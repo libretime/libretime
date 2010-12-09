@@ -32,6 +32,10 @@ class ScheduleController extends Zend_Controller_Action
 		$end = $this->_getParam('end', null);
 		$weekday = $this->_getParam('weekday', null);
 
+		if(!is_null($weekday)) {
+			$weekday = array($weekday);
+		}
+
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 		$show = new Show($userInfo->type);
@@ -56,37 +60,29 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->form = $form->__toString();
     }
 
-    function addShow()
+    public function moveShowAction()
     {
-		//name, description, hosts, allDay, repeats,
-		//start_time, duration, start_date, end_date, dofw
+        $deltaDay = $this->_getParam('day');
+		$deltaMin = $this->_getParam('min');
+		$showId = $this->_getParam('showId');
 
-		/*
-        $name = $this->_getParam('name', 'Default Name');
-		$description = $this->_getParam('description', '');
-		$hosts = $this->_getParam('hosts');
-		$allDay = $this->_getParam('all_day', false);
-		$repeats = $this->_getParam('repeats', false);
-		$startTime = $this->_getParam('start_time');
-		$duration = $this->_getParam('duration');
-		$startDate = $this->_getParam('start_date');
-		$endDate = $this->_getParam('end_date', null);
-		$dofw = $this->_getParam('dofw');
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		if($repeats === false)
-			$endDate = $startDate;
+		$show = new Show($userInfo->type);
+		$show->moveShow($showId, $deltaDay, $deltaMin);
+    }
 
-		$repeats = $repeats ? 1 : 0;
-		*/
-
-		//$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-		//$show = new Show($userInfo->type);
-		//$show->addShow($name, $startDate, $endDate, $startTime, $duration, $repeats, $dofw, $description);
+    public function resizeShowAction()
+    {
+        // action body
     }
 
 
 }
+
+
+
+
 
 
 

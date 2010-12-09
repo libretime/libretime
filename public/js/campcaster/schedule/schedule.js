@@ -113,11 +113,32 @@ function eventMouseout(event, jsEvent, view) {
 }
 
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
-	var x;
+	var url;
+
+	url = '/Schedule/move-show/format/json';
+
+	$.post(url, 
+		{day: dayDelta, min: minuteDelta, showId: event.id},
+		function(json){
+			if(json.error) {
+				revertFunc();
+			}
+		});
 }
 
 function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ) { 
 	var x;
+}
+
+function openShowDialog() {
+	var url;
+
+	url = '/Schedule/add-show-dialog/format/json';
+
+	$.get(url, function(json){
+		var dialog = makeShowDialog(json.form);
+		dialog.dialog('open');
+	});
 }
 
 $(document).ready(function() {
@@ -130,6 +151,7 @@ $(document).ready(function() {
 		}, 
 		defaultView: 'agendaDay',
 		editable: false,
+		allDaySlot: false,
 
 		events: function(start, end, callback) {
 			var url, start_date, end_date;
@@ -170,17 +192,7 @@ $(document).ready(function() {
 
     })
 
-	$('#schedule_add_show').click(function() {
-		var url;
-
-		url = '/Schedule/add-show-dialog/format/json';
-
-		$.get(url, function(json){
-			var dialog = makeShowDialog(json.form);
-			dialog.dialog('open');
-		});
-
-	});
+	$('#schedule_add_show').click(openShowDialog);
 
 
 });

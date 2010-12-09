@@ -53,6 +53,7 @@ class Show {
 
 		if($data['no_end']) {
 			$endDate = NULL;
+			$data['repeats'] = 1;
 		}
 		else if($data['repeats']) {
 			$endDate = $data['end_date'];
@@ -97,7 +98,29 @@ class Show {
 
 	}
 
-	public function getShows($start=NULL, $end=NULL, $weekday=NULL) {
+	public function moveShow($showId, $deltaDay, $deltaMin){
+		global $CC_DBC;
+
+		$sql = "SELECT * FROM cc_show WHERE show_id = '{$showId}'";
+		$res = $CC_DBC->GetAll($sql);
+
+		$show = $res[0];
+		$start = $show["first_show"];
+		$end = $show["last_show"];
+		$days = array();
+		$s_time = $show["start_time"];
+		$e_time = $show["end_time"];
+
+		foreach($res as $show) {
+			$days[] = $show["day"];
+		}
+
+		$shows_overlap = $this->getShows($start, $end, $days, $s_time, $e_time);
+
+		echo $shows_overlap;
+	}
+
+	public function getShows($start=NULL, $end=NULL, $days=NULL, $s_time=NULL, $e_time=NULL) {
 		global $CC_DBC;
 
 		$sql;
@@ -113,12 +136,27 @@ class Show {
 
 			$sql = $sql_gen ." WHERE ". $sql_range;
 		}
-		if(!is_null($weekday)){
-			$sql_day = "day = {$weekday}";
+		if(!is_null($days)){
+
+			$sql_opt = array();
+			foreach ($days as $day) {
+				$sql_opt[] = "day = {$day}";
+			}
+			$sql_day = join(" OR ", $sql_opt);
 				
 			$sql = $sql_gen ." WHERE (". $sql_day ." AND (". $sql_range ."))";
 		}
-		
+		if(!is_null($s_time) && !is_null($e_time)) {
+			$sql_time = "(start_time <= '{$s_time}' AND end_time >= '{$e_time}')
+				OR (start_time >= '{$s_time}' AND end_time <= '{$e_time}')
+				OR (end_time > '{$s_time}' AND end_time <= '{$e_time}')
+				OR (start_time >= '{$s_time}' AND start_time < '{$e_time}')";
+
+			$sql = $sql_gen ." WHERE (". $sql_day ." AND (". $sql_range .") AND (". $sql_time ."))";
+		}
+
+		//echo $sql;
+
 		return  $CC_DBC->GetAll($sql);	
 	}
 
@@ -150,7 +188,13 @@ class Show {
 				
 				$end_epoch = strtotime($end);
 
+				//add repeating events until the show end is reached or fullcalendar's end date is reached.
 				if($row["repeats"]) {
+
+					if(!is_null($row["last_show"])) {
+						$time = $row["last_show"] ." ".$row["end_time"];
+						$show_end_epoch = strtotime($time);
+					}
 
 					while(true) {
 
@@ -158,7 +202,10 @@ class Show {
 						$repeatDate = $CC_DBC->GetOne($diff);
 						$repeat_epoch = strtotime($repeatDate);
 
-						if ($repeat_epoch < $end_epoch ) {
+						if (isset($show_end_epoch) && $repeat_epoch < $show_end_epoch && $repeat_epoch < $end_epoch) {
+							$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
+						}
+						else if(!isset($show_end_epoch) && $repeat_epoch < $end_epoch) {
 							$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 						}
 						else {
