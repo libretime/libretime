@@ -13,7 +13,8 @@ class ScheduleController extends Zend_Controller_Action
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('event-feed', 'json')
 					->addActionContext('add-show-dialog', 'json')
-					->addActionContext('add-show', 'json')	
+					->addActionContext('add-show', 'json')
+					->addActionContext('move-show', 'json')	
                     ->initContext();
     }
 
@@ -69,7 +70,8 @@ class ScheduleController extends Zend_Controller_Action
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 		$show = new Show($userInfo->type);
-		$show->moveShow($showId, $deltaDay, $deltaMin);
+
+		$this->view->overlap = $show->moveShow($showId, $deltaDay, $deltaMin);
     }
 
     public function resizeShowAction()

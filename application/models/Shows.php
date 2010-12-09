@@ -113,19 +113,31 @@ class Show {
 		$start = $show["first_show"];
 		$end = $show["last_show"];
 		$days = array();
-		$s_time = $show["start_time"];
-		$e_time = $show["end_time"];
+
+		$hours = $deltaMin/60;
+		if($hours > 0)
+			$hours = floor($hours);
+		else
+			$hours = ceil($hours);
+
+		$mins = abs($deltaMin%60);
+
+		$sql = "SELECT time '{$show["start_time"]}' + interval '{$hours}:{$mins}'";
+		//echo $sql;
+		$s_time = $CC_DBC->GetOne($sql);
+
+		$sql = "SELECT time '{$show["end_time"]}' + interval '{$hours}:{$mins}'";
+		//echo $sql;
+		$e_time = $CC_DBC->GetOne($sql);
 
 		foreach($res as $show) {
 			$days[] = $show["day"] + $deltaDay;
 		}
 
-		$shows_overlap = $this->getShows($start, $end, $days, $s_time, $e_time);
-
-		echo $shows_overlap;
+		return $this->getShows($start, $end, $days, $s_time, $e_time, array($showId));
 	}
 
-	public function getShows($start=NULL, $end=NULL, $days=NULL, $s_time=NULL, $e_time=NULL) {
+	public function getShows($start=NULL, $end=NULL, $days=NULL, $s_time=NULL, $e_time=NULL, $exclude_shows=NULL) {
 		global $CC_DBC;
 
 		$sql;
@@ -149,7 +161,7 @@ class Show {
 			}
 			$sql_day = join(" OR ", $sql_opt);
 				
-			$sql = $sql_gen ." WHERE (". $sql_day ." AND (". $sql_range ."))";
+			$sql = $sql_gen ." WHERE ((". $sql_day .") AND (". $sql_range ."))";
 		}
 		if(!is_null($s_time) && !is_null($e_time)) {
 			$sql_time = "(start_time <= '{$s_time}' AND end_time >= '{$e_time}')
@@ -157,12 +169,22 @@ class Show {
 				OR (end_time > '{$s_time}' AND end_time <= '{$e_time}')
 				OR (start_time >= '{$s_time}' AND start_time < '{$e_time}')";
 
-			$sql = $sql_gen ." WHERE (". $sql_day ." AND (". $sql_range .") AND (". $sql_time ."))";
+			$sql = $sql_gen ." WHERE ((". $sql_day .") AND (". $sql_range .") AND (". $sql_time ."))";
+		}
+		if(!is_null($exclude_shows)){
+
+			$sql_opt = array();
+			foreach ($exclude_shows as $showid) {
+				$sql_opt[] = "show_id = {$showid}";
+			}
+			$sql_showid = join(" OR ", $sql_opt);
+			
+			$sql = $sql_gen ." WHERE ((". $sql_day .") AND NOT (". $sql_showid .") AND (". $sql_range .") AND (". $sql_time ."))";	
 		}
 
 		//echo $sql;
 
-		return  $CC_DBC->GetAll($sql);	
+		return $CC_DBC->GetAll($sql);	
 	}
 
 	public function getFullCalendarEvents($start, $end, $weekday=NULL) {
