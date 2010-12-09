@@ -5,9 +5,9 @@ header("Content-type: text/plain");
 require_once('DB.php');
 require_once("XML/Util.php");
 require_once("XML/Beautifier.php");
-require_once(dirname(__FILE__)."/../conf.php");
-require_once(dirname(__FILE__)."/../backend/BasicStor.php");
-require_once(dirname(__FILE__)."/../backend/Prefs.php");
+require_once(dirname(__FILE__)."/../application/configs/conf.php");
+require_once(dirname(__FILE__)."/../application/models/BasicStor.php");
+require_once(dirname(__FILE__)."/../application/models/Prefs.php");
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
