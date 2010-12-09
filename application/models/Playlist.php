@@ -102,7 +102,14 @@ class Playlist {
     }
 
 
- 		/**
+    public static function findPlaylistByName($p_name)
+    {
+ 	    $res = CcPlaylistQuery::create()->findByDbName($p_name);
+ 	 	return $res;
+ 	}
+
+
+ 	/**
      * Fetch instance of Playlist object.<br>
      *
      * @param string $id
@@ -414,7 +421,7 @@ class Playlist {
         if (is_null($media) || PEAR::isError($media)) {
         	return $media;
         }
-      
+
         $metadata = $media->getMetadata();
         $length = $metadata["length"];
 
@@ -425,7 +432,7 @@ class Playlist {
         // insert at end of playlist.
         if (is_null($p_position))
           $p_position = $this->getNextPos();
-        
+
 	    // insert default values if parameter was empty
         $p_cuein = !is_null($p_cuein) ? $p_cuein : '00:00:00.000000';
         $p_cueout = !is_null($p_cueout) ? $p_cueout : $length;
@@ -434,9 +441,9 @@ class Playlist {
         $sql = "SELECT INTERVAL '{$p_cueout}' - INTERVAL '{$p_cuein}'";
 		$r = $con->query($sql);
 		$p_cliplength = $r->fetchColumn(0);
-		
+
         $res = $this->insertPlaylistElement($this->id, $p_mediaId, $p_position, $p_cliplength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
-        
+
         return TRUE;
     }
 
@@ -629,7 +636,7 @@ class Playlist {
             $sql = "SELECT INTERVAL '{$oldCueOut}' - INTERVAL '{$cueIn}'";
 			$r = $con->query($sql);
 			$cliplength = $r->fetchColumn(0);
-			
+
             $row->setDbCuein($cueIn);
             $row->setDBCliplength($cliplength);
         }

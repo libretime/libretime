@@ -54,6 +54,9 @@
           <actionMethod actionName="eventFeed"/>
           <actionMethod actionName="addShowDialog"/>
         </controllerFile>
+        <controllerFile controllerName="Api">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Login"/>
@@ -167,6 +170,9 @@
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="addShowDialog"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Api">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
@@ -207,6 +213,7 @@
           <testApplicationControllerFile filesystemName="SearchControllerTest.php"/>
           <testApplicationControllerFile filesystemName="LoginControllerTest.php"/>
           <testApplicationControllerFile filesystemName="ScheduleControllerTest.php"/>
+          <testApplicationControllerFile filesystemName="ApiControllerTest.php"/>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>
       <testLibraryDirectory>
