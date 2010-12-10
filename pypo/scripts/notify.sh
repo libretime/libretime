@@ -4,5 +4,4 @@
 # needed here to keep dirs/configs clean   #
 # and maybe to set user-rights             #
 ############################################
-cd ../
-./pypo_notify.py $1 $2 $3 $4 $5 $6 $7 $8 &
+cd ../ && ./pypo-notify.py $1 $2 $3 $4 $5 $6 $7 $8 &

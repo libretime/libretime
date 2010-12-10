@@ -301,7 +301,7 @@ class CampcasterApiClient(ApiClientInterface):
 			url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
 			url = url.replace("%%media_id%%", str(media_id))
 			url = url.replace("%%schedule_id%%", str(schedule_id))
-			url += "&api_key=" + self.config["api_key"]
+			url = url.replace("%%api_key%%", self.config["api_key"])
 			logger.debug(url)
 			response = urllib.urlopen(url)
 			response = json.read(response.read())
