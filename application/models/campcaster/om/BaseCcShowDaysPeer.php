@@ -2,28 +2,28 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'cc_subjs' table.
+ * Base static class for performing query and update operations on the 'cc_show_days' table.
  *
  * 
  *
  * @package    propel.generator.campcaster.om
  */
-abstract class BaseCcSubjsPeer {
+abstract class BaseCcShowDaysPeer {
 
 	/** the default database name for this class */
 	const DATABASE_NAME = 'campcaster';
 
 	/** the table name for this class */
-	const TABLE_NAME = 'cc_subjs';
+	const TABLE_NAME = 'cc_show_days';
 
 	/** the related Propel class for this table */
-	const OM_CLASS = 'CcSubjs';
+	const OM_CLASS = 'CcShowDays';
 
 	/** A class that can be returned by this peer. */
-	const CLASS_DEFAULT = 'campcaster.CcSubjs';
+	const CLASS_DEFAULT = 'campcaster.CcShowDays';
 
 	/** the related TableMap class for this table */
-	const TM_CLASS = 'CcSubjsTableMap';
+	const TM_CLASS = 'CcShowDaysTableMap';
 	
 	/** The total number of columns. */
 	const NUM_COLUMNS = 7;
@@ -32,31 +32,31 @@ abstract class BaseCcSubjsPeer {
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
 	/** the column name for the ID field */
-	const ID = 'cc_subjs.ID';
+	const ID = 'cc_show_days.ID';
 
-	/** the column name for the LOGIN field */
-	const LOGIN = 'cc_subjs.LOGIN';
+	/** the column name for the FIRST_SHOW field */
+	const FIRST_SHOW = 'cc_show_days.FIRST_SHOW';
 
-	/** the column name for the PASS field */
-	const PASS = 'cc_subjs.PASS';
+	/** the column name for the LAST_SHOW field */
+	const LAST_SHOW = 'cc_show_days.LAST_SHOW';
 
-	/** the column name for the TYPE field */
-	const TYPE = 'cc_subjs.TYPE';
+	/** the column name for the START_TIME field */
+	const START_TIME = 'cc_show_days.START_TIME';
 
-	/** the column name for the REALNAME field */
-	const REALNAME = 'cc_subjs.REALNAME';
+	/** the column name for the END_TIME field */
+	const END_TIME = 'cc_show_days.END_TIME';
 
-	/** the column name for the LASTLOGIN field */
-	const LASTLOGIN = 'cc_subjs.LASTLOGIN';
+	/** the column name for the DAY field */
+	const DAY = 'cc_show_days.DAY';
 
-	/** the column name for the LASTFAIL field */
-	const LASTFAIL = 'cc_subjs.LASTFAIL';
+	/** the column name for the SHOW_ID field */
+	const SHOW_ID = 'cc_show_days.SHOW_ID';
 
 	/**
-	 * An identiy map to hold any loaded instances of CcSubjs objects.
+	 * An identiy map to hold any loaded instances of CcShowDays objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
 	 * queries.
-	 * @var        array CcSubjs[]
+	 * @var        array CcShowDays[]
 	 */
 	public static $instances = array();
 
@@ -68,11 +68,11 @@ abstract class BaseCcSubjsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Login', 'Pass', 'Type', 'Realname', 'Lastlogin', 'Lastfail', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'login', 'pass', 'type', 'realname', 'lastlogin', 'lastfail', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::LOGIN, self::PASS, self::TYPE, self::REALNAME, self::LASTLOGIN, self::LASTFAIL, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'REALNAME', 'LASTLOGIN', 'LASTFAIL', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'realname', 'lastlogin', 'lastfail', ),
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFirstShow', 'DbLastShow', 'DbStartTime', 'DbEndTime', 'DbDay', 'DbShowId', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFirstShow', 'dbLastShow', 'dbStartTime', 'dbEndTime', 'dbDay', 'dbShowId', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::FIRST_SHOW, self::LAST_SHOW, self::START_TIME, self::END_TIME, self::DAY, self::SHOW_ID, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FIRST_SHOW', 'LAST_SHOW', 'START_TIME', 'END_TIME', 'DAY', 'SHOW_ID', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'first_show', 'last_show', 'start_time', 'end_time', 'day', 'show_id', ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
 	);
 
@@ -83,11 +83,11 @@ abstract class BaseCcSubjsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Login' => 1, 'Pass' => 2, 'Type' => 3, 'Realname' => 4, 'Lastlogin' => 5, 'Lastfail' => 6, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'realname' => 4, 'lastlogin' => 5, 'lastfail' => 6, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::LOGIN => 1, self::PASS => 2, self::TYPE => 3, self::REALNAME => 4, self::LASTLOGIN => 5, self::LASTFAIL => 6, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'REALNAME' => 4, 'LASTLOGIN' => 5, 'LASTFAIL' => 6, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'realname' => 4, 'lastlogin' => 5, 'lastfail' => 6, ),
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFirstShow' => 1, 'DbLastShow' => 2, 'DbStartTime' => 3, 'DbEndTime' => 4, 'DbDay' => 5, 'DbShowId' => 6, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFirstShow' => 1, 'dbLastShow' => 2, 'dbStartTime' => 3, 'dbEndTime' => 4, 'dbDay' => 5, 'dbShowId' => 6, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::FIRST_SHOW => 1, self::LAST_SHOW => 2, self::START_TIME => 3, self::END_TIME => 4, self::DAY => 5, self::SHOW_ID => 6, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FIRST_SHOW' => 1, 'LAST_SHOW' => 2, 'START_TIME' => 3, 'END_TIME' => 4, 'DAY' => 5, 'SHOW_ID' => 6, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'first_show' => 1, 'last_show' => 2, 'start_time' => 3, 'end_time' => 4, 'day' => 5, 'show_id' => 6, ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
 	);
 
@@ -137,12 +137,12 @@ abstract class BaseCcSubjsPeer {
 	 *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
 	 * </code>
 	 * @param      string $alias The alias for the current table.
-	 * @param      string $column The column name for current table. (i.e. CcSubjsPeer::COLUMN_NAME).
+	 * @param      string $column The column name for current table. (i.e. CcShowDaysPeer::COLUMN_NAME).
 	 * @return     string
 	 */
 	public static function alias($alias, $column)
 	{
-		return str_replace(CcSubjsPeer::TABLE_NAME.'.', $alias.'.', $column);
+		return str_replace(CcShowDaysPeer::TABLE_NAME.'.', $alias.'.', $column);
 	}
 
 	/**
@@ -160,21 +160,21 @@ abstract class BaseCcSubjsPeer {
 	public static function addSelectColumns(Criteria $criteria, $alias = null)
 	{
 		if (null === $alias) {
-			$criteria->addSelectColumn(CcSubjsPeer::ID);
-			$criteria->addSelectColumn(CcSubjsPeer::LOGIN);
-			$criteria->addSelectColumn(CcSubjsPeer::PASS);
-			$criteria->addSelectColumn(CcSubjsPeer::TYPE);
-			$criteria->addSelectColumn(CcSubjsPeer::REALNAME);
-			$criteria->addSelectColumn(CcSubjsPeer::LASTLOGIN);
-			$criteria->addSelectColumn(CcSubjsPeer::LASTFAIL);
+			$criteria->addSelectColumn(CcShowDaysPeer::ID);
+			$criteria->addSelectColumn(CcShowDaysPeer::FIRST_SHOW);
+			$criteria->addSelectColumn(CcShowDaysPeer::LAST_SHOW);
+			$criteria->addSelectColumn(CcShowDaysPeer::START_TIME);
+			$criteria->addSelectColumn(CcShowDaysPeer::END_TIME);
+			$criteria->addSelectColumn(CcShowDaysPeer::DAY);
+			$criteria->addSelectColumn(CcShowDaysPeer::SHOW_ID);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
-			$criteria->addSelectColumn($alias . '.LOGIN');
-			$criteria->addSelectColumn($alias . '.PASS');
-			$criteria->addSelectColumn($alias . '.TYPE');
-			$criteria->addSelectColumn($alias . '.REALNAME');
-			$criteria->addSelectColumn($alias . '.LASTLOGIN');
-			$criteria->addSelectColumn($alias . '.LASTFAIL');
+			$criteria->addSelectColumn($alias . '.FIRST_SHOW');
+			$criteria->addSelectColumn($alias . '.LAST_SHOW');
+			$criteria->addSelectColumn($alias . '.START_TIME');
+			$criteria->addSelectColumn($alias . '.END_TIME');
+			$criteria->addSelectColumn($alias . '.DAY');
+			$criteria->addSelectColumn($alias . '.SHOW_ID');
 		}
 	}
 
@@ -194,21 +194,21 @@ abstract class BaseCcSubjsPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcSubjsPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcShowDaysPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcSubjsPeer::addSelectColumns($criteria);
+			CcShowDaysPeer::addSelectColumns($criteria);
 		}
 
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 		$criteria->setDbName(self::DATABASE_NAME); // Set the correct dbName
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 		// BasePeer returns a PDOStatement
 		$stmt = BasePeer::doCount($criteria, $con);
@@ -226,7 +226,7 @@ abstract class BaseCcSubjsPeer {
 	 *
 	 * @param      Criteria $criteria object used to create the SELECT statement.
 	 * @param      PropelPDO $con
-	 * @return     CcSubjs
+	 * @return     CcShowDays
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -234,7 +234,7 @@ abstract class BaseCcSubjsPeer {
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
-		$objects = CcSubjsPeer::doSelect($critcopy, $con);
+		$objects = CcShowDaysPeer::doSelect($critcopy, $con);
 		if ($objects) {
 			return $objects[0];
 		}
@@ -251,7 +251,7 @@ abstract class BaseCcSubjsPeer {
 	 */
 	public static function doSelect(Criteria $criteria, PropelPDO $con = null)
 	{
-		return CcSubjsPeer::populateObjects(CcSubjsPeer::doSelectStmt($criteria, $con));
+		return CcShowDaysPeer::populateObjects(CcShowDaysPeer::doSelectStmt($criteria, $con));
 	}
 	/**
 	 * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -269,12 +269,12 @@ abstract class BaseCcSubjsPeer {
 	public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		if (!$criteria->hasSelectClause()) {
 			$criteria = clone $criteria;
-			CcSubjsPeer::addSelectColumns($criteria);
+			CcShowDaysPeer::addSelectColumns($criteria);
 		}
 
 		// Set the correct dbName
@@ -292,14 +292,14 @@ abstract class BaseCcSubjsPeer {
 	 * to the cache in order to ensure that the same objects are always returned by doSelect*()
 	 * and retrieveByPK*() calls.
 	 *
-	 * @param      CcSubjs $value A CcSubjs object.
+	 * @param      CcShowDays $value A CcShowDays object.
 	 * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
 	 */
-	public static function addInstanceToPool(CcSubjs $obj, $key = null)
+	public static function addInstanceToPool(CcShowDays $obj, $key = null)
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
-				$key = (string) $obj->getId();
+				$key = (string) $obj->getDbId();
 			} // if key === null
 			self::$instances[$key] = $obj;
 		}
@@ -313,18 +313,18 @@ abstract class BaseCcSubjsPeer {
 	 * methods in your stub classes -- you may need to explicitly remove objects
 	 * from the cache in order to prevent returning objects that no longer exist.
 	 *
-	 * @param      mixed $value A CcSubjs object or a primary key value.
+	 * @param      mixed $value A CcShowDays object or a primary key value.
 	 */
 	public static function removeInstanceFromPool($value)
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
-			if (is_object($value) && $value instanceof CcSubjs) {
-				$key = (string) $value->getId();
+			if (is_object($value) && $value instanceof CcShowDays) {
+				$key = (string) $value->getDbId();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;
 			} else {
-				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcSubjs object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcShowDays object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
 				throw $e;
 			}
 
@@ -339,7 +339,7 @@ abstract class BaseCcSubjsPeer {
 	 * a multi-column primary key, a serialize()d version of the primary key will be returned.
 	 *
 	 * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-	 * @return     CcSubjs Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+	 * @return     CcShowDays Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
 	 * @see        getPrimaryKeyHash()
 	 */
 	public static function getInstanceFromPool($key)
@@ -363,23 +363,11 @@ abstract class BaseCcSubjsPeer {
 	}
 	
 	/**
-	 * Method to invalidate the instance pool of all tables related to cc_subjs
+	 * Method to invalidate the instance pool of all tables related to cc_show_days
 	 * by a foreign key with ON DELETE CASCADE
 	 */
 	public static function clearRelatedInstancePool()
 	{
-		// Invalidate objects in CcPermsPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcPermsPeer::clearInstancePool();
-		// Invalidate objects in CcShowHostsPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcShowHostsPeer::clearInstancePool();
-		// Invalidate objects in CcPrefPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcPrefPeer::clearInstancePool();
-		// Invalidate objects in CcSessPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcSessPeer::clearInstancePool();
 	}
 
 	/**
@@ -427,11 +415,11 @@ abstract class BaseCcSubjsPeer {
 		$results = array();
 	
 		// set the class once to avoid overhead in the loop
-		$cls = CcSubjsPeer::getOMClass(false);
+		$cls = CcShowDaysPeer::getOMClass(false);
 		// populate the object(s)
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key = CcSubjsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj = CcSubjsPeer::getInstanceFromPool($key))) {
+			$key = CcShowDaysPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj = CcShowDaysPeer::getInstanceFromPool($key))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj->hydrate($row, 0, true); // rehydrate
@@ -440,7 +428,7 @@ abstract class BaseCcSubjsPeer {
 				$obj = new $cls();
 				$obj->hydrate($row);
 				$results[] = $obj;
-				CcSubjsPeer::addInstanceToPool($obj, $key);
+				CcShowDaysPeer::addInstanceToPool($obj, $key);
 			} // if key exists
 		}
 		$stmt->closeCursor();
@@ -453,24 +441,258 @@ abstract class BaseCcSubjsPeer {
 	 * @param      int $startcol The 0-based offset for reading from the resultset row.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
-	 * @return     array (CcSubjs object, last column rank)
+	 * @return     array (CcShowDays object, last column rank)
 	 */
 	public static function populateObject($row, $startcol = 0)
 	{
-		$key = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol);
-		if (null !== ($obj = CcSubjsPeer::getInstanceFromPool($key))) {
+		$key = CcShowDaysPeer::getPrimaryKeyHashFromRow($row, $startcol);
+		if (null !== ($obj = CcShowDaysPeer::getInstanceFromPool($key))) {
 			// We no longer rehydrate the object, since this can cause data loss.
 			// See http://www.propelorm.org/ticket/509
 			// $obj->hydrate($row, $startcol, true); // rehydrate
-			$col = $startcol + CcSubjsPeer::NUM_COLUMNS;
+			$col = $startcol + CcShowDaysPeer::NUM_COLUMNS;
 		} else {
-			$cls = CcSubjsPeer::OM_CLASS;
+			$cls = CcShowDaysPeer::OM_CLASS;
 			$obj = new $cls();
 			$col = $obj->hydrate($row, $startcol);
-			CcSubjsPeer::addInstanceToPool($obj, $key);
+			CcShowDaysPeer::addInstanceToPool($obj, $key);
 		}
 		return array($obj, $col);
 	}
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcShow table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinCcShow(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcShowDaysPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcShowDaysPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcShowDaysPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Selects a collection of CcShowDays objects pre-filled with their CcShow objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcShowDays objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinCcShow(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcShowDaysPeer::addSelectColumns($criteria);
+		$startcol = (CcShowDaysPeer::NUM_COLUMNS - CcShowDaysPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcShowPeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(CcShowDaysPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcShowDaysPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcShowDaysPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = CcShowDaysPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcShowDaysPeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = CcShowPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcShowPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					CcShowPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (CcShowDays) to $obj2 (CcShow)
+				$obj2->addCcShowDays($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining all related tables
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAll(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcShowDaysPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcShowDaysPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcShowDaysPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+	/**
+	 * Selects a collection of CcShowDays objects pre-filled with all related objects.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcShowDays objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAll(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcShowDaysPeer::addSelectColumns($criteria);
+		$startcol2 = (CcShowDaysPeer::NUM_COLUMNS - CcShowDaysPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcShowPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcShowDaysPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcShowDaysPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcShowDaysPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcShowDaysPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcShowDaysPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+			// Add objects for joined CcShow rows
+
+			$key2 = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+			if ($key2 !== null) {
+				$obj2 = CcShowPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcShowPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcShowPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 loaded
+
+				// Add the $obj1 (CcShowDays) to the collection in $obj2 (CcShow)
+				$obj2->addCcShowDays($obj1);
+			} // if joined row not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
 	/**
 	 * Returns the TableMap related to this peer.
 	 * This method is not needed for general use but a specific application could have a need.
@@ -488,10 +710,10 @@ abstract class BaseCcSubjsPeer {
 	 */
 	public static function buildTableMap()
 	{
-	  $dbMap = Propel::getDatabaseMap(BaseCcSubjsPeer::DATABASE_NAME);
-	  if (!$dbMap->hasTable(BaseCcSubjsPeer::TABLE_NAME))
+	  $dbMap = Propel::getDatabaseMap(BaseCcShowDaysPeer::DATABASE_NAME);
+	  if (!$dbMap->hasTable(BaseCcShowDaysPeer::TABLE_NAME))
 	  {
-	    $dbMap->addTableObject(new CcSubjsTableMap());
+	    $dbMap->addTableObject(new CcShowDaysTableMap());
 	  }
 	}
 
@@ -508,13 +730,13 @@ abstract class BaseCcSubjsPeer {
 	 */
 	public static function getOMClass($withPrefix = true)
 	{
-		return $withPrefix ? CcSubjsPeer::CLASS_DEFAULT : CcSubjsPeer::OM_CLASS;
+		return $withPrefix ? CcShowDaysPeer::CLASS_DEFAULT : CcShowDaysPeer::OM_CLASS;
 	}
 
 	/**
-	 * Method perform an INSERT on the database, given a CcSubjs or Criteria object.
+	 * Method perform an INSERT on the database, given a CcShowDays or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcSubjs object containing data that is used to create the INSERT statement.
+	 * @param      mixed $values Criteria or CcShowDays object containing data that is used to create the INSERT statement.
 	 * @param      PropelPDO $con the PropelPDO connection to use
 	 * @return     mixed The new primary key.
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -523,17 +745,17 @@ abstract class BaseCcSubjsPeer {
 	public static function doInsert($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 		} else {
-			$criteria = $values->buildCriteria(); // build Criteria from CcSubjs object
+			$criteria = $values->buildCriteria(); // build Criteria from CcShowDays object
 		}
 
-		if ($criteria->containsKey(CcSubjsPeer::ID) && $criteria->keyContainsValue(CcSubjsPeer::ID) ) {
-			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcSubjsPeer::ID.')');
+		if ($criteria->containsKey(CcShowDaysPeer::ID) && $criteria->keyContainsValue(CcShowDaysPeer::ID) ) {
+			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcShowDaysPeer::ID.')');
 		}
 
 
@@ -555,9 +777,9 @@ abstract class BaseCcSubjsPeer {
 	}
 
 	/**
-	 * Method perform an UPDATE on the database, given a CcSubjs or Criteria object.
+	 * Method perform an UPDATE on the database, given a CcShowDays or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcSubjs object containing data that is used to create the UPDATE statement.
+	 * @param      mixed $values Criteria or CcShowDays object containing data that is used to create the UPDATE statement.
 	 * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -566,7 +788,7 @@ abstract class BaseCcSubjsPeer {
 	public static function doUpdate($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$selectCriteria = new Criteria(self::DATABASE_NAME);
@@ -574,15 +796,15 @@ abstract class BaseCcSubjsPeer {
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 
-			$comparison = $criteria->getComparison(CcSubjsPeer::ID);
-			$value = $criteria->remove(CcSubjsPeer::ID);
+			$comparison = $criteria->getComparison(CcShowDaysPeer::ID);
+			$value = $criteria->remove(CcShowDaysPeer::ID);
 			if ($value) {
-				$selectCriteria->add(CcSubjsPeer::ID, $value, $comparison);
+				$selectCriteria->add(CcShowDaysPeer::ID, $value, $comparison);
 			} else {
-				$selectCriteria->setPrimaryTableName(CcSubjsPeer::TABLE_NAME);
+				$selectCriteria->setPrimaryTableName(CcShowDaysPeer::TABLE_NAME);
 			}
 
-		} else { // $values is CcSubjs object
+		} else { // $values is CcShowDays object
 			$criteria = $values->buildCriteria(); // gets full criteria
 			$selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
 		}
@@ -594,26 +816,26 @@ abstract class BaseCcSubjsPeer {
 	}
 
 	/**
-	 * Method to DELETE all rows from the cc_subjs table.
+	 * Method to DELETE all rows from the cc_show_days table.
 	 *
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	public static function doDeleteAll($con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		$affectedRows = 0; // initialize var to track total num of affected rows
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			$affectedRows += BasePeer::doDeleteAll(CcSubjsPeer::TABLE_NAME, $con, CcSubjsPeer::DATABASE_NAME);
+			$affectedRows += BasePeer::doDeleteAll(CcShowDaysPeer::TABLE_NAME, $con, CcShowDaysPeer::DATABASE_NAME);
 			// Because this db requires some delete cascade/set null emulation, we have to
 			// clear the cached instance *after* the emulation has happened (since
 			// instances get re-added by the select statement contained therein).
-			CcSubjsPeer::clearInstancePool();
-			CcSubjsPeer::clearRelatedInstancePool();
+			CcShowDaysPeer::clearInstancePool();
+			CcShowDaysPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -623,9 +845,9 @@ abstract class BaseCcSubjsPeer {
 	}
 
 	/**
-	 * Method perform a DELETE on the database, given a CcSubjs or Criteria object OR a primary key value.
+	 * Method perform a DELETE on the database, given a CcShowDays or Criteria object OR a primary key value.
 	 *
-	 * @param      mixed $values Criteria or CcSubjs object or primary key or array of primary keys
+	 * @param      mixed $values Criteria or CcShowDays object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
 	 * @param      PropelPDO $con the connection to use
 	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -636,27 +858,27 @@ abstract class BaseCcSubjsPeer {
 	 public static function doDelete($values, PropelPDO $con = null)
 	 {
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			// invalidate the cache for all objects of this type, since we have no
 			// way of knowing (without running a query) what objects should be invalidated
 			// from the cache based on this Criteria.
-			CcSubjsPeer::clearInstancePool();
+			CcShowDaysPeer::clearInstancePool();
 			// rename for clarity
 			$criteria = clone $values;
-		} elseif ($values instanceof CcSubjs) { // it's a model object
+		} elseif ($values instanceof CcShowDays) { // it's a model object
 			// invalidate the cache for this single object
-			CcSubjsPeer::removeInstanceFromPool($values);
+			CcShowDaysPeer::removeInstanceFromPool($values);
 			// create criteria based on pk values
 			$criteria = $values->buildPkeyCriteria();
 		} else { // it's a primary key, or an array of pks
 			$criteria = new Criteria(self::DATABASE_NAME);
-			$criteria->add(CcSubjsPeer::ID, (array) $values, Criteria::IN);
+			$criteria->add(CcShowDaysPeer::ID, (array) $values, Criteria::IN);
 			// invalidate the cache for this object(s)
 			foreach ((array) $values as $singleval) {
-				CcSubjsPeer::removeInstanceFromPool($singleval);
+				CcShowDaysPeer::removeInstanceFromPool($singleval);
 			}
 		}
 
@@ -671,7 +893,7 @@ abstract class BaseCcSubjsPeer {
 			$con->beginTransaction();
 			
 			$affectedRows += BasePeer::doDelete($criteria, $con);
-			CcSubjsPeer::clearRelatedInstancePool();
+			CcShowDaysPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -681,24 +903,24 @@ abstract class BaseCcSubjsPeer {
 	}
 
 	/**
-	 * Validates all modified columns of given CcSubjs object.
+	 * Validates all modified columns of given CcShowDays object.
 	 * If parameter $columns is either a single column name or an array of column names
 	 * than only those columns are validated.
 	 *
 	 * NOTICE: This does not apply to primary or foreign keys for now.
 	 *
-	 * @param      CcSubjs $obj The object to validate.
+	 * @param      CcShowDays $obj The object to validate.
 	 * @param      mixed $cols Column name or array of column names.
 	 *
 	 * @return     mixed TRUE if all columns are valid or the error message of the first invalid column.
 	 */
-	public static function doValidate(CcSubjs $obj, $cols = null)
+	public static function doValidate(CcShowDays $obj, $cols = null)
 	{
 		$columns = array();
 
 		if ($cols) {
-			$dbMap = Propel::getDatabaseMap(CcSubjsPeer::DATABASE_NAME);
-			$tableMap = $dbMap->getTable(CcSubjsPeer::TABLE_NAME);
+			$dbMap = Propel::getDatabaseMap(CcShowDaysPeer::DATABASE_NAME);
+			$tableMap = $dbMap->getTable(CcShowDaysPeer::TABLE_NAME);
 
 			if (! is_array($cols)) {
 				$cols = array($cols);
@@ -714,7 +936,7 @@ abstract class BaseCcSubjsPeer {
 
 		}
 
-		return BasePeer::doValidate(CcSubjsPeer::DATABASE_NAME, CcSubjsPeer::TABLE_NAME, $columns);
+		return BasePeer::doValidate(CcShowDaysPeer::DATABASE_NAME, CcShowDaysPeer::TABLE_NAME, $columns);
 	}
 
 	/**
@@ -722,23 +944,23 @@ abstract class BaseCcSubjsPeer {
 	 *
 	 * @param      int $pk the primary key.
 	 * @param      PropelPDO $con the connection to use
-	 * @return     CcSubjs
+	 * @return     CcShowDays
 	 */
 	public static function retrieveByPK($pk, PropelPDO $con = null)
 	{
 
-		if (null !== ($obj = CcSubjsPeer::getInstanceFromPool((string) $pk))) {
+		if (null !== ($obj = CcShowDaysPeer::getInstanceFromPool((string) $pk))) {
 			return $obj;
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria = new Criteria(CcSubjsPeer::DATABASE_NAME);
-		$criteria->add(CcSubjsPeer::ID, $pk);
+		$criteria = new Criteria(CcShowDaysPeer::DATABASE_NAME);
+		$criteria->add(CcShowDaysPeer::ID, $pk);
 
-		$v = CcSubjsPeer::doSelect($criteria, $con);
+		$v = CcShowDaysPeer::doSelect($criteria, $con);
 
 		return !empty($v) > 0 ? $v[0] : null;
 	}
@@ -754,23 +976,23 @@ abstract class BaseCcSubjsPeer {
 	public static function retrieveByPKs($pks, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowDaysPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		$objs = null;
 		if (empty($pks)) {
 			$objs = array();
 		} else {
-			$criteria = new Criteria(CcSubjsPeer::DATABASE_NAME);
-			$criteria->add(CcSubjsPeer::ID, $pks, Criteria::IN);
-			$objs = CcSubjsPeer::doSelect($criteria, $con);
+			$criteria = new Criteria(CcShowDaysPeer::DATABASE_NAME);
+			$criteria->add(CcShowDaysPeer::ID, $pks, Criteria::IN);
+			$objs = CcShowDaysPeer::doSelect($criteria, $con);
 		}
 		return $objs;
 	}
 
-} // BaseCcSubjsPeer
+} // BaseCcShowDaysPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseCcSubjsPeer::buildTableMap();
+BaseCcShowDaysPeer::buildTableMap();
 

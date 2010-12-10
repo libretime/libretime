@@ -26,7 +26,7 @@ abstract class BaseCcShowPeer {
 	const TM_CLASS = 'CcShowTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 10;
+	const NUM_COLUMNS = 4;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -37,29 +37,11 @@ abstract class BaseCcShowPeer {
 	/** the column name for the NAME field */
 	const NAME = 'cc_show.NAME';
 
-	/** the column name for the FIRST_SHOW field */
-	const FIRST_SHOW = 'cc_show.FIRST_SHOW';
-
-	/** the column name for the LAST_SHOW field */
-	const LAST_SHOW = 'cc_show.LAST_SHOW';
-
-	/** the column name for the START_TIME field */
-	const START_TIME = 'cc_show.START_TIME';
-
-	/** the column name for the END_TIME field */
-	const END_TIME = 'cc_show.END_TIME';
-
 	/** the column name for the REPEATS field */
 	const REPEATS = 'cc_show.REPEATS';
 
-	/** the column name for the DAY field */
-	const DAY = 'cc_show.DAY';
-
 	/** the column name for the DESCRIPTION field */
 	const DESCRIPTION = 'cc_show.DESCRIPTION';
-
-	/** the column name for the SHOW_ID field */
-	const SHOW_ID = 'cc_show.SHOW_ID';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcShow objects.
@@ -77,12 +59,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbFirstShow', 'DbLastShow', 'DbStartTime', 'DbEndTime', 'DbRepeats', 'DbDay', 'DbDescription', 'DbShowId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbFirstShow', 'dbLastShow', 'dbStartTime', 'dbEndTime', 'dbRepeats', 'dbDay', 'dbDescription', 'dbShowId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::FIRST_SHOW, self::LAST_SHOW, self::START_TIME, self::END_TIME, self::REPEATS, self::DAY, self::DESCRIPTION, self::SHOW_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'FIRST_SHOW', 'LAST_SHOW', 'START_TIME', 'END_TIME', 'REPEATS', 'DAY', 'DESCRIPTION', 'SHOW_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'first_show', 'last_show', 'start_time', 'end_time', 'repeats', 'day', 'description', 'show_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbRepeats', 'DbDescription', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbRepeats', 'dbDescription', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::REPEATS, self::DESCRIPTION, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'REPEATS', 'DESCRIPTION', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'repeats', 'description', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -92,12 +74,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbFirstShow' => 2, 'DbLastShow' => 3, 'DbStartTime' => 4, 'DbEndTime' => 5, 'DbRepeats' => 6, 'DbDay' => 7, 'DbDescription' => 8, 'DbShowId' => 9, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbFirstShow' => 2, 'dbLastShow' => 3, 'dbStartTime' => 4, 'dbEndTime' => 5, 'dbRepeats' => 6, 'dbDay' => 7, 'dbDescription' => 8, 'dbShowId' => 9, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::FIRST_SHOW => 2, self::LAST_SHOW => 3, self::START_TIME => 4, self::END_TIME => 5, self::REPEATS => 6, self::DAY => 7, self::DESCRIPTION => 8, self::SHOW_ID => 9, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'FIRST_SHOW' => 2, 'LAST_SHOW' => 3, 'START_TIME' => 4, 'END_TIME' => 5, 'REPEATS' => 6, 'DAY' => 7, 'DESCRIPTION' => 8, 'SHOW_ID' => 9, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'first_show' => 2, 'last_show' => 3, 'start_time' => 4, 'end_time' => 5, 'repeats' => 6, 'day' => 7, 'description' => 8, 'show_id' => 9, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbRepeats' => 2, 'DbDescription' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbRepeats' => 2, 'dbDescription' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::REPEATS => 2, self::DESCRIPTION => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'REPEATS' => 2, 'DESCRIPTION' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'repeats' => 2, 'description' => 3, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -171,25 +153,13 @@ abstract class BaseCcShowPeer {
 		if (null === $alias) {
 			$criteria->addSelectColumn(CcShowPeer::ID);
 			$criteria->addSelectColumn(CcShowPeer::NAME);
-			$criteria->addSelectColumn(CcShowPeer::FIRST_SHOW);
-			$criteria->addSelectColumn(CcShowPeer::LAST_SHOW);
-			$criteria->addSelectColumn(CcShowPeer::START_TIME);
-			$criteria->addSelectColumn(CcShowPeer::END_TIME);
 			$criteria->addSelectColumn(CcShowPeer::REPEATS);
-			$criteria->addSelectColumn(CcShowPeer::DAY);
 			$criteria->addSelectColumn(CcShowPeer::DESCRIPTION);
-			$criteria->addSelectColumn(CcShowPeer::SHOW_ID);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.NAME');
-			$criteria->addSelectColumn($alias . '.FIRST_SHOW');
-			$criteria->addSelectColumn($alias . '.LAST_SHOW');
-			$criteria->addSelectColumn($alias . '.START_TIME');
-			$criteria->addSelectColumn($alias . '.END_TIME');
 			$criteria->addSelectColumn($alias . '.REPEATS');
-			$criteria->addSelectColumn($alias . '.DAY');
 			$criteria->addSelectColumn($alias . '.DESCRIPTION');
-			$criteria->addSelectColumn($alias . '.SHOW_ID');
 		}
 	}
 
@@ -383,6 +353,12 @@ abstract class BaseCcShowPeer {
 	 */
 	public static function clearRelatedInstancePool()
 	{
+		// Invalidate objects in CcShowDaysPeer instance pool, 
+		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+		CcShowDaysPeer::clearInstancePool();
+		// Invalidate objects in CcShowHostsPeer instance pool, 
+		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+		CcShowHostsPeer::clearInstancePool();
 	}
 
 	/**

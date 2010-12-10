@@ -30,17 +30,6 @@ class Application_Form_AddShow extends Zend_Form
     		) 
         ));
 
-		// Add end date element
-        $this->addElement('text', 'end_date', array(
-            'label'      => 'Date End:',
-            'required'   => false,
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('YYYY-MM-DD'))
-    		) 
-        ));
-
 		// Add start time element
         $this->addElement('text', 'start_time', array(
             'label'      => 'Start Time:',
@@ -52,23 +41,6 @@ class Application_Form_AddShow extends Zend_Form
     		) 
         ));
 
-		/*
-		$this->addElement(
-            'select',
-            'start_time',
-            array(
-				'label' => 'Start Time:',
-                'required' => true,
-                'multiOptions' => array(
-					"00:00" => "00:00",
-                    "00:30" => "00:30",
-					"01:00" => "01:00",
-					"01:30" => "01:30",
-					"02:00" => "02:00",
-                ),
-         ));
-		*/
-
 		// Add duration element
         $this->addElement('text', 'duration', array(
             'label'      => 'Duration:',
@@ -79,6 +51,12 @@ class Application_Form_AddShow extends Zend_Form
         		array('date', false, array('HH:mm'))
     		) 
         ));
+
+		// Add repeats element
+		$this->addElement('checkbox', 'repeats', array(
+            'label'      => 'repeats',
+            'required'   => false,
+		));
 
 		$this->addElement(
             'multiCheckbox',
@@ -97,15 +75,16 @@ class Application_Form_AddShow extends Zend_Form
                 ),
          ));
 
-        $this->addElement('checkbox', 'all_day', array(
-            'label'      => 'all day',
+		// Add end date element
+        $this->addElement('text', 'end_date', array(
+            'label'      => 'Date End:',
             'required'   => false,
-		));
-
-		$this->addElement('checkbox', 'repeats', array(
-            'label'      => 'repeats',
-            'required'   => false,
-		));
+            'filters'    => array('StringTrim'),
+			'validators' => array(
+				'NotEmpty',
+        		array('date', false, array('YYYY-MM-DD'))
+    		) 
+        ));
 
 		$this->addElement('checkbox', 'no_end', array(
             'label'      => 'no end',

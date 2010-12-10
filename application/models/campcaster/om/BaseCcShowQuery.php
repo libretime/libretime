@@ -8,54 +8,38 @@
  *
  * @method     CcShowQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcShowQuery orderByDbName($order = Criteria::ASC) Order by the name column
- * @method     CcShowQuery orderByDbFirstShow($order = Criteria::ASC) Order by the first_show column
- * @method     CcShowQuery orderByDbLastShow($order = Criteria::ASC) Order by the last_show column
- * @method     CcShowQuery orderByDbStartTime($order = Criteria::ASC) Order by the start_time column
- * @method     CcShowQuery orderByDbEndTime($order = Criteria::ASC) Order by the end_time column
  * @method     CcShowQuery orderByDbRepeats($order = Criteria::ASC) Order by the repeats column
- * @method     CcShowQuery orderByDbDay($order = Criteria::ASC) Order by the day column
  * @method     CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
- * @method     CcShowQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
  *
  * @method     CcShowQuery groupByDbId() Group by the id column
  * @method     CcShowQuery groupByDbName() Group by the name column
- * @method     CcShowQuery groupByDbFirstShow() Group by the first_show column
- * @method     CcShowQuery groupByDbLastShow() Group by the last_show column
- * @method     CcShowQuery groupByDbStartTime() Group by the start_time column
- * @method     CcShowQuery groupByDbEndTime() Group by the end_time column
  * @method     CcShowQuery groupByDbRepeats() Group by the repeats column
- * @method     CcShowQuery groupByDbDay() Group by the day column
  * @method     CcShowQuery groupByDbDescription() Group by the description column
- * @method     CcShowQuery groupByDbShowId() Group by the show_id column
  *
  * @method     CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcShowQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     CcShowQuery leftJoinCcShowDays($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowDays relation
+ * @method     CcShowQuery rightJoinCcShowDays($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowDays relation
+ * @method     CcShowQuery innerJoinCcShowDays($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowDays relation
+ *
+ * @method     CcShowQuery leftJoinCcShowHosts($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowHosts relation
+ * @method     CcShowQuery rightJoinCcShowHosts($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowHosts relation
+ * @method     CcShowQuery innerJoinCcShowHosts($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowHosts relation
  *
  * @method     CcShow findOne(PropelPDO $con = null) Return the first CcShow matching the query
  * @method     CcShow findOneOrCreate(PropelPDO $con = null) Return the first CcShow matching the query, or a new CcShow object populated from the query conditions when no match is found
  *
  * @method     CcShow findOneByDbId(int $id) Return the first CcShow filtered by the id column
  * @method     CcShow findOneByDbName(string $name) Return the first CcShow filtered by the name column
- * @method     CcShow findOneByDbFirstShow(string $first_show) Return the first CcShow filtered by the first_show column
- * @method     CcShow findOneByDbLastShow(string $last_show) Return the first CcShow filtered by the last_show column
- * @method     CcShow findOneByDbStartTime(string $start_time) Return the first CcShow filtered by the start_time column
- * @method     CcShow findOneByDbEndTime(string $end_time) Return the first CcShow filtered by the end_time column
  * @method     CcShow findOneByDbRepeats(int $repeats) Return the first CcShow filtered by the repeats column
- * @method     CcShow findOneByDbDay(int $day) Return the first CcShow filtered by the day column
  * @method     CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
- * @method     CcShow findOneByDbShowId(int $show_id) Return the first CcShow filtered by the show_id column
  *
  * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
- * @method     array findByDbFirstShow(string $first_show) Return CcShow objects filtered by the first_show column
- * @method     array findByDbLastShow(string $last_show) Return CcShow objects filtered by the last_show column
- * @method     array findByDbStartTime(string $start_time) Return CcShow objects filtered by the start_time column
- * @method     array findByDbEndTime(string $end_time) Return CcShow objects filtered by the end_time column
  * @method     array findByDbRepeats(int $repeats) Return CcShow objects filtered by the repeats column
- * @method     array findByDbDay(int $day) Return CcShow objects filtered by the day column
  * @method     array findByDbDescription(string $description) Return CcShow objects filtered by the description column
- * @method     array findByDbShowId(int $show_id) Return CcShow objects filtered by the show_id column
  *
  * @package    propel.generator.campcaster.om
  */
@@ -205,130 +189,6 @@ abstract class BaseCcShowQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the first_show column
-	 * 
-	 * @param     string|array $dbFirstShow The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbFirstShow($dbFirstShow = null, $comparison = null)
-	{
-		if (is_array($dbFirstShow)) {
-			$useMinMax = false;
-			if (isset($dbFirstShow['min'])) {
-				$this->addUsingAlias(CcShowPeer::FIRST_SHOW, $dbFirstShow['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbFirstShow['max'])) {
-				$this->addUsingAlias(CcShowPeer::FIRST_SHOW, $dbFirstShow['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::FIRST_SHOW, $dbFirstShow, $comparison);
-	}
-
-	/**
-	 * Filter the query on the last_show column
-	 * 
-	 * @param     string|array $dbLastShow The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbLastShow($dbLastShow = null, $comparison = null)
-	{
-		if (is_array($dbLastShow)) {
-			$useMinMax = false;
-			if (isset($dbLastShow['min'])) {
-				$this->addUsingAlias(CcShowPeer::LAST_SHOW, $dbLastShow['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbLastShow['max'])) {
-				$this->addUsingAlias(CcShowPeer::LAST_SHOW, $dbLastShow['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::LAST_SHOW, $dbLastShow, $comparison);
-	}
-
-	/**
-	 * Filter the query on the start_time column
-	 * 
-	 * @param     string|array $dbStartTime The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbStartTime($dbStartTime = null, $comparison = null)
-	{
-		if (is_array($dbStartTime)) {
-			$useMinMax = false;
-			if (isset($dbStartTime['min'])) {
-				$this->addUsingAlias(CcShowPeer::START_TIME, $dbStartTime['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbStartTime['max'])) {
-				$this->addUsingAlias(CcShowPeer::START_TIME, $dbStartTime['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::START_TIME, $dbStartTime, $comparison);
-	}
-
-	/**
-	 * Filter the query on the end_time column
-	 * 
-	 * @param     string|array $dbEndTime The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbEndTime($dbEndTime = null, $comparison = null)
-	{
-		if (is_array($dbEndTime)) {
-			$useMinMax = false;
-			if (isset($dbEndTime['min'])) {
-				$this->addUsingAlias(CcShowPeer::END_TIME, $dbEndTime['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbEndTime['max'])) {
-				$this->addUsingAlias(CcShowPeer::END_TIME, $dbEndTime['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::END_TIME, $dbEndTime, $comparison);
-	}
-
-	/**
 	 * Filter the query on the repeats column
 	 * 
 	 * @param     int|array $dbRepeats The value to use as filter.
@@ -360,37 +220,6 @@ abstract class BaseCcShowQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the day column
-	 * 
-	 * @param     int|array $dbDay The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbDay($dbDay = null, $comparison = null)
-	{
-		if (is_array($dbDay)) {
-			$useMinMax = false;
-			if (isset($dbDay['min'])) {
-				$this->addUsingAlias(CcShowPeer::DAY, $dbDay['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbDay['max'])) {
-				$this->addUsingAlias(CcShowPeer::DAY, $dbDay['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::DAY, $dbDay, $comparison);
-	}
-
-	/**
 	 * Filter the query on the description column
 	 * 
 	 * @param     string $dbDescription The value to use as filter.
@@ -413,34 +242,131 @@ abstract class BaseCcShowQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the show_id column
-	 * 
-	 * @param     int|array $dbShowId The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * Filter the query by a related CcShowDays object
+	 *
+	 * @param     CcShowDays $ccShowDays  the related object to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcShowQuery The current query, for fluid interface
 	 */
-	public function filterByDbShowId($dbShowId = null, $comparison = null)
+	public function filterByCcShowDays($ccShowDays, $comparison = null)
 	{
-		if (is_array($dbShowId)) {
-			$useMinMax = false;
-			if (isset($dbShowId['min'])) {
-				$this->addUsingAlias(CcShowPeer::SHOW_ID, $dbShowId['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbShowId['max'])) {
-				$this->addUsingAlias(CcShowPeer::SHOW_ID, $dbShowId['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
+		return $this
+			->addUsingAlias(CcShowPeer::ID, $ccShowDays->getDbShowId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowDays relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function joinCcShowDays($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowDays');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
 		}
-		return $this->addUsingAlias(CcShowPeer::SHOW_ID, $dbShowId, $comparison);
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowDays');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowDays relation CcShowDays object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowDaysQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowDaysQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCcShowDays($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowDays', 'CcShowDaysQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcShowHosts object
+	 *
+	 * @param     CcShowHosts $ccShowHosts  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowHosts($ccShowHosts, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcShowPeer::ID, $ccShowHosts->getDbShow(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowHosts relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function joinCcShowHosts($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowHosts');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowHosts');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowHosts relation CcShowHosts object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowHostsQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowHostsQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCcShowHosts($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowHosts', 'CcShowHostsQuery');
 	}
 
 	/**

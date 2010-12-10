@@ -53,6 +53,8 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="eventFeed"/>
           <actionMethod actionName="addShowDialog"/>
+          <actionMethod actionName="moveShow"/>
+          <actionMethod actionName="resizeShow"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -170,6 +172,11 @@
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="addShowDialog"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="moveShow"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="resizeShow"/>
           <viewControllerScriptsDirectory forControllerName="Api">
             <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>

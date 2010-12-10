@@ -86,6 +86,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	protected $collCcPermss;
 
 	/**
+	 * @var        array CcShowHosts[] Collection to store aggregation of CcShowHosts objects.
+	 */
+	protected $collCcShowHostss;
+
+	/**
 	 * @var        array CcPlaylist[] Collection to store aggregation of CcPlaylist objects.
 	 */
 	protected $collCcPlaylists;
@@ -583,6 +588,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 			$this->collCcPermss = null;
 
+			$this->collCcShowHostss = null;
+
 			$this->collCcPlaylists = null;
 
 			$this->collCcPrefs = null;
@@ -746,6 +753,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcShowHostss !== null) {
+				foreach ($this->collCcShowHostss as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collCcPlaylists !== null) {
 				foreach ($this->collCcPlaylists as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -859,6 +874,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 				if ($this->collCcPermss !== null) {
 					foreach ($this->collCcPermss as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcShowHostss !== null) {
+					foreach ($this->collCcShowHostss as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -1162,6 +1185,12 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			foreach ($this->getCcPermss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcPerms($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getCcShowHostss() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcShowHosts($relObj->copy($deepCopy));
 				}
 			}
 
@@ -1556,6 +1585,140 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcShowHostss collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcShowHostss()
+	 */
+	public function clearCcShowHostss()
+	{
+		$this->collCcShowHostss = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcShowHostss collection.
+	 *
+	 * By default this just sets the collCcShowHostss collection to an empty array (like clearcollCcShowHostss());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcShowHostss()
+	{
+		$this->collCcShowHostss = new PropelObjectCollection();
+		$this->collCcShowHostss->setModel('CcShowHosts');
+	}
+
+	/**
+	 * Gets an array of CcShowHosts objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcSubjs is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcShowHosts[] List of CcShowHosts objects
+	 * @throws     PropelException
+	 */
+	public function getCcShowHostss($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowHostss || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowHostss) {
+				// return empty collection
+				$this->initCcShowHostss();
+			} else {
+				$collCcShowHostss = CcShowHostsQuery::create(null, $criteria)
+					->filterByCcSubjs($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcShowHostss;
+				}
+				$this->collCcShowHostss = $collCcShowHostss;
+			}
+		}
+		return $this->collCcShowHostss;
+	}
+
+	/**
+	 * Returns the number of related CcShowHosts objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcShowHosts objects.
+	 * @throws     PropelException
+	 */
+	public function countCcShowHostss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowHostss || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowHostss) {
+				return 0;
+			} else {
+				$query = CcShowHostsQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcSubjs($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcShowHostss);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcShowHosts object to this object
+	 * through the CcShowHosts foreign key attribute.
+	 *
+	 * @param      CcShowHosts $l CcShowHosts
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcShowHosts(CcShowHosts $l)
+	{
+		if ($this->collCcShowHostss === null) {
+			$this->initCcShowHostss();
+		}
+		if (!$this->collCcShowHostss->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcShowHostss[]= $l;
+			$l->setCcSubjs($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcSubjs is new, it will return
+	 * an empty collection; or if this CcSubjs has previously
+	 * been saved, it will retrieve related CcShowHostss from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcSubjs.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowHosts[] List of CcShowHosts objects
+	 */
+	public function getCcShowHostssJoinCcShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowHostsQuery::create(null, $criteria);
+		$query->joinWith('CcShow', $join_behavior);
+
+		return $this->getCcShowHostss($query, $con);
+	}
+
+	/**
 	 * Clears out the collCcPlaylists collection
 	 *
 	 * This does not modify the database; however, it will remove any associated objects, causing
@@ -1930,6 +2093,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcShowHostss) {
+				foreach ((array) $this->collCcShowHostss as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCcPlaylists) {
 				foreach ((array) $this->collCcPlaylists as $o) {
 					$o->clearAllReferences($deep);
@@ -1950,6 +2118,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		$this->collCcAccesss = null;
 		$this->collCcFiless = null;
 		$this->collCcPermss = null;
+		$this->collCcShowHostss = null;
 		$this->collCcPlaylists = null;
 		$this->collCcPrefs = null;
 		$this->collCcSesss = null;
