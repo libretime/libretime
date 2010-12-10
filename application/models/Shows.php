@@ -187,6 +187,12 @@ class Show {
 
 			$sql = $sql_gen ." WHERE ". $sql_range;
 		}
+		if(!is_null($start) && is_null($end)) {
+			$sql_range = "(last_show IS NULL) 
+					OR (last_show > '{$start}')";
+
+			$sql = $sql_gen ." WHERE ". $sql_range;
+		}
 		if(!is_null($days)){
 
 			$sql_opt = array();
@@ -262,6 +268,7 @@ class Show {
 						$repeatDate = $CC_DBC->GetOne($diff);
 						$repeat_epoch = strtotime($repeatDate);
 
+						//show has finite duration.
 						if (isset($show_end_epoch) && $repeat_epoch < $show_end_epoch && $repeat_epoch < $end_epoch) {
 							$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 						}
