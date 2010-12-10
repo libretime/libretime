@@ -47,8 +47,35 @@ function submitShow() {
 		formData,
 		function(data){
 			if(data.form) {
-				$("#schedule_add_event_dialog").find("form").remove();
-				$("#schedule_add_event_dialog").append(data.form);
+				dialog.find("form").remove();
+				dialog.append(data.form);
+
+				var start  = dialog.find("#start_date");
+				var end  = dialog.find("#end_date");
+
+				createDateInput(start, startDpSelect);
+				createDateInput(end, endDpSelect);
+
+				if(data.overlap) {
+					var table, tr, days;
+					table = $("<table/>");
+					days = $.datepicker.regional[''].dayNamesShort;
+
+					$.each(data.overlap, function(i, val){
+						tr = $("<tr/>");
+						tr
+							.append("<td>"+val.name+"</td>")
+							.append("<td>"+days[val.day]+"</td>")
+							.append("<td>"+val.start_time+"</td>")
+							.append("<td>"+val.end_time+"</td>");
+
+						table.append(tr);
+					});
+					
+					dialog.append("<span>Cannot add show. New show overlaps the following shows:</span>");
+					dialog.append(table);
+				}
+		
 			}
 			else {
 				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
@@ -82,7 +109,7 @@ function makeShowDialog(html) {
 		width: 950,
 		height: 400,
 		close: closeDialog,
-		buttons: { "Ok": submitShow }
+		buttons: { "Cancel": closeDialog, "Ok": submitShow}
 	});
 
 	return dialog;
@@ -155,7 +182,7 @@ $(document).ready(function() {
 
     $('#schedule_calendar').fullCalendar({
         header: {
-			left: 'next, today',
+			left: 'prev, next, today',
 			center: 'title',
 			right: 'agendaDay, agendaWeek, month'
 		}, 

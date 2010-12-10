@@ -99,14 +99,12 @@ class Application_Form_AddShow extends Zend_Form
 			$options[$host['id']] = $host['login'];
 		}
 
-		$this->addElement(
-            'multiselect',
-            'hosts',
-            array(
-				'label' => 'Hosts:',
-                'required' => true,
-                'multiOptions' => $options 
-         ));
+		$hosts = new Zend_Form_Element_Multiselect('hosts');
+		$hosts->setLabel('Hosts:')
+			->setMultiOptions($options)
+			->setRequired(true);
+
+		$this->addElement($hosts);
 
     }
 

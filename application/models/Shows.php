@@ -3,11 +3,12 @@
 class Show {
 
 	private $_userRole;
+	private $_userId;
 
-	public function __construct($userType='G')
+	public function __construct($userId, $userType='G')
     {
         $this->_userRole = $userType;
-       
+		$this->_userId = $userId;     
     }
 
 	//end dates are non inclusive.
@@ -41,6 +42,12 @@ class Show {
 		if($data['day_check'] === null) {
 			$data['day_check'] = array($startDow);
 		} 
+
+		$overlap =  $this->getShows($data['start_date'], $endDate, $data['day_check'], $data['start_time'], $endTime);
+
+		if(count($overlap) > 0) {
+			return $overlap;
+		}
 		
 		$show = new CcShow();
 			$show->setDbName($data['name']);
@@ -76,7 +83,13 @@ class Show {
 			$showDay->setDbShowId($showId);
 			$showDay->save();
 		}
-
+		
+		foreach ($data['hosts'] as $host) {
+			$showHost = new CcShowHosts();
+			$showHost->setDbShow($showId);
+			$showHost->setDbHost($host);
+			$showHost->save();
+		}
 	}
 
 	public function moveShow($showId, $deltaDay, $deltaMin){
@@ -121,7 +134,6 @@ class Show {
 			$show->setDbEndTime($e_time);
 			$show->save();
 		}		
-
 	}
 
 	public function resizeShow($showId, $deltaDay, $deltaMin){
@@ -188,7 +200,7 @@ class Show {
 			$sql = $sql_gen ." WHERE ". $sql_range;
 		}
 		if(!is_null($start) && is_null($end)) {
-			$sql_range = "(last_show IS NULL) 
+			$sql_range = "(first_show <= '{$start}' AND last_show IS NULL) 
 					OR (last_show > '{$start}')";
 
 			$sql = $sql_gen ." WHERE ". $sql_range;

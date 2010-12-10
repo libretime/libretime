@@ -14,7 +14,8 @@ class ScheduleController extends Zend_Controller_Action
         $ajaxContext->addActionContext('event-feed', 'json')
 					->addActionContext('add-show-dialog', 'json')
 					->addActionContext('add-show', 'json')
-					->addActionContext('move-show', 'json')	
+					->addActionContext('move-show', 'json')
+					->addActionContext('resize-show', 'json')		
                     ->initContext();
     }
 
@@ -39,7 +40,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$show = new Show($userInfo->type);
+		$show = new Show($userInfo->id, $userInfo->type);
 		$this->view->events = $show->getFullCalendarEvents($start, $end, $weekday);
     }
 
@@ -53,8 +54,14 @@ class ScheduleController extends Zend_Controller_Action
     
 				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-				$show = new Show($userInfo->type);
-				$show->addShow($form->getValues());
+				$show = new Show($userInfo->id, $userInfo->type);
+				$overlap = $show->addShow($form->getValues());
+
+				if(isset($overlap)) {
+					$this->view->overlap = $overlap;
+					$this->view->form = $form->__toString();
+				}
+
 				return;
 			}     
         }
@@ -69,7 +76,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$show = new Show($userInfo->type);
+		$show = new Show($userInfo->id, $userInfo->type);
 
 		$overlap = $show->moveShow($showId, $deltaDay, $deltaMin);
 
@@ -85,7 +92,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$show = new Show($userInfo->type);
+		$show = new Show($userInfo->id, $userInfo->type);
 
 		$overlap = $show->resizeShow($showId, $deltaDay, $deltaMin);
 
