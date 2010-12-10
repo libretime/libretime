@@ -61,8 +61,17 @@ try:
   shutil.copy("../scripts/silence-playlist.lsp", BASE_PATH+"files/basic")
   shutil.copy("../scripts/silence.mp3", BASE_PATH+"files/basic")
   shutil.copy("../pypo-cli.py", BASE_PATH+"bin")
+  shutil.copy("../pypo-notify.py", BASE_PATH+"bin")
+  shutil.copy("../logging.cfg", BASE_PATH+"bin")
+  shutil.copy("../config.cfg", BASE_PATH+"bin")
   shutil.copy("../pypo-log.sh", BASE_PATH+"bin")
-
+  print "Copying directory util"
+  shutil.copytree("../util", BASE_PATH+"bin/util")
+  print "Copying directory api_clients"
+  shutil.copytree("../api_clients", BASE_PATH+"bin/api_clients")
+  print "Copying directory scripts"
+  shutil.copytree("../scripts", BASE_PATH+"bin/scripts")
+  
   print "Setting permissions"
   os.system("chmod -R 755 "+BASE_PATH)
   os.system("chown -R pypo:pypo "+BASE_PATH)
@@ -95,8 +104,18 @@ try:
   output = p.stdout.read()
   if (output.find("unable to open supervise/ok: file does not exist") >= 0):
     print "Install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
+    sys.exit()
+  print output
+  
+  p = Popen('svstat /etc/service/pypo-push', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+  output = p.stdout.read()
+  print output
+  
+  p = Popen('svstat /etc/service/pypo-liquidsoap', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+  output = p.stdout.read()
+  print output
 
-  #os.symlink(BASE_PATH+"bin/pypo-log.sh", "/usr/local/bin/")
+#os.symlink(BASE_PATH+"bin/pypo-log.sh", "/usr/local/bin/")
   
   
 except Exception, e:

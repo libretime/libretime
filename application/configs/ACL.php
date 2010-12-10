@@ -15,6 +15,7 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('playlist'))
 	  ->add(new Zend_Acl_Resource('plupload'))
 	  ->add(new Zend_Acl_Resource('schedule'))
+	  ->add(new Zend_Acl_Resource('api'))
 	  ->add(new Zend_Acl_Resource('search'));
 
 /** Creating permissions */
@@ -23,11 +24,12 @@ $ccAcl->allow('guest', 'index')
 	  ->allow('guest', 'error')
 	  ->allow('guest', 'library')
 	  ->allow('guest', 'search')
+	  ->allow('guest', 'api')
       ->allow('host', 'plupload')
 	  ->allow('host', 'playlist')
       ->allow('host', 'schedule');
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
 
-$front = Zend_Controller_Front::getInstance();  
+$front = Zend_Controller_Front::getInstance();
 $front->registerPlugin($aclPlugin);

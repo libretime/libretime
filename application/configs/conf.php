@@ -25,6 +25,8 @@ $CC_CONFIG = array(
 
     'apiKey' => array('AAA'),
 
+    'apiPath' => "/api/",
+
     'baseFilesDir' => __DIR__."/../../files",
     // main directory for storing binary media files
     'storageDir'    =>  __DIR__.'/../../files/stor',
@@ -161,5 +163,14 @@ $old_include_path = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 					.PATH_SEPARATOR.$CC_CONFIG['zendPath']
 					.PATH_SEPARATOR.$old_include_path);
+
+//$dsn = $CC_CONFIG['dsn'];
+//$CC_DBC = DB::connect($dsn, TRUE);
+//if (PEAR::isError($CC_DBC)) {
+//	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
+//	exit(1);
+//}
+//$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
 
 ?>

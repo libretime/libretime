@@ -402,6 +402,26 @@ class Schedule {
     }
 
     /**
+     * Return true if the input string is in the format YYYY-MM-DD-HH-mm
+     *
+     * @param string $p_time
+     * @return boolean
+     */
+    public static function ValidPypoTimeFormat($p_time)
+    {
+        $t = explode("-", $p_time);
+        if (count($t) != 5) {
+            return false;
+        }
+        foreach ($t as $part) {
+            if (!is_numeric($part)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Converts a time value as a string (with format HH:MM:SS.mmmmmm) to
      * millisecs.
      *

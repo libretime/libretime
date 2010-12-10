@@ -1,12 +1,23 @@
 <?php
-require_once '../../conf.php';
-require_once '../Playlist.php';
-require_once '../StoredFile.php';
-require_once(__DIR__.'/../../3rd_party/php/propel/runtime/lib/Propel.php');
+require_once '../../application/configs/conf.php';
+require_once 'DB.php';
+require_once '../../application/models/Playlist.php';
+require_once '../../application/models/StoredFile.php';
+require_once(__DIR__.'/../../library/propel/runtime/lib/Propel.php');
 // Initialize Propel with the runtime configuration
-Propel::init(__DIR__."/../propel-db/build/conf/campcaster-conf.php");
+Propel::init(__DIR__."/../../application/configs/propel-config.php");
 // Add the generated 'classes' directory to the include path
-set_include_path(__DIR__."/../propel-db/build/classes" . PATH_SEPARATOR . get_include_path());
+set_include_path(__DIR__."/../../application/models" . PATH_SEPARATOR . get_include_path());
+
+$dsn = $CC_CONFIG['dsn'];
+
+$CC_DBC = DB::connect($dsn, TRUE);
+if (PEAR::isError($CC_DBC)) {
+	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
+	exit(1);
+}
+$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
 
 $playlistName = "pypo_playlist_test";
 $minutesFromNow = 1;

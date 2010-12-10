@@ -9,10 +9,10 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-require_once('../conf.php');
 require_once('DB.php');
+require_once('../application/configs/conf.php');
 require_once('../install/installInit.php');
-require_once('../backend/StoredFile.php');
+require_once('../application/models/StoredFile.php');
 
 function printUsage() {
 

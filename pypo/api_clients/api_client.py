@@ -251,7 +251,7 @@ class CampcasterApiClient(ApiClientInterface):
 		logger = logging.getLogger()
 		
 		try:
-			src = src + "&api_key=" + self.config["api_key"]
+			src = src + "/api_key/" + self.config["api_key"]
 			# check if file exists already before downloading again
 			filename, headers = urllib.urlretrieve(src, dst)
 			
@@ -269,7 +269,7 @@ class CampcasterApiClient(ApiClientInterface):
 		schedule_id = playlist["schedule_id"]		
 		url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
 		url = url.replace("%%schedule_id%%", str(schedule_id))
-		url += "&api_key=" + self.config["api_key"]
+		url = url.replace("%%api_key%%", self.config["api_key"])
 		logger.debug(url)
 		
 		try:

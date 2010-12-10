@@ -1697,7 +1697,7 @@ class StoredFile {
     {
         global $CC_CONFIG;
         return "http://".$CC_CONFIG["storageUrlHost"]
-        .$CC_CONFIG["apiPath"]."get_media.php?file="
+        .$CC_CONFIG["apiPath"]."getMedia/file/"
         .$this->gunid.".".$this->getFileExtension();
     }
 
