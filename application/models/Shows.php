@@ -10,31 +10,6 @@ class Show {
        
     }
 
-	private function makeFullCalendarEvent($show, $date, $options=array()) {
-
-		$start = $date."T".$show["start_time"];
-		$end = $date."T".$show["end_time"];
-
-		$event = array(
-			"id" => $show["show_id"],
-			"title" => $show["name"],
-			"start" => $start,
-			"end" => $end,
-			"allDay" => false,
-			"description" => $show["description"]
-		);
-
-		foreach($options as $key=>$value) {
-			$event[$key] = $value;
-		}
-
-		if($this->_userRole === "A") {
-			$event["editable"] = true;
-		}
-
-		return $event;
-	}
-
 	//end dates are non inclusive.
 	public function addShow($data) {
 	
@@ -43,10 +18,6 @@ class Show {
 		$sql = "SELECT time '{$data['start_time']}' + INTERVAL '{$data['duration']} hour' ";
 		$r = $con->query($sql);
         $endTime = $r->fetchColumn(0); 
-
-		$sql = "SELECT nextval('show_group_id_seq')";
-		$r = $con->query($sql);
-        $showId = $r->fetchColumn(0);
 
 		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$data['start_date']} {$data['start_time']}')";
 		$r = $con->query($sql);
@@ -69,7 +40,15 @@ class Show {
 
 		if($data['day_check'] === null) {
 			$data['day_check'] = array($startDow);
-		}       
+		} 
+		
+		$show = new CcShow();
+			$show->setDbName($data['name']);
+			$show->setDbRepeats($data['repeats']);
+			$show->setDbDescription($data['description']);
+			$show->save();      
+
+		$showId = $show->getDbId();
 
 		foreach ($data['day_check'] as $day) {
 
@@ -88,17 +67,14 @@ class Show {
 				$start = $data['start_date'];
 			}
 
-			$show = new CcShow();
-			$show->setDbName($data['name']);
-			$show->setDbFirstShow($start);
-			$show->setDbLastShow($endDate);
-			$show->setDbStartTime($data['start_time']);
-			$show->setDbEndTime($endTime);
-			$show->setDbRepeats($data['repeats']);
-			$show->setDbDay($day);
-			$show->setDbDescription($data['description']);
-			$show->setDbShowId($showId);
-			$show->save();
+			$showDay = new CcShowDays();
+			$showDay->setDbFirstShow($start);
+			$showDay->setDbLastShow($endDate);
+			$showDay->setDbStartTime($data['start_time']);
+			$showDay->setDbEndTime($endTime);
+			$showDay->setDbDay($day);
+			$showDay->setDbShowId($showId);
+			$showDay->save();
 		}
 
 	}
@@ -106,7 +82,7 @@ class Show {
 	public function moveShow($showId, $deltaDay, $deltaMin){
 		global $CC_DBC;
 
-		$sql = "SELECT * FROM cc_show WHERE show_id = '{$showId}'";
+		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$showId}'";
 		$res = $CC_DBC->GetAll($sql);
 
 		$show = $res[0];
@@ -123,18 +99,73 @@ class Show {
 		$mins = abs($deltaMin%60);
 
 		$sql = "SELECT time '{$show["start_time"]}' + interval '{$hours}:{$mins}'";
-		//echo $sql;
 		$s_time = $CC_DBC->GetOne($sql);
 
 		$sql = "SELECT time '{$show["end_time"]}' + interval '{$hours}:{$mins}'";
-		//echo $sql;
 		$e_time = $CC_DBC->GetOne($sql);
 
 		foreach($res as $show) {
 			$days[] = $show["day"] + $deltaDay;
 		}
 
-		return $this->getShows($start, $end, $days, $s_time, $e_time, array($showId));
+		//need to check each specific day if times different then merge arrays.
+		$overlap =  $this->getShows($start, $end, $days, $s_time, $e_time, array($showId));
+
+		if(count($overlap) > 0) {
+			return $overlap;
+		}
+
+		foreach($res as $row) {
+			$show = CcShowDaysQuery::create()->findPK($row["id"]);
+			$show->setDbStartTime($s_time);
+			$show->setDbEndTime($e_time);
+			$show->save();
+		}		
+
+	}
+
+	public function resizeShow($showId, $deltaDay, $deltaMin){
+		global $CC_DBC;
+
+		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$showId}'";
+		$res = $CC_DBC->GetAll($sql);
+
+		$show = $res[0];
+		$start = $show["first_show"];
+		$end = $show["last_show"];
+		$days = array();
+
+		$hours = $deltaMin/60;
+		if($hours > 0)
+			$hours = floor($hours);
+		else
+			$hours = ceil($hours);
+
+		$mins = abs($deltaMin%60);
+
+		$s_time = $show["start_time"];
+
+		$sql = "SELECT time '{$show["end_time"]}' + interval '{$hours}:{$mins}'";
+		$e_time = $CC_DBC->GetOne($sql);
+
+		foreach($res as $show) {
+			$days[] = $show["day"] + $deltaDay;
+		}
+
+		//need to check each specific day if times different then merge arrays.
+		$overlap =  $this->getShows($start, $end, $days, $s_time, $e_time, array($showId));
+
+		if(count($overlap) > 0) {
+			return $overlap;
+		}
+
+		foreach($res as $row) {
+			$show = CcShowDaysQuery::create()->findPK($row["id"]);
+			$show->setDbStartTime($s_time);
+			$show->setDbEndTime($e_time);
+			$show->save();
+		}		
+
 	}
 
 	public function getShows($start=NULL, $end=NULL, $days=NULL, $s_time=NULL, $e_time=NULL, $exclude_shows=NULL) {
@@ -142,7 +173,10 @@ class Show {
 
 		$sql;
 	
-		$sql_gen = "SELECT * FROM cc_show";
+		$sql_gen = "SELECT cc_show_days.id AS day_id, name, repeats, description, 
+			first_show, last_show, start_time, end_time, day, show_id  
+			FROM (cc_show LEFT JOIN cc_show_days ON cc_show.id = cc_show_days.show_id)";
+
 		$sql = $sql_gen;
 
 		if(!is_null($start) && !is_null($end)) {
@@ -246,5 +280,30 @@ class Show {
 		}
 
 		return $shows;
+	}
+
+	private function makeFullCalendarEvent($show, $date, $options=array()) {
+
+		$start = $date."T".$show["start_time"];
+		$end = $date."T".$show["end_time"];
+
+		$event = array(
+			"id" => $show["show_id"],
+			"title" => $show["name"],
+			"start" => $start,
+			"end" => $end,
+			"allDay" => false,
+			"description" => $show["description"]
+		);
+
+		foreach($options as $key=>$value) {
+			$event[$key] = $value;
+		}
+
+		if($this->_userRole === "A") {
+			$event["editable"] = true;
+		}
+
+		return $event;
 	}
 }

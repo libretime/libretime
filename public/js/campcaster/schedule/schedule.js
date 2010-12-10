@@ -120,14 +120,24 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
 	$.post(url, 
 		{day: dayDelta, min: minuteDelta, showId: event.id},
 		function(json){
-			if(json.error) {
+			if(json.overlap) {
 				revertFunc();
 			}
 		});
 }
 
 function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ) { 
-	var x;
+	var url;
+
+	url = '/Schedule/resize-show/format/json';
+
+	$.post(url, 
+		{day: dayDelta, min: minuteDelta, showId: event.id},
+		function(json){
+			if(json.overlap) {
+				revertFunc();
+			}
+		});
 }
 
 function openShowDialog() {
@@ -145,7 +155,7 @@ $(document).ready(function() {
 
     $('#schedule_calendar').fullCalendar({
         header: {
-			left: 'prev, next, today',
+			left: 'next, today',
 			center: 'title',
 			right: 'agendaDay, agendaWeek, month'
 		}, 

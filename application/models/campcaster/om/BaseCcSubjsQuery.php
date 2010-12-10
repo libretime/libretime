@@ -38,6 +38,10 @@
  * @method     CcSubjsQuery rightJoinCcPerms($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPerms relation
  * @method     CcSubjsQuery innerJoinCcPerms($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPerms relation
  *
+ * @method     CcSubjsQuery leftJoinCcShowHosts($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowHosts relation
+ * @method     CcSubjsQuery rightJoinCcShowHosts($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowHosts relation
+ * @method     CcSubjsQuery innerJoinCcShowHosts($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowHosts relation
+ *
  * @method     CcSubjsQuery leftJoinCcPlaylist($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPlaylist relation
  * @method     CcSubjsQuery rightJoinCcPlaylist($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylist relation
  * @method     CcSubjsQuery innerJoinCcPlaylist($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylist relation
@@ -534,6 +538,70 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 		return $this
 			->joinCcPerms($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcPerms', 'CcPermsQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcShowHosts object
+	 *
+	 * @param     CcShowHosts $ccShowHosts  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowHosts($ccShowHosts, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcSubjsPeer::ID, $ccShowHosts->getDbHost(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowHosts relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function joinCcShowHosts($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowHosts');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowHosts');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowHosts relation CcShowHosts object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowHostsQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowHostsQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCcShowHosts($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowHosts', 'CcShowHostsQuery');
 	}
 
 	/**

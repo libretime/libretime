@@ -71,12 +71,26 @@ class ScheduleController extends Zend_Controller_Action
 
 		$show = new Show($userInfo->type);
 
-		$this->view->overlap = $show->moveShow($showId, $deltaDay, $deltaMin);
+		$overlap = $show->moveShow($showId, $deltaDay, $deltaMin);
+
+		if(isset($overlap))
+			$this->view->overlap = $overlap;
     }
 
     public function resizeShowAction()
     {
-        // action body
+        $deltaDay = $this->_getParam('day');
+		$deltaMin = $this->_getParam('min');
+		$showId = $this->_getParam('showId');
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$show = new Show($userInfo->type);
+
+		$overlap = $show->resizeShow($showId, $deltaDay, $deltaMin);
+
+		if(isset($overlap))
+			$this->view->overlap = $overlap;
     }
 
 
