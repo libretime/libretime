@@ -180,6 +180,10 @@ class Show {
 
 	}
 
+	public function deleteShow($showId, $dayId=NULL) {
+		CcShowQuery::create()->filterByDbId($showId)->delete();
+	}
+
 	public function getShows($start=NULL, $end=NULL, $days=NULL, $s_time=NULL, $e_time=NULL, $exclude_shows=NULL) {
 		global $CC_DBC;
 

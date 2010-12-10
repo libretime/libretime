@@ -15,17 +15,26 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('add-show-dialog', 'json')
 					->addActionContext('add-show', 'json')
 					->addActionContext('move-show', 'json')
-					->addActionContext('resize-show', 'json')		
+					->addActionContext('resize-show', 'json')
+					->addActionContext('delete-show', 'json')		
                     ->initContext();
     }
 
     public function indexAction()
     {
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
+
     	$this->view->headScript()->appendFile('/js/campcaster/schedule/schedule.js','text/javascript');
 
+		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
 		$this->view->headLink()->appendStylesheet('/css/schedule.css');
+
+
+		$eventMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
+  
+		$this->view->eventMenu = $eventMenu;
     }
 
     public function eventFeedAction()
@@ -100,8 +109,21 @@ class ScheduleController extends Zend_Controller_Action
 			$this->view->overlap = $overlap;
     }
 
+    public function deleteShowAction()
+    {
+        $showId = $this->_getParam('showId');
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$show = new Show($userInfo->id, $userInfo->type);
+
+		$show->deleteShow($showId);
+    }
+
 
 }
+
+
 
 
 
