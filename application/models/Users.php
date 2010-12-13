@@ -11,7 +11,23 @@ class User {
 		$this->_userId = $userId;     
     }
 
-	public function getUsers($type=NULL) {
+	public function getType(){
+		return $this->userRole;
+	}
+
+	public function getId(){
+		return $this->_userId;
+	}
+
+	public function isHost($showId) {
+		return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($this->_userId)->count() > 0;
+	}
+
+	public function isAdmin() {
+		return $this->_userRole === 'A';
+	}
+
+	public static function getUsers($type=NULL) {
 		global $CC_DBC;
 
 		$sql;
@@ -38,12 +54,8 @@ class User {
 		return  $CC_DBC->GetAll($sql);	
 	}
 
-	public function getHosts() {
-		return $this->getUsers(array('H', 'A'));
-	}
-
-	public function isHost($showId) {
-		$res = CCShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($this->_userId);
+	public static function getHosts() {
+		return User::getUsers(array('H', 'A'));
 	}
 
 }

@@ -91,9 +91,8 @@ class Application_Form_AddShow extends Zend_Form
             'required'   => false,
 		));
 
-		$user = new User();
 		$options = array();
-		$hosts = $user->getHosts();
+		$hosts = User::getHosts();
 
 		foreach ($hosts as $host) {
 			$options[$host['id']] = $host['login'];

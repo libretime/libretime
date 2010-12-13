@@ -2,13 +2,11 @@
 
 class Show {
 
-	private $_userRole;
-	private $_userId;
+	private $_user;
 
-	public function __construct($userId, $userType='G')
+	public function __construct($user=NULL)
     {
-        $this->_userRole = $userType;
-		$this->_userId = $userId;     
+		$this->_user = $user;    
     }
 
 	//end dates are non inclusive.
@@ -323,8 +321,12 @@ class Show {
 			$event[$key] = $value;
 		}
 
-		if($this->_userRole === "A") {
+		if($this->_user->isAdmin() === "A") {
 			$event["editable"] = true;
+		}
+
+		if($this->_user->isHost($show["show_id"])) {
+			$event["isHost"] = true;
 		}
 
 		return $event;

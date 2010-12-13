@@ -32,9 +32,14 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet('/css/schedule.css');
 
 
-		$eventMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
+		$eventDefaultMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
   
-		$this->view->eventMenu = $eventMenu;
+		$this->view->eventDefaultMenu = $eventDefaultMenu;
+
+		$eventHostMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
+		$eventHostMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Schedule');
+  
+		$this->view->eventHostMenu = $eventHostMenu;
     }
 
     public function eventFeedAction()
@@ -49,7 +54,8 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$show = new Show($userInfo->id, $userInfo->type);
+		$show = new Show(new User($userInfo->id, $userInfo->type));
+
 		$this->view->events = $show->getFullCalendarEvents($start, $end, $weekday);
     }
 
@@ -63,7 +69,7 @@ class ScheduleController extends Zend_Controller_Action
     
 				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-				$show = new Show($userInfo->id, $userInfo->type);
+				$show = new Show(new User($userInfo->id, $userInfo->type));
 				$overlap = $show->addShow($form->getValues());
 
 				if(isset($overlap)) {
@@ -85,7 +91,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$show = new Show($userInfo->id, $userInfo->type);
+		$show = new Show(new User($userInfo->id, $userInfo->type));
 
 		$overlap = $show->moveShow($showId, $deltaDay, $deltaMin);
 
@@ -101,7 +107,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$show = new Show($userInfo->id, $userInfo->type);
+		$show = new Show(new User($userInfo->id, $userInfo->type));
 
 		$overlap = $show->resizeShow($showId, $deltaDay, $deltaMin);
 
@@ -115,7 +121,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$show = new Show($userInfo->id, $userInfo->type);
+		$show = new Show(new User($userInfo->id, $userInfo->type));
 
 		$show->deleteShow($showId);
     }

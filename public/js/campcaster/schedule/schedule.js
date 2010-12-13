@@ -142,9 +142,16 @@ function eventRender(event, element, view) {
 
 function eventAfterRender( event, element, view ) {
 	
-	$(element).contextMenu(
-		{menu: 'schedule_event_menu'}, eventMenu
-	);
+	if(event.isHost === true) {
+		$(element).contextMenu(
+			{menu: 'schedule_event_host_menu'}, eventMenu
+		);
+	}
+	else{
+		$(element).contextMenu(
+			{menu: 'schedule_event_default_menu'}, eventMenu
+		);
+	}
 
 	$(element).data({'event': event});
 }
