@@ -137,7 +137,10 @@ function dayClick(date, allDay, jsEvent, view) {
 }
 
 function eventRender(event, element, view) { 
-		
+	//element.qtip({
+     //       content: event.description
+     //   });
+	
 }
 
 function eventAfterRender( event, element, view ) {

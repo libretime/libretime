@@ -56,6 +56,7 @@
           <actionMethod actionName="moveShow"/>
           <actionMethod actionName="resizeShow"/>
           <actionMethod actionName="deleteShow"/>
+          <actionMethod actionName="makeContextMenu"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -184,6 +185,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="deleteShow"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="makeContextMenu"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

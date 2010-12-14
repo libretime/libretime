@@ -16,7 +16,7 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('add-show', 'json')
 					->addActionContext('move-show', 'json')
 					->addActionContext('resize-show', 'json')
-					->addActionContext('delete-show', 'json')		
+					->addActionContext('delete-show', 'json')	
                     ->initContext();
     }
 
@@ -24,6 +24,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
 
     	$this->view->headScript()->appendFile('/js/campcaster/schedule/schedule.js','text/javascript');
 
@@ -32,7 +33,8 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet('/css/schedule.css');
 
 
-		$eventDefaultMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
+		$eventDefaultMenu = array();
+		//$eventDefaultMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
   
 		$this->view->eventDefaultMenu = $eventDefaultMenu;
 
@@ -118,16 +120,22 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $showId = $this->_getParam('showId');
-
+        
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 		$show = new Show(new User($userInfo->id, $userInfo->type));
-
 		$show->deleteShow($showId);
+    }
+
+    public function makeContextMenuAction()
+    {
+        // action body
     }
 
 
 }
+
+
 
 
 
