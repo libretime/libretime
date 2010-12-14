@@ -35,7 +35,15 @@ def create_user(username):
     os.system("adduser --system --quiet --group --disabled-login "+username)
   else:
     print "User already exists."
-  
+
+def copy_dir(src_dir, dest_dir):
+  if (os.path.exists(dest_dir)) and (dest_dir != "/"):
+    print "Removing old directory "+dest_dir
+    shutil.rmtree(dest_dir)
+  if not (os.path.exists(dest_dir)):
+    print "Copying directory "+src_dir+" to "+dest_dir
+    shutil.copytree(src_dir, dest_dir)
+    
 try:
   # Create users
   create_user("pypo")
@@ -60,38 +68,22 @@ try:
   print "Copying pypo files"
   shutil.copy("../scripts/silence-playlist.lsp", BASE_PATH+"files/basic")
   shutil.copy("../scripts/silence.mp3", BASE_PATH+"files/basic")
-  shutil.copy("../pypo-cli.py", BASE_PATH+"bin")
-  shutil.copy("../pypo-notify.py", BASE_PATH+"bin")
-  shutil.copy("../logging.cfg", BASE_PATH+"bin")
-  shutil.copy("../config.cfg", BASE_PATH+"bin")
-  shutil.copy("../pypo-log.sh", BASE_PATH+"bin")
-  print "Copying directory util"
-  shutil.copytree("../util", BASE_PATH+"bin/util")
-  print "Copying directory api_clients"
-  shutil.copytree("../api_clients", BASE_PATH+"bin/api_clients")
-  print "Copying directory scripts"
-  shutil.copytree("../scripts", BASE_PATH+"bin/scripts")
+  #shutil.copy("../pypo-cli.py", BASE_PATH+"bin")
+  #shutil.copy("../pypo-notify.py", BASE_PATH+"bin")
+  #shutil.copy("../logging.cfg", BASE_PATH+"bin")
+  #shutil.copy("../config.cfg", BASE_PATH+"bin")
+  #shutil.copy("../pypo-log.sh", BASE_PATH+"bin")
+  copy_dir("..", BASE_PATH+"bin/")
+  #copy_dir("../util", BASE_PATH+"bin/")
+  #copy_dir("../api_clients", BASE_PATH+"bin/api_clients")
+  #copy_dir("../scripts", BASE_PATH+"bin/scripts")
+  #copy_dir("../dls", BASE_PATH+"bin/dls")
+  #copy_dir("../dls", BASE_PATH+"bin/dls")
   
   print "Setting permissions"
   os.system("chmod -R 755 "+BASE_PATH)
   os.system("chown -R pypo:pypo "+BASE_PATH)
-  
-  print "Installing daemontool script pypo-liquidsoap"
-  create_path("/etc/service/pypo-liquidsoap")  
-  create_path("/etc/service/pypo-liquidsoap/log")  
-  shutil.copy("pypo-daemontools-liquidsoap.sh", "/etc/service/pypo-liquidsoap/run")
-  shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-liquidsoap/log/run")
-  os.system("chmod -R 755 /etc/service/pypo-liquidsoap")
-  os.system("chown -R pypo:pypo /etc/service/pypo-liquidsoap")
-  
-  print "Installing daemontool script pypo-push"
-  create_path("/etc/service/pypo-push")
-  create_path("/etc/service/pypo-push/log")
-  shutil.copy("pypo-daemontools-push.sh", "/etc/service/pypo-push/run")
-  shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-push/log/run")
-  os.system("chmod -R 755 /etc/service/pypo-push")
-  os.system("chown -R pypo:pypo /etc/service/pypo-push")
-  
+
   print "Installing daemontool script pypo-fetch"
   create_path("/etc/service/pypo-fetch")
   create_path("/etc/service/pypo-fetch/log")
@@ -99,6 +91,27 @@ try:
   shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-fetch/log/run")
   os.system("chmod -R 755 /etc/service/pypo-fetch")
   os.system("chown -R pypo:pypo /etc/service/pypo-fetch")
+  os.system("svc -t /etc/service/pypo-fetch")
+
+  print "Installing daemontool script pypo-push"
+  create_path("/etc/service/pypo-push")
+  create_path("/etc/service/pypo-push/log")
+  shutil.copy("pypo-daemontools-push.sh", "/etc/service/pypo-push/run")
+  shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-push/log/run")
+  os.system("chmod -R 755 /etc/service/pypo-push")
+  os.system("chown -R pypo:pypo /etc/service/pypo-push")
+  os.system("svc -t /etc/service/pypo-push")
+
+  print "Installing daemontool script pypo-liquidsoap"
+  os.system("svc -dk /etc/service/pypo-liquidsoap")  
+  os.system("killall liquidsoap")
+  create_path("/etc/service/pypo-liquidsoap")  
+  create_path("/etc/service/pypo-liquidsoap/log")  
+  shutil.copy("pypo-daemontools-liquidsoap.sh", "/etc/service/pypo-liquidsoap/run")
+  shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-liquidsoap/log/run")
+  os.system("chmod -R 755 /etc/service/pypo-liquidsoap")
+  os.system("chown -R pypo:pypo /etc/service/pypo-liquidsoap")
+  os.system("svc -u /etc/service/pypo-liquidsoap")
 
   p = Popen('svstat /etc/service/pypo-fetch', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
