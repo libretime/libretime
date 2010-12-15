@@ -76,10 +76,10 @@ class Global:
         print
         
     def selfcheck(self):
-        
         self.api_auth = urllib.urlencode({'api_key': API_KEY})
         self.api_client = api_client.api_client_factory(config)
-        self.api_client.check_version()
+        if (not self.api_client.is_server_compatible()):
+	  sys.exit()
 
 class Notify:
     def __init__(self):

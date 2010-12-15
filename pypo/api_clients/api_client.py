@@ -37,7 +37,7 @@ class ApiClientInterface:
 	#
 	# Should exit the program if this version of pypo is not compatible with
 	# 3rd party software.
-	def check_version(self):
+	def is_server_compatible(self, verbose = True):
 		pass
 	
 	# Implementation: Required
@@ -108,7 +108,7 @@ class CampcasterApiClient(ApiClientInterface):
 	def __init__(self, config):
 		self.config = config
 
-	def __get_campcaster_version(self):
+	def __get_campcaster_version(self, verbose = True):
 		logger = logging.getLogger()
 		url = self.config["base_url"] + self.config["api_base"] + self.config["version_url"]
 		url = url.replace("%%api_key%%", self.config["api_key"])
@@ -124,26 +124,28 @@ class CampcasterApiClient(ApiClientInterface):
 		except Exception, e:
 			try:
 				if e[1] == 401:
-					print '#####################################'
-					print '# YOUR API KEY SEEMS TO BE INVALID:'
-					print '# ' + self.config["api_key"]
-					print '#####################################'
-					sys.exit()
+					if (verbose):
+						print '#####################################'
+						print '# YOUR API KEY SEEMS TO BE INVALID:'
+						print '# ' + self.config["api_key"]
+						print '#####################################'
+					return False
 			except Exception, e:
 				pass
 
 			try:
 				if e[1] == 404:
-					print '#####################################'
-					print '# Unable to contact the Campcaster-API'
-					print '# ' + url
-					print '#####################################'
-					sys.exit()
+					if (verbose):
+						print '#####################################'
+						print '# Unable to contact the Campcaster-API'
+						print '# ' + url
+						print '#####################################'
+					return False
 			except Exception, e:
 				pass
 
 			version = 0
-			logger.error("Unable to detect Campcaster Version - %s", e)
+			logger.error("Unable to detect Campcaster Version - %s, Response: %s", e, response)
 
 		return version
 
@@ -165,21 +167,25 @@ class CampcasterApiClient(ApiClientInterface):
 				self.get_media(item["uri"], filename)
 
 
-	def check_version(self):
-		version = self.__get_campcaster_version()
-		if (version == 0):
-			print 'Unable to get Campcaster version number.'
-			print
-			sys.exit()     
+	def is_server_compatible(self, verbose = True):
+		version = self.__get_campcaster_version(verbose)
+		if (version == 0 or version == False):
+			if (verbose):
+				print 'Unable to get Campcaster version number.'
+				print
+			return False     
 		elif (version[0:4] != "1.6."): 
-			print 'Campcaster version: ' + str(version)
-			print 'pypo not compatible with this version of Campcaster.'
-			print
-			sys.exit()     
+			if (verbose):
+				print 'Campcaster version: ' + str(version)
+				print 'pypo not compatible with this version of Campcaster.'
+				print
+			return False     
 		else:
-			print 'Campcaster version: ' + str(version)
-			print 'pypo is compatible with this version of Campcaster.'
-			print
+			if (verbose):
+				print 'Campcaster version: ' + str(version)
+				print 'pypo is compatible with this version of Campcaster.'
+				print
+			return True
 
 
 	def get_schedule(self, start=None, end=None):
@@ -361,27 +367,31 @@ class ObpApiClient():
 		self.config = config
 		self.api_auth = urllib.urlencode({'api_key': self.config["api_key"]})
 		
-	def check_version(self):
+	def is_server_compatible(self, verbose = True):
 		obp_version = self.get_obp_version()
 		
 		if obp_version == 0:
-			print '#################################################'
-			print 'Unable to get OBP version. Is OBP up and running?'
-			print '#################################################'
-			print
-			sys.exit()
+			if (verbose):
+				print '#################################################'
+				print 'Unable to get OBP version. Is OBP up and running?'
+				print '#################################################'
+				print
+			return False
 		elif obp_version < OBP_MIN_VERSION:
-			print 'OBP version: ' + str(obp_version)
-			print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-			print 'pypo not compatible with this version of OBP'
-			print
-			sys.exit()
+			if (verbose):
+				print 'OBP version: ' + str(obp_version)
+				print 'OBP min-version: ' + str(OBP_MIN_VERSION)
+				print 'pypo not compatible with this version of OBP'
+				print
+			return False
 		else:
-			print 'OBP API: ' + str(API_BASE)
-			print 'OBP version: ' + str(obp_version)
-			print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-			print 'pypo is compatible with this version of OBP'
-			print
+			if (verbose):
+				print 'OBP API: ' + str(API_BASE)
+				print 'OBP version: ' + str(obp_version)
+				print 'OBP min-version: ' + str(OBP_MIN_VERSION)
+				print 'pypo is compatible with this version of OBP'
+				print
+			return True
 	
 	
 	def get_obp_version(self):
