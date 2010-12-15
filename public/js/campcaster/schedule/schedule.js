@@ -88,6 +88,34 @@ function closeDialog(event, ui) {
 	$(this).remove();
 }
 
+function schedulePlaylist() {
+	var li, pl_id, url, start, dialog;
+
+	dialog = $(this);
+	li = $("#schedule_playlist_dialog").find(".ui-state-active");
+	pl_id = li.data('pl_id');
+	start = li.data('start');
+
+	var sy, sm, sd, h, m, s;
+		sy = start.getFullYear();
+		sm = start.getMonth() + 1;
+		sd = start.getDate();
+		h = start.getHours();
+		m = start.getMinutes();
+		s = start.getSeconds();
+
+		start_date = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+
+	url = '/Schedule/schedule-show/format/json';
+
+	$.post(url, 
+		{plId: pl_id, start: start_date},
+		function(json){
+			dialog.remove();
+		});	
+	
+}
+
 function makeShowDialog(html) {
 	
 	var dialog;
@@ -115,15 +143,69 @@ function makeShowDialog(html) {
 	return dialog;
 }
 
+function makeScheduleDialog(playlists, event) {
+	
+	var dialog;
+
+	//main jqueryUI dialog
+	dialog = $('<div id="schedule_playlist_dialog" />');
+
+	var ol, li;
+	ol = $('<ul/>');
+	$.each(playlists, function(i, val){
+		li = $('<li />')
+			.addClass('ui-widget-content ui-selectee')
+			.append('<div>'+val.name+'</div>')
+			.append('<div>'+val.description+'</div>')
+			.click(function(){
+				$(this).parent().find("li").removeClass("ui-state-active")
+				$(this).addClass("ui-state-active");
+			});
+
+		li.data({'pl_id': val.id, 'start': event.start});
+		ol.append(li);
+	});
+
+	dialog.append(ol);
+
+	dialog.dialog({
+		autoOpen: false,
+		title: 'Schedule Playlist',
+		width: 950,
+		height: 400,
+		close: closeDialog,
+		buttons: { "Cancel": closeDialog, "Ok": schedulePlaylist}
+	});
+
+	return dialog;
+}
+
 function eventMenu(action, el, pos) {
-	var event;
+	var method = action.split('/').pop(),
+		event;
+
 	event = $(el).data('event');
 
-	$.post(action, 
-		{showId: event.id, format: "json"},
-		function(json){
-			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-		});
+	if (method === 'delete-show') {
+		$.post(action, 
+			{format: "json", showId: event.id},
+			function(json){
+				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+			});
+	}
+	else if (method === 'schedule-show') {
+		var length, h, m, s, time;
+
+		length = event.end.getTime() - event.start.getTime();
+
+		h = length / (1000*60*60);
+		m = (length % (1000*60*60)) / (1000*60);
+		s = ((length % (1000*60*60)) % (1000*60)) / 1000;
+
+		time = h+":"+m+":"+s;
+
+		openScheduleDialog(event, time);
+	}
 }
 
 /**
@@ -172,6 +254,11 @@ function eventMouseout(event, jsEvent, view) {
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
 	var url;
 
+	if (event.repeats && dayDelta !== 0) {
+		revertFunc();
+		return;
+	}
+
 	url = '/Schedule/move-show/format/json';
 
 	$.post(url, 
@@ -206,6 +293,19 @@ function openShowDialog() {
 		var dialog = makeShowDialog(json.form);
 		dialog.dialog('open');
 	});
+}
+
+function openScheduleDialog(event, time) {
+	var url;
+
+	url = '/Schedule/schedule-show/format/json';
+
+	$.get(url, 
+		{showId: event.id, length: time},
+		function(json){
+			var dialog = makeScheduleDialog(json.playlists, event);
+			dialog.dialog('open');
+		});
 }
 
 $(document).ready(function() {

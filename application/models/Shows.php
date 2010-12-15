@@ -48,10 +48,10 @@ class Show {
 		}
 		
 		$show = new CcShow();
-			$show->setDbName($data['name']);
-			$show->setDbRepeats($data['repeats']);
-			$show->setDbDescription($data['description']);
-			$show->save();      
+		$show->setDbName($data['name']);
+		$show->setDbRepeats($data['repeats']);
+		$show->setDbDescription($data['description']);
+		$show->save();      
 
 		$showId = $show->getDbId();
 
@@ -127,9 +127,18 @@ class Show {
 		}
 
 		foreach($res as $row) {
+
+			$sql = "SELECT date '{$show["first_show"]}' + interval '{$deltaDay} day'";
+			$f_show = $CC_DBC->GetOne($sql);
+			//get a timestamp back only need a date.
+			$tmp = spliti(" ", $f_show);
+			$f_show = $tmp[0];
+
 			$show = CcShowDaysQuery::create()->findPK($row["id"]);
 			$show->setDbStartTime($s_time);
 			$show->setDbEndTime($e_time);
+			$show->setDbFirstShow($f_show);
+			$show->setDbDay($row['day'] + $deltaDay);
 			$show->save();
 		}		
 	}
