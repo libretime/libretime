@@ -214,7 +214,7 @@ class Playout:
         
     def get_schedule(self):
         logger = logging.getLogger()
-        status, response = self.api_client.get_schedule();
+        status, response = self.api_client.get_schedule()
                     
         if status == 1:
             logger.info("dump serialized schedule to %s", self.schedule_file)
@@ -498,7 +498,7 @@ class Playout:
                     logger.error("%s", e)
                     
                 # cue
-                print "STARTIONG CUE"
+                print "STARTING CUE"
                 print self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
                 print "END CUE"
                     
