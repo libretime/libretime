@@ -115,6 +115,17 @@ function makeShowDialog(html) {
 	return dialog;
 }
 
+function eventMenu(action, el, pos) {
+	var event;
+	event = $(el).data('event');
+
+	$.post(action, 
+		{showId: event.id, format: "json"},
+		function(json){
+			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+		});
+}
+
 /**
 *
 *	Full Calendar callback methods.
@@ -126,7 +137,26 @@ function dayClick(date, allDay, jsEvent, view) {
 }
 
 function eventRender(event, element, view) { 
-	var x;
+	//element.qtip({
+     //       content: event.description
+     //   });
+	
+}
+
+function eventAfterRender( event, element, view ) {
+	
+	if(event.isHost === true) {
+		$(element).contextMenu(
+			{menu: 'schedule_event_host_menu'}, eventMenu
+		);
+	}
+	else{
+		$(element).contextMenu(
+			{menu: 'schedule_event_default_menu'}, eventMenu
+		);
+	}
+
+	$(element).data({'event': event});
 }
 
 function eventClick(event, jsEvent, view) { 
@@ -221,6 +251,7 @@ $(document).ready(function() {
 		//callbacks
 		dayClick: dayClick,
 		eventRender: eventRender,
+		eventAfterRender: eventAfterRender,
 		eventClick: eventClick,
 		eventMouseover: eventMouseover,
 		eventMouseout: eventMouseout,

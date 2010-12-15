@@ -2,13 +2,11 @@
 
 class Show {
 
-	private $_userRole;
-	private $_userId;
+	private $_user;
 
-	public function __construct($userId, $userType='G')
+	public function __construct($user=NULL)
     {
-        $this->_userRole = $userType;
-		$this->_userId = $userId;     
+		$this->_user = $user;    
     }
 
 	//end dates are non inclusive.
@@ -180,6 +178,10 @@ class Show {
 
 	}
 
+	public function deleteShow($showId, $dayId=NULL) {
+		CcShowQuery::create()->filterByDbId($showId)->delete();
+	}
+
 	public function getShows($start=NULL, $end=NULL, $days=NULL, $s_time=NULL, $e_time=NULL, $exclude_shows=NULL) {
 		global $CC_DBC;
 
@@ -201,7 +203,7 @@ class Show {
 		}
 		if(!is_null($start) && is_null($end)) {
 			$sql_range = "(first_show <= '{$start}' AND last_show IS NULL) 
-					OR (last_show > '{$start}')";
+					OR (first_show <= '{$start}' AND last_show > '{$start}')";
 
 			$sql = $sql_gen ." WHERE ". $sql_range;
 		}
@@ -319,8 +321,12 @@ class Show {
 			$event[$key] = $value;
 		}
 
-		if($this->_userRole === "A") {
+		if($this->_user->isAdmin()) {
 			$event["editable"] = true;
+		}
+
+		if($this->_user->isHost($show["show_id"])) {
+			$event["isHost"] = true;
 		}
 
 		return $event;
