@@ -271,6 +271,11 @@ function eventRender(event, element, view) {
 	//element.qtip({
      //       content: event.description
      //   });
+
+	if(event.hasContent) {
+		var span = $('<span/>').addClass("ui-icon ui-icon-check");
+		$(element).find(".fc-event-title").after(span);
+	}
 	
 }
 

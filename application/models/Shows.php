@@ -202,6 +202,16 @@ class Show {
 		}
 	}
 
+	public function showHasContent($start_timestamp, $end_timestamp) {
+
+		$con = Propel::getConnection("campcaster");
+        $sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}'";
+		$r = $con->query($sql);
+		$length = $r->fetchColumn(0);
+
+		return !Schedule::isScheduleEmptyInRange($start_timestamp, $length);
+	}
+
 	public function deleteShow($showId, $dayId=NULL) {
 		$groups = CcShowScheduleQuery::create()->filterByDbShowId($showId)->find();
 
@@ -355,6 +365,12 @@ class Show {
 
 		if($this->_user->isHost($show["show_id"])) {
 			$event["isHost"] = true;
+		}
+
+		$start = $date." ".$show["start_time"];
+		$end = $date." ".$show["end_time"];
+		if($this->showHasContent($start, $end)) {
+			$event["hasContent"] = true;
 		}
 
 		return $event;

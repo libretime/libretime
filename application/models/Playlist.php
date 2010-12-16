@@ -126,12 +126,12 @@ class Playlist {
     }
 
     public static function Delete($id) {
-      $pl = CcPlaylistQuery::create()->findPK($id);
-    	if($pl === NULL)
-   	    return FALSE;
+		$pl = CcPlaylistQuery::create()->findPK($id);
+		if($pl === NULL)
+			return FALSE;
 
-    	$pl->delete();
-      return TRUE;
+		$pl->delete();
+		return TRUE;
     }
 
 
