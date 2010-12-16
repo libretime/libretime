@@ -37,17 +37,17 @@ class CcScheduleTableMap extends TableMap {
 		$this->setPackage('campcaster');
 		$this->setUseIdGenerator(false);
 		// columns
-		$this->addPrimaryKey('ID', 'Id', 'BIGINT', true, null, null);
-		$this->addColumn('PLAYLIST_ID', 'PlaylistId', 'INTEGER', true, null, null);
-		$this->addColumn('STARTS', 'Starts', 'TIMESTAMP', true, null, null);
-		$this->addColumn('ENDS', 'Ends', 'TIMESTAMP', true, null, null);
-		$this->addColumn('GROUP_ID', 'GroupId', 'INTEGER', false, null, null);
-		$this->addColumn('FILE_ID', 'FileId', 'INTEGER', false, null, null);
-		$this->addColumn('CLIP_LENGTH', 'ClipLength', 'TIME', false, null, '00:00:00');
-		$this->addColumn('FADE_IN', 'FadeIn', 'TIME', false, null, '00:00:00');
-		$this->addColumn('FADE_OUT', 'FadeOut', 'TIME', false, null, '00:00:00');
-		$this->addColumn('CUE_IN', 'CueIn', 'TIME', false, null, '00:00:00');
-		$this->addColumn('CUE_OUT', 'CueOut', 'TIME', false, null, '00:00:00');
+		$this->addPrimaryKey('ID', 'DbId', 'BIGINT', true, null, null);
+		$this->addColumn('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', true, null, null);
+		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
+		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
+		$this->addColumn('GROUP_ID', 'DbGroupId', 'INTEGER', false, null, null);
+		$this->addColumn('FILE_ID', 'DbFileId', 'INTEGER', false, null, null);
+		$this->addColumn('CLIP_LENGTH', 'DbClipLength', 'TIME', false, null, '00:00:00');
+		$this->addColumn('FADE_IN', 'DbFadeIn', 'TIME', false, null, '00:00:00');
+		$this->addColumn('FADE_OUT', 'DbFadeOut', 'TIME', false, null, '00:00:00');
+		$this->addColumn('CUE_IN', 'DbCueIn', 'TIME', false, null, '00:00:00');
+		$this->addColumn('CUE_OUT', 'DbCueOut', 'TIME', false, null, '00:00:00');
 		// validators
 	} // initialize()
 

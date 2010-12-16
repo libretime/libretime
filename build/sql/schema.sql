@@ -214,6 +214,25 @@ COMMENT ON TABLE "cc_show_hosts" IS '';
 
 SET search_path TO public;
 -----------------------------------------------------------------------------
+-- cc_show_schedule
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_show_schedule" CASCADE;
+
+
+CREATE TABLE "cc_show_schedule"
+(
+	"id" serial  NOT NULL,
+	"show_id" INTEGER  NOT NULL,
+	"group_id" INTEGER  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_show_schedule" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
 -- cc_playlist
 -----------------------------------------------------------------------------
 
@@ -444,6 +463,8 @@ ALTER TABLE "cc_show_days" ADD CONSTRAINT "cc_show_fkey" FOREIGN KEY ("show_id")
 ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_host_fkey" FOREIGN KEY ("subjs_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_schedule" ADD CONSTRAINT "cc_perm_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
 

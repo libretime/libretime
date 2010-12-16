@@ -23,6 +23,13 @@ $pages = array(
 		'action'     => 'index',
 		'pages'      => array(
 		    array(
+		        'label'      => 'New',
+		        'module'     => 'default',
+		        'controller' => 'Playlist',
+		        'action'     => 'new',
+				'visible'    => false
+		    ),
+			array(
 		        'label'      => 'Edit',
 		        'module'     => 'default',
 		        'controller' => 'Playlist',

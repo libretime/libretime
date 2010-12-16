@@ -57,6 +57,8 @@
           <actionMethod actionName="resizeShow"/>
           <actionMethod actionName="deleteShow"/>
           <actionMethod actionName="makeContextMenu"/>
+          <actionMethod actionName="scheduleShow"/>
+          <actionMethod actionName="clearShow"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -69,6 +71,7 @@
         <formFile formName="AdvancedSearchRow"/>
         <formFile formName="EditAudioMD"/>
         <formFile formName="AddShow"/>
+        <formFile formName="ScheduleShow"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory/>
@@ -188,6 +191,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="makeContextMenu"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="scheduleShow"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="clearShow"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

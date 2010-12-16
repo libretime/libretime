@@ -3,10 +3,12 @@
 class Show {
 
 	private $_user;
+	private $_showId;
 
-	public function __construct($user=NULL)
+	public function __construct($user=NULL, $showId=NULL)
     {
-		$this->_user = $user;    
+		$this->_user = $user;
+		$this->_showId = $showId;    
     }
 
 	//end dates are non inclusive.
@@ -48,10 +50,10 @@ class Show {
 		}
 		
 		$show = new CcShow();
-			$show->setDbName($data['name']);
-			$show->setDbRepeats($data['repeats']);
-			$show->setDbDescription($data['description']);
-			$show->save();      
+		$show->setDbName($data['name']);
+		$show->setDbRepeats($data['repeats']);
+		$show->setDbDescription($data['description']);
+		$show->save();      
 
 		$showId = $show->getDbId();
 
@@ -127,9 +129,18 @@ class Show {
 		}
 
 		foreach($res as $row) {
+
+			$sql = "SELECT date '{$show["first_show"]}' + interval '{$deltaDay} day'";
+			$f_show = $CC_DBC->GetOne($sql);
+			//get a timestamp back only need a date.
+			$tmp = spliti(" ", $f_show);
+			$f_show = $tmp[0];
+
 			$show = CcShowDaysQuery::create()->findPK($row["id"]);
 			$show->setDbStartTime($s_time);
 			$show->setDbEndTime($e_time);
+			$show->setDbFirstShow($f_show);
+			$show->setDbDay($row['day'] + $deltaDay);
 			$show->save();
 		}		
 	}
@@ -178,7 +189,37 @@ class Show {
 
 	}
 
+	public function scheduleShow($start, $plId) {
+		if($this->_user->isHost($this->_showId)) {
+
+			$sched = new ScheduleGroup();
+			$groupId = $sched->add($start, null, $plId);
+
+			$groupsched = new CcShowSchedule();
+			$groupsched->setDbShowId($this->_showId);
+			$groupsched->setDbGroupId($groupId);
+			$groupsched->save();
+		}
+	}
+
+	public function showHasContent($start_timestamp, $end_timestamp) {
+
+		$con = Propel::getConnection("campcaster");
+        $sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}'";
+		$r = $con->query($sql);
+		$length = $r->fetchColumn(0);
+
+		return !Schedule::isScheduleEmptyInRange($start_timestamp, $length);
+	}
+
 	public function deleteShow($showId, $dayId=NULL) {
+		$groups = CcShowScheduleQuery::create()->filterByDbShowId($showId)->find();
+
+		foreach($groups as $group) {
+			$groupId = $group->getDbGroupId();
+			CcScheduleQuery::create()->filterByDbGroupId($groupId)->delete();
+		}
+
 		CcShowQuery::create()->filterByDbId($showId)->delete();
 	}
 
@@ -249,55 +290,52 @@ class Show {
 
 		foreach($res as $row) {
 
-			if(!is_null($start)) { 
+			$timeDiff = "SELECT date '{$start}' - date '{$row["first_show"]}' as diff";
+			$diff = $CC_DBC->GetOne($timeDiff);
 
-				$timeDiff = "SELECT date '{$start}' - date '{$row["first_show"]}' as diff";
-				$diff = $CC_DBC->GetOne($timeDiff);
+			if($diff > 0) {
 
-				if($diff > 0) {
+				$add = ($diff % 7 === 0) ? $diff : $diff + (7 - $diff % 7);
 
-					$add = ($diff % 7 === 0) ? $diff : $diff + (7 - $diff % 7);
+				$new = "SELECT date '{$row["first_show"]}' + integer '{$add}'";
+				$newDate = $CC_DBC->GetOne($new); 
+			}
+			else {
+				$newDate = $row["first_show"];
+			}
 
-					$new = "SELECT date '{$row["first_show"]}' + integer '{$add}'";
-					$newDate = $CC_DBC->GetOne($new); 
+			$shows[] = $this->makeFullCalendarEvent($row, $newDate);
+			
+			$end_epoch = strtotime($end);
+
+			//add repeating events until the show end is reached or fullcalendar's end date is reached.
+			if($row["repeats"]) {
+
+				if(!is_null($row["last_show"])) {
+					$show_end_epoch = strtotime($row["last_show"]);
 				}
-				else {
-					$newDate = $row["first_show"];
-				}
 
-				$shows[] = $this->makeFullCalendarEvent($row, $newDate);
-				
-				$end_epoch = strtotime($end);
+				while(true) {
 
-				//add repeating events until the show end is reached or fullcalendar's end date is reached.
-				if($row["repeats"]) {
+					$diff = "SELECT date '{$newDate}' + integer '7'";
+					$repeatDate = $CC_DBC->GetOne($diff);
+					$repeat_epoch = strtotime($repeatDate);
 
-					if(!is_null($row["last_show"])) {
-						$show_end_epoch = strtotime($row["last_show"]);
+					//show has finite duration.
+					if (isset($show_end_epoch) && $repeat_epoch < $show_end_epoch && $repeat_epoch < $end_epoch) {
+						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
+					}
+					//case for non-ending shows.
+					else if(!isset($show_end_epoch) && $repeat_epoch < $end_epoch) {
+						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
+					}
+					else {
+						break;
 					}
 
-					while(true) {
-
-						$diff = "SELECT date '{$newDate}' + integer '7'";
-						$repeatDate = $CC_DBC->GetOne($diff);
-						$repeat_epoch = strtotime($repeatDate);
-
-						//show has finite duration.
-						if (isset($show_end_epoch) && $repeat_epoch < $show_end_epoch && $repeat_epoch < $end_epoch) {
-							$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
-						}
-						//case for non-ending shows.
-						else if(!isset($show_end_epoch) && $repeat_epoch < $end_epoch) {
-							$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
-						}
-						else {
-							break;
-						}
-
-						$newDate = $repeatDate;
-					}					
-				}	
-			}		
+					$newDate = $repeatDate;
+				}					
+			}			
 		}
 
 		return $shows;
@@ -327,6 +365,12 @@ class Show {
 
 		if($this->_user->isHost($show["show_id"])) {
 			$event["isHost"] = true;
+		}
+
+		$start = $date." ".$show["start_time"];
+		$end = $date." ".$show["end_time"];
+		if($this->showHasContent($start, $end)) {
+			$event["hasContent"] = true;
 		}
 
 		return $event;

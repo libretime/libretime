@@ -4,6 +4,19 @@
 *
 */
 
+function makeTimeStamp(date){
+	var sy, sm, sd, h, m, s, timestamp;
+	sy = date.getFullYear();
+	sm = date.getMonth() + 1;
+	sd = date.getDate();
+	h = date.getHours();
+	m = date.getMinutes();
+	s = date.getSeconds();
+
+	timestamp = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+	return timestamp;
+}
+
 //dateText mm-dd-yy
 function startDpSelect(dateText, inst) {
 	var time, date;
@@ -71,11 +84,11 @@ function submitShow() {
 
 						table.append(tr);
 					});
-					
+				
 					dialog.append("<span>Cannot add show. New show overlaps the following shows:</span>");
 					dialog.append(table);
 				}
-		
+	
 			}
 			else {
 				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
@@ -86,6 +99,33 @@ function submitShow() {
 
 function closeDialog(event, ui) {
 	$(this).remove();
+}
+
+function schedulePlaylist() {
+	var li, pl_id, url, event, start, dialog;
+
+	dialog = $(this);
+	li = $("#schedule_playlist_dialog").find(".ui-state-active");
+
+	if(li.length === 0) {
+		dialog.remove();
+		return;
+	}
+
+	pl_id = li.data('pl_id');
+	event = li.parent().data('event');	
+
+	start_date = makeTimeStamp(event.start);
+
+	url = '/Schedule/schedule-show/format/json';
+
+	$.post(url, 
+		{plId: pl_id, start: start_date, showId: event.id},
+		function(json){
+			dialog.remove();
+			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+		});	
+	
 }
 
 function makeShowDialog(html) {
@@ -115,15 +155,106 @@ function makeShowDialog(html) {
 	return dialog;
 }
 
+function makeScheduleDialog(playlists, event) {
+	
+	var dialog;
+
+	//main jqueryUI dialog
+	dialog = $('<div id="schedule_playlist_dialog" />');
+
+	var ol, li;
+	ol = $('<ul/>');
+	$.each(playlists, function(i, val){
+		li = $('<li />')
+			.addClass('ui-widget-content')
+			.append('<div>'+val.name+'</div>')
+			.append('<div>'+val.description+'</div>')
+			.append('<div>'+val.length+'</div>')
+			.click(function(){
+				$(this).parent().find("li").removeClass("ui-state-active")
+				$(this).addClass("ui-state-active");
+			});
+
+		li.data({'pl_id': val.id});
+		ol.append(li);
+	});
+	
+	ol.data({'event': event});
+	dialog.append(ol);
+
+	dialog.dialog({
+		autoOpen: false,
+		title: 'Schedule Playlist',
+		width: 950,
+		height: 400,
+		close: closeDialog,
+		buttons: { "Cancel": closeDialog, "Ok": schedulePlaylist}
+	});
+
+	return dialog;
+}
+
+function openShowDialog() {
+	var url;
+
+	url = '/Schedule/add-show-dialog/format/json';
+
+	$.get(url, function(json){
+		var dialog = makeShowDialog(json.form);
+		dialog.dialog('open');
+	});
+}
+
+function openScheduleDialog(event, time) {
+	var url;
+
+	url = '/Schedule/schedule-show/format/json';
+
+	$.get(url, 
+		{length: time},
+		function(json){
+			var dialog = makeScheduleDialog(json.playlists, event);
+			dialog.dialog('open');
+		});
+}
+
 function eventMenu(action, el, pos) {
-	var event;
+	var method = action.split('/').pop(),
+		event;
+
 	event = $(el).data('event');
 
-	$.post(action, 
-		{showId: event.id, format: "json"},
-		function(json){
-			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-		});
+	if (method === 'delete-show') {
+		$.post(action, 
+			{format: "json", showId: event.id},
+			function(json){
+				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+			});
+	}
+	else if (method === 'schedule-show') {
+		var length, h, m, s, time;
+
+		length = event.end.getTime() - event.start.getTime();
+
+		h = length / (1000*60*60);
+		m = (length % (1000*60*60)) / (1000*60);
+		s = ((length % (1000*60*60)) % (1000*60)) / 1000;
+
+		time = h+":"+m+":"+s;
+
+		openScheduleDialog(event, time);
+	}
+	else if (method === 'clear-show') {
+		start_date = makeTimeStamp(event.start);
+
+		url = '/Schedule/clear-show/format/json';
+
+		$.post(url, 
+			{start: start_date, showId: event.id},
+			function(json){
+				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+			});	
+	}
 }
 
 /**
@@ -140,12 +271,18 @@ function eventRender(event, element, view) {
 	//element.qtip({
      //       content: event.description
      //   });
+
+	if(event.hasContent) {
+		var span = $('<span/>').addClass("ui-icon ui-icon-check");
+		$(element).find(".fc-event-title").after(span);
+	}
 	
 }
 
 function eventAfterRender( event, element, view ) {
-	
-	if(event.isHost === true) {
+	var today = new Date();	
+
+	if(event.isHost === true && event.start > today) {
 		$(element).contextMenu(
 			{menu: 'schedule_event_host_menu'}, eventMenu
 		);
@@ -172,6 +309,11 @@ function eventMouseout(event, jsEvent, view) {
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
 	var url;
 
+	if (event.repeats && dayDelta !== 0) {
+		revertFunc();
+		return;
+	}
+
 	url = '/Schedule/move-show/format/json';
 
 	$.post(url, 
@@ -195,17 +337,6 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 				revertFunc();
 			}
 		});
-}
-
-function openShowDialog() {
-	var url;
-
-	url = '/Schedule/add-show-dialog/format/json';
-
-	$.get(url, function(json){
-		var dialog = makeShowDialog(json.form);
-		dialog.dialog('open');
-	});
 }
 
 $(document).ready(function() {

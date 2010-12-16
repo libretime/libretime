@@ -62,6 +62,49 @@ class Playlist {
 
     }
 
+	 /**
+-     * Convert playlist time value to float seconds
+-     *
+-     * @param string $plt
+-     * 		playlist time value (HH:mm:ss.dddddd)
+-     * @return int
+-     * 		seconds
+-     */
+	public static function playlistTimeToSeconds($plt)
+	{
+        $arr =  preg_split('/:/', $plt);
+        if (isset($arr[2])) {
+          return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
+        }
+        if (isset($arr[1])) {
+        	return intval($arr[0])*60 + floatval($arr[1]);
+        }
+        return floatval($arr[0]);
+    }
+
+
+    /**
+-     * Convert float seconds value to playlist time format
+-     *
+-     * @param float $seconds
+-     * @return string
+-     * 		time in playlist time format (HH:mm:ss.dddddd)
+-     */
+    public static function secondsToPlaylistTime($p_seconds)
+    {
+        $seconds = $p_seconds;
+        $milliseconds = intval(($seconds - intval($seconds)) * 1000);
+        $milliStr = str_pad($milliseconds, 6, '0');
+        $hours = floor($seconds / 3600);
+        $seconds -= $hours * 3600;
+        $minutes = floor($seconds / 60);
+        $seconds -= $minutes * 60;
+
+        $res = sprintf("%02d:%02d:%02d.%s", $hours, $minutes, $seconds, $milliStr);
+
+       return $res;
+    }
+
     public static function Insert($p_values)
     {
          // Create the StoredPlaylist object
@@ -83,12 +126,12 @@ class Playlist {
     }
 
     public static function Delete($id) {
-      $pl = CcPlaylistQuery::create()->findPK($id);
-    	if($pl === NULL)
-   	    return FALSE;
+		$pl = CcPlaylistQuery::create()->findPK($id);
+		if($pl === NULL)
+			return FALSE;
 
-    	$pl->delete();
-      return TRUE;
+		$pl->delete();
+		return TRUE;
     }
 
 
@@ -98,7 +141,7 @@ class Playlist {
      */
     public static function DeleteFileFromAllPlaylists($p_fileId)
     {
-      CcPlaylistcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
+    	CcPlaylistcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
     }
 
 
@@ -107,6 +150,17 @@ class Playlist {
  	    $res = CcPlaylistQuery::create()->findByDbName($p_name);
  	 	return $res;
  	}
+
+	public static function findPlaylistMaxLength($p_length) 
+	{
+		$con = Propel::getConnection("campcaster");
+
+		$sql = "SELECT * FROM cc_playlist LEFT JOIN cc_playlisttimes USING(id) WHERE length <= '{$p_length}' ";
+		//AND state != 'edited'
+
+		$r = $con->query($sql);
+        return $r->fetchAll();
+	}
 
 
  	/**
@@ -750,50 +804,6 @@ class Playlist {
 
     }
 
-
-    /**
-     * Convert playlist time value to float seconds
-     *
-     * @param string $plt
-     * 		playlist time value (HH:mm:ss.dddddd)
-     * @return int
-     * 		seconds
-     */
-    public static function playlistTimeToSeconds($plt)
-    {
-        $arr =  preg_split('/:/', $plt);
-        if (isset($arr[2])) {
-          return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
-        }
-        if (isset($arr[1])) {
-        	return intval($arr[0])*60 + floatval($arr[1]);
-        }
-        return floatval($arr[0]);
-    }
-
-
-    /**
-     * Convert float seconds value to playlist time format
-     *
-     * @param float $seconds
-     * @return string
-     * 		time in playlist time format (HH:mm:ss.dddddd)
-     */
-    public static function secondsToPlaylistTime($p_seconds)
-    {
-        $seconds = $p_seconds;
-        $milliseconds = intval(($seconds - intval($seconds)) * 1000);
-        $milliStr = str_pad($milliseconds, 6, '0');
-        $hours = floor($seconds / 3600);
-        $seconds -= $hours * 3600;
-        $minutes = floor($seconds / 60);
-        $seconds -= $minutes * 60;
-
-        $res = sprintf("%02d:%02d:%02d.%s", $hours, $minutes, $seconds, $milliStr);
-
-        return $res;
-    }
-
     /**
      * Export playlist as simplified SMIL XML file.
      *
@@ -896,109 +906,7 @@ class Playlist {
         return TRUE;
     }
 
-    /**
-     * Set playlist length - dcterm:extent
-     *
-     * @param string $newPlLen
-     * 		new length in extent format
-     * @param int $parid
-     * 		playlist container record id
-     * @param int $metaParid
-     * 		metadata container record id
-     * @return boolean
-     */
-    private function setPlaylistLength($newPlLen, $parid, $metaParid)
-    {
-        $mid = $this->_getMidOrInsert('playlength', $parid, $newPlLen, 'A');
-        if (PEAR::isError($mid)) {
-        	return $mid;
-        }
-        $r = $this->_setValueOrInsert(
-            $mid, $newPlLen, $parid,  'playlength', 'A');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        $mid = $this->_getMidOrInsert('dcterms:extent', $metaParid, $newPlLen);
-        if (PEAR::isError($mid)) {
-        	return $mid;
-        }
-        $r = $this->_setValueOrInsert(
-            $mid, $newPlLen, $metaParid,  'dcterms:extent');
-        if (PEAR::isError($r)) {
-        	return $r;
-        }
-        return TRUE;
-    }
-
 } // class Playlist
-
-
-/**
- * Auxiliary class for GB playlist editing methods
- *
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- */
-class PlaylistElement {
-    private $pl = NULL;
-    private $plEl = NULL;
-
-    public function PlaylistElement($pl, $plEl)
-    {
-        $this->pl = $pl;
-        $this->plEl = $plEl;
-    }
-
-
-    public function analyze()
-    {
-        $plInfo = array(
-            'acLen' => '00:00:00.000000',
-            'acLenS' => 0,
-            'fadeIn' => '00:00:00.000000',
-            'fadeInS' => 0,
-            'fadeOut' => '00:00:00.000000',
-            'fadeOutS' => 0,
-            'clipStart' => '00:00:00.000000',
-            'clipStartS' => 0,
-            'clipEnd' => '00:00:00.000000',
-            'clipEndS' => 0
-        );
-        $plInfo['elOffset'] = $this->plEl['attrs']['relativeOffset'];
-        $plInfo['elOffsetS'] = Playlist::playlistTimeToSeconds($plInfo['elOffset']);
-        // cycle over tags inside playlistElement
-        foreach ($this->plEl['children'] as $j => $acFi) {
-            switch ($acFi['elementname']) {
-	            case "playlist":
-	                $plInfo['type'] = 'playlist';
-	                break;
-	            case "audioClip":
-	                $plInfo['type'] = 'audioClip';
-	                break;
-	        }
-	        switch ($acFi['elementname']) {
-	            case "playlist":
-	            case "audioClip":
-	                $plInfo['acLen'] = $acFi['attrs']['playlength'];
-	                $plInfo['acLenS'] = Playlist::playlistTimeToSeconds($plInfo['acLen']);
-	                $plInfo['acGunid'] = $acFi['attrs']['id'];
-	                break;
-	            case "fadeInfo":
-	                $plInfo['fadeIn'] = $acFi['attrs']['fadeIn'];
-	                $plInfo['fadeInS'] = Playlist::playlistTimeToSeconds($plInfo['fadeIn']);
-	                $plInfo['fadeOut'] = $acFi['attrs']['fadeOut'];
-	                $plInfo['fadeOutS'] = Playlist::playlistTimeToSeconds($plInfo['fadeOut']);
-	                break;
-            }
-            $plInfo['clipStart'] = $this->plEl['attrs']['clipStart'];
-            $plInfo['clipStartS'] = Playlist::playlistTimeToSeconds($this->plEl['attrs']['clipStart']);
-            $plInfo['clipEnd'] = $this->plEl['attrs']['clipEnd'];
-            $plInfo['clipEndS'] = Playlist::playlistTimeToSeconds($this->plEl['attrs']['clipEnd']);
-        }
-        return $plInfo;
-    }
-} // class PlaylistElement
-
 
 /**
  * @package Campcaster

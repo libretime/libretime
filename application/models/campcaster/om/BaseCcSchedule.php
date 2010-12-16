@@ -139,7 +139,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getId()
+	public function getDbId()
 	{
 		return $this->id;
 	}
@@ -149,7 +149,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getPlaylistId()
+	public function getDbPlaylistId()
 	{
 		return $this->playlist_id;
 	}
@@ -163,7 +163,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getStarts($format = 'Y-m-d H:i:s')
+	public function getDbStarts($format = 'Y-m-d H:i:s')
 	{
 		if ($this->starts === null) {
 			return null;
@@ -196,7 +196,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getEnds($format = 'Y-m-d H:i:s')
+	public function getDbEnds($format = 'Y-m-d H:i:s')
 	{
 		if ($this->ends === null) {
 			return null;
@@ -225,7 +225,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getGroupId()
+	public function getDbGroupId()
 	{
 		return $this->group_id;
 	}
@@ -235,7 +235,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getFileId()
+	public function getDbFileId()
 	{
 		return $this->file_id;
 	}
@@ -249,7 +249,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getClipLength($format = '%X')
+	public function getDbClipLength($format = '%X')
 	{
 		if ($this->clip_length === null) {
 			return null;
@@ -282,7 +282,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getFadeIn($format = '%X')
+	public function getDbFadeIn($format = '%X')
 	{
 		if ($this->fade_in === null) {
 			return null;
@@ -315,7 +315,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getFadeOut($format = '%X')
+	public function getDbFadeOut($format = '%X')
 	{
 		if ($this->fade_out === null) {
 			return null;
@@ -348,7 +348,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getCueIn($format = '%X')
+	public function getDbCueIn($format = '%X')
 	{
 		if ($this->cue_in === null) {
 			return null;
@@ -381,7 +381,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getCueOut($format = '%X')
+	public function getDbCueOut($format = '%X')
 	{
 		if ($this->cue_out === null) {
 			return null;
@@ -411,7 +411,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setId($v)
+	public function setDbId($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -423,7 +423,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setId()
+	} // setDbId()
 
 	/**
 	 * Set the value of [playlist_id] column.
@@ -431,7 +431,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setPlaylistId($v)
+	public function setDbPlaylistId($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -443,7 +443,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setPlaylistId()
+	} // setDbPlaylistId()
 
 	/**
 	 * Sets the value of [starts] column to a normalized version of the date/time value specified.
@@ -452,7 +452,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setStarts($v)
+	public function setDbStarts($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -492,7 +492,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setStarts()
+	} // setDbStarts()
 
 	/**
 	 * Sets the value of [ends] column to a normalized version of the date/time value specified.
@@ -501,7 +501,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setEnds($v)
+	public function setDbEnds($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -541,7 +541,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setEnds()
+	} // setDbEnds()
 
 	/**
 	 * Set the value of [group_id] column.
@@ -549,7 +549,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setGroupId($v)
+	public function setDbGroupId($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -561,7 +561,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setGroupId()
+	} // setDbGroupId()
 
 	/**
 	 * Set the value of [file_id] column.
@@ -569,7 +569,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setFileId($v)
+	public function setDbFileId($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -581,7 +581,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setFileId()
+	} // setDbFileId()
 
 	/**
 	 * Sets the value of [clip_length] column to a normalized version of the date/time value specified.
@@ -590,7 +590,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setClipLength($v)
+	public function setDbClipLength($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -631,7 +631,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setClipLength()
+	} // setDbClipLength()
 
 	/**
 	 * Sets the value of [fade_in] column to a normalized version of the date/time value specified.
@@ -640,7 +640,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setFadeIn($v)
+	public function setDbFadeIn($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -681,7 +681,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setFadeIn()
+	} // setDbFadeIn()
 
 	/**
 	 * Sets the value of [fade_out] column to a normalized version of the date/time value specified.
@@ -690,7 +690,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setFadeOut($v)
+	public function setDbFadeOut($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -731,7 +731,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setFadeOut()
+	} // setDbFadeOut()
 
 	/**
 	 * Sets the value of [cue_in] column to a normalized version of the date/time value specified.
@@ -740,7 +740,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setCueIn($v)
+	public function setDbCueIn($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -781,7 +781,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setCueIn()
+	} // setDbCueIn()
 
 	/**
 	 * Sets the value of [cue_out] column to a normalized version of the date/time value specified.
@@ -790,7 +790,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
-	public function setCueOut($v)
+	public function setDbCueOut($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -831,7 +831,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setCueOut()
+	} // setDbCueOut()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -1196,37 +1196,37 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				return $this->getId();
+				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getPlaylistId();
+				return $this->getDbPlaylistId();
 				break;
 			case 2:
-				return $this->getStarts();
+				return $this->getDbStarts();
 				break;
 			case 3:
-				return $this->getEnds();
+				return $this->getDbEnds();
 				break;
 			case 4:
-				return $this->getGroupId();
+				return $this->getDbGroupId();
 				break;
 			case 5:
-				return $this->getFileId();
+				return $this->getDbFileId();
 				break;
 			case 6:
-				return $this->getClipLength();
+				return $this->getDbClipLength();
 				break;
 			case 7:
-				return $this->getFadeIn();
+				return $this->getDbFadeIn();
 				break;
 			case 8:
-				return $this->getFadeOut();
+				return $this->getDbFadeOut();
 				break;
 			case 9:
-				return $this->getCueIn();
+				return $this->getDbCueIn();
 				break;
 			case 10:
-				return $this->getCueOut();
+				return $this->getDbCueOut();
 				break;
 			default:
 				return null;
@@ -1251,17 +1251,17 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	{
 		$keys = CcSchedulePeer::getFieldNames($keyType);
 		$result = array(
-			$keys[0] => $this->getId(),
-			$keys[1] => $this->getPlaylistId(),
-			$keys[2] => $this->getStarts(),
-			$keys[3] => $this->getEnds(),
-			$keys[4] => $this->getGroupId(),
-			$keys[5] => $this->getFileId(),
-			$keys[6] => $this->getClipLength(),
-			$keys[7] => $this->getFadeIn(),
-			$keys[8] => $this->getFadeOut(),
-			$keys[9] => $this->getCueIn(),
-			$keys[10] => $this->getCueOut(),
+			$keys[0] => $this->getDbId(),
+			$keys[1] => $this->getDbPlaylistId(),
+			$keys[2] => $this->getDbStarts(),
+			$keys[3] => $this->getDbEnds(),
+			$keys[4] => $this->getDbGroupId(),
+			$keys[5] => $this->getDbFileId(),
+			$keys[6] => $this->getDbClipLength(),
+			$keys[7] => $this->getDbFadeIn(),
+			$keys[8] => $this->getDbFadeOut(),
+			$keys[9] => $this->getDbCueIn(),
+			$keys[10] => $this->getDbCueOut(),
 		);
 		return $result;
 	}
@@ -1294,37 +1294,37 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				$this->setId($value);
+				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setPlaylistId($value);
+				$this->setDbPlaylistId($value);
 				break;
 			case 2:
-				$this->setStarts($value);
+				$this->setDbStarts($value);
 				break;
 			case 3:
-				$this->setEnds($value);
+				$this->setDbEnds($value);
 				break;
 			case 4:
-				$this->setGroupId($value);
+				$this->setDbGroupId($value);
 				break;
 			case 5:
-				$this->setFileId($value);
+				$this->setDbFileId($value);
 				break;
 			case 6:
-				$this->setClipLength($value);
+				$this->setDbClipLength($value);
 				break;
 			case 7:
-				$this->setFadeIn($value);
+				$this->setDbFadeIn($value);
 				break;
 			case 8:
-				$this->setFadeOut($value);
+				$this->setDbFadeOut($value);
 				break;
 			case 9:
-				$this->setCueIn($value);
+				$this->setDbCueIn($value);
 				break;
 			case 10:
-				$this->setCueOut($value);
+				$this->setDbCueOut($value);
 				break;
 		} // switch()
 	}
@@ -1350,17 +1350,17 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	{
 		$keys = CcSchedulePeer::getFieldNames($keyType);
 
-		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setPlaylistId($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setStarts($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setEnds($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setGroupId($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setFileId($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setClipLength($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setFadeIn($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setFadeOut($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setCueIn($arr[$keys[9]]);
-		if (array_key_exists($keys[10], $arr)) $this->setCueOut($arr[$keys[10]]);
+		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbPlaylistId($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbStarts($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbEnds($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbGroupId($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbFileId($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbClipLength($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbFadeIn($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbFadeOut($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbCueIn($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbCueOut($arr[$keys[10]]);
 	}
 
 	/**
@@ -1409,7 +1409,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	public function getPrimaryKey()
 	{
-		return $this->getId();
+		return $this->getDbId();
 	}
 
 	/**
@@ -1420,7 +1420,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	public function setPrimaryKey($key)
 	{
-		$this->setId($key);
+		$this->setDbId($key);
 	}
 
 	/**
@@ -1429,7 +1429,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	public function isPrimaryKeyNull()
 	{
-		return null === $this->getId();
+		return null === $this->getDbId();
 	}
 
 	/**
@@ -1444,17 +1444,17 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setId($this->id);
-		$copyObj->setPlaylistId($this->playlist_id);
-		$copyObj->setStarts($this->starts);
-		$copyObj->setEnds($this->ends);
-		$copyObj->setGroupId($this->group_id);
-		$copyObj->setFileId($this->file_id);
-		$copyObj->setClipLength($this->clip_length);
-		$copyObj->setFadeIn($this->fade_in);
-		$copyObj->setFadeOut($this->fade_out);
-		$copyObj->setCueIn($this->cue_in);
-		$copyObj->setCueOut($this->cue_out);
+		$copyObj->setDbId($this->id);
+		$copyObj->setDbPlaylistId($this->playlist_id);
+		$copyObj->setDbStarts($this->starts);
+		$copyObj->setDbEnds($this->ends);
+		$copyObj->setDbGroupId($this->group_id);
+		$copyObj->setDbFileId($this->file_id);
+		$copyObj->setDbClipLength($this->clip_length);
+		$copyObj->setDbFadeIn($this->fade_in);
+		$copyObj->setDbFadeOut($this->fade_out);
+		$copyObj->setDbCueIn($this->cue_in);
+		$copyObj->setDbCueOut($this->cue_out);
 
 		$copyObj->setNew(true);
 	}

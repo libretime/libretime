@@ -45,14 +45,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	{
 		$view = $this->getResource('view');
 
-		$view->headLink()->appendStylesheet('/css/excite-bike/excite_bike.css');
+		$view->headLink()->appendStylesheet('/css/excite-bike/jquery-ui-1.8.7.custom.css');
 	}
 
 	protected function _initHeadScript()
 	{
 		$view = $this->getResource('view');
 		$view->headScript()->appendFile('/js/libs/jquery-1.4.4.min.js','text/javascript');
-		$view->headScript()->appendFile('/js/libs/jquery-ui-1.8.5.min.js','text/javascript');
+		$view->headScript()->appendFile('/js/libs/jquery-ui-1.8.7.custom.min.js','text/javascript');
 	}
 
 }

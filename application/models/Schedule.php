@@ -174,6 +174,22 @@ class ScheduleGroup {
 
     }
 
+	public function removeAtTime($p_datetime) {
+		global $CC_CONFIG, $CC_DBC;
+
+		$id = $this->dateToId($p_datetime);
+
+		$sql = "SELECT group_id FROM ".$CC_CONFIG["scheduleTable"]." WHERE id = ".$id;
+        $groupId = $CC_DBC->GetOne($sql);
+
+		if($groupId === NULL)
+			return;
+
+		$sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]
+        ." WHERE group_id = ".$groupId;
+        $CC_DBC->query($sql);
+	}
+
     /**
      * Remove the group from the schedule.
      * Note: does not check if it is in the past, you can remove anything.
