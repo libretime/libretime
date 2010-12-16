@@ -89,29 +89,37 @@ function closeDialog(event, ui) {
 }
 
 function schedulePlaylist() {
-	var li, pl_id, url, start, dialog;
+	var li, pl_id, url, event, start, dialog;
 
 	dialog = $(this);
 	li = $("#schedule_playlist_dialog").find(".ui-state-active");
+
+	if(li.length === 0) {
+		dialog.remove();
+		return;
+	}
+
 	pl_id = li.data('pl_id');
-	start = li.data('start');
+	event = li.parent().data('event');
+	start = event.start;
 
 	var sy, sm, sd, h, m, s;
-		sy = start.getFullYear();
-		sm = start.getMonth() + 1;
-		sd = start.getDate();
-		h = start.getHours();
-		m = start.getMinutes();
-		s = start.getSeconds();
+	sy = start.getFullYear();
+	sm = start.getMonth() + 1;
+	sd = start.getDate();
+	h = start.getHours();
+	m = start.getMinutes();
+	s = start.getSeconds();
 
-		start_date = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+	start_date = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
 
 	url = '/Schedule/schedule-show/format/json';
 
 	$.post(url, 
-		{plId: pl_id, start: start_date},
+		{plId: pl_id, start: start_date, showId: event.id},
 		function(json){
 			dialog.remove();
+			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
 		});	
 	
 }
@@ -154,7 +162,7 @@ function makeScheduleDialog(playlists, event) {
 	ol = $('<ul/>');
 	$.each(playlists, function(i, val){
 		li = $('<li />')
-			.addClass('ui-widget-content ui-selectee')
+			.addClass('ui-widget-content')
 			.append('<div>'+val.name+'</div>')
 			.append('<div>'+val.description+'</div>')
 			.click(function(){
@@ -162,10 +170,11 @@ function makeScheduleDialog(playlists, event) {
 				$(this).addClass("ui-state-active");
 			});
 
-		li.data({'pl_id': val.id, 'start': event.start});
+		li.data({'pl_id': val.id});
 		ol.append(li);
 	});
-
+	
+	ol.data({'event': event});
 	dialog.append(ol);
 
 	dialog.dialog({
@@ -178,6 +187,30 @@ function makeScheduleDialog(playlists, event) {
 	});
 
 	return dialog;
+}
+
+function openShowDialog() {
+	var url;
+
+	url = '/Schedule/add-show-dialog/format/json';
+
+	$.get(url, function(json){
+		var dialog = makeShowDialog(json.form);
+		dialog.dialog('open');
+	});
+}
+
+function openScheduleDialog(event, time) {
+	var url;
+
+	url = '/Schedule/schedule-show/format/json';
+
+	$.get(url, 
+		{length: time},
+		function(json){
+			var dialog = makeScheduleDialog(json.playlists, event);
+			dialog.dialog('open');
+		});
 }
 
 function eventMenu(action, el, pos) {
@@ -205,6 +238,27 @@ function eventMenu(action, el, pos) {
 		time = h+":"+m+":"+s;
 
 		openScheduleDialog(event, time);
+	}
+	else if (method === 'clear-show') {
+		start = event.start;
+
+		var sy, sm, sd, h, m, s, start_date;
+		sy = start.getFullYear();
+		sm = start.getMonth() + 1;
+		sd = start.getDate();
+		h = start.getHours();
+		m = start.getMinutes();
+		s = start.getSeconds();
+
+		start_date = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+
+		url = '/Schedule/clear-show/format/json';
+
+		$.post(url, 
+			{start: start_date, showId: event.id},
+			function(json){
+				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+			});	
 	}
 }
 
@@ -281,30 +335,6 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 			if(json.overlap) {
 				revertFunc();
 			}
-		});
-}
-
-function openShowDialog() {
-	var url;
-
-	url = '/Schedule/add-show-dialog/format/json';
-
-	$.get(url, function(json){
-		var dialog = makeShowDialog(json.form);
-		dialog.dialog('open');
-	});
-}
-
-function openScheduleDialog(event, time) {
-	var url;
-
-	url = '/Schedule/schedule-show/format/json';
-
-	$.get(url, 
-		{showId: event.id, length: time},
-		function(json){
-			var dialog = makeScheduleDialog(json.playlists, event);
-			dialog.dialog('open');
 		});
 }
 

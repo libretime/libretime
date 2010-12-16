@@ -58,6 +58,7 @@
           <actionMethod actionName="deleteShow"/>
           <actionMethod actionName="makeContextMenu"/>
           <actionMethod actionName="scheduleShow"/>
+          <actionMethod actionName="clearShow"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -193,6 +194,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="scheduleShow"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="clearShow"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

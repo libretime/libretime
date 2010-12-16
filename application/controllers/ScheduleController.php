@@ -17,7 +17,8 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('move-show', 'json')
 					->addActionContext('resize-show', 'json')
 					->addActionContext('delete-show', 'json')
-					->addActionContext('schedule-show', 'json')	
+					->addActionContext('schedule-show', 'json')
+					->addActionContext('clear-show', 'json')		
                     ->initContext();
     }
 
@@ -41,6 +42,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$eventHostMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
 		$eventHostMenu[] = array('action' => '/Schedule/schedule-show', 'text' => 'Schedule');
+		$eventHostMenu[] = array('action' => '/Schedule/clear-show', 'text' => 'Clear');
   
 		$this->view->eventHostMenu = $eventHostMenu;
     }
@@ -121,7 +123,7 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $showId = $this->_getParam('showId');
-                
+                        
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 		$show = new Show(new User($userInfo->id, $userInfo->type));
@@ -135,25 +137,48 @@ class ScheduleController extends Zend_Controller_Action
 
     public function scheduleShowAction()
     {
-		$request = $this->getRequest();
-
+        $request = $this->getRequest();
+        
 		if($request->isPost()) {
 			$plId = $this->_getParam('plId');
 			$start = $this->_getParam('start');
+			$showId = $this->_getParam('showId');
 
-			$sched = new ScheduleGroup();
-			$this->view->res = $sched->add($start, null, $plId);
+			$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+			$user = new User($userInfo->id, $userInfo->type);
+
+			if($user->isHost($showId)) {
+
+				$sched = new ScheduleGroup();
+				$this->view->res = $sched->add($start, null, $plId);
+			}
 		}
 		else {
-		    $showId = $this->_getParam('showId');
 			$length = $this->_getParam('length');
 
 			$this->view->playlists = Playlist::findPlaylistMaxLength($length);
 		}
     }
 
+    public function clearShowAction()
+    {
+        $start = $this->_getParam('start');
+		$showId = $this->_getParam('showId');
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+		$user = new User($userInfo->id, $userInfo->type);
+
+		if($user->isHost($showId)) {
+
+			$sched = new ScheduleGroup();
+			$this->view->res = $sched->removeAtTime($start);
+		}
+    }
+
 
 }
+
+
 
 
 
