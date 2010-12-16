@@ -32,7 +32,7 @@ def create_user(username):
   if (output[0:3] != "uid"):
     # Make the pypo user
     print "Creating user "+username
-    os.system("adduser --system --quiet --group --disabled-login "+username)
+    os.system("adduser --system --quiet --group --shell /bin/bash "+username)
   else:
     print "User already exists."
 
