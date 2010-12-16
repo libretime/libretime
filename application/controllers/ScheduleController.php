@@ -145,13 +145,11 @@ class ScheduleController extends Zend_Controller_Action
 			$showId = $this->_getParam('showId');
 
 			$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
 			$user = new User($userInfo->id, $userInfo->type);
+			$show = new Show($user, $showId);
+			$show->scheduleShow($start, $plId);
 
-			if($user->isHost($showId)) {
-
-				$sched = new ScheduleGroup();
-				$this->view->res = $sched->add($start, null, $plId);
-			}
 		}
 		else {
 			$length = $this->_getParam('length');

@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_show' table.
+ * This class defines the structure of the 'cc_show_schedule' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.campcaster.map
  */
-class CcShowTableMap extends TableMap {
+class CcShowScheduleTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'campcaster.map.CcShowTableMap';
+	const CLASS_NAME = 'campcaster.map.CcShowScheduleTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,17 +31,16 @@ class CcShowTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('cc_show');
-		$this->setPhpName('CcShow');
-		$this->setClassname('CcShow');
+		$this->setName('cc_show_schedule');
+		$this->setPhpName('CcShowSchedule');
+		$this->setClassname('CcShowSchedule');
 		$this->setPackage('campcaster');
 		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_show_id_seq');
+		$this->setPrimaryKeyMethodInfo('cc_show_schedule_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, '');
-		$this->addColumn('REPEATS', 'DbRepeats', 'TINYINT', true, null, null);
-		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', false, 512, null);
+		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
+		$this->addColumn('GROUP_ID', 'DbGroupId', 'INTEGER', true, null, null);
 		// validators
 	} // initialize()
 
@@ -50,9 +49,7 @@ class CcShowTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcShowDays', 'CcShowDays', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
-    $this->addRelation('CcShowHosts', 'CcShowHosts', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
-    $this->addRelation('CcShowSchedule', 'CcShowSchedule', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
+    $this->addRelation('CcShow', 'CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
-} // CcShowTableMap
+} // CcShowScheduleTableMap

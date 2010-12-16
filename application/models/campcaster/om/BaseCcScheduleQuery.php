@@ -6,29 +6,29 @@
  *
  * 
  *
- * @method     CcScheduleQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     CcScheduleQuery orderByPlaylistId($order = Criteria::ASC) Order by the playlist_id column
- * @method     CcScheduleQuery orderByStarts($order = Criteria::ASC) Order by the starts column
- * @method     CcScheduleQuery orderByEnds($order = Criteria::ASC) Order by the ends column
- * @method     CcScheduleQuery orderByGroupId($order = Criteria::ASC) Order by the group_id column
- * @method     CcScheduleQuery orderByFileId($order = Criteria::ASC) Order by the file_id column
- * @method     CcScheduleQuery orderByClipLength($order = Criteria::ASC) Order by the clip_length column
- * @method     CcScheduleQuery orderByFadeIn($order = Criteria::ASC) Order by the fade_in column
- * @method     CcScheduleQuery orderByFadeOut($order = Criteria::ASC) Order by the fade_out column
- * @method     CcScheduleQuery orderByCueIn($order = Criteria::ASC) Order by the cue_in column
- * @method     CcScheduleQuery orderByCueOut($order = Criteria::ASC) Order by the cue_out column
+ * @method     CcScheduleQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method     CcScheduleQuery orderByDbPlaylistId($order = Criteria::ASC) Order by the playlist_id column
+ * @method     CcScheduleQuery orderByDbStarts($order = Criteria::ASC) Order by the starts column
+ * @method     CcScheduleQuery orderByDbEnds($order = Criteria::ASC) Order by the ends column
+ * @method     CcScheduleQuery orderByDbGroupId($order = Criteria::ASC) Order by the group_id column
+ * @method     CcScheduleQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
+ * @method     CcScheduleQuery orderByDbClipLength($order = Criteria::ASC) Order by the clip_length column
+ * @method     CcScheduleQuery orderByDbFadeIn($order = Criteria::ASC) Order by the fade_in column
+ * @method     CcScheduleQuery orderByDbFadeOut($order = Criteria::ASC) Order by the fade_out column
+ * @method     CcScheduleQuery orderByDbCueIn($order = Criteria::ASC) Order by the cue_in column
+ * @method     CcScheduleQuery orderByDbCueOut($order = Criteria::ASC) Order by the cue_out column
  *
- * @method     CcScheduleQuery groupById() Group by the id column
- * @method     CcScheduleQuery groupByPlaylistId() Group by the playlist_id column
- * @method     CcScheduleQuery groupByStarts() Group by the starts column
- * @method     CcScheduleQuery groupByEnds() Group by the ends column
- * @method     CcScheduleQuery groupByGroupId() Group by the group_id column
- * @method     CcScheduleQuery groupByFileId() Group by the file_id column
- * @method     CcScheduleQuery groupByClipLength() Group by the clip_length column
- * @method     CcScheduleQuery groupByFadeIn() Group by the fade_in column
- * @method     CcScheduleQuery groupByFadeOut() Group by the fade_out column
- * @method     CcScheduleQuery groupByCueIn() Group by the cue_in column
- * @method     CcScheduleQuery groupByCueOut() Group by the cue_out column
+ * @method     CcScheduleQuery groupByDbId() Group by the id column
+ * @method     CcScheduleQuery groupByDbPlaylistId() Group by the playlist_id column
+ * @method     CcScheduleQuery groupByDbStarts() Group by the starts column
+ * @method     CcScheduleQuery groupByDbEnds() Group by the ends column
+ * @method     CcScheduleQuery groupByDbGroupId() Group by the group_id column
+ * @method     CcScheduleQuery groupByDbFileId() Group by the file_id column
+ * @method     CcScheduleQuery groupByDbClipLength() Group by the clip_length column
+ * @method     CcScheduleQuery groupByDbFadeIn() Group by the fade_in column
+ * @method     CcScheduleQuery groupByDbFadeOut() Group by the fade_out column
+ * @method     CcScheduleQuery groupByDbCueIn() Group by the cue_in column
+ * @method     CcScheduleQuery groupByDbCueOut() Group by the cue_out column
  *
  * @method     CcScheduleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcScheduleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -37,29 +37,29 @@
  * @method     CcSchedule findOne(PropelPDO $con = null) Return the first CcSchedule matching the query
  * @method     CcSchedule findOneOrCreate(PropelPDO $con = null) Return the first CcSchedule matching the query, or a new CcSchedule object populated from the query conditions when no match is found
  *
- * @method     CcSchedule findOneById(string $id) Return the first CcSchedule filtered by the id column
- * @method     CcSchedule findOneByPlaylistId(int $playlist_id) Return the first CcSchedule filtered by the playlist_id column
- * @method     CcSchedule findOneByStarts(string $starts) Return the first CcSchedule filtered by the starts column
- * @method     CcSchedule findOneByEnds(string $ends) Return the first CcSchedule filtered by the ends column
- * @method     CcSchedule findOneByGroupId(int $group_id) Return the first CcSchedule filtered by the group_id column
- * @method     CcSchedule findOneByFileId(int $file_id) Return the first CcSchedule filtered by the file_id column
- * @method     CcSchedule findOneByClipLength(string $clip_length) Return the first CcSchedule filtered by the clip_length column
- * @method     CcSchedule findOneByFadeIn(string $fade_in) Return the first CcSchedule filtered by the fade_in column
- * @method     CcSchedule findOneByFadeOut(string $fade_out) Return the first CcSchedule filtered by the fade_out column
- * @method     CcSchedule findOneByCueIn(string $cue_in) Return the first CcSchedule filtered by the cue_in column
- * @method     CcSchedule findOneByCueOut(string $cue_out) Return the first CcSchedule filtered by the cue_out column
+ * @method     CcSchedule findOneByDbId(string $id) Return the first CcSchedule filtered by the id column
+ * @method     CcSchedule findOneByDbPlaylistId(int $playlist_id) Return the first CcSchedule filtered by the playlist_id column
+ * @method     CcSchedule findOneByDbStarts(string $starts) Return the first CcSchedule filtered by the starts column
+ * @method     CcSchedule findOneByDbEnds(string $ends) Return the first CcSchedule filtered by the ends column
+ * @method     CcSchedule findOneByDbGroupId(int $group_id) Return the first CcSchedule filtered by the group_id column
+ * @method     CcSchedule findOneByDbFileId(int $file_id) Return the first CcSchedule filtered by the file_id column
+ * @method     CcSchedule findOneByDbClipLength(string $clip_length) Return the first CcSchedule filtered by the clip_length column
+ * @method     CcSchedule findOneByDbFadeIn(string $fade_in) Return the first CcSchedule filtered by the fade_in column
+ * @method     CcSchedule findOneByDbFadeOut(string $fade_out) Return the first CcSchedule filtered by the fade_out column
+ * @method     CcSchedule findOneByDbCueIn(string $cue_in) Return the first CcSchedule filtered by the cue_in column
+ * @method     CcSchedule findOneByDbCueOut(string $cue_out) Return the first CcSchedule filtered by the cue_out column
  *
- * @method     array findById(string $id) Return CcSchedule objects filtered by the id column
- * @method     array findByPlaylistId(int $playlist_id) Return CcSchedule objects filtered by the playlist_id column
- * @method     array findByStarts(string $starts) Return CcSchedule objects filtered by the starts column
- * @method     array findByEnds(string $ends) Return CcSchedule objects filtered by the ends column
- * @method     array findByGroupId(int $group_id) Return CcSchedule objects filtered by the group_id column
- * @method     array findByFileId(int $file_id) Return CcSchedule objects filtered by the file_id column
- * @method     array findByClipLength(string $clip_length) Return CcSchedule objects filtered by the clip_length column
- * @method     array findByFadeIn(string $fade_in) Return CcSchedule objects filtered by the fade_in column
- * @method     array findByFadeOut(string $fade_out) Return CcSchedule objects filtered by the fade_out column
- * @method     array findByCueIn(string $cue_in) Return CcSchedule objects filtered by the cue_in column
- * @method     array findByCueOut(string $cue_out) Return CcSchedule objects filtered by the cue_out column
+ * @method     array findByDbId(string $id) Return CcSchedule objects filtered by the id column
+ * @method     array findByDbPlaylistId(int $playlist_id) Return CcSchedule objects filtered by the playlist_id column
+ * @method     array findByDbStarts(string $starts) Return CcSchedule objects filtered by the starts column
+ * @method     array findByDbEnds(string $ends) Return CcSchedule objects filtered by the ends column
+ * @method     array findByDbGroupId(int $group_id) Return CcSchedule objects filtered by the group_id column
+ * @method     array findByDbFileId(int $file_id) Return CcSchedule objects filtered by the file_id column
+ * @method     array findByDbClipLength(string $clip_length) Return CcSchedule objects filtered by the clip_length column
+ * @method     array findByDbFadeIn(string $fade_in) Return CcSchedule objects filtered by the fade_in column
+ * @method     array findByDbFadeOut(string $fade_out) Return CcSchedule objects filtered by the fade_out column
+ * @method     array findByDbCueIn(string $cue_in) Return CcSchedule objects filtered by the cue_in column
+ * @method     array findByDbCueOut(string $cue_out) Return CcSchedule objects filtered by the cue_out column
  *
  * @package    propel.generator.campcaster.om
  */
@@ -172,39 +172,39 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	/**
 	 * Filter the query on the id column
 	 * 
-	 * @param     string|array $id The value to use as filter.
+	 * @param     string|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterById($id = null, $comparison = null)
+	public function filterByDbId($dbId = null, $comparison = null)
 	{
-		if (is_array($id) && null === $comparison) {
+		if (is_array($dbId) && null === $comparison) {
 			$comparison = Criteria::IN;
 		}
-		return $this->addUsingAlias(CcSchedulePeer::ID, $id, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::ID, $dbId, $comparison);
 	}
 
 	/**
 	 * Filter the query on the playlist_id column
 	 * 
-	 * @param     int|array $playlistId The value to use as filter.
+	 * @param     int|array $dbPlaylistId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByPlaylistId($playlistId = null, $comparison = null)
+	public function filterByDbPlaylistId($dbPlaylistId = null, $comparison = null)
 	{
-		if (is_array($playlistId)) {
+		if (is_array($dbPlaylistId)) {
 			$useMinMax = false;
-			if (isset($playlistId['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $playlistId['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbPlaylistId['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $dbPlaylistId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($playlistId['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $playlistId['max'], Criteria::LESS_EQUAL);
+			if (isset($dbPlaylistId['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $dbPlaylistId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -214,28 +214,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $playlistId, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $dbPlaylistId, $comparison);
 	}
 
 	/**
 	 * Filter the query on the starts column
 	 * 
-	 * @param     string|array $starts The value to use as filter.
+	 * @param     string|array $dbStarts The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByStarts($starts = null, $comparison = null)
+	public function filterByDbStarts($dbStarts = null, $comparison = null)
 	{
-		if (is_array($starts)) {
+		if (is_array($dbStarts)) {
 			$useMinMax = false;
-			if (isset($starts['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::STARTS, $starts['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbStarts['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::STARTS, $dbStarts['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($starts['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::STARTS, $starts['max'], Criteria::LESS_EQUAL);
+			if (isset($dbStarts['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::STARTS, $dbStarts['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -245,28 +245,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::STARTS, $starts, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::STARTS, $dbStarts, $comparison);
 	}
 
 	/**
 	 * Filter the query on the ends column
 	 * 
-	 * @param     string|array $ends The value to use as filter.
+	 * @param     string|array $dbEnds The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByEnds($ends = null, $comparison = null)
+	public function filterByDbEnds($dbEnds = null, $comparison = null)
 	{
-		if (is_array($ends)) {
+		if (is_array($dbEnds)) {
 			$useMinMax = false;
-			if (isset($ends['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::ENDS, $ends['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbEnds['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::ENDS, $dbEnds['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($ends['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::ENDS, $ends['max'], Criteria::LESS_EQUAL);
+			if (isset($dbEnds['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::ENDS, $dbEnds['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -276,28 +276,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::ENDS, $ends, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::ENDS, $dbEnds, $comparison);
 	}
 
 	/**
 	 * Filter the query on the group_id column
 	 * 
-	 * @param     int|array $groupId The value to use as filter.
+	 * @param     int|array $dbGroupId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByGroupId($groupId = null, $comparison = null)
+	public function filterByDbGroupId($dbGroupId = null, $comparison = null)
 	{
-		if (is_array($groupId)) {
+		if (is_array($dbGroupId)) {
 			$useMinMax = false;
-			if (isset($groupId['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::GROUP_ID, $groupId['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbGroupId['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::GROUP_ID, $dbGroupId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($groupId['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::GROUP_ID, $groupId['max'], Criteria::LESS_EQUAL);
+			if (isset($dbGroupId['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::GROUP_ID, $dbGroupId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -307,28 +307,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::GROUP_ID, $groupId, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::GROUP_ID, $dbGroupId, $comparison);
 	}
 
 	/**
 	 * Filter the query on the file_id column
 	 * 
-	 * @param     int|array $fileId The value to use as filter.
+	 * @param     int|array $dbFileId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByFileId($fileId = null, $comparison = null)
+	public function filterByDbFileId($dbFileId = null, $comparison = null)
 	{
-		if (is_array($fileId)) {
+		if (is_array($dbFileId)) {
 			$useMinMax = false;
-			if (isset($fileId['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::FILE_ID, $fileId['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbFileId['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::FILE_ID, $dbFileId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($fileId['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::FILE_ID, $fileId['max'], Criteria::LESS_EQUAL);
+			if (isset($dbFileId['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::FILE_ID, $dbFileId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -338,28 +338,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::FILE_ID, $fileId, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::FILE_ID, $dbFileId, $comparison);
 	}
 
 	/**
 	 * Filter the query on the clip_length column
 	 * 
-	 * @param     string|array $clipLength The value to use as filter.
+	 * @param     string|array $dbClipLength The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByClipLength($clipLength = null, $comparison = null)
+	public function filterByDbClipLength($dbClipLength = null, $comparison = null)
 	{
-		if (is_array($clipLength)) {
+		if (is_array($dbClipLength)) {
 			$useMinMax = false;
-			if (isset($clipLength['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $clipLength['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbClipLength['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $dbClipLength['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($clipLength['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $clipLength['max'], Criteria::LESS_EQUAL);
+			if (isset($dbClipLength['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $dbClipLength['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -369,28 +369,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $clipLength, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $dbClipLength, $comparison);
 	}
 
 	/**
 	 * Filter the query on the fade_in column
 	 * 
-	 * @param     string|array $fadeIn The value to use as filter.
+	 * @param     string|array $dbFadeIn The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByFadeIn($fadeIn = null, $comparison = null)
+	public function filterByDbFadeIn($dbFadeIn = null, $comparison = null)
 	{
-		if (is_array($fadeIn)) {
+		if (is_array($dbFadeIn)) {
 			$useMinMax = false;
-			if (isset($fadeIn['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::FADE_IN, $fadeIn['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbFadeIn['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::FADE_IN, $dbFadeIn['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($fadeIn['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::FADE_IN, $fadeIn['max'], Criteria::LESS_EQUAL);
+			if (isset($dbFadeIn['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::FADE_IN, $dbFadeIn['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -400,28 +400,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::FADE_IN, $fadeIn, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::FADE_IN, $dbFadeIn, $comparison);
 	}
 
 	/**
 	 * Filter the query on the fade_out column
 	 * 
-	 * @param     string|array $fadeOut The value to use as filter.
+	 * @param     string|array $dbFadeOut The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByFadeOut($fadeOut = null, $comparison = null)
+	public function filterByDbFadeOut($dbFadeOut = null, $comparison = null)
 	{
-		if (is_array($fadeOut)) {
+		if (is_array($dbFadeOut)) {
 			$useMinMax = false;
-			if (isset($fadeOut['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::FADE_OUT, $fadeOut['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbFadeOut['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::FADE_OUT, $dbFadeOut['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($fadeOut['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::FADE_OUT, $fadeOut['max'], Criteria::LESS_EQUAL);
+			if (isset($dbFadeOut['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::FADE_OUT, $dbFadeOut['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -431,28 +431,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::FADE_OUT, $fadeOut, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::FADE_OUT, $dbFadeOut, $comparison);
 	}
 
 	/**
 	 * Filter the query on the cue_in column
 	 * 
-	 * @param     string|array $cueIn The value to use as filter.
+	 * @param     string|array $dbCueIn The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByCueIn($cueIn = null, $comparison = null)
+	public function filterByDbCueIn($dbCueIn = null, $comparison = null)
 	{
-		if (is_array($cueIn)) {
+		if (is_array($dbCueIn)) {
 			$useMinMax = false;
-			if (isset($cueIn['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::CUE_IN, $cueIn['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbCueIn['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::CUE_IN, $dbCueIn['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($cueIn['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::CUE_IN, $cueIn['max'], Criteria::LESS_EQUAL);
+			if (isset($dbCueIn['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::CUE_IN, $dbCueIn['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -462,28 +462,28 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::CUE_IN, $cueIn, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::CUE_IN, $dbCueIn, $comparison);
 	}
 
 	/**
 	 * Filter the query on the cue_out column
 	 * 
-	 * @param     string|array $cueOut The value to use as filter.
+	 * @param     string|array $dbCueOut The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByCueOut($cueOut = null, $comparison = null)
+	public function filterByDbCueOut($dbCueOut = null, $comparison = null)
 	{
-		if (is_array($cueOut)) {
+		if (is_array($dbCueOut)) {
 			$useMinMax = false;
-			if (isset($cueOut['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::CUE_OUT, $cueOut['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbCueOut['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::CUE_OUT, $dbCueOut['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($cueOut['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::CUE_OUT, $cueOut['max'], Criteria::LESS_EQUAL);
+			if (isset($dbCueOut['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::CUE_OUT, $dbCueOut['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -493,7 +493,7 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::CUE_OUT, $cueOut, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::CUE_OUT, $dbCueOut, $comparison);
 	}
 
 	/**
@@ -506,7 +506,7 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	public function prune($ccSchedule = null)
 	{
 		if ($ccSchedule) {
-			$this->addUsingAlias(CcSchedulePeer::ID, $ccSchedule->getId(), Criteria::NOT_EQUAL);
+			$this->addUsingAlias(CcSchedulePeer::ID, $ccSchedule->getDbId(), Criteria::NOT_EQUAL);
 	  }
 	  
 		return $this;

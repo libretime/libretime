@@ -150,6 +150,14 @@
       <reference local="subjs_id" foreign="id"/>
     </foreign-key>
   </table>
+  <table name="cc_show_schedule" phpName="CcShowSchedule">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+	<column name="show_id" phpName="DbShowId" type="INTEGER" required="true"/>
+    <column name="group_id" phpName="DbGroupId" type="INTEGER" required="true"/>
+	<foreign-key foreignTable="cc_show" name="cc_perm_show_fkey" onDelete="CASCADE">
+      <reference local="show_id" foreign="id"/>
+    </foreign-key>
+  </table>
   <table name="cc_playlist" phpName="CcPlaylist">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
@@ -200,17 +208,17 @@
     </index>
   </table>
   <table name="cc_schedule" phpName="CcSchedule">
-    <column name="id" phpName="Id" type="BIGINT" primaryKey="true" required="true"/>
-    <column name="playlist_id" phpName="PlaylistId" type="INTEGER" required="true"/>
-    <column name="starts" phpName="Starts" type="TIMESTAMP" required="true"/>
-    <column name="ends" phpName="Ends" type="TIMESTAMP" required="true"/>
-    <column name="group_id" phpName="GroupId" type="INTEGER" required="false"/>
-    <column name="file_id" phpName="FileId" type="INTEGER" required="false"/>
-    <column name="clip_length" phpName="ClipLength" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="fade_in" phpName="FadeIn" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="fade_out" phpName="FadeOut" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cue_in" phpName="CueIn" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cue_out" phpName="CueOut" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="id" phpName="DbId" type="BIGINT" primaryKey="true" required="true"/>
+    <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="true"/>
+    <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
+    <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
+    <column name="group_id" phpName="DbGroupId" type="INTEGER" required="false"/>
+    <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
+    <column name="clip_length" phpName="DbClipLength" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="fade_in" phpName="DbFadeIn" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="fade_out" phpName="DbFadeOut" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="cue_in" phpName="DbCueIn" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="cue_out" phpName="DbCueOut" type="TIME" required="false" defaultValue="00:00:00"/>
   </table>
   <table name="cc_sess" phpName="CcSess">
     <column name="sessid" phpName="Sessid" type="CHAR" size="32" primaryKey="true" required="true"/>

@@ -84,11 +84,11 @@ function submitShow() {
 
 						table.append(tr);
 					});
-					
+				
 					dialog.append("<span>Cannot add show. New show overlaps the following shows:</span>");
 					dialog.append(table);
 				}
-		
+	
 			}
 			else {
 				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
@@ -169,6 +169,7 @@ function makeScheduleDialog(playlists, event) {
 			.addClass('ui-widget-content')
 			.append('<div>'+val.name+'</div>')
 			.append('<div>'+val.description+'</div>')
+			.append('<div>'+val.length+'</div>')
 			.click(function(){
 				$(this).parent().find("li").removeClass("ui-state-active")
 				$(this).addClass("ui-state-active");
@@ -274,8 +275,9 @@ function eventRender(event, element, view) {
 }
 
 function eventAfterRender( event, element, view ) {
-	
-	if(event.isHost === true) {
+	var today = new Date();	
+
+	if(event.isHost === true && event.start > today) {
 		$(element).contextMenu(
 			{menu: 'schedule_event_host_menu'}, eventMenu
 		);
