@@ -278,11 +278,42 @@ class Schedule {
         ." WHERE (starts >= '$p_datetime') "
         ." AND (ends <= (TIMESTAMP '$p_datetime' + INTERVAL '$p_length'))";
         //$_SESSION["debug"] = $sql;
-        //var_dump($sql);
+        //echo $sql;
         $count = $CC_DBC->GetOne($sql);
         //var_dump($count);
         return ($count == '0');
     }
+
+	public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
+		global $CC_CONFIG, $CC_DBC;
+
+		$sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
+			WHERE (starts >= '{$s_datetime}')  
+			AND (ends <= '{$e_datetime}')";
+
+		$res = $CC_DBC->GetOne($sql);
+
+		if(is_null($res))
+			return 0;
+
+		$con = Propel::getConnection("campcaster");
+
+        $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$s_datetime}')";
+		$r = $con->query($sql);
+		$s_epoch = $r->fetchColumn(0);
+
+		$sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$e_datetime}')";
+		$r = $con->query($sql);
+		$e_epoch = $r->fetchColumn(0);
+
+		$sql = "SELECT EXTRACT(EPOCH FROM INTERVAL '{$res}')";
+		$r = $con->query($sql);
+		$i_epoch = $r->fetchColumn(0);
+
+		$percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
+
+		return $percent;
+	}
 
     //  public function onAddTrackToPlaylist($playlistId, $audioTrackId) {
     //

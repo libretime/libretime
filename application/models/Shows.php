@@ -369,9 +369,9 @@ class Show {
 
 		$start = $date." ".$show["start_time"];
 		$end = $date." ".$show["end_time"];
-		if($this->showHasContent($start, $end)) {
-			$event["hasContent"] = true;
-		}
+
+		$percent = Schedule::getPercentScheduledInRange($start, $end);
+		$event["percent"] = $percent;
 
 		return $event;
 	}
