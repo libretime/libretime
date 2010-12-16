@@ -36,7 +36,7 @@ class ApiController extends Zend_Controller_Action
     }
 
 
-    public function mediaAction()
+    public function getMediaAction()
     {
         global $CC_CONFIG;
 

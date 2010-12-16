@@ -211,6 +211,8 @@
     <column name="fade_out" phpName="FadeOut" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="cue_in" phpName="CueIn" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="cue_out" phpName="CueOut" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="schedule_group_played" phpName="ScheduleGroupPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
+    <column name="media_item_played" phpName="MediaItemPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
   </table>
   <table name="cc_sess" phpName="CcSess">
     <column name="sessid" phpName="Sessid" type="CHAR" size="32" primaryKey="true" required="true"/>

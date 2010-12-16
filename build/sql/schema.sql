@@ -306,6 +306,8 @@ CREATE TABLE "cc_schedule"
 	"fade_out" TIME default '00:00:00',
 	"cue_in" TIME default '00:00:00',
 	"cue_out" TIME default '00:00:00',
+	"schedule_group_played" BOOLEAN default 'f',
+	"media_item_played" BOOLEAN default 'f',
 	PRIMARY KEY ("id")
 );
 
