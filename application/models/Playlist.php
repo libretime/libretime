@@ -62,6 +62,49 @@ class Playlist {
 
     }
 
+	 /**
+-     * Convert playlist time value to float seconds
+-     *
+-     * @param string $plt
+-     * 		playlist time value (HH:mm:ss.dddddd)
+-     * @return int
+-     * 		seconds
+-     */
+	public static function playlistTimeToSeconds($plt)
+	{
+        $arr =  preg_split('/:/', $plt);
+        if (isset($arr[2])) {
+          return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
+        }
+        if (isset($arr[1])) {
+        	return intval($arr[0])*60 + floatval($arr[1]);
+        }
+        return floatval($arr[0]);
+    }
+
+
+    /**
+-     * Convert float seconds value to playlist time format
+-     *
+-     * @param float $seconds
+-     * @return string
+-     * 		time in playlist time format (HH:mm:ss.dddddd)
+-     */
+    public static function secondsToPlaylistTime($p_seconds)
+    {
+        $seconds = $p_seconds;
+        $milliseconds = intval(($seconds - intval($seconds)) * 1000);
+        $milliStr = str_pad($milliseconds, 6, '0');
+        $hours = floor($seconds / 3600);
+        $seconds -= $hours * 3600;
+        $minutes = floor($seconds / 60);
+        $seconds -= $minutes * 60;
+
+        $res = sprintf("%02d:%02d:%02d.%s", $hours, $minutes, $seconds, $milliStr);
+
+       return $res;
+    }
+
     public static function Insert($p_values)
     {
          // Create the StoredPlaylist object
