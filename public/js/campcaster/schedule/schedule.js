@@ -4,6 +4,19 @@
 *
 */
 
+function makeTimeStamp(date){
+	var sy, sm, sd, h, m, s, timestamp;
+	sy = date.getFullYear();
+	sm = date.getMonth() + 1;
+	sd = date.getDate();
+	h = date.getHours();
+	m = date.getMinutes();
+	s = date.getSeconds();
+
+	timestamp = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+	return timestamp;
+}
+
 //dateText mm-dd-yy
 function startDpSelect(dateText, inst) {
 	var time, date;
@@ -100,18 +113,9 @@ function schedulePlaylist() {
 	}
 
 	pl_id = li.data('pl_id');
-	event = li.parent().data('event');
-	start = event.start;
+	event = li.parent().data('event');	
 
-	var sy, sm, sd, h, m, s;
-	sy = start.getFullYear();
-	sm = start.getMonth() + 1;
-	sd = start.getDate();
-	h = start.getHours();
-	m = start.getMinutes();
-	s = start.getSeconds();
-
-	start_date = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+	start_date = makeTimeStamp(event.start);
 
 	url = '/Schedule/schedule-show/format/json';
 
@@ -240,17 +244,7 @@ function eventMenu(action, el, pos) {
 		openScheduleDialog(event, time);
 	}
 	else if (method === 'clear-show') {
-		start = event.start;
-
-		var sy, sm, sd, h, m, s, start_date;
-		sy = start.getFullYear();
-		sm = start.getMonth() + 1;
-		sd = start.getDate();
-		h = start.getHours();
-		m = start.getMinutes();
-		s = start.getSeconds();
-
-		start_date = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+		start_date = makeTimeStamp(event.start);
 
 		url = '/Schedule/clear-show/format/json';
 
