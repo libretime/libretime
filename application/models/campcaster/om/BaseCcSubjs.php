@@ -52,11 +52,18 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	protected $type;
 
 	/**
-	 * The value for the realname field.
+	 * The value for the first_name field.
 	 * Note: this column has a database default value of: ''
 	 * @var        string
 	 */
-	protected $realname;
+	protected $first_name;
+
+	/**
+	 * The value for the last_name field.
+	 * Note: this column has a database default value of: ''
+	 * @var        string
+	 */
+	protected $last_name;
 
 	/**
 	 * The value for the lastlogin field.
@@ -130,7 +137,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		$this->login = '';
 		$this->pass = '';
 		$this->type = 'U';
-		$this->realname = '';
+		$this->first_name = '';
+		$this->last_name = '';
 	}
 
 	/**
@@ -148,7 +156,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getId()
+	public function getDbId()
 	{
 		return $this->id;
 	}
@@ -158,7 +166,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getLogin()
+	public function getDbLogin()
 	{
 		return $this->login;
 	}
@@ -168,7 +176,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getPass()
+	public function getDbPass()
 	{
 		return $this->pass;
 	}
@@ -178,19 +186,29 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getType()
+	public function getDbType()
 	{
 		return $this->type;
 	}
 
 	/**
-	 * Get the [realname] column value.
+	 * Get the [first_name] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getRealname()
+	public function getDbFirstName()
 	{
-		return $this->realname;
+		return $this->first_name;
+	}
+
+	/**
+	 * Get the [last_name] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbLastName()
+	{
+		return $this->last_name;
 	}
 
 	/**
@@ -202,7 +220,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getLastlogin($format = 'Y-m-d H:i:s')
+	public function getDbLastlogin($format = 'Y-m-d H:i:s')
 	{
 		if ($this->lastlogin === null) {
 			return null;
@@ -235,7 +253,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getLastfail($format = 'Y-m-d H:i:s')
+	public function getDbLastfail($format = 'Y-m-d H:i:s')
 	{
 		if ($this->lastfail === null) {
 			return null;
@@ -265,7 +283,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcSubjs The current object (for fluent API support)
 	 */
-	public function setId($v)
+	public function setDbId($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -277,7 +295,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setId()
+	} // setDbId()
 
 	/**
 	 * Set the value of [login] column.
@@ -285,7 +303,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcSubjs The current object (for fluent API support)
 	 */
-	public function setLogin($v)
+	public function setDbLogin($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -297,7 +315,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setLogin()
+	} // setDbLogin()
 
 	/**
 	 * Set the value of [pass] column.
@@ -305,7 +323,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcSubjs The current object (for fluent API support)
 	 */
-	public function setPass($v)
+	public function setDbPass($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -317,7 +335,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setPass()
+	} // setDbPass()
 
 	/**
 	 * Set the value of [type] column.
@@ -325,7 +343,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcSubjs The current object (for fluent API support)
 	 */
-	public function setType($v)
+	public function setDbType($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -337,27 +355,47 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setType()
+	} // setDbType()
 
 	/**
-	 * Set the value of [realname] column.
+	 * Set the value of [first_name] column.
 	 * 
 	 * @param      string $v new value
 	 * @return     CcSubjs The current object (for fluent API support)
 	 */
-	public function setRealname($v)
+	public function setDbFirstName($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->realname !== $v || $this->isNew()) {
-			$this->realname = $v;
-			$this->modifiedColumns[] = CcSubjsPeer::REALNAME;
+		if ($this->first_name !== $v || $this->isNew()) {
+			$this->first_name = $v;
+			$this->modifiedColumns[] = CcSubjsPeer::FIRST_NAME;
 		}
 
 		return $this;
-	} // setRealname()
+	} // setDbFirstName()
+
+	/**
+	 * Set the value of [last_name] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcSubjs The current object (for fluent API support)
+	 */
+	public function setDbLastName($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->last_name !== $v || $this->isNew()) {
+			$this->last_name = $v;
+			$this->modifiedColumns[] = CcSubjsPeer::LAST_NAME;
+		}
+
+		return $this;
+	} // setDbLastName()
 
 	/**
 	 * Sets the value of [lastlogin] column to a normalized version of the date/time value specified.
@@ -366,7 +404,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSubjs The current object (for fluent API support)
 	 */
-	public function setLastlogin($v)
+	public function setDbLastlogin($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -406,7 +444,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setLastlogin()
+	} // setDbLastlogin()
 
 	/**
 	 * Sets the value of [lastfail] column to a normalized version of the date/time value specified.
@@ -415,7 +453,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcSubjs The current object (for fluent API support)
 	 */
-	public function setLastfail($v)
+	public function setDbLastfail($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -455,7 +493,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setLastfail()
+	} // setDbLastfail()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -479,7 +517,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				return false;
 			}
 
-			if ($this->realname !== '') {
+			if ($this->first_name !== '') {
+				return false;
+			}
+
+			if ($this->last_name !== '') {
 				return false;
 			}
 
@@ -509,9 +551,10 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			$this->login = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
 			$this->pass = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->type = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->realname = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->lastlogin = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-			$this->lastfail = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->first_name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->last_name = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->lastlogin = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->lastfail = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -520,7 +563,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 7; // 7 = CcSubjsPeer::NUM_COLUMNS - CcSubjsPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 8; // 8 = CcSubjsPeer::NUM_COLUMNS - CcSubjsPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcSubjs object", $e);
@@ -720,7 +763,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 					$pk = BasePeer::doInsert($criteria, $con);
 					$affectedRows = 1;
-					$this->setId($pk);  //[IMV] update autoincrement primary key
+					$this->setDbId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
 					$affectedRows = CcSubjsPeer::doUpdate($this, $con);
@@ -946,25 +989,28 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				return $this->getId();
+				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getLogin();
+				return $this->getDbLogin();
 				break;
 			case 2:
-				return $this->getPass();
+				return $this->getDbPass();
 				break;
 			case 3:
-				return $this->getType();
+				return $this->getDbType();
 				break;
 			case 4:
-				return $this->getRealname();
+				return $this->getDbFirstName();
 				break;
 			case 5:
-				return $this->getLastlogin();
+				return $this->getDbLastName();
 				break;
 			case 6:
-				return $this->getLastfail();
+				return $this->getDbLastlogin();
+				break;
+			case 7:
+				return $this->getDbLastfail();
 				break;
 			default:
 				return null;
@@ -989,13 +1035,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	{
 		$keys = CcSubjsPeer::getFieldNames($keyType);
 		$result = array(
-			$keys[0] => $this->getId(),
-			$keys[1] => $this->getLogin(),
-			$keys[2] => $this->getPass(),
-			$keys[3] => $this->getType(),
-			$keys[4] => $this->getRealname(),
-			$keys[5] => $this->getLastlogin(),
-			$keys[6] => $this->getLastfail(),
+			$keys[0] => $this->getDbId(),
+			$keys[1] => $this->getDbLogin(),
+			$keys[2] => $this->getDbPass(),
+			$keys[3] => $this->getDbType(),
+			$keys[4] => $this->getDbFirstName(),
+			$keys[5] => $this->getDbLastName(),
+			$keys[6] => $this->getDbLastlogin(),
+			$keys[7] => $this->getDbLastfail(),
 		);
 		return $result;
 	}
@@ -1028,25 +1075,28 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	{
 		switch($pos) {
 			case 0:
-				$this->setId($value);
+				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setLogin($value);
+				$this->setDbLogin($value);
 				break;
 			case 2:
-				$this->setPass($value);
+				$this->setDbPass($value);
 				break;
 			case 3:
-				$this->setType($value);
+				$this->setDbType($value);
 				break;
 			case 4:
-				$this->setRealname($value);
+				$this->setDbFirstName($value);
 				break;
 			case 5:
-				$this->setLastlogin($value);
+				$this->setDbLastName($value);
 				break;
 			case 6:
-				$this->setLastfail($value);
+				$this->setDbLastlogin($value);
+				break;
+			case 7:
+				$this->setDbLastfail($value);
 				break;
 		} // switch()
 	}
@@ -1072,13 +1122,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	{
 		$keys = CcSubjsPeer::getFieldNames($keyType);
 
-		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setLogin($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setPass($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setType($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setRealname($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setLastlogin($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setLastfail($arr[$keys[6]]);
+		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbLogin($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbPass($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbType($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbFirstName($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbLastName($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbLastlogin($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbLastfail($arr[$keys[7]]);
 	}
 
 	/**
@@ -1094,7 +1145,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcSubjsPeer::LOGIN)) $criteria->add(CcSubjsPeer::LOGIN, $this->login);
 		if ($this->isColumnModified(CcSubjsPeer::PASS)) $criteria->add(CcSubjsPeer::PASS, $this->pass);
 		if ($this->isColumnModified(CcSubjsPeer::TYPE)) $criteria->add(CcSubjsPeer::TYPE, $this->type);
-		if ($this->isColumnModified(CcSubjsPeer::REALNAME)) $criteria->add(CcSubjsPeer::REALNAME, $this->realname);
+		if ($this->isColumnModified(CcSubjsPeer::FIRST_NAME)) $criteria->add(CcSubjsPeer::FIRST_NAME, $this->first_name);
+		if ($this->isColumnModified(CcSubjsPeer::LAST_NAME)) $criteria->add(CcSubjsPeer::LAST_NAME, $this->last_name);
 		if ($this->isColumnModified(CcSubjsPeer::LASTLOGIN)) $criteria->add(CcSubjsPeer::LASTLOGIN, $this->lastlogin);
 		if ($this->isColumnModified(CcSubjsPeer::LASTFAIL)) $criteria->add(CcSubjsPeer::LASTFAIL, $this->lastfail);
 
@@ -1123,7 +1175,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 */
 	public function getPrimaryKey()
 	{
-		return $this->getId();
+		return $this->getDbId();
 	}
 
 	/**
@@ -1134,7 +1186,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 */
 	public function setPrimaryKey($key)
 	{
-		$this->setId($key);
+		$this->setDbId($key);
 	}
 
 	/**
@@ -1143,7 +1195,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 */
 	public function isPrimaryKeyNull()
 	{
-		return null === $this->getId();
+		return null === $this->getDbId();
 	}
 
 	/**
@@ -1158,12 +1210,13 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setLogin($this->login);
-		$copyObj->setPass($this->pass);
-		$copyObj->setType($this->type);
-		$copyObj->setRealname($this->realname);
-		$copyObj->setLastlogin($this->lastlogin);
-		$copyObj->setLastfail($this->lastfail);
+		$copyObj->setDbLogin($this->login);
+		$copyObj->setDbPass($this->pass);
+		$copyObj->setDbType($this->type);
+		$copyObj->setDbFirstName($this->first_name);
+		$copyObj->setDbLastName($this->last_name);
+		$copyObj->setDbLastlogin($this->lastlogin);
+		$copyObj->setDbLastfail($this->lastfail);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1216,7 +1269,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 
 		$copyObj->setNew(true);
-		$copyObj->setId(NULL); // this is a auto-increment column, so set to default value
+		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
 	}
 
 	/**
@@ -2054,7 +2107,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		$this->login = null;
 		$this->pass = null;
 		$this->type = null;
-		$this->realname = null;
+		$this->first_name = null;
+		$this->last_name = null;
 		$this->lastlogin = null;
 		$this->lastfail = null;
 		$this->alreadyInSave = false;

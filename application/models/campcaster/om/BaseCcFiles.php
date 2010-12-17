@@ -1167,7 +1167,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcFilesPeer::EDITEDBY;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getId() !== $v) {
+		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
 			$this->aCcSubjs = null;
 		}
 
@@ -2273,7 +2273,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aCcSubjs !== null && $this->editedby !== $this->aCcSubjs->getId()) {
+		if ($this->aCcSubjs !== null && $this->editedby !== $this->aCcSubjs->getDbId()) {
 			$this->aCcSubjs = null;
 		}
 	} // ensureConsistency
@@ -3359,7 +3359,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($v === null) {
 			$this->setEditedby(NULL);
 		} else {
-			$this->setEditedby($v->getId());
+			$this->setEditedby($v->getDbId());
 		}
 
 		$this->aCcSubjs = $v;

@@ -6,21 +6,23 @@
  *
  * 
  *
- * @method     CcSubjsQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     CcSubjsQuery orderByLogin($order = Criteria::ASC) Order by the login column
- * @method     CcSubjsQuery orderByPass($order = Criteria::ASC) Order by the pass column
- * @method     CcSubjsQuery orderByType($order = Criteria::ASC) Order by the type column
- * @method     CcSubjsQuery orderByRealname($order = Criteria::ASC) Order by the realname column
- * @method     CcSubjsQuery orderByLastlogin($order = Criteria::ASC) Order by the lastlogin column
- * @method     CcSubjsQuery orderByLastfail($order = Criteria::ASC) Order by the lastfail column
+ * @method     CcSubjsQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method     CcSubjsQuery orderByDbLogin($order = Criteria::ASC) Order by the login column
+ * @method     CcSubjsQuery orderByDbPass($order = Criteria::ASC) Order by the pass column
+ * @method     CcSubjsQuery orderByDbType($order = Criteria::ASC) Order by the type column
+ * @method     CcSubjsQuery orderByDbFirstName($order = Criteria::ASC) Order by the first_name column
+ * @method     CcSubjsQuery orderByDbLastName($order = Criteria::ASC) Order by the last_name column
+ * @method     CcSubjsQuery orderByDbLastlogin($order = Criteria::ASC) Order by the lastlogin column
+ * @method     CcSubjsQuery orderByDbLastfail($order = Criteria::ASC) Order by the lastfail column
  *
- * @method     CcSubjsQuery groupById() Group by the id column
- * @method     CcSubjsQuery groupByLogin() Group by the login column
- * @method     CcSubjsQuery groupByPass() Group by the pass column
- * @method     CcSubjsQuery groupByType() Group by the type column
- * @method     CcSubjsQuery groupByRealname() Group by the realname column
- * @method     CcSubjsQuery groupByLastlogin() Group by the lastlogin column
- * @method     CcSubjsQuery groupByLastfail() Group by the lastfail column
+ * @method     CcSubjsQuery groupByDbId() Group by the id column
+ * @method     CcSubjsQuery groupByDbLogin() Group by the login column
+ * @method     CcSubjsQuery groupByDbPass() Group by the pass column
+ * @method     CcSubjsQuery groupByDbType() Group by the type column
+ * @method     CcSubjsQuery groupByDbFirstName() Group by the first_name column
+ * @method     CcSubjsQuery groupByDbLastName() Group by the last_name column
+ * @method     CcSubjsQuery groupByDbLastlogin() Group by the lastlogin column
+ * @method     CcSubjsQuery groupByDbLastfail() Group by the lastfail column
  *
  * @method     CcSubjsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcSubjsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -57,21 +59,23 @@
  * @method     CcSubjs findOne(PropelPDO $con = null) Return the first CcSubjs matching the query
  * @method     CcSubjs findOneOrCreate(PropelPDO $con = null) Return the first CcSubjs matching the query, or a new CcSubjs object populated from the query conditions when no match is found
  *
- * @method     CcSubjs findOneById(int $id) Return the first CcSubjs filtered by the id column
- * @method     CcSubjs findOneByLogin(string $login) Return the first CcSubjs filtered by the login column
- * @method     CcSubjs findOneByPass(string $pass) Return the first CcSubjs filtered by the pass column
- * @method     CcSubjs findOneByType(string $type) Return the first CcSubjs filtered by the type column
- * @method     CcSubjs findOneByRealname(string $realname) Return the first CcSubjs filtered by the realname column
- * @method     CcSubjs findOneByLastlogin(string $lastlogin) Return the first CcSubjs filtered by the lastlogin column
- * @method     CcSubjs findOneByLastfail(string $lastfail) Return the first CcSubjs filtered by the lastfail column
+ * @method     CcSubjs findOneByDbId(int $id) Return the first CcSubjs filtered by the id column
+ * @method     CcSubjs findOneByDbLogin(string $login) Return the first CcSubjs filtered by the login column
+ * @method     CcSubjs findOneByDbPass(string $pass) Return the first CcSubjs filtered by the pass column
+ * @method     CcSubjs findOneByDbType(string $type) Return the first CcSubjs filtered by the type column
+ * @method     CcSubjs findOneByDbFirstName(string $first_name) Return the first CcSubjs filtered by the first_name column
+ * @method     CcSubjs findOneByDbLastName(string $last_name) Return the first CcSubjs filtered by the last_name column
+ * @method     CcSubjs findOneByDbLastlogin(string $lastlogin) Return the first CcSubjs filtered by the lastlogin column
+ * @method     CcSubjs findOneByDbLastfail(string $lastfail) Return the first CcSubjs filtered by the lastfail column
  *
- * @method     array findById(int $id) Return CcSubjs objects filtered by the id column
- * @method     array findByLogin(string $login) Return CcSubjs objects filtered by the login column
- * @method     array findByPass(string $pass) Return CcSubjs objects filtered by the pass column
- * @method     array findByType(string $type) Return CcSubjs objects filtered by the type column
- * @method     array findByRealname(string $realname) Return CcSubjs objects filtered by the realname column
- * @method     array findByLastlogin(string $lastlogin) Return CcSubjs objects filtered by the lastlogin column
- * @method     array findByLastfail(string $lastfail) Return CcSubjs objects filtered by the lastfail column
+ * @method     array findByDbId(int $id) Return CcSubjs objects filtered by the id column
+ * @method     array findByDbLogin(string $login) Return CcSubjs objects filtered by the login column
+ * @method     array findByDbPass(string $pass) Return CcSubjs objects filtered by the pass column
+ * @method     array findByDbType(string $type) Return CcSubjs objects filtered by the type column
+ * @method     array findByDbFirstName(string $first_name) Return CcSubjs objects filtered by the first_name column
+ * @method     array findByDbLastName(string $last_name) Return CcSubjs objects filtered by the last_name column
+ * @method     array findByDbLastlogin(string $lastlogin) Return CcSubjs objects filtered by the lastlogin column
+ * @method     array findByDbLastfail(string $lastfail) Return CcSubjs objects filtered by the lastfail column
  *
  * @package    propel.generator.campcaster.om
  */
@@ -184,127 +188,149 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 	/**
 	 * Filter the query on the id column
 	 * 
-	 * @param     int|array $id The value to use as filter.
+	 * @param     int|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function filterById($id = null, $comparison = null)
+	public function filterByDbId($dbId = null, $comparison = null)
 	{
-		if (is_array($id) && null === $comparison) {
+		if (is_array($dbId) && null === $comparison) {
 			$comparison = Criteria::IN;
 		}
-		return $this->addUsingAlias(CcSubjsPeer::ID, $id, $comparison);
+		return $this->addUsingAlias(CcSubjsPeer::ID, $dbId, $comparison);
 	}
 
 	/**
 	 * Filter the query on the login column
 	 * 
-	 * @param     string $login The value to use as filter.
+	 * @param     string $dbLogin The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function filterByLogin($login = null, $comparison = null)
+	public function filterByDbLogin($dbLogin = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($login)) {
+			if (is_array($dbLogin)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $login)) {
-				$login = str_replace('*', '%', $login);
+			} elseif (preg_match('/[\%\*]/', $dbLogin)) {
+				$dbLogin = str_replace('*', '%', $dbLogin);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcSubjsPeer::LOGIN, $login, $comparison);
+		return $this->addUsingAlias(CcSubjsPeer::LOGIN, $dbLogin, $comparison);
 	}
 
 	/**
 	 * Filter the query on the pass column
 	 * 
-	 * @param     string $pass The value to use as filter.
+	 * @param     string $dbPass The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function filterByPass($pass = null, $comparison = null)
+	public function filterByDbPass($dbPass = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($pass)) {
+			if (is_array($dbPass)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $pass)) {
-				$pass = str_replace('*', '%', $pass);
+			} elseif (preg_match('/[\%\*]/', $dbPass)) {
+				$dbPass = str_replace('*', '%', $dbPass);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcSubjsPeer::PASS, $pass, $comparison);
+		return $this->addUsingAlias(CcSubjsPeer::PASS, $dbPass, $comparison);
 	}
 
 	/**
 	 * Filter the query on the type column
 	 * 
-	 * @param     string $type The value to use as filter.
+	 * @param     string $dbType The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function filterByType($type = null, $comparison = null)
+	public function filterByDbType($dbType = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($type)) {
+			if (is_array($dbType)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $type)) {
-				$type = str_replace('*', '%', $type);
+			} elseif (preg_match('/[\%\*]/', $dbType)) {
+				$dbType = str_replace('*', '%', $dbType);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcSubjsPeer::TYPE, $type, $comparison);
+		return $this->addUsingAlias(CcSubjsPeer::TYPE, $dbType, $comparison);
 	}
 
 	/**
-	 * Filter the query on the realname column
+	 * Filter the query on the first_name column
 	 * 
-	 * @param     string $realname The value to use as filter.
+	 * @param     string $dbFirstName The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function filterByRealname($realname = null, $comparison = null)
+	public function filterByDbFirstName($dbFirstName = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($realname)) {
+			if (is_array($dbFirstName)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $realname)) {
-				$realname = str_replace('*', '%', $realname);
+			} elseif (preg_match('/[\%\*]/', $dbFirstName)) {
+				$dbFirstName = str_replace('*', '%', $dbFirstName);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcSubjsPeer::REALNAME, $realname, $comparison);
+		return $this->addUsingAlias(CcSubjsPeer::FIRST_NAME, $dbFirstName, $comparison);
+	}
+
+	/**
+	 * Filter the query on the last_name column
+	 * 
+	 * @param     string $dbLastName The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByDbLastName($dbLastName = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbLastName)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbLastName)) {
+				$dbLastName = str_replace('*', '%', $dbLastName);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcSubjsPeer::LAST_NAME, $dbLastName, $comparison);
 	}
 
 	/**
 	 * Filter the query on the lastlogin column
 	 * 
-	 * @param     string|array $lastlogin The value to use as filter.
+	 * @param     string|array $dbLastlogin The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function filterByLastlogin($lastlogin = null, $comparison = null)
+	public function filterByDbLastlogin($dbLastlogin = null, $comparison = null)
 	{
-		if (is_array($lastlogin)) {
+		if (is_array($dbLastlogin)) {
 			$useMinMax = false;
-			if (isset($lastlogin['min'])) {
-				$this->addUsingAlias(CcSubjsPeer::LASTLOGIN, $lastlogin['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbLastlogin['min'])) {
+				$this->addUsingAlias(CcSubjsPeer::LASTLOGIN, $dbLastlogin['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($lastlogin['max'])) {
-				$this->addUsingAlias(CcSubjsPeer::LASTLOGIN, $lastlogin['max'], Criteria::LESS_EQUAL);
+			if (isset($dbLastlogin['max'])) {
+				$this->addUsingAlias(CcSubjsPeer::LASTLOGIN, $dbLastlogin['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -314,28 +340,28 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSubjsPeer::LASTLOGIN, $lastlogin, $comparison);
+		return $this->addUsingAlias(CcSubjsPeer::LASTLOGIN, $dbLastlogin, $comparison);
 	}
 
 	/**
 	 * Filter the query on the lastfail column
 	 * 
-	 * @param     string|array $lastfail The value to use as filter.
+	 * @param     string|array $dbLastfail The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function filterByLastfail($lastfail = null, $comparison = null)
+	public function filterByDbLastfail($dbLastfail = null, $comparison = null)
 	{
-		if (is_array($lastfail)) {
+		if (is_array($dbLastfail)) {
 			$useMinMax = false;
-			if (isset($lastfail['min'])) {
-				$this->addUsingAlias(CcSubjsPeer::LASTFAIL, $lastfail['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbLastfail['min'])) {
+				$this->addUsingAlias(CcSubjsPeer::LASTFAIL, $dbLastfail['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($lastfail['max'])) {
-				$this->addUsingAlias(CcSubjsPeer::LASTFAIL, $lastfail['max'], Criteria::LESS_EQUAL);
+			if (isset($dbLastfail['max'])) {
+				$this->addUsingAlias(CcSubjsPeer::LASTFAIL, $dbLastfail['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -345,7 +371,7 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSubjsPeer::LASTFAIL, $lastfail, $comparison);
+		return $this->addUsingAlias(CcSubjsPeer::LASTFAIL, $dbLastfail, $comparison);
 	}
 
 	/**
@@ -806,7 +832,7 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 	public function prune($ccSubjs = null)
 	{
 		if ($ccSubjs) {
-			$this->addUsingAlias(CcSubjsPeer::ID, $ccSubjs->getId(), Criteria::NOT_EQUAL);
+			$this->addUsingAlias(CcSubjsPeer::ID, $ccSubjs->getDbId(), Criteria::NOT_EQUAL);
 	  }
 	  
 		return $this;

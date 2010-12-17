@@ -322,7 +322,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcPlaylistPeer::EDITEDBY;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getId() !== $v) {
+		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
 			$this->aCcSubjs = null;
 		}
 
@@ -501,7 +501,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aCcSubjs !== null && $this->editedby !== $this->aCcSubjs->getId()) {
+		if ($this->aCcSubjs !== null && $this->editedby !== $this->aCcSubjs->getDbId()) {
 			$this->aCcSubjs = null;
 		}
 	} // ensureConsistency
@@ -1127,7 +1127,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		if ($v === null) {
 			$this->setDbEditedby(NULL);
 		} else {
-			$this->setDbEditedby($v->getId());
+			$this->setDbEditedby($v->getDbId());
 		}
 
 		$this->aCcSubjs = $v;

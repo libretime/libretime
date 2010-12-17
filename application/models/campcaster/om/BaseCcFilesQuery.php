@@ -1597,7 +1597,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	public function filterByCcSubjs($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcFilesPeer::EDITEDBY, $ccSubjs->getId(), $comparison);
+			->addUsingAlias(CcFilesPeer::EDITEDBY, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**

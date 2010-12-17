@@ -167,7 +167,7 @@ abstract class BaseCcSess extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcSessPeer::USERID;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getId() !== $v) {
+		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
 			$this->aCcSubjs = null;
 		}
 
@@ -310,7 +310,7 @@ abstract class BaseCcSess extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aCcSubjs !== null && $this->userid !== $this->aCcSubjs->getId()) {
+		if ($this->aCcSubjs !== null && $this->userid !== $this->aCcSubjs->getDbId()) {
 			$this->aCcSubjs = null;
 		}
 	} // ensureConsistency
@@ -856,7 +856,7 @@ abstract class BaseCcSess extends BaseObject  implements Persistent
 		if ($v === null) {
 			$this->setUserid(NULL);
 		} else {
-			$this->setUserid($v->getId());
+			$this->setUserid($v->getDbId());
 		}
 
 		$this->aCcSubjs = $v;

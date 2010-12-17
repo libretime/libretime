@@ -26,7 +26,7 @@ abstract class BaseCcSubjsPeer {
 	const TM_CLASS = 'CcSubjsTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 7;
+	const NUM_COLUMNS = 8;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -43,8 +43,11 @@ abstract class BaseCcSubjsPeer {
 	/** the column name for the TYPE field */
 	const TYPE = 'cc_subjs.TYPE';
 
-	/** the column name for the REALNAME field */
-	const REALNAME = 'cc_subjs.REALNAME';
+	/** the column name for the FIRST_NAME field */
+	const FIRST_NAME = 'cc_subjs.FIRST_NAME';
+
+	/** the column name for the LAST_NAME field */
+	const LAST_NAME = 'cc_subjs.LAST_NAME';
 
 	/** the column name for the LASTLOGIN field */
 	const LASTLOGIN = 'cc_subjs.LASTLOGIN';
@@ -68,12 +71,12 @@ abstract class BaseCcSubjsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Login', 'Pass', 'Type', 'Realname', 'Lastlogin', 'Lastfail', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'login', 'pass', 'type', 'realname', 'lastlogin', 'lastfail', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::LOGIN, self::PASS, self::TYPE, self::REALNAME, self::LASTLOGIN, self::LASTFAIL, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'REALNAME', 'LASTLOGIN', 'LASTFAIL', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'realname', 'lastlogin', 'lastfail', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbLogin', 'DbPass', 'DbType', 'DbFirstName', 'DbLastName', 'DbLastlogin', 'DbLastfail', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbLogin', 'dbPass', 'dbType', 'dbFirstName', 'dbLastName', 'dbLastlogin', 'dbLastfail', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::LOGIN, self::PASS, self::TYPE, self::FIRST_NAME, self::LAST_NAME, self::LASTLOGIN, self::LASTFAIL, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'FIRST_NAME', 'LAST_NAME', 'LASTLOGIN', 'LASTFAIL', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'first_name', 'last_name', 'lastlogin', 'lastfail', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	/**
@@ -83,12 +86,12 @@ abstract class BaseCcSubjsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Login' => 1, 'Pass' => 2, 'Type' => 3, 'Realname' => 4, 'Lastlogin' => 5, 'Lastfail' => 6, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'realname' => 4, 'lastlogin' => 5, 'lastfail' => 6, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::LOGIN => 1, self::PASS => 2, self::TYPE => 3, self::REALNAME => 4, self::LASTLOGIN => 5, self::LASTFAIL => 6, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'REALNAME' => 4, 'LASTLOGIN' => 5, 'LASTFAIL' => 6, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'realname' => 4, 'lastlogin' => 5, 'lastfail' => 6, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbLogin' => 1, 'DbPass' => 2, 'DbType' => 3, 'DbFirstName' => 4, 'DbLastName' => 5, 'DbLastlogin' => 6, 'DbLastfail' => 7, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbLogin' => 1, 'dbPass' => 2, 'dbType' => 3, 'dbFirstName' => 4, 'dbLastName' => 5, 'dbLastlogin' => 6, 'dbLastfail' => 7, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::LOGIN => 1, self::PASS => 2, self::TYPE => 3, self::FIRST_NAME => 4, self::LAST_NAME => 5, self::LASTLOGIN => 6, self::LASTFAIL => 7, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'FIRST_NAME' => 4, 'LAST_NAME' => 5, 'LASTLOGIN' => 6, 'LASTFAIL' => 7, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'first_name' => 4, 'last_name' => 5, 'lastlogin' => 6, 'lastfail' => 7, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	/**
@@ -164,7 +167,8 @@ abstract class BaseCcSubjsPeer {
 			$criteria->addSelectColumn(CcSubjsPeer::LOGIN);
 			$criteria->addSelectColumn(CcSubjsPeer::PASS);
 			$criteria->addSelectColumn(CcSubjsPeer::TYPE);
-			$criteria->addSelectColumn(CcSubjsPeer::REALNAME);
+			$criteria->addSelectColumn(CcSubjsPeer::FIRST_NAME);
+			$criteria->addSelectColumn(CcSubjsPeer::LAST_NAME);
 			$criteria->addSelectColumn(CcSubjsPeer::LASTLOGIN);
 			$criteria->addSelectColumn(CcSubjsPeer::LASTFAIL);
 		} else {
@@ -172,7 +176,8 @@ abstract class BaseCcSubjsPeer {
 			$criteria->addSelectColumn($alias . '.LOGIN');
 			$criteria->addSelectColumn($alias . '.PASS');
 			$criteria->addSelectColumn($alias . '.TYPE');
-			$criteria->addSelectColumn($alias . '.REALNAME');
+			$criteria->addSelectColumn($alias . '.FIRST_NAME');
+			$criteria->addSelectColumn($alias . '.LAST_NAME');
 			$criteria->addSelectColumn($alias . '.LASTLOGIN');
 			$criteria->addSelectColumn($alias . '.LASTFAIL');
 		}
@@ -299,7 +304,7 @@ abstract class BaseCcSubjsPeer {
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
-				$key = (string) $obj->getId();
+				$key = (string) $obj->getDbId();
 			} // if key === null
 			self::$instances[$key] = $obj;
 		}
@@ -319,7 +324,7 @@ abstract class BaseCcSubjsPeer {
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
 			if (is_object($value) && $value instanceof CcSubjs) {
-				$key = (string) $value->getId();
+				$key = (string) $value->getDbId();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;

@@ -10,11 +10,17 @@
 $pages = array(
 	array(
 		'label'      => 'Home',
-		'title'      => 'Go Home',
 		'module'     => 'default',
 		'controller' => 'index',
 		'action'     => 'index',
 		'order'      => -100 // make sure home is the first page
+	),
+	array(
+		'label'      => 'Add User',
+		'module'     => 'default',
+		'controller' => 'user',
+		'action'     => 'add-user',
+		'resource'	=>	'user'	
 	),
 	array(
 		'label'      => 'Playlists',
@@ -62,7 +68,8 @@ $pages = array(
 		'label'      => 'Schedule',
 		'module'     => 'default',
 		'controller' => 'Schedule',
-		'action'     => 'index'
+		'action'     => 'index',
+		'resource'   => 'schedule'
 	),
 	array(
 		'label'      => 'Logout',

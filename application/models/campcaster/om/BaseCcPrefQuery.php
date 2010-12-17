@@ -248,7 +248,7 @@ abstract class BaseCcPrefQuery extends ModelCriteria
 	public function filterByCcSubjs($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcPrefPeer::SUBJID, $ccSubjs->getId(), $comparison);
+			->addUsingAlias(CcPrefPeer::SUBJID, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**

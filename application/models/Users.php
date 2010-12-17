@@ -27,6 +27,18 @@ class User {
 		return $this->_userRole === 'A';
 	}
 
+	public static function addUser($data) {
+
+		$user = new CcSubjs();
+		$user->setDbLogin($data['login']);
+		$user->setDbPass(md5($data['password']));
+		$user->setDbFirstName($data['first_name']);
+		$user->setDbLastName($data['last_name']);
+		$user->setDbType($data['type']);
+		$user->save();
+		
+	}
+
 	public static function getUsers($type=NULL) {
 		global $CC_DBC;
 

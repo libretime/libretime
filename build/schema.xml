@@ -248,13 +248,14 @@
     </unique>
   </table>
   <table name="cc_subjs" phpName="CcSubjs">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="login" phpName="Login" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="pass" phpName="Pass" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="type" phpName="Type" type="CHAR" size="1" required="true" defaultValue="U"/>
-    <column name="realname" phpName="Realname" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="lastlogin" phpName="Lastlogin" type="TIMESTAMP" required="false"/>
-    <column name="lastfail" phpName="Lastfail" type="TIMESTAMP" required="false"/>
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="login" phpName="DbLogin" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <column name="pass" phpName="DbPass" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <column name="type" phpName="DbType" type="CHAR" size="1" required="true" defaultValue="U"/>
+    <column name="first_name" phpName="DbFirstName" type="VARCHAR" size="255" required="true" defaultValue=""/>
+	<column name="last_name" phpName="DbLastName" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <column name="lastlogin" phpName="DbLastlogin" type="TIMESTAMP" required="false"/>
+    <column name="lastfail" phpName="DbLastfail" type="TIMESTAMP" required="false"/>
     <unique name="cc_subjs_id_idx">
       <unique-column name="id"/>
     </unique>

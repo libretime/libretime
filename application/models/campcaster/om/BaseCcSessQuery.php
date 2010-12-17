@@ -262,7 +262,7 @@ abstract class BaseCcSessQuery extends ModelCriteria
 	public function filterByCcSubjs($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcSessPeer::USERID, $ccSubjs->getId(), $comparison);
+			->addUsingAlias(CcSessPeer::USERID, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**

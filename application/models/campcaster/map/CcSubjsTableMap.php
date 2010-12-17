@@ -38,13 +38,14 @@ class CcSubjsTableMap extends TableMap {
 		$this->setUseIdGenerator(true);
 		$this->setPrimaryKeyMethodInfo('cc_subjs_id_seq');
 		// columns
-		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('LOGIN', 'Login', 'VARCHAR', true, 255, '');
-		$this->addColumn('PASS', 'Pass', 'VARCHAR', true, 255, '');
-		$this->addColumn('TYPE', 'Type', 'CHAR', true, 1, 'U');
-		$this->addColumn('REALNAME', 'Realname', 'VARCHAR', true, 255, '');
-		$this->addColumn('LASTLOGIN', 'Lastlogin', 'TIMESTAMP', false, null, null);
-		$this->addColumn('LASTFAIL', 'Lastfail', 'TIMESTAMP', false, null, null);
+		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
+		$this->addColumn('LOGIN', 'DbLogin', 'VARCHAR', true, 255, '');
+		$this->addColumn('PASS', 'DbPass', 'VARCHAR', true, 255, '');
+		$this->addColumn('TYPE', 'DbType', 'CHAR', true, 1, 'U');
+		$this->addColumn('FIRST_NAME', 'DbFirstName', 'VARCHAR', true, 255, '');
+		$this->addColumn('LAST_NAME', 'DbLastName', 'VARCHAR', true, 255, '');
+		$this->addColumn('LASTLOGIN', 'DbLastlogin', 'TIMESTAMP', false, null, null);
+		$this->addColumn('LASTFAIL', 'DbLastfail', 'TIMESTAMP', false, null, null);
 		// validators
 	} // initialize()
 
