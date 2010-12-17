@@ -259,8 +259,10 @@ class Show {
 			$sql = $sql_gen ." WHERE ((". $sql_day .") AND (". $sql_range ."))";
 		}
 		if(!is_null($s_time) && !is_null($e_time)) {
-			$sql_time = "(start_time <= '{$s_time}' AND end_time >= '{$e_time}')
-				OR (start_time >= '{$s_time}' AND end_time <= '{$e_time}')
+			$sql_time = "(start_time <= '{$s_time}' AND end_time >= '{$e_time}' AND '{$s_time}' < '{$e_time}')
+				OR (start_time >= '{$s_time}' AND end_time <= '{$e_time}' AND '{$s_time}' > '{$e_time}')
+				OR (start_time >= '{$s_time}' AND end_time <= '{$e_time}' AND start_time < end_time)
+				OR (start_time <= '{$s_time}' AND end_time >= '{$e_time}' AND start_time > end_time)
 				OR (end_time > '{$s_time}' AND end_time <= '{$e_time}')
 				OR (start_time >= '{$s_time}' AND start_time < '{$e_time}')";
 
@@ -342,15 +344,24 @@ class Show {
 	}
 
 	private function makeFullCalendarEvent($show, $date, $options=array()) {
+		global $CC_DBC;
 
-		$start = $date."T".$show["start_time"];
-		$end = $date."T".$show["end_time"];
+		$start_ts = $date." ".$show["start_time"];
+		$end_ts = $date." ".$show["end_time"];
+		
+		$sql = "SELECT timestamp '{$start_ts}' > timestamp '{$end_ts}'";
+		$isNextDay = $CC_DBC->GetOne($sql);
+
+		if($isNextDay === 't') {
+			$sql = "SELECT date '{$date}' + interval '1 day {$show["end_time"]}'";
+			$end_ts = $CC_DBC->GetOne($sql);
+		}
 
 		$event = array(
 			"id" => $show["show_id"],
 			"title" => $show["name"],
-			"start" => $start,
-			"end" => $end,
+			"start" => $start_ts,
+			"end" => $end_ts,
 			"allDay" => false,
 			"description" => $show["description"]
 		);
@@ -367,11 +378,8 @@ class Show {
 			$event["isHost"] = true;
 		}
 
-		$start = $date." ".$show["start_time"];
-		$end = $date." ".$show["end_time"];
-		if($this->showHasContent($start, $end)) {
-			$event["hasContent"] = true;
-		}
+		$percent = Schedule::getPercentScheduledInRange($start_ts, $end_ts);
+		$event["percent"] = $percent;
 
 		return $event;
 	}

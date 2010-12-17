@@ -17,6 +17,8 @@
  * @method     CcScheduleQuery orderByDbFadeOut($order = Criteria::ASC) Order by the fade_out column
  * @method     CcScheduleQuery orderByDbCueIn($order = Criteria::ASC) Order by the cue_in column
  * @method     CcScheduleQuery orderByDbCueOut($order = Criteria::ASC) Order by the cue_out column
+ * @method     CcScheduleQuery orderByDbScheduleGroupPlayed($order = Criteria::ASC) Order by the schedule_group_played column
+ * @method     CcScheduleQuery orderByDbMediaItemPlayed($order = Criteria::ASC) Order by the media_item_played column
  *
  * @method     CcScheduleQuery groupByDbId() Group by the id column
  * @method     CcScheduleQuery groupByDbPlaylistId() Group by the playlist_id column
@@ -29,6 +31,8 @@
  * @method     CcScheduleQuery groupByDbFadeOut() Group by the fade_out column
  * @method     CcScheduleQuery groupByDbCueIn() Group by the cue_in column
  * @method     CcScheduleQuery groupByDbCueOut() Group by the cue_out column
+ * @method     CcScheduleQuery groupByDbScheduleGroupPlayed() Group by the schedule_group_played column
+ * @method     CcScheduleQuery groupByDbMediaItemPlayed() Group by the media_item_played column
  *
  * @method     CcScheduleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcScheduleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -48,6 +52,8 @@
  * @method     CcSchedule findOneByDbFadeOut(string $fade_out) Return the first CcSchedule filtered by the fade_out column
  * @method     CcSchedule findOneByDbCueIn(string $cue_in) Return the first CcSchedule filtered by the cue_in column
  * @method     CcSchedule findOneByDbCueOut(string $cue_out) Return the first CcSchedule filtered by the cue_out column
+ * @method     CcSchedule findOneByDbScheduleGroupPlayed(boolean $schedule_group_played) Return the first CcSchedule filtered by the schedule_group_played column
+ * @method     CcSchedule findOneByDbMediaItemPlayed(boolean $media_item_played) Return the first CcSchedule filtered by the media_item_played column
  *
  * @method     array findByDbId(string $id) Return CcSchedule objects filtered by the id column
  * @method     array findByDbPlaylistId(int $playlist_id) Return CcSchedule objects filtered by the playlist_id column
@@ -60,6 +66,8 @@
  * @method     array findByDbFadeOut(string $fade_out) Return CcSchedule objects filtered by the fade_out column
  * @method     array findByDbCueIn(string $cue_in) Return CcSchedule objects filtered by the cue_in column
  * @method     array findByDbCueOut(string $cue_out) Return CcSchedule objects filtered by the cue_out column
+ * @method     array findByDbScheduleGroupPlayed(boolean $schedule_group_played) Return CcSchedule objects filtered by the schedule_group_played column
+ * @method     array findByDbMediaItemPlayed(boolean $media_item_played) Return CcSchedule objects filtered by the media_item_played column
  *
  * @package    propel.generator.campcaster.om
  */
@@ -494,6 +502,40 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcSchedulePeer::CUE_OUT, $dbCueOut, $comparison);
+	}
+
+	/**
+	 * Filter the query on the schedule_group_played column
+	 * 
+	 * @param     boolean|string $dbScheduleGroupPlayed The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcScheduleQuery The current query, for fluid interface
+	 */
+	public function filterByDbScheduleGroupPlayed($dbScheduleGroupPlayed = null, $comparison = null)
+	{
+		if (is_string($dbScheduleGroupPlayed)) {
+			$schedule_group_played = in_array(strtolower($dbScheduleGroupPlayed), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcSchedulePeer::SCHEDULE_GROUP_PLAYED, $dbScheduleGroupPlayed, $comparison);
+	}
+
+	/**
+	 * Filter the query on the media_item_played column
+	 * 
+	 * @param     boolean|string $dbMediaItemPlayed The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcScheduleQuery The current query, for fluid interface
+	 */
+	public function filterByDbMediaItemPlayed($dbMediaItemPlayed = null, $comparison = null)
+	{
+		if (is_string($dbMediaItemPlayed)) {
+			$media_item_played = in_array(strtolower($dbMediaItemPlayed), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcSchedulePeer::MEDIA_ITEM_PLAYED, $dbMediaItemPlayed, $comparison);
 	}
 
 	/**

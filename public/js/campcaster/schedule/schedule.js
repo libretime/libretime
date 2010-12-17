@@ -272,11 +272,28 @@ function eventRender(event, element, view) {
      //       content: event.description
      //   });
 
-	if(event.hasContent) {
-		var span = $('<span/>').addClass("ui-icon ui-icon-check");
-		$(element).find(".fc-event-title").after(span);
-	}
-	
+	if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
+		var div = $('<div/>');
+		div
+			.height('5px')
+			.width('100px')
+			.css('margin-top', '5px')
+			.progressbar({
+				value: event.percent
+			});
+
+		if(event.percent === 0) {
+			// even at 0, the bar still seems to display a little bit of progress...
+			div.find("div").hide();
+		}
+		else {
+			div.find("div")
+				.removeClass("ui-widget-header")
+				.addClass("ui-state-active");
+		}
+
+		$(element).find(".fc-event-title").after(div);
+	}	
 }
 
 function eventAfterRender( event, element, view ) {

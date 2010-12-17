@@ -48,6 +48,8 @@ class CcScheduleTableMap extends TableMap {
 		$this->addColumn('FADE_OUT', 'DbFadeOut', 'TIME', false, null, '00:00:00');
 		$this->addColumn('CUE_IN', 'DbCueIn', 'TIME', false, null, '00:00:00');
 		$this->addColumn('CUE_OUT', 'DbCueOut', 'TIME', false, null, '00:00:00');
+		$this->addColumn('SCHEDULE_GROUP_PLAYED', 'DbScheduleGroupPlayed', 'BOOLEAN', false, null, false);
+		$this->addColumn('MEDIA_ITEM_PLAYED', 'DbMediaItemPlayed', 'BOOLEAN', false, null, false);
 		// validators
 	} // initialize()
 
