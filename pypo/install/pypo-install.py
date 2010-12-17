@@ -43,7 +43,7 @@ def copy_dir(src_dir, dest_dir):
   if not (os.path.exists(dest_dir)):
     print "Copying directory "+src_dir+" to "+dest_dir
     shutil.copytree(src_dir, dest_dir)
-    
+                    
 try:
   # Create users
   create_user("pypo")
@@ -91,8 +91,7 @@ try:
   shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-fetch/log/run")
   os.system("chmod -R 755 /etc/service/pypo-fetch")
   os.system("chown -R pypo:pypo /etc/service/pypo-fetch")
-  os.system("svc -t /etc/service/pypo-fetch")
-
+  
   print "Installing daemontool script pypo-push"
   create_path("/etc/service/pypo-push")
   create_path("/etc/service/pypo-push/log")
@@ -100,10 +99,9 @@ try:
   shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-push/log/run")
   os.system("chmod -R 755 /etc/service/pypo-push")
   os.system("chown -R pypo:pypo /etc/service/pypo-push")
-  os.system("svc -t /etc/service/pypo-push")
 
   print "Installing daemontool script pypo-liquidsoap"
-  os.system("svc -dk /etc/service/pypo-liquidsoap")  
+  os.system("svc -dk /etc/service/pypo-liquidsoap  > /dev/null 2>&1")  
   os.system("killall liquidsoap")
   create_path("/etc/service/pypo-liquidsoap")  
   create_path("/etc/service/pypo-liquidsoap/log")  
@@ -111,7 +109,11 @@ try:
   shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-liquidsoap/log/run")
   os.system("chmod -R 755 /etc/service/pypo-liquidsoap")
   os.system("chown -R pypo:pypo /etc/service/pypo-liquidsoap")
-  os.system("svc -u /etc/service/pypo-liquidsoap")
+
+  print "Waiting for processes to start..."
+  time.sleep(5)
+  os.system("python ./pypo-start.py")
+  time.sleep(2)
 
   p = Popen('svstat /etc/service/pypo-fetch', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
@@ -130,7 +132,7 @@ try:
 
 #os.symlink(BASE_PATH+"bin/pypo-log.sh", "/usr/local/bin/")
   
-  
+  print "Install complete."
 except Exception, e:
   print "exception:" + str(e)
   
