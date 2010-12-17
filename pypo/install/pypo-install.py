@@ -91,6 +91,7 @@ try:
   shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-fetch/log/run")
   os.system("chmod -R 755 /etc/service/pypo-fetch")
   os.system("chown -R pypo:pypo /etc/service/pypo-fetch")
+  time.sleep(1)
   os.system("svc -t /etc/service/pypo-fetch")
 
   print "Installing daemontool script pypo-push"
@@ -100,6 +101,7 @@ try:
   shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-push/log/run")
   os.system("chmod -R 755 /etc/service/pypo-push")
   os.system("chown -R pypo:pypo /etc/service/pypo-push")
+  time.sleep(1)
   os.system("svc -t /etc/service/pypo-push")
 
   print "Installing daemontool script pypo-liquidsoap"
@@ -111,7 +113,11 @@ try:
   shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-liquidsoap/log/run")
   os.system("chmod -R 755 /etc/service/pypo-liquidsoap")
   os.system("chown -R pypo:pypo /etc/service/pypo-liquidsoap")
+  time.sleep(1)
   os.system("svc -u /etc/service/pypo-liquidsoap")
+
+  print "Waiting for processes to start..."
+  time.sleep(2)
 
   p = Popen('svstat /etc/service/pypo-fetch', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
