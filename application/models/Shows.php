@@ -352,21 +352,16 @@ class Show {
 		$sql = "SELECT timestamp '{$start_ts}' > timestamp '{$end_ts}'";
 		$isNextDay = $CC_DBC->GetOne($sql);
 
-		$start = $date."T".$show["start_time"];
-
 		if($isNextDay === 't') {
 			$sql = "SELECT date '{$date}' + interval '1 day {$show["end_time"]}'";
-			$end = $CC_DBC->GetOne($sql);
-		}
-		else {
-			$end = $date."T".$show["end_time"];
+			$end_ts = $CC_DBC->GetOne($sql);
 		}
 
 		$event = array(
 			"id" => $show["show_id"],
 			"title" => $show["name"],
-			"start" => $start,
-			"end" => $end,
+			"start" => $start_ts,
+			"end" => $end_ts,
 			"allDay" => false,
 			"description" => $show["description"]
 		);
