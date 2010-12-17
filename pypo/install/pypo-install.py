@@ -101,7 +101,7 @@ try:
   os.system("chown -R pypo:pypo /etc/service/pypo-push")
 
   print "Installing daemontool script pypo-liquidsoap"
-  os.system("svc -dk /etc/service/pypo-liquidsoap")  
+  os.system("svc -dk /etc/service/pypo-liquidsoap  > /dev/null 2>&1")  
   os.system("killall liquidsoap")
   create_path("/etc/service/pypo-liquidsoap")  
   create_path("/etc/service/pypo-liquidsoap/log")  
@@ -132,7 +132,7 @@ try:
 
 #os.symlink(BASE_PATH+"bin/pypo-log.sh", "/usr/local/bin/")
   
-  
+  print "Install complete."
 except Exception, e:
   print "exception:" + str(e)
   

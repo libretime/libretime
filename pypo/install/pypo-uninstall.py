@@ -21,8 +21,7 @@ def remove_user(username):
     print "Waiting for processes to close..."
     time.sleep(5)
     
-    os.system("delgroup " + username)
-    os.system("deluser --remove-home " + username)
+    os.system("deluser --remove-home " + username + " > /dev/null")
     
     #pypo group appears to be deleted when removing user.
     #os.system("delgroup " + username)
@@ -45,6 +44,7 @@ try:
     print "Removing daemontool script pypo-liquidsoap"
     remove_path("rm -rf /etc/service/pypo-liquidsoap")
 
-    #remove_user("pypo")  
+    remove_user("pypo")
+    print "Uninstall complete."
 except Exception, e:
     print "exception:" + str(e)
