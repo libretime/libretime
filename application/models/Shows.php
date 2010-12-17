@@ -260,7 +260,8 @@ class Show {
 		}
 		if(!is_null($s_time) && !is_null($e_time)) {
 			$sql_time = "(start_time <= '{$s_time}' AND end_time >= '{$e_time}')
-				OR (start_time >= '{$s_time}' AND end_time <= '{$e_time}')
+				OR (start_time >= '{$s_time}' AND end_time <= '{$e_time}' AND start_time < end_time)
+				OR (start_time <= '{$s_time}' AND end_time >= '{$e_time}' AND start_time > end_time)
 				OR (end_time > '{$s_time}' AND end_time <= '{$e_time}')
 				OR (start_time >= '{$s_time}' AND start_time < '{$e_time}')";
 
