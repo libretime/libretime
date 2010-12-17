@@ -33,59 +33,59 @@
   </table>
   <table name="cc_files" phpName="CcFiles">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="gunid" phpName="Gunid" type="char" size="32" required="true"/>
-    <column name="name" phpName="Name" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="mime" phpName="Mime" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="ftype" phpName="Ftype" type="VARCHAR" size="128" required="true" defaultValue=""/>
-    <column name="filepath" phpName="filepath" type="LONGVARCHAR" required="false" defaultValue=""/>
-    <column name="state" phpName="State" type="VARCHAR" size="128" required="true" defaultValue="empty"/>
-    <column name="currentlyaccessing" phpName="Currentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
-    <column name="editedby" phpName="Editedby" type="INTEGER" required="false"/>
-    <column name="mtime" phpName="Mtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="md5" phpName="Md5" type="CHAR" size="32" required="false"/>
-    <column name="track_title" phpName="TrackTitle" type="VARCHAR" size="512" required="false"/>
-    <column name="artist_name" phpName="ArtistName" type="VARCHAR" size="512" required="false"/>
-    <column name="bit_rate" phpName="BitRate" type="VARCHAR" size="32" required="false"/>
-    <column name="sample_rate" phpName="SampleRate" type="VARCHAR" size="32" required="false"/>
-    <column name="format" phpName="Format" type="VARCHAR" size="128" required="false"/>
+    <column name="gunid" phpName="DbGunid" type="char" size="32" required="true"/>
+    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <column name="mime" phpName="DbMime" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <column name="ftype" phpName="DbFtype" type="VARCHAR" size="128" required="true" defaultValue=""/>
+    <column name="filepath" phpName="DbFilepath" type="LONGVARCHAR" required="false" defaultValue=""/>
+    <column name="state" phpName="DbState" type="VARCHAR" size="128" required="true" defaultValue="empty"/>
+    <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
+    <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false"/>
+    <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="md5" phpName="DbMd5" type="CHAR" size="32" required="false"/>
+    <column name="track_title" phpName="DbTrackTitle" type="VARCHAR" size="512" required="false"/>
+    <column name="artist_name" phpName="DbArtistName" type="VARCHAR" size="512" required="false"/>
+    <column name="bit_rate" phpName="DbBitRate" type="VARCHAR" size="32" required="false"/>
+    <column name="sample_rate" phpName="DbSampleRate" type="VARCHAR" size="32" required="false"/>
+    <column name="format" phpName="DbFormat" type="VARCHAR" size="128" required="false"/>
     <column name="length" phpName="DbLength" type="TIME" required="false"/>
-    <column name="album_title" phpName="AlbumTitle" type="VARCHAR" size="512" required="false"/>
-    <column name="genre" phpName="Genre" type="VARCHAR" size="64" required="false"/>
-    <column name="comments" phpName="Comments" type="LONGVARCHAR" required="false"/>
-    <column name="year" phpName="Year" type="VARCHAR" size="16" required="false"/>
-    <column name="track_number" phpName="TrackNumber" type="INTEGER" required="false"/>
-    <column name="channels" phpName="Channels" type="INTEGER" required="false"/>
-    <column name="url" phpName="Url" type="VARCHAR" size="1024" required="false"/>
-    <column name="bpm" phpName="Bpm" type="VARCHAR" size="8" required="false"/>
-    <column name="rating" phpName="Rating" type="VARCHAR" size="8" required="false"/>
-    <column name="encoded_by" phpName="EncodedBy" type="VARCHAR" size="255" required="false"/>
-    <column name="disc_number" phpName="DiscNumber" type="VARCHAR" size="8" required="false"/>
-    <column name="mood" phpName="Mood" type="VARCHAR" size="64" required="false"/>
-    <column name="label" phpName="Label" type="VARCHAR" size="512" required="false"/>
-    <column name="composer" phpName="Composer" type="VARCHAR" size="512" required="false"/>
-    <column name="encoder" phpName="Encoder" type="VARCHAR" size="64" required="false"/>
-    <column name="checksum" phpName="Checksum" type="VARCHAR" size="256" required="false"/>
-    <column name="lyrics" phpName="Lyrics" type="LONGVARCHAR" required="false"/>
-    <column name="orchestra" phpName="Orchestra" type="VARCHAR" size="512" required="false"/>
-    <column name="conductor" phpName="Conductor" type="VARCHAR" size="512" required="false"/>
-    <column name="lyricist" phpName="Lyricist" type="VARCHAR" size="512" required="false"/>
-    <column name="original_lyricist" phpName="OriginalLyricist" type="VARCHAR" size="512" required="false"/>
-    <column name="radio_station_name" phpName="RadioStationName" type="VARCHAR" size="512" required="false"/>
-    <column name="info_url" phpName="InfoUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="artist_url" phpName="ArtistUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="audio_source_url" phpName="AudioSourceUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="radio_station_url" phpName="RadioStationUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="buy_this_url" phpName="BuyThisUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="isrc_number" phpName="IsrcNumber" type="VARCHAR" size="512" required="false"/>
-    <column name="catalog_number" phpName="CatalogNumber" type="VARCHAR" size="512" required="false"/>
-    <column name="original_artist" phpName="OriginalArtist" type="VARCHAR" size="512" required="false"/>
-    <column name="copyright" phpName="Copyright" type="VARCHAR" size="512" required="false"/>
-    <column name="report_datetime" phpName="ReportDatetime" type="VARCHAR" size="32" required="false"/>
-    <column name="report_location" phpName="ReportLocation" type="VARCHAR" size="512" required="false"/>
-    <column name="report_organization" phpName="ReportOrganization" type="VARCHAR" size="512" required="false"/>
-    <column name="subject" phpName="Subject" type="VARCHAR" size="512" required="false"/>
-    <column name="contributor" phpName="Contributor" type="VARCHAR" size="512" required="false"/>
-    <column name="language" phpName="Language" type="VARCHAR" size="512" required="false"/>
+    <column name="album_title" phpName="DbAlbumTitle" type="VARCHAR" size="512" required="false"/>
+    <column name="genre" phpName="DbGenre" type="VARCHAR" size="64" required="false"/>
+    <column name="comments" phpName="DbComments" type="LONGVARCHAR" required="false"/>
+    <column name="year" phpName="DbYear" type="VARCHAR" size="16" required="false"/>
+    <column name="track_number" phpName="DbTrackNumber" type="INTEGER" required="false"/>
+    <column name="channels" phpName="DbChannels" type="INTEGER" required="false"/>
+    <column name="url" phpName="DbUrl" type="VARCHAR" size="1024" required="false"/>
+    <column name="bpm" phpName="DbBpm" type="VARCHAR" size="8" required="false"/>
+    <column name="rating" phpName="DbRating" type="VARCHAR" size="8" required="false"/>
+    <column name="encoded_by" phpName="DbEncodedBy" type="VARCHAR" size="255" required="false"/>
+    <column name="disc_number" phpName="DbDiscNumber" type="VARCHAR" size="8" required="false"/>
+    <column name="mood" phpName="DbMood" type="VARCHAR" size="64" required="false"/>
+    <column name="label" phpName="DbLabel" type="VARCHAR" size="512" required="false"/>
+    <column name="composer" phpName="DbComposer" type="VARCHAR" size="512" required="false"/>
+    <column name="encoder" phpName="DbEncoder" type="VARCHAR" size="64" required="false"/>
+    <column name="checksum" phpName="DbChecksum" type="VARCHAR" size="256" required="false"/>
+    <column name="lyrics" phpName="DbLyrics" type="LONGVARCHAR" required="false"/>
+    <column name="orchestra" phpName="DbOrchestra" type="VARCHAR" size="512" required="false"/>
+    <column name="conductor" phpName="DbConductor" type="VARCHAR" size="512" required="false"/>
+    <column name="lyricist" phpName="DbLyricist" type="VARCHAR" size="512" required="false"/>
+    <column name="original_lyricist" phpName="DbOriginalLyricist" type="VARCHAR" size="512" required="false"/>
+    <column name="radio_station_name" phpName="DbRadioStationName" type="VARCHAR" size="512" required="false"/>
+    <column name="info_url" phpName="DbInfoUrl" type="VARCHAR" size="512" required="false"/>
+    <column name="artist_url" phpName="DbArtistUrl" type="VARCHAR" size="512" required="false"/>
+    <column name="audio_source_url" phpName="DbAudioSourceUrl" type="VARCHAR" size="512" required="false"/>
+    <column name="radio_station_url" phpName="DbRadioStationUrl" type="VARCHAR" size="512" required="false"/>
+    <column name="buy_this_url" phpName="DbBuyThisUrl" type="VARCHAR" size="512" required="false"/>
+    <column name="isrc_number" phpName="DbIsrcNumber" type="VARCHAR" size="512" required="false"/>
+    <column name="catalog_number" phpName="DbCatalogNumber" type="VARCHAR" size="512" required="false"/>
+    <column name="original_artist" phpName="DbOriginalArtist" type="VARCHAR" size="512" required="false"/>
+    <column name="copyright" phpName="DbCopyright" type="VARCHAR" size="512" required="false"/>
+    <column name="report_datetime" phpName="DbReportDatetime" type="VARCHAR" size="32" required="false"/>
+    <column name="report_location" phpName="DbReportLocation" type="VARCHAR" size="512" required="false"/>
+    <column name="report_organization" phpName="DbReportOrganization" type="VARCHAR" size="512" required="false"/>
+    <column name="subject" phpName="DbSubject" type="VARCHAR" size="512" required="false"/>
+    <column name="contributor" phpName="DbContributor" type="VARCHAR" size="512" required="false"/>
+    <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id"/>
     </foreign-key>
