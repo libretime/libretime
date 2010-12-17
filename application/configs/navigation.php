@@ -27,12 +27,14 @@ $pages = array(
 		'module'     => 'default',
 		'controller' => 'Playlist',
 		'action'     => 'index',
+		'resource'	=>	'playlist',
 		'pages'      => array(
 		    array(
 		        'label'      => 'New',
 		        'module'     => 'default',
 		        'controller' => 'Playlist',
 		        'action'     => 'new',
+				'resource'	=>	'playlist',
 				'visible'    => false
 		    ),
 			array(
@@ -40,6 +42,7 @@ $pages = array(
 		        'module'     => 'default',
 		        'controller' => 'Playlist',
 		        'action'     => 'edit',
+				'resource'	=>	'playlist',
 				'visible'    => false
 		    )
 		)
@@ -49,18 +52,21 @@ $pages = array(
 		'module'     => 'default',
 		'controller' => 'Library',
 		'action'     => 'index',
+		'resource'	=>	'library',
 		'pages'      => array(
 		    array(
 		        'label'      => 'Add Audio',
 		        'module'     => 'default',
 		        'controller' => 'Plupload',
-		        'action'     => 'plupload'
+		        'action'     => 'plupload',
+				'resource'	=>	'plupload'
 		    ),
 			array(
 		        'label'      => 'Search',
 		        'module'     => 'default',
 		        'controller' => 'Search',
-		        'action'     => 'display'
+		        'action'     => 'display',
+				'resource'	=>	'search'
 		    )
 		)
 	),
@@ -75,7 +81,8 @@ $pages = array(
 		'label'      => 'Logout',
 		'module'     => 'default',
 		'controller' => 'Login',
-		'action'     => 'logout'
+		'action'     => 'logout',
+		'resource'	=>	'login'
 	)
 );
  
