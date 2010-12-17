@@ -131,20 +131,36 @@ function schedulePlaylist() {
 	
 }
 
-function makeShowDialog(html) {
+function autoSelect(event, ui) {
+
+	$("#hosts-"+ui.item.value).attr("checked", "checked");
+	event.preventDefault();
+}
+
+function makeShowDialog(json) {
 	
 	var dialog;
 
 	//main jqueryUI dialog
 	dialog = $('<div id="schedule_add_event_dialog" />');
 
-	dialog.append(html);
+	dialog.append(json.form);
 
 	var start  = dialog.find("#start_date");
 	var end  = dialog.find("#end_date");
 
 	createDateInput(start, startDpSelect);
 	createDateInput(end, endDpSelect);
+
+	var auto = json.hosts.map(function(el) {
+		return {value: el.id, label: el.login};
+	});
+
+	dialog.find("#hosts_autocomplete").autocomplete({
+		source: auto,
+		select: autoSelect
+	});
+
 
 	dialog.dialog({
 		autoOpen: false,
@@ -203,7 +219,7 @@ function openShowDialog() {
 	url = '/Schedule/add-show-dialog/format/json';
 
 	$.get(url, function(json){
-		var dialog = makeShowDialog(json.form);
+		var dialog = makeShowDialog(json);
 		dialog.dialog('open');
 	});
 }

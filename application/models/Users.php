@@ -11,11 +11,11 @@ class User {
 		$this->_userId = $userId;     
     }
 
-	public function getType(){
+	public function getType() {
 		return $this->userRole;
 	}
 
-	public function getId(){
+	public function getId() {
 		return $this->_userId;
 	}
 
@@ -32,7 +32,7 @@ class User {
 
 		$sql;
 
-		$sql_gen = "SELECT id, login, type FROM cc_subjs";
+		$sql_gen = "SELECT id, login, type FROM cc_subjs ";
 		$sql = $sql_gen;
 
 	
@@ -50,6 +50,8 @@ class User {
 			
 			$sql = $sql_gen ." WHERE ". $sql_type;
 		}
+
+		$sql = $sql . " ORDER BY login";
 	
 		return  $CC_DBC->GetAll($sql);	
 	}

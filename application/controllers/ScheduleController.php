@@ -86,6 +86,7 @@ class ScheduleController extends Zend_Controller_Action
 			}     
         }
 		$this->view->form = $form->__toString();
+		$this->view->hosts = User::getHosts();
     }
 
     public function moveShowAction()
