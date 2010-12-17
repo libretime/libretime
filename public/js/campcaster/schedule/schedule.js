@@ -61,6 +61,7 @@ function submitShow() {
 		function(data){
 			if(data.form) {
 				dialog.find("form").remove();
+				dialog.find("#show_overlap_error").remove();
 				dialog.append(data.form);
 
 				var start  = dialog.find("#start_date");
@@ -70,8 +71,9 @@ function submitShow() {
 				createDateInput(end, endDpSelect);
 
 				if(data.overlap) {
-					var table, tr, days;
-					table = $("<table/>");
+					var div, table, tr, days;
+					div = $('<div id="show_overlap_error"/>');
+					table = $('<table/>');
 					days = $.datepicker.regional[''].dayNamesShort;
 
 					$.each(data.overlap, function(i, val){
@@ -85,8 +87,9 @@ function submitShow() {
 						table.append(tr);
 					});
 				
-					dialog.append("<span>Cannot add show. New show overlaps the following shows:</span>");
-					dialog.append(table);
+					div.append("<span>Cannot add show. New show overlaps the following shows:</span>");
+					div.append(table);
+					dialog.append(div);
 				}
 	
 			}
