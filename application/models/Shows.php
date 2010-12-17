@@ -342,9 +342,23 @@ class Show {
 	}
 
 	private function makeFullCalendarEvent($show, $date, $options=array()) {
+		global $CC_DBC;
+
+		$start_ts = $date." ".$show["start_time"];
+		$end_ts = $date." ".$show["end_time"];
+		
+		$sql = "SELECT timestamp '{$start_ts}' > timestamp '{$end_ts}'";
+		$isNextDay = $CC_DBC->GetOne($sql);
 
 		$start = $date."T".$show["start_time"];
-		$end = $date."T".$show["end_time"];
+
+		if($isNextDay === 't') {
+			$sql = "SELECT date '{$date}' + interval '1 day {$show["end_time"]}'";
+			$end = $CC_DBC->GetOne($sql);
+		}
+		else {
+			$end = $date."T".$show["end_time"];
+		}
 
 		$event = array(
 			"id" => $show["show_id"],
@@ -367,10 +381,7 @@ class Show {
 			$event["isHost"] = true;
 		}
 
-		$start = $date." ".$show["start_time"];
-		$end = $date." ".$show["end_time"];
-
-		$percent = Schedule::getPercentScheduledInRange($start, $end);
+		$percent = Schedule::getPercentScheduledInRange($start_ts, $end_ts);
 		$event["percent"] = $percent;
 
 		return $event;

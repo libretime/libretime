@@ -287,6 +287,14 @@ class Schedule {
 	public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
 		global $CC_CONFIG, $CC_DBC;
 
+		$sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
+		$isNextDay = $CC_DBC->GetOne($sql);
+
+		if($isNextDay === 't') {
+			$sql = "SELECT date '{$e_datetime}' + interval '1 day'";
+			$e_datetime = $CC_DBC->GetOne($sql);
+		}
+
 		$sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
 			WHERE (starts >= '{$s_datetime}')  
 			AND (ends <= '{$e_datetime}')";
