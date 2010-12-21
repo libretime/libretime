@@ -106,7 +106,7 @@ class Global:
     def selfcheck(self):       
         self.api_client = api_client.api_client_factory(config)
         if (not self.api_client.is_server_compatible()):
-	  sys.exit()
+            sys.exit()
             
   
 """

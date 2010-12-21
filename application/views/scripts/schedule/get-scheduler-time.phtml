@@ -1,0 +1,86 @@
+<div>
+<script>
+    function convertDateToPosixTime(s){
+        var year = s.substring(0, 4);
+        var month = s.substring(5, 7);
+        var day = s.substring(8, 10);
+        var hour = s.substring(11, 13);
+        var minute = s.substring(14, 16);
+        var sec = s.substring(17);
+
+        return Date.UTC(year, month, day, hour, minute, sec, 0);
+    }
+
+    var schedulePosixTime;
+
+    var currentSong;
+    var nextSong;
+
+    var updatedSchedule = false;
+
+    function secondsTimer(){
+        schedulePosixTime += 1000;
+        updateProgressBarValue();
+    }
+
+    function updateProgressBarValue(){
+        var percentDone = (schedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
+        if (percentDone <= 100){
+            $('#spaceused1').progressBar(percentDone);
+            setTimeout(secondsTimer, 1000);
+            
+            if (!updatedSchedule && (currentSong.songEndPosixTime - schedulePosixTime < 5000)){
+                updatedSchedule = true;
+                getScheduleFromServer();
+            }
+        } else {
+            currentSong = nextSong;
+            updatedSchedule = false;
+        }
+    }
+
+    function getCurrentPlayingItem(currentItem){
+        var clipLength = currentItem.clip_length;
+        var clHours = parseInt(clipLength.substring(0, 2));
+        var clMinutes = parseInt(clipLength.substring(3, 5));
+        var clSeconds = parseInt(clipLength.substring(6, 8));
+        var clMs = parseInt(clipLength.substring(9));
+
+        var songLengthMs = clMs + clSeconds*1000 + clMinutes*60*1000 + clHours*60*60*1000; 
+        var songStartPosixTime = convertDateToPosixTime(currentItem.starts);
+        var songEndPosixTime = convertDateToPosixTime(currentItem.ends);
+
+        return {songLengthMs:songLengthMs, songStartPosixTime:songStartPosixTime, songEndPosixTime:songEndPosixTime};
+       
+    }
+
+    function prepareNextPlayingItem(obj){
+        if (obj.next.length > 0){
+            var nextItem = obj.next[0];
+        }        
+    }
+
+    function parseItems(obj){
+        schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
+        if (obj.current.length > 0){
+            currentSong = getCurrentPlayingItem(obj.current[0]);
+        }
+        if (obj.next.length > 0){
+            nextSong = getCurrentPlayingItem(obj.next[0]);
+        }
+        updateProgressBarValue();
+    }
+
+    function getScheduleFromServer(){
+        $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
+                parseItems(data.entries);
+              }});
+    }
+
+	$(document).ready(function() {
+		$("#spaceused1").progressBar();
+        getScheduleFromServer();
+	});
+</script>
+<span class="progressBar" id="spaceused1">0%</span>
+</div>
