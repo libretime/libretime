@@ -59,6 +59,12 @@ $pages = array(
 		)
 	),
 	array(
+		'label'      => 'Test',
+		'module'     => 'default',
+		'controller' => 'Schedule',
+		'action'     => 'get-scheduler-time'
+	),
+	array(
 		'label'      => 'Schedule',
 		'module'     => 'default',
 		'controller' => 'Schedule',

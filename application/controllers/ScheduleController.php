@@ -18,7 +18,8 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('resize-show', 'json')
 					->addActionContext('delete-show', 'json')
 					->addActionContext('schedule-show', 'json')
-					->addActionContext('clear-show', 'json')		
+					->addActionContext('clear-show', 'json')
+                    ->addActionContext('get-current-playlist', 'json')	
                     ->initContext();
     }
 
@@ -173,6 +174,15 @@ class ScheduleController extends Zend_Controller_Action
 		}
     }
 
+    public function getSchedulerTimeAction()
+    {
+        $this->view->headScript()->appendFile('/js/progressbar/jquery.progressbar.min.js','text/javascript');
+    }
+
+    public function getCurrentPlaylistAction()
+    {
+        $this->view->entries = Schedule::GetPlayOrderRange();
+    }
 
 }
 

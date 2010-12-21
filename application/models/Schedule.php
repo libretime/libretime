@@ -351,7 +351,7 @@ class Schedule {
 
 
     /**
-     * Returns array indexed numberically of:
+     * Returns array indexed by:
      *    "playlistId"/"playlist_id" (aliases to the same thing)
      *    "start"/"starts" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
      *    "end"/"ends" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
@@ -369,7 +369,7 @@ class Schedule {
      * @param string $p_toDateTime
      *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
      * @param boolean $p_playlistsOnly
-     *    Retreive playlists as a single item.
+     *    Retrieve playlists as a single item.
      * @return array
      * 		Returns empty array if nothing found
      */
@@ -412,19 +412,94 @@ class Schedule {
         return $rows;
     }
 
-    public function getSchedulerTime() {
-
+    
+    /**
+     * Returns the date of the server in the format
+     * "YYYY-MM-DD HH:mm:SS".
+     *
+     * Note: currently assuming that Web Server and Scheduler are on the 
+     * same host.
+     *
+     * @return date Current server time.
+     */
+    public static function GetSchedulerTime() {
+        return date("Y-m-d H:i:s"); 
     }
 
-    public function getCurrentlyPlaying() {
+    /**
+     * Returns current playlist.
+     *
+     * Note: Total playlist length is prev + next + 1
+     *
+     * @param int $prev
+     * @param int $next
+     * @return date
+     */
+    public static function GetPlayOrderRange($prev = 1, $next = 1) {
+        if (!is_int($prev) || !is_int($next)){
+            //must enter integers to specify ranges
+            return "{}";
+        }
 
+        $timeNow = Schedule::GetSchedulerTime();
+        $currentSong = Schedule::getCurrentlyPlaying();
+        return array("schedulerTime"=>$timeNow,"previous"=>Schedule::getPreviousItems($timeNow), 
+            "current"=>Schedule::getCurrentlyPlaying($timeNow), 
+            "next"=>Schedule::getNextItems($timeNow));
     }
 
-    public function getNextItem($nextCount = 1) {
-
+    private static function GetPreviousItems($timeNow, $prevCount = 1){
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
+        ." WHERE (starts < TIMESTAMP '$timeNow')"
+        ." ORDER BY id"
+        ." LIMIT $prevCount";
+        $rows = $CC_DBC->GetAll($sql);
+        foreach ($rows as &$row) {
+            $row["count"] = "1";
+            $row["playlistId"] = $row["playlist_id"];
+            $row["start"] = $row["starts"];
+            $row["end"] = $row["ends"];
+            $row["id"] = $row["group_id"];
+        }
+        return $rows;
     }
 
-    public function getStatus() {
+    private static function GetCurrentlyPlaying($timeNow){
+        global $CC_CONFIG, $CC_DBC;
+        
+        $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
+        ." WHERE (starts < TIMESTAMP '$timeNow') "
+        ." AND (ends > TIMESTAMP '$timeNow')";
+        $rows = $CC_DBC->GetAll($sql);
+        foreach ($rows as &$row) {
+            $row["count"] = "1";
+            $row["playlistId"] = $row["playlist_id"];
+            $row["start"] = $row["starts"];
+            $row["end"] = $row["ends"];
+            $row["id"] = $row["group_id"];
+        }
+        return $rows;
+    }
+
+    private static function GetNextItems($timeNow, $nextCount = 1) {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
+        ." WHERE (starts > TIMESTAMP '$timeNow')"
+        ." ORDER BY id"
+        ." LIMIT $nextCount";
+        $rows = $CC_DBC->GetAll($sql);
+        foreach ($rows as &$row) {
+            $row["count"] = "1";
+            $row["playlistId"] = $row["playlist_id"];
+            $row["start"] = $row["starts"];
+            $row["end"] = $row["ends"];
+            $row["id"] = $row["group_id"];
+        }
+        return $rows;
+    }
+
+    public static function GetStatus() {
 
     }
 
