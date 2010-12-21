@@ -10,7 +10,7 @@ function contextMenu(action, el, pos) {
 	else if (method === 'add-item') {
 		url = action + '/format/json';
 		url = url + '/id/' + $(el).attr('id');
-		$.post(url, addToPlaylist);
+		$.post(url, setSPLContent);
 	}
 }
 
@@ -24,21 +24,6 @@ function deleteItem(json){
 
 	id = this.url.split('/').pop();
 	$("#library_display tr#" +id).remove();
-}
-
-function addToPlaylist(json){
-	
-	if(json.message) {  
-		alert(json.message);
-		return;		
-	}
-	
-	$('#spl_name').empty()
-		.append(json.name);
-	$('#spl_length').empty()
-		.append(json.length);		
-	$('#spl_sortable').empty()
-		.append(json.html);	
 }
 
 function setLibraryContents(data){
@@ -56,12 +41,34 @@ function setLibraryContents(data){
 
 function setSPLContent(json) {
 	
+	if(json.message) {  
+		alert(json.message);
+		return;		
+	}
+
 	$('#spl_name').empty()
 		.append(json.name);
 	$('#spl_length').empty()
 		.append(json.length);		
 	$('#spl_sortable').empty()
 		.append(json.html);	
+}
+
+function addSPLItem(event, ui){
+	
+	var url, tr, id;
+
+	tr = ui.helper; 	
+    	
+	if(tr.get(0).tagName === 'LI')
+		return;
+	
+	id = tr.attr('id');
+
+	url = '/Playlist/add-item/format/json';
+	url = url + '/id/'+id;
+
+	$.post(url, setSPLContent);
 }
 
 function deleteSPLItem(){
@@ -126,13 +133,18 @@ $(document).ready(function() {
 		$.post(url, setLibraryContents);
 	});
 
-	$("#library_display tr:not(:first-child)").contextMenu(
-		{menu: 'myMenu'}, contextMenu
-	);
+	$("#library_display tr:not(:first-child)")
+		.contextMenu({menu: 'myMenu'}, contextMenu)
+		.draggable({ 
+				helper: 'clone' 
+		});
 
 	$("#spl_sortable").sortable();
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
+
+	$("#spl_sortable").droppable();
+	$("#spl_sortable" ).bind( "drop", addSPLItem);
 
 	$('input[name="all"]').click(function(){
 		$('form[name="SPL"]').find('input').attr("checked", $(this).attr("checked"));
