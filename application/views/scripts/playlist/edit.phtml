@@ -1,4 +1,6 @@
 <form name="PL">
+	<div id="pl_name"><?php echo $this->pl->getName() ?></div>
+	<div id="pl_length"><?php echo $this->pl->getLength() ?></div>
     <div class="pl_head">
         <span class="pl_input"><input type="checkbox" name="all"></span>
         <span class="pl_title">Title</span>
@@ -10,9 +12,9 @@
     </div>
 	<div class="pl_main">
     	<ul id="pl_sortable">
-		<?php 
-			if (count($this->playlistcontents)) {
-				echo $this->partialLoop('playlist/playlistEditorTable.phtml', $this->playlistcontents);
+		<?php
+			if (count($this->pl->getContents())) {
+				echo $this->partialLoop('playlist/playlistEditorTable.phtml', $this->pl->getContents());
 			}
 			else {
 				echo '<li class="pl_empty">Empty playlist</li>'; 

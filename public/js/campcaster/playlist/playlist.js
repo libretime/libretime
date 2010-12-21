@@ -192,11 +192,14 @@ function addTextInput(){
 }
 
 
-function setPLContent(html) {
-	var ul = $("#pl_sortable");
-
-	ul.empty();
-	ul.append(html);
+function setPLContent(json) {
+	
+	$('#pl_name').empty()
+		.append(json.name);
+	$('#pl_length').empty()
+		.append(json.length);		
+	$('#pl_sortable').empty()
+		.append(json.html);	
 
 	$(".pl_time").click(addTextInput);	
 }
@@ -205,7 +208,7 @@ function deletePLItem(){
 
 	var url, pos;
 
-	url = '/Playlist/delete-item/format/html';
+	url = '/Playlist/delete-item/format/json/view/pl';
 
 	pos = $('form[name="PL"]').find(':checked').not('input[name="all"]').map(function() {
 		return "/pos/" + $(this).attr('name');
@@ -225,7 +228,8 @@ function movePLItem(event, ui) {
     oldPos = li.attr('id').split("_").pop(); 
 
 	url = '/Playlist/move-item'
-	url = url + '/format/html';
+	url = url + '/format/json';
+	url = url + '/view/pl';
 	url = url + '/oldPos/' + oldPos;
 	url = url + '/newPos/' + newPos;
 

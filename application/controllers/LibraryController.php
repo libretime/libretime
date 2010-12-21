@@ -55,23 +55,24 @@ class LibraryController extends Zend_Controller_Action
     		$file = StoredFile::Recall($id);
 			
 			if (PEAR::isError($file)) {
-				die('{"jsonrpc" : "2.0", "error" : {"message": ' + $file->getMessage() + '}}');
+				$this->view->message = $file->getMessage();
+				return;
 			}
 			else if(is_null($file)) {
-				die('{"jsonrpc" : "2.0", "error" : {"message": "file doesn\'t exist"}}');
+				$this->view->message = "file doesn\'t exist";
+				return;
 			}	
 
 			$res = $file->delete();
 			
 			if (PEAR::isError($res)) {
-				die('{"jsonrpc" : "2.0", "error" : {"message": ' + $res->getMessage() + '}}');
+				$this->view->message = $res->getMessage();
+				return;
 			}
 		}
-		else {
-			die('{"jsonrpc" : "2.0", "error" : {"message": "file doesn\'t exist"}}');
-		}
 
-		die('{"jsonrpc" : "2.0"}');
+		$this->view->message = "file doesn\'t exist";
+		
     }
 
     public function contentsAction()
@@ -80,6 +81,8 @@ class LibraryController extends Zend_Controller_Action
 		$query["order"] = $this->_getParam('order', "asc");
 	
 		$this->view->files = StoredFile::getFiles($query);
+
+		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
     public function searchAction()

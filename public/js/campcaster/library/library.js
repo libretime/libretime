@@ -15,11 +15,10 @@ function contextMenu(action, el, pos) {
 }
 
 function deleteItem(json){	
-	var j = jQuery.parseJSON(json),
-		id;
+	var id;
 
-	if(j.error !== undefined) {  
-		alert(j.error.message);	
+	if(json.message) {  
+		alert(j.message);	
 		return;	
 	}
 
@@ -28,12 +27,18 @@ function deleteItem(json){
 }
 
 function addToPlaylist(json){
-	var j = jQuery.parseJSON(json);
-
-	if(j.error !== undefined) {  
-		alert(j.error.message);
+	
+	if(json.message) {  
+		alert(json.message);
 		return;		
-	}	
+	}
+	
+	$('#spl_name').empty()
+		.append(json.name);
+	$('#spl_length').empty()
+		.append(json.length);		
+	$('#spl_sortable').empty()
+		.append(json.html);	
 }
 
 function setLibraryContents(data){
@@ -44,6 +49,53 @@ function setLibraryContents(data){
 		{menu: 'myMenu'}, contextMenu
 	);
 }
+
+//--------------------------------------------------------------------------------------------------------------------------------
+//Side Playlist Functions
+//--------------------------------------------------------------------------------------------------------------------------------
+
+function setSPLContent(json) {
+	
+	$('#spl_name').empty()
+		.append(json.name);
+	$('#spl_length').empty()
+		.append(json.length);		
+	$('#spl_sortable').empty()
+		.append(json.html);	
+}
+
+function deleteSPLItem(){
+
+	var url, pos;
+
+	url = '/Playlist/delete-item/format/json/view/spl';
+
+	pos = $('form[name="SPL"]').find(':checked').not('input[name="all"]').map(function() {
+		return "/pos/" + $(this).attr('name');
+	}).get().join("");
+
+	url = url + pos;
+
+	$.post(url, setSPLContent);
+}
+
+function moveSPLItem(event, ui) {	
+	var li, newPos, oldPos, url;
+	
+	li = ui.item;
+	
+    newPos = li.index();
+    oldPos = li.attr('id').split("_").pop(); 
+
+	url = '/Playlist/move-item'
+	url = url + '/format/json';
+	url = url + '/view/spl';
+	url = url + '/oldPos/' + oldPos;
+	url = url + '/newPos/' + newPos;
+
+	$.post(url, setSPLContent);
+}
+
 
 $(document).ready(function() {
 
@@ -77,5 +129,13 @@ $(document).ready(function() {
 	$("#library_display tr:not(:first-child)").contextMenu(
 		{menu: 'myMenu'}, contextMenu
 	);
+
+	$("#spl_sortable").sortable();
+    $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
+	$("#spl_remove_selected").click(deleteSPLItem);
+
+	$('input[name="all"]').click(function(){
+		$('form[name="SPL"]').find('input').attr("checked", $(this).attr("checked"));
+	});
 
 });

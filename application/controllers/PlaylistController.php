@@ -14,10 +14,10 @@ class PlaylistController extends Zend_Controller_Action
 
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('add-item', 'json')
-					->addActionContext('delete-item', 'html')
+					->addActionContext('delete-item', 'json')
 					->addActionContext('set-fade', 'json')
 					->addActionContext('set-cue', 'json')
-					->addActionContext('move-item', 'html')
+					->addActionContext('move-item', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -78,7 +78,12 @@ class PlaylistController extends Zend_Controller_Action
 		if(isset($pl_sess->id)) {
 
 			$pl = Playlist::Recall($pl_sess->id);
+			if($pl === FALSE) {
+				unset($pl_sess->id);
+				$this->_helper->redirector('index');
+			}
 
+			$this->view->pl = $pl;
 			$this->view->playlistcontents = $pl->getContents();
 			return;
 		}
@@ -97,15 +102,20 @@ class PlaylistController extends Zend_Controller_Action
 				$res = $pl->addAudioClip($id);
 
 				if (PEAR::isError($res)) {
-					die('{"jsonrpc" : "2.0", "error" : {"message": ' + $res->getMessage() + '}}');
+					$this->view->message = $res->getMessage();
 				}
 
-				die('{"jsonrpc" : "2.0"}');
-			}
-			die('{"jsonrpc" : "2.0", "error" : {"message": "no open playlist"}}');
-		}
+				$this->view->pl = $pl;
+				$this->view->html = $this->view->render('sideplaylist/update.phtml');
+				$this->view->name = $pl->getName();
+				$this->view->length = $pl->getLength();
 
-		die('{"jsonrpc" : "2.0", "error" : {"message": "a file is not chosen"}}');
+				unset($this->view->pl);
+				return;
+			}
+			$this->view->message =  "no open playlist";
+		}
+		$this->view->message =  "a file is not chosen";
     }
 
     public function moveItemAction()
@@ -121,7 +131,18 @@ class PlaylistController extends Zend_Controller_Action
 
 			$pl->moveAudioClip($oldPos, $newPos);
 
-			$this->view->playlistcontents = $pl->getContents();
+			$this->view->pl = $pl;
+			
+			if($display === 'pl') {
+				$this->view->html = $this->view->render('playlist/update.phtml');
+			} 
+			else {
+				$this->view->html = $this->view->render('sideplaylist/update.phtml');
+			}
+			$this->view->name = $pl->getName();
+			$this->view->length = $pl->getLength();
+
+			unset($this->view->pl);
 			return;
 		}
 		
@@ -134,9 +155,14 @@ class PlaylistController extends Zend_Controller_Action
                                                         
 		if(isset($pl_sess->id)) {        
 
-			$positions = $this->_getParam('pos', array());
-
 			$pl = Playlist::Recall($pl_sess->id);
+			if($pl === FALSE) {
+				unset($pl_sess->id);
+				$this->_helper->redirector('index');
+			}
+
+			$positions = $this->_getParam('pos', array());
+			$display = $this->_getParam('view');
 
 			if (!is_array($positions))
 		        $positions = array($positions);
@@ -149,7 +175,18 @@ class PlaylistController extends Zend_Controller_Action
 		    	$pl->delAudioClip($pos);        
 		    }
 
-			$this->view->playlistcontents = $pl->getContents();
+			$this->view->pl = $pl;
+			
+			if($display === 'pl') {
+				$this->view->html = $this->view->render('playlist/update.phtml');
+			} 
+			else {
+				$this->view->html = $this->view->render('sideplaylist/update.phtml');
+			}
+			$this->view->name = $pl->getName();
+			$this->view->length = $pl->getLength();
+
+			unset($this->view->pl);
 			return;
 		}
 		
