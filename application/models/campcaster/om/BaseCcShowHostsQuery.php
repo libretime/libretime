@@ -299,7 +299,7 @@ abstract class BaseCcShowHostsQuery extends ModelCriteria
 	public function filterByCcSubjs($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcShowHostsPeer::SUBJS_ID, $ccSubjs->getId(), $comparison);
+			->addUsingAlias(CcShowHostsPeer::SUBJS_ID, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**

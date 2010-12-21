@@ -116,7 +116,9 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 		else {
 			$this->_roleName = "guest";
 		}
-		
+
+		Zend_View_Helper_Navigation_HelperAbstract::setDefaultRole($this->_roleName);
+
         $resourceName = '';
 
         if ($request->getModuleName() != 'default') {

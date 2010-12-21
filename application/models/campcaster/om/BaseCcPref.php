@@ -144,7 +144,7 @@ abstract class BaseCcPref extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcPrefPeer::SUBJID;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getId() !== $v) {
+		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
 			$this->aCcSubjs = null;
 		}
 
@@ -258,7 +258,7 @@ abstract class BaseCcPref extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aCcSubjs !== null && $this->subjid !== $this->aCcSubjs->getId()) {
+		if ($this->aCcSubjs !== null && $this->subjid !== $this->aCcSubjs->getDbId()) {
 			$this->aCcSubjs = null;
 		}
 	} // ensureConsistency
@@ -812,7 +812,7 @@ abstract class BaseCcPref extends BaseObject  implements Persistent
 		if ($v === null) {
 			$this->setSubjid(NULL);
 		} else {
-			$this->setSubjid($v->getId());
+			$this->setSubjid($v->getDbId());
 		}
 
 		$this->aCcSubjs = $v;

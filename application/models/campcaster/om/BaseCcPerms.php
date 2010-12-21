@@ -160,7 +160,7 @@ abstract class BaseCcPerms extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcPermsPeer::SUBJ;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getId() !== $v) {
+		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
 			$this->aCcSubjs = null;
 		}
 
@@ -295,7 +295,7 @@ abstract class BaseCcPerms extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aCcSubjs !== null && $this->subj !== $this->aCcSubjs->getId()) {
+		if ($this->aCcSubjs !== null && $this->subj !== $this->aCcSubjs->getDbId()) {
 			$this->aCcSubjs = null;
 		}
 	} // ensureConsistency
@@ -851,7 +851,7 @@ abstract class BaseCcPerms extends BaseObject  implements Persistent
 		if ($v === null) {
 			$this->setSubj(NULL);
 		} else {
-			$this->setSubj($v->getId());
+			$this->setSubj($v->getDbId());
 		}
 
 		$this->aCcSubjs = $v;

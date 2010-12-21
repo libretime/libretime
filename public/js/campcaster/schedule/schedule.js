@@ -61,6 +61,7 @@ function submitShow() {
 		function(data){
 			if(data.form) {
 				dialog.find("form").remove();
+				dialog.find("#show_overlap_error").remove();
 				dialog.append(data.form);
 
 				var start  = dialog.find("#start_date");
@@ -70,8 +71,9 @@ function submitShow() {
 				createDateInput(end, endDpSelect);
 
 				if(data.overlap) {
-					var table, tr, days;
-					table = $("<table/>");
+					var div, table, tr, days;
+					div = $('<div id="show_overlap_error"/>');
+					table = $('<table/>');
 					days = $.datepicker.regional[''].dayNamesShort;
 
 					$.each(data.overlap, function(i, val){
@@ -85,8 +87,9 @@ function submitShow() {
 						table.append(tr);
 					});
 				
-					dialog.append("<span>Cannot add show. New show overlaps the following shows:</span>");
-					dialog.append(table);
+					div.append("<span>Cannot add show. New show overlaps the following shows:</span>");
+					div.append(table);
+					dialog.append(div);
 				}
 	
 			}
@@ -128,20 +131,36 @@ function schedulePlaylist() {
 	
 }
 
-function makeShowDialog(html) {
+function autoSelect(event, ui) {
+
+	$("#hosts-"+ui.item.value).attr("checked", "checked");
+	event.preventDefault();
+}
+
+function makeShowDialog(json) {
 	
 	var dialog;
 
 	//main jqueryUI dialog
 	dialog = $('<div id="schedule_add_event_dialog" />');
 
-	dialog.append(html);
+	dialog.append(json.form);
 
 	var start  = dialog.find("#start_date");
 	var end  = dialog.find("#end_date");
 
 	createDateInput(start, startDpSelect);
 	createDateInput(end, endDpSelect);
+
+	var auto = json.hosts.map(function(el) {
+		return {value: el.id, label: el.login};
+	});
+
+	dialog.find("#hosts_autocomplete").autocomplete({
+		source: auto,
+		select: autoSelect
+	});
+
 
 	dialog.dialog({
 		autoOpen: false,
@@ -200,7 +219,7 @@ function openShowDialog() {
 	url = '/Schedule/add-show-dialog/format/json';
 
 	$.get(url, function(json){
-		var dialog = makeShowDialog(json.form);
+		var dialog = makeShowDialog(json);
 		dialog.dialog('open');
 	});
 }

@@ -405,7 +405,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 	public function filterByCcSubjs($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcAccessPeer::OWNER, $ccSubjs->getId(), $comparison);
+			->addUsingAlias(CcAccessPeer::OWNER, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**

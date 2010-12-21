@@ -157,7 +157,7 @@ abstract class BaseCcShowHosts extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcShowHostsPeer::SUBJS_ID;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getId() !== $v) {
+		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
 			$this->aCcSubjs = null;
 		}
 
@@ -233,7 +233,7 @@ abstract class BaseCcShowHosts extends BaseObject  implements Persistent
 		if ($this->aCcShow !== null && $this->show_id !== $this->aCcShow->getDbId()) {
 			$this->aCcShow = null;
 		}
-		if ($this->aCcSubjs !== null && $this->subjs_id !== $this->aCcSubjs->getId()) {
+		if ($this->aCcSubjs !== null && $this->subjs_id !== $this->aCcSubjs->getDbId()) {
 			$this->aCcSubjs = null;
 		}
 	} // ensureConsistency
@@ -843,7 +843,7 @@ abstract class BaseCcShowHosts extends BaseObject  implements Persistent
 		if ($v === null) {
 			$this->setDbHost(NULL);
 		} else {
-			$this->setDbHost($v->getId());
+			$this->setDbHost($v->getDbId());
 		}
 
 		$this->aCcSubjs = $v;

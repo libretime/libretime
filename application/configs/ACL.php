@@ -10,6 +10,7 @@ $ccAcl->addRole(new Zend_Acl_Role('guest'))
 
 $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('index'))
+	  ->add(new Zend_Acl_Resource('user'))
 	  ->add(new Zend_Acl_Resource('error'))
       ->add(new Zend_Acl_Resource('login'))
 	  ->add(new Zend_Acl_Resource('playlist'))
@@ -27,9 +28,12 @@ $ccAcl->allow('guest', 'index')
 	  ->allow('guest', 'api')
       ->allow('host', 'plupload')
 	  ->allow('host', 'playlist')
-      ->allow('host', 'schedule');
+      ->allow('host', 'schedule')
+	  ->allow('admin', 'user');
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
+
+Zend_View_Helper_Navigation_HelperAbstract::setDefaultAcl($ccAcl);
 
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin($aclPlugin);

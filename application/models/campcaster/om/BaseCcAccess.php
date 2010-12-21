@@ -393,7 +393,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcAccessPeer::OWNER;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getId() !== $v) {
+		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
 			$this->aCcSubjs = null;
 		}
 
@@ -533,7 +533,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aCcSubjs !== null && $this->owner !== $this->aCcSubjs->getId()) {
+		if ($this->aCcSubjs !== null && $this->owner !== $this->aCcSubjs->getDbId()) {
 			$this->aCcSubjs = null;
 		}
 	} // ensureConsistency
@@ -1137,7 +1137,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 		if ($v === null) {
 			$this->setOwner(NULL);
 		} else {
-			$this->setOwner($v->getId());
+			$this->setOwner($v->getDbId());
 		}
 
 		$this->aCcSubjs = $v;

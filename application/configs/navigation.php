@@ -10,23 +10,31 @@
 $pages = array(
 	array(
 		'label'      => 'Home',
-		'title'      => 'Go Home',
 		'module'     => 'default',
 		'controller' => 'index',
 		'action'     => 'index',
 		'order'      => -100 // make sure home is the first page
 	),
 	array(
+		'label'      => 'Add User',
+		'module'     => 'default',
+		'controller' => 'user',
+		'action'     => 'add-user',
+		'resource'	=>	'user'	
+	),
+	array(
 		'label'      => 'Playlists',
 		'module'     => 'default',
 		'controller' => 'Playlist',
 		'action'     => 'index',
+		'resource'	=>	'playlist',
 		'pages'      => array(
 		    array(
 		        'label'      => 'New',
 		        'module'     => 'default',
 		        'controller' => 'Playlist',
 		        'action'     => 'new',
+				'resource'	=>	'playlist',
 				'visible'    => false
 		    ),
 			array(
@@ -34,6 +42,7 @@ $pages = array(
 		        'module'     => 'default',
 		        'controller' => 'Playlist',
 		        'action'     => 'edit',
+				'resource'	=>	'playlist',
 				'visible'    => false
 		    )
 		)
@@ -43,18 +52,21 @@ $pages = array(
 		'module'     => 'default',
 		'controller' => 'Library',
 		'action'     => 'index',
+		'resource'	=>	'library',
 		'pages'      => array(
 		    array(
 		        'label'      => 'Add Audio',
 		        'module'     => 'default',
 		        'controller' => 'Plupload',
-		        'action'     => 'plupload'
+		        'action'     => 'plupload',
+				'resource'	=>	'plupload'
 		    ),
 			array(
 		        'label'      => 'Search',
 		        'module'     => 'default',
 		        'controller' => 'Search',
-		        'action'     => 'display'
+		        'action'     => 'display',
+				'resource'	=>	'search'
 		    )
 		)
 	),
@@ -68,13 +80,15 @@ $pages = array(
 		'label'      => 'Schedule',
 		'module'     => 'default',
 		'controller' => 'Schedule',
-		'action'     => 'index'
+		'action'     => 'index',
+		'resource'   => 'schedule'
 	),
 	array(
 		'label'      => 'Logout',
 		'module'     => 'default',
 		'controller' => 'Login',
-		'action'     => 'logout'
+		'action'     => 'logout',
+		'resource'	=>	'login'
 	)
 );
  

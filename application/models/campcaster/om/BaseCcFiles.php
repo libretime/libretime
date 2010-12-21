@@ -419,7 +419,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getGunid()
+	public function getDbGunid()
 	{
 		return $this->gunid;
 	}
@@ -429,7 +429,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getName()
+	public function getDbName()
 	{
 		return $this->name;
 	}
@@ -439,7 +439,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getMime()
+	public function getDbMime()
 	{
 		return $this->mime;
 	}
@@ -449,7 +449,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getFtype()
+	public function getDbFtype()
 	{
 		return $this->ftype;
 	}
@@ -459,7 +459,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getfilepath()
+	public function getDbFilepath()
 	{
 		return $this->filepath;
 	}
@@ -469,7 +469,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getState()
+	public function getDbState()
 	{
 		return $this->state;
 	}
@@ -479,7 +479,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getCurrentlyaccessing()
+	public function getDbCurrentlyaccessing()
 	{
 		return $this->currentlyaccessing;
 	}
@@ -489,7 +489,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getEditedby()
+	public function getDbEditedby()
 	{
 		return $this->editedby;
 	}
@@ -503,7 +503,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getMtime($format = 'Y-m-d H:i:s')
+	public function getDbMtime($format = 'Y-m-d H:i:s')
 	{
 		if ($this->mtime === null) {
 			return null;
@@ -532,7 +532,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getMd5()
+	public function getDbMd5()
 	{
 		return $this->md5;
 	}
@@ -542,7 +542,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getTrackTitle()
+	public function getDbTrackTitle()
 	{
 		return $this->track_title;
 	}
@@ -552,7 +552,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getArtistName()
+	public function getDbArtistName()
 	{
 		return $this->artist_name;
 	}
@@ -562,7 +562,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getBitRate()
+	public function getDbBitRate()
 	{
 		return $this->bit_rate;
 	}
@@ -572,7 +572,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getSampleRate()
+	public function getDbSampleRate()
 	{
 		return $this->sample_rate;
 	}
@@ -582,7 +582,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getFormat()
+	public function getDbFormat()
 	{
 		return $this->format;
 	}
@@ -625,7 +625,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getAlbumTitle()
+	public function getDbAlbumTitle()
 	{
 		return $this->album_title;
 	}
@@ -635,7 +635,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getGenre()
+	public function getDbGenre()
 	{
 		return $this->genre;
 	}
@@ -645,7 +645,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getComments()
+	public function getDbComments()
 	{
 		return $this->comments;
 	}
@@ -655,7 +655,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getYear()
+	public function getDbYear()
 	{
 		return $this->year;
 	}
@@ -665,7 +665,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getTrackNumber()
+	public function getDbTrackNumber()
 	{
 		return $this->track_number;
 	}
@@ -675,7 +675,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     int
 	 */
-	public function getChannels()
+	public function getDbChannels()
 	{
 		return $this->channels;
 	}
@@ -685,7 +685,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getUrl()
+	public function getDbUrl()
 	{
 		return $this->url;
 	}
@@ -695,7 +695,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getBpm()
+	public function getDbBpm()
 	{
 		return $this->bpm;
 	}
@@ -705,7 +705,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getRating()
+	public function getDbRating()
 	{
 		return $this->rating;
 	}
@@ -715,7 +715,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getEncodedBy()
+	public function getDbEncodedBy()
 	{
 		return $this->encoded_by;
 	}
@@ -725,7 +725,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getDiscNumber()
+	public function getDbDiscNumber()
 	{
 		return $this->disc_number;
 	}
@@ -735,7 +735,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getMood()
+	public function getDbMood()
 	{
 		return $this->mood;
 	}
@@ -745,7 +745,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getLabel()
+	public function getDbLabel()
 	{
 		return $this->label;
 	}
@@ -755,7 +755,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getComposer()
+	public function getDbComposer()
 	{
 		return $this->composer;
 	}
@@ -765,7 +765,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getEncoder()
+	public function getDbEncoder()
 	{
 		return $this->encoder;
 	}
@@ -775,7 +775,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getChecksum()
+	public function getDbChecksum()
 	{
 		return $this->checksum;
 	}
@@ -785,7 +785,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getLyrics()
+	public function getDbLyrics()
 	{
 		return $this->lyrics;
 	}
@@ -795,7 +795,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getOrchestra()
+	public function getDbOrchestra()
 	{
 		return $this->orchestra;
 	}
@@ -805,7 +805,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getConductor()
+	public function getDbConductor()
 	{
 		return $this->conductor;
 	}
@@ -815,7 +815,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getLyricist()
+	public function getDbLyricist()
 	{
 		return $this->lyricist;
 	}
@@ -825,7 +825,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getOriginalLyricist()
+	public function getDbOriginalLyricist()
 	{
 		return $this->original_lyricist;
 	}
@@ -835,7 +835,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getRadioStationName()
+	public function getDbRadioStationName()
 	{
 		return $this->radio_station_name;
 	}
@@ -845,7 +845,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getInfoUrl()
+	public function getDbInfoUrl()
 	{
 		return $this->info_url;
 	}
@@ -855,7 +855,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getArtistUrl()
+	public function getDbArtistUrl()
 	{
 		return $this->artist_url;
 	}
@@ -865,7 +865,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getAudioSourceUrl()
+	public function getDbAudioSourceUrl()
 	{
 		return $this->audio_source_url;
 	}
@@ -875,7 +875,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getRadioStationUrl()
+	public function getDbRadioStationUrl()
 	{
 		return $this->radio_station_url;
 	}
@@ -885,7 +885,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getBuyThisUrl()
+	public function getDbBuyThisUrl()
 	{
 		return $this->buy_this_url;
 	}
@@ -895,7 +895,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getIsrcNumber()
+	public function getDbIsrcNumber()
 	{
 		return $this->isrc_number;
 	}
@@ -905,7 +905,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getCatalogNumber()
+	public function getDbCatalogNumber()
 	{
 		return $this->catalog_number;
 	}
@@ -915,7 +915,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getOriginalArtist()
+	public function getDbOriginalArtist()
 	{
 		return $this->original_artist;
 	}
@@ -925,7 +925,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getCopyright()
+	public function getDbCopyright()
 	{
 		return $this->copyright;
 	}
@@ -935,7 +935,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getReportDatetime()
+	public function getDbReportDatetime()
 	{
 		return $this->report_datetime;
 	}
@@ -945,7 +945,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getReportLocation()
+	public function getDbReportLocation()
 	{
 		return $this->report_location;
 	}
@@ -955,7 +955,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getReportOrganization()
+	public function getDbReportOrganization()
 	{
 		return $this->report_organization;
 	}
@@ -965,7 +965,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getSubject()
+	public function getDbSubject()
 	{
 		return $this->subject;
 	}
@@ -975,7 +975,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getContributor()
+	public function getDbContributor()
 	{
 		return $this->contributor;
 	}
@@ -985,7 +985,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * 
 	 * @return     string
 	 */
-	public function getLanguage()
+	public function getDbLanguage()
 	{
 		return $this->language;
 	}
@@ -1016,7 +1016,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setGunid($v)
+	public function setDbGunid($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1028,7 +1028,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setGunid()
+	} // setDbGunid()
 
 	/**
 	 * Set the value of [name] column.
@@ -1036,7 +1036,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setName($v)
+	public function setDbName($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1048,7 +1048,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setName()
+	} // setDbName()
 
 	/**
 	 * Set the value of [mime] column.
@@ -1056,7 +1056,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setMime($v)
+	public function setDbMime($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1068,7 +1068,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setMime()
+	} // setDbMime()
 
 	/**
 	 * Set the value of [ftype] column.
@@ -1076,7 +1076,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setFtype($v)
+	public function setDbFtype($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1088,7 +1088,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setFtype()
+	} // setDbFtype()
 
 	/**
 	 * Set the value of [filepath] column.
@@ -1096,7 +1096,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setfilepath($v)
+	public function setDbFilepath($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1108,7 +1108,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setfilepath()
+	} // setDbFilepath()
 
 	/**
 	 * Set the value of [state] column.
@@ -1116,7 +1116,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setState($v)
+	public function setDbState($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1128,7 +1128,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setState()
+	} // setDbState()
 
 	/**
 	 * Set the value of [currentlyaccessing] column.
@@ -1136,7 +1136,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setCurrentlyaccessing($v)
+	public function setDbCurrentlyaccessing($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -1148,7 +1148,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setCurrentlyaccessing()
+	} // setDbCurrentlyaccessing()
 
 	/**
 	 * Set the value of [editedby] column.
@@ -1156,7 +1156,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setEditedby($v)
+	public function setDbEditedby($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -1167,12 +1167,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcFilesPeer::EDITEDBY;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getId() !== $v) {
+		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
 			$this->aCcSubjs = null;
 		}
 
 		return $this;
-	} // setEditedby()
+	} // setDbEditedby()
 
 	/**
 	 * Sets the value of [mtime] column to a normalized version of the date/time value specified.
@@ -1181,7 +1181,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setMtime($v)
+	public function setDbMtime($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -1221,7 +1221,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		} // if either are not null
 
 		return $this;
-	} // setMtime()
+	} // setDbMtime()
 
 	/**
 	 * Set the value of [md5] column.
@@ -1229,7 +1229,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setMd5($v)
+	public function setDbMd5($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1241,7 +1241,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setMd5()
+	} // setDbMd5()
 
 	/**
 	 * Set the value of [track_title] column.
@@ -1249,7 +1249,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setTrackTitle($v)
+	public function setDbTrackTitle($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1261,7 +1261,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setTrackTitle()
+	} // setDbTrackTitle()
 
 	/**
 	 * Set the value of [artist_name] column.
@@ -1269,7 +1269,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setArtistName($v)
+	public function setDbArtistName($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1281,7 +1281,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setArtistName()
+	} // setDbArtistName()
 
 	/**
 	 * Set the value of [bit_rate] column.
@@ -1289,7 +1289,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setBitRate($v)
+	public function setDbBitRate($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1301,7 +1301,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setBitRate()
+	} // setDbBitRate()
 
 	/**
 	 * Set the value of [sample_rate] column.
@@ -1309,7 +1309,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setSampleRate($v)
+	public function setDbSampleRate($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1321,7 +1321,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setSampleRate()
+	} // setDbSampleRate()
 
 	/**
 	 * Set the value of [format] column.
@@ -1329,7 +1329,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setFormat($v)
+	public function setDbFormat($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1341,7 +1341,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setFormat()
+	} // setDbFormat()
 
 	/**
 	 * Sets the value of [length] column to a normalized version of the date/time value specified.
@@ -1398,7 +1398,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setAlbumTitle($v)
+	public function setDbAlbumTitle($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1410,7 +1410,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setAlbumTitle()
+	} // setDbAlbumTitle()
 
 	/**
 	 * Set the value of [genre] column.
@@ -1418,7 +1418,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setGenre($v)
+	public function setDbGenre($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1430,7 +1430,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setGenre()
+	} // setDbGenre()
 
 	/**
 	 * Set the value of [comments] column.
@@ -1438,7 +1438,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setComments($v)
+	public function setDbComments($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1450,7 +1450,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setComments()
+	} // setDbComments()
 
 	/**
 	 * Set the value of [year] column.
@@ -1458,7 +1458,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setYear($v)
+	public function setDbYear($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1470,7 +1470,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setYear()
+	} // setDbYear()
 
 	/**
 	 * Set the value of [track_number] column.
@@ -1478,7 +1478,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setTrackNumber($v)
+	public function setDbTrackNumber($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -1490,7 +1490,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setTrackNumber()
+	} // setDbTrackNumber()
 
 	/**
 	 * Set the value of [channels] column.
@@ -1498,7 +1498,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setChannels($v)
+	public function setDbChannels($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -1510,7 +1510,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setChannels()
+	} // setDbChannels()
 
 	/**
 	 * Set the value of [url] column.
@@ -1518,7 +1518,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setUrl($v)
+	public function setDbUrl($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1530,7 +1530,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setUrl()
+	} // setDbUrl()
 
 	/**
 	 * Set the value of [bpm] column.
@@ -1538,7 +1538,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setBpm($v)
+	public function setDbBpm($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1550,7 +1550,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setBpm()
+	} // setDbBpm()
 
 	/**
 	 * Set the value of [rating] column.
@@ -1558,7 +1558,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setRating($v)
+	public function setDbRating($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1570,7 +1570,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setRating()
+	} // setDbRating()
 
 	/**
 	 * Set the value of [encoded_by] column.
@@ -1578,7 +1578,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setEncodedBy($v)
+	public function setDbEncodedBy($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1590,7 +1590,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setEncodedBy()
+	} // setDbEncodedBy()
 
 	/**
 	 * Set the value of [disc_number] column.
@@ -1598,7 +1598,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setDiscNumber($v)
+	public function setDbDiscNumber($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1610,7 +1610,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setDiscNumber()
+	} // setDbDiscNumber()
 
 	/**
 	 * Set the value of [mood] column.
@@ -1618,7 +1618,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setMood($v)
+	public function setDbMood($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1630,7 +1630,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setMood()
+	} // setDbMood()
 
 	/**
 	 * Set the value of [label] column.
@@ -1638,7 +1638,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setLabel($v)
+	public function setDbLabel($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1650,7 +1650,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setLabel()
+	} // setDbLabel()
 
 	/**
 	 * Set the value of [composer] column.
@@ -1658,7 +1658,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setComposer($v)
+	public function setDbComposer($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1670,7 +1670,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setComposer()
+	} // setDbComposer()
 
 	/**
 	 * Set the value of [encoder] column.
@@ -1678,7 +1678,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setEncoder($v)
+	public function setDbEncoder($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1690,7 +1690,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setEncoder()
+	} // setDbEncoder()
 
 	/**
 	 * Set the value of [checksum] column.
@@ -1698,7 +1698,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setChecksum($v)
+	public function setDbChecksum($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1710,7 +1710,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setChecksum()
+	} // setDbChecksum()
 
 	/**
 	 * Set the value of [lyrics] column.
@@ -1718,7 +1718,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setLyrics($v)
+	public function setDbLyrics($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1730,7 +1730,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setLyrics()
+	} // setDbLyrics()
 
 	/**
 	 * Set the value of [orchestra] column.
@@ -1738,7 +1738,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setOrchestra($v)
+	public function setDbOrchestra($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1750,7 +1750,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setOrchestra()
+	} // setDbOrchestra()
 
 	/**
 	 * Set the value of [conductor] column.
@@ -1758,7 +1758,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setConductor($v)
+	public function setDbConductor($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1770,7 +1770,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setConductor()
+	} // setDbConductor()
 
 	/**
 	 * Set the value of [lyricist] column.
@@ -1778,7 +1778,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setLyricist($v)
+	public function setDbLyricist($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1790,7 +1790,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setLyricist()
+	} // setDbLyricist()
 
 	/**
 	 * Set the value of [original_lyricist] column.
@@ -1798,7 +1798,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setOriginalLyricist($v)
+	public function setDbOriginalLyricist($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1810,7 +1810,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setOriginalLyricist()
+	} // setDbOriginalLyricist()
 
 	/**
 	 * Set the value of [radio_station_name] column.
@@ -1818,7 +1818,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setRadioStationName($v)
+	public function setDbRadioStationName($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1830,7 +1830,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setRadioStationName()
+	} // setDbRadioStationName()
 
 	/**
 	 * Set the value of [info_url] column.
@@ -1838,7 +1838,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setInfoUrl($v)
+	public function setDbInfoUrl($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1850,7 +1850,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setInfoUrl()
+	} // setDbInfoUrl()
 
 	/**
 	 * Set the value of [artist_url] column.
@@ -1858,7 +1858,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setArtistUrl($v)
+	public function setDbArtistUrl($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1870,7 +1870,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setArtistUrl()
+	} // setDbArtistUrl()
 
 	/**
 	 * Set the value of [audio_source_url] column.
@@ -1878,7 +1878,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setAudioSourceUrl($v)
+	public function setDbAudioSourceUrl($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1890,7 +1890,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setAudioSourceUrl()
+	} // setDbAudioSourceUrl()
 
 	/**
 	 * Set the value of [radio_station_url] column.
@@ -1898,7 +1898,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setRadioStationUrl($v)
+	public function setDbRadioStationUrl($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1910,7 +1910,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setRadioStationUrl()
+	} // setDbRadioStationUrl()
 
 	/**
 	 * Set the value of [buy_this_url] column.
@@ -1918,7 +1918,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setBuyThisUrl($v)
+	public function setDbBuyThisUrl($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1930,7 +1930,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setBuyThisUrl()
+	} // setDbBuyThisUrl()
 
 	/**
 	 * Set the value of [isrc_number] column.
@@ -1938,7 +1938,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setIsrcNumber($v)
+	public function setDbIsrcNumber($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1950,7 +1950,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setIsrcNumber()
+	} // setDbIsrcNumber()
 
 	/**
 	 * Set the value of [catalog_number] column.
@@ -1958,7 +1958,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setCatalogNumber($v)
+	public function setDbCatalogNumber($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1970,7 +1970,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setCatalogNumber()
+	} // setDbCatalogNumber()
 
 	/**
 	 * Set the value of [original_artist] column.
@@ -1978,7 +1978,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setOriginalArtist($v)
+	public function setDbOriginalArtist($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -1990,7 +1990,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setOriginalArtist()
+	} // setDbOriginalArtist()
 
 	/**
 	 * Set the value of [copyright] column.
@@ -1998,7 +1998,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setCopyright($v)
+	public function setDbCopyright($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -2010,7 +2010,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setCopyright()
+	} // setDbCopyright()
 
 	/**
 	 * Set the value of [report_datetime] column.
@@ -2018,7 +2018,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setReportDatetime($v)
+	public function setDbReportDatetime($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -2030,7 +2030,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setReportDatetime()
+	} // setDbReportDatetime()
 
 	/**
 	 * Set the value of [report_location] column.
@@ -2038,7 +2038,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setReportLocation($v)
+	public function setDbReportLocation($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -2050,7 +2050,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setReportLocation()
+	} // setDbReportLocation()
 
 	/**
 	 * Set the value of [report_organization] column.
@@ -2058,7 +2058,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setReportOrganization($v)
+	public function setDbReportOrganization($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -2070,7 +2070,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setReportOrganization()
+	} // setDbReportOrganization()
 
 	/**
 	 * Set the value of [subject] column.
@@ -2078,7 +2078,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setSubject($v)
+	public function setDbSubject($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -2090,7 +2090,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setSubject()
+	} // setDbSubject()
 
 	/**
 	 * Set the value of [contributor] column.
@@ -2098,7 +2098,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setContributor($v)
+	public function setDbContributor($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -2110,7 +2110,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setContributor()
+	} // setDbContributor()
 
 	/**
 	 * Set the value of [language] column.
@@ -2118,7 +2118,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setLanguage($v)
+	public function setDbLanguage($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -2130,7 +2130,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		}
 
 		return $this;
-	} // setLanguage()
+	} // setDbLanguage()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -2273,7 +2273,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aCcSubjs !== null && $this->editedby !== $this->aCcSubjs->getId()) {
+		if ($this->aCcSubjs !== null && $this->editedby !== $this->aCcSubjs->getDbId()) {
 			$this->aCcSubjs = null;
 		}
 	} // ensureConsistency
@@ -2599,163 +2599,163 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getGunid();
+				return $this->getDbGunid();
 				break;
 			case 2:
-				return $this->getName();
+				return $this->getDbName();
 				break;
 			case 3:
-				return $this->getMime();
+				return $this->getDbMime();
 				break;
 			case 4:
-				return $this->getFtype();
+				return $this->getDbFtype();
 				break;
 			case 5:
-				return $this->getfilepath();
+				return $this->getDbFilepath();
 				break;
 			case 6:
-				return $this->getState();
+				return $this->getDbState();
 				break;
 			case 7:
-				return $this->getCurrentlyaccessing();
+				return $this->getDbCurrentlyaccessing();
 				break;
 			case 8:
-				return $this->getEditedby();
+				return $this->getDbEditedby();
 				break;
 			case 9:
-				return $this->getMtime();
+				return $this->getDbMtime();
 				break;
 			case 10:
-				return $this->getMd5();
+				return $this->getDbMd5();
 				break;
 			case 11:
-				return $this->getTrackTitle();
+				return $this->getDbTrackTitle();
 				break;
 			case 12:
-				return $this->getArtistName();
+				return $this->getDbArtistName();
 				break;
 			case 13:
-				return $this->getBitRate();
+				return $this->getDbBitRate();
 				break;
 			case 14:
-				return $this->getSampleRate();
+				return $this->getDbSampleRate();
 				break;
 			case 15:
-				return $this->getFormat();
+				return $this->getDbFormat();
 				break;
 			case 16:
 				return $this->getDbLength();
 				break;
 			case 17:
-				return $this->getAlbumTitle();
+				return $this->getDbAlbumTitle();
 				break;
 			case 18:
-				return $this->getGenre();
+				return $this->getDbGenre();
 				break;
 			case 19:
-				return $this->getComments();
+				return $this->getDbComments();
 				break;
 			case 20:
-				return $this->getYear();
+				return $this->getDbYear();
 				break;
 			case 21:
-				return $this->getTrackNumber();
+				return $this->getDbTrackNumber();
 				break;
 			case 22:
-				return $this->getChannels();
+				return $this->getDbChannels();
 				break;
 			case 23:
-				return $this->getUrl();
+				return $this->getDbUrl();
 				break;
 			case 24:
-				return $this->getBpm();
+				return $this->getDbBpm();
 				break;
 			case 25:
-				return $this->getRating();
+				return $this->getDbRating();
 				break;
 			case 26:
-				return $this->getEncodedBy();
+				return $this->getDbEncodedBy();
 				break;
 			case 27:
-				return $this->getDiscNumber();
+				return $this->getDbDiscNumber();
 				break;
 			case 28:
-				return $this->getMood();
+				return $this->getDbMood();
 				break;
 			case 29:
-				return $this->getLabel();
+				return $this->getDbLabel();
 				break;
 			case 30:
-				return $this->getComposer();
+				return $this->getDbComposer();
 				break;
 			case 31:
-				return $this->getEncoder();
+				return $this->getDbEncoder();
 				break;
 			case 32:
-				return $this->getChecksum();
+				return $this->getDbChecksum();
 				break;
 			case 33:
-				return $this->getLyrics();
+				return $this->getDbLyrics();
 				break;
 			case 34:
-				return $this->getOrchestra();
+				return $this->getDbOrchestra();
 				break;
 			case 35:
-				return $this->getConductor();
+				return $this->getDbConductor();
 				break;
 			case 36:
-				return $this->getLyricist();
+				return $this->getDbLyricist();
 				break;
 			case 37:
-				return $this->getOriginalLyricist();
+				return $this->getDbOriginalLyricist();
 				break;
 			case 38:
-				return $this->getRadioStationName();
+				return $this->getDbRadioStationName();
 				break;
 			case 39:
-				return $this->getInfoUrl();
+				return $this->getDbInfoUrl();
 				break;
 			case 40:
-				return $this->getArtistUrl();
+				return $this->getDbArtistUrl();
 				break;
 			case 41:
-				return $this->getAudioSourceUrl();
+				return $this->getDbAudioSourceUrl();
 				break;
 			case 42:
-				return $this->getRadioStationUrl();
+				return $this->getDbRadioStationUrl();
 				break;
 			case 43:
-				return $this->getBuyThisUrl();
+				return $this->getDbBuyThisUrl();
 				break;
 			case 44:
-				return $this->getIsrcNumber();
+				return $this->getDbIsrcNumber();
 				break;
 			case 45:
-				return $this->getCatalogNumber();
+				return $this->getDbCatalogNumber();
 				break;
 			case 46:
-				return $this->getOriginalArtist();
+				return $this->getDbOriginalArtist();
 				break;
 			case 47:
-				return $this->getCopyright();
+				return $this->getDbCopyright();
 				break;
 			case 48:
-				return $this->getReportDatetime();
+				return $this->getDbReportDatetime();
 				break;
 			case 49:
-				return $this->getReportLocation();
+				return $this->getDbReportLocation();
 				break;
 			case 50:
-				return $this->getReportOrganization();
+				return $this->getDbReportOrganization();
 				break;
 			case 51:
-				return $this->getSubject();
+				return $this->getDbSubject();
 				break;
 			case 52:
-				return $this->getContributor();
+				return $this->getDbContributor();
 				break;
 			case 53:
-				return $this->getLanguage();
+				return $this->getDbLanguage();
 				break;
 			default:
 				return null;
@@ -2782,59 +2782,59 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$keys = CcFilesPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getDbId(),
-			$keys[1] => $this->getGunid(),
-			$keys[2] => $this->getName(),
-			$keys[3] => $this->getMime(),
-			$keys[4] => $this->getFtype(),
-			$keys[5] => $this->getfilepath(),
-			$keys[6] => $this->getState(),
-			$keys[7] => $this->getCurrentlyaccessing(),
-			$keys[8] => $this->getEditedby(),
-			$keys[9] => $this->getMtime(),
-			$keys[10] => $this->getMd5(),
-			$keys[11] => $this->getTrackTitle(),
-			$keys[12] => $this->getArtistName(),
-			$keys[13] => $this->getBitRate(),
-			$keys[14] => $this->getSampleRate(),
-			$keys[15] => $this->getFormat(),
+			$keys[1] => $this->getDbGunid(),
+			$keys[2] => $this->getDbName(),
+			$keys[3] => $this->getDbMime(),
+			$keys[4] => $this->getDbFtype(),
+			$keys[5] => $this->getDbFilepath(),
+			$keys[6] => $this->getDbState(),
+			$keys[7] => $this->getDbCurrentlyaccessing(),
+			$keys[8] => $this->getDbEditedby(),
+			$keys[9] => $this->getDbMtime(),
+			$keys[10] => $this->getDbMd5(),
+			$keys[11] => $this->getDbTrackTitle(),
+			$keys[12] => $this->getDbArtistName(),
+			$keys[13] => $this->getDbBitRate(),
+			$keys[14] => $this->getDbSampleRate(),
+			$keys[15] => $this->getDbFormat(),
 			$keys[16] => $this->getDbLength(),
-			$keys[17] => $this->getAlbumTitle(),
-			$keys[18] => $this->getGenre(),
-			$keys[19] => $this->getComments(),
-			$keys[20] => $this->getYear(),
-			$keys[21] => $this->getTrackNumber(),
-			$keys[22] => $this->getChannels(),
-			$keys[23] => $this->getUrl(),
-			$keys[24] => $this->getBpm(),
-			$keys[25] => $this->getRating(),
-			$keys[26] => $this->getEncodedBy(),
-			$keys[27] => $this->getDiscNumber(),
-			$keys[28] => $this->getMood(),
-			$keys[29] => $this->getLabel(),
-			$keys[30] => $this->getComposer(),
-			$keys[31] => $this->getEncoder(),
-			$keys[32] => $this->getChecksum(),
-			$keys[33] => $this->getLyrics(),
-			$keys[34] => $this->getOrchestra(),
-			$keys[35] => $this->getConductor(),
-			$keys[36] => $this->getLyricist(),
-			$keys[37] => $this->getOriginalLyricist(),
-			$keys[38] => $this->getRadioStationName(),
-			$keys[39] => $this->getInfoUrl(),
-			$keys[40] => $this->getArtistUrl(),
-			$keys[41] => $this->getAudioSourceUrl(),
-			$keys[42] => $this->getRadioStationUrl(),
-			$keys[43] => $this->getBuyThisUrl(),
-			$keys[44] => $this->getIsrcNumber(),
-			$keys[45] => $this->getCatalogNumber(),
-			$keys[46] => $this->getOriginalArtist(),
-			$keys[47] => $this->getCopyright(),
-			$keys[48] => $this->getReportDatetime(),
-			$keys[49] => $this->getReportLocation(),
-			$keys[50] => $this->getReportOrganization(),
-			$keys[51] => $this->getSubject(),
-			$keys[52] => $this->getContributor(),
-			$keys[53] => $this->getLanguage(),
+			$keys[17] => $this->getDbAlbumTitle(),
+			$keys[18] => $this->getDbGenre(),
+			$keys[19] => $this->getDbComments(),
+			$keys[20] => $this->getDbYear(),
+			$keys[21] => $this->getDbTrackNumber(),
+			$keys[22] => $this->getDbChannels(),
+			$keys[23] => $this->getDbUrl(),
+			$keys[24] => $this->getDbBpm(),
+			$keys[25] => $this->getDbRating(),
+			$keys[26] => $this->getDbEncodedBy(),
+			$keys[27] => $this->getDbDiscNumber(),
+			$keys[28] => $this->getDbMood(),
+			$keys[29] => $this->getDbLabel(),
+			$keys[30] => $this->getDbComposer(),
+			$keys[31] => $this->getDbEncoder(),
+			$keys[32] => $this->getDbChecksum(),
+			$keys[33] => $this->getDbLyrics(),
+			$keys[34] => $this->getDbOrchestra(),
+			$keys[35] => $this->getDbConductor(),
+			$keys[36] => $this->getDbLyricist(),
+			$keys[37] => $this->getDbOriginalLyricist(),
+			$keys[38] => $this->getDbRadioStationName(),
+			$keys[39] => $this->getDbInfoUrl(),
+			$keys[40] => $this->getDbArtistUrl(),
+			$keys[41] => $this->getDbAudioSourceUrl(),
+			$keys[42] => $this->getDbRadioStationUrl(),
+			$keys[43] => $this->getDbBuyThisUrl(),
+			$keys[44] => $this->getDbIsrcNumber(),
+			$keys[45] => $this->getDbCatalogNumber(),
+			$keys[46] => $this->getDbOriginalArtist(),
+			$keys[47] => $this->getDbCopyright(),
+			$keys[48] => $this->getDbReportDatetime(),
+			$keys[49] => $this->getDbReportLocation(),
+			$keys[50] => $this->getDbReportOrganization(),
+			$keys[51] => $this->getDbSubject(),
+			$keys[52] => $this->getDbContributor(),
+			$keys[53] => $this->getDbLanguage(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcSubjs) {
@@ -2875,163 +2875,163 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setGunid($value);
+				$this->setDbGunid($value);
 				break;
 			case 2:
-				$this->setName($value);
+				$this->setDbName($value);
 				break;
 			case 3:
-				$this->setMime($value);
+				$this->setDbMime($value);
 				break;
 			case 4:
-				$this->setFtype($value);
+				$this->setDbFtype($value);
 				break;
 			case 5:
-				$this->setfilepath($value);
+				$this->setDbFilepath($value);
 				break;
 			case 6:
-				$this->setState($value);
+				$this->setDbState($value);
 				break;
 			case 7:
-				$this->setCurrentlyaccessing($value);
+				$this->setDbCurrentlyaccessing($value);
 				break;
 			case 8:
-				$this->setEditedby($value);
+				$this->setDbEditedby($value);
 				break;
 			case 9:
-				$this->setMtime($value);
+				$this->setDbMtime($value);
 				break;
 			case 10:
-				$this->setMd5($value);
+				$this->setDbMd5($value);
 				break;
 			case 11:
-				$this->setTrackTitle($value);
+				$this->setDbTrackTitle($value);
 				break;
 			case 12:
-				$this->setArtistName($value);
+				$this->setDbArtistName($value);
 				break;
 			case 13:
-				$this->setBitRate($value);
+				$this->setDbBitRate($value);
 				break;
 			case 14:
-				$this->setSampleRate($value);
+				$this->setDbSampleRate($value);
 				break;
 			case 15:
-				$this->setFormat($value);
+				$this->setDbFormat($value);
 				break;
 			case 16:
 				$this->setDbLength($value);
 				break;
 			case 17:
-				$this->setAlbumTitle($value);
+				$this->setDbAlbumTitle($value);
 				break;
 			case 18:
-				$this->setGenre($value);
+				$this->setDbGenre($value);
 				break;
 			case 19:
-				$this->setComments($value);
+				$this->setDbComments($value);
 				break;
 			case 20:
-				$this->setYear($value);
+				$this->setDbYear($value);
 				break;
 			case 21:
-				$this->setTrackNumber($value);
+				$this->setDbTrackNumber($value);
 				break;
 			case 22:
-				$this->setChannels($value);
+				$this->setDbChannels($value);
 				break;
 			case 23:
-				$this->setUrl($value);
+				$this->setDbUrl($value);
 				break;
 			case 24:
-				$this->setBpm($value);
+				$this->setDbBpm($value);
 				break;
 			case 25:
-				$this->setRating($value);
+				$this->setDbRating($value);
 				break;
 			case 26:
-				$this->setEncodedBy($value);
+				$this->setDbEncodedBy($value);
 				break;
 			case 27:
-				$this->setDiscNumber($value);
+				$this->setDbDiscNumber($value);
 				break;
 			case 28:
-				$this->setMood($value);
+				$this->setDbMood($value);
 				break;
 			case 29:
-				$this->setLabel($value);
+				$this->setDbLabel($value);
 				break;
 			case 30:
-				$this->setComposer($value);
+				$this->setDbComposer($value);
 				break;
 			case 31:
-				$this->setEncoder($value);
+				$this->setDbEncoder($value);
 				break;
 			case 32:
-				$this->setChecksum($value);
+				$this->setDbChecksum($value);
 				break;
 			case 33:
-				$this->setLyrics($value);
+				$this->setDbLyrics($value);
 				break;
 			case 34:
-				$this->setOrchestra($value);
+				$this->setDbOrchestra($value);
 				break;
 			case 35:
-				$this->setConductor($value);
+				$this->setDbConductor($value);
 				break;
 			case 36:
-				$this->setLyricist($value);
+				$this->setDbLyricist($value);
 				break;
 			case 37:
-				$this->setOriginalLyricist($value);
+				$this->setDbOriginalLyricist($value);
 				break;
 			case 38:
-				$this->setRadioStationName($value);
+				$this->setDbRadioStationName($value);
 				break;
 			case 39:
-				$this->setInfoUrl($value);
+				$this->setDbInfoUrl($value);
 				break;
 			case 40:
-				$this->setArtistUrl($value);
+				$this->setDbArtistUrl($value);
 				break;
 			case 41:
-				$this->setAudioSourceUrl($value);
+				$this->setDbAudioSourceUrl($value);
 				break;
 			case 42:
-				$this->setRadioStationUrl($value);
+				$this->setDbRadioStationUrl($value);
 				break;
 			case 43:
-				$this->setBuyThisUrl($value);
+				$this->setDbBuyThisUrl($value);
 				break;
 			case 44:
-				$this->setIsrcNumber($value);
+				$this->setDbIsrcNumber($value);
 				break;
 			case 45:
-				$this->setCatalogNumber($value);
+				$this->setDbCatalogNumber($value);
 				break;
 			case 46:
-				$this->setOriginalArtist($value);
+				$this->setDbOriginalArtist($value);
 				break;
 			case 47:
-				$this->setCopyright($value);
+				$this->setDbCopyright($value);
 				break;
 			case 48:
-				$this->setReportDatetime($value);
+				$this->setDbReportDatetime($value);
 				break;
 			case 49:
-				$this->setReportLocation($value);
+				$this->setDbReportLocation($value);
 				break;
 			case 50:
-				$this->setReportOrganization($value);
+				$this->setDbReportOrganization($value);
 				break;
 			case 51:
-				$this->setSubject($value);
+				$this->setDbSubject($value);
 				break;
 			case 52:
-				$this->setContributor($value);
+				$this->setDbContributor($value);
 				break;
 			case 53:
-				$this->setLanguage($value);
+				$this->setDbLanguage($value);
 				break;
 		} // switch()
 	}
@@ -3058,59 +3058,59 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$keys = CcFilesPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setGunid($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setMime($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setFtype($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setfilepath($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setState($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setCurrentlyaccessing($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setEditedby($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setMtime($arr[$keys[9]]);
-		if (array_key_exists($keys[10], $arr)) $this->setMd5($arr[$keys[10]]);
-		if (array_key_exists($keys[11], $arr)) $this->setTrackTitle($arr[$keys[11]]);
-		if (array_key_exists($keys[12], $arr)) $this->setArtistName($arr[$keys[12]]);
-		if (array_key_exists($keys[13], $arr)) $this->setBitRate($arr[$keys[13]]);
-		if (array_key_exists($keys[14], $arr)) $this->setSampleRate($arr[$keys[14]]);
-		if (array_key_exists($keys[15], $arr)) $this->setFormat($arr[$keys[15]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbGunid($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbName($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbMime($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbFtype($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbFilepath($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbState($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbCurrentlyaccessing($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbEditedby($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbMtime($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbMd5($arr[$keys[10]]);
+		if (array_key_exists($keys[11], $arr)) $this->setDbTrackTitle($arr[$keys[11]]);
+		if (array_key_exists($keys[12], $arr)) $this->setDbArtistName($arr[$keys[12]]);
+		if (array_key_exists($keys[13], $arr)) $this->setDbBitRate($arr[$keys[13]]);
+		if (array_key_exists($keys[14], $arr)) $this->setDbSampleRate($arr[$keys[14]]);
+		if (array_key_exists($keys[15], $arr)) $this->setDbFormat($arr[$keys[15]]);
 		if (array_key_exists($keys[16], $arr)) $this->setDbLength($arr[$keys[16]]);
-		if (array_key_exists($keys[17], $arr)) $this->setAlbumTitle($arr[$keys[17]]);
-		if (array_key_exists($keys[18], $arr)) $this->setGenre($arr[$keys[18]]);
-		if (array_key_exists($keys[19], $arr)) $this->setComments($arr[$keys[19]]);
-		if (array_key_exists($keys[20], $arr)) $this->setYear($arr[$keys[20]]);
-		if (array_key_exists($keys[21], $arr)) $this->setTrackNumber($arr[$keys[21]]);
-		if (array_key_exists($keys[22], $arr)) $this->setChannels($arr[$keys[22]]);
-		if (array_key_exists($keys[23], $arr)) $this->setUrl($arr[$keys[23]]);
-		if (array_key_exists($keys[24], $arr)) $this->setBpm($arr[$keys[24]]);
-		if (array_key_exists($keys[25], $arr)) $this->setRating($arr[$keys[25]]);
-		if (array_key_exists($keys[26], $arr)) $this->setEncodedBy($arr[$keys[26]]);
-		if (array_key_exists($keys[27], $arr)) $this->setDiscNumber($arr[$keys[27]]);
-		if (array_key_exists($keys[28], $arr)) $this->setMood($arr[$keys[28]]);
-		if (array_key_exists($keys[29], $arr)) $this->setLabel($arr[$keys[29]]);
-		if (array_key_exists($keys[30], $arr)) $this->setComposer($arr[$keys[30]]);
-		if (array_key_exists($keys[31], $arr)) $this->setEncoder($arr[$keys[31]]);
-		if (array_key_exists($keys[32], $arr)) $this->setChecksum($arr[$keys[32]]);
-		if (array_key_exists($keys[33], $arr)) $this->setLyrics($arr[$keys[33]]);
-		if (array_key_exists($keys[34], $arr)) $this->setOrchestra($arr[$keys[34]]);
-		if (array_key_exists($keys[35], $arr)) $this->setConductor($arr[$keys[35]]);
-		if (array_key_exists($keys[36], $arr)) $this->setLyricist($arr[$keys[36]]);
-		if (array_key_exists($keys[37], $arr)) $this->setOriginalLyricist($arr[$keys[37]]);
-		if (array_key_exists($keys[38], $arr)) $this->setRadioStationName($arr[$keys[38]]);
-		if (array_key_exists($keys[39], $arr)) $this->setInfoUrl($arr[$keys[39]]);
-		if (array_key_exists($keys[40], $arr)) $this->setArtistUrl($arr[$keys[40]]);
-		if (array_key_exists($keys[41], $arr)) $this->setAudioSourceUrl($arr[$keys[41]]);
-		if (array_key_exists($keys[42], $arr)) $this->setRadioStationUrl($arr[$keys[42]]);
-		if (array_key_exists($keys[43], $arr)) $this->setBuyThisUrl($arr[$keys[43]]);
-		if (array_key_exists($keys[44], $arr)) $this->setIsrcNumber($arr[$keys[44]]);
-		if (array_key_exists($keys[45], $arr)) $this->setCatalogNumber($arr[$keys[45]]);
-		if (array_key_exists($keys[46], $arr)) $this->setOriginalArtist($arr[$keys[46]]);
-		if (array_key_exists($keys[47], $arr)) $this->setCopyright($arr[$keys[47]]);
-		if (array_key_exists($keys[48], $arr)) $this->setReportDatetime($arr[$keys[48]]);
-		if (array_key_exists($keys[49], $arr)) $this->setReportLocation($arr[$keys[49]]);
-		if (array_key_exists($keys[50], $arr)) $this->setReportOrganization($arr[$keys[50]]);
-		if (array_key_exists($keys[51], $arr)) $this->setSubject($arr[$keys[51]]);
-		if (array_key_exists($keys[52], $arr)) $this->setContributor($arr[$keys[52]]);
-		if (array_key_exists($keys[53], $arr)) $this->setLanguage($arr[$keys[53]]);
+		if (array_key_exists($keys[17], $arr)) $this->setDbAlbumTitle($arr[$keys[17]]);
+		if (array_key_exists($keys[18], $arr)) $this->setDbGenre($arr[$keys[18]]);
+		if (array_key_exists($keys[19], $arr)) $this->setDbComments($arr[$keys[19]]);
+		if (array_key_exists($keys[20], $arr)) $this->setDbYear($arr[$keys[20]]);
+		if (array_key_exists($keys[21], $arr)) $this->setDbTrackNumber($arr[$keys[21]]);
+		if (array_key_exists($keys[22], $arr)) $this->setDbChannels($arr[$keys[22]]);
+		if (array_key_exists($keys[23], $arr)) $this->setDbUrl($arr[$keys[23]]);
+		if (array_key_exists($keys[24], $arr)) $this->setDbBpm($arr[$keys[24]]);
+		if (array_key_exists($keys[25], $arr)) $this->setDbRating($arr[$keys[25]]);
+		if (array_key_exists($keys[26], $arr)) $this->setDbEncodedBy($arr[$keys[26]]);
+		if (array_key_exists($keys[27], $arr)) $this->setDbDiscNumber($arr[$keys[27]]);
+		if (array_key_exists($keys[28], $arr)) $this->setDbMood($arr[$keys[28]]);
+		if (array_key_exists($keys[29], $arr)) $this->setDbLabel($arr[$keys[29]]);
+		if (array_key_exists($keys[30], $arr)) $this->setDbComposer($arr[$keys[30]]);
+		if (array_key_exists($keys[31], $arr)) $this->setDbEncoder($arr[$keys[31]]);
+		if (array_key_exists($keys[32], $arr)) $this->setDbChecksum($arr[$keys[32]]);
+		if (array_key_exists($keys[33], $arr)) $this->setDbLyrics($arr[$keys[33]]);
+		if (array_key_exists($keys[34], $arr)) $this->setDbOrchestra($arr[$keys[34]]);
+		if (array_key_exists($keys[35], $arr)) $this->setDbConductor($arr[$keys[35]]);
+		if (array_key_exists($keys[36], $arr)) $this->setDbLyricist($arr[$keys[36]]);
+		if (array_key_exists($keys[37], $arr)) $this->setDbOriginalLyricist($arr[$keys[37]]);
+		if (array_key_exists($keys[38], $arr)) $this->setDbRadioStationName($arr[$keys[38]]);
+		if (array_key_exists($keys[39], $arr)) $this->setDbInfoUrl($arr[$keys[39]]);
+		if (array_key_exists($keys[40], $arr)) $this->setDbArtistUrl($arr[$keys[40]]);
+		if (array_key_exists($keys[41], $arr)) $this->setDbAudioSourceUrl($arr[$keys[41]]);
+		if (array_key_exists($keys[42], $arr)) $this->setDbRadioStationUrl($arr[$keys[42]]);
+		if (array_key_exists($keys[43], $arr)) $this->setDbBuyThisUrl($arr[$keys[43]]);
+		if (array_key_exists($keys[44], $arr)) $this->setDbIsrcNumber($arr[$keys[44]]);
+		if (array_key_exists($keys[45], $arr)) $this->setDbCatalogNumber($arr[$keys[45]]);
+		if (array_key_exists($keys[46], $arr)) $this->setDbOriginalArtist($arr[$keys[46]]);
+		if (array_key_exists($keys[47], $arr)) $this->setDbCopyright($arr[$keys[47]]);
+		if (array_key_exists($keys[48], $arr)) $this->setDbReportDatetime($arr[$keys[48]]);
+		if (array_key_exists($keys[49], $arr)) $this->setDbReportLocation($arr[$keys[49]]);
+		if (array_key_exists($keys[50], $arr)) $this->setDbReportOrganization($arr[$keys[50]]);
+		if (array_key_exists($keys[51], $arr)) $this->setDbSubject($arr[$keys[51]]);
+		if (array_key_exists($keys[52], $arr)) $this->setDbContributor($arr[$keys[52]]);
+		if (array_key_exists($keys[53], $arr)) $this->setDbLanguage($arr[$keys[53]]);
 	}
 
 	/**
@@ -3237,59 +3237,59 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setGunid($this->gunid);
-		$copyObj->setName($this->name);
-		$copyObj->setMime($this->mime);
-		$copyObj->setFtype($this->ftype);
-		$copyObj->setfilepath($this->filepath);
-		$copyObj->setState($this->state);
-		$copyObj->setCurrentlyaccessing($this->currentlyaccessing);
-		$copyObj->setEditedby($this->editedby);
-		$copyObj->setMtime($this->mtime);
-		$copyObj->setMd5($this->md5);
-		$copyObj->setTrackTitle($this->track_title);
-		$copyObj->setArtistName($this->artist_name);
-		$copyObj->setBitRate($this->bit_rate);
-		$copyObj->setSampleRate($this->sample_rate);
-		$copyObj->setFormat($this->format);
+		$copyObj->setDbGunid($this->gunid);
+		$copyObj->setDbName($this->name);
+		$copyObj->setDbMime($this->mime);
+		$copyObj->setDbFtype($this->ftype);
+		$copyObj->setDbFilepath($this->filepath);
+		$copyObj->setDbState($this->state);
+		$copyObj->setDbCurrentlyaccessing($this->currentlyaccessing);
+		$copyObj->setDbEditedby($this->editedby);
+		$copyObj->setDbMtime($this->mtime);
+		$copyObj->setDbMd5($this->md5);
+		$copyObj->setDbTrackTitle($this->track_title);
+		$copyObj->setDbArtistName($this->artist_name);
+		$copyObj->setDbBitRate($this->bit_rate);
+		$copyObj->setDbSampleRate($this->sample_rate);
+		$copyObj->setDbFormat($this->format);
 		$copyObj->setDbLength($this->length);
-		$copyObj->setAlbumTitle($this->album_title);
-		$copyObj->setGenre($this->genre);
-		$copyObj->setComments($this->comments);
-		$copyObj->setYear($this->year);
-		$copyObj->setTrackNumber($this->track_number);
-		$copyObj->setChannels($this->channels);
-		$copyObj->setUrl($this->url);
-		$copyObj->setBpm($this->bpm);
-		$copyObj->setRating($this->rating);
-		$copyObj->setEncodedBy($this->encoded_by);
-		$copyObj->setDiscNumber($this->disc_number);
-		$copyObj->setMood($this->mood);
-		$copyObj->setLabel($this->label);
-		$copyObj->setComposer($this->composer);
-		$copyObj->setEncoder($this->encoder);
-		$copyObj->setChecksum($this->checksum);
-		$copyObj->setLyrics($this->lyrics);
-		$copyObj->setOrchestra($this->orchestra);
-		$copyObj->setConductor($this->conductor);
-		$copyObj->setLyricist($this->lyricist);
-		$copyObj->setOriginalLyricist($this->original_lyricist);
-		$copyObj->setRadioStationName($this->radio_station_name);
-		$copyObj->setInfoUrl($this->info_url);
-		$copyObj->setArtistUrl($this->artist_url);
-		$copyObj->setAudioSourceUrl($this->audio_source_url);
-		$copyObj->setRadioStationUrl($this->radio_station_url);
-		$copyObj->setBuyThisUrl($this->buy_this_url);
-		$copyObj->setIsrcNumber($this->isrc_number);
-		$copyObj->setCatalogNumber($this->catalog_number);
-		$copyObj->setOriginalArtist($this->original_artist);
-		$copyObj->setCopyright($this->copyright);
-		$copyObj->setReportDatetime($this->report_datetime);
-		$copyObj->setReportLocation($this->report_location);
-		$copyObj->setReportOrganization($this->report_organization);
-		$copyObj->setSubject($this->subject);
-		$copyObj->setContributor($this->contributor);
-		$copyObj->setLanguage($this->language);
+		$copyObj->setDbAlbumTitle($this->album_title);
+		$copyObj->setDbGenre($this->genre);
+		$copyObj->setDbComments($this->comments);
+		$copyObj->setDbYear($this->year);
+		$copyObj->setDbTrackNumber($this->track_number);
+		$copyObj->setDbChannels($this->channels);
+		$copyObj->setDbUrl($this->url);
+		$copyObj->setDbBpm($this->bpm);
+		$copyObj->setDbRating($this->rating);
+		$copyObj->setDbEncodedBy($this->encoded_by);
+		$copyObj->setDbDiscNumber($this->disc_number);
+		$copyObj->setDbMood($this->mood);
+		$copyObj->setDbLabel($this->label);
+		$copyObj->setDbComposer($this->composer);
+		$copyObj->setDbEncoder($this->encoder);
+		$copyObj->setDbChecksum($this->checksum);
+		$copyObj->setDbLyrics($this->lyrics);
+		$copyObj->setDbOrchestra($this->orchestra);
+		$copyObj->setDbConductor($this->conductor);
+		$copyObj->setDbLyricist($this->lyricist);
+		$copyObj->setDbOriginalLyricist($this->original_lyricist);
+		$copyObj->setDbRadioStationName($this->radio_station_name);
+		$copyObj->setDbInfoUrl($this->info_url);
+		$copyObj->setDbArtistUrl($this->artist_url);
+		$copyObj->setDbAudioSourceUrl($this->audio_source_url);
+		$copyObj->setDbRadioStationUrl($this->radio_station_url);
+		$copyObj->setDbBuyThisUrl($this->buy_this_url);
+		$copyObj->setDbIsrcNumber($this->isrc_number);
+		$copyObj->setDbCatalogNumber($this->catalog_number);
+		$copyObj->setDbOriginalArtist($this->original_artist);
+		$copyObj->setDbCopyright($this->copyright);
+		$copyObj->setDbReportDatetime($this->report_datetime);
+		$copyObj->setDbReportLocation($this->report_location);
+		$copyObj->setDbReportOrganization($this->report_organization);
+		$copyObj->setDbSubject($this->subject);
+		$copyObj->setDbContributor($this->contributor);
+		$copyObj->setDbLanguage($this->language);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -3357,9 +3357,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	public function setCcSubjs(CcSubjs $v = null)
 	{
 		if ($v === null) {
-			$this->setEditedby(NULL);
+			$this->setDbEditedby(NULL);
 		} else {
-			$this->setEditedby($v->getId());
+			$this->setDbEditedby($v->getDbId());
 		}
 
 		$this->aCcSubjs = $v;

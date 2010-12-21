@@ -283,7 +283,7 @@ abstract class BaseCcPermsQuery extends ModelCriteria
 	public function filterByCcSubjs($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcPermsPeer::SUBJ, $ccSubjs->getId(), $comparison);
+			->addUsingAlias(CcPermsPeer::SUBJ, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**

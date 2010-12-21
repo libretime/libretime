@@ -30,25 +30,23 @@ class LoginController extends Zend_Controller_Action
 
                 $authAdapter = $this->getAuthAdapter();
 
-                # get the username and password from the form
+                //get the username and password from the form
                 $username = $form->getValue('username');
                 $password = $form->getValue('password');
 
-                # pass to the adapter the submitted username and password
+                //pass to the adapter the submitted username and password
                 $authAdapter->setIdentity($username)
                             ->setCredential($password);
 
                 $auth = Zend_Auth::getInstance();
                 $result = $auth->authenticate($authAdapter);
 
-                # is the user a valid one?
                 if($result->isValid())
                 {
-                    # all info about this user from the login table
-                    # omit only the password, we don't need that
+                    //all info about this user from the login table omit only the password
                     $userInfo = $authAdapter->getResultRowObject(null, 'password');
 
-                    # the default storage is a session with namespace Zend_Auth
+                    //the default storage is a session with namespace Zend_Auth
                     $authStorage = $auth->getStorage();
                     $authStorage->write($userInfo);
 

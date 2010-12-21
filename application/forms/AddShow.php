@@ -91,6 +91,12 @@ class Application_Form_AddShow extends Zend_Form
             'required'   => false,
 		));
 
+		// Add end date element
+        $this->addElement('text', 'hosts_autocomplete', array(
+            'label'      => 'Type a Host:',
+            'required'   => false
+		)); 
+
 		$options = array();
 		$hosts = User::getHosts();
 
@@ -98,7 +104,7 @@ class Application_Form_AddShow extends Zend_Form
 			$options[$host['id']] = $host['login'];
 		}
 
-		$hosts = new Zend_Form_Element_Multiselect('hosts');
+		$hosts = new Zend_Form_Element_MultiCheckbox('hosts');
 		$hosts->setLabel('Hosts:')
 			->setMultiOptions($options)
 			->setRequired(true);

@@ -7,114 +7,114 @@
  * 
  *
  * @method     CcFilesQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method     CcFilesQuery orderByGunid($order = Criteria::ASC) Order by the gunid column
- * @method     CcFilesQuery orderByName($order = Criteria::ASC) Order by the name column
- * @method     CcFilesQuery orderByMime($order = Criteria::ASC) Order by the mime column
- * @method     CcFilesQuery orderByFtype($order = Criteria::ASC) Order by the ftype column
- * @method     CcFilesQuery orderByfilepath($order = Criteria::ASC) Order by the filepath column
- * @method     CcFilesQuery orderByState($order = Criteria::ASC) Order by the state column
- * @method     CcFilesQuery orderByCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
- * @method     CcFilesQuery orderByEditedby($order = Criteria::ASC) Order by the editedby column
- * @method     CcFilesQuery orderByMtime($order = Criteria::ASC) Order by the mtime column
- * @method     CcFilesQuery orderByMd5($order = Criteria::ASC) Order by the md5 column
- * @method     CcFilesQuery orderByTrackTitle($order = Criteria::ASC) Order by the track_title column
- * @method     CcFilesQuery orderByArtistName($order = Criteria::ASC) Order by the artist_name column
- * @method     CcFilesQuery orderByBitRate($order = Criteria::ASC) Order by the bit_rate column
- * @method     CcFilesQuery orderBySampleRate($order = Criteria::ASC) Order by the sample_rate column
- * @method     CcFilesQuery orderByFormat($order = Criteria::ASC) Order by the format column
+ * @method     CcFilesQuery orderByDbGunid($order = Criteria::ASC) Order by the gunid column
+ * @method     CcFilesQuery orderByDbName($order = Criteria::ASC) Order by the name column
+ * @method     CcFilesQuery orderByDbMime($order = Criteria::ASC) Order by the mime column
+ * @method     CcFilesQuery orderByDbFtype($order = Criteria::ASC) Order by the ftype column
+ * @method     CcFilesQuery orderByDbFilepath($order = Criteria::ASC) Order by the filepath column
+ * @method     CcFilesQuery orderByDbState($order = Criteria::ASC) Order by the state column
+ * @method     CcFilesQuery orderByDbCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
+ * @method     CcFilesQuery orderByDbEditedby($order = Criteria::ASC) Order by the editedby column
+ * @method     CcFilesQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
+ * @method     CcFilesQuery orderByDbMd5($order = Criteria::ASC) Order by the md5 column
+ * @method     CcFilesQuery orderByDbTrackTitle($order = Criteria::ASC) Order by the track_title column
+ * @method     CcFilesQuery orderByDbArtistName($order = Criteria::ASC) Order by the artist_name column
+ * @method     CcFilesQuery orderByDbBitRate($order = Criteria::ASC) Order by the bit_rate column
+ * @method     CcFilesQuery orderByDbSampleRate($order = Criteria::ASC) Order by the sample_rate column
+ * @method     CcFilesQuery orderByDbFormat($order = Criteria::ASC) Order by the format column
  * @method     CcFilesQuery orderByDbLength($order = Criteria::ASC) Order by the length column
- * @method     CcFilesQuery orderByAlbumTitle($order = Criteria::ASC) Order by the album_title column
- * @method     CcFilesQuery orderByGenre($order = Criteria::ASC) Order by the genre column
- * @method     CcFilesQuery orderByComments($order = Criteria::ASC) Order by the comments column
- * @method     CcFilesQuery orderByYear($order = Criteria::ASC) Order by the year column
- * @method     CcFilesQuery orderByTrackNumber($order = Criteria::ASC) Order by the track_number column
- * @method     CcFilesQuery orderByChannels($order = Criteria::ASC) Order by the channels column
- * @method     CcFilesQuery orderByUrl($order = Criteria::ASC) Order by the url column
- * @method     CcFilesQuery orderByBpm($order = Criteria::ASC) Order by the bpm column
- * @method     CcFilesQuery orderByRating($order = Criteria::ASC) Order by the rating column
- * @method     CcFilesQuery orderByEncodedBy($order = Criteria::ASC) Order by the encoded_by column
- * @method     CcFilesQuery orderByDiscNumber($order = Criteria::ASC) Order by the disc_number column
- * @method     CcFilesQuery orderByMood($order = Criteria::ASC) Order by the mood column
- * @method     CcFilesQuery orderByLabel($order = Criteria::ASC) Order by the label column
- * @method     CcFilesQuery orderByComposer($order = Criteria::ASC) Order by the composer column
- * @method     CcFilesQuery orderByEncoder($order = Criteria::ASC) Order by the encoder column
- * @method     CcFilesQuery orderByChecksum($order = Criteria::ASC) Order by the checksum column
- * @method     CcFilesQuery orderByLyrics($order = Criteria::ASC) Order by the lyrics column
- * @method     CcFilesQuery orderByOrchestra($order = Criteria::ASC) Order by the orchestra column
- * @method     CcFilesQuery orderByConductor($order = Criteria::ASC) Order by the conductor column
- * @method     CcFilesQuery orderByLyricist($order = Criteria::ASC) Order by the lyricist column
- * @method     CcFilesQuery orderByOriginalLyricist($order = Criteria::ASC) Order by the original_lyricist column
- * @method     CcFilesQuery orderByRadioStationName($order = Criteria::ASC) Order by the radio_station_name column
- * @method     CcFilesQuery orderByInfoUrl($order = Criteria::ASC) Order by the info_url column
- * @method     CcFilesQuery orderByArtistUrl($order = Criteria::ASC) Order by the artist_url column
- * @method     CcFilesQuery orderByAudioSourceUrl($order = Criteria::ASC) Order by the audio_source_url column
- * @method     CcFilesQuery orderByRadioStationUrl($order = Criteria::ASC) Order by the radio_station_url column
- * @method     CcFilesQuery orderByBuyThisUrl($order = Criteria::ASC) Order by the buy_this_url column
- * @method     CcFilesQuery orderByIsrcNumber($order = Criteria::ASC) Order by the isrc_number column
- * @method     CcFilesQuery orderByCatalogNumber($order = Criteria::ASC) Order by the catalog_number column
- * @method     CcFilesQuery orderByOriginalArtist($order = Criteria::ASC) Order by the original_artist column
- * @method     CcFilesQuery orderByCopyright($order = Criteria::ASC) Order by the copyright column
- * @method     CcFilesQuery orderByReportDatetime($order = Criteria::ASC) Order by the report_datetime column
- * @method     CcFilesQuery orderByReportLocation($order = Criteria::ASC) Order by the report_location column
- * @method     CcFilesQuery orderByReportOrganization($order = Criteria::ASC) Order by the report_organization column
- * @method     CcFilesQuery orderBySubject($order = Criteria::ASC) Order by the subject column
- * @method     CcFilesQuery orderByContributor($order = Criteria::ASC) Order by the contributor column
- * @method     CcFilesQuery orderByLanguage($order = Criteria::ASC) Order by the language column
+ * @method     CcFilesQuery orderByDbAlbumTitle($order = Criteria::ASC) Order by the album_title column
+ * @method     CcFilesQuery orderByDbGenre($order = Criteria::ASC) Order by the genre column
+ * @method     CcFilesQuery orderByDbComments($order = Criteria::ASC) Order by the comments column
+ * @method     CcFilesQuery orderByDbYear($order = Criteria::ASC) Order by the year column
+ * @method     CcFilesQuery orderByDbTrackNumber($order = Criteria::ASC) Order by the track_number column
+ * @method     CcFilesQuery orderByDbChannels($order = Criteria::ASC) Order by the channels column
+ * @method     CcFilesQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
+ * @method     CcFilesQuery orderByDbBpm($order = Criteria::ASC) Order by the bpm column
+ * @method     CcFilesQuery orderByDbRating($order = Criteria::ASC) Order by the rating column
+ * @method     CcFilesQuery orderByDbEncodedBy($order = Criteria::ASC) Order by the encoded_by column
+ * @method     CcFilesQuery orderByDbDiscNumber($order = Criteria::ASC) Order by the disc_number column
+ * @method     CcFilesQuery orderByDbMood($order = Criteria::ASC) Order by the mood column
+ * @method     CcFilesQuery orderByDbLabel($order = Criteria::ASC) Order by the label column
+ * @method     CcFilesQuery orderByDbComposer($order = Criteria::ASC) Order by the composer column
+ * @method     CcFilesQuery orderByDbEncoder($order = Criteria::ASC) Order by the encoder column
+ * @method     CcFilesQuery orderByDbChecksum($order = Criteria::ASC) Order by the checksum column
+ * @method     CcFilesQuery orderByDbLyrics($order = Criteria::ASC) Order by the lyrics column
+ * @method     CcFilesQuery orderByDbOrchestra($order = Criteria::ASC) Order by the orchestra column
+ * @method     CcFilesQuery orderByDbConductor($order = Criteria::ASC) Order by the conductor column
+ * @method     CcFilesQuery orderByDbLyricist($order = Criteria::ASC) Order by the lyricist column
+ * @method     CcFilesQuery orderByDbOriginalLyricist($order = Criteria::ASC) Order by the original_lyricist column
+ * @method     CcFilesQuery orderByDbRadioStationName($order = Criteria::ASC) Order by the radio_station_name column
+ * @method     CcFilesQuery orderByDbInfoUrl($order = Criteria::ASC) Order by the info_url column
+ * @method     CcFilesQuery orderByDbArtistUrl($order = Criteria::ASC) Order by the artist_url column
+ * @method     CcFilesQuery orderByDbAudioSourceUrl($order = Criteria::ASC) Order by the audio_source_url column
+ * @method     CcFilesQuery orderByDbRadioStationUrl($order = Criteria::ASC) Order by the radio_station_url column
+ * @method     CcFilesQuery orderByDbBuyThisUrl($order = Criteria::ASC) Order by the buy_this_url column
+ * @method     CcFilesQuery orderByDbIsrcNumber($order = Criteria::ASC) Order by the isrc_number column
+ * @method     CcFilesQuery orderByDbCatalogNumber($order = Criteria::ASC) Order by the catalog_number column
+ * @method     CcFilesQuery orderByDbOriginalArtist($order = Criteria::ASC) Order by the original_artist column
+ * @method     CcFilesQuery orderByDbCopyright($order = Criteria::ASC) Order by the copyright column
+ * @method     CcFilesQuery orderByDbReportDatetime($order = Criteria::ASC) Order by the report_datetime column
+ * @method     CcFilesQuery orderByDbReportLocation($order = Criteria::ASC) Order by the report_location column
+ * @method     CcFilesQuery orderByDbReportOrganization($order = Criteria::ASC) Order by the report_organization column
+ * @method     CcFilesQuery orderByDbSubject($order = Criteria::ASC) Order by the subject column
+ * @method     CcFilesQuery orderByDbContributor($order = Criteria::ASC) Order by the contributor column
+ * @method     CcFilesQuery orderByDbLanguage($order = Criteria::ASC) Order by the language column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
- * @method     CcFilesQuery groupByGunid() Group by the gunid column
- * @method     CcFilesQuery groupByName() Group by the name column
- * @method     CcFilesQuery groupByMime() Group by the mime column
- * @method     CcFilesQuery groupByFtype() Group by the ftype column
- * @method     CcFilesQuery groupByfilepath() Group by the filepath column
- * @method     CcFilesQuery groupByState() Group by the state column
- * @method     CcFilesQuery groupByCurrentlyaccessing() Group by the currentlyaccessing column
- * @method     CcFilesQuery groupByEditedby() Group by the editedby column
- * @method     CcFilesQuery groupByMtime() Group by the mtime column
- * @method     CcFilesQuery groupByMd5() Group by the md5 column
- * @method     CcFilesQuery groupByTrackTitle() Group by the track_title column
- * @method     CcFilesQuery groupByArtistName() Group by the artist_name column
- * @method     CcFilesQuery groupByBitRate() Group by the bit_rate column
- * @method     CcFilesQuery groupBySampleRate() Group by the sample_rate column
- * @method     CcFilesQuery groupByFormat() Group by the format column
+ * @method     CcFilesQuery groupByDbGunid() Group by the gunid column
+ * @method     CcFilesQuery groupByDbName() Group by the name column
+ * @method     CcFilesQuery groupByDbMime() Group by the mime column
+ * @method     CcFilesQuery groupByDbFtype() Group by the ftype column
+ * @method     CcFilesQuery groupByDbFilepath() Group by the filepath column
+ * @method     CcFilesQuery groupByDbState() Group by the state column
+ * @method     CcFilesQuery groupByDbCurrentlyaccessing() Group by the currentlyaccessing column
+ * @method     CcFilesQuery groupByDbEditedby() Group by the editedby column
+ * @method     CcFilesQuery groupByDbMtime() Group by the mtime column
+ * @method     CcFilesQuery groupByDbMd5() Group by the md5 column
+ * @method     CcFilesQuery groupByDbTrackTitle() Group by the track_title column
+ * @method     CcFilesQuery groupByDbArtistName() Group by the artist_name column
+ * @method     CcFilesQuery groupByDbBitRate() Group by the bit_rate column
+ * @method     CcFilesQuery groupByDbSampleRate() Group by the sample_rate column
+ * @method     CcFilesQuery groupByDbFormat() Group by the format column
  * @method     CcFilesQuery groupByDbLength() Group by the length column
- * @method     CcFilesQuery groupByAlbumTitle() Group by the album_title column
- * @method     CcFilesQuery groupByGenre() Group by the genre column
- * @method     CcFilesQuery groupByComments() Group by the comments column
- * @method     CcFilesQuery groupByYear() Group by the year column
- * @method     CcFilesQuery groupByTrackNumber() Group by the track_number column
- * @method     CcFilesQuery groupByChannels() Group by the channels column
- * @method     CcFilesQuery groupByUrl() Group by the url column
- * @method     CcFilesQuery groupByBpm() Group by the bpm column
- * @method     CcFilesQuery groupByRating() Group by the rating column
- * @method     CcFilesQuery groupByEncodedBy() Group by the encoded_by column
- * @method     CcFilesQuery groupByDiscNumber() Group by the disc_number column
- * @method     CcFilesQuery groupByMood() Group by the mood column
- * @method     CcFilesQuery groupByLabel() Group by the label column
- * @method     CcFilesQuery groupByComposer() Group by the composer column
- * @method     CcFilesQuery groupByEncoder() Group by the encoder column
- * @method     CcFilesQuery groupByChecksum() Group by the checksum column
- * @method     CcFilesQuery groupByLyrics() Group by the lyrics column
- * @method     CcFilesQuery groupByOrchestra() Group by the orchestra column
- * @method     CcFilesQuery groupByConductor() Group by the conductor column
- * @method     CcFilesQuery groupByLyricist() Group by the lyricist column
- * @method     CcFilesQuery groupByOriginalLyricist() Group by the original_lyricist column
- * @method     CcFilesQuery groupByRadioStationName() Group by the radio_station_name column
- * @method     CcFilesQuery groupByInfoUrl() Group by the info_url column
- * @method     CcFilesQuery groupByArtistUrl() Group by the artist_url column
- * @method     CcFilesQuery groupByAudioSourceUrl() Group by the audio_source_url column
- * @method     CcFilesQuery groupByRadioStationUrl() Group by the radio_station_url column
- * @method     CcFilesQuery groupByBuyThisUrl() Group by the buy_this_url column
- * @method     CcFilesQuery groupByIsrcNumber() Group by the isrc_number column
- * @method     CcFilesQuery groupByCatalogNumber() Group by the catalog_number column
- * @method     CcFilesQuery groupByOriginalArtist() Group by the original_artist column
- * @method     CcFilesQuery groupByCopyright() Group by the copyright column
- * @method     CcFilesQuery groupByReportDatetime() Group by the report_datetime column
- * @method     CcFilesQuery groupByReportLocation() Group by the report_location column
- * @method     CcFilesQuery groupByReportOrganization() Group by the report_organization column
- * @method     CcFilesQuery groupBySubject() Group by the subject column
- * @method     CcFilesQuery groupByContributor() Group by the contributor column
- * @method     CcFilesQuery groupByLanguage() Group by the language column
+ * @method     CcFilesQuery groupByDbAlbumTitle() Group by the album_title column
+ * @method     CcFilesQuery groupByDbGenre() Group by the genre column
+ * @method     CcFilesQuery groupByDbComments() Group by the comments column
+ * @method     CcFilesQuery groupByDbYear() Group by the year column
+ * @method     CcFilesQuery groupByDbTrackNumber() Group by the track_number column
+ * @method     CcFilesQuery groupByDbChannels() Group by the channels column
+ * @method     CcFilesQuery groupByDbUrl() Group by the url column
+ * @method     CcFilesQuery groupByDbBpm() Group by the bpm column
+ * @method     CcFilesQuery groupByDbRating() Group by the rating column
+ * @method     CcFilesQuery groupByDbEncodedBy() Group by the encoded_by column
+ * @method     CcFilesQuery groupByDbDiscNumber() Group by the disc_number column
+ * @method     CcFilesQuery groupByDbMood() Group by the mood column
+ * @method     CcFilesQuery groupByDbLabel() Group by the label column
+ * @method     CcFilesQuery groupByDbComposer() Group by the composer column
+ * @method     CcFilesQuery groupByDbEncoder() Group by the encoder column
+ * @method     CcFilesQuery groupByDbChecksum() Group by the checksum column
+ * @method     CcFilesQuery groupByDbLyrics() Group by the lyrics column
+ * @method     CcFilesQuery groupByDbOrchestra() Group by the orchestra column
+ * @method     CcFilesQuery groupByDbConductor() Group by the conductor column
+ * @method     CcFilesQuery groupByDbLyricist() Group by the lyricist column
+ * @method     CcFilesQuery groupByDbOriginalLyricist() Group by the original_lyricist column
+ * @method     CcFilesQuery groupByDbRadioStationName() Group by the radio_station_name column
+ * @method     CcFilesQuery groupByDbInfoUrl() Group by the info_url column
+ * @method     CcFilesQuery groupByDbArtistUrl() Group by the artist_url column
+ * @method     CcFilesQuery groupByDbAudioSourceUrl() Group by the audio_source_url column
+ * @method     CcFilesQuery groupByDbRadioStationUrl() Group by the radio_station_url column
+ * @method     CcFilesQuery groupByDbBuyThisUrl() Group by the buy_this_url column
+ * @method     CcFilesQuery groupByDbIsrcNumber() Group by the isrc_number column
+ * @method     CcFilesQuery groupByDbCatalogNumber() Group by the catalog_number column
+ * @method     CcFilesQuery groupByDbOriginalArtist() Group by the original_artist column
+ * @method     CcFilesQuery groupByDbCopyright() Group by the copyright column
+ * @method     CcFilesQuery groupByDbReportDatetime() Group by the report_datetime column
+ * @method     CcFilesQuery groupByDbReportLocation() Group by the report_location column
+ * @method     CcFilesQuery groupByDbReportOrganization() Group by the report_organization column
+ * @method     CcFilesQuery groupByDbSubject() Group by the subject column
+ * @method     CcFilesQuery groupByDbContributor() Group by the contributor column
+ * @method     CcFilesQuery groupByDbLanguage() Group by the language column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -132,114 +132,114 @@
  * @method     CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
  *
  * @method     CcFiles findOneByDbId(int $id) Return the first CcFiles filtered by the id column
- * @method     CcFiles findOneByGunid(string $gunid) Return the first CcFiles filtered by the gunid column
- * @method     CcFiles findOneByName(string $name) Return the first CcFiles filtered by the name column
- * @method     CcFiles findOneByMime(string $mime) Return the first CcFiles filtered by the mime column
- * @method     CcFiles findOneByFtype(string $ftype) Return the first CcFiles filtered by the ftype column
- * @method     CcFiles findOneByfilepath(string $filepath) Return the first CcFiles filtered by the filepath column
- * @method     CcFiles findOneByState(string $state) Return the first CcFiles filtered by the state column
- * @method     CcFiles findOneByCurrentlyaccessing(int $currentlyaccessing) Return the first CcFiles filtered by the currentlyaccessing column
- * @method     CcFiles findOneByEditedby(int $editedby) Return the first CcFiles filtered by the editedby column
- * @method     CcFiles findOneByMtime(string $mtime) Return the first CcFiles filtered by the mtime column
- * @method     CcFiles findOneByMd5(string $md5) Return the first CcFiles filtered by the md5 column
- * @method     CcFiles findOneByTrackTitle(string $track_title) Return the first CcFiles filtered by the track_title column
- * @method     CcFiles findOneByArtistName(string $artist_name) Return the first CcFiles filtered by the artist_name column
- * @method     CcFiles findOneByBitRate(string $bit_rate) Return the first CcFiles filtered by the bit_rate column
- * @method     CcFiles findOneBySampleRate(string $sample_rate) Return the first CcFiles filtered by the sample_rate column
- * @method     CcFiles findOneByFormat(string $format) Return the first CcFiles filtered by the format column
+ * @method     CcFiles findOneByDbGunid(string $gunid) Return the first CcFiles filtered by the gunid column
+ * @method     CcFiles findOneByDbName(string $name) Return the first CcFiles filtered by the name column
+ * @method     CcFiles findOneByDbMime(string $mime) Return the first CcFiles filtered by the mime column
+ * @method     CcFiles findOneByDbFtype(string $ftype) Return the first CcFiles filtered by the ftype column
+ * @method     CcFiles findOneByDbFilepath(string $filepath) Return the first CcFiles filtered by the filepath column
+ * @method     CcFiles findOneByDbState(string $state) Return the first CcFiles filtered by the state column
+ * @method     CcFiles findOneByDbCurrentlyaccessing(int $currentlyaccessing) Return the first CcFiles filtered by the currentlyaccessing column
+ * @method     CcFiles findOneByDbEditedby(int $editedby) Return the first CcFiles filtered by the editedby column
+ * @method     CcFiles findOneByDbMtime(string $mtime) Return the first CcFiles filtered by the mtime column
+ * @method     CcFiles findOneByDbMd5(string $md5) Return the first CcFiles filtered by the md5 column
+ * @method     CcFiles findOneByDbTrackTitle(string $track_title) Return the first CcFiles filtered by the track_title column
+ * @method     CcFiles findOneByDbArtistName(string $artist_name) Return the first CcFiles filtered by the artist_name column
+ * @method     CcFiles findOneByDbBitRate(string $bit_rate) Return the first CcFiles filtered by the bit_rate column
+ * @method     CcFiles findOneByDbSampleRate(string $sample_rate) Return the first CcFiles filtered by the sample_rate column
+ * @method     CcFiles findOneByDbFormat(string $format) Return the first CcFiles filtered by the format column
  * @method     CcFiles findOneByDbLength(string $length) Return the first CcFiles filtered by the length column
- * @method     CcFiles findOneByAlbumTitle(string $album_title) Return the first CcFiles filtered by the album_title column
- * @method     CcFiles findOneByGenre(string $genre) Return the first CcFiles filtered by the genre column
- * @method     CcFiles findOneByComments(string $comments) Return the first CcFiles filtered by the comments column
- * @method     CcFiles findOneByYear(string $year) Return the first CcFiles filtered by the year column
- * @method     CcFiles findOneByTrackNumber(int $track_number) Return the first CcFiles filtered by the track_number column
- * @method     CcFiles findOneByChannels(int $channels) Return the first CcFiles filtered by the channels column
- * @method     CcFiles findOneByUrl(string $url) Return the first CcFiles filtered by the url column
- * @method     CcFiles findOneByBpm(string $bpm) Return the first CcFiles filtered by the bpm column
- * @method     CcFiles findOneByRating(string $rating) Return the first CcFiles filtered by the rating column
- * @method     CcFiles findOneByEncodedBy(string $encoded_by) Return the first CcFiles filtered by the encoded_by column
- * @method     CcFiles findOneByDiscNumber(string $disc_number) Return the first CcFiles filtered by the disc_number column
- * @method     CcFiles findOneByMood(string $mood) Return the first CcFiles filtered by the mood column
- * @method     CcFiles findOneByLabel(string $label) Return the first CcFiles filtered by the label column
- * @method     CcFiles findOneByComposer(string $composer) Return the first CcFiles filtered by the composer column
- * @method     CcFiles findOneByEncoder(string $encoder) Return the first CcFiles filtered by the encoder column
- * @method     CcFiles findOneByChecksum(string $checksum) Return the first CcFiles filtered by the checksum column
- * @method     CcFiles findOneByLyrics(string $lyrics) Return the first CcFiles filtered by the lyrics column
- * @method     CcFiles findOneByOrchestra(string $orchestra) Return the first CcFiles filtered by the orchestra column
- * @method     CcFiles findOneByConductor(string $conductor) Return the first CcFiles filtered by the conductor column
- * @method     CcFiles findOneByLyricist(string $lyricist) Return the first CcFiles filtered by the lyricist column
- * @method     CcFiles findOneByOriginalLyricist(string $original_lyricist) Return the first CcFiles filtered by the original_lyricist column
- * @method     CcFiles findOneByRadioStationName(string $radio_station_name) Return the first CcFiles filtered by the radio_station_name column
- * @method     CcFiles findOneByInfoUrl(string $info_url) Return the first CcFiles filtered by the info_url column
- * @method     CcFiles findOneByArtistUrl(string $artist_url) Return the first CcFiles filtered by the artist_url column
- * @method     CcFiles findOneByAudioSourceUrl(string $audio_source_url) Return the first CcFiles filtered by the audio_source_url column
- * @method     CcFiles findOneByRadioStationUrl(string $radio_station_url) Return the first CcFiles filtered by the radio_station_url column
- * @method     CcFiles findOneByBuyThisUrl(string $buy_this_url) Return the first CcFiles filtered by the buy_this_url column
- * @method     CcFiles findOneByIsrcNumber(string $isrc_number) Return the first CcFiles filtered by the isrc_number column
- * @method     CcFiles findOneByCatalogNumber(string $catalog_number) Return the first CcFiles filtered by the catalog_number column
- * @method     CcFiles findOneByOriginalArtist(string $original_artist) Return the first CcFiles filtered by the original_artist column
- * @method     CcFiles findOneByCopyright(string $copyright) Return the first CcFiles filtered by the copyright column
- * @method     CcFiles findOneByReportDatetime(string $report_datetime) Return the first CcFiles filtered by the report_datetime column
- * @method     CcFiles findOneByReportLocation(string $report_location) Return the first CcFiles filtered by the report_location column
- * @method     CcFiles findOneByReportOrganization(string $report_organization) Return the first CcFiles filtered by the report_organization column
- * @method     CcFiles findOneBySubject(string $subject) Return the first CcFiles filtered by the subject column
- * @method     CcFiles findOneByContributor(string $contributor) Return the first CcFiles filtered by the contributor column
- * @method     CcFiles findOneByLanguage(string $language) Return the first CcFiles filtered by the language column
+ * @method     CcFiles findOneByDbAlbumTitle(string $album_title) Return the first CcFiles filtered by the album_title column
+ * @method     CcFiles findOneByDbGenre(string $genre) Return the first CcFiles filtered by the genre column
+ * @method     CcFiles findOneByDbComments(string $comments) Return the first CcFiles filtered by the comments column
+ * @method     CcFiles findOneByDbYear(string $year) Return the first CcFiles filtered by the year column
+ * @method     CcFiles findOneByDbTrackNumber(int $track_number) Return the first CcFiles filtered by the track_number column
+ * @method     CcFiles findOneByDbChannels(int $channels) Return the first CcFiles filtered by the channels column
+ * @method     CcFiles findOneByDbUrl(string $url) Return the first CcFiles filtered by the url column
+ * @method     CcFiles findOneByDbBpm(string $bpm) Return the first CcFiles filtered by the bpm column
+ * @method     CcFiles findOneByDbRating(string $rating) Return the first CcFiles filtered by the rating column
+ * @method     CcFiles findOneByDbEncodedBy(string $encoded_by) Return the first CcFiles filtered by the encoded_by column
+ * @method     CcFiles findOneByDbDiscNumber(string $disc_number) Return the first CcFiles filtered by the disc_number column
+ * @method     CcFiles findOneByDbMood(string $mood) Return the first CcFiles filtered by the mood column
+ * @method     CcFiles findOneByDbLabel(string $label) Return the first CcFiles filtered by the label column
+ * @method     CcFiles findOneByDbComposer(string $composer) Return the first CcFiles filtered by the composer column
+ * @method     CcFiles findOneByDbEncoder(string $encoder) Return the first CcFiles filtered by the encoder column
+ * @method     CcFiles findOneByDbChecksum(string $checksum) Return the first CcFiles filtered by the checksum column
+ * @method     CcFiles findOneByDbLyrics(string $lyrics) Return the first CcFiles filtered by the lyrics column
+ * @method     CcFiles findOneByDbOrchestra(string $orchestra) Return the first CcFiles filtered by the orchestra column
+ * @method     CcFiles findOneByDbConductor(string $conductor) Return the first CcFiles filtered by the conductor column
+ * @method     CcFiles findOneByDbLyricist(string $lyricist) Return the first CcFiles filtered by the lyricist column
+ * @method     CcFiles findOneByDbOriginalLyricist(string $original_lyricist) Return the first CcFiles filtered by the original_lyricist column
+ * @method     CcFiles findOneByDbRadioStationName(string $radio_station_name) Return the first CcFiles filtered by the radio_station_name column
+ * @method     CcFiles findOneByDbInfoUrl(string $info_url) Return the first CcFiles filtered by the info_url column
+ * @method     CcFiles findOneByDbArtistUrl(string $artist_url) Return the first CcFiles filtered by the artist_url column
+ * @method     CcFiles findOneByDbAudioSourceUrl(string $audio_source_url) Return the first CcFiles filtered by the audio_source_url column
+ * @method     CcFiles findOneByDbRadioStationUrl(string $radio_station_url) Return the first CcFiles filtered by the radio_station_url column
+ * @method     CcFiles findOneByDbBuyThisUrl(string $buy_this_url) Return the first CcFiles filtered by the buy_this_url column
+ * @method     CcFiles findOneByDbIsrcNumber(string $isrc_number) Return the first CcFiles filtered by the isrc_number column
+ * @method     CcFiles findOneByDbCatalogNumber(string $catalog_number) Return the first CcFiles filtered by the catalog_number column
+ * @method     CcFiles findOneByDbOriginalArtist(string $original_artist) Return the first CcFiles filtered by the original_artist column
+ * @method     CcFiles findOneByDbCopyright(string $copyright) Return the first CcFiles filtered by the copyright column
+ * @method     CcFiles findOneByDbReportDatetime(string $report_datetime) Return the first CcFiles filtered by the report_datetime column
+ * @method     CcFiles findOneByDbReportLocation(string $report_location) Return the first CcFiles filtered by the report_location column
+ * @method     CcFiles findOneByDbReportOrganization(string $report_organization) Return the first CcFiles filtered by the report_organization column
+ * @method     CcFiles findOneByDbSubject(string $subject) Return the first CcFiles filtered by the subject column
+ * @method     CcFiles findOneByDbContributor(string $contributor) Return the first CcFiles filtered by the contributor column
+ * @method     CcFiles findOneByDbLanguage(string $language) Return the first CcFiles filtered by the language column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
- * @method     array findByGunid(string $gunid) Return CcFiles objects filtered by the gunid column
- * @method     array findByName(string $name) Return CcFiles objects filtered by the name column
- * @method     array findByMime(string $mime) Return CcFiles objects filtered by the mime column
- * @method     array findByFtype(string $ftype) Return CcFiles objects filtered by the ftype column
- * @method     array findByfilepath(string $filepath) Return CcFiles objects filtered by the filepath column
- * @method     array findByState(string $state) Return CcFiles objects filtered by the state column
- * @method     array findByCurrentlyaccessing(int $currentlyaccessing) Return CcFiles objects filtered by the currentlyaccessing column
- * @method     array findByEditedby(int $editedby) Return CcFiles objects filtered by the editedby column
- * @method     array findByMtime(string $mtime) Return CcFiles objects filtered by the mtime column
- * @method     array findByMd5(string $md5) Return CcFiles objects filtered by the md5 column
- * @method     array findByTrackTitle(string $track_title) Return CcFiles objects filtered by the track_title column
- * @method     array findByArtistName(string $artist_name) Return CcFiles objects filtered by the artist_name column
- * @method     array findByBitRate(string $bit_rate) Return CcFiles objects filtered by the bit_rate column
- * @method     array findBySampleRate(string $sample_rate) Return CcFiles objects filtered by the sample_rate column
- * @method     array findByFormat(string $format) Return CcFiles objects filtered by the format column
+ * @method     array findByDbGunid(string $gunid) Return CcFiles objects filtered by the gunid column
+ * @method     array findByDbName(string $name) Return CcFiles objects filtered by the name column
+ * @method     array findByDbMime(string $mime) Return CcFiles objects filtered by the mime column
+ * @method     array findByDbFtype(string $ftype) Return CcFiles objects filtered by the ftype column
+ * @method     array findByDbFilepath(string $filepath) Return CcFiles objects filtered by the filepath column
+ * @method     array findByDbState(string $state) Return CcFiles objects filtered by the state column
+ * @method     array findByDbCurrentlyaccessing(int $currentlyaccessing) Return CcFiles objects filtered by the currentlyaccessing column
+ * @method     array findByDbEditedby(int $editedby) Return CcFiles objects filtered by the editedby column
+ * @method     array findByDbMtime(string $mtime) Return CcFiles objects filtered by the mtime column
+ * @method     array findByDbMd5(string $md5) Return CcFiles objects filtered by the md5 column
+ * @method     array findByDbTrackTitle(string $track_title) Return CcFiles objects filtered by the track_title column
+ * @method     array findByDbArtistName(string $artist_name) Return CcFiles objects filtered by the artist_name column
+ * @method     array findByDbBitRate(string $bit_rate) Return CcFiles objects filtered by the bit_rate column
+ * @method     array findByDbSampleRate(string $sample_rate) Return CcFiles objects filtered by the sample_rate column
+ * @method     array findByDbFormat(string $format) Return CcFiles objects filtered by the format column
  * @method     array findByDbLength(string $length) Return CcFiles objects filtered by the length column
- * @method     array findByAlbumTitle(string $album_title) Return CcFiles objects filtered by the album_title column
- * @method     array findByGenre(string $genre) Return CcFiles objects filtered by the genre column
- * @method     array findByComments(string $comments) Return CcFiles objects filtered by the comments column
- * @method     array findByYear(string $year) Return CcFiles objects filtered by the year column
- * @method     array findByTrackNumber(int $track_number) Return CcFiles objects filtered by the track_number column
- * @method     array findByChannels(int $channels) Return CcFiles objects filtered by the channels column
- * @method     array findByUrl(string $url) Return CcFiles objects filtered by the url column
- * @method     array findByBpm(string $bpm) Return CcFiles objects filtered by the bpm column
- * @method     array findByRating(string $rating) Return CcFiles objects filtered by the rating column
- * @method     array findByEncodedBy(string $encoded_by) Return CcFiles objects filtered by the encoded_by column
- * @method     array findByDiscNumber(string $disc_number) Return CcFiles objects filtered by the disc_number column
- * @method     array findByMood(string $mood) Return CcFiles objects filtered by the mood column
- * @method     array findByLabel(string $label) Return CcFiles objects filtered by the label column
- * @method     array findByComposer(string $composer) Return CcFiles objects filtered by the composer column
- * @method     array findByEncoder(string $encoder) Return CcFiles objects filtered by the encoder column
- * @method     array findByChecksum(string $checksum) Return CcFiles objects filtered by the checksum column
- * @method     array findByLyrics(string $lyrics) Return CcFiles objects filtered by the lyrics column
- * @method     array findByOrchestra(string $orchestra) Return CcFiles objects filtered by the orchestra column
- * @method     array findByConductor(string $conductor) Return CcFiles objects filtered by the conductor column
- * @method     array findByLyricist(string $lyricist) Return CcFiles objects filtered by the lyricist column
- * @method     array findByOriginalLyricist(string $original_lyricist) Return CcFiles objects filtered by the original_lyricist column
- * @method     array findByRadioStationName(string $radio_station_name) Return CcFiles objects filtered by the radio_station_name column
- * @method     array findByInfoUrl(string $info_url) Return CcFiles objects filtered by the info_url column
- * @method     array findByArtistUrl(string $artist_url) Return CcFiles objects filtered by the artist_url column
- * @method     array findByAudioSourceUrl(string $audio_source_url) Return CcFiles objects filtered by the audio_source_url column
- * @method     array findByRadioStationUrl(string $radio_station_url) Return CcFiles objects filtered by the radio_station_url column
- * @method     array findByBuyThisUrl(string $buy_this_url) Return CcFiles objects filtered by the buy_this_url column
- * @method     array findByIsrcNumber(string $isrc_number) Return CcFiles objects filtered by the isrc_number column
- * @method     array findByCatalogNumber(string $catalog_number) Return CcFiles objects filtered by the catalog_number column
- * @method     array findByOriginalArtist(string $original_artist) Return CcFiles objects filtered by the original_artist column
- * @method     array findByCopyright(string $copyright) Return CcFiles objects filtered by the copyright column
- * @method     array findByReportDatetime(string $report_datetime) Return CcFiles objects filtered by the report_datetime column
- * @method     array findByReportLocation(string $report_location) Return CcFiles objects filtered by the report_location column
- * @method     array findByReportOrganization(string $report_organization) Return CcFiles objects filtered by the report_organization column
- * @method     array findBySubject(string $subject) Return CcFiles objects filtered by the subject column
- * @method     array findByContributor(string $contributor) Return CcFiles objects filtered by the contributor column
- * @method     array findByLanguage(string $language) Return CcFiles objects filtered by the language column
+ * @method     array findByDbAlbumTitle(string $album_title) Return CcFiles objects filtered by the album_title column
+ * @method     array findByDbGenre(string $genre) Return CcFiles objects filtered by the genre column
+ * @method     array findByDbComments(string $comments) Return CcFiles objects filtered by the comments column
+ * @method     array findByDbYear(string $year) Return CcFiles objects filtered by the year column
+ * @method     array findByDbTrackNumber(int $track_number) Return CcFiles objects filtered by the track_number column
+ * @method     array findByDbChannels(int $channels) Return CcFiles objects filtered by the channels column
+ * @method     array findByDbUrl(string $url) Return CcFiles objects filtered by the url column
+ * @method     array findByDbBpm(string $bpm) Return CcFiles objects filtered by the bpm column
+ * @method     array findByDbRating(string $rating) Return CcFiles objects filtered by the rating column
+ * @method     array findByDbEncodedBy(string $encoded_by) Return CcFiles objects filtered by the encoded_by column
+ * @method     array findByDbDiscNumber(string $disc_number) Return CcFiles objects filtered by the disc_number column
+ * @method     array findByDbMood(string $mood) Return CcFiles objects filtered by the mood column
+ * @method     array findByDbLabel(string $label) Return CcFiles objects filtered by the label column
+ * @method     array findByDbComposer(string $composer) Return CcFiles objects filtered by the composer column
+ * @method     array findByDbEncoder(string $encoder) Return CcFiles objects filtered by the encoder column
+ * @method     array findByDbChecksum(string $checksum) Return CcFiles objects filtered by the checksum column
+ * @method     array findByDbLyrics(string $lyrics) Return CcFiles objects filtered by the lyrics column
+ * @method     array findByDbOrchestra(string $orchestra) Return CcFiles objects filtered by the orchestra column
+ * @method     array findByDbConductor(string $conductor) Return CcFiles objects filtered by the conductor column
+ * @method     array findByDbLyricist(string $lyricist) Return CcFiles objects filtered by the lyricist column
+ * @method     array findByDbOriginalLyricist(string $original_lyricist) Return CcFiles objects filtered by the original_lyricist column
+ * @method     array findByDbRadioStationName(string $radio_station_name) Return CcFiles objects filtered by the radio_station_name column
+ * @method     array findByDbInfoUrl(string $info_url) Return CcFiles objects filtered by the info_url column
+ * @method     array findByDbArtistUrl(string $artist_url) Return CcFiles objects filtered by the artist_url column
+ * @method     array findByDbAudioSourceUrl(string $audio_source_url) Return CcFiles objects filtered by the audio_source_url column
+ * @method     array findByDbRadioStationUrl(string $radio_station_url) Return CcFiles objects filtered by the radio_station_url column
+ * @method     array findByDbBuyThisUrl(string $buy_this_url) Return CcFiles objects filtered by the buy_this_url column
+ * @method     array findByDbIsrcNumber(string $isrc_number) Return CcFiles objects filtered by the isrc_number column
+ * @method     array findByDbCatalogNumber(string $catalog_number) Return CcFiles objects filtered by the catalog_number column
+ * @method     array findByDbOriginalArtist(string $original_artist) Return CcFiles objects filtered by the original_artist column
+ * @method     array findByDbCopyright(string $copyright) Return CcFiles objects filtered by the copyright column
+ * @method     array findByDbReportDatetime(string $report_datetime) Return CcFiles objects filtered by the report_datetime column
+ * @method     array findByDbReportLocation(string $report_location) Return CcFiles objects filtered by the report_location column
+ * @method     array findByDbReportOrganization(string $report_organization) Return CcFiles objects filtered by the report_organization column
+ * @method     array findByDbSubject(string $subject) Return CcFiles objects filtered by the subject column
+ * @method     array findByDbContributor(string $contributor) Return CcFiles objects filtered by the contributor column
+ * @method     array findByDbLanguage(string $language) Return CcFiles objects filtered by the language column
  *
  * @package    propel.generator.campcaster.om
  */
@@ -369,154 +369,154 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the gunid column
 	 * 
-	 * @param     string $gunid The value to use as filter.
+	 * @param     string $dbGunid The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByGunid($gunid = null, $comparison = null)
+	public function filterByDbGunid($dbGunid = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($gunid)) {
+			if (is_array($dbGunid)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $gunid)) {
-				$gunid = str_replace('*', '%', $gunid);
+			} elseif (preg_match('/[\%\*]/', $dbGunid)) {
+				$dbGunid = str_replace('*', '%', $dbGunid);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::GUNID, $gunid, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::GUNID, $dbGunid, $comparison);
 	}
 
 	/**
 	 * Filter the query on the name column
 	 * 
-	 * @param     string $name The value to use as filter.
+	 * @param     string $dbName The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByName($name = null, $comparison = null)
+	public function filterByDbName($dbName = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($name)) {
+			if (is_array($dbName)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $name)) {
-				$name = str_replace('*', '%', $name);
+			} elseif (preg_match('/[\%\*]/', $dbName)) {
+				$dbName = str_replace('*', '%', $dbName);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::NAME, $name, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::NAME, $dbName, $comparison);
 	}
 
 	/**
 	 * Filter the query on the mime column
 	 * 
-	 * @param     string $mime The value to use as filter.
+	 * @param     string $dbMime The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByMime($mime = null, $comparison = null)
+	public function filterByDbMime($dbMime = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($mime)) {
+			if (is_array($dbMime)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $mime)) {
-				$mime = str_replace('*', '%', $mime);
+			} elseif (preg_match('/[\%\*]/', $dbMime)) {
+				$dbMime = str_replace('*', '%', $dbMime);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::MIME, $mime, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::MIME, $dbMime, $comparison);
 	}
 
 	/**
 	 * Filter the query on the ftype column
 	 * 
-	 * @param     string $ftype The value to use as filter.
+	 * @param     string $dbFtype The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByFtype($ftype = null, $comparison = null)
+	public function filterByDbFtype($dbFtype = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($ftype)) {
+			if (is_array($dbFtype)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $ftype)) {
-				$ftype = str_replace('*', '%', $ftype);
+			} elseif (preg_match('/[\%\*]/', $dbFtype)) {
+				$dbFtype = str_replace('*', '%', $dbFtype);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::FTYPE, $ftype, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::FTYPE, $dbFtype, $comparison);
 	}
 
 	/**
 	 * Filter the query on the filepath column
 	 * 
-	 * @param     string $filepath The value to use as filter.
+	 * @param     string $dbFilepath The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByfilepath($filepath = null, $comparison = null)
+	public function filterByDbFilepath($dbFilepath = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($filepath)) {
+			if (is_array($dbFilepath)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $filepath)) {
-				$filepath = str_replace('*', '%', $filepath);
+			} elseif (preg_match('/[\%\*]/', $dbFilepath)) {
+				$dbFilepath = str_replace('*', '%', $dbFilepath);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::FILEPATH, $filepath, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::FILEPATH, $dbFilepath, $comparison);
 	}
 
 	/**
 	 * Filter the query on the state column
 	 * 
-	 * @param     string $state The value to use as filter.
+	 * @param     string $dbState The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByState($state = null, $comparison = null)
+	public function filterByDbState($dbState = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($state)) {
+			if (is_array($dbState)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $state)) {
-				$state = str_replace('*', '%', $state);
+			} elseif (preg_match('/[\%\*]/', $dbState)) {
+				$dbState = str_replace('*', '%', $dbState);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::STATE, $state, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::STATE, $dbState, $comparison);
 	}
 
 	/**
 	 * Filter the query on the currentlyaccessing column
 	 * 
-	 * @param     int|array $currentlyaccessing The value to use as filter.
+	 * @param     int|array $dbCurrentlyaccessing The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByCurrentlyaccessing($currentlyaccessing = null, $comparison = null)
+	public function filterByDbCurrentlyaccessing($dbCurrentlyaccessing = null, $comparison = null)
 	{
-		if (is_array($currentlyaccessing)) {
+		if (is_array($dbCurrentlyaccessing)) {
 			$useMinMax = false;
-			if (isset($currentlyaccessing['min'])) {
-				$this->addUsingAlias(CcFilesPeer::CURRENTLYACCESSING, $currentlyaccessing['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbCurrentlyaccessing['min'])) {
+				$this->addUsingAlias(CcFilesPeer::CURRENTLYACCESSING, $dbCurrentlyaccessing['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($currentlyaccessing['max'])) {
-				$this->addUsingAlias(CcFilesPeer::CURRENTLYACCESSING, $currentlyaccessing['max'], Criteria::LESS_EQUAL);
+			if (isset($dbCurrentlyaccessing['max'])) {
+				$this->addUsingAlias(CcFilesPeer::CURRENTLYACCESSING, $dbCurrentlyaccessing['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -526,28 +526,28 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::CURRENTLYACCESSING, $currentlyaccessing, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::CURRENTLYACCESSING, $dbCurrentlyaccessing, $comparison);
 	}
 
 	/**
 	 * Filter the query on the editedby column
 	 * 
-	 * @param     int|array $editedby The value to use as filter.
+	 * @param     int|array $dbEditedby The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByEditedby($editedby = null, $comparison = null)
+	public function filterByDbEditedby($dbEditedby = null, $comparison = null)
 	{
-		if (is_array($editedby)) {
+		if (is_array($dbEditedby)) {
 			$useMinMax = false;
-			if (isset($editedby['min'])) {
-				$this->addUsingAlias(CcFilesPeer::EDITEDBY, $editedby['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbEditedby['min'])) {
+				$this->addUsingAlias(CcFilesPeer::EDITEDBY, $dbEditedby['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($editedby['max'])) {
-				$this->addUsingAlias(CcFilesPeer::EDITEDBY, $editedby['max'], Criteria::LESS_EQUAL);
+			if (isset($dbEditedby['max'])) {
+				$this->addUsingAlias(CcFilesPeer::EDITEDBY, $dbEditedby['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -557,28 +557,28 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::EDITEDBY, $editedby, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::EDITEDBY, $dbEditedby, $comparison);
 	}
 
 	/**
 	 * Filter the query on the mtime column
 	 * 
-	 * @param     string|array $mtime The value to use as filter.
+	 * @param     string|array $dbMtime The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByMtime($mtime = null, $comparison = null)
+	public function filterByDbMtime($dbMtime = null, $comparison = null)
 	{
-		if (is_array($mtime)) {
+		if (is_array($dbMtime)) {
 			$useMinMax = false;
-			if (isset($mtime['min'])) {
-				$this->addUsingAlias(CcFilesPeer::MTIME, $mtime['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbMtime['min'])) {
+				$this->addUsingAlias(CcFilesPeer::MTIME, $dbMtime['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($mtime['max'])) {
-				$this->addUsingAlias(CcFilesPeer::MTIME, $mtime['max'], Criteria::LESS_EQUAL);
+			if (isset($dbMtime['max'])) {
+				$this->addUsingAlias(CcFilesPeer::MTIME, $dbMtime['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -588,139 +588,139 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::MTIME, $mtime, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::MTIME, $dbMtime, $comparison);
 	}
 
 	/**
 	 * Filter the query on the md5 column
 	 * 
-	 * @param     string $md5 The value to use as filter.
+	 * @param     string $dbMd5 The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByMd5($md5 = null, $comparison = null)
+	public function filterByDbMd5($dbMd5 = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($md5)) {
+			if (is_array($dbMd5)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $md5)) {
-				$md5 = str_replace('*', '%', $md5);
+			} elseif (preg_match('/[\%\*]/', $dbMd5)) {
+				$dbMd5 = str_replace('*', '%', $dbMd5);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::MD5, $md5, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::MD5, $dbMd5, $comparison);
 	}
 
 	/**
 	 * Filter the query on the track_title column
 	 * 
-	 * @param     string $trackTitle The value to use as filter.
+	 * @param     string $dbTrackTitle The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByTrackTitle($trackTitle = null, $comparison = null)
+	public function filterByDbTrackTitle($dbTrackTitle = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($trackTitle)) {
+			if (is_array($dbTrackTitle)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $trackTitle)) {
-				$trackTitle = str_replace('*', '%', $trackTitle);
+			} elseif (preg_match('/[\%\*]/', $dbTrackTitle)) {
+				$dbTrackTitle = str_replace('*', '%', $dbTrackTitle);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::TRACK_TITLE, $trackTitle, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::TRACK_TITLE, $dbTrackTitle, $comparison);
 	}
 
 	/**
 	 * Filter the query on the artist_name column
 	 * 
-	 * @param     string $artistName The value to use as filter.
+	 * @param     string $dbArtistName The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByArtistName($artistName = null, $comparison = null)
+	public function filterByDbArtistName($dbArtistName = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($artistName)) {
+			if (is_array($dbArtistName)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $artistName)) {
-				$artistName = str_replace('*', '%', $artistName);
+			} elseif (preg_match('/[\%\*]/', $dbArtistName)) {
+				$dbArtistName = str_replace('*', '%', $dbArtistName);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ARTIST_NAME, $artistName, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ARTIST_NAME, $dbArtistName, $comparison);
 	}
 
 	/**
 	 * Filter the query on the bit_rate column
 	 * 
-	 * @param     string $bitRate The value to use as filter.
+	 * @param     string $dbBitRate The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByBitRate($bitRate = null, $comparison = null)
+	public function filterByDbBitRate($dbBitRate = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($bitRate)) {
+			if (is_array($dbBitRate)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $bitRate)) {
-				$bitRate = str_replace('*', '%', $bitRate);
+			} elseif (preg_match('/[\%\*]/', $dbBitRate)) {
+				$dbBitRate = str_replace('*', '%', $dbBitRate);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::BIT_RATE, $bitRate, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::BIT_RATE, $dbBitRate, $comparison);
 	}
 
 	/**
 	 * Filter the query on the sample_rate column
 	 * 
-	 * @param     string $sampleRate The value to use as filter.
+	 * @param     string $dbSampleRate The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterBySampleRate($sampleRate = null, $comparison = null)
+	public function filterByDbSampleRate($dbSampleRate = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($sampleRate)) {
+			if (is_array($dbSampleRate)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $sampleRate)) {
-				$sampleRate = str_replace('*', '%', $sampleRate);
+			} elseif (preg_match('/[\%\*]/', $dbSampleRate)) {
+				$dbSampleRate = str_replace('*', '%', $dbSampleRate);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::SAMPLE_RATE, $sampleRate, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::SAMPLE_RATE, $dbSampleRate, $comparison);
 	}
 
 	/**
 	 * Filter the query on the format column
 	 * 
-	 * @param     string $format The value to use as filter.
+	 * @param     string $dbFormat The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByFormat($format = null, $comparison = null)
+	public function filterByDbFormat($dbFormat = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($format)) {
+			if (is_array($dbFormat)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $format)) {
-				$format = str_replace('*', '%', $format);
+			} elseif (preg_match('/[\%\*]/', $dbFormat)) {
+				$dbFormat = str_replace('*', '%', $dbFormat);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::FORMAT, $format, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::FORMAT, $dbFormat, $comparison);
 	}
 
 	/**
@@ -757,110 +757,110 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the album_title column
 	 * 
-	 * @param     string $albumTitle The value to use as filter.
+	 * @param     string $dbAlbumTitle The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByAlbumTitle($albumTitle = null, $comparison = null)
+	public function filterByDbAlbumTitle($dbAlbumTitle = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($albumTitle)) {
+			if (is_array($dbAlbumTitle)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $albumTitle)) {
-				$albumTitle = str_replace('*', '%', $albumTitle);
+			} elseif (preg_match('/[\%\*]/', $dbAlbumTitle)) {
+				$dbAlbumTitle = str_replace('*', '%', $dbAlbumTitle);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ALBUM_TITLE, $albumTitle, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ALBUM_TITLE, $dbAlbumTitle, $comparison);
 	}
 
 	/**
 	 * Filter the query on the genre column
 	 * 
-	 * @param     string $genre The value to use as filter.
+	 * @param     string $dbGenre The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByGenre($genre = null, $comparison = null)
+	public function filterByDbGenre($dbGenre = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($genre)) {
+			if (is_array($dbGenre)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $genre)) {
-				$genre = str_replace('*', '%', $genre);
+			} elseif (preg_match('/[\%\*]/', $dbGenre)) {
+				$dbGenre = str_replace('*', '%', $dbGenre);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::GENRE, $genre, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::GENRE, $dbGenre, $comparison);
 	}
 
 	/**
 	 * Filter the query on the comments column
 	 * 
-	 * @param     string $comments The value to use as filter.
+	 * @param     string $dbComments The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByComments($comments = null, $comparison = null)
+	public function filterByDbComments($dbComments = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($comments)) {
+			if (is_array($dbComments)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $comments)) {
-				$comments = str_replace('*', '%', $comments);
+			} elseif (preg_match('/[\%\*]/', $dbComments)) {
+				$dbComments = str_replace('*', '%', $dbComments);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::COMMENTS, $comments, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::COMMENTS, $dbComments, $comparison);
 	}
 
 	/**
 	 * Filter the query on the year column
 	 * 
-	 * @param     string $year The value to use as filter.
+	 * @param     string $dbYear The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByYear($year = null, $comparison = null)
+	public function filterByDbYear($dbYear = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($year)) {
+			if (is_array($dbYear)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $year)) {
-				$year = str_replace('*', '%', $year);
+			} elseif (preg_match('/[\%\*]/', $dbYear)) {
+				$dbYear = str_replace('*', '%', $dbYear);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::YEAR, $year, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::YEAR, $dbYear, $comparison);
 	}
 
 	/**
 	 * Filter the query on the track_number column
 	 * 
-	 * @param     int|array $trackNumber The value to use as filter.
+	 * @param     int|array $dbTrackNumber The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByTrackNumber($trackNumber = null, $comparison = null)
+	public function filterByDbTrackNumber($dbTrackNumber = null, $comparison = null)
 	{
-		if (is_array($trackNumber)) {
+		if (is_array($dbTrackNumber)) {
 			$useMinMax = false;
-			if (isset($trackNumber['min'])) {
-				$this->addUsingAlias(CcFilesPeer::TRACK_NUMBER, $trackNumber['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbTrackNumber['min'])) {
+				$this->addUsingAlias(CcFilesPeer::TRACK_NUMBER, $dbTrackNumber['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($trackNumber['max'])) {
-				$this->addUsingAlias(CcFilesPeer::TRACK_NUMBER, $trackNumber['max'], Criteria::LESS_EQUAL);
+			if (isset($dbTrackNumber['max'])) {
+				$this->addUsingAlias(CcFilesPeer::TRACK_NUMBER, $dbTrackNumber['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -870,28 +870,28 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::TRACK_NUMBER, $trackNumber, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::TRACK_NUMBER, $dbTrackNumber, $comparison);
 	}
 
 	/**
 	 * Filter the query on the channels column
 	 * 
-	 * @param     int|array $channels The value to use as filter.
+	 * @param     int|array $dbChannels The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByChannels($channels = null, $comparison = null)
+	public function filterByDbChannels($dbChannels = null, $comparison = null)
 	{
-		if (is_array($channels)) {
+		if (is_array($dbChannels)) {
 			$useMinMax = false;
-			if (isset($channels['min'])) {
-				$this->addUsingAlias(CcFilesPeer::CHANNELS, $channels['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbChannels['min'])) {
+				$this->addUsingAlias(CcFilesPeer::CHANNELS, $dbChannels['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($channels['max'])) {
-				$this->addUsingAlias(CcFilesPeer::CHANNELS, $channels['max'], Criteria::LESS_EQUAL);
+			if (isset($dbChannels['max'])) {
+				$this->addUsingAlias(CcFilesPeer::CHANNELS, $dbChannels['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -901,689 +901,689 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::CHANNELS, $channels, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::CHANNELS, $dbChannels, $comparison);
 	}
 
 	/**
 	 * Filter the query on the url column
 	 * 
-	 * @param     string $url The value to use as filter.
+	 * @param     string $dbUrl The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByUrl($url = null, $comparison = null)
+	public function filterByDbUrl($dbUrl = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($url)) {
+			if (is_array($dbUrl)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $url)) {
-				$url = str_replace('*', '%', $url);
+			} elseif (preg_match('/[\%\*]/', $dbUrl)) {
+				$dbUrl = str_replace('*', '%', $dbUrl);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::URL, $url, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::URL, $dbUrl, $comparison);
 	}
 
 	/**
 	 * Filter the query on the bpm column
 	 * 
-	 * @param     string $bpm The value to use as filter.
+	 * @param     string $dbBpm The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByBpm($bpm = null, $comparison = null)
+	public function filterByDbBpm($dbBpm = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($bpm)) {
+			if (is_array($dbBpm)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $bpm)) {
-				$bpm = str_replace('*', '%', $bpm);
+			} elseif (preg_match('/[\%\*]/', $dbBpm)) {
+				$dbBpm = str_replace('*', '%', $dbBpm);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::BPM, $bpm, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::BPM, $dbBpm, $comparison);
 	}
 
 	/**
 	 * Filter the query on the rating column
 	 * 
-	 * @param     string $rating The value to use as filter.
+	 * @param     string $dbRating The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByRating($rating = null, $comparison = null)
+	public function filterByDbRating($dbRating = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($rating)) {
+			if (is_array($dbRating)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $rating)) {
-				$rating = str_replace('*', '%', $rating);
+			} elseif (preg_match('/[\%\*]/', $dbRating)) {
+				$dbRating = str_replace('*', '%', $dbRating);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::RATING, $rating, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::RATING, $dbRating, $comparison);
 	}
 
 	/**
 	 * Filter the query on the encoded_by column
 	 * 
-	 * @param     string $encodedBy The value to use as filter.
+	 * @param     string $dbEncodedBy The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByEncodedBy($encodedBy = null, $comparison = null)
+	public function filterByDbEncodedBy($dbEncodedBy = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($encodedBy)) {
+			if (is_array($dbEncodedBy)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $encodedBy)) {
-				$encodedBy = str_replace('*', '%', $encodedBy);
+			} elseif (preg_match('/[\%\*]/', $dbEncodedBy)) {
+				$dbEncodedBy = str_replace('*', '%', $dbEncodedBy);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ENCODED_BY, $encodedBy, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ENCODED_BY, $dbEncodedBy, $comparison);
 	}
 
 	/**
 	 * Filter the query on the disc_number column
 	 * 
-	 * @param     string $discNumber The value to use as filter.
+	 * @param     string $dbDiscNumber The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByDiscNumber($discNumber = null, $comparison = null)
+	public function filterByDbDiscNumber($dbDiscNumber = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($discNumber)) {
+			if (is_array($dbDiscNumber)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $discNumber)) {
-				$discNumber = str_replace('*', '%', $discNumber);
+			} elseif (preg_match('/[\%\*]/', $dbDiscNumber)) {
+				$dbDiscNumber = str_replace('*', '%', $dbDiscNumber);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::DISC_NUMBER, $discNumber, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::DISC_NUMBER, $dbDiscNumber, $comparison);
 	}
 
 	/**
 	 * Filter the query on the mood column
 	 * 
-	 * @param     string $mood The value to use as filter.
+	 * @param     string $dbMood The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByMood($mood = null, $comparison = null)
+	public function filterByDbMood($dbMood = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($mood)) {
+			if (is_array($dbMood)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $mood)) {
-				$mood = str_replace('*', '%', $mood);
+			} elseif (preg_match('/[\%\*]/', $dbMood)) {
+				$dbMood = str_replace('*', '%', $dbMood);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::MOOD, $mood, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::MOOD, $dbMood, $comparison);
 	}
 
 	/**
 	 * Filter the query on the label column
 	 * 
-	 * @param     string $label The value to use as filter.
+	 * @param     string $dbLabel The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByLabel($label = null, $comparison = null)
+	public function filterByDbLabel($dbLabel = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($label)) {
+			if (is_array($dbLabel)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $label)) {
-				$label = str_replace('*', '%', $label);
+			} elseif (preg_match('/[\%\*]/', $dbLabel)) {
+				$dbLabel = str_replace('*', '%', $dbLabel);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::LABEL, $label, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::LABEL, $dbLabel, $comparison);
 	}
 
 	/**
 	 * Filter the query on the composer column
 	 * 
-	 * @param     string $composer The value to use as filter.
+	 * @param     string $dbComposer The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByComposer($composer = null, $comparison = null)
+	public function filterByDbComposer($dbComposer = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($composer)) {
+			if (is_array($dbComposer)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $composer)) {
-				$composer = str_replace('*', '%', $composer);
+			} elseif (preg_match('/[\%\*]/', $dbComposer)) {
+				$dbComposer = str_replace('*', '%', $dbComposer);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::COMPOSER, $composer, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::COMPOSER, $dbComposer, $comparison);
 	}
 
 	/**
 	 * Filter the query on the encoder column
 	 * 
-	 * @param     string $encoder The value to use as filter.
+	 * @param     string $dbEncoder The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByEncoder($encoder = null, $comparison = null)
+	public function filterByDbEncoder($dbEncoder = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($encoder)) {
+			if (is_array($dbEncoder)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $encoder)) {
-				$encoder = str_replace('*', '%', $encoder);
+			} elseif (preg_match('/[\%\*]/', $dbEncoder)) {
+				$dbEncoder = str_replace('*', '%', $dbEncoder);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ENCODER, $encoder, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ENCODER, $dbEncoder, $comparison);
 	}
 
 	/**
 	 * Filter the query on the checksum column
 	 * 
-	 * @param     string $checksum The value to use as filter.
+	 * @param     string $dbChecksum The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByChecksum($checksum = null, $comparison = null)
+	public function filterByDbChecksum($dbChecksum = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($checksum)) {
+			if (is_array($dbChecksum)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $checksum)) {
-				$checksum = str_replace('*', '%', $checksum);
+			} elseif (preg_match('/[\%\*]/', $dbChecksum)) {
+				$dbChecksum = str_replace('*', '%', $dbChecksum);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::CHECKSUM, $checksum, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::CHECKSUM, $dbChecksum, $comparison);
 	}
 
 	/**
 	 * Filter the query on the lyrics column
 	 * 
-	 * @param     string $lyrics The value to use as filter.
+	 * @param     string $dbLyrics The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByLyrics($lyrics = null, $comparison = null)
+	public function filterByDbLyrics($dbLyrics = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($lyrics)) {
+			if (is_array($dbLyrics)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $lyrics)) {
-				$lyrics = str_replace('*', '%', $lyrics);
+			} elseif (preg_match('/[\%\*]/', $dbLyrics)) {
+				$dbLyrics = str_replace('*', '%', $dbLyrics);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::LYRICS, $lyrics, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::LYRICS, $dbLyrics, $comparison);
 	}
 
 	/**
 	 * Filter the query on the orchestra column
 	 * 
-	 * @param     string $orchestra The value to use as filter.
+	 * @param     string $dbOrchestra The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByOrchestra($orchestra = null, $comparison = null)
+	public function filterByDbOrchestra($dbOrchestra = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($orchestra)) {
+			if (is_array($dbOrchestra)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $orchestra)) {
-				$orchestra = str_replace('*', '%', $orchestra);
+			} elseif (preg_match('/[\%\*]/', $dbOrchestra)) {
+				$dbOrchestra = str_replace('*', '%', $dbOrchestra);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ORCHESTRA, $orchestra, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ORCHESTRA, $dbOrchestra, $comparison);
 	}
 
 	/**
 	 * Filter the query on the conductor column
 	 * 
-	 * @param     string $conductor The value to use as filter.
+	 * @param     string $dbConductor The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByConductor($conductor = null, $comparison = null)
+	public function filterByDbConductor($dbConductor = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($conductor)) {
+			if (is_array($dbConductor)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $conductor)) {
-				$conductor = str_replace('*', '%', $conductor);
+			} elseif (preg_match('/[\%\*]/', $dbConductor)) {
+				$dbConductor = str_replace('*', '%', $dbConductor);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::CONDUCTOR, $conductor, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::CONDUCTOR, $dbConductor, $comparison);
 	}
 
 	/**
 	 * Filter the query on the lyricist column
 	 * 
-	 * @param     string $lyricist The value to use as filter.
+	 * @param     string $dbLyricist The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByLyricist($lyricist = null, $comparison = null)
+	public function filterByDbLyricist($dbLyricist = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($lyricist)) {
+			if (is_array($dbLyricist)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $lyricist)) {
-				$lyricist = str_replace('*', '%', $lyricist);
+			} elseif (preg_match('/[\%\*]/', $dbLyricist)) {
+				$dbLyricist = str_replace('*', '%', $dbLyricist);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::LYRICIST, $lyricist, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::LYRICIST, $dbLyricist, $comparison);
 	}
 
 	/**
 	 * Filter the query on the original_lyricist column
 	 * 
-	 * @param     string $originalLyricist The value to use as filter.
+	 * @param     string $dbOriginalLyricist The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByOriginalLyricist($originalLyricist = null, $comparison = null)
+	public function filterByDbOriginalLyricist($dbOriginalLyricist = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($originalLyricist)) {
+			if (is_array($dbOriginalLyricist)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $originalLyricist)) {
-				$originalLyricist = str_replace('*', '%', $originalLyricist);
+			} elseif (preg_match('/[\%\*]/', $dbOriginalLyricist)) {
+				$dbOriginalLyricist = str_replace('*', '%', $dbOriginalLyricist);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ORIGINAL_LYRICIST, $originalLyricist, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ORIGINAL_LYRICIST, $dbOriginalLyricist, $comparison);
 	}
 
 	/**
 	 * Filter the query on the radio_station_name column
 	 * 
-	 * @param     string $radioStationName The value to use as filter.
+	 * @param     string $dbRadioStationName The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByRadioStationName($radioStationName = null, $comparison = null)
+	public function filterByDbRadioStationName($dbRadioStationName = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($radioStationName)) {
+			if (is_array($dbRadioStationName)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $radioStationName)) {
-				$radioStationName = str_replace('*', '%', $radioStationName);
+			} elseif (preg_match('/[\%\*]/', $dbRadioStationName)) {
+				$dbRadioStationName = str_replace('*', '%', $dbRadioStationName);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::RADIO_STATION_NAME, $radioStationName, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::RADIO_STATION_NAME, $dbRadioStationName, $comparison);
 	}
 
 	/**
 	 * Filter the query on the info_url column
 	 * 
-	 * @param     string $infoUrl The value to use as filter.
+	 * @param     string $dbInfoUrl The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByInfoUrl($infoUrl = null, $comparison = null)
+	public function filterByDbInfoUrl($dbInfoUrl = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($infoUrl)) {
+			if (is_array($dbInfoUrl)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $infoUrl)) {
-				$infoUrl = str_replace('*', '%', $infoUrl);
+			} elseif (preg_match('/[\%\*]/', $dbInfoUrl)) {
+				$dbInfoUrl = str_replace('*', '%', $dbInfoUrl);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::INFO_URL, $infoUrl, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::INFO_URL, $dbInfoUrl, $comparison);
 	}
 
 	/**
 	 * Filter the query on the artist_url column
 	 * 
-	 * @param     string $artistUrl The value to use as filter.
+	 * @param     string $dbArtistUrl The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByArtistUrl($artistUrl = null, $comparison = null)
+	public function filterByDbArtistUrl($dbArtistUrl = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($artistUrl)) {
+			if (is_array($dbArtistUrl)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $artistUrl)) {
-				$artistUrl = str_replace('*', '%', $artistUrl);
+			} elseif (preg_match('/[\%\*]/', $dbArtistUrl)) {
+				$dbArtistUrl = str_replace('*', '%', $dbArtistUrl);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ARTIST_URL, $artistUrl, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ARTIST_URL, $dbArtistUrl, $comparison);
 	}
 
 	/**
 	 * Filter the query on the audio_source_url column
 	 * 
-	 * @param     string $audioSourceUrl The value to use as filter.
+	 * @param     string $dbAudioSourceUrl The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByAudioSourceUrl($audioSourceUrl = null, $comparison = null)
+	public function filterByDbAudioSourceUrl($dbAudioSourceUrl = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($audioSourceUrl)) {
+			if (is_array($dbAudioSourceUrl)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $audioSourceUrl)) {
-				$audioSourceUrl = str_replace('*', '%', $audioSourceUrl);
+			} elseif (preg_match('/[\%\*]/', $dbAudioSourceUrl)) {
+				$dbAudioSourceUrl = str_replace('*', '%', $dbAudioSourceUrl);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::AUDIO_SOURCE_URL, $audioSourceUrl, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::AUDIO_SOURCE_URL, $dbAudioSourceUrl, $comparison);
 	}
 
 	/**
 	 * Filter the query on the radio_station_url column
 	 * 
-	 * @param     string $radioStationUrl The value to use as filter.
+	 * @param     string $dbRadioStationUrl The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByRadioStationUrl($radioStationUrl = null, $comparison = null)
+	public function filterByDbRadioStationUrl($dbRadioStationUrl = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($radioStationUrl)) {
+			if (is_array($dbRadioStationUrl)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $radioStationUrl)) {
-				$radioStationUrl = str_replace('*', '%', $radioStationUrl);
+			} elseif (preg_match('/[\%\*]/', $dbRadioStationUrl)) {
+				$dbRadioStationUrl = str_replace('*', '%', $dbRadioStationUrl);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::RADIO_STATION_URL, $radioStationUrl, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::RADIO_STATION_URL, $dbRadioStationUrl, $comparison);
 	}
 
 	/**
 	 * Filter the query on the buy_this_url column
 	 * 
-	 * @param     string $buyThisUrl The value to use as filter.
+	 * @param     string $dbBuyThisUrl The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByBuyThisUrl($buyThisUrl = null, $comparison = null)
+	public function filterByDbBuyThisUrl($dbBuyThisUrl = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($buyThisUrl)) {
+			if (is_array($dbBuyThisUrl)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $buyThisUrl)) {
-				$buyThisUrl = str_replace('*', '%', $buyThisUrl);
+			} elseif (preg_match('/[\%\*]/', $dbBuyThisUrl)) {
+				$dbBuyThisUrl = str_replace('*', '%', $dbBuyThisUrl);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::BUY_THIS_URL, $buyThisUrl, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::BUY_THIS_URL, $dbBuyThisUrl, $comparison);
 	}
 
 	/**
 	 * Filter the query on the isrc_number column
 	 * 
-	 * @param     string $isrcNumber The value to use as filter.
+	 * @param     string $dbIsrcNumber The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByIsrcNumber($isrcNumber = null, $comparison = null)
+	public function filterByDbIsrcNumber($dbIsrcNumber = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($isrcNumber)) {
+			if (is_array($dbIsrcNumber)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $isrcNumber)) {
-				$isrcNumber = str_replace('*', '%', $isrcNumber);
+			} elseif (preg_match('/[\%\*]/', $dbIsrcNumber)) {
+				$dbIsrcNumber = str_replace('*', '%', $dbIsrcNumber);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ISRC_NUMBER, $isrcNumber, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ISRC_NUMBER, $dbIsrcNumber, $comparison);
 	}
 
 	/**
 	 * Filter the query on the catalog_number column
 	 * 
-	 * @param     string $catalogNumber The value to use as filter.
+	 * @param     string $dbCatalogNumber The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByCatalogNumber($catalogNumber = null, $comparison = null)
+	public function filterByDbCatalogNumber($dbCatalogNumber = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($catalogNumber)) {
+			if (is_array($dbCatalogNumber)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $catalogNumber)) {
-				$catalogNumber = str_replace('*', '%', $catalogNumber);
+			} elseif (preg_match('/[\%\*]/', $dbCatalogNumber)) {
+				$dbCatalogNumber = str_replace('*', '%', $dbCatalogNumber);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::CATALOG_NUMBER, $catalogNumber, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::CATALOG_NUMBER, $dbCatalogNumber, $comparison);
 	}
 
 	/**
 	 * Filter the query on the original_artist column
 	 * 
-	 * @param     string $originalArtist The value to use as filter.
+	 * @param     string $dbOriginalArtist The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByOriginalArtist($originalArtist = null, $comparison = null)
+	public function filterByDbOriginalArtist($dbOriginalArtist = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($originalArtist)) {
+			if (is_array($dbOriginalArtist)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $originalArtist)) {
-				$originalArtist = str_replace('*', '%', $originalArtist);
+			} elseif (preg_match('/[\%\*]/', $dbOriginalArtist)) {
+				$dbOriginalArtist = str_replace('*', '%', $dbOriginalArtist);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::ORIGINAL_ARTIST, $originalArtist, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::ORIGINAL_ARTIST, $dbOriginalArtist, $comparison);
 	}
 
 	/**
 	 * Filter the query on the copyright column
 	 * 
-	 * @param     string $copyright The value to use as filter.
+	 * @param     string $dbCopyright The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByCopyright($copyright = null, $comparison = null)
+	public function filterByDbCopyright($dbCopyright = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($copyright)) {
+			if (is_array($dbCopyright)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $copyright)) {
-				$copyright = str_replace('*', '%', $copyright);
+			} elseif (preg_match('/[\%\*]/', $dbCopyright)) {
+				$dbCopyright = str_replace('*', '%', $dbCopyright);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::COPYRIGHT, $copyright, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::COPYRIGHT, $dbCopyright, $comparison);
 	}
 
 	/**
 	 * Filter the query on the report_datetime column
 	 * 
-	 * @param     string $reportDatetime The value to use as filter.
+	 * @param     string $dbReportDatetime The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByReportDatetime($reportDatetime = null, $comparison = null)
+	public function filterByDbReportDatetime($dbReportDatetime = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($reportDatetime)) {
+			if (is_array($dbReportDatetime)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $reportDatetime)) {
-				$reportDatetime = str_replace('*', '%', $reportDatetime);
+			} elseif (preg_match('/[\%\*]/', $dbReportDatetime)) {
+				$dbReportDatetime = str_replace('*', '%', $dbReportDatetime);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::REPORT_DATETIME, $reportDatetime, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::REPORT_DATETIME, $dbReportDatetime, $comparison);
 	}
 
 	/**
 	 * Filter the query on the report_location column
 	 * 
-	 * @param     string $reportLocation The value to use as filter.
+	 * @param     string $dbReportLocation The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByReportLocation($reportLocation = null, $comparison = null)
+	public function filterByDbReportLocation($dbReportLocation = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($reportLocation)) {
+			if (is_array($dbReportLocation)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $reportLocation)) {
-				$reportLocation = str_replace('*', '%', $reportLocation);
+			} elseif (preg_match('/[\%\*]/', $dbReportLocation)) {
+				$dbReportLocation = str_replace('*', '%', $dbReportLocation);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::REPORT_LOCATION, $reportLocation, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::REPORT_LOCATION, $dbReportLocation, $comparison);
 	}
 
 	/**
 	 * Filter the query on the report_organization column
 	 * 
-	 * @param     string $reportOrganization The value to use as filter.
+	 * @param     string $dbReportOrganization The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByReportOrganization($reportOrganization = null, $comparison = null)
+	public function filterByDbReportOrganization($dbReportOrganization = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($reportOrganization)) {
+			if (is_array($dbReportOrganization)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $reportOrganization)) {
-				$reportOrganization = str_replace('*', '%', $reportOrganization);
+			} elseif (preg_match('/[\%\*]/', $dbReportOrganization)) {
+				$dbReportOrganization = str_replace('*', '%', $dbReportOrganization);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::REPORT_ORGANIZATION, $reportOrganization, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::REPORT_ORGANIZATION, $dbReportOrganization, $comparison);
 	}
 
 	/**
 	 * Filter the query on the subject column
 	 * 
-	 * @param     string $subject The value to use as filter.
+	 * @param     string $dbSubject The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterBySubject($subject = null, $comparison = null)
+	public function filterByDbSubject($dbSubject = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($subject)) {
+			if (is_array($dbSubject)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $subject)) {
-				$subject = str_replace('*', '%', $subject);
+			} elseif (preg_match('/[\%\*]/', $dbSubject)) {
+				$dbSubject = str_replace('*', '%', $dbSubject);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::SUBJECT, $subject, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::SUBJECT, $dbSubject, $comparison);
 	}
 
 	/**
 	 * Filter the query on the contributor column
 	 * 
-	 * @param     string $contributor The value to use as filter.
+	 * @param     string $dbContributor The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByContributor($contributor = null, $comparison = null)
+	public function filterByDbContributor($dbContributor = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($contributor)) {
+			if (is_array($dbContributor)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $contributor)) {
-				$contributor = str_replace('*', '%', $contributor);
+			} elseif (preg_match('/[\%\*]/', $dbContributor)) {
+				$dbContributor = str_replace('*', '%', $dbContributor);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::CONTRIBUTOR, $contributor, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::CONTRIBUTOR, $dbContributor, $comparison);
 	}
 
 	/**
 	 * Filter the query on the language column
 	 * 
-	 * @param     string $language The value to use as filter.
+	 * @param     string $dbLanguage The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByLanguage($language = null, $comparison = null)
+	public function filterByDbLanguage($dbLanguage = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($language)) {
+			if (is_array($dbLanguage)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $language)) {
-				$language = str_replace('*', '%', $language);
+			} elseif (preg_match('/[\%\*]/', $dbLanguage)) {
+				$dbLanguage = str_replace('*', '%', $dbLanguage);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::LANGUAGE, $language, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::LANGUAGE, $dbLanguage, $comparison);
 	}
 
 	/**
@@ -1597,7 +1597,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	public function filterByCcSubjs($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcFilesPeer::EDITEDBY, $ccSubjs->getId(), $comparison);
+			->addUsingAlias(CcFilesPeer::EDITEDBY, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**
