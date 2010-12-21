@@ -143,8 +143,8 @@ $(document).ready(function() {
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
 
-	$("#spl_sortable").droppable();
-	$("#spl_sortable" ).bind( "drop", addSPLItem);
+	$("#side_playlist").droppable();
+	$("#side_playlist" ).bind( "drop", addSPLItem);
 
 	$('input[name="all"]').click(function(){
 		$('form[name="SPL"]').find('input').attr("checked", $(this).attr("checked"));
