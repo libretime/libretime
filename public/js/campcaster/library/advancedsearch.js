@@ -57,20 +57,12 @@ function searchLibrary() {
 	});
 }
 
-$(document).ready(function() {
- 
+function setUpSearch() {
+
 	$("#search_add").click(ajaxAddField);
 	$("#search_submit").click(searchLibrary);
 	
 	$('[id^="fieldset-row_"]').each(function(i, el){
 		addRemove(el);
 	});
-
-	$("#library_display tr:not(:first-child)")
-		.contextMenu({menu: 'myMenu'}, contextMenu)
-		.draggable({ 
-				helper: 'clone' 
-		});
-
-	setUpSPL();
-});
+}

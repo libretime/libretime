@@ -72,8 +72,8 @@ function setUpSPL() {
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
 
-	$("#side_playlist").droppable();
-	$("#side_playlist" ).bind( "drop", addSPLItem);
+	$("#spl_sortable").droppable();
+	$("#spl_sortable" ).bind( "drop", addSPLItem);
 
 	$('input[name="all"]').click(function(){
 		$('form[name="SPL"]').find('input').attr("checked", $(this).attr("checked"));

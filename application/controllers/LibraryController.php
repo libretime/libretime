@@ -24,7 +24,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-		$this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/campcaster/onready/library.js','text/javascript');
 	
 		$this->_helper->layout->setLayout('library');
 
@@ -83,6 +83,8 @@ class LibraryController extends Zend_Controller_Action
     public function contentsAction()
     {
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
+
+		$this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
 
         $query["category"] = $this->_getParam('ob', "dc:creator");
 		$query["order"] = $this->_getParam('order', "asc");

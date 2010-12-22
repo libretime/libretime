@@ -14,13 +14,14 @@ function setLibraryContents(data){
 	$("#library_display tr:not(:first-child)").remove();
 	$("#library_display").append(data);
 
-	$("#library_display tr:not(:first-child)").contextMenu(
-		{menu: 'myMenu'}, contextMenu
-	);
+	$("#library_display tr:not(:first-child)")
+		.contextMenu({menu: 'myMenu'}, contextMenu)
+		.draggable({ 
+				helper: 'clone' 
+		});
 }
 
-$(document).ready(function() {
-
+function setUpLibrary() {
 	$("#library_display tr:first-child span.title").data({'ob': 'dc:title', 'order' : 'asc'});
 	$("#library_display tr:first-child span.artist").data({'ob': 'dc:creator', 'order' : 'desc'});
 	$("#library_display tr:first-child span.album").data({'ob': 'dc:source', 'order' : 'asc'});
@@ -53,7 +54,4 @@ $(document).ready(function() {
 		.draggable({ 
 				helper: 'clone' 
 		});
-
-	setUpSPL();
-
-});
+}
