@@ -1726,22 +1726,7 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-
-	public static function getFiles($query=NULL)
-    {
-        global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
-
-        $sql = "SELECT * FROM ".$CC_CONFIG['filesTable'];
-
-		if(!is_null($query)) {
-			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$query["category"]];
-			$sql = $sql . $ob . " " .$query["order"];
-		}
-
-        return $CC_DBC->getAll($sql);
-    }
-
-	public static function searchFiles($md)
+	public static function searchFiles($md, $order=NULL)
 	{
 		global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
 
@@ -1776,8 +1761,15 @@ class StoredFile {
 			}
 		}
 
-		$where = " WHERE ". join(" AND ", $cond);
-		$sql = $sql . $where;
+		if(count($cond) > 0) {
+			$where = " WHERE ". join(" AND ", $cond);
+			$sql = $sql . $where;
+		}
+
+		if(!is_null($order)) {
+			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]];
+			$sql = $sql . $ob . " " .$order["order"];
+		}
 		//echo $sql;
 
         return $CC_DBC->getAll($sql);

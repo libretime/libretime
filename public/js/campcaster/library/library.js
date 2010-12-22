@@ -22,6 +22,7 @@ function setLibraryContents(data){
 }
 
 function setUpLibrary() {
+
 	$("#library_display tr:first-child span.title").data({'ob': 'dc:title', 'order' : 'asc'});
 	$("#library_display tr:first-child span.artist").data({'ob': 'dc:creator', 'order' : 'desc'});
 	$("#library_display tr:first-child span.album").data({'ob': 'dc:source', 'order' : 'asc'});
@@ -33,11 +34,6 @@ function setUpLibrary() {
 			ob = $(this).data('ob'),
 			order = $(this).data('order');
 
-		//append orderby category to url.
-		url = url + "/ob/" + ob;
-		//append asc or desc order.
-		url = url + "/order/" + order;
-
 		//toggle order for next click.
 		if(order === 'asc') {
 			$(this).data('order', 'desc');
@@ -46,7 +42,7 @@ function setUpLibrary() {
 			$(this).data('order', 'asc');
 		}
 
-		$.post(url, setLibraryContents);
+		$.post(url, {ob: ob, order: order}, setLibraryContents);
 	});
 
 	$("#library_display tr:not(:first-child)")

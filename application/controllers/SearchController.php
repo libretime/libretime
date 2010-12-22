@@ -4,6 +4,7 @@ class SearchController extends Zend_Controller_Action
 {
 
 	protected $form;
+	protected $search_sess = null;
 
     public function init()
     {
@@ -18,6 +19,7 @@ class SearchController extends Zend_Controller_Action
 					->initContext();
 
 		$this->form = new Application_Form_AdvancedSearch();
+		$this->search_sess = new Zend_Session_Namespace("search");
     }
 
     public function indexAction()
@@ -46,6 +48,10 @@ class SearchController extends Zend_Controller_Action
 
 		// Form has not been submitted - displayed using layouts
 		if (!$request->isPost()) {
+
+			unset($this->search_sess->md);
+			unset($this->search_sess->order);
+
 			$sub = new Application_Form_AdvancedSearchRow(1);
 			$form->addSubForm($sub, 'row_1');
 			$form->getSubForm('row_1')->removeDecorator('DtDdWrapper');
@@ -62,11 +68,12 @@ class SearchController extends Zend_Controller_Action
 			return;
 		}
 
-		// form was submitted, send back strings to json response.
-		//$this->view->form = $form->__toString();
+		// form was submitted, send back strings to json response.	
+		$info = $form->getValues();
+		$this->search_sess->md = $info;
+		$order = isset($this->search_sess->order) ? $this->search_sess->order : NULL;
 
-		$info = $form->getValues();	
-		$this->view->files = StoredFile::searchFiles($info);
+		$this->view->files = StoredFile::searchFiles($info, $order);
 		$this->view->results = $this->view->render('library/update.phtml');
 		unset($this->view->files);
     }

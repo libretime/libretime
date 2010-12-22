@@ -4,6 +4,7 @@ class LibraryController extends Zend_Controller_Action
 {
 
     protected $pl_sess = null;
+	protected $search_sess = null;
 
     public function init()
     {
@@ -20,6 +21,7 @@ class LibraryController extends Zend_Controller_Action
                     ->initContext();
 
 		$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
+		$this->search_sess = new Zend_Session_Namespace("search");
     }
 
     public function indexAction()
@@ -27,6 +29,9 @@ class LibraryController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/campcaster/onready/library.js','text/javascript');
 	
 		$this->_helper->layout->setLayout('library');
+
+		unset($this->search_sess->md);
+		unset($this->search_sess->order);
 
 		$this->_helper->actionStack('context-menu', 'library');
 		$this->_helper->actionStack('contents', 'library');
@@ -82,14 +87,17 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
-		$this->_helper->viewRenderer->setResponseSegment('library'); 
-
 		$this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
 
-        $query["category"] = $this->_getParam('ob', "dc:creator");
-		$query["order"] = $this->_getParam('order', "asc");
-	
-		$this->view->files = StoredFile::getFiles($query);
+		$this->_helper->viewRenderer->setResponseSegment('library'); 
+
+        $order["category"] = $this->_getParam('ob', "dc:creator");
+		$order["order"] = $this->_getParam('order', "asc");
+
+		$this->search_sess->order = $order;
+		$md = isset($this->search_sess->md) ? $this->search_sess->md : array();
+
+		$this->view->files = StoredFile::searchFiles($md, $order);
     }
 
     public function searchAction()
