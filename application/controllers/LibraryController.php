@@ -24,16 +24,23 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
-
-		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
 	
+		$this->_helper->layout->setLayout('library');
+
 		$this->_helper->actionStack('context-menu', 'library');
+		$this->_helper->actionStack('contents', 'library');
+		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
     public function contextMenuAction()
     {
+		$this->_helper->viewRenderer->setResponseSegment('library');
+
+		$this->view->headScript()->appendFile('/js/campcaster/library/context-menu.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
+		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
+
         $pl_sess = $this->pl_sess;
 		$contextMenu;
 
@@ -43,8 +50,6 @@ class LibraryController extends Zend_Controller_Action
 			$contextMenu[] = array('action' => '/Playlist/add-item', 'text' => 'Add To Playlist');
 
 		$this->view->menu = $contextMenu;
-
-		$this->_helper->actionStack('contents', 'library');
     }
 
     public function deleteAction()
@@ -77,12 +82,12 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
+		$this->_helper->viewRenderer->setResponseSegment('library'); 
+
         $query["category"] = $this->_getParam('ob', "dc:creator");
 		$query["order"] = $this->_getParam('order', "asc");
 	
 		$this->view->files = StoredFile::getFiles($query);
-
-		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
     public function searchAction()

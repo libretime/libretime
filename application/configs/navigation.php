@@ -65,7 +65,7 @@ $pages = array(
 		        'label'      => 'Search',
 		        'module'     => 'default',
 		        'controller' => 'Search',
-		        'action'     => 'display',
+		        'action'     => 'index',
 				'resource'	=>	'search'
 		    )
 		)

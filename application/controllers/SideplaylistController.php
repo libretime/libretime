@@ -17,7 +17,8 @@ class SideplaylistController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->_helper->layout->setLayout('sidebar');
+		$this->view->headScript()->appendFile('/js/campcaster/library/spl.js','text/javascript');
+
 		$this->_helper->viewRenderer->setResponseSegment('spl'); 
 
         $pl_sess = $this->pl_sess;

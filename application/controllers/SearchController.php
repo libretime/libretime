@@ -14,6 +14,7 @@ class SearchController extends Zend_Controller_Action
 
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('newfield', 'html')
+					->addActionContext('display', 'json')
 					->initContext();
 
 		$this->form = new Application_Form_AdvancedSearch();
@@ -21,7 +22,12 @@ class SearchController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
+		$this->_helper->layout->setLayout('search');
+
+		$this->_helper->actionStack('context-menu', 'library');
+		$this->_helper->actionStack('display', 'search');
+		$this->_helper->actionStack('contents', 'library');
+		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
     public function displayAction()
@@ -29,11 +35,15 @@ class SearchController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/campcaster/library/advancedsearch.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/library_search.css');
 
+		$this->_helper->viewRenderer->setResponseSegment('search'); 
+
+		$request = $this->getRequest();
+
 		$this->form = new Application_Form_AdvancedSearch();
 		$form = $this->form;
 
-		// Form has not been submitted - pass to view and return
-		if (!$this->getRequest()->isPost()) {
+		// Form has not been submitted - displayed using layouts
+		if (!$request->isPost()) {
 			$sub = new Application_Form_AdvancedSearchRow(1);
 			$form->addSubForm($sub, 'row_1');
 			$form->getSubForm('row_1')->removeDecorator('DtDdWrapper');
@@ -43,18 +53,20 @@ class SearchController extends Zend_Controller_Action
 		}
 
 		// Form has been submitted - run data through preValidation()
-		$form->preValidation($_POST);
+		$form->preValidation($request->getPost());
 		
-		if (!$form->isValid($_POST)) {
-			$this->view->form = $form;
+		if (!$form->isValid($request->getPost())) {
+			$this->view->form = $form->__toString();
 			return;
 		}
 
-		// Form is valid
-		$this->view->form = $form;
+		// form was submitted, send back strings to json response.
+		//$this->view->form = $form->__toString();
 
-		$info = $form->getValues();		
+		$info = $form->getValues();	
 		$this->view->files = StoredFile::searchFiles($info);
+		$this->view->results = $this->view->render('library/update.phtml');
+		unset($this->view->files);
     }
 
     public function newfieldAction()

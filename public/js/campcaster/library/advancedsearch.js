@@ -28,15 +28,49 @@ function ajaxAddField() {
 	});
 }
 
+function searchLibrary() {
+	var url, data;
+
+	url = '/Search/display/format/json';
+	data = $("form").serializeArray();
+
+	$.post(url, data, function(json){
+		
+		if(json.form) {
+			$("#search")
+				.empty()
+				.append(json.form);
+		}
+		
+
+		if(json.results) {
+			$("#library_display tr:not(:first-child)").remove();
+			$("#library_display tbody").append(json.results);
+
+			$("#library_display tr:not(:first-child)")
+				.contextMenu({menu: 'myMenu'}, contextMenu)
+				.draggable({ 
+						helper: 'clone' 
+				});
+		}
+
+	});
+}
+
 $(document).ready(function() {
  
 	$("#search_add").click(ajaxAddField);
-	$("#search_submit").click(function(){
-		$("form").submit();
-	});
+	$("#search_submit").click(searchLibrary);
 	
 	$('[id^="fieldset-row_"]').each(function(i, el){
 		addRemove(el);
 	});
 
+	$("#library_display tr:not(:first-child)")
+		.contextMenu({menu: 'myMenu'}, contextMenu)
+		.draggable({ 
+				helper: 'clone' 
+		});
+
+	setUpSPL();
 });
