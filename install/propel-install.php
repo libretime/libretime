@@ -15,9 +15,7 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-echo "**********************\n";
-echo "* Campcaster Install *\n";
-echo "**********************\n";
+echo "******************************* Install Begin ********************************\n";
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/../application/models/GreenBox.php');
@@ -56,23 +54,24 @@ campcaster_db_connect(true);
 // Install postgres scripting language
 $langIsInstalled = $CC_DBC->GetOne('SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'');
 if ($langIsInstalled == '0') {
-  echo "   * Installing Postgres scripting language...\n";
+  echo " * Installing Postgres scripting language\n";
   $sql = "CREATE LANGUAGE 'plpgsql'";
   camp_install_query($sql, false);
 } else {
-  echo "   * Postgres scripting language already installed\n";
+  echo " * Postgres scripting language already installed\n";
 }
 
+echo " * Creating database tables\n";
 // Put Propel sql files in Database
-$command = "../library/propel/generator/bin/propel-gen ../build/ insert-sql";
-echo $command."\n";
+$command = __DIR__."/../library/propel/generator/bin/propel-gen ../build/ insert-sql";
+//echo $command."\n";
 @exec($command, $output, $results);
 
 
 //------------------------------------------------------------------------
 // Install default data
 //------------------------------------------------------------------------
-echo " *** Inserting Default Data ***\n";
+echo " *** Inserting Default Users ***\n";
 
 // Add the "Station Preferences" group
 if (!empty($CC_CONFIG['StationPrefsGr'])) {
@@ -87,20 +86,20 @@ if (!empty($CC_CONFIG['StationPrefsGr'])) {
 }
 
 // Add the root user if it doesnt exist yet.
-$rootUid = Subjects::GetSubjId('root');
-if (!$rootUid) {
-    echo "   * Creating user 'root'...";
-    $rootUid = BasicStor::addSubj("root", $CC_CONFIG['tmpRootPass']);
+//$rootUid = Subjects::GetSubjId('root');
+//if (!$rootUid) {
+//    echo "   * Creating user 'root'...";
+//    $rootUid = BasicStor::addSubj("root", $CC_CONFIG['tmpRootPass']);
 
     // Add root user to the admin group
     //$r = Subjects::AddSubjectToGroup('root', $CC_CONFIG['AdminsGr']);
     //if (PEAR::isError($r)) {
     //return $r;
     //}
-    echo "done.\n";
-} else {
-    echo "   * Skipping: user already exists: 'root'\n";
-}
+//    echo "done.\n";
+//} else {
+//    echo "   * Skipping: user already exists: 'root'\n";
+//}
 
 // Create the user named 'scheduler'.
 if (!Subjects::GetSubjId('scheduler')) {
@@ -201,8 +200,9 @@ install_setDirPermissions($CC_CONFIG["storageDir"]);
 //$cron->closeCrontab();
 //echo "   Done.\n";
 
-echo "*******************************\n";
-echo "* Campcaster Install Complete *\n";
-echo "*******************************\n";
+echo " * Importing sample audio clips \n";
+$command = __DIR__."/../utils/campcaster-import --copy ../audio_samples/ > /dev/null";
+@exec($command, $output, $results);
+echo "****************************** Install Complete ******************************\n";
 
 ?>
