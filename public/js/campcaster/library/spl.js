@@ -68,11 +68,24 @@ function moveSPLItem(event, ui) {
 	$.post(url, setSPLContent);
 }
 
+function closeSPL() {
+	var url;
+
+	url = '/Playlist/close/format/json/view/spl';
+
+	$.post(url, function(json){
+		$("#side_playlist")
+			.empty()
+			.append(json.html);
+	});
+}
+
 function setUpSPL() {
 
 	$("#spl_sortable").sortable();
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
+	$("#spl_close").click(closeSPL);
 
 	$("#spl_sortable").droppable();
 	$("#spl_sortable" ).bind( "drop", addSPLItem);

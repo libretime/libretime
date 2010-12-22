@@ -415,8 +415,6 @@ class Playlist {
     /**
      * Lock playlist for edit
      *
-     * @param string $sessid
-     * 		session id
      * @param int $subjid
      * 		local subject (user) id
      * @param boolean $val
@@ -439,8 +437,6 @@ class Playlist {
     /**
      * Unlock playlist
      *
-     * @param sessId
-     * 		reference to GreenBox object
      * @return boolean
      * 		previous state or error object
      */

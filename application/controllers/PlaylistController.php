@@ -7,7 +7,7 @@ class PlaylistController extends Zend_Controller_Action
 
     public function init()
     {
-		if(!Zend_Auth::getInstance()->hasIdentity())
+        if(!Zend_Auth::getInstance()->hasIdentity())
         {
             $this->_redirect('login/index');
         }
@@ -18,19 +18,49 @@ class PlaylistController extends Zend_Controller_Action
 					->addActionContext('set-fade', 'json')
 					->addActionContext('set-cue', 'json')
 					->addActionContext('move-item', 'json')
+					->addActionContext('close', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
     }
 
+	private function getPlaylist()
+	{
+		$pl_sess = $this->pl_sess;
+                        
+		if(isset($pl_sess->id)) {
+
+			$pl = Playlist::Recall($pl_sess->id);
+			if($pl === FALSE) {
+				unset($pl_sess->id);
+				$this->_helper->redirector('index');
+			}
+
+			return $pl;
+		}
+		
+		$this->_helper->redirector('index');
+	}
+
+	private function closePlaylist($pl)
+    {
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $res = $pl->unlock($userInfo->id);
+
+		$pl_sess = $this->pl_sess;
+		unset($pl_sess->id);
+
+        return $res;
+    }
+
     public function indexAction()
     {
-    
+        
     }
 
     public function newAction()
     {
-		$pl_sess = $this->pl_sess;
+        $pl_sess = $this->pl_sess;
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
         $pl = new Playlist();
@@ -46,8 +76,7 @@ class PlaylistController extends Zend_Controller_Action
 
     public function metadataAction()
     {
-        $pl_sess = $this->pl_sess;
-                                                        
+                                                         
         $request = $this->getRequest();
         $form = new Application_Form_PlaylistMetadata();
  
@@ -56,7 +85,7 @@ class PlaylistController extends Zend_Controller_Action
     
 				$formdata = $form->getValues();
 
-				$pl = Playlist::Recall($pl_sess->id);
+				$pl = $this->getPlaylist();
 				$pl->setPLMetaData(UI_MDATA_KEY_TITLE, $formdata["title"]);
 				
 				if(isset($formdata["description"]))
@@ -71,172 +100,122 @@ class PlaylistController extends Zend_Controller_Action
 
     public function editAction()
     {
-        $this->view->headScript()->appendFile('/js/campcaster/playlist/playlist.js','text/javascript');
-                                
-        $pl_sess = $this->pl_sess;
-                        
-		if(isset($pl_sess->id)) {
+        $this->view->headScript()->appendFile('/js/campcaster/playlist/playlist.js','text/javascript');                             
 
-			$pl = Playlist::Recall($pl_sess->id);
-			if($pl === FALSE) {
-				unset($pl_sess->id);
-				$this->_helper->redirector('index');
-			}
-
-			$this->view->pl = $pl;
-			$this->view->playlistcontents = $pl->getContents();
-			return;
-		}
+		$pl = $this->getPlaylist();
 		
-		$this->_helper->redirector('index');       		
+		$this->view->pl = $pl;
+		$this->view->playlistcontents = $pl->getContents();	
     }
 
     public function addItemAction()
-    {
-        $pl_sess = $this->pl_sess;        
+    {    
 		$id = $this->_getParam('id');
 
 		if (!is_null($id)) {
-			if(isset($pl_sess->id)) {
-				$pl = Playlist::Recall($pl_sess->id);
-				$res = $pl->addAudioClip($id);
+			
+			$pl = $this->getPlaylist();
+			$res = $pl->addAudioClip($id);
 
-				if (PEAR::isError($res)) {
-					$this->view->message = $res->getMessage();
-				}
-
-				$this->view->pl = $pl;
-				$this->view->html = $this->view->render('sideplaylist/update.phtml');
-				$this->view->name = $pl->getName();
-				$this->view->length = $pl->getLength();
-
-				unset($this->view->pl);
-				return;
+			if (PEAR::isError($res)) {
+				$this->view->message = $res->getMessage();
 			}
-			$this->view->message =  "no open playlist";
+
+			$this->view->pl = $pl;
+			$this->view->html = $this->view->render('sideplaylist/update.phtml');
+			$this->view->name = $pl->getName();
+			$this->view->length = $pl->getLength();
+
+			unset($this->view->pl);
+			return;
 		}
 		$this->view->message =  "a file is not chosen";
     }
 
     public function moveItemAction()
     {
-        $pl_sess = $this->pl_sess;
-                                                        
-		if(isset($pl_sess->id)) {
+		$oldPos = $this->_getParam('oldPos');
+		$newPos = $this->_getParam('newPos');
 
-			$oldPos = $this->_getParam('oldPos');
-			$newPos = $this->_getParam('newPos');
+		$pl = $this->getPlaylist();
 
-			$pl = Playlist::Recall($pl_sess->id);
+		$pl->moveAudioClip($oldPos, $newPos);
 
-			$pl->moveAudioClip($oldPos, $newPos);
-
-			$this->view->pl = $pl;
-			
-			if($display === 'pl') {
-				$this->view->html = $this->view->render('playlist/update.phtml');
-			} 
-			else {
-				$this->view->html = $this->view->render('sideplaylist/update.phtml');
-			}
-			$this->view->name = $pl->getName();
-			$this->view->length = $pl->getLength();
-
-			unset($this->view->pl);
-			return;
-		}
+		$this->view->pl = $pl;
 		
-		$this->_helper->redirector('index');      		
+		if($display === 'pl') {
+			$this->view->html = $this->view->render('playlist/update.phtml');
+		} 
+		else {
+			$this->view->html = $this->view->render('sideplaylist/update.phtml');
+		}
+		$this->view->name = $pl->getName();
+		$this->view->length = $pl->getLength();
+
+		unset($this->view->pl);
     }
 
     public function deleteItemAction()
     {
-        $pl_sess = $this->pl_sess;
-                                                        
-		if(isset($pl_sess->id)) {        
+		$positions = $this->_getParam('pos', array());
+		$display = $this->_getParam('view');
 
-			$pl = Playlist::Recall($pl_sess->id);
-			if($pl === FALSE) {
-				unset($pl_sess->id);
-				$this->_helper->redirector('index');
-			}
+		if (!is_array($positions))
+	        $positions = array($positions);
 
-			$positions = $this->_getParam('pos', array());
-			$display = $this->_getParam('view');
+	    //so the automatic updating of playlist positioning doesn't affect removal.
+	    sort($positions);
+	    $positions = array_reverse($positions);
 
-			if (!is_array($positions))
-		        $positions = array($positions);
+		$pl = $this->getPlaylist();
 
-		    //so the automatic updating of playlist positioning doesn't affect removal.
-		    sort($positions);
-		    $positions = array_reverse($positions);
+	    foreach ($positions as $pos) {
+	    	$pl->delAudioClip($pos);        
+	    }
 
-		    foreach ($positions as $pos) {
-		    	$pl->delAudioClip($pos);        
-		    }
-
-			$this->view->pl = $pl;
-			
-			if($display === 'pl') {
-				$this->view->html = $this->view->render('playlist/update.phtml');
-			} 
-			else {
-				$this->view->html = $this->view->render('sideplaylist/update.phtml');
-			}
-			$this->view->name = $pl->getName();
-			$this->view->length = $pl->getLength();
-
-			unset($this->view->pl);
-			return;
-		}
+		$this->view->pl = $pl;
 		
-		$this->_helper->redirector('index');
+		if($display === 'pl') {
+			$this->view->html = $this->view->render('playlist/update.phtml');
+		} 
+		else {
+			$this->view->html = $this->view->render('sideplaylist/update.phtml');
+		}
+		$this->view->name = $pl->getName();
+		$this->view->length = $pl->getLength();
+
+		unset($this->view->pl);		
     }
 
     public function setCueAction()
     {
-        $pl_sess = $this->pl_sess;
-                                                        
-		if(isset($pl_sess->id)) {
+		$pos = $this->_getParam('pos');
+		$cueIn = $this->_getParam('cueIn', null);
+		$cueOut = $this->_getParam('cueOut', null);
 
-			$pos = $this->_getParam('pos');
-			$cueIn = $this->_getParam('cueIn', null);
-			$cueOut = $this->_getParam('cueOut', null);
+		$pl = $this->getPlaylist();
+		$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
 
-			$pl = Playlist::Recall($pl_sess->id);
-
-			$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
-
-			die(json_encode($response));
-		}
-
-		$this->_helper->redirector('index');
+		die(json_encode($response));
     }
 
     public function setFadeAction()
     {
-        $pl_sess = $this->pl_sess;
-                                                        
-		if(isset($pl_sess->id)) {
+		$pos = $this->_getParam('pos');
+		$fadeIn = $this->_getParam('fadeIn', null);
+		$fadeOut = $this->_getParam('fadeOut', null);
 
-			$pos = $this->_getParam('pos');
-			$fadeIn = $this->_getParam('fadeIn', null);
-			$fadeOut = $this->_getParam('fadeOut', null);
+		$pl = $this->getPlaylist();
+		
+		$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
 
-			$pl = Playlist::Recall($pl_sess->id);
-			
-			$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
-
-			die(json_encode($response));
-		}
-
-		$this->_helper->redirector('index');
+		die(json_encode($response));
     }
 
     public function deleteAction()
     {
         $id = $this->_getParam('id', null);
-        
+                
 		if (!is_null($id)) {
 
 			$this->closePlaylist();
@@ -245,30 +224,33 @@ class PlaylistController extends Zend_Controller_Action
     }
 
     public function deleteActiveAction()
-    {
-        $pl_sess = $this->pl_sess;
-                                                        
-		if(isset($pl_sess->id)) {
+    {   
+		$pl = $this->getPlaylist();
+		$this->closePlaylist($pl);
+		
+		Playlist::Delete($pl_sess->id);
 
-			$pl = Playlist::Recall($pl_sess->id);
-			$this->closePlaylist($pl);
-			
-			Playlist::Delete($pl_sess->id);
-
-			unset($pl_sess->id);
-		}
-
-		$this->_helper->redirector('index');
+		unset($pl_sess->id);
     }
 
-    public function closePlaylist($pl)
+    public function closeAction()
     {
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $res = $pl->unlock($userInfo->id);
-        return $res;
+		$display = $this->_getParam('view');
+
+		$pl = $this->getPlaylist();
+		$this->closePlaylist($pl);
+		
+		if($display === 'spl') {
+			$this->view->html = $this->view->render('sideplaylist/index.phtml');
+			return;
+		} 
+
+		$this->_helper->redirector('index');		
     }
 
 }
+
+
 
 
 

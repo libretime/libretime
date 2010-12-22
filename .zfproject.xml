@@ -27,6 +27,7 @@
           <actionMethod actionName="setFade"/>
           <actionMethod actionName="delete"/>
           <actionMethod actionName="deleteActive"/>
+          <actionMethod actionName="close"/>
         </controllerFile>
         <controllerFile controllerName="Library">
           <actionMethod actionName="index"/>
@@ -224,6 +225,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Sideplaylist">
             <viewScriptFile forActionName="addItem"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Playlist">
+            <viewScriptFile forActionName="close"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
