@@ -9,6 +9,8 @@ function setSPLContent(json) {
 		return;		
 	}
 
+	$('input[name="all"]').attr("checked", false);
+
 	$('#spl_name').empty()
 		.append(json.name);
 	$('#spl_length').empty()

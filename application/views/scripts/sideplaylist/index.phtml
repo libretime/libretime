@@ -1,6 +1,14 @@
 <form name="SPL">
 	<div>
-		<span id="spl_new">New</span>
+		<span id="spl_new">
+		<a href="<?php echo $this->url(
+			array(
+				'controller' => 'Playlist',
+				'action'     => 'new'
+			),
+			'default',
+			true) ?>">New</a>
+		</span>
 		<span id="spl_delete">Delete</span>
 	<div>
 	<div id="spl_name"><?php if (isset($this->pl)) { echo $this->pl->getName(); } ?></div>
