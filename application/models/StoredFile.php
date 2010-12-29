@@ -1740,7 +1740,43 @@ class StoredFile {
 			"6" => "!=",
 		);
 
-        $sql = "SELECT * FROM ".$CC_CONFIG['filesTable'];
+        //$sql = "SELECT * FROM ".$CC_CONFIG['filesTable'];
+
+
+		$plSelect = "SELECT ";
+        $fileSelect = "SELECT ";
+        $_SESSION["br"] = "";
+        foreach ($g_metadata_xml_to_db_mapping as $key => $val){
+            $_SESSION["br"] .= "key: ".$key." value:".$val.", ";
+            if($key === "dc:title"){
+                $plSelect .= "name AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }
+            else if ($key === "dc:creator"){
+                $plSelect .= "creator AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }
+            else if ($key === "dcterms:extent"){
+                $plSelect .= "length, ";
+                $fileSelect .= "length, ";
+            }
+            else if ($key === "dc:description"){
+                $plSelect .= "text(description) AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }
+            else {
+                $plSelect .= "NULL AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }
+        }
+
+        $sql = "SELECT * FROM ((".$plSelect."PL.id, 'playlist' AS ftype
+                FROM ".$CC_CONFIG["playListTable"]." AS PL
+				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id)
+
+                UNION
+
+                (".$fileSelect."id, ftype FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
 
 		$cond = array();
 		foreach(array_keys($md) as $key) {

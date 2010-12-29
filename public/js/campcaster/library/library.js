@@ -1,24 +1,34 @@
-function deleteItem(json){	
-	var id;
+function getId() { 
+	var tr_id =  $(this.triggerElement).attr("id");
+	tr_id = tr_id.split("_");
 
-	if(json.message) {  
-		alert(j.message);	
-		return;	
-	}
+	return tr_id[1];
+}
 
-	id = this.url.split('/').pop();
-	$("#library_display tr#" +id).remove();
+function getType() { 
+	var tr_id =  $(this.triggerElement).attr("id");
+	tr_id = tr_id.split("_");
+
+	return tr_id[0];
 }
 
 function setLibraryContents(data){
 	$("#library_display tr:not(:first-child)").remove();
 	$("#library_display").append(data);
 
-	$("#library_display tr:not(:first-child)")
-		.contextMenu({menu: 'myMenu'}, contextMenu)
+	/*
+	$('#library_display tr[id ^= "au"]')
+		.contextMenu({menu: 'audioMenu'}, contextMenu)
 		.draggable({ 
 				helper: 'clone' 
 		});
+
+	$('#library_display tr[id ^= "pl"]')
+		.contextMenu({menu: 'plMenu'}, contextMenu)
+		.draggable({ 
+				helper: 'clone' 
+		});
+	*/
 }
 
 function setUpLibrary() {
@@ -45,9 +55,27 @@ function setUpLibrary() {
 		$.post(url, {ob: ob, order: order}, setLibraryContents);
 	});
 
-	$("#library_display tr:not(:first-child)")
-		.contextMenu({menu: 'myMenu'}, contextMenu)
+	/*
+	$('#library_display tr[id ^= "au"]')
+		.contextMenu({menu: 'audioMenu'}, contextMenu)
 		.draggable({ 
 				helper: 'clone' 
 		});
+
+	$('#library_display tr[id ^= "pl"]')
+		.contextMenu({menu: 'plMenu'}, contextMenu)
+		
+	*/
+
+	$('#library_display tr:not(:first-child)')
+		.draggable({ 
+				helper: 'clone' 
+		});
+
+	$('#library_display tr:not(:first-child)')
+		.jjmenu("rightClick", 
+			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],  
+			{id: getId, type: getType}, 
+			{xposition: "mouse", yposition: "mouse"});
+
 }

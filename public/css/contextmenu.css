@@ -1,0 +1,33 @@
+div.jjmenu {
+	
+	position:absolute;
+	background:#fffef0;
+	border-bottom:2px solid gray;
+	border-right:1px solid gray;
+	padding:0px;
+}
+
+div.jj_menu_item {
+	color:black;
+	border:1px solid gray;
+	border-bottom:none;
+	background:url(menuitem.gif) no-repeat black;
+	cursor:pointer;
+}
+
+div.jj_menu_item span {
+	display:block;
+	padding:4px;
+}
+
+div.jj_menu_item_more span {
+	background:url(more.gif)  right no-repeat;	
+}
+div.jj_menu_item_more span {
+	padding-right:20px;
+}
+
+div.jj_menu_item_hover {
+	background:#e4e4e4;
+	
+}

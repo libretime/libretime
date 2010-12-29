@@ -18,6 +18,7 @@ class LibraryController extends Zend_Controller_Action
 					->addActionContext('plupload', 'html')
 					->addActionContext('upload', 'json')
 					->addActionContext('delete', 'json')
+					->addActionContext('context-menu', 'json')
                     ->initContext();
 
 		$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -27,34 +28,46 @@ class LibraryController extends Zend_Controller_Action
     public function indexAction()
     {
 		$this->view->headScript()->appendFile('/js/campcaster/onready/library.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/campcaster/library/context-menu.js','text/javascript');
+		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 	
 		$this->_helper->layout->setLayout('library');
 
 		unset($this->search_sess->md);
 		unset($this->search_sess->order);
 
-		$this->_helper->actionStack('context-menu', 'library');
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
     public function contextMenuAction()
     {
-		$this->_helper->viewRenderer->setResponseSegment('library');
+		$id = $this->_getParam('id');
+		$type = $this->_getParam('type');
 
-		$this->view->headScript()->appendFile('/js/campcaster/library/context-menu.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
-		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
+		$callback = 'window["contextMenu"]';
+		$params = '/format/json/id/#id#/type/#type#';
 
         $pl_sess = $this->pl_sess;
-		$contextMenu;
 
-		$contextMenu[] = array('action' => '/Library/delete', 'text' => 'Delete');
-  
-		if(isset($pl_sess->id))
-			$contextMenu[] = array('action' => '/Playlist/add-item', 'text' => 'Add To Playlist');
+		if($type === "au") {
 
-		$this->view->menu = $contextMenu;
+			$menu[] = array('action' => '/Library/delete'.$params, 'title' => 'Delete');
+	  
+			if(isset($pl_sess->id))
+				$menu[] = array('action' => '/Playlist/add-item'.$params, 'title' => 'Add To Playlist');
+
+		}
+		else if($type === "pl") {
+
+			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/delete'.$params, 'callback' => $callback), 'title' => 'Delete');
+
+		}
+
+		//returns format jjmenu is looking for.
+		die(json_encode($menu));
+
     }
 
     public function deleteAction()
@@ -69,7 +82,7 @@ class LibraryController extends Zend_Controller_Action
 				return;
 			}
 			else if(is_null($file)) {
-				$this->view->message = "file doesn\'t exist";
+				$this->view->message = "file doesn't exist";
 				return;
 			}	
 
@@ -81,8 +94,6 @@ class LibraryController extends Zend_Controller_Action
 			}
 		}
 
-		$this->view->message = "file doesn\'t exist";
-		
     }
 
     public function contentsAction()

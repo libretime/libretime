@@ -20,6 +20,7 @@ class PlaylistController extends Zend_Controller_Action
 					->addActionContext('move-item', 'json')
 					->addActionContext('close', 'json')
 					->addActionContext('delete-active', 'json')
+					->addActionContext('delete', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -216,11 +217,17 @@ class PlaylistController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = $this->_getParam('id', null);
+		$pl = Playlist::Recall($id);
                 
-		if (!is_null($id)) {
+		if ($pl !== FALSE) {
 
-			$this->closePlaylist();
 			Playlist::Delete($id);
+
+			$pl_sess = $this->pl_sess;
+
+			if($pl_sess->id === $id){
+				unset($pl_sess->id);
+			}
 		}
     }
 
