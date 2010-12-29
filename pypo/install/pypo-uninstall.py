@@ -23,9 +23,6 @@ def remove_user(username):
     
     os.system("deluser --remove-home " + username + " > /dev/null")
     
-    #pypo group appears to be deleted when removing user.
-    #os.system("delgroup " + username)
-
 try:
     os.system("python ./pypo-stop.py")
     

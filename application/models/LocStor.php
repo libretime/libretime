@@ -306,7 +306,7 @@ class LocStor extends BasicStor {
     {
         //        $res = $this->existsAudioClip($sessid, $gunid);
         //        if(PEAR::isError($res)) return $res;
-        $media = StoredFile::RecallByGunid($gunid)
+        $media = StoredFile::RecallByGunid($gunid);
         $id = $media->getGunid();
         if (is_null($id)) {
             return PEAR::raiseError(

@@ -71,7 +71,7 @@ $pages = array(
 		)
 	),
 	array(
-		'label'      => 'Test',
+		'label'      => 'Now Playing',
 		'module'     => 'default',
 		'controller' => 'Schedule',
 		'action'     => 'get-scheduler-time'

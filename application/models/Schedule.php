@@ -442,60 +442,41 @@ class Schedule {
         }
 
         $timeNow = Schedule::GetSchedulerTime();
-        $currentSong = Schedule::getCurrentlyPlaying();
-        return array("schedulerTime"=>$timeNow,"previous"=>Schedule::getPreviousItems($timeNow), 
-            "current"=>Schedule::getCurrentlyPlaying($timeNow), 
-            "next"=>Schedule::getNextItems($timeNow));
+        return array("schedulerTime"=>$timeNow,"previous"=>Schedule::GetPreviousItems($timeNow), 
+            "current"=>Schedule::GetCurrentlyPlaying($timeNow), 
+            "next"=>Schedule::GetNextItems($timeNow));
     }
 
     private static function GetPreviousItems($timeNow, $prevCount = 1){
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE (starts < TIMESTAMP '$timeNow')"
-        ." ORDER BY id"
+        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable], $CC_CONFIG[filesTable]"
+        ." WHERE ($CC_CONFIG[scheduleTable].ends < TIMESTAMP '$timeNow')"
+        ." AND ($CC_CONFIG[scheduleTable].file_id = $CC_CONFIG[filesTable].id)"
+        ." ORDER BY $CC_CONFIG[scheduleTable].id"
         ." LIMIT $prevCount";
         $rows = $CC_DBC->GetAll($sql);
-        foreach ($rows as &$row) {
-            $row["count"] = "1";
-            $row["playlistId"] = $row["playlist_id"];
-            $row["start"] = $row["starts"];
-            $row["end"] = $row["ends"];
-            $row["id"] = $row["group_id"];
-        }
         return $rows;
     }
 
     private static function GetCurrentlyPlaying($timeNow){
         global $CC_CONFIG, $CC_DBC;
         
-        $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE (starts < TIMESTAMP '$timeNow') "
-        ." AND (ends > TIMESTAMP '$timeNow')";
+        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable], $CC_CONFIG[filesTable]"
+        ." WHERE ($CC_CONFIG[scheduleTable].starts < TIMESTAMP '$timeNow')"
+        ." AND ($CC_CONFIG[scheduleTable].ends > TIMESTAMP '$timeNow')"
+        ." AND ($CC_CONFIG[scheduleTable].file_id = $CC_CONFIG[filesTable].id)";
         $rows = $CC_DBC->GetAll($sql);
-        foreach ($rows as &$row) {
-            $row["count"] = "1";
-            $row["playlistId"] = $row["playlist_id"];
-            $row["start"] = $row["starts"];
-            $row["end"] = $row["ends"];
-            $row["id"] = $row["group_id"];
-        }
         return $rows;
     }
 
     private static function GetNextItems($timeNow, $nextCount = 1) {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE (starts > TIMESTAMP '$timeNow')"
-        ." ORDER BY id"
+        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable], $CC_CONFIG[filesTable]"
+        ." WHERE ($CC_CONFIG[scheduleTable].starts > TIMESTAMP '$timeNow')"
+        ." AND ($CC_CONFIG[scheduleTable].file_id = $CC_CONFIG[filesTable].id)"
+        ." ORDER BY $CC_CONFIG[scheduleTable].id"
         ." LIMIT $nextCount";
         $rows = $CC_DBC->GetAll($sql);
-        foreach ($rows as &$row) {
-            $row["count"] = "1";
-            $row["playlistId"] = $row["playlist_id"];
-            $row["start"] = $row["starts"];
-            $row["end"] = $row["ends"];
-            $row["id"] = $row["group_id"];
-        }
         return $rows;
     }
 
