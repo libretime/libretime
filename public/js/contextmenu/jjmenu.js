@@ -285,6 +285,8 @@
 			/* do action on menu item */
 			function doAction(act) {
 			
+				$("#jjmenu_main").hide();
+
 				if (act) {
 					
 					switch (act.type) {
@@ -302,7 +304,6 @@
 						
 						case "ajax":
 							$.getJSON(uReplace(act.url), function(data) {
-							
 
 								var cb = eval(act.callback);
 								if (typeof(cb) == "function") {

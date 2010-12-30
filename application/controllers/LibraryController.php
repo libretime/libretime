@@ -29,7 +29,6 @@ class LibraryController extends Zend_Controller_Action
     {
 		$this->view->headScript()->appendFile('/js/campcaster/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/campcaster/library/context-menu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 	
 		$this->_helper->layout->setLayout('library');
@@ -46,22 +45,33 @@ class LibraryController extends Zend_Controller_Action
 		$id = $this->_getParam('id');
 		$type = $this->_getParam('type');
 
-		$callback = 'window["contextMenu"]';
 		$params = '/format/json/id/#id#/type/#type#';
 
         $pl_sess = $this->pl_sess;
 
 		if($type === "au") {
 
-			$menu[] = array('action' => '/Library/delete'.$params, 'title' => 'Delete');
+			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/delete'.$params, 'callback' => 'window["deleteAudioClip"]'), 
+							'title' => 'Delete');
 	  
-			if(isset($pl_sess->id))
-				$menu[] = array('action' => '/Playlist/add-item'.$params, 'title' => 'Add To Playlist');
+			if(isset($pl_sess->id)) {
+				$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/add-item'.$params, 'callback' => 'window["setSPLContent"]'), 
+							'title' => 'Add to Playlist');
+			}
 
 		}
 		else if($type === "pl") {
 
-			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/delete'.$params, 'callback' => $callback), 'title' => 'Delete');
+			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/delete'.$params, 'callback' => 'window["deletePlaylist"]'), 
+							'title' => 'Delete');
+
+			if(!isset($pl_sess->id) || $pl_sess->id !== $id) {
+				$menu[] = array('action' => 
+									array('type' => 'ajax', 
+									'url' => '/Playlist/edit/view/spl'.$params, 
+									'callback' => 'window["openDiffSPL"]'), 
+								'title' => 'Edit');
+			}
 
 		}
 
@@ -93,7 +103,8 @@ class LibraryController extends Zend_Controller_Action
 				return;
 			}
 		}
-
+		
+		$this->view->id = $id;
     }
 
     public function contentsAction()

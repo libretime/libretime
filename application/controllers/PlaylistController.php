@@ -19,6 +19,7 @@ class PlaylistController extends Zend_Controller_Action
 					->addActionContext('set-cue', 'json')
 					->addActionContext('move-item', 'json')
 					->addActionContext('close', 'json')
+					->addActionContext('edit', 'json')
 					->addActionContext('delete-active', 'json')
 					->addActionContext('delete', 'json')
                     ->initContext();
@@ -42,6 +43,28 @@ class PlaylistController extends Zend_Controller_Action
 		}
 		
 		$this->_helper->redirector('index');
+	}
+
+	private function changePlaylist($pl_id){
+		
+		$pl_sess = $this->pl_sess;
+
+		if(isset($pl_sess->id)) {
+
+			$pl = Playlist::Recall($pl_sess->id);
+			if($pl !== FALSE) {
+				$this->closePlaylist($pl);
+			}
+		}
+	
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$pl = Playlist::Recall($pl_id);
+		if($pl === FALSE) {
+			return FALSE;
+		}		
+		$pl->lock($userInfo->id);
+		$pl_sess->id = $pl_id;	
 	}
 
 	private function closePlaylist($pl)
@@ -68,10 +91,9 @@ class PlaylistController extends Zend_Controller_Action
         $pl = new Playlist();
         $pl_id = $pl->create("Test Zend Auth");
 		$pl->setPLMetaData('dc:creator', $userInfo->login);
-		$pl->lock($userInfo->id);
 
 		//set this playlist as active id.
-		$pl_sess->id = $pl_id;
+		$this->changePlaylist($pl_id);
 
 		$this->_helper->redirector('metadata');
     }
@@ -102,12 +124,22 @@ class PlaylistController extends Zend_Controller_Action
 
     public function editAction()
     {
-        $this->view->headScript()->appendFile('/js/campcaster/playlist/playlist.js','text/javascript');                             
+        $this->view->headScript()->appendFile('/js/campcaster/playlist/playlist.js','text/javascript'); 
 
+		$pl_id = $this->_getParam('id', null);
+		$display = $this->_getParam('view', null);
+		if(!is_null($pl_id)) {
+			$this->changePlaylist($pl_id);      
+		}
+		                      
 		$pl = $this->getPlaylist();
 		
 		$this->view->pl = $pl;
-		$this->view->playlistcontents = $pl->getContents();	
+
+		if($display === 'spl') {
+			$this->view->html = $this->view->render('sideplaylist/index.phtml');
+			unset($this->view->pl);
+		}
     }
 
     public function addItemAction()
@@ -138,6 +170,7 @@ class PlaylistController extends Zend_Controller_Action
     {
 		$oldPos = $this->_getParam('oldPos');
 		$newPos = $this->_getParam('newPos');
+		$display = $this->_getParam('view');
 
 		$pl = $this->getPlaylist();
 
@@ -229,6 +262,8 @@ class PlaylistController extends Zend_Controller_Action
 				unset($pl_sess->id);
 			}
 		}
+
+		$this->view->id = $id;
     }
 
     public function deleteActiveAction()

@@ -27,6 +27,8 @@ class SearchController extends Zend_Controller_Action
 		$this->_helper->layout->setLayout('search');
 
 		$this->view->headScript()->appendFile('/js/campcaster/onready/search.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
+		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
 		$this->_helper->actionStack('display', 'search');
 		$this->_helper->actionStack('contents', 'library');

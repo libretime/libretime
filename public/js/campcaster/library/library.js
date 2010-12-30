@@ -12,23 +12,51 @@ function getType() {
 	return tr_id[0];
 }
 
+function deleteItem(type, id) {
+	var tr_id;
+
+	tr_id = type+"_"+id;
+
+	$("#library_display tr#" +tr_id).remove();
+}
+
+function deleteAudioClip(json) {
+	if(json.message) {  
+		alert(json.message);	
+		return;
+	}
+
+	deleteItem("au", json.id);
+}
+
+function deletePlaylist(json) {
+	if(json.message) {  
+		alert(json.message);	
+		return;
+	}
+
+	deleteItem("pl", json.id);
+}
+
+function addLibraryItemEvents() {
+	$('#library_display tr[id ^= "au"]')
+		.draggable({ 
+				helper: 'clone' 
+		});
+
+	$('#library_display tr:not(:first-child)')
+		.jjmenu("rightClick", 
+			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],  
+			{id: getId, type: getType}, 
+			{xposition: "mouse", yposition: "mouse"});
+
+}
+
 function setLibraryContents(data){
 	$("#library_display tr:not(:first-child)").remove();
 	$("#library_display").append(data);
 
-	/*
-	$('#library_display tr[id ^= "au"]')
-		.contextMenu({menu: 'audioMenu'}, contextMenu)
-		.draggable({ 
-				helper: 'clone' 
-		});
-
-	$('#library_display tr[id ^= "pl"]')
-		.contextMenu({menu: 'plMenu'}, contextMenu)
-		.draggable({ 
-				helper: 'clone' 
-		});
-	*/
+	addLibraryItemEvents()	
 }
 
 function setUpLibrary() {
@@ -55,27 +83,5 @@ function setUpLibrary() {
 		$.post(url, {ob: ob, order: order}, setLibraryContents);
 	});
 
-	/*
-	$('#library_display tr[id ^= "au"]')
-		.contextMenu({menu: 'audioMenu'}, contextMenu)
-		.draggable({ 
-				helper: 'clone' 
-		});
-
-	$('#library_display tr[id ^= "pl"]')
-		.contextMenu({menu: 'plMenu'}, contextMenu)
-		
-	*/
-
-	$('#library_display tr:not(:first-child)')
-		.draggable({ 
-				helper: 'clone' 
-		});
-
-	$('#library_display tr:not(:first-child)')
-		.jjmenu("rightClick", 
-			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],  
-			{id: getId, type: getType}, 
-			{xposition: "mouse", yposition: "mouse"});
-
+	addLibraryItemEvents()
 }
