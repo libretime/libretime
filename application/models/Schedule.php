@@ -452,7 +452,7 @@ class Schedule {
         $sql = "SELECT * FROM $CC_CONFIG[scheduleTable], $CC_CONFIG[filesTable]"
         ." WHERE ($CC_CONFIG[scheduleTable].ends < TIMESTAMP '$timeNow')"
         ." AND ($CC_CONFIG[scheduleTable].file_id = $CC_CONFIG[filesTable].id)"
-        ." ORDER BY $CC_CONFIG[scheduleTable].id"
+        ." ORDER BY $CC_CONFIG[scheduleTable].starts DESC"
         ." LIMIT $prevCount";
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
@@ -474,7 +474,7 @@ class Schedule {
         $sql = "SELECT * FROM $CC_CONFIG[scheduleTable], $CC_CONFIG[filesTable]"
         ." WHERE ($CC_CONFIG[scheduleTable].starts > TIMESTAMP '$timeNow')"
         ." AND ($CC_CONFIG[scheduleTable].file_id = $CC_CONFIG[filesTable].id)"
-        ." ORDER BY $CC_CONFIG[scheduleTable].id"
+        ." ORDER BY $CC_CONFIG[scheduleTable].starts"
         ." LIMIT $nextCount";
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
