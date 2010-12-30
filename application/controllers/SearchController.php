@@ -27,8 +27,9 @@ class SearchController extends Zend_Controller_Action
 		$this->_helper->layout->setLayout('search');
 
 		$this->view->headScript()->appendFile('/js/campcaster/onready/search.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
+		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
-		$this->_helper->actionStack('context-menu', 'library');
 		$this->_helper->actionStack('display', 'search');
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('index', 'sideplaylist');
@@ -74,7 +75,13 @@ class SearchController extends Zend_Controller_Action
 		$order = isset($this->search_sess->order) ? $this->search_sess->order : NULL;
 
 		$this->view->files = StoredFile::searchFiles($info, $order);
-		$this->view->results = $this->view->render('library/update.phtml');
+
+		if (count($this->view->files) > 0) {
+			$this->view->results = $this->view->render('library/update.phtml');
+		}
+		else {
+			$this->view->results = "<tr>No Results</tr>";
+		}
 		unset($this->view->files);
     }
 

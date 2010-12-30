@@ -1,7 +1,5 @@
 <?php
 
-Zend_Session::start();
-
 require_once (__DIR__."/configs/navigation.php");
 require_once (__DIR__."/configs/ACL.php");
 
@@ -31,6 +29,8 @@ if (PEAR::isError($CC_DBC)) {
 	exit(1);
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+Zend_Session::start();
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {

@@ -19,7 +19,9 @@ class PlaylistController extends Zend_Controller_Action
 					->addActionContext('set-cue', 'json')
 					->addActionContext('move-item', 'json')
 					->addActionContext('close', 'json')
+					->addActionContext('edit', 'json')
 					->addActionContext('delete-active', 'json')
+					->addActionContext('delete', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -41,6 +43,28 @@ class PlaylistController extends Zend_Controller_Action
 		}
 		
 		$this->_helper->redirector('index');
+	}
+
+	private function changePlaylist($pl_id){
+		
+		$pl_sess = $this->pl_sess;
+
+		if(isset($pl_sess->id)) {
+
+			$pl = Playlist::Recall($pl_sess->id);
+			if($pl !== FALSE) {
+				$this->closePlaylist($pl);
+			}
+		}
+	
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$pl = Playlist::Recall($pl_id);
+		if($pl === FALSE) {
+			return FALSE;
+		}		
+		$pl->lock($userInfo->id);
+		$pl_sess->id = $pl_id;	
 	}
 
 	private function closePlaylist($pl)
@@ -67,10 +91,9 @@ class PlaylistController extends Zend_Controller_Action
         $pl = new Playlist();
         $pl_id = $pl->create("Test Zend Auth");
 		$pl->setPLMetaData('dc:creator', $userInfo->login);
-		$pl->lock($userInfo->id);
 
 		//set this playlist as active id.
-		$pl_sess->id = $pl_id;
+		$this->changePlaylist($pl_id);
 
 		$this->_helper->redirector('metadata');
     }
@@ -80,6 +103,19 @@ class PlaylistController extends Zend_Controller_Action
                                                          
         $request = $this->getRequest();
         $form = new Application_Form_PlaylistMetadata();
+
+		$pl_id = $this->_getParam('id', null);
+		//not a new playlist
+		if(!is_null($pl_id)) {
+			$this->changePlaylist($pl_id); 
+ 
+			$pl = $this->getPlaylist();
+			$title = $pl->getPLMetaData(UI_MDATA_KEY_TITLE);
+			$desc = $pl->getPLMetaData(UI_MDATA_KEY_DESCRIPTION);
+
+			$data = array( 'title' => $title, 'description' => $desc);  
+			$form->populate($data);  
+		}
  
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {  
@@ -89,8 +125,9 @@ class PlaylistController extends Zend_Controller_Action
 				$pl = $this->getPlaylist();
 				$pl->setPLMetaData(UI_MDATA_KEY_TITLE, $formdata["title"]);
 				
-				if(isset($formdata["description"]))
+				if(isset($formdata["description"])) {
 					$pl->setPLMetaData(UI_MDATA_KEY_DESCRIPTION, $formdata["description"]);
+				}
 
 				$this->_helper->redirector('edit');
             }
@@ -101,12 +138,22 @@ class PlaylistController extends Zend_Controller_Action
 
     public function editAction()
     {
-        $this->view->headScript()->appendFile('/js/campcaster/playlist/playlist.js','text/javascript');                             
+        $this->view->headScript()->appendFile('/js/campcaster/playlist/playlist.js','text/javascript'); 
 
+		$pl_id = $this->_getParam('id', null);
+		$display = $this->_getParam('view', null);
+		if(!is_null($pl_id)) {
+			$this->changePlaylist($pl_id);      
+		}
+		                      
 		$pl = $this->getPlaylist();
 		
 		$this->view->pl = $pl;
-		$this->view->playlistcontents = $pl->getContents();	
+
+		if($display === 'spl') {
+			$this->view->html = $this->view->render('sideplaylist/index.phtml');
+			unset($this->view->pl);
+		}
     }
 
     public function addItemAction()
@@ -137,6 +184,7 @@ class PlaylistController extends Zend_Controller_Action
     {
 		$oldPos = $this->_getParam('oldPos');
 		$newPos = $this->_getParam('newPos');
+		$display = $this->_getParam('view');
 
 		$pl = $this->getPlaylist();
 
@@ -216,12 +264,20 @@ class PlaylistController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = $this->_getParam('id', null);
+		$pl = Playlist::Recall($id);
                 
-		if (!is_null($id)) {
+		if ($pl !== FALSE) {
 
-			$this->closePlaylist();
 			Playlist::Delete($id);
+
+			$pl_sess = $this->pl_sess;
+
+			if($pl_sess->id === $id){
+				unset($pl_sess->id);
+			}
 		}
+
+		$this->view->id = $id;
     }
 
     public function deleteActiveAction()

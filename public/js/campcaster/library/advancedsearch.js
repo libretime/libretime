@@ -47,11 +47,8 @@ function searchLibrary() {
 			$("#library_display tr:not(:first-child)").remove();
 			$("#library_display tbody").append(json.results);
 
-			$("#library_display tr:not(:first-child)")
-				.contextMenu({menu: 'myMenu'}, contextMenu)
-				.draggable({ 
-						helper: 'clone' 
-				});
+			//in campcaster/library.js
+			addLibraryItemEvents();
 		}
 
 	});

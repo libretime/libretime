@@ -28,7 +28,7 @@ function addSPLItem(event, ui){
 	if(tr.get(0).tagName === 'LI')
 		return;
 	
-	id = tr.attr('id');
+	id = tr.attr('id').split("_").pop();
 
 	url = '/Playlist/add-item/format/json';
 	url = url + '/id/'+id;
@@ -88,6 +88,15 @@ function deleteSPL() {
 	url = '/Playlist/delete-active/format/json/view/spl';
 
 	$.post(url, noOpenPL);
+}
+
+function openDiffSPL(json) {
+	
+	$("#side_playlist")
+		.empty()
+		.append(json.html);
+
+		setUpSPL();
 }
 
 function setUpSPL() {
