@@ -103,6 +103,19 @@ class PlaylistController extends Zend_Controller_Action
                                                          
         $request = $this->getRequest();
         $form = new Application_Form_PlaylistMetadata();
+
+		$pl_id = $this->_getParam('id', null);
+		//not a new playlist
+		if(!is_null($pl_id)) {
+			$this->changePlaylist($pl_id); 
+ 
+			$pl = $this->getPlaylist();
+			$title = $pl->getPLMetaData(UI_MDATA_KEY_TITLE);
+			$desc = $pl->getPLMetaData(UI_MDATA_KEY_DESCRIPTION);
+
+			$data = array( 'title' => $title, 'description' => $desc);  
+			$form->populate($data);  
+		}
  
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {  
@@ -112,8 +125,9 @@ class PlaylistController extends Zend_Controller_Action
 				$pl = $this->getPlaylist();
 				$pl->setPLMetaData(UI_MDATA_KEY_TITLE, $formdata["title"]);
 				
-				if(isset($formdata["description"]))
+				if(isset($formdata["description"])) {
 					$pl->setPLMetaData(UI_MDATA_KEY_DESCRIPTION, $formdata["description"]);
+				}
 
 				$this->_helper->redirector('edit');
             }

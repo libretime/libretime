@@ -62,9 +62,6 @@ class LibraryController extends Zend_Controller_Action
 		}
 		else if($type === "pl") {
 
-			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/delete'.$params, 'callback' => 'window["deletePlaylist"]'), 
-							'title' => 'Delete');
-
 			if(!isset($pl_sess->id) || $pl_sess->id !== $id) {
 				$menu[] = array('action' => 
 									array('type' => 'ajax', 
@@ -79,6 +76,12 @@ class LibraryController extends Zend_Controller_Action
 									'callback' => 'window["noOpenPL"]'), 
 								'title' => 'Close');
 			}
+
+			$menu[] = array('action' => array('type' => 'gourl', 'url' => '/Playlist/metadata'.$params), 
+							'title' => 'Description');
+
+			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/delete'.$params, 'callback' => 'window["deletePlaylist"]'), 
+							'title' => 'Delete');
 
 		}
 
