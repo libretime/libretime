@@ -2,13 +2,12 @@
 
 class LibraryController extends Zend_Controller_Action
 {
-
     protected $pl_sess = null;
-	protected $search_sess = null;
+    protected $search_sess = null;
 
     public function init()
     {
-		if(!Zend_Auth::getInstance()->hasIdentity())
+        if(!Zend_Auth::getInstance()->hasIdentity())
         {
             $this->_redirect('login/index');
         }
@@ -27,7 +26,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-		$this->view->headScript()->appendFile('/js/campcaster/onready/library.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/campcaster/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 	
@@ -42,7 +41,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function contextMenuAction()
     {
-		$id = $this->_getParam('id');
+        $id = $this->_getParam('id');
 		$type = $this->_getParam('type');
 
 		$params = '/format/json/id/#id#/type/#type#';
@@ -58,6 +57,9 @@ class LibraryController extends Zend_Controller_Action
 				$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/add-item'.$params, 'callback' => 'window["setSPLContent"]'), 
 							'title' => 'Add to Playlist');
 			}
+
+			$menu[] = array('action' => array('type' => 'gourl', 'url' => '/Library/edit-file-md/id/#id#'), 
+							'title' => 'Info');
 
 		}
 		else if($type === "pl") {
@@ -87,13 +89,12 @@ class LibraryController extends Zend_Controller_Action
 
 		//returns format jjmenu is looking for.
 		die(json_encode($menu));
-
     }
 
     public function deleteAction()
     {
         $id = $this->_getParam('id');
-        	
+                	
 		if (!is_null($id)) {
     		$file = StoredFile::Recall($id);
 			
@@ -119,8 +120,8 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
-		$this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
-
+        $this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
+        
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
         $order["category"] = $this->_getParam('ob', "dc:creator");
@@ -132,13 +133,33 @@ class LibraryController extends Zend_Controller_Action
 		$this->view->files = StoredFile::searchFiles($md, $order);
     }
 
-    public function searchAction()
+    public function editFileMdAction()
     {
-        // action body
+        $request = $this->getRequest();
+        $form = new Application_Form_EditAudioMD();
+
+		$file_id = $this->_getParam('id', null);
+
+		$file = StoredFile::Recall($file_id);
+		$form->populate($file->md);  
+ 
+        if ($request->isPost()) {
+            if ($form->isValid($request->getPost())) {  
+    
+				$formdata = $form->getValues();
+				$file->replaceDbMetadata($formdata);
+
+				$this->_helper->redirector('index');
+            }
+        }
+ 
+        $this->view->form = $form;
     }
 
 
 }
+
+
 
 
 

@@ -92,15 +92,13 @@ class PlaylistController extends Zend_Controller_Action
         $pl_id = $pl->create("Test Zend Auth");
 		$pl->setPLMetaData('dc:creator', $userInfo->login);
 
-		//set this playlist as active id.
 		$this->changePlaylist($pl_id);
 
 		$this->_helper->redirector('metadata');
     }
 
     public function metadataAction()
-    {
-                                                         
+    {                                                  
         $request = $this->getRequest();
         $form = new Application_Form_PlaylistMetadata();
 

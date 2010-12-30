@@ -34,7 +34,7 @@
           <actionMethod actionName="contextMenu"/>
           <actionMethod actionName="delete"/>
           <actionMethod actionName="contents"/>
-          <actionMethod actionName="search"/>
+          <actionMethod actionName="editFileMd"/>
         </controllerFile>
         <controllerFile controllerName="Plupload">
           <actionMethod actionName="index"/>
@@ -145,9 +145,6 @@
           <viewControllerScriptsDirectory forControllerName="Playlist">
             <viewScriptFile forActionName="deleteActive"/>
           </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Library">
-            <viewScriptFile forActionName="search"/>
-          </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Index">
             <viewScriptFile forActionName="newfield"/>
           </viewControllerScriptsDirectory>
@@ -228,6 +225,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Playlist">
             <viewScriptFile forActionName="close"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Library">
+            <viewScriptFile forActionName="editFileMd"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
