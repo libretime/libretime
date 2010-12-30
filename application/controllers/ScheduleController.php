@@ -175,7 +175,7 @@ class ScheduleController extends Zend_Controller_Action
 		}
     }
 
-    public function getSchedulerTimeAction()
+    public function viewPlaylistAction()
     {
         $this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
         $this->view->headScript()->appendFile('/js/progressbar/jquery.progressbar.min.js','text/javascript');
