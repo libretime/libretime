@@ -72,6 +72,13 @@ class LibraryController extends Zend_Controller_Action
 									'callback' => 'window["openDiffSPL"]'), 
 								'title' => 'Edit');
 			}
+			else if(isset($pl_sess->id) && $pl_sess->id === $id) {
+				$menu[] = array('action' => 
+									array('type' => 'ajax', 
+									'url' => '/Playlist/close/view/spl'.$params, 
+									'callback' => 'window["noOpenPL"]'), 
+								'title' => 'Close');
+			}
 
 		}
 
