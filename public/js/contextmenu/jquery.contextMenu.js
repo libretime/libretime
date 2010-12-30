@@ -37,7 +37,7 @@ if(jQuery)( function() {
 						e.stopPropagation();
 						var srcElement = $(this);
 						$(this).unbind('mouseup');
-						if( evt.button == 1 ) {
+						if( evt.button == 2 ) {
 							// Hide context menus that may be showing
 							$(".contextMenu").hide();
 							// Get this context menu
