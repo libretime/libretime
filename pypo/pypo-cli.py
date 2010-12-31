@@ -687,7 +687,6 @@ class Playout:
                     logger.debug(line.strip())
                     tn.write(self.export_source + '.push %s' % (line.strip()))
                     tn.write("\n")
-                    #time.sleep(0.1)
                 
             tn.write("exit\n")
             logger.debug(tn.read_all())
@@ -702,10 +701,6 @@ class Playout:
             logger.debug("Sending additional data to liquidsoap: "+liquidsoap_data)
             tn.write("vars.pypo_data "+liquidsoap_data+"\n")
                 
-#            if(int(ptype) < 5):
-#                tn.write(self.export_source + '.flip')
-#                tn.write("\n")
-
             tn.write(self.export_source + '.flip')
             tn.write("\n")
                 
