@@ -79,7 +79,7 @@ dst = TEMP_DIR + 'lstf_' + "".join( [random.choice(string.letters) for i in xran
 # get length of track using mutagen. 
 #audio
 #command
-if src.endswith('.mp3'):
+if src.lower().endswith('.mp3'):
     audio = MP3(src)
     dur = round(audio.info.length, 3)
 
@@ -115,7 +115,7 @@ if src.endswith('.mp3'):
     sys.stderr.write('abs:      ' + str(str_cue_out) + '\n\n')
 
     command = 'mp3cut -o %s -t %s-%s %s' % (dst, str_cue_in, str_cue_out, src)
-elif src.endswith('.ogg'):
+elif src.lower().endswith('.ogg'):
     audio = OggVorbis(src)
     dur = audio.info.length
     sys.stderr.write('duration: ' + str(dur) + '\n')

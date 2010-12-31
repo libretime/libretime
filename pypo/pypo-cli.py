@@ -463,7 +463,7 @@ class Playout:
         """
         Handle files on NAS. Pre-cueing not implemented at the moment.
         (not needed by openbroadcast, feel free to add this)
-        Here an implementation for localy stored files.
+        Here's an implementation for locally stored files.
         Works the same as with remote files, just replaced API-download with
         file copy.
         """
