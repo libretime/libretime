@@ -258,6 +258,7 @@ class CampcasterApiClient(ApiClientInterface):
 		
 		try:
 			src = src + "/api_key/" + self.config["api_key"]
+			logger.debug("try to download from %s to %s", src, dst)
 			# check if file exists already before downloading again
 			filename, headers = urllib.urlretrieve(src, dst)
 			

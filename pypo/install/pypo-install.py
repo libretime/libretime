@@ -67,6 +67,7 @@ try:
   create_path(BASE_PATH+"bin")
   create_path(BASE_PATH+"cache")
   create_path(BASE_PATH+"files")
+  create_path(BASE_PATH+"tmp")
   create_path(BASE_PATH+"files/basic")
   create_path(BASE_PATH+"files/fallback")
   create_path(BASE_PATH+"files/jingles")
