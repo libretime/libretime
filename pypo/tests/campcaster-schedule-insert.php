@@ -54,18 +54,6 @@ if (is_null($mediaFile)) {
 }
 $pl->addAudioClip($mediaFile->getId());
 
-$mediaFile = StoredFile::findByOriginalName("Manolo Camp - Morning Coffee.mp3");
-if (is_null($mediaFile)) {
-    echo "Adding test audio clip to the database.\n";
-    $v = array("filepath" => __DIR__."/../../audio_samples/OpSound/Manolo Camp - Morning Coffee.mp3");
-    $mediaFile = StoredFile::Insert($v);
-    if (PEAR::isError($mediaFile)) {
-    	var_dump($mediaFile);
-    	exit();
-    }
-}
-$pl->addAudioClip($mediaFile->getId());
-
 $mediaFile = StoredFile::findByOriginalName("Peter Rudenko - Opening.mp3");
 if (is_null($mediaFile)) {
     echo "Adding test audio clip to the database.\n";

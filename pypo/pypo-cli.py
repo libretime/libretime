@@ -185,7 +185,7 @@ class Playout:
         try: self.cleanup(self.export_source)
         except Exception, e: logger.error("%s", e)
             
-        logger.info("fetch loop completed")
+        #logger.info("fetch loop completed")
             
         
     """
@@ -364,15 +364,16 @@ class Playout:
         for media in playlist['medias']:
             logger.debug("Processing track %s", media['uri'])
             
+            fileExt = os.path.splitext(media['uri'])[1]            
             try:
                 if str(media['cue_in']) == '0' and str(media['cue_out']) == '0':
                     logger.debug('No cue in/out detected for this file')
-                    dst = "%s%s/%s.mp3" % (self.cache_dir, str(pkey), str(media['id']))
+                    dst = "%s%s/%s%s" % (self.cache_dir, str(pkey), str(media['id']), str(fileExt))
                     do_cue = False
                 else:
                     logger.debug('Cue in/out detected')
-                    dst = "%s%s/%s_cue_%s-%s.mp3" % \
-                    (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000))
+                    dst = "%s%s/%s_cue_%s-%s%s" % \
+                    (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000), str(fileExt))
                     do_cue = True
                     
                 # check if it is a remote file, if yes download
@@ -431,7 +432,8 @@ class Playout:
             else:
                 logger.debug("try to download and cue %s", media['uri'])
                 
-                dst_tmp = config["tmp_dir"] + "".join([random.choice(string.letters) for i in xrange(10)]) + '.mp3'
+                fileExt = os.path.splitext(media['uri'])[1]
+                dst_tmp = config["tmp_dir"] + "".join([random.choice(string.letters) for i in xrange(10)]) + fileExt
                 self.api_client.get_media(media['uri'], dst_tmp)
                     
                 # cue
@@ -628,7 +630,7 @@ class Playout:
             open(self.schedule_file, 'w').close() 
         else:                
             # load the schedule from cache
-            logger.debug('loading schedule file '+self.schedule_file)
+            #logger.debug('loading schedule file '+self.schedule_file)
             try:
                 schedule_file = open(self.schedule_file, "r")
                 schedule = pickle.load(schedule_file)
@@ -652,7 +654,7 @@ class Playout:
             schedule_tracker.close()            
         else:        
             try:
-                logger.debug('loading schedule tracker file '+ self.schedule_tracker_file)
+                #logger.debug('loading schedule tracker file '+ self.schedule_tracker_file)
                 schedule_tracker = open(self.schedule_tracker_file, "r")
                 playedItems = pickle.load(schedule_tracker)
                 schedule_tracker.close()                
@@ -890,8 +892,10 @@ while run == True:
             print e
             sys.exit()
         
-        print 'ZZzZzZzzzzZZZz.... sleeping for ' + str(POLL_INTERVAL) + ' seconds'
-        logger.info('fetch loop %s - ZZzZzZzzzzZZZz.... sleeping for %s seconds', loops, POLL_INTERVAL)
+        #print 'ZZzZzZzzzzZZZz.... sleeping for ' + str(POLL_INTERVAL) + ' seconds'
+        #logger.info('fetch loop %s - ZZzZzZzzzzZZZz.... sleeping for %s seconds', loops, POLL_INTERVAL)
+        if (loops%2 == 0):
+            logger.info("heartbeat\n\n\n\n")
         loops += 1
         time.sleep(POLL_INTERVAL)
     
@@ -901,8 +905,8 @@ while run == True:
             print e
             sys.exit()
         
-        print 'ZZzZzZzzzzZZZz.... sleeping for ' + str(POLL_INTERVAL) + ' seconds'
-        logger.info('fetch loop %s - ZZzZzZzzzzZZZz.... sleeping for %s seconds', loops, POLL_INTERVAL)
+        #print 'ZZzZzZzzzzZZZz.... sleeping for ' + str(POLL_INTERVAL) + ' seconds'
+        #logger.info('fetch loop %s - ZZzZzZzzzzZZZz.... sleeping for %s seconds', loops, POLL_INTERVAL)
         loops += 1
         time.sleep(POLL_INTERVAL)
         
@@ -916,7 +920,10 @@ while run == True:
             print e
             sys.exit()
             
-        logger.info('push loop %s - ZZzZzZzzzzZZZz.... sleeping for %s seconds', loops, PUSH_INTERVAL)
+        if (loops%20 == 0):
+            logger.info("heartbeat")
+            
+        #logger.info('push loop %s - ZZzZzZzzzzZZZz.... sleeping for %s seconds', loops, PUSH_INTERVAL)
         loops += 1
         time.sleep(PUSH_INTERVAL)
         
@@ -930,7 +937,7 @@ while run == True:
             print e
             sys.exit()
             
-        logger.info('push loop %s - ZZzZzZzzzzZZZz.... sleeping for %s seconds', loops, PUSH_INTERVAL)
+        #logger.info('push loop %s - ZZzZzZzzzzZZZz.... sleeping for %s seconds', loops, PUSH_INTERVAL)
         loops += 1
         time.sleep(PUSH_INTERVAL)
         

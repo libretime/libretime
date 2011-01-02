@@ -34,6 +34,12 @@ def create_user(username):
     # Make the pypo user
     print "Creating user "+username
     os.system("adduser --system --quiet --group --shell /bin/bash "+username)
+    
+    #set pypo password
+    p = os.popen('/usr/bin/passwd pypo', 'w')
+    p.write('pypo\n')
+    p.write('pypo\n')
+    p.close()
   else:
     print "User already exists."
 
