@@ -255,7 +255,7 @@ function eventMenu(action, el, pos) {
 
 		length = event.end.getTime() - event.start.getTime();
 
-		h = length / (1000*60*60);
+		h = Math.floor(length / (1000*60*60));
 		m = (length % (1000*60*60)) / (1000*60);
 		s = ((length % (1000*60*60)) % (1000*60)) / 1000;
 
