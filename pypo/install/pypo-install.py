@@ -12,6 +12,7 @@ import logging
 import logging.config
 import shutil
 import string
+import platform
 from subprocess import Popen, PIPE, STDOUT
 
 if os.geteuid() != 0:
@@ -68,6 +69,17 @@ try:
   print "Copying pypo files"
   shutil.copy("../scripts/silence-playlist.lsp", BASE_PATH+"files/basic")
   shutil.copy("../scripts/silence.mp3", BASE_PATH+"files/basic")
+  
+  if platform.architecture()[0] == '64bit':
+      print "Installing 64-bit liquidsoap binary"
+      shutil.copy("../liquidsoap/liquidsoap64", "../liquidsoap/liquidsoap")
+  elif platform.architecture()[0] == '32bit':
+      print "Installing 32-bit liquidsoap binary"
+      shutil.copy("../liquidsoap/liquidsoap32", "../liquidsoap/liquidsoap")
+  else:
+      print "Unknown system architecture."
+      sys.exit(1)
+  
   #shutil.copy("../pypo-cli.py", BASE_PATH+"bin")
   #shutil.copy("../pypo-notify.py", BASE_PATH+"bin")
   #shutil.copy("../logging.cfg", BASE_PATH+"bin")

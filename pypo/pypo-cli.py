@@ -463,7 +463,7 @@ class Playout:
         """
         Handle files on NAS. Pre-cueing not implemented at the moment.
         (not needed by openbroadcast, feel free to add this)
-        Here an implementation for localy stored files.
+        Here's an implementation for locally stored files.
         Works the same as with remote files, just replaced API-download with
         file copy.
         """
@@ -687,7 +687,6 @@ class Playout:
                     logger.debug(line.strip())
                     tn.write(self.export_source + '.push %s' % (line.strip()))
                     tn.write("\n")
-                    #time.sleep(0.1)
                 
             tn.write("exit\n")
             logger.debug(tn.read_all())
@@ -702,10 +701,6 @@ class Playout:
             logger.debug("Sending additional data to liquidsoap: "+liquidsoap_data)
             tn.write("vars.pypo_data "+liquidsoap_data+"\n")
                 
-#            if(int(ptype) < 5):
-#                tn.write(self.export_source + '.flip')
-#                tn.write("\n")
-
             tn.write(self.export_source + '.flip')
             tn.write("\n")
                 
