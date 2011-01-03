@@ -32,6 +32,7 @@ class LibraryController extends Zend_Controller_Action
 	
 		$this->_helper->layout->setLayout('library');
 
+		unset($this->search_sess->page);
 		unset($this->search_sess->md);
 		
 		$this->_helper->actionStack('contents', 'library');

@@ -1841,7 +1841,7 @@ class StoredFile {
 			$paginate = " LIMIT ".$limit. " OFFSET " .$offset;
 			$sql = $sql . $paginate;
 		}
-		echo $sql;
+		//echo $sql;
 
 		return $CC_DBC->getAll($sql);
 	}
