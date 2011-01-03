@@ -20,3 +20,15 @@
 	}
 ?>
 
+<?php 
+
+echo "page: " . $this->page;
+echo "curr: " . $this->curr;
+
+echo $this->paginationControl($this->paginator,
+                                    'Sliding',
+                                    'library/paginator.phtml'); 
+
+
+?>
+

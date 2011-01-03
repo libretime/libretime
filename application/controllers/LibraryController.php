@@ -33,8 +33,7 @@ class LibraryController extends Zend_Controller_Action
 		$this->_helper->layout->setLayout('library');
 
 		unset($this->search_sess->md);
-		unset($this->search_sess->order);
-
+		
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('index', 'sideplaylist');
     }
@@ -59,7 +58,7 @@ class LibraryController extends Zend_Controller_Action
 			}
 
 			$menu[] = array('action' => array('type' => 'gourl', 'url' => '/Library/edit-file-md/id/#id#'), 
-							'title' => 'Info');
+							'title' => 'Edit Metadata');
 
 		}
 		else if($type === "pl") {
@@ -124,13 +123,40 @@ class LibraryController extends Zend_Controller_Action
         
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
-        $order["category"] = $this->_getParam('ob', "dc:creator");
-		$order["order"] = $this->_getParam('order', "asc");
+        $cat = $this->_getParam('ob', null);
+		$or = $this->_getParam('order', null);
+		$page = $this->_getParam('page', null);
 
-		$this->search_sess->order = $order;
+		if(!is_null($cat) && !is_null($or)) {
+			$order["category"] = $cat;
+			$order["order"] = $or;
+			$this->search_sess->order = $order;
+		}
+		else if(isset($this->search_sess->order)){
+			$order = $this->search_sess->order;
+		}
+		else{
+			$order = null;
+		}
+
+		if (isset($this->search_sess->page)) {
+			$last_page = $this->search_sess->page;
+		}
+		else{
+			$last_page = null;
+		}
+		
+		$currpage = isset($page) ? $page : $last_page;
+		$this->search_sess->page = $currpage;
+
 		$md = isset($this->search_sess->md) ? $this->search_sess->md : array();
 
-		$this->view->files = StoredFile::searchFiles($md, $order);
+		$count = StoredFile::searchFiles($md, $order, true);
+
+		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($count));
+		$paginator->setCurrentPageNumber($currpage);
+		$this->view->paginator = $paginator;
+		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage());
     }
 
     public function editFileMdAction()

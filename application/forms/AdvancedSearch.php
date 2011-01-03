@@ -9,6 +9,13 @@ class Application_Form_AdvancedSearch extends Zend_Form
 			'value' => 2
 		));
 		$this->getElement('search_next_id')->removeDecorator('Label')->removeDecorator('HtmlTag');
+
+		// Add the submit button
+        $this->addElement('submit', 'submit', array(
+            'ignore'   => true,
+            'label'    => 'Submit',
+			'order'    => '-1'
+        ));
     }
 
 	public function preValidation(array $data) {
@@ -30,6 +37,8 @@ class Application_Form_AdvancedSearch extends Zend_Form
 			$id = findId($field);
 			$this->addNewField($data, $id);
 		}
+
+		
 	}
 
 	public function addNewField($data, $id) {

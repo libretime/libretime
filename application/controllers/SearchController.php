@@ -15,7 +15,6 @@ class SearchController extends Zend_Controller_Action
 
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('newfield', 'html')
-					->addActionContext('display', 'json')
 					->initContext();
 
 		$this->form = new Application_Form_AdvancedSearch();
@@ -30,8 +29,8 @@ class SearchController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
-		$this->_helper->actionStack('display', 'search');
 		$this->_helper->actionStack('contents', 'library');
+		$this->_helper->actionStack('display', 'search');
 		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
@@ -46,18 +45,15 @@ class SearchController extends Zend_Controller_Action
 
 		$this->form = new Application_Form_AdvancedSearch();
 		$form = $this->form;
+		$this->view->form = $form;
 
 		// Form has not been submitted - displayed using layouts
 		if (!$request->isPost()) {
-
-			unset($this->search_sess->md);
-			unset($this->search_sess->order);
 
 			$sub = new Application_Form_AdvancedSearchRow(1);
 			$form->addSubForm($sub, 'row_1');
 			$form->getSubForm('row_1')->removeDecorator('DtDdWrapper');
 
-			$this->view->form = $form;
 			return;
 		}
 
@@ -65,24 +61,15 @@ class SearchController extends Zend_Controller_Action
 		$form->preValidation($request->getPost());
 		
 		if (!$form->isValid($request->getPost())) {
-			$this->view->form = $form->__toString();
 			return;
 		}
 
-		// form was submitted, send back strings to json response.	
+		// valid form was submitted set as search criteria.
 		$info = $form->getValues();
 		$this->search_sess->md = $info;
-		$order = isset($this->search_sess->order) ? $this->search_sess->order : NULL;
 
-		$this->view->files = StoredFile::searchFiles($info, $order);
-
-		if (count($this->view->files) > 0) {
-			$this->view->results = $this->view->render('library/update.phtml');
-		}
-		else {
-			$this->view->results = "<tr>No Results</tr>";
-		}
-		unset($this->view->files);
+		//make sure to start on first page of new results.
+		unset($this->search_sess->page);
     }
 
     public function newfieldAction()

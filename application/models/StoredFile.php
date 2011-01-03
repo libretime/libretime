@@ -1741,7 +1741,7 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-	public static function searchFiles($md, $order=NULL)
+	public static function searchFiles($md, $order=NULL, $count=false, $page=null, $limit=null)
 	{
 		global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
 
@@ -1754,9 +1754,6 @@ class StoredFile {
 			"5" => ">=",
 			"6" => "!=",
 		);
-
-        //$sql = "SELECT * FROM ".$CC_CONFIG['filesTable'];
-
 
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
@@ -1785,13 +1782,22 @@ class StoredFile {
             }
         }
 
-        $sql = "SELECT * FROM ((".$plSelect."PL.id, 'playlist' AS ftype
+		if($count) {
+			$selector = "SELECT COUNT(*)";
+		}
+		else {
+			$selector = "SELECT *";
+		}
+
+		$from = " FROM ((".$plSelect."PL.id, 'playlist' AS ftype
                 FROM ".$CC_CONFIG["playListTable"]." AS PL
 				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id)
 
                 UNION
 
                 (".$fileSelect."id, ftype FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
+
+        $sql = $selector." ".$from;
 
 		$cond = array();
 		foreach(array_keys($md) as $key) {
@@ -1817,13 +1823,27 @@ class StoredFile {
 			$sql = $sql . $where;
 		}
 
-		if(!is_null($order)) {
-			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]];
-			$sql = $sql . $ob . " " .$order["order"];
+		if($count) {
+			return $CC_DBC->getOne($sql);
 		}
-		//echo $sql;
 
-        return $CC_DBC->getAll($sql);
+		if(!is_null($order)) {
+			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]]. ", id " .$order["order"];
+			$sql = $sql . $ob;
+		}
+		else{
+			$ob = " ORDER BY artist_name, id asc";
+			$sql = $sql . $ob;
+		}
+
+		if(!is_null($page) && !is_null($limit)) {
+			$offset = $page * $limit - ($limit);
+			$paginate = " LIMIT ".$limit. " OFFSET " .$offset;
+			$sql = $sql . $paginate;
+		}
+		echo $sql;
+
+		return $CC_DBC->getAll($sql);
 	}
 
 }
