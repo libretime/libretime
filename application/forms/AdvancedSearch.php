@@ -10,12 +10,21 @@ class Application_Form_AdvancedSearch extends Zend_Form
 		));
 		$this->getElement('search_next_id')->removeDecorator('Label')->removeDecorator('HtmlTag');
 
+		// Add the add button
+        $this->addElement('button', 'search_add', array(
+            'ignore'   => true,
+            'label'    => 'Add',
+			'order'    => '-2'
+        ));
+		$this->getElement('search_add')->removeDecorator('DtDdWrapper');
+
 		// Add the submit button
-        $this->addElement('submit', 'submit', array(
+        $this->addElement('submit', 'search_submit', array(
             'ignore'   => true,
             'label'    => 'Submit',
 			'order'    => '-1'
         ));
+		$this->getElement('search_submit')->removeDecorator('DtDdWrapper');
     }
 
 	public function preValidation(array $data) {
