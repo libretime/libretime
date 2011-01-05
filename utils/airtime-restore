@@ -2,26 +2,26 @@
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2010 Sourcefabric O.P.S.
 #
-#   This file is part of the Campcaster project.
+#   This file is part of the Airtime project.
 #   http://campcaster.sourcefabric.org/
 #
-#   Campcaster is free software; you can redistribute it and/or modify
+#   Airtime is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   Campcaster is distributed in the hope that it will be useful,
+#   Airtime is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with Campcaster; if not, write to the Free Software
+#   along with Airtime; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script restores the data which was backed up with campcaster-backup.
+#  This script restores the data which was backed up with airtime-backup.
 #
 #  To get usage help, try the -h option
 #-------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ tarfile0="xmls.tar"
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "This script restores the data which was backed up with campcaster-backup."
+    echo "This script restores the data which was backed up with airtime-backup."
     echo "parameters:";
     echo "";
     echo "  -f, --file          File with the backed up data, required.";
