@@ -61,7 +61,7 @@ $locStor = new XR_LocStor();
 $methods = array(
     'test'                    => 'Tests toupper and checks sessid, params: '.
                                   'teststring, sessid.',
-    'getVersion'              => 'Get version of Campcaster.',
+    'getVersion'              => 'Get version of Airtime.',
 //    'authenticate'            => 'Checks authentication.',
     'login'                   => 'Login to storage.',
     'logout'                  => 'Logout from storage.',

@@ -3,7 +3,7 @@ define('BACKUP_EXT', 'tar');
 define('ACCESS_TYPE', 'backup');
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

@@ -5,7 +5,7 @@
  * Handles recursive accessPlaylist/releasePlaylist.
  * Should be 'required_once' from LocStor.php only.
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

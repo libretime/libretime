@@ -5,7 +5,7 @@ define('TR_LEAVE_CLOSED', TRUE);
 /**
  * Auxiliary class for transport records
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

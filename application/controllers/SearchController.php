@@ -25,7 +25,7 @@ class SearchController extends Zend_Controller_Action
     {
 		$this->_helper->layout->setLayout('search');
 
-		$this->view->headScript()->appendFile('/js/campcaster/onready/search.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/airtime/onready/search.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
@@ -36,7 +36,7 @@ class SearchController extends Zend_Controller_Action
 
     public function displayAction()
     {
-		$this->view->headScript()->appendFile('/js/campcaster/library/advancedsearch.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/airtime/library/advancedsearch.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/library_search.css');
 
 		$this->_helper->viewRenderer->setResponseSegment('search'); 

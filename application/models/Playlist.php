@@ -7,7 +7,7 @@ define('INDCH', ' ');
  *
  * remark: dcterms:extent format: hh:mm:ss.ssssss
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -905,7 +905,7 @@ class Playlist {
 } // class Playlist
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -1015,7 +1015,7 @@ class PlaylistTagExport
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -1196,7 +1196,7 @@ class PlaylistElementExport {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -1270,7 +1270,7 @@ class PlaylistAudioClipExport
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -1304,7 +1304,7 @@ class PlaylistFadeInfoExport
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

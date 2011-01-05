@@ -8,7 +8,7 @@ define('ALIBERR_NOTEXISTS', 31);
 /**
  * Authentication/authorization class
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage Alib
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

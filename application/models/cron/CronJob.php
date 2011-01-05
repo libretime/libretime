@@ -2,7 +2,7 @@
 /**
  * Cron jobs handling abstract class
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer.Cron
  */
 class CronJob

@@ -4,7 +4,7 @@ define('INDCH', ' ');
 /**
  * M3uPlaylist class
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -59,7 +59,7 @@ class M3uPlaylist {
      *
      * @param GreenBox $gb
      * @param string $aPath
-     * 		absolute path part of imported file (e.g. /home/user/campcaster)
+     * 		absolute path part of imported file (e.g. /home/user/airtime)
      * @param string $rPath
      * 		relative path/filename part of imported file
      *      (e.g. playlists/playlist_1.smil)
@@ -141,7 +141,7 @@ class M3uPlaylist {
      * @param string $data
      * 		local path to M3U file
      * @return string
-     * 		XML playlist in Campcaster playlist format
+     * 		XML playlist in Airtime playlist format
      */
     function convert2lspl(&$gb, $data)
     {
@@ -196,7 +196,7 @@ class M3uPlaylist {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -231,7 +231,7 @@ class M3uPlaylistBodyElement {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -257,7 +257,7 @@ class M3uPlaylistParElement {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -313,7 +313,7 @@ class M3uPlaylistAudioElement {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

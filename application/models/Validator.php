@@ -23,7 +23,7 @@ define('VAL_PREDXML', 121);
  *  </ul>
  *  It probably should be replaced by XML schema validation in the future.
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

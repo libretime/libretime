@@ -16,7 +16,7 @@ if (isset($WHITE_SCREEN_OF_DEATH) && $WHITE_SCREEN_OF_DEATH) {
  *
  * Local storage interface
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -1362,7 +1362,7 @@ class LocStor extends BasicStor {
 
     /*===================================================== auxiliary methods */
     /**
-     * Dummy method - only returns Campcaster version
+     * Dummy method - only returns Airtime version
      *
      * @return string
      */

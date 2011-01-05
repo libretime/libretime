@@ -17,7 +17,7 @@ class SideplaylistController extends Zend_Controller_Action
 
     public function indexAction()
     {
-		$this->view->headScript()->appendFile('/js/campcaster/library/spl.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/airtime/library/spl.js','text/javascript');
 
 		$this->_helper->viewRenderer->setResponseSegment('spl'); 
 
