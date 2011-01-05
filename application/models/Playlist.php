@@ -155,8 +155,7 @@ class Playlist {
 	{
 		$con = Propel::getConnection("campcaster");
 
-		$sql = "SELECT * FROM cc_playlist LEFT JOIN cc_playlisttimes USING(id) WHERE length <= '{$p_length}' ";
-		//AND state != 'edited'
+		$sql = "SELECT * FROM cc_playlist LEFT JOIN cc_playlisttimes USING(id) WHERE length <= '{$p_length}' AND state != 'edited' ";
 
 		$r = $con->query($sql);
         return $r->fetchAll();

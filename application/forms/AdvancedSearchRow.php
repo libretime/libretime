@@ -2,22 +2,11 @@
 
 class Application_Form_AdvancedSearchRow extends Zend_Form_SubForm
 {
-
-	protected $_rowid;
-
-    public function __construct($id = null)
-    {
-        $this->_rowid = $id;
-        parent::__construct();
-    }
-
     public function init()
     {
-		$id = $this->_rowid;
-
         $this->addElement(
             'select',
-            'metadata_'.$id,
+            'metadata',
             array(
                 'required' => true,
                 'multiOptions' => array(
@@ -50,11 +39,11 @@ class Application_Form_AdvancedSearchRow extends Zend_Form_SubForm
                 ), 
             )
         );
-		$this->getElement('metadata_'.$id)->removeDecorator('Label')->removeDecorator('HtmlTag');
+		$this->getElement('metadata')->removeDecorator('Label')->removeDecorator('HtmlTag');
 
 		$this->addElement(
             'select',
-            'match_'.$id,
+            'match',
             array(
                 'required' => true,
                 'multiOptions' => array(
@@ -68,12 +57,12 @@ class Application_Form_AdvancedSearchRow extends Zend_Form_SubForm
                 ), 
             )
         );
-		$this->getElement('match_'.$id)->removeDecorator('Label')->removeDecorator('HtmlTag');
+		$this->getElement('match')->removeDecorator('Label')->removeDecorator('HtmlTag');
 
-		$this->addElement('text', 'search_'.$id, array(
+		$this->addElement('text', 'search', array(
 		  'required' => true,
 		));
-		$this->getElement('search_'.$id)->removeDecorator('Label')->removeDecorator('HtmlTag');
+		$this->getElement('search')->removeDecorator('Label')->removeDecorator('HtmlTag');
     }
 
 

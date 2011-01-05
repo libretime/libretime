@@ -1799,27 +1799,35 @@ class StoredFile {
 
         $sql = $selector." ".$from;
 
-		$cond = array();
-		foreach(array_keys($md) as $key) {
-			if(strpos($key, 'row') !== false){
-				$t = explode("_", $key);
-				$row_num = $t[1];
+		$or_cond = array();
+		foreach (array_keys($md) as $group) {
 
-				$string = $g_metadata_xml_to_db_mapping[$md[$key]["metadata_".$row_num]];
+			if(strpos($group, 'group') === false) {
+				continue;
+			}
 
-				$string = $string ." ".$match[$md[$key]["match_".$row_num]];
+			$and_cond = array();
+			foreach (array_keys($md[$group]) as $row) {
 
-				if ($md[$key]["match_".$row_num] === "0")
-					$string = $string." '%". $md[$key]["search_".$row_num]."%'";
+				$string = $g_metadata_xml_to_db_mapping[$md[$group][$row]["metadata"]];
+
+				$string = $string ." ".$match[$md[$group][$row]["match"]];
+
+				if ($md[$group][$row]["match"] === "0")
+					$string = $string." '%". $md[$group][$row]["search"]."%'";
 				else
-					$string = $string." '". $md[$key]["search_".$row_num]."'";
+					$string = $string." '". $md[$group][$row]["search"]."'";
 
-				$cond[] = $string;
+				$and_cond[] = $string;
+			}
+		
+			if(count($and_cond) > 0) {
+				$or_cond[] = "(".join(" AND ", $and_cond).")";
 			}
 		}
 
-		if(count($cond) > 0) {
-			$where = " WHERE ". join(" AND ", $cond);
+		if(count($or_cond) > 0) {
+			$where = " WHERE ". join(" OR ", $or_cond);
 			$sql = $sql . $where;
 		}
 
@@ -1841,7 +1849,8 @@ class StoredFile {
 			$paginate = " LIMIT ".$limit. " OFFSET " .$offset;
 			$sql = $sql . $paginate;
 		}
-		//echo $sql;
+		//echo var_dump($md);
+		echo $sql;
 
 		return $CC_DBC->getAll($sql);
 	}

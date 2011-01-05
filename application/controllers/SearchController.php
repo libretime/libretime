@@ -2,29 +2,49 @@
 
 class SearchController extends Zend_Controller_Action
 {
+    protected $search_sess = null;
 
-	protected $form;
-	protected $search_sess = null;
+	private function addGroup($group_id) {
+
+		$form = new Application_Form_AdvancedSearch();
+
+		$form->addGroup($group_id, 1);
+		$group = $form->getSubForm('group_'.$group_id);
+		
+		return $group->__toString();
+	}
+	
+	private function addFieldToGroup($group_id, $row_id) {
+		
+		$form = new Application_Form_AdvancedSearch();
+
+		$form->addGroup($group_id);
+		$group = $form->getSubForm('group_'.$group_id);
+
+		$group->addRow($row_id);
+	
+		return $group->__toString();
+	}
 
     public function init()
     {
-		if(!Zend_Auth::getInstance()->hasIdentity())
+        if(!Zend_Auth::getInstance()->hasIdentity())
         {
             $this->_redirect('login/index');
         }
 
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('newfield', 'html')
+        $ajaxContext->addActionContext('newfield', 'json')
+					->addActionContext('newgroup', 'json')
 					->initContext();
 
-		$this->form = new Application_Form_AdvancedSearch();
 		$this->search_sess = new Zend_Session_Namespace("search");
     }
 
     public function indexAction()
     {
-		$this->_helper->layout->setLayout('search');
-
+        $this->_helper->layout->setLayout('search');
+        
 		$this->view->headScript()->appendFile('/js/campcaster/onready/search.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
@@ -36,28 +56,30 @@ class SearchController extends Zend_Controller_Action
 
     public function displayAction()
     {
-		$this->view->headScript()->appendFile('/js/campcaster/library/advancedsearch.js','text/javascript');
-		$this->view->headLink()->appendStylesheet('/css/library_search.css');
+        $this->view->headScript()->appendFile('/js/campcaster/library/advancedsearch.js','text/javascript');
+		//$this->view->headLink()->appendStylesheet('/css/library_search.css');
 
 		$this->_helper->viewRenderer->setResponseSegment('search'); 
 
 		$request = $this->getRequest();
 
-		$this->form = new Application_Form_AdvancedSearch();
-		$form = $this->form;
+		$form = new Application_Form_AdvancedSearch();
 		$this->view->form = $form;
 
 		// Form has not been submitted - displayed using layouts
 		if (!$request->isPost()) {
 
-			$sub = new Application_Form_AdvancedSearchRow(1);
-			$form->addSubForm($sub, 'row_1');
-			$form->getSubForm('row_1')->removeDecorator('DtDdWrapper');
+			$form->addGroup(1, 1);
+
+			$this->search_sess->next_group = 2;
+			$this->search_sess->next_row[1] = 2;
 
 			return;
 		}
 
-		// Form has been submitted - run data through preValidation()
+		$this->view->md = $request->getPost();
+	
+		// Form has been submitted
 		$form->preValidation($request->getPost());
 		
 		if (!$form->isValid($request->getPost())) {
@@ -65,8 +87,8 @@ class SearchController extends Zend_Controller_Action
 		}
 
 		// valid form was submitted set as search criteria.
-		$info = $form->getValues();
-		$this->search_sess->md = $info;
+		$this->view->md = $form->getValues();
+		$this->search_sess->md = $form->getValues();
 
 		//make sure to start on first page of new results.
 		unset($this->search_sess->page);
@@ -74,17 +96,29 @@ class SearchController extends Zend_Controller_Action
 
     public function newfieldAction()
     {
-		$id = $this->_getParam('id', 1);
+        $group_id = $this->_getParam('group', 1);
+		$row_id = $this->search_sess->next_row[$group_id];
 
-		$this->form->addSubForm(new Application_Form_AdvancedSearchRow($id), 'row_'.$id, $id);
+		$this->view->html = $this->addFieldToGroup($group_id, $row_id);
+		$this->view->row = $row_id;
 
-		$this->form->getSubForm('row_'.$id)->removeDecorator('DtDdWrapper');
-		$e = $this->form->getSubForm('row_'.$id);
-		
-		$this->view->field = $e->__toString();
+		$this->search_sess->next_row[$group_id] = $row_id + 1;
     }
 
+    public function newgroupAction()
+    {
+        $group_id = $this->search_sess->next_group;		
+		
+		$this->view->html = $this->addGroup($group_id);
+
+		$this->search_sess->next_group = $group_id + 1;
+		$this->search_sess->next_row[$group_id] = 2;
+    }
+
+
 }
+
+
 
 
 

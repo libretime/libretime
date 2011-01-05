@@ -35,6 +35,7 @@
           <actionMethod actionName="delete"/>
           <actionMethod actionName="contents"/>
           <actionMethod actionName="editFileMd"/>
+          <actionMethod actionName="quickSearch"/>
         </controllerFile>
         <controllerFile controllerName="Plupload">
           <actionMethod actionName="index"/>
@@ -45,6 +46,7 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="newfield"/>
           <actionMethod actionName="display"/>
+          <actionMethod actionName="newgroup"/>
         </controllerFile>
         <controllerFile controllerName="Login">
           <actionMethod actionName="index"/>
@@ -85,6 +87,7 @@
         <formFile formName="AddShow"/>
         <formFile formName="ScheduleShow"/>
         <formFile formName="AddUser"/>
+        <formFile formName="AdvancedSearchGroup"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory/>
@@ -228,6 +231,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Library">
             <viewScriptFile forActionName="editFileMd"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Library">
+            <viewScriptFile forActionName="quickSearch"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Search">
+            <viewScriptFile forActionName="newgroup"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

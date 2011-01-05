@@ -2,7 +2,9 @@
 
 class LibraryController extends Zend_Controller_Action
 {
+
     protected $pl_sess = null;
+
     protected $search_sess = null;
 
     public function init()
@@ -18,6 +20,7 @@ class LibraryController extends Zend_Controller_Action
 					->addActionContext('upload', 'json')
 					->addActionContext('delete', 'json')
 					->addActionContext('context-menu', 'json')
+					->addActionContext('quick-search', 'json')
                     ->initContext();
 
 		$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -36,6 +39,7 @@ class LibraryController extends Zend_Controller_Action
 		unset($this->search_sess->md);
 		
 		$this->_helper->actionStack('contents', 'library');
+		$this->_helper->actionStack('quick-search', 'library');
 		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
@@ -94,7 +98,7 @@ class LibraryController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = $this->_getParam('id');
-                	
+                        	
 		if (!is_null($id)) {
     		$file = StoredFile::Recall($id);
 			
@@ -121,7 +125,7 @@ class LibraryController extends Zend_Controller_Action
     public function contentsAction()
     {
         $this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
-        
+                
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
         $cat = $this->_getParam('ob', null);
@@ -183,8 +187,51 @@ class LibraryController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
+    public function quickSearchAction()
+    {
+		$this->view->headScript()->appendFile('/js/campcaster/library/quicksearch.js','text/javascript');
 
+        $this->_helper->viewRenderer->setResponseSegment('quick_search'); 
+
+		$search = $this->_getParam('search', null);
+		$format = $this->_getParam('format', 'layout');
+
+		if($format !== 'json')
+			return;
+
+		$categories = array("dc:title", "dc:creator", "dc:source");
+		$keywords = explode(" ", $search);
+
+		$md = array();
+
+		$i = 0;
+		foreach($keywords as $word) {
+					
+			foreach($categories as $cat) {
+				$md["row_".$i]["metadata_".$i] = $cat;
+				$md["row_".$i]["match_".$i] = 0;
+				$md["row_".$i]["search_".$i] = $word;
+				
+				$i = $i + 1;
+			}
+		} 
+
+		$currpage = isset($this->search_sess->page) ? $this->search_sess->page : null;
+		$order = isset($this->search_sess->order) ? $this->search_sess->order : null;
+		$count = StoredFile::searchFiles($md, $order, true);
+
+		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($count));
+		$paginator->setCurrentPageNumber($currpage);
+		$this->view->paginator = $paginator;
+		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage());
+
+		$this->view->html = $this->view->render('library/contents.phtml');
+		unset($this->view->files);
+		unset($this->view->paginator);
+    }
 }
+
+
 
 
 

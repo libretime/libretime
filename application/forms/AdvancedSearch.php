@@ -5,18 +5,13 @@ class Application_Form_AdvancedSearch extends Zend_Form
 
     public function init()
     {
-		$this->addElement('hidden', 'search_next_id', array(
-			'value' => 2
-		));
-		$this->getElement('search_next_id')->removeDecorator('Label')->removeDecorator('HtmlTag');
-
 		// Add the add button
-        $this->addElement('button', 'search_add', array(
+        $this->addElement('button', 'search_add_group', array(
             'ignore'   => true,
             'label'    => 'Add',
 			'order'    => '-2'
         ));
-		$this->getElement('search_add')->removeDecorator('DtDdWrapper');
+		$this->getElement('search_add_group')->removeDecorator('DtDdWrapper');
 
 		// Add the submit button
         $this->addElement('submit', 'search_submit', array(
@@ -27,6 +22,17 @@ class Application_Form_AdvancedSearch extends Zend_Form
 		$this->getElement('search_submit')->removeDecorator('DtDdWrapper');
     }
 
+	public function addGroup($group_id, $row_id=null) {
+
+		$this->addSubForm(new Application_Form_AdvancedSearchGroup(), 'group_'.$group_id, $group_id);
+		$this->getSubForm('group_'.$group_id)->removeDecorator('DtDdWrapper');
+
+		if(!is_null($row_id)) {
+			$subGroup = $this->getSubForm('group_'.$group_id);
+			$subGroup->addRow($row_id);
+		}
+	}
+
 	public function preValidation(array $data) {
 
 		function findId($name) {
@@ -34,36 +40,26 @@ class Application_Form_AdvancedSearch extends Zend_Form
 			return $t[1];
 		}
 
-		// array_filter callback
 		function findFields($field) {
-		  return strpos($field, 'row') !== false;
+		  return strpos($field, 'group') !== false;
 		}
 
-		$fields = array_filter(array_keys($data), 'findFields');
+		$groups = array_filter(array_keys($data), 'findFields');
 
-		foreach ($fields as $field) {
-			// use id to set new order
-			$id = findId($field);
-			$this->addNewField($data, $id);
+		foreach ($groups as $group) {
+
+			$group_id = findId($group);
+			$this->addGroup($group_id);
+
+			$subGroup = $this->getSubForm($group);
+
+			foreach (array_keys($data[$group]) as $row) {
+
+				$row_id = findId($row);
+				$subGroup->addRow($row_id, $data[$group][$row]);
+			}
 		}
-
 		
 	}
-
-	public function addNewField($data, $id) {
-
-		$sub = new Application_Form_AdvancedSearchRow($id);
-
-		$values = array("metadata_".$id => $data["row_".$id]["metadata_".$id], 
-						"match_".$id => $data["row_".$id]["match_".$id], 
-						"search_".$id => $data["row_".$id]["search_".$id]);
-
-		$sub->setDefaults($values);
-
-		$this->addSubForm($sub, 'row_'.$id, $id);
-		$this->getSubForm('row_'.$id)->removeDecorator('DtDdWrapper');
-	}
-
-
 }
 
