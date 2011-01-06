@@ -6,6 +6,7 @@ require_once("Schedule.php");
 
 global $g_metadata_xml_to_db_mapping;
 $g_metadata_xml_to_db_mapping = array(
+	"ls:type" => "ftype",
     "dc:format" => "format",
     "ls:bitrate" => "bit_rate",
     "ls:samplerate" => "sample_rate",
@@ -1764,6 +1765,10 @@ class StoredFile {
                 $plSelect .= "name AS ".$val.", ";
                 $fileSelect .= $val.", ";
             }
+			else if ($key === "ls:type"){
+                $plSelect .= "'playlist' AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }
             else if ($key === "dc:creator"){
                 $plSelect .= "creator AS ".$val.", ";
                 $fileSelect .= $val.", ";
@@ -1789,13 +1794,13 @@ class StoredFile {
 			$selector = "SELECT *";
 		}
 
-		$from = " FROM ((".$plSelect."PL.id, 'playlist' AS ftype
+		$from = " FROM ((".$plSelect."PL.id
                 FROM ".$CC_CONFIG["playListTable"]." AS PL
 				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id)
 
                 UNION
 
-                (".$fileSelect."id, ftype FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
+                (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
 
         $sql = $selector." ".$from;
 
