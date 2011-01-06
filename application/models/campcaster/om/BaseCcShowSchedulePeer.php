@@ -26,7 +26,7 @@ abstract class BaseCcShowSchedulePeer {
 	const TM_CLASS = 'CcShowScheduleTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 3;
+	const NUM_COLUMNS = 5;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -36,6 +36,12 @@ abstract class BaseCcShowSchedulePeer {
 
 	/** the column name for the SHOW_ID field */
 	const SHOW_ID = 'cc_show_schedule.SHOW_ID';
+
+	/** the column name for the SHOW_DAY field */
+	const SHOW_DAY = 'cc_show_schedule.SHOW_DAY';
+
+	/** the column name for the POSITION field */
+	const POSITION = 'cc_show_schedule.POSITION';
 
 	/** the column name for the GROUP_ID field */
 	const GROUP_ID = 'cc_show_schedule.GROUP_ID';
@@ -56,12 +62,12 @@ abstract class BaseCcShowSchedulePeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbShowId', 'DbGroupId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbShowId', 'dbGroupId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::SHOW_ID, self::GROUP_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SHOW_ID', 'GROUP_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'show_id', 'group_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbShowId', 'DbShowDay', 'DbPosition', 'DbGroupId', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbShowId', 'dbShowDay', 'dbPosition', 'dbGroupId', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::SHOW_ID, self::SHOW_DAY, self::POSITION, self::GROUP_ID, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SHOW_ID', 'SHOW_DAY', 'POSITION', 'GROUP_ID', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'show_id', 'show_day', 'position', 'group_id', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
 	);
 
 	/**
@@ -71,12 +77,12 @@ abstract class BaseCcShowSchedulePeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbShowId' => 1, 'DbGroupId' => 2, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbShowId' => 1, 'dbGroupId' => 2, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::SHOW_ID => 1, self::GROUP_ID => 2, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SHOW_ID' => 1, 'GROUP_ID' => 2, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'show_id' => 1, 'group_id' => 2, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbShowId' => 1, 'DbShowDay' => 2, 'DbPosition' => 3, 'DbGroupId' => 4, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbShowId' => 1, 'dbShowDay' => 2, 'dbPosition' => 3, 'dbGroupId' => 4, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::SHOW_ID => 1, self::SHOW_DAY => 2, self::POSITION => 3, self::GROUP_ID => 4, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SHOW_ID' => 1, 'SHOW_DAY' => 2, 'POSITION' => 3, 'GROUP_ID' => 4, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'show_id' => 1, 'show_day' => 2, 'position' => 3, 'group_id' => 4, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
 	);
 
 	/**
@@ -150,10 +156,14 @@ abstract class BaseCcShowSchedulePeer {
 		if (null === $alias) {
 			$criteria->addSelectColumn(CcShowSchedulePeer::ID);
 			$criteria->addSelectColumn(CcShowSchedulePeer::SHOW_ID);
+			$criteria->addSelectColumn(CcShowSchedulePeer::SHOW_DAY);
+			$criteria->addSelectColumn(CcShowSchedulePeer::POSITION);
 			$criteria->addSelectColumn(CcShowSchedulePeer::GROUP_ID);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.SHOW_ID');
+			$criteria->addSelectColumn($alias . '.SHOW_DAY');
+			$criteria->addSelectColumn($alias . '.POSITION');
 			$criteria->addSelectColumn($alias . '.GROUP_ID');
 		}
 	}

@@ -37,10 +37,6 @@ class LibraryController extends Zend_Controller_Action
 
 		unset($this->search_sess->page);
 		unset($this->search_sess->md);
-
-		//if ($this->getRequest()->isGet()) {
-		//	unset($this->search_sess->quick);
-		//}
 		
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('quick-search', 'library');
@@ -218,7 +214,7 @@ class LibraryController extends Zend_Controller_Action
 		$search = $this->_getParam('search', null);
 		$this->search_sess->quick_string = $search;
 
-		$categories = array("dc:title", "dc:creator", "dc:source");
+		$categories = array("dc:title", "dc:creator", "dc:source", "ls:type");
 		$keywords = explode(" ", $search);
 
 		$md = array();
