@@ -68,7 +68,7 @@ if ($langIsInstalled == '0') {
 
 echo " * Creating database tables\n";
 // Put Propel sql files in Database
-$command = __DIR__."/../library/propel/generator/bin/propel-gen ../build/ insert-sql";
+$command = __DIR__."/../library/propel/generator/bin/propel-gen ../build/ insert-sql 2>propel-error.log";
 //echo $command."\n";
 @exec($command, $output, $results);
 
