@@ -21,7 +21,6 @@
             $(cc.currentElem).append(prevDiv);
             
             var currParentDiv = document.createElement('div');
-            currParentDiv.setAttribute("style", "background-color:#bbbbbb;");
             $(cc.currentElem).append(currParentDiv);
             
             var currDiv = document.createElement('div');

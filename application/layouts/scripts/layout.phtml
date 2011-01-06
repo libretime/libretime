@@ -11,7 +11,17 @@
 
 <div id="nav"><?php echo $this->navigation()->menu()->setRenderInvisible(true) ?></div>
  
-<div id="content"><?php echo $this->layout()->content ?></div>
- 
+<div id="content" style="height: auto"><?php echo $this->layout()->content ?></div>
+<div style="z-index: 1; position: absolute; width: 100%; left: 0px; right: 0px; bottom: 0px; color: black; min-height: 100px; background-color: #cc3300;">
+	<div style="float:left; width: 15%; height: 100%;">&nbsp;</div>
+	<div style="float:left; width: 25%; height: 100%;"><div>Show:</div><div>Playlist:</div><div>Host:</div></div>
+	<div style="float:left; width: 30%;  height: 100%;"><div>Previous:</div><div>Current:</div><div>Upcoming:</div></div>
+	<div style="float:left; width: 30%; height: 100%;" id="list0" ></div>
+</div>
+<script>	
+$(document).ready(function() {
+	$("#list0").playlistViewer();
+});
+</script>
 </body>
 </html>

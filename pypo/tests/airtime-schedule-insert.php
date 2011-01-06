@@ -66,7 +66,7 @@ if (is_null($mediaFile)) {
 }
 $pl->addAudioClip($mediaFile->getId());
 
-$mediaFile = StoredFile::findByOriginalName("Peter Rudenko - Opening.mp3");
+$mediaFile = StoredFile::findByOriginalName("Peter_Rudenko_-_Opening.mp3");
 if (is_null($mediaFile)) {
     echo "Adding test audio clip to the database.\n";
     $v = array("filepath" => __DIR__."/../../audio_samples/OpSound/Peter Rudenko - Opening.mp3");
