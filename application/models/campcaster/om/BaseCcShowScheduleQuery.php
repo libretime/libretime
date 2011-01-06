@@ -8,10 +8,14 @@
  *
  * @method     CcShowScheduleQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcShowScheduleQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
+ * @method     CcShowScheduleQuery orderByDbShowDay($order = Criteria::ASC) Order by the show_day column
+ * @method     CcShowScheduleQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
  * @method     CcShowScheduleQuery orderByDbGroupId($order = Criteria::ASC) Order by the group_id column
  *
  * @method     CcShowScheduleQuery groupByDbId() Group by the id column
  * @method     CcShowScheduleQuery groupByDbShowId() Group by the show_id column
+ * @method     CcShowScheduleQuery groupByDbShowDay() Group by the show_day column
+ * @method     CcShowScheduleQuery groupByDbPosition() Group by the position column
  * @method     CcShowScheduleQuery groupByDbGroupId() Group by the group_id column
  *
  * @method     CcShowScheduleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -27,10 +31,14 @@
  *
  * @method     CcShowSchedule findOneByDbId(int $id) Return the first CcShowSchedule filtered by the id column
  * @method     CcShowSchedule findOneByDbShowId(int $show_id) Return the first CcShowSchedule filtered by the show_id column
+ * @method     CcShowSchedule findOneByDbShowDay(string $show_day) Return the first CcShowSchedule filtered by the show_day column
+ * @method     CcShowSchedule findOneByDbPosition(int $position) Return the first CcShowSchedule filtered by the position column
  * @method     CcShowSchedule findOneByDbGroupId(int $group_id) Return the first CcShowSchedule filtered by the group_id column
  *
  * @method     array findByDbId(int $id) Return CcShowSchedule objects filtered by the id column
  * @method     array findByDbShowId(int $show_id) Return CcShowSchedule objects filtered by the show_id column
+ * @method     array findByDbShowDay(string $show_day) Return CcShowSchedule objects filtered by the show_day column
+ * @method     array findByDbPosition(int $position) Return CcShowSchedule objects filtered by the position column
  * @method     array findByDbGroupId(int $group_id) Return CcShowSchedule objects filtered by the group_id column
  *
  * @package    propel.generator.campcaster.om
@@ -187,6 +195,68 @@ abstract class BaseCcShowScheduleQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowSchedulePeer::SHOW_ID, $dbShowId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the show_day column
+	 * 
+	 * @param     string|array $dbShowDay The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowScheduleQuery The current query, for fluid interface
+	 */
+	public function filterByDbShowDay($dbShowDay = null, $comparison = null)
+	{
+		if (is_array($dbShowDay)) {
+			$useMinMax = false;
+			if (isset($dbShowDay['min'])) {
+				$this->addUsingAlias(CcShowSchedulePeer::SHOW_DAY, $dbShowDay['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbShowDay['max'])) {
+				$this->addUsingAlias(CcShowSchedulePeer::SHOW_DAY, $dbShowDay['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowSchedulePeer::SHOW_DAY, $dbShowDay, $comparison);
+	}
+
+	/**
+	 * Filter the query on the position column
+	 * 
+	 * @param     int|array $dbPosition The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowScheduleQuery The current query, for fluid interface
+	 */
+	public function filterByDbPosition($dbPosition = null, $comparison = null)
+	{
+		if (is_array($dbPosition)) {
+			$useMinMax = false;
+			if (isset($dbPosition['min'])) {
+				$this->addUsingAlias(CcShowSchedulePeer::POSITION, $dbPosition['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbPosition['max'])) {
+				$this->addUsingAlias(CcShowSchedulePeer::POSITION, $dbPosition['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowSchedulePeer::POSITION, $dbPosition, $comparison);
 	}
 
 	/**

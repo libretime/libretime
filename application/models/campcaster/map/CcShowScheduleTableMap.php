@@ -40,6 +40,8 @@ class CcShowScheduleTableMap extends TableMap {
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
+		$this->addColumn('SHOW_DAY', 'DbShowDay', 'DATE', true, null, null);
+		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', false, null, null);
 		$this->addColumn('GROUP_ID', 'DbGroupId', 'INTEGER', true, null, null);
 		// validators
 	} // initialize()
