@@ -1838,11 +1838,11 @@ class StoredFile {
 		}
 
 		if(!is_null($order)) {
-			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]]. ", id " .$order["order"];
+			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]]." ".$order["order"].", id ";
 			$sql = $sql . $ob;
 		}
 		else{
-			$ob = " ORDER BY artist_name, id asc";
+			$ob = " ORDER BY artist_name asc, id";
 			$sql = $sql . $ob;
 		}
 

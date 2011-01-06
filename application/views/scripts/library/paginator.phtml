@@ -1,10 +1,10 @@
+<div class="paginationControl">
 <p>
 	<?php if ($this->pageCount): ?>
-	<div class="paginationControl">
+	
 	<?php echo $this->firstItemNumber; ?> - <?php echo $this->lastItemNumber; ?>
 	of <?php echo $this->totalItemCount; ?>
 </p>
-
 <p>
 	<!-- First page link -->
 	<?php if (isset($this->previous)): ?>
@@ -50,7 +50,7 @@
 	<?php else: ?>
 	  <span class="disabled">Last</span>
 	<?php endif; ?>
-	 
-	</div>
+	
 	<?php endif; ?>
 </p>
+</div>
