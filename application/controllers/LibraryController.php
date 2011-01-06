@@ -204,7 +204,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function quickSearchAction()
     {
-		$this->view->headScript()->appendFile('/js/campcaster/library/quicksearch.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/airtime/library/quicksearch.js','text/javascript');
 
         $this->_helper->viewRenderer->setResponseSegment('quick_search'); 
 
