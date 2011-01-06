@@ -37,6 +37,10 @@ class LibraryController extends Zend_Controller_Action
 
 		unset($this->search_sess->page);
 		unset($this->search_sess->md);
+
+		if ($this->getRequest()->isGet()) {
+			unset($this->search_sess->quick);
+		}
 		
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('quick-search', 'library');
@@ -154,14 +158,25 @@ class LibraryController extends Zend_Controller_Action
 		$currpage = isset($page) ? $page : $last_page;
 		$this->search_sess->page = $currpage;
 
-		$md = isset($this->search_sess->md) ? $this->search_sess->md : array();
-
-		$count = StoredFile::searchFiles($md, $order, true);
+		if(isset($this->search_sess->md)){
+			$md = $this->search_sess->md;
+			$quick = false;
+		}
+		else if(isset($this->search_sess->quick)) {
+			$md = $this->search_sess->quick;
+			$quick = true;
+		}
+		else {
+			$md = array();
+			$quick = false;
+		}
+		
+		$count = StoredFile::searchFiles($md, $order, true, null, null, $quick);
 
 		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($count));
 		$paginator->setCurrentPageNumber($currpage);
 		$this->view->paginator = $paginator;
-		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage());
+		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage(), $quick);
     }
 
     public function editFileMdAction()
@@ -193,6 +208,9 @@ class LibraryController extends Zend_Controller_Action
 
         $this->_helper->viewRenderer->setResponseSegment('quick_search'); 
 
+		//$this->view->urlparams = array("route" => array("controller"=> "Library", "action"=> "index", "module"=> "default"));
+		$this->route = 'quick_search';
+
 		$search = $this->_getParam('search', null);
 		$format = $this->_getParam('format', 'layout');
 
@@ -204,26 +222,26 @@ class LibraryController extends Zend_Controller_Action
 
 		$md = array();
 
-		$i = 0;
-		foreach($keywords as $word) {
-					
-			foreach($categories as $cat) {
-				$md["row_".$i]["metadata_".$i] = $cat;
-				$md["row_".$i]["match_".$i] = 0;
-				$md["row_".$i]["search_".$i] = $word;
-				
-				$i = $i + 1;
-			}
-		} 
+		for($group_id=1; $group_id <= count($keywords); $group_id++) {
+			
+			for($row_id=1; $row_id <= count($categories); $row_id++) {
 
+				$md["group_".$group_id]["row_".$row_id]["metadata"] = $categories[$row_id-1];
+				$md["group_".$group_id]["row_".$row_id]["match"] = "0";
+				$md["group_".$group_id]["row_".$row_id]["search"] = $keywords[$group_id-1];
+			}
+		}
+
+		$this->search_sess->quick = $md;
+		
 		$currpage = isset($this->search_sess->page) ? $this->search_sess->page : null;
 		$order = isset($this->search_sess->order) ? $this->search_sess->order : null;
-		$count = StoredFile::searchFiles($md, $order, true);
+		$count = StoredFile::searchFiles($md, $order, true, null, null, true);
 
 		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($count));
 		$paginator->setCurrentPageNumber($currpage);
 		$this->view->paginator = $paginator;
-		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage());
+		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage(), true);
 
 		$this->view->html = $this->view->render('library/contents.phtml');
 		unset($this->view->files);

@@ -1741,7 +1741,7 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-	public static function searchFiles($md, $order=NULL, $count=false, $page=null, $limit=null)
+	public static function searchFiles($md, $order=NULL, $count=false, $page=null, $limit=null, $quick=false)
 	{
 		global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
 
@@ -1800,6 +1800,8 @@ class StoredFile {
         $sql = $selector." ".$from;
 
 		$or_cond = array();
+		$inner = $quick ? 'OR':'AND';
+		$outer = $quick ? 'AND':'OR';
 		foreach (array_keys($md) as $group) {
 
 			if(strpos($group, 'group') === false) {
@@ -1822,12 +1824,12 @@ class StoredFile {
 			}
 		
 			if(count($and_cond) > 0) {
-				$or_cond[] = "(".join(" AND ", $and_cond).")";
+				$or_cond[] = "(".join(" ".$inner." ", $and_cond).")";
 			}
 		}
 
 		if(count($or_cond) > 0) {
-			$where = " WHERE ". join(" OR ", $or_cond);
+			$where = " WHERE ". join(" ".$outer." ", $or_cond);
 			$sql = $sql . $where;
 		}
 
@@ -1850,7 +1852,7 @@ class StoredFile {
 			$sql = $sql . $paginate;
 		}
 		//echo var_dump($md);
-		echo $sql;
+		//echo $sql;
 
 		return $CC_DBC->getAll($sql);
 	}

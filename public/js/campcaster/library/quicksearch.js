@@ -8,7 +8,15 @@ function setUpQuickSearch() {
 		string = $(this).val();
 
 		$.post(url, {search: string}, function(json){
-			var x;
+			var html;
+			//hacky way until I can figure out paginator better.
+			html = json.html.replace(/quick-search\/format\/json/g, "index");
+
+			$("#library_content")
+				.empty()
+				.append(html);
+
+			setUpLibrary();
 		});
 	});
 
