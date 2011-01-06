@@ -38,9 +38,9 @@ class LibraryController extends Zend_Controller_Action
 		unset($this->search_sess->page);
 		unset($this->search_sess->md);
 
-		if ($this->getRequest()->isGet()) {
-			unset($this->search_sess->quick);
-		}
+		//if ($this->getRequest()->isGet()) {
+		//	unset($this->search_sess->quick);
+		//}
 		
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('quick-search', 'library');
@@ -153,10 +153,7 @@ class LibraryController extends Zend_Controller_Action
 		}
 		else{
 			$last_page = null;
-		}
-		
-		$currpage = isset($page) ? $page : $last_page;
-		$this->search_sess->page = $currpage;
+		}	
 
 		if(isset($this->search_sess->md)){
 			$md = $this->search_sess->md;
@@ -170,6 +167,9 @@ class LibraryController extends Zend_Controller_Action
 			$md = array();
 			$quick = false;
 		}
+
+		$currpage = isset($page) ? $page : $last_page;
+		$this->search_sess->page = $currpage;
 		
 		$count = StoredFile::searchFiles($md, $order, true, null, null, $quick);
 
@@ -206,16 +206,17 @@ class LibraryController extends Zend_Controller_Action
     {
 		$this->view->headScript()->appendFile('/js/airtime/library/quicksearch.js','text/javascript');
 
-        $this->_helper->viewRenderer->setResponseSegment('quick_search'); 
+        $this->_helper->viewRenderer->setResponseSegment('quick_search');  
 
-		//$this->view->urlparams = array("route" => array("controller"=> "Library", "action"=> "index", "module"=> "default"));
-		$this->route = 'quick_search';
+		$this->view->qs_value = $this->search_sess->quick_string;
 
-		$search = $this->_getParam('search', null);
 		$format = $this->_getParam('format', 'layout');
 
 		if($format !== 'json')
 			return;
+
+		$search = $this->_getParam('search', null);
+		$this->search_sess->quick_string = $search;
 
 		$categories = array("dc:title", "dc:creator", "dc:source");
 		$keywords = explode(" ", $search);
