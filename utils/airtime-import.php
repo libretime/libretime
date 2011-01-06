@@ -238,11 +238,11 @@ if ($DEBUG_IMPORT) {
     $testonly = false;
     $importMode = "link";
     $files = array("/path/to/your/test/file.mp3");
-    $dsn =  array('username' => 'campcaster',
-                  'password' => 'campcaster',
+    $dsn =  array('username' => 'airtime',
+                  'password' => 'airtime',
                   'hostspec' => 'localhost',
                   'phptype' => 'pgsql',
-                  'database' => 'campcaster');
+                  'database' => 'airtime');
 } else {
     $dsn = $CC_CONFIG['dsn'];
 }

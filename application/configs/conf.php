@@ -8,11 +8,11 @@ global $CC_CONFIG;
 $CC_CONFIG = array(
     // Database config
     'dsn'           => array(
-        'username'      => 'campcaster',
-        'password'      => 'campcaster',
+        'username'      => 'airtime',
+        'password'      => 'airtime',
         'hostspec'      => 'localhost',
         'phptype'       => 'pgsql',
-        'database'      => 'campcaster',
+        'database'      => 'airtime',
     ),
 
     // Name of the web server user

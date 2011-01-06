@@ -145,7 +145,7 @@
         }
 
         function getScheduleFromServer(){
-            $.ajax({ url: "http://localhost/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
+            $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                     parseItems(data.entries);
                   }});
             setTimeout(getScheduleFromServer, 5000);
