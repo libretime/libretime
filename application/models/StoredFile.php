@@ -312,14 +312,14 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
 /**
  *  StoredFile class
  *
- *  Campcaster file storage support class.<br>
+ *  Airtime file storage support class.<br>
  *  Represents one virtual file in storage. Virtual file has up to two parts:
  *  <ul>
  *      <li>metadata in database - represented by MetaData class</li>
  *      <li>binary media data in real file</li>
  *  </ul>
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

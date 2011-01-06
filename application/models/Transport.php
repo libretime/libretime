@@ -38,7 +38,7 @@ include_once("TransportRecord.php");
  *   <li>file</li>
  *  </ul>
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -401,7 +401,7 @@ class Transport
 
     /* ------------------------------------------------ remote-search methods */
     /**
-     * Start search job on remote Campcaster instance.
+     * Start search job on remote Airtime instance.
      *
      * @param array $criteria
      * 		LS criteria format (see localSearch)
@@ -1636,7 +1636,7 @@ class Transport
 
 
     /**
-     * Ping to remote Campcaster server
+     * Ping to remote Airtime server
      *
      * @return string
      * 		network hub response or error object

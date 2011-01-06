@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../LocStor.php');
 /**
  * XML-RPC interface for LocStor class
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../LocStor.php');
 class XR_LocStor extends LocStor {
     /* ----------------------------------------------------------- getVersion */
     /**
-     * Dummy method - only returns Campcaster version
+     * Dummy method - only returns Airtime version
      *
      * The XML-RPC name of this method is "locstor.getVersion".
      *
@@ -242,7 +242,7 @@ class XR_LocStor extends LocStor {
      *          (returned by subsequent storeAudioClipClose call)
      *      </li>
      *      <li> metadata  : string -  metadata XML string
-     *          (as defined in Campcaster::Core::AudioClip Class Reference,
+     *          (as defined in Airtime::Core::AudioClip Class Reference,
      *          examples are in storageServer/var/tests/*.xml)
      *      </li>
      *      <li> fname :  string - human readable mnemonic file name

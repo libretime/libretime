@@ -8,7 +8,7 @@ require_once("Playlist.php");
  *
  * Playlist to file rendering - PHP layer, caller to the renderer executable
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

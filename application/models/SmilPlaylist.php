@@ -6,7 +6,7 @@ require_once("XmlParser.php");
 /**
  * SmilPlaylist class
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -35,7 +35,7 @@ class SmilPlaylist {
      * @param GreenBox $gb
      * 		reference to GreenBox object
      * @param string $aPath
-     * 		absolute path part of imported file (e.g. /home/user/campcaster)
+     * 		absolute path part of imported file (e.g. /home/user/airtime)
      * @param string $rPath
      * 		relative path/filename part of imported file
      *      (e.g. playlists/playlist_1.smil)
@@ -92,7 +92,7 @@ class SmilPlaylist {
      * @param array $parr
      * 		array of subjid, aPath, plid, rPath
      * @return string
-     * 		XML of playlist in Campcaster playlist format
+     * 		XML of playlist in Airtime playlist format
      */
     public static function convert2lspl(&$gb, $data, &$gunids, $parr)
     {
@@ -119,7 +119,7 @@ class SmilPlaylist {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -158,7 +158,7 @@ class SmilPlaylistBodyElement {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -186,7 +186,7 @@ class SmilPlaylistParElement {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -271,7 +271,7 @@ class SmilPlaylistAudioElement {
 
 
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

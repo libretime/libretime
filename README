@@ -1,94 +1,45 @@
 =========================================================================
-==========================   CAMPCASTER   ===============================
+==========================    AIRTIME   =================================
 =========================================================================
-Campcaster is the first free and open radio management software that 
-provides live studio broadcast capabilities as well as remote automation
-in one integrated system.
+Airtime is an open source application that provides remote automation 
+of a radio station.
 
-Campcaster has three audio outputs: one for live broadcasting, one for
-previewing audio, and one for automated scheduled playback.
-
-Major features of Campcaster:
- * Live, in-studio playout.  Campcaster Studio enables station personnel
-   to play out both individual sound files and playlists such as 
-   advertising blocks or entire programs.
+Major features:
  * Web-based remote station management.  Authorized personnel can add
    program material, create playlists, and schedule programming all via 
-   Campcaster's web interface.
- * Automation.  Campcaster has a scheduler function that enables users to
+   a web interface.
+ * Automation.  Airtime has a scheduler function that enables users to
    set playlists for playback at a date and time of their choosing.
    Playlists can be played back multiple times.
- * Playlists.  Campcaster allows users to create playlists that can be 
+ * Playlists.  Airtime allows users to create playlists that can be 
    either played on-demand in the Studio or in automated mode.  Playlists
    can be nested inside each other, so for example, a playlist with a 
    block of ads can be inside of a playlist with a music program.
  * Centralized archives of station program material.  Station personnel
    have a searchable, browseable central archive that is accessible both
    in the office and via the web.
- * Solid, fast playback.  Campcaster uses the popular Gstreamer 
+ * Solid, fast playback.  Airtime uses the open source Liquidsoap 
    multimedia framework for clean, reliable, fast playback. 
- * Program sharing.  Stations can share both playlists and files with a 
-   designated, centralized 'network hub.'  This enables the creation of 
-   'virtual radio networks' connected via the Internet. 
- * Search-based backup.  You can backup all station archives at the click
-   of a button, or only backup certain files based on search terms, so 
-   that backup files can be made of only a certain program or of all 
-   files created by a certain user.
- * Localization.  Campcaster is multilingual and supports Unicode.  It
-   also is very easy to create language localizations.
- * No restrictions.  Multiple instances of the Campcaster Studio program 
-   can access the same archive on the office network, and there are no 
-   worries about hardware dongles or keys limiting access on multiple PCs.
- * Innovative design.  Campcaster's user interface – the product of 
-   Parsons School of Design's “Design and Communication” program -  
-   introduces a number of innovations, including the 'Scratchpad', 
-   a list of recently-used files and playlists.
  * Open, extensible architecture.  Stations are free to extend and alter 
-   all parts of the Campcaster program code, which makes extensive use 
-   of XML-RPC APIs.
+   all parts of the program code.
 
 
 INSTALLATION
 ------------
 Please see this page for a typical user installation:
-http://en.flossmanuals.net/Campcaster
+http://en.flossmanuals.net/Airtime
 
 If you are a developer, please see this page:
-http://wiki.sourcefabric.org/display/CC/Campcaster+Dev+Site
+http://wiki.sourcefabric.org/display/CC/Airtime+Dev+Site
 
 Quick links to our resources
 ----------------------------
-    User Manual: http://en.flossmanuals.net/Campcaster/Introduction
+    User Manual: http://en.flossmanuals.net/Airtime/Introduction
     Forums and mailing lists: http://forum.sourcefabric.org
     Bug Tracking: http://dev.sourcefabric.org
     Code view/review: http://code.sourcefabric.org
     Public source code hosting: http://github.com/sourcefabric
-    Download link: https://sourceforge.net/projects/campcaster/files/
+    Download link: https://sourceforge.net/projects/airtime/files/
     Developer's wiki: http://wiki.sourcefabric.org
 
-
-
--------------------------------------------------------------------------
-
-    Copyright (c) 2010 Sourcefabric O.P.S.
-
-    This file is part of the Campcaster project.
-    http://campcaster.sourcefabric.org/
-    To report bugs, send an e-mail to campcaster-support@lists.sourcefabric.org
-
-    Campcaster is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Campcaster is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Campcaster; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
--------------------------------------------------------------------------
 

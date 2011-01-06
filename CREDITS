@@ -6,7 +6,8 @@ Version 1.6.0
 -------------
 This version marks a major change to the project, completely replacing the
 custom audio player with liquidsoap, dropping the custom desktop GUI, and 
-completely rewriting the web interface.
+completely rewriting the web interface. The project has also been renamed
+from "Campcaster" to "Airtime" for this release.
 
 Paul Baranowski (paul.baranowski@sourcefabric.org)
   Role: Project Lead / Software Developer
@@ -19,6 +20,12 @@ Naomi Aro (naomi.aro@sourcefabric.org)
   Highlights: 
     - New User Interface
     - Conversion to Propel DB backend
+
+Martin Konecny (martin.konecny@sourcefabric.org)
+  Role:Software Developer
+  Highlights:
+    - New User Interface
+    - Scheduler
 
 Daniel James
   Role: Documentor & QA

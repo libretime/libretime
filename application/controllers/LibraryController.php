@@ -29,7 +29,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/campcaster/onready/library.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/airtime/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 	
@@ -128,8 +128,8 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
-        $this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
-                
+        $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
+
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
         $cat = $this->_getParam('ob', null);

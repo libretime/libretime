@@ -18,7 +18,7 @@ require_once (dirname(__FILE__).'/../../conf.php');
  *    );
  *    $cron->closeCrontab();
  * </pre>
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer.Cron
  */
 class Cron {

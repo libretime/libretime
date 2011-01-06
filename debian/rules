@@ -139,7 +139,7 @@ override_dh_install:
 override_dh_fixperms:
 	dh_fixperms
 	#
-	chmod +x debian/campcaster-data/usr/share/campcaster/www/storageServer/var/install/campcaster-user.php
+	chmod +x debian/campcaster-data/usr/share/campcaster/www/storageServer/var/install/airtime-user.php
 	chmod -x debian/campcaster-data/usr/share/campcaster/www/storageServer/var/cron/Crontab.php \
 		 debian/campcaster-data/usr/share/campcaster/www/storageServer/var/cron/CronJob.php \
 		 debian/campcaster-data/usr/share/campcaster/www/htmlUI/var/templates/popup/PLAYLIST.downloadExportedFile.tpl \

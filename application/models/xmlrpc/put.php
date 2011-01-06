@@ -23,7 +23,7 @@
  *  </ul>
  *
  *  @see XR_LocStor
- * @package Campcaster
+ * @package Airtime
  * @subpackage storageServer
  */
 

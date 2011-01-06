@@ -17,9 +17,9 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 function printUsage()
 {
     echo "\n";
-    echo "campcaster-user\n";
+    echo "airtime-user\n";
     echo "===============\n";
-    echo "    This program allows you to manage Campcaster users.\n";
+    echo "    This program allows you to manage Airtime users.\n";
     echo "\n";
     echo "OPTIONS:\n";
     echo "    --addupdate <username> <password>\n";
