@@ -4,7 +4,7 @@ we need to update database host, dbname, username and password.
 
 This script reads from database.conf.
 """
-
+import os
 import ConfigParser
 import xml.dom.minidom
 from xml.dom.minidom import Node
@@ -73,5 +73,6 @@ xml_file = open('runtime-conf.xml', "w")
 xml_file.writelines(doc.toxml('utf-8'))
 xml_file.close()
 
-
+print 'Regenerating propel-config.php'
+os.system('../library/propel/generator/bin/propel-gen')
 
