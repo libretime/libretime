@@ -1,0 +1,4 @@
+#.*
+*.pyc
+files/
+pypo/liquidsoap/liquidsoap
