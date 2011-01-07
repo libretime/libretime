@@ -165,7 +165,7 @@ class PluploadController extends Zend_Controller_Action
                                 
         $view->headScript()->appendFile('/js/plupload/plupload.full.min.js','text/javascript');
 		$view->headScript()->appendFile('/js/plupload/jquery.plupload.queue.min.js','text/javascript');
-		$view->headScript()->appendFile('/js/campcaster/library/plupload.js','text/javascript');
+		$view->headScript()->appendFile('/js/airtime/library/plupload.js','text/javascript');
 
 		$view->headLink()->appendStylesheet('/css/plupload.queue.css');
     }

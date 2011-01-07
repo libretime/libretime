@@ -18,7 +18,7 @@ require_once("Transport.php");
  *
  * File storage module.
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

@@ -106,9 +106,9 @@ require_once(dirname(__FILE__)."/Playlist.php");
 //        "dc:language" => "language");
 
 /**
- * Core of Campcaster file storage module
+ * Core of Airtime file storage module
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -1494,7 +1494,7 @@ class BasicStor {
      * @param string $plid
      * 		Playlist gunid
      * @param string $aPath
-     * 		Absolute path part of imported file (e.g. /home/user/campcaster)
+     * 		Absolute path part of imported file (e.g. /home/user/airtime)
      * @param string $rPath
      * 		Relative path/filename part of imported file (e.g. playlists/playlist_1.smil)
      * @param string $ext

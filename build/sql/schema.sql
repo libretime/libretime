@@ -224,6 +224,8 @@ CREATE TABLE "cc_show_schedule"
 (
 	"id" serial  NOT NULL,
 	"show_id" INTEGER  NOT NULL,
+	"show_day" DATE  NOT NULL,
+	"position" INTEGER,
 	"group_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );

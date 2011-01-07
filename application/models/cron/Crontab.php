@@ -11,7 +11,7 @@ define('CRON_EMPTY',   4);
  * This class lets you manipulate a user's crontab.
  * It lets you add delete update entries easily.
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer.Cron
  */
 class Crontab

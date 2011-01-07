@@ -66,6 +66,7 @@ function setUpLibrary() {
 	$("#library_display tr:first-child span.album").data({'ob': 'dc:source', 'order' : 'asc'});
 	$("#library_display tr:first-child span.track").data({'ob': 'ls:track_num', 'order' : 'asc'});
 	$("#library_display tr:first-child span.length").data({'ob': 'dcterms:extent', 'order' : 'asc'});
+	$("#library_display tr:first-child span.type").data({'ob': 'dcterms:extent', 'order' : 'asc'});
 
 	$("#library_display tr:first-child span").click(function(){
 		var url = "/Library/contents/format/html",

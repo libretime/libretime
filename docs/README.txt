@@ -14,13 +14,13 @@ Setting Up Your VHOST
 The following is a sample VHOST you might want to consider for your project.
 
 <VirtualHost *:80>
-   DocumentRoot "/home/naomiaro/campcaster-refactor/campcaster/public"
-   ServerName campcaster.local
+   DocumentRoot "/home/naomiaro/campcaster-refactor/airtime/public"
+   ServerName airtime.local
 
    # This should be omitted in the production environment
    SetEnv APPLICATION_ENV development
     
-   <Directory "/home/naomiaro/campcaster-refactor/campcaster/public">
+   <Directory "/home/naomiaro/campcaster-refactor/airtime/public">
        Options Indexes MultiViews FollowSymLinks
        AllowOverride All
        Order allow,deny

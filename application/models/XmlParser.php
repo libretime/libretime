@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  */
 require_once "XML/Util.php";
@@ -10,7 +10,7 @@ require_once "XML/Util.php";
 /**
  * Object representation of one XML element
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -80,7 +80,7 @@ class XmlElement {
 /**
  * Object representation of one XML attribute
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -126,7 +126,7 @@ class XmlAttrib {
 /**
  *  XML parser object encapsulation
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt

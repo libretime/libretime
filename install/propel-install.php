@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -15,7 +15,6 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-echo "******************************* Install Begin ********************************\n";
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/../application/models/GreenBox.php');
@@ -23,6 +22,12 @@ require_once(dirname(__FILE__).'/../application/models/GreenBox.php');
 require_once(dirname(__FILE__)."/installInit.php");
 
 // Need to check that we are superuser before running this.
+if(exec("whoami") != "root"){
+  echo "Must be root user.\n";
+  exit(1);
+}
+
+echo "******************************* Install Begin ********************************\n";
 
 echo " *** Database Installation ***\n";
 
@@ -63,7 +68,7 @@ if ($langIsInstalled == '0') {
 
 echo " * Creating database tables\n";
 // Put Propel sql files in Database
-$command = __DIR__."/../library/propel/generator/bin/propel-gen ../build/ insert-sql";
+$command = __DIR__."/../library/propel/generator/bin/propel-gen ../build/ insert-sql 2>propel-error.log";
 //echo $command."\n";
 @exec($command, $output, $results);
 
@@ -201,7 +206,7 @@ install_setDirPermissions($CC_CONFIG["storageDir"]);
 //echo "   Done.\n";
 
 echo " * Importing sample audio clips \n";
-$command = __DIR__."/../utils/campcaster-import --copy ../audio_samples/ > /dev/null";
+$command = __DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null";
 @exec($command, $output, $results);
 echo "****************************** Install Complete ******************************\n";
 

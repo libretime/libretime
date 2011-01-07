@@ -20,8 +20,8 @@ from urlparse import urlparse
 
 
 def api_client_factory(config):
-	if config["api_client"] == "campcaster":	
-		return CampcasterApiClient(config)
+	if config["api_client"] == "airtime":	
+		return AirTimeApiClient(config)
 	elif config["api_client"] == "obp":
 		return ObpApiClient(config)
 	else:
@@ -100,15 +100,15 @@ class ApiClientInterface:
 	#	nil
 
 ################################################################################
-# Campcaster API Client
+# Airtime API Client
 ################################################################################
 
-class CampcasterApiClient(ApiClientInterface):
+class AirTimeApiClient(ApiClientInterface):
 
 	def __init__(self, config):
 		self.config = config
 
-	def __get_campcaster_version(self, verbose = True):
+	def __get_airtime_version(self, verbose = True):
 		logger = logging.getLogger()
 		url = self.config["base_url"] + self.config["api_base"] + self.config["version_url"]
 		url = url.replace("%%api_key%%", self.config["api_key"])
@@ -120,7 +120,7 @@ class CampcasterApiClient(ApiClientInterface):
 			logger.debug("Data: %s", data)
 			response_json = json.read(data)
 			version = response_json['version']
-			logger.debug("Campcaster Version %s detected", version)    
+			logger.debug("Airtime Version %s detected", version)    
 		except Exception, e:
 			try:
 				if e[1] == 401:
@@ -137,7 +137,7 @@ class CampcasterApiClient(ApiClientInterface):
 				if e[1] == 404:
 					if (verbose):
 						print '#####################################'
-						print '# Unable to contact the Campcaster-API'
+						print '# Unable to contact the Airtime-API'
 						print '# ' + url
 						print '#####################################'
 					return False
@@ -145,7 +145,7 @@ class CampcasterApiClient(ApiClientInterface):
 				pass
 
 			version = 0
-			logger.error("Unable to detect Campcaster Version - %s, Response: %s", e, response)
+			logger.error("Unable to detect Airtime Version - %s, Response: %s", e, response)
 
 		return version
 
@@ -168,22 +168,22 @@ class CampcasterApiClient(ApiClientInterface):
 
 
 	def is_server_compatible(self, verbose = True):
-		version = self.__get_campcaster_version(verbose)
+		version = self.__get_airtime_version(verbose)
 		if (version == 0 or version == False):
 			if (verbose):
-				print 'Unable to get Campcaster version number.'
+				print 'Unable to get Airtime version number.'
 				print
 			return False     
 		elif (version[0:4] != "1.6."): 
 			if (verbose):
-				print 'Campcaster version: ' + str(version)
-				print 'pypo not compatible with this version of Campcaster.'
+				print 'Airtime version: ' + str(version)
+				print 'pypo not compatible with this version of Airtime.'
 				print
 			return False     
 		else:
 			if (verbose):
-				print 'Campcaster version: ' + str(version)
-				print 'pypo is compatible with this version of Campcaster.'
+				print 'Airtime version: ' + str(version)
+				print 'pypo is compatible with this version of Airtime.'
 				print
 			return True
 

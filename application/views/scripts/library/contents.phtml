@@ -8,6 +8,7 @@
 		<th><span class="album">Album</span></th>
 		<th><span class="track">Track</span></th>
 		<th><span class="length">Length</span></th>
+		<th><span class="type">Type</span></th>
 	</tr>
 <?php
 		echo $this->partialLoop('library/libraryTablePartial.phtml', $this->files); 
@@ -18,5 +19,14 @@
 	else {
 		echo "No Results";
 	}
+?>
+
+<?php 
+
+echo $this->paginationControl($this->paginator,
+                                    'Sliding',
+                                    'library/paginator.phtml'); 
+
+
 ?>
 

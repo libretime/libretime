@@ -21,7 +21,6 @@
             $(cc.currentElem).append(prevDiv);
             
             var currParentDiv = document.createElement('div');
-            currParentDiv.setAttribute("style", "background-color:#bbbbbb;");
             $(cc.currentElem).append(currParentDiv);
             
             var currDiv = document.createElement('div');
@@ -145,7 +144,7 @@
         }
 
         function getScheduleFromServer(){
-            $.ajax({ url: "http://localhost/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
+            $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                     parseItems(data.entries);
                   }});
             setTimeout(getScheduleFromServer, 5000);

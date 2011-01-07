@@ -29,7 +29,7 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
 
-    	$this->view->headScript()->appendFile('/js/campcaster/schedule/schedule.js','text/javascript');
+    	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
@@ -177,8 +177,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function viewPlaylistAction()
     {
-        $this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/progressbar/jquery.progressbar.min.js','text/javascript');
+        //TODO: insert code for datagrid
     }
 
     public function getCurrentPlaylistAction()

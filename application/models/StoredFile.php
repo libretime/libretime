@@ -6,6 +6,7 @@ require_once("Schedule.php");
 
 global $g_metadata_xml_to_db_mapping;
 $g_metadata_xml_to_db_mapping = array(
+	"ls:type" => "ftype",
     "dc:format" => "format",
     "ls:bitrate" => "bit_rate",
     "ls:samplerate" => "sample_rate",
@@ -312,14 +313,14 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
 /**
  *  StoredFile class
  *
- *  Campcaster file storage support class.<br>
+ *  Airtime file storage support class.<br>
  *  Represents one virtual file in storage. Virtual file has up to two parts:
  *  <ul>
  *      <li>metadata in database - represented by MetaData class</li>
  *      <li>binary media data in real file</li>
  *  </ul>
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -1741,7 +1742,7 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-	public static function searchFiles($md, $order=NULL)
+	public static function searchFiles($md, $order=NULL, $count=false, $page=null, $limit=null, $quick=false)
 	{
 		global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
 
@@ -1755,9 +1756,6 @@ class StoredFile {
 			"6" => "!=",
 		);
 
-        //$sql = "SELECT * FROM ".$CC_CONFIG['filesTable'];
-
-
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
         $_SESSION["br"] = "";
@@ -1765,6 +1763,10 @@ class StoredFile {
             $_SESSION["br"] .= "key: ".$key." value:".$val.", ";
             if($key === "dc:title"){
                 $plSelect .= "name AS ".$val.", ";
+                $fileSelect .= $val.", ";
+            }
+			else if ($key === "ls:type"){
+                $plSelect .= "'playlist' AS ".$val.", ";
                 $fileSelect .= $val.", ";
             }
             else if ($key === "dc:creator"){
@@ -1785,45 +1787,79 @@ class StoredFile {
             }
         }
 
-        $sql = "SELECT * FROM ((".$plSelect."PL.id, 'playlist' AS ftype
+		if($count) {
+			$selector = "SELECT COUNT(*)";
+		}
+		else {
+			$selector = "SELECT *";
+		}
+
+		$from = " FROM ((".$plSelect."PL.id
                 FROM ".$CC_CONFIG["playListTable"]." AS PL
 				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id)
 
                 UNION
 
-                (".$fileSelect."id, ftype FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
+                (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
 
-		$cond = array();
-		foreach(array_keys($md) as $key) {
-			if(strpos($key, 'row') !== false){
-				$t = explode("_", $key);
-				$row_num = $t[1];
+        $sql = $selector." ".$from;
 
-				$string = $g_metadata_xml_to_db_mapping[$md[$key]["metadata_".$row_num]];
+		$or_cond = array();
+		$inner = $quick ? 'OR':'AND';
+		$outer = $quick ? 'AND':'OR';
+		foreach (array_keys($md) as $group) {
 
-				$string = $string ." ".$match[$md[$key]["match_".$row_num]];
+			if(strpos($group, 'group') === false) {
+				continue;
+			}
 
-				if ($md[$key]["match_".$row_num] === "0")
-					$string = $string." '%". $md[$key]["search_".$row_num]."%'";
+			$and_cond = array();
+			foreach (array_keys($md[$group]) as $row) {
+
+				$string = $g_metadata_xml_to_db_mapping[$md[$group][$row]["metadata"]];
+
+				$string = $string ." ".$match[$md[$group][$row]["match"]];
+
+				if ($md[$group][$row]["match"] === "0")
+					$string = $string." '%". $md[$group][$row]["search"]."%'";
 				else
-					$string = $string." '". $md[$key]["search_".$row_num]."'";
+					$string = $string." '". $md[$group][$row]["search"]."'";
 
-				$cond[] = $string;
+				$and_cond[] = $string;
+			}
+		
+			if(count($and_cond) > 0) {
+				$or_cond[] = "(".join(" ".$inner." ", $and_cond).")";
 			}
 		}
 
-		if(count($cond) > 0) {
-			$where = " WHERE ". join(" AND ", $cond);
+		if(count($or_cond) > 0) {
+			$where = " WHERE ". join(" ".$outer." ", $or_cond);
 			$sql = $sql . $where;
 		}
 
-		if(!is_null($order)) {
-			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]];
-			$sql = $sql . $ob . " " .$order["order"];
+		if($count) {
+			return $CC_DBC->getOne($sql);
 		}
+
+		if(!is_null($order)) {
+			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]]." ".$order["order"].", id ";
+			$sql = $sql . $ob;
+		}
+		else{
+			$ob = " ORDER BY artist_name asc, id";
+			$sql = $sql . $ob;
+		}
+
+		if(!is_null($page) && !is_null($limit)) {
+			$offset = $page * $limit - ($limit);
+			$paginate = " LIMIT ".$limit. " OFFSET " .$offset;
+			$sql = $sql . $paginate;
+		}
+		//echo var_dump($md);
 		//echo $sql;
 
-        return $CC_DBC->getAll($sql);
+		return $CC_DBC->getAll($sql);
 	}
 
 }

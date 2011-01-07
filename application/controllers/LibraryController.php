@@ -2,7 +2,9 @@
 
 class LibraryController extends Zend_Controller_Action
 {
+
     protected $pl_sess = null;
+
     protected $search_sess = null;
 
     public function init()
@@ -18,6 +20,7 @@ class LibraryController extends Zend_Controller_Action
 					->addActionContext('upload', 'json')
 					->addActionContext('delete', 'json')
 					->addActionContext('context-menu', 'json')
+					->addActionContext('quick-search', 'json')
                     ->initContext();
 
 		$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -26,16 +29,17 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/campcaster/onready/library.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/airtime/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 	
 		$this->_helper->layout->setLayout('library');
 
+		unset($this->search_sess->page);
 		unset($this->search_sess->md);
-		unset($this->search_sess->order);
-
+		
 		$this->_helper->actionStack('contents', 'library');
+		$this->_helper->actionStack('quick-search', 'library');
 		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
@@ -59,7 +63,7 @@ class LibraryController extends Zend_Controller_Action
 			}
 
 			$menu[] = array('action' => array('type' => 'gourl', 'url' => '/Library/edit-file-md/id/#id#'), 
-							'title' => 'Info');
+							'title' => 'Edit Metadata');
 
 		}
 		else if($type === "pl") {
@@ -94,7 +98,7 @@ class LibraryController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = $this->_getParam('id');
-                	
+                        	
 		if (!is_null($id)) {
     		$file = StoredFile::Recall($id);
 			
@@ -120,17 +124,55 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
-        $this->view->headScript()->appendFile('/js/campcaster/library/library.js','text/javascript');
-        
+        $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
+
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
-        $order["category"] = $this->_getParam('ob', "dc:creator");
-		$order["order"] = $this->_getParam('order', "asc");
+        $cat = $this->_getParam('ob', null);
+		$or = $this->_getParam('order', null);
+		$page = $this->_getParam('page', null);
 
-		$this->search_sess->order = $order;
-		$md = isset($this->search_sess->md) ? $this->search_sess->md : array();
+		if(!is_null($cat) && !is_null($or)) {
+			$order["category"] = $cat;
+			$order["order"] = $or;
+			$this->search_sess->order = $order;
+		}
+		else if(isset($this->search_sess->order)){
+			$order = $this->search_sess->order;
+		}
+		else{
+			$order = null;
+		}
 
-		$this->view->files = StoredFile::searchFiles($md, $order);
+		if (isset($this->search_sess->page)) {
+			$last_page = $this->search_sess->page;
+		}
+		else{
+			$last_page = null;
+		}	
+
+		if(isset($this->search_sess->md)){
+			$md = $this->search_sess->md;
+			$quick = false;
+		}
+		else if(isset($this->search_sess->quick)) {
+			$md = $this->search_sess->quick;
+			$quick = true;
+		}
+		else {
+			$md = array();
+			$quick = false;
+		}
+
+		$currpage = isset($page) ? $page : $last_page;
+		$this->search_sess->page = $currpage;
+		
+		$count = StoredFile::searchFiles($md, $order, true, null, null, $quick);
+
+		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($count));
+		$paginator->setCurrentPageNumber($currpage);
+		$this->view->paginator = $paginator;
+		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage(), $quick);
     }
 
     public function editFileMdAction()
@@ -156,8 +198,55 @@ class LibraryController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
+    public function quickSearchAction()
+    {
+		$this->view->headScript()->appendFile('/js/airtime/library/quicksearch.js','text/javascript');
 
+        $this->_helper->viewRenderer->setResponseSegment('quick_search');  
+
+		$this->view->qs_value = $this->search_sess->quick_string;
+
+		$format = $this->_getParam('format', 'layout');
+
+		if($format !== 'json')
+			return;
+
+		$search = $this->_getParam('search', null);
+		$this->search_sess->quick_string = $search;
+
+		$categories = array("dc:title", "dc:creator", "dc:source", "ls:type");
+		$keywords = explode(" ", $search);
+
+		$md = array();
+
+		for($group_id=1; $group_id <= count($keywords); $group_id++) {
+			
+			for($row_id=1; $row_id <= count($categories); $row_id++) {
+
+				$md["group_".$group_id]["row_".$row_id]["metadata"] = $categories[$row_id-1];
+				$md["group_".$group_id]["row_".$row_id]["match"] = "0";
+				$md["group_".$group_id]["row_".$row_id]["search"] = $keywords[$group_id-1];
+			}
+		}
+
+		$this->search_sess->quick = $md;
+		
+		$currpage = isset($this->search_sess->page) ? $this->search_sess->page : null;
+		$order = isset($this->search_sess->order) ? $this->search_sess->order : null;
+		$count = StoredFile::searchFiles($md, $order, true, null, null, true);
+
+		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($count));
+		$paginator->setCurrentPageNumber($currpage);
+		$this->view->paginator = $paginator;
+		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage(), true);
+
+		$this->view->html = $this->view->render('library/contents.phtml');
+		unset($this->view->files);
+		unset($this->view->paginator);
+    }
 }
+
+
 
 
 

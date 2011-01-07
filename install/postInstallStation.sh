@@ -1,23 +1,23 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#   Copyright (c) 2010 Sourcefabric O.P.S.
+#   Copyright (c) 2010 Airtime O.P.S.
 #
-#   This file is part of the Campcaster project.
+#   This file is part of the Airtime project.
 #   http://campcaster.sourcefabric.org/
 #   To report bugs, send an e-mail to bugs@campware.org
 #
-#   Campcaster is free software; you can redistribute it and/or modify
+#   Airtime is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   Campcaster is distributed in the hope that it will be useful,
+#   Airtime is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License
-#   along with Campcaster; if not, write to the Free Software
+#   along with Airtime; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #-------------------------------------------------------------------------------
@@ -404,7 +404,7 @@ if [ "$storage_is_local" = "yes" ]; then
     grep -q 'ls_scheduler_storage_pass' $install_etc/campcaster-scheduler.xml
     if [ $? = 0 ]; then
         SCHEDULER_STORAGE_PASS=`pwgen -N1 -c -n -s`
-        php -q $install_var_ls/storageServer/var/install/campcaster-user.php \
+        php -q $install_var_ls/storageServer/var/install/airtime-user.php \
             --addupdate scheduler ${SCHEDULER_STORAGE_PASS}
         sed -i -e "s/ls_scheduler_storage_pass/${SCHEDULER_STORAGE_PASS}/" \
             $install_etc/campcaster-scheduler.xml

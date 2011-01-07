@@ -2,7 +2,7 @@
 /**
  * Mass import of audio files.
  *
- * @package Campcaster
+ * @package Airtime
  * @subpackage StorageAdmin
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
@@ -27,7 +27,7 @@ function camp_import_error_handler()
 function printUsage()
 {
     global $CC_CONFIG;
-    echo "There are two ways to import audio files into Campcaster: linking\n";
+    echo "There are two ways to import audio files into Airtime: linking\n";
     echo "or copying.\n";
     echo "\n";
     echo "Linking has the advantage that it will not duplicate any files,\n";
@@ -40,13 +40,13 @@ function printUsage()
     echo "your files.\n";
     echo "\n";
     echo "Usage:\n";
-    echo "  campcaster-import [OPTIONS] FILES_OR_DIRS\n";
+    echo "  airtime-import [OPTIONS] FILES_OR_DIRS\n";
     echo "\n";
     echo "Options:\n";
     echo "  -l, --link     Link to specified files.\n";
     echo "                 Saves storage space, but you cannot move, delete,\n";
     echo "                 or rename the original files, otherwise there will\n";
-    echo "                 be dead air when Campcaster tries to play the file.\n";
+    echo "                 be dead air when Airtime tries to play the file.\n";
     echo "\n";
     echo "  -c, --copy     Copy the specified files.\n";
     echo "                 This is useful if you are importing from removable media.\n";
@@ -228,7 +228,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
 $DEBUG_IMPORT = false;
 
 echo "========================\n";
-echo "Campcaster Import Script\n";
+echo "Airtime Import Script\n";
 echo "========================\n";
 $g_errors = 0;
 //print_r($argv);
@@ -238,11 +238,11 @@ if ($DEBUG_IMPORT) {
     $testonly = false;
     $importMode = "link";
     $files = array("/path/to/your/test/file.mp3");
-    $dsn =  array('username' => 'campcaster',
-                  'password' => 'campcaster',
+    $dsn =  array('username' => 'airtime',
+                  'password' => 'airtime',
                   'hostspec' => 'localhost',
                   'phptype' => 'pgsql',
-                  'database' => 'campcaster');
+                  'database' => 'airtime');
 } else {
     $dsn = $CC_CONFIG['dsn'];
 }
