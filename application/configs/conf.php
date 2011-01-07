@@ -7,13 +7,7 @@ global $CC_CONFIG;
 
 $CC_CONFIG = array(
     // Database config
-    'dsn'           => array(
-        'username'      => 'airtime',
-        'password'      => 'airtime',
-        'hostspec'      => 'localhost',
-        'phptype'       => 'pgsql',
-        'database'      => 'airtime',
-    ),
+    'dsn'           => load_db_config(),
 
     // Name of the web server user
     'webServerUser' => 'www-data',
@@ -171,6 +165,15 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 //	exit(1);
 //}
 //$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-
+function load_db_config(){
+	$ini_array = parse_ini_file(dirname(__FILE__).'/../../build/database.conf', true);
+		
+	return array(        
+        'username'      => $ini_array['database']['dbuser'],
+        'password'      => $ini_array['database']['dbpass'],
+        'hostspec'      => $ini_array['database']['host'],
+        'phptype'       => 'pgsql',
+        'database'      => $ini_array['database']['dbname']);
+}
 
 ?>
