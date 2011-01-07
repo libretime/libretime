@@ -2,7 +2,7 @@ dnl-----------------------------------------------------------------------------
 dnl Copyright (c) 2010 Sourcefabric O.P.S.
 dnl
 dnl This file is part of the Airtime project.
-dnl http://campcaster.sourcefabric.org/
+dnl http://airtime.sourcefabric.org/
 dnl
 dnl Airtime is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ dnl This is due to the fact that configure spreads a lot of trash around,
 dnl like atom4te cache directories, config.* files, etc. into the directory
 dnl it is being run from. We clearly don't want these in our base directory.
 dnl-----------------------------------------------------------------------------
-AC_INIT(GetId3, 0.0, bugs@campware.org)
+AC_INIT(GetId3, 0.0, contact@sourcefabric.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2010 Sourcefabric O.P.S. under the GNU GPL])
 AC_REVISION($Revision$)
