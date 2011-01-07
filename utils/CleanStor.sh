@@ -3,7 +3,7 @@
 #   Copyright (c) 2010 Sourcefabric O.P.S.
 #
 #   This file is part of the Airtime project.
-#   http://campcaster.sourcefabric.org/
+#   http://airtime.sourcefabric.org/
 #
 #   Airtime is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
