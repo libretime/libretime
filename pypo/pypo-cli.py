@@ -92,7 +92,8 @@ logging.config.fileConfig("logging.cfg")
 try:
     config = ConfigObj('config.cfg')
     POLL_INTERVAL = float(config['poll_interval'])
-    PUSH_INTERVAL = float(config['push_interval'])
+    PUSH_INTERVAL = 0.5
+    #PUSH_INTERVAL = float(config['push_interval'])
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
 except Exception, e:
@@ -109,9 +110,6 @@ class Global:
             sys.exit()
             
   
-"""
-
-"""
 class Playout:
     def __init__(self):
         self.api_client = api_client.api_client_factory(config)
@@ -577,47 +575,41 @@ class Playout:
         self.schedule = self.load_schedule()
         playedItems = self.load_schedule_tracker()
         
-        tcomming = time.localtime(time.time() + self.push_ahead)
+        tcoming = time.localtime(time.time() + self.push_ahead)
         tnow = time.localtime(time.time())
         
-        str_tnow = "%04d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4])
-        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])        
-        str_tcomming = "%04d-%02d-%02d-%02d-%02d" % (tcomming[0], tcomming[1], tcomming[2], tcomming[3], tcomming[4])
-        str_tcomming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcomming[0], tcomming[1], tcomming[2], tcomming[3], tcomming[4], tcomming[5])
-
-        playnow = None
-        
+        str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
+    
         if self.schedule == None:
             logger.warn('Unable to loop schedule - maybe write in progress?')
             logger.warn('Will try again in next loop.')
         
         else:    
-            for pkey in self.schedule:                
-                if pkey[0:16] == str_tcomming:
+            for pkey in self.schedule:
+                playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)                
+                if pkey[0:19] <= str_tcoming_s and not playedFlag:
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = self.schedule[pkey]
-                    playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
-                    logger.debug("PLAYED FLAG: " + str(playedFlag)) 
-                    if not playedFlag:
-                        # We have a match, replace the current playlist and
-                        # force liquidsoap to refresh.
-                        ptype = playlist['subtype']
+                    
+                    ptype = playlist['subtype']
 
-                        if (self.push_liquidsoap(pkey, self.schedule, ptype) == 1):
-                            logger.debug("Pushed to liquidsoap, updating 'played' status.")
-                            # Marked the current playlist as 'played' in the schedule tracker
-                            # so it is not called again in the next push loop.
-                            # Write changes back to tracker file.                            
-                            playedItems[pkey] = playlist
-                            playedItems[pkey]['played'] = 1 
-                            schedule_tracker = open(self.schedule_tracker_file, "w")
-                            pickle.dump(playedItems, schedule_tracker)
-                            schedule_tracker.close()
-                            logger.debug("Wrote schedule to disk: "+str(playedItems))
-                                                        
-                            # Call API to update schedule states
-                            logger.debug("Doing callback to server to update 'played' status.")
-                            self.api_client.notify_scheduled_item_start_playing(pkey, self.schedule)
+                    # We have a match, replace the current playlist and
+                    # force liquidsoap to refresh.
+                    if (self.push_liquidsoap(pkey, self.schedule, ptype) == 1):
+                        logger.debug("Pushed to liquidsoap, updating 'played' status.")
+                        # Marked the current playlist as 'played' in the schedule tracker
+                        # so it is not called again in the next push loop.
+                        # Write changes back to tracker file.                            
+                        playedItems[pkey] = playlist
+                        playedItems[pkey]['played'] = 1 
+                        schedule_tracker = open(self.schedule_tracker_file, "w")
+                        pickle.dump(playedItems, schedule_tracker)
+                        schedule_tracker.close()
+                        logger.debug("Wrote schedule to disk: "+str(playedItems))
+                                                    
+                        # Call API to update schedule states
+                        logger.debug("Doing callback to server to update 'played' status.")
+                        self.api_client.notify_scheduled_item_start_playing(pkey, self.schedule)
 
         
     def load_schedule(self):
@@ -724,80 +716,6 @@ class Playout:
             status = 0
             
         return status
-    
-    
-    #def push_liquidsoap_legacy(self, pkey, ptype, p_id, user_id):
-    #    logger = logging.getLogger()
-    #    logger.debug('trying to push %s to liquidsoap', pkey)
-    #    
-    #    self.export_source = export_source
-    #    self.cache_dir = CACHE_DIR + self.export_source + '/'
-    #    self.schedule_file = self.cache_dir + 'schedule'
-    #
-    #    src = self.cache_dir + str(pkey) + '/list.lsp'
-    #    dst = self.cache_dir + 'current.lsp'
-    #    
-    #    print src
-    #    print dst
-    #    
-    #    print '*************'
-    #    print ptype
-    #    print '*************'
-    #    
-    #    if True == os.access(src, os.R_OK):
-    #        try:
-    #            shutil.copy2(src, dst)
-    #            logger.debug('copy %s to %s', src, dst)
-    #            """
-    #            i know this could be wrapped, maybe later..
-    #            """
-    #            tn = telnetlib.Telnet(LS_HOST, 1234)
-    #            tn.write("\n")
-    #            tn.write("live_in.stop\n")
-    #            tn.write("stream_disable\n")
-    #            time.sleep(0.2)
-    #            tn.write("\n")
-    #            #tn.write("reload_current\n")
-    #            tn.write("current.reload\n")
-    #            time.sleep(0.2)
-    #            tn.write("skip_current\n")
-    #            
-    #            if(int(ptype) == 6):
-    #                """
-    #                Couchcaster comming. Stop/Start live input to have ls re-read it's playlist
-    #                """
-    #                print 'Couchcaster - switching to stream'
-    #                tn.write("live_in.start\n")
-    #                time.sleep(0.2)
-    #                tn.write("stream_enable\n")
-    #            
-    #            if(int(ptype) == 7):
-    #                """
-    #                Recast comming. Start the live input
-    #                """
-    #                print 'Recast - switching to stream'
-    #                tn.write("live_in.start\n")
-    #                time.sleep(0.2)
-    #                tn.write("stream_enable\n")
-    #            
-    #            """
-    #            Pass some extra information to liquidsoap
-    #            """
-    #            tn.write("pl.pl_id '%s'\n" % p_id)
-    #            tn.write("pl.user_id '%s'\n" % user_id)
-    #            tn.write("exit\n")
-    #            
-    #            print tn.read_all()
-    #            
-    #            status = 1
-    #            
-    #        except Exception, e:
-    #            logger.error('%s', e)
-    #            status = 0
-    #    else:
-    #        status = 0
-    #            
-    #    return status
     
 
     """
