@@ -104,33 +104,6 @@ function closeDialog(event, ui) {
 	$(this).remove();
 }
 
-function schedulePlaylist() {
-	var li, pl_id, url, event, start, dialog;
-
-	dialog = $(this);
-	li = $("#schedule_playlist_dialog").find(".ui-state-active");
-
-	if(li.length === 0) {
-		dialog.remove();
-		return;
-	}
-
-	pl_id = li.data('pl_id');
-	event = li.parent().data('event');	
-
-	start_date = makeTimeStamp(event.start);
-
-	url = '/Schedule/schedule-show/format/json';
-
-	$.post(url, 
-		{plId: pl_id, start: start_date, showId: event.id},
-		function(json){
-			dialog.remove();
-			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-		});	
-	
-}
-
 function autoSelect(event, ui) {
 
 	$("#hosts-"+ui.item.value).attr("checked", "checked");
@@ -203,6 +176,30 @@ function makeScheduleDialog(dialog, show) {
 			
 		});
 	});
+
+	dialog.find('#schedule_playlist_choice li')
+		.draggable({ 
+			helper: 'clone' 
+		});
+
+	dialog.find("#schedule_playlist_chosen")
+		.droppable({
+      		drop: function(event, ui) {
+				var li, pl_id, url, start_date;
+
+				pl_id = $(ui.helper).attr("id").split("_").pop();
+				
+				start_date = makeTimeStamp(show.start);
+
+				url = '/Schedule/schedule-show/format/json';
+
+				/*$.post(url, 
+					{plId: pl_id, start: start_date, showId: show.id},
+					function(json){
+						var x;
+					});	*/
+			}
+    	});
 }
 
 function openScheduleDialog(show, time) {
@@ -223,7 +220,10 @@ function openScheduleDialog(show, time) {
 				width: 950,
 				height: 400,
 				close: closeDialog,
-				buttons: { "Cancel": closeDialog, "Ok": schedulePlaylist}
+				buttons: {"Ok": function() {
+					dialog.remove();
+					$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+				}}
 			});
 
 			dialog.dialog('open');

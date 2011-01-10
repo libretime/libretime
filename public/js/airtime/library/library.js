@@ -41,7 +41,7 @@ function deletePlaylist(json) {
 function addLibraryItemEvents() {
 	$('#library_display tr[id ^= "au"]')
 		.draggable({ 
-				helper: 'clone' 
+			helper: 'clone' 
 		});
 
 	$('#library_display tr:not(:first-child)')

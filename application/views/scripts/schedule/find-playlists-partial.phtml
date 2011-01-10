@@ -1,8 +1,11 @@
-<li class="ui-widget-content">
+<li id="sp_<?php echo $this->id ?>" class="ui-widget-content">
 	<div><?php echo $this->name ?></div>
 	<div><?php echo $this->description ?></div>
 	<div><?php echo $this->length ?></div>
-	<?php if($this->state === "edited") : ?>
-	<div>edited by: <?php echo $this->login ?></div>
-	<?php endif ?>
+	<div>
+		<span>Creator: <?php echo $this->creator ?></span>
+		<?php if($this->state === "edited") : ?>
+		<span>Editing: <?php echo $this->login ?></span>
+		<?php endif ?>
+	</div>
 </li>

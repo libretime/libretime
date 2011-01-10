@@ -155,7 +155,7 @@ class Playlist {
 	{
 		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
-		$sql = "SELECT  sub.login, plt.length, pl.state, pl.description, pl.name, pl.id 
+		$sql = "SELECT  sub.login, plt.length, pl.state, pl.creator, pl.description, pl.name, pl.id 
 				FROM cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id 
 				WHERE plt.length <= '{$p_length}' ";
 
@@ -167,7 +167,7 @@ class Playlist {
 	{
 		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
-		$sql = "SELECT  sub.login, plt.length, pl.state, pl.description, pl.name, pl.id 
+		$sql = "SELECT  sub.login, plt.length, pl.state, pl.creator, pl.description, pl.name, pl.id 
 				FROM cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id 
 				WHERE plt.length <= '{$p_length}' ";
 
@@ -175,7 +175,7 @@ class Playlist {
 		if(!is_null($search)) {
 			$keywords = explode(" ", $search);
 
-			$categories = array("pl.description", "pl.name", "pl.creator");
+			$categories = array("pl.description", "pl.name", "pl.creator", "sub.login");
 
 			for($group_id=1; $group_id <= count($keywords); $group_id++) {
 			
