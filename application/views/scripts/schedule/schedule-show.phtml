@@ -1,1 +1,9 @@
-<br /><br /><center>View script for controller <b>Schedule</b> and script/action name <b>scheduleShow</b></center>
+<div id="schedule_playlist_dialog">
+<input id="schedule_playlist_search" type="text"></input>
+<ul id="schedule_playlist_choice">
+<?php
+		echo $this->partialLoop('schedule/find-playlists-partial.phtml', $this->playlists); 
+?>
+</ul>
+<ul id="schedule_playlist_chosen"></ul>
+</div>

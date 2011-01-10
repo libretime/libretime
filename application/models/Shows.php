@@ -14,7 +14,7 @@ class Show {
 	//end dates are non inclusive.
 	public function addShow($data) {
 	
-		$con = Propel::getConnection("campcaster");
+		$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
 
 		$sql = "SELECT time '{$data['start_time']}' + INTERVAL '{$data['duration']} hour' ";
 		$r = $con->query($sql);
@@ -202,9 +202,19 @@ class Show {
 		}
 	}
 
+	public function getTimeUnScheduled($start_date, $end_date, $start_time, $end_time) {
+
+		$start_timestamp = $start_date ." ".$start_time;
+		$end_timestamp = $end_date ." ".$end_time;
+
+		$time = Schedule::getTimeUnScheduledInRange($start_timestamp, $end_timestamp);
+
+		return $time;
+	}
+
 	public function showHasContent($start_timestamp, $end_timestamp) {
 
-		$con = Propel::getConnection("campcaster");
+		$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
         $sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}'";
 		$r = $con->query($sql);
 		$length = $r->fetchColumn(0);
@@ -384,5 +394,23 @@ class Show {
 		$event["percent"] = $percent;
 
 		return $event;
+	}
+
+	public function searchPlaylistsForShow($day, $search){
+		global $CC_DBC;
+
+		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$this->_showId}' AND day = '{$day}'";
+		$row = $CC_DBC->GetAll($sql);
+		$row = $row[0];
+
+		$start_date = $row["first_show"];
+		$end_date = $row["last_show"];
+		$start_time = $row["start_time"];
+		$end_time = $row["end_time"];
+
+		$length = $this->getTimeUnScheduled($start_date, $start_date, $start_time, $end_time);
+
+		return Playlist::searchPlaylists($length, $search);
+
 	}
 }

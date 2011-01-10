@@ -174,45 +174,6 @@ function makeShowDialog(json) {
 	return dialog;
 }
 
-function makeScheduleDialog(playlists, event) {
-	
-	var dialog;
-
-	//main jqueryUI dialog
-	dialog = $('<div id="schedule_playlist_dialog" />');
-
-	var ol, li;
-	ol = $('<ul/>');
-	$.each(playlists, function(i, val){
-		li = $('<li />')
-			.addClass('ui-widget-content')
-			.append('<div>'+val.name+'</div>')
-			.append('<div>'+val.description+'</div>')
-			.append('<div>'+val.length+'</div>')
-			.click(function(){
-				$(this).parent().find("li").removeClass("ui-state-active")
-				$(this).addClass("ui-state-active");
-			});
-
-		li.data({'pl_id': val.id});
-		ol.append(li);
-	});
-	
-	ol.data({'event': event});
-	dialog.append(ol);
-
-	dialog.dialog({
-		autoOpen: false,
-		title: 'Schedule Playlist',
-		width: 950,
-		height: 400,
-		close: closeDialog,
-		buttons: { "Cancel": closeDialog, "Ok": schedulePlaylist}
-	});
-
-	return dialog;
-}
-
 function openShowDialog() {
 	var url;
 
@@ -220,11 +181,31 @@ function openShowDialog() {
 
 	$.get(url, function(json){
 		var dialog = makeShowDialog(json);
+
 		dialog.dialog('open');
 	});
 }
 
-function openScheduleDialog(event, time) {
+function makeScheduleDialog(dialog, show) {
+	
+	dialog.find("#schedule_playlist_search").keyup(function(){
+		var url, string, day;
+		
+		url = "/Schedule/find-playlists/format/html";
+		string = $(this).val();
+		day = show.start.getDay();
+
+		$.post(url, {search: string, id: show.id, day: day}, function(html){
+			
+			$("#schedule_playlist_choice")
+				.empty()
+				.append(html);
+			
+		});
+	});
+}
+
+function openScheduleDialog(show, time) {
 	var url;
 
 	url = '/Schedule/schedule-show/format/json';
@@ -232,7 +213,19 @@ function openScheduleDialog(event, time) {
 	$.get(url, 
 		{length: time},
 		function(json){
-			var dialog = makeScheduleDialog(json.playlists, event);
+			var dialog = $(json.dialog);
+
+			makeScheduleDialog(dialog, show);
+
+			dialog.dialog({
+				autoOpen: false,
+				title: 'Schedule Playlist',
+				width: 950,
+				height: 400,
+				close: closeDialog,
+				buttons: { "Cancel": closeDialog, "Ok": schedulePlaylist}
+			});
+
 			dialog.dialog('open');
 		});
 }
