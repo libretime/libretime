@@ -153,7 +153,7 @@ class Playlist {
 
 	public static function findPlaylistMaxLength($p_length) 
 	{
-		$con = Propel::getConnection("airtime");
+		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
 		$sql = "SELECT  sub.login, plt.length, pl.state, pl.description, pl.name, pl.id 
 				FROM cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id 
@@ -165,7 +165,7 @@ class Playlist {
 
 	public static function searchPlaylists($p_length, $search=null) 
 	{
-		$con = Propel::getConnection("airtime");
+		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
 		$sql = "SELECT  sub.login, plt.length, pl.state, pl.description, pl.name, pl.id 
 				FROM cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id 
