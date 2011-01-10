@@ -1796,7 +1796,7 @@ class StoredFile {
 
 		$from = " FROM ((".$plSelect."PL.id
                 FROM ".$CC_CONFIG["playListTable"]." AS PL
-				LEFT JOIN ".$CC_CONFIG['playListTimeView']." PLT ON PL.id = PLT.id)
+				LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
 
                 UNION
 

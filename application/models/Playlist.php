@@ -153,9 +153,63 @@ class Playlist {
 
 	public static function findPlaylistMaxLength($p_length) 
 	{
-		$con = Propel::getConnection("campcaster");
+		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
-		$sql = "SELECT * FROM cc_playlist LEFT JOIN cc_playlisttimes USING(id) WHERE length <= '{$p_length}' AND state != 'edited' ";
+		$sql = "SELECT  sub.login, plt.length, pl.state, pl.creator, pl.description, pl.name, pl.id 
+				FROM cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id 
+				WHERE plt.length <= '{$p_length}' ";
+
+		$r = $con->query($sql);
+        return $r->fetchAll();
+	}
+
+	public static function searchPlaylists($p_length, $search=null) 
+	{
+		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
+
+		$sql = "SELECT  sub.login, plt.length, pl.state, pl.creator, pl.description, pl.name, pl.id 
+				FROM cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id 
+				WHERE plt.length <= '{$p_length}' ";
+
+
+		if(!is_null($search)) {
+			$keywords = explode(" ", $search);
+
+			$categories = array("pl.description", "pl.name", "pl.creator", "sub.login");
+
+			for($group_id=1; $group_id <= count($keywords); $group_id++) {
+			
+				for($row_id=1; $row_id <= count($categories); $row_id++) {
+
+					$md["group_".$group_id]["row_".$row_id]["metadata"] = $categories[$row_id-1];
+					$md["group_".$group_id]["row_".$row_id]["match"] = "ILIKE";
+					$md["group_".$group_id]["row_".$row_id]["search"] = $keywords[$group_id-1];
+				}
+			}
+
+			$and_cond = array();
+			foreach (array_keys($md) as $group) {
+
+				$or_cond = array();
+				foreach (array_keys($md[$group]) as $row) {
+
+					$string = $md[$group][$row]["metadata"];
+					$string = $string ." ".$md[$group][$row]["match"];
+					$string = $string." '%". $md[$group][$row]["search"]."%'";
+					
+					$or_cond[] = $string;
+				}
+		
+				if(count($or_cond) > 0) {
+					$and_cond[] = "(".join(" OR ", $or_cond).")";
+				}
+			}
+
+			$where_search = " AND ". join(" AND ", $and_cond);
+			$sql = $sql . $where_search;
+		}
+
+		//echo $sql;
 
 		$r = $con->query($sql);
         return $r->fetchAll();
@@ -486,7 +540,7 @@ class Playlist {
         $p_cuein = !is_null($p_cuein) ? $p_cuein : '00:00:00.000000';
         $p_cueout = !is_null($p_cueout) ? $p_cueout : $length;
 
-		$con = Propel::getConnection("campcaster");
+		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
         $sql = "SELECT INTERVAL '{$p_cueout}' - INTERVAL '{$p_cuein}'";
 		$r = $con->query($sql);
 		$p_cliplength = $r->fetchColumn(0);
@@ -561,7 +615,7 @@ class Playlist {
     public function changeFadeInfo($pos, $fadeIn, $fadeOut)
     {
         $errArray= array();
-		$con = Propel::getConnection("campcaster");
+		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
         if(is_null($pos) || $pos < 0 || $pos >= $this->getNextPos()) {
             $errArray["error"]="Invalid position.";
@@ -617,7 +671,7 @@ class Playlist {
     public function changeClipLength($pos, $cueIn, $cueOut)
     {
         $errArray= array();
-		$con = Propel::getConnection("campcaster");
+		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
         if(is_null($cueIn) && is_null($cueOut)) {
             $errArray["error"]="Cue in and cue out are null.";

@@ -284,7 +284,36 @@ class Schedule {
         return ($count == '0');
     }
 
-	public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
+	public static function getTimeUnScheduledInRange($s_datetime, $e_datetime) {
+		global $CC_CONFIG, $CC_DBC;
+
+		$sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
+		$isNextDay = $CC_DBC->GetOne($sql);
+
+		if($isNextDay === 't') {
+			$sql = "SELECT date '{$e_datetime}' + interval '1 day'";
+			$e_datetime = $CC_DBC->GetOne($sql);
+		}
+
+		$sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
+			WHERE (starts >= '{$s_datetime}')  
+			AND (ends <= '{$e_datetime}')";
+
+		$time = $CC_DBC->GetOne($sql);
+
+		if(is_null($time))
+			$time = 0;
+
+		$sql = "SELECT TIMESTAMP '{$e_datetime}' - TIMESTAMP '{$s_datetime}'";
+		$length = $CC_DBC->GetOne($sql);
+
+		$sql = "SELECT INTERVAL '{$length}' - INTERVAL '{$time}'";
+		$time_left =$CC_DBC->GetOne($sql);
+
+		return $time_left;
+	}
+
+	public static function getTimeScheduledInRange($s_datetime, $e_datetime) {
 		global $CC_CONFIG, $CC_DBC;
 
 		$sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
@@ -304,7 +333,14 @@ class Schedule {
 		if(is_null($res))
 			return 0;
 
-		$con = Propel::getConnection("campcaster");
+		return $res;
+	}
+
+	public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
+
+		$time = Schedule::getTimeScheduledInRange($s_datetime, $e_datetime);
+
+		$con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
         $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$s_datetime}')";
 		$r = $con->query($sql);
@@ -314,7 +350,7 @@ class Schedule {
 		$r = $con->query($sql);
 		$e_epoch = $r->fetchColumn(0);
 
-		$sql = "SELECT EXTRACT(EPOCH FROM INTERVAL '{$res}')";
+		$sql = "SELECT EXTRACT(EPOCH FROM INTERVAL '{$time}')";
 		$r = $con->query($sql);
 		$i_epoch = $r->fetchColumn(0);
 

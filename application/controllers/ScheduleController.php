@@ -20,6 +20,7 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('schedule-show', 'json')
 					->addActionContext('clear-show', 'json')
                     ->addActionContext('get-current-playlist', 'json')	
+					->addActionContext('find-playlists', 'html')
                     ->initContext();
     }
 
@@ -125,7 +126,7 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $showId = $this->_getParam('showId');
-                        
+                                
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 		$show = new Show(new User($userInfo->id, $userInfo->type));
@@ -140,7 +141,7 @@ class ScheduleController extends Zend_Controller_Action
     public function scheduleShowAction()
     {
         $request = $this->getRequest();
-        
+                
 		if($request->isPost()) {
 			$plId = $this->_getParam('plId');
 			$start = $this->_getParam('start');
@@ -156,7 +157,10 @@ class ScheduleController extends Zend_Controller_Action
 		else {
 			$length = $this->_getParam('length');
 
-			$this->view->playlists = Playlist::findPlaylistMaxLength($length);
+			$this->view->playlists = Playlist::searchPlaylists($length);
+			$this->view->dialog = $this->view->render('schedule/schedule-show.phtml');
+
+			unset($this->view->playlists);
 		}
     }
 
@@ -185,7 +189,20 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->entries = Schedule::GetPlayOrderRange();
     }
 
+    public function findPlaylistsAction()
+    {
+		$search = $this->_getParam('search');
+		$show_id = $this->_getParam('id');
+		$dofw = $this->_getParam('day');
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+		$show = new Show(new User($userInfo->id, $userInfo->type), $show_id);
+		$this->view->playlists = $show->searchPlaylistsForShow($dofw, $search);
+
+    }
 }
+
+
 
 
 

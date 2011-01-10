@@ -62,6 +62,7 @@
           <actionMethod actionName="makeContextMenu"/>
           <actionMethod actionName="scheduleShow"/>
           <actionMethod actionName="clearShow"/>
+          <actionMethod actionName="findPlaylists"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -237,6 +238,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Search">
             <viewScriptFile forActionName="newgroup"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="findPlaylists"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
