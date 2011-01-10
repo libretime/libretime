@@ -43,44 +43,44 @@ generated radio station based in Basel, Switzerland powered by Campcaster. We ar
 very grateful for their contributions, and specifically to Thomas Gilgen, Dirk Claes,
 Rigzen Latshang and Fabiano Sidler.
 
-Douglas Arellanes (douglas.arellanes@mdlf.org)
+Douglas Arellanes 
     - Tester and user feedback
 
-Robin Gareus (robin@64studio.com)
+Robin Gareus 
     - Packaging
 
-Ferenc Gerlits (fgerlits@campware.org)
+Ferenc Gerlits 
     - Studio GUI
 
-Sebastian Göbel (sebastian@campware.org)
+Sebastian Göbel 
     - Web interface, storage server
 
-Nebojsa Grujic (nebojsa@campware.org)
+Nebojsa Grujic 
     - Scheduler, XML-RPC interface, Gstreamer plugins
 
-Tomáš Hlava (th@red2head.com)
+Tomáš Hlava 
     - Bug fixes
 
-Sava Tatić (sava.tatic@mdlf.org)
+Sava Tatić 
     - Manager
 
 
 Version 1.3.0 - "Dakar"
 -----------------------
 
-Douglas Arellanes (douglas.arellanes@mdlf.org)
+Douglas Arellanes 
     - Tester and user feedback
 
-Ferenc Gerlits (fgerlits@campware.org)
+Ferenc Gerlits 
     - Studio GUI, scheduler, packaging
 
-Sebastian Göbel (sebastian@campware.org)
+Sebastian Göbel 
     - Web interface
 
-Tomáš Hlava (th@red2head.com)
+Tomáš Hlava 
     - Bug fixes
 
-Sava Tatić (sava.tatic@mdlf.org)
+Sava Tatić 
     - Manager
 
 
@@ -88,19 +88,19 @@ Version 1.2.0 - "Kotor"
 -----------------------
 In alphabetical order:
 
-Douglas Arellanes (Douglas.Arellanes@mdlf.org)
+Douglas Arellanes 
     - Tester and user feedback
-Paul Baranowski (paul@paulbaranowski.org)
+Paul Baranowski 
     - Project manager, HTML UI, storage server
-Ferenc Gerlits (fgerlits@campware.org)
+Ferenc Gerlits 
     - Studio GUI, scheduler, packaging
-Tomáš Hlava (th@red2head.com)
+Tomáš Hlava 
     - Bug fixes
-Robert Klajn (robert.klajn@gmail.com)
+Robert Klajn 
     - Superuser feedback	
-Mark Kretschmann (markey@web.de)
+Mark Kretschmann 
     - Audio player
-Sava Tatić (sava.tatic@mdlf.org)
+Sava Tatić 
     - Manager
 
 
@@ -108,19 +108,19 @@ Version 1.1.X - "Freetown"
 --------------------------
 In alphabetical order:
 
-Douglas Arellanes (Douglas.Arellanes@mdlf.org)
+Douglas Arellanes 
     - Tester and user feedback
-Paul Baranowski (paul@paulbaranowski.org)
+Paul Baranowski 
     - Project manager, HTML UI, storage server, scheduler
-János Csikós (retired)
+János Csikós 
     - HTML UI
-Ferenc Gerlits (fgerlits@campware.org)
+Ferenc Gerlits 
     - Studio GUI, scheduler, packaging
-Tomáš Hlava (th@red2head.com)
+Tomáš Hlava 
     - Storage server, network hub
-Mark Kretschmann (markey@web.de)
+Mark Kretschmann 
     - Audio player
-Ákos Maróy (retired)
+Ákos Maróy 
     - Architecture design, scheduler, audio player
 Sava Tatić
     - Manager
@@ -136,12 +136,12 @@ Department of Digital Design Colleen Macklin, assisted by Kunal Jain.
 
 In alphabetical order:
 Douglas Arellanes
-Michael Aschauer <mash@re-p.org>
-Micz Flor (micz.flor@web.de)
+Michael Aschauer 
+Micz Flor 
 Ferenc Gerlits
 Sebastian Göbel
 Tomáš Hlava
 Nadine Kokot
-Ákos Maróy (darkeye@tyrell.hu)
+Ákos Maróy 
 Sava Tatić
 Charles Truett
