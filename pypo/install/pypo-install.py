@@ -54,14 +54,11 @@ def copy_dir(src_dir, dest_dir):
 try:
   # Create users
   create_user("pypo")
-  #create_user("pypo-logger")
 
   print "Creating log directories"
   create_path("/var/log/pypo")
   os.system("chmod -R 755 /var/log/pypo")
   os.system("chown -R pypo:pypo /var/log/pypo")
-  #os.mkdirs("/var/log/liquidsoap")
-  #os.system("chown -R liquidsoap:liquidsoap /var/log/liquidsoap")
 
   create_path(BASE_PATH)
   create_path(BASE_PATH+"bin")
@@ -87,17 +84,7 @@ try:
       print "Unknown system architecture."
       sys.exit(1)
   
-  #shutil.copy("../pypo-cli.py", BASE_PATH+"bin")
-  #shutil.copy("../pypo-notify.py", BASE_PATH+"bin")
-  #shutil.copy("../logging.cfg", BASE_PATH+"bin")
-  #shutil.copy("../config.cfg", BASE_PATH+"bin")
-  #shutil.copy("../pypo-log.sh", BASE_PATH+"bin")
   copy_dir("..", BASE_PATH+"bin/")
-  #copy_dir("../util", BASE_PATH+"bin/")
-  #copy_dir("../api_clients", BASE_PATH+"bin/api_clients")
-  #copy_dir("../scripts", BASE_PATH+"bin/scripts")
-  #copy_dir("../dls", BASE_PATH+"bin/dls")
-  #copy_dir("../dls", BASE_PATH+"bin/dls")
   
   print "Setting permissions"
   os.system("chmod -R 755 "+BASE_PATH)
@@ -120,8 +107,7 @@ try:
   os.system("chown -R pypo:pypo /etc/service/pypo-push")
 
   print "Installing daemontool script pypo-liquidsoap"
-  os.system("svc -dk /etc/service/pypo-liquidsoap  > /dev/null 2>&1")  
-  os.system("killall liquidsoap")
+  os.system("svc -dx /etc/service/pypo-liquidsoap  1>/dev/null 2>&1")  
   create_path("/etc/service/pypo-liquidsoap")  
   create_path("/etc/service/pypo-liquidsoap/log")  
   shutil.copy("pypo-daemontools-liquidsoap.sh", "/etc/service/pypo-liquidsoap/run")
@@ -131,6 +117,7 @@ try:
 
   print "Waiting for processes to start..."
   time.sleep(5)
+  os.system("killall liquidsoap")
   os.system("python ./pypo-start.py")
   time.sleep(2)
 
@@ -148,9 +135,7 @@ try:
   p = Popen('svstat /etc/service/pypo-liquidsoap', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
   print output
-
-#os.symlink(BASE_PATH+"bin/pypo-log.sh", "/usr/local/bin/")
-  
+ 
   print "Install complete."
 except Exception, e:
   print "exception:" + str(e)

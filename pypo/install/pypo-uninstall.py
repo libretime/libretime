@@ -21,7 +21,7 @@ def remove_user(username):
     print "Waiting for processes to close..."
     time.sleep(5)
     
-    os.system("deluser --remove-home " + username + " > /dev/null")
+    os.system("deluser --remove-home " + username + " 1>/dev/null")
     
 try:
     os.system("python ./pypo-stop.py")
