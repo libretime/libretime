@@ -27,6 +27,29 @@ if(exec("whoami") != "root"){
   exit(1);
 }
 
+// Need to check if build.properties project home is set correctly.
+
+$property = 'project.home';
+$lines = file('../build/build.properties');
+foreach ($lines as $line) {
+    if ($property == substr($line, 0, strlen($property))){
+        $indexOfEquals = strpos($line, '=');
+        if ($indexOfEquals !== false){
+		    $dir_value = trim(substr($line, $indexOfEquals+1));
+		    //check to make sure that the project.home path is equal to one level
+		    //up of this install script location.
+		    $dir_found = realpath(__dir__.'/../') == realpath($dir_value);
+		}
+		break;
+	}
+}
+
+if ($dir_found === false){
+	echo ("../build/build.properties 'project.home' value of '$dir_value' is incorrect. Please correct and try install again.\n");
+	exit(1);
+}
+ 
+
 echo "******************************* Install Begin ********************************\n";
 
 echo " *** Database Installation ***\n";
