@@ -7,6 +7,7 @@
 # include configuration                #
 ########################################
 
+%include "library/pervasives.liq"
 %include "ls_config.liq"
 %include "library.liq"
 %include "include_dynamic_vars.liq"
@@ -49,8 +50,9 @@ end
 #######################################################################
 silence = single("/opt/pypo/files/basic/silence.mp3")
 jingles_cc = playlist("/opt/pypo/files/jingles/jcc")
-fallback_couchcaster = playlist("/opt/pypo/files/fallback_couchcaster")
-fallback_couchcaster = audio_to_stereo(fallback_couchcaster)
+fallback_airtime = playlist("/opt/pypo/files/basic/silence-playlist.lsp")
+fallback_airtime = audio_to_stereo(fallback_airtime)
+
 
 # default
 default = silence
@@ -69,7 +71,7 @@ source = fallback(track_sensitive=false,transitions=[dp_to_scheduler],[strip_bla
 
 %include "include_live_in.liq"
 
-live = fallback(track_sensitive=false,[strip_blank(threshold=silence_threshold,length=silence_time,live),fallback_couchcaster])
+live = fallback(track_sensitive=false,[strip_blank(threshold=silence_threshold,length=silence_time,live),fallback_airtime])
 live = switch(track_sensitive=false, [({!live_active},live)])
 
 source = fallback(track_sensitive=false,transitions=[to_live_s, to_scheduler_s],[live, source]) 

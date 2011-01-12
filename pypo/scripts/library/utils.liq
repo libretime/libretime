@@ -2,7 +2,7 @@
 # Turn a source into an infaillible source.
 # by adding blank when the source is not available.
 # @param s the source to turn infaillible
-# @category Source / Input
+# @category Source / Track Processing
 def mksafe(s)
   fallback(id="mksafe",track_sensitive=false,[s,blank(id="safe_blank")])
 end
@@ -87,11 +87,14 @@ end
 
 # Removes all metadata coming from a source
 # @category Source / Track Processing
-def clear_metadata(s)
-  def map(m)
-    []
-  end
-  map_metadata(map,update=false,strip=true,s)
+def drop_metadata(s)
+  map_metadata(fun(_)->[],update=false,strip=true,insert_missing=false,s)
+end
+
+# Merge all tracks from a source, provided that it does not fail
+# @category Source / Track Processing
+def merge_tracks(s)
+  sequence(merge=true,[s])
 end
 
 output.prefered=output.dummy
@@ -125,7 +128,7 @@ in = fun () -> blank()
   in = fun () -> input.portaudio(id="pa_mic")
 %endif
 # Create a source from the first available input driver in this list:
-#   portaudio, alsa, oss, blank
+#   portaudio, alsa, oss, blank.
 # @category Source / Input
 def in()
   in()
@@ -208,12 +211,6 @@ def say_metadata
                                       interactive=false))
 end
 
-# Relay the audio stream of Dolebraï, a libre music netradio running liquidsoap.
-# @category Source / Input
-def dolebrai ()
-  input.http(id="dolebrai","http://dolebrai.net:8000/dolebrai.ogg")
-end
-
 %ifdef soundtouch
 # Increases the pitch, making voices sound like on helium.
 # @category Source / Sound Processing
@@ -235,6 +232,72 @@ def test_process(command)
   else
     "0" == list.hd(lines)
   end
+end
+
+# Split an url of the form foo?arg=bar&arg2=bar2
+# into ("foo",[("arg","bar"),("arg2","bar2")]
+# @category String
+# @param uri Url to split
+def url.split(uri) = 
+  ret = string.extract(pattern="([^\?]*)\?(.*)",uri)
+  args = ret["2"]
+  if args != "" then
+    l = string.split(separator="&",args)
+    def f(x) =
+      ret = string.split(separator="=",x)
+      (url.decode(list.nth(ret,0)),
+       url.decode(list.nth(ret,1)))
+    end
+    l = list.map(f,l)
+    (ret["1"],l)
+  else
+    (uri,[])
+  end
+end
+
+# Register a server/telnet command to 
+# update a source's metadata. Returns 
+# a new source, which will receive the 
+# updated metadata. Semantics is the 
+# same as pre 1.0 insert_metadata operator, 
+# i.e. @insert key1="val1",key2="val2",..@
+# @category Source / Track Processing
+# @param ~id Force the value of the source ID.
+def server.insert_metadata(~id="",s) = 
+  x = insert_metadata(id=id,s)
+  insert = fst(x)
+  s = snd(x)
+  def insert(s) = 
+    l = string.split(separator='([^=]+\s*=\s*"(\\"|[^"])*")\s*,\s*',s)
+    def f(l,x) = 
+      sub = fun (s) -> string.replace(pattern='\\"',fun (_) -> '"',s)
+      if x != "" then
+        ret = string.extract(pattern='([^=]+)\s*=\s*"((?:\\"|[^"])*)"',x)
+        if ret["1"] != "" then
+          list.append(l,[(ret["1"],
+                          sub(ret["2"]))])
+        else
+          l
+        end
+      else
+        l
+      end
+    end
+    meta = list.fold(f,[],l)
+    if meta != [] then
+      insert(meta)
+      "Done"
+    else
+      "Syntax error or no metadata given. \
+       Use key1=\"val1\",key2=\"val2\",.."
+    end
+  end
+  id = source.id(s)
+  server.register(namespace="#{id}",
+                  description="Insert a metadata chunk.",
+                  usage="insert key1=\"val1\",key2=\"val2\",..",
+                  "insert",insert)
+  s
 end
 
 # Get the base name of a path.
@@ -559,14 +622,18 @@ def enable_replaygain_metadata(
 end
 
 # Create a log of clock times for all the clocks initially present.
-# The log is in simple format, which you can notably directly use with gnuplot.
+# The log is in a simple format which you can directly use with gnuplot.
 # @category Liquidsoap
 # @param ~interval Polling interval.
-def log_clocks(~interval=1.,logfile)
+# @param ~delay    Delay before setting up the clock logger. This should \
+#                  be used to ensure that the logger starts only after \
+#                  the clocks are created.
+# @param unlabeled Path of the log file.
+def log_clocks(~delay=0.,~interval=1.,logfile)
   # Get the current clocks
   clocks = list.map(fst,get_clock_status())
   # Column headers
-  system("echo \# #{string.concat(separator=' ',clocks)} > #{logfile}")
+  system("echo \# #{string.concat(separator=' ',clocks)} > #{(logfile:string)}")
   def report()
     status = get_clock_status()
     status = list.map(fun (x) -> (fst(x),string_of(snd(x))), status)
@@ -574,5 +641,9 @@ def log_clocks(~interval=1.,logfile)
     system("echo #{string.concat(separator=' ',status)} >> #{logfile}")
     interval
   end
-  add_timeout(interval,report)
+  if delay<=0. then
+    add_timeout(interval,report)
+  else
+    add_timeout(delay,{add_timeout(interval,report) (-1.)})
+  end
 end

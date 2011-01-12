@@ -35,7 +35,7 @@ if test_process("which flac") then
   add_decoder(name="FLAC",description="Decode files using the flac \
               decoder binary.", test=test_flac,flac_p)
 else
-  log(level=3,"flac binary not found: flac decoder disabled.")
+  log(level=3,"Did not find flac binary: flac decoder disabled.")
 end
 %endif
 
@@ -63,15 +63,16 @@ if os.type != "Win32" then
    end
    add_metadata_resolver("FLAC",flac_meta)
   else
-   log(level=3,"metaflac binary not found: flac metadata resolver disabled.")
+   log(level=3,"Did not find metaflac binary: flac metadata resolver disabled.")
   end
 end
 
 # A list of know extensions and content-type for AAC.
 # Values from http://en.wikipedia.org/wiki/Advanced_Audio_Coding 
 # TODO: can we register a setting for that ??
-aac_mimes = ["audio/aac", "audio/aacp", "audio/3gpp", "audio/3gpp2", "audio/mp4",
-             "audio/MP4A-LATM", "audio/mpeg4-generic", "audio/x-hx-aac-adts"]
+aac_mimes =
+  ["audio/aac", "audio/aacp", "audio/3gpp", "audio/3gpp2", "audio/mp4",
+   "audio/MP4A-LATM", "audio/mpeg4-generic", "audio/x-hx-aac-adts"]
 aac_filexts = ["m4a", "m4b", "m4p", "m4v",
                "m4r", "3gp", "mp4", "aac"]
 
@@ -143,7 +144,48 @@ if os.type != "Win32" then
     end
     add_metadata_resolver("FAAD",faad_meta)
   else
-    log(level=3,"faad binary not found: faad decoder disabled.")
+    log(level=3,"Did not find faad binary: faad decoder disabled.")
   end
 end
 
+# Standard function for displaying metadata.
+# Shows artist and title, using "Unknown" when a field is empty.
+# @param m Metadata packet to be displayed.
+def string_of_metadata(m)
+  artist = m["artist"]
+  title  = m["title"]
+  artist = if ""==artist then "Unknown" else artist end
+  title  = if ""==title  then "Unknown" else title  end
+  "#{artist} -- #{title}"
+end
+
+# Use X On Screen Display to display metadata info.
+# @param ~color    Color of the text.
+# @param ~position Position of the text (top|middle|bottom).
+# @param ~font     Font used (xfontsel is your friend...)
+# @param ~display  Function used to display a metadata packet.
+def osd_metadata(~color="green",~position="top",
+        ~font="-*-courier-*-r-*-*-*-240-*-*-*-*-*-*",
+        ~display=string_of_metadata,
+        s)
+  osd = 'osd_cat -p #{position} --font #{quote(font)}'
+      ^ ' --color #{color}'
+  def feedback(m)
+    system("echo #{quote(display(m))} | #{osd} &")
+  end
+  on_metadata(feedback,s)
+end
+
+# Use notify to display metadata info.
+# @param ~urgency Urgency (low|normal|critical).
+# @param ~icon    Icon filename or stock icon to display.
+# @param ~time    Timeout in milliseconds.
+# @param ~display Function used to display a metadata packet.
+# @param ~title   Title of the notification message.
+def notify_metadata(~urgency="low",~icon="stock_smiley-22",~time=3000,
+           ~display=string_of_metadata,
+           ~title="Liquidsoap: new track",s)
+  send = 'notify-send -i #{icon} -u #{urgency}'
+       ^ ' -t #{time} #{quote(title)} '
+  on_metadata(fun (m) -> system(send^quote(display(m))),s)
+end
