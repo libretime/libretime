@@ -42,12 +42,6 @@ foreach($lines as $key => $line){
 	fwrite($fp, $line);
 }
 fclose($fp);
-
-
-if ($dir_found === false){
-	echo ("../build/build.properties 'project.home' value of '$dir_value' is incorrect. Please correct and try install again.\n");
-	exit(1);
-}
  
 
 echo "******************************* Install Begin ********************************\n";
