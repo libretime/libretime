@@ -189,17 +189,70 @@ class Show {
 
 	}
 
-	public function scheduleShow($start, $plId) {
+	private function getNextPos($day) {
+		global $CC_DBC;
+
+		$timeinfo = explode(" ", $day);
+
+		$sql = "SELECT MAX(position)+1 from cc_show_schedule WHERE show_id = '{$this->_showId}' AND show_day = '{$timeinfo[0]}'";
+		$res = $CC_DBC->GetOne($sql);	
+
+		if(is_null($res))
+            return 0;
+
+		return $res;
+	}
+
+	private function getLastGroupId($start_timestamp) {
+		global $CC_DBC;
+
+		$timeinfo = explode(" ", $start_timestamp);
+
+		$sql = "SELECT MAX(group_id) from cc_show_schedule WHERE show_id = '{$this->_showId}' AND show_day = '{$timeinfo[0]}'";
+		$res = $CC_DBC->GetOne($sql);	
+
+		return $res;
+	}
+
+	public function addPlaylistToShow($start_timestamp, $plId) {
+		
+		$sched = new ScheduleGroup();
+		$lastGroupId = $this->getLastGroupId($start_timestamp);
+
+		if(is_null($lastGroupId)) {
+
+			$groupId = $sched->add($start_timestamp, null, $plId);		
+		}
+		else {
+			$groupId = $sched->addPlaylistAfter($lastGroupId, $plId);
+		}
+
+		$timeinfo = explode(" ", $start_timestamp);
+		$day = $timeinfo[0];
+		$pos = $this->getNextPos($day);
+
+		$groupsched = new CcShowSchedule();
+		$groupsched->setDbShowId($this->_showId);
+		$groupsched->setDbGroupId($groupId);
+		$groupsched->setDbShowDay($day);
+		$groupsched->setDbPosition($pos);
+		$groupsched->save();
+	}
+
+	public function scheduleShow($start_timestamp, $plIds) {
 		if($this->_user->isHost($this->_showId)) {
 
-			$sched = new ScheduleGroup();
-			$groupId = $sched->add($start, null, $plId);
-
-			$groupsched = new CcShowSchedule();
-			$groupsched->setDbShowId($this->_showId);
-			$groupsched->setDbGroupId($groupId);
-			$groupsched->save();
+			foreach($plIds as $plId) {
+				$this->addPlaylistToShow($start_timestamp, $plId);
+			}
 		}
+	}
+
+	public function getTimeScheduled($start_timestamp, $end_timestamp) {
+
+		$time = Schedule::getTimeScheduledInRange($start_timestamp, $end_timestamp);
+
+		return $time;
 	}
 
 	public function getTimeUnScheduled($start_date, $end_date, $start_time, $end_time) {
@@ -220,6 +273,39 @@ class Show {
 		$length = $r->fetchColumn(0);
 
 		return !Schedule::isScheduleEmptyInRange($start_timestamp, $length);
+	}
+
+	public function getShowContent($day) {
+		global $CC_DBC;
+
+		$timeinfo = explode(" ", $day);
+	
+		$sql = "SELECT * 
+			FROM (cc_show_schedule AS ss LEFT JOIN cc_schedule AS s USING(group_id)
+				LEFT JOIN cc_files AS f ON f.id = s.file_id
+				LEFT JOIN cc_playlist AS p ON p.id = s.playlist_id )
+
+			WHERE ss.show_day = '{$timeinfo[0]}' AND ss.show_id = '{$this->_showId}'";
+
+		return $CC_DBC->GetAll($sql);	
+	}
+
+	public function clearShow($day) {
+		$timeinfo = explode(" ", $day);
+
+		$groups = CcShowScheduleQuery::create()
+					->filterByDbShowId($this->_showId)
+					->filterByDbShowDay($timeinfo[0])
+					->find();
+
+		foreach($groups as $group) {
+			$groupId = $group->getDbGroupId();
+			CcScheduleQuery::create()
+				->filterByDbGroupId($groupId)
+				->delete();
+
+			$group->delete();
+		}
 	}
 
 	public function deleteShow($showId, $dayId=NULL) {

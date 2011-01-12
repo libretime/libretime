@@ -164,31 +164,25 @@ class ScheduleGroup {
     public function addAfter($p_groupId, $p_audioFileId) {
         global $CC_CONFIG, $CC_DBC;
         // Get the end time for the given entry
-        $sql = "SELECT ends FROM ".$CC_CONFIG["scheduleTable"]
+        $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id=$p_groupId";
         $startTime = $CC_DBC->GetOne($sql);
         return $this->add($startTime, $p_audioFileId);
     }
 
+	public function addPlaylistAfter($p_groupId, $p_playlistId) {
+        global $CC_CONFIG, $CC_DBC;
+        // Get the end time for the given entry
+        $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
+        ." WHERE group_id=$p_groupId";
+	
+        $startTime = $CC_DBC->GetOne($sql);
+        return $this->add($startTime, null, $p_playlistId);
+    }
+
     public function update() {
 
     }
-
-	public function removeAtTime($p_datetime) {
-		global $CC_CONFIG, $CC_DBC;
-
-		$id = $this->dateToId($p_datetime);
-
-		$sql = "SELECT group_id FROM ".$CC_CONFIG["scheduleTable"]." WHERE id = ".$id;
-        $groupId = $CC_DBC->GetOne($sql);
-
-		if($groupId === NULL)
-			return;
-
-		$sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE group_id = ".$groupId;
-        $CC_DBC->query($sql);
-	}
 
     /**
      * Remove the group from the schedule.
