@@ -515,7 +515,7 @@ class Show {
 		return $event;
 	}
 
-	public function searchPlaylistsForShow($day, $search){
+	public function searchPlaylistsForShow($day, $search=null){
 		global $CC_DBC;
 
 		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$this->_showId}' AND day = '{$day}'";

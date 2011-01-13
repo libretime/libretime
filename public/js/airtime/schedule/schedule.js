@@ -185,9 +185,10 @@ function makeScheduleDialog(dialog, show) {
 	dialog.find("#schedule_playlist_chosen")
 		.droppable({
       		drop: function(event, ui) {
-				var li, pl_id, url, start_date, end_date;
+				var li, pl_id, url, start_date, end_date, day;
 
 				pl_id = $(ui.helper).attr("id").split("_").pop();
+				day = show.start.getDay();
 				
 				start_date = makeTimeStamp(show.start);
 				end_date = makeTimeStamp(show.end);
@@ -195,7 +196,7 @@ function makeScheduleDialog(dialog, show) {
 				url = '/Schedule/schedule-show/format/json';
 
 				$.post(url, 
-					{plId: pl_id, start: start_date, end: end_date, showId: show.id},
+					{plId: pl_id, start: start_date, end: end_date, showId: show.id, day: day},
 					function(json){
 						var x;
 
@@ -208,13 +209,17 @@ function makeScheduleDialog(dialog, show) {
     	});
 }
 
-function openScheduleDialog(show, time) {
-	var url;
+function openScheduleDialog(show) {
+	var url, start_date, end_date, day;
 
 	url = '/Schedule/schedule-show/format/json';
+	day = show.start.getDay();
+
+	start_date = makeTimeStamp(show.start);
+	end_date = makeTimeStamp(show.end);
 
 	$.get(url, 
-		{length: time},
+		{day: day, start: start_date, end: end_date, showId: show.id},
 		function(json){
 			var dialog = $(json.dialog);
 
@@ -250,17 +255,8 @@ function eventMenu(action, el, pos) {
 			});
 	}
 	else if (method === 'schedule-show') {
-		var length, h, m, s, time;
-
-		length = event.end.getTime() - event.start.getTime();
-
-		h = Math.floor(length / (1000*60*60));
-		m = (length % (1000*60*60)) / (1000*60);
-		s = ((length % (1000*60*60)) % (1000*60)) / 1000;
-
-		time = h+":"+m+":"+s;
-
-		openScheduleDialog(event, time);
+		
+		openScheduleDialog(event);
 	}
 	else if (method === 'clear-show') {
 		start_date = makeTimeStamp(event.start);
