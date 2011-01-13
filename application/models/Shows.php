@@ -305,18 +305,19 @@ class Show {
 
 				$items[$pl_counter]["pl_name"] = $row["name"];
 				$items[$pl_counter]["pl_creator"] = $row["creator"];
-				$items[$pl_counter]["pl_description"] = $row["description"];	
+				$items[$pl_counter]["pl_description"] = $row["description"];
+				$items[$pl_counter]["pl_group"] = $row["group_id"];	
 
-				$sql = "SELECT  SUM(clip_length) FROM cc_schedule WHERE group_id = '{$currGroupId}'";
+				$sql = "SELECT SUM(clip_length) FROM cc_schedule WHERE group_id = '{$currGroupId}'";
 				$length = $CC_DBC->GetOne($sql);
 
 				$items[$pl_counter]["pl_length"] = $length;
 			}
 			$f_counter = $f_counter + 1;
 
-			$items[$pl_counter][$f_counter]["f_name"] = $row["track_title"];
-			$items[$pl_counter][$f_counter]["f_artist"] = $row["artist_name"];
-			$items[$pl_counter][$f_counter]["f_length"] = $row["length"];
+			$items[$pl_counter]["pl_content"][$f_counter]["f_name"] = $row["track_title"];
+			$items[$pl_counter]["pl_content"][$f_counter]["f_artist"] = $row["artist_name"];
+			$items[$pl_counter]["pl_content"][$f_counter]["f_length"] = $row["length"];
 		}
 
 		return $items;	

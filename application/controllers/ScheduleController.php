@@ -156,6 +156,9 @@ class ScheduleController extends Zend_Controller_Action
 			$show->scheduleShow($start, array($plId));
 
 			$this->view->showContent = $show->getShowContent($start);
+			$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
+
+			unset($this->view->showContent);
 
 		}
 		else {

@@ -194,14 +194,14 @@ function makeScheduleDialog(dialog, show) {
 
 				url = '/Schedule/schedule-show/format/json';
 
-				//$("#schedule_playlist_chosen")
-				//	.append(ui.helper);
-
-				
 				$.post(url, 
 					{plId: pl_id, start: start_date, end: end_date, showId: show.id},
 					function(json){
 						var x;
+
+						$("#schedule_playlist_chosen")
+							.empty()
+							.append(json.chosen);
 					});
 				
 			}
