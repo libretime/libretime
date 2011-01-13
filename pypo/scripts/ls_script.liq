@@ -94,13 +94,13 @@ source = smooth_add(normal=source,special=special)
 # Stream Output
 #####################################
 # finally the output | mp3
-clock(id="clock_icecast",
-  output.icecast(%mp3,
-    host = icecast_host, port = icecast_port,
-    password = icecast_pass, mount = mount_scheduler,
-    fallible = true,
-    restart = true,
-    restart_delay = 5,
-    buffer(source)))
+#clock(id="clock_icecast",
+#  output.icecast(%mp3,
+#   host = icecast_host, port = icecast_port,
+#    password = icecast_pass, mount = mount_scheduler,
+#    fallible = true,
+#    restart = true,
+#    restart_delay = 5,
+#    buffer(source)))
 
-#output.dummy(live_in)
+out(source)
