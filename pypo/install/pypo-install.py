@@ -35,6 +35,9 @@ def create_user(username):
     print "Creating user "+username
     os.system("adduser --system --quiet --group --shell /bin/bash "+username)
     
+    #add pypo to audio group
+    os.system("adduser " + username + " audio")
+    
     #set pypo password
     p = os.popen('/usr/bin/passwd pypo', 'w')
     p.write('pypo\n')
