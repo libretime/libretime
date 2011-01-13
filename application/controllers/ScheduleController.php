@@ -143,18 +143,23 @@ class ScheduleController extends Zend_Controller_Action
         $request = $this->getRequest();
                 
 		if($request->isPost()) {
+
 			$plId = $this->_getParam('plId');
 			$start = $this->_getParam('start');
+			$end = $this->_getParam('end');
 			$showId = $this->_getParam('showId');
 
 			$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 			$user = new User($userInfo->id, $userInfo->type);
 			$show = new Show($user, $showId);
-			$show->scheduleShow($start, $plId);
+			$show->scheduleShow($start, array($plId));
+
+			$this->view->showContent = $show->getShowContent($start);
 
 		}
 		else {
+
 			$length = $this->_getParam('length');
 
 			$this->view->playlists = Playlist::searchPlaylists($length);
@@ -174,8 +179,8 @@ class ScheduleController extends Zend_Controller_Action
 
 		if($user->isHost($showId)) {
 
-			$sched = new ScheduleGroup();
-			$this->view->res = $sched->removeAtTime($start);
+			$show = new Show($user, $showId);
+			$show->clearShow($start);
 		}
     }
 

@@ -185,19 +185,25 @@ function makeScheduleDialog(dialog, show) {
 	dialog.find("#schedule_playlist_chosen")
 		.droppable({
       		drop: function(event, ui) {
-				var li, pl_id, url, start_date;
+				var li, pl_id, url, start_date, end_date;
 
 				pl_id = $(ui.helper).attr("id").split("_").pop();
 				
 				start_date = makeTimeStamp(show.start);
+				end_date = makeTimeStamp(show.end);
 
 				url = '/Schedule/schedule-show/format/json';
 
-				/*$.post(url, 
-					{plId: pl_id, start: start_date, showId: show.id},
+				//$("#schedule_playlist_chosen")
+				//	.append(ui.helper);
+
+				
+				$.post(url, 
+					{plId: pl_id, start: start_date, end: end_date, showId: show.id},
 					function(json){
 						var x;
-					});	*/
+					});
+				
 			}
     	});
 }
