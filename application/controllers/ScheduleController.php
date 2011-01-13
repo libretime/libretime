@@ -162,6 +162,7 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->playlists = $show->searchPlaylistsForShow($day);
 		$this->view->showContent = $show->getShowContent($start);
 
+		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
 		$this->view->dialog = $this->view->render('schedule/schedule-show.phtml');
 

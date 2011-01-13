@@ -200,6 +200,14 @@ function makeScheduleDialog(dialog, show) {
 					function(json){
 						var x;
 
+						$("#schedule_playlist_choice")
+							.empty()
+							.append(json.choice)
+							.find('li')
+								.draggable({ 
+									helper: 'clone' 
+								});
+
 						$("#schedule_playlist_chosen")
 							.empty()
 							.append(json.chosen);
