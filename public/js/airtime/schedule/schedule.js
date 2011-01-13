@@ -159,7 +159,7 @@ function openShowDialog() {
 	});
 }
 
-function makeScheduleDialog(dialog, show) {
+function makeScheduleDialog(dialog, json, show) {
 	
 	dialog.find("#schedule_playlist_search").keyup(function(){
 		var url, string, day;
@@ -172,20 +172,29 @@ function makeScheduleDialog(dialog, show) {
 			
 			$("#schedule_playlist_choice")
 				.empty()
-				.append(html);
+				.append(html)
+				.find('li')
+					.draggable({ 
+						helper: 'clone' 
+					});
 			
 		});
 	});
 
-	dialog.find('#schedule_playlist_choice li')
-		.draggable({ 
-			helper: 'clone' 
-		});
+	dialog.find('#schedule_playlist_choice')
+		.append(json.choice)
+		.find('li')
+			.draggable({ 
+				helper: 'clone' 
+			});
 
 	dialog.find("#schedule_playlist_chosen")
+		.append(json.chosen)
 		.droppable({
       		drop: function(event, ui) {
-				var li, pl_id, url, start_date, end_date, day;
+				var li, pl_id, url, start_date, end_date, day, search;
+
+				search = $("#schedule_playlist_search").val();
 
 				pl_id = $(ui.helper).attr("id").split("_").pop();
 				day = show.start.getDay();
@@ -196,7 +205,7 @@ function makeScheduleDialog(dialog, show) {
 				url = '/Schedule/schedule-show/format/json';
 
 				$.post(url, 
-					{plId: pl_id, start: start_date, end: end_date, showId: show.id, day: day},
+					{plId: pl_id, start: start_date, end: end_date, showId: show.id, day: day, search: search},
 					function(json){
 						var x;
 
@@ -231,7 +240,7 @@ function openScheduleDialog(show) {
 		function(json){
 			var dialog = $(json.dialog);
 
-			makeScheduleDialog(dialog, show);
+			makeScheduleDialog(dialog, json, show);
 
 			dialog.dialog({
 				autoOpen: false,

@@ -146,6 +146,11 @@ class ScheduleController extends Zend_Controller_Action
 		$end = $this->_getParam('end');
 		$showId = $this->_getParam('showId');
 		$day = $this->_getParam('day');
+		$search = $this->_getParam('search', null);
+
+		if($search == "") {
+			$search = null;
+		}
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -159,7 +164,7 @@ class ScheduleController extends Zend_Controller_Action
 			$show->scheduleShow($start, array($plId));
 		}
 
-		$this->view->playlists = $show->searchPlaylistsForShow($day);
+		$this->view->playlists = $show->searchPlaylistsForShow($day, $search);
 		$this->view->showContent = $show->getShowContent($start);
 
 		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
