@@ -693,6 +693,8 @@ class Playout:
             # Get any extra information for liquidsoap (which will be sent back to us)
             liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)            
             logger.debug("Sending additional data to liquidsoap: "+liquidsoap_data)
+            
+            #Sending JSON string. Example: {"schedule_id":"13"}
             tn.write("vars.pypo_data "+liquidsoap_data+"\n")
                 
             tn.write(self.export_source + '.flip')
