@@ -219,11 +219,20 @@ function makeScheduleDialog(dialog, json, show) {
 
 						$("#schedule_playlist_chosen")
 							.empty()
-							.append(json.chosen);
+							.append(json.chosen)
+							.find("li")
+								.click(function(){
+									$(this).find(".group_list").toggle();
+								});
 					});
 				
 			}
     	});
+
+	dialog.find("#schedule_playlist_chosen li")
+		.click(function(){
+			$(this).find(".group_list").toggle();
+		});
 }
 
 function openScheduleDialog(show) {
