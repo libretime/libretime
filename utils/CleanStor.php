@@ -9,7 +9,6 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-require_once('DB.php');
 require_once('../application/configs/conf.php');
 require_once('../install/installInit.php');
 require_once('../application/models/StoredFile.php');
@@ -101,6 +100,11 @@ global $CC_CONFIG;
 
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+if ($argc != 2){
+    printUsage();
+    exit(1);
+}
 
 switch($argv[1]){
 
