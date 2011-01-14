@@ -101,6 +101,7 @@ function submitShow() {
 }
 
 function closeDialog(event, ui) {
+	$("#schedule_calendar").fullCalendar( 'refetchEvents' );
 	$(this).remove();
 }
 
@@ -140,6 +141,7 @@ function makeShowDialog(json) {
 		title: 'Add Show',
 		width: 950,
 		height: 400,
+		modal: true,
 		close: closeDialog,
 		buttons: { "Cancel": closeDialog, "Ok": submitShow}
 	});
@@ -256,6 +258,7 @@ function openScheduleDialog(show) {
 				title: 'Schedule Playlist',
 				width: 950,
 				height: 450,
+				modal: true,
 				close: closeDialog,
 				buttons: {"Ok": function() {
 					dialog.remove();
