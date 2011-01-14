@@ -255,7 +255,7 @@ function openScheduleDialog(show) {
 				autoOpen: false,
 				title: 'Schedule Playlist',
 				width: 950,
-				height: 400,
+				height: 450,
 				close: closeDialog,
 				buttons: {"Ok": function() {
 					dialog.remove();

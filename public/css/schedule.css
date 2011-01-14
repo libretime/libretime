@@ -5,3 +5,28 @@
 div.ui-datepicker {
 	font-size: 75%;
 }
+
+#schedule_playlist_dialog ul {
+	list-style-type: none;
+	float: left;
+	width: 400px;
+	height: 200px;
+	overflow: auto;
+}
+
+#schedule_playlist_chosen li {
+	clear: left;
+}
+
+#schedule_playlist_chosen li > div {
+	float: left;
+	margin: 0 5px 2px 0;
+}
+
+#schedule_playlist_chosen li div.group_list {
+	clear: left;
+}
+
+.sched_description {
+	font-size: 85%;
+}
