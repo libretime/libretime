@@ -285,9 +285,42 @@ class Show {
 				LEFT JOIN cc_files AS f ON f.id = s.file_id
 				LEFT JOIN cc_playlist AS p ON p.id = s.playlist_id )
 
-			WHERE ss.show_day = '{$timeinfo[0]}' AND ss.show_id = '{$this->_showId}'";
+			WHERE ss.show_day = '{$timeinfo[0]}' AND ss.show_id = '{$this->_showId}' ORDER BY starts";
 
-		return $CC_DBC->GetAll($sql);	
+		$res = $CC_DBC->GetAll($sql);
+
+		if(count($res) <= 0) {
+			return $res;
+		}
+
+		$items = array();
+		$currGroupId = -1;
+		$pl_counter = -1;
+		$f_counter = -1;
+		foreach ($res as $row) {
+			if($currGroupId != $row["group_id"]){
+				$currGroupId = $row["group_id"];
+				$pl_counter = $pl_counter + 1;
+				$f_counter = -1;
+
+				$items[$pl_counter]["pl_name"] = $row["name"];
+				$items[$pl_counter]["pl_creator"] = $row["creator"];
+				$items[$pl_counter]["pl_description"] = $row["description"];
+				$items[$pl_counter]["pl_group"] = $row["group_id"];	
+
+				$sql = "SELECT SUM(clip_length) FROM cc_schedule WHERE group_id = '{$currGroupId}'";
+				$length = $CC_DBC->GetOne($sql);
+
+				$items[$pl_counter]["pl_length"] = $length;
+			}
+			$f_counter = $f_counter + 1;
+
+			$items[$pl_counter]["pl_content"][$f_counter]["f_name"] = $row["track_title"];
+			$items[$pl_counter]["pl_content"][$f_counter]["f_artist"] = $row["artist_name"];
+			$items[$pl_counter]["pl_content"][$f_counter]["f_length"] = $row["length"];
+		}
+
+		return $items;	
 	}
 
 	public function clearShow($day) {
@@ -482,7 +515,7 @@ class Show {
 		return $event;
 	}
 
-	public function searchPlaylistsForShow($day, $search){
+	public function searchPlaylistsForShow($day, $search=null){
 		global $CC_DBC;
 
 		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$this->_showId}' AND day = '{$day}'";

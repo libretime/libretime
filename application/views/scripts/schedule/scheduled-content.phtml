@@ -1,0 +1,25 @@
+<?php if(count($this->showContent) > 0) : ?>
+	<?php foreach($this->showContent as $pl) : ?>
+	<li id="g_<?php echo $pl["pl_group"] ?>">
+	<div>
+		<span><?php echo $pl["pl_name"] ?></span>
+		<span><?php echo $pl["pl_length"] ?></span>
+		<div><?php echo $pl["pl_creator"] ?></div>
+		<div class="group_list" style="display:none">
+			<div class="sched_description"><?php echo $pl["pl_description"] ?></div>
+			<?php foreach($pl["pl_content"] as $file) : ?>
+			<div>
+				<span><?php echo $file["f_name"] ?></span>
+				<span><?php echo $file["f_length"] ?></span>
+			</div>
+			<div><?php echo $file["f_artist"] ?></div>
+			<?php endforeach; ?>
+		</div>
+	</div>
+	</li>
+	<?php endforeach; ?>
+<?php else : ?>
+<h3><a href="#">Empty</a></h3>
+<div>No Playlists</div>
+<?php endif; ?>
+

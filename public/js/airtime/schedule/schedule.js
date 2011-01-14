@@ -159,7 +159,7 @@ function openShowDialog() {
 	});
 }
 
-function makeScheduleDialog(dialog, show) {
+function makeScheduleDialog(dialog, json, show) {
 	
 	dialog.find("#schedule_playlist_search").keyup(function(){
 		var url, string, day;
@@ -172,53 +172,84 @@ function makeScheduleDialog(dialog, show) {
 			
 			$("#schedule_playlist_choice")
 				.empty()
-				.append(html);
+				.append(html)
+				.find('li')
+					.draggable({ 
+						helper: 'clone' 
+					});
 			
 		});
 	});
 
-	dialog.find('#schedule_playlist_choice li')
-		.draggable({ 
-			helper: 'clone' 
-		});
+	dialog.find('#schedule_playlist_choice')
+		.append(json.choice)
+		.find('li')
+			.draggable({ 
+				helper: 'clone' 
+			});
 
 	dialog.find("#schedule_playlist_chosen")
+		.append(json.chosen)
 		.droppable({
       		drop: function(event, ui) {
-				var li, pl_id, url, start_date, end_date;
+				var li, pl_id, url, start_date, end_date, day, search;
+
+				search = $("#schedule_playlist_search").val();
 
 				pl_id = $(ui.helper).attr("id").split("_").pop();
+				day = show.start.getDay();
 				
 				start_date = makeTimeStamp(show.start);
 				end_date = makeTimeStamp(show.end);
 
 				url = '/Schedule/schedule-show/format/json';
 
-				//$("#schedule_playlist_chosen")
-				//	.append(ui.helper);
-
-				
 				$.post(url, 
-					{plId: pl_id, start: start_date, end: end_date, showId: show.id},
+					{plId: pl_id, start: start_date, end: end_date, showId: show.id, day: day, search: search},
 					function(json){
 						var x;
+
+						$("#schedule_playlist_choice")
+							.empty()
+							.append(json.choice)
+							.find('li')
+								.draggable({ 
+									helper: 'clone' 
+								});
+
+						$("#schedule_playlist_chosen")
+							.empty()
+							.append(json.chosen)
+							.find("li")
+								.click(function(){
+									$(this).find(".group_list").toggle();
+								});
 					});
 				
 			}
     	});
+
+	dialog.find("#schedule_playlist_chosen li")
+		.click(function(){
+			$(this).find(".group_list").toggle();
+		});
 }
 
-function openScheduleDialog(show, time) {
-	var url;
+function openScheduleDialog(show) {
+	var url, start_date, end_date, day;
 
 	url = '/Schedule/schedule-show/format/json';
+	day = show.start.getDay();
+
+	start_date = makeTimeStamp(show.start);
+	end_date = makeTimeStamp(show.end);
 
 	$.get(url, 
-		{length: time},
+		{day: day, start: start_date, end: end_date, showId: show.id},
 		function(json){
 			var dialog = $(json.dialog);
 
-			makeScheduleDialog(dialog, show);
+			makeScheduleDialog(dialog, json, show);
 
 			dialog.dialog({
 				autoOpen: false,
@@ -250,17 +281,8 @@ function eventMenu(action, el, pos) {
 			});
 	}
 	else if (method === 'schedule-show') {
-		var length, h, m, s, time;
-
-		length = event.end.getTime() - event.start.getTime();
-
-		h = Math.floor(length / (1000*60*60));
-		m = (length % (1000*60*60)) / (1000*60);
-		s = ((length % (1000*60*60)) % (1000*60)) / 1000;
-
-		time = h+":"+m+":"+s;
-
-		openScheduleDialog(event, time);
+		
+		openScheduleDialog(event);
 	}
 	else if (method === 'clear-show') {
 		start_date = makeTimeStamp(event.start);

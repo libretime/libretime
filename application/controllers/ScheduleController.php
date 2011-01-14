@@ -141,32 +141,39 @@ class ScheduleController extends Zend_Controller_Action
     public function scheduleShowAction()
     {
         $request = $this->getRequest();
-                
+
+		$start = $this->_getParam('start');
+		$end = $this->_getParam('end');
+		$showId = $this->_getParam('showId');
+		$day = $this->_getParam('day');
+		$search = $this->_getParam('search', null);
+
+		if($search == "") {
+			$search = null;
+		}
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$user = new User($userInfo->id, $userInfo->type);
+		$show = new Show($user, $showId);
+
 		if($request->isPost()) {
 
 			$plId = $this->_getParam('plId');
-			$start = $this->_getParam('start');
-			$end = $this->_getParam('end');
-			$showId = $this->_getParam('showId');
 
-			$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-			$user = new User($userInfo->id, $userInfo->type);
-			$show = new Show($user, $showId);
 			$show->scheduleShow($start, array($plId));
-
-			$this->view->showContent = $show->getShowContent($start);
-
 		}
-		else {
 
-			$length = $this->_getParam('length');
+		$this->view->playlists = $show->searchPlaylistsForShow($day, $search);
+		$this->view->showContent = $show->getShowContent($start);
 
-			$this->view->playlists = Playlist::searchPlaylists($length);
-			$this->view->dialog = $this->view->render('schedule/schedule-show.phtml');
+		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
+		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
+		$this->view->dialog = $this->view->render('schedule/schedule-show.phtml');
 
-			unset($this->view->playlists);
-		}
+		unset($this->view->showContent);
+		unset($this->view->playlists);
+               	
     }
 
     public function clearShowAction()
