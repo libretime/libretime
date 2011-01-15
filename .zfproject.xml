@@ -64,6 +64,7 @@
           <actionMethod actionName="clearShow"/>
           <actionMethod actionName="findPlaylists"/>
           <actionMethod actionName="removeGroup"/>
+          <actionMethod actionName="scheduleShowDialog"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -245,6 +246,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="removeGroup"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="scheduleShowDialog"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
