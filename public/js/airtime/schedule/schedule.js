@@ -164,13 +164,13 @@ function openShowDialog() {
 function makeScheduleDialog(dialog, json, show) {
 	
 	dialog.find("#schedule_playlist_search").keyup(function(){
-		var url, string, day;
+		var url, string, start_date;
 		
 		url = "/Schedule/find-playlists/format/html";
 		string = $(this).val();
-		day = show.start.getDay();
-
-		$.post(url, {search: string, id: show.id, day: day}, function(html){
+		start_date = makeTimeStamp(show.start);
+		
+		$.post(url, {search: string, showId: show.id, start: start_date}, function(html){
 			
 			$("#schedule_playlist_choice")
 				.empty()
@@ -194,20 +194,18 @@ function makeScheduleDialog(dialog, json, show) {
 		.append(json.chosen)
 		.droppable({
       		drop: function(event, ui) {
-				var li, pl_id, url, start_date, end_date, day, search;
+				var li, pl_id, url, start_date, search;
 
 				search = $("#schedule_playlist_search").val();
 
 				pl_id = $(ui.helper).attr("id").split("_").pop();
-				day = show.start.getDay();
 				
 				start_date = makeTimeStamp(show.start);
-				end_date = makeTimeStamp(show.end);
 
 				url = '/Schedule/schedule-show/format/json';
 
 				$.post(url, 
-					{plId: pl_id, start: start_date, end: end_date, showId: show.id, day: day, search: search},
+					{plId: pl_id, start: start_date, showId: show.id, search: search},
 					function(json){
 						var x;
 
@@ -221,33 +219,53 @@ function makeScheduleDialog(dialog, json, show) {
 
 						$("#schedule_playlist_chosen")
 							.empty()
-							.append(json.chosen)
-							.find("li")
-								.click(function(){
-									$(this).find(".group_list").toggle();
-								});
+							.append(json.chosen);
+						
 					});
 				
 			}
     	});
 
-	dialog.find("#schedule_playlist_chosen li")
-		.click(function(){
-			$(this).find(".group_list").toggle();
-		});
+	dialog.find(".ui-icon-triangle-1-e").parent().click(function(){
+		$(this).parent().find(".group_list").toggle();
+	});
+
+	dialog.find(".ui-icon-close").parent().click(function(){
+		var groupId, url, start_date;
+		
+		start_date = makeTimeStamp(show.start);
+		groupId = $(this).parent().attr("id").split("_").pop();
+		url = '/Schedule/remove-group/format/json';
+	
+		$.post(url, 
+			{start: start_date, showId: show.id, groupId: groupId},
+			function(json){
+
+				$("#schedule_playlist_choice")
+					.empty()
+					.append(json.choice)
+					.find('li')
+						.draggable({ 
+							helper: 'clone' 
+						});
+
+				$("#schedule_playlist_chosen")
+					.empty()
+					.append(json.chosen);
+			});	
+	});
 }
 
 function openScheduleDialog(show) {
-	var url, start_date, end_date, day;
+	var url, start_date, end_date;
 
 	url = '/Schedule/schedule-show/format/json';
-	day = show.start.getDay();
-
+	
 	start_date = makeTimeStamp(show.start);
 	end_date = makeTimeStamp(show.end);
 
 	$.get(url, 
-		{day: day, start: start_date, end: end_date, showId: show.id},
+		{start: start_date, end: end_date, showId: show.id},
 		function(json){
 			var dialog = $(json.dialog);
 

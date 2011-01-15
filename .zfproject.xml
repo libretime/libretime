@@ -63,6 +63,7 @@
           <actionMethod actionName="scheduleShow"/>
           <actionMethod actionName="clearShow"/>
           <actionMethod actionName="findPlaylists"/>
+          <actionMethod actionName="removeGroup"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -241,6 +242,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="findPlaylists"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="removeGroup"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
