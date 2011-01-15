@@ -556,6 +556,15 @@ class Show {
 		return $event;
 	}
 
+	public function getShowLength($start_timestamp, $end_timestamp){
+		global $CC_DBC;
+
+		$sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}' ";
+		$length = $CC_DBC->GetOne($sql);
+
+		return $length;
+	}
+
 	public function searchPlaylistsForShow($start_timestamp, $search=null){
 		global $CC_DBC;
 

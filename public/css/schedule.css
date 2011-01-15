@@ -6,6 +6,15 @@ div.ui-datepicker {
 	font-size: 75%;
 }
 
+#show_time_info {
+	clear: left;
+}
+
+#show_progressbar {
+	width: 150px;
+	height: 5px;
+}
+
 #schedule_playlist_dialog ul {
 	list-style-type: none;
 	float: left;

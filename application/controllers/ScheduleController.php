@@ -144,10 +144,9 @@ class ScheduleController extends Zend_Controller_Action
     }
 
     public function scheduleShowAction()
-    {
-        $request = $this->getRequest();
-                
+    {  
 		$start_timestamp = $this->sched_sess->showStart;
+		$end_timestamp = $this->sched_sess->showEnd;
 		$showId = $this->sched_sess->showId;
 		$search = $this->_getParam('search', null);
 		$plId = $this->_getParam('plId');
@@ -166,10 +165,13 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->playlists = $show->searchPlaylistsForShow($start_timestamp, $search);
 		$this->view->showContent = $show->getShowContent($start_timestamp);
 
+		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
+		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+
 		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
-		$this->view->dialog = $this->view->render('schedule/schedule-show.phtml');
-
+		
 		unset($this->view->showContent);
 		unset($this->view->playlists);
     }
@@ -214,6 +216,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $group_id = $this->_getParam('groupId');
 		$start_timestamp = $this->sched_sess->showStart;
+		$end_timestamp = $this->sched_sess->showEnd;
 		$show_id = $this->sched_sess->showId;
 		$search = $this->_getParam('search', null);
 
@@ -225,6 +228,10 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->playlists = $show->searchPlaylistsForShow($start_timestamp, $search);
 		$this->view->showContent = $show->getShowContent($start_timestamp);
 
+		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
+		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+
 		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
 		
@@ -235,10 +242,12 @@ class ScheduleController extends Zend_Controller_Action
     public function scheduleShowDialogAction()
     {
 		$start_timestamp = $this->_getParam('start');
+		$end_timestamp = $this->_getParam('end');
 		$showId = $this->_getParam('showId');
 
 		$this->sched_sess->showId = $showId;
 		$this->sched_sess->showStart = $start_timestamp;
+		$this->sched_sess->showEnd = $end_timestamp;
 		
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -248,9 +257,13 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->playlists = $show->searchPlaylistsForShow($start_timestamp);
 		$this->view->showContent = $show->getShowContent($start_timestamp);
 
+		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
+		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+
 		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
-		$this->view->dialog = $this->view->render('schedule/schedule-show.phtml');
+		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
 
 		unset($this->view->showContent);
 		unset($this->view->playlists);

@@ -174,6 +174,9 @@ function setScheduleDialogHtml(json) {
 	$("#schedule_playlist_chosen")
 		.empty()
 		.append(json.chosen);
+
+	$("#show_time_filled").empty().append(json.timeFilled);
+	$("#show_progressbar").progressbar( "value" , json.percentFilled );
 }
 
 function setScheduleDialogEvents() {
@@ -263,6 +266,11 @@ function makeScheduleDialog(dialog, json) {
 				setScheduleDialogEvents();	
 			});	
 	});
+
+	dialog.find("#show_progressbar").progressbar({
+		value: json.percentFilled
+	});
+
 }
 
 function openScheduleDialog(show) {
@@ -271,9 +279,10 @@ function openScheduleDialog(show) {
 	url = '/Schedule/schedule-show-dialog/format/json';
 	
 	start_date = makeTimeStamp(show.start);
+	end_date = makeTimeStamp(show.end);
 
 	$.post(url, 
-		{start: start_date, showId: show.id},
+		{start: start_date, end: end_date, showId: show.id},
 		function(json){
 			var dialog = $(json.dialog);
 
