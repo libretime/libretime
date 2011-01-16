@@ -1,24 +1,26 @@
 <?php if(count($this->showContent) > 0) : ?>
 	<?php foreach($this->showContent as $pl) : ?>
-	<li id="g_<?php echo $pl["pl_group"] ?>">
-		<div><span class="ui-icon ui-icon-triangle-1-e"></span></div>
-		<div><?php echo $pl["pl_name"] ?></div>
-		<div><?php echo $pl["pl_creator"] ?></div>
-		<div><?php echo $pl["pl_length"] ?></div>
-		<div><span class="ui-icon ui-icon-close"></span></div>
-		<div class="group_list" style="display:none">
+	<li id="g_<?php echo $pl["pl_group"] ?>" >
+		<h3 class="ui-accordion-header ui-state-default ui-corner-all">
+			<div><span class="ui-icon ui-icon-triangle-1-e"></span></div>
+			<div class="sh_pl_name"><?php echo $pl["pl_name"] ?></div>
+			<div class="sh_pl_creator"><?php echo $pl["pl_creator"] ?></div>
+			<div class="sh_pl_time"><?php echo $pl["pl_length"] ?></div>
+			<div><span class="ui-icon ui-icon-close"></span></div>
+		</h3>
+		<div class="group_list ui-widget-content ui-corner-bottom" style="display:none">
 			<div class="sched_description"><?php echo $pl["pl_description"] ?></div>
 			<?php foreach($pl["pl_content"] as $file) : ?>
 			<div>
-				<span><?php echo $file["f_name"] ?></span>
+				<span class="sh_file_name"><?php echo $file["f_name"] ?></span>
 				<span><?php echo $file["f_length"] ?></span>
 			</div>
-			<div><?php echo $file["f_artist"] ?></div>
+			<div class="sh_file_artist"><?php echo $file["f_artist"] ?></div>
 			<?php endforeach; ?>
 		</div>
 	</li>
 	<?php endforeach; ?>
 <?php else : ?>
-<li>No Playlists</li>
+<li>Nothing Scheduled</li>
 <?php endif; ?>
 

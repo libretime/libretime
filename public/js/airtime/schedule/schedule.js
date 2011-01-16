@@ -189,21 +189,25 @@ function setScheduleDialogEvents() {
 				.removeClass("ui-icon-triangle-1-s")
 				.addClass("ui-icon ui-icon-triangle-1-e");
 
-			$(this).parent().find(".group_list").hide();
+			$(this).parent().removeClass("ui-state-active ui-corner-top");
+			$(this).parent().addClass("ui-corner-all");
+			$(this).parent().parent().find(".group_list").hide();
 		}
 		else if(span.hasClass("ui-icon-triangle-1-e")) {
 			span
 				.removeClass("ui-icon-triangle-1-e")
 				.addClass("ui-icon ui-icon-triangle-1-s");
 
-			$(this).parent().find(".group_list").show();
+			$(this).parent().addClass("ui-state-active ui-corner-top");
+			$(this).parent().removeClass("ui-corner-all");
+			$(this).parent().parent().find(".group_list").show();
 		}
 	});
 
 	$(".ui-icon-close").parent().click(function(){
 		var groupId, url;
 		
-		groupId = $(this).parent().attr("id").split("_").pop();
+		groupId = $(this).parent().parent().attr("id").split("_").pop();
 		url = '/Schedule/remove-group/format/json';
 	
 		$.post(url, 
@@ -271,14 +275,18 @@ function makeScheduleDialog(dialog, json) {
 				.removeClass("ui-icon-triangle-1-s")
 				.addClass("ui-icon ui-icon-triangle-1-e");
 
-			$(this).parent().find(".group_list").hide();
+			$(this).parent().removeClass("ui-state-active ui-corner-top");
+			$(this).parent().addClass("ui-corner-all");
+			$(this).parent().parent().find(".group_list").hide();
 		}
 		else if(span.hasClass("ui-icon-triangle-1-e")) {
 			span
 				.removeClass("ui-icon-triangle-1-e")
 				.addClass("ui-icon ui-icon-triangle-1-s");
 
-			$(this).parent().find(".group_list").show();
+			$(this).parent().addClass("ui-state-active ui-corner-top");
+			$(this).parent().removeClass("ui-corner-all");
+			$(this).parent().parent().find(".group_list").show();
 		}
 	});
 
@@ -286,7 +294,7 @@ function makeScheduleDialog(dialog, json) {
 		var groupId, url, search;
 		
 		search = $("#schedule_playlist_search").val();
-		groupId = $(this).parent().attr("id").split("_").pop();
+		groupId = $(this).parent().parent().attr("id").split("_").pop();
 		url = '/Schedule/remove-group/format/json';
 	
 		$.post(url, 
