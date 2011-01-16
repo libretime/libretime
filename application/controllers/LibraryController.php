@@ -32,6 +32,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/airtime/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
+		$this->view->headLink()->appendStylesheet('/css/media_library.css');
 	
 		$this->_helper->layout->setLayout('library');
 
@@ -40,7 +41,7 @@ class LibraryController extends Zend_Controller_Action
 		
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('quick-search', 'library');
-		$this->_helper->actionStack('index', 'sideplaylist');
+		$this->_helper->actionStack('index', 'playlist');
     }
 
     public function contextMenuAction()

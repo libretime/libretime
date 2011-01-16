@@ -80,7 +80,19 @@ class PlaylistController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        
+        $this->view->headScript()->appendFile('/js/airtime/library/spl.js','text/javascript');
+		$this->view->headLink()->appendStylesheet('/css/playlist_builder.css');
+
+		$this->_helper->viewRenderer->setResponseSegment('spl'); 
+
+        $pl_sess = $this->pl_sess;
+                        
+		if(isset($pl_sess->id)) {
+
+			$pl = $this->getPlaylist();
+			
+			$this->view->pl = $pl;
+		}
     }
 
     public function newAction()
@@ -139,7 +151,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/airtime/playlist/playlist.js','text/javascript'); 
 
 		$pl_id = $this->_getParam('id', null);
-		$display = $this->_getParam('view', null);
+	
 		if(!is_null($pl_id)) {
 			$this->changePlaylist($pl_id);      
 		}
@@ -147,11 +159,8 @@ class PlaylistController extends Zend_Controller_Action
 		$pl = $this->getPlaylist();
 		
 		$this->view->pl = $pl;
-
-		if($display === 'spl') {
-			$this->view->html = $this->view->render('sideplaylist/index.phtml');
-			unset($this->view->pl);
-		}
+		$this->view->html = $this->view->render('playlist/index.phtml');
+		unset($this->view->pl);
     }
 
     public function addItemAction()
@@ -168,7 +177,7 @@ class PlaylistController extends Zend_Controller_Action
 			}
 
 			$this->view->pl = $pl;
-			$this->view->html = $this->view->render('sideplaylist/update.phtml');
+			$this->view->html = $this->view->render('playlist/update.phtml');
 			$this->view->name = $pl->getName();
 			$this->view->length = $pl->getLength();
 
@@ -182,20 +191,13 @@ class PlaylistController extends Zend_Controller_Action
     {
 		$oldPos = $this->_getParam('oldPos');
 		$newPos = $this->_getParam('newPos');
-		$display = $this->_getParam('view');
-
+		
 		$pl = $this->getPlaylist();
 
 		$pl->moveAudioClip($oldPos, $newPos);
 
 		$this->view->pl = $pl;
-		
-		if($display === 'pl') {
-			$this->view->html = $this->view->render('playlist/update.phtml');
-		} 
-		else {
-			$this->view->html = $this->view->render('sideplaylist/update.phtml');
-		}
+		$this->view->html = $this->view->render('playlist/update.phtml');
 		$this->view->name = $pl->getName();
 		$this->view->length = $pl->getLength();
 
@@ -205,8 +207,7 @@ class PlaylistController extends Zend_Controller_Action
     public function deleteItemAction()
     {
 		$positions = $this->_getParam('pos', array());
-		$display = $this->_getParam('view');
-
+		
 		if (!is_array($positions))
 	        $positions = array($positions);
 
@@ -221,13 +222,7 @@ class PlaylistController extends Zend_Controller_Action
 	    }
 
 		$this->view->pl = $pl;
-		
-		if($display === 'pl') {
-			$this->view->html = $this->view->render('playlist/update.phtml');
-		} 
-		else {
-			$this->view->html = $this->view->render('sideplaylist/update.phtml');
-		}
+		$this->view->html = $this->view->render('playlist/update.phtml');
 		$this->view->name = $pl->getName();
 		$this->view->length = $pl->getLength();
 
@@ -280,35 +275,21 @@ class PlaylistController extends Zend_Controller_Action
 
     public function deleteActiveAction()
     {   
-		$display = $this->_getParam('view');
-
 		$pl = $this->getPlaylist();	
 		Playlist::Delete($pl->getId());
 
 		$pl_sess = $this->pl_sess;
 		unset($pl_sess->id);
 
-		if($display === 'spl') {
-			$this->view->html = $this->view->render('sideplaylist/index.phtml');
-			return;
-		} 
-
-		$this->_helper->redirector('index');
+		$this->view->html = $this->view->render('playlist/index.phtml');
     }
 
     public function closeAction()
     {
-		$display = $this->_getParam('view');
-
 		$pl = $this->getPlaylist();
 		$this->closePlaylist($pl);
 		
-		if($display === 'spl') {
-			$this->view->html = $this->view->render('sideplaylist/index.phtml');
-			return;
-		} 
-
-		$this->_helper->redirector('index');		
+		$this->view->html = $this->view->render('playlist/index.phtml');	
     }
 
 }

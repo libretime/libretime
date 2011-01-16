@@ -1,0 +1,8 @@
+#side_playlist div, #side_playlist span, #side_playlist ul, #side_playlist li {
+	float: left;
+}
+
+#spl_sortable, #spl_sortable > li, .spl_artist, #side_playlist > div{
+	clear: left;
+}
+

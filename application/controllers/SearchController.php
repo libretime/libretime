@@ -51,7 +51,7 @@ class SearchController extends Zend_Controller_Action
 
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('display', 'search');
-		$this->_helper->actionStack('index', 'sideplaylist');
+		$this->_helper->actionStack('index', 'playlist');
     }
 
     public function displayAction()

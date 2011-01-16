@@ -9,14 +9,14 @@ function setSPLContent(json) {
 		return;		
 	}
 
-	$('input[name="all"]').attr("checked", false);
-
 	$('#spl_name').empty()
 		.append(json.name);
 	$('#spl_length').empty()
 		.append(json.length);		
 	$('#spl_sortable').empty()
 		.append(json.html);	
+
+	$(".ui-icon-close").click(deleteSPLItem);
 }
 
 function addSPLItem(event, ui){
@@ -37,16 +37,12 @@ function addSPLItem(event, ui){
 }
 
 function deleteSPLItem(){
-
 	var url, pos;
 
-	url = '/Playlist/delete-item/format/json/view/spl';
+	pos = $(this).parent().attr("id").split("_").pop();
 
-	pos = $('form[name="SPL"]').find(':checked').not('input[name="all"]').map(function() {
-		return "/pos/" + $(this).attr('name');
-	}).get().join("");
-
-	url = url + pos;
+	url = '/Playlist/delete-item/format/json';
+	url = url + '/pos/' + pos;
 
 	$.post(url, setSPLContent);
 }
@@ -61,7 +57,6 @@ function moveSPLItem(event, ui) {
 
 	url = '/Playlist/move-item'
 	url = url + '/format/json';
-	url = url + '/view/spl';
 	url = url + '/oldPos/' + oldPos;
 	url = url + '/newPos/' + newPos;
 
@@ -77,15 +72,19 @@ function noOpenPL(json) {
 function closeSPL() {
 	var url;
 
-	url = '/Playlist/close/format/json/view/spl';
+	url = '/Playlist/close/format/json';
 
 	$.post(url, noOpenPL);
+}
+
+function newSPL() {
+
 }
 
 function deleteSPL() {
 	var url;
 
-	url = '/Playlist/delete-active/format/json/view/spl';
+	url = '/Playlist/delete-active/format/json';
 
 	$.post(url, noOpenPL);
 }
@@ -106,12 +105,10 @@ function setUpSPL() {
 	$("#spl_remove_selected").click(deleteSPLItem);
 	$("#spl_close").click(closeSPL);
 	$("#spl_delete").click(deleteSPL);
+	$(".ui-icon-close").click(deleteSPLItem);
 
 	$("#spl_sortable").droppable();
 	$("#spl_sortable" ).bind( "drop", addSPLItem);
 
-	$('input[name="all"]').click(function(){
-		$('form[name="SPL"]').find('input').attr("checked", $(this).attr("checked"));
-	});
 }
 
