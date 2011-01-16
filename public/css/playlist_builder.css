@@ -2,7 +2,7 @@
 	width: 500px;
 }
 
-#side_playlist div, #side_playlist span, #side_playlist ul, #side_playlist li {
+#side_playlist, #side_playlist div, #side_playlist span, #side_playlist ul, #side_playlist li {
 	float: left;
 }
 
@@ -16,5 +16,32 @@
 
 #side_playlist textarea {
 	height: 100px;
+}
+
+#spl_sortable {
+	list-style: none;
+	padding:0;
+}
+
+.spl_title {
+	display: inline-block;
+	width: 325px;
+}
+
+.spl_playlength {
+	display: inline-block;
+	width: 150px;
+}
+
+.spl_artist {
+	font-size: 90%;
+	width: 300px;
+}
+
+.spl_fade_control {
+	position: relative;
+	margin-top: -30px;
+	margin-left: -50px;
+	z-index: 2;
 }
 

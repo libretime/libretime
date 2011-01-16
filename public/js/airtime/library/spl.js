@@ -2,6 +2,26 @@
 //Side Playlist Functions
 //--------------------------------------------------------------------------------------------------------------------------------
 
+function highlightActive(el) {
+	$("#spl_sortable")
+		.find(".ui-state-active")
+		.removeClass("ui-state-active");
+
+	$(el).addClass("ui-state-active");
+}
+
+function openFadeEditor(event) {
+	event.stopPropagation();
+
+	highlightActive(this);
+}
+
+function openCueEditor(event) {
+	event.stopPropagation();
+
+	highlightActive(this);
+}
+
 function setSPLContent(json) {
 	
 	if(json.message) {  
@@ -17,6 +37,8 @@ function setSPLContent(json) {
 		.append(json.html);	
 
 	$(".ui-icon-close").click(deleteSPLItem);
+	$(".spl_fade_control").click(openFadeEditor);
+	$("#spl_sortable li").click(openCueEditor);
 }
 
 function addSPLItem(event, ui){
@@ -36,8 +58,10 @@ function addSPLItem(event, ui){
 	$.post(url, setSPLContent);
 }
 
-function deleteSPLItem(){
+function deleteSPLItem(event){
 	var url, pos;
+
+	event.stopPropagation();
 
 	pos = $(this).parent().attr("id").split("_").pop();
 
@@ -67,6 +91,10 @@ function noOpenPL(json) {
 	$("#side_playlist")
 		.empty()
 		.append(json.html);
+
+	$("#spl_new")
+		.button()
+		.click(newSPL);
 }
 
 function closeSPL() {
@@ -86,6 +114,7 @@ function newSPL() {
 		var submit;
 
 		submit = $('<span>Submit</span>')
+			.button()
 			.click(function(){
 				var url, data;
 
@@ -130,10 +159,21 @@ function setUpSPL() {
 	$("#spl_sortable").sortable();
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
-	$("#spl_new").click(newSPL);
-	$("#spl_close").click(closeSPL);
-	$("#spl_delete").click(deleteSPL);
+	$("#spl_new")
+		.button()
+		.click(newSPL);
+
+	$("#spl_close")
+		.button()
+		.click(closeSPL);
+
+	$("#spl_delete")
+		.button()
+		.click(deleteSPL);
+
 	$(".ui-icon-close").click(deleteSPLItem);
+	$(".spl_fade_control").click(openFadeEditor);
+	$("#spl_sortable li").click(openCueEditor);
 
 	$("#spl_sortable").droppable();
 	$("#spl_sortable" ).bind( "drop", addSPLItem);
