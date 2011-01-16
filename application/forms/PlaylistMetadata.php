@@ -5,9 +5,6 @@ class Application_Form_PlaylistMetadata extends Zend_Form
 
     public function init()
     {
-        // Set the method for the display form to POST
-        $this->setMethod('post');
-
 		// Add username element
         $this->addElement('text', 'title', array(
             'label'      => 'Title:',
@@ -23,12 +20,6 @@ class Application_Form_PlaylistMetadata extends Zend_Form
             'label'      => 'Description:',
             'required'   => false,
 		));
-
-		// Add the submit button
-        $this->addElement('submit', 'submit', array(
-            'ignore'   => true,
-            'label'    => 'Submit',
-        ));
     }
 
 

@@ -19,6 +19,8 @@ class PlaylistController extends Zend_Controller_Action
 					->addActionContext('set-cue', 'json')
 					->addActionContext('move-item', 'json')
 					->addActionContext('close', 'json')
+					->addActionContext('new', 'json')
+					->addActionContext('metadata', 'json')
 					->addActionContext('edit', 'json')
 					->addActionContext('delete-active', 'json')
 					->addActionContext('delete', 'json')
@@ -98,7 +100,9 @@ class PlaylistController extends Zend_Controller_Action
 
 		$this->changePlaylist($pl_id);
 
-		$this->_helper->redirector('metadata');
+		$form = new Application_Form_PlaylistMetadata();
+
+		$this->view->form = $form->__toString();
     }
 
     public function metadataAction()
@@ -125,17 +129,19 @@ class PlaylistController extends Zend_Controller_Action
 				$formdata = $form->getValues();
 
 				$pl = $this->getPlaylist();
-				$pl->setPLMetaData(UI_MDATA_KEY_TITLE, $formdata["title"]);
+				$pl->setName($formdata["title"]);
 				
 				if(isset($formdata["description"])) {
 					$pl->setPLMetaData(UI_MDATA_KEY_DESCRIPTION, $formdata["description"]);
 				}
 
-				$this->_helper->redirector('edit');
+				$this->view->pl = $pl;
+				$this->view->html = $this->view->render('playlist/index.phtml');
+				unset($this->view->pl);
             }
         }
  
-        $this->view->form = $form;
+        $this->view->form = $form->__toString();
     }
 
     public function editAction()

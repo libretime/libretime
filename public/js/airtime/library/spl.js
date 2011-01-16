@@ -78,7 +78,34 @@ function closeSPL() {
 }
 
 function newSPL() {
+	var url;
 
+	url = '/Playlist/new/format/json';
+
+	$.post(url, function(json){
+		var submit;
+
+		submit = $('<span>Submit</span>')
+			.click(function(){
+				var url, data;
+
+				url = '/Playlist/metadata/format/json';
+				data = $("#side_playlist form").serialize(); 
+
+				$.post(url, data, function(json){
+					if(json.form){
+
+					}
+
+					openDiffSPL(json);
+				})
+			});
+
+		$("#side_playlist")
+			.empty()
+			.append(json.form)
+			.append(submit);
+	});
 }
 
 function deleteSPL() {
@@ -103,6 +130,7 @@ function setUpSPL() {
 	$("#spl_sortable").sortable();
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
+	$("#spl_new").click(newSPL);
 	$("#spl_close").click(closeSPL);
 	$("#spl_delete").click(deleteSPL);
 	$(".ui-icon-close").click(deleteSPLItem);

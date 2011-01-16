@@ -84,9 +84,6 @@ class LibraryController extends Zend_Controller_Action
 								'title' => 'Close');
 			}
 
-			$menu[] = array('action' => array('type' => 'gourl', 'url' => '/Playlist/metadata'.$params), 
-							'title' => 'Description');
-
 			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/delete'.$params, 'callback' => 'window["deletePlaylist"]'), 
 							'title' => 'Delete');
 
