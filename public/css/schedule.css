@@ -6,25 +6,18 @@ div.ui-datepicker {
 	font-size: 75%;
 }
 
-#show_time_info {
-	clear: left;
-}
-
-#show_progressbar {
-	width: 150px;
-	height: 5px;
+#schedule_playlist_dialog > div {
+	float: left;
+	width: 500px;
+	padding: 5px;
 }
 
 #schedule_playlist_dialog ul {
 	list-style-type: none;
-	float: left;
-	width: 400px;
-	height: 200px;
 	overflow: auto;
-}
-
-#schedule_playlist_chosen li {
-	clear: left;
+	margin: 0;
+	padding: 0;
+	height: 300px;
 }
 
 #schedule_playlist_chosen li > div {
@@ -32,10 +25,26 @@ div.ui-datepicker {
 	margin: 0 5px 2px 0;
 }
 
-#schedule_playlist_chosen li div.group_list {
+#schedule_playlist_chosen li {
 	clear: left;
 }
 
 .sched_description {
+	clear: left;
 	font-size: 85%;
+}
+
+#show_time_info > div, #show_time_info > span{
+	float: left;
+}
+
+#show_progressbar {
+	width: 150px;
+	height: 5px;
+}
+
+.time {
+	width: 150px;
+	margin: 5px;
+	text-align: center;
 }

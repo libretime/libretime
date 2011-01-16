@@ -182,7 +182,22 @@ function setScheduleDialogHtml(json) {
 function setScheduleDialogEvents() {
 
 	$(".ui-icon-triangle-1-e").parent().click(function(){
-		$(this).parent().find(".group_list").toggle();
+		var span = $(this).find("span");
+
+		if(span.hasClass("ui-icon-triangle-1-s")) {
+			span
+				.removeClass("ui-icon-triangle-1-s")
+				.addClass("ui-icon ui-icon-triangle-1-e");
+
+			$(this).parent().find(".group_list").hide();
+		}
+		else if(span.hasClass("ui-icon-triangle-1-e")) {
+			span
+				.removeClass("ui-icon-triangle-1-e")
+				.addClass("ui-icon ui-icon-triangle-1-s");
+
+			$(this).parent().find(".group_list").show();
+		}
 	});
 
 	$(".ui-icon-close").parent().click(function(){
@@ -248,8 +263,23 @@ function makeScheduleDialog(dialog, json) {
 			}
     	});
 
-	dialog.find(".ui-icon-triangle-1-e").parent().click(function(){
-		$(this).parent().find(".group_list").toggle();
+	dialog.find(".ui-icon-triangle-1-e").parent().click(function(ev){
+		var span = $(this).find("span");
+
+		if(span.hasClass("ui-icon-triangle-1-s")) {
+			span
+				.removeClass("ui-icon-triangle-1-s")
+				.addClass("ui-icon ui-icon-triangle-1-e");
+
+			$(this).parent().find(".group_list").hide();
+		}
+		else if(span.hasClass("ui-icon-triangle-1-e")) {
+			span
+				.removeClass("ui-icon-triangle-1-e")
+				.addClass("ui-icon ui-icon-triangle-1-s");
+
+			$(this).parent().find(".group_list").show();
+		}
 	});
 
 	dialog.find(".ui-icon-close").parent().click(function(){
@@ -291,8 +321,8 @@ function openScheduleDialog(show) {
 			dialog.dialog({
 				autoOpen: false,
 				title: 'Schedule Playlist',
-				width: 950,
-				height: 450,
+				width: 1100,
+				height: 500,
 				modal: true,
 				close: closeDialog,
 				buttons: {"Ok": function() {
