@@ -179,9 +179,9 @@ function setScheduleDialogHtml(json) {
 	$("#show_progressbar").progressbar( "value" , json.percentFilled );
 }
 
-function setScheduleDialogEvents() {
+function setScheduleDialogEvents(dialog) {
 
-	$(".ui-icon-triangle-1-e").parent().click(function(){
+	dialog.find(".ui-icon-triangle-1-e").parent().click(function(){
 		var span = $(this).find("span");
 
 		if(span.hasClass("ui-icon-triangle-1-s")) {
@@ -204,7 +204,7 @@ function setScheduleDialogEvents() {
 		}
 	});
 
-	$(".ui-icon-close").parent().click(function(){
+	dialog.find(".ui-icon-close").parent().click(function(){
 		var groupId, url;
 		
 		groupId = $(this).parent().parent().attr("id").split("_").pop();
@@ -213,8 +213,10 @@ function setScheduleDialogEvents() {
 		$.post(url, 
 			{groupId: groupId},
 			function(json){
+				var dialog = $("#schedule_playlist_dialog");
+
 				setScheduleDialogHtml(json);
-				setScheduleDialogEvents();
+				setScheduleDialogEvents(dialog);
 			});	
 	});
 }
@@ -261,54 +263,19 @@ function makeScheduleDialog(dialog, json) {
 				$.post(url, 
 					{plId: pl_id, search: search},
 					function(json){
+						var dialog = $("#schedule_playlist_dialog");
+
 						setScheduleDialogHtml(json);
-						setScheduleDialogEvents();
+						setScheduleDialogEvents(dialog);
 					});	
 			}
     	});
-
-	dialog.find(".ui-icon-triangle-1-e").parent().click(function(ev){
-		var span = $(this).find("span");
-
-		if(span.hasClass("ui-icon-triangle-1-s")) {
-			span
-				.removeClass("ui-icon-triangle-1-s")
-				.addClass("ui-icon ui-icon-triangle-1-e");
-
-			$(this).parent().removeClass("ui-state-active ui-corner-top");
-			$(this).parent().addClass("ui-corner-all");
-			$(this).parent().parent().find(".group_list").hide();
-		}
-		else if(span.hasClass("ui-icon-triangle-1-e")) {
-			span
-				.removeClass("ui-icon-triangle-1-e")
-				.addClass("ui-icon ui-icon-triangle-1-s");
-
-			$(this).parent().addClass("ui-state-active ui-corner-top");
-			$(this).parent().removeClass("ui-corner-all");
-			$(this).parent().parent().find(".group_list").show();
-		}
-	});
-
-	dialog.find(".ui-icon-close").parent().click(function(){
-		var groupId, url, search;
-		
-		search = $("#schedule_playlist_search").val();
-		groupId = $(this).parent().parent().attr("id").split("_").pop();
-		url = '/Schedule/remove-group/format/json';
-	
-		$.post(url, 
-			{groupId: groupId, search: search},
-			function(json){
-				setScheduleDialogHtml(json);
-				setScheduleDialogEvents();	
-			});	
-	});
 
 	dialog.find("#show_progressbar").progressbar({
 		value: json.percentFilled
 	});
 
+	setScheduleDialogEvents(dialog);
 }
 
 function openScheduleDialog(show) {
