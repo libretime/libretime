@@ -36,13 +36,10 @@ class PlaylistController extends Zend_Controller_Action
 			$pl = Playlist::Recall($pl_sess->id);
 			if($pl === FALSE) {
 				unset($pl_sess->id);
-				$this->_helper->redirector('index');
+				return;
 			}
-
 			return $pl;
 		}
-		
-		$this->_helper->redirector('index');
 	}
 
 	private function changePlaylist($pl_id){
@@ -84,15 +81,10 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet('/css/playlist_builder.css');
 
 		$this->_helper->viewRenderer->setResponseSegment('spl'); 
-
-        $pl_sess = $this->pl_sess;
-                        
-		if(isset($pl_sess->id)) {
-
-			$pl = $this->getPlaylist();
-			
-			$this->view->pl = $pl;
-		}
+             
+		$pl_sess = $this->pl_sess;
+         
+		$this->view->pl = $this->getPlaylist();
     }
 
     public function newAction()

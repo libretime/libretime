@@ -32,16 +32,16 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/airtime/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
-		$this->view->headLink()->appendStylesheet('/css/media_library.css');
+		//$this->view->headLink()->appendStylesheet('/css/media_library.css');
 	
 		$this->_helper->layout->setLayout('library');
 
 		unset($this->search_sess->page);
 		unset($this->search_sess->md);
 		
+		$this->_helper->actionStack('index', 'playlist');
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('quick-search', 'library');
-		$this->_helper->actionStack('index', 'playlist');
     }
 
     public function contextMenuAction()
@@ -72,14 +72,14 @@ class LibraryController extends Zend_Controller_Action
 			if(!isset($pl_sess->id) || $pl_sess->id !== $id) {
 				$menu[] = array('action' => 
 									array('type' => 'ajax', 
-									'url' => '/Playlist/edit/view/spl'.$params, 
+									'url' => '/Playlist/edit'.$params, 
 									'callback' => 'window["openDiffSPL"]'), 
 								'title' => 'Edit');
 			}
 			else if(isset($pl_sess->id) && $pl_sess->id === $id) {
 				$menu[] = array('action' => 
 									array('type' => 'ajax', 
-									'url' => '/Playlist/close/view/spl'.$params, 
+									'url' => '/Playlist/close'.$params, 
 									'callback' => 'window["noOpenPL"]'), 
 								'title' => 'Close');
 			}
