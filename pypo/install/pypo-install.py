@@ -75,6 +75,7 @@ try:
   
   print "Copying pypo files"
   shutil.copy("../scripts/silence.mp3", BASE_PATH+"files/basic")
+  shutil.copy("../scripts/silence-playlist.lsp", BASE_PATH+"files/basic")
   
   if platform.architecture()[0] == '64bit':
       print "Installing 64-bit liquidsoap binary"
@@ -91,7 +92,7 @@ try:
   print "Setting permissions"
   os.system("chmod -R 755 "+BASE_PATH)
   os.system("chown -R pypo:pypo "+BASE_PATH)
-
+  
   print "Installing daemontool script pypo-fetch"
   create_path("/etc/service/pypo-fetch")
   create_path("/etc/service/pypo-fetch/log")
