@@ -607,7 +607,7 @@ class Schedule {
             $millisec2 = substr($parts2[1], 0, 3);
             $millisec2 = str_pad($millisec2, 3, "0");
             $millisec2 = intval($millisec2);
-            $diff = abs(millisec1 - millisec2)/1000;
+            $diff = abs($millisec1 - $millisec2)/1000;
         }
         return $diff;
     }
