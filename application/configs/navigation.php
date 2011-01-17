@@ -23,31 +23,6 @@ $pages = array(
 		'resource'	=>	'user'	
 	),
 	array(
-		'label'      => 'Playlists',
-		'module'     => 'default',
-		'controller' => 'Playlist',
-		'action'     => 'index',
-		'resource'	=>	'playlist',
-		'pages'      => array(
-		    array(
-		        'label'      => 'New',
-		        'module'     => 'default',
-		        'controller' => 'Playlist',
-		        'action'     => 'new',
-				'resource'	=>	'playlist',
-				'visible'    => false
-		    ),
-			array(
-		        'label'      => 'Edit',
-		        'module'     => 'default',
-		        'controller' => 'Playlist',
-		        'action'     => 'edit',
-				'resource'	=>	'playlist',
-				'visible'    => false
-		    )
-		)
-	),
-	array(
 		'label'      => 'Media Library',
 		'module'     => 'default',
 		'controller' => 'Library',

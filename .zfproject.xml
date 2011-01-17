@@ -63,6 +63,8 @@
           <actionMethod actionName="scheduleShow"/>
           <actionMethod actionName="clearShow"/>
           <actionMethod actionName="findPlaylists"/>
+          <actionMethod actionName="removeGroup"/>
+          <actionMethod actionName="scheduleShowDialog"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -73,10 +75,6 @@
         </controllerFile>
         <controllerFile controllerName="SidePlaylist">
           <actionMethod actionName="index"/>
-        </controllerFile>
-        <controllerFile controllerName="Sideplaylist">
-          <actionMethod actionName="index"/>
-          <actionMethod actionName="addItem"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory>
@@ -218,15 +216,6 @@
           <viewControllerScriptsDirectory forControllerName="User">
             <viewScriptFile forActionName="addUser"/>
           </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="SidePlaylist">
-            <viewScriptFile forActionName="index"/>
-          </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Sideplaylist">
-            <viewScriptFile forActionName="index"/>
-          </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Sideplaylist">
-            <viewScriptFile forActionName="addItem"/>
-          </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Playlist">
             <viewScriptFile forActionName="close"/>
           </viewControllerScriptsDirectory>
@@ -241,6 +230,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="findPlaylists"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="removeGroup"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="scheduleShowDialog"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
@@ -284,8 +279,6 @@
           <testApplicationControllerFile filesystemName="ScheduleControllerTest.php"/>
           <testApplicationControllerFile filesystemName="ApiControllerTest.php"/>
           <testApplicationControllerFile filesystemName="UserControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="SidePlaylistControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="SideplaylistControllerTest.php"/>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>
       <testLibraryDirectory>

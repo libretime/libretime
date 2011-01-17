@@ -1,19 +1,22 @@
-<div><a href="<?php echo $this->url(
-    array(
-        'controller' => 'Playlist',
-        'action'     => 'new'
-    ),
-    'default',
-    true) ?>"> New Playlist</a></div>
+<button id="spl_new">New</button>
+<?php if (isset($this->pl)) : ?>
+<button id="spl_delete">Delete</button>
+<button id="spl_close">Done Editing</button>
+<?php endif; ?>
 
-<div><a href="<?php echo $this->url(
-    array(
-        'controller' => 'Playlist',
-        'action'     => 'edit'
-    ),
-    'default',
-    true) ?>"> Edit Playlist</a></div>
+<?php if (isset($this->pl)) : ?>
+<div id="spl_name"><?php echo $this->pl->getName(); ?></div>
+<div id="spl_length"><?php echo $this->pl->getLength(); ?></div>
 
-<?php 
-
-echo $this->form;
+<ul id="spl_sortable">
+	<?php if (count($this->pl->getContents())) : ?>
+	<?php echo $this->partialLoop('playlist/sidebarcontent.phtml', $this->pl->getContents()); ?>
+	<?php else : ?>
+	<li class="spl_empty">Empty playlist</li> 
+	<?php endif; ?>
+</ul>
+<div id="spl_editor"></div>
+<div id="spl_error" class="ui-state-error ui-corner-all" style="display: none"></div>
+<?php else : ?>
+<div>No open playlist</div>
+<?php endif; ?>

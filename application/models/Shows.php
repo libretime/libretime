@@ -248,6 +248,47 @@ class Show {
 		}
 	}
 
+	public function removeGroupFromShow($start_timestamp, $group_id){
+		global $CC_DBC, $CC_CONFIG;
+
+		$timeinfo = explode(" ", $start_timestamp);
+
+		$group = CcShowScheduleQuery::create()
+			->filterByDbShowId($this->_showId)
+			->filterByDbGroupId($group_id)
+			->filterByDbShowDay($timeinfo[0])
+			->findOne();
+
+		$position = $group->getDbPosition();
+
+		$sql = "SELECT group_id FROM cc_show_schedule 
+					WHERE show_id = '{$this->_showId}' AND show_day = '{$timeinfo[0]}'
+					AND position > '{$position}'";
+		$followingGroups = $CC_DBC->GetAll($sql);
+
+		$sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." WHERE group_id='{$group_id}'";
+		$group_length = $CC_DBC->GetOne($sql);
+
+		$sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE group_id = '{$group_id}'";
+		$CC_DBC->query($sql);
+
+		if(!is_null($followingGroups)) {
+			$sql_opt = array();
+			foreach ($followingGroups as $row) {
+				$sql_opt[] = "group_id = {$row["group_id"]}";
+			}
+			$sql_group_ids = join(" OR ", $sql_opt);
+
+			$sql = "UPDATE ".$CC_CONFIG["scheduleTable"]." 
+						SET starts = (starts - INTERVAL '{$group_length}'), ends = (ends - INTERVAL '{$group_length}') 
+						WHERE " . $sql_group_ids;
+			$CC_DBC->query($sql);
+		}
+
+		$group->delete();
+
+	}
+
 	public function getTimeScheduled($start_timestamp, $end_timestamp) {
 
 		$time = Schedule::getTimeScheduledInRange($start_timestamp, $end_timestamp);
@@ -515,8 +556,20 @@ class Show {
 		return $event;
 	}
 
-	public function searchPlaylistsForShow($day, $search=null){
+	public function getShowLength($start_timestamp, $end_timestamp){
 		global $CC_DBC;
+
+		$sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}' ";
+		$length = $CC_DBC->GetOne($sql);
+
+		return $length;
+	}
+
+	public function searchPlaylistsForShow($start_timestamp, $search=null){
+		global $CC_DBC;
+
+		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$start_timestamp}')";
+		$day = $CC_DBC->GetOne($sql);
 
 		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$this->_showId}' AND day = '{$day}'";
 		$row = $CC_DBC->GetAll($sql);

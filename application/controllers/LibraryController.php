@@ -38,9 +38,9 @@ class LibraryController extends Zend_Controller_Action
 		unset($this->search_sess->page);
 		unset($this->search_sess->md);
 		
+		$this->_helper->actionStack('index', 'playlist');
 		$this->_helper->actionStack('contents', 'library');
 		$this->_helper->actionStack('quick-search', 'library');
-		$this->_helper->actionStack('index', 'sideplaylist');
     }
 
     public function contextMenuAction()
@@ -71,20 +71,17 @@ class LibraryController extends Zend_Controller_Action
 			if(!isset($pl_sess->id) || $pl_sess->id !== $id) {
 				$menu[] = array('action' => 
 									array('type' => 'ajax', 
-									'url' => '/Playlist/edit/view/spl'.$params, 
+									'url' => '/Playlist/edit'.$params, 
 									'callback' => 'window["openDiffSPL"]'), 
 								'title' => 'Edit');
 			}
 			else if(isset($pl_sess->id) && $pl_sess->id === $id) {
 				$menu[] = array('action' => 
 									array('type' => 'ajax', 
-									'url' => '/Playlist/close/view/spl'.$params, 
+									'url' => '/Playlist/close'.$params, 
 									'callback' => 'window["noOpenPL"]'), 
 								'title' => 'Close');
 			}
-
-			$menu[] = array('action' => array('type' => 'gourl', 'url' => '/Playlist/metadata'.$params), 
-							'title' => 'Description');
 
 			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/delete'.$params, 'callback' => 'window["deletePlaylist"]'), 
 							'title' => 'Delete');
@@ -125,6 +122,7 @@ class LibraryController extends Zend_Controller_Action
     public function contentsAction()
     {
         $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
+		$this->view->headLink()->appendStylesheet('/css/media_library.css');
 
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
@@ -214,7 +212,7 @@ class LibraryController extends Zend_Controller_Action
 		$search = $this->_getParam('search', null);
 		$this->search_sess->quick_string = $search;
 
-		$categories = array("dc:title", "dc:creator", "dc:source", "ls:type");
+		$categories = array("dc:title", "dc:creator", "dc:source");
 		$keywords = explode(" ", $search);
 
 		$md = array();

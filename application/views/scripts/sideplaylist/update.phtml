@@ -1,7 +1,0 @@
-<?php
-if (count($this->pl->getContents())) {
-	echo $this->partialLoop('sideplaylist/sidebarcontent.phtml', $this->pl->getContents());
-}
-else {
-	echo '<li class="pl_empty">Empty playlist</li>'; 
-}

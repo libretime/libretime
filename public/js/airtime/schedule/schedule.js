@@ -101,6 +101,7 @@ function submitShow() {
 }
 
 function closeDialog(event, ui) {
+	$("#schedule_calendar").fullCalendar( 'refetchEvents' );
 	$(this).remove();
 }
 
@@ -140,6 +141,7 @@ function makeShowDialog(json) {
 		title: 'Add Show',
 		width: 950,
 		height: 400,
+		modal: true,
 		close: closeDialog,
 		buttons: { "Cancel": closeDialog, "Ok": submitShow}
 	});
@@ -159,16 +161,75 @@ function openShowDialog() {
 	});
 }
 
-function makeScheduleDialog(dialog, json, show) {
+function setScheduleDialogHtml(json) {
+
+	$("#schedule_playlist_choice")
+		.empty()
+		.append(json.choice)
+		.find('li')
+			.draggable({ 
+				helper: 'clone' 
+			});
+
+	$("#schedule_playlist_chosen")
+		.empty()
+		.append(json.chosen);
+
+	$("#show_time_filled").empty().append(json.timeFilled);
+	$("#show_progressbar").progressbar( "value" , json.percentFilled );
+}
+
+function setScheduleDialogEvents(dialog) {
+
+	dialog.find(".ui-icon-triangle-1-e").parent().click(function(){
+		var span = $(this).find("span");
+
+		if(span.hasClass("ui-icon-triangle-1-s")) {
+			span
+				.removeClass("ui-icon-triangle-1-s")
+				.addClass("ui-icon ui-icon-triangle-1-e");
+
+			$(this).parent().removeClass("ui-state-active ui-corner-top");
+			$(this).parent().addClass("ui-corner-all");
+			$(this).parent().parent().find(".group_list").hide();
+		}
+		else if(span.hasClass("ui-icon-triangle-1-e")) {
+			span
+				.removeClass("ui-icon-triangle-1-e")
+				.addClass("ui-icon ui-icon-triangle-1-s");
+
+			$(this).parent().addClass("ui-state-active ui-corner-top");
+			$(this).parent().removeClass("ui-corner-all");
+			$(this).parent().parent().find(".group_list").show();
+		}
+	});
+
+	dialog.find(".ui-icon-close").parent().click(function(){
+		var groupId, url;
+		
+		groupId = $(this).parent().parent().attr("id").split("_").pop();
+		url = '/Schedule/remove-group/format/json';
+	
+		$.post(url, 
+			{groupId: groupId},
+			function(json){
+				var dialog = $("#schedule_playlist_dialog");
+
+				setScheduleDialogHtml(json);
+				setScheduleDialogEvents(dialog);
+			});	
+	});
+}
+
+function makeScheduleDialog(dialog, json) {
 	
 	dialog.find("#schedule_playlist_search").keyup(function(){
-		var url, string, day;
+		var url, string;
 		
 		url = "/Schedule/find-playlists/format/html";
 		string = $(this).val();
-		day = show.start.getDay();
-
-		$.post(url, {search: string, id: show.id, day: day}, function(html){
+		
+		$.post(url, {search: string}, function(html){
 			
 			$("#schedule_playlist_choice")
 				.empty()
@@ -192,60 +253,41 @@ function makeScheduleDialog(dialog, json, show) {
 		.append(json.chosen)
 		.droppable({
       		drop: function(event, ui) {
-				var li, pl_id, url, start_date, end_date, day, search;
+				var pl_id, url, search;
 
 				search = $("#schedule_playlist_search").val();
-
 				pl_id = $(ui.helper).attr("id").split("_").pop();
-				day = show.start.getDay();
 				
-				start_date = makeTimeStamp(show.start);
-				end_date = makeTimeStamp(show.end);
-
 				url = '/Schedule/schedule-show/format/json';
 
 				$.post(url, 
-					{plId: pl_id, start: start_date, end: end_date, showId: show.id, day: day, search: search},
+					{plId: pl_id, search: search},
 					function(json){
-						var x;
+						var dialog = $("#schedule_playlist_dialog");
 
-						$("#schedule_playlist_choice")
-							.empty()
-							.append(json.choice)
-							.find('li')
-								.draggable({ 
-									helper: 'clone' 
-								});
-
-						$("#schedule_playlist_chosen")
-							.empty()
-							.append(json.chosen)
-							.find("li")
-								.click(function(){
-									$(this).find(".group_list").toggle();
-								});
-					});
-				
+						setScheduleDialogHtml(json);
+						setScheduleDialogEvents(dialog);
+					});	
 			}
     	});
 
-	dialog.find("#schedule_playlist_chosen li")
-		.click(function(){
-			$(this).find(".group_list").toggle();
-		});
+	dialog.find("#show_progressbar").progressbar({
+		value: json.percentFilled
+	});
+
+	setScheduleDialogEvents(dialog);
 }
 
 function openScheduleDialog(show) {
-	var url, start_date, end_date, day;
+	var url, start_date, end_date;
 
-	url = '/Schedule/schedule-show/format/json';
-	day = show.start.getDay();
-
+	url = '/Schedule/schedule-show-dialog/format/json';
+	
 	start_date = makeTimeStamp(show.start);
 	end_date = makeTimeStamp(show.end);
 
-	$.get(url, 
-		{day: day, start: start_date, end: end_date, showId: show.id},
+	$.post(url, 
+		{start: start_date, end: end_date, showId: show.id},
 		function(json){
 			var dialog = $(json.dialog);
 
@@ -254,8 +296,9 @@ function openScheduleDialog(show) {
 			dialog.dialog({
 				autoOpen: false,
 				title: 'Schedule Playlist',
-				width: 950,
-				height: 400,
+				width: 1100,
+				height: 500,
+				modal: true,
 				close: closeDialog,
 				buttons: {"Ok": function() {
 					dialog.remove();
@@ -325,11 +368,6 @@ function eventRender(event, element, view) {
 		if(event.percent === 0) {
 			// even at 0, the bar still seems to display a little bit of progress...
 			div.find("div").hide();
-		}
-		else {
-			div.find("div")
-				.removeClass("ui-widget-header")
-				.addClass("ui-state-active");
 		}
 
 		$(element).find(".fc-event-title").after(div);
@@ -449,7 +487,6 @@ $(document).ready(function() {
     })
 
 	$('#schedule_add_show').click(openShowDialog);
-
 
 });
 

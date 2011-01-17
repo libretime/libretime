@@ -30,13 +30,9 @@ DROP FUNCTION show_content() CASCADE;
 CREATE FUNCTION show_content() RETURNS trigger AS
     '
     BEGIN
-    	IF(TG_OP=''INSERT'') THEN
-        	UPDATE cc_show_schedule SET position = (position + 1) 
-		WHERE (id = new.id AND position >= new.position AND id != new.id);
-        END IF;
         IF(TG_OP=''DELETE'') THEN
         	UPDATE cc_show_schedule SET position = (position - 1) 
-		WHERE (id = old.id AND position > old.position);
+		WHERE (show_id = old.show_id AND show_day = old.show_day AND position > old.position);
         END IF;
         RETURN NULL;
     END;

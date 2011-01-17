@@ -41,6 +41,7 @@ echo "Creating new playlist '$playlistName'...";
 $pl = new Playlist();
 $pl->create($playlistName);
 
+/*
 // Add a media clip
 $mediaFile = StoredFile::findByOriginalName("ACDC_-_Back_In_Black-sample.ogg");
 if (is_null($mediaFile)) {
@@ -53,6 +54,7 @@ if (is_null($mediaFile)) {
     }
 }
 $pl->addAudioClip($mediaFile->getId());
+*/
 
 $mediaFile = StoredFile::findByOriginalName("Peter_Rudenko_-_Opening.mp3");
 if (is_null($mediaFile)) {

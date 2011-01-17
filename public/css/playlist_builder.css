@@ -1,0 +1,125 @@
+#side_playlist {
+	width: 450px;
+	height: 485px;
+	padding: 0.5em;
+	font-size: 16px;
+}
+
+#side_playlist, 
+#side_playlist div, 
+#side_playlist span,
+#side_playlist ul, 
+#side_playlist li, 
+#side_playlist button {
+	float: left;
+}
+
+#spl_sortable, 
+#spl_sortable > li, 
+#side_playlist > div,
+#spl_editor,
+.spl_artist,
+.spl_cue_in,
+.spl_fade_in,
+.spl_cue_out,
+.spl_fade_out {
+	clear: left;
+}
+
+#side_playlist button {
+	font-size: 12px;
+}
+
+#side_playlist input, 
+#side_playlist textarea {
+	width: 200px;
+}
+
+#side_playlist textarea {
+	height: 100px;
+}
+
+#spl_sortable {
+	list-style: none;
+	padding:0;
+	height: 300px;
+	width: 450px;
+	overflow: auto;
+}
+
+#side_playlist li {
+	width: 425px;
+}
+
+#side_playlist li > div {
+	height: 50px;
+}
+
+#spl_name {
+	margin-top: 0.5em;
+}
+
+.ui-icon-play {
+	margin-top: 17px;
+}
+
+.ui-icon-close {
+	margin-top: 7px;
+}
+
+.spl_title {
+	display: inline-block;
+	width: 260px;
+	margin-left: 20px;
+}
+
+.spl_playlength {
+	display: inline-block;
+	width: 100px;
+	font-size: 85%;
+	margin-top: 15px;
+}
+
+.spl_artist {
+	font-size: 90%;
+	width: 275px;
+	margin-left: 25px;
+	margin-top: -8px;
+}
+
+.spl_fade_control {
+	padding: 0.2em;
+	margin-top: -45px;
+	margin-left: -80px;
+	z-index: 2;
+}
+
+#spl_editor {
+	height: 50px;
+}
+
+#spl_editor > div > span {
+	display: inline-block;
+	width: 150px;
+}
+
+.ui-icon-close,
+.ui-icon-play,
+.spl_fade_control,
+.spl_playlength,
+.spl_text_input {
+	cursor: pointer;
+}
+
+.spl_text_input input {
+	cursor: text;
+}
+
+#spl_error {
+	font-size: 14px;
+	padding: 0.3em;
+	width: 440px;
+	text-align: center;
+}
+
+

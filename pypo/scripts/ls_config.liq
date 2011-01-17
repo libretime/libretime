@@ -28,9 +28,7 @@ icecast_port = 8000
 icecast_pass = "hackme"
 
 # mountpoints
-mount_scheduler = "pypo_scheduler.mp3"
-mount_fallback = "pypo_fallback.mp3"
-mount_final = "pypo_final.mp3"
+mount_scheduler = "airtime.mp3"
 
 # mount intra is used for scheduler >>> fallback stream
 mount_intra = "pypo_intra"
