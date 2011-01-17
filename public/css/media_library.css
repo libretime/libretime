@@ -8,8 +8,12 @@
 	text-align: left;
 }
 
+#library_display td {
+
+}
+
 #library_display th,
 #library_display td,
 .paginationControl {
-	font-size: 13px;
+	font-size: 15px;
 }

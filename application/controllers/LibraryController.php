@@ -212,7 +212,7 @@ class LibraryController extends Zend_Controller_Action
 		$search = $this->_getParam('search', null);
 		$this->search_sess->quick_string = $search;
 
-		$categories = array("dc:title", "dc:creator", "dc:source", "ls:type");
+		$categories = array("dc:title", "dc:creator", "dc:source");
 		$keywords = explode(" ", $search);
 
 		$md = array();
