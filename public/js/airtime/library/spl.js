@@ -212,6 +212,8 @@ function setEditorContent(json) {
 		.empty()
 		.append(json.html);
 
+	clearEditorError();
+
 	$(".spl_cue_in span:last, .spl_cue_out span:last, .spl_fade_in span:last, .spl_fade_out span:last").click(addTextInput);
 }
 
