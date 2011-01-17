@@ -1,5 +1,5 @@
 #side_playlist {
-	width: 500px;
+	width: 450px;
 	padding: 0.5em;
 	font-size: 16px;
 }
@@ -41,28 +41,60 @@
 #spl_sortable {
 	list-style: none;
 	padding:0;
+	height: 300px;
+	width: 450px;
+	overflow: auto;
+}
+
+#side_playlist li {
+	width: 425px;
+}
+
+#side_playlist li > div {
+	height: 50px;
+}
+
+#spl_name {
+	margin-top: 0.5em;
+}
+
+.ui-icon-play {
+	margin-top: 17px;
+}
+
+.ui-icon-close {
+	margin-top: 7px;
 }
 
 .spl_title {
 	display: inline-block;
-	width: 325px;
+	width: 260px;
+	margin-left: 20px;
 }
 
 .spl_playlength {
 	display: inline-block;
-	width: 150px;
+	width: 100px;
+	font-size: 85%;
+	margin-top: 15px;
 }
 
 .spl_artist {
 	font-size: 90%;
-	width: 300px;
+	width: 275px;
+	margin-left: 25px;
+	margin-top: -8px;
 }
 
 .spl_fade_control {
 	padding: 0.2em;
-	margin-top: -34px;
-	margin-left: -50px;
+	margin-top: -45px;
+	margin-left: -80px;
 	z-index: 2;
+}
+
+#spl_editor {
+	height: 50px;
 }
 
 #spl_editor > div > span {
@@ -71,6 +103,7 @@
 }
 
 .ui-icon-close,
+.ui-icon-play,
 .spl_fade_control,
 .spl_playlength {
 	cursor: pointer;

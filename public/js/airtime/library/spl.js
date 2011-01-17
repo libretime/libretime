@@ -35,7 +35,7 @@ function openCueEditor(event) {
 
 	var pos, url, li;
 	
-	li = $(this).parent();
+	li = $(this).parent().parent();
 	pos = li.attr("id").split("_").pop();
 	url = '/Playlist/set-cue/format/json';
 	url = url + '/pos/' + pos;
@@ -90,7 +90,7 @@ function deleteSPLItem(event){
 
 	event.stopPropagation();
 
-	pos = $(this).parent().attr("id").split("_").pop();
+	pos = $(this).parent().parent().attr("id").split("_").pop();
 
 	url = '/Playlist/delete-item/format/json';
 	url = url + '/pos/' + pos;
