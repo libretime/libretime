@@ -229,27 +229,47 @@ class PlaylistController extends Zend_Controller_Action
 
     public function setCueAction()
     {
+		$request = $this->getRequest();
 		$pos = $this->_getParam('pos');
-		$cueIn = $this->_getParam('cueIn', null);
-		$cueOut = $this->_getParam('cueOut', null);
-
 		$pl = $this->getPlaylist();
-		$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
 
-		die(json_encode($response));
+		if($request->isPost()) {
+			$cueIn = $this->_getParam('cueIn', null);
+			$cueOut = $this->_getParam('cueOut', null);
+
+			$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
+
+			die(json_encode($response));
+		}
+
+		$cues = $pl->getCueInfo($pos);
+
+		$this->view->cueIn = $cues[0];
+		$this->view->cueOut = $cues[1];
+		$this->view->html = $this->view->render('playlist/set-cue.phtml');
     }
 
     public function setFadeAction()
     {
+		$request = $this->getRequest();
 		$pos = $this->_getParam('pos');
-		$fadeIn = $this->_getParam('fadeIn', null);
-		$fadeOut = $this->_getParam('fadeOut', null);
-
 		$pl = $this->getPlaylist();
-		
-		$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
 
-		die(json_encode($response));
+		if($request->isPost()) {
+			$fadeIn = $this->_getParam('fadeIn', null);
+			$fadeOut = $this->_getParam('fadeOut', null);
+
+			$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
+
+			die(json_encode($response));
+		}
+
+		$fades = $pl->getFadeInfo($pos);
+		$this->view->fadeIn = $fades[0];
+
+		$fades = $pl->getFadeInfo($pos-1);
+		$this->view->fadeOut = $fades[1];
+		$this->view->html = $this->view->render('playlist/set-fade.phtml');
     }
 
     public function deleteAction()

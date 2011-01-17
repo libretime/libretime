@@ -2,6 +2,12 @@
 //Side Playlist Functions
 //--------------------------------------------------------------------------------------------------------------------------------
 
+function setEditorContent(json) {
+	$("#spl_editor")
+		.empty()
+		.append(json.html);
+}
+
 function highlightActive(el) {
 	$("#spl_sortable")
 		.find(".ui-state-active")
@@ -13,13 +19,29 @@ function highlightActive(el) {
 function openFadeEditor(event) {
 	event.stopPropagation();
 
+	var pos, url;
+	
+	pos = $(this).attr("id").split("_").pop();
+	url = '/Playlist/set-fade/format/json';
+	url = url + '/pos/' + pos;
+
 	highlightActive(this);
+
+	$.get(url, setEditorContent);
 }
 
 function openCueEditor(event) {
 	event.stopPropagation();
 
+	var pos, url;
+	
+	pos = $(this).attr("id").split("_").pop();
+	url = '/Playlist/set-cue/format/json';
+	url = url + '/pos/' + pos;
+
 	highlightActive(this);
+
+	$.get(url, setEditorContent);	
 }
 
 function setSPLContent(json) {

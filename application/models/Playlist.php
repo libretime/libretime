@@ -600,6 +600,19 @@ class Playlist {
         return TRUE;
     }
 
+	public function getFadeInfo($pos) {
+
+		$row = CcPlaylistcontentsQuery::create()
+            ->joinWith(CcFilesPeer::OM_CLASS)
+            ->filterByDbPlaylistId($this->id)
+            ->filterByDbPosition($pos)
+            ->findOne();
+
+        $fadeIn = $row->getDbFadein();
+        $fadeOut = $row->getDbFadeout();
+
+		return array($fadeIn, $fadeOut);
+	}
 
     /**
      * Change fadeIn and fadeOut values for playlist Element
@@ -656,6 +669,20 @@ class Playlist {
 
         return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
     }
+
+	public function getCueInfo($pos) {
+
+		$row = CcPlaylistcontentsQuery::create()
+            ->joinWith(CcFilesPeer::OM_CLASS)
+            ->filterByDbPlaylistId($this->id)
+            ->filterByDbPosition($pos)
+            ->findOne();
+
+        $cueIn = $row->getDBCuein();
+        $cueOut = $row->getDbCueout();
+
+		return array($cueIn, $cueOut);
+	}
 
     /**
      * Change cueIn/cueOut values for playlist element
