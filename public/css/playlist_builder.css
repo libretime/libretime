@@ -1,16 +1,36 @@
 #side_playlist {
 	width: 500px;
+	padding: 0.5em;
+	font-size: 16px;
 }
 
-#side_playlist, #side_playlist div, #side_playlist span, #side_playlist ul, #side_playlist li {
+#side_playlist, 
+#side_playlist div, 
+#side_playlist span,
+#side_playlist ul, 
+#side_playlist li, 
+#side_playlist button {
 	float: left;
 }
 
-#spl_sortable, #spl_sortable > li, .spl_artist, #side_playlist > div{
+#spl_sortable, 
+#spl_sortable > li, 
+#side_playlist > div,
+#spl_editor,
+.spl_artist,
+.spl_cue_in,
+.spl_fade_in,
+.spl_cue_out,
+.spl_fade_out {
 	clear: left;
 }
 
-#side_playlist input, #side_playlist textarea {
+#side_playlist button {
+	font-size: 12px;
+}
+
+#side_playlist input, 
+#side_playlist textarea {
 	width: 200px;
 }
 
@@ -39,9 +59,21 @@
 }
 
 .spl_fade_control {
-	position: relative;
-	margin-top: -30px;
+	padding: 0.2em;
+	margin-top: -34px;
 	margin-left: -50px;
 	z-index: 2;
 }
+
+#spl_editor > div > span {
+	display: inline-block;
+	width: 150px;
+}
+
+.ui-icon-close,
+.spl_fade_control,
+.spl_playlength {
+	cursor: pointer;
+}
+
 

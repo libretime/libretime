@@ -33,13 +33,14 @@ function openFadeEditor(event) {
 function openCueEditor(event) {
 	event.stopPropagation();
 
-	var pos, url;
+	var pos, url, li;
 	
-	pos = $(this).attr("id").split("_").pop();
+	li = $(this).parent();
+	pos = li.attr("id").split("_").pop();
 	url = '/Playlist/set-cue/format/json';
 	url = url + '/pos/' + pos;
 
-	highlightActive(this);
+	highlightActive(li);
 
 	$.get(url, setEditorContent);	
 }
@@ -57,10 +58,14 @@ function setSPLContent(json) {
 		.append(json.length);		
 	$('#spl_sortable').empty()
 		.append(json.html);	
+	$("#spl_editor")
+		.empty();
 
 	$(".ui-icon-close").click(deleteSPLItem);
 	$(".spl_fade_control").click(openFadeEditor);
-	$("#spl_sortable li").click(openCueEditor);
+	$(".spl_playlength").click(openCueEditor);
+
+	return false;
 }
 
 function addSPLItem(event, ui){
@@ -95,7 +100,7 @@ function deleteSPLItem(event){
 
 function moveSPLItem(event, ui) {	
 	var li, newPos, oldPos, url;
-	
+
 	li = ui.item;
 	
     newPos = li.index();
@@ -135,7 +140,7 @@ function newSPL() {
 	$.post(url, function(json){
 		var submit;
 
-		submit = $('<span>Submit</span>')
+		submit = $('<button>Submit</button>')
 			.button()
 			.click(function(){
 				var url, data;
@@ -195,7 +200,7 @@ function setUpSPL() {
 
 	$(".ui-icon-close").click(deleteSPLItem);
 	$(".spl_fade_control").click(openFadeEditor);
-	$("#spl_sortable li").click(openCueEditor);
+	$(".spl_playlength").click(openCueEditor);
 
 	$("#spl_sortable").droppable();
 	$("#spl_sortable" ).bind( "drop", addSPLItem);
