@@ -671,16 +671,12 @@ class Playout:
             i know this could be wrapped, maybe later..
             """
             tn = telnetlib.Telnet(LS_HOST, 1234)
-            
-            if (int(ptype) == 6):
-                tn.write("live_in.start")
-                tn.write("\n") 
-                   
-            if (int(ptype) < 5):
-                for line in pl_file.readlines():
-                    logger.debug(line.strip())
-                    tn.write(self.export_source + '.push %s' % (line.strip()))
-                    tn.write("\n")
+                          
+            for line in pl_file.readlines():
+                line = line.strip()
+                logger.debug(line)
+                tn.write(self.export_source + '.push %s' % (line))
+                tn.write("\n")
                 
             tn.write("exit\n")
             logger.debug(tn.read_all())
@@ -699,16 +695,6 @@ class Playout:
                 
             tn.write(self.export_source + '.flip')
             tn.write("\n")
-                
-            if (int(ptype) == 6):
-                tn.write("live.active 1")
-                tn.write("\n")
-            else:
-                tn.write("live.active 0")
-                tn.write("\n") 
-                tn.write("live_in.stop")
-                tn.write("\n") 
-            
             tn.write("exit\n")
             
             tn.read_all()

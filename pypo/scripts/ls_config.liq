@@ -10,7 +10,7 @@
 # general settings                        #
 ###########################################
 
-log_file = "/var/log/pypo/<script>.log"
+log_file = "/home/martin/workspace/pypo/<script>.log"
 log_level = 3
 
 # archive directory

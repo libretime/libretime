@@ -36,7 +36,7 @@ def create_user(username):
     os.system("adduser --system --quiet --group --shell /bin/bash "+username)
     
     #add pypo to audio group
-    os.system("adduser " + username + " audio")
+    os.system("adduser " + username + " pulse-access")
     
     #set pypo password
     p = os.popen('/usr/bin/passwd pypo', 'w')
@@ -74,7 +74,6 @@ try:
   create_path(BASE_PATH+"archive")
   
   print "Copying pypo files"
-  shutil.copy("../scripts/silence-playlist.lsp", BASE_PATH+"files/basic")
   shutil.copy("../scripts/silence.mp3", BASE_PATH+"files/basic")
   
   if platform.architecture()[0] == '64bit':
