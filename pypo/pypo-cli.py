@@ -29,6 +29,8 @@ sure the json parsing has to be changed
 
 # python defaults (debian default)
 import time
+import calendar
+
 import os
 import traceback
 from optparse import *
@@ -684,8 +686,30 @@ class Playout:
                 
             tn.write("exit\n")
             logger.debug(tn.read_all())
-            logger.debug('sleeping for %s s' % (self.push_ahead))
-            time.sleep(self.push_ahead)
+            
+            pattern = '%Y-%m-%d-%H-%M-%S'   
+            
+            #strptime returns struct_time in local time
+            #mktime takes a time_struct and returns a floating point 
+            #gmtime Convert a time expressed in seconds since the epoch to a struct_time in UTC
+                        
+            #mktime: expresses the time in local time, not UTC. It returns a floating point number, for compatibility with time().
+            epoch_start = calendar.timegm(time.gmtime(time.mktime(time.strptime(pkey, pattern))))
+            
+            #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
+            epoch_now = time.time()
+            
+            logger.debug("Epoch start: "+ str(epoch_start))
+            logger.debug("Epoch now: "+ str(epoch_now))
+            
+            sleep_time = epoch_start - epoch_now;
+            
+            if sleep_time < 0:
+                sleep_time = 0
+            
+            
+            logger.debug('sleeping for %s s' % (sleep_time))
+            time.sleep(sleep_time)
             
             logger.debug('sending "flip"')
             tn = telnetlib.Telnet(LS_HOST, 1234)
