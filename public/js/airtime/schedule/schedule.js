@@ -369,11 +369,6 @@ function eventRender(event, element, view) {
 			// even at 0, the bar still seems to display a little bit of progress...
 			div.find("div").hide();
 		}
-		else {
-			div.find("div")
-				.removeClass("ui-widget-header")
-				.addClass("ui-state-active");
-		}
 
 		$(element).find(".fc-event-title").after(div);
 	}	

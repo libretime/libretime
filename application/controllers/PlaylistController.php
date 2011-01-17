@@ -239,11 +239,13 @@ class PlaylistController extends Zend_Controller_Action
 
 			$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
 
-			die(json_encode($response));
+			$this->view->response = $response;
+			return;
 		}
 
 		$cues = $pl->getCueInfo($pos);
 
+		$this->view->pos = $pos;
 		$this->view->cueIn = $cues[0];
 		$this->view->cueOut = $cues[1];
 		$this->view->html = $this->view->render('playlist/set-cue.phtml');
@@ -261,8 +263,11 @@ class PlaylistController extends Zend_Controller_Action
 
 			$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
 
-			die(json_encode($response));
+			$this->view->response = $response;
+			return;
 		}
+
+		$this->view->pos = $pos;
 
 		$fades = $pl->getFadeInfo($pos);
 		$this->view->fadeIn = $fades[0];

@@ -1,4 +1,15 @@
 #library_content {
 	float: left;
 	width: 750px;
+	height: 475px;
+}
+
+#library_display th {
+	text-align: left;
+}
+
+#library_display th,
+#library_display td,
+.paginationControl {
+	font-size: 13px;
 }

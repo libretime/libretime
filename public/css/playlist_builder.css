@@ -1,5 +1,6 @@
 #side_playlist {
 	width: 450px;
+	height: 485px;
 	padding: 0.5em;
 	font-size: 16px;
 }
@@ -105,8 +106,20 @@
 .ui-icon-close,
 .ui-icon-play,
 .spl_fade_control,
-.spl_playlength {
+.spl_playlength,
+.spl_text_input {
 	cursor: pointer;
+}
+
+.spl_text_input input {
+	cursor: text;
+}
+
+#spl_error {
+	font-size: 14px;
+	padding: 0.3em;
+	width: 440px;
+	text-align: center;
 }
 
 

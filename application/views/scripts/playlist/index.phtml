@@ -1,7 +1,7 @@
 <button id="spl_new">New</button>
 <?php if (isset($this->pl)) : ?>
 <button id="spl_delete">Delete</button>
-<button id="spl_close">Close</button>
+<button id="spl_close">Done Editing</button>
 <?php endif; ?>
 
 <?php if (isset($this->pl)) : ?>
@@ -16,6 +16,7 @@
 	<?php endif; ?>
 </ul>
 <div id="spl_editor"></div>
+<div id="spl_error" class="ui-state-error ui-corner-all" style="display: none"></div>
 <?php else : ?>
 <div>No open playlist</div>
 <?php endif; ?>
