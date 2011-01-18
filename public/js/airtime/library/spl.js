@@ -144,6 +144,13 @@ function changeFadeOut() {
 	});
 }
 
+function submitOnEnter(event) {
+	//enter was pressed
+	if(event.keyCode === 13) {
+		$(this).blur();
+	}
+}
+
 function setEditorContent(json) {
 	$("#spl_editor")
 		.empty()
@@ -155,6 +162,8 @@ function setEditorContent(json) {
 	$(".spl_cue_out span:last").blur(changeCueOut);
 	$(".spl_fade_in span:last").blur(changeFadeIn);
 	$(".spl_fade_out span:last").blur(changeFadeOut);
+
+	$(".spl_cue_in span:last, .spl_cue_out span:last, .spl_fade_in span:last, .spl_fade_out span:last").keyup(submitOnEnter);
 }
 
 function highlightActive(el) {
