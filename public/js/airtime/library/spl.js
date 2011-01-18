@@ -13,16 +13,9 @@ function isTimeValid(time) {
 	return true;
 }
 
-function revertEditorValue(el) {
-	var oldValue = $("#pl_tmp_time").val();
-
-	el.empty()
-		.append(oldValue)
-		.click(addTextInput);;
-}
-
 function displayEditorError(error) {
 	$("#spl_error")
+		.empty()
 		.append('<span class="ui-icon ui-icon-alert"></span>')
 		.append(error)
 		.show();
@@ -44,29 +37,29 @@ function cueSetUp(pos, json) {
 		.empty()
 		.append(json.response.length);
 
-	$(".spl_cue_in span:last, .spl_cue_out span:last").click(addTextInput);
+	$(".spl_cue_in span:last").blur(changeCueIn);
+	$(".spl_cue_out span:last").blur(changeCueOut);
 }
 
 function fadeSetUp() {
-	$(".spl_fade_in span:last, .spl_fade_out span:last").click(addTextInput);
+	$(".spl_fade_in span:last").blur(changeFadeIn);
+	$(".spl_fade_out span:last").blur(changeFadeOut);
 }
 
 function changeCueIn() {
 	var pos, url, cueIn, div;
 
-	span = $(this).parent();
+	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
 	url = "/Playlist/set-cue/format/json";
-	cueIn = $(this).val().trim();
+	cueIn = span.text().trim();
 
 	if(!isTimeValid(cueIn)){
-		revertEditorValue(span);
 		return;
 	}
 
 	$.post(url, {cueIn: cueIn, pos: pos}, function(json){
 		if(json.response.error) {
-			revertEditorValue(span);
 			displayEditorError(json.response.error);
 			return;
 		}
@@ -83,19 +76,17 @@ function changeCueIn() {
 function changeCueOut() {
 	var pos, url, cueOut, div;
 
-	span = $(this).parent();
+	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
 	url = "/Playlist/set-cue/format/json";
-	cueOut = $(this).val().trim();
+	cueOut = span.text().trim();
 
 	if(!isTimeValid(cueOut)){
-		revertEditorValue(span);
 		return;
 	}
 
 	$.post(url, {cueOut: cueOut, pos: pos}, function(json){
 		if(json.response.error) {
-			revertEditorValue(span);
 			displayEditorError(json.response.error);
 			return;
 		}
@@ -112,19 +103,17 @@ function changeCueOut() {
 function changeFadeIn() {
 	var pos, url, fadeIn, div;
 
-	span = $(this).parent();
+	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
 	url = "/Playlist/set-fade/format/json";
-	fadeIn = $(this).val().trim();
+	fadeIn = span.text().trim();
 
 	if(!isTimeValid(fadeIn)){
-		revertEditorValue(span);
 		return;
 	}
 
 	$.post(url, {fadeIn: fadeIn, pos: pos}, function(json){
 		if(json.response.error) {
-			revertEditorValue(span);
 			displayEditorError(json.response.error);
 			return;
 		}
@@ -141,19 +130,17 @@ function changeFadeIn() {
 function changeFadeOut() {
 	var pos, url, fadeOut, div;
 
-	span = $(this).parent();
+	span = $(this);
 	pos = span.parent().attr("id").split("_").pop() - 1;
 	url = "/Playlist/set-fade/format/json";
-	fadeOut = $(this).val().trim();
+	fadeOut = span.text().trim();
 
 	if(!isTimeValid(fadeOut)){
-		revertEditorValue(span);
 		return;
 	}
 
 	$.post(url, {fadeOut: fadeOut, pos: pos}, function(json){
 		if(json.response.error) {
-			revertEditorValue(span);
 			displayEditorError(json.response.error);
 			return;
 		}
@@ -167,46 +154,6 @@ function changeFadeOut() {
 	});
 }
 
-function addTextInput(){
-	var time = $(this).text().trim();
-	var input = $("<input type='text' value="+time+" size='13' maxlength='15'/>");
-	
-	//Firefox seems to have problems losing focus otherwise, Chrome is fine.
-	$(":input").blur();
-	$(this).empty();
-	
-	$(this).append(input);
-	input.focus();
-	
-	var parent = $(this).parent();
-
-	if( parent.hasClass('spl_cue_in') ){
-		input.blur(changeCueIn);
-	}
-	else if( parent.hasClass('spl_cue_out') ){
-		input.blur(changeCueOut);
-	}
-	else if( parent.hasClass('spl_fade_in') ){
-		input.blur(changeFadeIn);
-	}
-	else if( parent.hasClass('spl_fade_out') ){
-		input.blur(changeFadeOut);
-	}  
-	
-	input.keypress(function(ev){
-		//don't want enter to submit.
-		if (ev.keyCode === 13) {
-			ev.preventDefault();
-			$(this).blur();
-		}
-	});
-	
-	input = $("<input type='hidden' value="+time+" size='10' id='pl_tmp_time'/>");
-	$(this).append(input);
-	
-	$(this).unbind('click');
-}
-
 function setEditorContent(json) {
 	$("#spl_editor")
 		.empty()
@@ -214,7 +161,10 @@ function setEditorContent(json) {
 
 	clearEditorError();
 
-	$(".spl_cue_in span:last, .spl_cue_out span:last, .spl_fade_in span:last, .spl_fade_out span:last").click(addTextInput);
+	$(".spl_cue_in span:last").blur(changeCueIn);
+	$(".spl_cue_out span:last").blur(changeCueOut);
+	$(".spl_fade_in span:last").blur(changeFadeIn);
+	$(".spl_fade_out span:last").blur(changeFadeOut);
 }
 
 function highlightActive(el) {
