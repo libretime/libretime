@@ -36,14 +36,6 @@ function cueSetUp(pos, json) {
 	$("#spl_length")
 		.empty()
 		.append(json.response.length);
-
-	$(".spl_cue_in span:last").blur(changeCueIn);
-	$(".spl_cue_out span:last").blur(changeCueOut);
-}
-
-function fadeSetUp() {
-	$(".spl_fade_in span:last").blur(changeFadeIn);
-	$(".spl_fade_out span:last").blur(changeFadeOut);
 }
 
 function changeCueIn() {
@@ -123,7 +115,6 @@ function changeFadeIn() {
 		span.empty()
 			.append(json.response.fadeIn);
 
-		fadeSetUp();
 	});
 }
 
@@ -150,7 +141,6 @@ function changeFadeOut() {
 		span.empty()
 			.append(json.response.fadeOut);
 
-		fadeSetUp();
 	});
 }
 
