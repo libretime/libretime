@@ -55,6 +55,11 @@ def copy_dir(src_dir, dest_dir):
     shutil.copytree(src_dir, dest_dir)
                     
 try:
+
+  print "Terminating any existing pypo processes"
+  os.system("python ./pypo-stop.py")
+  time.sleep(5)
+
   # Create users
   create_user("pypo")
 
@@ -109,7 +114,6 @@ try:
   os.system("chown -R pypo:pypo /etc/service/pypo-push")
 
   print "Installing daemontool script pypo-liquidsoap"
-  os.system("svc -dx /etc/service/pypo-liquidsoap  1>/dev/null 2>&1")  
   create_path("/etc/service/pypo-liquidsoap")  
   create_path("/etc/service/pypo-liquidsoap/log")  
   shutil.copy("pypo-daemontools-liquidsoap.sh", "/etc/service/pypo-liquidsoap/run")
@@ -119,15 +123,15 @@ try:
 
   print "Waiting for processes to start..."
   time.sleep(5)
-  os.system("killall liquidsoap")
   os.system("python ./pypo-start.py")
   time.sleep(2)
+
+  found = True
 
   p = Popen('svstat /etc/service/pypo-fetch', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
   if (output.find("unable to open supervise/ok: file does not exist") >= 0):
-    print "Install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
-    sys.exit()
+    found = False
   print output
   
   p = Popen('svstat /etc/service/pypo-push', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
@@ -137,8 +141,11 @@ try:
   p = Popen('svstat /etc/service/pypo-liquidsoap', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
   print output
- 
-  print "Install complete."
+
+  if not found:
+    print "Install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
+  else:
+    print "Install complete."
 except Exception, e:
   print "exception:" + str(e)
   

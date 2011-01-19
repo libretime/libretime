@@ -10,13 +10,13 @@ if os.geteuid() != 0:
     
 try:
     print "Starting daemontool script pypo-fetch"
-    os.system("svc -t /etc/service/pypo-fetch")
+    os.system("svc -u /etc/service/pypo-fetch")
     
     print "Starting daemontool script pypo-push"
-    os.system("svc -t /etc/service/pypo-push")
+    os.system("svc -u /etc/service/pypo-push")
     
     print "Starting daemontool script pypo-liquidsoap"
-    os.system("svc -t /etc/service/pypo-liquidsoap")
+    os.system("svc -u /etc/service/pypo-liquidsoap")
     
 except Exception, e:
     print "exception:" + str(e)
