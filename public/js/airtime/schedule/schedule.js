@@ -311,14 +311,15 @@ function openScheduleDialog(show) {
 }
 
 function eventMenu(action, el, pos) {
-	var method = action.split('/').pop(),
-		event;
+	var method, event, date;
 
+	method = action.split('/').pop();
 	event = $(el).data('event');
+	date = makeTimeStamp(event.start);
 
 	if (method === 'delete-show') {
 		$.post(action, 
-			{format: "json", showId: event.id},
+			{format: "json", showId: event.id, date: date},
 			function(json){
 				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
 			});
@@ -445,6 +446,7 @@ $(document).ready(function() {
 		defaultView: 'agendaDay',
 		editable: false,
 		allDaySlot: false,
+		lazyFetching: false,
 
 		events: function(start, end, callback) {
 			var url, start_date, end_date;
@@ -461,15 +463,15 @@ $(document).ready(function() {
 			ed = end.getDate();
 			end_date = ey +"-"+ em +"-"+ ed;
 
-			url = '/Schedule/event-feed/format/json';
-			url = url + '/start/' + start_date;
-			url = url + '/end/' + end_date;
-
+			url = '/Schedule/event-feed';
+			
 			if ((ed - sd) === 1) {
 				url = url + '/weekday/' + start.getDay();
 			}
 
-			$.post(url, function(json){
+			var d = new Date();
+
+			$.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
 				callback(json.events);
 			});
 		},

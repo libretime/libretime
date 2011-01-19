@@ -382,15 +382,77 @@ class Show {
 		}
 	}
 
-	public function deleteShow($showId, $dayId=NULL) {
-		$groups = CcShowScheduleQuery::create()->filterByDbShowId($showId)->find();
+	//TODO should only delete shows that are in the future.
+	public function deleteShow($timestamp, $dayId=NULL) {
+		global $CC_DBC;
 
-		foreach($groups as $group) {
-			$groupId = $group->getDbGroupId();
-			CcScheduleQuery::create()->filterByDbGroupId($groupId)->delete();
+		$today_timestamp = date("Y-m-d H:i:s");
+
+		$timeinfo = explode(" ", $timestamp);
+		$date = $timeinfo[0]; 
+		$time = $timeinfo[1];
+
+		$today_epoch = strtotime($today_timestamp);
+		$date_epoch = strtotime($timestamp);
+
+		//don't want someone to delete past shows.
+		if($date_epoch < $today_epoch) {
+			return;
 		}
 
-		CcShowQuery::create()->filterByDbId($showId)->delete();
+		$show = CcShowQuery::create()->findPK($this->_showId);
+		
+		$sql = "SELECT start_time, first_show FROM cc_show_days 
+				WHERE show_id = '{$this->_showId}'
+				ORDER BY first_show LIMIT 1";
+		$res = $CC_DBC->GetRow($sql);
+
+		$start_timestamp = $res["first_show"]." ".$res["start_time"];
+
+		$start_epoch = strtotime($start_timestamp);
+	
+		// must not delete shows in the past
+		if($show->getDbRepeats() && ($start_epoch < $date_epoch)) {
+
+			$sql = "DELETE FROM cc_show_days WHERE first_show >= '{$date}' ";
+			$CC_DBC->query($sql);
+			//echo $sql;
+
+			$sql = "UPDATE cc_show_days 
+				SET last_show = '{$date}' 
+				WHERE show_id = '{$this->_showId}' AND first_show <= '{$date}' ";
+			$CC_DBC->query($sql);
+			//echo $sql;
+
+			$sql = "SELECT DISTINCT group_id FROM cc_schedule WHERE starts > '{$timestamp}' ";
+		    $rows = $CC_DBC->GetAll($sql);
+			
+			$sql_opt = array();
+			foreach($rows as $row) {
+				$sql_opt[] = "group_id = '{$row["group_id"]}' ";
+			}
+			$groups = join(' OR ', $sql_opt);
+		
+			$sql = "DELETE FROM cc_show_schedule 
+			WHERE ($groups) AND show_id = '{$this->_showId}' AND show_day >= '{$date}' ";
+			$CC_DBC->query($sql);
+			//echo $sql;
+			
+			$sql = "DELETE FROM cc_schedule WHERE ($groups)";
+			$CC_DBC->query($sql);
+			//echo $sql;
+		}
+		else {
+			$groups = CcShowScheduleQuery::create()->filterByDbShowId($this->_showId)->find();
+
+			foreach($groups as $group) {
+				$groupId = $group->getDbGroupId();
+				CcScheduleQuery::create()->filterByDbGroupId($groupId)->delete();
+			}
+
+			$show->delete();
+		}
+
 	}
 
 	public function getShows($start=NULL, $end=NULL, $days=NULL, $s_time=NULL, $e_time=NULL, $exclude_shows=NULL) {
@@ -478,16 +540,21 @@ class Show {
 				$newDate = $row["first_show"];
 			}
 
-			$shows[] = $this->makeFullCalendarEvent($row, $newDate);
-			
+			$new_epoch = strtotime($newDate);
 			$end_epoch = strtotime($end);
 
+			if(!is_null($row["last_show"])) {
+				$show_end_epoch = strtotime($row["last_show"]);
+			}
+
+			if(isset($show_end_epoch) && $show_end_epoch <= $new_epoch) {
+				continue;
+			}
+
+			$shows[] = $this->makeFullCalendarEvent($row, $newDate);
+			
 			//add repeating events until the show end is reached or fullcalendar's end date is reached.
 			if($row["repeats"]) {
-
-				if(!is_null($row["last_show"])) {
-					$show_end_epoch = strtotime($row["last_show"]);
-				}
 
 				while(true) {
 
@@ -500,7 +567,7 @@ class Show {
 						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 					}
 					//case for non-ending shows.
-					else if(!isset($show_end_epoch) && $repeat_epoch < $end_epoch) {
+					else if(is_null($show_end_epoch) && $repeat_epoch < $end_epoch) {
 						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 					}
 					else {
@@ -509,7 +576,9 @@ class Show {
 
 					$newDate = $repeatDate;
 				}					
-			}			
+			}
+		
+			unset($show_end_epoch);			
 		}
 
 		return $shows;
