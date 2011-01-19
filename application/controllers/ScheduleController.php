@@ -131,11 +131,13 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $showId = $this->_getParam('showId');
+		$date = $this->_getParam('date');
                                                 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$show = new Show(new User($userInfo->id, $userInfo->type));
-		$show->deleteShow($showId);
+		$user = new User($userInfo->id, $userInfo->type);
+		$show = new Show($user, $showId);
+		$show->deleteShow($date);
     }
 
     public function makeContextMenuAction()

@@ -30,8 +30,8 @@ function clearEditorError() {
 function cueSetUp(pos, json) {
 
 	$("#spl_"+pos).find(".spl_playlength")
-			.empty()
-			.append(json.response.cliplength);
+		.empty()
+		.append(json.response.cliplength);
 
 	$("#spl_length")
 		.empty()
