@@ -1,9 +1,21 @@
-<div>
+<div id='col0' style='float:left; width: 10%; height: 100%;'>
+	<div>Listen</div>
+	<div>Volume</div>
+</div>
+	
+<div id='col1' style='float:left; width: 30%; height: 100%;'>
+	<div>Show: <span id='show'></span></div>
+	<div>Playlist: <span id='playlist'></span></div>
+	<div>Host: <span id='host'></span></div>
+</div>
+	
+<div id='col2' style='float:left; width: 30%; height: 100%;'>
+	<div>Previous: <span id='previous'></span></div>
+	<div>Current: <span id='current'></span></div>
+	<div>Upcoming: <span id='next'></span></div>
+</div>
 
-<script>
-	$(document).ready(function() {
-		$("#list1").playlistViewer();
-	});
-</script>
-<div id="list1"></div>
+<div id='list0' style='float:left; width: 30%; height: 100%;'></div>
+	<div>Start: <span id='start'></span> End: <span id='end'></span></div>
+	<div id='progressbar'></div>
 </div>

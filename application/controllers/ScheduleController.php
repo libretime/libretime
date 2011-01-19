@@ -193,7 +193,10 @@ class ScheduleController extends Zend_Controller_Action
 
     public function viewPlaylistAction()
     {
-        //TODO: insert code for datagrid
+        $this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/progressbar/jquery.progressbar.min.js','text/javascript');
+        
+        $this->_helper->viewRenderer->setResponseSegment('nowplaying');
     }
 
     public function getCurrentPlaylistAction()

@@ -1,154 +1,146 @@
-(function($) {
-    // jQuery plugin definition
-    $.fn.playlistViewer = function(params) {
-        var cc = this;
-        cc.estimatedSchedulePosixTime = -1;
-        cc.schedulePosixTime;
+var estimatedSchedulePosixTime = -1;
+var schedulePosixTime;
 
-        cc.previousSongs;
-        cc.currentSong;
-        cc.nextSongs;
-        
-        cc.currentElem;
+var previousSongs;
+var currentSong;
+var nextSongs;
 
-        // traverse all nodes
-        return this.each(function() {
-            // express a single node as a jQuery object
-            cc.currentElem = $(this);
-            
-            var prevDiv = document.createElement('div');
-            prevDiv.setAttribute("id", "previous");
-            $(cc.currentElem).append(prevDiv);
-            
-            var currParentDiv = document.createElement('div');
-            $(cc.currentElem).append(currParentDiv);
-            
-            var currDiv = document.createElement('div');
-            currDiv.setAttribute("id", "current");
-            $(currParentDiv).append(currDiv);
-            
-            var nextDiv = document.createElement('div');
-            nextDiv.setAttribute("id", "progressbar");
-            $(currParentDiv).append(nextDiv);
-        
-            var nextDiv = document.createElement('div');
-            nextDiv.setAttribute("id", "next");
-            $(cc.currentElem).append(nextDiv);
-            
-            $('#progressbar').progressBar(0);
+var currentElem;
 
-            getScheduleFromServer();
-            updateProgressBarValue();
-        });
+function init(elemID) {
+	var currentElem = $("#" + elemID).attr("style", "z-index: 1; width: 100%; left: 0px; right: 0px; bottom: 0px; color: white; min-height: 100px; background-color: #cc3300;");
+	
+	$('#progressbar').progressBar(0);
 
-        function convertDateToPosixTime(s){
-            var year = s.substring(0, 4);
-            var month = s.substring(5, 7);
-            var day = s.substring(8, 10);
-            var hour = s.substring(11, 13);
-            var minute = s.substring(14, 16);
-            var sec = s.substring(17, 19);
-            var msec = 0;
-            if (s.length >= 20){
-                msec = s.substring(20);
-            }
+	getScheduleFromServer();
+	updateProgressBarValue();
+	
+}
 
-            return Date.UTC(year, month, day, hour, minute, sec, msec);
-        }
+function convertDateToPosixTime(s){
+	var year = s.substring(0, 4);
+	var month = s.substring(5, 7);
+	var day = s.substring(8, 10);
+	var hour = s.substring(11, 13);
+	var minute = s.substring(14, 16);
+	var sec = s.substring(17, 19);
+	var msec = 0;
+	if (s.length >= 20){
+		msec = s.substring(20);
+	}
 
-        function secondsTimer(){
-            cc.estimatedSchedulePosixTime += 1000;
-            updateProgressBarValue();
-        }
+	return Date.UTC(year, month, day, hour, minute, sec, msec);
+}
 
-        function updateProgressBarValue(){
-            if (cc.estimatedSchedulePosixTime != -1){
-                if (cc.currentSong.length > 0){
-                    var percentDone = (cc.estimatedSchedulePosixTime - cc.currentSong[0].songStartPosixTime)/cc.currentSong[0].songLengthMs*100;
-                    if (percentDone <= 100){
-                        $('#progressbar').progressBar(percentDone);
-                    } else {
-                        if (cc.nextSongs.length > 0){
-                            cc.currentSong[0] = cc.nextSongs.shift();
-                        } else {
-                            cc.currentSong = new Array();
-                        }
-                        $('#progressbar').progressBar(0);
-                        //at the end of each song we are updating the
-                        //server time we have been estimating client-side
-                        //with the real server time.
-                        cc.estimatedSchedulePosixTime = cc.schedulePosixTime;
-                    }
-                } else
-					$('#progressbar').progressBar(0);
-                updatePlaylist();
-            }
-            setTimeout(secondsTimer, 1000);
-        }
+function secondsTimer(){
+	estimatedSchedulePosixTime += 1000;
+	updateProgressBarValue();
+}
 
-        function createPlaylistElementString(song){
-            return "Start time: " + song.starts + "<br>" +
-                    "End time: " + song.ends + "<br>" +
-                    "Clip length: " + song.clip_length + "<br>" +
-                    "Name: " + song.name + "<br>";
-        }
+/* Called every 1 second. */
+function updateProgressBarValue(){
+	if (estimatedSchedulePosixTime != -1){
+		if (currentSong.length > 0){
+			var percentDone = (estimatedSchedulePosixTime - currentSong[0].songStartPosixTime)/currentSong[0].songLengthMs*100;
+			if (percentDone <= 100){
+				$('#progressbar').progressBar(percentDone);
+			} else {
+				if (nextSongs.length > 0){
+					currentSong[0] = nextSongs.shift();
+				} else {
+					currentSong = new Array();
+				}
+				$('#progressbar').progressBar(0);
+				//at the end of each song we are updating the
+				//server time we have been estimating client-side
+				//with the real server time.
+				estimatedSchedulePosixTime = schedulePosixTime;
+			}
+		} else
+			$('#progressbar').progressBar(0);
+		updatePlaylist();
+	}
+	setTimeout(secondsTimer, 1000);
+}
 
-        function updatePlaylist(){
-            $('#previous').empty();
-            $('#current').empty();
-            $('#next').empty();
-            for (var i=0; i<cc.previousSongs.length; i++){
-                var divElem = document.createElement('div');
-                divElem.innerHTML = createPlaylistElementString(cc.previousSongs[i]);
-                $('#previous').append(divElem);
-            }
-            for (var i=0; i<cc.currentSong.length; i++){
-                var divElem = document.createElement('div');
-                divElem.innerHTML = createPlaylistElementString(cc.currentSong[i]);
-                $('#current').append(divElem);
-            }
-            for (var i=0; i<cc.nextSongs.length; i++){
-                var divElem = document.createElement('div');
-                divElem.innerHTML = createPlaylistElementString(cc.nextSongs[i]);
-                $('#next').append(divElem);
-            }
-        }
+function getTrackInfo(song){
+	return song.track_title + " - " + song.artist_name + " - " + song.album_title;
+}
 
-        function calcAdditionalData(currentItem){
-            for (var i=0; i<currentItem.length; i++){
-                currentItem[i].songStartPosixTime = convertDateToPosixTime(currentItem[i].starts);
-                currentItem[i].songEndPosixTime = convertDateToPosixTime(currentItem[i].ends);
-                currentItem[i].songLengthMs = currentItem[i].songEndPosixTime - currentItem[i].songStartPosixTime;
-            }
-        }
+function updatePlaylist(){
+	/* Column 0 update */
+	$('#listen');
+	$('#volume');
+	
+	/* Column 1 update */
+	$('#show').empty();
+	$('#playlist').empty();
+	$('#host').empty();
+	for (var i=0; i<currentSong.length; i++){
+		$('#show').append(currentSong[i].show);
+		$('#playlist').append(currentSong[i].playlist);
+		$('#host').append(currentSong[i].host);
+	}
+	
+	/* Column 2 update */
+	$('#previous').empty();
+	$('#current').empty();
+	$('#next').empty();
+	for (var i=0; i<previousSongs.length; i++){
+		$('#previous').append(getTrackInfo(previousSongs[i]));
+	}
+	for (var i=0; i<currentSong.length; i++){
+		$('#current').append(getTrackInfo(currentSongs[i]));
+	}
+	for (var i=0; i<nextSongs.length; i++){
+		$('#next').append(getTrackInfo(nextSongs[i]));
+	}
+	
+	/* Column 3 update */
+	$('#start').empty();
+	$('#end').empty();
+	for (var i=0; i<currentSong.length; i++){
+		$('#start').append(currentSong[i].starts);
+		$('#end').append(currentSong[i].ends);
+	}	
+}
 
-        function prepareNextPlayingItem(obj){
-            if (obj.next.length > 0){
-                var nextItem = obj.next[0];
-            }
-        }
+function calcAdditionalData(currentItem){
+	for (var i=0; i<currentItem.length; i++){
+		currentItem[i].songStartPosixTime = convertDateToPosixTime(currentItem[i].starts);
+		currentItem[i].songEndPosixTime = convertDateToPosixTime(currentItem[i].ends);
+		currentItem[i].songLengthMs = currentItem[i].songEndPosixTime - currentItem[i].songStartPosixTime;
+	}
+}
 
-        function parseItems(obj){
-            cc.schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
+function prepareNextPlayingItem(obj){
+	if (obj.next.length > 0){
+		var nextItem = obj.next[0];
+	}
+}
 
-            if (cc.estimatedSchedulePosixTime == -1)
-                cc.estimatedSchedulePosixTime = cc.schedulePosixTime;
+function parseItems(obj){
+	schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
 
-            cc.previousSongs = obj.previous;
-            cc.currentSong = obj.current;
-            cc.nextSongs = obj.next;
+	if (estimatedSchedulePosixTime == -1)
+		estimatedSchedulePosixTime = schedulePosixTime;
 
-            calcAdditionalData(cc.previousSongs);
-            calcAdditionalData(cc.currentSong);
-            calcAdditionalData(cc.nextSongs);
-        }
+	previousSongs = obj.previous;
+	currentSong = obj.current;
+	nextSongs = obj.next;
 
-        function getScheduleFromServer(){
-            $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
-                    parseItems(data.entries);
-                  }});
-            setTimeout(getScheduleFromServer, 5000);
-        }
+	calcAdditionalData(previousSongs);
+	calcAdditionalData(currentSong);
+	calcAdditionalData(nextSongs);
+}
 
-    };
-})(jQuery);
+function getScheduleFromServer(){
+	$.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
+			parseItems(data.entries);
+		  }});
+	setTimeout(getScheduleFromServer, 5000);
+}
+
+$(document).ready(function() {
+	init("nowplayingbar");
+});
