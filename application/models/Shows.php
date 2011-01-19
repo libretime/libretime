@@ -540,16 +540,21 @@ class Show {
 				$newDate = $row["first_show"];
 			}
 
-			$shows[] = $this->makeFullCalendarEvent($row, $newDate);
-			
+			$new_epoch = strtotime($newDate);
 			$end_epoch = strtotime($end);
 
+			if(!is_null($row["last_show"])) {
+				$show_end_epoch = strtotime($row["last_show"]);
+			}
+
+			if(isset($show_end_epoch) && $show_end_epoch <= $new_epoch) {
+				continue;
+			}
+
+			$shows[] = $this->makeFullCalendarEvent($row, $newDate);
+			
 			//add repeating events until the show end is reached or fullcalendar's end date is reached.
 			if($row["repeats"]) {
-
-				if(!is_null($row["last_show"])) {
-					$show_end_epoch = strtotime($row["last_show"]);
-				}
 
 				while(true) {
 
@@ -562,7 +567,7 @@ class Show {
 						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 					}
 					//case for non-ending shows.
-					else if(!isset($show_end_epoch) && $repeat_epoch < $end_epoch) {
+					else if(is_null($show_end_epoch) && $repeat_epoch < $end_epoch) {
 						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 					}
 					else {
@@ -571,7 +576,9 @@ class Show {
 
 					$newDate = $repeatDate;
 				}					
-			}			
+			}
+		
+			unset($show_end_epoch);			
 		}
 
 		return $shows;
