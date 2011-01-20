@@ -695,8 +695,8 @@ class Playout:
             #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
             epoch_now = time.time()
             
-            logger.debug("Epoch start: "+ str(epoch_start))
-            logger.debug("Epoch now: "+ str(epoch_now))
+            logger.debug("Epoch start: " + str(epoch_start))
+            logger.debug("Epoch now: " + str(epoch_now))
             
             sleep_time = epoch_start - epoch_now;
             
