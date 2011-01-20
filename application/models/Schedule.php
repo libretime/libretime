@@ -479,10 +479,10 @@ class Schedule {
 
     private static function GetPreviousItems($timeNow, $prevCount = 1){
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable], $CC_CONFIG[filesTable]"
-        ." WHERE ($CC_CONFIG[scheduleTable].ends < TIMESTAMP '$timeNow')"
-        ." AND ($CC_CONFIG[scheduleTable].file_id = $CC_CONFIG[filesTable].id)"
-        ." ORDER BY $CC_CONFIG[scheduleTable].starts DESC"
+        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft"
+        ." WHERE (st.ends < TIMESTAMP '$timeNow')"
+        ." AND (st.file_id = ft.id)"
+        ." ORDER BY st.starts DESC"
         ." LIMIT $prevCount";
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
@@ -491,20 +491,21 @@ class Schedule {
     private static function GetCurrentlyPlaying($timeNow){
         global $CC_CONFIG, $CC_DBC;
         
-        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable], $CC_CONFIG[filesTable]"
-        ." WHERE ($CC_CONFIG[scheduleTable].starts < TIMESTAMP '$timeNow')"
-        ." AND ($CC_CONFIG[scheduleTable].ends > TIMESTAMP '$timeNow')"
-        ." AND ($CC_CONFIG[scheduleTable].file_id = $CC_CONFIG[filesTable].id)";
+        $sql = "SELECT *, pt.name as playlistName FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
+        ." WHERE (st.starts < TIMESTAMP '$timeNow')"
+        ." AND (st.ends > TIMESTAMP '$timeNow')"
+        ." AND (st.playlist_id = pt.id)"
+        ." AND (st.file_id = ft.id)";
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
     }
 
     private static function GetNextItems($timeNow, $nextCount = 1) {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable], $CC_CONFIG[filesTable]"
-        ." WHERE ($CC_CONFIG[scheduleTable].starts > TIMESTAMP '$timeNow')"
-        ." AND ($CC_CONFIG[scheduleTable].file_id = $CC_CONFIG[filesTable].id)"
-        ." ORDER BY $CC_CONFIG[scheduleTable].starts"
+        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft"
+        ." WHERE (st.starts > TIMESTAMP '$timeNow')"
+        ." AND (st.file_id = ft.id)"
+        ." ORDER BY st.starts"
         ." LIMIT $nextCount";
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
