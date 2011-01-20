@@ -142,7 +142,7 @@ Subjects::AddSubjectToGroup('scheduler', $CC_CONFIG['StationPrefsGr']);
 // Install storage directories
 //------------------------------------------------------------------------
 echo " *** Directory Setup ***\n";
-foreach (array('baseFilesDir', 'storageDir', /*'bufferDir', 'transDir', 'accessDir',*/ 'cronDir') as $d) {
+foreach (array('baseFilesDir', 'storageDir') as $d) {
     $test = file_exists($CC_CONFIG[$d]);
     if ( $test === FALSE ) {
         @mkdir($CC_CONFIG[$d], 02775);

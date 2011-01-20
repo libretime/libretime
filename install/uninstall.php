@@ -14,16 +14,22 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit;
 }
 
+// Need to check that we are superuser before running this.
+if(exec("whoami") != "root"){
+  echo "Must be root user.\n";
+  exit(1);
+}
+
 
 echo "***************************\n";
 echo "* StorageServer Uninstall *\n";
 echo "***************************\n";
 
-require_once(dirname(__FILE__).'/../conf.php');
+require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/installInit.php');
-require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
+//require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
 
-function camp_uninstall_delete_files($p_path)
+function airtime_uninstall_delete_files($p_path)
 {
     if (!empty($p_path) && (strlen($p_path) > 4)) {
         if (file_exists($p_path)) {
@@ -49,7 +55,6 @@ function camp_uninstall_delete_files($p_path)
 //------------------------------------------------------------------------
 echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...\n";
 $command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']} 2> /dev/null";
-//$command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']}";
 @exec($command, $output, $dbDeleteFailed);
 
 //------------------------------------------------------------------------
@@ -187,6 +192,7 @@ if ($dbDeleteFailed) {
 //------------------------------------------------------------------------
 // Uninstall Cron job
 //------------------------------------------------------------------------
+/*
 $old_regex = '/transportCron\.php/';
 echo " * Uninstalling cron job...";
 
@@ -205,13 +211,11 @@ foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
 }
 $cron->closeCrontab();
 echo "done.\n";
-
+*/
 //------------------------------------------------------------------------
 // Delete files
 //------------------------------------------------------------------------
-camp_uninstall_delete_files($CC_CONFIG['storageDir']);
-camp_uninstall_delete_files($CC_CONFIG['transDir']);
-camp_uninstall_delete_files($CC_CONFIG['accessDir']);
+airtime_uninstall_delete_files($CC_CONFIG['storageDir']);
 
 
 //------------------------------------------------------------------------
