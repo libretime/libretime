@@ -104,3 +104,20 @@ div.ui-datepicker {
 	margin: 5px;
 	text-align: center;
 }
+
+/* Add show Dialog----------------------------------------------------------------------------------------------------
+*
+*
+*
+*/
+
+#add_show_name {
+
+}
+
+#add_show_description {
+	width: 400px;
+	height: 200px;
+}
+
+

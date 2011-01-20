@@ -34,11 +34,14 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
+
 
     	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
+		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet('/css/schedule.css');
 
 
@@ -74,10 +77,28 @@ class ScheduleController extends Zend_Controller_Action
     public function addShowDialogAction()
     {
         $request = $this->getRequest();
-        $form = new Application_Form_AddShow();
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho = new Application_Form_AddShowWho();
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen = new Application_Form_AddShowWhen();
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle = new Application_Form_AddShowStyle();
+		$formStyle->removeDecorator('DtDdWrapper');
+
+		$this->view->what = $formWhat;
+		$this->view->when = $formWhen;
+		$this->view->repeats = $formRepeats;
+		$this->view->who = $formWho;
+		$this->view->style = $formStyle;
  
         if ($request->isPost()) {
-            if ($form->isValid($request->getPost())) {  
+
+			$data = $request->getPost();
+
+            if ($formWhat->isValid($data) && $formWhen->isValid($data) && $formWho->isValid($data) && $formStyle->isValid($data)) {  
     
 				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -86,13 +107,14 @@ class ScheduleController extends Zend_Controller_Action
 
 				if(isset($overlap)) {
 					$this->view->overlap = $overlap;
-					$this->view->form = $form->__toString();
+					$this->view->form = $this->view->render('schedule/add-show-dialog.phtml');
 				}
 
 				return;
 			}     
         }
-		$this->view->form = $form->__toString();
+	
+		$this->view->content = $this->view->render('schedule/add-show-dialog.phtml');
 		$this->view->hosts = User::getHosts();
     }
 

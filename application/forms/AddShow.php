@@ -58,6 +58,7 @@ class Application_Form_AddShow extends Zend_Form
             'required'   => false,
 		));
 
+		// Add days checkboxes
 		$this->addElement(
             'multiCheckbox',
             'day_check',
@@ -86,12 +87,13 @@ class Application_Form_AddShow extends Zend_Form
     		) 
         ));
 
+		// Add no end element
 		$this->addElement('checkbox', 'no_end', array(
             'label'      => 'no end',
             'required'   => false,
 		));
 
-		// Add end date element
+		// Add hosts autocomplete
         $this->addElement('text', 'hosts_autocomplete', array(
             'label'      => 'Type a Host:',
             'required'   => false
@@ -104,6 +106,7 @@ class Application_Form_AddShow extends Zend_Form
 			$options[$host['id']] = $host['login'];
 		}
 
+		//Add hosts selection
 		$hosts = new Zend_Form_Element_MultiCheckbox('hosts');
 		$hosts->setLabel('Hosts:')
 			->setMultiOptions($options)

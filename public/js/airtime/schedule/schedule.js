@@ -118,7 +118,8 @@ function makeShowDialog(json) {
 	//main jqueryUI dialog
 	dialog = $('<div id="schedule_add_event_dialog" />');
 
-	dialog.append(json.form);
+	dialog.append(json.content);
+	dialog.find("#tabs").tabs();
 
 	var start  = dialog.find("#start_date");
 	var end  = dialog.find("#end_date");
@@ -135,12 +136,21 @@ function makeShowDialog(json) {
 		select: autoSelect
 	});
 
+	dialog.find("#schedule-show-style input").ColorPicker({
+		onSubmit: function(hsb, hex, rgb, el) {
+			$(el).val(hex);
+			$(el).ColorPickerHide();
+		},
+		onBeforeShow: function () {
+			$(this).ColorPickerSetColor(this.value);
+		}
+	});
 
 	dialog.dialog({
 		autoOpen: false,
 		title: 'Add Show',
-		width: 950,
-		height: 400,
+		width: 1100,
+		height: 500,
 		modal: true,
 		close: closeDialog,
 		buttons: { "Cancel": closeDialog, "Ok": submitShow}
