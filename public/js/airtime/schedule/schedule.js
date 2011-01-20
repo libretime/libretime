@@ -372,6 +372,12 @@ function eventRender(event, element, view) {
 		}
 
 		$(element).find(".fc-event-title").after(div);
+
+		$(element)
+			.css({'border-color': 'red'})
+			.find(".fc-event-time, a")
+				.css({'background-color': 'red', 'border-color': 'red', 'color': 'white'});
+
 	}	
 }
 
