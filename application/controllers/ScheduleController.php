@@ -298,28 +298,3 @@ class ScheduleController extends Zend_Controller_Action
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

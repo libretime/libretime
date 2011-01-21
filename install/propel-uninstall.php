@@ -27,24 +27,11 @@ echo "***************************\n";
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/installInit.php');
-//require_once(dirname(__FILE__).'/../backend/cron/Cron.php');
 
 function airtime_uninstall_delete_files($p_path)
 {
-    if (!empty($p_path) && (strlen($p_path) > 4)) {
-        if (file_exists($p_path)) {
-            $dir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($p_path), RecursiveIteratorIterator::CHILD_FIRST);
-
-            for ($dir->rewind(); $dir->valid(); $dir->next()) {
-                if ($dir->isDir()) {
-                    rmdir($dir->getPathname());
-                } else {
-                    unlink($dir->getPathname());
-                }
-            }
-            rmdir($p_path);
-        }
-    }
+	$command = "rm -rf $p_path";
+	exec($command);
 }
 
 //------------------------------------------------------------------------
@@ -212,10 +199,6 @@ foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
 $cron->closeCrontab();
 echo "done.\n";
 */
-//------------------------------------------------------------------------
-// Delete files
-//------------------------------------------------------------------------
-airtime_uninstall_delete_files($CC_CONFIG['storageDir']);
 
 
 //------------------------------------------------------------------------
@@ -235,6 +218,13 @@ if ($results == 0) {
 } else {
   echo "   * Nothing to delete..\n";
 }
+
+
+//------------------------------------------------------------------------
+// Delete files
+//------------------------------------------------------------------------
+airtime_uninstall_delete_files($CC_CONFIG['storageDir']);
+
 
 echo "************************************\n";
 echo "* StorageServer Uninstall Complete *\n";

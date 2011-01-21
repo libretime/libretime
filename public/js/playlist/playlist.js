@@ -8,9 +8,9 @@ var nextSongs;
 var currentElem;
 
 function init(elemID) {
-	var currentElem = $("#" + elemID).attr("style", "z-index: 1; width: 100%; left: 0px; right: 0px; bottom: 0px; color: white; min-height: 100px; background-color: #cc3300;");
+	var currentElem = $("#" + elemID).attr("style", "z-index: 1; width: 100%; left: 0px; right: 0px; bottom: 0px; color: black; min-height: 100px; background-color: #FEF1B5;");
 	
-	$('#progressbar').progressBar(0);
+	$('#progressbar').progressBar(0, {showText : false});
 
 	getScheduleFromServer();
 	updateProgressBarValue();
@@ -67,6 +67,30 @@ function getTrackInfo(song){
 	return song.track_title + " - " + song.artist_name + " - " + song.album_title;
 }
 
+function convertToHHMMSS(timeInMS){
+	var time = parseInt(timeInMS);
+	
+	var hours = parseInt(time / 3600000);
+	time -= 3600000*hours;
+		
+	var minutes = parseInt(time / 60000);
+	time -= 60000*minutes;
+	
+	var seconds = parseInt(time / 1000);
+	
+	hours = "" + hours;
+	minutes = "" + minutes;
+	seconds = "" + seconds;
+	
+	if (hours.length == 1)
+		hours = "0" + hours;
+	if (minutes.length == 1)
+		minutes = "0" + minutes;
+	if (seconds.length == 1)
+		seconds = "0" + seconds;
+	return "" + hours + ":" + minutes + ":" + seconds;
+}
+
 function updatePlaylist(){
 	/* Column 0 update */
 	$('#listen');
@@ -78,8 +102,8 @@ function updatePlaylist(){
 	$('#host').empty();
 	for (var i=0; i<currentSong.length; i++){
 		$('#show').append(currentSong[i].show);
-		$('#playlist').append(currentSong[i].playlist);
-		$('#host').append(currentSong[i].host);
+		$('#playlist').append(currentSong[i].playlistname);
+		$('#host').append(currentSong[i].creator);
 	}
 	
 	/* Column 2 update */
@@ -90,7 +114,7 @@ function updatePlaylist(){
 		$('#previous').append(getTrackInfo(previousSongs[i]));
 	}
 	for (var i=0; i<currentSong.length; i++){
-		$('#current').append(getTrackInfo(currentSongs[i]));
+		$('#current').append(getTrackInfo(currentSong[i]));
 	}
 	for (var i=0; i<nextSongs.length; i++){
 		$('#next').append(getTrackInfo(nextSongs[i]));
@@ -98,10 +122,14 @@ function updatePlaylist(){
 	
 	/* Column 3 update */
 	$('#start').empty();
-	$('#end').empty();
+	$('#end').empty();	
+	$('#songposition').empty();
+	$('#songlength').empty();
 	for (var i=0; i<currentSong.length; i++){
-		$('#start').append(currentSong[i].starts);
-		$('#end').append(currentSong[i].ends);
+		$('#start').append(currentSong[i].starts.substring(currentSong[i].starts.indexOf(" ")+1));
+		$('#end').append(currentSong[i].ends.substring(currentSong[i].starts.indexOf(" ")+1));
+		$('#songposition').append(convertToHHMMSS(estimatedSchedulePosixTime - currentSong[i].songStartPosixTime));
+		$('#songlength').append(currentSong[i].clip_length);
 	}	
 }
 
