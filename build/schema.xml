@@ -126,6 +126,8 @@
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="repeats" phpName="DbRepeats" type="TINYINT" required="true"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
+	<column name="color" phpName="DbColor" type="VARCHAR" size="6" required="false"/>
+	<column name="background_color" phpName="DbBackgroundColor" type="VARCHAR" size="6" required="false"/>
   </table>
   <table name="cc_show_days" phpName="CcShowDays">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>

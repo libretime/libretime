@@ -91,6 +91,11 @@
         <formFile formName="ScheduleShow"/>
         <formFile formName="AddUser"/>
         <formFile formName="AdvancedSearchGroup"/>
+        <formFile formName="AddShowWhen"/>
+        <formFile formName="AddShowWho"/>
+        <formFile formName="AddShowStyle"/>
+        <formFile formName="AddShowWhat"/>
+        <formFile formName="AddShowRepeats"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory>

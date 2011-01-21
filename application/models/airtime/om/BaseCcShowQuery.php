@@ -10,11 +10,15 @@
  * @method     CcShowQuery orderByDbName($order = Criteria::ASC) Order by the name column
  * @method     CcShowQuery orderByDbRepeats($order = Criteria::ASC) Order by the repeats column
  * @method     CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
+ * @method     CcShowQuery orderByDbColor($order = Criteria::ASC) Order by the color column
+ * @method     CcShowQuery orderByDbBackgroundColor($order = Criteria::ASC) Order by the background_color column
  *
  * @method     CcShowQuery groupByDbId() Group by the id column
  * @method     CcShowQuery groupByDbName() Group by the name column
  * @method     CcShowQuery groupByDbRepeats() Group by the repeats column
  * @method     CcShowQuery groupByDbDescription() Group by the description column
+ * @method     CcShowQuery groupByDbColor() Group by the color column
+ * @method     CcShowQuery groupByDbBackgroundColor() Group by the background_color column
  *
  * @method     CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -39,11 +43,15 @@
  * @method     CcShow findOneByDbName(string $name) Return the first CcShow filtered by the name column
  * @method     CcShow findOneByDbRepeats(int $repeats) Return the first CcShow filtered by the repeats column
  * @method     CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
+ * @method     CcShow findOneByDbColor(string $color) Return the first CcShow filtered by the color column
+ * @method     CcShow findOneByDbBackgroundColor(string $background_color) Return the first CcShow filtered by the background_color column
  *
  * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
  * @method     array findByDbRepeats(int $repeats) Return CcShow objects filtered by the repeats column
  * @method     array findByDbDescription(string $description) Return CcShow objects filtered by the description column
+ * @method     array findByDbColor(string $color) Return CcShow objects filtered by the color column
+ * @method     array findByDbBackgroundColor(string $background_color) Return CcShow objects filtered by the background_color column
  *
  * @package    propel.generator.airtime.om
  */
@@ -243,6 +251,50 @@ abstract class BaseCcShowQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowPeer::DESCRIPTION, $dbDescription, $comparison);
+	}
+
+	/**
+	 * Filter the query on the color column
+	 * 
+	 * @param     string $dbColor The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByDbColor($dbColor = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbColor)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbColor)) {
+				$dbColor = str_replace('*', '%', $dbColor);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcShowPeer::COLOR, $dbColor, $comparison);
+	}
+
+	/**
+	 * Filter the query on the background_color column
+	 * 
+	 * @param     string $dbBackgroundColor The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByDbBackgroundColor($dbBackgroundColor = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbBackgroundColor)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbBackgroundColor)) {
+				$dbBackgroundColor = str_replace('*', '%', $dbBackgroundColor);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcShowPeer::BACKGROUND_COLOR, $dbBackgroundColor, $comparison);
 	}
 
 	/**

@@ -1,1 +1,24 @@
-<br /><br /><center>View script for controller <b>Schedule</b> and script/action name <b>addShowDialog</b></center>
+<form>
+<div id="tabs">
+    <ul>
+        <li><a href="#schedule-show-what"><span>What</span></a></li>
+        <li><a href="#schedule-show-when"><span>When</span></a></li>
+        <li><a href="#schedule-show-who"><span>Who</span></a></li>
+		<li><a href="#schedule-show-style"><span>Style</span></a></li>
+    </ul>
+    <div id="schedule-show-what">
+        <?php echo $this->what ?>
+    </div>
+    <div id="schedule-show-when">
+		<div id="show_overlap_error"/>
+        <?php echo $this->when ?>
+		<?php echo $this->repeats ?>
+    </div>
+    <div id="schedule-show-who">
+        <?php echo $this->who ?>
+    </div>
+	<div id="schedule-show-style">
+    	<?php echo $this->style ?>
+    </div>
+</div>
+</form>

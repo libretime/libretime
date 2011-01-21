@@ -59,20 +59,14 @@ function submitShow() {
 	$.post("/Schedule/add-show-dialog/format/json", 
 		formData,
 		function(data){
-			if(data.form) {
+			if(data.content) {
+
 				dialog.find("form").remove();
-				dialog.find("#show_overlap_error").remove();
-				dialog.append(data.form);
-
-				var start  = dialog.find("#start_date");
-				var end  = dialog.find("#end_date");
-
-				createDateInput(start, startDpSelect);
-				createDateInput(end, endDpSelect);
+				makeShowDialog(dialog, data);
 
 				if(data.overlap) {
 					var div, table, tr, days;
-					div = $('<div id="show_overlap_error"/>');
+					div = dialog.find("#show_overlap_error");
 					table = $('<table/>');
 					days = $.datepicker.regional[''].dayNamesShort;
 
@@ -111,17 +105,13 @@ function autoSelect(event, ui) {
 	event.preventDefault();
 }
 
-function makeShowDialog(json) {
-	
-	var dialog;
+function makeShowDialog(dialog, json) {
 
-	//main jqueryUI dialog
-	dialog = $('<div id="schedule_add_event_dialog" />');
+	dialog.append(json.content);
+	dialog.find("#tabs").tabs();
 
-	dialog.append(json.form);
-
-	var start  = dialog.find("#start_date");
-	var end  = dialog.find("#end_date");
+	var start  = dialog.find("#add_show_start_date");
+	var end  = dialog.find("#add_show_end_date");
 
 	createDateInput(start, startDpSelect);
 	createDateInput(end, endDpSelect);
@@ -130,20 +120,19 @@ function makeShowDialog(json) {
 		return {value: el.id, label: el.login};
 	});
 
-	dialog.find("#hosts_autocomplete").autocomplete({
+	dialog.find("#add_show_hosts_autocomplete").autocomplete({
 		source: auto,
 		select: autoSelect
 	});
 
-
-	dialog.dialog({
-		autoOpen: false,
-		title: 'Add Show',
-		width: 950,
-		height: 400,
-		modal: true,
-		close: closeDialog,
-		buttons: { "Cancel": closeDialog, "Ok": submitShow}
+	dialog.find("#schedule-show-style input").ColorPicker({
+		onSubmit: function(hsb, hex, rgb, el) {
+			$(el).val(hex);
+			$(el).ColorPickerHide();
+		},
+		onBeforeShow: function () {
+			$(this).ColorPickerSetColor(this.value);
+		}
 	});
 
 	return dialog;
@@ -155,7 +144,22 @@ function openShowDialog() {
 	url = '/Schedule/add-show-dialog/format/json';
 
 	$.get(url, function(json){
-		var dialog = makeShowDialog(json);
+
+		var dialog;
+
+		//main jqueryUI dialog
+		dialog = $('<div id="schedule_add_event_dialog" />');
+		makeShowDialog(dialog, json);
+
+		dialog.dialog({
+			autoOpen: false,
+			title: 'Add Show',
+			width: 1100,
+			height: 500,
+			modal: true,
+			close: closeDialog,
+			buttons: { "Cancel": closeDialog, "Ok": submitShow}
+		});
 
 		dialog.dialog('open');
 	});
@@ -373,12 +377,19 @@ function eventRender(event, element, view) {
 
 		$(element).find(".fc-event-title").after(div);
 
-		$(element)
-			.css({'border-color': 'red'})
-			.find(".fc-event-time, a")
-				.css({'background-color': 'red', 'border-color': 'red', 'color': 'white'});
-
 	}	
+
+	if(event.backgroundColor !== "") {
+		$(element)
+			.css({'border-color': '#'+event.backgroundColor})
+			.find(".fc-event-time, a")
+				.css({'background-color': '#'+event.backgroundColor, 'border-color': '#'+event.backgroundColor});
+	}
+	if(event.color !== "") {
+		$(element)
+			.find(".fc-event-time, a")
+				.css({'color': '#'+event.color});
+	}
 }
 
 function eventAfterRender( event, element, view ) {
