@@ -60,11 +60,9 @@ function submitShow() {
 		formData,
 		function(data){
 			if(data.content) {
-				dialog.find("form").remove();
-				dialog.find("#show_overlap_error").empty();
-				dialog.append(data.content);
 
-				makeShowDialog(dialog, json);
+				dialog.find("form").remove();
+				makeShowDialog(dialog, data);
 
 				if(data.overlap) {
 					var div, table, tr, days;
