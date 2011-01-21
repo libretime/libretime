@@ -48,8 +48,8 @@ $pages = array(
 	array(
 		'label'      => 'Now Playing',
 		'module'     => 'default',
-		'controller' => 'Schedule',
-		'action'     => 'view-playlist'
+		'controller' => 'Nowplaying',
+		'action'     => 'index'
 	),
 	array(
 		'label'      => 'Schedule',

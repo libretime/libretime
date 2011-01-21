@@ -36,7 +36,7 @@ def create_user(username):
     os.system("adduser --system --quiet --group --shell /bin/bash "+username)
     
     #add pypo to audio group
-    os.system("adduser " + username + " pulse-access")
+    os.system("adduser " + username + " audio")
     
     #set pypo password
     p = os.popen('/usr/bin/passwd pypo', 'w')

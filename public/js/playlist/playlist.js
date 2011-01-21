@@ -168,7 +168,3 @@ function getScheduleFromServer(){
 		  }});
 	setTimeout(getScheduleFromServer, 5000);
 }
-
-$(document).ready(function() {
-	init("nowplayingbar");
-});

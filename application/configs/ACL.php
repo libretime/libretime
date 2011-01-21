@@ -18,6 +18,7 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('plupload'))
 	  ->add(new Zend_Acl_Resource('schedule'))
 	  ->add(new Zend_Acl_Resource('api'))
+	  ->add(new Zend_Acl_Resource('nowplaying'))
 	  ->add(new Zend_Acl_Resource('search'));
 
 /** Creating permissions */
@@ -25,6 +26,7 @@ $ccAcl->allow('guest', 'index')
 	  ->allow('guest', 'login')
 	  ->allow('guest', 'error')
 	  ->allow('guest', 'library')
+	  ->allow('guest', 'nowplaying')
 	  ->allow('guest', 'search')
 	  ->allow('guest', 'api')
       ->allow('host', 'plupload')

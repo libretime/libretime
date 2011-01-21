@@ -477,7 +477,7 @@ class Schedule {
             "next"=>Schedule::GetNextItems($timeNow));
     }
 
-    private static function GetPreviousItems($timeNow, $prevCount = 1){
+    public static function GetPreviousItems($timeNow, $prevCount = 1){
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT * FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft"
         ." WHERE (st.ends < TIMESTAMP '$timeNow')"
@@ -488,7 +488,7 @@ class Schedule {
         return $rows;
     }
 
-    private static function GetCurrentlyPlaying($timeNow){
+    public static function GetCurrentlyPlaying($timeNow){
         global $CC_CONFIG, $CC_DBC;
         
         $sql = "SELECT *, pt.name as playlistName FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
@@ -500,7 +500,7 @@ class Schedule {
         return $rows;
     }
 
-    private static function GetNextItems($timeNow, $nextCount = 1) {
+    public static function GetNextItems($timeNow, $nextCount = 1) {
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT * FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft"
         ." WHERE (st.starts > TIMESTAMP '$timeNow')"
