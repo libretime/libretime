@@ -59,10 +59,10 @@ function submitShow() {
 	$.post("/Schedule/add-show-dialog/format/json", 
 		formData,
 		function(data){
-			if(data.form) {
+			if(data.content) {
 				dialog.find("form").remove();
 				dialog.find("#show_overlap_error").remove();
-				dialog.append(data.form);
+				dialog.append(data.content);
 
 				var start  = dialog.find("#start_date");
 				var end  = dialog.find("#end_date");
@@ -121,8 +121,8 @@ function makeShowDialog(json) {
 	dialog.append(json.content);
 	dialog.find("#tabs").tabs();
 
-	var start  = dialog.find("#start_date");
-	var end  = dialog.find("#end_date");
+	var start  = dialog.find("#add_show_start_date");
+	var end  = dialog.find("#add_show_end_date");
 
 	createDateInput(start, startDpSelect);
 	createDateInput(end, endDpSelect);
@@ -131,7 +131,7 @@ function makeShowDialog(json) {
 		return {value: el.id, label: el.login};
 	});
 
-	dialog.find("#hosts_autocomplete").autocomplete({
+	dialog.find("#add_show_hosts_autocomplete").autocomplete({
 		source: auto,
 		select: autoSelect
 	});

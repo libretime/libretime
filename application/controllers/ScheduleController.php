@@ -98,19 +98,19 @@ class ScheduleController extends Zend_Controller_Action
 
 			$data = $request->getPost();
 
-            if ($formWhat->isValid($data) && $formWhen->isValid($data) && $formWho->isValid($data) && $formStyle->isValid($data)) {  
-    
+            if ($formStyle->isValid($data) && $formWhen->isValid($data) && $formWho->isValid($data) && $formStyle->isValid($data)) {  
+			
 				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 				$show = new Show(new User($userInfo->id, $userInfo->type));
-				$overlap = $show->addShow($form->getValues());
+				$overlap = $show->addShow($data);
 
 				if(isset($overlap)) {
 					$this->view->overlap = $overlap;
 					$this->view->form = $this->view->render('schedule/add-show-dialog.phtml');
 				}
 
-				return;
+				return;	
 			}     
         }
 	

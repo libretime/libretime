@@ -16,48 +16,48 @@ class Show {
 	
 		$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
 
-		$sql = "SELECT time '{$data['start_time']}' + INTERVAL '{$data['duration']} hour' ";
+		$sql = "SELECT time '{$data['add_show_start_time']}' + INTERVAL '{$data['add_show_duration']} hour' ";
 		$r = $con->query($sql);
         $endTime = $r->fetchColumn(0); 
 
-		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$data['start_date']} {$data['start_time']}')";
+		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$data['add_show_start_date']} {$data['add_show_start_time']}')";
 		$r = $con->query($sql);
         $startDow = $r->fetchColumn(0);  
 
-		if($data['no_end']) {
+		if($data['add_show_no_end']) {
 			$endDate = NULL;
-			$data['repeats'] = 1;
+			$data['add_show_repeats'] = 1;
 		}
-		else if($data['repeats']) {
-			$sql = "SELECT date '{$data['end_date']}' + INTERVAL '1 day' ";
+		else if($data['add_show_repeats']) {
+			$sql = "SELECT date '{$data['add_show_end_date']}' + INTERVAL '1 day' ";
 			$r = $con->query($sql);
         	$endDate = $r->fetchColumn(0); 
 		}
 		else {
-			$sql = "SELECT date '{$data['start_date']}' + INTERVAL '1 day' ";
+			$sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '1 day' ";
 			$r = $con->query($sql);
         	$endDate = $r->fetchColumn(0);
 		} 
 
-		if($data['day_check'] === null) {
-			$data['day_check'] = array($startDow);
+		if(!isset($data['add_show_day_check'])) {
+			$data['add_show_day_check'] = array($startDow);
 		} 
 
-		$overlap =  $this->getShows($data['start_date'], $endDate, $data['day_check'], $data['start_time'], $endTime);
+		$overlap =  $this->getShows($data['add_show_start_date'], $endDate, $data['add_show_day_check'], $data['add_show_start_time'], $endTime);
 
 		if(count($overlap) > 0) {
 			return $overlap;
 		}
 		
 		$show = new CcShow();
-		$show->setDbName($data['name']);
-		$show->setDbRepeats($data['repeats']);
-		$show->setDbDescription($data['description']);
+		$show->setDbName($data['add_show_name']);
+		$show->setDbRepeats($data['add_show_repeats']);
+		$show->setDbDescription($data['add_show_description']);
 		$show->save();      
 
 		$showId = $show->getDbId();
 
-		foreach ($data['day_check'] as $day) {
+		foreach ($data['add_show_day_check'] as $day) {
 
 			if($startDow !== $day){
 				
@@ -66,25 +66,25 @@ class Show {
 				else
 					$daysAdd = $day - $startDow;				
 
-				$sql = "SELECT date '{$data['start_date']}' + INTERVAL '{$daysAdd} day' ";
+				$sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '{$daysAdd} day' ";
 				$r = $con->query($sql);
 				$start = $r->fetchColumn(0); 
 			}
 			else {
-				$start = $data['start_date'];
+				$start = $data['add_show_start_date'];
 			}
 
 			$showDay = new CcShowDays();
 			$showDay->setDbFirstShow($start);
 			$showDay->setDbLastShow($endDate);
-			$showDay->setDbStartTime($data['start_time']);
+			$showDay->setDbStartTime($data['add_show_start_time']);
 			$showDay->setDbEndTime($endTime);
 			$showDay->setDbDay($day);
 			$showDay->setDbShowId($showId);
 			$showDay->save();
 		}
 		
-		foreach ($data['hosts'] as $host) {
+		foreach ($data['add_show_hosts'] as $host) {
 			$showHost = new CcShowHosts();
 			$showHost->setDbShow($showId);
 			$showHost->setDbHost($host);

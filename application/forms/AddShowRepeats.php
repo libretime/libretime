@@ -8,7 +8,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         // Add days checkboxes
 		$this->addElement(
             'multiCheckbox',
-            'day_check',
+            'add_show_day_check',
             array(
 				'label' => 'Select Days:',
                 'required' => false,
@@ -24,7 +24,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
          ));
 
 		// Add end date element
-        $this->addElement('text', 'end_date', array(
+        $this->addElement('text', 'add_show_end_date', array(
             'label'      => 'Date End:',
             'required'   => false,
             'filters'    => array('StringTrim'),
@@ -35,7 +35,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         ));
 
 		// Add no end element
-		$this->addElement('checkbox', 'no_end', array(
+		$this->addElement('checkbox', 'add_show_no_end', array(
             'label'      => 'no end',
             'required'   => false,
 		));
