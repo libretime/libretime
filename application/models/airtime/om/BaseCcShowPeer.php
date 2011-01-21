@@ -26,7 +26,7 @@ abstract class BaseCcShowPeer {
 	const TM_CLASS = 'CcShowTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 4;
+	const NUM_COLUMNS = 6;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -42,6 +42,12 @@ abstract class BaseCcShowPeer {
 
 	/** the column name for the DESCRIPTION field */
 	const DESCRIPTION = 'cc_show.DESCRIPTION';
+
+	/** the column name for the COLOR field */
+	const COLOR = 'cc_show.COLOR';
+
+	/** the column name for the BACKGROUND_COLOR field */
+	const BACKGROUND_COLOR = 'cc_show.BACKGROUND_COLOR';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcShow objects.
@@ -59,12 +65,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbRepeats', 'DbDescription', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbRepeats', 'dbDescription', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::REPEATS, self::DESCRIPTION, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'REPEATS', 'DESCRIPTION', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'repeats', 'description', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbRepeats', 'DbDescription', 'DbColor', 'DbBackgroundColor', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbRepeats', 'dbDescription', 'dbColor', 'dbBackgroundColor', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::REPEATS, self::DESCRIPTION, self::COLOR, self::BACKGROUND_COLOR, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'REPEATS', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'repeats', 'description', 'color', 'background_color', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
 	);
 
 	/**
@@ -74,12 +80,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbRepeats' => 2, 'DbDescription' => 3, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbRepeats' => 2, 'dbDescription' => 3, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::REPEATS => 2, self::DESCRIPTION => 3, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'REPEATS' => 2, 'DESCRIPTION' => 3, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'repeats' => 2, 'description' => 3, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbRepeats' => 2, 'DbDescription' => 3, 'DbColor' => 4, 'DbBackgroundColor' => 5, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbRepeats' => 2, 'dbDescription' => 3, 'dbColor' => 4, 'dbBackgroundColor' => 5, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::REPEATS => 2, self::DESCRIPTION => 3, self::COLOR => 4, self::BACKGROUND_COLOR => 5, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'REPEATS' => 2, 'DESCRIPTION' => 3, 'COLOR' => 4, 'BACKGROUND_COLOR' => 5, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'repeats' => 2, 'description' => 3, 'color' => 4, 'background_color' => 5, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
 	);
 
 	/**
@@ -155,11 +161,15 @@ abstract class BaseCcShowPeer {
 			$criteria->addSelectColumn(CcShowPeer::NAME);
 			$criteria->addSelectColumn(CcShowPeer::REPEATS);
 			$criteria->addSelectColumn(CcShowPeer::DESCRIPTION);
+			$criteria->addSelectColumn(CcShowPeer::COLOR);
+			$criteria->addSelectColumn(CcShowPeer::BACKGROUND_COLOR);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.NAME');
 			$criteria->addSelectColumn($alias . '.REPEATS');
 			$criteria->addSelectColumn($alias . '.DESCRIPTION');
+			$criteria->addSelectColumn($alias . '.COLOR');
+			$criteria->addSelectColumn($alias . '.BACKGROUND_COLOR');
 		}
 	}
 

@@ -61,18 +61,14 @@ function submitShow() {
 		function(data){
 			if(data.content) {
 				dialog.find("form").remove();
-				dialog.find("#show_overlap_error").remove();
+				dialog.find("#show_overlap_error").empty();
 				dialog.append(data.content);
 
-				var start  = dialog.find("#start_date");
-				var end  = dialog.find("#end_date");
-
-				createDateInput(start, startDpSelect);
-				createDateInput(end, endDpSelect);
+				makeShowDialog(dialog, json);
 
 				if(data.overlap) {
 					var div, table, tr, days;
-					div = $('<div id="show_overlap_error"/>');
+					div = dialog.find("#show_overlap_error");
 					table = $('<table/>');
 					days = $.datepicker.regional[''].dayNamesShort;
 
@@ -111,12 +107,7 @@ function autoSelect(event, ui) {
 	event.preventDefault();
 }
 
-function makeShowDialog(json) {
-	
-	var dialog;
-
-	//main jqueryUI dialog
-	dialog = $('<div id="schedule_add_event_dialog" />');
+function makeShowDialog(dialog, json) {
 
 	dialog.append(json.content);
 	dialog.find("#tabs").tabs();
@@ -146,16 +137,6 @@ function makeShowDialog(json) {
 		}
 	});
 
-	dialog.dialog({
-		autoOpen: false,
-		title: 'Add Show',
-		width: 1100,
-		height: 500,
-		modal: true,
-		close: closeDialog,
-		buttons: { "Cancel": closeDialog, "Ok": submitShow}
-	});
-
 	return dialog;
 }
 
@@ -165,7 +146,22 @@ function openShowDialog() {
 	url = '/Schedule/add-show-dialog/format/json';
 
 	$.get(url, function(json){
-		var dialog = makeShowDialog(json);
+
+		var dialog;
+
+		//main jqueryUI dialog
+		dialog = $('<div id="schedule_add_event_dialog" />');
+		makeShowDialog(dialog, json);
+
+		dialog.dialog({
+			autoOpen: false,
+			title: 'Add Show',
+			width: 1100,
+			height: 500,
+			modal: true,
+			close: closeDialog,
+			buttons: { "Cancel": closeDialog, "Ok": submitShow}
+		});
 
 		dialog.dialog('open');
 	});
@@ -383,12 +379,19 @@ function eventRender(event, element, view) {
 
 		$(element).find(".fc-event-title").after(div);
 
-		$(element)
-			.css({'border-color': 'red'})
-			.find(".fc-event-time, a")
-				.css({'background-color': 'red', 'border-color': 'red', 'color': 'white'});
-
 	}	
+
+	if(event.backgroundColor !== "") {
+		$(element)
+			.css({'border-color': '#'+event.backgroundColor})
+			.find(".fc-event-time, a")
+				.css({'background-color': '#'+event.backgroundColor, 'border-color': '#'+event.backgroundColor});
+	}
+	if(event.color !== "") {
+		$(element)
+			.find(".fc-event-time, a")
+				.css({'color': '#'+event.color});
+	}
 }
 
 function eventAfterRender( event, element, view ) {

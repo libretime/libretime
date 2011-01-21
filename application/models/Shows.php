@@ -53,6 +53,8 @@ class Show {
 		$show->setDbName($data['add_show_name']);
 		$show->setDbRepeats($data['add_show_repeats']);
 		$show->setDbDescription($data['add_show_description']);
+		$show->setDbColor($data['add_show_color']);
+		$show->setDbBackgroundColor($data['add_show_background_color']);
 		$show->save();      
 
 		$showId = $show->getDbId();
@@ -460,7 +462,7 @@ class Show {
 
 		$sql;
 	
-		$sql_gen = "SELECT cc_show_days.id AS day_id, name, repeats, description, 
+		$sql_gen = "SELECT cc_show_days.id AS day_id, name, repeats, description, color, background_color, 
 			first_show, last_show, start_time, end_time, day, show_id  
 			FROM (cc_show LEFT JOIN cc_show_days ON cc_show.id = cc_show_days.show_id)";
 
@@ -604,7 +606,9 @@ class Show {
 			"start" => $start_ts,
 			"end" => $end_ts,
 			"allDay" => false,
-			"description" => $show["description"]
+			"description" => $show["description"],
+			"color" => $show["color"],
+			"backgroundColor" => $show["background_color"]
 		);
 
 		foreach($options as $key=>$value) {

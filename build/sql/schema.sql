@@ -164,6 +164,8 @@ CREATE TABLE "cc_show"
 	"name" VARCHAR(255) default '' NOT NULL,
 	"repeats" INT2  NOT NULL,
 	"description" VARCHAR(512),
+	"color" VARCHAR(6),
+	"background_color" VARCHAR(6),
 	PRIMARY KEY ("id")
 );
 

@@ -50,6 +50,18 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $description;
 
 	/**
+	 * The value for the color field.
+	 * @var        string
+	 */
+	protected $color;
+
+	/**
+	 * The value for the background_color field.
+	 * @var        string
+	 */
+	protected $background_color;
+
+	/**
 	 * @var        array CcShowDays[] Collection to store aggregation of CcShowDays objects.
 	 */
 	protected $collCcShowDayss;
@@ -140,6 +152,26 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Get the [color] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbColor()
+	{
+		return $this->color;
+	}
+
+	/**
+	 * Get the [background_color] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbBackgroundColor()
+	{
+		return $this->background_color;
+	}
+
+	/**
 	 * Set the value of [id] column.
 	 * 
 	 * @param      int $v new value
@@ -220,6 +252,46 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	} // setDbDescription()
 
 	/**
+	 * Set the value of [color] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbColor($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->color !== $v) {
+			$this->color = $v;
+			$this->modifiedColumns[] = CcShowPeer::COLOR;
+		}
+
+		return $this;
+	} // setDbColor()
+
+	/**
+	 * Set the value of [background_color] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbBackgroundColor($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->background_color !== $v) {
+			$this->background_color = $v;
+			$this->modifiedColumns[] = CcShowPeer::BACKGROUND_COLOR;
+		}
+
+		return $this;
+	} // setDbBackgroundColor()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -259,6 +331,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
 			$this->repeats = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
 			$this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->color = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->background_color = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -267,7 +341,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 4; // 4 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 6; // 6 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShow object", $e);
@@ -632,6 +706,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 3:
 				return $this->getDbDescription();
 				break;
+			case 4:
+				return $this->getDbColor();
+				break;
+			case 5:
+				return $this->getDbBackgroundColor();
+				break;
 			default:
 				return null;
 				break;
@@ -659,6 +739,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$keys[1] => $this->getDbName(),
 			$keys[2] => $this->getDbRepeats(),
 			$keys[3] => $this->getDbDescription(),
+			$keys[4] => $this->getDbColor(),
+			$keys[5] => $this->getDbBackgroundColor(),
 		);
 		return $result;
 	}
@@ -702,6 +784,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 3:
 				$this->setDbDescription($value);
 				break;
+			case 4:
+				$this->setDbColor($value);
+				break;
+			case 5:
+				$this->setDbBackgroundColor($value);
+				break;
 		} // switch()
 	}
 
@@ -730,6 +818,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if (array_key_exists($keys[1], $arr)) $this->setDbName($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbRepeats($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setDbDescription($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbColor($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbBackgroundColor($arr[$keys[5]]);
 	}
 
 	/**
@@ -745,6 +835,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowPeer::NAME)) $criteria->add(CcShowPeer::NAME, $this->name);
 		if ($this->isColumnModified(CcShowPeer::REPEATS)) $criteria->add(CcShowPeer::REPEATS, $this->repeats);
 		if ($this->isColumnModified(CcShowPeer::DESCRIPTION)) $criteria->add(CcShowPeer::DESCRIPTION, $this->description);
+		if ($this->isColumnModified(CcShowPeer::COLOR)) $criteria->add(CcShowPeer::COLOR, $this->color);
+		if ($this->isColumnModified(CcShowPeer::BACKGROUND_COLOR)) $criteria->add(CcShowPeer::BACKGROUND_COLOR, $this->background_color);
 
 		return $criteria;
 	}
@@ -809,6 +901,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$copyObj->setDbName($this->name);
 		$copyObj->setDbRepeats($this->repeats);
 		$copyObj->setDbDescription($this->description);
+		$copyObj->setDbColor($this->color);
+		$copyObj->setDbBackgroundColor($this->background_color);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1239,6 +1333,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->name = null;
 		$this->repeats = null;
 		$this->description = null;
+		$this->color = null;
+		$this->background_color = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
