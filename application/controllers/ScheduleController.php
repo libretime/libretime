@@ -33,15 +33,12 @@ class ScheduleController extends Zend_Controller_Action
     {
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
-
-
+		//$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
-		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet('/css/schedule.css');
 
 
@@ -76,6 +73,15 @@ class ScheduleController extends Zend_Controller_Action
 
     public function addShowDialogAction()
     {
+		$this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
+    	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/airtime/schedule/add-show.js','text/javascript');
+
+		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
+		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
+		$this->view->headLink()->appendStylesheet('/css/add-show.css');
+
         $request = $this->getRequest();
         $formWhat = new Application_Form_AddShowWhat();
 		$formWhat->removeDecorator('DtDdWrapper');
@@ -87,18 +93,18 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle = new Application_Form_AddShowStyle();
 		$formStyle->removeDecorator('DtDdWrapper');
-
-		$this->view->what = $formWhat;
-		$this->view->when = $formWhen;
-		$this->view->repeats = $formRepeats;
-		$this->view->who = $formWho;
-		$this->view->style = $formStyle;
  
         if ($request->isPost()) {
 
 			$data = $request->getPost();
 
-            if ($formStyle->isValid($data) && $formWhen->isValid($data) && $formWho->isValid($data) && $formStyle->isValid($data)) {  
+			$what = $formWhat->isValid($data);
+			$when = $formWhen->isValid($data);
+			$repeats = $formRepeats->isValid($data);
+			$who = $formWho->isValid($data);
+			$style = $formStyle->isValid($data);
+
+            if ($what && $when && $repeats && $who && $style) {  
 			
 				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -107,15 +113,18 @@ class ScheduleController extends Zend_Controller_Action
 
 				if(isset($overlap)) {
 					$this->view->overlap = $overlap;
-					$this->view->form = $this->view->render('schedule/add-show-dialog.phtml');
 				}
-
-				return;	
-			}     
+				else {
+					$this->_redirect('Schedule');
+				}	
+			}  
         }
-	
-		$this->view->content = $this->view->render('schedule/add-show-dialog.phtml');
-		$this->view->hosts = User::getHosts();
+
+		$this->view->what = $formWhat;
+		$this->view->when = $formWhen;
+		$this->view->repeats = $formRepeats;
+		$this->view->who = $formWho;
+		$this->view->style = $formStyle;
     }
 
     public function moveShowAction()

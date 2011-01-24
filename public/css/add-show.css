@@ -1,0 +1,22 @@
+#schedule-add-show,
+#fullcalendar_show_display {
+	float: left;
+}
+
+#schedule-add-show {
+	font-size: 12px;
+	width: 600px;
+}
+
+#schedule-add-show textarea {
+	width: 100%;
+	height: 100px;
+}
+
+#fullcalendar_show_display {
+	width: 400px;
+}
+
+#schedule-add-show-overlap {
+	clear: left;
+}

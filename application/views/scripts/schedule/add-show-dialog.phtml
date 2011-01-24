@@ -1,24 +1,34 @@
-<form>
-<div id="tabs">
-    <ul>
-        <li><a href="#schedule-show-what"><span>What</span></a></li>
-        <li><a href="#schedule-show-when"><span>When</span></a></li>
-        <li><a href="#schedule-show-who"><span>Who</span></a></li>
-		<li><a href="#schedule-show-style"><span>Style</span></a></li>
-    </ul>
-    <div id="schedule-show-what">
-        <?php echo $this->what ?>
-    </div>
-    <div id="schedule-show-when">
-		<div id="show_overlap_error"/>
-        <?php echo $this->when ?>
-		<?php echo $this->repeats ?>
-    </div>
-    <div id="schedule-show-who">
-        <?php echo $this->who ?>
-    </div>
-	<div id="schedule-show-style">
-    	<?php echo $this->style ?>
-    </div>
+<div id="schedule-add-show">
+	<form method="post" action="">
+		<div id="schedule-add-show-tabs">
+			<ul>
+				<li><a href="#schedule-show-what"><span>What</span></a></li>
+				<li><a href="#schedule-show-when"><span>When</span></a></li>
+				<li><a href="#schedule-show-who"><span>Who</span></a></li>
+				<li><a href="#schedule-show-style"><span>Style</span></a></li>
+			</ul>
+			<div id="schedule-show-what">
+				<?php echo $this->what ?>
+			</div>
+			<div id="schedule-show-when">
+				<?php echo $this->when ?>
+				<?php echo $this->repeats ?>
+			</div>
+			<div id="schedule-show-who">
+				<?php echo $this->who ?>
+			</div>
+			<div id="schedule-show-style">
+				<?php echo $this->style ?>
+			</div>
+		</div>
+	</form>
+	<button id="add-show-submit">Add</button>
 </div>
-</form>
+
+<div id="fullcalendar_show_display"></div>
+<div id="schedule-add-show-overlap">
+	<?php if(isset($this->overlap)) : ?>
+		<div>Overlap</div>
+		<?php echo $this->partialLoop('schedule/show-overlap.phtml', $this->overlap); ?>
+	<?php endif;?> 
+</div>
