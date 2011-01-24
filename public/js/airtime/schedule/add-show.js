@@ -42,6 +42,12 @@ function autoSelect(event, ui) {
 	event.preventDefault();
 }
 
+function findHosts(request, callback) {
+	var search = request.term;
+
+	
+}
+
 function setAddShowEvents() {
 	var start, end;
 
@@ -53,14 +59,10 @@ function setAddShowEvents() {
 	createDateInput(start, startDpSelect);
 	createDateInput(end, endDpSelect);
 
-	//var auto = json.hosts.map(function(el) {
-	//	return {value: el.id, label: el.login};
-	//});
-
-	//dialog.find("#add_show_hosts_autocomplete").autocomplete({
-	//	source: auto,
-	//	select: autoSelect
-	//});
+	$("#add_show_hosts_autocomplete").autocomplete({
+		source: findHosts,
+		select: autoSelect
+	});
 
 	$("#schedule-show-style input").ColorPicker({
 		onSubmit: function(hsb, hex, rgb, el) {
