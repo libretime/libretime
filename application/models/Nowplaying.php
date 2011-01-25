@@ -23,18 +23,18 @@ class Application_Model_Nowplaying
 		
 		foreach ($previous as $item){
 			array_push($rows, array("p", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["playlistname"]));
+				$item["album_title"], "x" , $item["name"]));
 		}
 		
 		
 		foreach ($current as $item){
 			array_push($rows, array("c", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["playlistname"]));		
+				$item["album_title"], "x" , $item["name"]));		
 		}
 		
 		foreach ($next as $item){
 			array_push($rows, array("n", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["playlistname"]));
+				$item["album_title"], "x" , $item["name"]));
 		}
 		
 		return array("columnHeaders"=>$columnHeaders, "rows"=>$rows);
