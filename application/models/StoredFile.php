@@ -1742,25 +1742,16 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-	public static function searchFiles($md, $order=NULL, $count=false, $page=null, $limit=null, $quick=false)
+	public static function searchFiles($offset, $limit, $md=NULL, $order=NULL, $quick=false)
 	{
 		global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
 
-		$match = array(
-			"0" => "ILIKE",
-			"1" => "=",
-			"2" => "<",
-			"3" => "<=",
-			"4" => ">",
-			"5" => ">=",
-			"6" => "!=",
-		);
+		$columnsDisplayed = array("id", "track_title", "artist_name", "album_title", "track_number", "length", "ftype");
 
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
-        $_SESSION["br"] = "";
         foreach ($g_metadata_xml_to_db_mapping as $key => $val){
-            $_SESSION["br"] .= "key: ".$key." value:".$val.", ";
+
             if($key === "dc:title"){
                 $plSelect .= "name AS ".$val.", ";
                 $fileSelect .= $val.", ";
@@ -1787,14 +1778,11 @@ class StoredFile {
             }
         }
 
-		if($count) {
-			$selector = "SELECT COUNT(*)";
-		}
-		else {
-			$selector = "SELECT *";
-		}
+	
+		$selectorCount = "SELECT COUNT(*)";
+		$selectorRows = "SELECT ". join("," , $columnsDisplayed);
 
-		$from = " FROM ((".$plSelect."PL.id
+		$fromTable = " FROM ((".$plSelect."PL.id
                 FROM ".$CC_CONFIG["playListTable"]." AS PL
 				LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
 
@@ -1802,7 +1790,35 @@ class StoredFile {
 
                 (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
 
-        $sql = $selector." ".$from;
+        $sql = $selectorCount." ".$fromTable;
+		$totalRows = $CC_DBC->getOne($sql);
+
+		//ordered by integer as expected by datatables.
+		$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
+		$sql = $selectorRows." ".$fromTable." ORDER BY id OFFSET ".$offset." LIMIT ".$limit;
+		$results = $CC_DBC->getAll($sql);
+		//echo $results;
+		//echo $sql;
+
+		//put back to default fetch mode.		
+		$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+		return array("iTotalDisplayRecords" => $totalRows, "iTotalRecords" => $totalRows, "aaData" => $results);
+
+		
+		
+
+		/*
+
+		$match = array(
+			"0" => "ILIKE",
+			"1" => "=",
+			"2" => "<",
+			"3" => "<=",
+			"4" => ">",
+			"5" => ">=",
+			"6" => "!=",
+		);
 
 		$or_cond = array();
 		$inner = $quick ? 'OR':'AND';
@@ -1858,8 +1874,9 @@ class StoredFile {
 		}
 		//echo var_dump($md);
 		//echo $sql;
+		*/
 
-		return $CC_DBC->getAll($sql);
+		//return $CC_DBC->getAll($sql);
 	}
 
 }
