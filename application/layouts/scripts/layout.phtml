@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<div id="nowplayingbar"><?php echo $this->layout()->nowplaying ?></div>
+<div id="nowplayingbar"><?= $this->partial('partialviews/header.phtml') ?></div>
 <div id="nav"><?php echo $this->navigation()->menu()->setRenderInvisible(true) ?></div>
  
 <div id="content"><?php echo $this->layout()->content ?></div>

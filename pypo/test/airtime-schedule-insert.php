@@ -41,7 +41,7 @@ echo "Creating new playlist '$playlistName'...";
 $pl = new Playlist();
 $pl->create($playlistName);
 
-/*
+
 // Add a media clip
 $mediaFile = StoredFile::findByOriginalName("ACDC_-_Back_In_Black-sample.ogg");
 if (is_null($mediaFile)) {
@@ -54,7 +54,6 @@ if (is_null($mediaFile)) {
     }
 }
 $pl->addAudioClip($mediaFile->getId());
-*/
 
 $mediaFile = StoredFile::findByOriginalName("Peter_Rudenko_-_Opening.mp3");
 if (is_null($mediaFile)) {
@@ -68,6 +67,20 @@ if (is_null($mediaFile)) {
 }
 $pl->addAudioClip($mediaFile->getId());
 echo "done.\n";
+
+$mediaFile = StoredFile::findByOriginalName("Manolo Camp - Morning Coffee.mp3");
+if (is_null($mediaFile)) {
+    echo "Adding test audio clip to the database.\n";
+    $v = array("filepath" => __DIR__."/../../audio_samples/OpSound/Manolo Camp - Morning Coffee.mp3");
+    $mediaFile = StoredFile::Insert($v);
+    if (PEAR::isError($mediaFile)) {
+    	var_dump($mediaFile);
+    	exit();
+    }
+}
+$pl->addAudioClip($mediaFile->getId());
+echo "done.\n";
+
 
 //$pl2 = Playlist::findPlaylistByName("pypo_playlist_test");
 //var_dump($pl2);
@@ -91,7 +104,8 @@ echo "done.\n";
 
 // Schedule the playlist for two minutes from now
 echo "Scheduling new playlist...\n";
-$playTime = date("Y-m-d H:i:s", time()+(60*$minutesFromNow));
+//$playTime = date("Y-m-d H:i:s", time()+(60*$minutesFromNow));
+$playTime = date("Y-m-d H:i:s", time()+(20*$minutesFromNow));
 $scheduleGroup = new ScheduleGroup();
 $scheduleGroup->add($playTime, null, $pl->getId());
 

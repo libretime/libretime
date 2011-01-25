@@ -53,6 +53,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view = $this->getResource('view');
 		$view->headScript()->appendFile('/js/libs/jquery-1.4.4.min.js','text/javascript');
 		$view->headScript()->appendFile('/js/libs/jquery-ui-1.8.8.custom.min.js','text/javascript');
+		$view->headScript()->appendFile('/js/progressbar/jquery.progressbar.min.js','text/javascript');
+		$view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 	}
 
 }

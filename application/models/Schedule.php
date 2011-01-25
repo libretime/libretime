@@ -502,9 +502,10 @@ class Schedule {
 
     public static function GetNextItems($timeNow, $nextCount = 1) {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft"
+        $sql = "SELECT *, pt.name as playlistName FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE (st.starts > TIMESTAMP '$timeNow')"
         ." AND (st.file_id = ft.id)"
+        ." AND (st.playlist_id = pt.id)"
         ." ORDER BY st.starts"
         ." LIMIT $nextCount";
         $rows = $CC_DBC->GetAll($sql);

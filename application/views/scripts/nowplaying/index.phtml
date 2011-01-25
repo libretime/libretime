@@ -1,29 +1,42 @@
-<div id='col0' style='float:left; width: 10%; height: 100%;'>
-	<div>Listen</div>
-	<div>Volume</div>
-</div>
-	
-<div id='col1' style='float:left; width: 25%; height: 100%;'>
-	<div>Show: <span id='show'></span></div>
-	<div>Playlist: <span id='playlist'></span></div>
-	<div>Host: <span id='host'></span></div>
-</div>
-	
-<div id='col2' style='float:left; width: 30%; height: 100%;'>
-	<div>Previous: <span id='previous'></span></div>
-	<div>Current: <span id='current'></span></div>
-	<div>Upcoming: <span id='next'></span></div>
-</div>
-
-<div id='list0' style='float:left; width: 35%; height: 100%;'></div>
-	<div>Start: <span id='start'></span></div>
-	<div>End: <span id='end'></span></div>
-	<div><span id='progressbar'></span> <span id='songposition'></span> | <span id='songlength'></span></div>
-</div>
 <div id='demo'></div>
 <script>
+function getDateText(obj){
+	var str = obj.aData[ obj.iDataColumn ];
+	if (str.indexOf(" ") != -1){
+		return changeTimePrecision(str.substring(0, str.indexOf(" ")));
+	}
+	return str;
+}
+
+function getTimeText(obj){
+	var str = obj.aData[ obj.iDataColumn ];
+	if (str.indexOf(" ") != -1){
+		return changeTimePrecision(str.substring(str.indexOf(" ")+1));
+	}
+	return str;
+}
+
+function changeTimePrecisionInit(obj){
+	var str = obj.aData[ obj.iDataColumn ];
+	return changeTimePrecision(str);
+}
+
+function changeTimePrecision(str){
+	if (str.indexOf(".") != -1){
+		if (str.length - str.indexOf(".") > 2)
+			var extraLength = str.length - str.indexOf(".") -3;
+			return str.substring(0, str.length - extraLength);
+	}
+	return str;
+}
 
 function createDataGrid(obj){
+	
+	obj.columnHeaders[0]["fnRender"] = getDateText;
+	obj.columnHeaders[1]["fnRender"] = getTimeText;
+	obj.columnHeaders[2]["fnRender"] = getTimeText;
+	obj.columnHeaders[3]["fnRender"] = changeTimePrecisionInit;
+	
 	$('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
 	$('#example').dataTable( {
 		"bSort" : false,
@@ -38,15 +51,12 @@ function createDataGrid(obj){
 
 function init2(){
 	  $.ajax({ url: "/Nowplaying/get-data-grid-data/format/json", dataType:"json", success:function(data){
-		//alert(data);
 		createDataGrid(data.entries);
 	  }});
+	  //setTimeout(init2, 5000);
 }
 
-
 $(document).ready(function() {
-	
-	//initialize the playlist bar in the included playlist.js
-	init("nowplayingbar");
+	init2();
 });
 </script>

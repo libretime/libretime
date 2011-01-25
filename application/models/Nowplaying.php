@@ -21,14 +21,14 @@ class Application_Model_Nowplaying
 		$rows = array();
 		
 		foreach ($previous as $item){
-			array_push($rows, array(substr($item["starts"], 0, strpos($item["starts"], " ")), $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
+			array_push($rows, array($item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
 				$item["album_title"], "x" , "y"));
 		}
 		
 		
 		foreach ($current as $item){
 			array_push($rows, array($item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , "y"));
+				$item["album_title"], "x" , "y"));		
 		}
 		
 		foreach ($next as $item){
