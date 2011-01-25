@@ -39,14 +39,13 @@ class User {
 		
 	}
 
-	public static function getUsers($type=NULL) {
+	public static function getUsers($type=NULL, $search=NULL) {
 		global $CC_DBC;
 
 		$sql;
 
-		$sql_gen = "SELECT id, login, type FROM cc_subjs ";
+		$sql_gen = "SELECT id, login FROM cc_subjs ";
 		$sql = $sql_gen;
-
 	
 		if(!is_null($type)){
 			
@@ -61,6 +60,9 @@ class User {
 			}
 			
 			$sql = $sql_gen ." WHERE ". $sql_type;
+		}
+		if(!is_null($search)) {
+			$like = "login ILIKE '{$search}'";
 		}
 
 		$sql = $sql . " ORDER BY login";

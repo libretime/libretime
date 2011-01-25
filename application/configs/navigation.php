@@ -56,7 +56,16 @@ $pages = array(
 		'module'     => 'default',
 		'controller' => 'Schedule',
 		'action'     => 'index',
-		'resource'   => 'schedule'
+		'resource'   => 'schedule',
+		'pages'      => array(
+		    array(
+		        'label'      => 'Add Show',
+		        'module'     => 'default',
+		        'controller' => 'Schedule',
+		        'action'     => 'add-show-dialog',
+				'resource'	=>	'schedule'
+		    )
+		)
 	),
 	array(
 		'label'      => 'Logout',

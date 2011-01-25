@@ -72,6 +72,7 @@
         <controllerFile controllerName="User">
           <actionMethod actionName="index"/>
           <actionMethod actionName="addUser"/>
+          <actionMethod actionName="getHosts"/>
         </controllerFile>
         <controllerFile controllerName="SidePlaylist">
           <actionMethod actionName="index"/>
@@ -253,6 +254,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Nowplaying">
             <viewScriptFile forActionName="getDataGridData"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="User">
+            <viewScriptFile forActionName="getHosts"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
