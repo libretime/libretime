@@ -11,6 +11,12 @@ var currentElem;
 
 var updateInterval = 5000;
 
+var songEndFunc;
+
+function registerSongEndListener(func){
+	songEndFunc = func;
+}
+
 
 function convertToHHMMSS(timeInMS){
 	var time = parseInt(timeInMS);
@@ -103,6 +109,8 @@ function updateProgressBarValue(){
 function temp(){
 	currentSong[0] = nextSongs[0];
     updatePlaylist();
+    
+    songEndFunc();
 }
 
 function updatePlaylist(){

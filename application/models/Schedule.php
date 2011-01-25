@@ -479,9 +479,10 @@ class Schedule {
 
     public static function GetPreviousItems($timeNow, $prevCount = 1){
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT * FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft"
+        $sql = "SELECT *, pt.name as playlistname FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE (st.ends < TIMESTAMP '$timeNow')"
         ." AND (st.file_id = ft.id)"
+        ." AND (st.playlist_id = pt.id)"
         ." ORDER BY st.starts DESC"
         ." LIMIT $prevCount";
         $rows = $CC_DBC->GetAll($sql);
@@ -491,7 +492,7 @@ class Schedule {
     public static function GetCurrentlyPlaying($timeNow){
         global $CC_CONFIG, $CC_DBC;
         
-        $sql = "SELECT *, pt.name as playlistName FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
+        $sql = "SELECT *, pt.name as playlistname FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE (st.starts < TIMESTAMP '$timeNow')"
         ." AND (st.ends > TIMESTAMP '$timeNow')"
         ." AND (st.playlist_id = pt.id)"
@@ -502,7 +503,7 @@ class Schedule {
 
     public static function GetNextItems($timeNow, $nextCount = 1) {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT *, pt.name as playlistName FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
+        $sql = "SELECT *, pt.name as playlistname FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE (st.starts > TIMESTAMP '$timeNow')"
         ." AND (st.file_id = ft.id)"
         ." AND (st.playlist_id = pt.id)"
