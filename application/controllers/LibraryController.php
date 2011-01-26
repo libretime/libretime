@@ -16,6 +16,7 @@ class LibraryController extends Zend_Controller_Action
 
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents', 'html')
+					->addActionContext('contents', 'json')
 					->addActionContext('plupload', 'html')
 					->addActionContext('upload', 'json')
 					->addActionContext('delete', 'json')
@@ -40,7 +41,7 @@ class LibraryController extends Zend_Controller_Action
 		
 		$this->_helper->actionStack('index', 'playlist');
 		$this->_helper->actionStack('contents', 'library');
-		$this->_helper->actionStack('quick-search', 'library');
+		//$this->_helper->actionStack('quick-search', 'library');
     }
 
     public function contextMenuAction()
@@ -121,56 +122,29 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
+		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
-		$this->view->headLink()->appendStylesheet('/css/media_library.css');
 
+		$this->view->headLink()->appendStylesheet('/css/datatables/css/demo_table.css');
+		
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
-        $cat = $this->_getParam('ob', null);
-		$or = $this->_getParam('order', null);
-		$page = $this->_getParam('page', null);
+		$format = $this->_getParam('format');
+		$echo = $this->_getParam('sEcho');
+		$offset = $this->_getParam('iDisplayStart');
+		$limit = $this->_getParam('iDisplayLength');
+		$post = $this->getRequest()->getPost();
 
-		if(!is_null($cat) && !is_null($or)) {
-			$order["category"] = $cat;
-			$order["order"] = $or;
-			$this->search_sess->order = $order;
-		}
-		else if(isset($this->search_sess->order)){
-			$order = $this->search_sess->order;
-		}
-		else{
-			$order = null;
-		}
-
-		if (isset($this->search_sess->page)) {
-			$last_page = $this->search_sess->page;
-		}
-		else{
-			$last_page = null;
-		}	
-
-		if(isset($this->search_sess->md)){
-			$md = $this->search_sess->md;
-			$quick = false;
-		}
-		else if(isset($this->search_sess->quick)) {
-			$md = $this->search_sess->quick;
-			$quick = true;
-		}
-		else {
-			$md = array();
-			$quick = false;
-		}
-
-		$currpage = isset($page) ? $page : $last_page;
-		$this->search_sess->page = $currpage;
+		if($format == "json") {
 		
-		$count = StoredFile::searchFiles($md, $order, true, null, null, $quick);
+			$datatables = array("sEcho" => $echo);
+			$files = StoredFile::searchFiles($offset, $limit, $post);
 
-		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($count));
-		$paginator->setCurrentPageNumber($currpage);
-		$this->view->paginator = $paginator;
-		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage(), $quick);
+			$datatables = array_merge($datatables, $files);
+
+			die(json_encode($datatables));
+
+		}
     }
 
     public function editFileMdAction()

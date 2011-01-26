@@ -1742,25 +1742,19 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-	public static function searchFiles($md, $order=NULL, $count=false, $page=null, $limit=null, $quick=false)
+	public static function searchFiles($offset, $limit, $data)
 	{
 		global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
 
-		$match = array(
-			"0" => "ILIKE",
-			"1" => "=",
-			"2" => "<",
-			"3" => "<=",
-			"4" => ">",
-			"5" => ">=",
-			"6" => "!=",
-		);
+		$columnsDisplayed = explode(",", $data["sColumns"]);
+
+		if($data["sSearch"] !== "")
+			$searchTerms = explode(" ", $data["sSearch"]);
 
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
-        $_SESSION["br"] = "";
         foreach ($g_metadata_xml_to_db_mapping as $key => $val){
-            $_SESSION["br"] .= "key: ".$key." value:".$val.", ";
+
             if($key === "dc:title"){
                 $plSelect .= "name AS ".$val.", ";
                 $fileSelect .= $val.", ";
@@ -1787,22 +1781,104 @@ class StoredFile {
             }
         }
 
-		if($count) {
-			$selector = "SELECT COUNT(*)";
-		}
-		else {
-			$selector = "SELECT *";
-		}
+	
+		$selectorCount = "SELECT COUNT(*)";
+		$selectorRows = "SELECT ". join("," , $columnsDisplayed);
 
-		$from = " FROM ((".$plSelect."PL.id
+		$fromTable = " FROM ((".$plSelect."PL.id
                 FROM ".$CC_CONFIG["playListTable"]." AS PL
 				LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
 
                 UNION
 
-                (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS ";
+                (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
 
-        $sql = $selector." ".$from;
+        $sql = $selectorCount." ".$fromTable;
+		$totalRows = $CC_DBC->getOne($sql);
+
+		//	Where clause
+
+		if(isset($searchTerms)) {
+
+			$searchCols = array();
+
+			for($i=0; $i<$data["iColumns"]; $i++) {
+		
+				if($data["bSearchable_".$i] == "true") {
+					$searchCols[] = $columnsDisplayed[$i];
+				}
+			}
+
+			$outerCond = array();
+
+			foreach($searchTerms as $term) {
+			
+				$innerCond = array();
+
+				foreach($searchCols as $col) {
+
+					$innerCond[] = "{$col}::text ILIKE '%{$term}%'"; 
+				}
+			
+				$outerCond[] = join(" OR ", $innerCond);			
+			}
+
+			$where = join(" AND ", $outerCond);
+
+			$sql = $selectorCount." ".$fromTable." WHERE ".$where;
+			$totalDisplayRows = $CC_DBC->getOne($sql);
+		}
+		
+		// End Where clause
+
+		// Order By clause
+
+		$orderby = array();
+		for($i=0; $i<$data["iSortingCols"]; $i++){
+			$orderby[] = $columnsDisplayed[$data["iSortCol_".$i]]." ".$data["sSortDir_".$i];
+		}
+		$orderby[] = "id";
+		$orderby = join("," , $orderby);
+
+		// End Order By clause
+
+		//ordered by integer as expected by datatables.
+		$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
+
+		if(isset($where)) {
+			$sql = $selectorRows." ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$offset." LIMIT ".$limit;
+		}
+		else {
+			$sql = $selectorRows." ".$fromTable." ORDER BY ".$orderby." OFFSET ".$offset." LIMIT ".$limit;
+		}
+		
+		$results = $CC_DBC->getAll($sql);
+		//echo $results;
+		//echo $sql;
+
+		//put back to default fetch mode.		
+		$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+		if(!isset($totalDisplayRows)) {
+			$totalDisplayRows = $totalRows;
+		}
+
+		return array("iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
+
+		
+		
+
+		/*
+
+		$match = array(
+			"0" => "ILIKE",
+			"1" => "=",
+			"2" => "<",
+			"3" => "<=",
+			"4" => ">",
+			"5" => ">=",
+			"6" => "!=",
+		);
 
 		$or_cond = array();
 		$inner = $quick ? 'OR':'AND';
@@ -1858,8 +1934,9 @@ class StoredFile {
 		}
 		//echo var_dump($md);
 		//echo $sql;
+		*/
 
-		return $CC_DBC->getAll($sql);
+		//return $CC_DBC->getAll($sql);
 	}
 
 }
