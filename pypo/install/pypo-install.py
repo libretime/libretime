@@ -54,10 +54,17 @@ def copy_dir(src_dir, dest_dir):
     print "Copying directory "+src_dir+" to "+dest_dir
     shutil.copytree(src_dir, dest_dir)
                     
-try:
+def get_current_script_dir():
+  current_script_dir = os.path.realpath(__file__)
+  index = current_script_dir.rindex('/')
+  print current_script_dir[0:index]
+  return current_script_dir[0:index]
 
+
+try:
+  current_script_dir = get_current_script_dir()
   print "Terminating any existing pypo processes"
-  os.system("python ./pypo-stop.py")
+  os.system("python %s/pypo-stop.py"% current_script_dir)
   time.sleep(5)
 
   # Create users
@@ -79,19 +86,19 @@ try:
   create_path(BASE_PATH+"archive")
   
   print "Copying pypo files"
-  shutil.copy("../scripts/silence.mp3", BASE_PATH+"files/basic")
+  shutil.copy("%s/../scripts/silence.mp3"%current_script_dir, BASE_PATH+"files/basic")
   
   if platform.architecture()[0] == '64bit':
       print "Installing 64-bit liquidsoap binary"
-      shutil.copy("../liquidsoap/liquidsoap64", "../liquidsoap/liquidsoap")
+      shutil.copy("%s/../liquidsoap/liquidsoap64"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
   elif platform.architecture()[0] == '32bit':
       print "Installing 32-bit liquidsoap binary"
-      shutil.copy("../liquidsoap/liquidsoap32", "../liquidsoap/liquidsoap")
+      shutil.copy("%s/../liquidsoap/liquidsoap32"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
   else:
       print "Unknown system architecture."
       sys.exit(1)
   
-  copy_dir("..", BASE_PATH+"bin/")
+  copy_dir("%s/.."%current_script_dir, BASE_PATH+"bin/")
   
   print "Setting permissions"
   os.system("chmod -R 755 "+BASE_PATH)
@@ -100,30 +107,30 @@ try:
   print "Installing daemontool script pypo-fetch"
   create_path("/etc/service/pypo-fetch")
   create_path("/etc/service/pypo-fetch/log")
-  shutil.copy("pypo-daemontools-fetch.sh", "/etc/service/pypo-fetch/run")
-  shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-fetch/log/run")
+  shutil.copy("%s/pypo-daemontools-fetch.sh"%current_script_dir, "/etc/service/pypo-fetch/run")
+  shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-fetch/log/run")
   os.system("chmod -R 755 /etc/service/pypo-fetch")
   os.system("chown -R pypo:pypo /etc/service/pypo-fetch")
   
   print "Installing daemontool script pypo-push"
   create_path("/etc/service/pypo-push")
   create_path("/etc/service/pypo-push/log")
-  shutil.copy("pypo-daemontools-push.sh", "/etc/service/pypo-push/run")
-  shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-push/log/run")
+  shutil.copy("%s/pypo-daemontools-push.sh"%current_script_dir, "/etc/service/pypo-push/run")
+  shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-push/log/run")
   os.system("chmod -R 755 /etc/service/pypo-push")
   os.system("chown -R pypo:pypo /etc/service/pypo-push")
 
   print "Installing daemontool script pypo-liquidsoap"
   create_path("/etc/service/pypo-liquidsoap")  
   create_path("/etc/service/pypo-liquidsoap/log")  
-  shutil.copy("pypo-daemontools-liquidsoap.sh", "/etc/service/pypo-liquidsoap/run")
-  shutil.copy("pypo-daemontools-logger.sh", "/etc/service/pypo-liquidsoap/log/run")
+  shutil.copy("%s/pypo-daemontools-liquidsoap.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/run")
+  shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/log/run")
   os.system("chmod -R 755 /etc/service/pypo-liquidsoap")
   os.system("chown -R pypo:pypo /etc/service/pypo-liquidsoap")
 
   print "Waiting for processes to start..."
   time.sleep(5)
-  os.system("python ./pypo-start.py")
+  os.system("python %s/pypo-start.py" % (get_current_script_dir()))
   time.sleep(2)
 
   found = True
