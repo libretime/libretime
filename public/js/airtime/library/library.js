@@ -1,3 +1,4 @@
+//used by jjmenu
 function getId() { 
 	var tr_id =  $(this.triggerElement).attr("id");
 	tr_id = tr_id.split("_");
@@ -11,15 +12,19 @@ function getType() {
 
 	return tr_id[0];
 }
+//end functions used by jjmenu
 
 function deleteItem(type, id) {
-	var tr_id;
+	var tr_id, tr, dt;
 
 	tr_id = type+"_"+id;
+	tr = $("#"+tr_id);
 
-	$("#library_display tr#" +tr_id).remove();
+	dt = $("#library_display").dataTable();
+	dt.fnDeleteRow( tr );
 }
 
+//callbacks called by jjmenu
 function deleteAudioClip(json) {
 	if(json.message) {  
 		alert(json.message);	
@@ -37,6 +42,7 @@ function deletePlaylist(json) {
 
 	deleteItem("pl", json.id);
 }
+//end callbacks called by jjmenu
 
 function addLibraryItemEvents() {
 
@@ -45,7 +51,7 @@ function addLibraryItemEvents() {
 			helper: 'clone' 
 		});
 
-	$('#library_display tr:not(:first-child)')
+	$('#library_display tbody tr')
 		.jjmenu("rightClick", 
 			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],  
 			{id: getId, type: getType}, 
@@ -89,8 +95,8 @@ function setUpLibrary() {
 			/* Album */		{ "sName": "album_title" },
 			/* Track */		{ "sName": "track_number" },
 			/* Length */	{ "sName": "length" },
-			/* Type */		{ "sName": "type" }
-		]
-
+			/* Type */		{ "sName": "ftype", "bSearchable": false }
+		],
+		"aaSorting": [[2,'asc']]
 	} );
 }

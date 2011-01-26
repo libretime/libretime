@@ -133,11 +133,12 @@ class LibraryController extends Zend_Controller_Action
 		$echo = $this->_getParam('sEcho');
 		$offset = $this->_getParam('iDisplayStart');
 		$limit = $this->_getParam('iDisplayLength');
+		$post = $this->getRequest()->getPost();
 
 		if($format == "json") {
 		
 			$datatables = array("sEcho" => $echo);
-			$files = StoredFile::searchFiles($offset, $limit);
+			$files = StoredFile::searchFiles($offset, $limit, $post);
 
 			$datatables = array_merge($datatables, $files);
 

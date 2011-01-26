@@ -37,7 +37,7 @@ $pages = array(
 				'resource'	=>	'plupload'
 		    ),
 			array(
-		        'label'      => 'Search',
+		        'label'      => 'Search (not working right now)',
 		        'module'     => 'default',
 		        'controller' => 'Search',
 		        'action'     => 'index',
