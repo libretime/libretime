@@ -1,7 +1,6 @@
 var estimatedSchedulePosixTime = -1;
-var schedulePosixTime;
 
-var currentRemoteTimeOffset;
+var localRemoteTimeOffset;
 
 var previousSongs = new Array();
 var currentSong = new Array();
@@ -9,15 +8,33 @@ var nextSongs = new Array();
 
 var currentElem;
 
-var updateInterval = 5000;
+var serverUpdateInterval = 5000;
+var uiUpdateInterval = 200;
 
 var songEndFunc;
 
+var showStartPosixTime = 0;
+var showEndPosixTime = 0;
+var showLengthMs = 1;
+
+/* boolean flag to let us know if we should prepare to execute a function
+ * that flips the playlist to the next song. This flags purpose is to
+ * make sure the function is only executed once*/
+var nextSongPrepare = true;
+
+/* Another script can register its function here
+ * when it wishes to know when a song ends. */
 function registerSongEndListener(func){
 	songEndFunc = func;
 }
 
+function notifySongEndListener(){
+    if (typeof songEndFunc == "function")
+        songEndFunc();
+}
 
+/* Takes an input parameter of milliseconds and converts these into
+ * the format HH:MM:SS */
 function convertToHHMMSS(timeInMS){
 	var time = parseInt(timeInMS);
 	
@@ -72,58 +89,64 @@ function getTrackInfo(song){
 
 function secondsTimer(){
 	var date = new Date();
-	estimatedSchedulePosixTime = date.getTime() - currentRemoteTimeOffset;
+	estimatedSchedulePosixTime = date.getTime() - localRemoteTimeOffset;
 	updateProgressBarValue();
 }
 
-/* Called every 0.2 seconds. */
+function updateGlobalValues(obj){
+    showStartPosixTime = obj.showStartPosixTime;
+    showEndPosixTime = obj.showEndPosixTime;
+    showLengthMs = showEndPosixTime - showStartPosixTime;
+}
+
+function newSongStart(){
+    nextSongPrepare = true;
+	currentSong[0] = nextSongs.shift();
+    updateGlobalValues(currentSong[0]);
+    updatePlaybar();
+    
+    notifySongEndListener();
+}
+
+/* Called every "uiUpdateInterval" mseconds. */
 function updateProgressBarValue(){
 	if (estimatedSchedulePosixTime != -1){
+        if (showStartPosixTime != 0){
+            var showPercentDone = (estimatedSchedulePosixTime - showStartPosixTime)/showLengthMs*100;
+            if (showPercentDone < 0 || showPercentDone > 100){
+                showPercentDone = 0;
+            }
+            $('#showprogressbar').progressBar(showPercentDone);
+        }
+
+        var songPercentDone = 0;
 		if (currentSong.length > 0){
-			var percentDone = (estimatedSchedulePosixTime - currentSong[0].songStartPosixTime)/currentSong[0].songLengthMs*100;
-			if (percentDone <= 100){
-				$('#progressbar').progressBar(percentDone);
-			} else {
-				if (nextSongs.length > 0){
-					currentSong[0] = nextSongs.shift();
-				} else {
-					currentSong = new Array();
-				}
-				$('#progressbar').progressBar(0);
-			}
-			
-			
-			percentDone = (estimatedSchedulePosixTime - currentSong[0].showStartPosixTime)/currentSong[0].showLengthMs*100;
-			//$('#showprogressbar').text(currentSong[0].showLengthMs);
-			$('#showprogressbar').progressBar(percentDone);
-		} else {
-			$('#progressbar').progressBar(0);
-			
-			//calculate how much time left to next song if there is any
-			if (nextSongs.length > 0){
-				if (nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime < updateInterval){
-					setTimeout(temp, nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime);
-				}
+			songPercentDone = (estimatedSchedulePosixTime - currentSong[0].songStartPosixTime)/currentSong[0].songLengthMs*100;
+			if (songPercentDone < 0 || songPercentDone > 100){
+				songPercentDone = 0;
+                currentSong = new Array();
 			}
 		}
-		updatePlaylist();
+        $('#progressbar').progressBar(songPercentDone);
+
+        //calculate how much time left to next song if there is any
+        if (nextSongs.length > 0 && nextSongPrepare){
+            if (nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime < serverUpdateInterval){
+                nextSongPrepare = false;
+                setTimeout(newSongStart, nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime);
+            }
+        }
+        
+		updatePlaybar();
 	}
-	setTimeout(secondsTimer, 200);
+	setTimeout(secondsTimer, uiUpdateInterval);
 }
 
-function temp(){
-	currentSong[0] = nextSongs[0];
-    updatePlaylist();
-    
-    songEndFunc();
-}
-
-function updatePlaylist(){
+function updatePlaybar(){
 	/* Column 0 update */
-	$('#listen');
-	
 	
 	/* Column 1 update */
+    $('#playlist').empty();
 	for (var i=0; i<currentSong.length; i++){
 		//alert (currentSong[i].playlistname);
 		//$('#show').text(currentSong[i].show);
@@ -132,6 +155,9 @@ function updatePlaylist(){
 	}
 	
 	/* Column 2 update */
+    $('#previous').empty();
+    $('#current').empty();
+    $('#next').empty();
 	for (var i=0; i<previousSongs.length; i++){
 		$('#previous').text(getTrackInfo(previousSongs[i]));
 	}
@@ -143,51 +169,75 @@ function updatePlaylist(){
 	}
 	
 	/* Column 3 update */
+    $('#start').empty();
+    $('#end').empty();
+    $('#songposition').empty();
+    $('#songlength').empty();
+    $('#showposition').empty();
+    $('#showlength').empty();
 	for (var i=0; i<currentSong.length; i++){
 		$('#start').text(currentSong[i].starts.substring(currentSong[i].starts.indexOf(" ")+1));
 		$('#end').text(currentSong[i].ends.substring(currentSong[i].starts.indexOf(" ")+1));
-		$('#songposition').text(convertToHHMMSS(estimatedSchedulePosixTime - currentSong[i].songStartPosixTime));
+
+        /* Get rid of the millisecond accuracy so that the second counters for both
+         * show and song change at the same time. */
+        var songStartRoughly = parseInt(currentSong[i].songStartPosixTime/1000)*1000;
+        
+		$('#songposition').text(convertToHHMMSS(estimatedSchedulePosixTime - songStartRoughly));
 		$('#songlength').text(currentSong[i].clip_length);
-		$('#showposition').text(convertToHHMMSS(estimatedSchedulePosixTime - currentSong[i].showStartPosixTime));
-		$('#showlength').text(convertToHHMMSS(currentSong[i].showEndPosixTime - currentSong[i].showStartPosixTime));
-	}	
+	}
+    if (estimatedSchedulePosixTime < showEndPosixTime){
+        $('#showposition').text(convertToHHMMSS(estimatedSchedulePosixTime - showStartPosixTime));
+        $('#showlength').text(convertToHHMMSS(showEndPosixTime - showStartPosixTime));
+    }
 }
 
-function calcAdditionalData(currentItem){
+function calcAdditionalData(currentItem, bUpdateGlobalValues){
 	for (var i=0; i<currentItem.length; i++){
 		currentItem[i].songStartPosixTime = convertDateToPosixTime(currentItem[i].starts);
 		currentItem[i].songEndPosixTime = convertDateToPosixTime(currentItem[i].ends);
 		currentItem[i].songLengthMs = currentItem[i].songEndPosixTime - currentItem[i].songStartPosixTime;
-		
-		currentItem[i].showStartPosixTime = convertDateToPosixTime(currentItem[i].starts.substring(0, currentItem[i].starts.indexOf(" ")) + " " + currentItem[i].start_time);
-		currentItem[i].showEndPosixTime = convertDateToPosixTime(currentItem[i].starts.substring(0, currentItem[i].starts.indexOf(" ")) + " " + currentItem[i].end_time);
-		currentItem[i].showLengthMs = currentItem[i].showEndPosixTime - currentItem[i].showStartPosixTime;
+
+        currentItem[i].showStartPosixTime = convertDateToPosixTime(currentItem[i].starts.substring(0, currentItem[i].starts.indexOf(" ")) + " " + currentItem[i].start_time);
+        currentItem[i].showEndPosixTime = convertDateToPosixTime(currentItem[i].starts.substring(0, currentItem[i].starts.indexOf(" ")) + " " + currentItem[i].end_time);
+
+        //check if there is a rollover past midnight
+        if (currentItem[i].start_time > currentItem[i].end_time){
+            //start_time is greater than end_time, so we rolled through midnight.
+            currentItem[i].showEndPosixTime += (1000*3600*24); //add 24 hours
+        }
+
+        currentItem[i].showLengthMs = currentItem[i].showEndPosixTime - currentItem[i].showStartPosixTime;
+            
+        if (bUpdateGlobalValues){
+            updateGlobalValues(currentItem[i]);
+        }
 	}
 }
 
 function parseItems(obj){
-	schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
-
-	if (estimatedSchedulePosixTime == -1){
-		var date = new Date();
-		currentRemoteTimeOffset = date.getTime() - schedulePosixTime;
-		estimatedSchedulePosixTime = schedulePosixTime;
-	}
+	var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
 	
 	previousSongs = obj.previous;
 	currentSong = obj.current;
 	nextSongs = obj.next;
 
-	calcAdditionalData(previousSongs);
-	calcAdditionalData(currentSong);
-	calcAdditionalData(nextSongs);
+	calcAdditionalData(previousSongs, false);
+	calcAdditionalData(currentSong, true);
+	calcAdditionalData(nextSongs, false);
+
+	if (estimatedSchedulePosixTime == -1){
+		var date = new Date();
+		localRemoteTimeOffset = date.getTime() - schedulePosixTime;
+		estimatedSchedulePosixTime = schedulePosixTime;
+	}
 }
 
 function getScheduleFromServer(){
 	$.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
 			parseItems(data.entries);
 		  }});
-	setTimeout(getScheduleFromServer, updateInterval);
+	setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
 
 function init(elemID) {
@@ -196,7 +246,10 @@ function init(elemID) {
 	$('#progressbar').progressBar(0, {showText : false});
 	$('#showprogressbar').progressBar(0, {showText : false, barImage:'/js/progressbar/images/progressbg_red.gif'});
 
+    //begin producer "thread"
 	getScheduleFromServer();
+
+    //begin consumer "thread"
 	updateProgressBarValue();
 	
 }

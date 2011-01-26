@@ -42,6 +42,13 @@ def notify(m)
   print("./notify.sh --data='#{!pypo_data}' --media-id=#{m['media_id']}")
 end
 
+def crossfade(s)
+  s = fade.in(type="log", s)
+  s = fade.out(type="log", s)
+  fader = fun (a,b) -> add(normalize=false,[b,a])
+  cross(fader,s)
+end
+
 server.register(namespace="scheduler","push", scheduler_push)
 server.register(namespace="scheduler","flip", fun (s) -> begin scheduler_flip() end)
 server.register(namespace="vars", "pypo_data", fun (s) ->  begin pypo_data := s "Done" end)
@@ -50,6 +57,8 @@ default = single("/opt/pypo/files/basic/silence.mp3")
 radio = fallback(track_sensitive=false, [switch(track_sensitive=false, [(fun () -> !active_queue==1, scheduler_q0), (fun () -> !active_queue==0, scheduler_q1)]), default])
 
 #radio = on_metadata(notify, radio)
+
+radio = crossfade(radio)
 
 #out(radio)
 clock(id="clock_icecast",

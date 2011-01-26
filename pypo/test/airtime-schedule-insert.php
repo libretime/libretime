@@ -42,19 +42,6 @@ $pl = new Playlist();
 $pl->create($playlistName);
 
 
-// Add a media clip
-$mediaFile = StoredFile::findByOriginalName("ACDC_-_Back_In_Black-sample.ogg");
-if (is_null($mediaFile)) {
-    echo "Adding test audio clip to the database.\n";
-    $v = array("filepath" => __DIR__."/../../audio_samples/OpSound/ACDC_-_Back_In_Black-sample.ogg");
-    $mediaFile = StoredFile::Insert($v);
-    if (PEAR::isError($mediaFile)) {
-    	var_dump($mediaFile);
-    	exit();
-    }
-}
-$pl->addAudioClip($mediaFile->getId());
-
 $mediaFile = StoredFile::findByOriginalName("Peter_Rudenko_-_Opening.mp3");
 if (is_null($mediaFile)) {
     echo "Adding test audio clip to the database.\n";
