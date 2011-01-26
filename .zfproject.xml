@@ -80,6 +80,7 @@
         <controllerFile controllerName="Nowplaying">
           <actionMethod actionName="index"/>
           <actionMethod actionName="getDataGridData"/>
+          <actionMethod actionName="livestream"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory>
@@ -257,6 +258,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="User">
             <viewScriptFile forActionName="getHosts"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Nowplaying">
+            <viewScriptFile forActionName="livestream"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

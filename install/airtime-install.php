@@ -44,7 +44,7 @@ foreach($lines as $key => $line){
 fclose($fp);
  
 
-echo "******************************* Install Begin ********************************\n";
+echo "******************************** Install Begin *********************************\n";
 
 echo " *** Database Installation ***\n";
 
@@ -225,9 +225,13 @@ install_setDirPermissions($CC_CONFIG["storageDir"]);
 echo " * Importing sample audio clips \n";
 $command = __DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null";
 @exec($command, $output, $results);
-echo "****************************** Database Install Complete ******************************\n";
 
 $command = "python ".__DIR__."/../pypo/install/pypo-install.py";
+
+$output = array();
 @exec($command, $output, $results);
-//print_r($output);
+foreach ($output as $value){
+    echo $value."\n";
+}
+echo "******************************* Install Complete *******************************\n";
 ?>

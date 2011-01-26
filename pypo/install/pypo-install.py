@@ -150,9 +150,7 @@ try:
   print output
 
   if not found:
-    print "Install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
-  else:
-    print "Install complete."
+    print "Pypo install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
 except Exception, e:
   print "exception:" + str(e)
   
