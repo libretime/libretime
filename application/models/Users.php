@@ -39,39 +39,37 @@ class User {
 		
 	}
 
-	public static function getUsers($type=NULL, $search=NULL) {
+	public static function getUsers($type, $search=NULL) {
 		global $CC_DBC;
 
 		$sql;
 
-		$sql_gen = "SELECT id, login FROM cc_subjs ";
+		$sql_gen = "SELECT id AS value, login AS label FROM cc_subjs ";
 		$sql = $sql_gen;
+		
+		if(is_array($type)) {
+			for($i=0; $i<count($type); $i++) {
+				$type[$i] = "type = '{$type[$i]}'";
+			}
+			$sql_type = join(" OR ", $type);
+		}
+		else {
+			$sql_type = "type = {$type}";
+		}
+		
+		$sql = $sql_gen ." WHERE (". $sql_type.")";
 	
-		if(!is_null($type)){
-			
-			if(is_array($type)) {
-				for($i=0; $i<count($type); $i++) {
-					$type[$i] = "type = '{$type[$i]}'";
-				}
-				$sql_type = join(" OR ", $type);
-			}
-			else {
-				$sql_type = "type = {$type}";
-			}
-			
-			$sql = $sql_gen ." WHERE ". $sql_type;
-		}
 		if(!is_null($search)) {
-			$like = "login ILIKE '{$search}'";
-		}
+			$like = "login ILIKE '%{$search}%'";
 
-		$sql = $sql . " ORDER BY login";
+			$sql = $sql . " AND ".$like." ORDER BY login";
+		}
 	
 		return  $CC_DBC->GetAll($sql);	
 	}
 
-	public static function getHosts() {
-		return User::getUsers(array('H', 'A'));
+	public static function getHosts($search=NULL) {
+		return User::getUsers(array('H', 'A'), $search);
 	}
 
 }

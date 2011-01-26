@@ -38,13 +38,22 @@ function createDateInput(el, onSelect) {
 
 function autoSelect(event, ui) {
 
-	$("#hosts-"+ui.item.value).attr("checked", "checked");
+	$("#add_show_hosts-"+ui.item.value).attr("checked", "checked");
 	event.preventDefault();
 }
 
 function findHosts(request, callback) {
-	var search = request.term;
+	var search, url;
 
+	url = "/User/get-hosts";
+	search = request.term;
+
+	$.post(url, 
+		{format: "json", term: search}, 
+		
+		function(json) {
+			callback(json.hosts);
+		});
 	
 }
 

@@ -5,7 +5,9 @@ class UserController extends Zend_Controller_Action
 
     public function init()
     {
-        /* Initialize action controller here */
+    	$ajaxContext = $this->_helper->getHelper('AjaxContext');
+        $ajaxContext->addActionContext('get-hosts', 'json')
+                    ->initContext();
     }
 
     public function indexAction()
@@ -32,9 +34,10 @@ class UserController extends Zend_Controller_Action
 
     public function getHostsAction()
     {
-        $this->view->hosts = User::getHosts();
-    }
+		$search = $this->_getParam('term');
 
+        $this->view->hosts = User::getHosts($search);
+    }
 
 }
 
