@@ -1,14 +1,21 @@
+<?php if($this->partialCounter-1 > 0): ?>
+<li id="crossfade_<?php echo $this->partialCounter-2 ?>-<?php echo $this->partialCounter-1 ?>" class="crossfade" style="display: none"></li>
+<?php endif; ?>
+
 <li class="ui-state-default" id="spl_<?php echo $this->partialCounter-1 ?>">
-	<div>
-		<span class="ui-icon ui-icon-play"></span>
-	</div>
-	<div>
-		<span class="spl_title"><?php echo $this->CcFiles['track_title'] ?></span>
+	<a href="#" class="big_play"><span class="ui-icon ui-icon-play"></span></a>
+	<div class="text-row top">
 		<span class="spl_playlength"><?php echo $this->cliplength ?></span>
-		<span class="ui-icon ui-icon-close"></span>
+		<span class="spl_title"><?php echo $this->CcFiles['track_title'] ?></span>
+	</div>
+	<div class="text-row">
 		<span class="spl_artist"><?php echo $this->CcFiles['artist_name'] ?></span>
-		<?php if($this->partialCounter-1 > 0): ?>
-		<div id="fade_<?php echo $this->partialCounter-1 ?>" class="spl_fade_control ui-state-default ui-corner-all">Fade</div>
-		<?php endif; ?>
-	<div>
+	</div>
+	<?php if($this->partialCounter-1 > 0): ?>
+	<div id="fade_<?php echo $this->partialCounter-1 ?>" class="spl_fade_control ui-state-default"></div>
+	<?php endif; ?>
+	<span class="ui-icon ui-icon-closethick"></span>
 </li>
+
+<li id="cues_<?php echo $this->partialCounter-1 ?>" class="crossfade" style="display: none"></li>
+

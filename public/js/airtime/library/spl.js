@@ -177,30 +177,57 @@ function highlightActive(el) {
 function openFadeEditor(event) {
 	event.stopPropagation();
 
+	$('li[id ^= "cues"]').hide();
+	$('li[id ^= "crossfade"]').hide();
+
+	if($(this).hasClass("ui-state-active")) {
+		$(this).removeClass("ui-state-active");
+		return;
+	}
+
 	var pos, url;
 	
 	pos = $(this).attr("id").split("_").pop();
-	url = '/Playlist/set-fade/format/json';
-	url = url + '/pos/' + pos;
+	url = '/Playlist/set-fade';
 
 	highlightActive(this);
 
-	$.get(url, setEditorContent);
+	$.get(url, {format: "json", pos: pos}, function(json){
+
+		$("#crossfade_"+(pos-1)+"-"+pos)
+			.empty()
+			.append(json.html)
+			.show();
+	});
 }
 
 function openCueEditor(event) {
 	event.stopPropagation();
 
 	var pos, url, li;
-	
+
+	$('li[id ^= "cues"]').hide();
+	$('li[id ^= "crossfade"]').hide();
+
 	li = $(this).parent().parent();
+
+	if(li.hasClass("ui-state-active")) {
+		li.removeClass("ui-state-active");
+		return;
+	}
+
 	pos = li.attr("id").split("_").pop();
-	url = '/Playlist/set-cue/format/json';
-	url = url + '/pos/' + pos;
+	url = '/Playlist/set-cue';
 
 	highlightActive(li);
 
-	$.get(url, setEditorContent);	
+	$.get(url, {format: "json", pos: pos}, function(json){
+		
+		$("#cues_"+pos)
+			.empty()
+			.append(json.html)
+			.show();
+	});	
 }
 
 function setSPLContent(json) {
@@ -219,7 +246,7 @@ function setSPLContent(json) {
 	$("#spl_editor")
 		.empty();
 
-	$(".ui-icon-close").click(deleteSPLItem);
+	$("#spl_sortable .ui-icon-closethick").click(deleteSPLItem);
 	$(".spl_fade_control").click(openFadeEditor);
 	$(".spl_playlength").click(openCueEditor);
 
@@ -248,12 +275,11 @@ function deleteSPLItem(event){
 
 	event.stopPropagation();
 
-	pos = $(this).parent().parent().attr("id").split("_").pop();
+	pos = $(this).parent().attr("id").split("_").pop();
 
-	url = '/Playlist/delete-item/format/json';
-	url = url + '/pos/' + pos;
+	url = '/Playlist/delete-item';
 
-	$.post(url, setSPLContent);
+	$.post(url, {format: "json", pos: pos}, setSPLContent);
 }
 
 function moveSPLItem(event, ui) {	
@@ -341,8 +367,8 @@ function openDiffSPL(json) {
 
 function setUpSPL() {
 
-	$("#spl_sortable").sortable();
-    $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
+	//$("#spl_sortable").sortable();
+    //$("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
 	$("#spl_new")
 		.button()
@@ -356,7 +382,7 @@ function setUpSPL() {
 		.button()
 		.click(deleteSPL);
 
-	$(".ui-icon-close").click(deleteSPLItem);
+	$("#spl_sortable .ui-icon-closethick").click(deleteSPLItem);
 	$(".spl_fade_control").click(openFadeEditor);
 	$(".spl_playlength").click(openCueEditor);
 

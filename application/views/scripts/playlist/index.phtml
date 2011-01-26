@@ -1,21 +1,24 @@
-<button id="spl_new">New</button>
+<button id="spl_new" class="ui-button" role="button" aria-disabled="false">New</button>
 <?php if (isset($this->pl)) : ?>
-<button id="spl_delete">Delete</button>
-<button id="spl_close">Done Editing</button>
+<button id="spl_delete" class="ui-button" role="button" aria-disabled="false">Delete</button>
+<button id="spl_close" class="ui-button right-floated" role="button" aria-disabled="false">Done Editing</button>
 <?php endif; ?>
 
 <?php if (isset($this->pl)) : ?>
-<div id="spl_name"><?php echo $this->pl->getName(); ?></div>
-<div id="spl_length"><?php echo $this->pl->getLength(); ?></div>
+<h3 id="spl_name"><?php echo $this->pl->getName(); ?></h3>
+<h4 id="spl_length"><?php echo $this->pl->getLength(); ?></h4>
 
-<ul id="spl_sortable">
-	<?php if (count($this->pl->getContents())) : ?>
-	<?php echo $this->partialLoop('playlist/sidebarcontent.phtml', $this->pl->getContents()); ?>
-	<?php else : ?>
-	<li class="spl_empty">Empty playlist</li> 
-	<?php endif; ?>
-</ul>
-<div id="spl_editor"></div>
+<div class="clear"></div>
+<div class="" style="clear:both; float:none; width:100%;">
+	<ul id="spl_sortable">
+		<?php if (count($this->pl->getContents())) : ?>
+		<?php echo $this->partialLoop('playlist/sidebarcontent.phtml', $this->pl->getContents()); ?>
+		<?php else : ?>
+		<li class="spl_empty">Empty playlist</li> 
+		<?php endif; ?>
+	</ul>
+</div>
+
 <div id="spl_error" class="ui-state-error ui-corner-all" style="display: none"></div>
 <?php else : ?>
 <div>No open playlist</div>

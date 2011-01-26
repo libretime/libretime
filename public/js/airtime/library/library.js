@@ -73,6 +73,8 @@ function dtDrawCallback() {
 
 function setUpLibrary() {
 
+	$('.tabs').tabs();
+
 	$('#library_display').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
@@ -97,6 +99,7 @@ function setUpLibrary() {
 			/* Length */	{ "sName": "length" },
 			/* Type */		{ "sName": "ftype", "bSearchable": false }
 		],
-		"aaSorting": [[2,'asc']]
+		"aaSorting": [[2,'asc']],
+		"sPaginationType": "full_numbers"
 	} );
 }

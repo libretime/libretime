@@ -33,6 +33,8 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/airtime/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
+		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
+		$this->view->headLink()->appendStylesheet('/css/styles.css');
 	
 		$this->_helper->layout->setLayout('library');
 
@@ -125,7 +127,7 @@ class LibraryController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
 
-		$this->view->headLink()->appendStylesheet('/css/datatables/css/demo_table.css');
+		$this->view->headLink()->appendStylesheet('/css/media_library.css');
 		
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
