@@ -9,7 +9,8 @@ class Application_Model_Nowplaying
 		$current = Schedule::GetCurrentlyPlaying($timeNow);
 		$next = Schedule::GetNextItems($timeNow, 10);
 		
-		$columnHeaders = array(array("sTitle"=>"Date"), 
+		$columnHeaders = array(array("sTitle"=>"type", "bVisible"=>false),
+					array("sTitle"=>"Date"), 
 					array("sTitle"=>"Start"),
 					array("sTitle"=>"End"),
 					array("sTitle"=>"Duration"),
@@ -21,19 +22,19 @@ class Application_Model_Nowplaying
 		$rows = array();
 		
 		foreach ($previous as $item){
-			array_push($rows, array($item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , "y"));
+			array_push($rows, array("p", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
+				$item["album_title"], "x" , $item["name"]));
 		}
 		
 		
 		foreach ($current as $item){
-			array_push($rows, array($item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , "y"));		
+			array_push($rows, array("c", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
+				$item["album_title"], "x" , $item["name"]));		
 		}
 		
 		foreach ($next as $item){
-			array_push($rows, array($item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , "y"));
+			array_push($rows, array("n", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
+				$item["album_title"], "x" , $item["name"]));
 		}
 		
 		return array("columnHeaders"=>$columnHeaders, "rows"=>$rows);

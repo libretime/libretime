@@ -416,7 +416,7 @@ class Show {
 		// must not delete shows in the past
 		if($show->getDbRepeats() && ($start_epoch < $date_epoch)) {
 
-			$sql = "DELETE FROM cc_show_days WHERE first_show >= '{$date}' ";
+			$sql = "DELETE FROM cc_show_days WHERE first_show >= '{$date}' AND show_id = '{$this->_showId}'";
 			$CC_DBC->query($sql);
 			//echo $sql;
 
@@ -426,7 +426,7 @@ class Show {
 			$CC_DBC->query($sql);
 			//echo $sql;
 
-			$sql = "SELECT DISTINCT group_id FROM cc_schedule WHERE starts > '{$timestamp}' ";
+			$sql = "SELECT group_id FROM cc_show_schedule WHERE show_day >= '{$date}' AND show_id = '{$this->_showId}'";
 		    $rows = $CC_DBC->GetAll($sql);
 			
 			$sql_opt = array();

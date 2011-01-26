@@ -230,4 +230,7 @@ echo "************************************\n";
 echo "* StorageServer Uninstall Complete *\n";
 echo "************************************\n";
 
+$command = "python ".__DIR__."/../pypo/install/pypo-uninstall.py";
+@exec($command, $output, $results);
+//print_r($output);
 ?>

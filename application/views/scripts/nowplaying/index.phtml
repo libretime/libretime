@@ -1,6 +1,10 @@
 <div id='demo'></div>
 <script>
 function getDateText(obj){
+	//var str = "";
+	//for (s in obj.oSettings)
+	//	str += s + ", ";
+	//alert(str);
 	var str = obj.aData[ obj.iDataColumn ];
 	if (str.indexOf(" ") != -1){
 		return changeTimePrecision(str.substring(0, str.indexOf(" ")));
@@ -30,13 +34,26 @@ function changeTimePrecision(str){
 	return str;
 }
 
-function createDataGrid(obj){
+function notifySongEnd(){
+	for (row in datagridData.rows){
+		if (row[0] == "c")
+			row[0] = "p";
+		if (row[0] == "n"){
+			row[0] = "c";
+			break;
+		}
+	}
 	
-	obj.columnHeaders[0]["fnRender"] = getDateText;
-	obj.columnHeaders[1]["fnRender"] = getTimeText;
-	obj.columnHeaders[2]["fnRender"] = getTimeText;
-	obj.columnHeaders[3]["fnRender"] = changeTimePrecisionInit;
+	createDataGrid();
+}
+
+function createDataGrid(){
 	
+	datagridData.columnHeaders[1]["fnRender"] = getDateText;
+	datagridData.columnHeaders[2]["fnRender"] = getTimeText;
+	datagridData.columnHeaders[3]["fnRender"] = getTimeText;
+	datagridData.columnHeaders[4]["fnRender"] = changeTimePrecisionInit;
+		
 	$('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
 	$('#example').dataTable( {
 		"bSort" : false,
@@ -44,16 +61,34 @@ function createDataGrid(obj){
 		"bFilter": true,
 		"bInfo": false,
 		"bLengthChange": false,
-		"aaData": obj.rows,
-		"aoColumns": obj.columnHeaders
+		"aaData": datagridData.rows,
+		"aoColumns": datagridData.columnHeaders,
+		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+			if (aData[0] == "p"){
+				//$(nRow).attr("style", "background-color:blue;");
+			} else if (aData[0] == "c"){
+				$(nRow).attr("style", "background-color:#61B329;");
+			} else if (aData[0] == "n"){
+			}
+			return nRow;
+		}
 	} );	
 }
 
+var registered = false
+
 function init2(){
 	  $.ajax({ url: "/Nowplaying/get-data-grid-data/format/json", dataType:"json", success:function(data){
-		createDataGrid(data.entries);
+		datagridData = data.entries;
+		createDataGrid();
 	  }});
-	  //setTimeout(init2, 5000);
+	  
+	  if (typeof registerSongEndListener == 'function' && !registered){
+		  registered = true;
+		  registerSongEndListener(notifySongEnd);
+	  }
+	  
+	  setTimeout(init2, 5000);
 }
 
 $(document).ready(function() {
