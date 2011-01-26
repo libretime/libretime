@@ -1,32 +1,17 @@
-<?php 
-	if($this->files) {
-?>
-	<table id="library_display">
-	<tr>
-		<th><span class="title">Title</span></th>
-		<th><span class="artist">Creator</span></th>
-		<th><span class="album">Album</span></th>
-		<th><span class="track">Track</span></th>
-		<th><span class="length">Length</span></th>
-		<th><span class="type">Type</span></th>
-	</tr>
-<?php
-		echo $this->partialLoop('library/libraryTablePartial.phtml', $this->files); 
-?>
-	</table>
-<?php
-	}
-	else {
-		echo "No Results";
-	}
-?>
-
-<?php 
-
-echo $this->paginationControl($this->paginator,
-                                    'Sliding',
-                                    'library/paginator.phtml'); 
-
-
-?>
+<div>
+<table id="library_display">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Title</th>
+			<th>Creator</th>
+			<th>Album</th>
+			<th>Track</th>
+			<th>Length</th>
+			<th>Type</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+</div>
 

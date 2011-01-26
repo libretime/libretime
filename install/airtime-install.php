@@ -225,6 +225,9 @@ install_setDirPermissions($CC_CONFIG["storageDir"]);
 echo " * Importing sample audio clips \n";
 $command = __DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null";
 @exec($command, $output, $results);
-echo "****************************** Install Complete ******************************\n";
+echo "****************************** Database Install Complete ******************************\n";
 
+$command = "python ".__DIR__."/../pypo/install/pypo-install.py";
+@exec($command, $output, $results);
+//print_r($output);
 ?>

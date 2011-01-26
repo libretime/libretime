@@ -22,9 +22,14 @@ def remove_user(username):
     time.sleep(5)
     
     os.system("deluser --remove-home " + username + " 1>/dev/null")
+
+def get_current_script_dir():
+  current_script_dir = os.path.realpath(__file__)
+  index = current_script_dir.rindex('/')
+  return current_script_dir[0:index]
     
 try:
-    os.system("python ./pypo-stop.py")
+    os.system("python %s/pypo-stop.py" % get_current_script_dir())
     
     print "Removing log directories"
     remove_path("/var/log/pypo")

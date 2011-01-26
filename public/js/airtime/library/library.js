@@ -1,3 +1,4 @@
+//used by jjmenu
 function getId() { 
 	var tr_id =  $(this.triggerElement).attr("id");
 	tr_id = tr_id.split("_");
@@ -11,15 +12,19 @@ function getType() {
 
 	return tr_id[0];
 }
+//end functions used by jjmenu
 
 function deleteItem(type, id) {
-	var tr_id;
+	var tr_id, tr, dt;
 
 	tr_id = type+"_"+id;
+	tr = $("#"+tr_id);
 
-	$("#library_display tr#" +tr_id).remove();
+	dt = $("#library_display").dataTable();
+	dt.fnDeleteRow( tr );
 }
 
+//callbacks called by jjmenu
 function deleteAudioClip(json) {
 	if(json.message) {  
 		alert(json.message);	
@@ -37,14 +42,16 @@ function deletePlaylist(json) {
 
 	deleteItem("pl", json.id);
 }
+//end callbacks called by jjmenu
 
 function addLibraryItemEvents() {
+
 	$('#library_display tr[id ^= "au"]')
 		.draggable({ 
 			helper: 'clone' 
 		});
 
-	$('#library_display tr:not(:first-child)')
+	$('#library_display tbody tr')
 		.jjmenu("rightClick", 
 			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],  
 			{id: getId, type: getType}, 
@@ -52,37 +59,44 @@ function addLibraryItemEvents() {
 
 }
 
-function setLibraryContents(data){
-	$("#library_display tr:not(:first-child)").remove();
-	$("#library_display").append(data);
+function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+	var id = aData[6].substring(0,2) + "_" + aData[0];
 
-	addLibraryItemEvents()	
+	$(nRow).attr("id", id);
+
+	return nRow;
+}
+
+function dtDrawCallback() {
+	addLibraryItemEvents();
 }
 
 function setUpLibrary() {
 
-	$("#library_display tr:first-child span.title").data({'ob': 'dc:title', 'order' : 'asc'});
-	$("#library_display tr:first-child span.artist").data({'ob': 'dc:creator', 'order' : 'desc'});
-	$("#library_display tr:first-child span.album").data({'ob': 'dc:source', 'order' : 'asc'});
-	$("#library_display tr:first-child span.track").data({'ob': 'ls:track_num', 'order' : 'asc'});
-	$("#library_display tr:first-child span.length").data({'ob': 'dcterms:extent', 'order' : 'asc'});
-	$("#library_display tr:first-child span.type").data({'ob': 'dcterms:extent', 'order' : 'asc'});
-
-	$("#library_display tr:first-child span").click(function(){
-		var url = "/Library/contents/format/html",
-			ob = $(this).data('ob'),
-			order = $(this).data('order');
-
-		//toggle order for next click.
-		if(order === 'asc') {
-			$(this).data('order', 'desc');
-		} 
-		else {
-			$(this).data('order', 'asc');
-		}
-
-		$.post(url, {ob: ob, order: order}, setLibraryContents);
-	});
-
-	addLibraryItemEvents()
+	$('#library_display').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "/Library/contents/format/json",
+		"fnServerData": function ( sSource, aoData, fnCallback ) {
+			$.ajax( {
+				"dataType": 'json', 
+				"type": "POST", 
+				"url": sSource, 
+				"data": aoData, 
+				"success": fnCallback
+			} );
+		},
+		"fnRowCallback": dtRowCallback,
+		"fnDrawCallback": dtDrawCallback,
+		"aoColumns": [ 
+			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false },
+			/* Title */		{ "sName": "track_title" },
+			/* Creator */	{ "sName": "artist_name" },
+			/* Album */		{ "sName": "album_title" },
+			/* Track */		{ "sName": "track_number" },
+			/* Length */	{ "sName": "length" },
+			/* Type */		{ "sName": "ftype", "bSearchable": false }
+		],
+		"aaSorting": [[2,'asc']]
+	} );
 }

@@ -11,7 +11,7 @@ function startDpSelect(dateText, inst) {
 	time = dateText.split("-");
 	date = new Date(time[0], time[1] - 1, time[2]);
 
-	$("#end_date").datepicker("option", "minDate", date);
+	$("#add_show_end_date").datepicker("option", "minDate", date);
 }
 
 function endDpSelect(dateText, inst) {
@@ -20,7 +20,7 @@ function endDpSelect(dateText, inst) {
 	time = dateText.split("-");
 	date = new Date(time[0], time[1] - 1, time[2]);
 
-	$("#start_date").datepicker( "option", "maxDate", date);
+	$("#add_show_start_date").datepicker( "option", "maxDate", date);
 }
 
 function createDateInput(el, onSelect) {
@@ -38,13 +38,22 @@ function createDateInput(el, onSelect) {
 
 function autoSelect(event, ui) {
 
-	$("#hosts-"+ui.item.value).attr("checked", "checked");
+	$("#add_show_hosts-"+ui.item.value).attr("checked", "checked");
 	event.preventDefault();
 }
 
 function findHosts(request, callback) {
-	var search = request.term;
+	var search, url;
 
+	url = "/User/get-hosts";
+	search = request.term;
+
+	$.post(url, 
+		{format: "json", term: search}, 
+		
+		function(json) {
+			callback(json.hosts);
+		});
 	
 }
 

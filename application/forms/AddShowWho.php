@@ -15,7 +15,7 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
 		$hosts = User::getHosts();
 
 		foreach ($hosts as $host) {
-			$options[$host['id']] = $host['login'];
+			$options[$host['value']] = $host['label'];
 		}
 
 		//Add hosts selection

@@ -76,7 +76,7 @@ function secondsTimer(){
 	updateProgressBarValue();
 }
 
-/* Called every 1 second. */
+/* Called every 0.2 seconds. */
 function updateProgressBarValue(){
 	if (estimatedSchedulePosixTime != -1){
 		if (currentSong.length > 0){
@@ -91,6 +91,11 @@ function updateProgressBarValue(){
 				}
 				$('#progressbar').progressBar(0);
 			}
+			
+			
+			percentDone = (estimatedSchedulePosixTime - currentSong[0].showStartPosixTime)/currentSong[0].showLengthMs*100;
+			//$('#showprogressbar').text(currentSong[0].showLengthMs);
+			$('#showprogressbar').progressBar(percentDone);
 		} else {
 			$('#progressbar').progressBar(0);
 			
@@ -119,40 +124,32 @@ function updatePlaylist(){
 	
 	
 	/* Column 1 update */
-	$('#show').empty();
-	$('#playlist').empty();
-	$('#host').empty();
 	for (var i=0; i<currentSong.length; i++){
 		//alert (currentSong[i].playlistname);
-		//$('#show').append(currentSong[i].show);
-		$('#playlist').append(currentSong[i].playlistname);
-		//$('#host').append(currentSong[i].creator);
+		//$('#show').text(currentSong[i].show);
+		$('#playlist').text(currentSong[i].name);
+		//$('#host').text(currentSong[i].creator);
 	}
 	
 	/* Column 2 update */
-	$('#previous').empty();
-	$('#current').empty();
-	$('#next').empty();
 	for (var i=0; i<previousSongs.length; i++){
-		$('#previous').append(getTrackInfo(previousSongs[i]));
+		$('#previous').text(getTrackInfo(previousSongs[i]));
 	}
 	for (var i=0; i<currentSong.length; i++){
-		$('#current').append(getTrackInfo(currentSong[i]));
+		$('#current').text(getTrackInfo(currentSong[i]));
 	}
 	for (var i=0; i<nextSongs.length; i++){
-		$('#next').append(getTrackInfo(nextSongs[i]));
+		$('#next').text(getTrackInfo(nextSongs[i]));
 	}
 	
 	/* Column 3 update */
-	$('#start').empty();
-	$('#end').empty();	
-	$('#songposition').empty();
-	$('#songlength').empty();
 	for (var i=0; i<currentSong.length; i++){
-		$('#start').append(currentSong[i].starts.substring(currentSong[i].starts.indexOf(" ")+1));
-		$('#end').append(currentSong[i].ends.substring(currentSong[i].starts.indexOf(" ")+1));
-		$('#songposition').append(convertToHHMMSS(estimatedSchedulePosixTime - currentSong[i].songStartPosixTime));
-		$('#songlength').append(currentSong[i].clip_length);
+		$('#start').text(currentSong[i].starts.substring(currentSong[i].starts.indexOf(" ")+1));
+		$('#end').text(currentSong[i].ends.substring(currentSong[i].starts.indexOf(" ")+1));
+		$('#songposition').text(convertToHHMMSS(estimatedSchedulePosixTime - currentSong[i].songStartPosixTime));
+		$('#songlength').text(currentSong[i].clip_length);
+		$('#showposition').text(convertToHHMMSS(estimatedSchedulePosixTime - currentSong[i].showStartPosixTime));
+		$('#showlength').text(convertToHHMMSS(currentSong[i].showEndPosixTime - currentSong[i].showStartPosixTime));
 	}	
 }
 
@@ -161,6 +158,10 @@ function calcAdditionalData(currentItem){
 		currentItem[i].songStartPosixTime = convertDateToPosixTime(currentItem[i].starts);
 		currentItem[i].songEndPosixTime = convertDateToPosixTime(currentItem[i].ends);
 		currentItem[i].songLengthMs = currentItem[i].songEndPosixTime - currentItem[i].songStartPosixTime;
+		
+		currentItem[i].showStartPosixTime = convertDateToPosixTime(currentItem[i].starts.substring(0, currentItem[i].starts.indexOf(" ")) + " " + currentItem[i].start_time);
+		currentItem[i].showEndPosixTime = convertDateToPosixTime(currentItem[i].starts.substring(0, currentItem[i].starts.indexOf(" ")) + " " + currentItem[i].end_time);
+		currentItem[i].showLengthMs = currentItem[i].showEndPosixTime - currentItem[i].showStartPosixTime;
 	}
 }
 
@@ -193,6 +194,7 @@ function init(elemID) {
 	var currentElem = $("#" + elemID).attr("style", "z-index: 1; width: 100%; left: 0px; right: 0px; bottom: 0px; color: black; min-height: 100px; background-color: #FEF1B5;");
 	
 	$('#progressbar').progressBar(0, {showText : false});
+	$('#showprogressbar').progressBar(0, {showText : false, barImage:'/js/progressbar/images/progressbg_red.gif'});
 
 	getScheduleFromServer();
 	updateProgressBarValue();
