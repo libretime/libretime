@@ -21,9 +21,7 @@ if(exec("whoami") != "root"){
 }
 
 
-echo "***************************\n";
-echo "* StorageServer Uninstall *\n";
-echo "***************************\n";
+echo "******************************* Uninstall Begin ********************************\n";
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/installInit.php');
@@ -226,11 +224,11 @@ if ($results == 0) {
 airtime_uninstall_delete_files($CC_CONFIG['storageDir']);
 
 
-echo "************************************\n";
-echo "* StorageServer Uninstall Complete *\n";
-echo "************************************\n";
-
 $command = "python ".__DIR__."/../pypo/install/pypo-uninstall.py";
+$output = array();
 @exec($command, $output, $results);
-//print_r($output);
+foreach ($output as $value){
+    echo $value."\n";
+}
+echo "****************************** Uninstall Complete ******************************\n";
 ?>
