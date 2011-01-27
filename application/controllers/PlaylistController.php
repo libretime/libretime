@@ -164,11 +164,12 @@ class PlaylistController extends Zend_Controller_Action
     public function addItemAction()
     {    
 		$id = $this->_getParam('id');
+		$pos = $this->_getParam('pos', null);
 
 		if (!is_null($id)) {
 			
 			$pl = $this->getPlaylist();
-			$res = $pl->addAudioClip($id);
+			$res = $pl->addAudioClip($id, $pos);
 
 			if (PEAR::isError($res)) {
 				$this->view->message = $res->getMessage();
