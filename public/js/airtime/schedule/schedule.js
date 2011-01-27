@@ -11,14 +11,10 @@ function closeDialog(event, ui) {
 
 
 function setScheduleDialogHtml(json) {
+	var dt;
 
-	$("#schedule_playlist_choice")
-		.empty()
-		.append(json.choice)
-		.find('li')
-			.draggable({ 
-				helper: 'clone' 
-			});
+	dt = $('#schedule_playlists').dataTable();
+	dt.fnDraw();
 
 	$("#schedule_playlist_chosen")
 		.empty()
@@ -70,6 +66,26 @@ function setScheduleDialogEvents(dialog) {
 	});
 }
 
+function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+	var id = "pl_" + aData[0];
+
+	$(nRow).attr("id", id);
+
+	return nRow;
+}
+
+function addDtPlaylistEvents() {
+	
+	$('#schedule_playlists tbody tr')
+		.draggable({ 
+			helper: 'clone' 
+		});
+}
+
+function dtDrawCallback() {
+	addDtPlaylistEvents();
+}
+
 function makeScheduleDialog(dialog, json) {
 	
 	dialog.find("#schedule_playlist_search").keyup(function(){
@@ -91,12 +107,34 @@ function makeScheduleDialog(dialog, json) {
 		});
 	});
 
-	dialog.find('#schedule_playlist_choice')
-		.append(json.choice)
-		.find('li')
-			.draggable({ 
-				helper: 'clone' 
-			});
+	dialog.find('#schedule_playlists').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "/Schedule/find-playlists/format/json",
+		"fnServerData": function ( sSource, aoData, fnCallback ) {
+			$.ajax( {
+				"dataType": 'json', 
+				"type": "POST", 
+				"url": sSource, 
+				"data": aoData, 
+				"success": fnCallback
+			} );
+		},
+		"fnRowCallback": dtRowCallback,
+		"fnDrawCallback": dtDrawCallback,
+		"aoColumns": [ 
+			/* Id */			{ "sName": "pl.id", "bSearchable": false, "bVisible": false },
+			/* Description */	{ "sName": "pl.description", "bVisible": false },
+			/* Name */			{ "sName": "pl.name" },
+			/* Creator */		{ "sName": "pl.creator" },
+			/* Length */		{ "sName": "plt.length" },
+			/* Editing */		{ "sName": "sub.login" }
+		],
+		"aaSorting": [[2,'asc']],
+		"sPaginationType": "full_numbers",
+		"bJQueryUI": true,
+		"bAutoWidth": false
+	});
 
 	dialog.find("#schedule_playlist_chosen")
 		.append(json.chosen)
