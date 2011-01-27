@@ -101,6 +101,7 @@ function setUpLibrary() {
 		],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
-		"bJQueryUI": true
+		"bJQueryUI": true,
+		"bAutoWidth": false
 	} );
 }
