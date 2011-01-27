@@ -29,8 +29,11 @@ function registerSongEndListener(func){
 }
 
 function notifySongEndListener(){
-    if (typeof songEndFunc == "function")
-        songEndFunc();
+    if (typeof songEndFunc == "function"){
+        //create a slight pause in execution to allow the browser
+		//to update the display.
+		setTimeout(songEndFunc, 50);
+	}
 }
 
 function getTrackInfo(song){
