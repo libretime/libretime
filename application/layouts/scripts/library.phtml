@@ -9,9 +9,8 @@
 </head>
 <body>
 
+<div id="nowplayingbar"><?= $this->partial('partialviews/header.phtml') ?></div>
 <div class="logo"></div>
-
-<div id="master-panel"></div>
 
 <?php 	$partial = array('menu.phtml', 'default');
 		$this->navigation()->menu()->setPartial($partial); ?>

@@ -59,6 +59,22 @@ function convertToHHMMSS(timeInMS){
 	return "" + hours + ":" + minutes + ":" + seconds;
 }
 
+function convertDateToHHMMSS(epochTime){
+	var d = new Date(epochTime);
+	
+	var hours = d.getUTCHours().toString();
+	var minutes = d.getUTCMinutes().toString();
+	var seconds = d.getUTCSeconds().toString();
+	
+	if (hours.length == 1)
+		hours = "0" + hours;
+	if (minutes.length == 1)
+		minutes = "0" + minutes;
+	if (seconds.length == 1)
+		seconds = "0" + seconds;
+	return "" + hours + ":" + minutes + ":" + seconds;
+}
+
 function convertDateToPosixTime(s){
 	var year = s.substring(0, 4);
 	var month = s.substring(5, 7);
@@ -81,8 +97,10 @@ function getTrackInfo(song){
 		str += song.track_title;
 	if (song.artist_name != null)
 		str += " - " + song.artist_name;
-	if (song.album_title != null)
-		str += " - " + song.album_title;
+	//if (song.album_title != null)
+		//str += " - " + song.album_title;
+		
+	str += ","
 		
 	return str;
 }
@@ -115,8 +133,11 @@ function updateProgressBarValue(){
             var showPercentDone = (estimatedSchedulePosixTime - showStartPosixTime)/showLengthMs*100;
             if (showPercentDone < 0 || showPercentDone > 100){
                 showPercentDone = 0;
-            }
-            $('#showprogressbar').progressBar(showPercentDone);
+				$('#on-air-info').attr("class", "on-air-info off");
+            } else {
+				$('#on-air-info').attr("class", "on-air-info on");
+			}
+			$('#progress-show').attr("style", "width:"+showPercentDone+"%");
         }
 
         var songPercentDone = 0;
@@ -127,7 +148,7 @@ function updateProgressBarValue(){
                 currentSong = new Array();
 			}
 		}
-        $('#progressbar').progressBar(songPercentDone);
+        $('#progress-bar').attr("style", "width:"+songPercentDone+"%");
 
         //calculate how much time left to next song if there is any
         if (nextSongs.length > 0 && nextSongPrepare){
@@ -144,35 +165,28 @@ function updateProgressBarValue(){
 
 function updatePlaybar(){
 	/* Column 0 update */
-	
-	/* Column 1 update */
-    $('#playlist').empty();
-	for (var i=0; i<currentSong.length; i++){
-		//alert (currentSong[i].playlistname);
-		//$('#show').text(currentSong[i].show);
-		$('#playlist').text(currentSong[i].name);
-		//$('#host').text(currentSong[i].creator);
+    $('#previous').text("none,");
+    $('#prev-length').text("n/a,");
+    $('#current').text("none,");
+    $('#next').text("none,");
+    $('#next-length').text("n/a");
+	if (previousSongs.length > 0){
+		$('#previous').text(getTrackInfo(previousSongs[previousSongs.length-1]));
+		$('#prev-length').text(previousSongs[previousSongs.length-1].clip_length);
+	}
+	if (currentSong.length > 0){
+		$('#current').text(getTrackInfo(currentSong[0]));
+	}
+	if (nextSongs.length > 0){
+		$('#next').text(getTrackInfo(nextSongs[0]));
+		$('#next-length').text(previousSongs[previousSongs.length-1].clip_length);
 	}
 	
-	/* Column 2 update */
-    $('#previous').empty();
-    $('#current').empty();
-    $('#next').empty();
-	for (var i=0; i<previousSongs.length; i++){
-		$('#previous').text(getTrackInfo(previousSongs[i]));
-	}
-	for (var i=0; i<currentSong.length; i++){
-		$('#current').text(getTrackInfo(currentSong[i]));
-	}
-	for (var i=0; i<nextSongs.length; i++){
-		$('#next').text(getTrackInfo(nextSongs[i]));
-	}
-	
-	/* Column 3 update */
     $('#start').empty();
     $('#end').empty();
-    $('#songposition').empty();
-    $('#songlength').empty();
+    $('#time-elapsed').empty();
+    $('#time-remaining').empty();
+    $('#song-length').empty();
     $('#showposition').empty();
     $('#showlength').empty();
 	for (var i=0; i<currentSong.length; i++){
@@ -181,15 +195,26 @@ function updatePlaybar(){
 
         /* Get rid of the millisecond accuracy so that the second counters for both
          * show and song change at the same time. */
-        var songStartRoughly = parseInt(currentSong[i].songStartPosixTime/1000)*1000;
+        var songStartRoughly = parseInt(Math.round(currentSong[i].songStartPosixTime/1000))*1000;
+        var songEndRoughly = parseInt(Math.round(currentSong[i].songEndPosixTime/1000))*1000;
         
-		$('#songposition').text(convertToHHMMSS(estimatedSchedulePosixTime - songStartRoughly));
-		$('#songlength').text(currentSong[i].clip_length);
-	}
-    if (estimatedSchedulePosixTime < showEndPosixTime){
-        $('#showposition').text(convertToHHMMSS(estimatedSchedulePosixTime - showStartPosixTime));
-        $('#showlength').text(convertToHHMMSS(showEndPosixTime - showStartPosixTime));
+		$('#time-elapsed').text(convertToHHMMSS(estimatedSchedulePosixTime - songStartRoughly));
+		$('#time-remaining').text(convertToHHMMSS(songEndRoughly - estimatedSchedulePosixTime));
+		$('#song-length').text(currentSong[i].clip_length);
+	}	
+	
+	/* Column 1 update */
+    $('#playlist').text("Unknown");
+	for (var i=0; i<currentSong.length; i++){
+		$('#playlist').text(currentSong[i].name);
+	}	
+	$('#show-length').empty();
+	if (estimatedSchedulePosixTime < showEndPosixTime){
+        $('#show-length').text(convertDateToHHMMSS(showStartPosixTime) + " - " + convertDateToHHMMSS(showEndPosixTime));
     }
+	
+	/* Column 2 update */
+	$('#time').text(convertDateToHHMMSS(estimatedSchedulePosixTime));
 }
 
 function calcAdditionalData(currentItem, bUpdateGlobalValues){
@@ -243,8 +268,8 @@ function getScheduleFromServer(){
 function init(elemID) {
 	var currentElem = $("#" + elemID).attr("style", "z-index: 1; width: 100%; left: 0px; right: 0px; bottom: 0px; color: black; min-height: 100px; background-color: #FEF1B5;");
 	
-	$('#progressbar').progressBar(0, {showText : false});
-	$('#showprogressbar').progressBar(0, {showText : false, barImage:'/js/progressbar/images/progressbg_red.gif'});
+	//$('#progressbar').progressBar(0, {showText : false});
+	//$('#showprogressbar').progressBar(0, {showText : false, barImage:'/js/progressbar/images/progressbg_red.gif'});
 
     //begin producer "thread"
 	getScheduleFromServer();

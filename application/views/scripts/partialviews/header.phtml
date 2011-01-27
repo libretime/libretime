@@ -1,3 +1,4 @@
+<!--
 <div id='col0' style='float:left; width: 10%; height: 100%;'>
 	<div><a href="Nowplaying/livestream" onClick="return popup(this)">Listen</a></div>
 </div>
@@ -19,6 +20,43 @@
 	<div>End: <span id='end'></span></div>
 	<div><span id='progressbar'></span> <span id='songposition'></span> | <span id='songlength'></span></div>
 	<div><span id='showprogressbar'></span> <span id='showposition'></span> | <span id='showlength'></span></div>
+</div>
+-->
+<div id="master-panel">
+  <div class="now-playing-block">
+    <div class="text-row"><strong>Previous:</strong> <span id='previous'></span> <span id='prev-length'>04:45</span></div>
+    <div class="now-playing-info song">
+      <div class="time-flow"><span class="time-elapsed" id="time-elapsed">03:05</span><span class="time-remaining" id="time-remaining">01:05</span></div>
+      <span id='current'>Engl - Rammstein</span> <span class="length" id="song-length">04:10</span> </div>
+    <div class="progressbar">
+      <div class="progress-song" id="progress-bar" style="width:0%;"></div>
+    </div>
+    <div class="text-row next-song"><strong>Next:</strong> <span id='next'>Engl - Rammstein</span> <span id='next-length'>03:56</span></div>
+  </div>
+  <div class="show-block">
+    <div class="text-row">&nbsp;</div>
+    <div class="now-playing-info show"> <span id='playlist'>The Fast Show</span> <span class="length" id="show-length">16:00 - 17:00</span> </div>
+    <div class="progressbar">
+      <div class="progress-show" id='progress-show' style="width:0%;"></div>
+    </div>
+  </div>
+  <div class="on-air-block">
+    <div class="on-air-info off" id="on-air-info">ON AIR</div>
+  </div>
+  <div class="time-info-block">
+    <ul>
+      <li>Station time</li>
+      <li class="time" id="time">16:45:16</li>
+      <li class="time-zone">CET</li>
+    </ul>
+  </div>
+  <div class="personal-block">
+    <ul>
+      <li>Signed in:</li>
+      <li class="name">Vladimir Stefanovic</li>
+      <li><a href="/Login/logout">Logout</a></li>
+    </ul>
+  </div>
 </div>
 
 <script type="text/javascript">

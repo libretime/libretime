@@ -56,6 +56,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headScript()->appendFile('/js/libs/stuHover.js','text/javascript');
 		$view->headScript()->appendFile('/js/progressbar/jquery.progressbar.min.js','text/javascript');
 		$view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
+
+        $view->headLink()->appendStylesheet('/css/styles.css');
 	}
 
 }

@@ -60,7 +60,7 @@ radio = fallback(track_sensitive=false, [switch(track_sensitive=false, [(fun () 
 
 radio = crossfade(radio)
 
-#out(radio)
+out(radio)
 clock(id="clock_icecast",
   output.icecast(%mp3,
    host = icecast_host, port = icecast_port,
