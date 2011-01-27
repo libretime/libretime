@@ -100,6 +100,7 @@ function setUpLibrary() {
 			/* Type */		{ "sName": "ftype", "bSearchable": false }
 		],
 		"aaSorting": [[2,'asc']],
-		"sPaginationType": "full_numbers"
+		"sPaginationType": "full_numbers",
+		"bJQueryUI": true
 	} );
 }
