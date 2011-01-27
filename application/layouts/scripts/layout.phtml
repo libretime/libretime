@@ -10,7 +10,12 @@
 <body>
 
 <div id="nowplayingbar"><?= $this->partial('partialviews/header.phtml') ?></div>
-<div id="nav"><?php echo $this->navigation()->menu()->setRenderInvisible(true) ?></div>
+<div class="logo"></div>
+
+<?php 	$partial = array('menu.phtml', 'default');
+		$this->navigation()->menu()->setPartial($partial); ?>
+
+<?php echo $this->navigation()->menu() ?>
  
 <div id="content"><?php echo $this->layout()->content ?></div>
 </body>

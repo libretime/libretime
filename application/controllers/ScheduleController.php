@@ -40,7 +40,8 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
 		$this->view->headLink()->appendStylesheet('/css/schedule.css');
-
+		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
+		$this->view->headLink()->appendStylesheet('/css/styles.css');
 
 		$eventDefaultMenu = array();
 		//$eventDefaultMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
@@ -81,6 +82,8 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
 		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet('/css/add-show.css');
+		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
+		$this->view->headLink()->appendStylesheet('/css/styles.css');
 
         $request = $this->getRequest();
         $formWhat = new Application_Form_AddShowWhat();

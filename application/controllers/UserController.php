@@ -12,11 +12,14 @@ class UserController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
+
     }
 
     public function addUserAction()
     {
+		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
+		$this->view->headLink()->appendStylesheet('/css/styles.css');
+		
         $request = $this->getRequest();
         $form = new Application_Form_AddUser();
  

@@ -168,6 +168,8 @@ class PluploadController extends Zend_Controller_Action
 		$view->headScript()->appendFile('/js/airtime/library/plupload.js','text/javascript');
 
 		$view->headLink()->appendStylesheet('/css/plupload.queue.css');
+		$view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
+		$view->headLink()->appendStylesheet('/css/styles.css');
     }
 
 
