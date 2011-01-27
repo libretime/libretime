@@ -1,41 +1,17 @@
-<!--
-<div id='col0' style='float:left; width: 10%; height: 100%;'>
-	<div><a href="Nowplaying/livestream" onClick="return popup(this)">Listen</a></div>
-</div>
-	
-<div id='col1' style='float:left; width: 25%; height: 100%;'>
-	<div>Show: <span id='show'></span></div>
-	<div>Playlist: <span id='playlist'></span></div>
-	<div>Host: <span id='host'></span></div>
-</div>
-	
-<div id='col2' style='float:left; width: 30%; height: 100%;'>
-	<div>Previous: <span id='previous'></span></div>
-	<div>Current: <span id='current'></span></div>
-	<div>Upcoming: <span id='next'></span></div>
-</div>
-
-<div id='list0' style='float:left; width: 35%; height: 100%;'>
-	<div>Start: <span id='start'></span></div>
-	<div>End: <span id='end'></span></div>
-	<div><span id='progressbar'></span> <span id='songposition'></span> | <span id='songlength'></span></div>
-	<div><span id='showprogressbar'></span> <span id='showposition'></span> | <span id='showlength'></span></div>
-</div>
--->
 <div id="master-panel">
   <div class="now-playing-block">
-    <div class="text-row"><strong>Previous:</strong> <span id='previous'></span> <span id='prev-length'>04:45</span></div>
+    <div class="text-row"><strong>Previous:</strong> <span id='previous'></span> <span id='prev-length'></span></div>
     <div class="now-playing-info song">
-      <div class="time-flow"><span class="time-elapsed" id="time-elapsed">03:05</span><span class="time-remaining" id="time-remaining">01:05</span></div>
-      <span id='current'>Engl - Rammstein</span> <span class="length" id="song-length">04:10</span> </div>
+      <div class="time-flow"><span class="time-elapsed" id="time-elapsed"></span><span class="time-remaining" id="time-remaining"></span></div>
+      <span id='current'></span> <span class="length" id="song-length"></span> </div>
     <div class="progressbar">
       <div class="progress-song" id="progress-bar" style="width:0%;"></div>
     </div>
-    <div class="text-row next-song"><strong>Next:</strong> <span id='next'>Engl - Rammstein</span> <span id='next-length'>03:56</span></div>
+    <div class="text-row next-song"><strong>Next:</strong> <span id='next'></span> <span id='next-length'></span></div>
   </div>
   <div class="show-block">
     <div class="text-row">&nbsp;</div>
-    <div class="now-playing-info show"> <span id='playlist'>The Fast Show</span> <span class="length" id="show-length">16:00 - 17:00</span> </div>
+    <div class="now-playing-info show"> <span id='playlist'></span> <span class="length" id="show-length"></span> </div>
     <div class="progressbar">
       <div class="progress-show" id='progress-show' style="width:0%;"></div>
     </div>
@@ -46,7 +22,7 @@
   <div class="time-info-block">
     <ul>
       <li>Station time</li>
-      <li class="time" id="time">16:45:16</li>
+      <li class="time" id="time"></li>
       <li class="time-zone">CET</li>
     </ul>
   </div>
