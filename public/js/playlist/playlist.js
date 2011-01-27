@@ -165,11 +165,11 @@ function updateProgressBarValue(){
 
 function updatePlaybar(){
 	/* Column 0 update */
-    $('#previous').text("none,");
+    $('#previous').text("Prev Song: N/A");
     $('#prev-length').text("n/a,");
-    $('#current').text("none,");
-    $('#next').text("none,");
-    $('#next-length').text("n/a");
+    $('#current').text("Current Song: N/A");
+    $('#next').text("Next Song: N/A");
+    $('#next-length').empty();
 	if (previousSongs.length > 0){
 		$('#previous').text(getTrackInfo(previousSongs[previousSongs.length-1]));
 		$('#prev-length').text(previousSongs[previousSongs.length-1].clip_length);
@@ -204,7 +204,7 @@ function updatePlaybar(){
 	}	
 	
 	/* Column 1 update */
-    $('#playlist').text("Unknown");
+    $('#playlist').text("Current Show: N/A");
 	for (var i=0; i<currentSong.length; i++){
 		$('#playlist').text(currentSong[i].name);
 	}	
@@ -266,15 +266,26 @@ function getScheduleFromServer(){
 }
 
 function init(elemID) {
-	var currentElem = $("#" + elemID).attr("style", "z-index: 1; width: 100%; left: 0px; right: 0px; bottom: 0px; color: black; min-height: 100px; background-color: #FEF1B5;");
-	
-	//$('#progressbar').progressBar(0, {showText : false});
-	//$('#showprogressbar').progressBar(0, {showText : false, barImage:'/js/progressbar/images/progressbg_red.gif'});
-
     //begin producer "thread"
 	getScheduleFromServer();
 
     //begin consumer "thread"
-	updateProgressBarValue();
-	
+	updateProgressBarValue();	
 }
+
+function popup(mylink){
+	if (!window.focus)
+		return true;
+	var href;
+	if (typeof(mylink) == 'string')
+	   href=mylink;
+	else
+	   href=mylink.href;
+	window.open(href, "player", 'width=300,height=100,scrollbars=yes');
+	return false;
+}
+
+$(document).ready(function() {
+	//initialize the playlist bar in the included playlist.js
+	init("nowplayingbar");
+});

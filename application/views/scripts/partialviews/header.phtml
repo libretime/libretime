@@ -34,24 +34,3 @@
     </ul>
   </div>
 </div>
-
-<script type="text/javascript">
-function popup(mylink){
-	if (!window.focus)
-		return true;
-	var href;
-	if (typeof(mylink) == 'string')
-	   href=mylink;
-	else
-	   href=mylink.href;
-	window.open(href, "player", 'width=300,height=100,scrollbars=yes');
-	return false;
-}
-</script>
-
-<script type="text/javascript">
-$(document).ready(function() {
-	//initialize the playlist bar in the included playlist.js
-	init("nowplayingbar");
-});
-</script>
