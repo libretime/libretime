@@ -17,11 +17,15 @@ $pages = array(
 	),
 	array(
 		'label'      => 'Schedule',
-		'module'     => 'default',
-		'controller' => 'Schedule',
-		'action'     => 'index',
-		'resource'   => 'schedule',
+		'uri' => 'javascript:void(null)',
 		'pages'      => array(
+		    array(
+		        'label'      => 'View',
+		        'module'     => 'default',
+		        'controller' => 'Schedule',
+		        'action'     => 'index',
+				'resource'	=>	'schedule'
+		    ),
 		    array(
 		        'label'      => 'Add Show',
 		        'module'     => 'default',
@@ -55,8 +59,7 @@ $pages = array(
 	),
 	array(
 		'label'      => 'Configure',
-		'module'     => 'default',
-		'controller' => 'Nowplaying',
+		'uri' => 'javascript:void(null)',
 		'pages'      => array(
 		    array(
 		        'label'      => 'Preferences',

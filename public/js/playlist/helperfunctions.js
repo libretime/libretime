@@ -1,0 +1,98 @@
+/* Takes an input parameter of milliseconds and converts these into
+ * the format HH:MM:SS */
+function convertToHHMMSS(timeInMS){
+	var time = parseInt(timeInMS);
+	
+	var hours = parseInt(time / 3600000);
+	time -= 3600000*hours;
+		
+	var minutes = parseInt(time / 60000);
+	time -= 60000*minutes;
+	
+	var seconds = parseInt(time / 1000);
+	
+	hours = hours.toString();
+	minutes = minutes.toString();
+	seconds = seconds.toString();
+	
+	if (hours.length == 1)
+		hours = "0" + hours;
+	if (minutes.length == 1)
+		minutes = "0" + minutes;
+	if (seconds.length == 1)
+		seconds = "0" + seconds;
+	if (hours == "00")
+		return minutes + ":" + seconds;
+	else
+		return "" + hours + ":" + minutes + ":" + seconds;
+}
+
+function convertToHHMMSSmm(timeInMS){
+	var time = parseInt(timeInMS);
+	
+	var hours = parseInt(time / 3600000);
+	time -= 3600000*hours;
+		
+	var minutes = parseInt(time / 60000);
+	time -= 60000*minutes;
+	
+	var seconds = parseInt(time / 1000);
+	time -= 1000*seconds;
+	
+	var ms = parseInt(time);
+	
+	hours = hours.toString();
+	minutes = minutes.toString();
+	seconds = seconds.toString();
+	ms = ms.toString();
+	
+	if (hours.length == 1)
+		hours = "0" + hours;
+	if (minutes.length == 1)
+		minutes = "0" + minutes;
+	if (seconds.length == 1)
+		seconds = "0" + seconds;
+		
+	if (ms.length == 3)
+		ms = ms.substring(0, 2);
+	else if (ms.length == 2)
+		ms = "0" + ms.substring(0,1);
+	else if (ms.length == 1)
+		ms = "00";
+		
+	if (hours == "00")
+		return minutes + ":" + seconds + "." + ms;
+	else
+		return "" + hours + ":" + minutes + ":" + seconds+ "." + ms;
+}
+
+function convertDateToHHMMSS(epochTime){
+	var d = new Date(epochTime);
+	
+	var hours = d.getUTCHours().toString();
+	var minutes = d.getUTCMinutes().toString();
+	var seconds = d.getUTCSeconds().toString();
+	
+	if (hours.length == 1)
+		hours = "0" + hours;
+	if (minutes.length == 1)
+		minutes = "0" + minutes;
+	if (seconds.length == 1)
+		seconds = "0" + seconds;
+	return "" + hours + ":" + minutes + ":" + seconds;
+}
+
+function convertDateToPosixTime(s){
+	var year = s.substring(0, 4);
+	var month = s.substring(5, 7);
+	var day = s.substring(8, 10);
+	var hour = s.substring(11, 13);
+	var minute = s.substring(14, 16);
+	var sec = s.substring(17, 19);
+	var msec = 0;
+	if (s.length >= 20){
+		msec = s.substring(20);
+	}
+
+	return Date.UTC(year, month, day, hour, minute, sec, msec);
+}
