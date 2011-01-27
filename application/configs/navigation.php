@@ -49,14 +49,6 @@ $pages = array(
 		'action'     => 'plupload',
 		'resource'	=>	'plupload'
 	),
-	
-	array(
-		'label'      => 'Add User',
-		'module'     => 'default',
-		'controller' => 'user',
-		'action'     => 'add-user',
-		'resource'	=>	'user'	
-	),
 	array(
 		'label'      => 'Configure',
 		'uri' => 'javascript:void(null)',
@@ -67,10 +59,12 @@ $pages = array(
 		        'controller' => 'Nowplaying'
 		    ),
 			array(
-		        'label'      => 'Manage Users',
-		        'module'     => 'default',
-		        'controller' => 'Nowplaying'
-		    )
+				'label'      => 'Manage Users',
+				'module'     => 'default',
+				'controller' => 'user',
+				'action'     => 'add-user',
+				'resource'	=>	'user'	
+			)
 		)
 	)
 	/*
