@@ -255,19 +255,31 @@ function setSPLContent(json) {
 
 function addSPLItem(event, ui){
 	
-	var url, tr, id;
+	var url, tr, id, items, draggableOffset, elOffset, pos;
 
 	tr = ui.helper; 	
     	
 	if(tr.get(0).tagName === 'LI')
 		return;
+
+	items = $(event.currentTarget).children();
+
+	draggableOffset = ui.offset;
+
+	$.each(items, function(i, val){
+		elOffset = $(this).offset();
+
+		if(elOffset.top > draggableOffset.top) {
+			pos = $(this).attr('id').split("_").pop();
+			return false;
+		}
+	});
 	
 	id = tr.attr('id').split("_").pop();
 
-	url = '/Playlist/add-item/format/json';
-	url = url + '/id/'+id;
+	url = '/Playlist/add-item';
 
-	$.post(url, setSPLContent);
+	$.post(url, {format: "json", id: id, pos: pos}, setSPLContent);
 }
 
 function deleteSPLItem(event){
@@ -367,8 +379,8 @@ function openDiffSPL(json) {
 
 function setUpSPL() {
 
-	//$("#spl_sortable").sortable();
-    //$("#spl_sortable" ).bind( "sortstop", moveSPLItem);
+	$("#spl_sortable").sortable();
+    $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
 	$("#spl_new")
 		.button()
