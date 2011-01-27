@@ -1,8 +1,7 @@
+var registered = false;
+var datagridData;
+
 function getDateText(obj){
-	//var str = "";
-	//for (s in obj.oSettings)
-	//	str += s + ", ";
-	//alert(str);
 	var str = obj.aData[ obj.iDataColumn ];
 	if (str.indexOf(" ") != -1){
 		return changeTimePrecision(str.substring(0, str.indexOf(" ")));
@@ -33,11 +32,12 @@ function changeTimePrecision(str){
 }
 
 function notifySongEnd(){
-	for (row in datagridData.rows){
-		if (row[0] == "c")
-			row[0] = "p";
-		if (row[0] == "n"){
-			row[0] = "c";
+	//alert("length " + datagridData.rows.length);
+	for (var i=0; i<datagridData.rows.length; i++){
+		if (datagridData.rows[i][0] == "c")
+			datagridData.rows[i][0] = "p";
+		if (datagridData.rows[i][0] == "n"){
+			datagridData.rows[i][0] = "c";
 			break;
 		}
 	}
@@ -72,8 +72,6 @@ function createDataGrid(){
 		}
 	} );
 }
-
-var registered = false
 
 function init2(){
 	  $.ajax({ url: "/Nowplaying/get-data-grid-data/format/json", dataType:"json", success:function(data){

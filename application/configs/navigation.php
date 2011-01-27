@@ -9,12 +9,43 @@
 */
 $pages = array(
 	array(
-		'label'      => 'Home',
-		'module'     => 'default',
+		'label'      => 'Now Playing',
+		'module'     => 'Nowplaying',
 		'controller' => 'index',
 		'action'     => 'index',
 		'order'      => -100 // make sure home is the first page
 	),
+	array(
+		'label'      => 'Schedule',
+		'module'     => 'default',
+		'controller' => 'Schedule',
+		'action'     => 'index',
+		'resource'   => 'schedule',
+		'pages'      => array(
+		    array(
+		        'label'      => 'Add Show',
+		        'module'     => 'default',
+		        'controller' => 'Schedule',
+		        'action'     => 'add-show-dialog',
+				'resource'	=>	'schedule'
+		    )
+		)
+	),
+	array(
+		'label'      => 'Playlist Builder',
+		'module'     => 'default',
+		'controller' => 'Library',
+		'action'     => 'index',
+		'resource'	=>	'library'
+	),
+	array(
+		'label'      => 'Add Audio',
+		'module'     => 'default',
+		'controller' => 'Plupload',
+		'action'     => 'plupload',
+		'resource'	=>	'plupload'
+	),
+	
 	array(
 		'label'      => 'Add User',
 		'module'     => 'default',
@@ -22,6 +53,24 @@ $pages = array(
 		'action'     => 'add-user',
 		'resource'	=>	'user'	
 	),
+	array(
+		'label'      => 'Configure',
+		'module'     => 'default',
+		'controller' => 'Nowplaying',
+		'pages'      => array(
+		    array(
+		        'label'      => 'Preferences',
+		        'module'     => 'default',
+		        'controller' => 'Nowplaying'
+		    ),
+			array(
+		        'label'      => 'Manage Users',
+		        'module'     => 'default',
+		        'controller' => 'Nowplaying'
+		    )
+		)
+	)
+	/*
 	array(
 		'label'      => 'Media Library',
 		'module'     => 'default',
@@ -44,36 +93,8 @@ $pages = array(
 				'resource'	=>	'search'
 		    )
 		)
-	),
-	array(
-		'label'      => 'Now Playing',
-		'module'     => 'default',
-		'controller' => 'Nowplaying',
-		'action'     => 'index'
-	),
-	array(
-		'label'      => 'Schedule',
-		'module'     => 'default',
-		'controller' => 'Schedule',
-		'action'     => 'index',
-		'resource'   => 'schedule',
-		'pages'      => array(
-		    array(
-		        'label'      => 'Add Show',
-		        'module'     => 'default',
-		        'controller' => 'Schedule',
-		        'action'     => 'add-show-dialog',
-				'resource'	=>	'schedule'
-		    )
-		)
-	),
-	array(
-		'label'      => 'Logout',
-		'module'     => 'default',
-		'controller' => 'Login',
-		'action'     => 'logout',
-		'resource'	=>	'login'
 	)
+	*/
 );
  
 // Create container from array

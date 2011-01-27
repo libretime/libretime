@@ -46,9 +46,9 @@ function convertToHHMMSS(timeInMS){
 	
 	var seconds = parseInt(time / 1000);
 	
-	hours = "" + hours;
-	minutes = "" + minutes;
-	seconds = "" + seconds;
+	hours = hours.toString();
+	minutes = minutes.toString();
+	seconds = seconds.toString();
 	
 	if (hours.length == 1)
 		hours = "0" + hours;
@@ -56,7 +56,49 @@ function convertToHHMMSS(timeInMS){
 		minutes = "0" + minutes;
 	if (seconds.length == 1)
 		seconds = "0" + seconds;
-	return "" + hours + ":" + minutes + ":" + seconds;
+	if (hours == "00")
+		return minutes + ":" + seconds;
+	else
+		return "" + hours + ":" + minutes + ":" + seconds;
+}
+
+function convertToHHMMSSmm(timeInMS){
+	var time = parseInt(timeInMS);
+	
+	var hours = parseInt(time / 3600000);
+	time -= 3600000*hours;
+		
+	var minutes = parseInt(time / 60000);
+	time -= 60000*minutes;
+	
+	var seconds = parseInt(time / 1000);
+	time -= 1000*seconds;
+	
+	var ms = parseInt(time);
+	
+	hours = hours.toString();
+	minutes = minutes.toString();
+	seconds = seconds.toString();
+	ms = ms.toString();
+	
+	if (hours.length == 1)
+		hours = "0" + hours;
+	if (minutes.length == 1)
+		minutes = "0" + minutes;
+	if (seconds.length == 1)
+		seconds = "0" + seconds;
+		
+	if (ms.length == 3)
+		ms = ms.substring(0, 2);
+	else if (ms.length == 2)
+		ms = "0" + ms.substring(0,1);
+	else if (ms.length == 1)
+		ms = "00";
+		
+	if (hours == "00")
+		return minutes + ":" + seconds + "." + ms;
+	else
+		return "" + hours + ":" + minutes + ":" + seconds+ "." + ms;
 }
 
 function convertDateToHHMMSS(epochTime){
@@ -172,14 +214,14 @@ function updatePlaybar(){
     $('#next-length').empty();
 	if (previousSongs.length > 0){
 		$('#previous').text(getTrackInfo(previousSongs[previousSongs.length-1]));
-		$('#prev-length').text(previousSongs[previousSongs.length-1].clip_length);
+		$('#prev-length').text(convertToHHMMSSmm(previousSongs[previousSongs.length-1].songLengthMs));
 	}
 	if (currentSong.length > 0){
 		$('#current').text(getTrackInfo(currentSong[0]));
 	}
 	if (nextSongs.length > 0){
 		$('#next').text(getTrackInfo(nextSongs[0]));
-		$('#next-length').text(previousSongs[previousSongs.length-1].clip_length);
+		$('#next-length').text(convertToHHMMSSmm(nextSongs[0].songLengthMs));
 	}
 	
     $('#start').empty();
@@ -200,7 +242,7 @@ function updatePlaybar(){
         
 		$('#time-elapsed').text(convertToHHMMSS(estimatedSchedulePosixTime - songStartRoughly));
 		$('#time-remaining').text(convertToHHMMSS(songEndRoughly - estimatedSchedulePosixTime));
-		$('#song-length').text(currentSong[i].clip_length);
+		$('#song-length').text(convertToHHMMSSmm(currentSong[i].songLengthMs));
 	}	
 	
 	/* Column 1 update */

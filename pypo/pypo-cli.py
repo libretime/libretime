@@ -117,7 +117,15 @@ class Playout:
         self.api_client = api_client.api_client_factory(config)
         self.cue_file = CueFile()
         self.silence_file = config["file_dir"] + 'basic/silence.mp3'
+        
+        """
+        push_ahead2 MUST be < push_ahead. The difference in these two values 
+        gives the number of seconds of the window of opportunity for the scheduler
+        to catch when a playlist is to be played.
+        """
         self.push_ahead = 15
+        self.push_ahead2 = 10
+        
         self.range_updated = False
         
     
@@ -578,10 +586,13 @@ class Playout:
         playedItems = self.load_schedule_tracker()
         
         tcoming = time.localtime(time.time() + self.push_ahead)
+        tcoming2 = time.localtime(time.time() + self.push_ahead2)
         tnow = time.localtime(time.time())
         
+        
         str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
-    
+        str_tcoming2_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming2[0], tcoming2[1], tcoming2[2], tcoming2[3], tcoming2[4], tcoming2[5])
+        
         if self.schedule == None:
             logger.warn('Unable to loop schedule - maybe write in progress?')
             logger.warn('Will try again in next loop.')
@@ -589,7 +600,7 @@ class Playout:
         else:    
             for pkey in self.schedule:
                 playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)                
-                if pkey[0:19] <= str_tcoming_s and not playedFlag:
+                if pkey[0:19] == str_tcoming_s or (pkey[0:19] < str_tcoming_s and pkey[0:19] > str_tcoming2_s and not playedFlag):
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = self.schedule[pkey]
                     
