@@ -60,120 +60,120 @@ class ScheduleController extends Zend_Controller_Action
     public function eventFeedAction()
     {
         $start = $this->_getParam('start', null);
-                		$end = $this->_getParam('end', null);
-                		$weekday = $this->_getParam('weekday', null);
-                
-                		if(!is_null($weekday)) {
-                			$weekday = array($weekday);
-                		}
-                
-                		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                
-                		$show = new Show(new User($userInfo->id, $userInfo->type));
-                
-                		$this->view->events = $show->getFullCalendarEvents($start, $end, $weekday);
+		$end = $this->_getParam('end', null);
+		$weekday = $this->_getParam('weekday', null);
+
+		if(!is_null($weekday)) {
+			$weekday = array($weekday);
+		}
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$show = new Show(new User($userInfo->id, $userInfo->type));
+
+		$this->view->events = $show->getFullCalendarEvents($start, $end, $weekday);
     }
 
     public function addShowDialogAction()
     {
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
-                		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
-                    	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
-                		$this->view->headScript()->appendFile('/js/airtime/schedule/add-show.js','text/javascript');
-                
-                		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
-                		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
-                		$this->view->headLink()->appendStylesheet('/css/add-show.css');
-                		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
-                		$this->view->headLink()->appendStylesheet('/css/styles.css');
-                
-                        $request = $this->getRequest();
-                        $formWhat = new Application_Form_AddShowWhat();
-                		$formWhat->removeDecorator('DtDdWrapper');
-                		$formWho = new Application_Form_AddShowWho();
-                		$formWho->removeDecorator('DtDdWrapper');
-                		$formWhen = new Application_Form_AddShowWhen();
-                		$formWhen->removeDecorator('DtDdWrapper');
-                		$formRepeats = new Application_Form_AddShowRepeats();
-                		$formRepeats->removeDecorator('DtDdWrapper');
-                		$formStyle = new Application_Form_AddShowStyle();
-                		$formStyle->removeDecorator('DtDdWrapper');
-                 
-                        if ($request->isPost()) {
-                
-                			$data = $request->getPost();
-                
-                			$what = $formWhat->isValid($data);
-                			$when = $formWhen->isValid($data);
-                			$repeats = $formRepeats->isValid($data);
-                			$who = $formWho->isValid($data);
-                			$style = $formStyle->isValid($data);
-                
-                            if ($what && $when && $repeats && $who && $style) {  
-                			
-                				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                
-                				$show = new Show(new User($userInfo->id, $userInfo->type));
-                				$overlap = $show->addShow($data);
-                
-                				if(isset($overlap)) {
-                					$this->view->overlap = $overlap;
-                				}
-                				else {
-                					$this->_redirect('Schedule');
-                				}	
-                			}  
-                        }
-                
-                		$this->view->what = $formWhat;
-                		$this->view->when = $formWhen;
-                		$this->view->repeats = $formRepeats;
-                		$this->view->who = $formWho;
-                		$this->view->style = $formStyle;
+		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
+    	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/airtime/schedule/add-show.js','text/javascript');
+
+		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
+		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
+		$this->view->headLink()->appendStylesheet('/css/add-show.css');
+		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
+		$this->view->headLink()->appendStylesheet('/css/styles.css');
+
+        $request = $this->getRequest();
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho = new Application_Form_AddShowWho();
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen = new Application_Form_AddShowWhen();
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle = new Application_Form_AddShowStyle();
+		$formStyle->removeDecorator('DtDdWrapper');
+ 
+        if ($request->isPost()) {
+
+			$data = $request->getPost();
+
+			$what = $formWhat->isValid($data);
+			$when = $formWhen->isValid($data);
+			$repeats = $formRepeats->isValid($data);
+			$who = $formWho->isValid($data);
+			$style = $formStyle->isValid($data);
+
+            if ($what && $when && $repeats && $who && $style) {  
+			
+				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+				$show = new Show(new User($userInfo->id, $userInfo->type));
+				$overlap = $show->addShow($data);
+
+				if(isset($overlap)) {
+					$this->view->overlap = $overlap;
+				}
+				else {
+					$this->_redirect('Schedule');
+				}	
+			}  
+        }
+
+		$this->view->what = $formWhat;
+		$this->view->when = $formWhen;
+		$this->view->repeats = $formRepeats;
+		$this->view->who = $formWho;
+		$this->view->style = $formStyle;
     }
 
     public function moveShowAction()
     {
         $deltaDay = $this->_getParam('day');
-                		$deltaMin = $this->_getParam('min');
-                		$showId = $this->_getParam('showId');
-                
-                		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                
-                		$show = new Show(new User($userInfo->id, $userInfo->type));
-                
-                		$overlap = $show->moveShow($showId, $deltaDay, $deltaMin);
-                
-                		if(isset($overlap))
-                			$this->view->overlap = $overlap;
+		$deltaMin = $this->_getParam('min');
+		$showId = $this->_getParam('showId');
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$show = new Show(new User($userInfo->id, $userInfo->type));
+
+		$overlap = $show->moveShow($showId, $deltaDay, $deltaMin);
+
+		if(isset($overlap))
+			$this->view->overlap = $overlap;
     }
 
     public function resizeShowAction()
     {
         $deltaDay = $this->_getParam('day');
-                		$deltaMin = $this->_getParam('min');
-                		$showId = $this->_getParam('showId');
-                
-                		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                
-                		$show = new Show(new User($userInfo->id, $userInfo->type));
-                
-                		$overlap = $show->resizeShow($showId, $deltaDay, $deltaMin);
-                
-                		if(isset($overlap))
-                			$this->view->overlap = $overlap;
+		$deltaMin = $this->_getParam('min');
+		$showId = $this->_getParam('showId');
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$show = new Show(new User($userInfo->id, $userInfo->type));
+
+		$overlap = $show->resizeShow($showId, $deltaDay, $deltaMin);
+
+		if(isset($overlap))
+			$this->view->overlap = $overlap;
     }
 
     public function deleteShowAction()
     {
         $showId = $this->_getParam('showId');
-                		$date = $this->_getParam('date');
-                                                                
-                		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                
-                		$user = new User($userInfo->id, $userInfo->type);
-                		$show = new Show($user, $showId);
-                		$show->deleteShow($date);
+		$date = $this->_getParam('date');
+                                                
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$user = new User($userInfo->id, $userInfo->type);
+		$show = new Show($user, $showId);
+		$show->deleteShow($date);
     }
 
     public function makeContextMenuAction()
@@ -268,31 +268,28 @@ class ScheduleController extends Zend_Controller_Action
     public function scheduleShowDialogAction()
     {
         $start_timestamp = $this->_getParam('start');
-                		$end_timestamp = $this->_getParam('end');
-                		$showId = $this->_getParam('showId');
-                
-                		$this->sched_sess->showId = $showId;
-                		$this->sched_sess->showStart = $start_timestamp;
-                		$this->sched_sess->showEnd = $end_timestamp;
-                		
-                		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                
-                		$user = new User($userInfo->id, $userInfo->type);
-                		$show = new Show($user, $showId);
-                
-                		$this->view->playlists = $show->searchPlaylistsForShow($start_timestamp);
-                		$this->view->showContent = $show->getShowContent($start_timestamp);
-                
-                		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
-                		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
-                		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
-                
-                		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
-                		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
-                		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
-                
-                		unset($this->view->showContent);
-                		unset($this->view->playlists);
+		$end_timestamp = $this->_getParam('end');
+		$showId = $this->_getParam('showId');
+
+		$this->sched_sess->showId = $showId;
+		$this->sched_sess->showStart = $start_timestamp;
+		$this->sched_sess->showEnd = $end_timestamp;
+		
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$user = new User($userInfo->id, $userInfo->type);
+		$show = new Show($user, $showId);
+
+		$this->view->showContent = $show->getShowContent($start_timestamp);
+
+		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
+		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+
+		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
+		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
+
+		unset($this->view->showContent);
     }
 
     public function showListAction()
