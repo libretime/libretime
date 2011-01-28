@@ -288,16 +288,20 @@ fieldset.plain {
     text-indent: 3px;
 	width:auto;
 }
+<<<<<<< HEAD
 .auto-search {
 	background:#dddddd url(images/search_auto_bg.png) no-repeat 0 0;
 	text-indent:25px;
 }
+=======
+>>>>>>> c9c41762fe7a0764d107228d207f6b5ea8506d8b
 .input_text_area {
     background:#dddddd url("images/input_bg.png") repeat-x scroll 0 0 ;
 	border: 1px solid #5b5b5b;
     font-size: 13px;
     text-indent: 3px;
 }
+<<<<<<< HEAD
 .input_select {
     background-color: #DDDDDD;
 	border: 1px solid #5b5b5b;
@@ -308,6 +312,8 @@ fieldset.plain {
     padding: 2px 2px 2px 0;
     vertical-align: top;
 }
+=======
+>>>>>>> c9c41762fe7a0764d107228d207f6b5ea8506d8b
 label {
 	font-size:13px;
 	color:#5b5b5b;
@@ -409,6 +415,7 @@ dl.inline-list dd {
     border-width: 0px 1px 0 1px;
 }
 
+<<<<<<< HEAD
 .DataTables_sort_wrapper .ui-icon {
     display: block;
     float: left;
@@ -466,6 +473,8 @@ dl.inline-list dd {
 	margin-right:3px;
 }
 
+=======
+>>>>>>> c9c41762fe7a0764d107228d207f6b5ea8506d8b
 /*----END Data Table----*/
 
 fieldset {
@@ -484,6 +493,7 @@ input[type="checkbox"] {
 	padding:0;
 	width:13px;
 	height:13px;
+<<<<<<< HEAD
 }
 /*---//////////////////// LOGIN ////////////////////---*/
 
@@ -641,4 +651,6 @@ dt.block-display, dd.block-display {
 	top:0;
 	left:0;
 	margin-bottom:140px;
+=======
+>>>>>>> c9c41762fe7a0764d107228d207f6b5ea8506d8b
 }
