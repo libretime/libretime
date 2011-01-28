@@ -8,53 +8,53 @@ class ScheduleController extends Zend_Controller_Action
     public function init()
     {
         if(!Zend_Auth::getInstance()->hasIdentity())
-                        {
-                            $this->_redirect('login/index');
-                		}
-                
-                		$ajaxContext = $this->_helper->getHelper('AjaxContext');
-                        $ajaxContext->addActionContext('event-feed', 'json')
-                					->addActionContext('add-show-dialog', 'json')
-                					->addActionContext('add-show', 'json')
-                					->addActionContext('move-show', 'json')
-                					->addActionContext('resize-show', 'json')
-                					->addActionContext('delete-show', 'json')
-                					->addActionContext('schedule-show', 'json')
-                					->addActionContext('schedule-show-dialog', 'json')
-                					->addActionContext('clear-show', 'json')
-                                    ->addActionContext('get-current-playlist', 'json')	
-                					->addActionContext('find-playlists', 'html')
-                					->addActionContext('remove-group', 'json')	
-                					->addActionContext('get-show-data', 'json')	
-                                    ->initContext();
-                
-                		$this->sched_sess = new Zend_Session_Namespace("schedule");
+        {
+            $this->_redirect('login/index');
+		}
+
+		$ajaxContext = $this->_helper->getHelper('AjaxContext');
+        $ajaxContext->addActionContext('event-feed', 'json')
+					->addActionContext('add-show-dialog', 'json')
+					->addActionContext('add-show', 'json')
+					->addActionContext('move-show', 'json')
+					->addActionContext('resize-show', 'json')
+					->addActionContext('delete-show', 'json')
+					->addActionContext('schedule-show', 'json')
+					->addActionContext('schedule-show-dialog', 'json')
+					->addActionContext('clear-show', 'json')
+                    ->addActionContext('get-current-playlist', 'json')	
+					->addActionContext('find-playlists', 'json')
+					->addActionContext('remove-group', 'json')	
+                    ->initContext();
+
+		$this->sched_sess = new Zend_Session_Namespace("schedule");
     }
 
     public function indexAction()
     {
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
-                		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
-                		//$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
-                		$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
-                    	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
-                
-                		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
-                		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
-                		$this->view->headLink()->appendStylesheet('/css/schedule.css');
-                		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
-                		$this->view->headLink()->appendStylesheet('/css/styles.css');
-                
-                		$eventDefaultMenu = array();
-                		//$eventDefaultMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
-                  
-                		$this->view->eventDefaultMenu = $eventDefaultMenu;
-                
-                		$eventHostMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
-                		$eventHostMenu[] = array('action' => '/Schedule/schedule-show', 'text' => 'Schedule');
-                		$eventHostMenu[] = array('action' => '/Schedule/clear-show', 'text' => 'Clear');
-                  
-                		$this->view->eventHostMenu = $eventHostMenu;
+		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
+		//$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
+    	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
+
+		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
+		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
+		$this->view->headLink()->appendStylesheet('/css/schedule.css');
+		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
+		$this->view->headLink()->appendStylesheet('/css/styles.css');
+
+		$eventDefaultMenu = array();
+		//$eventDefaultMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
+  
+		$this->view->eventDefaultMenu = $eventDefaultMenu;
+
+		$eventHostMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
+		$eventHostMenu[] = array('action' => '/Schedule/schedule-show', 'text' => 'Schedule');
+		$eventHostMenu[] = array('action' => '/Schedule/clear-show', 'text' => 'Clear');
+  
+		$this->view->eventHostMenu = $eventHostMenu;
     }
 
     public function eventFeedAction()
@@ -182,36 +182,31 @@ class ScheduleController extends Zend_Controller_Action
     }
 
     public function scheduleShowAction()
-    {
-        $start_timestamp = $this->sched_sess->showStart;
-                		$end_timestamp = $this->sched_sess->showEnd;
-                		$showId = $this->sched_sess->showId;
-                		$search = $this->_getParam('search', null);
-                		$plId = $this->_getParam('plId');
-                
-                		if($search == "") {
-                			$search = null;
-                		}
-                
-                		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                
-                		$user = new User($userInfo->id, $userInfo->type);
-                		$show = new Show($user, $showId);
-                
-                		$show->scheduleShow($start_timestamp, array($plId));
-                
-                		$this->view->playlists = $show->searchPlaylistsForShow($start_timestamp, $search);
-                		$this->view->showContent = $show->getShowContent($start_timestamp);
-                
-                		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
-                		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
-                		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
-                
-                		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
-                		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
-                		
-                		unset($this->view->showContent);
-                		unset($this->view->playlists);
+    {  
+		$start_timestamp = $this->sched_sess->showStart;
+		$end_timestamp = $this->sched_sess->showEnd;
+		$showId = $this->sched_sess->showId;
+		$search = $this->_getParam('search', null);
+		$plId = $this->_getParam('plId');
+
+		if($search == "") {
+			$search = null;
+		}
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+
+		$user = new User($userInfo->id, $userInfo->type);
+		$show = new Show($user, $showId);
+
+		$show->scheduleShow($start_timestamp, array($plId));
+
+		$this->view->showContent = $show->getShowContent($start_timestamp);
+		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+
+		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
+		
+		unset($this->view->showContent);
     }
 
     public function clearShowAction()
@@ -236,40 +231,38 @@ class ScheduleController extends Zend_Controller_Action
 
     public function findPlaylistsAction()
     {
-        $search = $this->_getParam('search');
-                		$show_id = $this->sched_sess->showId;
-                		$start_timestamp = $this->sched_sess->showStart;
-                
-                		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                		$show = new Show(new User($userInfo->id, $userInfo->type), $show_id);
-                		$this->view->playlists = $show->searchPlaylistsForShow($start_timestamp, $search);
+		$show_id = $this->sched_sess->showId;
+		$start_timestamp = $this->sched_sess->showStart;
+		$post = $this->getRequest()->getPost();
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+		$show = new Show(new User($userInfo->id, $userInfo->type), $show_id);
+		$playlists = $show->searchPlaylistsForShow($start_timestamp, $post);
+
+		//for datatables
+		die(json_encode($playlists));
     }
 
     public function removeGroupAction()
     {
         $group_id = $this->_getParam('groupId');
-                		$start_timestamp = $this->sched_sess->showStart;
-                		$end_timestamp = $this->sched_sess->showEnd;
-                		$show_id = $this->sched_sess->showId;
-                		$search = $this->_getParam('search', null);
-                
-                		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                		$show = new Show(new User($userInfo->id, $userInfo->type), $show_id);
-                		
-                		$show->removeGroupFromShow($start_timestamp, $group_id);
-                
-                		$this->view->playlists = $show->searchPlaylistsForShow($start_timestamp, $search);
-                		$this->view->showContent = $show->getShowContent($start_timestamp);
-                
-                		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
-                		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
-                		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
-                
-                		$this->view->choice = $this->view->render('schedule/find-playlists.phtml');
-                		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
-                		
-                		unset($this->view->showContent);
-                		unset($this->view->playlists);
+		$start_timestamp = $this->sched_sess->showStart;
+		$end_timestamp = $this->sched_sess->showEnd;
+		$show_id = $this->sched_sess->showId;
+		$search = $this->_getParam('search', null);
+
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+		$show = new Show(new User($userInfo->id, $userInfo->type), $show_id);
+		
+		$show->removeGroupFromShow($start_timestamp, $group_id);
+
+		$this->view->showContent = $show->getShowContent($start_timestamp);
+		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+
+		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
+		
+		unset($this->view->showContent);
     }
 
     public function scheduleShowDialogAction()
@@ -315,11 +308,16 @@ class ScheduleController extends Zend_Controller_Action
     public function getShowDataAction()
     {
 		$this->view->data = Show::getShows("2011-01-27");
+		$this->view->showContent = $show->getShowContent($start_timestamp);
+		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
+		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+
+		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
+		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
+
+		unset($this->view->showContent);
     }
 
 
 }
-
-
-
-

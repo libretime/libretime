@@ -132,20 +132,14 @@ class LibraryController extends Zend_Controller_Action
 		$this->_helper->viewRenderer->setResponseSegment('library'); 
 
 		$format = $this->_getParam('format');
-		$echo = $this->_getParam('sEcho');
-		$offset = $this->_getParam('iDisplayStart');
-		$limit = $this->_getParam('iDisplayLength');
+		
 		$post = $this->getRequest()->getPost();
 
 		if($format == "json") {
 		
-			$datatables = array("sEcho" => $echo);
-			$files = StoredFile::searchFiles($offset, $limit, $post);
-
-			$datatables = array_merge($datatables, $files);
+			$datatables = StoredFile::searchFilesForPlaylistBuilder($post);
 
 			die(json_encode($datatables));
-
 		}
     }
 

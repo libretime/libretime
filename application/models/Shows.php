@@ -639,7 +639,7 @@ class Show {
 		return $length;
 	}
 
-	public function searchPlaylistsForShow($start_timestamp, $search=null){
+	public function searchPlaylistsForShow($start_timestamp, $datatables){
 		global $CC_DBC;
 
 		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$start_timestamp}')";
@@ -656,7 +656,6 @@ class Show {
 
 		$length = $this->getTimeUnScheduled($start_date, $start_date, $start_time, $end_time);
 
-		return Playlist::searchPlaylists($length, $search);
-
+		return StoredFile::searchPlaylistsForSchedule($length, $datatables);
 	}
 }

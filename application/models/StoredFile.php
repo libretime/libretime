@@ -1742,14 +1742,9 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-	public static function searchFiles($offset, $limit, $data)
-	{
-		global $CC_CONFIG, $CC_DBC, $g_metadata_xml_to_db_mapping;
+	public static function searchFilesForPlaylistBuilder($datatables) {
 
-		$columnsDisplayed = explode(",", $data["sColumns"]);
-
-		if($data["sSearch"] !== "")
-			$searchTerms = explode(" ", $data["sSearch"]);
+		global $CC_CONFIG, $g_metadata_xml_to_db_mapping;
 
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
@@ -1781,22 +1776,49 @@ class StoredFile {
             }
         }
 
+		$fromTable = " ((".$plSelect."PL.id
+		    FROM ".$CC_CONFIG["playListTable"]." AS PL
+			LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
+
+		    UNION
+
+		    (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
+
+		return StoredFile::searchFiles($fromTable, $datatables);
 	
+	}
+
+	public static function searchPlaylistsForSchedule($p_length, $datatables) {
+
+		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
+
+		$datatables["optWhere"][] = "plt.length <= '{$p_length}'";
+
+		
+		return StoredFile::searchFiles($fromTable, $datatables);
+	}	
+
+	private static function searchFiles($fromTable, $data)
+	{
+		global $CC_CONFIG, $CC_DBC;
+
+		$columnsDisplayed = explode(",", $data["sColumns"]);
+
+		if($data["sSearch"] !== "")
+			$searchTerms = explode(" ", $data["sSearch"]);
+
 		$selectorCount = "SELECT COUNT(*)";
 		$selectorRows = "SELECT ". join("," , $columnsDisplayed);
 
-		$fromTable = " FROM ((".$plSelect."PL.id
-                FROM ".$CC_CONFIG["playListTable"]." AS PL
-				LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
-
-                UNION
-
-                (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
-
-        $sql = $selectorCount." ".$fromTable;
+        $sql = $selectorCount." FROM ".$fromTable;
 		$totalRows = $CC_DBC->getOne($sql);
 
 		//	Where clause
+
+		if(isset($data["optWhere"])) {
+		
+			$where[] = join(" AND ", $data["optWhere"]);	
+		}
 
 		if(isset($searchTerms)) {
 
@@ -1819,14 +1841,9 @@ class StoredFile {
 
 					$innerCond[] = "{$col}::text ILIKE '%{$term}%'"; 
 				}
-			
-				$outerCond[] = join(" OR ", $innerCond);			
+				$outerCond[] = "(".join(" OR ", $innerCond).")";			
 			}
-
-			$where = join(" AND ", $outerCond);
-
-			$sql = $selectorCount." ".$fromTable." WHERE ".$where;
-			$totalDisplayRows = $CC_DBC->getOne($sql);
+			$where[] = "(".join(" AND ", $outerCond).")";
 		}
 		
 		// End Where clause
@@ -1846,10 +1863,16 @@ class StoredFile {
 		$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
 
 		if(isset($where)) {
-			$sql = $selectorRows." ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$offset." LIMIT ".$limit;
+
+			$where = join(" AND ", $where);
+
+			$sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
+			$totalDisplayRows = $CC_DBC->getOne($sql);
+
+			$sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 		else {
-			$sql = $selectorRows." ".$fromTable." ORDER BY ".$orderby." OFFSET ".$offset." LIMIT ".$limit;
+			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 		
 		$results = $CC_DBC->getAll($sql);
@@ -1863,7 +1886,7 @@ class StoredFile {
 			$totalDisplayRows = $totalRows;
 		}
 
-		return array("iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
+		return array("sEcho" => intval($data["sEcho"]), "iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
 
 		
 		
