@@ -48,12 +48,11 @@
 #side_playlist li {
 	width: 99.5%;
 	margin-bottom:-1px;
-	height:56px;
 	position:relative;
 }
 
-#side_playlist li > div {
-	height: 50px;
+#side_playlist li div.list-item-container {
+	height:56px;
 }
 
 #spl_name {
@@ -185,7 +184,7 @@
 	float:none;
 }
 #spl_sortable .top {
-    margin-top:9px;
+    padding-top:9px;
 }
 #spl_sortable li .spl_fade_control.ui-state-default {
 	background: transparent url(images/crossfade_playlist.png) no-repeat 0 0;
@@ -195,10 +194,11 @@
 	background: transparent url(images/crossfade_playlist.png) no-repeat 0 -30px;
 	border:none;
 }
-#spl_sortable li.crossfade {
-	background:#debc9e url(images/crossfade_bg.png) repeat-x 0 0;
+#spl_sortable li .crossfade {
+	background:#debc9e url(images/crossfade_bg.png) repeat-x 0 0 !important;
 	border:1px solid #5d5d5d;
-	border-width: 1px 1px 0 1px;
+	border-width: 1px 0 0 0;
+	height:60px;
 }
 #spl_sortable dl.inline-list {
 	margin:10px 0 0 37px;

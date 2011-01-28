@@ -52,7 +52,7 @@ function createDataGrid(){
 	datagridData.columnHeaders[3]["fnRender"] = getTimeText;
 	datagridData.columnHeaders[4]["fnRender"] = changeTimePrecisionInit;
 
-	$('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="datatable" width="100%" id="nowplayingtable"></table>' );
+	$('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="datatable" id="nowplayingtable"></table>' );
 	$('#nowplayingtable').dataTable( {
 		"bSort" : false,
 		"bJQueryUI": true,

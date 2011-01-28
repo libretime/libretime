@@ -5,18 +5,95 @@
 
 #schedule-add-show {
 	font-size: 12px;
-	width: 600px;
+	width: 25%;
+	min-width:340px;
 }
 
 #schedule-add-show textarea {
-	width: 100%;
+	width: 99%;
 	height: 100px;
 }
 
 #fullcalendar_show_display {
-	width: 400px;
+	width: 60%;
 }
 
 #schedule-add-show-overlap {
 	clear: left;
+}
+
+#schedule-add-show .ui-tabs-panel {
+    padding-top: 16px;
+}
+#schedule-add-show fieldset {
+	padding:8px;
+	margin-bottom:8px;
+}
+
+#schedule-add-show dl {
+	padding:8px;
+	margin-bottom:8px;
+	margin:0;
+	padding:0;
+	width:100%;
+}
+#schedule-add-show dd {
+    padding: 4px 0;
+    float: left;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 4px 0 4px 15px;
+}
+#schedule-add-show dt, #schedule-add-show dt.big {
+    clear: left;
+    color: #666666;
+    float: left;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+    padding: 4px 0;
+    text-align: left;
+	min-width:90px;
+	clear:left;
+}
+#schedule-add-show dt.big {
+	min-width:130px;
+}
+#schedule-add-show dt.block-display, #schedule-add-show dd.block-display {
+	display:block;
+	float:none;
+	margin-left:0;
+	padding-left:0;
+}
+
+#schedule-add-show dt label {
+    padding-right:0;
+}
+.wrapp-label {
+	padding:0;
+	height:16px;
+	display:block;
+	line-height:18px;
+}
+label.wrapp-label input[type="checkbox"] {
+	float:left;
+	margin:-1px 4px 0 0;
+}
+#schedule-add-show fieldset {
+	min-height:70px;
+}
+#schedule-add-show fieldset dd input[type="checkbox"] {
+    margin-top:2px;
+}
+#add_show_day_check-element.block-display  {
+	margin-bottom:15px;
+	margin-top:7px;
+}
+#add_show_day_check-element.block-display label.wrapp-label {
+	font-size:12px;
+	float:left;
+	margin-right:5px;
+}
+#add_show_name-element .input_text {
+	width:99%;
 }

@@ -16,7 +16,7 @@
 .fc,
 .fc .fc-header,
 .fc .fc-content {
-	font-size: 1em;
+	font-size: 12px;
 	}
 	
 .fc {
@@ -95,19 +95,20 @@ table.fc-header {
 	}
 	
 .fc-header .fc-state-default {
-	border-width: 1px 0;
-	padding: 0 1px;
+	border-width: 1px;
+	padding: 0;
 	}
 	
 .fc-header .fc-state-default,
 .fc-header .fc-state-default a {
 	border-style: solid;
+	font-size:13px;
 	}
 	
 .fc-header .fc-state-default a {
 	display: block;
-	border-width: 0 1px;
-	margin: 0 -1px;
+	border-width:0;
+	margin: 0;
 	width: 100%;
 	text-decoration: none;
 	}
@@ -115,8 +116,8 @@ table.fc-header {
 .fc-header .fc-state-default span {
 	display: block;
 	border-style: solid;
-	border-width: 1px 0 1px 1px;
-	padding: 3px 5px;
+	border-width: 0;
+	padding: 3px 10px 4px 10px;
 	}
 	
 .fc-header .ui-state-default {
@@ -146,12 +147,12 @@ table.fc-header {
 /* for fake rounded corners */
 	
 .fc-header .fc-corner-left {
-	margin-left: 1px;
+	margin-left: 0;
 	padding-left: 0;
 	}
 	
 .fc-header .fc-corner-right {
-	margin-right: 1px;
+	margin-right: 0;
 	padding-right: 0;
 	}
 	
@@ -159,13 +160,30 @@ table.fc-header {
 	
 .fc-header .fc-state-default,
 .fc-header .fc-state-default a {
-	border-color: #777; /* outer border */
-	color: #333;
+	border-color: #5b5b5b; /* outer border */
+	color: #fff;
 	}
 
 .fc-header .fc-state-default span {
 	border-color: #fff #fff #d1d1d1; /* inner border */
-	background: #e8e8e8;
+	background-color: #6e6e6e;
+    background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
+	}
+
+
+/* HOVER button COLORS */
+
+.fc-header .fc-state-hover,
+.fc-header .fc-state-hover a {
+	border-color: #282828; /* outer border */
+	color: #fff;
+	}
+	
+.fc-header .fc-state-hover span {
+	background-color: #282828;
+    background: -moz-linear-gradient(top, #3b3b3b 0, #282828 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #282828));
 	}
 	
 /* PRESSED button COLORS (down and active) */
@@ -183,17 +201,17 @@ table.fc-header {
 /* DISABLED button COLORS */
 	
 .fc-header .fc-state-disabled a {
-	color: #999;
+	color: #a1a1a1;
 	}
 	
 .fc-header .fc-state-disabled,
 .fc-header .fc-state-disabled a {
-	border-color: #ccc; /* outer border */
+	border-color: #a1a1a1; /* outer border */
 	}
 	
 .fc-header .fc-state-disabled span {
 	border-color: #fff #fff #f0f0f0; /* inner border */
-	background: #f0f0f0;
+	background: #bdbdbd;
 	}
 	
 	
@@ -202,7 +220,8 @@ table.fc-header {
 ------------------------------------------------------------------------*/
 	
 .fc-widget-content {
-	border: 1px solid #ccc; /* outer border color */
+	border: 1px solid #5b5b5b; /* outer border color */
+	background:#d8d8d8;
 	}
 	
 .fc-content {
@@ -211,11 +230,11 @@ table.fc-header {
 	
 .fc-content .fc-state-default {
 	border-style: solid;
-	border-color: #ccc; /* inner border color */
+	border-color: #a5a5a5; /* inner border color */
 	}
 	
 .fc-content .fc-state-highlight { /* today */
-	background: #ffc;
+	background: #efdac6;
 	}
 	
 .fc-content .fc-not-today { /* override jq-ui highlight (TODO: ui-widget-content) */
@@ -583,4 +602,10 @@ table.fc-header {
 	cursor: s-resize;
 	}
 	
-	
+/* added january 26th, 2011 - fritz */	
+.fc-agenda-head tr.fc-last th, .fc-agenda-head tr.fc-first th {
+	padding:3px 0;
+	background-color: #b9b9b9;
+    background: -moz-linear-gradient(top, #cdcdcd 0, #b9b9b9 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #cdcdcd), color-stop(100%, #b9b9b9));
+	}
