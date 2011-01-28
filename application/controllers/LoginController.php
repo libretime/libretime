@@ -12,7 +12,7 @@ class LoginController extends Zend_Controller_Action
     {
 		if(Zend_Auth::getInstance()->hasIdentity())
 		{
-			$this->_redirect('library/index');
+			$this->_redirect('Nowplaying');
 		}
 
 		//uses separate layout without a navigation.
@@ -50,7 +50,7 @@ class LoginController extends Zend_Controller_Action
                     $authStorage = $auth->getStorage();
                     $authStorage->write($userInfo);
 
-                    $this->_redirect('library/index');
+                    $this->_redirect('Nowplaying');
                 }
                 else
                 {
