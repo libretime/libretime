@@ -111,10 +111,10 @@ function updateProgressBarValue(){
 
 function updatePlaybar(){
     /* Column 0 update */
-    $('#previous').text("Prev Song: N/A");
-    $('#prev-length').text("n/a,");
-    $('#current').text("Current Song: N/A");
-    $('#next').text("Next Song: N/A");
+    $('#previous').empty();
+    $('#prev-length').empty();
+    $('#current').text("Current:");
+    $('#next').empty();
     $('#next-length').empty();
     if (previousSongs.length > 0){
         $('#previous').text(getTrackInfo(previousSongs[previousSongs.length-1]));
@@ -133,8 +133,6 @@ function updatePlaybar(){
     $('#time-elapsed').empty();
     $('#time-remaining').empty();
     $('#song-length').empty();
-    $('#showposition').empty();
-    $('#showlength').empty();
     for (var i=0; i<currentSong.length; i++){
         $('#start').text(currentSong[i].starts.substring(currentSong[i].starts.indexOf(" ")+1));
         $('#end').text(currentSong[i].ends.substring(currentSong[i].starts.indexOf(" ")+1));
@@ -150,7 +148,7 @@ function updatePlaybar(){
     }
 
     /* Column 1 update */
-    $('#playlist').text("Current Show: N/A");
+    $('#playlist').text("Current Show:");
     for (var i=0; i<currentSong.length; i++){
         $('#playlist').text(currentSong[i].name);
     }

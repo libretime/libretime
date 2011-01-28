@@ -11,11 +11,11 @@
 <div id="nowplayingbar"><?= $this->partial('partialviews/header.phtml') ?></div>
 <div id="nav"><?php echo $this->navigation()->menu()->setRenderInvisible(true) ?></div>
  
+<div class="wrapper">
 <div id="search"><?php echo $this->layout()->search ?></div>
-
 <div id="library_content"><?php echo $this->layout()->library ?></div>
-
 <div id="side_playlist"><?php echo $this->layout()->spl ?></div>
- 
+</div>
+
 </body>
 </html>

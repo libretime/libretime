@@ -225,10 +225,6 @@ airtime_uninstall_delete_files($CC_CONFIG['storageDir']);
 
 
 $command = "python ".__DIR__."/../pypo/install/pypo-uninstall.py";
-$output = array();
-@exec($command, $output, $results);
-foreach ($output as $value){
-    echo $value."\n";
-}
+system($command);
 echo "****************************** Uninstall Complete ******************************\n";
 ?>

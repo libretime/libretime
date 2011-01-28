@@ -29,10 +29,8 @@ class NowplayingController extends Zend_Controller_Action
     public function livestreamAction()
     {
         //use bare bones layout (no header bar or menu)
-	$this->_helper->layout->setLayout('bare');
+        $this->_helper->layout->setLayout('bare');
     }
-
-
 }
 
 

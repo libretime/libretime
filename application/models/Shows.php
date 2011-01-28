@@ -478,7 +478,8 @@ class Show {
 		}
 		if(!is_null($start) && is_null($end)) {
 			$sql_range = "(first_show <= '{$start}' AND last_show IS NULL) 
-					OR (first_show <= '{$start}' AND last_show > '{$start}')";
+					OR (first_show <= '{$start}' AND last_show > '{$start}')
+                    OR (first_show >= '{$start}')";
 
 			$sql = $sql_gen ." WHERE ". $sql_range;
 		}

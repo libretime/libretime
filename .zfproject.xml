@@ -65,6 +65,8 @@
           <actionMethod actionName="findPlaylists"/>
           <actionMethod actionName="removeGroup"/>
           <actionMethod actionName="scheduleShowDialog"/>
+          <actionMethod actionName="showList"/>
+          <actionMethod actionName="getShowData"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -261,6 +263,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Nowplaying">
             <viewScriptFile forActionName="livestream"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="showList"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="getShowData"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

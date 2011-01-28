@@ -228,10 +228,6 @@ $command = __DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/nul
 
 $command = "python ".__DIR__."/../pypo/install/pypo-install.py";
 
-$output = array();
-@exec($command, $output, $results);
-foreach ($output as $value){
-    echo $value."\n";
-}
+system($command);
 echo "******************************* Install Complete *******************************\n";
 ?>
