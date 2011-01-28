@@ -1814,7 +1814,6 @@ class StoredFile {
 		$totalRows = $CC_DBC->getOne($sql);
 
 		//	Where clause
-
 		if(isset($data["optWhere"])) {
 		
 			$where[] = join(" AND ", $data["optWhere"]);	
@@ -1845,18 +1844,15 @@ class StoredFile {
 			}
 			$where[] = "(".join(" AND ", $outerCond).")";
 		}
-		
 		// End Where clause
 
 		// Order By clause
-
 		$orderby = array();
 		for($i=0; $i<$data["iSortingCols"]; $i++){
 			$orderby[] = $columnsDisplayed[$data["iSortCol_".$i]]." ".$data["sSortDir_".$i];
 		}
 		$orderby[] = "id";
 		$orderby = join("," , $orderby);
-
 		// End Order By clause
 
 		//ordered by integer as expected by datatables.
