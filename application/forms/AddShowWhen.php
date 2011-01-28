@@ -49,6 +49,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
+    /*
     public function postValidation(array $formData) {
        
         $now_timestamp = date("Y-m-d H:i:s");
@@ -64,6 +65,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
  
         return true;
     }
+    */
 
 }
 

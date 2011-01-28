@@ -68,6 +68,8 @@ function setAddShowEvents() {
 	createDateInput(start, startDpSelect);
 	createDateInput(end, endDpSelect);
 
+    $("#add_show_start_time").timepicker();
+
 	$("#add_show_hosts_autocomplete").autocomplete({
 		source: findHosts,
 		select: autoSelect
