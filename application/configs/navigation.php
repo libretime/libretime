@@ -13,7 +13,7 @@ $pages = array(
 		'module'     => 'Nowplaying',
 		'controller' => 'index',
 		'action'     => 'index',
-		'order'      => -100 // make sure home is the first page
+		'order'      => -100 //make sure home is the first page
 	),
 	array(
 		'label'      => 'Schedule',

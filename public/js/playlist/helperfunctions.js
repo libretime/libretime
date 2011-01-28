@@ -96,3 +96,37 @@ function convertDateToPosixTime(s){
 
 	return Date.UTC(year, month, day, hour, minute, sec, msec);
 }
+
+/* This function decides whether a song should be played or stopped.
+ * It decides the current state of music through the presence/absence
+ * of the <audio> tag. It also takes care of the managing the play/pause
+ * icons of the buttons. */
+function audioPreview(e, uri){
+    var elems = $('.ui-icon.ui-icon-pause');
+    elems.attr("class", "ui-icon ui-icon-play");
+
+    var s = $('#'+e);
+    var spl = $('#side_playlist');
+  
+    if (spl.children('audio').length != 1){
+        spl.append('<audio autoplay="autoplay"></audio>');
+        //spl.children('audio').attr('autoplay', 'autoplay');
+        spl.children('audio').attr('src', uri);
+        var arr = $(s).children("a").children().attr("class", "ui-icon ui-icon-pause");
+
+        var myAudio = spl.children('audio')[0];
+        var canPlayMp3 = !!myAudio.canPlayType && "" != myAudio.canPlayType('audio/mpeg');
+        var canPlayOgg = !!myAudio.canPlayType && "" != myAudio.canPlayType('audio/ogg; codecs="vorbis"');
+        alert(canPlayMp3);
+        alert(canPlayOgg);
+    } else {
+        if (spl.children('audio').attr('data-playlist-id') == $(s).attr("id")){
+            spl.children("audio").remove();
+        } else {
+            spl.children('audio').attr('autoplay', 'autoplay');
+            spl.children('audio').attr('src', uri);
+            spl.children('audio').attr('data-playlist-id', $(s).attr("id"));
+            $(s).children("a").children().attr("class", "ui-icon ui-icon-pause");
+        }
+    }
+}
