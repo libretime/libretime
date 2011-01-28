@@ -26,6 +26,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 		// Add end date element
         $this->addElement('text', 'add_show_end_date', array(
             'label'      => 'Date End:',
+            //'class'      => 'input_text hasDatepicker',
             'required'   => false,
             'filters'    => array('StringTrim'),
 			'validators' => array(

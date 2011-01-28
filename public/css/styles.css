@@ -41,6 +41,14 @@ select {
 	z-index:1000;
 	display:block;
 }
+
+/* Clearfix */
+.clearfix:after, li:after { content: "."; display: block;	height: 0; clear: both;  visibility: hidden;}
+.clearfix, li {	display: inline-block; }
+* html .clearfix, * html li { height: 1%;}
+.clearfix, li {	display: block;	}
+
+
 /* Master Panel */
 
 #master-panel {
@@ -264,8 +272,12 @@ fieldset.plain {
     text-indent: 3px;
 	width:auto;
 }
-
-
+.input_text_area {
+    background:#dddddd url("images/input_bg.png") repeat-x scroll 0 0 ;
+	border: 1px solid #5b5b5b;
+    font-size: 13px;
+    text-indent: 3px;
+}
 label {
 	font-size:13px;
 	color:#5b5b5b;
@@ -322,7 +334,6 @@ dl.inline-list dd {
     border: 1px solid #CCC;
 	border-width: 0 0 0 1px !important;
 }
-
 .datatable {
     border-color: #5b5b5b;
     border-style: solid;
@@ -338,16 +349,13 @@ dl.inline-list dd {
 .odd {
     background-color: #d8d8d8;
 }
-
 .even {
     background-color:#c7c7c7;
 }
-
-
-.smartlist tr.even.selected td {
+.datatable tr.even.selected td {
     background-color: #abcfe2;
 }
-.smartlist tr.odd.selected td {
+.datatable tr.odd.selected td {
     background-color: #c5deeb;
 }
 .datatable tr:hover td {
@@ -368,4 +376,24 @@ dl.inline-list dd {
 }
 .dataTables_scroll .datatable {
     border-width: 0px 1px 0 1px;
-}	
+}
+
+/*----END Data Table----*/
+
+fieldset {
+    border: 1px solid #8f8f8f;
+    margin: 0;
+    padding: 0;
+}
+fieldset.plain {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+input[type="checkbox"] {
+	margin:0;
+	outline:none;
+	padding:0;
+	width:13px;
+	height:13px;
+}

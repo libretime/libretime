@@ -384,7 +384,6 @@ class Show {
 		}
 	}
 
-	//TODO should only delete shows that are in the future.
 	public function deleteShow($timestamp, $dayId=NULL) {
 		global $CC_DBC;
 
