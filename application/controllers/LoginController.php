@@ -10,6 +10,8 @@ class LoginController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        $this->view->headLink()->appendStylesheet('/css/redmond/jquery-ui-1.8.8.custom.css');
+        $this->view->headLink()->appendStylesheet('/css/styles.css');
 		if(Zend_Auth::getInstance()->hasIdentity())
 		{
 			$this->_redirect('Nowplaying');
