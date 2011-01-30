@@ -1,6 +1,6 @@
 var estimatedSchedulePosixTime = -1;
 
-var localRemoteTimeOffset;
+var localRemoteTimeOffset = -1;
 
 var previousSongs = new Array();
 var currentSong = new Array();
@@ -53,8 +53,10 @@ function getTrackInfo(song){
 
 function secondsTimer(){
     var date = new Date();
-    estimatedSchedulePosixTime = date.getTime() - localRemoteTimeOffset;
+    if (localRemoteTimeOffset != -1)
+        estimatedSchedulePosixTime = date.getTime() - localRemoteTimeOffset;
     updateProgressBarValue();
+    
 }
 
 function updateGlobalValues(obj){
@@ -204,7 +206,7 @@ function parseItems(obj){
 
 function getScheduleFromServer(){
     $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
-            parseItems(data.entries);
+                parseItems(data.entries);
           }});
     setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
