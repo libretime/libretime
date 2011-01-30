@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<div id="nowplayingbar"><?= $this->partial('partialviews/header.phtml') ?></div>
+<div id="nowplayingbar"><?= $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs())) ?></div>
 <div class="logo"></div>
 
 <?php 	$partial = array('menu.phtml', 'default');

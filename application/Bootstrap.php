@@ -56,7 +56,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headScript()->appendFile('/js/libs/stuHover.js','text/javascript');
 
         //TODO: Find better place to put this in.
-        $view->addHelperPath('views/helpers', 'Airtime_View_Helper');
+        $view->addHelperPath('../application/views/helpers', 'Airtime_View_Helper');
     }
 }
 

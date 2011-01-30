@@ -8,9 +8,8 @@
 	<?php echo $this->headLink() ?>
 </head>
 <body>
-<?php //echo $this->loggedInAs() ?>
 
-<div id="nowplayingbar"><?php echo $this->partial('partialviews/header.phtml', array("user" => "martin")); ?></div>
+<div id="nowplayingbar"><?php echo $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs())); ?></div>
 <div class="logo"></div>
 
 <?php 	$partial = array('menu.phtml', 'default');
