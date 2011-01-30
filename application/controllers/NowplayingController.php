@@ -13,12 +13,11 @@ class NowplayingController extends Zend_Controller_Action
     {
         $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.min.js','text/javascript');
         $this->view->headScript()->appendFile('/js/playlist/nowplayingdatagrid.js','text/javascript');
-		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
+        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
+
+        $this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
 		$this->view->headLink()->appendStylesheet('/css/styles.css');
-		//$this->view->headLink()->appendStylesheet('/css/datatables/demo_page.css');
-		//$this->view->headLink()->appendStylesheet('/css/datatables/demo_table.css');
-		//$this->view->headLink()->appendStylesheet('/css/datatables/demo_table_jui.css');
-		//$this->view->headLink()->appendStylesheet('/css/styles.css');
     }
 
     public function getDataGridDataAction()

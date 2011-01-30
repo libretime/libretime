@@ -3,13 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Airtime!!</title>
+	<title>Airtime</title>
 	<?php echo $this->headScript() ?>
 	<?php echo $this->headLink() ?>
 </head>
 <body>
+<?php //echo $this->loggedInAs() ?>
 
-<div id="nowplayingbar"><?= $this->partial('partialviews/header.phtml') ?></div>
+<div id="nowplayingbar"><?php echo $this->partial('partialviews/header.phtml', array("user" => "martin")); ?></div>
 <div class="logo"></div>
 
 <?php 	$partial = array('menu.phtml', 'default');

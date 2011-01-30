@@ -23,7 +23,7 @@ class LoginController extends Zend_Controller_Action
 		$request = $this->getRequest();
         $form = new Application_Form_Login();
 
-		$errorMessage = "";
+		$message = "Please enter your user name and password";
 
         if($request->isPost())
         {
@@ -56,12 +56,12 @@ class LoginController extends Zend_Controller_Action
                 }
                 else
                 {
-                    $errorMessage = "Wrong username or password provided. Please try again.";
+                    $message = "Wrong username or password provided. Please try again.";
                 }
             }
         }
 
-		$this->view->errorMessage = $errorMessage;
+		$this->view->message = $message;
 		$this->view->form = $form;
 
     }

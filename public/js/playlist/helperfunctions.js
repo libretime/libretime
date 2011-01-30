@@ -24,7 +24,7 @@ function convertToHHMMSS(timeInMS){
 	if (hours == "00")
 		return minutes + ":" + seconds;
 	else
-		return "" + hours + ":" + minutes + ":" + seconds;
+		return hours + ":" + minutes + ":" + seconds;
 }
 
 function convertToHHMMSSmm(timeInMS){
@@ -63,7 +63,7 @@ function convertToHHMMSSmm(timeInMS){
 	if (hours == "00")
 		return minutes + ":" + seconds + "." + ms;
 	else
-		return "" + hours + ":" + minutes + ":" + seconds+ "." + ms;
+		return hours + ":" + minutes + ":" + seconds+ "." + ms;
 }
 
 function convertDateToHHMMSS(epochTime){
@@ -72,6 +72,9 @@ function convertDateToHHMMSS(epochTime){
 	var hours = d.getUTCHours().toString();
 	var minutes = d.getUTCMinutes().toString();
 	var seconds = d.getUTCSeconds().toString();
+
+    //if (hours == "NaN")
+        //alert("epochTime: " + epochTime);
 	
 	if (hours.length == 1)
 		hours = "0" + hours;
@@ -79,7 +82,7 @@ function convertDateToHHMMSS(epochTime){
 		minutes = "0" + minutes;
 	if (seconds.length == 1)
 		seconds = "0" + seconds;
-	return "" + hours + ":" + minutes + ":" + seconds;
+	return hours + ":" + minutes + ":" + seconds;
 }
 
 function convertDateToPosixTime(s){
@@ -117,8 +120,8 @@ function audioPreview(e, uri){
         var myAudio = spl.children('audio')[0];
         var canPlayMp3 = !!myAudio.canPlayType && "" != myAudio.canPlayType('audio/mpeg');
         var canPlayOgg = !!myAudio.canPlayType && "" != myAudio.canPlayType('audio/ogg; codecs="vorbis"');
-        alert(canPlayMp3);
-        alert(canPlayOgg);
+        //alert(canPlayMp3);
+        //alert(canPlayOgg);
     } else {
         if (spl.children('audio').attr('data-playlist-id') == $(s).attr("id")){
             spl.children("audio").remove();

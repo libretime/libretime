@@ -35,9 +35,10 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
-		//$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
@@ -81,6 +82,8 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/airtime/schedule/add-show.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/jquery-ui-timepicker.css.css');
         $this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
@@ -294,6 +297,7 @@ class ScheduleController extends Zend_Controller_Action
 		unset($this->view->showContent);
     }
 
+   /* Commented out for the 1.6 RC1 release.
     public function showListAction()
     {
         $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.min.js','text/javascript');
@@ -317,6 +321,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		unset($this->view->showContent);
     }
+    */
 
 
 }

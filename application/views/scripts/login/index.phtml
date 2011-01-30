@@ -1,16 +1,11 @@
-<?php
-echo $this->errorMessage;
-?>
-<div id="login-page">
 <div class="login_box">
   <div class="logobox">&nbsp;</div>
   <h2>Login</h2>
   
   <div id="login" class="login-content clearfix">
-  <p class="light">Please enter your user name and password</p>
+  <p class="light"><?php echo $this->message; ?></p>
     <?php echo $this->form; ?>
   </div>
 </div>
 <div class="footer"> Airtime&nbsp;1.6.0&nbsp;Copyright &copy; Sourcefabric o.p.s 2011. All rights reserved.<br/>
   Maintained and distributed under GNU GPL v.2 by <a href="http://www.sourcefabric.org"> Sourcefabric o.p.s </a> </div>
-</div>

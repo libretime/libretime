@@ -209,7 +209,7 @@ function getScheduleFromServer(){
     setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
 
-function init(elemID) {
+function init() {
     //begin producer "thread"
     getScheduleFromServer();
 
@@ -231,5 +231,5 @@ function popup(mylink){
 
 $(document).ready(function() {
     //initialize the playlist bar in the included playlist.js
-    init("nowplayingbar");
+    init();
 });
