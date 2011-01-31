@@ -241,8 +241,7 @@ $(document).ready(function() {
 		defaultView: 'agendaDay',
 		editable: false,
 		allDaySlot: false,
-		lazyFetching: false,
-
+		
 		events: getFullCalendarEvents,
 
 		//callbacks (from full-calendar-functions.js
@@ -255,6 +254,13 @@ $(document).ready(function() {
 		eventDrop: eventDrop,
 		eventResize: eventResize 
 
+    });
+
+    $(window).load(function(){
+        
+        var mainHeight = this.screen.height - 275 - 140 - 50;
+    
+        $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
     });
 
 });

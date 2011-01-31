@@ -1,5 +1,6 @@
-
-
+body {
+    overflow: hidden;
+}
 
 #schedule_calendar {
 	width:98%
