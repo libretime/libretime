@@ -256,12 +256,9 @@ $(document).ready(function() {
 
     });
 
-    $(window).load(function(){
-
-        var mainHeight = this.innerHeight - 200 - 50;
+    var mainHeight = document.documentElement.clientHeight - 200 - 50;
     
-        $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
-    });
+    $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
 
 });
 

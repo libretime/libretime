@@ -128,4 +128,8 @@ $(document).ready(function() {
 		eventRender: eventRender
 	});
 
+    var mainHeight = document.documentElement.clientHeight - 200 - 50;
+    
+    $('#fullcalendar_show_display').fullCalendar('option', 'contentHeight', mainHeight);
+
 });

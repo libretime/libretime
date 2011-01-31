@@ -1,3 +1,7 @@
+body {
+    overflow: hidden;
+}
+
 #schedule-add-show,
 #fullcalendar_show_display {
 	float: left;
