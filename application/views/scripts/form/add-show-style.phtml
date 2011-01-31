@@ -2,12 +2,13 @@
     <?php echo $this->formLabel($this->element->getName(),
                          $this->element->getLabel()) ?>
 </dt>
-<dd id="<?php echo $this->element->getName() ?>-element" class="<?php echo $this->class ?>">
+<dd id="<?php echo $this->element->getName() ?>-element">
     <?php echo $this->{$this->element->helper}(
         $this->element->getName(),
         $this->element->getValue(),
         $this->element->getAttribs()
     ) ?>
+
     <?php if($this->element->hasErrors()) {
             echo $this->formErrors($this->element->getMessages());
         } 

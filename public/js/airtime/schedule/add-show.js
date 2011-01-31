@@ -77,13 +77,20 @@ function setAddShowEvents() {
 	createDateInput(end, endDpSelect);
 
     $("#add_show_start_time").timepicker();
+    $("#add_show_duration").timepicker({
+        amPmText: ['', ''] 
+    });
 
 	$("#add_show_hosts_autocomplete").autocomplete({
 		source: findHosts,
-		select: autoSelect
+		select: autoSelect,
+        delay: 200 
 	});
 
 	$("#schedule-show-style input").ColorPicker({
+       onChange: function (hsb, hex, rgb, el) {
+		    $(el).val(hex);
+	    },
 		onSubmit: function(hsb, hex, rgb, el) {
 			$(el).val(hex);
 			$(el).ColorPickerHide();

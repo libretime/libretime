@@ -37,7 +37,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'filters'    => array('StringTrim'),
 			'validators' => array(
 				'NotEmpty',
-        		array('date', false, array('HH:mm'))
+        		array('regex', false, array('([0-2][0-3]:[0-5][0-5])', 'messages' => 'Show must be under 24 hours'))
     		) 
         ));
 
@@ -51,6 +51,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     public function checkReliantFields($formData) {
        
+        $valid = true;
+
         $now_timestamp = date("Y-m-d H:i:s");
         $start_timestamp = $formData['add_show_start_date']."".$formData['add_show_start_time'];
 
@@ -59,10 +61,15 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
         if($start_epoch < $now_epoch) {
             $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
-            return false;
+            $valid = false;
+        }
+
+        if(strtotime("23:59") < strtotime($formData["add_show_duration"])) {
+            $this->getElement('add_show_duration')->setErrors(array('Max show size: 23:59'));
+            $valid = false;
         }
  
-        return true;
+        return $valid;
     }
 
 }
