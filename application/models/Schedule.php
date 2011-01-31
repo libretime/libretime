@@ -474,7 +474,8 @@ class Schedule {
         $timeNow = Schedule::GetSchedulerTime();
         return array("schedulerTime"=>$timeNow,"previous"=>Schedule::GetPreviousItems($timeNow), 
             "current"=>Schedule::GetCurrentlyPlaying($timeNow), 
-            "next"=>Schedule::GetNextItems($timeNow));
+            "next"=>Schedule::GetNextItems($timeNow),
+            "timezone"=> date("T"));
     }
 
     public static function GetPreviousItems($timeNow, $prevCount = 1){

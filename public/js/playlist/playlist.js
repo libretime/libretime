@@ -188,6 +188,8 @@ function calcAdditionalData(currentItem, bUpdateGlobalValues){
 
 function parseItems(obj){
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
+    
+    $('#time-zone').text(obj.timezone);
 
     previousSongs = obj.previous;
     currentSong = obj.current;
