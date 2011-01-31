@@ -72,9 +72,6 @@ function convertDateToHHMMSS(epochTime){
 	var hours = d.getUTCHours().toString();
 	var minutes = d.getUTCMinutes().toString();
 	var seconds = d.getUTCSeconds().toString();
-
-    //if (hours == "NaN")
-        //alert("epochTime: " + epochTime);
 	
 	if (hours.length == 1)
 		hours = "0" + hours;

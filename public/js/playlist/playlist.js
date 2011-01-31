@@ -43,8 +43,6 @@ function getTrackInfo(song){
         str += song.track_title;
     if (song.artist_name != null)
         str += " - " + song.artist_name;
-    //if (song.album_title != null)
-        //str += " - " + song.album_title;
 
     str += ","
 
@@ -188,6 +186,7 @@ function calcAdditionalData(currentItem, bUpdateGlobalValues){
 
 function parseItems(obj){
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
+    schedulePosixTime += parseInt(obj.timezoneOffset)*1000;
     
     $('#time-zone').text(obj.timezone);
 
