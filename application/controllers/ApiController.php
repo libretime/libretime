@@ -69,6 +69,7 @@ class ApiController extends Zend_Controller_Action
             $fp = fopen($filepath, 'rb');
         	$mtype = '';
 
+            /*
         	// magic_mime module installed?
         	if (function_exists('mime_content_type')) {
         		$mtype = mime_content_type($file_path);
@@ -81,7 +82,15 @@ class ApiController extends Zend_Controller_Action
         	}
 
             //header("Content-Type: $mtype");
-        	header("Content-Type: audio/mpeg");
+            */
+            
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if ($ext == "ogg")
+                header("Content-Type: audio/ogg");
+            else if ($ext == "mp3")
+                header("Content-Type: audio/mpeg");
+
+
             header("Content-Length: " . filesize($filepath));
             //header('Content-Disposition: attachment; filename="'.$media->getRealMetadataFileName().'"');
             fpassthru($fp);

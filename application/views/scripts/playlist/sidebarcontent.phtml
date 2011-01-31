@@ -3,7 +3,7 @@
 <?php endif; ?>
 
 <li class="ui-state-default" id="spl_<?php echo $this->partialCounter-1 ?>">
-	<a href="javascript:void(0);" class="big_play" onclick="audioPreview('spl_<?php echo $this->partialCounter-1 ?>', '/api/get-media/file/<?php echo $this->CcFiles["gunid"] ?>.mp3/api_key/AAA')"><span class="ui-icon ui-icon-play"></span></a>
+	<a href="javascript:void(0);" class="big_play" onclick="audioPreview('<?php echo $this->CcFiles["gunid"].".".pathinfo($this->CcFiles["name"], PATHINFO_EXTENSION);?>', 'spl_<?php echo $this->partialCounter-1 ?>')"><span class="ui-icon ui-icon-play"></span></a>
 	<div class="text-row top">
 		<span class="spl_playlength"><?php echo $this->cliplength ?></span>
 		<span class="spl_title"><?php echo $this->CcFiles['track_title'] ?></span>
