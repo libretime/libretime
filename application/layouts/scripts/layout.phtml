@@ -9,13 +9,15 @@
 </head>
 <body>
 
-<div id="nowplayingbar"><?php echo $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs())); ?></div>
-<div class="logo"></div>
+<div id="Panel">
+    <div class="logo"></div>
+    <?= $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs())) ?>
 
 <?php 	$partial = array('menu.phtml', 'default');
 		$this->navigation()->menu()->setPartial($partial); ?>
 
 <?php echo $this->navigation()->menu() ?>
+</div>
  
 <div class="wrapper" id="content"><?php echo $this->layout()->content ?></div>
 </body>

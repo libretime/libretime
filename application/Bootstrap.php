@@ -54,6 +54,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headScript()->appendFile('/js/libs/jquery-1.4.4.min.js','text/javascript');
 		$view->headScript()->appendFile('/js/libs/jquery-ui-1.8.8.custom.min.js','text/javascript');
 		$view->headScript()->appendFile('/js/libs/stuHover.js','text/javascript');
+        $view->headScript()->appendFile('/js/libs/jquery.stickyPanel.js','text/javascript');
+
+        $view->headScript()->appendFile('/js/airtime/common/common.js','text/javascript');   
 
         //TODO: Find better place to put this in.
         $view->addHelperPath('../application/views/helpers', 'Airtime_View_Helper');
