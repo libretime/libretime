@@ -258,7 +258,9 @@ $(document).ready(function() {
 
     $(window).load(function(){
         
-        var mainHeight = this.screen.height - 275 - 140 - 50;
+        //var mainHeight = this.screen.height - 275 - 140 - 50;
+    alert(this.innerHeight);
+        var mainHeight = this.innerHeight - 200 - 50;
     
         $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
     });
