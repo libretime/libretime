@@ -1509,3 +1509,8 @@ padding: 0;
 	margin: -1px;
 	height:100%;
 }
+
+
+.ui-datepicker {
+	display:none;
+}

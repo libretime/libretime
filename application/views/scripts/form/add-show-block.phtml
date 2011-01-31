@@ -1,11 +1,12 @@
-<div class="<?php echo $this->class ?>">
+<dt id="<?php echo $this->element->getName() ?>-label" class="<?php echo $this->class ?>">
     <?php echo $this->formLabel($this->element->getName(),
                          $this->element->getLabel()) ?>
+</dt>
+<dd id="<?php echo $this->element->getName() ?>-element" class="<?php echo $this->class ?>">
     <?php echo $this->{$this->element->helper}(
         $this->element->getName(),
         $this->element->getValue(),
         $this->element->getAttribs()
     ) ?>
     <?php echo $this->formErrors($this->element->getMessages()) ?>
-    <div class="hint"><?php echo $this->element->getDescription() ?></div>
-</div>
+</dd>

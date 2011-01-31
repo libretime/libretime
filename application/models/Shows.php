@@ -76,14 +76,17 @@ class Show {
 				$start = $data['add_show_start_date'];
 			}
 
-			$showDay = new CcShowDays();
-			$showDay->setDbFirstShow($start);
-			$showDay->setDbLastShow($endDate);
-			$showDay->setDbStartTime($data['add_show_start_time']);
-			$showDay->setDbEndTime($endTime);
-			$showDay->setDbDay($day);
-			$showDay->setDbShowId($showId);
-			$showDay->save();
+            if(strtotime($start) < strtotime($endDate)) {
+
+			    $showDay = new CcShowDays();
+			    $showDay->setDbFirstShow($start);
+			    $showDay->setDbLastShow($endDate);
+			    $showDay->setDbStartTime($data['add_show_start_time']);
+			    $showDay->setDbEndTime($endTime);
+			    $showDay->setDbDay($day);
+			    $showDay->setDbShowId($showId);
+			    $showDay->save();
+            }
 		}
 		
 		foreach ($data['add_show_hosts'] as $host) {

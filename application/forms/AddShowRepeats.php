@@ -23,10 +23,16 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
                 ),
          ));
 
+        $checkboxes = $this->getElement('add_show_day_check');
+
+        $checkboxes->setDecorators(array(array('ViewScript', array(
+            'viewScript' => 'form/add-show-checkbox.phtml'
+        ))));
+
 		// Add end date element
         $this->addElement('text', 'add_show_end_date', array(
             'label'      => 'Date End:',
-            //'class'      => 'input_text hasDatepicker',
+            'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
 			'validators' => array(
@@ -42,6 +48,21 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 		));
     }
 
+    public function checkReliantFields($formData) {
+       
+        $start_timestamp = $formData['add_show_start_date'];
+        $end_timestamp = $formData['add_show_end_date'];
+
+        $start_epoch = strtotime($start_timestamp);
+        $end_epoch = strtotime($end_timestamp);
+
+        if($end_epoch < $start_epoch) {
+            $this->getElement('add_show_end_date')->setErrors(array('End date must be after start date'));
+            return false;
+        }
+ 
+        return true;
+    }
 
 }
 

@@ -60,7 +60,15 @@ function findHosts(request, callback) {
 function setAddShowEvents() {
 	var start, end;
 
-	$("#schedule-add-show-tabs").tabs();
+	$(".tabs").tabs();
+
+    if(!$("#add_show_repeats").attr('checked')) {
+        $("#schedule-show-when > fieldset:last").hide();
+    }
+
+    $("#add_show_repeats").click(function(){
+        $("#schedule-show-when > fieldset:last").toggle();
+    });
 
 	start  = $("#add_show_start_date");
 	end  = $("#add_show_end_date");
@@ -99,8 +107,8 @@ $(document).ready(function() {
 	$("#fullcalendar_show_display").fullCalendar({
 		header: {
 			left: 'prev, next, today',
-			center: '',
-			right: ''
+			center: 'title',
+			right: 'agendaDay, agendaWeek, month'
 		}, 
 		defaultView: 'agendaDay',
 		editable: false,

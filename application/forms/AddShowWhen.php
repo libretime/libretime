@@ -8,7 +8,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 		// Add start date element
         $this->addElement('text', 'add_show_start_date', array(
             'label'      => 'Date Start:',
-            //'class'      => 'input_text hasDatepicker',
+            'class'      => 'input_text',
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validators' => array(
@@ -49,8 +49,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
-    /*
-    public function postValidation(array $formData) {
+    public function checkReliantFields($formData) {
        
         $now_timestamp = date("Y-m-d H:i:s");
         $start_timestamp = $formData['add_show_start_date']."".$formData['add_show_start_time'];
@@ -65,7 +64,6 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
  
         return true;
     }
-    */
 
 }
 

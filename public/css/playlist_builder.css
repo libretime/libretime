@@ -51,8 +51,9 @@
 	position:relative;
 }
 
-#side_playlist li div.list-item-container {
+#side_playlist li div.list-item-container, #side_playlist li div.list-item-container.ui-state-active {
 	height:56px;
+	border: none;
 }
 
 #spl_name {
@@ -70,7 +71,9 @@
 .spl_playlength {
 	float:right;
 	font-size:14px;
-	padding:0 5px 0 0
+	padding:0 5px 0 0;
+	width:100px;
+	text-align:right;
 }
 
 .spl_artist {
@@ -202,4 +205,32 @@
 }
 #spl_sortable dl.inline-list {
 	margin:10px 0 0 37px;
+}
+
+
+#spl_sortable li .spl_fade_start, #spl_sortable li .spl_fade_end {
+    background-color: transparent;
+	float:right;
+    font-size: 9px;
+    height: 15px;
+    right: 35px;
+    width: 33px;
+	margin-top:2px;
+}
+#spl_sortable li .spl_fade_start.ui-state-default {
+	background: transparent url(images/fade_in.png) no-repeat 0 0;
+	border:none;
+}
+#spl_sortable li .spl_fade_start.ui-state-active {
+	background: transparent url(images/fade_in.png) no-repeat 0 -30px;
+	border:none;
+}
+
+#spl_sortable li .spl_fade_end.ui-state-default {
+	background: transparent url(images/fade_out.png) no-repeat 0 0;
+	border:none;
+}
+#spl_sortable li .spl_fade_end.ui-state-active {
+	background: transparent url(images/fade_out.png) no-repeat 0 -30px;
+	border:none;
 }

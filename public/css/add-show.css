@@ -18,12 +18,10 @@
 	width: 60%;
 }
 
-#schedule-add-show-overlap {
-	clear: left;
-}
+
 
 #schedule-add-show .ui-tabs-panel {
-    padding-top: 16px;
+    padding-top: 8px;
 }
 #schedule-add-show fieldset {
 	padding:8px;
@@ -82,6 +80,9 @@ label.wrapp-label input[type="checkbox"] {
 #schedule-add-show fieldset {
 	min-height:70px;
 }
+#schedule-add-show fieldset:last-child {
+	margin-bottom:0;
+}
 #schedule-add-show fieldset dd input[type="checkbox"] {
     margin-top:2px;
 }
@@ -96,4 +97,13 @@ label.wrapp-label input[type="checkbox"] {
 }
 #add_show_name-element .input_text {
 	width:99%;
+}
+
+#schedule-add-show-overlap {
+	border: 1px solid #c83f3f;
+	background: #c6b4b4;
+	margin-top:8px;
+	padding:8px;
+	color:#902d2d;
+	display:none;
 }
