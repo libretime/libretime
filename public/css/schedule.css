@@ -1,7 +1,9 @@
-#content {
-	width: 75%;
-}
 
+
+
+#schedule_calendar {
+	width:98%
+}
 div.ui-datepicker {
 	font-size: 75%;
 }
@@ -124,4 +126,6 @@ div.ui-datepicker {
 	width: 400px;
 }
 
-
+.fc-agenda-body {
+	max-height:560px;
+}	
