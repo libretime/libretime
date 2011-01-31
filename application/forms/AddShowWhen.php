@@ -8,7 +8,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 		// Add start date element
         $this->addElement('text', 'add_show_start_date', array(
             'label'      => 'Date Start:',
-            //'class'      => 'input_text hasDatepicker',
+            'class'      => 'input_text',
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validators' => array(
@@ -37,7 +37,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'filters'    => array('StringTrim'),
 			'validators' => array(
 				'NotEmpty',
-        		array('date', false, array('HH:mm'))
+                array('date', false, array('HH:mm', 'messages' => 'Show must be under 24 hours'))
     		) 
         ));
 
@@ -49,9 +49,10 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
-    /*
-    public function postValidation(array $formData) {
+    public function checkReliantFields($formData) {
        
+        $valid = true;
+
         $now_timestamp = date("Y-m-d H:i:s");
         $start_timestamp = $formData['add_show_start_date']."".$formData['add_show_start_time'];
 
@@ -60,12 +61,16 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
         if($start_epoch < $now_epoch) {
             $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
-            return false;
+            $valid = false;
+        }
+
+        if(strtotime("00:00") == strtotime($formData["add_show_duration"])) {
+            $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00:00'));
+            $valid = false;
         }
  
-        return true;
+        return $valid;
     }
-    */
 
 }
 

@@ -93,7 +93,7 @@
 				setSelector(col, cal.get(0));
 				setHue(col, cal.get(0));
 				setNewColor(col, cal.get(0));
-				cal.data('colorpicker').onChange.apply(cal, [col, HSBToHex(col), HSBToRGB(col)]);
+				cal.data('colorpicker').onChange.apply(cal, [col, HSBToHex(col), HSBToRGB(col), cal.data('colorpicker').el]);
 			},
 			blur = function (ev) {
 				var cal = $(this).parent().parent();
@@ -454,6 +454,7 @@
 				} else if (col.r != undefined && col.g != undefined && col.b != undefined) {
 					col = RGBToHSB(col);
 				} else if (col.h != undefined && col.s != undefined && col.b != undefined) {
+
 					col = fixHSB(col);
 				} else {
 					return this;

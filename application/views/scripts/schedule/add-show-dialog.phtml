@@ -1,12 +1,23 @@
-<div id="schedule-add-show">
+<div class="wrapper" id="content"> 
 	<form method="post" action="">
-		<div id="schedule-add-show-tabs">
+		<div id="schedule-add-show" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded">
 			<ul>
 				<li><a href="#schedule-show-what"><span>What</span></a></li>
 				<li><a href="#schedule-show-when"><span>When</span></a></li>
 				<li><a href="#schedule-show-who"><span>Who</span></a></li>
 				<li><a href="#schedule-show-style"><span>Style</span></a></li>
 			</ul>
+            <div class="button-bar">
+          	    <button id="add-show-submit" class="right-floated">Add this show</button></div>
+            <div class="clear"></div>
+
+            <?php if(isset($this->overlap)) : ?>
+	        <div id="schedule-add-show-overlap" style="display:block;">    
+	            <div>Overlap</div>
+	            <?php echo $this->partialLoop('schedule/show-overlap.phtml', $this->overlap); ?>   
+            </div>
+            <?php endif;?>
+
 			<div id="schedule-show-what">
 				<?php echo $this->what ?>
 			</div>
@@ -22,13 +33,6 @@
 			</div>
 		</div>
 	</form>
-	<button id="add-show-submit">Add</button>
-</div>
 
-<div id="fullcalendar_show_display"></div>
-<div id="schedule-add-show-overlap">
-	<?php if(isset($this->overlap)) : ?>
-		<div>Overlap</div>
-		<?php echo $this->partialLoop('schedule/show-overlap.phtml', $this->overlap); ?>
-	<?php endif;?> 
+    <div id="fullcalendar_show_display" class="ui-widget-content block-shadow omega-block padded"></div>
 </div>

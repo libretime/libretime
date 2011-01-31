@@ -651,3 +651,9 @@ dt.block-display, dd.block-display {
 	padding:0;
 	width:100%;
 }
+
+.floated-panel {
+	margin-top:0;
+	width:99.99%;
+	z-index:9999;
+}

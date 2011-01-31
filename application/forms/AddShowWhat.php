@@ -14,11 +14,11 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'validators' => array('NotEmpty')
         ));
 
-        $nameLabel = $this->getElement('add_show_name');
+        $nameInput = $this->getElement('add_show_name');
 
-        $nameLabel->setDecorators(array(array('ViewScript', array(
-            'viewScript' => 'testform.phtml',
-            'class'      => 'test template'
+        $nameInput->setDecorators(array(array('ViewScript', array(
+            'viewScript' => 'form/add-show-block.phtml',
+            'class'      => 'block-display'
         ))));
         
 
@@ -28,6 +28,13 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'required'   => false,
             'class'      => 'input_text_area'
 		));
+
+        $descText = $this->getElement('add_show_description');
+
+        $descText->setDecorators(array(array('ViewScript', array(
+            'viewScript' => 'form/add-show-block.phtml',
+            'class'      => 'block-display'
+        ))));
 
     }
 

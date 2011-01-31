@@ -85,7 +85,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
-		$this->view->headLink()->appendStylesheet('/css/jquery-ui-timepicker.css.css');
+		$this->view->headLink()->appendStylesheet('/css/jquery-ui-timepicker.css');
         $this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
 		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet('/css/add-show.css');
@@ -110,7 +110,20 @@ class ScheduleController extends Zend_Controller_Action
 
 			$what = $formWhat->isValid($data);
 			$when = $formWhen->isValid($data);
-			$repeats = $formRepeats->isValid($data);
+            if($when) {
+                $when = $formWhen->checkReliantFields($data);
+            }
+
+            if($data["add_show_repeats"]) {
+			    $repeats = $formRepeats->isValid($data);
+                if($repeats) {
+                    $when = $formRepeats->checkReliantFields($data);
+                }
+            }
+            else {
+                $repeats = 1; //make it valid, results don't matter anyways.
+            }
+
 			$who = $formWho->isValid($data);
 			$style = $formStyle->isValid($data);
 
@@ -126,7 +139,7 @@ class ScheduleController extends Zend_Controller_Action
 				}
 				else {
 					$this->_redirect('Schedule');
-				}	
+				}
 			}  
         }
 

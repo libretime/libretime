@@ -71,6 +71,7 @@ table.fc-header {
 .fc-header-title {
 	margin-top: 0;
 	white-space: nowrap;
+	font-size:17px;
 	}
 	
 .fc-header-space {
