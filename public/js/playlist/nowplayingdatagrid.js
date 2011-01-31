@@ -62,12 +62,12 @@ function createDataGrid(){
 		"aaData": datagridData.rows,
 		"aoColumns": datagridData.columnHeaders,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-			if (aData[0] == "p"){
-				//$(nRow).attr("style", "background-color:blue;");
-			} else if (aData[0] == "c"){
-				$(nRow).attr("style", "background-color:#61B329;");
-			} else if (aData[0] == "n"){
-			}
+            if (aData[aData.length-2] != ""){
+                $(nRow).attr("style", "background-color:#166622");
+            }
+
+            if (aData[0] == "c")
+				$(nRow).attr("style", "background-color:#61B329");
 			return nRow;
 		}
 	} );

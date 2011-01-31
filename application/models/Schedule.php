@@ -479,14 +479,15 @@ class Schedule {
 
     public static function GetPreviousItems($timeNow, $prevCount = 1){
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, sdt.start_time, sdt.end_time"
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt"
+        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, sdt.start_time, sdt.end_time, showt.background_color"
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt, $CC_CONFIG[showTable] showt"
         ." WHERE st.ends < TIMESTAMP '$timeNow'"
-        ." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '1 days')"
+        ." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '24 hours')"
         ." AND st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
         ." AND st.group_id = sst.group_id"
         ." AND sdt.show_id = sst.show_id"
+        ." AND showt.id = sst.show_id"
         ." ORDER BY st.starts DESC"
         ." LIMIT $prevCount";
         $rows = $CC_DBC->GetAll($sql);
@@ -496,29 +497,31 @@ class Schedule {
     public static function GetCurrentlyPlaying($timeNow){
         global $CC_CONFIG, $CC_DBC;
         
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, sdt.start_time, sdt.end_time"
+        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, sdt.start_time, sdt.end_time, showt.background_color"
         ." FROM $CC_CONFIG[scheduleTable] st,"
-        ."$CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt"
+        ."$CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt, $CC_CONFIG[showTable] showt"
         ." WHERE st.starts < TIMESTAMP '$timeNow'"
         ." AND st.ends > TIMESTAMP '$timeNow'"
         ." AND st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
         ." AND st.group_id = sst.group_id"
-        ." AND sdt.show_id = sst.show_id";
+        ." AND sdt.show_id = sst.show_id"
+        ." AND showt.id = sst.show_id";
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
     }
 
     public static function GetNextItems($timeNow, $nextCount = 1) {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, sdt.start_time, sdt.end_time" 
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt"
+        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, sdt.start_time, sdt.end_time, showt.background_color" 
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt, $CC_CONFIG[showTable] showt"
         ." WHERE st.starts > TIMESTAMP '$timeNow'"
         ." AND st.ends < (TIMESTAMP '$timeNow' + INTERVAL '24 hours')"
         ." AND st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
         ." AND st.group_id = sst.group_id"
         ." AND sdt.show_id = sst.show_id"
+        ." AND showt.id = sst.show_id"
         ." ORDER BY st.starts"
         ." LIMIT $nextCount";
         $rows = $CC_DBC->GetAll($sql);

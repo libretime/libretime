@@ -22,6 +22,7 @@ class NowplayingController extends Zend_Controller_Action
 
     public function getDataGridDataAction()
     {
+        //$this->view->entries = json_encode(Application_Model_Nowplaying::GetDataGridData());
         $this->view->entries = Application_Model_Nowplaying::GetDataGridData();
     }
 
