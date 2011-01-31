@@ -34,6 +34,7 @@ class LibraryController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
         $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/jplayer/jquery.jplayer.min.js');
         
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
