@@ -37,7 +37,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'filters'    => array('StringTrim'),
 			'validators' => array(
 				'NotEmpty',
-        		array('regex', false, array('([0-2][0-3]:[0-5][0-5])', 'messages' => 'Show must be under 24 hours'))
+                array('date', false, array('HH:mm', 'messages' => 'Show must be under 24 hours'))
     		) 
         ));
 
@@ -64,8 +64,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             $valid = false;
         }
 
-        if(strtotime("23:59") < strtotime($formData["add_show_duration"])) {
-            $this->getElement('add_show_duration')->setErrors(array('Max show size: 23:59'));
+        if(strtotime("00:00") == strtotime($formData["add_show_duration"])) {
+            $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00:00'));
             $valid = false;
         }
  
