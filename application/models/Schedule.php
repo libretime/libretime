@@ -472,10 +472,11 @@ class Schedule {
         }
 
         $timeNow = Schedule::GetSchedulerTime();
-        return array("schedulerTime"=>$timeNow,"previous"=>Schedule::GetPreviousItems($timeNow), 
+        return array("schedulerTime"=>gmdate("Y-m-d H:i:s"),"previous"=>Schedule::GetPreviousItems($timeNow), 
             "current"=>Schedule::GetCurrentlyPlaying($timeNow), 
             "next"=>Schedule::GetNextItems($timeNow),
-            "timezone"=> date("T"));
+            "timezone"=> date("T"),
+            "timezoneOffset"=> date("Z"));
     }
 
     public static function GetPreviousItems($timeNow, $prevCount = 1){
