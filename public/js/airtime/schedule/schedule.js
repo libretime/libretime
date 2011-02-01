@@ -201,7 +201,11 @@ $(document).ready(function() {
 		defaultView: 'agendaDay',
 		editable: false,
 		allDaySlot: false,
-		
+        axisFormat: 'H:mm',
+        timeFormat: {
+            agenda: 'H:mm{ - H:mm}'
+        },
+        
 		events: getFullCalendarEvents,
 
 		//callbacks (in full-calendar-functions.js)
