@@ -122,7 +122,8 @@ $(document).ready(function() {
 		allDaySlot: false,
         axisFormat: 'H:mm',
         timeFormat: {
-            agenda: 'H:mm{ - H:mm}'
+            agenda: 'H:mm{ - H:mm}',
+            month: 'H:mm{ - H:mm}'
         },
 
 		events: getFullCalendarEvents,
