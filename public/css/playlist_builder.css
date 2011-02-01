@@ -150,13 +150,14 @@
 #spl_sortable a.big_play .ui-icon-play {
 	margin: 17px 0 0 1px;
 }
+
 #spl_sortable a.big_play .ui-icon-pause {
-	margin: 17px 0 0 1px;
-}
-#spl_sortable a.big_play:hover .ui-icon-play {
-	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
+ margin: 17px 0 0 1px;
 }
 
+#spl_sortable a.big_play:hover .ui-icon-play, #spl_sortable a.big_play:hover .ui-icon-pause {
+	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
+}
 #spl_sortable .ui-icon-closethick {
 	position:absolute;
 	top:3px;
@@ -186,6 +187,7 @@
     overflow: hidden;
     padding: 0 30px 0 10px;
     text-indent: 2px;
+	margin:-1px 0 0 0;
 	float:none;
 }
 #spl_sortable .top {

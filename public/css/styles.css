@@ -34,6 +34,9 @@ h3 {
 	padding:0 0 10px 0;
 	margin:0;
 }
+a, a:focus {
+	outline:none;
+}
 label {
 	font-size:12px;
 }
@@ -79,7 +82,7 @@ select {
 	position:relative;
 }
 
-.now-playing-block, .show-block, .on-air-block, .time-info-block, .personal-block  {
+.now-playing-block, .show-block, .on-air-block, .time-info-block, .personal-block, .listen-control-block  {
 	height:100px;
 	float:left;
 	margin-right:10px;
@@ -234,6 +237,50 @@ select {
 	background:#575050 url(images/on-off-air.png) repeat-x 0 -36px;
 	color:#a5a5a5;
 }
+
+.listen-control-block a {
+	font-size:11px;
+	text-transform:uppercase;
+	padding:0;
+	border:1px solid #242424;
+	color:#fff;
+	text-decoration:none;
+	font-weight:bold;
+	margin-top:34px;
+	display:block;
+	
+}
+.listen-control-block a span {
+	background-color: #6e6e6e;
+    background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
+	padding:5px 10px;
+	border:1px solid #a1a1a1;
+	border-width:1px 0;
+	border-bottom-color:#646464;
+	color:#dcdcdc;
+	text-shadow: #555555 0px -1px;
+	display:block;
+}
+.listen-control-block a:hover {
+	border:1px solid #000;
+}
+.listen-control-block a:hover span {
+	background-color: #292929;
+    background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
+	border:1px solid #555555;
+	border-width:1px 0;
+	border-bottom-color:#1e1e1e;
+	color:#fff;
+	color:#0C0;
+	text-shadow: #000 0px -1px;
+	display:block;
+}
+.listen-control-block a:active span {
+	color:#fff;
+}
+
 /* END Master Panel */
 
 
@@ -657,3 +704,247 @@ dt.block-display, dd.block-display {
 	width:99.99%;
 	z-index:9999;
 }
+
+
+/*---//////////////////// Schedule Show ////////////////////---*/
+
+
+#schedule_playlist_dialog > div {
+	float: left;
+	width: 50%;
+	padding: 0;
+}
+
+#schedule_playlist_dialog > div:first-child {
+	margin-right:2%;
+	width: 48%;
+}
+
+#schedule_playlist_dialog div:first-child .ui-widget-header:first-child {
+    background: none repeat scroll 0 0 transparent;
+    border-width: 0 0 1px;
+    color: #444444;
+    font-weight: bold;
+}
+
+#schedule_playlist_dialog div:first-child .ui-widget-header:first-child {
+    background: none repeat scroll 0 0 transparent;
+    border-width: 0 0 1px;
+    color: #444444;
+    font-weight: bold;
+}
+#schedule_playlist_dialog .ui-widget-header:first-child .dataTables_filter,
+#schedule_playlist_dialog .ui-widget-header:first-child .dataTables_length {
+    margin: 0;
+}
+
+.ui-dialog #schedule_playlist_dialog.ui-dialog-content {
+    background: none repeat scroll 0 0 transparent;
+    border: 1px solid #8f8f8f;
+    overflow: auto;
+    padding: 8px;
+	margin:8px;
+
+}
+#schedule_playlist_dialog > div h4 {
+    padding: 13px 0 12px 0;
+    margin: 0;
+	font-size:16px;
+	font-weight:normal;
+}
+#schedule_calendar {
+	width:98%
+}
+div.ui-datepicker {
+	font-size: 75%;
+}
+
+
+#schedule_playlist_dialog ul {
+	list-style-type: none;
+	overflow: auto;
+	margin: 0 0 8px 0;
+	padding: 0;
+	height: 280px;
+	background:#9a9a9a;
+	width:100%;
+}
+
+#schedule_playlist_chosen li {
+	float: left;
+	clear: left;
+	margin: 0;
+	width: 100%;
+	display:block;
+	margin-bottom:-1px;
+}
+
+#schedule_playlist_chosen li > h3 {
+	font-size:15px;
+	padding: 7px 0 0 0;
+	margin: 0;
+	min-height:25px;
+
+}
+
+#schedule_playlist_chosen li > h3 > div {
+	float: left;
+	margin: 0 5px 2px 0;
+}
+
+#schedule_playlist_chosen li > h3 > div > span.ui-icon {
+	margin-top: 0px;
+}
+#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e {
+	float:left;
+	margin-right: 8px;
+}
+#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-close {
+	float:right;
+	margin-right: 8px;
+}
+#schedule_playlist_chosen div.group_list {
+	border-width:0 1px 1px 1px;
+}
+/*#schedule_playlist_chosen li div{
+	float: left;
+}
+
+#schedule_playlist_chosen li > div{
+	width: 475px;
+}
+*/
+
+#schedule_playlist_chosen li > div > div{
+	clear: left;
+	padding-top: 5px;
+	padding-left: 5px;
+}
+#schedule_playlist_chosen li > div:first-child {
+	border-bottom:1px solid #b1b1b1;
+}
+.sched_description {
+	clear: left;
+	font-size: 85%;
+	margin-left: 2em;
+}
+
+.sh_pl_name {
+	min-width: 150px;
+}
+
+.sh_pl_creator {
+
+}
+
+#schedule_playlist_chosen li > h3 > div.sh_pl_time {
+	float:right;
+	margin-right:22px;
+}
+
+#schedule_playlist_chosen li > div > div > span {
+	float: right;
+	margin-right:46px;
+}
+#schedule_playlist_chosen li > div > div > span.sh_file_name {
+	display: inline-block;
+	float: left;
+	margin-right:0;
+}
+
+.sh_file_artist, #schedule_playlist_chosen li > div > div.sh_file_artist {
+	font-size: 11px;
+	padding-top: 2px;
+	padding-bottom: 8px;
+	color:#5b5b5b;
+}
+
+#schedule_playlist_chosen li > div > div.sched_description {
+	font-size: 12px;
+	padding-top: 5px;
+	padding-bottom: 7px;
+	border-bottom:1px solid #b1b1b1;
+	color:#5b5b5b;
+	margin:0;
+	background:#dddddd;
+}
+#show_time_info {
+	font-size:12px;
+}
+
+#show_time_info > div, #show_time_info > span{
+	float: left;
+}
+
+#show_progressbar {
+	width: 46%;
+	height: 5px;
+	margin: 9px 9px 0 0;
+}
+#show_progressbar.ui-widget-content {
+	background: #646464 url(images/schedule-show_progressbar_bg.png) repeat-x 0 0;
+	border-color:#343434;
+	border-bottom-color:#cfcfcf;
+}
+
+#show_progressbar .ui-progressbar-value {
+	background: #ff5d1a;
+	border-color:#343434;
+	border-width: 1px 0 0 1px;
+}
+
+h2#scheduled_playlist_name {
+	font-size:21px;
+	font-weight:normal;
+	margin:0;
+	padding:16px 0 0px 12px;
+	color:#1c1c1c; 
+}
+
+h2#scheduled_playlist_name span {
+	color:#656565; 
+}
+
+.time {
+	width: 80px;
+	margin: 5px;
+	text-align: left;
+}
+
+/* --- Add show Dialog --- */
+
+#add_show_name {
+
+}
+
+#add_show_description {
+	width: 400px;
+	height: 200px;
+}
+
+#fullcalendar_show_display {
+	width: 400px;
+}
+
+.fc-agenda-body {
+	max-height:560px;
+}
+
+#schedule_calendar .ui-progressbar {
+	width: 46%;
+	height: 5px;
+	margin: 9px 9px 0 0;	
+}
+
+#schedule_calendar .ui-progressbar.ui-widget-content {
+	background: #646464 url(images/schedule-show_progressbar_bg.png) repeat-x 0 0;
+	border-color:#343434;
+	border-bottom-color:#cfcfcf;
+}
+#schedule_calendar .ui-progressbar .ui-progressbar-value {
+	background: #ff5d1a;
+	border-color:#343434;
+	border-width: 1px 0 0 1px;
+}
+/*---//////////////////// Advenced Search ////////////////////---*/
+
