@@ -11,6 +11,18 @@ class Show {
 		$this->_showId = $showId;    
     }
 
+    public function getName() {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+
+        return $show->getDbName();
+    }
+    
+    public function setName($name) {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+
+        $show->setDbName($name);
+    }
+
 	//end dates are non inclusive.
 	public function addShow($data) {
 	

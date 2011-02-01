@@ -16,14 +16,7 @@ class UserController extends Zend_Controller_Action
     }
 
     public function addUserAction()
-    {
-
-        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
-        
-		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
-		$this->view->headLink()->appendStylesheet('/css/styles.css');
-		
+    {	
         $request = $this->getRequest();
         $form = new Application_Form_AddUser();
  

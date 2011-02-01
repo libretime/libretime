@@ -146,8 +146,6 @@ class PlaylistController extends Zend_Controller_Action
 
     public function editAction()
     {
-        $this->view->headScript()->appendFile('/js/airtime/playlist/playlist.js','text/javascript'); 
-
 		$pl_id = $this->_getParam('id', null);
 	
 		if(!is_null($pl_id)) {
