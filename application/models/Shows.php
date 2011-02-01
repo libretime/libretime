@@ -88,7 +88,7 @@ class Show {
 				$start = $data['add_show_start_date'];
 			}
 
-            if(strtotime($start) < strtotime($endDate)) {
+            if(strtotime($start) < strtotime($endDate) || is_null($endDate)) {
 
 			    $showDay = new CcShowDays();
 			    $showDay->setDbFirstShow($start);
@@ -584,7 +584,7 @@ class Show {
 						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 					}
 					//case for non-ending shows.
-					else if(is_null($show_end_epoch) && $repeat_epoch < $end_epoch) {
+					else if(!isset($show_end_epoch) && $repeat_epoch < $end_epoch) {
 						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
 					}
 					else {
