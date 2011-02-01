@@ -164,12 +164,9 @@ class PluploadController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/plupload/plupload.full.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/plupload/jquery.plupload.queue.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/airtime/library/plupload.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/plupload.queue.css');
-		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
-		$this->view->headLink()->appendStylesheet('/css/styles.css');
+
     }
 
 

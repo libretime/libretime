@@ -5,8 +5,6 @@ class LibraryController extends Zend_Controller_Action
 
     protected $pl_sess = null;
 
-    protected $search_sess = null;
-
     public function init()
     {
         if(!Zend_Auth::getInstance()->hasIdentity())
@@ -17,11 +15,8 @@ class LibraryController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents', 'html')
 					->addActionContext('contents', 'json')
-					->addActionContext('plupload', 'html')
-					->addActionContext('upload', 'json')
 					->addActionContext('delete', 'json')
 					->addActionContext('context-menu', 'json')
-					->addActionContext('quick-search', 'json')
                     ->initContext();
 
 		$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -32,13 +27,9 @@ class LibraryController extends Zend_Controller_Action
     {
         $this->view->headScript()->appendFile('/js/airtime/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
         $this->view->headScript()->appendFile('/js/jplayer/jquery.jplayer.min.js');
         
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
-		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
-		$this->view->headLink()->appendStylesheet('/css/styles.css');
 	
 		$this->_helper->layout->setLayout('library');
 
@@ -47,7 +38,6 @@ class LibraryController extends Zend_Controller_Action
 		
 		$this->_helper->actionStack('index', 'playlist');
 		$this->_helper->actionStack('contents', 'library');
-		//$this->_helper->actionStack('quick-search', 'library');
     }
 
     public function contextMenuAction()
@@ -168,53 +158,6 @@ class LibraryController extends Zend_Controller_Action
         }
  
         $this->view->form = $form;
-    }
-
-    public function quickSearchAction()
-    {
-		$this->view->headScript()->appendFile('/js/airtime/library/quicksearch.js','text/javascript');
-
-        $this->_helper->viewRenderer->setResponseSegment('quick_search');  
-
-		$this->view->qs_value = $this->search_sess->quick_string;
-
-		$format = $this->_getParam('format', 'layout');
-
-		if($format !== 'json')
-			return;
-
-		$search = $this->_getParam('search', null);
-		$this->search_sess->quick_string = $search;
-
-		$categories = array("dc:title", "dc:creator", "dc:source");
-		$keywords = explode(" ", $search);
-
-		$md = array();
-
-		for($group_id=1; $group_id <= count($keywords); $group_id++) {
-			
-			for($row_id=1; $row_id <= count($categories); $row_id++) {
-
-				$md["group_".$group_id]["row_".$row_id]["metadata"] = $categories[$row_id-1];
-				$md["group_".$group_id]["row_".$row_id]["match"] = "0";
-				$md["group_".$group_id]["row_".$row_id]["search"] = $keywords[$group_id-1];
-			}
-		}
-
-		$this->search_sess->quick = $md;
-		
-		$currpage = isset($this->search_sess->page) ? $this->search_sess->page : null;
-		$order = isset($this->search_sess->order) ? $this->search_sess->order : null;
-		$count = StoredFile::searchFiles($md, $order, true, null, null, true);
-
-		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($count));
-		$paginator->setCurrentPageNumber($currpage);
-		$this->view->paginator = $paginator;
-		$this->view->files = StoredFile::searchFiles($md, $order, false, $paginator->getCurrentPageNumber(), $paginator->getItemCountPerPage(), true);
-
-		$this->view->html = $this->view->render('library/contents.phtml');
-		unset($this->view->files);
-		unset($this->view->paginator);
     }
 }
 

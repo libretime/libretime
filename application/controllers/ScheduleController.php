@@ -37,14 +37,9 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
-		$this->view->headLink()->appendStylesheet('/css/schedule.css');
-		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
-		$this->view->headLink()->appendStylesheet('/css/styles.css');
 
 		$eventDefaultMenu = array();
 		//$eventDefaultMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
@@ -82,15 +77,11 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/airtime/schedule/add-show.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/jquery-ui-timepicker.css');
         $this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
 		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet('/css/add-show.css');
-		$this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
-		$this->view->headLink()->appendStylesheet('/css/styles.css');
 
         $request = $this->getRequest();
         $formWhat = new Application_Form_AddShowWhat();
@@ -301,6 +292,7 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->showContent = $show->getShowContent($start_timestamp);
 
 		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+        $this->view->showName = $show->getName();
 		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
 		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
 

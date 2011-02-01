@@ -35,7 +35,6 @@
           <actionMethod actionName="delete"/>
           <actionMethod actionName="contents"/>
           <actionMethod actionName="editFileMd"/>
-          <actionMethod actionName="quickSearch"/>
         </controllerFile>
         <controllerFile controllerName="Plupload">
           <actionMethod actionName="index"/>
@@ -236,9 +235,6 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Library">
             <viewScriptFile forActionName="editFileMd"/>
-          </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Library">
-            <viewScriptFile forActionName="quickSearch"/>
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Search">
             <viewScriptFile forActionName="newgroup"/>
