@@ -13,8 +13,7 @@ class LibraryController extends Zend_Controller_Action
         }
 
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('contents', 'html')
-					->addActionContext('contents', 'json')
+        $ajaxContext->addActionContext('contents', 'json')
 					->addActionContext('delete', 'json')
 					->addActionContext('context-menu', 'json')
                     ->initContext();
@@ -28,16 +27,16 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/airtime/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
         $this->view->headScript()->appendFile('/js/jplayer/jquery.jplayer.min.js');
-        
+        $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
+
+		$this->view->headLink()->appendStylesheet('/css/media_library.css'); 
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 	
 		$this->_helper->layout->setLayout('library');
-
-		unset($this->search_sess->page);
-		unset($this->search_sess->md);
+        $this->_helper->viewRenderer->setResponseSegment('library');
 		
 		$this->_helper->actionStack('index', 'playlist');
-		$this->_helper->actionStack('contents', 'library');
     }
 
     public function contextMenuAction()
@@ -118,23 +117,10 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
-		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
+		$post = $this->getRequest()->getPost();	
+		$datatables = StoredFile::searchFilesForPlaylistBuilder($post);
 
-		$this->view->headLink()->appendStylesheet('/css/media_library.css');
-		
-		$this->_helper->viewRenderer->setResponseSegment('library'); 
-
-		$format = $this->_getParam('format');
-		
-		$post = $this->getRequest()->getPost();
-
-		if($format == "json") {
-		
-			$datatables = StoredFile::searchFilesForPlaylistBuilder($post);
-
-			die(json_encode($datatables));
-		}
+		die(json_encode($datatables));
     }
 
     public function editFileMdAction()
