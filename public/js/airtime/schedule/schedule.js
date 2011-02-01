@@ -165,69 +165,29 @@ function makeScheduleDialog(dialog, json) {
 	setScheduleDialogEvents(dialog);
 }
 
-function openScheduleDialog(show) {
-	var url, start_date, end_date;
+function buildScheduleDialog(json){
+	var dialog = $(json.dialog);
 
-	url = '/Schedule/schedule-show-dialog/format/json';
-	
-	start_date = makeTimeStamp(show.start);
-	end_date = makeTimeStamp(show.end);
+	makeScheduleDialog(dialog, json);
 
-	$.post(url, 
-		{start: start_date, end: end_date, showId: show.id},
-		function(json){
-			var dialog = $(json.dialog);
+	dialog.dialog({
+		autoOpen: false,
+		title: 'Schedule Playlist',
+		width: 1100,
+		height: 500,
+		modal: true,
+		close: closeDialog,
+		buttons: {"Ok": function() {
+			dialog.remove();
+			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+		}}
+	});
 
-			makeScheduleDialog(dialog, json, show);
-
-			dialog.dialog({
-				autoOpen: false,
-				title: 'Schedule Playlist',
-				width: 1100,
-				height: 500,
-				modal: true,
-				close: closeDialog,
-				buttons: {"Ok": function() {
-					dialog.remove();
-					$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-				}}
-			});
-
-			dialog.dialog('open');
-		});
+	dialog.dialog('open');
 }
 
-function eventMenu(action, el, pos) {
-	var method, event, start_timestamp, url;
-
-	method = action.split('/').pop();
-	event = $(el).data('event');
-	start_timestamp = makeTimeStamp(event.start);
-
-	if (method === 'delete-show') {
-		
-		url = '/Schedule/delete-show';
-
-		$.post(action, 
-			{format: "json", showId: event.id, date: start_timestamp},
-			function(json){
-				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-			});
-	}
-	else if (method === 'schedule-show') {
-		
-		openScheduleDialog(event);
-	}
-	else if (method === 'clear-show') {
-		
-		url = '/Schedule/clear-show';
-
-		$.post(url, 
-			{format: "json", start: start_timestamp, showId: event.id},
-			function(json){
-				$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-			});	
-	}
+function scheduleRefetchEvents() {
+    $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
 
 $(document).ready(function() {
@@ -244,7 +204,7 @@ $(document).ready(function() {
 		
 		events: getFullCalendarEvents,
 
-		//callbacks (from full-calendar-functions.js
+		//callbacks (in full-calendar-functions.js)
 		dayClick: dayClick,
 		eventRender: eventRender,
 		eventAfterRender: eventAfterRender,
@@ -253,9 +213,7 @@ $(document).ready(function() {
 		eventMouseout: eventMouseout,
 		eventDrop: eventDrop,
 		eventResize: eventResize 
-
     });
-
 });
 
 $(window).load(function() {
