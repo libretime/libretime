@@ -1,27 +1,30 @@
 <div id="schedule_playlist_dialog">
     <h2 id="scheduled_playlist_name"><?php echo $this->showName; ?>, <span><?php echo $this->showLength; ?></span></h2>
-	<div>	
-		<table id="schedule_playlists" cellpadding="0" cellspacing="0" class="datatable">
-			<thead>
-				<tr>
-					<th>Id</th>
-					<th>Description</th>
-					<th>Title</th>
-					<th>Creator</th>
-					<th>Length</th>
-					<th>Editing</th>
-				</tr>
-			</thead>
-			<tbody></tbody>
-		</table>
-	</div>
-	<div>
-		<div>Items In This Show:</div>
-		<ul id="schedule_playlist_chosen"></ul>
-		<div id="show_time_info">
-			<span id="show_time_filled" class="time"><?php echo $this->timeFilled; ?></span>
-			<div id="show_progressbar"></div>
-			<span id="show_length" class="time"><?php echo $this->showLength; ?></span>
-		</div>
-	</div>
+	<div class="clearfix">
+        <div class="wrapp-one">	
+		    <table id="schedule_playlists" cellpadding="0" cellspacing="0" class="datatable">
+			    <thead>
+				    <tr>
+					    <th>Id</th>
+					    <th>Description</th>
+					    <th>Title</th>
+					    <th>Creator</th>
+					    <th>Length</th>
+					    <th>Editing</th>
+				    </tr>
+			    </thead>
+			    <tbody></tbody>
+		    </table>
+	    </div>
+    
+	    <div class="wrapp-two">
+		    <div><h4>Items In This Show:</h4></div>
+		    <ul id="schedule_playlist_chosen"></ul>
+		    <div id="show_time_info">
+			    <span id="show_time_filled" class="time"><?php echo $this->timeFilled; ?></span>
+			    <div id="show_progressbar"></div>
+			    <span id="show_length" class="time"><?php echo $this->showLength; ?></span>
+		    </div>
+	    </div>
+    </div>
 </div>

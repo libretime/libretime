@@ -255,11 +255,12 @@ class ScheduleController extends Zend_Controller_Action
     {
 		$show_id = $this->sched_sess->showId;
 		$start_timestamp = $this->sched_sess->showStart;
+        $end_timestamp = $this->sched_sess->showEnd;
 		$post = $this->getRequest()->getPost();
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 		$show = new Show(new User($userInfo->id, $userInfo->type), $show_id);
-		$playlists = $show->searchPlaylistsForShow($start_timestamp, $post);
+		$playlists = $show->searchPlaylistsForShow($start_timestamp, $end_timestamp, $post);
 
 		//for datatables
 		die(json_encode($playlists));

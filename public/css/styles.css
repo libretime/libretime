@@ -709,15 +709,16 @@ dt.block-display, dd.block-display {
 /*---//////////////////// Schedule Show ////////////////////---*/
 
 
-#schedule_playlist_dialog > div {
+#schedule_playlist_dialog .wrapp-two {
 	float: left;
 	width: 50%;
 	padding: 0;
 }
 
-#schedule_playlist_dialog > div:first-child {
+#schedule_playlist_dialog .wrapp-one {
 	margin-right:2%;
 	width: 48%;
+	float: left;
 }
 
 #schedule_playlist_dialog div:first-child .ui-widget-header:first-child {
@@ -739,13 +740,18 @@ dt.block-display, dd.block-display {
 }
 
 .ui-dialog #schedule_playlist_dialog.ui-dialog-content {
+	padding:0;
+}
+
+
+#schedule_playlist_dialog > div {
     background: none repeat scroll 0 0 transparent;
     border: 1px solid #8f8f8f;
-    overflow: auto;
     padding: 8px;
-	margin:8px;
-
+	margin:8px 8px 0 8px;
 }
+
+
 #schedule_playlist_dialog > div h4 {
     padding: 13px 0 12px 0;
     margin: 0;
@@ -897,7 +903,7 @@ h2#scheduled_playlist_name {
 	font-size:21px;
 	font-weight:normal;
 	margin:0;
-	padding:16px 0 0px 12px;
+	padding:8px 0 0px 12px;
 	color:#1c1c1c; 
 }
 

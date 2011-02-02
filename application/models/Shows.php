@@ -313,10 +313,7 @@ class Show {
 		return $time;
 	}
 
-	public function getTimeUnScheduled($start_date, $end_date, $start_time, $end_time) {
-
-		$start_timestamp = $start_date ." ".$start_time;
-		$end_timestamp = $end_date ." ".$end_time;
+	public function getTimeUnScheduled($start_timestamp, $end_timestamp) {
 
 		$time = Schedule::getTimeUnScheduledInRange($start_timestamp, $end_timestamp);
 
@@ -653,22 +650,9 @@ class Show {
 		return $length;
 	}
 
-	public function searchPlaylistsForShow($start_timestamp, $datatables){
-		global $CC_DBC;
+	public function searchPlaylistsForShow($start_timestamp, $end_timestamp, $datatables){
 
-		$sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$start_timestamp}')";
-		$day = $CC_DBC->GetOne($sql);
-
-		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$this->_showId}' AND day = '{$day}'";
-		$row = $CC_DBC->GetAll($sql);
-		$row = $row[0];
-
-		$start_date = $row["first_show"];
-		$end_date = $row["last_show"];
-		$start_time = $row["start_time"];
-		$end_time = $row["end_time"];
-
-		$length = $this->getTimeUnScheduled($start_date, $end_date, $start_time, $end_time);
+		$length = $this->getTimeUnScheduled($start_timestamp, $end_timestamp);
 
 		return StoredFile::searchPlaylistsForSchedule($length, $datatables);
 	}
