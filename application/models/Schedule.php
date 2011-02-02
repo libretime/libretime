@@ -457,9 +457,7 @@ class Schedule {
     }
 
     /**
-     * Returns current playlist.
-     *
-     * Note: Total playlist length is prev + next + 1
+     * Returns data related to the scheduled items.
      *
      * @param int $prev
      * @param int $next
@@ -473,20 +471,71 @@ class Schedule {
 
         $timeNow = Schedule::GetSchedulerTime();
         return array("schedulerTime"=>gmdate("Y-m-d H:i:s"),
-            "previous"=>Schedule::GetPreviousItems($timeNow),
-            "current"=>Schedule::GetCurrentlyPlaying($timeNow),
-            "next"=>Schedule::GetNextItems($timeNow),
-            "showStartEndTime"=>Schedule::GetCurrentShow($timeNow),
+            "previous"=>Schedule::Get_Scheduled_Item_Data($timeNow, -1, $prev, "24 hours"),
+            "current"=>Schedule::Get_Scheduled_Item_Data($timeNow, 0),
+            "next"=>Schedule::Get_Scheduled_Item_Data($timeNow, 1, $next, "48 hours"),
+            "currentShow"=>Schedule::GetCurrentShow($timeNow),
+            "nextShow"=>Schedule::GetNextShow($timeNow),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
     }
+    
+    /**
+     * Builds an SQL Query for accessing scheduled item information from
+     * the database. 
+     *
+     * @param int $timeNow
+     * @param int $timePeriod
+     * @param int $count
+     * @param String $interval
+     * @return date
+     * 
+     * $timeNow is the the currentTime in the format "Y-m-d H:i:s". 
+     * For example: 2011-02-02 22:00:54
+     * 
+     * $timePeriod can be either negative, zero or positive. This is used
+     * to indicate whether we want items from the past, present or future.
+     * 
+     * $count indicates how many results we want to limit ourselves to.
+     * 
+     * $interval is used to indicate how far into the past or future we
+     * want to search the database. For example "5 days", "18 hours", "60 minutes",
+     * "30 seconds" etc.
+     */
+    public static function Get_Scheduled_Item_Data($timeNow, $timePeriod=0, $count = 0, $interval="0 hours"){
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id"
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
+        ." WHERE st.playlist_id = pt.id"
+        ." AND st.file_id = ft.id";
+        
+        if ($timePeriod < 0){
+        	$sql .= " AND st.ends < TIMESTAMP '$timeNow'"
+        	." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '$interval')"
+  	        ." ORDER BY st.starts DESC"
+        	." LIMIT $count";	
+		} else if ($timePeriod == 0){
+	        $sql .= " AND st.starts < TIMESTAMP '$timeNow'"
+    	    ." AND st.ends > TIMESTAMP '$timeNow'";		
+		} else if ($timePeriod > 0){
+        	$sql .= " AND st.starts > TIMESTAMP '$timeNow'"
+        	." AND st.starts < (TIMESTAMP '$timeNow' + INTERVAL '$interval')"	
+        	." ORDER BY st.starts"
+        	." LIMIT $count";		
+		}
+        
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+	}
+	
+	/*
 
-    public static function GetPreviousItems($timeNow, $prevCount = 1){
+    public static function GetPreviousItems($timeNow, $prevCount = 1, $prevInterval="24 hours"){
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id"
         ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE st.ends < TIMESTAMP '$timeNow'"
-        ." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '24 hours')"
+        ." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '$prevInterval')"
         ." AND st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
         ." ORDER BY st.starts DESC"
@@ -514,7 +563,7 @@ class Schedule {
         $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id" 
         ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE st.starts > TIMESTAMP '$timeNow'"
-        ." AND st.ends < (TIMESTAMP '$timeNow' + INTERVAL '24 hours')"
+        ." AND st.ends < (TIMESTAMP '$timeNow' + INTERVAL '7 days')"
         ." AND st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
         ." ORDER BY st.starts"
@@ -522,11 +571,11 @@ class Schedule {
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
     }
-
+*/
     public static function GetCurrentShow($timeNow) {
         global $CC_CONFIG, $CC_DBC;
         
-		$timestamp = preg_split("/ /", $timeNow);
+		$timestamp = explode(" ", $timeNow);
 		$date = $timestamp[0];
 		$time = $timestamp[1];
         
@@ -541,6 +590,22 @@ class Schedule {
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
     }
+    
+    public static function GetNextShow($timeNow) {
+        global $CC_CONFIG, $CC_DBC;
+                
+        $sql = "SELECT current_date + sd.start_time as start_timestamp, current_date + sd.end_time as end_timestamp, s.name, s.id"
+        ." FROM $CC_CONFIG[showDays] sd, $CC_CONFIG[showTable] s"
+        ." WHERE sd.show_id = s.id"
+        ." AND (sd.first_show + sd.start_time) >= TIMESTAMP '$timeNow'"
+        ." ORDER BY (sd.first_show + sd.start_time)"
+        ." LIMIT 1";
+        
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+    }
+     
+    
     
     public static function GetCurrentShowGroupIDs($showID){
         global $CC_CONFIG, $CC_DBC;

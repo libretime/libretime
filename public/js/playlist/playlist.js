@@ -5,6 +5,9 @@ var previousSongs = new Array();
 var currentSong = new Array();
 var nextSongs = new Array();
 
+var currentShow = new Array();
+var nextShow = new Array();
+
 var currentElem;
 
 var serverUpdateInterval = 5000;
@@ -12,15 +15,16 @@ var uiUpdateInterval = 200;
 
 var songEndFunc;
 
-var showStartPosixTime = 0;
-var showEndPosixTime = 0;
-var showLengthMs = 1;
-var currentShowName = "";
+//var showStartPosixTime = 0;
+//var showEndPosixTime = 0;
+//var showLengthMs = 1;
+//var currentShowName = "";
 
 /* boolean flag to let us know if we should prepare to execute a function
  * that flips the playlist to the next song. This flags purpose is to
  * make sure the function is only executed once*/
 var nextSongPrepare = true;
+var nextShowPrepare = true;
 
 /* Another script can register its function here
  * when it wishes to know when a song ends. */
@@ -61,21 +65,26 @@ function secondsTimer(){
 function newSongStart(){
     nextSongPrepare = true;
     currentSong[0] = nextSongs.shift();
-    //updateGlobalValues(currentSong[0]);
     updatePlaybar();
 
     notifySongEndListener();
 }
 
+function nextShowStart(){
+    nextShowPrepare = true;
+    currentShow[0] = nextShow.shift();
+    updatePlaybar();
+
+    //notifySongEndListener();	
+}
+
 /* Called every "uiUpdateInterval" mseconds. */
 function updateProgressBarValue(){
-	if (showStartPosixTime != 0){
-		var showPercentDone = (estimatedSchedulePosixTime - showStartPosixTime)/showLengthMs*100;
+	if (currentShow.length > 0){
+		var showPercentDone = (estimatedSchedulePosixTime - currentShow[0].showStartPosixTime)/currentShow[0].showLengthMs*100;
 		if (showPercentDone < 0 || showPercentDone > 100){
 			showPercentDone = 0;
-			$('#on-air-info').attr("class", "on-air-info off");
-		} else {
-			$('#on-air-info').attr("class", "on-air-info on");
+			currentShow = new Array();
 		}
 		$('#progress-show').attr("style", "width:"+showPercentDone+"%");
 	}
@@ -86,8 +95,11 @@ function updateProgressBarValue(){
 		if (songPercentDone < 0 || songPercentDone > 100){
 			songPercentDone = 0;
 			currentSong = new Array();
+		} else {
+			$('#on-air-info').attr("class", "on-air-info on");
 		}
-	}
+	} else
+		$('#on-air-info').attr("class", "on-air-info off");
 	$('#progress-bar').attr("style", "width:"+songPercentDone+"%");
 
 	//calculate how much time left to next song if there is any
@@ -95,6 +107,14 @@ function updateProgressBarValue(){
 		if (nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime < serverUpdateInterval){
 			nextSongPrepare = false;
 			setTimeout(newSongStart, nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime);
+		}
+	}
+	
+	//calculate how much time left to next show if there is any
+	if (nextShow.length > 0 && nextShowPrepare){
+		if (nextShow[0].showStartPosixTime - estimatedSchedulePosixTime < serverUpdateInterval){
+			nextShowPrepare = false;
+			setTimeout(nextShowStart, nextShow[0].showStartPosixTime - estimatedSchedulePosixTime);
 		}
 	}
 
@@ -141,33 +161,31 @@ function updatePlaybar(){
 
     /* Column 1 update */
     $('#playlist').text("Current Show:");
-    $('#playlist').text(currentShowName);
+    if (currentShow.length > 0)
+    	$('#playlist').text(currentShow[0].name);
 
     $('#show-length').empty();
-    if (estimatedSchedulePosixTime < showEndPosixTime){
-        $('#show-length').text(convertDateToHHMMSS(showStartPosixTime) + " - " + convertDateToHHMMSS(showEndPosixTime));
+    if (currentShow.length > 0){
+        $('#show-length').text(convertDateToHHMMSS(currentShow[0].showStartPosixTime) + " - " + convertDateToHHMMSS(currentShow[0].showEndPosixTime));
     }
 
     /* Column 2 update */
     $('#time').text(convertDateToHHMMSS(estimatedSchedulePosixTime));
 }
 
-function calcAdditionalData(currentItem, bUpdateGlobalValues){
+function calcAdditionalData(currentItem){
     for (var i=0; i<currentItem.length; i++){
         currentItem[i].songStartPosixTime = convertDateToPosixTime(currentItem[i].starts);
         currentItem[i].songEndPosixTime = convertDateToPosixTime(currentItem[i].ends);
         currentItem[i].songLengthMs = currentItem[i].songEndPosixTime - currentItem[i].songStartPosixTime;
-
-        currentItem[i].showLengthMs = currentItem[i].showEndPosixTime - currentItem[i].showStartPosixTime;
     }
 }
 
-function updateGlobalValues(obj){
-	if (obj.showStartEndTime.length > 0){
-		showStartPosixTime = convertDateToPosixTime(obj.showStartEndTime[0].start_timestamp);
-		showEndPosixTime = convertDateToPosixTime(obj.showStartEndTime[0].end_timestamp);
-		showLengthMs = showEndPosixTime - showStartPosixTime;
-		currentShowName = obj.showStartEndTime[0].name;
+function calcAdditionalShowData(show){
+	if (show.length > 0){
+		show[0].showStartPosixTime = convertDateToPosixTime(show[0].start_timestamp);
+		show[0].showEndPosixTime = convertDateToPosixTime(show[0].end_timestamp);
+		show[0].showLengthMs = show[0].showEndPosixTime - show[0].showStartPosixTime;
 	}
 }
 
@@ -181,11 +199,15 @@ function parseItems(obj){
     currentSong = obj.current;
     nextSongs = obj.next;
     
-    updateGlobalValues(obj);
-
     calcAdditionalData(previousSongs);
     calcAdditionalData(currentSong);
     calcAdditionalData(nextSongs);
+    
+    currentShow = obj.currentShow;
+    nextShow = obj.nextShow;
+    
+    calcAdditionalShowData(obj.currentShow);
+    calcAdditionalShowData(obj.nextShow);
 
     if (localRemoteTimeOffset == null){
         var date = new Date();
