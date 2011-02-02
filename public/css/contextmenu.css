@@ -5,6 +5,7 @@ div.jjmenu {
 	border-bottom:2px solid gray;
 	border-right:1px solid gray;
 	padding:0px;
+    z-index: 100;
 }
 
 div.jj_menu_item {

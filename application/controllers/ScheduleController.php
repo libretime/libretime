@@ -14,6 +14,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('event-feed', 'json')
+                    ->addActionContext('make-context-menu', 'json')
 					->addActionContext('add-show-dialog', 'json')
 					->addActionContext('add-show', 'json')
 					->addActionContext('move-show', 'json')
@@ -33,24 +34,13 @@ class ScheduleController extends Zend_Controller_Action
     public function indexAction()
     {
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/contextmenu/jquery.contextMenu.js','text/javascript');
+		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
 
-		$this->view->headLink()->appendStylesheet('/css/jquery.contextMenu.css');
+		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
-
-		$eventDefaultMenu = array();
-		//$eventDefaultMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
-  
-		$this->view->eventDefaultMenu = $eventDefaultMenu;
-
-		$eventHostMenu[] = array('action' => '/Schedule/delete-show', 'text' => 'Delete');
-		$eventHostMenu[] = array('action' => '/Schedule/schedule-show', 'text' => 'Schedule');
-		$eventHostMenu[] = array('action' => '/Schedule/clear-show', 'text' => 'Clear');
-  
-		$this->view->eventHostMenu = $eventHostMenu;
     }
 
     public function eventFeedAction()
@@ -175,19 +165,42 @@ class ScheduleController extends Zend_Controller_Action
 
     public function deleteShowAction()
     {
-        $showId = $this->_getParam('showId');
-		$date = $this->_getParam('date');
+        $showId = $this->_getParam('id');
+		$start_timestamp = $this->_getParam('start');
                                                 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 		$user = new User($userInfo->id, $userInfo->type);
 		$show = new Show($user, $showId);
-		$show->deleteShow($date);
+		$show->deleteShow($start_timestamp);
     }
 
     public function makeContextMenuAction()
     {
-        // action body
+        $id = $this->_getParam('id');
+		$start_timestamp = $this->_getParam('start');
+
+        $today_timestamp = date("Y-m-d H:i:s");
+
+		$params = '/format/json/id/#id#/start/#start#/end/#end#';
+
+		if(strtotime($today_timestamp) < strtotime($start_timestamp)) {
+
+			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 
+							'title' => 'Delete');
+	  
+			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 
+							'title' => 'Clear');
+
+            $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 'callback' => 'window["buildScheduleDialog"]'), 
+							'title' => 'Schedule');
+		}
+		else {
+
+		}
+
+		//returns format jjmenu is looking for.
+		die(json_encode($menu));
     }
 
     public function scheduleShowAction()
@@ -221,7 +234,7 @@ class ScheduleController extends Zend_Controller_Action
     public function clearShowAction()
     {
         $start = $this->_getParam('start');
-        $showId = $this->_getParam('showId');
+        $showId = $this->_getParam('id');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id, $userInfo->type);
@@ -278,7 +291,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $start_timestamp = $this->_getParam('start');
 		$end_timestamp = $this->_getParam('end');
-		$showId = $this->_getParam('showId');
+		$showId = $this->_getParam('id');
 
 		$this->sched_sess->showId = $showId;
 		$this->sched_sess->showStart = $start_timestamp;

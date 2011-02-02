@@ -59,20 +59,22 @@ function eventRender(event, element, view) {
 }
 
 function eventAfterRender( event, element, view ) {
-	var today = new Date();	
 
-	if(event.isHost === true && event.start > today) {
-		$(element).contextMenu(
-			{menu: 'schedule_event_host_menu'}, eventMenu
-		);
-	}
-	else{
-		$(element).contextMenu(
-			{menu: 'schedule_event_default_menu'}, eventMenu
-		);
-	}
+    function getStartTS() {
+        var start =  makeTimeStamp(event.start);
+        return start; 
+    }
 
-	$(element).data({'event': event});
+    function getEndTS() {
+        var start =  makeTimeStamp(event.end);
+        return start; 
+    }
+
+    $(element)
+		.jjmenu("rightClick", 
+			[{get:"/Schedule/make-context-menu/format/json/id/#id#/start/#start#/end/#end#"}],  
+			{id: event.id, start: getStartTS, end: getEndTS}, 
+			{xposition: "mouse", yposition: "mouse"});
 }
 
 function eventClick(event, jsEvent, view) { 
