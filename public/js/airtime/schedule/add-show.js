@@ -117,7 +117,7 @@ $(document).ready(function() {
 			center: 'title',
 			right: 'agendaDay, agendaWeek, month'
 		}, 
-		defaultView: 'agendaDay',
+		defaultView: 'month',
 		editable: false,
 		allDaySlot: false,
         axisFormat: 'H:mm',

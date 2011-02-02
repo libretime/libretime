@@ -41,6 +41,7 @@ function viewDisplay( view ) {
                     var opt = view.calendar.options;
                     opt.slotMinutes = parseInt(x);
                     opt.events = getFullCalendarEvents;
+                    opt.defaultView = view.name;
                     $(calendarEl).fullCalendar('destroy');
                     $(calendarEl).fullCalendar(opt); 
                 });
