@@ -43,10 +43,6 @@ function viewDisplay( view ) {
                     opt.events = getFullCalendarEvents;
                     $(calendarEl).fullCalendar('destroy');
                     $(calendarEl).fullCalendar(opt); 
-
-                    var mainHeight = document.documentElement.clientHeight - 200 - 50;
-                    $(calendarEl).fullCalendar('option', 'contentHeight', mainHeight);
-                    $(calendarEl).fullCalendar('render');
                 });
 
             $('.fc-header-left tbody tr:first')

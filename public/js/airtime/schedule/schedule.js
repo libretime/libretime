@@ -190,7 +190,8 @@ function scheduleRefetchEvents() {
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
 
-$(document).ready(function() {
+$(window).load(function() {
+    var mainHeight = document.documentElement.clientHeight - 200 - 50;
 
     $('#schedule_calendar').fullCalendar({
         header: {
@@ -206,6 +207,7 @@ $(document).ready(function() {
             agenda: 'H:mm{ - H:mm}',
             month: 'H:mm{ - H:mm}'
         },
+        contentHeight: mainHeight,
        
 		events: getFullCalendarEvents,
 
@@ -220,12 +222,6 @@ $(document).ready(function() {
 		eventDrop: eventDrop,
 		eventResize: eventResize 
     });
-});
-
-$(window).load(function() {
-     var mainHeight = document.documentElement.clientHeight - 200 - 50;
     
-    $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
-    $('#schedule_calendar').fullCalendar('render');
 });
 
