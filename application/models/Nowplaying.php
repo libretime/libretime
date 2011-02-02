@@ -4,11 +4,7 @@ class Application_Model_Nowplaying
 {
 	
 	public static function GetDataGridData(){
-		$timeNow = Schedule::GetSchedulerTime();
-		$previous = Schedule::GetPreviousItems($timeNow, 1);
-		$current = Schedule::GetCurrentlyPlaying($timeNow);
-		$next = Schedule::GetNextItems($timeNow, 10);
-		
+						
 		$columnHeaders = array(array("sTitle"=>"type", "bVisible"=>false),
 					array("sTitle"=>"Date"), 
 					array("sTitle"=>"Start"),
@@ -21,30 +17,44 @@ class Application_Model_Nowplaying
 					array("sTitle"=>"Playlist"),
                     array("sTitle"=>"bgcolor", "bVisible"=>false),
                     array("sTitle"=>"group_id", "bVisible"=>false));
-		$rows = array();
 
-        $current_group_id = -1;
-        if (count($current) != 0){
-            $current_group_id = $current[0]["group_id"];
-        }
+		$timeNow = Schedule::GetSchedulerTime();
+		$currentShow = Schedule::GetCurrentShow($timeNow);
 		
-		foreach ($previous as $item){
-			array_push($rows, array("p", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["name"], ($item["group_id"] == $current_group_id ? $item["background_color"] : ""), $item["group_id"]));
+		if (count($currentShow) > 0){
+			$dbRows = Schedule::GetCurrentShowGroupIDs($currentShow[0]["id"]);
+			$groupIDs = array();
+			
+			foreach ($dbRows as $row){
+				array_push($groupIDs, $row["group_id"]);
+			}
 		}
 		
+		$previous = Schedule::GetPreviousItems($timeNow, 1);
+		$current = Schedule::GetCurrentlyPlaying($timeNow);
+		$next = Schedule::GetNextItems($timeNow, 10);
+		
+		$rows = array();
+		
+		foreach ($previous as $item){
+			$color = (count($currentShow) > 0) && in_array($item["group_id"], $groupIDs) ? "x" : "";
+			array_push($rows, array("p", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
+				$item["album_title"], "x" , $item["name"], $color, $item["group_id"]));
+		}
 		
 		foreach ($current as $item){
 			array_push($rows, array("c", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["name"], $item["background_color"], $item["group_id"]));		
+				$item["album_title"], "x" , $item["name"], "", $item["group_id"]));		
 		}
 		
 		foreach ($next as $item){
+			$color = (count($currentShow) > 0) && in_array($item["group_id"], $groupIDs) ? "x" : "";
 			array_push($rows, array("n", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["name"], ($item["group_id"] == $current_group_id ? $item["background_color"] : ""), $item["group_id"]));
+				$item["album_title"], "x" , $item["name"], $color, $item["group_id"]));
 		}
+		$data = array("columnHeaders"=>$columnHeaders, "rows"=>$rows);
 		
-		return array("columnHeaders"=>$columnHeaders, "rows"=>$rows);
+		return $data;
 	}
 
 }

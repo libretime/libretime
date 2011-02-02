@@ -170,12 +170,12 @@ class ScheduleGroup {
         return $this->add($startTime, $p_audioFileId);
     }
 
-	public function addPlaylistAfter($p_groupId, $p_playlistId) {
+    public function addPlaylistAfter($p_groupId, $p_playlistId) {
         global $CC_CONFIG, $CC_DBC;
         // Get the end time for the given entry
         $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id=$p_groupId";
-	
+    
         $startTime = $CC_DBC->GetOne($sql);
         return $this->add($startTime, null, $p_playlistId);
     }
@@ -278,80 +278,80 @@ class Schedule {
         return ($count == '0');
     }
 
-	public static function getTimeUnScheduledInRange($s_datetime, $e_datetime) {
-		global $CC_CONFIG, $CC_DBC;
+    public static function getTimeUnScheduledInRange($s_datetime, $e_datetime) {
+        global $CC_CONFIG, $CC_DBC;
 
-		$sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
-		$isNextDay = $CC_DBC->GetOne($sql);
+        $sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
+        $isNextDay = $CC_DBC->GetOne($sql);
 
-		if($isNextDay === 't') {
-			$sql = "SELECT date '{$e_datetime}' + interval '1 day'";
-			$e_datetime = $CC_DBC->GetOne($sql);
-		}
+        if($isNextDay === 't') {
+            $sql = "SELECT date '{$e_datetime}' + interval '1 day'";
+            $e_datetime = $CC_DBC->GetOne($sql);
+        }
 
-		$sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
-			WHERE (starts >= '{$s_datetime}')  
-			AND (ends <= '{$e_datetime}')";
+        $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
+            WHERE (starts >= '{$s_datetime}')  
+            AND (ends <= '{$e_datetime}')";
 
-		$time = $CC_DBC->GetOne($sql);
+        $time = $CC_DBC->GetOne($sql);
 
-		if(is_null($time))
-			$time = 0;
+        if(is_null($time))
+            $time = 0;
 
-		$sql = "SELECT TIMESTAMP '{$e_datetime}' - TIMESTAMP '{$s_datetime}'";
-		$length = $CC_DBC->GetOne($sql);
+        $sql = "SELECT TIMESTAMP '{$e_datetime}' - TIMESTAMP '{$s_datetime}'";
+        $length = $CC_DBC->GetOne($sql);
 
-		$sql = "SELECT INTERVAL '{$length}' - INTERVAL '{$time}'";
-		$time_left =$CC_DBC->GetOne($sql);
+        $sql = "SELECT INTERVAL '{$length}' - INTERVAL '{$time}'";
+        $time_left =$CC_DBC->GetOne($sql);
 
-		return $time_left;
-	}
+        return $time_left;
+    }
 
-	public static function getTimeScheduledInRange($s_datetime, $e_datetime) {
-		global $CC_CONFIG, $CC_DBC;
+    public static function getTimeScheduledInRange($s_datetime, $e_datetime) {
+        global $CC_CONFIG, $CC_DBC;
 
-		$sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
-		$isNextDay = $CC_DBC->GetOne($sql);
+        $sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
+        $isNextDay = $CC_DBC->GetOne($sql);
 
-		if($isNextDay === 't') {
-			$sql = "SELECT date '{$e_datetime}' + interval '1 day'";
-			$e_datetime = $CC_DBC->GetOne($sql);
-		}
+        if($isNextDay === 't') {
+            $sql = "SELECT date '{$e_datetime}' + interval '1 day'";
+            $e_datetime = $CC_DBC->GetOne($sql);
+        }
 
-		$sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
-			WHERE (starts >= '{$s_datetime}')  
-			AND (ends <= '{$e_datetime}')";
+        $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
+            WHERE (starts >= '{$s_datetime}')  
+            AND (ends <= '{$e_datetime}')";
 
-		$res = $CC_DBC->GetOne($sql);
+        $res = $CC_DBC->GetOne($sql);
 
-		if(is_null($res))
-			return 0;
+        if(is_null($res))
+            return 0;
 
-		return $res;
-	}
+        return $res;
+    }
 
-	public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
+    public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
 
-		$time = Schedule::getTimeScheduledInRange($s_datetime, $e_datetime);
+        $time = Schedule::getTimeScheduledInRange($s_datetime, $e_datetime);
 
-		$con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
         $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$s_datetime}')";
-		$r = $con->query($sql);
-		$s_epoch = $r->fetchColumn(0);
+        $r = $con->query($sql);
+        $s_epoch = $r->fetchColumn(0);
 
-		$sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$e_datetime}')";
-		$r = $con->query($sql);
-		$e_epoch = $r->fetchColumn(0);
+        $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$e_datetime}')";
+        $r = $con->query($sql);
+        $e_epoch = $r->fetchColumn(0);
 
-		$sql = "SELECT EXTRACT(EPOCH FROM INTERVAL '{$time}')";
-		$r = $con->query($sql);
-		$i_epoch = $r->fetchColumn(0);
+        $sql = "SELECT EXTRACT(EPOCH FROM INTERVAL '{$time}')";
+        $r = $con->query($sql);
+        $i_epoch = $r->fetchColumn(0);
 
-		$percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
+        $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
 
-		return $percent;
-	}
+        return $percent;
+    }
 
     //  public function onAddTrackToPlaylist($playlistId, $audioTrackId) {
     //
@@ -387,7 +387,7 @@ class Schedule {
      *    "end"/"ends" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
      *    "group_id"/"id" (aliases to the same thing)
      *    "clip_length" (for audio clips this is the length of the audio clip,
-     *    				 for playlists this is the length of the entire playlist)
+     *                   for playlists this is the length of the entire playlist)
      *    "name" (playlist only)
      *    "creator" (playlist only)
      *    "file_id" (audioclip only)
@@ -401,7 +401,7 @@ class Schedule {
      * @param boolean $p_playlistsOnly
      *    Retrieve playlists as a single item.
      * @return array
-     * 		Returns empty array if nothing found
+     *      Returns empty array if nothing found
      */
     public static function GetItems($p_fromDateTime, $p_toDateTime, $p_playlistsOnly = true) {
         global $CC_CONFIG, $CC_DBC;
@@ -472,24 +472,23 @@ class Schedule {
         }
 
         $timeNow = Schedule::GetSchedulerTime();
-        return array("schedulerTime"=>gmdate("Y-m-d H:i:s"),"previous"=>Schedule::GetPreviousItems($timeNow), 
-            "current"=>Schedule::GetCurrentlyPlaying($timeNow), 
+        return array("schedulerTime"=>gmdate("Y-m-d H:i:s"),
+            "previous"=>Schedule::GetPreviousItems($timeNow),
+            "current"=>Schedule::GetCurrentlyPlaying($timeNow),
             "next"=>Schedule::GetNextItems($timeNow),
+            "showStartEndTime"=>Schedule::GetCurrentShow($timeNow),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
     }
 
     public static function GetPreviousItems($timeNow, $prevCount = 1){
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, sdt.start_time, sdt.end_time, showt.background_color"
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt, $CC_CONFIG[showTable] showt"
+        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id"
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE st.ends < TIMESTAMP '$timeNow'"
         ." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '24 hours')"
         ." AND st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
-        ." AND st.group_id = sst.group_id"
-        ." AND sdt.show_id = sst.show_id"
-        ." AND showt.id = sst.show_id"
         ." ORDER BY st.starts DESC"
         ." LIMIT $prevCount";
         $rows = $CC_DBC->GetAll($sql);
@@ -499,40 +498,60 @@ class Schedule {
     public static function GetCurrentlyPlaying($timeNow){
         global $CC_CONFIG, $CC_DBC;
         
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, sdt.start_time, sdt.end_time, showt.background_color"
+        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id"
         ." FROM $CC_CONFIG[scheduleTable] st,"
-        ."$CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt, $CC_CONFIG[showTable] showt"
+        ."$CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE st.starts < TIMESTAMP '$timeNow'"
         ." AND st.ends > TIMESTAMP '$timeNow'"
         ." AND st.playlist_id = pt.id"
-        ." AND st.file_id = ft.id"
-        ." AND st.group_id = sst.group_id"
-        ." AND sdt.show_id = sst.show_id"
-        ." AND showt.id = sst.show_id";
+        ." AND st.file_id = ft.id";
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
     }
 
     public static function GetNextItems($timeNow, $nextCount = 1) {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, sdt.start_time, sdt.end_time, showt.background_color" 
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] sst, $CC_CONFIG[showDays] sdt, $CC_CONFIG[showTable] showt"
+        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id" 
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
         ." WHERE st.starts > TIMESTAMP '$timeNow'"
         ." AND st.ends < (TIMESTAMP '$timeNow' + INTERVAL '24 hours')"
         ." AND st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
-        ." AND st.group_id = sst.group_id"
-        ." AND sdt.show_id = sst.show_id"
-        ." AND showt.id = sst.show_id"
         ." ORDER BY st.starts"
         ." LIMIT $nextCount";
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
     }
 
-    public static function GetStatus() {
-
+    public static function GetCurrentShow($timeNow) {
+        global $CC_CONFIG, $CC_DBC;
+        
+		$timestamp = preg_split("/ /", $timeNow);
+		$date = $timestamp[0];
+		$time = $timestamp[1];
+        
+        $sql = "SELECT current_date + sd.start_time as start_timestamp, current_date + sd.end_time as end_timestamp, s.name, s.id"
+        ." FROM $CC_CONFIG[showDays] sd, $CC_CONFIG[showTable] s"
+        ." WHERE sd.show_id = s.id"
+        ." AND sd.first_show <= DATE '$date'"
+        ." AND sd.start_time <= TIME '$time'"
+        ." AND sd.last_show > DATE '$date'"
+        ." AND sd.end_time > TIME '$time'";
+        
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
     }
+    
+    public static function GetCurrentShowGroupIDs($showID){
+        global $CC_CONFIG, $CC_DBC;
+        
+		$sql = "SELECT group_id"
+		." FROM $CC_CONFIG[showSchedule]"
+		." WHERE show_id = $showID";
+		
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+	}
 
     /**
      * Convert a time string in the format "YYYY-MM-DD HH:mm:SS"
@@ -637,9 +656,9 @@ class Schedule {
      * Export the schedule in json formatted for pypo (the liquidsoap scheduler)
      *
      * @param string $range
-     * 		In the format "YYYY-MM-DD HH:mm:ss"
+     *      In the format "YYYY-MM-DD HH:mm:ss"
      * @param string $source
-     * 		In the format "YYYY-MM-DD HH:mm:ss"
+     *      In the format "YYYY-MM-DD HH:mm:ss"
      */
     public static function ExportRangeAsJson($p_fromDateTime, $p_toDateTime)
     {
@@ -675,8 +694,8 @@ class Schedule {
                 $playlists[$pkey]['schedule_id'] = $dx['group_id'];
                 $playlists[$pkey]['user_id'] = 0;
                 $playlists[$pkey]['id'] = $dx["playlist_id"];
-            	$playlists[$pkey]['start'] = Schedule::CcTimeToPypoTime($dx["start"]);
-            	$playlists[$pkey]['end'] = Schedule::CcTimeToPypoTime($dx["end"]);
+                $playlists[$pkey]['start'] = Schedule::CcTimeToPypoTime($dx["start"]);
+                $playlists[$pkey]['end'] = Schedule::CcTimeToPypoTime($dx["end"]);
             }
         }
 
@@ -697,13 +716,13 @@ class Schedule {
                     $cueOut = Schedule::WallTimeToMillisecs($item["cue_out"]);
                 }
                 $medias[] = array(
-					'id' => $storedFile->getGunid(), //$item["file_id"],
-					'uri' => $uri,
-					'fade_in' => Schedule::WallTimeToMillisecs($item["fade_in"]),
-					'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
-					'fade_cross' => 0,
-					'cue_in' => Schedule::WallTimeToMillisecs($item["cue_in"]),
-					'cue_out' => $cueOut,
+                    'id' => $storedFile->getGunid(), //$item["file_id"],
+                    'uri' => $uri,
+                    'fade_in' => Schedule::WallTimeToMillisecs($item["fade_in"]),
+                    'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
+                    'fade_cross' => 0,
+                    'cue_in' => Schedule::WallTimeToMillisecs($item["cue_in"]),
+                    'cue_out' => $cueOut,
                     'export_source' => 'scheduler'
                 );
             }
