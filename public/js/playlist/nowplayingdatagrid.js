@@ -2,7 +2,7 @@ var registered = false;
 var datagridData;
 
 function getDateText(obj){
-	var str = obj.aData[ obj.iDataColumn ];
+	var str = obj.aData[ obj.iDataColumn ].toString();
 	if (str.indexOf(" ") != -1){
 		return changeTimePrecision(str.substring(0, str.indexOf(" ")));
 	}
@@ -10,7 +10,7 @@ function getDateText(obj){
 }
 
 function getTimeText(obj){
-	var str = obj.aData[ obj.iDataColumn ];
+	var str = obj.aData[ obj.iDataColumn ].toString();
 	if (str.indexOf(" ") != -1){
 		return changeTimePrecision(str.substring(str.indexOf(" ")+1));
 	}
@@ -18,7 +18,7 @@ function getTimeText(obj){
 }
 
 function changeTimePrecisionInit(obj){
-	var str = obj.aData[ obj.iDataColumn ];
+	var str = obj.aData[ obj.iDataColumn ].toString();
 	return changeTimePrecision(str);
 }
 
@@ -62,12 +62,12 @@ function createDataGrid(){
 		"aaData": datagridData.rows,
 		"aoColumns": datagridData.columnHeaders,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-            if (aData[aData.length-2] != ""){
+            if (aData[aData.length-2] != "")
                 $(nRow).attr("style", "background-color:#166622");
-            }
-
             if (aData[0] == "c")
 				$(nRow).attr("style", "background-color:#61B329");
+            else if (aData[0] == "b")
+                $(nRow).attr("style", "background-color:#EE3B3B");
 			return nRow;
 		}
 	} );
