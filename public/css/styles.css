@@ -805,6 +805,10 @@ div.ui-datepicker {
 	float:left;
 	margin-right: 8px;
 }
+#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-s {
+	float:left;
+	margin-right: 8px;
+}
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-close {
 	float:right;
 	margin-right: 8px;

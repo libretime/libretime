@@ -26,16 +26,14 @@ function setScheduleDialogHtml(json) {
 
 function setScheduleDialogEvents(dialog) {
 
-	dialog.find(".ui-icon-triangle-1-e").parent().click(function(){
-		var span = $(this).find("span");
+	dialog.find(".ui-icon-triangle-1-e").click(function(){
+		var span = $(this);
 
 		if(span.hasClass("ui-icon-triangle-1-s")) {
 			span
 				.removeClass("ui-icon-triangle-1-s")
 				.addClass("ui-icon ui-icon-triangle-1-e");
 
-			$(this).parent().removeClass("ui-state-active ui-corner-top");
-			$(this).parent().addClass("ui-corner-all");
 			$(this).parent().parent().find(".group_list").hide();
 		}
 		else if(span.hasClass("ui-icon-triangle-1-e")) {
@@ -43,8 +41,6 @@ function setScheduleDialogEvents(dialog) {
 				.removeClass("ui-icon-triangle-1-e")
 				.addClass("ui-icon ui-icon-triangle-1-s");
 
-			$(this).parent().addClass("ui-state-active ui-corner-top");
-			$(this).parent().removeClass("ui-corner-all");
 			$(this).parent().parent().find(".group_list").show();
 		}
 	});
@@ -135,6 +131,10 @@ function makeScheduleDialog(dialog, json) {
 		"bJQueryUI": true,
 		"bAutoWidth": false
 	});
+
+    //classes added for Vladimir's styles.css
+    dialog.find("#schedule_playlists_length select").addClass('input_select');
+    dialog.find("#schedule_playlists_filter input").addClass('input_text auto-search');
 
 	dialog.find("#schedule_playlist_chosen")
 		.append(json.chosen)
