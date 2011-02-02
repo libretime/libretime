@@ -1,0 +1,12 @@
+<div id="show_content_dialog">
+<?php foreach($this->showContent as $row): ?>
+<div>
+    <span><?php echo $row["starts"] ?></span>
+    <span><?php echo $row["track_title"] ?></span>
+    <span><?php echo $row["artist_name"] ?></span>
+    <span><?php echo $row["album_title"] ?></span>
+    <span><?php echo $row["length"] ?></span>
+    <span><?php echo $row["genre"] ?></span>
+</div>
+<?php endforeach; ?>
+</div>

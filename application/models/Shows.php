@@ -330,10 +330,10 @@ class Show {
 		return !Schedule::isScheduleEmptyInRange($start_timestamp, $length);
 	}
 
-	public function getShowContent($day) {
-		global $CC_DBC;
+    public function getShowListContent($start_timestamp) {
+        global $CC_DBC;
 
-		$timeinfo = explode(" ", $day);
+		$timeinfo = explode(" ", $start_timestamp);
 	
 		$sql = "SELECT * 
 			FROM (cc_show_schedule AS ss LEFT JOIN cc_schedule AS s USING(group_id)
@@ -342,9 +342,15 @@ class Show {
 
 			WHERE ss.show_day = '{$timeinfo[0]}' AND ss.show_id = '{$this->_showId}' ORDER BY starts";
 
-		$res = $CC_DBC->GetAll($sql);
+		return $CC_DBC->GetAll($sql);	
+    }
 
-		if(count($res) <= 0) {
+	public function getShowContent($start_timestamp) {
+		global $CC_DBC;
+
+        $res = $this->getShowListContent($start_timestamp);
+
+        if(count($res) <= 0) {
 			return $res;
 		}
 
@@ -429,14 +435,12 @@ class Show {
 
 			$sql = "DELETE FROM cc_show_days WHERE first_show >= '{$date}' AND show_id = '{$this->_showId}'";
 			$CC_DBC->query($sql);
-			//echo $sql;
-
+			
 			$sql = "UPDATE cc_show_days 
 				SET last_show = '{$date}' 
 				WHERE show_id = '{$this->_showId}' AND first_show <= '{$date}' ";
 			$CC_DBC->query($sql);
-			//echo $sql;
-
+			
 			$sql = "SELECT group_id FROM cc_show_schedule WHERE show_day >= '{$date}' AND show_id = '{$this->_showId}'";
 		    $rows = $CC_DBC->GetAll($sql);
 			
@@ -449,11 +453,9 @@ class Show {
 			$sql = "DELETE FROM cc_show_schedule 
 			WHERE ($groups) AND show_id = '{$this->_showId}' AND show_day >= '{$date}' ";
 			$CC_DBC->query($sql);
-			//echo $sql;
 			
 			$sql = "DELETE FROM cc_schedule WHERE ($groups)";
 			$CC_DBC->query($sql);
-			//echo $sql;
 		}
 		else {
 			$groups = CcShowScheduleQuery::create()->filterByDbShowId($this->_showId)->find();

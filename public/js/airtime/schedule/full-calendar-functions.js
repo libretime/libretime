@@ -22,10 +22,11 @@ function dayClick(date, allDay, jsEvent, view) {
 }
 
 function viewDisplay( view ) {
-    
+
+    $('.schedule_change_slots').remove();
+
     if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 
-        $('.schedule_change_slots').remove();
         var calendarEl = this;
 
         var select = $('<select class="schedule_change_slots"/>')
@@ -56,9 +57,6 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) { 
-	//element.qtip({
-     //       content: event.description
-     //   });
 
 	if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 		var div = $('<div/>');
@@ -76,7 +74,6 @@ function eventRender(event, element, view) {
 		}
 
 		$(element).find(".fc-event-title").after(div);
-
 	}	
 
 	if(event.backgroundColor !== "") {
@@ -109,6 +106,19 @@ function eventAfterRender( event, element, view ) {
 			[{get:"/Schedule/make-context-menu/format/json/id/#id#/start/#start#/end/#end#"}],  
 			{id: event.id, start: getStartTS, end: getEndTS}, 
 			{xposition: "mouse", yposition: "mouse"});
+
+    /*
+    $(element).qtip({
+        content: {
+           text: event.description,
+           title: { text: 'Show Description' }
+        },
+        position: {
+           target: 'mouse',
+           adjust: { mouse: true }
+        }
+    });
+    */
 }
 
 function eventClick(event, jsEvent, view) { 

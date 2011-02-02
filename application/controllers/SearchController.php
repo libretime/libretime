@@ -45,7 +45,6 @@ class SearchController extends Zend_Controller_Action
     {
 		$this->_helper->layout->setLayout('search');
 
-		$this->view->headScript()->appendFile('/js/airtime/onready/search.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 

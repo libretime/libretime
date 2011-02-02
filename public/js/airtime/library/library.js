@@ -71,7 +71,7 @@ function dtDrawCallback() {
 	addLibraryItemEvents();
 }
 
-function setUpLibrary() {
+$(document).ready(function() {
 
 	$('.tabs').tabs();
 
@@ -103,5 +103,5 @@ function setUpLibrary() {
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
 		"bAutoWidth": false
-	} );
-}
+	});
+});

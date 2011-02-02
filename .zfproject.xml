@@ -66,6 +66,7 @@
           <actionMethod actionName="scheduleShowDialog"/>
           <actionMethod actionName="showList"/>
           <actionMethod actionName="getShowData"/>
+          <actionMethod actionName="showContentDialog"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -265,6 +266,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="getShowData"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="showContentDialog"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

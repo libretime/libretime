@@ -36,7 +36,7 @@ function ajaxAddGroup() {
 	});
 }
 
-function setUpSearch() {
+$(document).ready(function() {
 
 	$("#search_add_group").click(ajaxAddGroup);
 	
@@ -45,4 +45,4 @@ function setUpSearch() {
 	$('[id^="fieldset-row_"]').each(function(i, el){
 		addRemove(el);
 	});
-}
+});

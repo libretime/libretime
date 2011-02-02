@@ -377,7 +377,7 @@ function openDiffSPL(json) {
 		setUpSPL();
 }
 
-function setUpSPL() {
+$(document).ready(function() {
 
 	$("#spl_sortable").sortable();
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
@@ -401,5 +401,4 @@ function setUpSPL() {
 	$("#spl_sortable").droppable();
 	$("#spl_sortable" ).bind( "drop", addSPLItem);
 
-}
-
+});

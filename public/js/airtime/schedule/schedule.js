@@ -165,6 +165,24 @@ function makeScheduleDialog(dialog, json) {
 	setScheduleDialogEvents(dialog);
 }
 
+function buildContentDialog(json){
+	var dialog = $(json.dialog);
+
+	dialog.dialog({
+		autoOpen: false,
+		title: 'Show Contents',
+		width: 1100,
+		height: 500,
+		modal: true,
+		close: closeDialog,
+		buttons: {"Ok": function() {
+			dialog.remove();
+		}}
+	});
+
+	dialog.dialog('open');
+}
+
 function buildScheduleDialog(json){
 	var dialog = $(json.dialog);
 
