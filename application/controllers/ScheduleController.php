@@ -297,6 +297,12 @@ class ScheduleController extends Zend_Controller_Action
 		$this->sched_sess->showId = $showId;
 		$this->sched_sess->showStart = $start_timestamp;
 		$this->sched_sess->showEnd = $end_timestamp;
+
+        $start = explode(" ", $start_timestamp);
+        $end = explode(" ", $end_timestamp);
+        $startTime = explode(":", $start[1]);
+        $endTime = explode(":", $end[1]);
+        $dateInfo = getDate(strtotime($start_timestamp));
 		
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -304,11 +310,16 @@ class ScheduleController extends Zend_Controller_Action
 		$show = new Show($user, $showId);
 
 		$this->view->showContent = $show->getShowContent($start_timestamp);
-
 		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
         $this->view->showName = $show->getName();
 		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
 		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+
+        $this->view->wday = $dateInfo['weekday'];
+        $this->view->month = $dateInfo['month'];
+        $this->view->day = $dateInfo['mday'];
+        $this->view->startTime = sprintf("%d:%02d", $startTime[0], $startTime[1]);
+        $this->view->endTime = sprintf("%d:%02d", $endTime[0], $endTime[1]);
 
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
 		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
