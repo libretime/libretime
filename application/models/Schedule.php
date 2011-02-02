@@ -353,14 +353,7 @@ class Schedule {
         return $percent;
     }
 
-    //  public function onAddTrackToPlaylist($playlistId, $audioTrackId) {
-    //
-    //  }
-    //
-    //  public function onRemoveTrackFromPlaylist($playlistId, $audioTrackId) {
-    //
-    //  }
-
+    
     /**
      * Return TRUE if file is going to be played in the future.
      *
