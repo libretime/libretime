@@ -24,7 +24,6 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/airtime/onready/library.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
         $this->view->headScript()->appendFile('/js/jplayer/jquery.jplayer.min.js');
         $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');

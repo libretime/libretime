@@ -22,10 +22,11 @@ function dayClick(date, allDay, jsEvent, view) {
 }
 
 function viewDisplay( view ) {
-    
+
+    $('.schedule_change_slots').remove();
+
     if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 
-        $('.schedule_change_slots').remove();
         var calendarEl = this;
 
         var select = $('<select class="schedule_change_slots"/>')
@@ -76,7 +77,6 @@ function eventRender(event, element, view) {
 		}
 
 		$(element).find(".fc-event-title").after(div);
-
 	}	
 
 	if(event.backgroundColor !== "") {
