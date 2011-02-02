@@ -668,7 +668,7 @@ class Show {
 		$start_time = $row["start_time"];
 		$end_time = $row["end_time"];
 
-		$length = $this->getTimeUnScheduled($start_date, $start_date, $start_time, $end_time);
+		$length = $this->getTimeUnScheduled($start_date, $end_date, $start_time, $end_time);
 
 		return StoredFile::searchPlaylistsForSchedule($length, $datatables);
 	}
