@@ -206,10 +206,11 @@ $(document).ready(function() {
             agenda: 'H:mm{ - H:mm}',
             month: 'H:mm{ - H:mm}'
         },
-        
+       
 		events: getFullCalendarEvents,
 
 		//callbacks (in full-calendar-functions.js)
+        viewDisplay: viewDisplay,
 		dayClick: dayClick,
 		eventRender: eventRender,
 		eventAfterRender: eventAfterRender,
