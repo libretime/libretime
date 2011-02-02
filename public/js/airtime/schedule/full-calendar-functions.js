@@ -25,35 +25,33 @@ function viewDisplay( view ) {
     
     if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 
-        var select = $('.schedule_change_slots');
+        $('.schedule_change_slots').remove();
         var calendarEl = this;
 
-        if(select.length === 0) {
+        var select = $('<select class="schedule_change_slots"/>')
+            .append('<option value="5">5 min</option>')
+            .append('<option value="10">10 min</option>')
+            .append('<option value="15">15 min</option>')
+            .append('<option value="30">30 min</option>')
+            .append('<option value="60">60 min</option>')
+            .change(function(){
+                var x = $(this).val();
+                var opt = view.calendar.options;
+                opt.slotMinutes = parseInt(x);
+                opt.events = getFullCalendarEvents;
+                opt.defaultView = view.name;
+                $(calendarEl).fullCalendar('destroy');
+                $(calendarEl).fullCalendar(opt); 
+            });
 
-            select = $('<select class="schedule_change_slots"/>')
-                .append('<option value="5">5 min</option>')
-                .append('<option value="10">10 min</option>')
-                .append('<option value="15">15 min</option>')
-                .append('<option value="30">30 min</option>')
-                .append('<option value="60">60 min</option>')
-                .change(function(){
-                    var x = $(this).val();
-                    var opt = view.calendar.options;
-                    opt.slotMinutes = parseInt(x);
-                    opt.events = getFullCalendarEvents;
-                    $(calendarEl).fullCalendar('destroy');
-                    $(calendarEl).fullCalendar(opt); 
-                });
+        $('.fc-header-left tbody tr:first')
+            .append('<td><span class="fc-header-space"></span></td>')
+            .append('<td></td>')
+            .find('td:last')
+                .append(select);
 
-            $('.fc-header-left tbody tr:first')
-                .append('<td><span class="fc-header-space"></span></td>')
-                .append('<td></td>')
-                .find('td:last')
-                    .append(select);
-
-            var slotMin = view.calendar.options.slotMinutes;
-            $('.schedule_change_slots option[value="'+slotMin+'"]').attr('selected', 'selected');
-        }
+        var slotMin = view.calendar.options.slotMinutes;
+        $('.schedule_change_slots option[value="'+slotMin+'"]').attr('selected', 'selected');
     }
 }
 

@@ -2,11 +2,11 @@
 	<?php foreach($this->showContent as $pl) : ?>
 	<li id="g_<?php echo $pl["pl_group"] ?>" >
 		<h3 class="ui-accordion-header ui-state-default ui-corner-all">
-			<div><span class="ui-icon ui-icon-triangle-1-e"></span></div>
+			<span class="ui-icon ui-icon-triangle-1-e"></span>
+            <span class="ui-icon ui-icon-close"></span>
 			<div class="sh_pl_name"><?php echo $pl["pl_name"] ?></div>
 			<div class="sh_pl_creator"><?php echo $pl["pl_creator"] ?></div>
 			<div class="sh_pl_time"><?php echo $pl["pl_length"] ?></div>
-			<div><span class="ui-icon ui-icon-close"></span></div>
 		</h3>
 		<div class="group_list ui-widget-content ui-corner-bottom" style="display:none">
 			<div class="sched_description"><?php echo $pl["pl_description"] ?></div>
