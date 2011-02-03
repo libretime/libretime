@@ -56,7 +56,7 @@ $pages = array(
 		    array(
 		        'label'      => 'Preferences',
 		        'module'     => 'default',
-		        'controller' => 'Nowplaying'
+		        'controller' => 'Preference'
 		    ),
 			array(
 				'label'      => 'Manage Users',

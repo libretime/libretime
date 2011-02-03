@@ -64,9 +64,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
         $view->headScript()->appendFile('/js/airtime/common/common.js','text/javascript');   
-
-        //TODO: Find better place to put this in.
+    }
+    
+    protected function _initViewHelpers(){
+        $view = $this->getResource('view');
         $view->addHelperPath('../application/views/helpers', 'Airtime_View_Helper');
+    }
+    
+    protected function _initTitle(){
+        $view = $this->getResource('view');
+        $view->headTitle(Application_Model_Preference::GetStationName());
     }
 }
 

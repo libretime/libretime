@@ -19,7 +19,8 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('schedule'))
 	  ->add(new Zend_Acl_Resource('api'))
 	  ->add(new Zend_Acl_Resource('nowplaying'))
-	  ->add(new Zend_Acl_Resource('search'));
+	  ->add(new Zend_Acl_Resource('search'))
+      ->add(new Zend_Acl_Resource('preference'));
 
 /** Creating permissions */
 $ccAcl->allow('guest', 'index')
@@ -33,7 +34,8 @@ $ccAcl->allow('guest', 'index')
 	  ->allow('host', 'playlist')
 	   ->allow('host', 'sideplaylist')
       ->allow('host', 'schedule')
-	  ->allow('admin', 'user');
+	  ->allow('admin', 'user')
+      ->allow('admin', 'preference');
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
 
