@@ -104,17 +104,23 @@ function updateProgressBarValue(){
 
 	//calculate how much time left to next song if there is any
 	if (nextSongs.length > 0 && nextSongPrepare){
-		if (nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime < serverUpdateInterval){
+		var diff = nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime;
+		if (diff < serverUpdateInterval && diff >= 0){
 			nextSongPrepare = false;
-			setTimeout(newSongStart, nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime);
+			setTimeout(newSongStart, diff);
+		} else if (diff < 0){
+			alert ("Warning: estimatedSchedulePosixTime > songStartPosixTime");
 		}
 	}
 	
 	//calculate how much time left to next show if there is any
 	if (nextShow.length > 0 && nextShowPrepare){
-		if (nextShow[0].showStartPosixTime - estimatedSchedulePosixTime < serverUpdateInterval){
+		var diff = nextShow[0].showStartPosixTime - estimatedSchedulePosixTime;
+		if (diff < serverUpdateInterval && diff >= 0){
 			nextShowPrepare = false;
-			setTimeout(nextShowStart, nextShow[0].showStartPosixTime - estimatedSchedulePosixTime);
+			setTimeout(nextShowStart, diff);
+		} else if (diff < 0){
+			alert ("Warning: estimatedSchedulePosixTime > showStartPosixTime");
 		}
 	}
 
@@ -185,6 +191,12 @@ function calcAdditionalShowData(show){
 	if (show.length > 0){
 		show[0].showStartPosixTime = convertDateToPosixTime(show[0].start_timestamp);
 		show[0].showEndPosixTime = convertDateToPosixTime(show[0].end_timestamp);
+		
+		//hack to fix case where show end is next day, but we have it set
+		//as the same day.
+		if (show[0].showEndPosixTime - show[0].showStartPosixTime < 0)
+			show[0].showEndPosixTime += 1000*3600*24;
+		
 		show[0].showLengthMs = show[0].showEndPosixTime - show[0].showStartPosixTime;
 	}
 }

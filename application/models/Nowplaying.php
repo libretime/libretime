@@ -27,7 +27,7 @@ class Application_Model_Nowplaying
 		$arrayIndexOffset = 0;
 		
 		if ($n < 2)
-			return;
+			return $rows;
 		
 		for ($i=1; $i<$n; $i++){
 			if ($rows[$i-1][3] != $rows[$i][2])

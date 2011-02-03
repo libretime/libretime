@@ -586,14 +586,18 @@ class Schedule {
     
     public static function GetNextShow($timeNow) {
         global $CC_CONFIG, $CC_DBC;
-                
-        $sql = "SELECT current_date + sd.start_time as start_timestamp, current_date + sd.end_time as end_timestamp, s.name, s.id"
-        ." FROM $CC_CONFIG[showDays] sd, $CC_CONFIG[showTable] s"
-        ." WHERE sd.show_id = s.id"
-        ." AND (sd.first_show + sd.start_time) >= TIMESTAMP '$timeNow'"
-        ." ORDER BY (sd.first_show + sd.start_time)"
-        ." LIMIT 1";
         
+        $datetime = explode(" ", $timeNow);
+                        
+		$sql = "SELECT *, (current_date + start_time) as start_timestamp, (current_date + end_time) as end_timestamp FROM "
+		." $CC_CONFIG[showDays] sd, $CC_CONFIG[showTable] s"
+		." WHERE sd.show_id = s.id"
+		." AND ((sd.last_show + sd.end_time) > TIMESTAMP '$timeNow' OR sd.last_show = NULL)"
+		." AND TIME '$datetime[1]' < sd.start_time "
+		." AND sd.day = EXTRACT(DOW FROM TIMESTAMP '$timeNow')"
+        ." ORDER BY sd.start_time"
+        ." LIMIT 1";
+                
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
     }
