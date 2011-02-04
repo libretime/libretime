@@ -60,16 +60,19 @@ function addLibraryItemEvents() {
 }
 
 function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-	var id = aData[6].substring(0,2) + "_" + aData[0];
+	var id, type, once;
 
-	$(nRow).attr("id", id);
+    type = aData[6].substring(0,2);
+    id = aData[0];
+
+	$(nRow).attr("id", type+'_'+id);
 
     $(nRow).qtip({
 
         content: {
-            // Set the text to an image HTML string with the correct src URL to the loading image you want to use
-            //text: '<img class="throbber" src="/projects/qtip/images/throbber.gif" alt="Loading..." />',
-            url: '/Library/get-file-meta-data/format/html/file/'+id, // Use the rel attribute of each element for the url to load
+            url: '/Library/get-file-meta-data',
+            type: 'post',
+            data: ({format: "html", id : id, type: type}),
             title: {
                text: aData[1] + ' MetaData',
                button: 'Close' // Show a close link in the title

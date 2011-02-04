@@ -149,19 +149,17 @@ class LibraryController extends Zend_Controller_Action
 
     public function getFileMetaDataAction()
     {
-        //id = type_id
-        $id = $this->_getParam('file');
+        $id = $this->_getParam('id');
+        $type = $this->_getParam('type');
 
-        $info = explode("_", $id);
-
-        if($info[0] == "au") {
-            $file = StoredFile::Recall($info[1]);
-            $this->view->type = $info[0];
+        if($type == "au") {
+            $file = StoredFile::Recall($id);
+            $this->view->type = $type;
             $this->view->md = $file->md;
         }
-        else if($info[0] == "pl") {
-            $file = Playlist::Recall($info[1]);
-            $this->view->type = $info[0];
+        else if($type == "pl") {
+            $file = Playlist::Recall($id);
+            $this->view->type = $type;
             $this->view->md = $file->getAllPLMetaData();
             $this->view->contents = $file->getContents();
         }
