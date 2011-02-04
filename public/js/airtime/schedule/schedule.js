@@ -45,14 +45,14 @@ function setScheduleDialogEvents(dialog) {
 		}
 	});
 
-	dialog.find(".ui-icon-close").parent().click(function(){
+	dialog.find(".ui-icon-close").click(function(){
 		var groupId, url;
 		
 		groupId = $(this).parent().parent().attr("id").split("_").pop();
-		url = '/Schedule/remove-group/format/json';
+		url = '/Schedule/remove-group';
 	
 		$.post(url, 
-			{groupId: groupId},
+			{format: "json", groupId: groupId},
 			function(json){
 				var dialog = $("#schedule_playlist_dialog");
 
@@ -83,25 +83,6 @@ function dtDrawCallback() {
 }
 
 function makeScheduleDialog(dialog, json) {
-	
-	dialog.find("#schedule_playlist_search").keyup(function(){
-		var url, string;
-		
-		url = "/Schedule/find-playlists/format/html";
-		string = $(this).val();
-		
-		$.post(url, {search: string}, function(html){
-			
-			$("#schedule_playlist_choice")
-				.empty()
-				.append(html)
-				.find('li')
-					.draggable({ 
-						helper: 'clone' 
-					});
-			
-		});
-	});
 
 	dialog.find('#schedule_playlists').dataTable( {
 		"bProcessing": true,
