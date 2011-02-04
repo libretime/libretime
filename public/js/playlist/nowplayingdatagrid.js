@@ -45,12 +45,35 @@ function notifySongEnd(){
 	createDataGrid();
 }
 
+/*
+function updateDataGrid(){
+    var table = $('#nowplayingtable');
+    //table.dataTable().fnClearTable();
+        
+    for (var i=0; i<datagridData.rows.length; i++){
+        table.dataTable().fnAddData(datagridData.rows[i]);
+    }
+}
+*/
+    var columns = [{"sTitle": "type", "bVisible":false},
+        {"sTitle":"Date"},
+        {"sTitle":"Start"},
+        {"sTitle":"End"},
+        {"sTitle":"Duration"},
+        {"sTitle":"Song"},
+        {"sTitle":"Artist"},
+        {"sTitle":"Album"},
+        {"sTitle":"Playlist"},
+        {"sTitle":"Show"},
+        {"sTitle":"bgcolor", "bVisible":false},
+        {"sTitle":"group_id", "bVisible":false}];
+
 function createDataGrid(){
-	
-	datagridData.columnHeaders[1]["fnRender"] = getDateText;
-	datagridData.columnHeaders[2]["fnRender"] = getTimeText;
-	datagridData.columnHeaders[3]["fnRender"] = getTimeText;
-	datagridData.columnHeaders[4]["fnRender"] = changeTimePrecisionInit;
+    	
+	columns[1]["fnRender"] = getDateText;
+	columns[2]["fnRender"] = getTimeText;
+	columns[3]["fnRender"] = getTimeText;
+	columns[4]["fnRender"] = changeTimePrecisionInit;
 
 	$('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="datatable" id="nowplayingtable"></table>' );
 	$('#nowplayingtable').dataTable( {
@@ -59,8 +82,9 @@ function createDataGrid(){
 		"bFilter": false,
 		"bInfo": false,
 		"bLengthChange": false,
+        "bPaginate": false,
 		"aaData": datagridData.rows,
-		"aoColumns": datagridData.columnHeaders,
+		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
             if (aData[aData.length-2] != "")
                 $(nRow).attr("style", "background-color:#166622");
@@ -71,20 +95,30 @@ function createDataGrid(){
 			return nRow;
 		}
 	} );
+    
+    setTimeout(init2, 5000);
+}
+
+var viewType = "now" //"day";
+function setViewType(type){
+    if (type == 0){
+        viewType = "now";
+    } else {
+        viewType = "day";
+    }
+    init2();
 }
 
 function init2(){
-	  $.ajax({ url: "/Nowplaying/get-data-grid-data/format/json", dataType:"json", success:function(data){
+	  $.ajax({ url: "/Nowplaying/get-data-grid-data/format/json/view/" + viewType, dataType:"json", success:function(data){
 		datagridData = data.entries;
-		createDataGrid();
+        createDataGrid();
 	  }});
 	  
 	  if (typeof registerSongEndListener == 'function' && !registered){
 		  registered = true;
 		  registerSongEndListener(notifySongEnd);
 	  }
-	  
-	  setTimeout(init2, 5000);
 }
 
 $(document).ready(function() {

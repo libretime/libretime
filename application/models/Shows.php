@@ -659,3 +659,38 @@ class Show {
 		return StoredFile::searchPlaylistsForSchedule($length, $datatables);
 	}
 }
+
+/* Show Data Access Layer */
+class Show_DAL{
+    
+    /* Given a group_id, get all show data related to
+     * id. This is useful in the case where you have an item
+     * in the schedule table and you want to find out more about 
+     * the show it is in without joining the schedule and show tables
+     * (which causes problems with duplicate items)
+     */
+    public static function GetShowData($group_id){
+        global $CC_DBC;
+                
+        $sql="SELECT * FROM cc_show_schedule as ss, cc_show as s"
+        ." WHERE ss.show_id = s.id"
+        ." AND ss.group_id = $group_id"
+        ." LIMIT 1";
+        
+        return $CC_DBC->GetOne($sql);
+    }
+    
+    /* Given a show ID, this function returns what group IDs
+     * are present in this show. */
+    public static function GetShowGroupIDs($showID){
+        global $CC_CONFIG, $CC_DBC;
+        
+		$sql = "SELECT group_id"
+		." FROM $CC_CONFIG[showSchedule]"
+		." WHERE show_id = $showID";
+		
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+	}
+    
+}
