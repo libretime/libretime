@@ -60,9 +60,47 @@ function addLibraryItemEvents() {
 }
 
 function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-	var id = aData[6].substring(0,2) + "_" + aData[0];
+	var id, type, once;
 
-	$(nRow).attr("id", id);
+    type = aData[6].substring(0,2);
+    id = aData[0];
+
+	$(nRow).attr("id", type+'_'+id);
+
+    $(nRow).qtip({
+
+        content: {
+            url: '/Library/get-file-meta-data',
+            type: 'post',
+            data: ({format: "html", id : id, type: type}),
+            title: {
+               text: aData[1] + ' MetaData',
+               button: 'Close' // Show a close link in the title
+            }
+         },
+         position: {
+            corner: {
+               //target: 'leftMiddle'
+               tooltip: 'rightMiddle'
+            },
+            adjust: {
+               screen: true // Keep the tooltip on-screen at all times
+            }
+         },
+         show: { 
+            when: 'click', 
+            solo: true // Only show one tooltip at a time
+         },
+         hide: 'click',
+         style: {
+            border: {
+               width: 0,
+               radius: 4
+            },
+            name: 'dark', // Use the default light style
+            width: 570 // Set the tooltip width
+         }
+    });
 
 	return nRow;
 }

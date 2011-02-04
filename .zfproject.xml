@@ -35,6 +35,7 @@
           <actionMethod actionName="delete"/>
           <actionMethod actionName="contents"/>
           <actionMethod actionName="editFileMd"/>
+          <actionMethod actionName="getFileMetaData"/>
         </controllerFile>
         <controllerFile controllerName="Plupload">
           <actionMethod actionName="index"/>
@@ -282,6 +283,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Preference">
             <viewScriptFile forActionName="update"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Library">
+            <viewScriptFile forActionName="getFileMetaData"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

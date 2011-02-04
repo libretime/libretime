@@ -492,9 +492,9 @@ class StoredFile {
         $escapedValue = pg_escape_string($this->gunid);
         $sql = "SELECT * FROM ".$CC_CONFIG["filesTable"]
         ." WHERE gunid='$escapedValue'";
-        //var_dump($sql);
+        
         $this->md = $CC_DBC->getRow($sql);
-        //var_dump($this->md);
+       
         if (PEAR::isError($this->md)) {
             $error = $this->md;
             $this->md = null;
@@ -511,10 +511,9 @@ class StoredFile {
                 $compatibilityData[$xmlName] = $value;
             }
         }
-        //var_dump($compatibilityData);
-        $this->md = array_merge($this->md, $compatibilityData);
-        //var_dump($this->md);
-        //$_SESSION["debug"] = $this->md;
+        
+        //$this->md = array_merge($this->md, $compatibilityData);
+        $this->md = $compatibilityData;
     }
 
     public function setFormat($p_value)
@@ -707,7 +706,7 @@ class StoredFile {
         $sql = "SELECT *"
         ." FROM ".$CC_CONFIG['filesTable']
         ." WHERE $cond";
-        //echo $sql;
+       
         $row = $CC_DBC->getRow($sql);
         if (PEAR::isError($row) || is_null($row)) {
             return $row;

@@ -166,13 +166,13 @@ class Playlist {
     	    return FALSE;
 
         $storedPlaylist = new Playlist();
-        $storedPlaylist->id = $pl->getDbId();
+        $storedPlaylist->id = $id;
         $storedPlaylist->name = $pl->getDbName();
         $storedPlaylist->state = $pl->getDbState();
         $storedPlaylist->currentlyaccessing = $pl->getDbCurrentlyaccessing();
         $storedPlaylist->editedby = $pl->getDbEditedby();
         $storedPlaylist->mtime = $pl->getDbMtime();
-
+        
         return $storedPlaylist;
     }
 
@@ -461,7 +461,7 @@ class Playlist {
         }
 
         $metadata = $media->getMetadata();
-        $length = $metadata["length"];
+        $length = $metadata["dcterms:extent"];
 
         if (!is_null($p_clipLength)) {
         	$length = $p_clipLength;
@@ -775,6 +775,25 @@ class Playlist {
     public function getPlaylistClipAtPosition($pos)
     {
 
+    }
+
+    public function getAllPLMetaData()
+    {
+        $categories = $this->categories;
+        $row = CcPlaylistQuery::create()->findPK($this->id);
+        $md = array();
+
+        foreach($categories as $key => $val) {
+            if($val === 'length') {
+                $md[$key] = $this->getLength();
+                continue;
+            }
+
+            $method = 'get' . $val;
+            $md[$key] = $row->$method();
+        }
+
+        return $md;
     }
 
     public function getPLMetaData($category)
