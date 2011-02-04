@@ -60,8 +60,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile('/js/libs/jquery.stickyPanel.js','text/javascript');
 
         //scripts for now playing bar
-        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
+        //$this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
+		//$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
         $view->headScript()->appendFile('/js/airtime/common/common.js','text/javascript');   
     }

@@ -16,6 +16,7 @@ class LibraryController extends Zend_Controller_Action
         $ajaxContext->addActionContext('contents', 'json')
 					->addActionContext('delete', 'json')
 					->addActionContext('context-menu', 'json')
+                    ->addActionContext('get-file-meta-data', 'html')
                     ->initContext();
 
 		$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -24,9 +25,10 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
         $this->view->headScript()->appendFile('/js/jplayer/jquery.jplayer.min.js');
         $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
         $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/media_library.css'); 
@@ -90,7 +92,7 @@ class LibraryController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = $this->_getParam('id');
-                        	
+                                	
 		if (!is_null($id)) {
     		$file = StoredFile::Recall($id);
 			
@@ -116,7 +118,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
-		$post = $this->getRequest()->getPost();	
+        $post = $this->getRequest()->getPost();	
 		$datatables = StoredFile::searchFilesForPlaylistBuilder($post);
 
 		die(json_encode($datatables));
@@ -144,7 +146,32 @@ class LibraryController extends Zend_Controller_Action
  
         $this->view->form = $form;
     }
+
+    public function getFileMetaDataAction()
+    {
+        //id = type_id
+        $id = $this->_getParam('file');
+
+        $info = explode("_", $id);
+
+        if($info[0] == "au") {
+            $file = StoredFile::Recall($info[1]);
+            $this->view->type = $info[0];
+            $this->view->md = $file->md;
+        }
+        else if($info[0] == "pl") {
+            $file = Playlist::Recall($info[1]);
+            $this->view->type = $info[0];
+            $this->view->md = $file->getAllPLMetaData();
+            $this->view->contents = $file->getContents();
+        }
+   
+    }
+
+
 }
+
+
 
 
 

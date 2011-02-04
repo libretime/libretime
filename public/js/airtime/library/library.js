@@ -64,6 +64,41 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
 	$(nRow).attr("id", id);
 
+    $(nRow).qtip({
+
+        content: {
+            // Set the text to an image HTML string with the correct src URL to the loading image you want to use
+            //text: '<img class="throbber" src="/projects/qtip/images/throbber.gif" alt="Loading..." />',
+            url: '/Library/get-file-meta-data/format/html/file/'+id, // Use the rel attribute of each element for the url to load
+            title: {
+               text: aData[1] + ' MetaData',
+               button: 'Close' // Show a close link in the title
+            }
+         },
+         position: {
+            corner: {
+               //target: 'leftMiddle'
+               tooltip: 'rightMiddle'
+            },
+            adjust: {
+               screen: true // Keep the tooltip on-screen at all times
+            }
+         },
+         show: { 
+            when: 'click', 
+            solo: true // Only show one tooltip at a time
+         },
+         hide: 'click',
+         style: {
+            border: {
+               width: 0,
+               radius: 4
+            },
+            name: 'dark', // Use the default light style
+            width: 570 // Set the tooltip width
+         }
+    });
+
 	return nRow;
 }
 
