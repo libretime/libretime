@@ -30,7 +30,7 @@ class Application_Model_Preference
         $result = $CC_DBC->GetOne($sql);
         
         if ($result == 0)
-            return "Airtime";
+            return "";
         else {
             $sql = "SELECT valstr FROM cc_pref"
             ." WHERE keystr = '$key'";
@@ -50,7 +50,10 @@ class Application_Model_Preference
             $title = Application_Model_Preference::GetValue("station_name");
             $defaultNamespace->title = $title;
         }
-        return $title." - Airtime";
+        if (strlen($title) > 0)
+            $title .= " - ";
+        
+        return $title."Airtime";
     }
     
     public static function SetHeadTitle($title, $view){
