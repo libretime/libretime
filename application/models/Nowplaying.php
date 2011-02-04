@@ -60,10 +60,10 @@ class Application_Model_Nowplaying
 		$date = Schedule::GetSchedulerTime();
         $timeNow = $date->getDate();
 		$currentShow = Schedule::GetCurrentShow($timeNow);
-		
+		$groupIDs = array();
+        
 		if (count($currentShow) > 0){
 			$dbRows = Show_DAL::GetShowGroupIDs($currentShow[0]["id"]);
-			$groupIDs = array();
 			
 			foreach ($dbRows as $row){
 				array_push($groupIDs, $row["group_id"]);
