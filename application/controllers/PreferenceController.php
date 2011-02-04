@@ -27,12 +27,10 @@ class PreferenceController extends Zend_Controller_Action
             $this->view->form = $form;
             return $this->render('index'); //render the phtml file
         }
- 
-        $auth = Zend_Auth::getInstance();
-        $id = $auth->getIdentity()->id;
-        
+         
         $values = $form->getValues();
-        Application_Model_Preference::UpdateStationName($values["stationName"], $id);      
+        Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);    
+                  
         $this->view->form = $form;
     }
 

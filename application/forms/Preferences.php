@@ -12,7 +12,8 @@ class Application_Form_Preferences extends Zend_Form
             'label'      => 'Station Name:',
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'validators' => array('NotEmpty')
+            'validators' => array('NotEmpty'),
+            'value' => Application_Model_Preference::GetValue("station_name")
         ));
         
         /*

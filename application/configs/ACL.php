@@ -32,7 +32,7 @@ $ccAcl->allow('guest', 'index')
 	  ->allow('guest', 'api')
       ->allow('host', 'plupload')
 	  ->allow('host', 'playlist')
-	   ->allow('host', 'sideplaylist')
+	  ->allow('host', 'sideplaylist')
       ->allow('host', 'schedule')
 	  ->allow('admin', 'user')
       ->allow('admin', 'preference');

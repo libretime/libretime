@@ -49,50 +49,27 @@ $pages = array(
 		'action'     => 'plupload',
 		'resource'	=>	'plupload'
 	),
-	array(
-		'label'      => 'Configure',
-		'uri' => 'javascript:void(null)',
-		'pages'      => array(
-		    array(
-		        'label'      => 'Preferences',
-		        'module'     => 'default',
-		        'controller' => 'Preference'
-		    ),
-			array(
-				'label'      => 'Manage Users',
-				'module'     => 'default',
-				'controller' => 'user',
-				'action'     => 'add-user',
-				'resource'	=>	'user'	
-			)
-		)
-	)
-	/*
-	array(
-		'label'      => 'Media Library',
-		'module'     => 'default',
-		'controller' => 'Library',
-		'action'     => 'index',
-		'resource'	=>	'library',
-		'pages'      => array(
-		    array(
-		        'label'      => 'Add Audio',
-		        'module'     => 'default',
-		        'controller' => 'Plupload',
-		        'action'     => 'plupload',
-				'resource'	=>	'plupload'
-		    ),
-			array(
-		        'label'      => 'Search (not working right now)',
-		        'module'     => 'default',
-		        'controller' => 'Search',
-		        'action'     => 'index',
-				'resource'	=>	'search'
-		    )
-		)
-	)
-	*/
+    array(
+        'label'      => 'Configure',
+        'uri' => 'javascript:void(null)',
+        'resource' => 'preference',
+        'pages'      => array(
+            array(
+                'label'      => 'Preferences',
+                'module'     => 'default',
+                'controller' => 'Preference'
+            ),
+            array(
+                'label'      => 'Manage Users',
+                'module'     => 'default',
+                'controller' => 'user',
+                'action'     => 'add-user',
+                'resource'	=>	'user'	
+            )
+        )
+    )
 );
+
  
 // Create container from array
 $container = new Zend_Navigation($pages);

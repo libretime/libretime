@@ -73,7 +73,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     
     protected function _initTitle(){
         $view = $this->getResource('view');
-        $view->headTitle(Application_Model_Preference::GetStationName());
+        $view->headTitle(Application_Model_Preference::GetHeadTitle());
     }
 }
 
