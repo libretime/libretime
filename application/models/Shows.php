@@ -142,6 +142,11 @@ class Show {
 		$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
 		$new_ends = $CC_DBC->GetOne($sql);
 
+        $today_timestamp = date("Y-m-d H:i:s");
+        if(strtotime($today_timestamp) > strtotime($new_starts)) {
+            return "can't move show into past";
+        }
+
 		$overlap =  $this->getShows($new_starts, $new_ends, array($showInstanceId));
 
 		if(count($overlap) > 0) {
@@ -633,7 +638,11 @@ class Show {
 		}
 
 		if($this->_user->isAdmin()) {
-			$event["editable"] = true;
+            $today_timestamp = date("Y-m-d H:i:s");
+
+            if(strtotime($today_timestamp) < strtotime($show["starts"])) {
+			    $event["editable"] = true;
+            }
 		}
 
 		if($this->_user->isHost($show["show_id"])) {

@@ -139,7 +139,7 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
 	$.post(url, 
 		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
-			if(json.overlap) {
+			if(json.error) {
 				revertFunc();
 			}
 		});
@@ -153,7 +153,7 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 	$.post(url, 
 		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
-			if(json.overlap) {
+			if(json.error) {
 				revertFunc();
 			}
 		});
