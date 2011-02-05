@@ -142,7 +142,7 @@ class Show {
 		$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
 		$new_ends = $CC_DBC->GetOne($sql);
 
-		$overlap =  $this->getShows($new_starts, $new_ends);
+		$overlap =  $this->getShows($new_starts, $new_ends, array($showInstanceId));
 
 		if(count($overlap) > 0) {
 			return $overlap;
@@ -176,11 +176,11 @@ class Show {
         //only need to check overlap if show increased in size.
         if(strtotime($new_ends) > strtotime($ends)) {
 		    $overlap =  $this->getShows($ends, $new_ends);
-        }
 
-		if(count($overlap) > 0) {
-			return $overlap;
-		}
+            if(count($overlap) > 0) {
+			    return $overlap;
+		    }
+        }
 
         $showInstance
             ->setDbEnds($new_ends)
@@ -460,14 +460,24 @@ class Show {
 		}
 	}
 
-    public function getShows($start_timestamp, $end_timestamp) {
+    public function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL) {
         global $CC_DBC;
 
         $sql = "SELECT starts, ends, show_id, name, description, color, background_color, cc_show_instances.id AS instance_id  
             FROM cc_show_instances 
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id 
-            WHERE starts >= '{$start_timestamp}' AND starts <= '{$end_timestamp}'
-                OR ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}'";
+            WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
+                OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}'))";
+
+        if(isset($excludeInstance)) {
+            foreach($excludeInstance as $instance) {
+                $sql_exclude[] = "cc_show_instances.id != {$instance}";
+            }
+
+            $exclude = join(" OR ", $sql_exclude);
+
+            $sql = $sql." AND ({$exclude})";
+        }
 
 		//echo $sql;
 
