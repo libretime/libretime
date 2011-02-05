@@ -2,7 +2,6 @@
 
 class ScheduleController extends Zend_Controller_Action
 {
-
     protected $sched_sess = null;
 
     public function init()
@@ -51,9 +50,13 @@ class ScheduleController extends Zend_Controller_Action
 		$end = $this->_getParam('end', null);
 		
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-		$show = new Show(new User($userInfo->id, $userInfo->type));
+        $user = new User($userInfo->id, $userInfo->type);
+        if($user->isAdmin())
+            $editable = true;
+        else
+            $editable = false;
 
-		$this->view->events = $show->getFullCalendarEvents($start, $end);
+		$this->view->events = Show::getFullCalendarEvents($start, $end, $editable);
     }
 
     public function addShowDialogAction()
@@ -133,10 +136,8 @@ class ScheduleController extends Zend_Controller_Action
 		$deltaMin = $this->_getParam('min');
 		$showInstanceId = $this->_getParam('showInstanceId');
 
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-		$show = new Show(new User($userInfo->id, $userInfo->type));
-
-		$error = $show->moveShow($showInstanceId, $deltaDay, $deltaMin);
+		$show = new ShowInstance($showInstanceId);
+		$error = $show->moveShow($deltaDay, $deltaMin);
 
 		if(isset($error))
 			$this->view->error = $error;
@@ -148,10 +149,8 @@ class ScheduleController extends Zend_Controller_Action
 		$deltaMin = $this->_getParam('min');
 		$showInstanceId = $this->_getParam('showInstanceId');
 
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-		$show = new Show(new User($userInfo->id, $userInfo->type));
-
-		$error = $show->resizeShow($showInstanceId, $deltaDay, $deltaMin);
+		$show = new ShowInstance($showInstanceId);
+		$error = $show->resizeShow($deltaDay, $deltaMin);
 
 		if(isset($error))
 			$this->view->error = $error;
@@ -219,7 +218,9 @@ class ScheduleController extends Zend_Controller_Action
 		$user = new User($userInfo->id, $userInfo->type);
 		$show = new Show($user, $showId);
 
-		$show->scheduleShow($start_timestamp, array($plId));
+        if($user->isHost($showId)) {
+		    $show->scheduleShow($start_timestamp, array($plId));
+        }
 
 		$this->view->showContent = $show->getShowContent($start_timestamp);
 		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);

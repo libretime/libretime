@@ -31,16 +31,10 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	protected $id;
 
 	/**
-	 * The value for the show_id field.
+	 * The value for the instance_id field.
 	 * @var        int
 	 */
-	protected $show_id;
-
-	/**
-	 * The value for the show_day field.
-	 * @var        string
-	 */
-	protected $show_day;
+	protected $instance_id;
 
 	/**
 	 * The value for the position field.
@@ -55,9 +49,9 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	protected $group_id;
 
 	/**
-	 * @var        CcShow
+	 * @var        CcShowInstances
 	 */
-	protected $aCcShow;
+	protected $aCcShowInstances;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -84,46 +78,13 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [show_id] column value.
+	 * Get the [instance_id] column value.
 	 * 
 	 * @return     int
 	 */
-	public function getDbShowId()
+	public function getDbInstanceId()
 	{
-		return $this->show_id;
-	}
-
-	/**
-	 * Get the [optionally formatted] temporal [show_day] column value.
-	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
-	 */
-	public function getDbShowDay($format = '%x')
-	{
-		if ($this->show_day === null) {
-			return null;
-		}
-
-
-
-		try {
-			$dt = new DateTime($this->show_day);
-		} catch (Exception $x) {
-			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->show_day, true), $x);
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
+		return $this->instance_id;
 	}
 
 	/**
@@ -167,77 +128,28 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	} // setDbId()
 
 	/**
-	 * Set the value of [show_id] column.
+	 * Set the value of [instance_id] column.
 	 * 
 	 * @param      int $v new value
 	 * @return     CcShowSchedule The current object (for fluent API support)
 	 */
-	public function setDbShowId($v)
+	public function setDbInstanceId($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
 		}
 
-		if ($this->show_id !== $v) {
-			$this->show_id = $v;
-			$this->modifiedColumns[] = CcShowSchedulePeer::SHOW_ID;
+		if ($this->instance_id !== $v) {
+			$this->instance_id = $v;
+			$this->modifiedColumns[] = CcShowSchedulePeer::INSTANCE_ID;
 		}
 
-		if ($this->aCcShow !== null && $this->aCcShow->getDbId() !== $v) {
-			$this->aCcShow = null;
+		if ($this->aCcShowInstances !== null && $this->aCcShowInstances->getDbId() !== $v) {
+			$this->aCcShowInstances = null;
 		}
 
 		return $this;
-	} // setDbShowId()
-
-	/**
-	 * Sets the value of [show_day] column to a normalized version of the date/time value specified.
-	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
-	 * @return     CcShowSchedule The current object (for fluent API support)
-	 */
-	public function setDbShowDay($v)
-	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
-		}
-
-		if ( $this->show_day !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->show_day !== null && $tmpDt = new DateTime($this->show_day)) ? $tmpDt->format('Y-m-d') : null;
-			$newNorm = ($dt !== null) ? $dt->format('Y-m-d') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					)
-			{
-				$this->show_day = ($dt ? $dt->format('Y-m-d') : null);
-				$this->modifiedColumns[] = CcShowSchedulePeer::SHOW_DAY;
-			}
-		} // if either are not null
-
-		return $this;
-	} // setDbShowDay()
+	} // setDbInstanceId()
 
 	/**
 	 * Set the value of [position] column.
@@ -312,10 +224,9 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->show_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-			$this->show_day = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->position = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-			$this->group_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+			$this->instance_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+			$this->position = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+			$this->group_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -324,7 +235,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 5; // 5 = CcShowSchedulePeer::NUM_COLUMNS - CcShowSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 4; // 4 = CcShowSchedulePeer::NUM_COLUMNS - CcShowSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowSchedule object", $e);
@@ -347,8 +258,8 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
-		if ($this->aCcShow !== null && $this->show_id !== $this->aCcShow->getDbId()) {
-			$this->aCcShow = null;
+		if ($this->aCcShowInstances !== null && $this->instance_id !== $this->aCcShowInstances->getDbId()) {
+			$this->aCcShowInstances = null;
 		}
 	} // ensureConsistency
 
@@ -389,7 +300,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->aCcShow = null;
+			$this->aCcShowInstances = null;
 		} // if (deep)
 	}
 
@@ -505,11 +416,11 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aCcShow !== null) {
-				if ($this->aCcShow->isModified() || $this->aCcShow->isNew()) {
-					$affectedRows += $this->aCcShow->save($con);
+			if ($this->aCcShowInstances !== null) {
+				if ($this->aCcShowInstances->isModified() || $this->aCcShowInstances->isNew()) {
+					$affectedRows += $this->aCcShowInstances->save($con);
 				}
-				$this->setCcShow($this->aCcShow);
+				$this->setCcShowInstances($this->aCcShowInstances);
 			}
 
 			if ($this->isNew() ) {
@@ -606,9 +517,9 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aCcShow !== null) {
-				if (!$this->aCcShow->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aCcShow->getValidationFailures());
+			if ($this->aCcShowInstances !== null) {
+				if (!$this->aCcShowInstances->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcShowInstances->getValidationFailures());
 				}
 			}
 
@@ -655,15 +566,12 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getDbShowId();
+				return $this->getDbInstanceId();
 				break;
 			case 2:
-				return $this->getDbShowDay();
-				break;
-			case 3:
 				return $this->getDbPosition();
 				break;
-			case 4:
+			case 3:
 				return $this->getDbGroupId();
 				break;
 			default:
@@ -691,14 +599,13 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 		$keys = CcShowSchedulePeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getDbId(),
-			$keys[1] => $this->getDbShowId(),
-			$keys[2] => $this->getDbShowDay(),
-			$keys[3] => $this->getDbPosition(),
-			$keys[4] => $this->getDbGroupId(),
+			$keys[1] => $this->getDbInstanceId(),
+			$keys[2] => $this->getDbPosition(),
+			$keys[3] => $this->getDbGroupId(),
 		);
 		if ($includeForeignObjects) {
-			if (null !== $this->aCcShow) {
-				$result['CcShow'] = $this->aCcShow->toArray($keyType, $includeLazyLoadColumns, true);
+			if (null !== $this->aCcShowInstances) {
+				$result['CcShowInstances'] = $this->aCcShowInstances->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 		}
 		return $result;
@@ -735,15 +642,12 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setDbShowId($value);
+				$this->setDbInstanceId($value);
 				break;
 			case 2:
-				$this->setDbShowDay($value);
-				break;
-			case 3:
 				$this->setDbPosition($value);
 				break;
-			case 4:
+			case 3:
 				$this->setDbGroupId($value);
 				break;
 		} // switch()
@@ -771,10 +675,9 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 		$keys = CcShowSchedulePeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setDbShowId($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setDbShowDay($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setDbPosition($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbGroupId($arr[$keys[4]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbInstanceId($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbPosition($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbGroupId($arr[$keys[3]]);
 	}
 
 	/**
@@ -787,8 +690,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 		$criteria = new Criteria(CcShowSchedulePeer::DATABASE_NAME);
 
 		if ($this->isColumnModified(CcShowSchedulePeer::ID)) $criteria->add(CcShowSchedulePeer::ID, $this->id);
-		if ($this->isColumnModified(CcShowSchedulePeer::SHOW_ID)) $criteria->add(CcShowSchedulePeer::SHOW_ID, $this->show_id);
-		if ($this->isColumnModified(CcShowSchedulePeer::SHOW_DAY)) $criteria->add(CcShowSchedulePeer::SHOW_DAY, $this->show_day);
+		if ($this->isColumnModified(CcShowSchedulePeer::INSTANCE_ID)) $criteria->add(CcShowSchedulePeer::INSTANCE_ID, $this->instance_id);
 		if ($this->isColumnModified(CcShowSchedulePeer::POSITION)) $criteria->add(CcShowSchedulePeer::POSITION, $this->position);
 		if ($this->isColumnModified(CcShowSchedulePeer::GROUP_ID)) $criteria->add(CcShowSchedulePeer::GROUP_ID, $this->group_id);
 
@@ -852,8 +754,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setDbShowId($this->show_id);
-		$copyObj->setDbShowDay($this->show_day);
+		$copyObj->setDbInstanceId($this->instance_id);
 		$copyObj->setDbPosition($this->position);
 		$copyObj->setDbGroupId($this->group_id);
 
@@ -900,24 +801,24 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Declares an association between this object and a CcShow object.
+	 * Declares an association between this object and a CcShowInstances object.
 	 *
-	 * @param      CcShow $v
+	 * @param      CcShowInstances $v
 	 * @return     CcShowSchedule The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setCcShow(CcShow $v = null)
+	public function setCcShowInstances(CcShowInstances $v = null)
 	{
 		if ($v === null) {
-			$this->setDbShowId(NULL);
+			$this->setDbInstanceId(NULL);
 		} else {
-			$this->setDbShowId($v->getDbId());
+			$this->setDbInstanceId($v->getDbId());
 		}
 
-		$this->aCcShow = $v;
+		$this->aCcShowInstances = $v;
 
 		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the CcShow object, it will not be re-added.
+		// If this object has already been added to the CcShowInstances object, it will not be re-added.
 		if ($v !== null) {
 			$v->addCcShowSchedule($this);
 		}
@@ -927,25 +828,25 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 
 	/**
-	 * Get the associated CcShow object
+	 * Get the associated CcShowInstances object
 	 *
 	 * @param      PropelPDO Optional Connection object.
-	 * @return     CcShow The associated CcShow object.
+	 * @return     CcShowInstances The associated CcShowInstances object.
 	 * @throws     PropelException
 	 */
-	public function getCcShow(PropelPDO $con = null)
+	public function getCcShowInstances(PropelPDO $con = null)
 	{
-		if ($this->aCcShow === null && ($this->show_id !== null)) {
-			$this->aCcShow = CcShowQuery::create()->findPk($this->show_id, $con);
+		if ($this->aCcShowInstances === null && ($this->instance_id !== null)) {
+			$this->aCcShowInstances = CcShowInstancesQuery::create()->findPk($this->instance_id, $con);
 			/* The following can be used additionally to
 			   guarantee the related object contains a reference
 			   to this object.  This level of coupling may, however, be
 			   undesirable since it could result in an only partially populated collection
 			   in the referenced object.
-			   $this->aCcShow->addCcShowSchedules($this);
+			   $this->aCcShowInstances->addCcShowSchedules($this);
 			 */
 		}
-		return $this->aCcShow;
+		return $this->aCcShowInstances;
 	}
 
 	/**
@@ -954,8 +855,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	public function clear()
 	{
 		$this->id = null;
-		$this->show_id = null;
-		$this->show_day = null;
+		$this->instance_id = null;
 		$this->position = null;
 		$this->group_id = null;
 		$this->alreadyInSave = false;
@@ -980,7 +880,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 		if ($deep) {
 		} // if ($deep)
 
-		$this->aCcShow = null;
+		$this->aCcShowInstances = null;
 	}
 
 	/**

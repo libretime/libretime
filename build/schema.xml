@@ -164,12 +164,11 @@
   </table>
   <table name="cc_show_schedule" phpName="CcShowSchedule">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-	<column name="show_id" phpName="DbShowId" type="INTEGER" required="true"/>
-	<column name="show_day" phpName="DbShowDay" type="DATE" required="true"/>
+	<column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
 	<column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
     <column name="group_id" phpName="DbGroupId" type="INTEGER" required="true"/>
-	<foreign-key foreignTable="cc_show" name="cc_perm_show_fkey" onDelete="CASCADE">
-      <reference local="show_id" foreign="id"/>
+	<foreign-key foreignTable="cc_show_instances" name="cc_show_inst_fkey" onDelete="CASCADE">
+      <reference local="instance_id" foreign="id"/>
     </foreign-key>
   </table>
   <table name="cc_playlist" phpName="CcPlaylist">

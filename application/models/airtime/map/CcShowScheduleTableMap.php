@@ -39,8 +39,7 @@ class CcShowScheduleTableMap extends TableMap {
 		$this->setPrimaryKeyMethodInfo('cc_show_schedule_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
-		$this->addColumn('SHOW_DAY', 'DbShowDay', 'DATE', true, null, null);
+		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', true, null, null);
 		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', false, null, null);
 		$this->addColumn('GROUP_ID', 'DbGroupId', 'INTEGER', true, null, null);
 		// validators
@@ -51,7 +50,7 @@ class CcShowScheduleTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcShow', 'CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcShowScheduleTableMap

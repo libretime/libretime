@@ -26,7 +26,7 @@ abstract class BaseCcShowSchedulePeer {
 	const TM_CLASS = 'CcShowScheduleTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 5;
+	const NUM_COLUMNS = 4;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -34,11 +34,8 @@ abstract class BaseCcShowSchedulePeer {
 	/** the column name for the ID field */
 	const ID = 'cc_show_schedule.ID';
 
-	/** the column name for the SHOW_ID field */
-	const SHOW_ID = 'cc_show_schedule.SHOW_ID';
-
-	/** the column name for the SHOW_DAY field */
-	const SHOW_DAY = 'cc_show_schedule.SHOW_DAY';
+	/** the column name for the INSTANCE_ID field */
+	const INSTANCE_ID = 'cc_show_schedule.INSTANCE_ID';
 
 	/** the column name for the POSITION field */
 	const POSITION = 'cc_show_schedule.POSITION';
@@ -62,12 +59,12 @@ abstract class BaseCcShowSchedulePeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbShowId', 'DbShowDay', 'DbPosition', 'DbGroupId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbShowId', 'dbShowDay', 'dbPosition', 'dbGroupId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::SHOW_ID, self::SHOW_DAY, self::POSITION, self::GROUP_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SHOW_ID', 'SHOW_DAY', 'POSITION', 'GROUP_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'show_id', 'show_day', 'position', 'group_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbInstanceId', 'DbPosition', 'DbGroupId', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbInstanceId', 'dbPosition', 'dbGroupId', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::INSTANCE_ID, self::POSITION, self::GROUP_ID, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'INSTANCE_ID', 'POSITION', 'GROUP_ID', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'instance_id', 'position', 'group_id', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -77,12 +74,12 @@ abstract class BaseCcShowSchedulePeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbShowId' => 1, 'DbShowDay' => 2, 'DbPosition' => 3, 'DbGroupId' => 4, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbShowId' => 1, 'dbShowDay' => 2, 'dbPosition' => 3, 'dbGroupId' => 4, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::SHOW_ID => 1, self::SHOW_DAY => 2, self::POSITION => 3, self::GROUP_ID => 4, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SHOW_ID' => 1, 'SHOW_DAY' => 2, 'POSITION' => 3, 'GROUP_ID' => 4, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'show_id' => 1, 'show_day' => 2, 'position' => 3, 'group_id' => 4, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbInstanceId' => 1, 'DbPosition' => 2, 'DbGroupId' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbInstanceId' => 1, 'dbPosition' => 2, 'dbGroupId' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::INSTANCE_ID => 1, self::POSITION => 2, self::GROUP_ID => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'INSTANCE_ID' => 1, 'POSITION' => 2, 'GROUP_ID' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'instance_id' => 1, 'position' => 2, 'group_id' => 3, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -155,14 +152,12 @@ abstract class BaseCcShowSchedulePeer {
 	{
 		if (null === $alias) {
 			$criteria->addSelectColumn(CcShowSchedulePeer::ID);
-			$criteria->addSelectColumn(CcShowSchedulePeer::SHOW_ID);
-			$criteria->addSelectColumn(CcShowSchedulePeer::SHOW_DAY);
+			$criteria->addSelectColumn(CcShowSchedulePeer::INSTANCE_ID);
 			$criteria->addSelectColumn(CcShowSchedulePeer::POSITION);
 			$criteria->addSelectColumn(CcShowSchedulePeer::GROUP_ID);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
-			$criteria->addSelectColumn($alias . '.SHOW_ID');
-			$criteria->addSelectColumn($alias . '.SHOW_DAY');
+			$criteria->addSelectColumn($alias . '.INSTANCE_ID');
 			$criteria->addSelectColumn($alias . '.POSITION');
 			$criteria->addSelectColumn($alias . '.GROUP_ID');
 		}
@@ -451,7 +446,7 @@ abstract class BaseCcShowSchedulePeer {
 	}
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related CcShow table
+	 * Returns the number of rows matching criteria, joining the related CcShowInstances table
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -459,7 +454,7 @@ abstract class BaseCcShowSchedulePeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinCcShow(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinCcShowInstances(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -486,7 +481,7 @@ abstract class BaseCcShowSchedulePeer {
 			$con = Propel::getConnection(CcShowSchedulePeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CcShowSchedulePeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+		$criteria->addJoin(CcShowSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -501,7 +496,7 @@ abstract class BaseCcShowSchedulePeer {
 
 
 	/**
-	 * Selects a collection of CcShowSchedule objects pre-filled with their CcShow objects.
+	 * Selects a collection of CcShowSchedule objects pre-filled with their CcShowInstances objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
@@ -509,7 +504,7 @@ abstract class BaseCcShowSchedulePeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinCcShow(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinCcShowInstances(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$criteria = clone $criteria;
 
@@ -520,9 +515,9 @@ abstract class BaseCcShowSchedulePeer {
 
 		CcShowSchedulePeer::addSelectColumns($criteria);
 		$startcol = (CcShowSchedulePeer::NUM_COLUMNS - CcShowSchedulePeer::NUM_LAZY_LOAD_COLUMNS);
-		CcShowPeer::addSelectColumns($criteria);
+		CcShowInstancesPeer::addSelectColumns($criteria);
 
-		$criteria->addJoin(CcShowSchedulePeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+		$criteria->addJoin(CcShowSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -542,19 +537,19 @@ abstract class BaseCcShowSchedulePeer {
 				CcShowSchedulePeer::addInstanceToPool($obj1, $key1);
 			} // if $obj1 already loaded
 
-			$key2 = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol);
+			$key2 = CcShowInstancesPeer::getPrimaryKeyHashFromRow($row, $startcol);
 			if ($key2 !== null) {
-				$obj2 = CcShowPeer::getInstanceFromPool($key2);
+				$obj2 = CcShowInstancesPeer::getInstanceFromPool($key2);
 				if (!$obj2) {
 
-					$cls = CcShowPeer::getOMClass(false);
+					$cls = CcShowInstancesPeer::getOMClass(false);
 
 					$obj2 = new $cls();
 					$obj2->hydrate($row, $startcol);
-					CcShowPeer::addInstanceToPool($obj2, $key2);
+					CcShowInstancesPeer::addInstanceToPool($obj2, $key2);
 				} // if obj2 already loaded
 
-				// Add the $obj1 (CcShowSchedule) to $obj2 (CcShow)
+				// Add the $obj1 (CcShowSchedule) to $obj2 (CcShowInstances)
 				$obj2->addCcShowSchedule($obj1);
 
 			} // if joined row was not null
@@ -602,7 +597,7 @@ abstract class BaseCcShowSchedulePeer {
 			$con = Propel::getConnection(CcShowSchedulePeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CcShowSchedulePeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+		$criteria->addJoin(CcShowSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -637,10 +632,10 @@ abstract class BaseCcShowSchedulePeer {
 		CcShowSchedulePeer::addSelectColumns($criteria);
 		$startcol2 = (CcShowSchedulePeer::NUM_COLUMNS - CcShowSchedulePeer::NUM_LAZY_LOAD_COLUMNS);
 
-		CcShowPeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + (CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcShowInstancesPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		$criteria->addJoin(CcShowSchedulePeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+		$criteria->addJoin(CcShowSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -659,21 +654,21 @@ abstract class BaseCcShowSchedulePeer {
 				CcShowSchedulePeer::addInstanceToPool($obj1, $key1);
 			} // if obj1 already loaded
 
-			// Add objects for joined CcShow rows
+			// Add objects for joined CcShowInstances rows
 
-			$key2 = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+			$key2 = CcShowInstancesPeer::getPrimaryKeyHashFromRow($row, $startcol2);
 			if ($key2 !== null) {
-				$obj2 = CcShowPeer::getInstanceFromPool($key2);
+				$obj2 = CcShowInstancesPeer::getInstanceFromPool($key2);
 				if (!$obj2) {
 
-					$cls = CcShowPeer::getOMClass(false);
+					$cls = CcShowInstancesPeer::getOMClass(false);
 
 					$obj2 = new $cls();
 					$obj2->hydrate($row, $startcol2);
-					CcShowPeer::addInstanceToPool($obj2, $key2);
+					CcShowInstancesPeer::addInstanceToPool($obj2, $key2);
 				} // if obj2 loaded
 
-				// Add the $obj1 (CcShowSchedule) to the collection in $obj2 (CcShow)
+				// Add the $obj1 (CcShowSchedule) to the collection in $obj2 (CcShowInstances)
 				$obj2->addCcShowSchedule($obj1);
 			} // if joined row not null
 
