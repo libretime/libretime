@@ -15,7 +15,7 @@ class Application_Model_Nowplaying
 		if (count($endDate) > 1)
 			$epochEndMS += $endDate[1];
 		
-		$blankRow = array(array("b", "-", "-", "-", TimeDateHelper::ConvertMSToHHMMSSmm($epochEndMS - $epochStartMS), "-", "-", "-", "-" , "-", "", ""));
+		$blankRow = array(array("b", "-", "-", "-", Application_Model_DateHelper::ConvertMSToHHMMSSmm($epochEndMS - $epochStartMS), "-", "-", "-", "-" , "-", "", ""));
 		array_splice($rows, $i, 0, $blankRow);
 		return $rows;
 	}
@@ -42,7 +42,7 @@ class Application_Model_Nowplaying
 		return $rows;
 	}
 	
-	public static function GetDataGridData(){
+	public static function GetDataGridData($viewType){
 						
 		$columnHeaders = array(array("sTitle"=>"type", "bVisible"=>false),
 					array("sTitle"=>"Date"), 
@@ -52,44 +52,52 @@ class Application_Model_Nowplaying
 					array("sTitle"=>"Song"),
 					array("sTitle"=>"Artist"),
 					array("sTitle"=>"Album"),
-					array("sTitle"=>"Creator"),
 					array("sTitle"=>"Playlist"),
+					array("sTitle"=>"Show"),
                     array("sTitle"=>"bgcolor", "bVisible"=>false),
                     array("sTitle"=>"group_id", "bVisible"=>false));
 
-		$timeNow = Schedule::GetSchedulerTime();
+		$date = Schedule::GetSchedulerTime();
+        $timeNow = $date->getDate();
 		$currentShow = Schedule::GetCurrentShow($timeNow);
-		
+		$groupIDs = array();
+        
 		if (count($currentShow) > 0){
-			$dbRows = Schedule::GetCurrentShowGroupIDs($currentShow[0]["id"]);
-			$groupIDs = array();
+			$dbRows = Show_DAL::GetShowGroupIDs($currentShow[0]["id"]);
 			
 			foreach ($dbRows as $row){
 				array_push($groupIDs, $row["group_id"]);
 			}
 		}
-		
-		$previous = Schedule::Get_Scheduled_Item_Data($timeNow, -1, 1, "60 seconds");
-		$current = Schedule::Get_Scheduled_Item_Data($timeNow, 0);
-		$next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, 10, "48 hours");
+				
+		if ($viewType == "now"){
+			$previous = Schedule::Get_Scheduled_Item_Data($timeNow, -1, 1, "60 seconds");
+			$current = Schedule::Get_Scheduled_Item_Data($timeNow, 0);
+			$next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, 10, "24 hours");
+		} else {
+            
+			$previous = Schedule::Get_Scheduled_Item_Data($timeNow, -1, "ALL", $date->getNowDayStartDiff()." seconds");
+			$current = Schedule::Get_Scheduled_Item_Data($timeNow, 0);
+			$next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, "ALL", $date->getNowDayEndDiff()." seconds");						
+		}
 		
 		$rows = array();
 				
 		foreach ($previous as $item){
 			$color = (count($currentShow) > 0) && in_array($item["group_id"], $groupIDs) ? "x" : "";
 			array_push($rows, array("p", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["name"], $color, $item["group_id"]));
+				$item["album_title"], $item["name"], $item["show_name"], $color, $item["group_id"]));
 		}
 		
 		foreach ($current as $item){
 			array_push($rows, array("c", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["name"], "", $item["group_id"]));		
+				$item["album_title"], $item["name"], $item["show_name"], "", $item["group_id"]));	
 		}
 		
 		foreach ($next as $item){
 			$color = (count($currentShow) > 0) && in_array($item["group_id"], $groupIDs) ? "x" : "";
 			array_push($rows, array("n", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-				$item["album_title"], "x" , $item["name"], $color, $item["group_id"]));
+				$item["album_title"], $item["name"], $item["show_name"], $color, $item["group_id"]));
 		}
 		
 		$rows = Application_Model_Nowplaying::FindGaps($rows);
@@ -98,31 +106,4 @@ class Application_Model_Nowplaying
 		return $data;
 	}
 }
-
-class TimeDateHelper
-{
-
-    public static function ConvertMSToHHMMSSmm($time){      
-        $hours = floor($time / 3600000);
-        $time -= 3600000*$hours;
-            
-        $minutes = floor($time / 60000);
-        $time -= 60000*$minutes;
-        
-        $seconds = floor($time / 1000);
-        $time -= 1000*$seconds;
-        
-        $ms = $time;
-        
-        if (strlen($hours) == 1)
-            $hours = "0".$hours;
-        if (strlen($minutes) == 1)
-            $minutes = "0".$minutes;
-        if (strlen($seconds) == 1)
-            $seconds = "0".$seconds;
-            
-        return $hours.":".$minutes.":".$seconds.".".$ms;
-    }
-}
-
 

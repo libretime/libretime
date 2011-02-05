@@ -111,6 +111,7 @@
       <modelsDirectory>
         <modelFile modelName="Nowplaying"/>
         <modelFile modelName="Preference"/>
+        <modelFile modelName="DateHelper"/>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <viewsDirectory>

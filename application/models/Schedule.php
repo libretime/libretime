@@ -446,7 +446,8 @@ class Schedule {
      * @return date Current server time.
      */
     public static function GetSchedulerTime() {
-        return date("Y-m-d H:i:s"); 
+        $date = new Application_Model_DateHelper;
+        return $date; 
     }
 
     /**
@@ -462,7 +463,8 @@ class Schedule {
             return "{}";
         }
 
-        $timeNow = Schedule::GetSchedulerTime();
+        $date = Schedule::GetSchedulerTime();
+        $timeNow = $date->getDate();
         return array("schedulerTime"=>gmdate("Y-m-d H:i:s"),
             "previous"=>Schedule::Get_Scheduled_Item_Data($timeNow, -1, $prev, "24 hours"),
             "current"=>Schedule::Get_Scheduled_Item_Data($timeNow, 0),
@@ -497,15 +499,17 @@ class Schedule {
      */
     public static function Get_Scheduled_Item_Data($timeNow, $timePeriod=0, $count = 0, $interval="0 hours"){
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id"
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
+        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name"
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] ss, $CC_CONFIG[showTable] show"
         ." WHERE st.playlist_id = pt.id"
-        ." AND st.file_id = ft.id";
+        ." AND st.file_id = ft.id"
+        ." AND st.group_id = ss.group_id"
+        ." AND ss.show_id = show.id";
         
         if ($timePeriod < 0){
         	$sql .= " AND st.ends < TIMESTAMP '$timeNow'"
         	." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '$interval')"
-  	        ." ORDER BY st.starts DESC"
+  	        ." ORDER BY st.starts"
         	." LIMIT $count";	
 		} else if ($timePeriod == 0){
 	        $sql .= " AND st.starts < TIMESTAMP '$timeNow'"
@@ -516,13 +520,12 @@ class Schedule {
         	." ORDER BY st.starts"
         	." LIMIT $count";		
 		}
-        
+
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
 	}
 	
 	/*
-
     public static function GetPreviousItems($timeNow, $prevCount = 1, $prevInterval="24 hours"){
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id"
@@ -602,18 +605,6 @@ class Schedule {
         return $rows;
     }
      
-    
-    
-    public static function GetCurrentShowGroupIDs($showID){
-        global $CC_CONFIG, $CC_DBC;
-        
-		$sql = "SELECT group_id"
-		." FROM $CC_CONFIG[showSchedule]"
-		." WHERE show_id = $showID";
-		
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-	}
 
     /**
      * Convert a time string in the format "YYYY-MM-DD HH:mm:SS"
