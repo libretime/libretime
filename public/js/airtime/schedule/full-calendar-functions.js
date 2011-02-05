@@ -104,7 +104,7 @@ function eventAfterRender( event, element, view ) {
     $(element)
 		.jjmenu("rightClick", 
 			[{get:"/Schedule/make-context-menu/format/json/id/#id#/start/#start#/end/#end#"}],  
-			{id: event.id, start: getStartTS, end: getEndTS}, 
+			{id: event.showId, start: getStartTS, end: getEndTS}, 
 			{xposition: "mouse", yposition: "mouse"});
 
     /*
@@ -134,15 +134,10 @@ function eventMouseout(event, jsEvent, view) {
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
 	var url;
 
-	if (event.repeats && dayDelta !== 0) {
-		revertFunc();
-		return;
-	}
-
 	url = '/Schedule/move-show/format/json';
 
 	$.post(url, 
-		{day: dayDelta, min: minuteDelta, showId: event.id},
+		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
 			if(json.overlap) {
 				revertFunc();
@@ -156,7 +151,7 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 	url = '/Schedule/resize-show/format/json';
 
 	$.post(url, 
-		{day: dayDelta, min: minuteDelta, showId: event.id},
+		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
 			if(json.overlap) {
 				revertFunc();
@@ -167,24 +162,11 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 function getFullCalendarEvents(start, end, callback) {
 	var url, start_date, end_date;
 
-	var sy, sm, sd, ey, em, ed;
-	sy = start.getFullYear();
-	sm = start.getMonth() + 1;
-	sd = start.getDate();
-
-	start_date = sy +"-"+ sm +"-"+ sd;
-
-	ey = end.getFullYear();
-	em = end.getMonth() + 1;
-	ed = end.getDate();
-	end_date = ey +"-"+ em +"-"+ ed;
+	start_date = makeTimeStamp(start);
+	end_date = makeTimeStamp(end);
 
 	url = '/Schedule/event-feed';
 	
-	if ((ed - sd) === 1) {
-		url = url + '/weekday/' + start.getDay();
-	}
-
 	var d = new Date();
 
 	$.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){

@@ -49,17 +49,11 @@ class ScheduleController extends Zend_Controller_Action
     {
         $start = $this->_getParam('start', null);
 		$end = $this->_getParam('end', null);
-		$weekday = $this->_getParam('weekday', null);
-
-		if(!is_null($weekday)) {
-			$weekday = array($weekday);
-		}
-
+		
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
 		$show = new Show(new User($userInfo->id, $userInfo->type));
 
-		$this->view->events = $show->getFullCalendarEvents($start, $end, $weekday);
+		$this->view->events = $show->getFullCalendarEvents($start, $end);
     }
 
     public function addShowDialogAction()
@@ -137,13 +131,12 @@ class ScheduleController extends Zend_Controller_Action
     {
         $deltaDay = $this->_getParam('day');
 		$deltaMin = $this->_getParam('min');
-		$showId = $this->_getParam('showId');
+		$showInstanceId = $this->_getParam('showInstanceId');
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
 		$show = new Show(new User($userInfo->id, $userInfo->type));
 
-		$overlap = $show->moveShow($showId, $deltaDay, $deltaMin);
+		$overlap = $show->moveShow($showInstanceId, $deltaDay, $deltaMin);
 
 		if(isset($overlap))
 			$this->view->overlap = $overlap;
@@ -153,13 +146,12 @@ class ScheduleController extends Zend_Controller_Action
     {
         $deltaDay = $this->_getParam('day');
 		$deltaMin = $this->_getParam('min');
-		$showId = $this->_getParam('showId');
+		$showInstanceId = $this->_getParam('showInstanceId');
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
 		$show = new Show(new User($userInfo->id, $userInfo->type));
 
-		$overlap = $show->resizeShow($showId, $deltaDay, $deltaMin);
+		$overlap = $show->resizeShow($showInstanceId, $deltaDay, $deltaMin);
 
 		if(isset($overlap))
 			$this->view->overlap = $overlap;

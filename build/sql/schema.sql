@@ -162,7 +162,6 @@ CREATE TABLE "cc_show"
 (
 	"id" serial  NOT NULL,
 	"name" VARCHAR(255) default '' NOT NULL,
-	"repeats" INT2  NOT NULL,
 	"description" VARCHAR(512),
 	"color" VARCHAR(6),
 	"background_color" VARCHAR(6),
@@ -170,6 +169,26 @@ CREATE TABLE "cc_show"
 );
 
 COMMENT ON TABLE "cc_show" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_show_instances
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_show_instances" CASCADE;
+
+
+CREATE TABLE "cc_show_instances"
+(
+	"id" serial  NOT NULL,
+	"starts" TIMESTAMP  NOT NULL,
+	"ends" TIMESTAMP  NOT NULL,
+	"show_id" INTEGER  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_show_instances" IS '';
 
 
 SET search_path TO public;
@@ -186,8 +205,10 @@ CREATE TABLE "cc_show_days"
 	"first_show" DATE  NOT NULL,
 	"last_show" DATE,
 	"start_time" TIME  NOT NULL,
-	"end_time" TIME  NOT NULL,
+	"duration" TIME  NOT NULL,
 	"day" INT2  NOT NULL,
+	"repeat_type" INT2  NOT NULL,
+	"next_pop_date" DATE,
 	"show_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );
@@ -462,6 +483,8 @@ ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owne
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey" FOREIGN KEY ("subj") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_show_days" ADD CONSTRAINT "cc_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 

@@ -8,14 +8,12 @@
  *
  * @method     CcShowQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcShowQuery orderByDbName($order = Criteria::ASC) Order by the name column
- * @method     CcShowQuery orderByDbRepeats($order = Criteria::ASC) Order by the repeats column
  * @method     CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method     CcShowQuery orderByDbColor($order = Criteria::ASC) Order by the color column
  * @method     CcShowQuery orderByDbBackgroundColor($order = Criteria::ASC) Order by the background_color column
  *
  * @method     CcShowQuery groupByDbId() Group by the id column
  * @method     CcShowQuery groupByDbName() Group by the name column
- * @method     CcShowQuery groupByDbRepeats() Group by the repeats column
  * @method     CcShowQuery groupByDbDescription() Group by the description column
  * @method     CcShowQuery groupByDbColor() Group by the color column
  * @method     CcShowQuery groupByDbBackgroundColor() Group by the background_color column
@@ -23,6 +21,10 @@
  * @method     CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcShowQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     CcShowQuery leftJoinCcShowInstances($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcShowQuery rightJoinCcShowInstances($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcShowQuery innerJoinCcShowInstances($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstances relation
  *
  * @method     CcShowQuery leftJoinCcShowDays($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowDays relation
  * @method     CcShowQuery rightJoinCcShowDays($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowDays relation
@@ -41,14 +43,12 @@
  *
  * @method     CcShow findOneByDbId(int $id) Return the first CcShow filtered by the id column
  * @method     CcShow findOneByDbName(string $name) Return the first CcShow filtered by the name column
- * @method     CcShow findOneByDbRepeats(int $repeats) Return the first CcShow filtered by the repeats column
  * @method     CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
  * @method     CcShow findOneByDbColor(string $color) Return the first CcShow filtered by the color column
  * @method     CcShow findOneByDbBackgroundColor(string $background_color) Return the first CcShow filtered by the background_color column
  *
  * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
- * @method     array findByDbRepeats(int $repeats) Return CcShow objects filtered by the repeats column
  * @method     array findByDbDescription(string $description) Return CcShow objects filtered by the description column
  * @method     array findByDbColor(string $color) Return CcShow objects filtered by the color column
  * @method     array findByDbBackgroundColor(string $background_color) Return CcShow objects filtered by the background_color column
@@ -201,37 +201,6 @@ abstract class BaseCcShowQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the repeats column
-	 * 
-	 * @param     int|array $dbRepeats The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbRepeats($dbRepeats = null, $comparison = null)
-	{
-		if (is_array($dbRepeats)) {
-			$useMinMax = false;
-			if (isset($dbRepeats['min'])) {
-				$this->addUsingAlias(CcShowPeer::REPEATS, $dbRepeats['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbRepeats['max'])) {
-				$this->addUsingAlias(CcShowPeer::REPEATS, $dbRepeats['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::REPEATS, $dbRepeats, $comparison);
-	}
-
-	/**
 	 * Filter the query on the description column
 	 * 
 	 * @param     string $dbDescription The value to use as filter.
@@ -295,6 +264,70 @@ abstract class BaseCcShowQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowPeer::BACKGROUND_COLOR, $dbBackgroundColor, $comparison);
+	}
+
+	/**
+	 * Filter the query by a related CcShowInstances object
+	 *
+	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowInstances($ccShowInstances, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcShowPeer::ID, $ccShowInstances->getDbShowId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowInstances relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function joinCcShowInstances($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowInstances');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowInstances');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowInstances relation CcShowInstances object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowInstancesQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCcShowInstances($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', 'CcShowInstancesQuery');
 	}
 
 	/**

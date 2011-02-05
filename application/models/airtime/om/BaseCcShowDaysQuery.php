@@ -10,16 +10,20 @@
  * @method     CcShowDaysQuery orderByDbFirstShow($order = Criteria::ASC) Order by the first_show column
  * @method     CcShowDaysQuery orderByDbLastShow($order = Criteria::ASC) Order by the last_show column
  * @method     CcShowDaysQuery orderByDbStartTime($order = Criteria::ASC) Order by the start_time column
- * @method     CcShowDaysQuery orderByDbEndTime($order = Criteria::ASC) Order by the end_time column
+ * @method     CcShowDaysQuery orderByDbDuration($order = Criteria::ASC) Order by the duration column
  * @method     CcShowDaysQuery orderByDbDay($order = Criteria::ASC) Order by the day column
+ * @method     CcShowDaysQuery orderByDbRepeatType($order = Criteria::ASC) Order by the repeat_type column
+ * @method     CcShowDaysQuery orderByDbNextPopDate($order = Criteria::ASC) Order by the next_pop_date column
  * @method     CcShowDaysQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
  *
  * @method     CcShowDaysQuery groupByDbId() Group by the id column
  * @method     CcShowDaysQuery groupByDbFirstShow() Group by the first_show column
  * @method     CcShowDaysQuery groupByDbLastShow() Group by the last_show column
  * @method     CcShowDaysQuery groupByDbStartTime() Group by the start_time column
- * @method     CcShowDaysQuery groupByDbEndTime() Group by the end_time column
+ * @method     CcShowDaysQuery groupByDbDuration() Group by the duration column
  * @method     CcShowDaysQuery groupByDbDay() Group by the day column
+ * @method     CcShowDaysQuery groupByDbRepeatType() Group by the repeat_type column
+ * @method     CcShowDaysQuery groupByDbNextPopDate() Group by the next_pop_date column
  * @method     CcShowDaysQuery groupByDbShowId() Group by the show_id column
  *
  * @method     CcShowDaysQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -37,16 +41,20 @@
  * @method     CcShowDays findOneByDbFirstShow(string $first_show) Return the first CcShowDays filtered by the first_show column
  * @method     CcShowDays findOneByDbLastShow(string $last_show) Return the first CcShowDays filtered by the last_show column
  * @method     CcShowDays findOneByDbStartTime(string $start_time) Return the first CcShowDays filtered by the start_time column
- * @method     CcShowDays findOneByDbEndTime(string $end_time) Return the first CcShowDays filtered by the end_time column
+ * @method     CcShowDays findOneByDbDuration(string $duration) Return the first CcShowDays filtered by the duration column
  * @method     CcShowDays findOneByDbDay(int $day) Return the first CcShowDays filtered by the day column
+ * @method     CcShowDays findOneByDbRepeatType(int $repeat_type) Return the first CcShowDays filtered by the repeat_type column
+ * @method     CcShowDays findOneByDbNextPopDate(string $next_pop_date) Return the first CcShowDays filtered by the next_pop_date column
  * @method     CcShowDays findOneByDbShowId(int $show_id) Return the first CcShowDays filtered by the show_id column
  *
  * @method     array findByDbId(int $id) Return CcShowDays objects filtered by the id column
  * @method     array findByDbFirstShow(string $first_show) Return CcShowDays objects filtered by the first_show column
  * @method     array findByDbLastShow(string $last_show) Return CcShowDays objects filtered by the last_show column
  * @method     array findByDbStartTime(string $start_time) Return CcShowDays objects filtered by the start_time column
- * @method     array findByDbEndTime(string $end_time) Return CcShowDays objects filtered by the end_time column
+ * @method     array findByDbDuration(string $duration) Return CcShowDays objects filtered by the duration column
  * @method     array findByDbDay(int $day) Return CcShowDays objects filtered by the day column
+ * @method     array findByDbRepeatType(int $repeat_type) Return CcShowDays objects filtered by the repeat_type column
+ * @method     array findByDbNextPopDate(string $next_pop_date) Return CcShowDays objects filtered by the next_pop_date column
  * @method     array findByDbShowId(int $show_id) Return CcShowDays objects filtered by the show_id column
  *
  * @package    propel.generator.airtime.om
@@ -268,24 +276,24 @@ abstract class BaseCcShowDaysQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the end_time column
+	 * Filter the query on the duration column
 	 * 
-	 * @param     string|array $dbEndTime The value to use as filter.
+	 * @param     string|array $dbDuration The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcShowDaysQuery The current query, for fluid interface
 	 */
-	public function filterByDbEndTime($dbEndTime = null, $comparison = null)
+	public function filterByDbDuration($dbDuration = null, $comparison = null)
 	{
-		if (is_array($dbEndTime)) {
+		if (is_array($dbDuration)) {
 			$useMinMax = false;
-			if (isset($dbEndTime['min'])) {
-				$this->addUsingAlias(CcShowDaysPeer::END_TIME, $dbEndTime['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbDuration['min'])) {
+				$this->addUsingAlias(CcShowDaysPeer::DURATION, $dbDuration['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($dbEndTime['max'])) {
-				$this->addUsingAlias(CcShowDaysPeer::END_TIME, $dbEndTime['max'], Criteria::LESS_EQUAL);
+			if (isset($dbDuration['max'])) {
+				$this->addUsingAlias(CcShowDaysPeer::DURATION, $dbDuration['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -295,7 +303,7 @@ abstract class BaseCcShowDaysQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcShowDaysPeer::END_TIME, $dbEndTime, $comparison);
+		return $this->addUsingAlias(CcShowDaysPeer::DURATION, $dbDuration, $comparison);
 	}
 
 	/**
@@ -327,6 +335,68 @@ abstract class BaseCcShowDaysQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowDaysPeer::DAY, $dbDay, $comparison);
+	}
+
+	/**
+	 * Filter the query on the repeat_type column
+	 * 
+	 * @param     int|array $dbRepeatType The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowDaysQuery The current query, for fluid interface
+	 */
+	public function filterByDbRepeatType($dbRepeatType = null, $comparison = null)
+	{
+		if (is_array($dbRepeatType)) {
+			$useMinMax = false;
+			if (isset($dbRepeatType['min'])) {
+				$this->addUsingAlias(CcShowDaysPeer::REPEAT_TYPE, $dbRepeatType['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbRepeatType['max'])) {
+				$this->addUsingAlias(CcShowDaysPeer::REPEAT_TYPE, $dbRepeatType['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowDaysPeer::REPEAT_TYPE, $dbRepeatType, $comparison);
+	}
+
+	/**
+	 * Filter the query on the next_pop_date column
+	 * 
+	 * @param     string|array $dbNextPopDate The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowDaysQuery The current query, for fluid interface
+	 */
+	public function filterByDbNextPopDate($dbNextPopDate = null, $comparison = null)
+	{
+		if (is_array($dbNextPopDate)) {
+			$useMinMax = false;
+			if (isset($dbNextPopDate['min'])) {
+				$this->addUsingAlias(CcShowDaysPeer::NEXT_POP_DATE, $dbNextPopDate['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbNextPopDate['max'])) {
+				$this->addUsingAlias(CcShowDaysPeer::NEXT_POP_DATE, $dbNextPopDate['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowDaysPeer::NEXT_POP_DATE, $dbNextPopDate, $comparison);
 	}
 
 	/**

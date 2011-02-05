@@ -124,18 +124,28 @@
   <table name="cc_show" phpName="CcShow">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="repeats" phpName="DbRepeats" type="TINYINT" required="true"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
 	<column name="color" phpName="DbColor" type="VARCHAR" size="6" required="false"/>
 	<column name="background_color" phpName="DbBackgroundColor" type="VARCHAR" size="6" required="false"/>
+  </table>
+  <table name="cc_show_instances" phpName="CcShowInstances">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
+    <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
+	<column name="show_id" phpName="DbShowId" type="INTEGER" required="true"/>
+	<foreign-key foreignTable="cc_show" name="cc_show_fkey" onDelete="CASCADE">
+      <reference local="show_id" foreign="id"/>
+    </foreign-key>
   </table>
   <table name="cc_show_days" phpName="CcShowDays">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
 	<column name="first_show" phpName="DbFirstShow" type="DATE" required="true"/>
 	<column name="last_show" phpName="DbLastShow" type="DATE" required="false"/>
 	<column name="start_time" phpName="DbStartTime" type="TIME" required="true"/>
-	<column name="end_time" phpName="DbEndTime" type="TIME" required="true"/>
+	<column name="duration" phpName="DbDuration" type="TIME" required="true"/>
 	<column name="day" phpName="DbDay" type="TINYINT" required="true"/>
+    <column name="repeat_type" phpName="DbRepeatType" type="TINYINT" required="true"/>
+    <column name="next_pop_date" phpName="DbNextPopDate" type="DATE" required="false"/>
 	<column name="show_id" phpName="DbShowId" type="INTEGER" required="true"/>
 	<foreign-key foreignTable="cc_show" name="cc_show_fkey" onDelete="CASCADE">
       <reference local="show_id" foreign="id"/>

@@ -38,12 +38,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $name;
 
 	/**
-	 * The value for the repeats field.
-	 * @var        int
-	 */
-	protected $repeats;
-
-	/**
 	 * The value for the description field.
 	 * @var        string
 	 */
@@ -60,6 +54,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 * @var        string
 	 */
 	protected $background_color;
+
+	/**
+	 * @var        array CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
+	 */
+	protected $collCcShowInstancess;
 
 	/**
 	 * @var        array CcShowDays[] Collection to store aggregation of CcShowDays objects.
@@ -132,16 +131,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [repeats] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getDbRepeats()
-	{
-		return $this->repeats;
-	}
-
-	/**
 	 * Get the [description] column value.
 	 * 
 	 * @return     string
@@ -210,26 +199,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 		return $this;
 	} // setDbName()
-
-	/**
-	 * Set the value of [repeats] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     CcShow The current object (for fluent API support)
-	 */
-	public function setDbRepeats($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->repeats !== $v) {
-			$this->repeats = $v;
-			$this->modifiedColumns[] = CcShowPeer::REPEATS;
-		}
-
-		return $this;
-	} // setDbRepeats()
 
 	/**
 	 * Set the value of [description] column.
@@ -329,10 +298,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-			$this->repeats = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-			$this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->color = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->background_color = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->description = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->color = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->background_color = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -341,7 +309,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 6; // 6 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 5; // 5 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShow object", $e);
@@ -402,6 +370,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->hydrate($row, 0, true); // rehydrate
 
 		if ($deep) {  // also de-associate any related objects?
+
+			$this->collCcShowInstancess = null;
 
 			$this->collCcShowDayss = null;
 
@@ -542,6 +512,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
+			if ($this->collCcShowInstancess !== null) {
+				foreach ($this->collCcShowInstancess as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collCcShowDayss !== null) {
 				foreach ($this->collCcShowDayss as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -637,6 +615,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			}
 
 
+				if ($this->collCcShowInstancess !== null) {
+					foreach ($this->collCcShowInstancess as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
 				if ($this->collCcShowDayss !== null) {
 					foreach ($this->collCcShowDayss as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
@@ -701,15 +687,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				return $this->getDbName();
 				break;
 			case 2:
-				return $this->getDbRepeats();
-				break;
-			case 3:
 				return $this->getDbDescription();
 				break;
-			case 4:
+			case 3:
 				return $this->getDbColor();
 				break;
-			case 5:
+			case 4:
 				return $this->getDbBackgroundColor();
 				break;
 			default:
@@ -737,10 +720,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$result = array(
 			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getDbName(),
-			$keys[2] => $this->getDbRepeats(),
-			$keys[3] => $this->getDbDescription(),
-			$keys[4] => $this->getDbColor(),
-			$keys[5] => $this->getDbBackgroundColor(),
+			$keys[2] => $this->getDbDescription(),
+			$keys[3] => $this->getDbColor(),
+			$keys[4] => $this->getDbBackgroundColor(),
 		);
 		return $result;
 	}
@@ -779,15 +761,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->setDbName($value);
 				break;
 			case 2:
-				$this->setDbRepeats($value);
-				break;
-			case 3:
 				$this->setDbDescription($value);
 				break;
-			case 4:
+			case 3:
 				$this->setDbColor($value);
 				break;
-			case 5:
+			case 4:
 				$this->setDbBackgroundColor($value);
 				break;
 		} // switch()
@@ -816,10 +795,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbName($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setDbRepeats($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setDbDescription($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbColor($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbBackgroundColor($arr[$keys[5]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbDescription($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbColor($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbBackgroundColor($arr[$keys[4]]);
 	}
 
 	/**
@@ -833,7 +811,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 		if ($this->isColumnModified(CcShowPeer::ID)) $criteria->add(CcShowPeer::ID, $this->id);
 		if ($this->isColumnModified(CcShowPeer::NAME)) $criteria->add(CcShowPeer::NAME, $this->name);
-		if ($this->isColumnModified(CcShowPeer::REPEATS)) $criteria->add(CcShowPeer::REPEATS, $this->repeats);
 		if ($this->isColumnModified(CcShowPeer::DESCRIPTION)) $criteria->add(CcShowPeer::DESCRIPTION, $this->description);
 		if ($this->isColumnModified(CcShowPeer::COLOR)) $criteria->add(CcShowPeer::COLOR, $this->color);
 		if ($this->isColumnModified(CcShowPeer::BACKGROUND_COLOR)) $criteria->add(CcShowPeer::BACKGROUND_COLOR, $this->background_color);
@@ -899,7 +876,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function copyInto($copyObj, $deepCopy = false)
 	{
 		$copyObj->setDbName($this->name);
-		$copyObj->setDbRepeats($this->repeats);
 		$copyObj->setDbDescription($this->description);
 		$copyObj->setDbColor($this->color);
 		$copyObj->setDbBackgroundColor($this->background_color);
@@ -908,6 +884,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			// important: temporarily setNew(false) because this affects the behavior of
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
+
+			foreach ($this->getCcShowInstancess() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcShowInstances($relObj->copy($deepCopy));
+				}
+			}
 
 			foreach ($this->getCcShowDayss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -970,6 +952,115 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			self::$peer = new CcShowPeer();
 		}
 		return self::$peer;
+	}
+
+	/**
+	 * Clears out the collCcShowInstancess collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcShowInstancess()
+	 */
+	public function clearCcShowInstancess()
+	{
+		$this->collCcShowInstancess = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcShowInstancess collection.
+	 *
+	 * By default this just sets the collCcShowInstancess collection to an empty array (like clearcollCcShowInstancess());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcShowInstancess()
+	{
+		$this->collCcShowInstancess = new PropelObjectCollection();
+		$this->collCcShowInstancess->setModel('CcShowInstances');
+	}
+
+	/**
+	 * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcShow is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 * @throws     PropelException
+	 */
+	public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowInstancess || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowInstancess) {
+				// return empty collection
+				$this->initCcShowInstancess();
+			} else {
+				$collCcShowInstancess = CcShowInstancesQuery::create(null, $criteria)
+					->filterByCcShow($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcShowInstancess;
+				}
+				$this->collCcShowInstancess = $collCcShowInstancess;
+			}
+		}
+		return $this->collCcShowInstancess;
+	}
+
+	/**
+	 * Returns the number of related CcShowInstances objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcShowInstances objects.
+	 * @throws     PropelException
+	 */
+	public function countCcShowInstancess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowInstancess || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowInstancess) {
+				return 0;
+			} else {
+				$query = CcShowInstancesQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcShow($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcShowInstancess);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcShowInstances object to this object
+	 * through the CcShowInstances foreign key attribute.
+	 *
+	 * @param      CcShowInstances $l CcShowInstances
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcShowInstances(CcShowInstances $l)
+	{
+		if ($this->collCcShowInstancess === null) {
+			$this->initCcShowInstancess();
+		}
+		if (!$this->collCcShowInstancess->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcShowInstancess[]= $l;
+			$l->setCcShow($this);
+		}
 	}
 
 	/**
@@ -1331,7 +1422,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	{
 		$this->id = null;
 		$this->name = null;
-		$this->repeats = null;
 		$this->description = null;
 		$this->color = null;
 		$this->background_color = null;
@@ -1356,6 +1446,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collCcShowInstancess) {
+				foreach ((array) $this->collCcShowInstancess as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCcShowDayss) {
 				foreach ((array) $this->collCcShowDayss as $o) {
 					$o->clearAllReferences($deep);
@@ -1373,6 +1468,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
+		$this->collCcShowInstancess = null;
 		$this->collCcShowDayss = null;
 		$this->collCcShowHostss = null;
 		$this->collCcShowSchedules = null;
