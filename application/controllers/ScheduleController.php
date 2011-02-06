@@ -317,8 +317,6 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         unset($this->view->showContent);
     }
-
-
 }
 
 

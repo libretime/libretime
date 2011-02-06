@@ -389,6 +389,30 @@ class ShowInstance {
         return $showInstance->getDbEnds();
     }
 
+    public function setShowStart($start) {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $showInstance->setDbStarts($start)
+            ->save();
+    }
+
+    public function setShowEnd($end) {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $showInstance->setDbEnds($end)
+            ->save();   
+    }
+
+    public function moveScheduledShowContent($deltaDay, $deltaHours, $deltaMin) {
+        global $CC_DBC;
+
+        $sql = "UPDATE cc_schedule
+                    SET starts = (starts + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}'),
+                        ends = (ends + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}')
+                    WHERE (starts >= '{$this->getShowStart()}')  
+                        AND (ends <= '{$this->getShowEnd()}')";
+
+        $CC_DBC->query($sql);
+    }
+
     public function moveShow($deltaDay, $deltaMin){
 		global $CC_DBC;
 
@@ -419,11 +443,10 @@ class ShowInstance {
 		if(count($overlap) > 0) {
 			return $overlap;
 		}
-
-        $showInstance
-            ->setDbStarts($new_starts)
-            ->setDbEnds($new_ends)
-            ->save();	
+    
+        $this->moveScheduledShowContent($deltaDay, $hours, $mins);
+        $this->setShowStart($new_starts);
+        $this->setShowEnd($new_ends);	
 	}
 
 	public function resizeShow($deltaDay, $deltaMin){
@@ -452,10 +475,8 @@ class ShowInstance {
 		    }
         }
 
-        $showInstance
-            ->setDbEnds($new_ends)
-            ->save();
-	
+        $this->setShowStart($new_starts);
+        $this->setShowEnd($new_ends);
 	}
 
     private function getNextPos() {
