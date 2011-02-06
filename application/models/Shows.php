@@ -49,7 +49,8 @@ class Show {
         	$endDate = $r->fetchColumn(0);
 		} 
 
-		if(!isset($data['add_show_day_check'])) {
+        //only want the day of the week from the start date.
+		if(!$data['add_show_repeats']) {
 			$data['add_show_day_check'] = array($startDow);
 		} 
 
