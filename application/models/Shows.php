@@ -53,8 +53,9 @@ class Show {
 			$data['add_show_day_check'] = array($startDow);
 		} 
 
+        //find repeat type or set to a non repeating show.
         if($data['add_show_repeats']) {
-            $repeat_type = 0; //chnage this when supporting more than just a weekly show option.
+            $repeat_type = $data["add_show_repeat_type"];
         }
         else {
             $repeat_type = -1;
@@ -110,73 +111,6 @@ class Show {
         Show::populateShowUntilLastGeneratedDate($showId);
 	}
 
-	public function deleteShow($timestamp, $dayId=NULL) {
-		global $CC_DBC;
-
-		$today_timestamp = date("Y-m-d H:i:s");
-
-		$timeinfo = explode(" ", $timestamp);
-		$date = $timeinfo[0]; 
-		$time = $timeinfo[1];
-
-		$today_epoch = strtotime($today_timestamp);
-		$date_epoch = strtotime($timestamp);
-
-		//don't want someone to delete past shows.
-		if($date_epoch < $today_epoch) {
-			return;
-		}
-
-		$show = CcShowQuery::create()->findPK($this->_showId);
-		
-		$sql = "SELECT start_time, first_show FROM cc_show_days 
-				WHERE show_id = '{$this->_showId}'
-				ORDER BY first_show LIMIT 1";
-		$res = $CC_DBC->GetRow($sql);
-
-		$start_timestamp = $res["first_show"]." ".$res["start_time"];
-
-		$start_epoch = strtotime($start_timestamp);
-	
-		// must not delete shows in the past
-		if($show->getDbRepeats() && ($start_epoch < $date_epoch)) {
-
-			$sql = "DELETE FROM cc_show_days WHERE first_show >= '{$date}' AND show_id = '{$this->_showId}'";
-			$CC_DBC->query($sql);
-			
-			$sql = "UPDATE cc_show_days 
-				SET last_show = '{$date}' 
-				WHERE show_id = '{$this->_showId}' AND first_show <= '{$date}' ";
-			$CC_DBC->query($sql);
-			
-			$sql = "SELECT group_id FROM cc_show_schedule WHERE show_day >= '{$date}' AND show_id = '{$this->_showId}'";
-		    $rows = $CC_DBC->GetAll($sql);
-			
-			$sql_opt = array();
-			foreach($rows as $row) {
-				$sql_opt[] = "group_id = '{$row["group_id"]}' ";
-			}
-			$groups = join(' OR ', $sql_opt);
-		
-			$sql = "DELETE FROM cc_show_schedule 
-			WHERE ($groups) AND show_id = '{$this->_showId}' AND show_day >= '{$date}' ";
-			$CC_DBC->query($sql);
-			
-			$sql = "DELETE FROM cc_schedule WHERE ($groups)";
-			$CC_DBC->query($sql);
-		}
-		else {
-			$groups = CcShowScheduleQuery::create()->filterByDbShowId($this->_showId)->find();
-
-			foreach($groups as $group) {
-				$groupId = $group->getDbGroupId();
-				CcScheduleQuery::create()->filterByDbGroupId($groupId)->delete();
-			}
-
-			$show->delete();
-		}
-	}
-
     public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL) {
         global $CC_DBC;
 
@@ -184,7 +118,8 @@ class Show {
             FROM cc_show_instances 
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id 
             WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
-                OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}'))";
+                OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}'))
+                ORDER BY starts";
 
         if(isset($excludeInstance)) {
             foreach($excludeInstance as $instance) {
@@ -261,6 +196,45 @@ class Show {
             ->save();
     }
 
+    //for a show with repeat_type == 1
+    private static function populateBiWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
+        global $CC_DBC;        
+
+        if(isset($next_pop_date)) {
+            $next_date = $next_pop_date." ".$start_time;
+        }
+        else {
+            $next_date = $first_show." ".$start_time;
+        }
+
+        while(strtotime($next_date) < strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
+            
+            $start = $next_date;
+            
+            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
+		    $end = $CC_DBC->GetOne($sql);
+
+            $newShow = new CcShowInstances();
+		    $newShow->setDbShowId($show_id);
+            $newShow->setDbStarts($start);
+            $newShow->setDbEnds($end);
+		    $newShow->save();
+
+            $sql = "SELECT timestamp '{$start}' + interval '14 days'";
+		    $next_date = $CC_DBC->GetOne($sql);
+        }
+
+        $nextInfo = explode(" ", $next_date);
+
+        $repeatInfo = CcShowDaysQuery::create()
+            ->filterByDbShowId($show_id)
+            ->filterByDbDay($day)
+            ->findOne();
+
+        $repeatInfo->setDbNextPopDate($nextInfo[0])
+            ->save();
+    }
+
     private static function populateShow($repeat_type, $show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
 
         if($repeat_type == -1) {
@@ -268,6 +242,9 @@ class Show {
         }
         else if($repeat_type == 0) {
             Show::populateWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
+        }
+        else if($repeat_type == 1) {
+            Show::populateBiWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
         }
     } 
 
