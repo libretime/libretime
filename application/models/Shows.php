@@ -494,10 +494,10 @@ class ShowInstance {
 
 		if(is_null($lastGroupId)) {
 
-			$groupId = $sched->add($this->getShowStart(), null, $plId);		
+			$groupId = $sched->add($this->_instanceId, $this->getShowStart(), null, $plId);		
 		}
 		else {
-			$groupId = $sched->addPlaylistAfter($lastGroupId, $plId);
+			$groupId = $sched->addPlaylistAfter($this->_instanceId, $lastGroupId, $plId);
 		}
 
 		$groupsched = new CcShowSchedule();

@@ -76,7 +76,7 @@ class ScheduleGroup {
      *    Return PEAR_Error if the item could not be added.
      *    Error code 555 is a scheduling conflict.
      */
-    public function add($p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
+    public function add($show_instance, $p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
         global $CC_CONFIG, $CC_DBC;
         if (!is_null($p_audioFileId)) {
             // Schedule a single audio track
@@ -101,8 +101,8 @@ class ScheduleGroup {
             $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
             $id = $this->dateToId($p_datetime);
             $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-            ." (id, playlist_id, starts, ends, clip_length, group_id, file_id)"
-            ." VALUES ($id, 0, TIMESTAMP '$p_datetime', "
+            ." (playlist_id, starts, ends, clip_length, group_id, file_id)"
+            ." VALUES (0, TIMESTAMP '$p_datetime', "
             ." (TIMESTAMP '$p_datetime' + INTERVAL '$length'),"
             ." '$length',"
             ." {$this->groupId}, $p_audioFileId)";
@@ -143,9 +143,9 @@ class ScheduleGroup {
                 $trackLength = $row["cliplength"];
                 //var_dump($trackLength);
                 $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-                ." (id, playlist_id, starts, ends, group_id, file_id,"
+                ." (instance_id, playlist_id, starts, ends, group_id, file_id,"
                 ." clip_length, cue_in, cue_out, fade_in, fade_out)"
-                ." VALUES ($id, $p_playlistId, TIMESTAMP '$itemStartTime', "
+                ." VALUES ($show_instance, $p_playlistId, TIMESTAMP '$itemStartTime', "
                 ." (TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'),"
                 ." '{$this->groupId}', '{$row['file_id']}', '$trackLength', '{$row['cuein']}',"
                 ." '{$row['cueout']}', '{$row['fadein']}','{$row['fadeout']}')";
@@ -161,23 +161,23 @@ class ScheduleGroup {
         }
     }
 
-    public function addAfter($p_groupId, $p_audioFileId) {
+    public function addAfter($show_instance, $p_groupId, $p_audioFileId) {
         global $CC_CONFIG, $CC_DBC;
         // Get the end time for the given entry
         $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id=$p_groupId";
         $startTime = $CC_DBC->GetOne($sql);
-        return $this->add($startTime, $p_audioFileId);
+        return $this->add($show_instance, $startTime, $p_audioFileId);
     }
 
-    public function addPlaylistAfter($p_groupId, $p_playlistId) {
+    public function addPlaylistAfter($show_instance, $p_groupId, $p_playlistId) {
         global $CC_CONFIG, $CC_DBC;
         // Get the end time for the given entry
         $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id=$p_groupId";
     
         $startTime = $CC_DBC->GetOne($sql);
-        return $this->add($startTime, null, $p_playlistId);
+        return $this->add($show_instance, $startTime, null, $p_playlistId);
     }
 
     public function update() {

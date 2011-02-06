@@ -221,7 +221,7 @@
     </index>
   </table>
   <table name="cc_schedule" phpName="CcSchedule">
-    <column name="id" phpName="DbId" type="BIGINT" primaryKey="true" required="true"/>
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="true"/>
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
@@ -234,6 +234,10 @@
     <column name="cue_out" phpName="DbCueOut" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="schedule_group_played" phpName="DbScheduleGroupPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
     <column name="media_item_played" phpName="DbMediaItemPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
+    <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="cc_show_instances" name="cc_show_inst_fkey" onDelete="CASCADE">
+      <reference local="instance_id" foreign="id"/>
+    </foreign-key>
   </table>
   <table name="cc_sess" phpName="CcSess">
     <column name="sessid" phpName="Sessid" type="CHAR" size="32" primaryKey="true" required="true"/>

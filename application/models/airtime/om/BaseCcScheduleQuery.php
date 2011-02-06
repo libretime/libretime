@@ -19,6 +19,7 @@
  * @method     CcScheduleQuery orderByDbCueOut($order = Criteria::ASC) Order by the cue_out column
  * @method     CcScheduleQuery orderByDbScheduleGroupPlayed($order = Criteria::ASC) Order by the schedule_group_played column
  * @method     CcScheduleQuery orderByDbMediaItemPlayed($order = Criteria::ASC) Order by the media_item_played column
+ * @method     CcScheduleQuery orderByDbInstanceId($order = Criteria::ASC) Order by the instance_id column
  *
  * @method     CcScheduleQuery groupByDbId() Group by the id column
  * @method     CcScheduleQuery groupByDbPlaylistId() Group by the playlist_id column
@@ -33,15 +34,20 @@
  * @method     CcScheduleQuery groupByDbCueOut() Group by the cue_out column
  * @method     CcScheduleQuery groupByDbScheduleGroupPlayed() Group by the schedule_group_played column
  * @method     CcScheduleQuery groupByDbMediaItemPlayed() Group by the media_item_played column
+ * @method     CcScheduleQuery groupByDbInstanceId() Group by the instance_id column
  *
  * @method     CcScheduleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcScheduleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcScheduleQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     CcScheduleQuery leftJoinCcShowInstances($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcScheduleQuery rightJoinCcShowInstances($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcScheduleQuery innerJoinCcShowInstances($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstances relation
+ *
  * @method     CcSchedule findOne(PropelPDO $con = null) Return the first CcSchedule matching the query
  * @method     CcSchedule findOneOrCreate(PropelPDO $con = null) Return the first CcSchedule matching the query, or a new CcSchedule object populated from the query conditions when no match is found
  *
- * @method     CcSchedule findOneByDbId(string $id) Return the first CcSchedule filtered by the id column
+ * @method     CcSchedule findOneByDbId(int $id) Return the first CcSchedule filtered by the id column
  * @method     CcSchedule findOneByDbPlaylistId(int $playlist_id) Return the first CcSchedule filtered by the playlist_id column
  * @method     CcSchedule findOneByDbStarts(string $starts) Return the first CcSchedule filtered by the starts column
  * @method     CcSchedule findOneByDbEnds(string $ends) Return the first CcSchedule filtered by the ends column
@@ -54,8 +60,9 @@
  * @method     CcSchedule findOneByDbCueOut(string $cue_out) Return the first CcSchedule filtered by the cue_out column
  * @method     CcSchedule findOneByDbScheduleGroupPlayed(boolean $schedule_group_played) Return the first CcSchedule filtered by the schedule_group_played column
  * @method     CcSchedule findOneByDbMediaItemPlayed(boolean $media_item_played) Return the first CcSchedule filtered by the media_item_played column
+ * @method     CcSchedule findOneByDbInstanceId(int $instance_id) Return the first CcSchedule filtered by the instance_id column
  *
- * @method     array findByDbId(string $id) Return CcSchedule objects filtered by the id column
+ * @method     array findByDbId(int $id) Return CcSchedule objects filtered by the id column
  * @method     array findByDbPlaylistId(int $playlist_id) Return CcSchedule objects filtered by the playlist_id column
  * @method     array findByDbStarts(string $starts) Return CcSchedule objects filtered by the starts column
  * @method     array findByDbEnds(string $ends) Return CcSchedule objects filtered by the ends column
@@ -68,6 +75,7 @@
  * @method     array findByDbCueOut(string $cue_out) Return CcSchedule objects filtered by the cue_out column
  * @method     array findByDbScheduleGroupPlayed(boolean $schedule_group_played) Return CcSchedule objects filtered by the schedule_group_played column
  * @method     array findByDbMediaItemPlayed(boolean $media_item_played) Return CcSchedule objects filtered by the media_item_played column
+ * @method     array findByDbInstanceId(int $instance_id) Return CcSchedule objects filtered by the instance_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -180,7 +188,7 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	/**
 	 * Filter the query on the id column
 	 * 
-	 * @param     string|array $dbId The value to use as filter.
+	 * @param     int|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
@@ -536,6 +544,101 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 			$media_item_played = in_array(strtolower($dbMediaItemPlayed), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
 		}
 		return $this->addUsingAlias(CcSchedulePeer::MEDIA_ITEM_PLAYED, $dbMediaItemPlayed, $comparison);
+	}
+
+	/**
+	 * Filter the query on the instance_id column
+	 * 
+	 * @param     int|array $dbInstanceId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcScheduleQuery The current query, for fluid interface
+	 */
+	public function filterByDbInstanceId($dbInstanceId = null, $comparison = null)
+	{
+		if (is_array($dbInstanceId)) {
+			$useMinMax = false;
+			if (isset($dbInstanceId['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::INSTANCE_ID, $dbInstanceId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbInstanceId['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::INSTANCE_ID, $dbInstanceId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcSchedulePeer::INSTANCE_ID, $dbInstanceId, $comparison);
+	}
+
+	/**
+	 * Filter the query by a related CcShowInstances object
+	 *
+	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcScheduleQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowInstances($ccShowInstances, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcSchedulePeer::INSTANCE_ID, $ccShowInstances->getDbId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowInstances relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcScheduleQuery The current query, for fluid interface
+	 */
+	public function joinCcShowInstances($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowInstances');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowInstances');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowInstances relation CcShowInstances object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowInstancesQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCcShowInstances($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', 'CcShowInstancesQuery');
 	}
 
 	/**

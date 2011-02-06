@@ -338,7 +338,7 @@ DROP TABLE "cc_schedule" CASCADE;
 
 CREATE TABLE "cc_schedule"
 (
-	"id" INT8  NOT NULL,
+	"id" serial  NOT NULL,
 	"playlist_id" INTEGER  NOT NULL,
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
@@ -351,6 +351,7 @@ CREATE TABLE "cc_schedule"
 	"cue_out" TIME default '00:00:00',
 	"schedule_group_played" BOOLEAN default 'f',
 	"media_item_played" BOOLEAN default 'f',
+	"instance_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -500,5 +501,7 @@ ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_file_id_fk
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_pref" ADD CONSTRAINT "cc_pref_subjid_fkey" FOREIGN KEY ("subjid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
