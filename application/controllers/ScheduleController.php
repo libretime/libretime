@@ -171,17 +171,18 @@ class ScheduleController extends Zend_Controller_Action
     public function makeContextMenuAction()
     {
         $id = $this->_getParam('id');
-		$start_timestamp = $this->_getParam('start');
         $today_timestamp = date("Y-m-d H:i:s");
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id, $userInfo->type);
 
-		$params = '/format/json/id/#id#/start/#start#/end/#end#';
+        $show = new ShowInstance($id);
 
-		if(strtotime($today_timestamp) < strtotime($start_timestamp)) {
+		$params = '/format/json/id/#id#';
 
-            if($user->isHost($id)) {
+		if(strtotime($today_timestamp) < strtotime($show->getShowStart())) {
+
+            if($user->isHost($show->getShowId())) {
 
 			    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 
 							    'title' => 'Delete');
@@ -203,9 +204,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function scheduleShowAction()
     {
-        $start_timestamp = $this->sched_sess->showStart;
-		$end_timestamp = $this->sched_sess->showEnd;
-		$showId = $this->sched_sess->showId;
+		$showInstanceId = $this->sched_sess->showInstanceId;
 		$search = $this->_getParam('search', null);
 		$plId = $this->_getParam('plId');
 
@@ -214,35 +213,33 @@ class ScheduleController extends Zend_Controller_Action
 		}
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id, $userInfo->type);
+		$show = new ShowInstance($showInstanceId);
 
-		$user = new User($userInfo->id, $userInfo->type);
-		$show = new Show($user, $showId);
-
-        if($user->isHost($showId)) {
-		    $show->scheduleShow($start_timestamp, array($plId));
+        if($user->isHost($show->getShowId())) {
+		    $show->scheduleShow(array($plId));
         }
 
-		$this->view->showContent = $show->getShowContent($start_timestamp);
-		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
-		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+		$this->view->showContent = $show->getShowContent();
+		$this->view->timeFilled = $show->getTimeScheduled();
+		$this->view->percentFilled = $show->getPercentScheduledInRange();
 
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
-		
 		unset($this->view->showContent);
     }
 
     public function clearShowAction()
     {
-        $start = $this->_getParam('start');
-        $showId = $this->_getParam('id');
+        $showInstanceId = $this->_getParam('id');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id, $userInfo->type);
 
-        if($user->isHost($showId)) {
+        $show = new ShowInstance($showInstanceId);
 
-            $show = new Show($user, $showId);
-            $show->clearShow($start);
+        if($user->isHost($show->getShowId())) {
+
+            $show->clearShow();
         }
     }
 
@@ -253,14 +250,10 @@ class ScheduleController extends Zend_Controller_Action
 
     public function findPlaylistsAction()
     {
-        $show_id = $this->sched_sess->showId;
-		$start_timestamp = $this->sched_sess->showStart;
-        $end_timestamp = $this->sched_sess->showEnd;
 		$post = $this->getRequest()->getPost();
 
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-		$show = new Show(new User($userInfo->id, $userInfo->type), $show_id);
-		$playlists = $show->searchPlaylistsForShow($start_timestamp, $end_timestamp, $post);
+		$show = new ShowInstance($this->sched_sess->showInstanceId);
+		$playlists = $show->searchPlaylistsForShow($post);
 
 		//for datatables
 		die(json_encode($playlists));
@@ -268,31 +261,29 @@ class ScheduleController extends Zend_Controller_Action
 
     public function removeGroupAction()
     {
+        $showInstanceId = $this->sched_sess->showInstanceId;
         $group_id = $this->_getParam('groupId');
-		$start_timestamp = $this->sched_sess->showStart;
-		$end_timestamp = $this->sched_sess->showEnd;
-		$show_id = $this->sched_sess->showId;
 		$search = $this->_getParam('search', null);
 
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-		$show = new Show(new User($userInfo->id, $userInfo->type), $show_id);
-		
-		$show->removeGroupFromShow($start_timestamp, $group_id);
+		$show = new ShowInstance($showInstanceId);
+		$show->removeGroupFromShow($group_id);
 
-		$this->view->showContent = $show->getShowContent($start_timestamp);
-		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
-		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+		$this->view->showContent = $show->getShowContent();
+		$this->view->timeFilled = $show->getTimeScheduled();
+		$this->view->percentFilled = $show->getPercentScheduledInRange();
 
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
-		
 		unset($this->view->showContent);
     }
 
     public function scheduleShowDialogAction()
     {
+		$showInstanceId = $this->_getParam('id');
+        
+        $show = new ShowInstance($showInstanceId);
+
         $start_timestamp = $this->_getParam('start');
 		$end_timestamp = $this->_getParam('end');
-		$showId = $this->_getParam('id');
 
 		$this->sched_sess->showId = $showId;
 		$this->sched_sess->showStart = $start_timestamp;

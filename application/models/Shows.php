@@ -369,10 +369,23 @@ class ShowInstance {
 		$this->_instanceId = $instanceId;    
     }
 
+    public function getShowId() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbShowId();
+    }
+
+    public function getShowStart() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbStarts();
+    }
+
+    public function getShowEnd() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbEnds();
+    }
+
     public function moveShow($deltaDay, $deltaMin){
 		global $CC_DBC;
-
-		$showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
 
 		$hours = $deltaMin/60;
 		if($hours > 0)
@@ -382,8 +395,8 @@ class ShowInstance {
 
 		$mins = abs($deltaMin%60);
 
-        $starts = $showInstance->getDbStarts();
-        $ends = $showInstance->getDbEnds(); 
+        $starts = $this->getShowStart();
+        $ends = $this->getShowEnd(); 
 
 		$sql = "SELECT timestamp '{$starts}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
 		$new_starts = $CC_DBC->GetOne($sql);
@@ -411,8 +424,6 @@ class ShowInstance {
 	public function resizeShow($deltaDay, $deltaMin){
 		global $CC_DBC;
 
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-
 		$hours = $deltaMin/60;
 		if($hours > 0)
 			$hours = floor($hours);
@@ -421,8 +432,8 @@ class ShowInstance {
 
 		$mins = abs($deltaMin%60);
 
-        $starts = $showInstance->getDbStarts();
-        $ends = $showInstance->getDbEnds();
+        $starts = $this->getShowStart();
+        $ends = $this->getShowEnd(); 
 
 		$sql = "SELECT timestamp '{$ends}' + interval '{$hours}:{$mins}'";
 		$new_ends = $CC_DBC->GetOne($sql);
@@ -442,12 +453,10 @@ class ShowInstance {
 	
 	}
 
-    private function getNextPos($instanceId) {
+    private function getNextPos() {
 		global $CC_DBC;
 
-		$timeinfo = explode(" ", $day);
-
-		$sql = "SELECT MAX(position)+1 from cc_show_schedule WHERE instance_id = '{$instanceId}'";
+		$sql = "SELECT MAX(position)+1 from cc_show_schedule WHERE instance_id = '{$this->_instanceId}'";
 		$res = $CC_DBC->GetOne($sql);	
 
 		if(is_null($res))
@@ -456,73 +465,60 @@ class ShowInstance {
 		return $res;
 	}
 
-	private function getLastGroupId($start_timestamp) {
+	private function getLastGroupId() {
 		global $CC_DBC;
 
-		$timeinfo = explode(" ", $start_timestamp);
-
-		$sql = "SELECT MAX(group_id) from cc_show_schedule WHERE show_id = '{$this->_showId}' AND show_day = '{$timeinfo[0]}'";
+		$sql = "SELECT MAX(group_id) from cc_show_schedule WHERE instance_id = '{$this->_instanceId}'";
 		$res = $CC_DBC->GetOne($sql);	
 
 		return $res;
 	}
 
-	public function addPlaylistToShow($start_timestamp, $plId) {
+	public function addPlaylistToShow($plId) {
 		
 		$sched = new ScheduleGroup();
-		$lastGroupId = $this->getLastGroupId($start_timestamp);
+		$lastGroupId = $this->getLastGroupId();
 
 		if(is_null($lastGroupId)) {
 
-			$groupId = $sched->add($start_timestamp, null, $plId);		
+			$groupId = $sched->add($this->getShowStart(), null, $plId);		
 		}
 		else {
 			$groupId = $sched->addPlaylistAfter($lastGroupId, $plId);
 		}
 
-        $instance = CcShowInstancesQuery::create()
-                        ->filterByDbStarts()
-                        ->findOne();
-
-        $instanceId = $instance->getDbId();
-		$pos = $this->getNextPos($day);
-
 		$groupsched = new CcShowSchedule();
-		$groupsched->setDbInstanceId($instanceId);
+		$groupsched->setDbInstanceId($this->_instanceId);
 		$groupsched->setDbGroupId($groupId);
 		$groupsched->setDbPosition($pos);
 		$groupsched->save();
 	}
 
-	public function scheduleShow($start_timestamp, $plIds) {
+	public function scheduleShow($plIds) {
 		
 		foreach($plIds as $plId) {
-			$this->addPlaylistToShow($start_timestamp, $plId);
+			$this->addPlaylistToShow($plId);
 		}
 	}
 
-	public function removeGroupFromShow($start_timestamp, $group_id){
-		global $CC_DBC, $CC_CONFIG;
-
-		$timeinfo = explode(" ", $start_timestamp);
+	public function removeGroupFromShow($group_id){
+		global $CC_DBC;
 
 		$group = CcShowScheduleQuery::create()
-			->filterByDbShowId($this->_showId)
+			->filterByDbInstanceId($this->_instanceId)
 			->filterByDbGroupId($group_id)
-			->filterByDbShowDay($timeinfo[0])
 			->findOne();
 
 		$position = $group->getDbPosition();
 
 		$sql = "SELECT group_id FROM cc_show_schedule 
-					WHERE show_id = '{$this->_showId}' AND show_day = '{$timeinfo[0]}'
-					AND position > '{$position}'";
+					WHERE instance_id = '{$this->_instanceId}' AND position > '{$position}'";
 		$followingGroups = $CC_DBC->GetAll($sql);
 
-		$sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." WHERE group_id='{$group_id}'";
+		$sql = "SELECT SUM(clip_length) FROM cc_schedule WHERE group_id='{$group_id}'";
 		$group_length = $CC_DBC->GetOne($sql);
 
-		$sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE group_id = '{$group_id}'";
+		$sql = "DELETE FROM cc_schedule WHERE group_id = '{$group_id}'";
 		$CC_DBC->query($sql);
 
 		if(!is_null($followingGroups)) {
@@ -532,22 +528,19 @@ class ShowInstance {
 			}
 			$sql_group_ids = join(" OR ", $sql_opt);
 
-			$sql = "UPDATE ".$CC_CONFIG["scheduleTable"]." 
+			$sql = "UPDATE cc_schedule 
 						SET starts = (starts - INTERVAL '{$group_length}'), ends = (ends - INTERVAL '{$group_length}') 
 						WHERE " . $sql_group_ids;
 			$CC_DBC->query($sql);
 		}
 
 		$group->delete();
-
 	}
 
-    public function clearShow($day) {
-		$timeinfo = explode(" ", $day);
-
+    public function clearShow() {
+		
 		$groups = CcShowScheduleQuery::create()
-					->filterByDbShowId($this->_showId)
-					->filterByDbShowDay($timeinfo[0])
+					->filterByDbInstanceId($this->_instanceId)
 					->find();
 
 		foreach($groups as $group) {
@@ -560,32 +553,39 @@ class ShowInstance {
 		}
 	}
 
-    public function getTimeScheduled($start_timestamp, $end_timestamp) {
+    public function getTimeScheduled() {
+
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
 
 		$time = Schedule::getTimeScheduledInRange($start_timestamp, $end_timestamp);
 
 		return $time;
 	}
 
-	public function getTimeUnScheduled($start_timestamp, $end_timestamp) {
+	public function getTimeUnScheduled() {
+
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
 
 		$time = Schedule::getTimeUnScheduledInRange($start_timestamp, $end_timestamp);
 
 		return $time;
 	}
 
-	public function showHasContent($start_timestamp, $end_timestamp) {
+    public function getPercentScheduledInRange(){
 
-		$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
-        $sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}'";
-		$r = $con->query($sql);
-		$length = $r->fetchColumn(0);
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
 
-		return !Schedule::isScheduleEmptyInRange($start_timestamp, $length);
-	}
+        Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+    }
 
-    public function getShowLength($start_timestamp, $end_timestamp){
+    public function getShowLength(){
 		global $CC_DBC;
+
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
 
 		$sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}' ";
 		$length = $CC_DBC->GetOne($sql);
@@ -593,9 +593,9 @@ class ShowInstance {
 		return $length;
 	}
 
-	public function searchPlaylistsForShow($start_timestamp, $end_timestamp, $datatables){
+	public function searchPlaylistsForShow($datatables){
 
-		$length = $this->getTimeUnScheduled($start_timestamp, $end_timestamp);
+		$length = $this->getTimeUnScheduled();
 
 		return StoredFile::searchPlaylistsForSchedule($length, $datatables);
 	}

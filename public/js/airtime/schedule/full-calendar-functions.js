@@ -91,34 +91,11 @@ function eventRender(event, element, view) {
 
 function eventAfterRender( event, element, view ) {
 
-    function getStartTS() {
-        var start =  makeTimeStamp(event.start);
-        return start; 
-    }
-
-    function getEndTS() {
-        var start =  makeTimeStamp(event.end);
-        return start; 
-    }
-
     $(element)
 		.jjmenu("rightClick", 
-			[{get:"/Schedule/make-context-menu/format/json/id/#id#/start/#start#/end/#end#"}],  
-			{id: event.id, start: getStartTS, end: getEndTS, showId: event.showId}, 
+			[{get:"/Schedule/make-context-menu/format/json/id/#id#"}],  
+			{id: event.id}, 
 			{xposition: "mouse", yposition: "mouse"});
-
-    /*
-    $(element).qtip({
-        content: {
-           text: event.description,
-           title: { text: 'Show Description' }
-        },
-        position: {
-           target: 'mouse',
-           adjust: { mouse: true }
-        }
-    });
-    */
 }
 
 function eventClick(event, jsEvent, view) { 
