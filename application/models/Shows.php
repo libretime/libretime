@@ -483,7 +483,6 @@ class ShowInstance {
             }
         }
 
-        $this->setShowStart($new_starts);
         $this->setShowEnd($new_ends);
 	}
 
