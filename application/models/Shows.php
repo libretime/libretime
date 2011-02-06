@@ -477,8 +477,10 @@ class ShowInstance {
         //have to check if any scheduled content still fits.
         else{
             $scheduledTime = $this->getTimeScheduled();
+            $sql = "SELECT (timestamp '{$new_ends}' - timestamp '{$starts}') >= interval '{$scheduledTime}'";
+		    $scheduledContentFits = $CC_DBC->GetOne($sql);
 
-            if((strtotime($new_ends) - strtotime($starts)) < strtotime($scheduledTime)) {
+            if($scheduledContentFits != "t") {
                 return "Must removed some scheduled content.";
             }
         }
