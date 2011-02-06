@@ -441,7 +441,7 @@ class ShowInstance {
 		$overlap = Show::getShows($new_starts, $new_ends, array($this->_instanceId));
 
 		if(count($overlap) > 0) {
-			return $overlap;
+			return "Should not overlap shows";
 		}
     
         $this->moveScheduledShowContent($deltaDay, $hours, $mins);
@@ -471,7 +471,7 @@ class ShowInstance {
 		    $overlap =  Show::getShows($ends, $new_ends);
 
             if(count($overlap) > 0) {
-			    return $overlap;
+			    return "Should not overlap shows";
 		    }
         }
         //have to check if any scheduled content still fits.

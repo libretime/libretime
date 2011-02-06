@@ -117,6 +117,7 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
 		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
 			if(json.error) {
+                alert(json.error);
 				revertFunc();
 			}
 		});
@@ -131,6 +132,7 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
 			if(json.error) {
+                alert(json.error);
 				revertFunc();
 			}
 		});
