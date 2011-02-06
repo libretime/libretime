@@ -587,6 +587,15 @@ class ShowInstance {
 		}
 	}
 
+    public function deleteShow() {
+		
+		$this->clearShow();
+
+        $showInstance = CcShowInstancesQuery::create()
+            ->findPK($this->_instanceId)
+            ->delete();
+	}
+
     public function getTimeScheduled() {
 
         $start_timestamp = $this->getShowStart(); 

@@ -136,8 +136,13 @@ class ScheduleController extends Zend_Controller_Action
 		$deltaMin = $this->_getParam('min');
 		$showInstanceId = $this->_getParam('showInstanceId');
 
-		$show = new ShowInstance($showInstanceId);
-		$error = $show->moveShow($deltaDay, $deltaMin);
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id, $userInfo->type);
+
+        if($user->isAdmin()) {
+		    $show = new ShowInstance($showInstanceId);
+		    $error = $show->moveShow($deltaDay, $deltaMin);
+        }
 
 		if(isset($error))
 			$this->view->error = $error;
@@ -149,8 +154,13 @@ class ScheduleController extends Zend_Controller_Action
 		$deltaMin = $this->_getParam('min');
 		$showInstanceId = $this->_getParam('showInstanceId');
 
-		$show = new ShowInstance($showInstanceId);
-		$error = $show->resizeShow($deltaDay, $deltaMin);
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id, $userInfo->type);
+
+        if($user->isAdmin()) {
+		    $show = new ShowInstance($showInstanceId);
+		    $error = $show->resizeShow($deltaDay, $deltaMin);
+        }
 
 		if(isset($error))
 			$this->view->error = $error;
@@ -158,14 +168,15 @@ class ScheduleController extends Zend_Controller_Action
 
     public function deleteShowAction()
     {
-        $showId = $this->_getParam('id');
-		$start_timestamp = $this->_getParam('start');
-                                                
+        $showInstanceId = $this->_getParam('id');
+		                                       
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
 		$user = new User($userInfo->id, $userInfo->type);
-		$show = new Show($user, $showId);
-		$show->deleteShow($start_timestamp);
+
+        if($user->isAdmin()) {
+		    $show = new ShowInstance($showInstanceId);
+		    $show->deleteShow();
+        }
     }
 
     public function makeContextMenuAction()
@@ -182,16 +193,15 @@ class ScheduleController extends Zend_Controller_Action
 
 		if(strtotime($today_timestamp) < strtotime($show->getShowStart())) {
 
-            if($user->isHost($show->getShowId())) {
+            if($user->isAdmin()) {
 
-			    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 
-							    'title' => 'Delete');
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete');
+            }
+            if($user->isHost($show->getShowId()) || $user->isAdmin()) {
 	      
-			    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 
-							    'title' => 'Clear');
+			    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Clear');
 
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 'callback' => 'window["buildScheduleDialog"]'), 
-							    'title' => 'Schedule');
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Schedule');
             }
 		}
 
@@ -231,14 +241,11 @@ class ScheduleController extends Zend_Controller_Action
     public function clearShowAction()
     {
         $showInstanceId = $this->_getParam('id');
-
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id, $userInfo->type);
-
         $show = new ShowInstance($showInstanceId);
 
         if($user->isHost($show->getShowId())) {
-
             $show->clearShow();
         }
     }
@@ -265,13 +272,17 @@ class ScheduleController extends Zend_Controller_Action
         $group_id = $this->_getParam('groupId');
 		$search = $this->_getParam('search', null);
 
-		$show = new ShowInstance($showInstanceId);
-		$show->removeGroupFromShow($group_id);
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id, $userInfo->type);
+        $show = new ShowInstance($showInstanceId);
+
+        if($user->isHost($show->getShowId())) {
+		    $show->removeGroupFromShow($group_id);
+        }
 
 		$this->view->showContent = $show->getShowContent();
 		$this->view->timeFilled = $show->getTimeScheduled();
 		$this->view->percentFilled = $show->getPercentScheduledInRange();
-
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
 		unset($this->view->showContent);
     }
