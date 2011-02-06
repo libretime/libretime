@@ -32,6 +32,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         //Add type select
 		$this->addElement('select', 'add_show_repeat_type', array(
             'required' => true,
+            'label'      => 'Repeat Type:',
             'multiOptions' => array(
 				"0" => "weekly",
                 "1" => "bi-weekly"
