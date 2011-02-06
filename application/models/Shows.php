@@ -474,6 +474,14 @@ class ShowInstance {
 			    return $overlap;
 		    }
         }
+        //have to check if any scheduled content still fits.
+        else{
+            $scheduledTime = $this->getTimeScheduled();
+
+            if((strtotime($new_ends) - strtotime($starts)) < strtotime($scheduledTime)) {
+                return "Must removed some scheduled content.";
+            }
+        }
 
         $this->setShowStart($new_starts);
         $this->setShowEnd($new_ends);
