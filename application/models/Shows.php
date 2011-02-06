@@ -119,8 +119,7 @@ class Show {
             FROM cc_show_instances 
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id 
             WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
-                OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}'))
-                ORDER BY starts";
+                OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}'));
 
         if(isset($excludeInstance)) {
             foreach($excludeInstance as $instance) {
@@ -132,7 +131,7 @@ class Show {
             $sql = $sql." AND ({$exclude})";
         }
 
-		//echo $sql;
+		echo $sql;
 
 		return $CC_DBC->GetAll($sql);
     }
