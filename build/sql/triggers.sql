@@ -32,7 +32,7 @@ CREATE FUNCTION show_content() RETURNS trigger AS
     BEGIN
         IF(TG_OP=''DELETE'') THEN
         	UPDATE cc_show_schedule SET position = (position - 1) 
-		WHERE (show_id = old.show_id AND show_day = old.show_day AND position > old.position);
+		WHERE (instance_id = old.instance_id AND position > old.position);
         END IF;
         RETURN NULL;
     END;

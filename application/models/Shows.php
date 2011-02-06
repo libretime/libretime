@@ -107,7 +107,7 @@ class Show {
 			$showHost->save();
 		}
 
-        $this->populateShowUntilLastGeneratedDate($showId);
+        Show::populateShowUntilLastGeneratedDate($showId);
 	}
 
 	public function deleteShow($timestamp, $dayId=NULL) {
@@ -374,6 +374,11 @@ class ShowInstance {
         return $showInstance->getDbShowId();
     }
 
+    public function getName() {
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+        return $show->getDbName();
+    }
+
     public function getShowStart() {
         $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
         return $showInstance->getDbStarts();
@@ -478,6 +483,7 @@ class ShowInstance {
 		
 		$sched = new ScheduleGroup();
 		$lastGroupId = $this->getLastGroupId();
+        $pos = $this->getNextPos();
 
 		if(is_null($lastGroupId)) {
 
@@ -578,7 +584,7 @@ class ShowInstance {
         $start_timestamp = $this->getShowStart(); 
         $end_timestamp = $this->getShowEnd();
 
-        Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+        return Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
     }
 
     public function getShowLength(){

@@ -279,32 +279,23 @@ class ScheduleController extends Zend_Controller_Action
     public function scheduleShowDialogAction()
     {
 		$showInstanceId = $this->_getParam('id');
+        $this->sched_sess->showInstanceId = $showInstanceId;
         
         $show = new ShowInstance($showInstanceId);
-
-        $start_timestamp = $this->_getParam('start');
-		$end_timestamp = $this->_getParam('end');
-
-		$this->sched_sess->showId = $showId;
-		$this->sched_sess->showStart = $start_timestamp;
-		$this->sched_sess->showEnd = $end_timestamp;
-
+        $start_timestamp = $show->getShowStart();
+		$end_timestamp = $show->getShowEnd();
+		
         $start = explode(" ", $start_timestamp);
         $end = explode(" ", $end_timestamp);
         $startTime = explode(":", $start[1]);
         $endTime = explode(":", $end[1]);
         $dateInfo = getDate(strtotime($start_timestamp));
 		
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-		$user = new User($userInfo->id, $userInfo->type);
-		$show = new Show($user, $showId);
-
-		$this->view->showContent = $show->getShowContent($start_timestamp);
-		$this->view->timeFilled = $show->getTimeScheduled($start_timestamp, $end_timestamp);
+		$this->view->showContent = $show->getShowContent();
+		$this->view->timeFilled = $show->getTimeScheduled();
         $this->view->showName = $show->getName();
-		$this->view->showLength = $show->getShowLength($start_timestamp, $end_timestamp);
-		$this->view->percentFilled = Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+		$this->view->showLength = $show->getShowLength();
+		$this->view->percentFilled = $show->getPercentScheduledInRange();
 
         $this->view->wday = $dateInfo['weekday'];
         $this->view->month = $dateInfo['month'];
@@ -314,7 +305,6 @@ class ScheduleController extends Zend_Controller_Action
 
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
 		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
-
 		unset($this->view->showContent);
     }
 

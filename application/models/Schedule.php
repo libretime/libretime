@@ -307,7 +307,7 @@ class Schedule {
             AND (ends <= '{$e_datetime}')";
 
         $res = $CC_DBC->GetOne($sql);
-
+      
         if(is_null($res))
             return 0;
 
@@ -315,9 +315,9 @@ class Schedule {
     }
 
     public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
-
+      
         $time = Schedule::getTimeScheduledInRange($s_datetime, $e_datetime);
-
+      
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
         $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$s_datetime}')";
@@ -333,7 +333,7 @@ class Schedule {
         $i_epoch = $r->fetchColumn(0);
 
         $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
-
+       
         return $percent;
     }
 
