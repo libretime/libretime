@@ -310,18 +310,11 @@ class ScheduleController extends Zend_Controller_Action
 
     public function showContentDialogAction()
     {
-        $start_timestamp = $this->_getParam('start');
-		$end_timestamp = $this->_getParam('end');
-		$showId = $this->_getParam('id');
+		$showInstanceId = $this->_getParam('id');
+		$show = new ShowInstance($showInstanceId);
 
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-		$user = new User($userInfo->id, $userInfo->type);
-		$show = new Show($user, $showId);
-
-		$this->view->showContent = $show->getShowListContent($start_timestamp);
+		$this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
-
         unset($this->view->showContent);
     }
 
