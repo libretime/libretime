@@ -47,7 +47,7 @@
  * @method     CcSchedule findOne(PropelPDO $con = null) Return the first CcSchedule matching the query
  * @method     CcSchedule findOneOrCreate(PropelPDO $con = null) Return the first CcSchedule matching the query, or a new CcSchedule object populated from the query conditions when no match is found
  *
- * @method     CcSchedule findOneByDbId(int $id) Return the first CcSchedule filtered by the id column
+ * @method     CcSchedule findOneByDbId(string $id) Return the first CcSchedule filtered by the id column
  * @method     CcSchedule findOneByDbPlaylistId(int $playlist_id) Return the first CcSchedule filtered by the playlist_id column
  * @method     CcSchedule findOneByDbStarts(string $starts) Return the first CcSchedule filtered by the starts column
  * @method     CcSchedule findOneByDbEnds(string $ends) Return the first CcSchedule filtered by the ends column
@@ -62,7 +62,7 @@
  * @method     CcSchedule findOneByDbMediaItemPlayed(boolean $media_item_played) Return the first CcSchedule filtered by the media_item_played column
  * @method     CcSchedule findOneByDbInstanceId(int $instance_id) Return the first CcSchedule filtered by the instance_id column
  *
- * @method     array findByDbId(int $id) Return CcSchedule objects filtered by the id column
+ * @method     array findByDbId(string $id) Return CcSchedule objects filtered by the id column
  * @method     array findByDbPlaylistId(int $playlist_id) Return CcSchedule objects filtered by the playlist_id column
  * @method     array findByDbStarts(string $starts) Return CcSchedule objects filtered by the starts column
  * @method     array findByDbEnds(string $ends) Return CcSchedule objects filtered by the ends column
@@ -188,7 +188,7 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	/**
 	 * Filter the query on the id column
 	 * 
-	 * @param     int|array $dbId The value to use as filter.
+	 * @param     string|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *

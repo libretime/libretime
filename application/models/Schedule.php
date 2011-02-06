@@ -101,8 +101,8 @@ class ScheduleGroup {
             $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
             $id = $this->dateToId($p_datetime);
             $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-            ." (playlist_id, starts, ends, clip_length, group_id, file_id)"
-            ." VALUES (0, TIMESTAMP '$p_datetime', "
+            ." (id, playlist_id, starts, ends, clip_length, group_id, file_id)"
+            ." VALUES ('$id', 0, TIMESTAMP '$p_datetime', "
             ." (TIMESTAMP '$p_datetime' + INTERVAL '$length'),"
             ." '$length',"
             ." {$this->groupId}, $p_audioFileId)";
@@ -143,9 +143,9 @@ class ScheduleGroup {
                 $trackLength = $row["cliplength"];
                 //var_dump($trackLength);
                 $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-                ." (instance_id, playlist_id, starts, ends, group_id, file_id,"
+                ." (id, instance_id, playlist_id, starts, ends, group_id, file_id,"
                 ." clip_length, cue_in, cue_out, fade_in, fade_out)"
-                ." VALUES ($show_instance, $p_playlistId, TIMESTAMP '$itemStartTime', "
+                ." VALUES ($id, $show_instance, $p_playlistId, TIMESTAMP '$itemStartTime', "
                 ." (TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'),"
                 ." '{$this->groupId}', '{$row['file_id']}', '$trackLength', '{$row['cuein']}',"
                 ." '{$row['cueout']}', '{$row['fadein']}','{$row['fadeout']}')";
