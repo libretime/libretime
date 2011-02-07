@@ -678,35 +678,37 @@ class ShowInstance {
 
 /* Show Data Access Layer */
 class Show_DAL{
-    
-    /* Given a group_id, get all show data related to
-     * id. This is useful in the case where you have an item
-     * in the schedule table and you want to find out more about 
-     * the show it is in without joining the schedule and show tables
-     * (which causes problems with duplicate items)
-     */
-    public static function GetShowData($group_id){
-        global $CC_DBC;
-                
-        $sql="SELECT * FROM cc_show_schedule as ss, cc_show as s"
-        ." WHERE ss.show_id = s.id"
-        ." AND ss.group_id = $group_id"
-        ." LIMIT 1";
         
-        return $CC_DBC->GetOne($sql);
-    }
-    
-    /* Given a show ID, this function returns what group IDs
-     * are present in this show. */
-    public static function GetShowGroupIDs($showID){
+    public static function GetCurrentShow($timeNow) {
         global $CC_CONFIG, $CC_DBC;
         
-		$sql = "SELECT group_id"
-		." FROM $CC_CONFIG[showSchedule]"
-		." WHERE show_id = $showID";
-		
+		$timestamp = explode(" ", $timeNow);
+		$date = $timestamp[0];
+		$time = $timestamp[1];
+        
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id"
+        ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
+        ." WHERE si.show_id = s.id"
+        ." AND si.starts <= TIMESTAMP '$timeNow'"
+        ." AND si.ends > TIMESTAMP '$timeNow'";
+        
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
-	}
+    }
+    
+    public static function GetNextShow($timeNow) {
+        global $CC_CONFIG, $CC_DBC;
+        
+		$sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
+		." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
+		." WHERE si.show_id = s.id"
+		." AND si.starts > TIMESTAMP '$timeNow'"
+		." AND si.starts < TIMESTAMP '$timeNow' + INTERVAL '48 hours'"
+        ." ORDER BY si.starts"
+        ." LIMIT 1";
+                
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+    }
     
 }

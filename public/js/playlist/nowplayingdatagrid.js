@@ -86,7 +86,7 @@ function createDataGrid(){
 		"aaData": datagridData.rows,
 		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-            if (aData[aData.length-2] != "")
+            if (aData[aData.length-2] == "t")
                 $(nRow).attr("style", "background-color:#166622");
             if (aData[0] == "c")
 				$(nRow).attr("style", "background-color:#61B329");

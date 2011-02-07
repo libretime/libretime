@@ -453,8 +453,8 @@ class Schedule {
             "previous"=>Schedule::Get_Scheduled_Item_Data($timeNow, -1, $prev, "24 hours"),
             "current"=>Schedule::Get_Scheduled_Item_Data($timeNow, 0),
             "next"=>Schedule::Get_Scheduled_Item_Data($timeNow, 1, $next, "48 hours"),
-            "currentShow"=>Schedule::GetCurrentShow($timeNow),
-            "nextShow"=>Schedule::GetNextShow($timeNow),
+            "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
+            "nextShow"=>Show_DAL::GetNextShow($timeNow),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
     }
@@ -483,7 +483,7 @@ class Schedule {
      */
     public static function Get_Scheduled_Item_Data($timeNow, $timePeriod=0, $count = 0, $interval="0 hours"){
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name"
+        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name, (si.starts <= TIMESTAMP '$timeNow' AND si.ends > TIMESTAMP '$timeNow') as current_show"
         ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
         ." WHERE st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
@@ -493,7 +493,7 @@ class Schedule {
         if ($timePeriod < 0){
         	$sql .= " AND st.ends < TIMESTAMP '$timeNow'"
         	." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '$interval')"
-  	        ." ORDER BY st.starts"
+  	        ." ORDER BY st.starts DESC"
         	." LIMIT $count";	
 		} else if ($timePeriod == 0){
 	        $sql .= " AND st.starts < TIMESTAMP '$timeNow'"
@@ -508,39 +508,7 @@ class Schedule {
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
 	}
-	
-    public static function GetCurrentShow($timeNow) {
-        global $CC_CONFIG, $CC_DBC;
-        
-		$timestamp = explode(" ", $timeNow);
-		$date = $timestamp[0];
-		$time = $timestamp[1];
-        
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id"
-        ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
-        ." WHERE si.show_id = s.id"
-        ." AND si.starts <= TIMESTAMP '$timeNow'"
-        ." AND si.ends > TIMESTAMP '$timeNow'";
-        
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-    
-    public static function GetNextShow($timeNow) {
-        global $CC_CONFIG, $CC_DBC;
-        
-		$sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
-		." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
-		." WHERE si.show_id = s.id"
-		." AND si.starts > TIMESTAMP '$timeNow'"
-		." AND si.starts < TIMESTAMP '$timeNow' + INTERVAL '48 hours'"
-        ." ORDER BY si.starts"
-        ." LIMIT 1";
-                
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-     
+	     
 
     /**
      * Convert a time string in the format "YYYY-MM-DD HH:mm:SS"
