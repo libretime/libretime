@@ -76,7 +76,7 @@ class ScheduleGroup {
      *    Return PEAR_Error if the item could not be added.
      *    Error code 555 is a scheduling conflict.
      */
-    public function add($p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
+    public function add($show_instance, $p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
         global $CC_CONFIG, $CC_DBC;
         if (!is_null($p_audioFileId)) {
             // Schedule a single audio track
@@ -101,8 +101,8 @@ class ScheduleGroup {
             $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
             $id = $this->dateToId($p_datetime);
             $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-            ." (id, playlist_id, starts, ends, clip_length, group_id, file_id)"
-            ." VALUES ($id, 0, TIMESTAMP '$p_datetime', "
+            ." (playlist_id, starts, ends, clip_length, group_id, file_id)"
+            ." VALUES (0, TIMESTAMP '$p_datetime', "
             ." (TIMESTAMP '$p_datetime' + INTERVAL '$length'),"
             ." '$length',"
             ." {$this->groupId}, $p_audioFileId)";
@@ -143,9 +143,9 @@ class ScheduleGroup {
                 $trackLength = $row["cliplength"];
                 //var_dump($trackLength);
                 $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-                ." (id, playlist_id, starts, ends, group_id, file_id,"
+                ." (instance_id, playlist_id, starts, ends, group_id, file_id,"
                 ." clip_length, cue_in, cue_out, fade_in, fade_out)"
-                ." VALUES ($id, $p_playlistId, TIMESTAMP '$itemStartTime', "
+                ." VALUES ($show_instance, $p_playlistId, TIMESTAMP '$itemStartTime', "
                 ." (TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'),"
                 ." '{$this->groupId}', '{$row['file_id']}', '$trackLength', '{$row['cuein']}',"
                 ." '{$row['cueout']}', '{$row['fadein']}','{$row['fadeout']}')";
@@ -161,23 +161,23 @@ class ScheduleGroup {
         }
     }
 
-    public function addAfter($p_groupId, $p_audioFileId) {
+    public function addAfter($show_instance, $p_groupId, $p_audioFileId) {
         global $CC_CONFIG, $CC_DBC;
         // Get the end time for the given entry
         $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id=$p_groupId";
         $startTime = $CC_DBC->GetOne($sql);
-        return $this->add($startTime, $p_audioFileId);
+        return $this->add($show_instance, $startTime, $p_audioFileId);
     }
 
-    public function addPlaylistAfter($p_groupId, $p_playlistId) {
+    public function addPlaylistAfter($show_instance, $p_groupId, $p_playlistId) {
         global $CC_CONFIG, $CC_DBC;
         // Get the end time for the given entry
         $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id=$p_groupId";
     
         $startTime = $CC_DBC->GetOne($sql);
-        return $this->add($startTime, null, $p_playlistId);
+        return $this->add($show_instance, $startTime, null, $p_playlistId);
     }
 
     public function update() {
@@ -281,14 +281,6 @@ class Schedule {
     public static function getTimeUnScheduledInRange($s_datetime, $e_datetime) {
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
-        $isNextDay = $CC_DBC->GetOne($sql);
-
-        if($isNextDay === 't') {
-            $sql = "SELECT date '{$e_datetime}' + interval '1 day'";
-            $e_datetime = $CC_DBC->GetOne($sql);
-        }
-
         $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
             WHERE (starts >= '{$s_datetime}')  
             AND (ends <= '{$e_datetime}')";
@@ -310,20 +302,12 @@ class Schedule {
     public static function getTimeScheduledInRange($s_datetime, $e_datetime) {
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT timestamp '{$s_datetime}' > timestamp '{$e_datetime}'";
-        $isNextDay = $CC_DBC->GetOne($sql);
-
-        if($isNextDay === 't') {
-            $sql = "SELECT date '{$e_datetime}' + interval '1 day'";
-            $e_datetime = $CC_DBC->GetOne($sql);
-        }
-
         $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
             WHERE (starts >= '{$s_datetime}')  
             AND (ends <= '{$e_datetime}')";
 
         $res = $CC_DBC->GetOne($sql);
-
+      
         if(is_null($res))
             return 0;
 
@@ -331,9 +315,9 @@ class Schedule {
     }
 
     public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
-
+      
         $time = Schedule::getTimeScheduledInRange($s_datetime, $e_datetime);
-
+      
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
         $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$s_datetime}')";
@@ -349,7 +333,7 @@ class Schedule {
         $i_epoch = $r->fetchColumn(0);
 
         $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
-
+       
         return $percent;
     }
 
@@ -460,17 +444,18 @@ class Schedule {
     public static function GetPlayOrderRange($prev = 1, $next = 1) {
         if (!is_int($prev) || !is_int($next)){
             //must enter integers to specify ranges
-            return "{}";
+            return array();
         }
 
         $date = Schedule::GetSchedulerTime();
         $timeNow = $date->getDate();
-        return array("schedulerTime"=>gmdate("Y-m-d H:i:s"),
+        return array("env"=>APPLICATION_ENV,
+            "schedulerTime"=>gmdate("Y-m-d H:i:s"),
             "previous"=>Schedule::Get_Scheduled_Item_Data($timeNow, -1, $prev, "24 hours"),
             "current"=>Schedule::Get_Scheduled_Item_Data($timeNow, 0),
             "next"=>Schedule::Get_Scheduled_Item_Data($timeNow, 1, $next, "48 hours"),
-            "currentShow"=>Schedule::GetCurrentShow($timeNow),
-            "nextShow"=>Schedule::GetNextShow($timeNow),
+            "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
+            "nextShow"=>Show_DAL::GetNextShow($timeNow),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
     }
@@ -499,17 +484,17 @@ class Schedule {
      */
     public static function Get_Scheduled_Item_Data($timeNow, $timePeriod=0, $count = 0, $interval="0 hours"){
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name"
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showSchedule] ss, $CC_CONFIG[showTable] show"
+        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name, (si.starts <= TIMESTAMP '$timeNow' AND si.ends > TIMESTAMP '$timeNow') as current_show"
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
         ." WHERE st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
-        ." AND st.group_id = ss.group_id"
-        ." AND ss.show_id = show.id";
+        ." AND st.instance_id = si.id"
+        ." AND si.show_id = show.id";
         
         if ($timePeriod < 0){
         	$sql .= " AND st.ends < TIMESTAMP '$timeNow'"
         	." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '$interval')"
-  	        ." ORDER BY st.starts"
+  	        ." ORDER BY st.starts DESC"
         	." LIMIT $count";	
 		} else if ($timePeriod == 0){
 	        $sql .= " AND st.starts < TIMESTAMP '$timeNow'"
@@ -524,87 +509,7 @@ class Schedule {
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
 	}
-	
-	/*
-    public static function GetPreviousItems($timeNow, $prevCount = 1, $prevInterval="24 hours"){
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id"
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
-        ." WHERE st.ends < TIMESTAMP '$timeNow'"
-        ." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '$prevInterval')"
-        ." AND st.playlist_id = pt.id"
-        ." AND st.file_id = ft.id"
-        ." ORDER BY st.starts DESC"
-        ." LIMIT $prevCount";
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-
-    public static function GetCurrentlyPlaying($timeNow){
-        global $CC_CONFIG, $CC_DBC;
-        
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id"
-        ." FROM $CC_CONFIG[scheduleTable] st,"
-        ."$CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
-        ." WHERE st.starts < TIMESTAMP '$timeNow'"
-        ." AND st.ends > TIMESTAMP '$timeNow'"
-        ." AND st.playlist_id = pt.id"
-        ." AND st.file_id = ft.id";
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-
-    public static function GetNextItems($timeNow, $nextCount = 1) {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id" 
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt"
-        ." WHERE st.starts > TIMESTAMP '$timeNow'"
-        ." AND st.ends < (TIMESTAMP '$timeNow' + INTERVAL '7 days')"
-        ." AND st.playlist_id = pt.id"
-        ." AND st.file_id = ft.id"
-        ." ORDER BY st.starts"
-        ." LIMIT $nextCount";
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-*/
-    public static function GetCurrentShow($timeNow) {
-        global $CC_CONFIG, $CC_DBC;
-        
-		$timestamp = explode(" ", $timeNow);
-		$date = $timestamp[0];
-		$time = $timestamp[1];
-        
-        $sql = "SELECT current_date + sd.start_time as start_timestamp, current_date + sd.end_time as end_timestamp, s.name, s.id"
-        ." FROM $CC_CONFIG[showDays] sd, $CC_CONFIG[showTable] s"
-        ." WHERE sd.show_id = s.id"
-        ." AND sd.first_show <= DATE '$date'"
-        ." AND sd.start_time <= TIME '$time'"
-        ." AND sd.last_show > DATE '$date'"
-        ." AND sd.end_time > TIME '$time'";
-        
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-    
-    public static function GetNextShow($timeNow) {
-        global $CC_CONFIG, $CC_DBC;
-        
-        $datetime = explode(" ", $timeNow);
-                        
-		$sql = "SELECT *, (current_date + start_time) as start_timestamp, (current_date + end_time) as end_timestamp FROM "
-		." $CC_CONFIG[showDays] sd, $CC_CONFIG[showTable] s"
-		." WHERE sd.show_id = s.id"
-		." AND ((sd.last_show + sd.end_time) > TIMESTAMP '$timeNow' OR sd.last_show = NULL)"
-		." AND TIME '$datetime[1]' < sd.start_time "
-		." AND sd.day = EXTRACT(DOW FROM TIMESTAMP '$timeNow')"
-        ." ORDER BY sd.start_time"
-        ." LIMIT 1";
-                
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-     
+	     
 
     /**
      * Convert a time string in the format "YYYY-MM-DD HH:mm:SS"

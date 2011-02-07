@@ -141,6 +141,7 @@ $CC_CONFIG['playListTimeView'] = $CC_CONFIG['tblNamePrefix'].'playlisttimes';
 $CC_CONFIG['showSchedule'] = $CC_CONFIG['tblNamePrefix'].'show_schedule';
 $CC_CONFIG['showDays'] = $CC_CONFIG['tblNamePrefix'].'show_days';
 $CC_CONFIG['showTable'] = $CC_CONFIG['tblNamePrefix'].'show';
+$CC_CONFIG['showInstances'] = $CC_CONFIG['tblNamePrefix'].'show_instances';
 
 $CC_CONFIG['playListSequence'] = $CC_CONFIG['playListTable'].'_id';
 $CC_CONFIG['filesSequence'] = $CC_CONFIG['filesTable'].'_id';

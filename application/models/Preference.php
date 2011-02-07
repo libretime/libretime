@@ -3,8 +3,11 @@
 class Application_Model_Preference
 {
 
-    public static function SetValue($key, $value, $id){
+    public static function SetValue($key, $value){
         global $CC_CONFIG, $CC_DBC;
+
+        $auth = Zend_Auth::getInstance();
+        $id = $auth->getIdentity()->id;
         
         //Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_pref"
@@ -57,10 +60,7 @@ class Application_Model_Preference
     }
     
     public static function SetHeadTitle($title, $view){
-        $auth = Zend_Auth::getInstance();
-        $id = $auth->getIdentity()->id;
-        
-        Application_Model_Preference::SetValue("station_name", $title, $id); 
+        Application_Model_Preference::SetValue("station_name", $title); 
         $defaultNamespace = new Zend_Session_Namespace('title_name'); 
         $defaultNamespace->title = $title;
  
@@ -68,6 +68,14 @@ class Application_Model_Preference
         //should probably do this in a view helper to keep this controller as minimal as possible.
         $view->headTitle()->exchangeArray(array()); //clear headTitle ArrayObject
         $view->headTitle(Application_Model_Preference::GetHeadTitle());
+    }
+
+    public static function SetShowsPopulatedUntil($timestamp) { 
+        Application_Model_Preference::SetValue("shows_populated_until", $timestamp); 
+    }
+
+    public static function GetShowsPopulatedUntil() {
+        return Application_Model_Preference::GetValue("shows_populated_until");
     }
 
 }

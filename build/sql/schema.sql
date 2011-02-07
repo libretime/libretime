@@ -162,7 +162,6 @@ CREATE TABLE "cc_show"
 (
 	"id" serial  NOT NULL,
 	"name" VARCHAR(255) default '' NOT NULL,
-	"repeats" INT2  NOT NULL,
 	"description" VARCHAR(512),
 	"color" VARCHAR(6),
 	"background_color" VARCHAR(6),
@@ -170,6 +169,26 @@ CREATE TABLE "cc_show"
 );
 
 COMMENT ON TABLE "cc_show" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_show_instances
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_show_instances" CASCADE;
+
+
+CREATE TABLE "cc_show_instances"
+(
+	"id" serial  NOT NULL,
+	"starts" TIMESTAMP  NOT NULL,
+	"ends" TIMESTAMP  NOT NULL,
+	"show_id" INTEGER  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_show_instances" IS '';
 
 
 SET search_path TO public;
@@ -186,8 +205,10 @@ CREATE TABLE "cc_show_days"
 	"first_show" DATE  NOT NULL,
 	"last_show" DATE,
 	"start_time" TIME  NOT NULL,
-	"end_time" TIME  NOT NULL,
+	"duration" TIME  NOT NULL,
 	"day" INT2  NOT NULL,
+	"repeat_type" INT2  NOT NULL,
+	"next_pop_date" DATE,
 	"show_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );
@@ -212,27 +233,6 @@ CREATE TABLE "cc_show_hosts"
 );
 
 COMMENT ON TABLE "cc_show_hosts" IS '';
-
-
-SET search_path TO public;
------------------------------------------------------------------------------
--- cc_show_schedule
------------------------------------------------------------------------------
-
-DROP TABLE "cc_show_schedule" CASCADE;
-
-
-CREATE TABLE "cc_show_schedule"
-(
-	"id" serial  NOT NULL,
-	"show_id" INTEGER  NOT NULL,
-	"show_day" DATE  NOT NULL,
-	"position" INTEGER,
-	"group_id" INTEGER  NOT NULL,
-	PRIMARY KEY ("id")
-);
-
-COMMENT ON TABLE "cc_show_schedule" IS '';
 
 
 SET search_path TO public;
@@ -318,7 +318,7 @@ DROP TABLE "cc_schedule" CASCADE;
 
 CREATE TABLE "cc_schedule"
 (
-	"id" INT8  NOT NULL,
+	"id" serial  NOT NULL,
 	"playlist_id" INTEGER  NOT NULL,
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
@@ -331,6 +331,7 @@ CREATE TABLE "cc_schedule"
 	"cue_out" TIME default '00:00:00',
 	"schedule_group_played" BOOLEAN default 'f',
 	"media_item_played" BOOLEAN default 'f',
+	"instance_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -463,13 +464,13 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("edi
 
 ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey" FOREIGN KEY ("subj") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
+ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
+
 ALTER TABLE "cc_show_days" ADD CONSTRAINT "cc_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_host_fkey" FOREIGN KEY ("subjs_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
-
-ALTER TABLE "cc_show_schedule" ADD CONSTRAINT "cc_perm_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
 
@@ -478,5 +479,7 @@ ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_file_id_fk
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_pref" ADD CONSTRAINT "cc_pref_subjid_fkey" FOREIGN KEY ("subjid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;

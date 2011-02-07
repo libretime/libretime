@@ -4,7 +4,7 @@ require_once (__DIR__."/configs/navigation.php");
 require_once (__DIR__."/configs/ACL.php");
 
 require_once 'propel/runtime/lib/Propel.php';
-Propel::init(__DIR__."/configs/propel-config.php");
+Propel::init(__DIR__."/configs/airtime-conf.php");
 
 //DateTime in PHP 5.3.0+ need a default timezone set.
 $tz = ini_get('date.timezone') ? ini_get('date.timezone') : 'UTC';

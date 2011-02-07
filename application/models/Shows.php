@@ -2,12 +2,10 @@
 
 class Show {
 
-	private $_user;
 	private $_showId;
 
-	public function __construct($user=NULL, $showId=NULL)
+	public function __construct($showId=NULL)
     {
-		$this->_user = $user;
 		$this->_showId = $showId;    
     }
 
@@ -24,7 +22,7 @@ class Show {
     }
 
 	//end dates are non inclusive.
-	public function addShow($data) {
+	public static function addShow($data) {
 	
 		$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
 
@@ -51,19 +49,21 @@ class Show {
         	$endDate = $r->fetchColumn(0);
 		} 
 
-		if(!isset($data['add_show_day_check'])) {
+        //only want the day of the week from the start date.
+		if(!$data['add_show_repeats']) {
 			$data['add_show_day_check'] = array($startDow);
 		} 
 
-		$overlap =  $this->getShows($data['add_show_start_date'], $endDate, $data['add_show_day_check'], $data['add_show_start_time'], $endTime);
-
-		if(count($overlap) > 0) {
-			return $overlap;
-		}
+        //find repeat type or set to a non repeating show.
+        if($data['add_show_repeats']) {
+            $repeat_type = $data["add_show_repeat_type"];
+        }
+        else {
+            $repeat_type = -1;
+        }
 		
 		$show = new CcShow();
 		$show->setDbName($data['add_show_name']);
-		$show->setDbRepeats($data['add_show_repeats']);
 		$show->setDbDescription($data['add_show_description']);
 		$show->setDbColor($data['add_show_color']);
 		$show->setDbBackgroundColor($data['add_show_background_color']);
@@ -94,8 +94,9 @@ class Show {
 			    $showDay->setDbFirstShow($start);
 			    $showDay->setDbLastShow($endDate);
 			    $showDay->setDbStartTime($data['add_show_start_time']);
-			    $showDay->setDbEndTime($endTime);
+			    $showDay->setDbDuration($data['add_show_duration']);
 			    $showDay->setDbDay($day);
+                $showDay->setDbRepeatType($repeat_type);
 			    $showDay->setDbShowId($showId);
 			    $showDay->save();
             }
@@ -107,18 +108,291 @@ class Show {
 			$showHost->setDbHost($host);
 			$showHost->save();
 		}
+
+        Show::populateShowUntilLastGeneratedDate($showId);
 	}
 
-	public function moveShow($showId, $deltaDay, $deltaMin){
+    public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL) {
+        global $CC_DBC;
+
+        $sql = "SELECT starts, ends, show_id, name, description, color, background_color, cc_show_instances.id AS instance_id  
+            FROM cc_show_instances 
+            LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id 
+            WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
+                OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}')
+                OR (starts <= '{$start_timestamp}' AND ends >= '{$end_timestamp}'))";
+
+        if(isset($excludeInstance)) {
+            foreach($excludeInstance as $instance) {
+                $sql_exclude[] = "cc_show_instances.id != {$instance}";
+            }
+
+            $exclude = join(" OR ", $sql_exclude);
+
+            $sql = $sql." AND ({$exclude})";
+        }
+
+		//echo $sql;
+
+		return $CC_DBC->GetAll($sql);
+    }
+
+     //for a show with repeat_type == -1
+    private static function populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $end_timestamp) {
+        global $CC_DBC;
+       
+        $next_date = $first_show." ".$start_time;
+       
+        if(strtotime($next_date) < strtotime($end_timestamp)) {
+            
+            $start = $next_date;
+            
+            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
+		    $end = $CC_DBC->GetOne($sql);
+
+            $newShow = new CcShowInstances();
+		    $newShow->setDbShowId($show_id);
+            $newShow->setDbStarts($start);
+            $newShow->setDbEnds($end);
+		    $newShow->save();
+        }
+    }
+
+    //for a show with repeat_type == 0
+    private static function populateWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
+        global $CC_DBC;        
+
+        if(isset($next_pop_date)) {
+            $next_date = $next_pop_date." ".$start_time;
+        }
+        else {
+            $next_date = $first_show." ".$start_time;
+        }
+
+        while(strtotime($next_date) < strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
+            
+            $start = $next_date;
+            
+            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
+		    $end = $CC_DBC->GetOne($sql);
+
+            $newShow = new CcShowInstances();
+		    $newShow->setDbShowId($show_id);
+            $newShow->setDbStarts($start);
+            $newShow->setDbEnds($end);
+		    $newShow->save();
+
+            $sql = "SELECT timestamp '{$start}' + interval '7 days'";
+		    $next_date = $CC_DBC->GetOne($sql);
+        }
+
+        $nextInfo = explode(" ", $next_date);
+
+        $repeatInfo = CcShowDaysQuery::create()
+            ->filterByDbShowId($show_id)
+            ->filterByDbDay($day)
+            ->findOne();
+
+        $repeatInfo->setDbNextPopDate($nextInfo[0])
+            ->save();
+    }
+
+    //for a show with repeat_type == 1
+    private static function populateBiWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
+        global $CC_DBC;        
+
+        if(isset($next_pop_date)) {
+            $next_date = $next_pop_date." ".$start_time;
+        }
+        else {
+            $next_date = $first_show." ".$start_time;
+        }
+
+        while(strtotime($next_date) < strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
+            
+            $start = $next_date;
+            
+            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
+		    $end = $CC_DBC->GetOne($sql);
+
+            $newShow = new CcShowInstances();
+		    $newShow->setDbShowId($show_id);
+            $newShow->setDbStarts($start);
+            $newShow->setDbEnds($end);
+		    $newShow->save();
+
+            $sql = "SELECT timestamp '{$start}' + interval '14 days'";
+		    $next_date = $CC_DBC->GetOne($sql);
+        }
+
+        $nextInfo = explode(" ", $next_date);
+
+        $repeatInfo = CcShowDaysQuery::create()
+            ->filterByDbShowId($show_id)
+            ->filterByDbDay($day)
+            ->findOne();
+
+        $repeatInfo->setDbNextPopDate($nextInfo[0])
+            ->save();
+    }
+
+    private static function populateShow($repeat_type, $show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
+
+        if($repeat_type == -1) {
+            Show::populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $end_timestamp);
+        }
+        else if($repeat_type == 0) {
+            Show::populateWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
+        }
+        else if($repeat_type == 1) {
+            Show::populateBiWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
+        }
+    } 
+
+    //used to catch up a newly added show
+    private static function populateShowUntilLastGeneratedDate($show_id) {
+        global $CC_DBC;
+        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+  
+        $sql = "SELECT * FROM cc_show_days WHERE show_id = {$show_id}";
+		$res = $CC_DBC->GetAll($sql); 
+
+        foreach($res as $row) {
+            Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"], 
+                                    $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $showsPopUntil);    
+        } 
+    }
+
+    public static function populateShowsUntil($pop_timestamp, $end_timestamp) {
+        global $CC_DBC;
+
+        if($pop_timestamp != "") {
+            $sql = "SELECT * FROM cc_show_days 
+                WHERE last_show IS NULL 
+                    OR first_show < '{$end_timestamp}' AND last_show > '{$pop_timestamp}'";
+        }
+        else {
+            $today_timestamp = date("Y-m-d");
+
+            $sql = "SELECT * FROM cc_show_days 
+                WHERE last_show IS NULL 
+                    OR first_show < '{$end_timestamp}' AND last_show > '{$today_timestamp}'";
+        }
+
+		$res = $CC_DBC->GetAll($sql); 
+
+        foreach($res as $row) {
+            Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"], 
+                                    $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $end_timestamp);    
+        }    
+    }
+
+    public static function getFullCalendarEvents($start, $end, $editable=false) {
+
+        $events = array();
+        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+        //if fullcalendar is requesting shows past our previous populated until date, generate shows up until this point.
+        if($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end)) {
+
+            Show::populateShowsUntil($showsPopUntil, $end);
+            Application_Model_Preference::SetShowsPopulatedUntil($end);
+        }
+
+        $shows = Show::getShows($start, $end);
+
+        $today_timestamp = date("Y-m-d H:i:s");
+        foreach ($shows as $show) {
+            if($editable && strtotime($today_timestamp) < strtotime($show["starts"]))
+			    $events[] = Show::makeFullCalendarEvent($show, array("editable" => true));
+            else
+                $events[] = Show::makeFullCalendarEvent($show);
+        }
+
+        return $events;
+    }
+
+	private static function makeFullCalendarEvent($show, $options=array()) {
 		global $CC_DBC;
 
-		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$showId}'";
-		$res = $CC_DBC->GetAll($sql);
+		$event = array(
+			"id" => $show["instance_id"],
+			"title" => $show["name"],
+			"start" => $show["starts"],
+			"end" => $show["ends"],
+			"allDay" => false,
+			"description" => $show["description"],
+			"color" => $show["color"],
+			"backgroundColor" => $show["background_color"],
+            "showId" => $show["show_id"]
+		);
 
-		$show = $res[0];
-		$start = $show["first_show"];
-		$end = $show["last_show"];
-		$days = array();
+		foreach($options as $key=>$value) {
+			$event[$key] = $value;
+		}
+
+		$percent = Schedule::getPercentScheduledInRange($show["starts"], $show["ends"]);
+		$event["percent"] = $percent;
+
+		return $event;
+	}
+}
+
+class ShowInstance {
+
+	private $_instanceId;
+
+	public function __construct($instanceId)
+    {
+		$this->_instanceId = $instanceId;    
+    }
+
+    public function getShowId() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbShowId();
+    }
+
+    public function getName() {
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+        return $show->getDbName();
+    }
+
+    public function getShowStart() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbStarts();
+    }
+
+    public function getShowEnd() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbEnds();
+    }
+
+    public function setShowStart($start) {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $showInstance->setDbStarts($start)
+            ->save();
+    }
+
+    public function setShowEnd($end) {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $showInstance->setDbEnds($end)
+            ->save();   
+    }
+
+    public function moveScheduledShowContent($deltaDay, $deltaHours, $deltaMin) {
+        global $CC_DBC;
+
+        $sql = "UPDATE cc_schedule
+                    SET starts = (starts + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}'),
+                        ends = (ends + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}')
+                    WHERE (starts >= '{$this->getShowStart()}')  
+                        AND (ends <= '{$this->getShowEnd()}')";
+
+        $CC_DBC->query($sql);
+    }
+
+    public function moveShow($deltaDay, $deltaMin){
+		global $CC_DBC;
 
 		$hours = $deltaMin/60;
 		if($hours > 0)
@@ -128,50 +402,33 @@ class Show {
 
 		$mins = abs($deltaMin%60);
 
-		$sql = "SELECT time '{$show["start_time"]}' + interval '{$hours}:{$mins}'";
-		$s_time = $CC_DBC->GetOne($sql);
+        $starts = $this->getShowStart();
+        $ends = $this->getShowEnd(); 
 
-		$sql = "SELECT time '{$show["end_time"]}' + interval '{$hours}:{$mins}'";
-		$e_time = $CC_DBC->GetOne($sql);
+		$sql = "SELECT timestamp '{$starts}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
+		$new_starts = $CC_DBC->GetOne($sql);
 
-		foreach($res as $show) {
-			$days[] = $show["day"] + $deltaDay;
-		}
+		$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
+		$new_ends = $CC_DBC->GetOne($sql);
 
-		//need to check each specific day if times different then merge arrays.
-		$overlap =  $this->getShows($start, $end, $days, $s_time, $e_time, array($showId));
+        $today_timestamp = date("Y-m-d H:i:s");
+        if(strtotime($today_timestamp) > strtotime($new_starts)) {
+            return "can't move show into past";
+        }
+
+		$overlap = Show::getShows($new_starts, $new_ends, array($this->_instanceId));
 
 		if(count($overlap) > 0) {
-			return $overlap;
+			return "Should not overlap shows";
 		}
-
-		foreach($res as $row) {
-
-			$sql = "SELECT date '{$show["first_show"]}' + interval '{$deltaDay} day'";
-			$f_show = $CC_DBC->GetOne($sql);
-			//get a timestamp back only need a date.
-			$tmp = spliti(" ", $f_show);
-			$f_show = $tmp[0];
-
-			$show = CcShowDaysQuery::create()->findPK($row["id"]);
-			$show->setDbStartTime($s_time);
-			$show->setDbEndTime($e_time);
-			$show->setDbFirstShow($f_show);
-			$show->setDbDay($row['day'] + $deltaDay);
-			$show->save();
-		}		
+    
+        $this->moveScheduledShowContent($deltaDay, $hours, $mins);
+        $this->setShowStart($new_starts);
+        $this->setShowEnd($new_ends);	
 	}
 
-	public function resizeShow($showId, $deltaDay, $deltaMin){
+	public function resizeShow($deltaDay, $deltaMin){
 		global $CC_DBC;
-
-		$sql = "SELECT * FROM cc_show_days WHERE show_id = '{$showId}'";
-		$res = $CC_DBC->GetAll($sql);
-
-		$show = $res[0];
-		$start = $show["first_show"];
-		$end = $show["last_show"];
-		$days = array();
 
 		$hours = $deltaMin/60;
 		if($hours > 0)
@@ -181,174 +438,161 @@ class Show {
 
 		$mins = abs($deltaMin%60);
 
-		$s_time = $show["start_time"];
+        $starts = $this->getShowStart();
+        $ends = $this->getShowEnd(); 
 
-		$sql = "SELECT time '{$show["end_time"]}' + interval '{$hours}:{$mins}'";
-		$e_time = $CC_DBC->GetOne($sql);
+		$sql = "SELECT timestamp '{$ends}' + interval '{$hours}:{$mins}'";
+		$new_ends = $CC_DBC->GetOne($sql);
 
-		foreach($res as $show) {
-			$days[] = $show["day"] + $deltaDay;
-		}
+        //only need to check overlap if show increased in size.
+        if(strtotime($new_ends) > strtotime($ends)) {
+		    $overlap =  Show::getShows($ends, $new_ends);
 
-		//need to check each specific day if times different then merge arrays.
-		$overlap =  $this->getShows($start, $end, $days, $s_time, $e_time, array($showId));
+            if(count($overlap) > 0) {
+			    return "Should not overlap shows";
+		    }
+        }
+        //have to check if any scheduled content still fits.
+        else{
+            $scheduledTime = $this->getTimeScheduled();
+            $sql = "SELECT (timestamp '{$new_ends}' - timestamp '{$starts}') >= interval '{$scheduledTime}'";
+		    $scheduledContentFits = $CC_DBC->GetOne($sql);
 
-		if(count($overlap) > 0) {
-			return $overlap;
-		}
+            if($scheduledContentFits != "t") {
+                return "Must removed some scheduled content.";
+            }
+        }
 
-		foreach($res as $row) {
-			$show = CcShowDaysQuery::create()->findPK($row["id"]);
-			$show->setDbStartTime($s_time);
-			$show->setDbEndTime($e_time);
-			$show->save();
-		}		
-
+        $this->setShowEnd($new_ends);
 	}
 
-	private function getNextPos($day) {
+	private function getLastGroupId() {
 		global $CC_DBC;
 
-		$timeinfo = explode(" ", $day);
-
-		$sql = "SELECT MAX(position)+1 from cc_show_schedule WHERE show_id = '{$this->_showId}' AND show_day = '{$timeinfo[0]}'";
-		$res = $CC_DBC->GetOne($sql);	
-
-		if(is_null($res))
-            return 0;
-
-		return $res;
-	}
-
-	private function getLastGroupId($start_timestamp) {
-		global $CC_DBC;
-
-		$timeinfo = explode(" ", $start_timestamp);
-
-		$sql = "SELECT MAX(group_id) from cc_show_schedule WHERE show_id = '{$this->_showId}' AND show_day = '{$timeinfo[0]}'";
+		$sql = "SELECT group_id FROM cc_schedule WHERE instance_id = '{$this->_instanceId}' ORDER BY ends DESC LIMIT 1";
 		$res = $CC_DBC->GetOne($sql);	
 
 		return $res;
 	}
 
-	public function addPlaylistToShow($start_timestamp, $plId) {
+	public function addPlaylistToShow($plId) {
 		
 		$sched = new ScheduleGroup();
-		$lastGroupId = $this->getLastGroupId($start_timestamp);
-
+		$lastGroupId = $this->getLastGroupId();
+        
 		if(is_null($lastGroupId)) {
 
-			$groupId = $sched->add($start_timestamp, null, $plId);		
+			$groupId = $sched->add($this->_instanceId, $this->getShowStart(), null, $plId);		
 		}
 		else {
-			$groupId = $sched->addPlaylistAfter($lastGroupId, $plId);
-		}
-
-		$timeinfo = explode(" ", $start_timestamp);
-		$day = $timeinfo[0];
-		$pos = $this->getNextPos($day);
-
-		$groupsched = new CcShowSchedule();
-		$groupsched->setDbShowId($this->_showId);
-		$groupsched->setDbGroupId($groupId);
-		$groupsched->setDbShowDay($day);
-		$groupsched->setDbPosition($pos);
-		$groupsched->save();
-	}
-
-	public function scheduleShow($start_timestamp, $plIds) {
-		if($this->_user->isHost($this->_showId)) {
-
-			foreach($plIds as $plId) {
-				$this->addPlaylistToShow($start_timestamp, $plId);
-			}
+			$groupId = $sched->addPlaylistAfter($this->_instanceId, $lastGroupId, $plId);
 		}
 	}
 
-	public function removeGroupFromShow($start_timestamp, $group_id){
-		global $CC_DBC, $CC_CONFIG;
+	public function scheduleShow($plIds) {
+		
+		foreach($plIds as $plId) {
+			$this->addPlaylistToShow($plId);
+		}
+	}
 
-		$timeinfo = explode(" ", $start_timestamp);
+	public function removeGroupFromShow($group_id){
+		global $CC_DBC;
 
-		$group = CcShowScheduleQuery::create()
-			->filterByDbShowId($this->_showId)
+        $sql = "SELECT MAX(ends) as end_timestamp, (MAX(ends) - MIN(starts)) as length
+                    FROM cc_schedule 
+					WHERE group_id = '{$group_id}'";
+       
+		$groupBoundry = $CC_DBC->GetRow($sql);
+
+		$group = CcScheduleQuery::create()
 			->filterByDbGroupId($group_id)
-			->filterByDbShowDay($timeinfo[0])
-			->findOne();
+			->delete();
 
-		$position = $group->getDbPosition();
+		$sql = "UPDATE cc_schedule 
+					SET starts = (starts - INTERVAL '{$groupBoundry["length"]}'), ends = (ends - INTERVAL '{$groupBoundry["length"]}') 
+					WHERE starts >= '{$groupBoundry["end_timestamp"]}' AND instance_id = {$this->_instanceId}";
 
-		$sql = "SELECT group_id FROM cc_show_schedule 
-					WHERE show_id = '{$this->_showId}' AND show_day = '{$timeinfo[0]}'
-					AND position > '{$position}'";
-		$followingGroups = $CC_DBC->GetAll($sql);
-
-		$sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." WHERE group_id='{$group_id}'";
-		$group_length = $CC_DBC->GetOne($sql);
-
-		$sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE group_id = '{$group_id}'";
 		$CC_DBC->query($sql);
-
-		if(!is_null($followingGroups)) {
-			$sql_opt = array();
-			foreach ($followingGroups as $row) {
-				$sql_opt[] = "group_id = {$row["group_id"]}";
-			}
-			$sql_group_ids = join(" OR ", $sql_opt);
-
-			$sql = "UPDATE ".$CC_CONFIG["scheduleTable"]." 
-						SET starts = (starts - INTERVAL '{$group_length}'), ends = (ends - INTERVAL '{$group_length}') 
-						WHERE " . $sql_group_ids;
-			$CC_DBC->query($sql);
-		}
-
-		$group->delete();
-
 	}
 
-	public function getTimeScheduled($start_timestamp, $end_timestamp) {
+    public function clearShow() {
+		
+		CcScheduleQuery::create()
+			->filterByDbInstanceId($this->_instanceId)
+			->delete();
+	}
+
+    public function deleteShow() {
+		
+        CcShowInstancesQuery::create()
+            ->findPK($this->_instanceId)
+            ->delete();
+	}
+
+    public function getTimeScheduled() {
+
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
 
 		$time = Schedule::getTimeScheduledInRange($start_timestamp, $end_timestamp);
 
 		return $time;
 	}
 
-	public function getTimeUnScheduled($start_timestamp, $end_timestamp) {
+	public function getTimeUnScheduled() {
+
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
 
 		$time = Schedule::getTimeUnScheduledInRange($start_timestamp, $end_timestamp);
 
 		return $time;
 	}
 
-	public function showHasContent($start_timestamp, $end_timestamp) {
+    public function getPercentScheduledInRange(){
 
-		$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
-        $sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}'";
-		$r = $con->query($sql);
-		$length = $r->fetchColumn(0);
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
 
-		return !Schedule::isScheduleEmptyInRange($start_timestamp, $length);
+        return Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+    }
+
+    public function getShowLength(){
+		global $CC_DBC;
+
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
+
+		$sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}' ";
+		$length = $CC_DBC->GetOne($sql);
+
+		return $length;
 	}
 
-    public function getShowListContent($start_timestamp) {
+	public function searchPlaylistsForShow($datatables){
+
+		$length = $this->getTimeUnScheduled();
+
+		return StoredFile::searchPlaylistsForSchedule($length, $datatables);
+	}
+
+    public function getShowListContent() {
         global $CC_DBC;
 
-		$timeinfo = explode(" ", $start_timestamp);
-	
 		$sql = "SELECT * 
-			FROM (cc_show_schedule AS ss LEFT JOIN cc_schedule AS s USING(group_id)
-				LEFT JOIN cc_files AS f ON f.id = s.file_id
+			FROM (cc_schedule AS s LEFT JOIN cc_files AS f ON f.id = s.file_id
 				LEFT JOIN cc_playlist AS p ON p.id = s.playlist_id )
 
-			WHERE ss.show_day = '{$timeinfo[0]}' AND ss.show_id = '{$this->_showId}' ORDER BY starts";
+			WHERE s.instance_id = '{$this->_instanceId}' ORDER BY starts";
 
 		return $CC_DBC->GetAll($sql);	
     }
 
-	public function getShowContent($start_timestamp) {
+	public function getShowContent() {
 		global $CC_DBC;
 
-        $res = $this->getShowListContent($start_timestamp);
+        $res = $this->getShowListContent();
 
         if(count($res) <= 0) {
 			return $res;
@@ -383,314 +627,41 @@ class Show {
 
 		return $items;	
 	}
-
-	public function clearShow($day) {
-		$timeinfo = explode(" ", $day);
-
-		$groups = CcShowScheduleQuery::create()
-					->filterByDbShowId($this->_showId)
-					->filterByDbShowDay($timeinfo[0])
-					->find();
-
-		foreach($groups as $group) {
-			$groupId = $group->getDbGroupId();
-			CcScheduleQuery::create()
-				->filterByDbGroupId($groupId)
-				->delete();
-
-			$group->delete();
-		}
-	}
-
-	public function deleteShow($timestamp, $dayId=NULL) {
-		global $CC_DBC;
-
-		$today_timestamp = date("Y-m-d H:i:s");
-
-		$timeinfo = explode(" ", $timestamp);
-		$date = $timeinfo[0]; 
-		$time = $timeinfo[1];
-
-		$today_epoch = strtotime($today_timestamp);
-		$date_epoch = strtotime($timestamp);
-
-		//don't want someone to delete past shows.
-		if($date_epoch < $today_epoch) {
-			return;
-		}
-
-		$show = CcShowQuery::create()->findPK($this->_showId);
-		
-		$sql = "SELECT start_time, first_show FROM cc_show_days 
-				WHERE show_id = '{$this->_showId}'
-				ORDER BY first_show LIMIT 1";
-		$res = $CC_DBC->GetRow($sql);
-
-		$start_timestamp = $res["first_show"]." ".$res["start_time"];
-
-		$start_epoch = strtotime($start_timestamp);
-	
-		// must not delete shows in the past
-		if($show->getDbRepeats() && ($start_epoch < $date_epoch)) {
-
-			$sql = "DELETE FROM cc_show_days WHERE first_show >= '{$date}' AND show_id = '{$this->_showId}'";
-			$CC_DBC->query($sql);
-			
-			$sql = "UPDATE cc_show_days 
-				SET last_show = '{$date}' 
-				WHERE show_id = '{$this->_showId}' AND first_show <= '{$date}' ";
-			$CC_DBC->query($sql);
-			
-			$sql = "SELECT group_id FROM cc_show_schedule WHERE show_day >= '{$date}' AND show_id = '{$this->_showId}'";
-		    $rows = $CC_DBC->GetAll($sql);
-			
-			$sql_opt = array();
-			foreach($rows as $row) {
-				$sql_opt[] = "group_id = '{$row["group_id"]}' ";
-			}
-			$groups = join(' OR ', $sql_opt);
-		
-			$sql = "DELETE FROM cc_show_schedule 
-			WHERE ($groups) AND show_id = '{$this->_showId}' AND show_day >= '{$date}' ";
-			$CC_DBC->query($sql);
-			
-			$sql = "DELETE FROM cc_schedule WHERE ($groups)";
-			$CC_DBC->query($sql);
-		}
-		else {
-			$groups = CcShowScheduleQuery::create()->filterByDbShowId($this->_showId)->find();
-
-			foreach($groups as $group) {
-				$groupId = $group->getDbGroupId();
-				CcScheduleQuery::create()->filterByDbGroupId($groupId)->delete();
-			}
-
-			$show->delete();
-		}
-
-	}
-
-	public function getShows($start=NULL, $end=NULL, $days=NULL, $s_time=NULL, $e_time=NULL, $exclude_shows=NULL) {
-		global $CC_DBC;
-
-		$sql;
-	
-		$sql_gen = "SELECT cc_show_days.id AS day_id, name, repeats, description, color, background_color, 
-			first_show, last_show, start_time, end_time, day, show_id  
-			FROM (cc_show LEFT JOIN cc_show_days ON cc_show.id = cc_show_days.show_id)";
-
-		$sql = $sql_gen;
-
-		if(!is_null($start) && !is_null($end)) {
-			$sql_range = "(first_show < '{$start}' AND last_show IS NULL) 
-					OR (first_show >= '{$start}' AND first_show < '{$end}') 
-					OR (last_show >= '{$start}' AND last_show < '{$end}')
-					OR (first_show < '{$start}' AND last_show >= '{$end}')";
-
-			$sql = $sql_gen ." WHERE ". $sql_range;
-		}
-		if(!is_null($start) && is_null($end)) {
-			$sql_range = "(first_show <= '{$start}' AND last_show IS NULL) 
-					OR (first_show <= '{$start}' AND last_show > '{$start}')
-                    OR (first_show >= '{$start}')";
-
-			$sql = $sql_gen ." WHERE ". $sql_range;
-		}
-		if(!is_null($days)){
-
-			$sql_opt = array();
-			foreach ($days as $day) {
-				$sql_opt[] = "day = {$day}";
-			}
-			$sql_day = join(" OR ", $sql_opt);
-				
-			$sql = $sql_gen ." WHERE ((". $sql_day .") AND (". $sql_range ."))";
-		}
-		if(!is_null($s_time) && !is_null($e_time)) {
-			$sql_time = "(start_time <= '{$s_time}' AND end_time >= '{$e_time}' AND start_time < end_time AND '{$s_time}' < '{$e_time}')
-				OR (start_time >= '{$s_time}' AND end_time <= '{$e_time}' AND start_time > end_time AND '{$s_time}' > '{$e_time}')
-				OR (start_time >= '{$s_time}' AND end_time <= '{$e_time}' AND start_time < end_time)
-				OR (start_time <= '{$s_time}' AND end_time >= '{$e_time}' AND start_time > end_time)
-				OR (start_time <= '{$s_time}' AND end_time <= '{$e_time}' AND start_time > end_time AND '{$s_time}' > '{$e_time}')
-				OR (start_time >= '{$s_time}' AND end_time >= '{$e_time}' AND start_time > end_time AND '{$s_time}' > '{$e_time}')
-				OR (end_time > '{$s_time}' AND end_time <= '{$e_time}')
-				OR (start_time >= '{$s_time}' AND start_time < '{$e_time}')";
-
-			$sql = $sql_gen ." WHERE ((". $sql_day .") AND (". $sql_range .") AND (". $sql_time ."))";
-		}
-		if(!is_null($exclude_shows)){
-
-			$sql_opt = array();
-			foreach ($exclude_shows as $showid) {
-				$sql_opt[] = "show_id = {$showid}";
-			}
-			$sql_showid = join(" OR ", $sql_opt);
-			
-			$sql = $sql_gen ." WHERE ((". $sql_day .") AND NOT (". $sql_showid .") AND (". $sql_range .") AND (". $sql_time ."))";	
-		}
-
-		//echo $sql;
-
-		return $CC_DBC->GetAll($sql);	
-	}
-
-	public function getFullCalendarEvents($start, $end, $weekday=NULL) {
-		global $CC_DBC;
-		$shows = array();
-
-		$res = $this->getShows($start, $end, $weekday);
-
-		foreach($res as $row) {
-
-			$timeDiff = "SELECT date '{$start}' - date '{$row["first_show"]}' as diff";
-			$diff = $CC_DBC->GetOne($timeDiff);
-
-			if($diff > 0) {
-
-				$add = ($diff % 7 === 0) ? $diff : $diff + (7 - $diff % 7);
-
-				$new = "SELECT date '{$row["first_show"]}' + integer '{$add}'";
-				$newDate = $CC_DBC->GetOne($new); 
-			}
-			else {
-				$newDate = $row["first_show"];
-			}
-
-			$new_epoch = strtotime($newDate);
-			$end_epoch = strtotime($end);
-
-			if(!is_null($row["last_show"])) {
-				$show_end_epoch = strtotime($row["last_show"]);
-			}
-
-			if(isset($show_end_epoch) && $show_end_epoch <= $new_epoch) {
-				continue;
-			}
-
-			$shows[] = $this->makeFullCalendarEvent($row, $newDate);
-			
-			//add repeating events until the show end is reached or fullcalendar's end date is reached.
-			if($row["repeats"]) {
-
-				while(true) {
-
-					$diff = "SELECT date '{$newDate}' + integer '7'";
-					$repeatDate = $CC_DBC->GetOne($diff);
-					$repeat_epoch = strtotime($repeatDate);
-
-					//show has finite duration.
-					if (isset($show_end_epoch) && $repeat_epoch < $show_end_epoch && $repeat_epoch < $end_epoch) {
-						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
-					}
-					//case for non-ending shows.
-					else if(!isset($show_end_epoch) && $repeat_epoch < $end_epoch) {
-						$shows[] = $this->makeFullCalendarEvent($row, $repeatDate);
-					}
-					else {
-						break;
-					}
-
-					$newDate = $repeatDate;
-				}					
-			}
-		
-			unset($show_end_epoch);			
-		}
-
-		return $shows;
-	}
-
-	private function makeFullCalendarEvent($show, $date, $options=array()) {
-		global $CC_DBC;
-
-		$start_ts = $date." ".$show["start_time"];
-		$end_ts = $date." ".$show["end_time"];
-		
-		$sql = "SELECT timestamp '{$start_ts}' > timestamp '{$end_ts}'";
-		$isNextDay = $CC_DBC->GetOne($sql);
-
-		if($isNextDay === 't') {
-			$sql = "SELECT date '{$date}' + interval '1 day {$show["end_time"]}'";
-			$end_ts = $CC_DBC->GetOne($sql);
-		}
-
-		$event = array(
-			"id" => $show["show_id"],
-			"title" => $show["name"],
-			"start" => $start_ts,
-			"end" => $end_ts,
-			"allDay" => false,
-			"description" => $show["description"],
-			"color" => $show["color"],
-			"backgroundColor" => $show["background_color"]
-		);
-
-		foreach($options as $key=>$value) {
-			$event[$key] = $value;
-		}
-
-		if($this->_user->isAdmin()) {
-			//$event["editable"] = true;
-		}
-
-		if($this->_user->isHost($show["show_id"])) {
-			$event["isHost"] = true;
-		}
-
-		$percent = Schedule::getPercentScheduledInRange($start_ts, $end_ts);
-		$event["percent"] = $percent;
-
-		return $event;
-	}
-
-	public function getShowLength($start_timestamp, $end_timestamp){
-		global $CC_DBC;
-
-		$sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}' ";
-		$length = $CC_DBC->GetOne($sql);
-
-		return $length;
-	}
-
-	public function searchPlaylistsForShow($start_timestamp, $end_timestamp, $datatables){
-
-		$length = $this->getTimeUnScheduled($start_timestamp, $end_timestamp);
-
-		return StoredFile::searchPlaylistsForSchedule($length, $datatables);
-	}
 }
 
 /* Show Data Access Layer */
 class Show_DAL{
-    
-    /* Given a group_id, get all show data related to
-     * id. This is useful in the case where you have an item
-     * in the schedule table and you want to find out more about 
-     * the show it is in without joining the schedule and show tables
-     * (which causes problems with duplicate items)
-     */
-    public static function GetShowData($group_id){
-        global $CC_DBC;
-                
-        $sql="SELECT * FROM cc_show_schedule as ss, cc_show as s"
-        ." WHERE ss.show_id = s.id"
-        ." AND ss.group_id = $group_id"
-        ." LIMIT 1";
         
-        return $CC_DBC->GetOne($sql);
-    }
-    
-    /* Given a show ID, this function returns what group IDs
-     * are present in this show. */
-    public static function GetShowGroupIDs($showID){
+    public static function GetCurrentShow($timeNow) {
         global $CC_CONFIG, $CC_DBC;
         
-		$sql = "SELECT group_id"
-		." FROM $CC_CONFIG[showSchedule]"
-		." WHERE show_id = $showID";
-		
+		$timestamp = explode(" ", $timeNow);
+		$date = $timestamp[0];
+		$time = $timestamp[1];
+        
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id"
+        ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
+        ." WHERE si.show_id = s.id"
+        ." AND si.starts <= TIMESTAMP '$timeNow'"
+        ." AND si.ends > TIMESTAMP '$timeNow'";
+        
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
-	}
+    }
+    
+    public static function GetNextShow($timeNow) {
+        global $CC_CONFIG, $CC_DBC;
+        
+		$sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
+		." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
+		." WHERE si.show_id = s.id"
+		." AND si.starts > TIMESTAMP '$timeNow'"
+		." AND si.starts < TIMESTAMP '$timeNow' + INTERVAL '48 hours'"
+        ." ORDER BY si.starts"
+        ." LIMIT 1";
+                
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+    }
     
 }

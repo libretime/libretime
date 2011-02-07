@@ -86,7 +86,7 @@ function createDataGrid(){
 		"aaData": datagridData.rows,
 		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-            if (aData[aData.length-2] != "")
+            if (aData[aData.length-2] == "t")
                 $(nRow).attr("style", "background-color:#166622");
             if (aData[0] == "c")
 				$(nRow).attr("style", "background-color:#61B329");
@@ -96,10 +96,12 @@ function createDataGrid(){
 		}
 	} );
     
-    setTimeout(init2, 5000);
+
 }
 
 var viewType = "now" //"day";
+var mainLoopRegistered = false;
+
 function setViewType(type){
     if (type == 0){
         viewType = "now";
@@ -119,6 +121,11 @@ function init2(){
 		  registered = true;
 		  registerSongEndListener(notifySongEnd);
 	  }
+
+      if (!mainLoopRegistered){
+        setTimeout(init2, 5000);
+        mainLoopRegistered = true;
+      }
 }
 
 $(document).ready(function() {

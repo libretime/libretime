@@ -702,7 +702,7 @@ dt.block-display, dd.block-display {
 .floated-panel {
 	margin-top:0;
 	width:99.99%;
-	z-index:999;
+	z-index:9999;
 }
 
 
@@ -802,10 +802,6 @@ div.ui-datepicker {
 	margin-top: 0px;
 }
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e {
-	float:left;
-	margin-right: 8px;
-}
-#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-s {
 	float:left;
 	margin-right: 8px;
 }
@@ -958,3 +954,109 @@ h2#scheduled_playlist_name span {
 }
 /*---//////////////////// Advenced Search ////////////////////---*/
 
+.search_control {
+	padding:8px;
+	border:1pxp solid #8f8f8f;
+	background:#d8d8d8;
+	margin-bottom:8px;
+}
+.search_group {
+	padding:8px;
+	border:1pxp solid #8f8f8f;
+	margin-bottom:8px;
+}
+.search_group > fieldset {
+	padding:0;
+	border:none;
+	margin-top:8px;
+}
+.search_group > fieldset .input_text {
+	width:45%;
+}
+.search_group > fieldset .input_text, .search_group > fieldset .input_select {
+	margin-right:6px;
+}
+.search_group fieldset .ui-button-icon-only .ui-button-text, .search_group fieldset .ui-button-icons-only .ui-button-text {
+    padding: 3px 2px;
+    text-indent: -1e+7px;
+}
+.search_group fieldset .ui-button-icon-only {
+    width: 2.1em;
+}
+
+.search_group fieldset .ui-button-icon-only .ui-icon {
+    left: 48%;
+    margin-top: -9px;
+    position: absolute;
+    top: 50%;
+}
+
+/*---//////////////////// USERS ////////////////////---*/
+
+.simple-formblock {
+    width: 30%;
+}
+
+.simple-formblock dl, .simple-formblock dl.zend_form {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.simple-formblock dt {
+    clear: left;
+    color: #666666;
+    float: left;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+    min-width: 90px;
+    padding: 4px 0;
+    text-align: left;
+}
+.simple-formblock dd {
+    float: left;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 4px 0 4px 15px;
+	width:60%;
+}
+
+.simple-formblock.padded-strong {
+	padding:12px;
+}
+
+.simple-formblock dd .input_text {
+    width: 100%;
+}
+
+.simple-formblock h2 {
+	font-size:1.7em;
+	padding-bottom:16px;
+}
+.simple-formblock label {
+	padding:0;
+}
+
+.ui-button-icon-only.crossfade-main-button, .ui-button-icons-only.crossfade-main-button {
+    padding-right: 8px;
+}
+.ui-button-icon-only.crossfade-main-button .ui-button-text, .ui-button-icons-only.crossfade-main-button .ui-button-text {
+    padding: 0;
+    text-indent: -1e+7px;
+    padding: 0.1em 1em;
+}
+
+.ui-state-default .ui-icon.crossfade-main-icon	 {
+	background:url(images/crossfade_main.png) no-repeat 0 2px;
+	width:25px;	
+}
+
+.ui-button-icon-only.crossfade-main-button .ui-icon {
+    left: 44%;
+    margin-left: -8px;
+}
+
+button, input {
+	margin-top:0;
+	margin-bottom:0;
+}

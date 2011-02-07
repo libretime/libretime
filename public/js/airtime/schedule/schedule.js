@@ -165,8 +165,14 @@ function buildContentDialog(json){
 }
 
 function buildScheduleDialog(json){
-	var dialog = $(json.dialog);
+	var dialog;
 
+    if(json.error) {
+        alert(json.error);
+        return;
+    }
+
+    dialog = $(json.dialog);
 	makeScheduleDialog(dialog, json);
 
 	dialog.dialog({

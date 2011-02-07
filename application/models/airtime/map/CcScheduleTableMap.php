@@ -35,9 +35,10 @@ class CcScheduleTableMap extends TableMap {
 		$this->setPhpName('CcSchedule');
 		$this->setClassname('CcSchedule');
 		$this->setPackage('airtime');
-		$this->setUseIdGenerator(false);
+		$this->setUseIdGenerator(true);
+		$this->setPrimaryKeyMethodInfo('cc_schedule_id_seq');
 		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'BIGINT', true, null, null);
+		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addColumn('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', true, null, null);
 		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
 		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
@@ -50,6 +51,7 @@ class CcScheduleTableMap extends TableMap {
 		$this->addColumn('CUE_OUT', 'DbCueOut', 'TIME', false, null, '00:00:00');
 		$this->addColumn('SCHEDULE_GROUP_PLAYED', 'DbScheduleGroupPlayed', 'BOOLEAN', false, null, false);
 		$this->addColumn('MEDIA_ITEM_PLAYED', 'DbMediaItemPlayed', 'BOOLEAN', false, null, false);
+		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', true, null, null);
 		// validators
 	} // initialize()
 
@@ -58,6 +60,7 @@ class CcScheduleTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
+    $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcScheduleTableMap

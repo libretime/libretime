@@ -29,6 +29,16 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             'viewScript' => 'form/add-show-checkbox.phtml'
         ))));
 
+        //Add type select
+		$this->addElement('select', 'add_show_repeat_type', array(
+            'required' => true,
+            'label'      => 'Repeat Type:',
+            'multiOptions' => array(
+				"0" => "weekly",
+                "1" => "bi-weekly"
+            ), 
+        ));
+
 		// Add end date element
         $this->addElement('text', 'add_show_end_date', array(
             'label'      => 'Date End:',

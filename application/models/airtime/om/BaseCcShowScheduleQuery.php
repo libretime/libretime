@@ -7,14 +7,12 @@
  * 
  *
  * @method     CcShowScheduleQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method     CcShowScheduleQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
- * @method     CcShowScheduleQuery orderByDbShowDay($order = Criteria::ASC) Order by the show_day column
+ * @method     CcShowScheduleQuery orderByDbInstanceId($order = Criteria::ASC) Order by the instance_id column
  * @method     CcShowScheduleQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
  * @method     CcShowScheduleQuery orderByDbGroupId($order = Criteria::ASC) Order by the group_id column
  *
  * @method     CcShowScheduleQuery groupByDbId() Group by the id column
- * @method     CcShowScheduleQuery groupByDbShowId() Group by the show_id column
- * @method     CcShowScheduleQuery groupByDbShowDay() Group by the show_day column
+ * @method     CcShowScheduleQuery groupByDbInstanceId() Group by the instance_id column
  * @method     CcShowScheduleQuery groupByDbPosition() Group by the position column
  * @method     CcShowScheduleQuery groupByDbGroupId() Group by the group_id column
  *
@@ -22,22 +20,20 @@
  * @method     CcShowScheduleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcShowScheduleQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcShowScheduleQuery leftJoinCcShow($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShow relation
- * @method     CcShowScheduleQuery rightJoinCcShow($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShow relation
- * @method     CcShowScheduleQuery innerJoinCcShow($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShow relation
+ * @method     CcShowScheduleQuery leftJoinCcShowInstances($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcShowScheduleQuery rightJoinCcShowInstances($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcShowScheduleQuery innerJoinCcShowInstances($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstances relation
  *
  * @method     CcShowSchedule findOne(PropelPDO $con = null) Return the first CcShowSchedule matching the query
  * @method     CcShowSchedule findOneOrCreate(PropelPDO $con = null) Return the first CcShowSchedule matching the query, or a new CcShowSchedule object populated from the query conditions when no match is found
  *
  * @method     CcShowSchedule findOneByDbId(int $id) Return the first CcShowSchedule filtered by the id column
- * @method     CcShowSchedule findOneByDbShowId(int $show_id) Return the first CcShowSchedule filtered by the show_id column
- * @method     CcShowSchedule findOneByDbShowDay(string $show_day) Return the first CcShowSchedule filtered by the show_day column
+ * @method     CcShowSchedule findOneByDbInstanceId(int $instance_id) Return the first CcShowSchedule filtered by the instance_id column
  * @method     CcShowSchedule findOneByDbPosition(int $position) Return the first CcShowSchedule filtered by the position column
  * @method     CcShowSchedule findOneByDbGroupId(int $group_id) Return the first CcShowSchedule filtered by the group_id column
  *
  * @method     array findByDbId(int $id) Return CcShowSchedule objects filtered by the id column
- * @method     array findByDbShowId(int $show_id) Return CcShowSchedule objects filtered by the show_id column
- * @method     array findByDbShowDay(string $show_day) Return CcShowSchedule objects filtered by the show_day column
+ * @method     array findByDbInstanceId(int $instance_id) Return CcShowSchedule objects filtered by the instance_id column
  * @method     array findByDbPosition(int $position) Return CcShowSchedule objects filtered by the position column
  * @method     array findByDbGroupId(int $group_id) Return CcShowSchedule objects filtered by the group_id column
  *
@@ -167,24 +163,24 @@ abstract class BaseCcShowScheduleQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the show_id column
+	 * Filter the query on the instance_id column
 	 * 
-	 * @param     int|array $dbShowId The value to use as filter.
+	 * @param     int|array $dbInstanceId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcShowScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByDbShowId($dbShowId = null, $comparison = null)
+	public function filterByDbInstanceId($dbInstanceId = null, $comparison = null)
 	{
-		if (is_array($dbShowId)) {
+		if (is_array($dbInstanceId)) {
 			$useMinMax = false;
-			if (isset($dbShowId['min'])) {
-				$this->addUsingAlias(CcShowSchedulePeer::SHOW_ID, $dbShowId['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbInstanceId['min'])) {
+				$this->addUsingAlias(CcShowSchedulePeer::INSTANCE_ID, $dbInstanceId['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($dbShowId['max'])) {
-				$this->addUsingAlias(CcShowSchedulePeer::SHOW_ID, $dbShowId['max'], Criteria::LESS_EQUAL);
+			if (isset($dbInstanceId['max'])) {
+				$this->addUsingAlias(CcShowSchedulePeer::INSTANCE_ID, $dbInstanceId['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -194,38 +190,7 @@ abstract class BaseCcShowScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcShowSchedulePeer::SHOW_ID, $dbShowId, $comparison);
-	}
-
-	/**
-	 * Filter the query on the show_day column
-	 * 
-	 * @param     string|array $dbShowDay The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowScheduleQuery The current query, for fluid interface
-	 */
-	public function filterByDbShowDay($dbShowDay = null, $comparison = null)
-	{
-		if (is_array($dbShowDay)) {
-			$useMinMax = false;
-			if (isset($dbShowDay['min'])) {
-				$this->addUsingAlias(CcShowSchedulePeer::SHOW_DAY, $dbShowDay['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbShowDay['max'])) {
-				$this->addUsingAlias(CcShowSchedulePeer::SHOW_DAY, $dbShowDay['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcShowSchedulePeer::SHOW_DAY, $dbShowDay, $comparison);
+		return $this->addUsingAlias(CcShowSchedulePeer::INSTANCE_ID, $dbInstanceId, $comparison);
 	}
 
 	/**
@@ -291,31 +256,31 @@ abstract class BaseCcShowScheduleQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query by a related CcShow object
+	 * Filter the query by a related CcShowInstances object
 	 *
-	 * @param     CcShow $ccShow  the related object to use as filter
+	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcShowScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByCcShow($ccShow, $comparison = null)
+	public function filterByCcShowInstances($ccShowInstances, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcShowSchedulePeer::SHOW_ID, $ccShow->getDbId(), $comparison);
+			->addUsingAlias(CcShowSchedulePeer::INSTANCE_ID, $ccShowInstances->getDbId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the CcShow relation
+	 * Adds a JOIN clause to the query using the CcShowInstances relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcShowScheduleQuery The current query, for fluid interface
 	 */
-	public function joinCcShow($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	public function joinCcShowInstances($relationAlias = '', $joinType = Criteria::INNER_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShow');
+		$relationMap = $tableMap->getRelation('CcShowInstances');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -330,14 +295,14 @@ abstract class BaseCcShowScheduleQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'CcShow');
+			$this->addJoinObject($join, 'CcShowInstances');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the CcShow relation CcShow object
+	 * Use the CcShowInstances relation CcShowInstances object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -345,13 +310,13 @@ abstract class BaseCcShowScheduleQuery extends ModelCriteria
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
-	 * @return    CcShowQuery A secondary query class using the current class as primary query
+	 * @return    CcShowInstancesQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcShowQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	public function useCcShowInstancesQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
 	{
 		return $this
-			->joinCcShow($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShow', 'CcShowQuery');
+			->joinCcShowInstances($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', 'CcShowInstancesQuery');
 	}
 
 	/**

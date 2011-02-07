@@ -26,7 +26,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the id field.
-	 * @var        string
+	 * @var        int
 	 */
 	protected $id;
 
@@ -110,6 +110,17 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	protected $media_item_played;
 
 	/**
+	 * The value for the instance_id field.
+	 * @var        int
+	 */
+	protected $instance_id;
+
+	/**
+	 * @var        CcShowInstances
+	 */
+	protected $aCcShowInstances;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -153,7 +164,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	/**
 	 * Get the [id] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
 	public function getDbId()
 	{
@@ -442,15 +453,25 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Get the [instance_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbInstanceId()
+	{
+		return $this->instance_id;
+	}
+
+	/**
 	 * Set the value of [id] column.
 	 * 
-	 * @param      string $v new value
+	 * @param      int $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
 	public function setDbId($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
 		if ($this->id !== $v) {
@@ -910,6 +931,30 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	} // setDbMediaItemPlayed()
 
 	/**
+	 * Set the value of [instance_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcSchedule The current object (for fluent API support)
+	 */
+	public function setDbInstanceId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->instance_id !== $v) {
+			$this->instance_id = $v;
+			$this->modifiedColumns[] = CcSchedulePeer::INSTANCE_ID;
+		}
+
+		if ($this->aCcShowInstances !== null && $this->aCcShowInstances->getDbId() !== $v) {
+			$this->aCcShowInstances = null;
+		}
+
+		return $this;
+	} // setDbInstanceId()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -969,7 +1014,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	{
 		try {
 
-			$this->id = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
+			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->playlist_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
 			$this->starts = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->ends = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
@@ -982,6 +1027,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$this->cue_out = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
 			$this->schedule_group_played = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
 			$this->media_item_played = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
+			$this->instance_id = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -990,7 +1036,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 13; // 13 = CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 14; // 14 = CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcSchedule object", $e);
@@ -1013,6 +1059,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
+		if ($this->aCcShowInstances !== null && $this->instance_id !== $this->aCcShowInstances->getDbId()) {
+			$this->aCcShowInstances = null;
+		}
 	} // ensureConsistency
 
 	/**
@@ -1052,6 +1101,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
+			$this->aCcShowInstances = null;
 		} // if (deep)
 	}
 
@@ -1162,16 +1212,36 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+			// We call the save method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aCcShowInstances !== null) {
+				if ($this->aCcShowInstances->isModified() || $this->aCcShowInstances->isNew()) {
+					$affectedRows += $this->aCcShowInstances->save($con);
+				}
+				$this->setCcShowInstances($this->aCcShowInstances);
+			}
+
+			if ($this->isNew() ) {
+				$this->modifiedColumns[] = CcSchedulePeer::ID;
+			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
 					$criteria = $this->buildCriteria();
+					if ($criteria->keyContainsValue(CcSchedulePeer::ID) ) {
+						throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcSchedulePeer::ID.')');
+					}
+
 					$pk = BasePeer::doInsert($criteria, $con);
-					$affectedRows = 1;
+					$affectedRows += 1;
+					$this->setDbId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
-					$affectedRows = CcSchedulePeer::doUpdate($this, $con);
+					$affectedRows += CcSchedulePeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
@@ -1241,6 +1311,18 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$retval = null;
 
 			$failureMap = array();
+
+
+			// We call the validate method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aCcShowInstances !== null) {
+				if (!$this->aCcShowInstances->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcShowInstances->getValidationFailures());
+				}
+			}
 
 
 			if (($retval = CcSchedulePeer::doValidate($this, $columns)) !== true) {
@@ -1320,6 +1402,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			case 12:
 				return $this->getDbMediaItemPlayed();
 				break;
+			case 13:
+				return $this->getDbInstanceId();
+				break;
 			default:
 				return null;
 				break;
@@ -1336,10 +1421,11 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
 	 *
 	 * @return    array an associative array containing the field names (as keys) and field values
 	 */
-	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
+	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $includeForeignObjects = false)
 	{
 		$keys = CcSchedulePeer::getFieldNames($keyType);
 		$result = array(
@@ -1356,7 +1442,13 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$keys[10] => $this->getDbCueOut(),
 			$keys[11] => $this->getDbScheduleGroupPlayed(),
 			$keys[12] => $this->getDbMediaItemPlayed(),
+			$keys[13] => $this->getDbInstanceId(),
 		);
+		if ($includeForeignObjects) {
+			if (null !== $this->aCcShowInstances) {
+				$result['CcShowInstances'] = $this->aCcShowInstances->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+		}
 		return $result;
 	}
 
@@ -1426,6 +1518,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			case 12:
 				$this->setDbMediaItemPlayed($value);
 				break;
+			case 13:
+				$this->setDbInstanceId($value);
+				break;
 		} // switch()
 	}
 
@@ -1463,6 +1558,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if (array_key_exists($keys[10], $arr)) $this->setDbCueOut($arr[$keys[10]]);
 		if (array_key_exists($keys[11], $arr)) $this->setDbScheduleGroupPlayed($arr[$keys[11]]);
 		if (array_key_exists($keys[12], $arr)) $this->setDbMediaItemPlayed($arr[$keys[12]]);
+		if (array_key_exists($keys[13], $arr)) $this->setDbInstanceId($arr[$keys[13]]);
 	}
 
 	/**
@@ -1487,6 +1583,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcSchedulePeer::CUE_OUT)) $criteria->add(CcSchedulePeer::CUE_OUT, $this->cue_out);
 		if ($this->isColumnModified(CcSchedulePeer::SCHEDULE_GROUP_PLAYED)) $criteria->add(CcSchedulePeer::SCHEDULE_GROUP_PLAYED, $this->schedule_group_played);
 		if ($this->isColumnModified(CcSchedulePeer::MEDIA_ITEM_PLAYED)) $criteria->add(CcSchedulePeer::MEDIA_ITEM_PLAYED, $this->media_item_played);
+		if ($this->isColumnModified(CcSchedulePeer::INSTANCE_ID)) $criteria->add(CcSchedulePeer::INSTANCE_ID, $this->instance_id);
 
 		return $criteria;
 	}
@@ -1509,7 +1606,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Returns the primary key for this object (row).
-	 * @return     string
+	 * @return     int
 	 */
 	public function getPrimaryKey()
 	{
@@ -1519,7 +1616,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	/**
 	 * Generic method to set the primary key (id column).
 	 *
-	 * @param      string $key Primary key.
+	 * @param      int $key Primary key.
 	 * @return     void
 	 */
 	public function setPrimaryKey($key)
@@ -1548,7 +1645,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setDbId($this->id);
 		$copyObj->setDbPlaylistId($this->playlist_id);
 		$copyObj->setDbStarts($this->starts);
 		$copyObj->setDbEnds($this->ends);
@@ -1561,8 +1657,10 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$copyObj->setDbCueOut($this->cue_out);
 		$copyObj->setDbScheduleGroupPlayed($this->schedule_group_played);
 		$copyObj->setDbMediaItemPlayed($this->media_item_played);
+		$copyObj->setDbInstanceId($this->instance_id);
 
 		$copyObj->setNew(true);
+		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
 	}
 
 	/**
@@ -1604,6 +1702,55 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Declares an association between this object and a CcShowInstances object.
+	 *
+	 * @param      CcShowInstances $v
+	 * @return     CcSchedule The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setCcShowInstances(CcShowInstances $v = null)
+	{
+		if ($v === null) {
+			$this->setDbInstanceId(NULL);
+		} else {
+			$this->setDbInstanceId($v->getDbId());
+		}
+
+		$this->aCcShowInstances = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the CcShowInstances object, it will not be re-added.
+		if ($v !== null) {
+			$v->addCcSchedule($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated CcShowInstances object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     CcShowInstances The associated CcShowInstances object.
+	 * @throws     PropelException
+	 */
+	public function getCcShowInstances(PropelPDO $con = null)
+	{
+		if ($this->aCcShowInstances === null && ($this->instance_id !== null)) {
+			$this->aCcShowInstances = CcShowInstancesQuery::create()->findPk($this->instance_id, $con);
+			/* The following can be used additionally to
+			   guarantee the related object contains a reference
+			   to this object.  This level of coupling may, however, be
+			   undesirable since it could result in an only partially populated collection
+			   in the referenced object.
+			   $this->aCcShowInstances->addCcSchedules($this);
+			 */
+		}
+		return $this->aCcShowInstances;
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1621,6 +1768,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$this->cue_out = null;
 		$this->schedule_group_played = null;
 		$this->media_item_played = null;
+		$this->instance_id = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
@@ -1644,6 +1792,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if ($deep) {
 		} // if ($deep)
 
+		$this->aCcShowInstances = null;
 	}
 
 	/**

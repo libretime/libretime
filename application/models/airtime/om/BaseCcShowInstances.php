@@ -2,25 +2,25 @@
 
 
 /**
- * Base class that represents a row from the 'cc_show' table.
+ * Base class that represents a row from the 'cc_show_instances' table.
  *
  * 
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcShow extends BaseObject  implements Persistent
+abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 {
 
 	/**
 	 * Peer class name
 	 */
-  const PEER = 'CcShowPeer';
+  const PEER = 'CcShowInstancesPeer';
 
 	/**
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var        CcShowPeer
+	 * @var        CcShowInstancesPeer
 	 */
 	protected static $peer;
 
@@ -31,44 +31,32 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $id;
 
 	/**
-	 * The value for the name field.
-	 * Note: this column has a database default value of: ''
+	 * The value for the starts field.
 	 * @var        string
 	 */
-	protected $name;
+	protected $starts;
 
 	/**
-	 * The value for the description field.
+	 * The value for the ends field.
 	 * @var        string
 	 */
-	protected $description;
+	protected $ends;
 
 	/**
-	 * The value for the color field.
-	 * @var        string
+	 * The value for the show_id field.
+	 * @var        int
 	 */
-	protected $color;
+	protected $show_id;
 
 	/**
-	 * The value for the background_color field.
-	 * @var        string
+	 * @var        CcShow
 	 */
-	protected $background_color;
+	protected $aCcShow;
 
 	/**
-	 * @var        array CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
+	 * @var        array CcSchedule[] Collection to store aggregation of CcSchedule objects.
 	 */
-	protected $collCcShowInstancess;
-
-	/**
-	 * @var        array CcShowDays[] Collection to store aggregation of CcShowDays objects.
-	 */
-	protected $collCcShowDayss;
-
-	/**
-	 * @var        array CcShowHosts[] Collection to store aggregation of CcShowHosts objects.
-	 */
-	protected $collCcShowHostss;
+	protected $collCcSchedules;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -85,27 +73,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $alreadyInValidation = false;
 
 	/**
-	 * Applies default values to this object.
-	 * This method should be called from the object's constructor (or
-	 * equivalent initialization method).
-	 * @see        __construct()
-	 */
-	public function applyDefaultValues()
-	{
-		$this->name = '';
-	}
-
-	/**
-	 * Initializes internal state of BaseCcShow object.
-	 * @see        applyDefaults()
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->applyDefaultValues();
-	}
-
-	/**
 	 * Get the [id] column value.
 	 * 
 	 * @return     int
@@ -116,50 +83,86 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [name] column value.
+	 * Get the [optionally formatted] temporal [starts] column value.
 	 * 
-	 * @return     string
+	 *
+	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 *							If format is NULL, then the raw DateTime object will be returned.
+	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getDbName()
+	public function getDbStarts($format = 'Y-m-d H:i:s')
 	{
-		return $this->name;
+		if ($this->starts === null) {
+			return null;
+		}
+
+
+
+		try {
+			$dt = new DateTime($this->starts);
+		} catch (Exception $x) {
+			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->starts, true), $x);
+		}
+
+		if ($format === null) {
+			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+			return $dt;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $dt->format('U'));
+		} else {
+			return $dt->format($format);
+		}
 	}
 
 	/**
-	 * Get the [description] column value.
+	 * Get the [optionally formatted] temporal [ends] column value.
 	 * 
-	 * @return     string
+	 *
+	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 *							If format is NULL, then the raw DateTime object will be returned.
+	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getDbDescription()
+	public function getDbEnds($format = 'Y-m-d H:i:s')
 	{
-		return $this->description;
+		if ($this->ends === null) {
+			return null;
+		}
+
+
+
+		try {
+			$dt = new DateTime($this->ends);
+		} catch (Exception $x) {
+			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->ends, true), $x);
+		}
+
+		if ($format === null) {
+			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+			return $dt;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $dt->format('U'));
+		} else {
+			return $dt->format($format);
+		}
 	}
 
 	/**
-	 * Get the [color] column value.
+	 * Get the [show_id] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
-	public function getDbColor()
+	public function getDbShowId()
 	{
-		return $this->color;
-	}
-
-	/**
-	 * Get the [background_color] column value.
-	 * 
-	 * @return     string
-	 */
-	public function getDbBackgroundColor()
-	{
-		return $this->background_color;
+		return $this->show_id;
 	}
 
 	/**
 	 * Set the value of [id] column.
 	 * 
 	 * @param      int $v new value
-	 * @return     CcShow The current object (for fluent API support)
+	 * @return     CcShowInstances The current object (for fluent API support)
 	 */
 	public function setDbId($v)
 	{
@@ -169,91 +172,133 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 		if ($this->id !== $v) {
 			$this->id = $v;
-			$this->modifiedColumns[] = CcShowPeer::ID;
+			$this->modifiedColumns[] = CcShowInstancesPeer::ID;
 		}
 
 		return $this;
 	} // setDbId()
 
 	/**
-	 * Set the value of [name] column.
+	 * Sets the value of [starts] column to a normalized version of the date/time value specified.
 	 * 
-	 * @param      string $v new value
-	 * @return     CcShow The current object (for fluent API support)
+	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+	 *						be treated as NULL for temporal objects.
+	 * @return     CcShowInstances The current object (for fluent API support)
 	 */
-	public function setDbName($v)
+	public function setDbStarts($v)
 	{
-		if ($v !== null) {
-			$v = (string) $v;
+		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
+		// -- which is unexpected, to say the least.
+		if ($v === null || $v === '') {
+			$dt = null;
+		} elseif ($v instanceof DateTime) {
+			$dt = $v;
+		} else {
+			// some string/numeric value passed; we normalize that so that we can
+			// validate it.
+			try {
+				if (is_numeric($v)) { // if it's a unix timestamp
+					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+					// We have to explicitly specify and then change the time zone because of a
+					// DateTime bug: http://bugs.php.net/bug.php?id=43003
+					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+				} else {
+					$dt = new DateTime($v);
+				}
+			} catch (Exception $x) {
+				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+			}
 		}
 
-		if ($this->name !== $v || $this->isNew()) {
-			$this->name = $v;
-			$this->modifiedColumns[] = CcShowPeer::NAME;
-		}
+		if ( $this->starts !== null || $dt !== null ) {
+			// (nested ifs are a little easier to read in this case)
+
+			$currNorm = ($this->starts !== null && $tmpDt = new DateTime($this->starts)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
+			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
+
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
+					)
+			{
+				$this->starts = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
+				$this->modifiedColumns[] = CcShowInstancesPeer::STARTS;
+			}
+		} // if either are not null
 
 		return $this;
-	} // setDbName()
+	} // setDbStarts()
 
 	/**
-	 * Set the value of [description] column.
+	 * Sets the value of [ends] column to a normalized version of the date/time value specified.
 	 * 
-	 * @param      string $v new value
-	 * @return     CcShow The current object (for fluent API support)
+	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+	 *						be treated as NULL for temporal objects.
+	 * @return     CcShowInstances The current object (for fluent API support)
 	 */
-	public function setDbDescription($v)
+	public function setDbEnds($v)
 	{
-		if ($v !== null) {
-			$v = (string) $v;
+		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
+		// -- which is unexpected, to say the least.
+		if ($v === null || $v === '') {
+			$dt = null;
+		} elseif ($v instanceof DateTime) {
+			$dt = $v;
+		} else {
+			// some string/numeric value passed; we normalize that so that we can
+			// validate it.
+			try {
+				if (is_numeric($v)) { // if it's a unix timestamp
+					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+					// We have to explicitly specify and then change the time zone because of a
+					// DateTime bug: http://bugs.php.net/bug.php?id=43003
+					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+				} else {
+					$dt = new DateTime($v);
+				}
+			} catch (Exception $x) {
+				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+			}
 		}
 
-		if ($this->description !== $v) {
-			$this->description = $v;
-			$this->modifiedColumns[] = CcShowPeer::DESCRIPTION;
-		}
+		if ( $this->ends !== null || $dt !== null ) {
+			// (nested ifs are a little easier to read in this case)
+
+			$currNorm = ($this->ends !== null && $tmpDt = new DateTime($this->ends)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
+			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
+
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
+					)
+			{
+				$this->ends = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
+				$this->modifiedColumns[] = CcShowInstancesPeer::ENDS;
+			}
+		} // if either are not null
 
 		return $this;
-	} // setDbDescription()
+	} // setDbEnds()
 
 	/**
-	 * Set the value of [color] column.
+	 * Set the value of [show_id] column.
 	 * 
-	 * @param      string $v new value
-	 * @return     CcShow The current object (for fluent API support)
+	 * @param      int $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
 	 */
-	public function setDbColor($v)
+	public function setDbShowId($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
-		if ($this->color !== $v) {
-			$this->color = $v;
-			$this->modifiedColumns[] = CcShowPeer::COLOR;
+		if ($this->show_id !== $v) {
+			$this->show_id = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::SHOW_ID;
+		}
+
+		if ($this->aCcShow !== null && $this->aCcShow->getDbId() !== $v) {
+			$this->aCcShow = null;
 		}
 
 		return $this;
-	} // setDbColor()
-
-	/**
-	 * Set the value of [background_color] column.
-	 * 
-	 * @param      string $v new value
-	 * @return     CcShow The current object (for fluent API support)
-	 */
-	public function setDbBackgroundColor($v)
-	{
-		if ($v !== null) {
-			$v = (string) $v;
-		}
-
-		if ($this->background_color !== $v) {
-			$this->background_color = $v;
-			$this->modifiedColumns[] = CcShowPeer::BACKGROUND_COLOR;
-		}
-
-		return $this;
-	} // setDbBackgroundColor()
+	} // setDbShowId()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -265,10 +310,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 */
 	public function hasOnlyDefaultValues()
 	{
-			if ($this->name !== '') {
-				return false;
-			}
-
 		// otherwise, everything was equal, so return TRUE
 		return true;
 	} // hasOnlyDefaultValues()
@@ -292,10 +333,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-			$this->description = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->color = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->background_color = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->starts = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->ends = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->show_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -304,10 +344,10 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 5; // 5 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 4; // 4 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
-			throw new PropelException("Error populating CcShow object", $e);
+			throw new PropelException("Error populating CcShowInstances object", $e);
 		}
 	}
 
@@ -327,6 +367,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
+		if ($this->aCcShow !== null && $this->show_id !== $this->aCcShow->getDbId()) {
+			$this->aCcShow = null;
+		}
 	} // ensureConsistency
 
 	/**
@@ -350,13 +393,13 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		// We don't need to alter the object instance pool; we're just modifying this instance
 		// already in the pool.
 
-		$stmt = CcShowPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+		$stmt = CcShowInstancesPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
 		$row = $stmt->fetch(PDO::FETCH_NUM);
 		$stmt->closeCursor();
 		if (!$row) {
@@ -366,11 +409,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->collCcShowInstancess = null;
-
-			$this->collCcShowDayss = null;
-
-			$this->collCcShowHostss = null;
+			$this->aCcShow = null;
+			$this->collCcSchedules = null;
 
 		} // if (deep)
 	}
@@ -391,14 +431,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
 			if ($ret) {
-				CcShowQuery::create()
+				CcShowInstancesQuery::create()
 					->filterByPrimaryKey($this->getPrimaryKey())
 					->delete($con);
 				$this->postDelete($con);
@@ -433,7 +473,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
@@ -453,7 +493,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 					$this->postUpdate($con);
 				}
 				$this->postSave($con);
-				CcShowPeer::addInstanceToPool($this);
+				CcShowInstancesPeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
 			}
@@ -482,47 +522,43 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+			// We call the save method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aCcShow !== null) {
+				if ($this->aCcShow->isModified() || $this->aCcShow->isNew()) {
+					$affectedRows += $this->aCcShow->save($con);
+				}
+				$this->setCcShow($this->aCcShow);
+			}
+
 			if ($this->isNew() ) {
-				$this->modifiedColumns[] = CcShowPeer::ID;
+				$this->modifiedColumns[] = CcShowInstancesPeer::ID;
 			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
 					$criteria = $this->buildCriteria();
-					if ($criteria->keyContainsValue(CcShowPeer::ID) ) {
-						throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcShowPeer::ID.')');
+					if ($criteria->keyContainsValue(CcShowInstancesPeer::ID) ) {
+						throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcShowInstancesPeer::ID.')');
 					}
 
 					$pk = BasePeer::doInsert($criteria, $con);
-					$affectedRows = 1;
+					$affectedRows += 1;
 					$this->setDbId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
-					$affectedRows = CcShowPeer::doUpdate($this, $con);
+					$affectedRows += CcShowInstancesPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
-			if ($this->collCcShowInstancess !== null) {
-				foreach ($this->collCcShowInstancess as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
-			if ($this->collCcShowDayss !== null) {
-				foreach ($this->collCcShowDayss as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
-			if ($this->collCcShowHostss !== null) {
-				foreach ($this->collCcShowHostss as $referrerFK) {
+			if ($this->collCcSchedules !== null) {
+				foreach ($this->collCcSchedules as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
 						$affectedRows += $referrerFK->save($con);
 					}
@@ -595,29 +631,25 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$failureMap = array();
 
 
-			if (($retval = CcShowPeer::doValidate($this, $columns)) !== true) {
+			// We call the validate method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aCcShow !== null) {
+				if (!$this->aCcShow->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcShow->getValidationFailures());
+				}
+			}
+
+
+			if (($retval = CcShowInstancesPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
 
-				if ($this->collCcShowInstancess !== null) {
-					foreach ($this->collCcShowInstancess as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
-
-				if ($this->collCcShowDayss !== null) {
-					foreach ($this->collCcShowDayss as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
-
-				if ($this->collCcShowHostss !== null) {
-					foreach ($this->collCcShowHostss as $referrerFK) {
+				if ($this->collCcSchedules !== null) {
+					foreach ($this->collCcSchedules as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -642,7 +674,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 */
 	public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = CcShowPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = CcShowInstancesPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		$field = $this->getByPosition($pos);
 		return $field;
 	}
@@ -661,16 +693,13 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getDbName();
+				return $this->getDbStarts();
 				break;
 			case 2:
-				return $this->getDbDescription();
+				return $this->getDbEnds();
 				break;
 			case 3:
-				return $this->getDbColor();
-				break;
-			case 4:
-				return $this->getDbBackgroundColor();
+				return $this->getDbShowId();
 				break;
 			default:
 				return null;
@@ -688,19 +717,24 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
 	 *
 	 * @return    array an associative array containing the field names (as keys) and field values
 	 */
-	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
+	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $includeForeignObjects = false)
 	{
-		$keys = CcShowPeer::getFieldNames($keyType);
+		$keys = CcShowInstancesPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getDbId(),
-			$keys[1] => $this->getDbName(),
-			$keys[2] => $this->getDbDescription(),
-			$keys[3] => $this->getDbColor(),
-			$keys[4] => $this->getDbBackgroundColor(),
+			$keys[1] => $this->getDbStarts(),
+			$keys[2] => $this->getDbEnds(),
+			$keys[3] => $this->getDbShowId(),
 		);
+		if ($includeForeignObjects) {
+			if (null !== $this->aCcShow) {
+				$result['CcShow'] = $this->aCcShow->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+		}
 		return $result;
 	}
 
@@ -716,7 +750,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 */
 	public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = CcShowPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = CcShowInstancesPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->setByPosition($pos, $value);
 	}
 
@@ -735,16 +769,13 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setDbName($value);
+				$this->setDbStarts($value);
 				break;
 			case 2:
-				$this->setDbDescription($value);
+				$this->setDbEnds($value);
 				break;
 			case 3:
-				$this->setDbColor($value);
-				break;
-			case 4:
-				$this->setDbBackgroundColor($value);
+				$this->setDbShowId($value);
 				break;
 		} // switch()
 	}
@@ -768,13 +799,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 */
 	public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = CcShowPeer::getFieldNames($keyType);
+		$keys = CcShowInstancesPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setDbName($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setDbDescription($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setDbColor($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbBackgroundColor($arr[$keys[4]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbStarts($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbEnds($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbShowId($arr[$keys[3]]);
 	}
 
 	/**
@@ -784,13 +814,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 */
 	public function buildCriteria()
 	{
-		$criteria = new Criteria(CcShowPeer::DATABASE_NAME);
+		$criteria = new Criteria(CcShowInstancesPeer::DATABASE_NAME);
 
-		if ($this->isColumnModified(CcShowPeer::ID)) $criteria->add(CcShowPeer::ID, $this->id);
-		if ($this->isColumnModified(CcShowPeer::NAME)) $criteria->add(CcShowPeer::NAME, $this->name);
-		if ($this->isColumnModified(CcShowPeer::DESCRIPTION)) $criteria->add(CcShowPeer::DESCRIPTION, $this->description);
-		if ($this->isColumnModified(CcShowPeer::COLOR)) $criteria->add(CcShowPeer::COLOR, $this->color);
-		if ($this->isColumnModified(CcShowPeer::BACKGROUND_COLOR)) $criteria->add(CcShowPeer::BACKGROUND_COLOR, $this->background_color);
+		if ($this->isColumnModified(CcShowInstancesPeer::ID)) $criteria->add(CcShowInstancesPeer::ID, $this->id);
+		if ($this->isColumnModified(CcShowInstancesPeer::STARTS)) $criteria->add(CcShowInstancesPeer::STARTS, $this->starts);
+		if ($this->isColumnModified(CcShowInstancesPeer::ENDS)) $criteria->add(CcShowInstancesPeer::ENDS, $this->ends);
+		if ($this->isColumnModified(CcShowInstancesPeer::SHOW_ID)) $criteria->add(CcShowInstancesPeer::SHOW_ID, $this->show_id);
 
 		return $criteria;
 	}
@@ -805,8 +834,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 */
 	public function buildPkeyCriteria()
 	{
-		$criteria = new Criteria(CcShowPeer::DATABASE_NAME);
-		$criteria->add(CcShowPeer::ID, $this->id);
+		$criteria = new Criteria(CcShowInstancesPeer::DATABASE_NAME);
+		$criteria->add(CcShowInstancesPeer::ID, $this->id);
 
 		return $criteria;
 	}
@@ -846,37 +875,24 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 * If desired, this method can also make copies of all associated (fkey referrers)
 	 * objects.
 	 *
-	 * @param      object $copyObj An object of CcShow (or compatible) type.
+	 * @param      object $copyObj An object of CcShowInstances (or compatible) type.
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @throws     PropelException
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setDbName($this->name);
-		$copyObj->setDbDescription($this->description);
-		$copyObj->setDbColor($this->color);
-		$copyObj->setDbBackgroundColor($this->background_color);
+		$copyObj->setDbStarts($this->starts);
+		$copyObj->setDbEnds($this->ends);
+		$copyObj->setDbShowId($this->show_id);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
 
-			foreach ($this->getCcShowInstancess() as $relObj) {
+			foreach ($this->getCcSchedules() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcShowInstances($relObj->copy($deepCopy));
-				}
-			}
-
-			foreach ($this->getCcShowDayss() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcShowDays($relObj->copy($deepCopy));
-				}
-			}
-
-			foreach ($this->getCcShowHostss() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcShowHosts($relObj->copy($deepCopy));
+					$copyObj->addCcSchedule($relObj->copy($deepCopy));
 				}
 			}
 
@@ -896,7 +912,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 * objects.
 	 *
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-	 * @return     CcShow Clone of current object.
+	 * @return     CcShowInstances Clone of current object.
 	 * @throws     PropelException
 	 */
 	public function copy($deepCopy = false)
@@ -915,366 +931,172 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 * same instance for all member of this class. The method could therefore
 	 * be static, but this would prevent one from overriding the behavior.
 	 *
-	 * @return     CcShowPeer
+	 * @return     CcShowInstancesPeer
 	 */
 	public function getPeer()
 	{
 		if (self::$peer === null) {
-			self::$peer = new CcShowPeer();
+			self::$peer = new CcShowInstancesPeer();
 		}
 		return self::$peer;
 	}
 
 	/**
-	 * Clears out the collCcShowInstancess collection
+	 * Declares an association between this object and a CcShow object.
+	 *
+	 * @param      CcShow $v
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setCcShow(CcShow $v = null)
+	{
+		if ($v === null) {
+			$this->setDbShowId(NULL);
+		} else {
+			$this->setDbShowId($v->getDbId());
+		}
+
+		$this->aCcShow = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the CcShow object, it will not be re-added.
+		if ($v !== null) {
+			$v->addCcShowInstances($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated CcShow object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     CcShow The associated CcShow object.
+	 * @throws     PropelException
+	 */
+	public function getCcShow(PropelPDO $con = null)
+	{
+		if ($this->aCcShow === null && ($this->show_id !== null)) {
+			$this->aCcShow = CcShowQuery::create()->findPk($this->show_id, $con);
+			/* The following can be used additionally to
+			   guarantee the related object contains a reference
+			   to this object.  This level of coupling may, however, be
+			   undesirable since it could result in an only partially populated collection
+			   in the referenced object.
+			   $this->aCcShow->addCcShowInstancess($this);
+			 */
+		}
+		return $this->aCcShow;
+	}
+
+	/**
+	 * Clears out the collCcSchedules collection
 	 *
 	 * This does not modify the database; however, it will remove any associated objects, causing
 	 * them to be refetched by subsequent calls to accessor method.
 	 *
 	 * @return     void
-	 * @see        addCcShowInstancess()
+	 * @see        addCcSchedules()
 	 */
-	public function clearCcShowInstancess()
+	public function clearCcSchedules()
 	{
-		$this->collCcShowInstancess = null; // important to set this to NULL since that means it is uninitialized
+		$this->collCcSchedules = null; // important to set this to NULL since that means it is uninitialized
 	}
 
 	/**
-	 * Initializes the collCcShowInstancess collection.
+	 * Initializes the collCcSchedules collection.
 	 *
-	 * By default this just sets the collCcShowInstancess collection to an empty array (like clearcollCcShowInstancess());
+	 * By default this just sets the collCcSchedules collection to an empty array (like clearcollCcSchedules());
 	 * however, you may wish to override this method in your stub class to provide setting appropriate
 	 * to your application -- for example, setting the initial array to the values stored in database.
 	 *
 	 * @return     void
 	 */
-	public function initCcShowInstancess()
+	public function initCcSchedules()
 	{
-		$this->collCcShowInstancess = new PropelObjectCollection();
-		$this->collCcShowInstancess->setModel('CcShowInstances');
+		$this->collCcSchedules = new PropelObjectCollection();
+		$this->collCcSchedules->setModel('CcSchedule');
 	}
 
 	/**
-	 * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
+	 * Gets an array of CcSchedule objects which contain a foreign key that references this object.
 	 *
 	 * If the $criteria is not null, it is used to always fetch the results from the database.
 	 * Otherwise the results are fetched from the database the first time, then cached.
 	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this CcShow is new, it will return
+	 * If this CcShowInstances is new, it will return
 	 * an empty collection or the current collection; the criteria is ignored on a new object.
 	 *
 	 * @param      Criteria $criteria optional Criteria object to narrow the query
 	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 * @return     PropelCollection|array CcSchedule[] List of CcSchedule objects
 	 * @throws     PropelException
 	 */
-	public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
+	public function getCcSchedules($criteria = null, PropelPDO $con = null)
 	{
-		if(null === $this->collCcShowInstancess || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowInstancess) {
+		if(null === $this->collCcSchedules || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcSchedules) {
 				// return empty collection
-				$this->initCcShowInstancess();
+				$this->initCcSchedules();
 			} else {
-				$collCcShowInstancess = CcShowInstancesQuery::create(null, $criteria)
-					->filterByCcShow($this)
+				$collCcSchedules = CcScheduleQuery::create(null, $criteria)
+					->filterByCcShowInstances($this)
 					->find($con);
 				if (null !== $criteria) {
-					return $collCcShowInstancess;
+					return $collCcSchedules;
 				}
-				$this->collCcShowInstancess = $collCcShowInstancess;
+				$this->collCcSchedules = $collCcSchedules;
 			}
 		}
-		return $this->collCcShowInstancess;
+		return $this->collCcSchedules;
 	}
 
 	/**
-	 * Returns the number of related CcShowInstances objects.
+	 * Returns the number of related CcSchedule objects.
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct
 	 * @param      PropelPDO $con
-	 * @return     int Count of related CcShowInstances objects.
+	 * @return     int Count of related CcSchedule objects.
 	 * @throws     PropelException
 	 */
-	public function countCcShowInstancess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	public function countCcSchedules(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
 	{
-		if(null === $this->collCcShowInstancess || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowInstancess) {
+		if(null === $this->collCcSchedules || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcSchedules) {
 				return 0;
 			} else {
-				$query = CcShowInstancesQuery::create(null, $criteria);
+				$query = CcScheduleQuery::create(null, $criteria);
 				if($distinct) {
 					$query->distinct();
 				}
 				return $query
-					->filterByCcShow($this)
+					->filterByCcShowInstances($this)
 					->count($con);
 			}
 		} else {
-			return count($this->collCcShowInstancess);
+			return count($this->collCcSchedules);
 		}
 	}
 
 	/**
-	 * Method called to associate a CcShowInstances object to this object
-	 * through the CcShowInstances foreign key attribute.
+	 * Method called to associate a CcSchedule object to this object
+	 * through the CcSchedule foreign key attribute.
 	 *
-	 * @param      CcShowInstances $l CcShowInstances
+	 * @param      CcSchedule $l CcSchedule
 	 * @return     void
 	 * @throws     PropelException
 	 */
-	public function addCcShowInstances(CcShowInstances $l)
+	public function addCcSchedule(CcSchedule $l)
 	{
-		if ($this->collCcShowInstancess === null) {
-			$this->initCcShowInstancess();
+		if ($this->collCcSchedules === null) {
+			$this->initCcSchedules();
 		}
-		if (!$this->collCcShowInstancess->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcShowInstancess[]= $l;
-			$l->setCcShow($this);
+		if (!$this->collCcSchedules->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcSchedules[]= $l;
+			$l->setCcShowInstances($this);
 		}
-	}
-
-	/**
-	 * Clears out the collCcShowDayss collection
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addCcShowDayss()
-	 */
-	public function clearCcShowDayss()
-	{
-		$this->collCcShowDayss = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collCcShowDayss collection.
-	 *
-	 * By default this just sets the collCcShowDayss collection to an empty array (like clearcollCcShowDayss());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @return     void
-	 */
-	public function initCcShowDayss()
-	{
-		$this->collCcShowDayss = new PropelObjectCollection();
-		$this->collCcShowDayss->setModel('CcShowDays');
-	}
-
-	/**
-	 * Gets an array of CcShowDays objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this CcShow is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array CcShowDays[] List of CcShowDays objects
-	 * @throws     PropelException
-	 */
-	public function getCcShowDayss($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collCcShowDayss || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowDayss) {
-				// return empty collection
-				$this->initCcShowDayss();
-			} else {
-				$collCcShowDayss = CcShowDaysQuery::create(null, $criteria)
-					->filterByCcShow($this)
-					->find($con);
-				if (null !== $criteria) {
-					return $collCcShowDayss;
-				}
-				$this->collCcShowDayss = $collCcShowDayss;
-			}
-		}
-		return $this->collCcShowDayss;
-	}
-
-	/**
-	 * Returns the number of related CcShowDays objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related CcShowDays objects.
-	 * @throws     PropelException
-	 */
-	public function countCcShowDayss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if(null === $this->collCcShowDayss || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowDayss) {
-				return 0;
-			} else {
-				$query = CcShowDaysQuery::create(null, $criteria);
-				if($distinct) {
-					$query->distinct();
-				}
-				return $query
-					->filterByCcShow($this)
-					->count($con);
-			}
-		} else {
-			return count($this->collCcShowDayss);
-		}
-	}
-
-	/**
-	 * Method called to associate a CcShowDays object to this object
-	 * through the CcShowDays foreign key attribute.
-	 *
-	 * @param      CcShowDays $l CcShowDays
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addCcShowDays(CcShowDays $l)
-	{
-		if ($this->collCcShowDayss === null) {
-			$this->initCcShowDayss();
-		}
-		if (!$this->collCcShowDayss->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcShowDayss[]= $l;
-			$l->setCcShow($this);
-		}
-	}
-
-	/**
-	 * Clears out the collCcShowHostss collection
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addCcShowHostss()
-	 */
-	public function clearCcShowHostss()
-	{
-		$this->collCcShowHostss = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collCcShowHostss collection.
-	 *
-	 * By default this just sets the collCcShowHostss collection to an empty array (like clearcollCcShowHostss());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @return     void
-	 */
-	public function initCcShowHostss()
-	{
-		$this->collCcShowHostss = new PropelObjectCollection();
-		$this->collCcShowHostss->setModel('CcShowHosts');
-	}
-
-	/**
-	 * Gets an array of CcShowHosts objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this CcShow is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array CcShowHosts[] List of CcShowHosts objects
-	 * @throws     PropelException
-	 */
-	public function getCcShowHostss($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collCcShowHostss || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowHostss) {
-				// return empty collection
-				$this->initCcShowHostss();
-			} else {
-				$collCcShowHostss = CcShowHostsQuery::create(null, $criteria)
-					->filterByCcShow($this)
-					->find($con);
-				if (null !== $criteria) {
-					return $collCcShowHostss;
-				}
-				$this->collCcShowHostss = $collCcShowHostss;
-			}
-		}
-		return $this->collCcShowHostss;
-	}
-
-	/**
-	 * Returns the number of related CcShowHosts objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related CcShowHosts objects.
-	 * @throws     PropelException
-	 */
-	public function countCcShowHostss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if(null === $this->collCcShowHostss || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowHostss) {
-				return 0;
-			} else {
-				$query = CcShowHostsQuery::create(null, $criteria);
-				if($distinct) {
-					$query->distinct();
-				}
-				return $query
-					->filterByCcShow($this)
-					->count($con);
-			}
-		} else {
-			return count($this->collCcShowHostss);
-		}
-	}
-
-	/**
-	 * Method called to associate a CcShowHosts object to this object
-	 * through the CcShowHosts foreign key attribute.
-	 *
-	 * @param      CcShowHosts $l CcShowHosts
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addCcShowHosts(CcShowHosts $l)
-	{
-		if ($this->collCcShowHostss === null) {
-			$this->initCcShowHostss();
-		}
-		if (!$this->collCcShowHostss->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcShowHostss[]= $l;
-			$l->setCcShow($this);
-		}
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this CcShow is new, it will return
-	 * an empty collection; or if this CcShow has previously
-	 * been saved, it will retrieve related CcShowHostss from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in CcShow.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array CcShowHosts[] List of CcShowHosts objects
-	 */
-	public function getCcShowHostssJoinCcSubjs($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = CcShowHostsQuery::create(null, $criteria);
-		$query->joinWith('CcSubjs', $join_behavior);
-
-		return $this->getCcShowHostss($query, $con);
 	}
 
 	/**
@@ -1283,14 +1105,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function clear()
 	{
 		$this->id = null;
-		$this->name = null;
-		$this->description = null;
-		$this->color = null;
-		$this->background_color = null;
+		$this->starts = null;
+		$this->ends = null;
+		$this->show_id = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
-		$this->applyDefaultValues();
 		$this->resetModified();
 		$this->setNew(true);
 		$this->setDeleted(false);
@@ -1308,26 +1128,15 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collCcShowInstancess) {
-				foreach ((array) $this->collCcShowInstancess as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
-			if ($this->collCcShowDayss) {
-				foreach ((array) $this->collCcShowDayss as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
-			if ($this->collCcShowHostss) {
-				foreach ((array) $this->collCcShowHostss as $o) {
+			if ($this->collCcSchedules) {
+				foreach ((array) $this->collCcSchedules as $o) {
 					$o->clearAllReferences($deep);
 				}
 			}
 		} // if ($deep)
 
-		$this->collCcShowInstancess = null;
-		$this->collCcShowDayss = null;
-		$this->collCcShowHostss = null;
+		$this->collCcSchedules = null;
+		$this->aCcShow = null;
 	}
 
 	/**
@@ -1349,4 +1158,4 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		throw new PropelException('Call to undefined method: ' . $name);
 	}
 
-} // BaseCcShow
+} // BaseCcShowInstances
