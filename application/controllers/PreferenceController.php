@@ -10,6 +10,8 @@ class PreferenceController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        $this->view->statusMsg = "";
+        
         $form = new Application_Form_Preferences();
         $this->view->form = $form;
     }
@@ -23,15 +25,18 @@ class PreferenceController extends Zend_Controller_Action
                 
         $form = new Application_Form_Preferences();
         if (!$form->isValid($request->getPost())) {
-            // Failed validation; redisplay form
-            $this->view->form = $form;
-            return $this->render('index'); //render the phtml file
+
+        } else {
+            $values = $form->getValues();
+            Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);                
+            
+            $this->view->statusMsg = "Preferences Updated.";
         }
          
-        $values = $form->getValues();
-        Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);    
+
                   
         $this->view->form = $form;
+        return $this->render('index'); //render the phtml file
     }
 
 

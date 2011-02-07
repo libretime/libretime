@@ -15,10 +15,9 @@ var uiUpdateInterval = 200;
 
 var songEndFunc;
 
-//var showStartPosixTime = 0;
-//var showEndPosixTime = 0;
-//var showLengthMs = 1;
-//var currentShowName = "";
+//set to "development" if we are developing :). Useful to disable alerts
+//when entering production mode. 
+var APPLICATION_ENV = "";
 
 /* boolean flag to let us know if we should prepare to execute a function
  * that flips the playlist to the next song. This flags purpose is to
@@ -108,8 +107,9 @@ function updateProgressBarValue(){
 		if (diff < serverUpdateInterval && diff >= 0){
 			nextSongPrepare = false;
 			setTimeout(newSongStart, diff);
-		} else if (diff < 0){
-			alert ("Warning: estimatedSchedulePosixTime > songStartPosixTime");
+		} else if (diff < 0 && APPLICATION_ENV == "development"){
+            alert ("Warning: estimatedSchedulePosixTime > songStartPosixTime");
+            alert (estimatedSchedulePosixTime + " " + nextSongs[0].songStartPosixTime);
 		}
 	}
 	
@@ -119,7 +119,7 @@ function updateProgressBarValue(){
 		if (diff < serverUpdateInterval && diff >= 0){
 			nextShowPrepare = false;
 			setTimeout(nextShowStart, diff);
-		} else if (diff < 0){
+		} else if (diff < 0 && APPLICATION_ENV == "development"){
 			alert ("Warning: estimatedSchedulePosixTime > showStartPosixTime");
 		}
 	}
@@ -202,6 +202,8 @@ function calcAdditionalShowData(show){
 }
 
 function parseItems(obj){
+    APPLICATION_ENV = obj.env;
+    
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
     schedulePosixTime += parseInt(obj.timezoneOffset)*1000;
     
@@ -242,18 +244,6 @@ function init() {
 	
     //begin consumer "thread"
     secondsTimer();
-}
-
-function popup(mylink){
-    if (!window.focus)
-        return true;
-    var href;
-    if (typeof(mylink) == 'string')
-       href=mylink;
-    else
-       href=mylink.href;
-    window.open(href, "player", 'width=300,height=100,scrollbars=yes');
-    return false;
 }
 
 $(document).ready(function() {
