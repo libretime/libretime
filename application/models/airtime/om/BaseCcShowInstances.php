@@ -54,11 +54,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	protected $aCcShow;
 
 	/**
-	 * @var        array CcShowSchedule[] Collection to store aggregation of CcShowSchedule objects.
-	 */
-	protected $collCcShowSchedules;
-
-	/**
 	 * @var        array CcSchedule[] Collection to store aggregation of CcSchedule objects.
 	 */
 	protected $collCcSchedules;
@@ -415,8 +410,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aCcShow = null;
-			$this->collCcShowSchedules = null;
-
 			$this->collCcSchedules = null;
 
 		} // if (deep)
@@ -564,14 +557,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
-			if ($this->collCcShowSchedules !== null) {
-				foreach ($this->collCcShowSchedules as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
 			if ($this->collCcSchedules !== null) {
 				foreach ($this->collCcSchedules as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -662,14 +647,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
-
-				if ($this->collCcShowSchedules !== null) {
-					foreach ($this->collCcShowSchedules as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
 
 				if ($this->collCcSchedules !== null) {
 					foreach ($this->collCcSchedules as $referrerFK) {
@@ -913,12 +890,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
 
-			foreach ($this->getCcShowSchedules() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcShowSchedule($relObj->copy($deepCopy));
-				}
-			}
-
 			foreach ($this->getCcSchedules() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcSchedule($relObj->copy($deepCopy));
@@ -1017,115 +988,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			 */
 		}
 		return $this->aCcShow;
-	}
-
-	/**
-	 * Clears out the collCcShowSchedules collection
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addCcShowSchedules()
-	 */
-	public function clearCcShowSchedules()
-	{
-		$this->collCcShowSchedules = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collCcShowSchedules collection.
-	 *
-	 * By default this just sets the collCcShowSchedules collection to an empty array (like clearcollCcShowSchedules());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @return     void
-	 */
-	public function initCcShowSchedules()
-	{
-		$this->collCcShowSchedules = new PropelObjectCollection();
-		$this->collCcShowSchedules->setModel('CcShowSchedule');
-	}
-
-	/**
-	 * Gets an array of CcShowSchedule objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this CcShowInstances is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array CcShowSchedule[] List of CcShowSchedule objects
-	 * @throws     PropelException
-	 */
-	public function getCcShowSchedules($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collCcShowSchedules || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowSchedules) {
-				// return empty collection
-				$this->initCcShowSchedules();
-			} else {
-				$collCcShowSchedules = CcShowScheduleQuery::create(null, $criteria)
-					->filterByCcShowInstances($this)
-					->find($con);
-				if (null !== $criteria) {
-					return $collCcShowSchedules;
-				}
-				$this->collCcShowSchedules = $collCcShowSchedules;
-			}
-		}
-		return $this->collCcShowSchedules;
-	}
-
-	/**
-	 * Returns the number of related CcShowSchedule objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related CcShowSchedule objects.
-	 * @throws     PropelException
-	 */
-	public function countCcShowSchedules(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if(null === $this->collCcShowSchedules || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowSchedules) {
-				return 0;
-			} else {
-				$query = CcShowScheduleQuery::create(null, $criteria);
-				if($distinct) {
-					$query->distinct();
-				}
-				return $query
-					->filterByCcShowInstances($this)
-					->count($con);
-			}
-		} else {
-			return count($this->collCcShowSchedules);
-		}
-	}
-
-	/**
-	 * Method called to associate a CcShowSchedule object to this object
-	 * through the CcShowSchedule foreign key attribute.
-	 *
-	 * @param      CcShowSchedule $l CcShowSchedule
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addCcShowSchedule(CcShowSchedule $l)
-	{
-		if ($this->collCcShowSchedules === null) {
-			$this->initCcShowSchedules();
-		}
-		if (!$this->collCcShowSchedules->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcShowSchedules[]= $l;
-			$l->setCcShowInstances($this);
-		}
 	}
 
 	/**
@@ -1266,11 +1128,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collCcShowSchedules) {
-				foreach ((array) $this->collCcShowSchedules as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
 			if ($this->collCcSchedules) {
 				foreach ((array) $this->collCcSchedules as $o) {
 					$o->clearAllReferences($deep);
@@ -1278,7 +1135,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
-		$this->collCcShowSchedules = null;
 		$this->collCcSchedules = null;
 		$this->aCcShow = null;
 	}
