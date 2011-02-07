@@ -43,7 +43,7 @@ def create_user(username):
   else:
     print "User already exists."
   #add pypo to audio group
-  os.system("adduser " + username + " pulse-access 2>&1 1>/dev/null")
+  os.system("adduser " + username + " audio 2>&1 1>/dev/null")
 
 def copy_dir(src_dir, dest_dir):
   if (os.path.exists(dest_dir)) and (dest_dir != "/"):
