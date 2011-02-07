@@ -1,34 +1,39 @@
 div.jjmenu {
 	
 	position:absolute;
-	background:#fffef0;
-	border-bottom:2px solid gray;
-	border-right:1px solid gray;
+	background:#d2d2d2;
+	border-bottom:2px solid #5b5b5b;
+	border-right:1px solid #5b5b5b;
 	padding:0px;
     z-index: 100;
+	font-size:11px;
 }
 
 div.jj_menu_item {
 	color:black;
-	border:1px solid gray;
+	border:1px solid #5b5b5b;
 	border-bottom:none;
-	background:url(menuitem.gif) no-repeat black;
+	background:#d2d2d2;
+    background: -moz-linear-gradient(center top , #d2d2d2 0pt, #bcbcbc 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d2d2d2), color-stop(100%, #bcbcbc));
 	cursor:pointer;
 }
 
 div.jj_menu_item span {
 	display:block;
-	padding:4px;
+	padding:4px 10px;
 }
 
 div.jj_menu_item_more span {
-	background:url(more.gif)  right no-repeat;	
+	background:url(images/more.gif) right no-repeat;	
 }
 div.jj_menu_item_more span {
 	padding-right:20px;
 }
 
 div.jj_menu_item_hover {
-	background:#e4e4e4;
-	
+	background:#6e6e6e;
+    background: -moz-linear-gradient(center top , #868686 0pt, #6e6e6e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
+	color:#FFF;	
 }
