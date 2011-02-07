@@ -7,11 +7,6 @@ class PlaylistController extends Zend_Controller_Action
 
     public function init()
     {
-        if(!Zend_Auth::getInstance()->hasIdentity())
-        {
-            $this->_redirect('login/index');
-        }
-
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('add-item', 'json')
 					->addActionContext('delete-item', 'json')
@@ -247,6 +242,7 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->pos = $pos;
 		$this->view->cueIn = $cues[0];
 		$this->view->cueOut = $cues[1];
+        $this->view->origLength = $cues[2];
 		$this->view->html = $this->view->render('playlist/set-cue.phtml');
     }
 
@@ -266,12 +262,12 @@ class PlaylistController extends Zend_Controller_Action
 			return;
 		}
 
-		$this->view->pos = $pos;
+		$this->view->pos = intval($pos);
 
-		$fades = $pl->getFadeInfo($pos);
+		$fades = $pl->getFadeInfo($pos+1);
 		$this->view->fadeIn = $fades[0];
 
-		$fades = $pl->getFadeInfo($pos-1);
+		$fades = $pl->getFadeInfo($pos);
 		$this->view->fadeOut = $fades[1];
 		$this->view->html = $this->view->render('playlist/set-fade.phtml');
     }

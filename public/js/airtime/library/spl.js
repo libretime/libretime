@@ -6,28 +6,13 @@ function isTimeValid(time) {
 	var regExpr = new RegExp("^\\d{2}[:]\\d{2}[:]\\d{2}([.]\\d{1,6})?$");
 
 	 if (!regExpr.test(time)) {
-    	displayEditorError("please put in a time '00:00:00 (.000000)'");
     	return false;
     }
 
 	return true;
 }
 
-function displayEditorError(error) {
-	$("#spl_error")
-		.empty()
-		.append('<span class="ui-icon ui-icon-alert"></span>')
-		.append(error)
-		.show();
-}
-
-function clearEditorError() {
-	$("#spl_error")
-		.empty()
-		.hide();
-}
-
-function cueSetUp(pos, json) {
+function changeClipLength(pos, json) {
 
 	$("#spl_"+pos).find(".spl_playlength")
 		.empty()
@@ -38,108 +23,94 @@ function cueSetUp(pos, json) {
 		.append(json.response.length);
 }
 
-function changeCueIn() {
+function changeCueIn(event) {
+    event.stopPropagation();
+
 	var pos, url, cueIn, div;
 
 	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
-	url = "/Playlist/set-cue/format/json";
+	url = "/Playlist/set-cue";
 	cueIn = span.text().trim();
 
 	if(!isTimeValid(cueIn)){
-		return;
+		//"please put in a time '00:00:00 (.000000)'"
 	}
 
-	$.post(url, {cueIn: cueIn, pos: pos}, function(json){
-		if(json.response.error) {
-			displayEditorError(json.response.error);
+	$.post(url, {format: "json", cueIn: cueIn, pos: pos}, function(json){
+
+        if(json.response.error) {
 			return;
 		}
 
-		clearEditorError();
-
-		span.empty()
-			.append(json.response.cueIn);
-
-		cueSetUp(pos, json);
+        changeClipLength(pos, json);
 	});
 }
 
-function changeCueOut() {
+function changeCueOut(event) {
+    event.stopPropagation();
+
 	var pos, url, cueOut, div;
 
 	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
-	url = "/Playlist/set-cue/format/json";
+	url = "/Playlist/set-cue";
 	cueOut = span.text().trim();
 
 	if(!isTimeValid(cueOut)){
 		return;
 	}
 
-	$.post(url, {cueOut: cueOut, pos: pos}, function(json){
+	$.post(url, {format: "json", cueOut: cueOut, pos: pos}, function(json){
 		if(json.response.error) {
-			displayEditorError(json.response.error);
 			return;
 		}
 
-		clearEditorError();
-
-		span.empty()
-			.append(json.response.cueOut);
-
-		cueSetUp(pos, json);
+		changeClipLength(pos, json);
 	});
 }
 
-function changeFadeIn() {
+function changeFadeIn(event) {
+    event.stopPropagation();
+
 	var pos, url, fadeIn, div;
 
 	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
-	url = "/Playlist/set-fade/format/json";
+	url = "/Playlist/set-fade";
 	fadeIn = span.text().trim();
 
 	if(!isTimeValid(fadeIn)){
 		return;
 	}
 
-	$.post(url, {fadeIn: fadeIn, pos: pos}, function(json){
+	$.post(url, {format: "json", fadeIn: fadeIn, pos: pos}, function(json){
 		if(json.response.error) {
 			displayEditorError(json.response.error);
 			return;
 		}
 
-		clearEditorError();
-
-		span.empty()
-			.append(json.response.fadeIn);
-
 	});
 }
 
-function changeFadeOut() {
+function changeFadeOut(event) {
+    event.stopPropagation();
+
 	var pos, url, fadeOut, div;
 
 	span = $(this);
-	pos = span.parent().attr("id").split("_").pop() - 1;
-	url = "/Playlist/set-fade/format/json";
+	pos = span.parent().attr("id").split("_").pop();
+	url = "/Playlist/set-fade";
 	fadeOut = span.text().trim();
 
 	if(!isTimeValid(fadeOut)){
 		return;
 	}
 
-	$.post(url, {fadeOut: fadeOut, pos: pos}, function(json){
+	$.post(url, {format: "json", fadeOut: fadeOut, pos: pos}, function(json){
 		if(json.response.error) {
-			displayEditorError(json.response.error);
 			return;
 		}
-
-		clearEditorError();
-
-		span.empty()
-			.append(json.response.fadeOut);
 
 	});
 }
@@ -151,25 +122,33 @@ function submitOnEnter(event) {
 	}
 }
 
-function setEditorContent(json) {
-	$("#spl_editor")
-		.empty()
-		.append(json.html);
+//function is needed for content editable span because 
+//jQuery sortable is not letting me edit.
+function focusOnEditable(ev){
+    $(this).focus();
+}
 
-	clearEditorError();
-
-	$(".spl_cue_in span:last").blur(changeCueIn);
+function setCueEvents() {
+    
+    $(".spl_cue_in span:last").blur(changeCueIn);
 	$(".spl_cue_out span:last").blur(changeCueOut);
-	$(".spl_fade_in span:last").blur(changeFadeIn);
-	$(".spl_fade_out span:last").blur(changeFadeOut);
 
-	$(".spl_cue_in span:last, .spl_cue_out span:last, .spl_fade_in span:last, .spl_fade_out span:last").keyup(submitOnEnter);
+    $(".spl_cue_in span:first, .spl_cue_out span:first")
+        .mousedown(focusOnEditable)
+        .keyup(submitOnEnter);
+}
+
+function setFadeEvents() {
+
+    $(".spl_fade_in span:first").blur(changeFadeIn);
+	$(".spl_fade_out span:first").blur(changeFadeOut);
+
+    $(".spl_fade_in span:first, .spl_fade_out span:first")
+        .mousedown(focusOnEditable)
+        .keyup(submitOnEnter);
 }
 
 function highlightActive(el) {
-	$("#spl_sortable")
-		.find(".ui-state-active")
-		.removeClass("ui-state-active");
 
 	$(el).addClass("ui-state-active");
 }
@@ -177,27 +156,33 @@ function highlightActive(el) {
 function openFadeEditor(event) {
 	event.stopPropagation();
 
-	$('li[id ^= "cues"]').hide();
-	$('li[id ^= "crossfade"]').hide();
+    var pos, url, li;
+	
+    li = $(this).parent().parent();
+	pos = parseInt(li.attr("id").split("_").pop());
 
 	if($(this).hasClass("ui-state-active")) {
 		$(this).removeClass("ui-state-active");
+
+        $("#crossfade_"+pos+"-"+(pos+1))
+			.empty()
+			.hide();
+
 		return;
 	}
 
-	var pos, url;
-	
-	pos = $(this).attr("id").split("_").pop();
 	url = '/Playlist/set-fade';
 
 	highlightActive(this);
 
 	$.get(url, {format: "json", pos: pos}, function(json){
 
-		$("#crossfade_"+(pos-1)+"-"+pos)
+		$("#crossfade_"+(pos)+"-"+(pos+1))
 			.empty()
 			.append(json.html)
 			.show();
+
+        setFadeEvents();
 	});
 }
 
@@ -206,17 +191,19 @@ function openCueEditor(event) {
 
 	var pos, url, li;
 
-	$('li[id ^= "cues"]').hide();
-	$('li[id ^= "crossfade"]').hide();
-
-	li = $(this).parent().parent();
+	li = $(this).parent().parent().parent();
+    pos = li.attr("id").split("_").pop();
 
 	if(li.hasClass("ui-state-active")) {
 		li.removeClass("ui-state-active");
+
+        $("#cues_"+pos)
+			.empty()
+			.hide();
+
 		return;
 	}
 
-	pos = li.attr("id").split("_").pop();
 	url = '/Playlist/set-cue';
 
 	highlightActive(li);
@@ -227,6 +214,8 @@ function openCueEditor(event) {
 			.empty()
 			.append(json.html)
 			.show();
+
+        setCueEvents();
 	});	
 }
 
@@ -389,6 +378,14 @@ function setUpSPL() {
 	$("#spl_close")
 		.button()
 		.click(closeSPL);
+
+    $("#spl_main_crossfade")
+		.button({
+            icons: {
+                primary: "crossfade-main-icon"
+            },
+            text: false
+        });
 
 	$("#spl_delete")
 		.button()

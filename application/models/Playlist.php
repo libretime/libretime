@@ -582,8 +582,8 @@ class Playlist {
 			$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$clipLength}'";
 			$r = $con->query($sql);
             if($r->fetchColumn(0)) {
-                $errArray["error"]="Fade In can't be larger than overall playlength.";
-                return $errArray;
+                //"Fade In can't be larger than overall playlength.";
+                $fadeIn = $clipLength;
             }
 
             $row->setDbFadein($fadeIn);
@@ -593,8 +593,8 @@ class Playlist {
 			$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$clipLength}'";
 			$r = $con->query($sql);
             if($r->fetchColumn(0)) {
-                $errArray["error"]="Fade Out can't be larger than overall playlength.";
-                return $errArray;
+                //Fade Out can't be larger than overall playlength.";
+                $fadeOut = $clipLength;
             }
 
             $row->setDbFadeout($fadeOut);
@@ -613,10 +613,12 @@ class Playlist {
             ->filterByDbPosition($pos)
             ->findOne();
 
+        $file = $row->getCcFiles();
+        $origLength = $file->getDbLength();
         $cueIn = $row->getDBCuein();
         $cueOut = $row->getDbCueout();
 
-		return array($cueIn, $cueOut);
+		return array($cueIn, $cueOut, $origLength);
 	}
 
     /**
@@ -739,7 +741,6 @@ class Playlist {
 		$r = $con->query($sql);
         if($r->fetchColumn(0)){
             $fadeIn = $cliplength;
-
             $row->setDbFadein($fadeIn);
         }
 
@@ -747,7 +748,6 @@ class Playlist {
 		$r = $con->query($sql);
         if($r->fetchColumn(0)){
             $fadeOut = $cliplength;
-
             $row->setDbFadein($fadeOut);
         }
 

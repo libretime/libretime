@@ -1,5 +1,36 @@
 <?php if (count($this->pl->getContents())) : ?>
-<?php echo $this->partialLoop('playlist/sidebarcontent.phtml', $this->pl->getContents()); ?>
+
+<?php $i = 0; ?>
+<?php foreach($this->pl->getContents() as $item) : ?>
+    <li class="ui-state-default" id="spl_<?php echo $i ?>">
+        <div class="list-item-container">
+            <a href="javascript:void(0);" class="big_play" 
+            onclick="audioPreview('<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["name"], PATHINFO_EXTENSION);?>', 
+            'spl_<?php echo $i ?>')"><span class="ui-icon ui-icon-play"></span></a>
+
+            <div class="text-row top">
+                <span class="spl_playlength"><?php echo $item["cliplength"] ?></span>
+                <span class="spl_title"><?php echo $item["CcFiles"]['track_title'] ?></span>
+            </div>
+            <div class="text-row">
+                <span class="spl_artist"><?php echo $item["CcFiles"]['artist_name'] ?></span>
+            </div>
+            <?php if($i < count($this->pl->getContents()) -1): ?>
+            <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div>
+            <?php endif; ?>
+            <span class="ui-icon ui-icon-closethick"></span>
+        </div>
+
+        <div id="cues_<?php echo $i ?>" class="cue-edit clearfix" style="display: none"></div>
+
+        <?php if($i < count($this->pl->getContents()) -1): ?>
+        <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none"></div>
+        <?php endif; ?>
+
+    </li>
+    <?php $i = $i+1; ?>
+<?php endforeach; ?>
+
 <?php else : ?>
-<li class="pl_empty">Empty playlist</li>
+<li class="spl_empty">Empty playlist</li> 
 <?php endif; ?>
