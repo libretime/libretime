@@ -9,24 +9,16 @@ class Application_Form_Preferences extends Zend_Form
         
         // Add login element
         $this->addElement('text', 'stationName', array(
+            'class'      => 'input_text',
             'label'      => 'Station Name:',
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validators' => array('NotEmpty'),
             'value' => Application_Model_Preference::GetValue("station_name")
         ));
-        
-        /*
-        $this->addElement('select', 'test', array(
-            'label'      => 'Live Stream Button: ',
-            'multiOptions' => array(
-				"e" => "enabled",
-                "d" => "disabled"
-            ))
-        );
-        */
-        
+            
         $this->addElement('submit', 'submit', array(
+            'class'    => 'ui-button ui-state-default',
             'ignore'   => true,
             'label'    => 'Submit',
         ));
