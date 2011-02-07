@@ -466,22 +466,10 @@ class ShowInstance {
         $this->setShowEnd($new_ends);
 	}
 
-    private function getNextPos() {
-		global $CC_DBC;
-
-		$sql = "SELECT MAX(position)+1 from cc_show_schedule WHERE instance_id = '{$this->_instanceId}'";
-		$res = $CC_DBC->GetOne($sql);	
-
-		if(is_null($res))
-            return 0;
-
-		return $res;
-	}
-
 	private function getLastGroupId() {
 		global $CC_DBC;
 
-		$sql = "SELECT MAX(group_id) from cc_show_schedule WHERE instance_id = '{$this->_instanceId}'";
+		$sql = "SELECT group_id FROM cc_schedule WHERE instance_id = '{$this->_instanceId}' ORDER BY ends DESC LIMIT 1";
 		$res = $CC_DBC->GetOne($sql);	
 
 		return $res;
@@ -491,8 +479,7 @@ class ShowInstance {
 		
 		$sched = new ScheduleGroup();
 		$lastGroupId = $this->getLastGroupId();
-        $pos = $this->getNextPos();
-
+        
 		if(is_null($lastGroupId)) {
 
 			$groupId = $sched->add($this->_instanceId, $this->getShowStart(), null, $plId);		
@@ -500,12 +487,6 @@ class ShowInstance {
 		else {
 			$groupId = $sched->addPlaylistAfter($this->_instanceId, $lastGroupId, $plId);
 		}
-
-		$groupsched = new CcShowSchedule();
-		$groupsched->setDbInstanceId($this->_instanceId);
-		$groupsched->setDbGroupId($groupId);
-		$groupsched->setDbPosition($pos);
-		$groupsched->save();
 	}
 
 	public function scheduleShow($plIds) {
@@ -518,60 +499,33 @@ class ShowInstance {
 	public function removeGroupFromShow($group_id){
 		global $CC_DBC;
 
-		$group = CcShowScheduleQuery::create()
-			->filterByDbInstanceId($this->_instanceId)
+        $sql = "SELECT MAX(ends) as end_timestamp, (MAX(ends) - MIN(starts)) as length
+                    FROM cc_schedule 
+					WHERE group_id = '{$group_id}'";
+       
+		$groupBoundry = $CC_DBC->GetRow($sql);
+
+		$group = CcScheduleQuery::create()
 			->filterByDbGroupId($group_id)
-			->findOne();
+			->delete();
 
-		$position = $group->getDbPosition();
+		$sql = "UPDATE cc_schedule 
+					SET starts = (starts - INTERVAL '{$groupBoundry["length"]}'), ends = (ends - INTERVAL '{$groupBoundry["length"]}') 
+					WHERE starts >= '{$groupBoundry["end_timestamp"]}' AND instance_id = {$this->_instanceId}";
 
-		$sql = "SELECT group_id FROM cc_show_schedule 
-					WHERE instance_id = '{$this->_instanceId}' AND position > '{$position}'";
-		$followingGroups = $CC_DBC->GetAll($sql);
-
-		$sql = "SELECT SUM(clip_length) FROM cc_schedule WHERE group_id='{$group_id}'";
-		$group_length = $CC_DBC->GetOne($sql);
-
-		$sql = "DELETE FROM cc_schedule WHERE group_id = '{$group_id}'";
 		$CC_DBC->query($sql);
-
-		if(!is_null($followingGroups)) {
-			$sql_opt = array();
-			foreach ($followingGroups as $row) {
-				$sql_opt[] = "group_id = {$row["group_id"]}";
-			}
-			$sql_group_ids = join(" OR ", $sql_opt);
-
-			$sql = "UPDATE cc_schedule 
-						SET starts = (starts - INTERVAL '{$group_length}'), ends = (ends - INTERVAL '{$group_length}') 
-						WHERE " . $sql_group_ids;
-			$CC_DBC->query($sql);
-		}
-
-		$group->delete();
 	}
 
     public function clearShow() {
 		
-		$groups = CcShowScheduleQuery::create()
-					->filterByDbInstanceId($this->_instanceId)
-					->find();
-
-		foreach($groups as $group) {
-			$groupId = $group->getDbGroupId();
-			CcScheduleQuery::create()
-				->filterByDbGroupId($groupId)
-				->delete();
-
-			$group->delete();
-		}
+		CcScheduleQuery::create()
+			->filterByDbInstanceId($this->_instanceId)
+			->delete();
 	}
 
     public function deleteShow() {
 		
-		$this->clearShow();
-
-        $showInstance = CcShowInstancesQuery::create()
+        CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
             ->delete();
 	}
@@ -627,11 +581,10 @@ class ShowInstance {
         global $CC_DBC;
 
 		$sql = "SELECT * 
-			FROM (cc_show_schedule AS ss LEFT JOIN cc_schedule AS s USING(group_id)
-				LEFT JOIN cc_files AS f ON f.id = s.file_id
+			FROM (cc_schedule AS s LEFT JOIN cc_files AS f ON f.id = s.file_id
 				LEFT JOIN cc_playlist AS p ON p.id = s.playlist_id )
 
-			WHERE ss.instance_id = '{$this->_instanceId}' ORDER BY starts";
+			WHERE s.instance_id = '{$this->_instanceId}' ORDER BY starts";
 
 		return $CC_DBC->GetAll($sql);	
     }

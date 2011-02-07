@@ -24,10 +24,6 @@
  * @method     CcShowInstancesQuery rightJoinCcShow($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShow relation
  * @method     CcShowInstancesQuery innerJoinCcShow($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShow relation
  *
- * @method     CcShowInstancesQuery leftJoinCcShowSchedule($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowSchedule relation
- * @method     CcShowInstancesQuery rightJoinCcShowSchedule($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowSchedule relation
- * @method     CcShowInstancesQuery innerJoinCcShowSchedule($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowSchedule relation
- *
  * @method     CcShowInstancesQuery leftJoinCcSchedule($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcSchedule relation
  * @method     CcShowInstancesQuery rightJoinCcSchedule($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSchedule relation
  * @method     CcShowInstancesQuery innerJoinCcSchedule($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSchedule relation
@@ -325,70 +321,6 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 		return $this
 			->joinCcShow($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcShow', 'CcShowQuery');
-	}
-
-	/**
-	 * Filter the query by a related CcShowSchedule object
-	 *
-	 * @param     CcShowSchedule $ccShowSchedule  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowInstancesQuery The current query, for fluid interface
-	 */
-	public function filterByCcShowSchedule($ccShowSchedule, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcShowInstancesPeer::ID, $ccShowSchedule->getDbInstanceId(), $comparison);
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the CcShowSchedule relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowInstancesQuery The current query, for fluid interface
-	 */
-	public function joinCcShowSchedule($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShowSchedule');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcShowSchedule');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the CcShowSchedule relation CcShowSchedule object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowScheduleQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcShowScheduleQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCcShowSchedule($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShowSchedule', 'CcShowScheduleQuery');
 	}
 
 	/**

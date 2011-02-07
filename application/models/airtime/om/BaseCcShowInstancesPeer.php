@@ -353,9 +353,6 @@ abstract class BaseCcShowInstancesPeer {
 	 */
 	public static function clearRelatedInstancePool()
 	{
-		// Invalidate objects in CcShowSchedulePeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcShowSchedulePeer::clearInstancePool();
 		// Invalidate objects in CcSchedulePeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcSchedulePeer::clearInstancePool();
