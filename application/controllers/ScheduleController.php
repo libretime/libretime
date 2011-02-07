@@ -295,6 +295,12 @@ class ScheduleController extends Zend_Controller_Action
         $show = new ShowInstance($showInstanceId);
         $start_timestamp = $show->getShowStart();
 		$end_timestamp = $show->getShowEnd();
+
+        //check to make sure show doesn't overlap.
+        if(Show::getShows($start_timestamp, $end_timestamp, array($showInstanceId))) {
+            $this->view->error = "cannot schedule an overlapping show.";
+            return;
+        }
 		
         $start = explode(" ", $start_timestamp);
         $end = explode(" ", $end_timestamp);
