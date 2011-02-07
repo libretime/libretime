@@ -9,7 +9,7 @@
 
 .ui-timepicker-inline { display: inline }
 
-#ui-timepicker-div { padding: 0.2em; z-index: 5 !important }
+#ui-timepicker-div { padding: 0.2em; z-index: 10 !important }
 .ui-timepicker-table { display: inline-table }
 .ui-timepicker-table table { margin:0.15em 0 0 0; border-collapse: collapse; }
 

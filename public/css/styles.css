@@ -762,7 +762,7 @@ dt.block-display, dd.block-display {
 	width:98%
 }
 div.ui-datepicker {
-	font-size: 75%;
+	/*font-size: 75%;*/
 }
 
 
@@ -1060,3 +1060,63 @@ button, input {
 	margin-top:0;
 	margin-bottom:0;
 }
+
+.user-management {
+	width:810px;
+}
+.user-data {
+	float:left;
+	width:420px;
+}
+.user-list-wrapper {
+	float:left;
+	width:380px;
+	margin-right:10px;
+}
+
+.user-management div.user-list-wrapper .ui-widget-header:first-child {
+    background: none repeat scroll 0 0 transparent;
+    border-width: 0 0 1px;
+    color: #444444;
+    font-weight: bold;
+}
+.user-list-wrapper .ui-widget-header:first-child .dataTables_filter {
+	margin:0;
+}
+.user-management h2 {
+    font-size: 1.7em;
+    padding-bottom: 16px;
+}
+.user-management .dataTables_filter .auto-search {
+    width: 378px;
+}
+.user-data.simple-formblock dd {
+    width: 73%;
+}
+
+.user-data fieldset {
+	margin-bottom:8px;
+}
+.user-data fieldset:last-child {
+	margin-bottom:0;
+}
+
+.user-list-wrapper .button-holder {
+	padding:8px 0;
+	text-align:right;
+}
+.user-list-wrapper .button-holder .ui-button {
+	margin:0;
+}
+.ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick {
+	background-image:url(redmond/images/ui-icons_666666_256x240.png);
+	cursor:pointer;
+	float:right;
+	margin-right:5px;
+}
+.ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick:hover {
+	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
+}
+
+
+#ui-datepicker-div { z-index: 10 !important }
