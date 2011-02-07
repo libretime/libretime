@@ -66,6 +66,20 @@ function convertToHHMMSSmm(timeInMS){
 		return hours + ":" + minutes + ":" + seconds+ "." + ms;
 }
 
+function convertDateToHHMM(epochTime){
+	var d = new Date(epochTime);
+	
+	var hours = d.getUTCHours().toString();
+	var minutes = d.getUTCMinutes().toString();
+	
+	if (hours.length == 1)
+		hours = "0" + hours;
+	if (minutes.length == 1)
+		minutes = "0" + minutes;
+        
+	return hours + ":" + minutes;
+}
+
 function convertDateToHHMMSS(epochTime){
 	var d = new Date(epochTime);
 	
@@ -82,17 +96,29 @@ function convertDateToHHMMSS(epochTime){
 	return hours + ":" + minutes + ":" + seconds;
 }
 
+/* Takes in a string of format similar to 2011-02-07 02:59:57,
+ * and converts this to epoch/posix time. */
 function convertDateToPosixTime(s){
-	var year = s.substring(0, 4);
-	var month = s.substring(5, 7);
-	var day = s.substring(8, 10);
-	var hour = s.substring(11, 13);
-	var minute = s.substring(14, 16);
-	var sec = s.substring(17, 19);
-	var msec = 0;
-	if (s.length >= 20){
-		msec = s.substring(20);
-	}
+
+    var temp = s.split(" ");
+
+    var date = temp[0].split("-");
+    var time = temp[1].split(":");
+    
+	var year = date[0];
+	var month = date[1];
+	var day = date[2];
+	var hour = time[0];
+	var minute = time[1];
+    var sec = 0;
+    var msec = 0;
+
+    if (time[2].indexOf(".") != -1){
+        var temp1 = time[2].split(".");
+        sec = temp1[0];
+        msec = temp1[1];
+    } else
+        sec = time[2];
 
 	return Date.UTC(year, month, day, hour, minute, sec, msec);
 }

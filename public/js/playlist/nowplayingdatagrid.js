@@ -96,10 +96,12 @@ function createDataGrid(){
 		}
 	} );
     
-    setTimeout(init2, 5000);
+
 }
 
 var viewType = "now" //"day";
+var mainLoopRegistered = false;
+
 function setViewType(type){
     if (type == 0){
         viewType = "now";
@@ -119,6 +121,11 @@ function init2(){
 		  registered = true;
 		  registerSongEndListener(notifySongEnd);
 	  }
+
+      if (!mainLoopRegistered){
+        setTimeout(init2, 5000);
+        mainLoopRegistered = true;
+      }
 }
 
 $(document).ready(function() {

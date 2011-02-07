@@ -172,7 +172,7 @@ function updatePlaybar(){
 
     $('#show-length').empty();
     if (currentShow.length > 0){
-        $('#show-length').text(convertDateToHHMMSS(currentShow[0].showStartPosixTime) + " - " + convertDateToHHMMSS(currentShow[0].showEndPosixTime));
+        $('#show-length').text(convertDateToHHMM(currentShow[0].showStartPosixTime) + " - " + convertDateToHHMM(currentShow[0].showEndPosixTime));
     }
 
     /* Column 2 update */
@@ -228,15 +228,6 @@ function parseItems(obj){
 }
 
 
-function getScheduleFromServerDebug(){
-    $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"text", success:function(data){
-                alert(data);
-          }});
-    setTimeout(getScheduleFromServer, serverUpdateInterval);
-}
-
-
-
 function getScheduleFromServer(){
     $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                 parseItems(data.entries);
@@ -248,7 +239,6 @@ function getScheduleFromServer(){
 function init() {
     //begin producer "thread"
     getScheduleFromServer();
-	//getScheduleFromServerDebug();
 	
     //begin consumer "thread"
     secondsTimer();
