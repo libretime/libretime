@@ -1,3 +1,17 @@
+/* function to create popup window */
+function popup(mylink){
+    if (!window.focus)
+        return true;
+    var href;
+    if (typeof(mylink) == 'string')
+       href=mylink;
+    else
+       href=mylink.href;
+    window.open(href, "player", 'width=300,height=100,scrollbars=yes');
+    return false;
+}
+
+
 /* Takes an input parameter of milliseconds and converts these into
  * the format HH:MM:SS */
 function convertToHHMMSS(timeInMS){
@@ -100,10 +114,10 @@ function convertDateToHHMMSS(epochTime){
  * and converts this to epoch/posix time. */
 function convertDateToPosixTime(s){
 
-    var temp = s.split(" ");
+    var datetime = s.split(" ");
 
-    var date = temp[0].split("-");
-    var time = temp[1].split(":");
+    var date = datetime[0].split("-");
+    var time = datetime[1].split(":");
     
 	var year = date[0];
 	var month = date[1];
@@ -114,9 +128,9 @@ function convertDateToPosixTime(s){
     var msec = 0;
 
     if (time[2].indexOf(".") != -1){
-        var temp1 = time[2].split(".");
-        sec = temp1[0];
-        msec = temp1[1];
+        var temp = time[2].split(".");
+        sec = temp[0];
+        msec = temp[1];
     } else
         sec = time[2];
 

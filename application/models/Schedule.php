@@ -444,12 +444,13 @@ class Schedule {
     public static function GetPlayOrderRange($prev = 1, $next = 1) {
         if (!is_int($prev) || !is_int($next)){
             //must enter integers to specify ranges
-            return "{}";
+            return array();
         }
 
         $date = Schedule::GetSchedulerTime();
         $timeNow = $date->getDate();
-        return array("schedulerTime"=>gmdate("Y-m-d H:i:s"),
+        return array("env"=>APPLICATION_ENV,
+            "schedulerTime"=>gmdate("Y-m-d H:i:s"),
             "previous"=>Schedule::Get_Scheduled_Item_Data($timeNow, -1, $prev, "24 hours"),
             "current"=>Schedule::Get_Scheduled_Item_Data($timeNow, 0),
             "next"=>Schedule::Get_Scheduled_Item_Data($timeNow, 1, $next, "48 hours"),
