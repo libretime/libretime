@@ -35,9 +35,10 @@ class CcScheduleTableMap extends TableMap {
 		$this->setPhpName('CcSchedule');
 		$this->setClassname('CcSchedule');
 		$this->setPackage('airtime');
-		$this->setUseIdGenerator(false);
+		$this->setUseIdGenerator(true);
+		$this->setPrimaryKeyMethodInfo('cc_schedule_id_seq');
 		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'BIGINT', true, null, null);
+		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addColumn('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', true, null, null);
 		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
 		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);

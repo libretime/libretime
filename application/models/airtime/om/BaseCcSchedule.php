@@ -26,7 +26,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the id field.
-	 * @var        string
+	 * @var        int
 	 */
 	protected $id;
 
@@ -164,7 +164,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	/**
 	 * Get the [id] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
 	public function getDbId()
 	{
@@ -465,13 +465,13 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	/**
 	 * Set the value of [id] column.
 	 * 
-	 * @param      string $v new value
+	 * @param      int $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
 	public function setDbId($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
 		if ($this->id !== $v) {
@@ -1014,7 +1014,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	{
 		try {
 
-			$this->id = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
+			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->playlist_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
 			$this->starts = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->ends = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
@@ -1224,13 +1224,21 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->setCcShowInstances($this->aCcShowInstances);
 			}
 
+			if ($this->isNew() ) {
+				$this->modifiedColumns[] = CcSchedulePeer::ID;
+			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
 					$criteria = $this->buildCriteria();
+					if ($criteria->keyContainsValue(CcSchedulePeer::ID) ) {
+						throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcSchedulePeer::ID.')');
+					}
+
 					$pk = BasePeer::doInsert($criteria, $con);
 					$affectedRows += 1;
+					$this->setDbId($pk);  //[IMV] update autoincrement primary key
 					$this->setNew(false);
 				} else {
 					$affectedRows += CcSchedulePeer::doUpdate($this, $con);
@@ -1598,7 +1606,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Returns the primary key for this object (row).
-	 * @return     string
+	 * @return     int
 	 */
 	public function getPrimaryKey()
 	{
@@ -1608,7 +1616,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	/**
 	 * Generic method to set the primary key (id column).
 	 *
-	 * @param      string $key Primary key.
+	 * @param      int $key Primary key.
 	 * @return     void
 	 */
 	public function setPrimaryKey($key)
@@ -1637,7 +1645,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setDbId($this->id);
 		$copyObj->setDbPlaylistId($this->playlist_id);
 		$copyObj->setDbStarts($this->starts);
 		$copyObj->setDbEnds($this->ends);
@@ -1653,6 +1660,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$copyObj->setDbInstanceId($this->instance_id);
 
 		$copyObj->setNew(true);
+		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
 	}
 
 	/**

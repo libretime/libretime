@@ -435,7 +435,7 @@ abstract class BaseCcSchedulePeer {
 	 */
 	public static function getPrimaryKeyFromRow($row, $startcol = 0)
 	{
-		return (string) $row[$startcol];
+		return (int) $row[$startcol];
 	}
 	
 	/**
@@ -789,6 +789,10 @@ abstract class BaseCcSchedulePeer {
 			$criteria = $values->buildCriteria(); // build Criteria from CcSchedule object
 		}
 
+		if ($criteria->containsKey(CcSchedulePeer::ID) && $criteria->keyContainsValue(CcSchedulePeer::ID) ) {
+			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcSchedulePeer::ID.')');
+		}
+
 
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
@@ -973,7 +977,7 @@ abstract class BaseCcSchedulePeer {
 	/**
 	 * Retrieve a single object by pkey.
 	 *
-	 * @param      string $pk the primary key.
+	 * @param      int $pk the primary key.
 	 * @param      PropelPDO $con the connection to use
 	 * @return     CcSchedule
 	 */
