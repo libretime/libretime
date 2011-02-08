@@ -28,6 +28,7 @@
           <actionMethod actionName="delete"/>
           <actionMethod actionName="deleteActive"/>
           <actionMethod actionName="close"/>
+          <actionMethod actionName="setPlaylistFades"/>
         </controllerFile>
         <controllerFile controllerName="Library">
           <actionMethod actionName="index"/>
@@ -286,6 +287,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Library">
             <viewScriptFile forActionName="getFileMetaData"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Playlist">
+            <viewScriptFile forActionName="setPlaylistFades"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

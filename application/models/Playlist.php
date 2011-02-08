@@ -355,6 +355,18 @@ class Playlist {
         return $res + 1;
     }
 
+     public function getSize() {
+
+        $res = CcPlaylistQuery::create()
+            ->findPK($this->id)
+            ->computeLastPosition();
+
+        if(is_null($res))
+            return 0;
+
+        return $res;
+    }
+
     /**
      * Get the entire playlist as a two dimentional array, sorted in order of play.
      * @return array

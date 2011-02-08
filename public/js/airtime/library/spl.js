@@ -392,13 +392,83 @@ function setUpSPL() {
 		.button()
 		.click(closeSPL);
 
-    $("#spl_main_crossfade")
-		.button({
-            icons: {
-                primary: "crossfade-main-icon"
-            },
-            text: false
-        });
+    $("#spl_crossfade").click(function(){
+
+        if($(this).hasClass("ui-state-active")) {
+            $(this).removeClass("ui-state-active");
+            $("#crossfade_main").hide();
+        }
+        else {
+            $(this).addClass("ui-state-active");
+
+            var url = '/Playlist/set-playlist-fades';
+
+	        $.get(url, {format: "json"}, function(json){
+                $("#spl_fade_in_main").find("span")
+                    .empty()
+                    .append(json.fadeIn);
+                $("#spl_fade_out_main").find("span")
+                    .empty()
+                    .append(json.fadeOut);
+
+                $("#crossfade_main").show();
+            });
+        }
+    });
+
+    $("#spl_fade_in_main span:first").blur(function(event){
+        event.stopPropagation();
+
+	    var url, fadeIn, span;
+
+	    span = $(this);
+	    url = "/Playlist/set-playlist-fades";
+	    fadeIn = span.text().trim();
+
+	    if(!isTimeValid(fadeIn)){
+            showError(span, "please put in a time '00:00:00 (.000000)'");
+		    return;
+	    }
+
+	    $.post(url, {format: "json", fadeIn: fadeIn}, function(json){
+		    if(json.response.error) {
+			    return;
+		    }
+
+             hideError(span);
+	    });
+    });
+
+    $("#spl_fade_out_main span:first").blur(function(event){
+        event.stopPropagation();
+
+	    var url, fadeIn, span;
+
+	    span = $(this);
+	    url = "/Playlist/set-playlist-fades";
+	    fadeOut = span.text().trim();
+
+	    if(!isTimeValid(fadeOut)){
+            showError(span, "please put in a time '00:00:00 (.000000)'");
+		    return;
+	    }
+
+	    $.post(url, {format: "json", fadeOut: fadeOut}, function(json){
+		    if(json.response.error) {
+			    return;
+		    }
+
+             hideError(span);
+	    });
+    });
+
+    $("#spl_fade_in_main span:first, #spl_fade_out_main span:first")
+        .keydown(submitOnEnter);
+
+    $("#crossfade_main > .ui-icon-closethick").click(function(){
+        $("#spl_crossfade").removeClass("ui-state-active");
+        $("#crossfade_main").hide();
+    });
 
 	$("#spl_delete")
 		.button()
