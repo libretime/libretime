@@ -206,7 +206,7 @@ CREATE TABLE "cc_show_days"
 	"last_show" DATE,
 	"start_time" TIME  NOT NULL,
 	"duration" TIME  NOT NULL,
-	"day" INT2  NOT NULL,
+	"day" INT2,
 	"repeat_type" INT2  NOT NULL,
 	"next_pop_date" DATE,
 	"show_id" INTEGER  NOT NULL,
