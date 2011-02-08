@@ -181,5 +181,5 @@ function audioPreview(filename, elemID){
       });
 
     //$('#jquery_jplayer_1').jPlayer('setMedia', media).jPlayer('play');
-    $('#'+elemID).children("a").children().attr("class", "ui-icon ui-icon-pause");
+    $('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
 }

@@ -23,6 +23,19 @@ function changeClipLength(pos, json) {
 		.append(json.response.length);
 }
 
+function showError(el, error) {
+    $(el).parent().next()
+        .empty()
+        .append(error)
+        .show();
+}
+
+function hideError(el) {
+     $(el).parent().next()
+        .empty()
+        .hide();
+}
+
 function changeCueIn(event) {
     event.stopPropagation();
 
@@ -34,16 +47,19 @@ function changeCueIn(event) {
 	cueIn = span.text().trim();
 
 	if(!isTimeValid(cueIn)){
-		//"please put in a time '00:00:00 (.000000)'"
+        showError(span, "please put in a time '00:00:00 (.000000)'");
+        return;
 	}
 
 	$.post(url, {format: "json", cueIn: cueIn, pos: pos}, function(json){
 
         if(json.response.error) {
+            showError(span, json.response.error);
 			return;
 		}
 
         changeClipLength(pos, json);
+        hideError(span);
 	});
 }
 
@@ -58,15 +74,19 @@ function changeCueOut(event) {
 	cueOut = span.text().trim();
 
 	if(!isTimeValid(cueOut)){
+        showError(span, "please put in a time '00:00:00 (.000000)'");
 		return;
 	}
 
 	$.post(url, {format: "json", cueOut: cueOut, pos: pos}, function(json){
+
 		if(json.response.error) {
+            showError(span, json.response.error);
 			return;
 		}
 
-		changeClipLength(pos, json);
+        changeClipLength(pos, json);
+        hideError(span);
 	});
 }
 
@@ -81,15 +101,16 @@ function changeFadeIn(event) {
 	fadeIn = span.text().trim();
 
 	if(!isTimeValid(fadeIn)){
+        showError(span, "please put in a time '00:00:00 (.000000)'");
 		return;
 	}
 
 	$.post(url, {format: "json", fadeIn: fadeIn, pos: pos}, function(json){
 		if(json.response.error) {
-			displayEditorError(json.response.error);
 			return;
 		}
 
+         hideError(span);
 	});
 }
 
@@ -104,6 +125,7 @@ function changeFadeOut(event) {
 	fadeOut = span.text().trim();
 
 	if(!isTimeValid(fadeOut)){
+        showError(span, "please put in a time '00:00:00 (.000000)'");
 		return;
 	}
 
@@ -111,21 +133,17 @@ function changeFadeOut(event) {
 		if(json.response.error) {
 			return;
 		}
-
+        
+         hideError(span);
 	});
 }
 
 function submitOnEnter(event) {
 	//enter was pressed
 	if(event.keyCode === 13) {
+        event.preventDefault();
 		$(this).blur();
 	}
-}
-
-//function is needed for content editable span because 
-//jQuery sortable is not letting me edit.
-function focusOnEditable(ev){
-    $(this).focus();
 }
 
 function setCueEvents() {
@@ -134,8 +152,7 @@ function setCueEvents() {
 	$(".spl_cue_out span:last").blur(changeCueOut);
 
     $(".spl_cue_in span:first, .spl_cue_out span:first")
-        .mousedown(focusOnEditable)
-        .keyup(submitOnEnter);
+        .keydown(submitOnEnter);
 }
 
 function setFadeEvents() {
@@ -144,8 +161,7 @@ function setFadeEvents() {
 	$(".spl_fade_out span:first").blur(changeFadeOut);
 
     $(".spl_fade_in span:first, .spl_fade_out span:first")
-        .mousedown(focusOnEditable)
-        .keyup(submitOnEnter);
+        .keydown(submitOnEnter);
 }
 
 function highlightActive(el) {
@@ -243,7 +259,6 @@ function setSPLContent(json) {
 }
 
 function addSPLItem(event, ui){
-	
 	var url, tr, id, items, draggableOffset, elOffset, pos;
 
 	tr = ui.helper; 	
@@ -272,12 +287,11 @@ function addSPLItem(event, ui){
 }
 
 function deleteSPLItem(event){
+    event.stopPropagation();
+
 	var url, pos;
 
-	event.stopPropagation();
-
-	pos = $(this).parent().attr("id").split("_").pop();
-
+	pos = $(this).parent().parent().attr("id").split("_").pop();
 	url = '/Playlist/delete-item';
 
 	$.post(url, {format: "json", pos: pos}, setSPLContent);
@@ -291,12 +305,9 @@ function moveSPLItem(event, ui) {
     newPos = li.index();
     oldPos = li.attr('id').split("_").pop(); 
 
-	url = '/Playlist/move-item'
-	url = url + '/format/json';
-	url = url + '/oldPos/' + oldPos;
-	url = url + '/newPos/' + newPos;
+	url = '/Playlist/move-item';
 
-	$.post(url, setSPLContent);
+	$.post(url, {format: "json", oldPos: oldPos, newPos: newPos}, setSPLContent);
 }
 
 function noOpenPL(json) {
@@ -368,7 +379,9 @@ function openDiffSPL(json) {
 
 function setUpSPL() {
     
-    $("#spl_sortable").sortable();
+    $("#spl_sortable").sortable({
+        handle: 'div.list-item-container'
+    });
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
 	$("#spl_new")
