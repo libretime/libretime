@@ -441,7 +441,7 @@ class ShowInstance {
         $starts = $this->getShowStart();
         $ends = $this->getShowEnd(); 
 
-		$sql = "SELECT timestamp '{$ends}' + interval '{$hours}:{$mins}'";
+		$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
 		$new_ends = $CC_DBC->GetOne($sql);
 
         //only need to check overlap if show increased in size.
