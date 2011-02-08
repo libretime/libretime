@@ -122,19 +122,12 @@ function submitOnEnter(event) {
 	}
 }
 
-//function is needed for content editable span because 
-//jQuery sortable is not letting me edit.
-function focusOnEditable(ev){
-    $(this).focus();
-}
-
 function setCueEvents() {
     
     $(".spl_cue_in span:last").blur(changeCueIn);
 	$(".spl_cue_out span:last").blur(changeCueOut);
 
     $(".spl_cue_in span:first, .spl_cue_out span:first")
-        .mousedown(focusOnEditable)
         .keyup(submitOnEnter);
 }
 
@@ -144,7 +137,6 @@ function setFadeEvents() {
 	$(".spl_fade_out span:first").blur(changeFadeOut);
 
     $(".spl_fade_in span:first, .spl_fade_out span:first")
-        .mousedown(focusOnEditable)
         .keyup(submitOnEnter);
 }
 
@@ -272,12 +264,11 @@ function addSPLItem(event, ui){
 }
 
 function deleteSPLItem(event){
+    event.stopPropagation();
+
 	var url, pos;
 
-	event.stopPropagation();
-
-	pos = $(this).parent().attr("id").split("_").pop();
-
+	pos = $(this).parent().parent().attr("id").split("_").pop();
 	url = '/Playlist/delete-item';
 
 	$.post(url, {format: "json", pos: pos}, setSPLContent);
@@ -368,7 +359,9 @@ function openDiffSPL(json) {
 
 function setUpSPL() {
     
-    $("#spl_sortable").sortable();
+    $("#spl_sortable").sortable({
+        handle: 'div.list-item-container'
+    });
     $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
 	$("#spl_remove_selected").click(deleteSPLItem);
 	$("#spl_new")
