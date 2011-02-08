@@ -42,12 +42,12 @@ class Application_Model_Nowplaying
         return $rows;
     }
     
-    public static function GetDataGridData($viewType){
-                        
-        $date = Schedule::GetSchedulerTime();
-        $timeNow = $date->getDate();
-                
+    public static function GetDataGridData($viewType, $dateString){
+                                
         if ($viewType == "now"){
+            
+            $date = new Application_Model_DateHelper;
+            $timeNow = $date->getDate();
             
             /* When do "ORDER BY x DESC LIMIT 5" to ensure that we get the last 5 previously scheduled items.
              * However using DESC, puts our scheduled items in reverse order, so we need to reverse it again 
@@ -57,6 +57,10 @@ class Application_Model_Nowplaying
             $current = Schedule::Get_Scheduled_Item_Data($timeNow, 0);
             $next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, 10, "24 hours");
         } else {
+            
+            $date = new Application_Model_DateHelper;
+            $timeNow = $date->setDate($dateString);
+            $timeNow = $date->getDate();
             
             $previous = array_reverse(Schedule::Get_Scheduled_Item_Data($timeNow, -1, "ALL", $date->getNowDayStartDiff()." seconds"));
             $current = Schedule::Get_Scheduled_Item_Data($timeNow, 0);

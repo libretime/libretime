@@ -71,5 +71,11 @@ class User {
 	public static function getHosts($search=NULL) {
 		return User::getUsers(array('H', 'A'), $search);
 	}
+    
+	public static function getUsersDataTablesInfo($datatables_post) {
+
+		$fromTable = "cc_subjs";
+		return StoredFile::searchFiles($fromTable, $datatables_post);
+	}	
 
 }

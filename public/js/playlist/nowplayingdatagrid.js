@@ -99,7 +99,6 @@ function createDataGrid(){
 
 }
 
-var viewType = "now" //"day";
 var mainLoopRegistered = false;
 
 function setViewType(type){
@@ -111,8 +110,29 @@ function setViewType(type){
     init2();
 }
 
+function getDateString(){
+    var date0 = $("#datepicker").datepicker("getDate");
+    return (date0.getFullYear() + "-" + date0.getMonth() + "-" + date0.getDate());
+}
+
+function getAJAXURL(){
+    var url = "/Nowplaying/get-data-grid-data/format/json/view/"+viewType;
+    
+    if (viewType == "day"){
+      url +=  "/date/" + getDateString();
+    }
+    
+    return url;
+}
+
 function init2(){
-	  $.ajax({ url: "/Nowplaying/get-data-grid-data/format/json/view/" + viewType, dataType:"json", success:function(data){
+	  
+      if (!mainLoopRegistered){
+        setTimeout(init2, 5000);
+        mainLoopRegistered = true;
+      }
+      
+      $.ajax({ url: getAJAXURL(), dataType:"json", success:function(data){
 		datagridData = data.entries;
         createDataGrid();
 	  }});
@@ -121,13 +141,14 @@ function init2(){
 		  registered = true;
 		  registerSongEndListener(notifySongEnd);
 	  }
-
-      if (!mainLoopRegistered){
-        setTimeout(init2, 5000);
-        mainLoopRegistered = true;
-      }
 }
 
 $(document).ready(function() {
-	init2();
+    if (viewType == "day"){
+        $("#datepicker").datepicker();
+        var date = new Date();
+        $("#datepicker").datepicker("setDate", date);
+    }
+
+    init2();
 });
