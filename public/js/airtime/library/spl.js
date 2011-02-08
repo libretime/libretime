@@ -23,6 +23,18 @@ function changeClipLength(pos, json) {
 		.append(json.response.length);
 }
 
+function showError(el, error) {
+    $(el).parent().next().find("span")
+        .empty()
+        .append(error)
+        .show();
+}
+
+function hideError(el) {
+     $(el).parent().next().find("span")
+        .hide();
+}
+
 function changeCueIn(event) {
     event.stopPropagation();
 
@@ -34,16 +46,19 @@ function changeCueIn(event) {
 	cueIn = span.text().trim();
 
 	if(!isTimeValid(cueIn)){
-		//"please put in a time '00:00:00 (.000000)'"
+        showError(span, "please put in a time '00:00:00 (.000000)'");
+        return;
 	}
 
 	$.post(url, {format: "json", cueIn: cueIn, pos: pos}, function(json){
 
         if(json.response.error) {
+            showError(span, json.response.error);
 			return;
 		}
 
         changeClipLength(pos, json);
+        hideError(span);
 	});
 }
 
@@ -58,15 +73,19 @@ function changeCueOut(event) {
 	cueOut = span.text().trim();
 
 	if(!isTimeValid(cueOut)){
+        showError(span, "please put in a time '00:00:00 (.000000)'");
 		return;
 	}
 
 	$.post(url, {format: "json", cueOut: cueOut, pos: pos}, function(json){
+
 		if(json.response.error) {
+            showError(span, json.response.error);
 			return;
 		}
 
-		changeClipLength(pos, json);
+        changeClipLength(pos, json);
+        hideError(span);
 	});
 }
 
@@ -81,15 +100,16 @@ function changeFadeIn(event) {
 	fadeIn = span.text().trim();
 
 	if(!isTimeValid(fadeIn)){
+        showError(span, "please put in a time '00:00:00 (.000000)'");
 		return;
 	}
 
 	$.post(url, {format: "json", fadeIn: fadeIn, pos: pos}, function(json){
 		if(json.response.error) {
-			displayEditorError(json.response.error);
 			return;
 		}
 
+         hideError(span);
 	});
 }
 
@@ -104,6 +124,7 @@ function changeFadeOut(event) {
 	fadeOut = span.text().trim();
 
 	if(!isTimeValid(fadeOut)){
+        showError(span, "please put in a time '00:00:00 (.000000)'");
 		return;
 	}
 
@@ -111,7 +132,8 @@ function changeFadeOut(event) {
 		if(json.response.error) {
 			return;
 		}
-
+        
+         hideError(span);
 	});
 }
 
@@ -235,7 +257,6 @@ function setSPLContent(json) {
 }
 
 function addSPLItem(event, ui){
-	
 	var url, tr, id, items, draggableOffset, elOffset, pos;
 
 	tr = ui.helper; 	
@@ -282,12 +303,9 @@ function moveSPLItem(event, ui) {
     newPos = li.index();
     oldPos = li.attr('id').split("_").pop(); 
 
-	url = '/Playlist/move-item'
-	url = url + '/format/json';
-	url = url + '/oldPos/' + oldPos;
-	url = url + '/newPos/' + newPos;
+	url = '/Playlist/move-item';
 
-	$.post(url, setSPLContent);
+	$.post(url, {format: "json", oldPos: oldPos, newPos: newPos}, setSPLContent);
 }
 
 function noOpenPL(json) {
