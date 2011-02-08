@@ -848,6 +848,7 @@ div.ui-datepicker {
 	margin-right:22px;
 }
 
+
 #schedule_playlist_chosen li > div > div > span {
 	float: right;
 	margin-right:46px;
@@ -1117,3 +1118,5 @@ button, input {
 .ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick:hover {
 	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
 }
+
+#ui-datepicker-div { z-index: 10 !important }

@@ -1,6 +1,10 @@
 <dl id="spl_editor" class="inline-list">
     <dt>Fade out:</dt>
-    <dd id="spl_fade_out_<?php echo $this->pos -1; ?>"><span contenteditable="true" class="spl_text_input"><?php echo $this->fadeOut; ?></span></dd>
+    <dd id="spl_fade_out_<?php echo $this->pos; ?>" class="spl_fade_out">
+        <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeOut; ?></span>
+    </dd>
     <dt>Fade in:</dt>
-    <dd id="spl_fade_in_<?php echo $this->pos; ?>"><span contenteditable="true" class="spl_text_input"><?php echo $this->fadeIn; ?></span></dd>
+    <dd id="spl_fade_in_<?php echo $this->pos + 1; ?>" class="spl_fade_in">
+        <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeIn; ?></span>
+    </dd>
 </dl>

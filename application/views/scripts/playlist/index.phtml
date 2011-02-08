@@ -10,16 +10,11 @@
 
 <div class="clear"></div>
 <div class="" style="clear:both; float:none; width:100%;">
-	<ul id="spl_sortable">
-		<?php if (count($this->pl->getContents())) : ?>
-		<?php echo $this->partialLoop('playlist/sidebarcontent.phtml', $this->pl->getContents()); ?>
-		<?php else : ?>
-		<li class="spl_empty">Empty playlist</li> 
-		<?php endif; ?>
+	<ul id="spl_sortable">	
+        <?php echo $this->render('playlist/update.phtml') ?>
 	</ul>
 </div>
 
-<div id="spl_error" class="ui-state-error ui-corner-all" style="display: none"></div>
 <?php else : ?>
 <div>No open playlist</div>
 <?php endif; ?>
