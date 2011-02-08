@@ -34,6 +34,7 @@ function showError(el, error) {
 
 function hideError(el) {
      $(el).parent().next().find("span")
+        .empty()
         .hide();
 }
 
@@ -142,6 +143,7 @@ function changeFadeOut(event) {
 function submitOnEnter(event) {
 	//enter was pressed
 	if(event.keyCode === 13) {
+        event.preventDefault();
 		$(this).blur();
 	}
 }
@@ -152,7 +154,7 @@ function setCueEvents() {
 	$(".spl_cue_out span:last").blur(changeCueOut);
 
     $(".spl_cue_in span:first, .spl_cue_out span:first")
-        .keyup(submitOnEnter);
+        .keydown(submitOnEnter);
 }
 
 function setFadeEvents() {
@@ -161,7 +163,7 @@ function setFadeEvents() {
 	$(".spl_fade_out span:first").blur(changeFadeOut);
 
     $(".spl_fade_in span:first, .spl_fade_out span:first")
-        .keyup(submitOnEnter);
+        .keydown(submitOnEnter);
 }
 
 function highlightActive(el) {
