@@ -239,12 +239,13 @@
     margin: 0;
 
 }
-.edit-error {
+dd.edit-error {
 	color:#b80000;
 	margin:0;
 	padding-bottom:0;
 	font-size:12px;
 	display:none;
+    clear: left;
 }
 	
 /*.edit-error:last-child {

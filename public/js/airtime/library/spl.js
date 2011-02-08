@@ -24,9 +24,11 @@ function changeClipLength(pos, json) {
 }
 
 function showError(el, error) {
-    $(el).parent().next().find("span")
-        .empty()
-        .append(error)
+    $(el).parent().next()
+        .find("span")
+            .empty()
+            .append(error)
+            .end()
         .show();
 }
 
