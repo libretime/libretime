@@ -33,7 +33,7 @@ function showError(el, error) {
 }
 
 function hideError(el) {
-     $(el).parent().next().find("span")
+     $(el).parent().next()
         .empty()
         .hide();
 }
