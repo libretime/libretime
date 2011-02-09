@@ -78,6 +78,9 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="addUser"/>
           <actionMethod actionName="getHosts"/>
+          <actionMethod actionName="getUserDataTableInfo"/>
+          <actionMethod actionName="getUserData"/>
+          <actionMethod actionName="removeUser"/>
         </controllerFile>
         <controllerFile controllerName="SidePlaylist">
           <actionMethod actionName="index"/>
@@ -86,6 +89,7 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="getDataGridData"/>
           <actionMethod actionName="livestream"/>
+          <actionMethod actionName="dayView"/>
         </controllerFile>
         <controllerFile controllerName="Preference">
           <actionMethod actionName="index"/>
@@ -289,6 +293,17 @@
           <viewControllerScriptsDirectory forControllerName="Library">
             <viewScriptFile forActionName="getFileMetaData"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Nowplaying">
+            <viewScriptFile forActionName="dayView"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="User">
+            <viewScriptFile forActionName="getUserDataTableInfo"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="User">
+            <viewScriptFile forActionName="getUserData"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="User">
+            <viewScriptFile forActionName="removeUser"/>
           <viewControllerScriptsDirectory forControllerName="Playlist">
             <viewScriptFile forActionName="setPlaylistFades"/>
           </viewControllerScriptsDirectory>

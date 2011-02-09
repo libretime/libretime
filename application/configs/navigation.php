@@ -10,10 +10,23 @@
 $pages = array(
 	array(
 		'label'      => 'Now Playing',
-		'module'     => 'Nowplaying',
-		'controller' => 'index',
-		'action'     => 'index',
-		'order'      => -100 //make sure home is the first page
+		'uri' => 'javascript:void(null)',
+		'pages'      => array(
+		    array(
+		        'label'      => 'Current',
+		        'module'     => 'default',
+		        'controller' => 'Nowplaying',
+		        'action'     => 'index',
+				'resource'	=>	'Nowplaying'
+		    ),
+		    array(
+		        'label'      => 'Daily View',
+		        'module'     => 'default',
+		        'controller' => 'Nowplaying',
+		        'action'     => 'day-view',
+				'resource'	=>	'Nowplaying'
+		    )
+		)
 	),
 	array(
 		'label'      => 'Schedule',

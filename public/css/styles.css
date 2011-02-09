@@ -516,6 +516,25 @@ dl.inline-list dd {
     padding: 0.2em 1em;
 	margin-right:3px;
 }
+.dataTables_filter input {
+    background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;
+    text-indent: 25px;
+	width: 60%;
+	border: 1px solid #5B5B5B;
+    height: 23px;
+    margin: 0;
+    padding: 0;	
+}
+.dataTables_length select {
+    background-color: #DDDDDD;
+    border: 1px solid #5B5B5B;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    height: 25px;
+    margin: 0;
+    padding: 2px 2px 2px 0;
+    vertical-align: top;
+}
 
 /*----END Data Table----*/
 
@@ -1088,7 +1107,7 @@ button, input {
     font-size: 1.7em;
     padding-bottom: 16px;
 }
-.user-management .dataTables_filter .auto-search {
+.user-management .dataTables_filter input {
     width: 378px;
 }
 .user-data.simple-formblock dd {
@@ -1121,3 +1140,4 @@ button, input {
 
 
 #ui-datepicker-div { z-index: 10 !important }
+

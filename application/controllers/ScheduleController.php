@@ -47,7 +47,7 @@ class ScheduleController extends Zend_Controller_Action
 		$end = $this->_getParam('end', null);
 		
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id, $userInfo->type);
+        $user = new User($userInfo->id);
         if($user->isAdmin())
             $editable = true;
         else
@@ -128,7 +128,7 @@ class ScheduleController extends Zend_Controller_Action
 		$showInstanceId = $this->_getParam('showInstanceId');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id, $userInfo->type);
+        $user = new User($userInfo->id);
 
         if($user->isAdmin()) {
 		    $show = new ShowInstance($showInstanceId);
@@ -146,7 +146,7 @@ class ScheduleController extends Zend_Controller_Action
 		$showInstanceId = $this->_getParam('showInstanceId');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id, $userInfo->type);
+        $user = new User($userInfo->id);
 
         if($user->isAdmin()) {
 		    $show = new ShowInstance($showInstanceId);
@@ -162,7 +162,7 @@ class ScheduleController extends Zend_Controller_Action
         $showInstanceId = $this->_getParam('id');
         		                                       
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-		$user = new User($userInfo->id, $userInfo->type);
+		$user = new User($userInfo->id);
 
         if($user->isAdmin()) {
 		    $show = new ShowInstance($showInstanceId);
@@ -176,7 +176,7 @@ class ScheduleController extends Zend_Controller_Action
         $today_timestamp = date("Y-m-d H:i:s");
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id, $userInfo->type);
+        $user = new User($userInfo->id);
 
         $show = new ShowInstance($id);
 
@@ -214,7 +214,7 @@ class ScheduleController extends Zend_Controller_Action
 		}
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id, $userInfo->type);
+        $user = new User($userInfo->id);
 		$show = new ShowInstance($showInstanceId);
 
         if($user->isHost($show->getShowId())) {
@@ -233,7 +233,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $showInstanceId = $this->_getParam('id');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id, $userInfo->type);
+        $user = new User($userInfo->id);
         $show = new ShowInstance($showInstanceId);
 
         if($user->isHost($show->getShowId()))
@@ -263,7 +263,7 @@ class ScheduleController extends Zend_Controller_Action
 		$search = $this->_getParam('search', null);
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id, $userInfo->type);
+        $user = new User($userInfo->id);
         $show = new ShowInstance($showInstanceId);
 
         if($user->isHost($show->getShowId())) {
