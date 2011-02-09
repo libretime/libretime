@@ -92,13 +92,16 @@ function updateProgressBarValue(){
 	if (currentSong.length > 0){
 		songPercentDone = (estimatedSchedulePosixTime - currentSong[0].songStartPosixTime)/currentSong[0].songLengthMs*100;
 		if (songPercentDone < 0 || songPercentDone > 100){
-			songPercentDone = 0;
-			currentSong = new Array();
+			songPercentDone = 0;        
+            currentSong = new Array();
 		} else {
 			$('#on-air-info').attr("class", "on-air-info on");
+            $('#progress-show').attr("class", "progress-show");
 		}
-	} else
+	} else {
 		$('#on-air-info').attr("class", "on-air-info off");
+        $('#progress-show').attr("class", "progress-show-red");
+    }
 	$('#progress-bar').attr("style", "width:"+songPercentDone+"%");
 
 	//calculate how much time left to next song if there is any
@@ -132,7 +135,7 @@ function updatePlaybar(){
     /* Column 0 update */
     $('#previous').empty();
     $('#prev-length').empty();
-    $('#current').text("Current:");
+    $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
     $('#next').empty();
     $('#next-length').empty();
     if (previousSongs.length > 0){

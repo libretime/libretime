@@ -174,13 +174,16 @@ select {
 	border-width:1px 1px 0 1px;
 	background:#141414 url(images/progressbar_bg.png) repeat-x 0 0;
 }
-.progressbar .progress-song, .progressbar .progress-show {
+.progressbar .progress-song, .progressbar .progress-show, .progress-show-red {
 	height:4px;
 	width:0%;
 	background:#f97202 url(images/progressbar_song.png) repeat-x 0 0;
 }
 .progressbar .progress-show {
 	background:#02cef9 url(images/progressbar_show.png) repeat-x 0 0;
+}
+.progressbar .progress-show-red {
+	background:#02cef9 url(images/progressbar_show_red.png) repeat-x 0 0;
 }
 .now-playing-info .lenght {
 	color:#c4c4c4;
