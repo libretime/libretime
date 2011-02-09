@@ -355,7 +355,7 @@ function newSPL() {
 
         form = $(json.form);
 
-        form.find("input, description")
+        form.find("input, textarea")
             .keydown(function(event){
                 //enter was pressed
 	            if(event.keyCode === 13) {
