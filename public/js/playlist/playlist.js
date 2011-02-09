@@ -104,23 +104,24 @@ function updateProgressBarValue(){
 	//calculate how much time left to next song if there is any
 	if (nextSongs.length > 0 && nextSongPrepare){
 		var diff = nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime;
-		if (diff < serverUpdateInterval && diff >= 0){
+		if (diff < serverUpdateInterval){
+            if (diff < 0)
+                diff=0;
+                
 			nextSongPrepare = false;
 			setTimeout(newSongStart, diff);
-		} else if (diff < 0 && APPLICATION_ENV == "development"){
-            alert ("Warning: estimatedSchedulePosixTime > songStartPosixTime");
-            alert (estimatedSchedulePosixTime + " " + nextSongs[0].songStartPosixTime);
 		}
 	}
 	
 	//calculate how much time left to next show if there is any
 	if (nextShow.length > 0 && nextShowPrepare){
 		var diff = nextShow[0].showStartPosixTime - estimatedSchedulePosixTime;
-		if (diff < serverUpdateInterval && diff >= 0){
+		if (diff < serverUpdateInterval){
+            if (diff < 0)
+                diff=0;
+                
 			nextShowPrepare = false;
 			setTimeout(nextShowStart, diff);
-		} else if (diff < 0 && APPLICATION_ENV == "development"){
-			alert ("Warning: estimatedSchedulePosixTime > showStartPosixTime");
 		}
 	}
 

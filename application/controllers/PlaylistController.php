@@ -88,7 +88,7 @@ class PlaylistController extends Zend_Controller_Action
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
         $pl = new Playlist();
-        $pl_id = $pl->create("Test Zend Auth");
+        $pl_id = $pl->create("Untitled Playlist");
 		$pl->setPLMetaData('dc:creator', $userInfo->login);
 
 		$this->changePlaylist($pl_id);

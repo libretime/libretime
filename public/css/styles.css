@@ -1082,7 +1082,7 @@ button, input {
 
 .user-management {
 	width:810px;
-	width:380px;
+	/*width:380px;*/
 }
 .user-management-expanded {
 	width:810px;
@@ -1091,7 +1091,7 @@ button, input {
 	float:left;
 	width:420px;
 	margin-left:10px;
-	display:none;
+	/* display:block;*/
 }
 .user-list-wrapper {
 	float:left;

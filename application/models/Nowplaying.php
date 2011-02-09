@@ -4,8 +4,11 @@ class Application_Model_Nowplaying
 {
     
     public static function InsertBlankRow($i, $rows){
-        $startDate = explode(".", $rows[$i-1][3]);
-        $endDate = explode(".", $rows[$i][2]);
+        $startDateFull = $rows[$i-1][3];
+        $endDateFull = $rows[$i][2];
+
+        $startDate = explode(".", $startDateFull);
+        $endDate = explode(".", $endDateFull);
         
         $epochStartMS =  strtotime($startDate[0])*1000;
         $epochEndMS =  strtotime($endDate[0])*1000;
@@ -15,7 +18,7 @@ class Application_Model_Nowplaying
         if (count($endDate) > 1)
             $epochEndMS += $endDate[1];
         
-        $blankRow = array(array("b", "-", "-", "-", Application_Model_DateHelper::ConvertMSToHHMMSSmm($epochEndMS - $epochStartMS), "-", "-", "-", "-" , "-", "", ""));
+        $blankRow = array(array("b", $startDateFull, $startDateFull, $endDate, Application_Model_DateHelper::ConvertMSToHHMMSSmm($epochEndMS - $epochStartMS), "-", "-", "-", "-" , "-", "", ""));
         array_splice($rows, $i, 0, $blankRow);
         return $rows;
     }
