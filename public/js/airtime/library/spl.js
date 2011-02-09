@@ -334,9 +334,9 @@ function newSPL() {
 	url = '/Playlist/new/format/json';
 
 	$.post(url, function(json){
-		var submit;
+		var submit, form;
 
-		submit = $('<button>Submit</button>')
+		submit = $('<button id="new_playlist_submit">Submit</button>')
 			.button()
 			.click(function(){
 				var url, data;
@@ -353,9 +353,20 @@ function newSPL() {
 				})
 			});
 
+        form = $(json.form);
+
+        form.find("input, description")
+            .keydown(function(event){
+                //enter was pressed
+	            if(event.keyCode === 13) {
+                    event.preventDefault();
+		            $("#new_playlist_submit").click();
+	            }
+            })
+
 		$("#side_playlist")
 			.empty()
-			.append(json.form)
+			.append(form)
 			.append(submit);
 	});
 }
