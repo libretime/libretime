@@ -70,6 +70,20 @@ function setAddShowEvents() {
         $("#schedule-show-when > fieldset:last").toggle();
     });
 
+    $("#add_show_repeat_type").change(function(){
+        var x = $(this).val();
+        if($(this).val() == 2) {
+            $("#add_show_day_check-label, #add_show_day_check-element").hide();
+        }
+        else {
+            $("#add_show_day_check-label, #add_show_day_check-element").show();
+        }
+    });
+
+    $("#add_show_no_end").click(function(){
+        $("#add_show_end_date").toggle();
+    });
+
 	start  = $("#add_show_start_date");
 	end  = $("#add_show_end_date");
 

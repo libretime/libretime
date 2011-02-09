@@ -71,37 +71,52 @@ class Show {
 
 		$showId = $show->getDbId();
 
-		foreach ($data['add_show_day_check'] as $day) {
+        //don't set day for monthly repeat type, it's invalid.
+        if($data['add_show_repeats'] && $data["add_show_repeat_type"] == 2) {
+            $showDay = new CcShowDays();
+	        $showDay->setDbFirstShow($data['add_show_start_date']);
+	        $showDay->setDbLastShow($endDate);
+	        $showDay->setDbStartTime($data['add_show_start_time']);
+	        $showDay->setDbDuration($data['add_show_duration']);
+            $showDay->setDbRepeatType($repeat_type);
+	        $showDay->setDbShowId($showId);
+	        $showDay->save();
+        }
+        else {
 
-			if($startDow !== $day){
+            foreach ($data['add_show_day_check'] as $day) {
+
+			    if($startDow !== $day){
 				
-				if($startDow > $day)
-					$daysAdd = 6 - $startDow + 1 + $day;
-				else
-					$daysAdd = $day - $startDow;				
+				    if($startDow > $day)
+					    $daysAdd = 6 - $startDow + 1 + $day;
+				    else
+					    $daysAdd = $day - $startDow;				
 
-				$sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '{$daysAdd} day' ";
-				$r = $con->query($sql);
-				$start = $r->fetchColumn(0); 
-			}
-			else {
-				$start = $data['add_show_start_date'];
-			}
+				    $sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '{$daysAdd} day' ";
+				    $r = $con->query($sql);
+				    $start = $r->fetchColumn(0); 
+			    }
+			    else {
+				    $start = $data['add_show_start_date'];
+			    }
 
-            if(strtotime($start) < strtotime($endDate) || is_null($endDate)) {
+                if(strtotime($start) < strtotime($endDate) || is_null($endDate)) {
 
-			    $showDay = new CcShowDays();
-			    $showDay->setDbFirstShow($start);
-			    $showDay->setDbLastShow($endDate);
-			    $showDay->setDbStartTime($data['add_show_start_time']);
-			    $showDay->setDbDuration($data['add_show_duration']);
-			    $showDay->setDbDay($day);
-                $showDay->setDbRepeatType($repeat_type);
-			    $showDay->setDbShowId($showId);
-			    $showDay->save();
-            }
-		}
+			        $showDay = new CcShowDays();
+			        $showDay->setDbFirstShow($start);
+			        $showDay->setDbLastShow($endDate);
+			        $showDay->setDbStartTime($data['add_show_start_time']);
+			        $showDay->setDbDuration($data['add_show_duration']);
+			        $showDay->setDbDay($day);
+                    $showDay->setDbRepeatType($repeat_type);
+			        $showDay->setDbShowId($showId);
+			        $showDay->save();
+                }
+		    }
+        }
 		
+        //add selected hosts to cc_show_hosts table.
 		foreach ($data['add_show_hosts'] as $host) {
 			$showHost = new CcShowHosts();
 			$showHost->setDbShow($showId);
@@ -158,6 +173,19 @@ class Show {
         }
     }
 
+    private static function setNextPop($next_date, $show_id, $day) {
+
+        $nextInfo = explode(" ", $next_date);
+
+        $repeatInfo = CcShowDaysQuery::create()
+            ->filterByDbShowId($show_id)
+            ->filterByDbDay($day)
+            ->findOne();
+
+        $repeatInfo->setDbNextPopDate($nextInfo[0])
+            ->save();
+    }
+
     //for a show with repeat_type == 0
     private static function populateWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
         global $CC_DBC;        
@@ -186,15 +214,7 @@ class Show {
 		    $next_date = $CC_DBC->GetOne($sql);
         }
 
-        $nextInfo = explode(" ", $next_date);
-
-        $repeatInfo = CcShowDaysQuery::create()
-            ->filterByDbShowId($show_id)
-            ->filterByDbDay($day)
-            ->findOne();
-
-        $repeatInfo->setDbNextPopDate($nextInfo[0])
-            ->save();
+        Show::setNextPop($next_date, $show_id, $day);
     }
 
     //for a show with repeat_type == 1
@@ -225,15 +245,38 @@ class Show {
 		    $next_date = $CC_DBC->GetOne($sql);
         }
 
-        $nextInfo = explode(" ", $next_date);
+        Show::setNextPop($next_date, $show_id, $day);
+    }
 
-        $repeatInfo = CcShowDaysQuery::create()
-            ->filterByDbShowId($show_id)
-            ->filterByDbDay($day)
-            ->findOne();
+    //for a show with repeat_type == 2
+    private static function populateMonthlyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
+        global $CC_DBC;        
 
-        $repeatInfo->setDbNextPopDate($nextInfo[0])
-            ->save();
+        if(isset($next_pop_date)) {
+            $next_date = $next_pop_date." ".$start_time;
+        }
+        else {
+            $next_date = $first_show." ".$start_time;
+        }
+
+        while(strtotime($next_date) < strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
+            
+            $start = $next_date;
+            
+            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
+		    $end = $CC_DBC->GetOne($sql);
+
+            $newShow = new CcShowInstances();
+		    $newShow->setDbShowId($show_id);
+            $newShow->setDbStarts($start);
+            $newShow->setDbEnds($end);
+		    $newShow->save();
+
+            $sql = "SELECT timestamp '{$start}' + interval '1 month'";
+		    $next_date = $CC_DBC->GetOne($sql);
+        }
+
+        Show::setNextPop($next_date, $show_id, $day);
     }
 
     private static function populateShow($repeat_type, $show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
@@ -246,6 +289,9 @@ class Show {
         }
         else if($repeat_type == 1) {
             Show::populateBiWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
+        }
+        else if($repeat_type == 2) {
+            Show::populateMonthlyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
         }
     } 
 
@@ -441,7 +487,7 @@ class ShowInstance {
         $starts = $this->getShowStart();
         $ends = $this->getShowEnd(); 
 
-		$sql = "SELECT timestamp '{$ends}' + interval '{$hours}:{$mins}'";
+		$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
 		$new_ends = $CC_DBC->GetOne($sql);
 
         //only need to check overlap if show increased in size.
@@ -459,7 +505,7 @@ class ShowInstance {
 		    $scheduledContentFits = $CC_DBC->GetOne($sql);
 
             if($scheduledContentFits != "t") {
-                return "Must removed some scheduled content.";
+                return "Must remove some scheduled content.";
             }
         }
 

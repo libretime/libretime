@@ -867,6 +867,7 @@ div.ui-datepicker {
 	margin-right:22px;
 }
 
+
 #schedule_playlist_chosen li > div > div > span {
 	float: right;
 	margin-right:46px;
@@ -931,7 +932,7 @@ h2#scheduled_playlist_name span {
 }
 
 .time {
-	width: 80px;
+	width: 100px;
 	margin: 5px;
 	text-align: left;
 }
