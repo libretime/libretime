@@ -1,26 +1,19 @@
-<?php
-
-//echo $this->form;
-?>
     <div class=
     "ui-widget ui-widget-content block-shadow clearfix padded-strong user-management">
     <h2>
         Manage users
       </h2>
       <div class="user-list-wrapper">
-        <div id="schedule_playlists_wrapper" class="dataTables_wrapper">
-          <div class=
-          "fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix">
-          <div class="dataTables_filter" id="schedule_playlists_filter">
-              <input type="text" class="input_text auto-search">
-            </div>
+        <div id="users_wrapper" class="dataTables_wrapper">
+          
+          <div class="fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix">
             <div class="button-holder">
-              <button type="button" id="search_add_group" name=
-              "search_add_group" class=
-              "ui-button ui-widget ui-state-default ui-button-text-icon-primary">
+             <button type="button" id="add_user_button" name=
+              "search_add_group" class="ui-button ui-widget ui-state-default ui-button-text-icon-primary">
               <span class="ui-button-text">Add user</span></button>
             </div>
           </div>
+          
           <table cellspacing="0" cellpadding="0" style="" id="users_datatable" class="datatable">
             <thead>
               <tr>
@@ -34,93 +27,9 @@
           </table>
         </div>
       </div>
-      <div class="user-data simple-formblock">
+      <div class="user-data simple-formblock" id="user_details">
 	  <fieldset class="padded">
       <?php echo $this->form ?>
       </fieldset>
       </div>
-	  <!--
-      <div class="user-data simple-formblock">
-        <form method="post" action="" enctype=
-        "application/x-www-form-urlencoded">
-          <fieldset class="padded">
-            <dl class="zend_form">
-              <dt id="first_name-label">
-                <label class="required" for="first_name">Firstname:</label>
-              </dt>
-              <dd id="first_name-element">
-                <input type="text" value="" id="first_name" name="first_name"
-                class="input_text">
-              </dd>
-              <dt id="last_name-label">
-                <label class="required" for="last_name">Lastname:</label>
-              </dt>
-              <dd id="last_name-element">
-                <input type="text" value="" id="last_name" name="last_name"
-                class="input_text">
-              </dd>
-              <dt id="login-label">
-                <label class="required" for="login">Username:</label>
-              </dt>
-              <dd id="login-element">
-                <input type="text" value="" id="login" name="login" class=
-                "input_text">
-              </dd>
-              <dt id="password-label">
-                <label class="required" for="password">Password:</label>
-              </dt>
-              <dd id="password-element">
-                <input type="text" value="" id="password" name="password"
-                class="input_text">
-              </dd>
-              <dt id="type-label">
-                <label class="required" for="type">Role:</label>
-              </dt>
-              <dd id="type-element">
-                <select id="type" name="type" class="input_select" style=
-                "width:40%;">
-                  <option label="admin" value="A">
-                    admin
-                  </option>
-                  <option label="host" value="H">
-                    host
-                  </option>
-                  <option label="guest" value="G">
-                    guest
-                  </option>
-                </select>
-              </dd>
-            </dl>
-          </fieldset>
-          <fieldset class="padded">
-            <dl class="zend_form">
-              <dt id="skype-label">
-                <label class="required" for="skype_name">Skype:</label>
-              </dt>
-              <dd id="skype-element">
-                <input type="text" value="" id="skype_name" name="skype_name"
-                class="input_text">
-              </dd>
-              <dt id="jabber-label">
-                <label class="required" for="jabber_name">Jabber:</label>
-              </dt>
-              <dd id="jabbert_name-element">
-                <input type="text" value="" id="jabber_name" name="jabber_name"
-                class="input_text">
-              </dd>
-              <dt id="email-label">
-                <label class="required" for="email">Email</label>
-              </dt>
-              <dd id="email-element">
-                <input type="text" value="" id="email" name="email" class=
-                "input_text">
-              </dd>
-            </dl>
-          </fieldset>
-          <fieldset class="padded">
-            <input type="submit" value="Save all" id="submit" name="submit"
-            class="ui-button ui-state-default right-floated">
-          </fieldset>
-        </form>
-      </div>-->
     </div>

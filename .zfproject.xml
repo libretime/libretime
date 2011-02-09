@@ -77,6 +77,8 @@
           <actionMethod actionName="addUser"/>
           <actionMethod actionName="getHosts"/>
           <actionMethod actionName="getUserDataTableInfo"/>
+          <actionMethod actionName="getUserData"/>
+          <actionMethod actionName="removeUser"/>
         </controllerFile>
         <controllerFile controllerName="SidePlaylist">
           <actionMethod actionName="index"/>
@@ -294,6 +296,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="User">
             <viewScriptFile forActionName="getUserDataTableInfo"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="User">
+            <viewScriptFile forActionName="getUserData"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="User">
+            <viewScriptFile forActionName="removeUser"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

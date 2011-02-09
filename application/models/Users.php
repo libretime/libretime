@@ -2,41 +2,99 @@
 
 class User {
 
-	private $_userRole;
-	private $_userId;
+	private $_userInstance;
 
-	public function __construct($userId, $userType='G')
+	public function __construct($userId)
     {
-        $this->_userRole = $userType;
-		$this->_userId = $userId;     
+        if (strlen($userId)==0){
+            $this->userInstance = $this->createUser();
+        } else {
+            $this->userInstance = CcSubjsQuery::create()->findPK($userId);
+        } 
     }
 
-	public function getType() {
-		return $this->userRole;
-	}
-
 	public function getId() {
-		return $this->_userId;
+        return $this->_userInstance->getDbId();
 	}
 
 	public function isHost($showId) {
-		return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($this->_userId)->count() > 0;
+        $userId = $this->_userInstance->getDbId();
+		return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($_userId)->count() > 0;
 	}
 
 	public function isAdmin() {
-		return $this->_userRole === 'A';
+        return $userInstance->getDbType() === 'A';
 	}
+    
+    public function setLogin($login){
+ 		$user = $this->userInstance;
+		$user->setDbLogin($login);
+		//$user->save();        
+    }
+     
+    public function setPassword($password){
+ 		$user = $this->userInstance;
+		$user->setDbPass(md5($password));
+		//$user->save();        
+    }
+    
+    public function setFirstName($firstName){
+ 		$user = $this->userInstance;
+		$user->setDbFirstName($firstName);
+		//$user->save();        
+    }
+    
+    public function setLastName($lastName){
+ 		$user = $this->userInstance;
+		$user->setDbLastName($lastName);
+		//$user->save();        
+    }
+    
+    public function setType($type){
+ 		$user = $this->userInstance;
+		$user->setDbType($type);
+		//$user->save();        
+    }
+    
+    public function getLogin(){
+ 		$user = $this->userInstance;
+		return $user->getDbLogin();       
+    }    
+    
+    public function getPassword(){
+ 		$user = $this->userInstance;
+		return $user->getDbPass();       
+    }
+    
+    public function getFirstName(){
+ 		$user = $this->userInstance;
+		return $user->getDbFirstName();          
+    }
+    
+    public function getLastName(){
+ 		$user = $this->userInstance;
+		return $user->getDbLastName();           
+    }
+    
+    public function getType(){
+ 		$user = $this->userInstance;
+		return $user->getDbType();          
+    }
+    
+    public function save(){
+        $this->userInstance->save();
+    }
+    
+    public function delete(){
+        if (!$this->userInstance->isDeleted())
+            $this->userInstance->delete();
+    }
 
-	public static function addUser($data) {
-
+	private function createUser() {
 		$user = new CcSubjs();
-		$user->setDbLogin($data['login']);
-		$user->setDbPass(md5($data['password']));
-		$user->setDbFirstName($data['first_name']);
-		$user->setDbLastName($data['last_name']);
-		$user->setDbType($data['type']);
-		$user->save();
-		
+		//$user->save();
+        
+        return $user;
 	}
 
 	public static function getUsers($type, $search=NULL) {
@@ -76,6 +134,16 @@ class User {
 
 		$fromTable = "cc_subjs";
 		return StoredFile::searchFiles($fromTable, $datatables_post);
-	}	
+	}
+    
+    public static function getUserData($id){
+        global $CC_DBC;
+        
+        $sql = "SELECT login, first_name, last_name, type, id"
+        ." FROM cc_subjs"
+        ." WHERE id = $id";
+        
+        return $CC_DBC->GetRow($sql);
+    }
 
 }

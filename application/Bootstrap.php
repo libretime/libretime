@@ -30,7 +30,8 @@ if (PEAR::isError($CC_DBC)) {
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-Zend_Session::start();
+//Zend_Session::start();
+Zend_Validate::setDefaultNamespaces("Zend");
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {

@@ -402,6 +402,9 @@ CREATE TABLE "cc_subjs"
 	"last_name" VARCHAR(255) default '' NOT NULL,
 	"lastlogin" TIMESTAMP,
 	"lastfail" TIMESTAMP,
+	"skype_contact" VARCHAR(255),
+	"jabber_contact" VARCHAR(255),
+	"email" VARCHAR(255),
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_subjs_id_idx" UNIQUE ("id"),
 	CONSTRAINT "cc_subjs_login_idx" UNIQUE ("login")
