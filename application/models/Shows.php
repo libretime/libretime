@@ -11,14 +11,42 @@ class Show {
 
     public function getName() {
         $show = CcShowQuery::create()->findPK($this->_showId);
-
         return $show->getDbName();
     }
     
     public function setName($name) {
         $show = CcShowQuery::create()->findPK($this->_showId);
-
         $show->setDbName($name);
+    }
+
+    public function getDescription() {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        return $show->getDbDescription();
+    }
+    
+    public function setDescription($description) {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbDescription($description);
+    }
+
+    public function getColor() {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        return $show->getDbColor();
+    }
+    
+    public function setColor($color) {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbColor($color);
+    }
+
+     public function getBackgroundColor() {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        return $show->getDbBackgroundColor();
+    }
+    
+    public function setBackgroundColor($backgroundColor) {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbBackgroundColor($backgroundColor);
     }
 
 	//end dates are non inclusive.

@@ -331,24 +331,10 @@ class ScheduleController extends Zend_Controller_Action
 
     public function editShowAction()
     {
-        $formWhat = new Application_Form_AddShowWhat();
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWho = new Application_Form_AddShowWho();
-		$formWho->removeDecorator('DtDdWrapper');
-		$formWhen = new Application_Form_AddShowWhen();
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formStyle = new Application_Form_AddShowStyle();
-		$formStyle->removeDecorator('DtDdWrapper');
+        $showInstanceId = $this->_getParam('id');
+        $showInstance = new ShowInstance($showInstanceId);
 
-        $this->view->what = $formWhat;
-		//$this->view->when = $formWhen;
-		//$this->view->repeats = $formRepeats;
-		$this->view->who = $formWho;
-		$this->view->style = $formStyle;
-
-        $this->view->dialog = $this->view->render('schedule/edit-show.phtml');
+        $show = new Show($showInstance->getShowId());
     }
 
 
