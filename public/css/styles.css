@@ -721,7 +721,7 @@ dt.block-display, dd.block-display {
 .floated-panel {
 	margin-top:0;
 	width:99.99%;
-	z-index:9999;
+	z-index:999;
 }
 
 
@@ -820,7 +820,8 @@ div.ui-datepicker {
 #schedule_playlist_chosen li > h3 > div > span.ui-icon {
 	margin-top: 0px;
 }
-#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e {
+#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e,
+#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-s {
 	float:left;
 	margin-right: 8px;
 }
@@ -1091,7 +1092,7 @@ button, input {
 	float:left;
 	width:420px;
 	margin-left:10px;
-	/* display:block;*/
+	/*display:none;*/
 }
 .user-list-wrapper {
 	float:left;
@@ -1184,3 +1185,54 @@ button, input {
 .end-button {
 	border-width:1px;
 }
+
+
+ul.errors {
+	display:block;
+	clear:left;
+	padding:3px 0 0 0;
+	margin:0;
+}
+
+ul.errors li {
+	color:#902d2d;
+	font-size:11px;
+	padding:2px 4px;
+	background:#c6b4b4;
+	margin-bottom:2px;
+	border:1px solid #c83f3f;
+}
+.collapsible-header {
+	border: 1px solid #8f8f8f;
+	background-color: #cccccc;
+    background: -moz-linear-gradient(top, #cccccc 0, #b9b9b9 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #cccccc), color-stop(100%, #b9b9b9));
+	font-size:13px;
+	color:#353535;
+	font-weight:bold;
+	padding:6px 0 6px 20px;
+	margin:8px 0 0 0;
+	cursor:pointer;
+	position:relative;
+}
+.collapsible-content {
+	margin-top:-1px;
+	display:none;
+}
+.collapsible-header .arrow-icon {
+	display:block;
+	background:url(images/arrows_collapse.png) no-repeat 0 0;
+	height:11px;
+	width:11px;
+	position:absolute;
+	left:5px;
+	top:8px;
+    
+}
+.collapsible-header.close .arrow-icon {
+	background-position: 0 -11px;
+    
+}
+#schedule-add-show .button-bar {
+    height: 28px;
+    margin: 0 0 8px 0;

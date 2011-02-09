@@ -60,7 +60,9 @@ function findHosts(request, callback) {
 function setAddShowEvents() {
 	var start, end;
 
-	$(".tabs").tabs();
+	$("h3").click(function(){
+        $(this).next().toggle();
+    });
 
     if(!$("#add_show_repeats").attr('checked')) {
         $("#schedule-show-when > fieldset:last").hide();

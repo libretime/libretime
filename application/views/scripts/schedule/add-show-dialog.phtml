@@ -1,31 +1,29 @@
 <div class="wrapper" id="content"> 
-	<form method="post" action="">
-		<div id="schedule-add-show" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded">
-			<ul>
-				<li><a href="#schedule-show-what"><span>What</span></a></li>
-				<li><a href="#schedule-show-when"><span>When</span></a></li>
-				<li><a href="#schedule-show-who"><span>Who</span></a></li>
-				<li><a href="#schedule-show-style"><span>Style</span></a></li>
-			</ul>
-            <div class="button-bar">
-          	    <button id="add-show-submit" class="right-floated">Add this show</button></div>
-            <div class="clear"></div>
 
-			<div id="schedule-show-what">
-				<?php echo $this->what ?>
-			</div>
-			<div id="schedule-show-when">
-				<?php echo $this->when ?>
-				<?php echo $this->repeats ?>
-			</div>
-			<div id="schedule-show-who">
-				<?php echo $this->who ?>
-			</div>
-			<div id="schedule-show-style">
-				<?php echo $this->style ?>
-			</div>
-		</div>
-	</form>
+    <form method="post" action="">
+        <div id="schedule-add-show" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded">
+            <div class="button-bar">
+                <button id="add-show-submit" class="right-floated">Add this show</button>
+            </div>
+            <div class="clear"></div>
+            <div id="schedule-show-what">
+            <?php echo $this->what ?>
+            </div>
+            <h3 class="collapsible-header"><span class="arrow-icon"></span>When</h3>
+            <div id="schedule-show-when" class="collapsible-content">
+            <?php echo $this->when ?>
+            <?php echo $this->repeats ?>
+            </div>
+            <h3 class="collapsible-header"><span class="arrow-icon"></span>Who</h3>
+            <div id="schedule-show-who" class="collapsible-content">
+            <?php echo $this->who ?>
+            </div>
+            <h3 class="collapsible-header"><span class="arrow-icon"></span>Style</h3>
+            <div id="schedule-show-style" class="collapsible-content">
+            <?php echo $this->style ?>
+            </div>
+        </div>
+    </form>
 
     <div id="fullcalendar_show_display" class="ui-widget-content block-shadow omega-block padded"></div>
 </div>
