@@ -23,13 +23,15 @@ function dayClick(date, allDay, jsEvent, view) {
 
 function viewDisplay( view ) {
 
-    $('.schedule_change_slots').remove();
+    var td = $('.schedule_change_slots').parent();
+    td.prev().remove();
+    td.remove();
 
     if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 
         var calendarEl = this;
 
-        var select = $('<select class="schedule_change_slots"/>')
+        var select = $('<select class="schedule_change_slots input_select"/>')
             .append('<option value="5">5 min</option>')
             .append('<option value="10">10 min</option>')
             .append('<option value="15">15 min</option>')
