@@ -59,7 +59,8 @@ class Application_Model_Nowplaying
             $next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, 10, "24 hours");
         } else {
             $date = new Application_Model_DateHelper;
-            $date->setDate($dateString);
+            $time = $date->getTime();
+            $date->setDate($dateString." ".$time);
             $timeNow = $date->getDate();
             
             $previous = array_reverse(Schedule::Get_Scheduled_Item_Data($timeNow, -1, "ALL", $date->getNowDayStartDiff()." seconds"));

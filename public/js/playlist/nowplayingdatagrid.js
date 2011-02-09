@@ -123,12 +123,20 @@ function init2(){
 
 }
 
+function redirect(url){
+    document.location.href = url;
+}
+
 $(document).ready(function() {
     if (viewType == "day"){
+        $('#now_view').click(function(){redirect('/Nowplaying/index')});
+        
         $("#datepicker").datepicker({
-            onSelect: function(dateText, inst) { updateData();}});
-        var date = new Date();
-        $("#datepicker").datepicker("setDate", date);
+            onSelect: function(dateText, inst) 
+                { updateData();}});
+        $("#datepicker").datepicker("setDate", new Date());
+    } else {
+        $('#day_view').click(function(){redirect('/Nowplaying/day-view')});
     }
 
     init2();

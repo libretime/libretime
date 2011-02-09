@@ -9,24 +9,11 @@
 */
 $pages = array(
 	array(
-		'label'      => 'Now Playing',
-		'uri' => 'javascript:void(null)',
-		'pages'      => array(
-		    array(
-		        'label'      => 'Current',
-		        'module'     => 'default',
-		        'controller' => 'Nowplaying',
-		        'action'     => 'index',
-				'resource'	=>	'Nowplaying'
-		    ),
-		    array(
-		        'label'      => 'Daily View',
-		        'module'     => 'default',
-		        'controller' => 'Nowplaying',
-		        'action'     => 'day-view',
-				'resource'	=>	'Nowplaying'
-		    )
-		)
+        'label'      => 'Now Playing',
+        'module'     => 'default',
+        'controller' => 'Nowplaying',
+        'action'     => 'index',
+        'resource'	=>	'Nowplaying'
 	),
 	array(
 		'label'      => 'Schedule',
