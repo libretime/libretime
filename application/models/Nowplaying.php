@@ -43,7 +43,8 @@ class Application_Model_Nowplaying
     }
     
     public static function GetDataGridData($viewType, $dateString){
-                                
+                
+        //echo $dateString;
         if ($viewType == "now"){
             
             $date = new Application_Model_DateHelper;
@@ -57,9 +58,8 @@ class Application_Model_Nowplaying
             $current = Schedule::Get_Scheduled_Item_Data($timeNow, 0);
             $next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, 10, "24 hours");
         } else {
-            
             $date = new Application_Model_DateHelper;
-            $timeNow = $date->setDate($dateString);
+            $date->setDate($dateString);
             $timeNow = $date->getDate();
             
             $previous = array_reverse(Schedule::Get_Scheduled_Item_Data($timeNow, -1, "ALL", $date->getNowDayStartDiff()." seconds"));

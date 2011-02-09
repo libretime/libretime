@@ -3,17 +3,17 @@ var datagridData;
 
 function getDateText(obj){
 	var str = obj.aData[ obj.iDataColumn ].toString();
-	if (str.indexOf(" ") != -1){
-		return changeTimePrecision(str.substring(0, str.indexOf(" ")));
-	}
+	datetime = str.split(" ");
+    if (datetime.length == 2)
+        return datetime[0];
 	return str;
 }
 
 function getTimeText(obj){
 	var str = obj.aData[ obj.iDataColumn ].toString();
-	if (str.indexOf(" ") != -1){
-		return changeTimePrecision(str.substring(str.indexOf(" ")+1));
-	}
+	datetime = str.split(" ");
+    if (datetime.length == 2)
+        return changeTimePrecision(datetime[1]);
 	return str;
 }
 
@@ -23,16 +23,16 @@ function changeTimePrecisionInit(obj){
 }
 
 function changeTimePrecision(str){
-	if (str.indexOf(".") != -1){
-		if (str.length - str.indexOf(".") > 2)
-			var extraLength = str.length - str.indexOf(".") -3;
-			return str.substring(0, str.length - extraLength);
-	}
-	return str;
+    
+    var temp = str.split(".")
+    if (temp.length == 2){
+        if (temp[1].length > 2)
+            return temp[0]+"."+temp[1].substr(0, 2);
+    }
+    return str;
 }
 
 function notifySongEnd(){
-	//alert("length " + datagridData.rows.length);
 	for (var i=0; i<datagridData.rows.length; i++){
 		if (datagridData.rows[i][0] == "c")
 			datagridData.rows[i][0] = "p";
@@ -45,16 +45,6 @@ function notifySongEnd(){
 	createDataGrid();
 }
 
-/*
-function updateDataGrid(){
-    var table = $('#nowplayingtable');
-    //table.dataTable().fnClearTable();
-        
-    for (var i=0; i<datagridData.rows.length; i++){
-        table.dataTable().fnAddData(datagridData.rows[i]);
-    }
-}
-*/
     var columns = [{"sTitle": "type", "bVisible":false},
         {"sTitle":"Date"},
         {"sTitle":"Start"},
@@ -99,20 +89,9 @@ function createDataGrid(){
 
 }
 
-var mainLoopRegistered = false;
-
-function setViewType(type){
-    if (type == 0){
-        viewType = "now";
-    } else {
-        viewType = "day";
-    }
-    init2();
-}
-
 function getDateString(){
     var date0 = $("#datepicker").datepicker("getDate");
-    return (date0.getFullYear() + "-" + date0.getMonth() + "-" + date0.getDate());
+    return (date0.getFullYear() + "-" + (parseInt(date0.getMonth())+1) + "-" + date0.getDate());
 }
 
 function getAJAXURL(){
@@ -125,27 +104,29 @@ function getAJAXURL(){
     return url;
 }
 
-function init2(){
-	  
-      if (!mainLoopRegistered){
-        setTimeout(init2, 5000);
-        mainLoopRegistered = true;
-      }
-      
-      $.ajax({ url: getAJAXURL(), dataType:"json", success:function(data){
+function updateData(){
+       $.ajax({ url: getAJAXURL(), dataType:"json", success:function(data){
 		datagridData = data.entries;
         createDataGrid();
-	  }});
-	  
+	  }});   
+}
+
+function init2(){	        
+      updateData();	  
+
 	  if (typeof registerSongEndListener == 'function' && !registered){
 		  registered = true;
 		  registerSongEndListener(notifySongEnd);
 	  }
+
+      setTimeout(init2, 5000);
+
 }
 
 $(document).ready(function() {
     if (viewType == "day"){
-        $("#datepicker").datepicker();
+        $("#datepicker").datepicker({
+            onSelect: function(dateText, inst) { updateData();}});
         var date = new Date();
         $("#datepicker").datepicker("setDate", date);
     }
