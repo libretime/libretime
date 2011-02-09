@@ -65,6 +65,13 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
     type = aData[6].substring(0,2);
     id = aData[0];
 
+    if(type == "au") {
+        $('td:eq(5)', nRow).html( '<img src="css/images/icon_audioclip.png">' );
+    }
+    else if(type == "pl") {
+        $('td:eq(5)', nRow).html( '<img src="css/images/icon_playlist.png">' );
+    }
+
 	$(nRow).attr("id", type+'_'+id);
 
     $(nRow).qtip({
