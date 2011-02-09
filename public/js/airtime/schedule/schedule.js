@@ -191,6 +191,10 @@ function buildScheduleDialog(json){
 	dialog.dialog('open');
 }
 
+function buildEditDialog(json){
+
+}
+
 function scheduleRefetchEvents() {
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }

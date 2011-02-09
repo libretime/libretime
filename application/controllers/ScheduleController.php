@@ -2,16 +2,12 @@
 
 class ScheduleController extends Zend_Controller_Action
 {
+
     protected $sched_sess = null;
 
     public function init()
     {
-        if(!Zend_Auth::getInstance()->hasIdentity())
-        {
-            $this->_redirect('login/index');
-		}
-
-		$ajaxContext = $this->_helper->getHelper('AjaxContext');
+        $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('event-feed', 'json')
                     ->addActionContext('make-context-menu', 'json')
 					->addActionContext('add-show-dialog', 'json')
@@ -26,6 +22,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('get-current-playlist', 'json')	
 					->addActionContext('find-playlists', 'json')
 					->addActionContext('remove-group', 'json')	
+                    ->addActionContext('edit-show', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -112,14 +109,8 @@ class ScheduleController extends Zend_Controller_Action
 				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
 				$show = new Show(new User($userInfo->id, $userInfo->type));
-				$overlap = $show->addShow($data);
-
-				if(isset($overlap)) {
-					$this->view->overlap = $overlap;
-				}
-				else {
-					$this->_redirect('Schedule');
-				}
+				$show->addShow($data);
+			    $this->_redirect('Schedule');
 			}  
         }
 
@@ -169,7 +160,7 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $showInstanceId = $this->_getParam('id');
-		                                       
+        		                                       
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 		$user = new User($userInfo->id, $userInfo->type);
 
@@ -214,7 +205,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function scheduleShowAction()
     {
-		$showInstanceId = $this->sched_sess->showInstanceId;
+        $showInstanceId = $this->sched_sess->showInstanceId;
 		$search = $this->_getParam('search', null);
 		$plId = $this->_getParam('plId');
 
@@ -245,9 +236,8 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id, $userInfo->type);
         $show = new ShowInstance($showInstanceId);
 
-        if($user->isHost($show->getShowId())) {
+        if($user->isHost($show->getShowId()))
             $show->clearShow();
-        }
     }
 
     public function getCurrentPlaylistAction()
@@ -257,8 +247,8 @@ class ScheduleController extends Zend_Controller_Action
 
     public function findPlaylistsAction()
     {
-		$post = $this->getRequest()->getPost();
-
+        $post = $this->getRequest()->getPost();
+        
 		$show = new ShowInstance($this->sched_sess->showInstanceId);
 		$playlists = $show->searchPlaylistsForShow($post);
 
@@ -289,7 +279,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function scheduleShowDialogAction()
     {
-		$showInstanceId = $this->_getParam('id');
+        $showInstanceId = $this->_getParam('id');
         $this->sched_sess->showInstanceId = $showInstanceId;
         
         $show = new ShowInstance($showInstanceId);
@@ -331,13 +321,39 @@ class ScheduleController extends Zend_Controller_Action
 
     public function showContentDialogAction()
     {
-		$showInstanceId = $this->_getParam('id');
+        $showInstanceId = $this->_getParam('id');
 		$show = new ShowInstance($showInstanceId);
 
 		$this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         unset($this->view->showContent);
     }
+
+    public function editShowAction()
+    {
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho = new Application_Form_AddShowWho();
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen = new Application_Form_AddShowWhen();
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle = new Application_Form_AddShowStyle();
+		$formStyle->removeDecorator('DtDdWrapper');
+
+        $this->view->what = $formWhat;
+		//$this->view->when = $formWhen;
+		//$this->view->repeats = $formRepeats;
+		$this->view->who = $formWho;
+		$this->view->style = $formStyle;
+
+        $this->view->dialog = $this->view->render('schedule/edit-show.phtml');
+    }
+
+
 }
+
+
 
 

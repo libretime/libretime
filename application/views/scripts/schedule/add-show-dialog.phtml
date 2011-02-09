@@ -11,13 +11,6 @@
           	    <button id="add-show-submit" class="right-floated">Add this show</button></div>
             <div class="clear"></div>
 
-            <?php if(isset($this->overlap)) : ?>
-	        <div id="schedule-add-show-overlap" style="display:block;">    
-	            <div>Overlap</div>
-	            <?php echo $this->partialLoop('schedule/show-overlap.phtml', $this->overlap); ?>   
-            </div>
-            <?php endif;?>
-
 			<div id="schedule-show-what">
 				<?php echo $this->what ?>
 			</div>
