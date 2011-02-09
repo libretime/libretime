@@ -146,21 +146,21 @@ function submitOnEnter(event) {
 	}
 }
 
-function setCueEvents() {
+function setCueEvents(el) {
     
-    $(".spl_cue_in span:last").blur(changeCueIn);
-	$(".spl_cue_out span:last").blur(changeCueOut);
+    $(el).find(".spl_cue_in span:last").blur(changeCueIn);
+	$(el).find(".spl_cue_out span:last").blur(changeCueOut);
 
-    $(".spl_cue_in span:first, .spl_cue_out span:first")
+    $(el).find(".spl_cue_in span:first, .spl_cue_out span:first")
         .keydown(submitOnEnter);
 }
 
-function setFadeEvents() {
+function setFadeEvents(el) {
 
-    $(".spl_fade_in span:first").blur(changeFadeIn);
-	$(".spl_fade_out span:first").blur(changeFadeOut);
+    $(el).find(".spl_fade_in span:first").blur(changeFadeIn);
+	$(el).find(".spl_fade_out span:first").blur(changeFadeOut);
 
-    $(".spl_fade_in span:first, .spl_fade_out span:first")
+    $(el).find(".spl_fade_in span:first, .spl_fade_out span:first")
         .keydown(submitOnEnter);
 }
 
@@ -198,7 +198,7 @@ function openFadeEditor(event) {
 			.append(json.html)
 			.show();
 
-        setFadeEvents();
+        setFadeEvents(li);
 	});
 }
 
@@ -231,7 +231,7 @@ function openCueEditor(event) {
 			.append(json.html)
 			.show();
 
-        setCueEvents();
+        setCueEvents(li);
 	});	
 }
 
