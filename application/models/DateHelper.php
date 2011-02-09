@@ -12,6 +12,10 @@ class Application_Model_DateHelper
        return date("Y-m-d H:i:s", $this->_timestamp);
    }
    
+   function getTime(){
+       return date("H:i:s", $this->_timestamp);
+   }
+   
    function setDate($dateString){
         $this->_timestamp = strtotime($dateString);
    }
