@@ -56,7 +56,6 @@
         <controllerFile controllerName="Schedule">
           <actionMethod actionName="index"/>
           <actionMethod actionName="eventFeed"/>
-          <actionMethod actionName="addShowDialog"/>
           <actionMethod actionName="moveShow"/>
           <actionMethod actionName="resizeShow"/>
           <actionMethod actionName="deleteShow"/>
@@ -214,9 +213,6 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Error">
             <viewScriptFile forActionName="denied"/>
-          </viewControllerScriptsDirectory>
-          <viewControllerScriptsDirectory forControllerName="Schedule">
-            <viewScriptFile forActionName="addShowDialog"/>
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="moveShow"/>

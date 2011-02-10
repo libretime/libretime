@@ -14,7 +14,7 @@ class Application_Form_AdvancedSearch extends Zend_Form
 		$this->getElement('search_add_group')->removeDecorator('DtDdWrapper');
 
 		// Add the submit button
-        $this->addElement('submit', 'search_submit', array(
+        $this->addElement('button', 'search_submit', array(
             'ignore'   => true,
             'label'    => 'Submit',
 			'order'    => '-1'

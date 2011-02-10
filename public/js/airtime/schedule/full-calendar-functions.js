@@ -23,20 +23,16 @@ function dayClick(date, allDay, jsEvent, view) {
 
 function viewDisplay( view ) {
 
-    var td = $('.schedule_change_slots').parent();
-    td.prev().remove();
-    td.remove();
-
     if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 
         var calendarEl = this;
 
         var select = $('<select class="schedule_change_slots input_select"/>')
-            .append('<option value="5">5 min</option>')
-            .append('<option value="10">10 min</option>')
-            .append('<option value="15">15 min</option>')
-            .append('<option value="30">30 min</option>')
-            .append('<option value="60">60 min</option>')
+            .append('<option value="5">5m</option>')
+            .append('<option value="10">10m</option>')
+            .append('<option value="15">15m</option>')
+            .append('<option value="30">30m</option>')
+            .append('<option value="60">60m</option>')
             .change(function(){
                 var x = $(this).val();
                 var opt = view.calendar.options;
@@ -47,14 +43,28 @@ function viewDisplay( view ) {
                 $(calendarEl).fullCalendar(opt); 
             });
 
-        $('.fc-header-left tbody tr:first')
-            .append('<td><span class="fc-header-space"></span></td>')
-            .append('<td></td>')
-            .find('td:last')
-                .append(select);
+        var x = $(view.element).find(".fc-agenda-head th:first");
+        select.width(x.width());
+        x.empty();
+        x.append(select);
 
         var slotMin = view.calendar.options.slotMinutes;
         $('.schedule_change_slots option[value="'+slotMin+'"]').attr('selected', 'selected');
+
+    }
+
+    if($('.fc-header-left tbody td').length === 5) {
+        $('.fc-header-left tbody tr:first')
+            .append('<td><span class="fc-header-space"></span></td>')
+            .append('<td><a href="#" class="add-button"><span class="add-icon"></span>Show</a></td>')
+            .find('td:last > a')
+                .click(function(){
+                    $("#add-show-form").show();
+                    var y = $("#schedule_calendar").width();
+                    var z = $("#schedule-add-show").width();
+                    $("#schedule_calendar").width(y-z-50);
+                    $("#schedule_calendar").fullCalendar('render');
+                });
     }
 }
 

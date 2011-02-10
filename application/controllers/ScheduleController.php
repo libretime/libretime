@@ -30,44 +30,20 @@ class ScheduleController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
-        //$this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
-    	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
-
-		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
-		$this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
-    }
-
-    public function eventFeedAction()
-    {
-        $start = $this->_getParam('start', null);
-		$end = $this->_getParam('end', null);
-		
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
-        if($user->isAdmin())
-            $editable = true;
-        else
-            $editable = false;
-
-		$this->view->events = Show::getFullCalendarEvents($start, $end, $editable);
-    }
-
-    public function addShowDialogAction()
-    {
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
         $this->view->headScript()->appendFile('/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/airtime/schedule/add-show.js','text/javascript');
+    	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/jquery-ui-timepicker.css');
         $this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
 		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet('/css/add-show.css');
+        $this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
         $request = $this->getRequest();
         $formWhat = new Application_Form_AddShowWhat();
@@ -119,6 +95,21 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->repeats = $formRepeats;
 		$this->view->who = $formWho;
 		$this->view->style = $formStyle;
+    }
+
+    public function eventFeedAction()
+    {
+        $start = $this->_getParam('start', null);
+		$end = $this->_getParam('end', null);
+		
+		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
+        if($user->isAdmin())
+            $editable = true;
+        else
+            $editable = false;
+
+		$this->view->events = Show::getFullCalendarEvents($start, $end, $editable);
     }
 
     public function moveShowAction()
