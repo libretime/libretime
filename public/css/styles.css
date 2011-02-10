@@ -174,16 +174,13 @@ select {
 	border-width:1px 1px 0 1px;
 	background:#141414 url(images/progressbar_bg.png) repeat-x 0 0;
 }
-.progressbar .progress-song, .progressbar .progress-show, .progress-show-red {
+.progressbar .progress-song, .progressbar .progress-show {
 	height:4px;
 	width:0%;
 	background:#f97202 url(images/progressbar_song.png) repeat-x 0 0;
 }
 .progressbar .progress-show {
 	background:#02cef9 url(images/progressbar_show.png) repeat-x 0 0;
-}
-.progressbar .progress-show-red {
-	background:#02cef9 url(images/progressbar_show_red.png) repeat-x 0 0;
 }
 .now-playing-info .lenght {
 	color:#c4c4c4;
@@ -781,7 +778,7 @@ dt.block-display, dd.block-display {
 	font-weight:normal;
 }
 #schedule_calendar {
-	width:98%
+	width:98.5%
 }
 div.ui-datepicker {
 	/*font-size: 75%;*/
@@ -1154,7 +1151,7 @@ button, input {
 
 .button-bar-top {
 	text-align:right;
-	height:30px;
+	height:38px;
 }
 
 .toggle-button, .toggle-button-active {
@@ -1189,6 +1186,17 @@ button, input {
 	border-width:1px;
 }
 
+.button-bar-top .toggle-button, .button-bar-top .toggle-button-active {
+	float:right;
+}
+
+.button-bar-top .input_text {
+	height:25px;
+	margin-right:6px
+}
+.button-bar-top .input_text.hasDatepicker {
+	background:url(images/input_with_calendar_bg.png) no-repeat right 0;
+}
 
 ul.errors {
 	display:block;
@@ -1239,3 +1247,49 @@ ul.errors li {
 #schedule-add-show .button-bar {
     height: 28px;
     margin: 0 0 8px 0;
+}
+	
+.schedule {
+	text-align:left;
+	height:38px;
+}
+
+.add-button {
+	border: 1px solid #242424;
+	background-color: #353535;
+    background: -moz-linear-gradient(top, #494949 0, #353535 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #494949), color-stop(100%, #353535));
+	color: #ffffff;
+	margin:0;
+	font-size:12px;
+	font-weight:bold;
+	padding:4px 12px 4px 22px;
+	text-decoration:none;
+	text-shadow: #000 0px -1px;
+	display:block;
+	float:left;
+	position:relative;
+}
+.add-button:hover {
+	border: 1px solid #000000;
+	background-color: #353535;
+    background: -moz-linear-gradient(top, #353535 0, #000000 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #353535), color-stop(100%, #000000));
+	color: #ffffff;
+}
+.add-button span {
+	position:absolute;
+	top:3px;
+	left:3px;
+	height:16px;
+	width:16px;
+	display:block;
+	background:url(redmond/images/ui-icons_ffffff_256x240.png) no-repeat;
+}
+.add-button:hover span {
+	background:url(redmond/images/ui-icons_ff5d1a_256x240.png) no-repeat;
+}
+.add-button span.add-icon {
+    background-position: -32px -128px;
+}
+
