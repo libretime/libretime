@@ -23,10 +23,6 @@ function dayClick(date, allDay, jsEvent, view) {
 
 function viewDisplay( view ) {
 
-    var td = $('.schedule_change_slots').parent();
-    td.prev().remove();
-    td.remove();
-
     if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 
         var calendarEl = this;
@@ -47,14 +43,24 @@ function viewDisplay( view ) {
                 $(calendarEl).fullCalendar(opt); 
             });
 
-        $('.fc-header-left tbody tr:first')
-            .append('<td><span class="fc-header-space"></span></td>')
-            .append('<td></td>')
-            .find('td:last')
-                .append(select);
+        var x = $(view.element).find(".fc-agenda-head th:first");
+        select.width(x.width());
+        x.empty();
+        x.append(select);
 
         var slotMin = view.calendar.options.slotMinutes;
         $('.schedule_change_slots option[value="'+slotMin+'"]').attr('selected', 'selected');
+
+    }
+
+    if($('.fc-header-left tbody td').length === 5) {
+        $('.fc-header-left tbody tr:first')
+            .append('<td><span class="fc-header-space"></span></td>')
+            .append('<td><a href="#" class="add-button"><span class="add-icon"></span>Add Show</a></td>')
+            .find('td:last > a')
+                .click(function(){
+
+                });
     }
 }
 

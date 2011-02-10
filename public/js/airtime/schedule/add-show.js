@@ -58,8 +58,7 @@ function findHosts(request, callback) {
 }
 
 function setAddShowEvents() {
-	var start, end;
-
+	
 	$("h3").click(function(){
         $(this).next().toggle();
     });
@@ -73,7 +72,6 @@ function setAddShowEvents() {
     });
 
     $("#add_show_repeat_type").change(function(){
-        var x = $(this).val();
         if($(this).val() == 2) {
             $("#add_show_day_check-label, #add_show_day_check-element").hide();
         }
@@ -86,11 +84,8 @@ function setAddShowEvents() {
         $("#add_show_end_date").toggle();
     });
 
-	start  = $("#add_show_start_date");
-	end  = $("#add_show_end_date");
-
-	createDateInput(start, startDpSelect);
-	createDateInput(end, endDpSelect);
+	createDateInput($("#add_show_start_date"), startDpSelect);
+	createDateInput($("#add_show_end_date"), endDpSelect);
 
     $("#add_show_start_time").timepicker();
     $("#add_show_duration").timepicker({
