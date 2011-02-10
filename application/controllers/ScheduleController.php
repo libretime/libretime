@@ -23,6 +23,7 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('find-playlists', 'json')
 					->addActionContext('remove-group', 'json')	
                     ->addActionContext('edit-show', 'json')
+                    ->addActionContext('add-show', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -30,7 +31,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function indexAction()
     {
-		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
         $this->view->headScript()->appendFile('/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
@@ -56,41 +57,8 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle = new Application_Form_AddShowStyle();
 		$formStyle->removeDecorator('DtDdWrapper');
- 
-        if ($request->isPost()) {
 
-			$data = $request->getPost();
-
-			$what = $formWhat->isValid($data);
-			$when = $formWhen->isValid($data);
-            if($when) {
-                $when = $formWhen->checkReliantFields($data);
-            }
-
-            if($data["add_show_repeats"]) {
-			    $repeats = $formRepeats->isValid($data);
-                if($repeats) {
-                    $when = $formRepeats->checkReliantFields($data);
-                }
-            }
-            else {
-                $repeats = 1; //make it valid, results don't matter anyways.
-            }
-
-			$who = $formWho->isValid($data);
-			$style = $formStyle->isValid($data);
-
-            if ($what && $when && $repeats && $who && $style) {  
-			
-				$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-				$show = new Show(new User($userInfo->id, $userInfo->type));
-				$show->addShow($data);
-			    $this->_redirect('Schedule');
-			}  
-        }
-
-		$this->view->what = $formWhat;
+        $this->view->what = $formWhat;
 		$this->view->when = $formWhen;
 		$this->view->repeats = $formRepeats;
 		$this->view->who = $formWho;
@@ -155,7 +123,7 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $showInstanceId = $this->_getParam('id');
-        		                                       
+                		                                       
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 		$user = new User($userInfo->id);
 
@@ -243,7 +211,7 @@ class ScheduleController extends Zend_Controller_Action
     public function findPlaylistsAction()
     {
         $post = $this->getRequest()->getPost();
-        
+                
 		$show = new ShowInstance($this->sched_sess->showInstanceId);
 		$playlists = $show->searchPlaylistsForShow($post);
 
@@ -332,8 +300,69 @@ class ScheduleController extends Zend_Controller_Action
         $show = new Show($showInstance->getShowId());
     }
 
+    public function addShowAction()
+    {
+		$js = $this->_getParam('data');
+        $data = array();
+
+        //need to convert from serialized jQuery array.
+        foreach($js as $j){
+            $data[$j["name"]] = $j["value"];
+        }
+
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWho = new Application_Form_AddShowWho();
+		$formWhen = new Application_Form_AddShowWhen();
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formStyle = new Application_Form_AddShowStyle();
+
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle->removeDecorator('DtDdWrapper');
+
+		$what = $formWhat->isValid($data);
+		$when = $formWhen->isValid($data);
+        if($when) {
+            $when = $formWhen->checkReliantFields($data);
+        }
+
+        if($data["add_show_repeats"]) {
+		    $repeats = $formRepeats->isValid($data);
+            if($repeats) {
+                $when = $formRepeats->checkReliantFields($data);
+            }
+        }
+        else {
+            $repeats = 1; //make it valid, results don't matter anyways.
+        }
+
+		$who = $formWho->isValid($data);
+		$style = $formStyle->isValid($data);
+
+        if ($what && $when && $repeats && $who && $style) {  
+		
+			if($user->isAdmin()) {
+			    Show::addShow($data);
+            }
+		    //$this->_redirect('Schedule');
+		}
+        else {
+
+            $this->view->what = $formWhat;
+		    $this->view->when = $formWhen;
+		    $this->view->repeats = $formRepeats;
+		    $this->view->who = $formWho;
+		    $this->view->style = $formStyle;
+            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+        } 
+
+    }
 
 }
+
+
 
 
 

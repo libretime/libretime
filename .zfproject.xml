@@ -69,6 +69,7 @@
           <actionMethod actionName="getShowData"/>
           <actionMethod actionName="showContentDialog"/>
           <actionMethod actionName="editShow"/>
+          <actionMethod actionName="addShow"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -300,11 +301,15 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="User">
             <viewScriptFile forActionName="removeUser"/>
+          </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Playlist">
             <viewScriptFile forActionName="setPlaylistFades"/>
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="editShow"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="addShow"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

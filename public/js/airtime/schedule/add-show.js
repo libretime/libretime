@@ -127,9 +127,39 @@ function setAddShowEvents() {
 
 	$("#add-show-submit")
 		.button()
-		.click(function(){
-			$("form").submit();
+		.click(function(event){
+            event.preventDefault();
+
+			var data = $("form").serializeArray();
+            var y;
+
+            $.post("/Schedule/add-show", {format: "json", data: data}, function(json){
+                if(json.form) {
+                    $("#add-show-form")
+                        .empty()
+                        .append(json.form);
+
+                    setAddShowEvents();
+                    showErrorSections();    
+                }
+                else {
+                    scheduleRefetchEvents();
+                }
+            });
 		});
+}
+
+function showErrorSections() {
+
+    if($("#schedule-show-when .errors").length > 0) {
+        $("#schedule-show-when").show();
+    }
+    if($("#schedule-show-who .errors").length > 0) {
+        $("#schedule-show-who").show();
+    }
+    if($("#schedule-show-style .errors").length > 0) {
+        $("#schedule-show-style").show();
+    }
 }
 
 $(document).ready(function() {
