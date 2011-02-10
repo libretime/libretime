@@ -4,6 +4,21 @@
 *
 */
 
+function makeAddShowButton(){
+    $('.fc-header-left tbody tr:first')
+        .append('<td><span class="fc-header-space"></span></td>')
+        .append('<td><a href="#" class="add-button"><span class="add-icon"></span>Show</a></td>')
+        .find('td:last > a')
+            .click(function(){
+                $("#add-show-form").show();
+                var y = $("#schedule_calendar").width();
+                var z = $("#schedule-add-show").width();
+                $("#schedule_calendar").width(y-z-50);
+                $("#schedule_calendar").fullCalendar('render');
+                $(this).remove();
+            });
+}
+
 function makeTimeStamp(date){
 	var sy, sm, sd, h, m, s, timestamp;
 	sy = date.getFullYear();
@@ -54,17 +69,7 @@ function viewDisplay( view ) {
     }
 
     if($("#add-show-form").length == 1 && $('.fc-header-left tbody td').length === 5) {
-        $('.fc-header-left tbody tr:first')
-            .append('<td><span class="fc-header-space"></span></td>')
-            .append('<td><a href="#" class="add-button"><span class="add-icon"></span>Show</a></td>')
-            .find('td:last > a')
-                .click(function(){
-                    $("#add-show-form").show();
-                    var y = $("#schedule_calendar").width();
-                    var z = $("#schedule-add-show").width();
-                    $("#schedule_calendar").width(y-z-50);
-                    $("#schedule_calendar").fullCalendar('render');
-                });
+        makeAddShowButton();
     }
 }
 

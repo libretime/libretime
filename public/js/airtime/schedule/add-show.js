@@ -123,6 +123,9 @@ function setAddShowEvents() {
             $("#schedule_calendar").width(y+z+50);
             $("#schedule_calendar").fullCalendar('render');
 			$("#add-show-form").hide();
+
+            //in full-calendar-functions.js
+            makeAddShowButton();
 		});
 
 	$("#add-show-submit")
