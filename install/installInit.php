@@ -3,9 +3,8 @@ if (!function_exists('pg_connect')) {
     trigger_error("PostgreSQL PHP extension required and not found.", E_USER_ERROR);
     exit(2);
 }
-//require_once('DB.php');
+
 require_once(dirname(__FILE__).'/../library/pear/DB.php');
-//require_once('File/Find.php');
 
 function camp_db_table_exists($p_name)
 {
