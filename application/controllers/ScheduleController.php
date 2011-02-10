@@ -95,6 +95,10 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->repeats = $formRepeats;
 		$this->view->who = $formWho;
 		$this->view->style = $formStyle;
+
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
+        $this->view->isAdmin = $user->isAdmin();
     }
 
     public function eventFeedAction()

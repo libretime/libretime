@@ -53,7 +53,7 @@ function viewDisplay( view ) {
 
     }
 
-    if($('.fc-header-left tbody td').length === 5) {
+    if($("#add-show-form").length == 1 && $('.fc-header-left tbody td').length === 5) {
         $('.fc-header-left tbody tr:first')
             .append('<td><span class="fc-header-space"></span></td>')
             .append('<td><a href="#" class="add-button"><span class="add-icon"></span>Show</a></td>')
