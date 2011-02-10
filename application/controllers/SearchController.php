@@ -28,14 +28,11 @@ class SearchController extends Zend_Controller_Action
 
     public function init()
     {
-        if(!Zend_Auth::getInstance()->hasIdentity())
-        {
-            $this->_redirect('login/index');
-        }
-
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('newfield', 'json')
 					->addActionContext('newgroup', 'json')
+                    ->addActionContext('index', 'json')
+                    ->addActionContext('display', 'json')
 					->initContext();
 
 		$this->search_sess = new Zend_Session_Namespace("search");
@@ -43,54 +40,24 @@ class SearchController extends Zend_Controller_Action
 
     public function indexAction()
     {
-		$this->_helper->layout->setLayout('search');
+		$data = $this->_getParam('data');
+		$form = new Application_Form_AdvancedSearch();
+	
+		// Form has been submitted
+		$form->preValidation($data);
+		
+		//if (!$form->isValid($data)) {
+            //$this->view->form = $form->__toString();
+			//return;
+		//}
 
-		$this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
-		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
-
-		$this->_helper->actionStack('contents', 'library');
-		$this->_helper->actionStack('display', 'search');
-		$this->_helper->actionStack('index', 'playlist');
+		// valid form was submitted set as search criteria.
+		$this->search_sess->md = $data;
     }
 
     public function displayAction()
     {
-		$this->view->headScript()->appendFile('/js/airtime/library/advancedsearch.js','text/javascript');
-		$this->view->headLink()->appendStylesheet('/css/library_search.css');
-
-		$this->_helper->viewRenderer->setResponseSegment('search'); 
-
-		$request = $this->getRequest();
-
-		$form = new Application_Form_AdvancedSearch();
-		$this->view->form = $form;
-
-		// Form has not been submitted - displayed using layouts
-		if (!$request->isPost()) {
-
-			$form->addGroup(1, 1);
-
-			$this->search_sess->next_group = 2;
-			$this->search_sess->next_row[1] = 2;
-
-			return;
-		}
-
-		$this->view->md = $request->getPost();
-	
-		// Form has been submitted
-		$form->preValidation($request->getPost());
 		
-		if (!$form->isValid($request->getPost())) {
-			return;
-		}
-
-		// valid form was submitted set as search criteria.
-		$this->view->md = $form->getValues();
-		$this->search_sess->md = $form->getValues();
-
-		//make sure to start on first page of new results.
-		unset($this->search_sess->page);
     }
 
     public function newfieldAction()
@@ -113,8 +80,6 @@ class SearchController extends Zend_Controller_Action
 		$this->search_sess->next_group = $group_id + 1;
 		$this->search_sess->next_row[$group_id] = 2;
     }
-
-
 }
 
 

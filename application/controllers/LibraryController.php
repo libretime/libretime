@@ -4,14 +4,10 @@ class LibraryController extends Zend_Controller_Action
 {
 
     protected $pl_sess = null;
+    protected $search_sess = null;
 
     public function init()
     {
-        if(!Zend_Auth::getInstance()->hasIdentity())
-        {
-            $this->_redirect('login/index');
-        }
-
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents', 'json')
 					->addActionContext('delete', 'json')
@@ -30,12 +26,21 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
         $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/airtime/library/advancedsearch.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet('/css/media_library.css'); 
 		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 	
 		$this->_helper->layout->setLayout('library');
         $this->_helper->viewRenderer->setResponseSegment('library');
+
+        $form = new Application_Form_AdvancedSearch();
+        $form->addGroup(1, 1);
+
+		$this->search_sess->next_group = 2;
+		$this->search_sess->next_row[1] = 2;
+		$this->view->form = $form;
+        $this->view->md = $this->search_sess->md;
 		
 		$this->_helper->actionStack('index', 'playlist');
     }

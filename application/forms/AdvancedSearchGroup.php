@@ -11,6 +11,14 @@ class Application_Form_AdvancedSearchGroup extends Zend_Form_SubForm
 			'order'    => '-2'
         ));
 		$this->getElement('search_add_row')->removeDecorator('DtDdWrapper');
+
+        // Add the add button
+        $this->addElement('button', 'search_remove_group', array(
+            'ignore'   => true,
+            'label'    => 'Remove',
+			'order'    => '-1'
+        ));
+		$this->getElement('search_remove_group')->removeDecorator('DtDdWrapper');
     }
 
 	public function addRow($row_id, $data=null) {
