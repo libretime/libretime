@@ -1,0 +1,25 @@
+<form id="add-show-form" method="post" action="" style="display:none;">
+    <div id="schedule-add-show" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded">
+        <div class="button-bar">
+            <button id="add-show-submit" class="right-floated">Add this show</button>
+            <button id="add-show-close" class="right-floated">Close</button>
+        </div>
+        <div class="clear"></div>
+        <div id="schedule-show-what">
+        <?php echo $this->what ?>
+        </div>
+        <h3 class="collapsible-header"><span class="arrow-icon"></span>When</h3>
+        <div id="schedule-show-when" class="collapsible-content">
+        <?php echo $this->when ?>
+        <?php echo $this->repeats ?>
+        </div>
+        <h3 class="collapsible-header"><span class="arrow-icon"></span>Who</h3>
+        <div id="schedule-show-who" class="collapsible-content">
+        <?php echo $this->who ?>
+        </div>
+        <h3 class="collapsible-header"><span class="arrow-icon"></span>Style</h3>
+        <div id="schedule-show-style" class="collapsible-content">
+        <?php echo $this->style ?>
+        </div>
+    </div>
+</form>
