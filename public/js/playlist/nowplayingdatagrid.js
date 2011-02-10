@@ -108,7 +108,8 @@ function updateDataTable(){
     var table = $('#nowplayingtable').dataTable();
     
     table.fnClearTable(false);
-    table.fnAddData(datagridData.rows);
+    table.fnAddData(datagridData.rows, false);
+    table.fnDraw(true);
     
 }
 
@@ -143,7 +144,7 @@ $(document).ready(function() {
         
         $("#datepicker").datepicker({
             onSelect: function(dateText, inst) 
-                { updateData();}});
+                { getData();}});
         $("#datepicker").datepicker("setDate", new Date());
     } else {
         $('#day_view').click(function(){redirect('/Nowplaying/day-view')});

@@ -77,14 +77,15 @@ function nextShowStart(){
 
 /* Called every "uiUpdateInterval" mseconds. */
 function updateProgressBarValue(){
+    var showPercentDone = 0;
 	if (currentShow.length > 0){
-		var showPercentDone = (estimatedSchedulePosixTime - currentShow[0].showStartPosixTime)/currentShow[0].showLengthMs*100;
+		showPercentDone = (estimatedSchedulePosixTime - currentShow[0].showStartPosixTime)/currentShow[0].showLengthMs*100;
 		if (showPercentDone < 0 || showPercentDone > 100){
 			showPercentDone = 0;
 			currentShow = new Array();
 		}
-		$('#progress-show').attr("style", "width:"+showPercentDone+"%");
 	}
+    $('#progress-show').attr("style", "width:"+showPercentDone+"%");
 
 	var songPercentDone = 0;
 	if (currentSong.length > 0){
