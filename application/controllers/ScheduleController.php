@@ -43,6 +43,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
 		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet('/css/add-show.css');
+        $this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
         $request = $this->getRequest();
         $formWhat = new Application_Form_AddShowWhat();
