@@ -24,7 +24,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      * @param $roleName
      * @return void
      **/
-    public function __construct(Zend_Acl $aclData, $roleName = 'guest')
+    public function __construct(Zend_Acl $aclData, $roleName = 'G')
     {
         $this->_errorPage = array('module' => 'default', 
                                   'controller' => 'error', 
@@ -71,8 +71,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
 	public function setRoleName($type)
 	{
-		$roles = array("A" => "admin", "H" => "host", "G" => "guest");
-		$this->_roleName = $roles[$type];
+		$this->_roleName = $type;
 	}
 
     /**

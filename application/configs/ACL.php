@@ -4,9 +4,9 @@ require_once 'Acl_plugin.php';
 
 $ccAcl = new Zend_Acl();
 
-$ccAcl->addRole(new Zend_Acl_Role('guest'))
-      ->addRole(new Zend_Acl_Role('host'), 'guest')
-      ->addRole(new Zend_Acl_Role('admin'), 'host');
+$ccAcl->addRole(new Zend_Acl_Role('G'))
+      ->addRole(new Zend_Acl_Role('H'), 'G')
+      ->addRole(new Zend_Acl_Role('A'), 'H');
 
 $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('index'))
@@ -23,19 +23,19 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('preference'));
 
 /** Creating permissions */
-$ccAcl->allow('guest', 'index')
-	  ->allow('guest', 'login')
-	  ->allow('guest', 'error')
-	  ->allow('guest', 'nowplaying')
-	  ->allow('guest', 'api')
-      ->allow('guest', 'schedule')
-      ->allow('host', 'library')
-      ->allow('host', 'search')
-      ->allow('host', 'plupload')
-	  ->allow('host', 'playlist')
-	  ->allow('host', 'sideplaylist')
-	  ->allow('admin', 'user')
-      ->allow('admin', 'preference');
+$ccAcl->allow('G', 'index')
+	  ->allow('G', 'login')
+	  ->allow('G', 'error')
+	  ->allow('G', 'nowplaying')
+	  ->allow('G', 'api')
+      ->allow('G', 'schedule')
+      ->allow('H', 'library')
+      ->allow('H', 'search')
+      ->allow('H', 'plupload')
+	  ->allow('H', 'playlist')
+	  ->allow('H', 'sideplaylist')
+	  ->allow('A', 'user')
+      ->allow('A', 'preference');
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
 

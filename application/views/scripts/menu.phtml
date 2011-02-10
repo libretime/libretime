@@ -1,22 +1,24 @@
 <ul id="nav">
 <?php foreach ($this->container as $page) : ?>
-	<li class="top">
-		<?php if($page->hasPages()) : ?>
-		<a class="top_link" href="<?php echo $page->getHref(); ?>">
-    		<span class="down"><?php echo $page->getLabel(); ?></span>
-		</a>
-		<ul class="sub">
-			<?php foreach ($page->getPages() as $sub) : ?>
-			<li>
-				<a href="<?php echo $sub->getHref(); ?>"><?php echo $sub->getLabel(); ?></a>
-			</li>
-			<?php endforeach; ?>
-		</ul>
-		<?php else: ?>
-		<a class="top_link" href="<?php echo $page->getHref(); ?>">
-    		<span><?php echo $page->getLabel(); ?></span>
-		</a>
-		<?php endif; ?>
-	</li>
+    <?php if($this->navigation()->accept($page)) : ?>
+	    <li class="top">
+		    <?php if($page->hasPages()) : ?>
+		    <a class="top_link" href="<?php echo $page->getHref(); ?>">
+        		<span class="down"><?php echo $page->getLabel(); ?></span>
+		    </a>
+		    <ul class="sub">
+			    <?php foreach ($page->getPages() as $sub) : ?>
+			    <li>
+				    <a href="<?php echo $sub->getHref(); ?>"><?php echo $sub->getLabel(); ?></a>
+			    </li>
+			    <?php endforeach; ?>
+		    </ul>
+		    <?php else: ?>
+		    <a class="top_link" href="<?php echo $page->getHref(); ?>">
+        		<span><?php echo $page->getLabel(); ?></span>
+		    </a>
+		    <?php endif; ?>
+	    </li>
+    <?php endif; ?>
 <?php endforeach; ?>
 </ul>

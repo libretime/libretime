@@ -13,7 +13,7 @@ $pages = array(
         'module'     => 'default',
         'controller' => 'Nowplaying',
         'action'     => 'index',
-        'resource'	=>	'Nowplaying'
+        'resource'	=>	'nowplaying'
 	),
 	array(
 		'label'      => 'Schedule',
