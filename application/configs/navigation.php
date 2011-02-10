@@ -17,23 +17,10 @@ $pages = array(
 	),
 	array(
 		'label'      => 'Schedule',
-		'uri' => 'javascript:void(null)',
-		'pages'      => array(
-		    array(
-		        'label'      => 'View',
-		        'module'     => 'default',
-		        'controller' => 'Schedule',
-		        'action'     => 'index',
-				'resource'	=>	'schedule'
-		    ),
-		    array(
-		        'label'      => 'Add Show',
-		        'module'     => 'default',
-		        'controller' => 'Schedule',
-		        'action'     => 'add-show-dialog',
-				'resource'	=>	'schedule'
-		    )
-		)
+        'module'     => 'default',
+        'controller' => 'Schedule',
+        'action'     => 'index',
+        'resource'	=>	'schedule'
 	),
 	array(
 		'label'      => 'Playlist Builder',

@@ -117,6 +117,11 @@ function setAddShowEvents() {
 		.click(function(event){
             event.stopPropagation();
             event.preventDefault();
+
+            var y = $("#schedule_calendar").width();
+            var z = $("#schedule-add-show").width();
+            $("#schedule_calendar").width(y+z+50);
+            $("#schedule_calendar").fullCalendar('render');
 			$("#add-show-form").hide();
 		});
 
@@ -130,33 +135,4 @@ function setAddShowEvents() {
 $(document).ready(function() {
 
 	setAddShowEvents();
-
-	$("#fullcalendar_show_display").fullCalendar({
-		header: {
-			left: 'prev, next, today',
-			center: 'title',
-			right: 'agendaDay, agendaWeek, month'
-		}, 
-		defaultView: 'month',
-		editable: false,
-		allDaySlot: false,
-        axisFormat: 'H:mm',
-        timeFormat: {
-            agenda: 'H:mm{ - H:mm}',
-            month: 'H:mm{ - H:mm}'
-        },
-
-		events: getFullCalendarEvents,
-
-		//callbacks
-		eventRender: eventRender
-	});
-
-});
-
-$(window).load(function() {
-     var mainHeight = document.documentElement.clientHeight - 200 - 50;
-    
-    $('#fullcalendar_show_display').fullCalendar('option', 'contentHeight', mainHeight);
-    $('#fullcalendar_show_display').fullCalendar('render');
 });
