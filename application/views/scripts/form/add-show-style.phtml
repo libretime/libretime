@@ -9,8 +9,5 @@
         $this->element->getAttribs()
     ) ?>
 
-    <?php if($this->element->hasErrors()) {
-            echo $this->formErrors($this->element->getMessages());
-        } 
-    ?>
+    <?php if($this->element->hasErrors()) { echo $this->formErrors($this->element->getMessages());} ?>
 </dd>

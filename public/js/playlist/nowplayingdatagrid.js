@@ -3,17 +3,17 @@ var datagridData;
 
 function getDateText(obj){
 	var str = obj.aData[ obj.iDataColumn ].toString();
-	if (str.indexOf(" ") != -1){
-		return changeTimePrecision(str.substring(0, str.indexOf(" ")));
-	}
+	datetime = str.split(" ");
+    if (datetime.length == 2)
+        return datetime[0];
 	return str;
 }
 
 function getTimeText(obj){
 	var str = obj.aData[ obj.iDataColumn ].toString();
-	if (str.indexOf(" ") != -1){
-		return changeTimePrecision(str.substring(str.indexOf(" ")+1));
-	}
+	datetime = str.split(" ");
+    if (datetime.length == 2)
+        return changeTimePrecision(datetime[1]);
 	return str;
 }
 
@@ -23,16 +23,16 @@ function changeTimePrecisionInit(obj){
 }
 
 function changeTimePrecision(str){
-	if (str.indexOf(".") != -1){
-		if (str.length - str.indexOf(".") > 2)
-			var extraLength = str.length - str.indexOf(".") -3;
-			return str.substring(0, str.length - extraLength);
-	}
-	return str;
+    
+    var temp = str.split(".")
+    if (temp.length == 2){
+        if (temp[1].length > 2)
+            return temp[0]+"."+temp[1].substr(0, 2);
+    }
+    return str;
 }
 
 function notifySongEnd(){
-	//alert("length " + datagridData.rows.length);
 	for (var i=0; i<datagridData.rows.length; i++){
 		if (datagridData.rows[i][0] == "c")
 			datagridData.rows[i][0] = "p";
@@ -45,16 +45,6 @@ function notifySongEnd(){
 	createDataGrid();
 }
 
-/*
-function updateDataGrid(){
-    var table = $('#nowplayingtable');
-    //table.dataTable().fnClearTable();
-        
-    for (var i=0; i<datagridData.rows.length; i++){
-        table.dataTable().fnAddData(datagridData.rows[i]);
-    }
-}
-*/
     var columns = [{"sTitle": "type", "bVisible":false},
         {"sTitle":"Date"},
         {"sTitle":"Start"},
@@ -83,7 +73,6 @@ function createDataGrid(){
 		"bInfo": false,
 		"bLengthChange": false,
         "bPaginate": false,
-		"aaData": datagridData.rows,
 		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
             if (aData[aData.length-2] == "t")
@@ -93,41 +82,73 @@ function createDataGrid(){
             else if (aData[0] == "b")
                 $(nRow).attr("style", "background-color:#EE3B3B");
 			return nRow;
-		}
+		},
+        "bAutoWidth":false
 	} );
     
 
 }
 
-var viewType = "now" //"day";
-var mainLoopRegistered = false;
-
-function setViewType(type){
-    if (type == 0){
-        viewType = "now";
-    } else {
-        viewType = "day";
-    }
-    init2();
+function getDateString(){
+    var date0 = $("#datepicker").datepicker("getDate");
+    return (date0.getFullYear() + "-" + (parseInt(date0.getMonth())+1) + "-" + date0.getDate());
 }
 
-function init2(){
-	  $.ajax({ url: "/Nowplaying/get-data-grid-data/format/json/view/" + viewType, dataType:"json", success:function(data){
+function getAJAXURL(){
+    var url = "/Nowplaying/get-data-grid-data/format/json/view/"+viewType;
+    
+    if (viewType == "day"){
+      url +=  "/date/" + getDateString();
+    }
+    
+    return url;
+}
+
+function updateDataTable(){
+    var table = $('#nowplayingtable').dataTable();
+    
+    table.fnClearTable(false);
+    table.fnAddData(datagridData.rows, false);
+    table.fnDraw(true);
+    
+}
+
+function getData(){
+       $.ajax({ url: getAJAXURL(), dataType:"json", success:function(data){
 		datagridData = data.entries;
-        createDataGrid();
-	  }});
-	  
+        updateDataTable();
+	  }});   
+}
+
+function init2(){	        
+      getData();
+
 	  if (typeof registerSongEndListener == 'function' && !registered){
 		  registered = true;
 		  registerSongEndListener(notifySongEnd);
 	  }
 
-      if (!mainLoopRegistered){
-        setTimeout(init2, 5000);
-        mainLoopRegistered = true;
-      }
+      setTimeout(init2, 5000);
+
+}
+
+function redirect(url){
+    document.location.href = url;
 }
 
 $(document).ready(function() {
-	init2();
+    
+    createDataGrid();
+    if (viewType == "day"){
+        $('#now_view').click(function(){redirect('/Nowplaying/index')});
+        
+        $("#datepicker").datepicker({
+            onSelect: function(dateText, inst) 
+                { getData();}});
+        $("#datepicker").datepicker("setDate", new Date());
+    } else {
+        $('#day_view').click(function(){redirect('/Nowplaying/day-view')});
+    }
+
+    init2();
 });

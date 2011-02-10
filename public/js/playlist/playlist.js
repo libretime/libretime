@@ -73,54 +73,60 @@ function nextShowStart(){
     nextShowPrepare = true;
     currentShow[0] = nextShow.shift();
     updatePlaybar();
-
-    //notifySongEndListener();	
 }
 
 /* Called every "uiUpdateInterval" mseconds. */
 function updateProgressBarValue(){
+    var showPercentDone = 0;
 	if (currentShow.length > 0){
-		var showPercentDone = (estimatedSchedulePosixTime - currentShow[0].showStartPosixTime)/currentShow[0].showLengthMs*100;
+		showPercentDone = (estimatedSchedulePosixTime - currentShow[0].showStartPosixTime)/currentShow[0].showLengthMs*100;
 		if (showPercentDone < 0 || showPercentDone > 100){
 			showPercentDone = 0;
 			currentShow = new Array();
 		}
-		$('#progress-show').attr("style", "width:"+showPercentDone+"%");
 	}
+    $('#progress-show').attr("style", "width:"+showPercentDone+"%");
 
 	var songPercentDone = 0;
 	if (currentSong.length > 0){
 		songPercentDone = (estimatedSchedulePosixTime - currentSong[0].songStartPosixTime)/currentSong[0].songLengthMs*100;
 		if (songPercentDone < 0 || songPercentDone > 100){
-			songPercentDone = 0;
-			currentSong = new Array();
+			songPercentDone = 0;        
+            currentSong = new Array();
 		} else {
 			$('#on-air-info').attr("class", "on-air-info on");
+            $('#progress-show').attr("class", "progress-show");
 		}
-	} else
+	} else {
 		$('#on-air-info').attr("class", "on-air-info off");
+        $('#progress-show').attr("class", "progress-show-red");
+    }
 	$('#progress-bar').attr("style", "width:"+songPercentDone+"%");
 
 	//calculate how much time left to next song if there is any
 	if (nextSongs.length > 0 && nextSongPrepare){
 		var diff = nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime;
-		if (diff < serverUpdateInterval && diff >= 0){
+		if (diff < serverUpdateInterval){
+            
+            //sometimes the diff is negative (-100ms for example). Still looking
+            //into why this could sometimes happen.
+            if (diff < 0)
+                diff=0;
+                
 			nextSongPrepare = false;
 			setTimeout(newSongStart, diff);
-		} else if (diff < 0 && APPLICATION_ENV == "development"){
-            alert ("Warning: estimatedSchedulePosixTime > songStartPosixTime");
-            alert (estimatedSchedulePosixTime + " " + nextSongs[0].songStartPosixTime);
 		}
 	}
 	
 	//calculate how much time left to next show if there is any
 	if (nextShow.length > 0 && nextShowPrepare){
 		var diff = nextShow[0].showStartPosixTime - estimatedSchedulePosixTime;
-		if (diff < serverUpdateInterval && diff >= 0){
+		if (diff < serverUpdateInterval){
+            if (diff < 0)
+                diff=0;
+                
 			nextShowPrepare = false;
 			setTimeout(nextShowStart, diff);
-		} else if (diff < 0 && APPLICATION_ENV == "development"){
-			alert ("Warning: estimatedSchedulePosixTime > showStartPosixTime");
 		}
 	}
 
@@ -131,7 +137,7 @@ function updatePlaybar(){
     /* Column 0 update */
     $('#previous').empty();
     $('#prev-length').empty();
-    $('#current').text("Current:");
+    $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
     $('#next').empty();
     $('#next-length').empty();
     if (previousSongs.length > 0){
@@ -191,22 +197,13 @@ function calcAdditionalShowData(show){
 	if (show.length > 0){
 		show[0].showStartPosixTime = convertDateToPosixTime(show[0].start_timestamp);
 		show[0].showEndPosixTime = convertDateToPosixTime(show[0].end_timestamp);
-		
-		//hack to fix case where show end is next day, but we have it set
-		//as the same day.
-		if (show[0].showEndPosixTime - show[0].showStartPosixTime < 0)
-			show[0].showEndPosixTime += 1000*3600*24;
-		
 		show[0].showLengthMs = show[0].showEndPosixTime - show[0].showStartPosixTime;
 	}
 }
 
 function parseItems(obj){
     APPLICATION_ENV = obj.env;
-    
-    var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
-    schedulePosixTime += parseInt(obj.timezoneOffset)*1000;
-    
+        
     $('#time-zone').text(obj.timezone);
 
     previousSongs = obj.previous;
@@ -223,10 +220,10 @@ function parseItems(obj){
     calcAdditionalShowData(obj.currentShow);
     calcAdditionalShowData(obj.nextShow);
 
-    if (localRemoteTimeOffset == null){
-        var date = new Date();
-        localRemoteTimeOffset = date.getTime() - schedulePosixTime;
-    }
+    var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
+    schedulePosixTime += parseInt(obj.timezoneOffset)*1000;
+    var date = new Date();
+    localRemoteTimeOffset = date.getTime() - schedulePosixTime;
 }
 
 

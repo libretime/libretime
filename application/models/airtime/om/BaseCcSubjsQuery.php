@@ -14,6 +14,9 @@
  * @method     CcSubjsQuery orderByDbLastName($order = Criteria::ASC) Order by the last_name column
  * @method     CcSubjsQuery orderByDbLastlogin($order = Criteria::ASC) Order by the lastlogin column
  * @method     CcSubjsQuery orderByDbLastfail($order = Criteria::ASC) Order by the lastfail column
+ * @method     CcSubjsQuery orderByDbSkypeContact($order = Criteria::ASC) Order by the skype_contact column
+ * @method     CcSubjsQuery orderByDbJabberContact($order = Criteria::ASC) Order by the jabber_contact column
+ * @method     CcSubjsQuery orderByDbEmail($order = Criteria::ASC) Order by the email column
  *
  * @method     CcSubjsQuery groupByDbId() Group by the id column
  * @method     CcSubjsQuery groupByDbLogin() Group by the login column
@@ -23,6 +26,9 @@
  * @method     CcSubjsQuery groupByDbLastName() Group by the last_name column
  * @method     CcSubjsQuery groupByDbLastlogin() Group by the lastlogin column
  * @method     CcSubjsQuery groupByDbLastfail() Group by the lastfail column
+ * @method     CcSubjsQuery groupByDbSkypeContact() Group by the skype_contact column
+ * @method     CcSubjsQuery groupByDbJabberContact() Group by the jabber_contact column
+ * @method     CcSubjsQuery groupByDbEmail() Group by the email column
  *
  * @method     CcSubjsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcSubjsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -67,6 +73,9 @@
  * @method     CcSubjs findOneByDbLastName(string $last_name) Return the first CcSubjs filtered by the last_name column
  * @method     CcSubjs findOneByDbLastlogin(string $lastlogin) Return the first CcSubjs filtered by the lastlogin column
  * @method     CcSubjs findOneByDbLastfail(string $lastfail) Return the first CcSubjs filtered by the lastfail column
+ * @method     CcSubjs findOneByDbSkypeContact(string $skype_contact) Return the first CcSubjs filtered by the skype_contact column
+ * @method     CcSubjs findOneByDbJabberContact(string $jabber_contact) Return the first CcSubjs filtered by the jabber_contact column
+ * @method     CcSubjs findOneByDbEmail(string $email) Return the first CcSubjs filtered by the email column
  *
  * @method     array findByDbId(int $id) Return CcSubjs objects filtered by the id column
  * @method     array findByDbLogin(string $login) Return CcSubjs objects filtered by the login column
@@ -76,6 +85,9 @@
  * @method     array findByDbLastName(string $last_name) Return CcSubjs objects filtered by the last_name column
  * @method     array findByDbLastlogin(string $lastlogin) Return CcSubjs objects filtered by the lastlogin column
  * @method     array findByDbLastfail(string $lastfail) Return CcSubjs objects filtered by the lastfail column
+ * @method     array findByDbSkypeContact(string $skype_contact) Return CcSubjs objects filtered by the skype_contact column
+ * @method     array findByDbJabberContact(string $jabber_contact) Return CcSubjs objects filtered by the jabber_contact column
+ * @method     array findByDbEmail(string $email) Return CcSubjs objects filtered by the email column
  *
  * @package    propel.generator.airtime.om
  */
@@ -372,6 +384,72 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcSubjsPeer::LASTFAIL, $dbLastfail, $comparison);
+	}
+
+	/**
+	 * Filter the query on the skype_contact column
+	 * 
+	 * @param     string $dbSkypeContact The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByDbSkypeContact($dbSkypeContact = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbSkypeContact)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbSkypeContact)) {
+				$dbSkypeContact = str_replace('*', '%', $dbSkypeContact);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcSubjsPeer::SKYPE_CONTACT, $dbSkypeContact, $comparison);
+	}
+
+	/**
+	 * Filter the query on the jabber_contact column
+	 * 
+	 * @param     string $dbJabberContact The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByDbJabberContact($dbJabberContact = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbJabberContact)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbJabberContact)) {
+				$dbJabberContact = str_replace('*', '%', $dbJabberContact);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcSubjsPeer::JABBER_CONTACT, $dbJabberContact, $comparison);
+	}
+
+	/**
+	 * Filter the query on the email column
+	 * 
+	 * @param     string $dbEmail The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByDbEmail($dbEmail = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbEmail)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbEmail)) {
+				$dbEmail = str_replace('*', '%', $dbEmail);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcSubjsPeer::EMAIL, $dbEmail, $comparison);
 	}
 
 	/**

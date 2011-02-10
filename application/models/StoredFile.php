@@ -1797,7 +1797,7 @@ class StoredFile {
 		return StoredFile::searchFiles($fromTable, $datatables);
 	}	
 
-	private static function searchFiles($fromTable, $data)
+	public static function searchFiles($fromTable, $data)
 	{
 		global $CC_CONFIG, $CC_DBC;
 

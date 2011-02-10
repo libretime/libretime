@@ -60,7 +60,9 @@ function findHosts(request, callback) {
 function setAddShowEvents() {
 	var start, end;
 
-	$(".tabs").tabs();
+	$("h3").click(function(){
+        $(this).next().toggle();
+    });
 
     if(!$("#add_show_repeats").attr('checked')) {
         $("#schedule-show-when > fieldset:last").hide();
@@ -113,6 +115,15 @@ function setAddShowEvents() {
 			$(this).ColorPickerSetColor(this.value);
 		}
 	});
+
+
+    $("#add-show-close")
+        .button()
+		.click(function(event){
+            event.stopPropagation();
+            event.preventDefault();
+			$("#add-show-form").hide();
+		});
 
 	$("#add-show-submit")
 		.button()

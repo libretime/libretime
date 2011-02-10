@@ -85,6 +85,9 @@ class LibraryController extends Zend_Controller_Action
 								'title' => 'Close');
 			}
 
+            $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/metadata/format/json/id/#id#', 'callback' => 'window["createPlaylistMetaForm"]'), 
+							'title' => 'Edit Metadata');
+
 			$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/delete'.$params, 'callback' => 'window["deletePlaylist"]'), 
 							'title' => 'Delete');
 

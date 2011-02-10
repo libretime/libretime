@@ -264,6 +264,9 @@
 	<column name="last_name" phpName="DbLastName" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="lastlogin" phpName="DbLastlogin" type="TIMESTAMP" required="false"/>
     <column name="lastfail" phpName="DbLastfail" type="TIMESTAMP" required="false"/>
+    <column name="skype_contact" phpName="DbSkypeContact" type="VARCHAR" required="false"/>
+    <column name="jabber_contact" phpName="DbJabberContact" type="VARCHAR" required="false"/>
+    <column name="email" phpName="DbEmail" type="VARCHAR" required="false"/>
     <unique name="cc_subjs_id_idx">
       <unique-column name="id"/>
     </unique>

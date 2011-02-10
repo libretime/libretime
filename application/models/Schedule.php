@@ -419,21 +419,6 @@ class Schedule {
         return $rows;
     }
 
-    
-    /**
-     * Returns the date of the server in the format
-     * "YYYY-MM-DD HH:mm:SS".
-     *
-     * Note: currently assuming that Web Server and Scheduler are on the 
-     * same host.
-     *
-     * @return date Current server time.
-     */
-    public static function GetSchedulerTime() {
-        $date = new Application_Model_DateHelper;
-        return $date; 
-    }
-
     /**
      * Returns data related to the scheduled items.
      *
@@ -447,7 +432,7 @@ class Schedule {
             return array();
         }
 
-        $date = Schedule::GetSchedulerTime();
+        $date = new Application_Model_DateHelper;
         $timeNow = $date->getDate();
         return array("env"=>APPLICATION_ENV,
             "schedulerTime"=>gmdate("Y-m-d H:i:s"),

@@ -9,11 +9,11 @@
 */
 $pages = array(
 	array(
-		'label'      => 'Now Playing',
-		'module'     => 'Nowplaying',
-		'controller' => 'index',
-		'action'     => 'index',
-		'order'      => -100 //make sure home is the first page
+        'label'      => 'Now Playing',
+        'module'     => 'default',
+        'controller' => 'Nowplaying',
+        'action'     => 'index',
+        'resource'	=>	'Nowplaying'
 	),
 	array(
 		'label'      => 'Schedule',

@@ -1,3 +1,33 @@
-<?php
-
-echo $this->form;
+    <div class=
+    "ui-widget ui-widget-content block-shadow clearfix padded-strong user-management">
+    <h2>
+        Manage users
+      </h2>
+      <div class="user-list-wrapper">
+        <div id="users_wrapper" class="dataTables_wrapper">
+          
+        <div class="button-holder">
+         <button type="button" id="add_user_button" name=
+          "search_add_group" class="ui-button ui-widget ui-state-default ui-button-text-icon-primary">
+          <span class="ui-button-text">Add user</span></button>
+        </div>
+          
+          <table cellspacing="0" cellpadding="0" style="" id="users_datatable" class="datatable">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="user-data simple-formblock" id="user_details">
+	  <fieldset class="padded">
+      <?php echo $this->form ?>
+      </fieldset>
+      </div>
+    </div>

@@ -46,6 +46,9 @@ class CcSubjsTableMap extends TableMap {
 		$this->addColumn('LAST_NAME', 'DbLastName', 'VARCHAR', true, 255, '');
 		$this->addColumn('LASTLOGIN', 'DbLastlogin', 'TIMESTAMP', false, null, null);
 		$this->addColumn('LASTFAIL', 'DbLastfail', 'TIMESTAMP', false, null, null);
+		$this->addColumn('SKYPE_CONTACT', 'DbSkypeContact', 'VARCHAR', false, 255, null);
+		$this->addColumn('JABBER_CONTACT', 'DbJabberContact', 'VARCHAR', false, 255, null);
+		$this->addColumn('EMAIL', 'DbEmail', 'VARCHAR', false, 255, null);
 		// validators
 	} // initialize()
 

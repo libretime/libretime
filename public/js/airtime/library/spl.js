@@ -146,21 +146,21 @@ function submitOnEnter(event) {
 	}
 }
 
-function setCueEvents() {
+function setCueEvents(el) {
     
-    $(".spl_cue_in span:last").blur(changeCueIn);
-	$(".spl_cue_out span:last").blur(changeCueOut);
+    $(el).find(".spl_cue_in span:last").blur(changeCueIn);
+	$(el).find(".spl_cue_out span:last").blur(changeCueOut);
 
-    $(".spl_cue_in span:first, .spl_cue_out span:first")
+    $(el).find(".spl_cue_in span:first, .spl_cue_out span:first")
         .keydown(submitOnEnter);
 }
 
-function setFadeEvents() {
+function setFadeEvents(el) {
 
-    $(".spl_fade_in span:first").blur(changeFadeIn);
-	$(".spl_fade_out span:first").blur(changeFadeOut);
+    $(el).find(".spl_fade_in span:first").blur(changeFadeIn);
+	$(el).find(".spl_fade_out span:first").blur(changeFadeOut);
 
-    $(".spl_fade_in span:first, .spl_fade_out span:first")
+    $(el).find(".spl_fade_in span:first, .spl_fade_out span:first")
         .keydown(submitOnEnter);
 }
 
@@ -198,7 +198,7 @@ function openFadeEditor(event) {
 			.append(json.html)
 			.show();
 
-        setFadeEvents();
+        setFadeEvents(li);
 	});
 }
 
@@ -231,7 +231,7 @@ function openCueEditor(event) {
 			.append(json.html)
 			.show();
 
-        setCueEvents();
+        setCueEvents(li);
 	});	
 }
 
@@ -328,36 +328,49 @@ function closeSPL() {
 	$.post(url, noOpenPL);
 }
 
+function createPlaylistMetaForm(json) {
+    var submit, form;
+
+	submit = $('<button id="new_playlist_submit">Submit</button>')
+		.button()
+		.click(function(){
+			var url, data;
+
+			url = '/Playlist/metadata/format/json';
+			data = $("#side_playlist form").serialize(); 
+
+			$.post(url, data, function(json){
+				if(json.form){
+
+				}
+
+				openDiffSPL(json);
+			})
+		});
+
+    form = $(json.form);
+
+    form.find("input, textarea")
+        .keydown(function(event){
+            //enter was pressed
+            if(event.keyCode === 13) {
+                event.preventDefault();
+	            $("#new_playlist_submit").click();
+            }
+        })
+
+	$("#side_playlist")
+		.empty()
+		.append(form)
+		.append(submit);
+}
+
 function newSPL() {
 	var url;
 
 	url = '/Playlist/new/format/json';
 
-	$.post(url, function(json){
-		var submit;
-
-		submit = $('<button>Submit</button>')
-			.button()
-			.click(function(){
-				var url, data;
-
-				url = '/Playlist/metadata/format/json';
-				data = $("#side_playlist form").serialize(); 
-
-				$.post(url, data, function(json){
-					if(json.form){
-
-					}
-
-					openDiffSPL(json);
-				})
-			});
-
-		$("#side_playlist")
-			.empty()
-			.append(json.form)
-			.append(submit);
-	});
+	$.post(url, createPlaylistMetaForm);
 }
 
 function deleteSPL() {

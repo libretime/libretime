@@ -174,13 +174,16 @@ select {
 	border-width:1px 1px 0 1px;
 	background:#141414 url(images/progressbar_bg.png) repeat-x 0 0;
 }
-.progressbar .progress-song, .progressbar .progress-show {
+.progressbar .progress-song, .progressbar .progress-show, .progress-show-red {
 	height:4px;
 	width:0%;
 	background:#f97202 url(images/progressbar_song.png) repeat-x 0 0;
 }
 .progressbar .progress-show {
 	background:#02cef9 url(images/progressbar_show.png) repeat-x 0 0;
+}
+.progressbar .progress-show-red {
+	background:#02cef9 url(images/progressbar_show_red.png) repeat-x 0 0;
 }
 .now-playing-info .lenght {
 	color:#c4c4c4;
@@ -516,6 +519,25 @@ dl.inline-list dd {
     padding: 0.2em 1em;
 	margin-right:3px;
 }
+.dataTables_filter input {
+    background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;
+    text-indent: 25px;
+	width: 60%;
+	border: 1px solid #5B5B5B;
+    height: 23px;
+    margin: 0;
+    padding: 0;	
+}
+.dataTables_length select {
+    background-color: #DDDDDD;
+    border: 1px solid #5B5B5B;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    height: 25px;
+    margin: 0;
+    padding: 2px 2px 2px 0;
+    vertical-align: top;
+}
 
 /*----END Data Table----*/
 
@@ -702,7 +724,7 @@ dt.block-display, dd.block-display {
 .floated-panel {
 	margin-top:0;
 	width:99.99%;
-	z-index:9999;
+	z-index:999;
 }
 
 
@@ -801,7 +823,8 @@ div.ui-datepicker {
 #schedule_playlist_chosen li > h3 > div > span.ui-icon {
 	margin-top: 0px;
 }
-#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e {
+#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e,
+#schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-s {
 	float:left;
 	margin-right: 8px;
 }
@@ -847,7 +870,6 @@ div.ui-datepicker {
 	float:right;
 	margin-right:22px;
 }
-
 
 #schedule_playlist_chosen li > div > div > span {
 	float: right;
@@ -913,7 +935,7 @@ h2#scheduled_playlist_name span {
 }
 
 .time {
-	width: 100px;
+	width: 80px;
 	margin: 5px;
 	text-align: left;
 }
@@ -1064,15 +1086,21 @@ button, input {
 
 .user-management {
 	width:810px;
+	/*width:380px;*/
+}
+.user-management-expanded {
+	width:810px;
 }
 .user-data {
 	float:left;
 	width:420px;
+	margin-left:10px;
+	/*display:none;*/
 }
 .user-list-wrapper {
 	float:left;
 	width:380px;
-	margin-right:10px;
+	/*margin-right:10px;*/
 }
 
 .user-management div.user-list-wrapper .ui-widget-header:first-child {
@@ -1086,10 +1114,11 @@ button, input {
 }
 .user-management h2 {
     font-size: 1.7em;
-    padding-bottom: 16px;
+    padding-bottom: 12px;
 }
-.user-management .dataTables_filter .auto-search {
+.user-management .dataTables_filter input {
     width: 378px;
+	margin-bottom:8px;
 }
 .user-data.simple-formblock dd {
     width: 73%;
@@ -1103,8 +1132,9 @@ button, input {
 }
 
 .user-list-wrapper .button-holder {
-	padding:8px 0;
+	padding:0;
 	text-align:right;
+	height:37px;
 }
 .user-list-wrapper .button-holder .ui-button {
 	margin:0;
@@ -1121,3 +1151,91 @@ button, input {
 
 
 #ui-datepicker-div { z-index: 10 !important }
+
+.button-bar-top {
+	text-align:right;
+	height:30px;
+}
+
+.toggle-button, .toggle-button-active {
+	border: 1px solid #505050;
+	background-color: #5e5e5e;
+    background: -moz-linear-gradient(top, #757575 0, #5e5e5e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #757575), color-stop(100%, #5e5e5e));
+	color: #ffffff;
+	margin:0;
+	font-size:12px;
+	padding:5px 12px;
+	text-decoration:none;
+	text-shadow: #343434 0px -1px;
+	border-width:1px 0 1px 1px;
+}
+.toggle-button:hover {
+	background-color: #292929;
+    background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
+	text-shadow: #000000 0px -1px;
+}
+
+.toggle-button-active {
+	background-color: #c6c6c6;
+    background: -moz-linear-gradient(top, #767676 0, #c6c6c6 20%, #c6c6c6 35%, #a0a0a0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #767676), color-stop(20%, #c6c6c6), color-stop(35%, #c6c6c6), color-stop(100%, #a0a0a0));
+	color: #2e2e2e;
+	cursor:default;
+	text-shadow: #d8d8d8 0px 1px;
+}
+.end-button {
+	border-width:1px;
+}
+
+
+ul.errors {
+	display:block;
+	clear:left;
+	padding:3px 0 0 0;
+	margin:0;
+}
+
+ul.errors li {
+	color:#902d2d;
+	font-size:11px;
+	padding:2px 4px;
+	background:#c6b4b4;
+	margin-bottom:2px;
+	border:1px solid #c83f3f;
+}
+.collapsible-header {
+	border: 1px solid #8f8f8f;
+	background-color: #cccccc;
+    background: -moz-linear-gradient(top, #cccccc 0, #b9b9b9 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #cccccc), color-stop(100%, #b9b9b9));
+	font-size:13px;
+	color:#353535;
+	font-weight:bold;
+	padding:6px 0 6px 20px;
+	margin:8px 0 0 0;
+	cursor:pointer;
+	position:relative;
+}
+.collapsible-content {
+	margin-top:-1px;
+	display:none;
+}
+.collapsible-header .arrow-icon {
+	display:block;
+	background:url(images/arrows_collapse.png) no-repeat 0 0;
+	height:11px;
+	width:11px;
+	position:absolute;
+	left:5px;
+	top:8px;
+    
+}
+.collapsible-header.close .arrow-icon {
+	background-position: 0 -11px;
+    
+}
+#schedule-add-show .button-bar {
+    height: 28px;
+    margin: 0 0 8px 0;
