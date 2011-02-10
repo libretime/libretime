@@ -116,6 +116,15 @@ function setAddShowEvents() {
 		}
 	});
 
+
+    $("#add-show-close")
+        .button()
+		.click(function(event){
+            event.stopPropagation();
+            event.preventDefault();
+			$("#add-show-form").hide();
+		});
+
 	$("#add-show-submit")
 		.button()
 		.click(function(){
