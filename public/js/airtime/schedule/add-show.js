@@ -138,7 +138,13 @@ function setAddShowEvents() {
                 }
             }).get();
 
-            $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts}, function(json){
+            var days = $('#add_show_day_check-element input').map(function() {
+                if($(this).attr("checked")) {
+                    return $(this).val();
+                }
+            }).get();
+
+            $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 if(json.form) {
                     $("#add-show-form")
                         .empty()

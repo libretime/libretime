@@ -310,6 +310,7 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
         $data['add_show_hosts'] =  $this->_getParam('hosts');
+        $data['add_show_day_check'] =  $this->_getParam('days');
 
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
