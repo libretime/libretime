@@ -73,7 +73,6 @@ function createDataGrid(){
 		"bInfo": false,
 		"bLengthChange": false,
         "bPaginate": false,
-		"aaData": datagridData.rows,
 		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
             if (aData[aData.length-2] == "t")
@@ -83,7 +82,8 @@ function createDataGrid(){
             else if (aData[0] == "b")
                 $(nRow).attr("style", "background-color:#EE3B3B");
 			return nRow;
-		}
+		},
+        "bAutoWidth":false
 	} );
     
 
@@ -104,15 +104,23 @@ function getAJAXURL(){
     return url;
 }
 
-function updateData(){
+function updateDataTable(){
+    var table = $('#nowplayingtable').dataTable();
+    
+    table.fnClearTable(false);
+    table.fnAddData(datagridData.rows);
+    
+}
+
+function getData(){
        $.ajax({ url: getAJAXURL(), dataType:"json", success:function(data){
 		datagridData = data.entries;
-        createDataGrid();
+        updateDataTable();
 	  }});   
 }
 
 function init2(){	        
-      updateData();	  
+      getData();
 
 	  if (typeof registerSongEndListener == 'function' && !registered){
 		  registered = true;
@@ -128,6 +136,8 @@ function redirect(url){
 }
 
 $(document).ready(function() {
+    
+    createDataGrid();
     if (viewType == "day"){
         $('#now_view').click(function(){redirect('/Nowplaying/index')});
         

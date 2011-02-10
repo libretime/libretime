@@ -73,8 +73,6 @@ function nextShowStart(){
     nextShowPrepare = true;
     currentShow[0] = nextShow.shift();
     updatePlaybar();
-
-    //notifySongEndListener();	
 }
 
 /* Called every "uiUpdateInterval" mseconds. */
@@ -108,6 +106,9 @@ function updateProgressBarValue(){
 	if (nextSongs.length > 0 && nextSongPrepare){
 		var diff = nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime;
 		if (diff < serverUpdateInterval){
+            
+            //sometimes the diff is negative (-100ms for example). Still looking
+            //into why this could sometimes happen.
             if (diff < 0)
                 diff=0;
                 
@@ -195,22 +196,13 @@ function calcAdditionalShowData(show){
 	if (show.length > 0){
 		show[0].showStartPosixTime = convertDateToPosixTime(show[0].start_timestamp);
 		show[0].showEndPosixTime = convertDateToPosixTime(show[0].end_timestamp);
-		
-		//hack to fix case where show end is next day, but we have it set
-		//as the same day.
-		if (show[0].showEndPosixTime - show[0].showStartPosixTime < 0)
-			show[0].showEndPosixTime += 1000*3600*24;
-		
 		show[0].showLengthMs = show[0].showEndPosixTime - show[0].showStartPosixTime;
 	}
 }
 
 function parseItems(obj){
     APPLICATION_ENV = obj.env;
-    
-    var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
-    schedulePosixTime += parseInt(obj.timezoneOffset)*1000;
-    
+        
     $('#time-zone').text(obj.timezone);
 
     previousSongs = obj.previous;
@@ -227,10 +219,10 @@ function parseItems(obj){
     calcAdditionalShowData(obj.currentShow);
     calcAdditionalShowData(obj.nextShow);
 
-    if (localRemoteTimeOffset == null){
-        var date = new Date();
-        localRemoteTimeOffset = date.getTime() - schedulePosixTime;
-    }
+    var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
+    schedulePosixTime += parseInt(obj.timezoneOffset)*1000;
+    var date = new Date();
+    localRemoteTimeOffset = date.getTime() - schedulePosixTime;
 }
 
 
