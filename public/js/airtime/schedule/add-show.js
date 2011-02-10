@@ -113,7 +113,6 @@ function setAddShowEvents() {
 
 
     $("#add-show-close")
-        .button()
 		.click(function(event){
             event.stopPropagation();
             event.preventDefault();
