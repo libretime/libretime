@@ -131,9 +131,15 @@ function setAddShowEvents() {
             event.preventDefault();
 
 			var data = $("form").serializeArray();
-            var y;
+            var string = $("form").serialize();
 
-            $.post("/Schedule/add-show", {format: "json", data: data}, function(json){
+            var hosts = $('#add_show_hosts-element input').map(function() {
+                if($(this).attr("checked")) {
+                    return $(this).val();
+                }
+            }).get();
+
+            $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts}, function(json){
                 if(json.form) {
                     $("#add-show-form")
                         .empty()
@@ -143,6 +149,11 @@ function setAddShowEvents() {
                     showErrorSections();    
                 }
                 else {
+                     $("#add-show-form")
+                        .empty()
+                        .append(json.newForm);
+
+                    setAddShowEvents();
                     scheduleRefetchEvents();
                 }
             });

@@ -304,11 +304,12 @@ class ScheduleController extends Zend_Controller_Action
     {
 		$js = $this->_getParam('data');
         $data = array();
-
+       
         //need to convert from serialized jQuery array.
         foreach($js as $j){
             $data[$j["name"]] = $j["value"];
         }
+        $data['add_show_hosts'] =  $this->_getParam('hosts');
 
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
@@ -343,10 +344,31 @@ class ScheduleController extends Zend_Controller_Action
 
         if ($what && $when && $repeats && $who && $style) {  
 		
+            $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+            $user = new User($userInfo->id);
 			if($user->isAdmin()) {
 			    Show::addShow($data);
             }
-		    //$this->_redirect('Schedule');
+
+            //send back a new form for the user.
+            $formWhat = new Application_Form_AddShowWhat();
+		    $formWho = new Application_Form_AddShowWho();
+		    $formWhen = new Application_Form_AddShowWhen();
+		    $formRepeats = new Application_Form_AddShowRepeats();
+		    $formStyle = new Application_Form_AddShowStyle();
+
+		    $formWhat->removeDecorator('DtDdWrapper');
+		    $formWho->removeDecorator('DtDdWrapper');
+		    $formWhen->removeDecorator('DtDdWrapper');
+		    $formRepeats->removeDecorator('DtDdWrapper');
+		    $formStyle->removeDecorator('DtDdWrapper');
+
+            $this->view->what = $formWhat;
+		    $this->view->when = $formWhen;
+		    $this->view->repeats = $formRepeats;
+		    $this->view->who = $formWho;
+		    $this->view->style = $formStyle;
+            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 		}
         else {
 
