@@ -35,12 +35,6 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
                 ),
          ));
 
-        $checkboxes = $this->getElement('add_show_day_check');
-
-        $checkboxes->setDecorators(array(array('ViewScript', array(
-            'viewScript' => 'form/add-show-checkbox.phtml'
-        ))));
-
 		// Add end date element
         $this->addElement('text', 'add_show_end_date', array(
             'label'      => 'Date End:',
