@@ -95,6 +95,9 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="update"/>
         </controllerFile>
+        <controllerFile controllerName="Dashboard">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Login"/>
@@ -311,6 +314,9 @@
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="addShow"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Dashboard">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
@@ -355,6 +361,7 @@
           <testApplicationControllerFile filesystemName="UserControllerTest.php"/>
           <testApplicationControllerFile filesystemName="NowplayingControllerTest.php"/>
           <testApplicationControllerFile filesystemName="PreferenceControllerTest.php"/>
+          <testApplicationControllerFile filesystemName="DashboardControllerTest.php"/>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>
       <testLibraryDirectory>

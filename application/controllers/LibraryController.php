@@ -24,7 +24,6 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
         $this->view->headScript()->appendFile('/js/jplayer/jquery.jplayer.min.js');
         $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
         $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
         $this->view->headScript()->appendFile('/js/airtime/library/advancedsearch.js','text/javascript');
 
