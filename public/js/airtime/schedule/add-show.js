@@ -130,6 +130,7 @@ function setAddShowEvents() {
             $("#schedule_calendar").width(y+z+50);
             $("#schedule_calendar").fullCalendar('render');
 			$("#add-show-form").hide();
+            makeAddShowButton();
 		});
 
 	form.find("#add-show-submit")
