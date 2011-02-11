@@ -1301,11 +1301,15 @@ ul.errors li {
 	background-color:#ff753c;
 }
 .playing-list {
-	background-color:#b4e0f7;
+	background-color:#b0dcf2;
+}
+.odd.playing-list {
+	background-color:#bfe5f8;
 }
 .gap {
 	background-color:#da5454;
 }
+/*---//////////////////// END NOW PLAYING COLORS ////////////////////---*/
 .icon-link, .ui-widget-content a.icon-link {
     color: #646464;
     position: relative;
@@ -1335,4 +1339,14 @@ ul.errors li {
 .button-bar .icon-link {
 	float:left;
 	margin:7px 0 0 1px;
+}
+
+#show_content_dialog .datatable tr:first-child td {
+	border-top:none;
+}
+
+#show_content_dialog .datatable {
+	margin-top:8px;
+	
+	
 }

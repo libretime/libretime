@@ -33,6 +33,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $this->addElement('text', 'add_show_duration', array(
             'label'      => 'Duration:',
             'class'      => 'input_text',
+            'value'      => '1:00',
             'required'   => true,
             'filters'    => array('StringTrim'),
 			'validators' => array(

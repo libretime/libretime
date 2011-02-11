@@ -59,46 +59,54 @@ function findHosts(request, callback) {
 
 function setAddShowEvents() {
 	
-	$("h3").click(function(){
+    var form = $("#add-show-form");
+
+	form.find("h3").click(function(){
         $(this).next().toggle();
     });
 
-    if(!$("#add_show_repeats").attr('checked')) {
-        $("#schedule-show-when > fieldset:last").hide();
+    if(!form.find("#add_show_repeats").attr('checked')) {
+        form.find("#schedule-show-when > fieldset:last").hide();
     }
 
-    $("#add_show_repeats").click(function(){
-        $("#schedule-show-when > fieldset:last").toggle();
+    form.find("#add_show_repeats").click(function(){
+        form.find("#schedule-show-when > fieldset:last").toggle();
     });
 
-    $("#add_show_repeat_type").change(function(){
+    form.find("#add_show_repeat_type").change(function(){
         if($(this).val() == 2) {
-            $("#add_show_day_check-label, #add_show_day_check-element").hide();
+            form.find("#add_show_day_check-label, #add_show_day_check-element").hide();
         }
         else {
-            $("#add_show_day_check-label, #add_show_day_check-element").show();
+            form.find("#add_show_day_check-label, #add_show_day_check-element").show();
         }
     });
 
-    $("#add_show_no_end").click(function(){
-        $("#add_show_end_date").toggle();
+    form.find("#add_show_day_check-label").addClass("block-display");
+    form.find("#add_show_day_check-element").addClass("block-display clearfix");
+    form.find("#add_show_day_check-element label").addClass("wrapp-label");
+    form.find("#add_show_day_check-element br").remove();
+
+    form.find("#add_show_no_end").click(function(){
+        form.find("#add_show_end_date").toggle();
     });
 
-	createDateInput($("#add_show_start_date"), startDpSelect);
-	createDateInput($("#add_show_end_date"), endDpSelect);
+	createDateInput(form.find("#add_show_start_date"), startDpSelect);
+	createDateInput(form.find("#add_show_end_date"), endDpSelect);
 
-    $("#add_show_start_time").timepicker();
-    $("#add_show_duration").timepicker({
-        amPmText: ['', ''] 
+    form.find("#add_show_start_time").timepicker();
+    form.find("#add_show_duration").timepicker({
+        amPmText: ['', ''],
+        defaultTime: '01:00' 
     });
 
-	$("#add_show_hosts_autocomplete").autocomplete({
+	form.find("#add_show_hosts_autocomplete").autocomplete({
 		source: findHosts,
 		select: autoSelect,
         delay: 200 
 	});
 
-	$("#schedule-show-style input").ColorPicker({
+	form.find("#schedule-show-style input").ColorPicker({
        onChange: function (hsb, hex, rgb, el) {
 		    $(el).val(hex);
 	    },
@@ -112,7 +120,7 @@ function setAddShowEvents() {
 	});
 
 
-    $("#add-show-close")
+    form.find("#add-show-close")
 		.click(function(event){
             event.stopPropagation();
             event.preventDefault();
@@ -124,7 +132,7 @@ function setAddShowEvents() {
 			$("#add-show-form").hide();
 		});
 
-	$("#add-show-submit")
+	form.find("#add-show-submit")
 		.button()
 		.click(function(event){
             event.preventDefault();
