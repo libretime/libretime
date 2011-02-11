@@ -25,15 +25,12 @@ function endDpSelect(dateText, inst) {
 
 function createDateInput(el, onSelect) {
 	var date;
-
+   
 	el.datepicker({
 			minDate: new Date(),
 			onSelect: onSelect,
 			dateFormat: 'yy-mm-dd' 
 		});
-
-	date = $.datepicker.formatDate("yy-mm-dd", new Date());
-	el.val(date);
 }
 
 function autoSelect(event, ui) {

@@ -340,10 +340,6 @@ function createPlaylistMetaForm(json) {
 			data = $("#side_playlist form").serialize(); 
 
 			$.post(url, data, function(json){
-				if(json.form){
-
-				}
-
 				openDiffSPL(json);
 			})
 		});

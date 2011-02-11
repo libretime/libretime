@@ -124,7 +124,7 @@ function viewDisplay( view ) {
                 opt.defaultView = view.name;
                 $(calendarEl).fullCalendar('destroy');
                 $(calendarEl).fullCalendar(opt); 
-                $(calendarEl).fullCalendar( 'gotoDate', d )
+                $(calendarEl).fullCalendar( 'gotoDate', d );
             });
 
         var x = $(view.element).find(".fc-agenda-head th:first");

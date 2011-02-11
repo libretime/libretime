@@ -10,6 +10,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'label'      => 'Date Start:',
             'class'      => 'input_text',
             'required'   => true,
+            'value'     => date("Y-m-d"),
             'filters'    => array('StringTrim'),
             'validators' => array(
 				'NotEmpty',
