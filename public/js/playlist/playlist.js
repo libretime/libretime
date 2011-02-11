@@ -241,6 +241,18 @@ function init() {
 	
     //begin consumer "thread"
     secondsTimer();
+    
+    $('#about-link').qtip({
+        content: $('#about-txt').html(),
+        show: 'mouseover',
+        hide: { when: 'mouseout', fixed: true },
+        position: {
+            corner: {
+                target: 'center',
+                tooltip: 'topRight'
+            }
+        }
+    });
 }
 
 $(document).ready(function() {

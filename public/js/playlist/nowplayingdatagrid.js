@@ -76,11 +76,11 @@ function createDataGrid(){
 		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
             if (aData[aData.length-2] == "t")
-                $(nRow).attr("style", "background-color:#166622");
+                $(nRow).attr("class", "playing-list");
             if (aData[0] == "c")
-				$(nRow).attr("style", "background-color:#61B329");
+				$(nRow).attr("class", "playing-song");
             else if (aData[0] == "b")
-                $(nRow).attr("style", "background-color:#EE3B3B");
+                $(nRow).attr("class", "gap");
 			return nRow;
 		},
         "bAutoWidth":false
