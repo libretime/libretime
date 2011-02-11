@@ -180,7 +180,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
 		$show = new ShowInstance($showInstanceId);
 
-        if($user->isHost($show->getShowId())) {
+        if($user->isHost($show->getShowId()) || $user->isAdmin()) {
 		    $show->scheduleShow(array($plId));
         }
 
@@ -199,7 +199,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
         $show = new ShowInstance($showInstanceId);
 
-        if($user->isHost($show->getShowId()))
+        if($user->isHost($show->getShowId()) || $user->isAdmin())
             $show->clearShow();
     }
 
@@ -229,7 +229,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
         $show = new ShowInstance($showInstanceId);
 
-        if($user->isHost($show->getShowId())) {
+        if($user->isHost($show->getShowId()) || $user->isAdmin()) {
 		    $show->removeGroupFromShow($group_id);
         }
 

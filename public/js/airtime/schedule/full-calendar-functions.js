@@ -4,17 +4,24 @@
 *
 */
 
+function openAddShowForm() {
+
+     if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none')) {
+        $("#add-show-form").show();
+        var y = $("#schedule_calendar").width();
+        var z = $("#schedule-add-show").width();
+        $("#schedule_calendar").width(y-z-50);
+        $("#schedule_calendar").fullCalendar('render');
+    }
+}
+
 function makeAddShowButton(){
     $('.fc-header-left tbody tr:first')
         .append('<td><span class="fc-header-space"></span></td>')
         .append('<td><a href="#" class="add-button"><span class="add-icon"></span>Show</a></td>')
         .find('td:last > a')
             .click(function(){
-                $("#add-show-form").show();
-                var y = $("#schedule_calendar").width();
-                var z = $("#schedule-add-show").width();
-                $("#schedule_calendar").width(y-z-50);
-                $("#schedule_calendar").fullCalendar('render');
+                openAddShowForm();         
 
                 var td = $(this).parent();
                 $(td).prev().remove();
@@ -36,7 +43,64 @@ function makeTimeStamp(date){
 }
 
 function dayClick(date, allDay, jsEvent, view) {
-	var x;
+    var now, today, selected, chosenDate, chosenTime; 
+
+    now = new Date();
+
+    if(view.name === "month") {
+        today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+    else {
+        today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+        selected = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
+    }
+
+    if(selected >= today) {
+        var addShow = $('.add-button');
+
+        //remove the +show button if it exists.
+        if(addShow.length == 1){
+             var td = $(addShow).parent();
+            $(td).prev().remove();
+            $(td).remove();
+        }
+
+        chosenDate = selected.getFullYear();
+
+        var month = selected.getMonth() + 1;
+        if(month < 10) {
+            chosenDate = chosenDate+'-0'+month;
+        }
+        else {
+            chosenDate = chosenDate+'-'+month;
+        }
+
+        var day = selected.getDate();
+        if(day < 10) {
+            chosenDate = chosenDate+'-0'+day;
+        }
+        else {
+            chosenDate = chosenDate+'-'+day;
+        }
+
+        var min = selected.getMinutes();
+        var hours = selected.getHours();
+        if(min < 10){
+            chosenTime = hours+":0"+min;
+        }
+        else {
+            chosenTime = hours+":"+min;
+        }
+
+        $("#add_show_start_date").val(chosenDate);
+        $("#add_show_end_date").datepicker("option", "minDate", chosenDate);
+        $("#add_show_end_date").val(chosenDate);
+        $("#add_show_start_time").val(chosenTime);
+        $("#schedule-show-when").show();
+        
+	    openAddShowForm();
+    }
 }
 
 function viewDisplay( view ) {
@@ -71,7 +135,7 @@ function viewDisplay( view ) {
 
     }
 
-    if(($("#add-show-form").length == 1) && ($('.fc-header-left tbody td').length == 5)) {
+    if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left tbody td').length == 5)) {
         makeAddShowButton();
     }
 }
