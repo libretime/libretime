@@ -8,7 +8,7 @@ class Application_Form_PlaylistMetadata extends Zend_Form
 		// Add username element
         $this->addElement('text', 'title', array(
             'label'      => 'Title:',
-            'required'   => true,
+            'required'   => false,
             'filters'    => array('StringTrim'),
             'validators' => array(
                 'NotEmpty',

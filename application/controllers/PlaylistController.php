@@ -120,7 +120,9 @@ class PlaylistController extends Zend_Controller_Action
 				$formdata = $form->getValues();
 
 				$pl = $this->getPlaylist();
-				$pl->setName($formdata["title"]);
+                
+                if($formdata["title"])
+				    $pl->setName($formdata["title"]);
 				
 				if(isset($formdata["description"])) {
 					$pl->setPLMetaData(UI_MDATA_KEY_DESCRIPTION, $formdata["description"]);

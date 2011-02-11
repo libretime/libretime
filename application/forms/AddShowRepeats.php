@@ -39,6 +39,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         $this->addElement('text', 'add_show_end_date', array(
             'label'      => 'Date End:',
             'class'      => 'input_text',
+            'value'     => date("Y-m-d"),
             'required'   => false,
             'filters'    => array('StringTrim'),
 			'validators' => array(

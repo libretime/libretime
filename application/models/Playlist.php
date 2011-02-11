@@ -927,11 +927,21 @@ class Playlist {
      */
     private function insertPlaylistElement($plId, $fileId, $pos, $clipLength, $cuein, $cueout, $fadeIn=NULL, $fadeOut=NULL)
     {
-        if(is_null($fadeIn))
-            $fadeIn = '00:00:00.000';
-        if(is_null($fadeOut))
-            $fadeOut = '00:00:00.000';
+        $defaultFade =  Application_Model_Preference::GetDefaultFade();
 
+        if(is_null($fadeIn)) {
+            if($defaultFade != "")
+                $fadeIn = $defaultFade;    
+            else
+                $fadeIn = '00:00:00.000';
+        }
+        if(is_null($fadeOut)) {
+            if($defaultFade != "")
+                $fadeOut = $defaultFade;    
+            else
+                $fadeOut = '00:00:00.000';
+        }
+            
         $row = new CcPlaylistcontents();
         $row->setDbPlaylistId($plId);
         $row->setDbFileId($fileId);
