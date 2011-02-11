@@ -181,6 +181,9 @@ function setAddShowEvents() {
 
 function showErrorSections() {
 
+    if($("#schedule-show-what .errors").length > 0) {
+        $("#schedule-show-what").show();
+    }
     if($("#schedule-show-when .errors").length > 0) {
         $("#schedule-show-when").show();
     }

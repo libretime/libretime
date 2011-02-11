@@ -147,13 +147,15 @@ class Show {
 		    }
         }
 		
-        //add selected hosts to cc_show_hosts table.
-		foreach ($data['add_show_hosts'] as $host) {
-			$showHost = new CcShowHosts();
-			$showHost->setDbShow($showId);
-			$showHost->setDbHost($host);
-			$showHost->save();
-		}
+        if(is_array($data['add_show_hosts'])) {
+            //add selected hosts to cc_show_hosts table.
+		    foreach ($data['add_show_hosts'] as $host) {
+			    $showHost = new CcShowHosts();
+			    $showHost->setDbShow($showId);
+			    $showHost->setDbHost($host);
+			    $showHost->save();
+		    }
+        }
 
         Show::populateShowUntilLastGeneratedDate($showId);
 	}
