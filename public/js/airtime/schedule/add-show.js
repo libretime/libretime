@@ -138,7 +138,6 @@ function setAddShowEvents() {
             event.preventDefault();
 
 			var data = $("form").serializeArray();
-            var string = $("form").serialize();
 
             var hosts = $('#add_show_hosts-element input').map(function() {
                 if($(this).attr("checked")) {
@@ -152,6 +151,9 @@ function setAddShowEvents() {
                 }
             }).get();
 
+            var start_date = $("#add_show_start_date").val();
+            var end_date = $("#add_show_end_date").val();
+
             $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 if(json.form) {
                     $("#add-show-form")
@@ -159,6 +161,9 @@ function setAddShowEvents() {
                         .append(json.form);
 
                     setAddShowEvents();
+
+                    $("#add_show_end_date").val(end_date);
+                    $("#add_show_start_date").val(start_date);
                     showErrorSections();    
                 }
                 else {
