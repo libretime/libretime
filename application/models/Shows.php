@@ -80,7 +80,10 @@ class Show {
         //only want the day of the week from the start date.
 		if(!$data['add_show_repeats']) {
 			$data['add_show_day_check'] = array($startDow);
-		} 
+		}
+        else if($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
+            $data['add_show_day_check'] = array($startDow);
+        } 
 
         //find repeat type or set to a non repeating show.
         if($data['add_show_repeats']) {
@@ -89,7 +92,7 @@ class Show {
         else {
             $repeat_type = -1;
         }
-		
+
 		$show = new CcShow();
 		$show->setDbName($data['add_show_name']);
 		$show->setDbDescription($data['add_show_description']);
