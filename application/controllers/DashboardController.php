@@ -13,10 +13,15 @@ class DashboardController extends Zend_Controller_Action
         // action body
     }
 
-
+    public function helpAction()
+    {
+        // action body
+    }
 
 
 }
+
+
 
 
 

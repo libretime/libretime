@@ -50,6 +50,21 @@ class User {
  		$user = $this->_userInstance;
 		$user->setDbType($type);  
     }
+
+    public function setEmail($email){
+	    $user = $this->_userInstance;
+	    $user->setDbEmail($email);   
+    }
+
+    public function setSkype($skype){
+	    $user = $this->_userInstance;
+	    $user->setDbSkypeContact($skype);   
+    }
+
+    public function setJabber($jabber){
+	    $user = $this->_userInstance;
+	    $user->setDbJabberContact($jabber);   
+    }
     
     public function getLogin(){
  		$user = $this->_userInstance;
@@ -74,6 +89,22 @@ class User {
     public function getType(){
  		$user = $this->_userInstance;
 		return $user->getDbType();          
+    }
+
+    public function getEmail(){
+	    $user = $this->_userInstance;
+        return $user->getDbEmail();	    
+    }
+
+    public function getSkype(){
+	    $user = $this->_userInstance;
+        return $user->getDbSkypeContact();	    
+    }
+
+    public function getJabber(){
+	    $user = $this->_userInstance;
+        return $user->getDbJabberContact();	    
+ 
     }
     
     public function save(){
@@ -132,7 +163,7 @@ class User {
     public static function getUserData($id){
         global $CC_DBC;
         
-        $sql = "SELECT login, first_name, last_name, type, id"
+        $sql = "SELECT login, first_name, last_name, type, id, email, skype_contact, jabber_contact"
         ." FROM cc_subjs"
         ." WHERE id = $id";
         

@@ -36,6 +36,9 @@ class UserController extends Zend_Controller_Action
                     if ($formdata['password'] != "xxxxxx")
                         $user->setPassword($formdata['password']);
                     $user->setType($formdata['type']);
+                    $user->setEmail($formdata['email']);
+                    $user->setSkype($formdata['skype']);
+                    $user->setJabber($formdata['jabber']);
                     $user->save();
                     
                     $form->reset();

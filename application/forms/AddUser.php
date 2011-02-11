@@ -47,6 +47,26 @@ class Application_Form_AddUser extends Zend_Form
         $lastName->addValidator('NotEmpty');
         $this->addElement($lastName);
         
+        $email = new Zend_Form_Element_Text('email');
+        $email->setLabel('Email:');
+        $email->setAttrib('class', 'input_text');
+        $email->addFilter('StringTrim');
+        $email->addValidator('EmailAddress');
+        $this->addElement($email);
+
+        $skype = new Zend_Form_Element_Text('skype');
+        $skype->setLabel('Skype:');
+        $skype->setAttrib('class', 'input_text');
+        $skype->addFilter('StringTrim');
+        $this->addElement($skype);
+
+        $jabber = new Zend_Form_Element_Text('jabber');
+        $jabber->setLabel('Jabber:');
+        $jabber->setAttrib('class', 'input_text');
+        $jabber->addFilter('StringTrim');
+        $jabber->addValidator('EmailAddress');
+        $this->addElement($jabber);
+
         $select = new Zend_Form_Element_Select('type');
         $select->setAttrib('class', 'input_select');
         $select->setAttrib('style', 'width: 40%');
