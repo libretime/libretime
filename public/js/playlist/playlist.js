@@ -99,7 +99,7 @@ function updateProgressBarValue(){
 		}
 	} else {
 		$('#on-air-info').attr("class", "on-air-info off");
-        $('#progress-show').attr("class", "progress-show-red");
+        $('#progress-show').attr("class", "progress-show-error");
     }
 	$('#progress-bar').attr("style", "width:"+songPercentDone+"%");
 

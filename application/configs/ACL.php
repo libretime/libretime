@@ -20,6 +20,7 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('api'))
 	  ->add(new Zend_Acl_Resource('nowplaying'))
 	  ->add(new Zend_Acl_Resource('search'))
+      ->add(new Zend_Acl_Resource('dashboard'))
       ->add(new Zend_Acl_Resource('preference'));
 
 /** Creating permissions */
@@ -29,6 +30,7 @@ $ccAcl->allow('G', 'index')
 	  ->allow('G', 'nowplaying')
 	  ->allow('G', 'api')
       ->allow('G', 'schedule')
+      ->allow('G', 'dashboard')
       ->allow('H', 'library')
       ->allow('H', 'search')
       ->allow('H', 'plupload')

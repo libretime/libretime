@@ -97,6 +97,7 @@
         </controllerFile>
         <controllerFile controllerName="Dashboard">
           <actionMethod actionName="index"/>
+          <actionMethod actionName="help"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory>
@@ -316,6 +317,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Dashboard">
             <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Dashboard">
+            <viewScriptFile forActionName="help"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

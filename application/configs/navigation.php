@@ -54,7 +54,14 @@ $pages = array(
                 'resource'	=>	'user'	
             )
         )
-    )
+    ),
+	array(
+		'label'      => 'Help',
+		'module'     => 'default',
+		'controller' => 'dashboard',
+		'action'     => 'help',
+		'resource'	=>	'dashboard'
+	)
 );
 
  

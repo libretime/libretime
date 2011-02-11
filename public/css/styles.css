@@ -1375,20 +1375,22 @@ ul.errors li {
 	overflow:auto;
 }
 .text-content {
-	padding:20px 10px 0 20px;
+	padding:20px 10px 40px 58px;
+	background: url(images/sf_arror.png) no-repeat 60% 0; 
+	height:100%;
 }
 .text-content h2 {
-	font-size:2.8em;
-	color:#242424;
+	font-size:2.4em;
+	color:#1f1f1f;
 }
 .text-content p {
 	font-size:1.6em;
 	line-height:140%;
-	color:#242424;
+	color:#1f1f1f;
 	margin:0 0 1.4em 0;
 }
 .text-content a {
-	color:#cccccc;
+	color:#f2f2f2;
 	text-decoration:none;
 }
 .text-content a:hover {
@@ -1396,12 +1398,17 @@ ul.errors li {
 }
 
 .text-content ol {
-	margin:0;
-	list-style-position:inside;
+	margin:0 0 22px 25px;
+	padding:0;
+	list-style-position:outside;
 }
 
 .text-content ol li {
-	margin:0 0 4px 0;
-	font-size:1.6em;
-	list-style-position:inside;
+	margin:0 0 6px 0;
+	font-size:1.7em;
+	display:list-item;
+	color:#1f1f1f;
+}
+.gray-logo {
+	margin:5px 0 0 20px;
 }

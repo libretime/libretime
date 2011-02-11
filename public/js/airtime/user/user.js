@@ -8,6 +8,9 @@ function populateForm(entries){
     $('#first_name').val(entries.first_name);
     $('#last_name').val(entries.last_name);
     $('#type').val(entries.type);
+    $('#email').val(entries.email);
+    $('#skype').val(entries.skype_contact);
+    $('#jabber').val(entries.jabber_contact);
     
     if (entries.id.length != 0){
         $('#login').attr('readonly', 'readonly');
