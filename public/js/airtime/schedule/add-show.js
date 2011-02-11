@@ -96,7 +96,8 @@ function setAddShowEvents() {
 
     form.find("#add_show_start_time").timepicker();
     form.find("#add_show_duration").timepicker({
-        amPmText: ['', ''] 
+        amPmText: ['', ''],
+        defaultTime: '01:00' 
     });
 
 	form.find("#add_show_hosts_autocomplete").autocomplete({
