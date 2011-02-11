@@ -78,5 +78,13 @@ class Application_Model_Preference
         return Application_Model_Preference::GetValue("shows_populated_until");
     }
 
+     public static function SetDefaultFade($fade) { 
+        Application_Model_Preference::SetValue("default_fade", $fade); 
+    }
+
+    public static function GetDefaultFade() {
+        return Application_Model_Preference::GetValue("default_fade");
+    }
+
 }
 

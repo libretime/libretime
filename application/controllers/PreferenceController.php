@@ -24,22 +24,18 @@ class PreferenceController extends Zend_Controller_Action
         }
                 
         $form = new Application_Form_Preferences();
-        if (!$form->isValid($request->getPost())) {
+        if ($form->isValid($request->getPost())) {
 
-        } else {
             $values = $form->getValues();
-            Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);                
+            Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view); 
+            Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);                      
             
             $this->view->statusMsg = "Preferences Updated.";
         }
-         
-
                   
         $this->view->form = $form;
         return $this->render('index'); //render the phtml file
     }
-
-
 }
 
 
