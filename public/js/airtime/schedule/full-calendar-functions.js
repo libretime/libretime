@@ -118,11 +118,13 @@ function viewDisplay( view ) {
             .change(function(){
                 var x = $(this).val();
                 var opt = view.calendar.options;
+                var d = $(calendarEl).fullCalendar('getDate');
                 opt.slotMinutes = parseInt(x);
                 opt.events = getFullCalendarEvents;
                 opt.defaultView = view.name;
                 $(calendarEl).fullCalendar('destroy');
                 $(calendarEl).fullCalendar(opt); 
+                $(calendarEl).fullCalendar( 'gotoDate', d )
             });
 
         var x = $(view.element).find(".fc-agenda-head th:first");
@@ -132,7 +134,6 @@ function viewDisplay( view ) {
 
         var slotMin = view.calendar.options.slotMinutes;
         $('.schedule_change_slots option[value="'+slotMin+'"]').attr('selected', 'selected');
-
     }
 
     if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left tbody td').length == 5)) {
