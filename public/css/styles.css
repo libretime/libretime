@@ -1347,6 +1347,61 @@ ul.errors li {
 
 #show_content_dialog .datatable {
 	margin-top:8px;
-	
-	
+}
+.simple-formblock.metadata {
+	border:none;
+	width:100%;
+}
+#side_playlist .simple-formblock.metadata .input_text, #side_playlist .simple-formblock.metadata .input_text_area {
+	width:95%;
+}
+#side_playlist .simple-formblock.metadata.simple-formblock dd {
+	width:70%;
+}
+#side_playlist h3.plain {
+	float:none;
+	font-size:18px;
+	margin:2px 0 20px 0;
+}
+
+.qtip {
+	font-size:11px;
+	line-height:160%;
+}
+
+#schedule-show-who.scrolled {
+    margin-bottom: 0;
+	max-height:300px;
+	overflow:auto;
+}
+.text-content {
+	padding:20px 10px 0 20px;
+}
+.text-content h2 {
+	font-size:2.8em;
+	color:#242424;
+}
+.text-content p {
+	font-size:1.6em;
+	line-height:140%;
+	color:#242424;
+	margin:0 0 1.4em 0;
+}
+.text-content a {
+	color:#cccccc;
+	text-decoration:none;
+}
+.text-content a:hover {
+	text-decoration:underline;
+}
+
+.text-content ol {
+	margin:0;
+	list-style-position:inside;
+}
+
+.text-content ol li {
+	margin:0 0 4px 0;
+	font-size:1.6em;
+	list-style-position:inside;
 }

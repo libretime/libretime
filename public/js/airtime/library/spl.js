@@ -331,20 +331,8 @@ function closeSPL() {
 function createPlaylistMetaForm(json) {
     var submit, form;
 
-	submit = $('<button id="new_playlist_submit">Submit</button>')
-		.button()
-		.click(function(){
-			var url, data;
-
-			url = '/Playlist/metadata/format/json';
-			data = $("#side_playlist form").serialize(); 
-
-			$.post(url, data, function(json){
-				openDiffSPL(json);
-			})
-		});
-
     form = $(json.form);
+    form.find("fieldset").addClass("simple-formblock metadata");
 
     form.find("input, textarea")
         .keydown(function(event){
@@ -355,10 +343,24 @@ function createPlaylistMetaForm(json) {
             }
         })
 
+    form.find("#new_playlist_submit")
+		.button()
+		.click(function(event){
+            event.preventDefault();
+
+			var url, data;
+
+			url = '/Playlist/metadata/format/json';
+			data = $("#side_playlist form").serialize(); 
+
+			$.post(url, data, function(json){
+				openDiffSPL(json);
+			})
+		});
+
 	$("#side_playlist")
 		.empty()
-		.append(form)
-		.append(submit);
+		.append(form);
 }
 
 function newSPL() {
