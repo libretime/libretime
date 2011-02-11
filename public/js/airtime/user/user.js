@@ -32,7 +32,18 @@ function removeUserCallback(row_id, nRow){
 
 function rowCallback( nRow, aData, iDisplayIndex ){
     $(nRow).click(function(){rowClickCallback(aData[0])});
-    $('td:eq(2)', nRow).append( '<span class="ui-icon ui-icon-closethick"></span>').children('span').click(function(e){e.stopPropagation(); removeUserCallback(aData[0], nRow)});
+    $('td:eq(4)', nRow).append( '<span class="ui-icon ui-icon-closethick"></span>').children('span').click(function(e){e.stopPropagation(); removeUserCallback(aData[0], nRow)});
+
+    if ( aData[4] == "A" )
+    {
+	    $('td:eq(3)', nRow).html( 'Admin' );
+    } else if ( aData[4] == "H" )
+    {
+	    $('td:eq(3)', nRow).html( 'Host' );
+    } else if ( aData[4] == "G" )
+    {
+	    $('td:eq(3)', nRow).html( 'Guest' );
+    }
     
     return nRow;
 }
@@ -55,12 +66,17 @@ $(document).ready(function() {
         "aoColumns": [
             /* Id */         { "sName": "id", "bSearchable": false, "bVisible": false },
             /* user name */  { "sName": "login" },
+            /* first name */ { "sName": "first_name" },
+            /* last name */  { "sName": "last_name" },
             /* user type */  { "sName": "type", "bSearchable": false },
             /* del button */ { "sName": "null as delete", "bSearchable": false, "bSortable": false}
         ],
         "bJQueryUI": true,
         "bAutoWidth": false,
-        "bLengthChange": false
+        "bLengthChange": false,
+        "oLanguage": {
+            "sSearch": ""
+        }
     });
     
     //$('#user_details').hide();

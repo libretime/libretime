@@ -147,6 +147,9 @@ $(document).ready(function() {
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
-		"bAutoWidth": false
+		"bAutoWidth": false,
+        "oLanguage": {
+            "sSearch": ""
+        }
 	});
 });

@@ -12,7 +12,7 @@ class Application_Form_AddUser extends Zend_Form
                                     * */
                         
         $hidden = new Zend_Form_Element_Hidden('user_id');
-        $hidden->setAttrib('style', 'display: none;');
+        $hidden->setDecorators(array('ViewHelper'));
         $this->addElement($hidden);
               
         $login = new Zend_Form_Element_Text('login');
