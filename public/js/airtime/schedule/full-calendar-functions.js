@@ -71,7 +71,7 @@ function viewDisplay( view ) {
 
     }
 
-    if(($("#add-show-form").length == 1) && ($('.fc-header-left tbody td').length == 5)) {
+    if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left tbody td').length == 5)) {
         makeAddShowButton();
     }
 }
