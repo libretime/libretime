@@ -120,7 +120,7 @@ class User {
 	}
 
 	public static function getHosts($search=NULL) {
-		return User::getUsers(array('H', 'A'), $search);
+		return User::getUsers(array('H'), $search);
 	}
     
 	public static function getUsersDataTablesInfo($datatables_post) {
