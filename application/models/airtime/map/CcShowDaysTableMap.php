@@ -42,7 +42,7 @@ class CcShowDaysTableMap extends TableMap {
 		$this->addColumn('FIRST_SHOW', 'DbFirstShow', 'DATE', true, null, null);
 		$this->addColumn('LAST_SHOW', 'DbLastShow', 'DATE', false, null, null);
 		$this->addColumn('START_TIME', 'DbStartTime', 'TIME', true, null, null);
-		$this->addColumn('DURATION', 'DbDuration', 'TIME', true, null, null);
+		$this->addColumn('DURATION', 'DbDuration', 'VARCHAR', true, 255, null);
 		$this->addColumn('DAY', 'DbDay', 'TINYINT', false, null, null);
 		$this->addColumn('REPEAT_TYPE', 'DbRepeatType', 'TINYINT', true, null, null);
 		$this->addColumn('NEXT_POP_DATE', 'DbNextPopDate', 'DATE', false, null, null);

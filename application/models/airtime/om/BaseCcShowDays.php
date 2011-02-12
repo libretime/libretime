@@ -207,36 +207,13 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [duration] column value.
+	 * Get the [duration] column value.
 	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 * @return     string
 	 */
-	public function getDbDuration($format = '%X')
+	public function getDbDuration()
 	{
-		if ($this->duration === null) {
-			return null;
-		}
-
-
-
-		try {
-			$dt = new DateTime($this->duration);
-		} catch (Exception $x) {
-			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->duration, true), $x);
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
+		return $this->duration;
 	}
 
 	/**
@@ -470,50 +447,21 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 	} // setDbStartTime()
 
 	/**
-	 * Sets the value of [duration] column to a normalized version of the date/time value specified.
+	 * Set the value of [duration] column.
 	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
+	 * @param      string $v new value
 	 * @return     CcShowDays The current object (for fluent API support)
 	 */
 	public function setDbDuration($v)
 	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
+		if ($v !== null) {
+			$v = (string) $v;
 		}
 
-		if ( $this->duration !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->duration !== null && $tmpDt = new DateTime($this->duration)) ? $tmpDt->format('H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					)
-			{
-				$this->duration = ($dt ? $dt->format('H:i:s') : null);
-				$this->modifiedColumns[] = CcShowDaysPeer::DURATION;
-			}
-		} // if either are not null
+		if ($this->duration !== $v) {
+			$this->duration = $v;
+			$this->modifiedColumns[] = CcShowDaysPeer::DURATION;
+		}
 
 		return $this;
 	} // setDbDuration()

@@ -142,7 +142,7 @@
 	<column name="first_show" phpName="DbFirstShow" type="DATE" required="true"/>
 	<column name="last_show" phpName="DbLastShow" type="DATE" required="false"/>
 	<column name="start_time" phpName="DbStartTime" type="TIME" required="true"/>
-	<column name="duration" phpName="DbDuration" type="TIME" required="true"/>
+	<column name="duration" phpName="DbDuration" type="VARCHAR" required="true"/>
 	<column name="day" phpName="DbDay" type="TINYINT" required="false"/>
     <column name="repeat_type" phpName="DbRepeatType" type="TINYINT" required="true"/>
     <column name="next_pop_date" phpName="DbNextPopDate" type="DATE" required="false"/>

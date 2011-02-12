@@ -38,10 +38,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'value'      => '1:00',
             'required'   => true,
             'filters'    => array('StringTrim'),
-			'validators' => array(
-				'NotEmpty',
-                array('date', false, array('HH:mm', 'messages' => 'Show must be under 24 hours'))
-    		) 
+            'validators' => array(
+                'NotEmpty',
+                array('regex', false, 
+                    array('/^\d+:[0-5][0-9]$/', 
+                    'messages' => 'enter a duration: HH:mm'))
+                )
         ));
 
 		// Add repeats element
