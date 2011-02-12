@@ -23,6 +23,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'label'      => 'Start Time:',
             'class'      => 'input_text',
             'required'   => true,
+            'value'     => '0:00',
             'filters'    => array('StringTrim'),
 			'validators' => array(
 				'NotEmpty',

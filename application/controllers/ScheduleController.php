@@ -24,6 +24,7 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('remove-group', 'json')	
                     ->addActionContext('edit-show', 'json')
                     ->addActionContext('add-show', 'json')
+                    ->addActionContext('cancel-show', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -123,7 +124,7 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $showInstanceId = $this->_getParam('id');
-                		                                       
+                        		                                       
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 		$user = new User($userInfo->id);
 
@@ -150,6 +151,8 @@ class ScheduleController extends Zend_Controller_Action
             if($user->isAdmin()) {
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete');
+    
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Cancel Show');
             }
             if($user->isHost($show->getShowId()) || $user->isAdmin()) {
 	      
@@ -211,7 +214,7 @@ class ScheduleController extends Zend_Controller_Action
     public function findPlaylistsAction()
     {
         $post = $this->getRequest()->getPost();
-                
+                        
 		$show = new ShowInstance($this->sched_sess->showInstanceId);
 		$playlists = $show->searchPlaylistsForShow($post);
 
@@ -302,7 +305,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function addShowAction()
     {
-		$js = $this->_getParam('data');
+        $js = $this->_getParam('data');
         $data = array();
        
         //need to convert from serialized jQuery array.
@@ -324,6 +327,12 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
 
+        $this->view->what = $formWhat;
+	    $this->view->when = $formWhen;
+	    $this->view->repeats = $formRepeats;
+	    $this->view->who = $formWho;
+	    $this->view->style = $formStyle;
+
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
         if($when) {
@@ -333,7 +342,7 @@ class ScheduleController extends Zend_Controller_Action
         if($data["add_show_repeats"]) {
 		    $repeats = $formRepeats->isValid($data);
             if($repeats) {
-                $when = $formRepeats->checkReliantFields($data);
+                $repeats = $formRepeats->checkReliantFields($data);
             }
         }
         else {
@@ -352,38 +361,41 @@ class ScheduleController extends Zend_Controller_Action
             }
 
             //send back a new form for the user.
-            $formWhat = new Application_Form_AddShowWhat();
-		    $formWho = new Application_Form_AddShowWho();
-		    $formWhen = new Application_Form_AddShowWhen();
-		    $formRepeats = new Application_Form_AddShowRepeats();
-		    $formStyle = new Application_Form_AddShowStyle();
-
-		    $formWhat->removeDecorator('DtDdWrapper');
-		    $formWho->removeDecorator('DtDdWrapper');
-		    $formWhen->removeDecorator('DtDdWrapper');
-		    $formRepeats->removeDecorator('DtDdWrapper');
-		    $formStyle->removeDecorator('DtDdWrapper');
-
-            $this->view->what = $formWhat;
-		    $this->view->when = $formWhen;
-		    $this->view->repeats = $formRepeats;
-		    $this->view->who = $formWho;
-		    $this->view->style = $formStyle;
+            $formWhat->reset();
+		    $formWho->reset();
+		    $formWhen->reset();
+            $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
+                                      'add_show_start_time' => '0:00',
+                                      'add_show_duration' => '1:00'));
+		    $formRepeats->reset();
+            $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
+		    $formStyle->reset();
+            
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 		}
         else {
 
-            $this->view->what = $formWhat;
-		    $this->view->when = $formWhen;
-		    $this->view->repeats = $formRepeats;
-		    $this->view->who = $formWho;
-		    $this->view->style = $formStyle;
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
-        } 
-
+        }
     }
 
+    public function cancelShowAction()
+    {
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
+		
+        if($user->isAdmin()) {
+		    $showInstanceId = $this->_getParam('id');
+
+            $showInstance = new ShowInstance($showInstanceId);
+            $show = new Show($showInstance->getShowId());
+
+            $show->cancelShow($showInstance->getShowStart());
+        }   
+    }
 }
+
+
 
 
 

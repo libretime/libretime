@@ -49,6 +49,21 @@ class Show {
         $show->setDbBackgroundColor($backgroundColor);
     }
 
+    public function cancelShow($day_timestamp) {
+        global $CC_DBC;
+
+        $timeinfo = explode(" ", $day_timestamp);
+
+        CcShowDaysQuery::create()
+            ->filterByDbShowId($this->_showId)
+            ->update(array('DbLastShow' => $timeinfo[0]));
+
+        $sql = "DELETE FROM cc_show_instances
+			        WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
+
+        $CC_DBC->query($sql);
+    }
+
 	//end dates are non inclusive.
 	public static function addShow($data) {
 	
