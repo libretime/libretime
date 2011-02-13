@@ -482,10 +482,10 @@ class Schedule {
   	        ." ORDER BY st.starts DESC"
         	." LIMIT $count";	
 		} else if ($timePeriod == 0){
-	        $sql .= " AND st.starts < TIMESTAMP '$timeNow'"
+	        $sql .= " AND st.starts <= TIMESTAMP '$timeNow'"
     	    ." AND st.ends > TIMESTAMP '$timeNow'";		
 		} else if ($timePeriod > 0){
-        	$sql .= " AND st.starts > TIMESTAMP '$timeNow'"
+        	$sql .= " AND st.starts >= TIMESTAMP '$timeNow'"
         	." AND st.starts < (TIMESTAMP '$timeNow' + INTERVAL '$interval')"	
         	." ORDER BY st.starts"
         	." LIMIT $count";		

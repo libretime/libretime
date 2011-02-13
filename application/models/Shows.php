@@ -749,7 +749,7 @@ class Show_DAL{
 		$sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
 		." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
 		." WHERE si.show_id = s.id"
-		." AND si.starts > TIMESTAMP '$timeNow'"
+		." AND si.starts >= TIMESTAMP '$timeNow'"
 		." AND si.starts < TIMESTAMP '$timeNow' + INTERVAL '48 hours'"
         ." ORDER BY si.starts"
         ." LIMIT 1";
