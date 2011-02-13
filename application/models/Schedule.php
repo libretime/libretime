@@ -467,8 +467,12 @@ class Schedule {
      * want to search the database. For example "5 days", "18 hours", "60 minutes",
      * "30 seconds" etc.
      */
-    public static function Get_Scheduled_Item_Data($timeNow, $timePeriod=0, $count = 0, $interval="0 hours"){
+    public static function Get_Scheduled_Item_Data($timeStamp, $timePeriod=0, $count = 0, $interval="0 hours"){
         global $CC_CONFIG, $CC_DBC;
+
+        $date = new Application_Model_DateHelper;
+        $timeNow = $date->getDate();
+        
         $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name, (si.starts <= TIMESTAMP '$timeNow' AND si.ends > TIMESTAMP '$timeNow') as current_show"
         ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
         ." WHERE st.playlist_id = pt.id"
@@ -477,16 +481,16 @@ class Schedule {
         ." AND si.show_id = show.id";
         
         if ($timePeriod < 0){
-        	$sql .= " AND st.ends < TIMESTAMP '$timeNow'"
-        	." AND st.ends > (TIMESTAMP '$timeNow' - INTERVAL '$interval')"
+        	$sql .= " AND st.ends < TIMESTAMP '$timeStamp'"
+        	." AND st.ends > (TIMESTAMP '$timeStamp' - INTERVAL '$interval')"
   	        ." ORDER BY st.starts DESC"
         	." LIMIT $count";	
 		} else if ($timePeriod == 0){
-	        $sql .= " AND st.starts <= TIMESTAMP '$timeNow'"
-    	    ." AND st.ends > TIMESTAMP '$timeNow'";		
+	        $sql .= " AND st.starts <= TIMESTAMP '$timeStamp'"
+    	    ." AND st.ends > TIMESTAMP '$timeStamp'";		
 		} else if ($timePeriod > 0){
-        	$sql .= " AND st.starts >= TIMESTAMP '$timeNow'"
-        	." AND st.starts < (TIMESTAMP '$timeNow' + INTERVAL '$interval')"	
+        	$sql .= " AND st.starts >= TIMESTAMP '$timeStamp'"
+        	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"	
         	." ORDER BY st.starts"
         	." LIMIT $count";		
 		}
