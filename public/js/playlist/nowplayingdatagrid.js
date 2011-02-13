@@ -125,7 +125,7 @@ function createDataGrid(){
 		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
             if (aData[aData.length-2] == "t")
-                $(nRow).attr("class", "playing-list");
+                $(nRow).addClass("playing-list");
             if (aData[0] == "c")
 				$(nRow).attr("class", "playing-song");
             else if (aData[0] == "b")
