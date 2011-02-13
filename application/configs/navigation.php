@@ -38,7 +38,7 @@ $pages = array(
 	),
     array(
         'label'      => 'Configure',
-        'uri' => 'javascript:void(null)',
+        'uri' => '#',
         'resource' => 'preference',
         'pages'      => array(
             array(
