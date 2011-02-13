@@ -1,5 +1,5 @@
 var registered = false;
-var datagridData;
+var datagridData = null;
 
 function getDateText(obj){
 	var str = obj.aData[ obj.iDataColumn ].toString();
@@ -42,52 +42,21 @@ function notifySongEnd(){
 		}
 	}
 	
-	createDataGrid();
+	updateDataTable();
 }
 
-    var columns = [{"sTitle": "type", "bVisible":false},
-        {"sTitle":"Date"},
-        {"sTitle":"Start"},
-        {"sTitle":"End"},
-        {"sTitle":"Duration"},
-        {"sTitle":"Song"},
-        {"sTitle":"Artist"},
-        {"sTitle":"Album"},
-        {"sTitle":"Playlist"},
-        {"sTitle":"Show"},
-        {"sTitle":"bgcolor", "bVisible":false},
-        {"sTitle":"group_id", "bVisible":false}];
-
-function createDataGrid(){
-    	
-	columns[1]["fnRender"] = getDateText;
-	columns[2]["fnRender"] = getTimeText;
-	columns[3]["fnRender"] = getTimeText;
-	columns[4]["fnRender"] = changeTimePrecisionInit;
-
-	$('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="datatable" id="nowplayingtable"></table>' );
-	$('#nowplayingtable').dataTable( {
-		"bSort" : false,
-		"bJQueryUI": true,
-		"bFilter": false,
-		"bInfo": false,
-		"bLengthChange": false,
-        "bPaginate": false,
-		"aoColumns": columns,
-		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-            if (aData[aData.length-2] == "t")
-                $(nRow).attr("class", "playing-list");
-            if (aData[0] == "c")
-				$(nRow).attr("class", "playing-song");
-            else if (aData[0] == "b")
-                $(nRow).attr("class", "gap");
-			return nRow;
-		},
-        "bAutoWidth":false
-	} );
-    
-
-}
+var columns = [{"sTitle": "type", "bVisible":false},
+    {"sTitle":"Date"},
+    {"sTitle":"Start"},
+    {"sTitle":"End"},
+    {"sTitle":"Duration"},
+    {"sTitle":"Song"},
+    {"sTitle":"Artist"},
+    {"sTitle":"Album"},
+    {"sTitle":"Playlist"},
+    {"sTitle":"Show"},
+    {"sTitle":"bgcolor", "bVisible":false},
+    {"sTitle":"group_id", "bVisible":false}];
 
 function getDateString(){
     var date0 = $("#datepicker").datepicker("getDate");
@@ -106,11 +75,14 @@ function getAJAXURL(){
 
 function updateDataTable(){
     var table = $('#nowplayingtable').dataTable();
-    
-    table.fnClearTable(false);
-    table.fnAddData(datagridData.rows, false);
-    table.fnDraw(true);
-    
+
+    //Check if datagridData has been initialized since this update
+    //function can be called before ajax call has been returned.
+    if (datagridData != null){
+        table.fnClearTable(false);
+        table.fnAddData(datagridData.rows, false);
+        table.fnDraw(true);
+    }
 }
 
 function getData(){
@@ -134,6 +106,34 @@ function init2(){
 
 function redirect(url){
     document.location.href = url;
+}
+
+function createDataGrid(){
+    	
+	columns[1]["fnRender"] = getDateText;
+	columns[2]["fnRender"] = getTimeText;
+	columns[3]["fnRender"] = getTimeText;
+	columns[4]["fnRender"] = changeTimePrecisionInit;
+
+	$('#nowplayingtable').dataTable( {
+		"bSort" : false,
+		"bJQueryUI": true,
+		"bFilter": false,
+		"bInfo": false,
+		"bLengthChange": false,
+        "bPaginate": false,
+		"aoColumns": columns,
+		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+            if (aData[aData.length-2] == "t")
+                $(nRow).attr("class", "playing-list");
+            if (aData[0] == "c")
+				$(nRow).attr("class", "playing-song");
+            else if (aData[0] == "b")
+                $(nRow).attr("class", "gap");
+			return nRow;
+		},
+        "bAutoWidth":false
+	} );
 }
 
 $(document).ready(function() {
