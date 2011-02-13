@@ -139,7 +139,7 @@ class User {
 			$sql_type = "type = {$type}";
 		}
 		
-		$sql = $sql_gen ." WHERE (". $sql_type.")";
+		$sql = $sql_gen ." WHERE (". $sql_type.") ORDER BY login";
 	
 		if(!is_null($search)) {
 			$like = "login ILIKE '%{$search}%'";
