@@ -16,11 +16,11 @@ $pages = array(
         'resource'	=>	'nowplaying'
 	),
 	array(
-		'label'      => 'Schedule',
-        'module'     => 'default',
-        'controller' => 'Schedule',
-        'action'     => 'index',
-        'resource'	=>	'schedule'
+		'label'      => 'Add Audio',
+		'module'     => 'default',
+		'controller' => 'Plupload',
+		'action'     => 'plupload',
+		'resource'	=>	'plupload'
 	),
 	array(
 		'label'      => 'Playlist Builder',
@@ -30,11 +30,11 @@ $pages = array(
 		'resource'	=>	'library'
 	),
 	array(
-		'label'      => 'Add Audio',
-		'module'     => 'default',
-		'controller' => 'Plupload',
-		'action'     => 'plupload',
-		'resource'	=>	'plupload'
+		'label'      => 'Schedule',
+        'module'     => 'default',
+        'controller' => 'Schedule',
+        'action'     => 'index',
+        'resource'	=>	'schedule'
 	),
     array(
         'label'      => 'Configure',
