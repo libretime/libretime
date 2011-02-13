@@ -13,8 +13,6 @@ var currentElem;
 var serverUpdateInterval = 5000;
 var uiUpdateInterval = 200;
 
-var songEndFunc;
-
 //set to "development" if we are developing :). Useful to disable alerts
 //when entering production mode. 
 var APPLICATION_ENV = "";
@@ -24,20 +22,6 @@ var APPLICATION_ENV = "";
  * make sure the function is only executed once*/
 var nextSongPrepare = true;
 var nextShowPrepare = true;
-
-/* Another script can register its function here
- * when it wishes to know when a song ends. */
-function registerSongEndListener(func){
-    songEndFunc = func;
-}
-
-function notifySongEndListener(){
-    if (typeof songEndFunc == "function"){
-        //create a slight delay in execution to allow the browser
-        //to update the display.
-        setTimeout(songEndFunc, 50);
-    }
-}
 
 function getTrackInfo(song){
     var str = "";
@@ -66,12 +50,15 @@ function newSongStart(){
     nextSongPrepare = true;
     currentSong[0] = nextSongs.shift();
 
-    notifySongEndListener();
+    notifySongStart();
 }
 
 function nextShowStart(){
     nextShowPrepare = true;
     currentShow[0] = nextShow.shift();
+
+    //call function in nowplayingdatagrid.js
+    notifyShowStart(currentShow[0]);
 }
 
 /* Called every "uiUpdateInterval" mseconds. */

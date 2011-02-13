@@ -733,7 +733,7 @@ class Show_DAL{
 		$date = $timestamp[0];
 		$time = $timestamp[1];
         
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id"
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts <= TIMESTAMP '$timeNow'"

@@ -469,11 +469,8 @@ class Schedule {
      */
     public static function Get_Scheduled_Item_Data($timeStamp, $timePeriod=0, $count = 0, $interval="0 hours"){
         global $CC_CONFIG, $CC_DBC;
-
-        $date = new Application_Model_DateHelper;
-        $timeNow = $date->getDate();
-        
-        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name, (si.starts <= TIMESTAMP '$timeNow' AND si.ends > TIMESTAMP '$timeNow') as current_show"
+      
+        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name, st.instance_id"
         ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
         ." WHERE st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
@@ -487,9 +484,9 @@ class Schedule {
         	." LIMIT $count";	
 		} else if ($timePeriod == 0){
 	        $sql .= " AND st.starts <= TIMESTAMP '$timeStamp'"
-    	    ." AND st.ends > TIMESTAMP '$timeStamp'";		
+    	    ." AND st.ends >= TIMESTAMP '$timeStamp'";		
 		} else if ($timePeriod > 0){
-        	$sql .= " AND st.starts >= TIMESTAMP '$timeStamp'"
+        	$sql .= " AND st.starts > TIMESTAMP '$timeStamp'"
         	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"	
         	." ORDER BY st.starts"
         	." LIMIT $count";		

@@ -1,5 +1,5 @@
-var registered = false;
 var datagridData = null;
+var currentShowInstanceID = -1;
 
 function getDateText(obj){
 	var str = obj.aData[ obj.iDataColumn ].toString();
@@ -32,7 +32,7 @@ function changeTimePrecision(str){
     return str;
 }
 
-function notifySongEnd(){
+function notifySongStart(){
 	for (var i=0; i<datagridData.rows.length; i++){
 		if (datagridData.rows[i][0] == "c")
 			datagridData.rows[i][0] = "p";
@@ -42,6 +42,11 @@ function notifySongEnd(){
 		}
 	}
 	
+	updateDataTable();
+}
+
+function notifyShowStart(show){
+	currentShowInstanceID = show.instance_id;
 	updateDataTable();
 }
 
@@ -88,6 +93,8 @@ function updateDataTable(){
 function getData(){
        $.ajax({ url: getAJAXURL(), dataType:"json", success:function(data){
 		datagridData = data.entries;
+        if (datagridData.currentShow.length > 0)
+            currentShowInstanceID = datagridData.currentShow[0].instance_id;
         updateDataTable();
 	  }});   
 }
@@ -95,13 +102,7 @@ function getData(){
 function init2(){	        
       getData();
 
-	  if (typeof registerSongEndListener == 'function' && !registered){
-		  registered = true;
-		  registerSongEndListener(notifySongEnd);
-	  }
-
       setTimeout(init2, 5000);
-
 }
 
 function redirect(url){
@@ -124,7 +125,7 @@ function createDataGrid(){
         "bPaginate": false,
 		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-            if (aData[aData.length-2] == "t")
+            if (aData[aData.length-2] == currentShowInstanceID)
                 $(nRow).addClass("playing-list");
             if (aData[0] == "c")
 				$(nRow).attr("class", "playing-song");
