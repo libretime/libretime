@@ -45,48 +45,6 @@ function notifySongStart(){
 	updateDataTable();
 }
 
-    var columns = [{"sTitle": "type", "bVisible":false},
-        {"sTitle":"Date"},
-        {"sTitle":"Start"},
-        {"sTitle":"End"},
-        {"sTitle":"Duration"},
-        {"sTitle":"Song"},
-        {"sTitle":"Artist"},
-        {"sTitle":"Album"},
-        {"sTitle":"Playlist"},
-        {"sTitle":"Show"},
-        {"sTitle":"bgcolor", "bVisible":false},
-        {"sTitle":"group_id", "bVisible":false}];
-
-function createDataGrid(){
-    	
-	columns[1]["fnRender"] = getDateText;
-	columns[2]["fnRender"] = getTimeText;
-	columns[3]["fnRender"] = getTimeText;
-	columns[4]["fnRender"] = changeTimePrecisionInit;
-
-	$('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="datatable" id="nowplayingtable"></table>' );
-	$('#nowplayingtable').dataTable( {
-		"bSort" : false,
-		"bJQueryUI": true,
-		"bFilter": false,
-		"bInfo": false,
-		"bLengthChange": false,
-        "bPaginate": false,
-		"aoColumns": columns,
-		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-            if (aData[aData.length-2] == "t")
-                $(nRow).addClass("playing-list");
-            if (aData[0] == "c")
-				$(nRow).attr("class", "playing-song");
-            else if (aData[0] == "b")
-                $(nRow).attr("class", "gap");
-			return nRow;
-		},
-        "bAutoWidth":false
-	} );
-    
-
 function notifyShowStart(show){
 	currentShowInstanceID = show.instance_id;
 	updateDataTable();
