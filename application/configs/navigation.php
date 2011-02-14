@@ -16,7 +16,7 @@ $pages = array(
         'resource'	=>	'nowplaying'
 	),
 	array(
-		'label'      => 'Schedule',
+		'label'      => 'Calendar',
         'module'     => 'default',
         'controller' => 'Schedule',
         'action'     => 'index',
