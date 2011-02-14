@@ -9,15 +9,8 @@ Major features:
    program material, create playlists, and schedule programming all via 
    a web interface.
  * Automation.  Airtime has a scheduler function that enables users to
-   set playlists for playback at a date and time of their choosing.
+   set shows with playlists for playback at a date and time of their choosing.
    Playlists can be played back multiple times.
- * Playlists.  Airtime allows users to create playlists that can be 
-   either played on-demand in the Studio or in automated mode.  Playlists
-   can be nested inside each other, so for example, a playlist with a 
-   block of ads can be inside of a playlist with a music program.
- * Centralized archives of station program material.  Station personnel
-   have a searchable, browseable central archive that is accessible both
-   in the office and via the web.
  * Solid, fast playback.  Airtime uses the open source Liquidsoap 
    multimedia framework for clean, reliable, fast playback. 
  * Open, extensible architecture.  Stations are free to extend and alter 
@@ -27,7 +20,7 @@ Major features:
 INSTALLATION
 ------------
 Please see this page for a typical user installation:
-http://en.flossmanuals.net/Airtime
+http://www.sourcefabric.org/en/products/airtime_manuals/
 
 If you are a developer, please see this page:
 http://wiki.sourcefabric.org/display/CC/Airtime+Dev+Site
