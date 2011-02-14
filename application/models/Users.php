@@ -139,13 +139,15 @@ class User {
 			$sql_type = "type = {$type}";
 		}
 		
-		$sql = $sql_gen ." WHERE (". $sql_type.")";
+		$sql = $sql_gen ." WHERE (". $sql_type.") ";
 	
 		if(!is_null($search)) {
 			$like = "login ILIKE '%{$search}%'";
 
-			$sql = $sql . " AND ".$like." ORDER BY login";
+			$sql = $sql . " AND ".$like;
 		}
+
+        $sql = $sql ." ORDER BY login";
 	
 		return  $CC_DBC->GetAll($sql);	
 	}

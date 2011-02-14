@@ -93,7 +93,8 @@ class PlaylistController extends Zend_Controller_Action
 
 		$this->changePlaylist($pl_id);
 		$form = new Application_Form_PlaylistMetadata();
-		$this->view->form = $form->__toString();
+		$this->view->fieldset = $form;
+        $this->view->form = $this->view->render('playlist/new.phtml');
     }
 
     public function metadataAction()
@@ -115,26 +116,25 @@ class PlaylistController extends Zend_Controller_Action
 		}
  
         if ($request->isPost()) {
-            if ($form->isValid($request->getPost())) {  
-    
-				$formdata = $form->getValues();
+            $title = $this->_getParam('title', null);
+            $description = $this->_getParam('description', null);
 
-				$pl = $this->getPlaylist();
-                
-                if($formdata["title"])
-				    $pl->setName($formdata["title"]);
-				
-				if(isset($formdata["description"])) {
-					$pl->setPLMetaData(UI_MDATA_KEY_DESCRIPTION, $formdata["description"]);
-				}
+			$pl = $this->getPlaylist();
+            
+            if($title)
+			    $pl->setName($title);
+			
+			if(isset($description)) {
+				$pl->setPLMetaData(UI_MDATA_KEY_DESCRIPTION, $description);
+			}
 
-				$this->view->pl = $pl;
-				$this->view->html = $this->view->render('playlist/index.phtml');
-				unset($this->view->pl);
-            }
+			$this->view->pl = $pl;
+			$this->view->html = $this->view->render('playlist/index.phtml');
+			unset($this->view->pl);
         }
  
-        $this->view->form = $form->__toString();
+        $this->view->fieldset = $form;
+        $this->view->form = $this->view->render('playlist/new.phtml');
     }
 
     public function editAction()

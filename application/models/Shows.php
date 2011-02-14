@@ -49,6 +49,21 @@ class Show {
         $show->setDbBackgroundColor($backgroundColor);
     }
 
+    public function cancelShow($day_timestamp) {
+        global $CC_DBC;
+
+        $timeinfo = explode(" ", $day_timestamp);
+
+        CcShowDaysQuery::create()
+            ->filterByDbShowId($this->_showId)
+            ->update(array('DbLastShow' => $timeinfo[0]));
+
+        $sql = "DELETE FROM cc_show_instances
+			        WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
+
+        $CC_DBC->query($sql);
+    }
+
 	//end dates are non inclusive.
 	public static function addShow($data) {
 	
@@ -718,7 +733,7 @@ class Show_DAL{
 		$date = $timestamp[0];
 		$time = $timestamp[1];
         
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id"
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts <= TIMESTAMP '$timeNow'"
@@ -734,7 +749,7 @@ class Show_DAL{
 		$sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
 		." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
 		." WHERE si.show_id = s.id"
-		." AND si.starts > TIMESTAMP '$timeNow'"
+		." AND si.starts >= TIMESTAMP '$timeNow'"
 		." AND si.starts < TIMESTAMP '$timeNow' + INTERVAL '48 hours'"
         ." ORDER BY si.starts"
         ." LIMIT 1";

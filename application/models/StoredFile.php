@@ -1792,7 +1792,7 @@ class StoredFile {
 		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
 
 		$datatables["optWhere"][] = "plt.length <= INTERVAL '{$p_length}'";
-
+        $datatables["optWhere"][] = "plt.length > INTERVAL '00:00:00'";
 		
 		return StoredFile::searchFiles($fromTable, $datatables);
 	}	

@@ -105,3 +105,9 @@ label.wrapp-label input[type="checkbox"] {
 	color:#902d2d;
 	display:none;
 }
+
+#add_show_hosts-element {
+    max-height: 80px;
+    min-width: 150px;
+    overflow: auto;
+}

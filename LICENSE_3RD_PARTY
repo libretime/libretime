@@ -1,27 +1,37 @@
 This application uses the following 3rd Party software:
- * Zend Framework (New BSD license, compatible with GPL)
- * Liquidsoap (GPLv2, we only call this as an executable)
- * PEAR (Ok to ship with GPLed code, see: http://pear.php.net/manual/en/faq.devs.php, see note [1])
- * poc-streamer (mp3cut)
- * PHP
 
+ * Zend Framework 
+   - License: New BSD license
+   - Does this link with our code? Yes
+   - Compatible with GPLv3: Yes
 
-[1] PEAR Note (from http://pear.php.net/manual/en/faq.devs.php):
-"""
-From time to time people raise concerns of using PEAR packages licensed under the PHP license in GPL'ed code. In a discussion about this topic, the creator of PHP, Rasmus Lerdorf, issued the following statement:
+ * Liquidsoap
+   - License: GPLv2
+   - Does this link with our code? No, we only call this as an executable
 
-    It all comes down to semantics of what linking means. The PHP license is pretty much identical to the Apache license and you could indeed make a case for not allowing any GPL'ed software to be "linked to" from Apache either.
+ * PEAR
+   - Notes: We only use the PEAR base class PEAR_Error, in the "PEAR" PEAR library.
+   - License: New BSD License
+   - Does this link with our code? Yes
+   - Compatible with GPLv3? Yes. 
 
-    See http://www.apache.org/licenses/LICENSE-1.1.
+ * GetID3
+   - License: GPLv2
+   - Does this link with our code?  Yes
+   - Compatible with GPLv3? Yes
 
-    The PHP license was chosen to match the Apache license because Apache and PHP are tied so closely to each other.
+ * mp3cut from the package poc-streamer
+   - Does this link with our code?  No, it is an externally called executable file.
 
-    This hair splitting over linking, derivation and aggregation has been going on since the beginning of time. My stance is that you can indeed ship PHP licensed PEAR components on the same cd or in the same tarball as GPL'ed code because I see it as an aggregate work. This changes if you take PEAR code, modify it and copy-paste it directly into your own work. Then it moves from aggregate to derived. But the intent of the PEAR components is to be used in aggregate form. The PHP license allows you to use it in derived form as well, of course, but then you should be choosing a license other than the GPL for the derived work.
+ * PHP  
+   - Does this link with our code?  No, it is the interpreter.
 
-    The FSF has a FAQ on aggregation here: http://www.fsf.org/licensing/licenses/gpl-faq.html#MereAggregation
+ * Propel ORM
+   - License: MIT/Expat License
+   - Does this link with our code? Yes
+   - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
 
-    That text is heavily biased towards compiled software and they talk about executables and memory spaces which don't really apply in this case. If you don't consider using a PEAR component as aggregation then it logically follows that you also cannot have Apache call your code so you will have to stipulate that nobody can use your code from Apache. I think this is an extreme interpretation that pretty much nobody out there shares.
-
-    In short, I don't see an issue here. Move along.
-"""
+ * Phing
+   - Note: Only used for development, not needed to run Airtime.
+   - License: LGPLv3
 

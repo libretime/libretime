@@ -17,14 +17,21 @@ class Application_Form_Preferences extends Zend_Form
             'value' => Application_Model_Preference::GetValue("station_name")
         ));
 
+        $defaultFade = Application_Model_Preference::GetValue("default_fade");
+        if($defaultFade == ""){
+            $defaultFade = '00:00:00.000000';
+        }
+
          // Add login element
         $this->addElement('text', 'stationDefaultFade', array(
             'class'      => 'input_text',
             'label'      => 'Default Fade:',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'validators' => array(array('regex', false, array('/^[0-2][0-3]:[0-5][0-9]:[0-5][0-9](\.\d{1,6})?$/', 'messages' => 'enter a time 00:00:00{.000000}'))),
-            'value' => Application_Model_Preference::GetValue("default_fade")
+            'validators' => array(array('regex', false, 
+                array('/^[0-2][0-3]:[0-5][0-9]:[0-5][0-9](\.\d{1,6})?$/', 
+                'messages' => 'enter a time 00:00:00{.000000}'))),
+            'value' => $defaultFade
         ));
             
         $this->addElement('submit', 'submit', array(
@@ -34,4 +41,3 @@ class Application_Form_Preferences extends Zend_Form
         ));
     }
 }
-///^[0-2][0-3]:[0-5][0-9]:[0-5][0-9]{.}[0-9]{0-6}/i

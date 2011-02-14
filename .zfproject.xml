@@ -70,6 +70,7 @@
           <actionMethod actionName="showContentDialog"/>
           <actionMethod actionName="editShow"/>
           <actionMethod actionName="addShow"/>
+          <actionMethod actionName="cancelShow"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -320,6 +321,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Dashboard">
             <viewScriptFile forActionName="help"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="cancelShow"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

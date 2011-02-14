@@ -13,8 +13,6 @@ var currentElem;
 var serverUpdateInterval = 5000;
 var uiUpdateInterval = 200;
 
-var songEndFunc;
-
 //set to "development" if we are developing :). Useful to disable alerts
 //when entering production mode. 
 var APPLICATION_ENV = "";
@@ -24,20 +22,6 @@ var APPLICATION_ENV = "";
  * make sure the function is only executed once*/
 var nextSongPrepare = true;
 var nextShowPrepare = true;
-
-/* Another script can register its function here
- * when it wishes to know when a song ends. */
-function registerSongEndListener(func){
-    songEndFunc = func;
-}
-
-function notifySongEndListener(){
-    if (typeof songEndFunc == "function"){
-        //create a slight pause in execution to allow the browser
-        //to update the display.
-        setTimeout(songEndFunc, 50);
-    }
-}
 
 function getTrackInfo(song){
     var str = "";
@@ -57,6 +41,7 @@ function secondsTimer(){
 		var date = new Date();
         estimatedSchedulePosixTime = date.getTime() - localRemoteTimeOffset;
 		updateProgressBarValue();
+        updatePlaybar();
 	}
     setTimeout(secondsTimer, uiUpdateInterval);
 }
@@ -64,15 +49,16 @@ function secondsTimer(){
 function newSongStart(){
     nextSongPrepare = true;
     currentSong[0] = nextSongs.shift();
-    updatePlaybar();
 
-    notifySongEndListener();
+    notifySongStart();
 }
 
 function nextShowStart(){
     nextShowPrepare = true;
     currentShow[0] = nextShow.shift();
-    updatePlaybar();
+
+    //call function in nowplayingdatagrid.js
+    notifyShowStart(currentShow[0]);
 }
 
 /* Called every "uiUpdateInterval" mseconds. */
@@ -129,8 +115,6 @@ function updateProgressBarValue(){
 			setTimeout(nextShowStart, diff);
 		}
 	}
-
-	updatePlaybar();
 }
 
 function updatePlaybar(){
@@ -230,7 +214,7 @@ function parseItems(obj){
 function getScheduleFromServer(){
     $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                 parseItems(data.entries);
-          }});
+          }, error:function(jqXHR, textStatus, errorThrown){}});
     setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
 
@@ -241,27 +225,31 @@ function init() {
 	
     //begin consumer "thread"
     secondsTimer();
-    
-    $('#about-link').qtip({
-        content: $('#about-txt').html(),
-        show: 'mouseover',
-        hide: { when: 'mouseout', fixed: true },
-        position: {
-            corner: {
-                target: 'center',
-                tooltip: 'topRight'
-            }
-        },
-         style: {
-            border: {
-               width: 0,
-               radius: 4
+
+    var qtipElem = $('#about-link');
+
+    if (qtipElem.length > 0)
+        qtipElem.qtip({
+            content: $('#about-txt').html(),
+            show: 'mouseover',
+            hide: { when: 'mouseout', fixed: true },
+            position: {
+                corner: {
+                    target: 'center',
+                    tooltip: 'topRight'
+                }
             },
-            name: 'light', // Use the default light style
-         }
-    });
+             style: {
+                border: {
+                   width: 0,
+                   radius: 4
+                },
+                name: 'light', // Use the default light style
+             }
+        });
 }
 
 $(document).ready(function() {
-    init();
+    if ($('#master-panel').length > 0)
+        init();
 });

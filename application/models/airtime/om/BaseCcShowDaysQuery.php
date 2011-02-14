@@ -278,29 +278,20 @@ abstract class BaseCcShowDaysQuery extends ModelCriteria
 	/**
 	 * Filter the query on the duration column
 	 * 
-	 * @param     string|array $dbDuration The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbDuration The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcShowDaysQuery The current query, for fluid interface
 	 */
 	public function filterByDbDuration($dbDuration = null, $comparison = null)
 	{
-		if (is_array($dbDuration)) {
-			$useMinMax = false;
-			if (isset($dbDuration['min'])) {
-				$this->addUsingAlias(CcShowDaysPeer::DURATION, $dbDuration['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbDuration['max'])) {
-				$this->addUsingAlias(CcShowDaysPeer::DURATION, $dbDuration['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbDuration)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbDuration)) {
+				$dbDuration = str_replace('*', '%', $dbDuration);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcShowDaysPeer::DURATION, $dbDuration, $comparison);
