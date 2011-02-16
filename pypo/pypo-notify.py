@@ -29,6 +29,7 @@ import logging.config
 import urllib
 import urllib2
 import string
+import json
 
 # additional modules (should be checked)
 from configobj import ConfigObj
@@ -97,7 +98,7 @@ class Notify:
         logger.debug('#################################################')
         logger.debug('data = '+ str(data))
         #print 'options.data = '+ options.data
-        #data = json.read(options.data)
+        #data = json.loads(options.data)
         response = self.api_client.notify_media_item_start_playing(data, media_id) 
         logger.debug("Response: "+str(response))
 

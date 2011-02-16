@@ -19,12 +19,6 @@ Attention & ToDos
 - liquidsoap does not like mono files! So we have to make sure that only files with 
   2 channels are fed to LiquidSoap
   (solved: current = audio_to_stereo(current) - maybe not with ultimate performance)
-
-
-made for python version 2.5!!
-should work with 2.6 as well with a bit of adaption. for 
-sure the json parsing has to be changed
-(2.6 has an parser, pypo brings it's own -> util/json.py)
 """
 
 # python defaults (debian default)
