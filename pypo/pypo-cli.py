@@ -290,17 +290,7 @@ class Playout:
                     
                 elif int(playlist['subtype']) > 0 and int(playlist['subtype']) < 5:
                     ls_playlist = self.handle_media_file(playlist, pkey, ls_playlist)
-                    
-                """
-                This is kind of hackish. We add a bunch of "silence" tracks to the end of each playlist.
-                So we can make sure the list does not get repeated just before a new one is called. 
-                (or in case nothing is in the scheduler afterwards)
-                20 x silence = 10 hours
-                """
-                for i in range (0, 1):
-                    ls_playlist += self.silence_file + "\n"
-                    print '',
-                            
+                                                
                 # write playlist file
                 plfile = open(self.cache_dir + str(pkey) + '/list.lsp', "w")
                 plfile.write(ls_playlist)
