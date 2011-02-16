@@ -1,37 +1,40 @@
 This application uses the following 3rd Party software:
 
+------------
+Linked code:
+------------
  * Zend Framework 
    - License: New BSD license
-   - Does this link with our code? Yes
    - Compatible with GPLv3: Yes
-
- * Liquidsoap
-   - License: GPLv2
-   - Does this link with our code? No, we only call this as an executable
 
  * PEAR
    - Notes: We only use the PEAR base class PEAR_Error, in the "PEAR" PEAR library.
    - License: New BSD License
-   - Does this link with our code? Yes
    - Compatible with GPLv3? Yes. 
 
  * GetID3
    - License: GPLv2
-   - Does this link with our code?  Yes
    - Compatible with GPLv3? Yes
-
- * mp3cut from the package poc-streamer
-   - Does this link with our code?  No, it is an externally called executable file.
-
- * PHP  
-   - Does this link with our code?  No, it is the interpreter.
 
  * Propel ORM
    - License: MIT/Expat License
-   - Does this link with our code? Yes
    - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
+
+----------------
+Non-linked code:
+----------------
+ * Liquidsoap
+   - License: GPLv2
+
+ * mp3cut from the package poc-streamer
 
  * Phing
    - Note: Only used for development, not needed to run Airtime.
    - License: LGPLv3
+
+ * Linux
+ * Apache
+ * PostgreSQL
+ * PHP  
+
 
