@@ -3,7 +3,8 @@ This application uses the following 3rd Party software:
 ------------
 Linked code:
 ------------
- * Zend Framework 
+ * Zend Framework 1.10.3 
+   - Web site: http://framework.zend.com/
    - License: New BSD license
    - Compatible with GPLv3: Yes
 
@@ -12,29 +13,60 @@ Linked code:
    - License: New BSD License
    - Compatible with GPLv3? Yes. 
 
- * GetID3
+ * GetID3 
+   - Web site: http://getid3.sourceforge.net/
    - License: GPLv2
    - Compatible with GPLv3? Yes
 
  * Propel ORM
+   - Web site: http://www.propelorm.org/
    - License: MIT/Expat License
    - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
+
+ * Phing 
+   - Web site: http://phing.info/trac/
+   - Note: Only used for development, not needed to run Airtime.
+   - License: LGPLv3
 
 ----------------
 Non-linked code:
 ----------------
- * Liquidsoap
+ * Linux
+
+ * Apache Web Server 2.2 
+   - Web site: http://httpd.apache.org/
+
+ * PostgreSQL 8.4 
+   - Web site: http://www.postgresql.org/
+   - License: The PostgreSQL License.  See http://www.opensource.org/licenses/postgresql
+
+ * PHP 5.3 
+   - Web site: http://www.php.net/
+   - License: The PHP License. See http://www.php.net/license/3_01.txt
+
+ * Python 2.6
+   - Web site: http://www.python.org/
+   - License: PSF License. See http://docs.python.org/license.html
+
+ * Liquidsoap (pre-release of 1.0) 
+   - Web site: http://savonet.sourceforge.net/
    - License: GPLv2
 
  * mp3cut from the package poc-streamer
 
- * Phing
-   - Note: Only used for development, not needed to run Airtime.
-   - License: LGPLv3
+ * jQuery 
+   - Web site: http://jquery.com/
+   - License: MIT and GPL.  See http://jquery.org/license
 
- * Linux
- * Apache
- * PostgreSQL
- * PHP  
+   - jQuery components used:
+     * Full Calendar 
+       - Web site: http://arshaw.com/fullcalendar/
+       - License: Dual licensed under MIT and GPLv2
+
+     * Colorpicker 
+       - Web site: http://www.eyecon.ro/colorpicker/
+       - License: Dual licensed under the MIT and GPL licenses.
+
+
 
 

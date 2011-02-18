@@ -1,29 +1,23 @@
 --------------------------------------------------------------------------------
 
-    Copyright (c) 2010 Sourcefabric O.P.S.
+    Copyright (c) 2010-2011 Sourcefabric O.P.S.
 
     This file is part of the Airtime project.
     http://airtime.sourcefabric.org/
-    To report bugs, send an e-mail to contact@sourcefabric.org
+    
+    To report bugs, visit our bug tracker at: 
+    http://dev.sourcefabric.org/browse/CC
 
-    Airtime is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Airtime is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Airtime; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Visit our community support forum here:
+    http://forum.sourcefabric.org/index.php/f/14/
+    
+    For commercial support, see http://sourcefabric.org/en/services/about/347/Support.htm 
+    or send an e-mail to contact@sourcefabric.org
 
 --------------------------------------------------------------------------------
 
-Please see this page for a typical user install:
-http://www.sourcefabric.org/en/products/airtime_manuals/
+Please see this page for install instructions:
+http://wiki.sourcefabric.org/display/CC/Installing+Airtime+%28v1.6%29
 
 If you are a developer, see this page:
 http://wiki.sourcefabric.org/display/CC
