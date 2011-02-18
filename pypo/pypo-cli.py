@@ -663,29 +663,12 @@ class Playout:
                 logger.debug('OK - Can read playlist file')
                 
             pl_file = open(src, "r")
-    
-            """
-            i know this could be wrapped, maybe later..
-            """
-            tn = telnetlib.Telnet(LS_HOST, 1234)
-                          
-            for line in pl_file.readlines():
-                line = line.strip()
-                logger.debug(line)
-                tn.write(self.export_source + '.push %s' % (line))
-                tn.write("\n")
-                
-            tn.write("exit\n")
-            logger.debug(tn.read_all())
-            
-            pattern = '%Y-%m-%d-%H-%M-%S'   
-            
+              
             #strptime returns struct_time in local time
             #mktime takes a time_struct and returns a floating point 
-            #gmtime Convert a time expressed in seconds since the epoch to a struct_time in UTC
-                        
+            #gmtime Convert a time expressed in seconds since the epoch to a struct_time in UTC            
             #mktime: expresses the time in local time, not UTC. It returns a floating point number, for compatibility with time().
-            epoch_start = calendar.timegm(time.gmtime(time.mktime(time.strptime(pkey, pattern))))
+            epoch_start = calendar.timegm(time.gmtime(time.mktime(time.strptime(pkey, '%Y-%m-%d-%H-%M-%S'))))
             
             #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
             epoch_now = time.time()
@@ -701,8 +684,19 @@ class Playout:
             
             logger.debug('sleeping for %s s' % (sleep_time))
             time.sleep(sleep_time)
+                        
+            tn = telnetlib.Telnet(LS_HOST, 1234)
+                          
+            for line in pl_file.readlines():
+                line = line.strip()
+                logger.debug(line)
+                tn.write('queue.push %s' % (line))
+                tn.write("\n")
+                
+            tn.write("exit\n")
+            logger.debug(tn.read_all())
             
-            logger.debug('sending "flip"')
+            """
             tn = telnetlib.Telnet(LS_HOST, 1234)
             
             # Get any extra information for liquidsoap (which will be sent back to us)
@@ -717,6 +711,7 @@ class Playout:
             tn.write("exit\n")
             
             tn.read_all()
+            """
             status = 1
         except Exception, e:
             logger.error('%s', e)
