@@ -7,8 +7,7 @@ import urllib
 import logging
 
 import telnetlib
-
-from util import json
+import json
 
 import os
 
@@ -26,7 +25,7 @@ class Status:
         # lookup OBP version
         try:
             response = urllib.urlopen(self.status_url)
-            response_json = json.read(response.read())
+            response_json = json.loads(response.read())
             obp_version = int(response_json['version'])
             logger.debug("OBP Version %s detected", obp_version)
     

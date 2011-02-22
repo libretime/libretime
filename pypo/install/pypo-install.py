@@ -62,8 +62,8 @@ def get_current_script_dir():
 
 try:
   current_script_dir = get_current_script_dir()
-  print "Terminating any existing pypo processes"
-  os.system("python %s/pypo-stop.py"% current_script_dir)
+  print "Checking and removing any existing pypo processes"
+  os.system("python %s/pypo-uninstall.py 2>&1 1>/dev/null"% current_script_dir)
   time.sleep(5)
 
   # Create users
