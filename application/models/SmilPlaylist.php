@@ -310,4 +310,3 @@ class SmilPlaylistAnimateElement {
     }
 } // class SmilPlaylistAnimateElement
 
-?>

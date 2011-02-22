@@ -1,6 +1,6 @@
 <?php
 
-class Airtime_View_Helper_LoggedInAs extends Zend_View_Helper_Abstract 
+class Airtime_View_Helper_LoggedInAs extends Zend_View_Helper_Abstract
 {
     public function loggedInAs ()
     {
@@ -10,8 +10,7 @@ class Airtime_View_Helper_LoggedInAs extends Zend_View_Helper_Abstract
         if ($auth->hasIdentity()) {
             $username = $auth->getIdentity()->login;
         }
-        return $username; 
+        return $username;
     }
 }
 
-?>

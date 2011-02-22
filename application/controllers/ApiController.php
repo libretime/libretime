@@ -83,7 +83,7 @@ class ApiController extends Zend_Controller_Action
 
             //header("Content-Type: $mtype");
             */
-            
+
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
             if ($ext == "ogg")
                 header("Content-Type: audio/ogg");
@@ -212,4 +212,3 @@ class ApiController extends Zend_Controller_Action
     }
 }
 
-?>

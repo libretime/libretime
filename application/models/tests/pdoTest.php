@@ -22,4 +22,4 @@ $sql3 = "SELECT TIMESTAMP '2011-01-01 00:00:00.000' + INTERVAL '01:00:00.123456'
 $result3 = $con->query($sql3);
 var_dump($result3->fetchAll());
 
-?>
+

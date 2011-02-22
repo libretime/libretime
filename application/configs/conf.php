@@ -176,8 +176,4 @@ function load_airtime_config(){
                 'database'      => $ini_array['database']['dbname']),
             'api_key' => array($ini_array['general']['api_key'])
         );
-
-    
 }
-
-?>

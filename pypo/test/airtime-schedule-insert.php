@@ -97,4 +97,3 @@ $scheduleGroup = new ScheduleGroup();
 $scheduleGroup->add($playTime, null, $pl->getId());
 
 echo " SUCCESS: Playlist scheduled at $playTime\n\n";
-?>

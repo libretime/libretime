@@ -169,4 +169,4 @@ foreach ($methods as $method => $description) {
 
 $s = new XML_RPC_Server($defs);
 
-?>
+

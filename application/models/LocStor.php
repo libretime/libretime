@@ -1746,4 +1746,3 @@ class LocStor extends BasicStor {
         /* ==================================================== auxiliary methods */
 
 } // class LocStor
-?>

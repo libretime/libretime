@@ -346,4 +346,3 @@ if ($g_errors > 0) {
 echo " *** Total: ".($g_fileCount+$g_duplicates)." files in $time seconds = $speed files/second.\n";
 echo "==========================================================================\n";
 
-?>

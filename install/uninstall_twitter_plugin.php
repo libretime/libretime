@@ -8,12 +8,7 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-?>
 
-//------------------------------------------------------------------------
-// Uninstall twitter Cron job
-//------------------------------------------------------------------------
-<?php
 require_once(dirname(__FILE__).'/../../../storageServer/var/cron/Cron.php');
 $old_regex = '/ui_twitterCron\.php/';
 
@@ -34,4 +29,3 @@ foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
 
 $cron->closeCrontab();
 echo "Done.\n";
-?>

@@ -96,4 +96,4 @@ fclose($fp);
 fclose($putdata);
 
 header("HTTP/1.1 200");
-?>
+

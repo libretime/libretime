@@ -172,7 +172,7 @@ class Playlist {
         $storedPlaylist->currentlyaccessing = $pl->getDbCurrentlyaccessing();
         $storedPlaylist->editedby = $pl->getDbEditedby();
         $storedPlaylist->mtime = $pl->getDbMtime();
-        
+
         return $storedPlaylist;
     }
 
@@ -931,17 +931,17 @@ class Playlist {
 
         if(is_null($fadeIn)) {
             if($defaultFade != "")
-                $fadeIn = $defaultFade;    
+                $fadeIn = $defaultFade;
             else
                 $fadeIn = '00:00:00.000';
         }
         if(is_null($fadeOut)) {
             if($defaultFade != "")
-                $fadeOut = $defaultFade;    
+                $fadeOut = $defaultFade;
             else
                 $fadeOut = '00:00:00.000';
         }
-            
+
         $row = new CcPlaylistcontents();
         $row->setDbPlaylistId($plId);
         $row->setDbFileId($fileId);
@@ -1386,4 +1386,3 @@ class PlaylistMetadataExport
     }
 }
 
-?>
