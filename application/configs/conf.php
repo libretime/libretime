@@ -5,9 +5,11 @@ define('CAMPCASTER_COPYRIGHT_DATE', '2010');
 // These are the default values for the config.
 global $CC_CONFIG;
 
+$values = load_airtime_config();
+
 $CC_CONFIG = array(
     // Database config
-    'dsn'           => load_db_config(),
+    'dsn'           => $values['database'],
 
     // Name of the web server user
     'webServerUser' => 'www-data',
@@ -17,7 +19,7 @@ $CC_CONFIG = array(
 
     /* ================================================ storage configuration */
 
-    'apiKey' => array('AAA'),
+    'apiKey' => $values['api_key'],
 
     'apiPath' => "/api/",
 
@@ -162,22 +164,20 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 					.PATH_SEPARATOR.$CC_CONFIG['zendPath']
 					.PATH_SEPARATOR.$old_include_path);
 
-//$dsn = $CC_CONFIG['dsn'];
-//$CC_DBC = DB::connect($dsn, TRUE);
-//if (PEAR::isError($CC_DBC)) {
-//	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-//	exit(1);
-//}
-//$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-function load_db_config(){
-	$ini_array = parse_ini_file(dirname(__FILE__).'/../../build/database.conf', true);
+function load_airtime_config(){
+	$ini_array = parse_ini_file(dirname(__FILE__).'/../../build/airtime.conf', true);
 		
-	return array(        
-        'username'      => $ini_array['database']['dbuser'],
-        'password'      => $ini_array['database']['dbpass'],
-        'hostspec'      => $ini_array['database']['host'],
-        'phptype'       => 'pgsql',
-        'database'      => $ini_array['database']['dbname']);
+	return array(
+            'database' => array(   
+                'username'      => $ini_array['database']['dbuser'],
+                'password'      => $ini_array['database']['dbpass'],
+                'hostspec'      => $ini_array['database']['host'],
+                'phptype'       => 'pgsql',
+                'database'      => $ini_array['database']['dbname']),
+            'api_key' => array($ini_array['general']['api_key'])
+        );
+
+    
 }
 
 ?>

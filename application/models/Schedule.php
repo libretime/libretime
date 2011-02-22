@@ -432,6 +432,8 @@ class Schedule {
             return array();
         }
 
+        global $CC_CONFIG;
+
         $date = new Application_Model_DateHelper;
         $timeNow = $date->getDate();
         return array("env"=>APPLICATION_ENV,
@@ -442,7 +444,8 @@ class Schedule {
             "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
             "nextShow"=>Show_DAL::GetNextShow($timeNow),
             "timezone"=> date("T"),
-            "timezoneOffset"=> date("Z"));
+            "timezoneOffset"=> date("Z"),
+            "apiKey"=>$CC_CONFIG['apiKey'][0]);
     }
     
     /**
