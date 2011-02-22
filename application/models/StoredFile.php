@@ -1836,8 +1836,8 @@ class StoredFile {
 				$innerCond = array();
 
 				foreach($searchCols as $col) {
-
-					$innerCond[] = "{$col}::text ILIKE '%{$term}%'"; 
+                    $escapedTerm = pg_escape_string($term);
+					$innerCond[] = "{$col}::text ILIKE '%{$escapedTerm}%'"; 
 				}
 				$outerCond[] = "(".join(" OR ", $innerCond).")";			
 			}
