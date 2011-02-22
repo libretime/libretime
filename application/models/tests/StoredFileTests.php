@@ -84,4 +84,3 @@ class StoredFileTest extends PHPUnit_TestCase {
     }
 
 }
-?>

@@ -252,4 +252,3 @@ foreach ($groups as $grname => $group) {
 /* -------------------------------------------------------- restoring objects */
 ls_restore_restoreObject($tree, /*$storId,*/ FALSE);
 
-?>

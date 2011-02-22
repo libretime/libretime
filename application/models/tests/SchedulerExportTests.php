@@ -39,4 +39,3 @@ class SchedulerExportTests extends PHPUnit_TestCase {
    }
 }
 
-?>

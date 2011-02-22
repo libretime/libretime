@@ -22,4 +22,3 @@ if (is_array($r)) {
     print_r($r);
 }
 echo"\n";
-?>

@@ -192,5 +192,3 @@ function admDumpGroup(&$bs, $gid, $ind='')
     #var_export($res);
     #var_dump($res);
     echo "$res";
-
-    ?>

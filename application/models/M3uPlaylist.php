@@ -349,4 +349,3 @@ class M3uPlaylistAnimateElement {
     }
 }
 
-?>

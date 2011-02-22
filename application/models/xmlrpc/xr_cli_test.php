@@ -365,4 +365,3 @@ if (isset($infos[$method]['r'])) {
     }
 }
 
-?>

@@ -8,12 +8,7 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-?>
 
-//------------------------------------------------------------------------
-// Install twitter Cron job
-//------------------------------------------------------------------------
-<?php
 require_once(dirname(__FILE__).'/../../../storageServer/var/cron/Cron.php');
 $m = '*';
 $h ='*';
@@ -41,4 +36,4 @@ echo "    adding new entry\n";
 $cron->ct->addCron($m, $h, $dom, $mon, $dow, $command);
 $cron->closeCrontab();
 echo "Done.\n";
-?>
+

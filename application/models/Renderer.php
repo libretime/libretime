@@ -287,4 +287,3 @@ class Renderer
 
 } // class Renderer
 
-?>

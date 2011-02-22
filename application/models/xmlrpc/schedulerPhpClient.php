@@ -508,4 +508,3 @@ $r = $spc->DisplayScheduleMethod($this->Base->sessid, '20040101T00:00:00', '2005
 #$r = $spc->GetSchedulerTimeMethod(); var_dump($r);
 ================= */
 
-?>

@@ -59,4 +59,3 @@ echo "$r\n";
 
 echo "#storeWebstream test: OK.\n\n"
 */
-?>

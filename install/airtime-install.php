@@ -24,7 +24,7 @@ function checkIfRoot(){
     if(exec("whoami") != "root"){
       echo "Must be root user.\n";
       exit(1);
-    }    
+    }
 }
 
 // Need to check if build.properties project home is set correctly.
@@ -41,7 +41,7 @@ function setBuildPropertiesPath(){
     foreach($lines as $key => $line){
         fwrite($fp, $line);
     }
-    fclose($fp);         
+    fclose($fp);
 }
 
 function directorySetup($CC_CONFIG){
@@ -69,7 +69,7 @@ echo " *** Directory Setup ***\n";
             //exit(1);
         }
         $CC_CONFIG[$d] = $rp;
-    }   
+    }
 }
 
 
@@ -132,4 +132,4 @@ $command = __DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/nul
 $command = "python ".__DIR__."/../pypo/install/pypo-install.py";
 system($command);
 echo "******************************* Install Complete *******************************\n";
-?>
+

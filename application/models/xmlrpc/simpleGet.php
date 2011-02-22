@@ -125,4 +125,3 @@ switch ($ftype) {
         // var_dump($ftype);
         http_error(500, "500 Unknown ftype ($ftype)");
 }
-?>

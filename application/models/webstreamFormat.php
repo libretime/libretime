@@ -338,8 +338,3 @@ $webstreamFormat = array(
 */
 );
 
-/*
-?
-ls:filename                          Text       auto
-*/
-?>

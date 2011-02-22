@@ -39,4 +39,3 @@ if (TR_LOG_LEVEL>1) {
 	$tr->trLog("transportCronJob($pid) end ($trtok)");
 }
 exit(0);
-?>

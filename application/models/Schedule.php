@@ -175,7 +175,7 @@ class ScheduleGroup {
         // Get the end time for the given entry
         $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id=$p_groupId";
-    
+
         $startTime = $CC_DBC->GetOne($sql);
         return $this->add($show_instance, $startTime, null, $p_playlistId);
     }
@@ -281,8 +281,8 @@ class Schedule {
     public static function getTimeUnScheduledInRange($s_datetime, $e_datetime) {
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
-            WHERE (starts >= '{$s_datetime}')  
+        $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]."
+            WHERE (starts >= '{$s_datetime}')
             AND (ends <= '{$e_datetime}')";
 
         $time = $CC_DBC->GetOne($sql);
@@ -302,12 +302,12 @@ class Schedule {
     public static function getTimeScheduledInRange($s_datetime, $e_datetime) {
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]." 
-            WHERE (starts >= '{$s_datetime}')  
+        $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]."
+            WHERE (starts >= '{$s_datetime}')
             AND (ends <= '{$e_datetime}')";
 
         $res = $CC_DBC->GetOne($sql);
-      
+
         if(is_null($res))
             return 0;
 
@@ -315,9 +315,9 @@ class Schedule {
     }
 
     public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
-      
+
         $time = Schedule::getTimeScheduledInRange($s_datetime, $e_datetime);
-      
+
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
         $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$s_datetime}')";
@@ -333,11 +333,11 @@ class Schedule {
         $i_epoch = $r->fetchColumn(0);
 
         $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
-       
+
         return $percent;
     }
 
-    
+
     /**
      * Return TRUE if file is going to be played in the future.
      *
@@ -444,58 +444,58 @@ class Schedule {
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
     }
-    
+
     /**
      * Builds an SQL Query for accessing scheduled item information from
-     * the database. 
+     * the database.
      *
      * @param int $timeNow
      * @param int $timePeriod
      * @param int $count
      * @param String $interval
      * @return date
-     * 
-     * $timeNow is the the currentTime in the format "Y-m-d H:i:s". 
+     *
+     * $timeNow is the the currentTime in the format "Y-m-d H:i:s".
      * For example: 2011-02-02 22:00:54
-     * 
+     *
      * $timePeriod can be either negative, zero or positive. This is used
      * to indicate whether we want items from the past, present or future.
-     * 
+     *
      * $count indicates how many results we want to limit ourselves to.
-     * 
+     *
      * $interval is used to indicate how far into the past or future we
      * want to search the database. For example "5 days", "18 hours", "60 minutes",
      * "30 seconds" etc.
      */
     public static function Get_Scheduled_Item_Data($timeStamp, $timePeriod=0, $count = 0, $interval="0 hours"){
         global $CC_CONFIG, $CC_DBC;
-      
+
         $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name, st.instance_id"
         ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
         ." WHERE st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
         ." AND st.instance_id = si.id"
         ." AND si.show_id = show.id";
-        
+
         if ($timePeriod < 0){
         	$sql .= " AND st.ends < TIMESTAMP '$timeStamp'"
         	." AND st.ends > (TIMESTAMP '$timeStamp' - INTERVAL '$interval')"
   	        ." ORDER BY st.starts DESC"
-        	." LIMIT $count";	
+        	." LIMIT $count";
 		} else if ($timePeriod == 0){
 	        $sql .= " AND st.starts <= TIMESTAMP '$timeStamp'"
-    	    ." AND st.ends >= TIMESTAMP '$timeStamp'";		
+    	    ." AND st.ends >= TIMESTAMP '$timeStamp'";
 		} else if ($timePeriod > 0){
         	$sql .= " AND st.starts > TIMESTAMP '$timeStamp'"
-        	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"	
+        	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"
         	." ORDER BY st.starts"
-        	." LIMIT $count";		
+        	." LIMIT $count";
 		}
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
 	}
-	     
+
 
     /**
      * Convert a time string in the format "YYYY-MM-DD HH:mm:SS"
@@ -701,4 +701,3 @@ class Schedule {
 
 }
 
-?>
