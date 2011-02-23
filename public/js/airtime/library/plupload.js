@@ -1,15 +1,17 @@
 $(document).ready(function() {
+    var uploader;
 
 	$("#plupload_files").pluploadQueue({
 		// General settings
-		runtimes : 'html5',
+		runtimes : 'html5,html4',
 		url : '/Plupload/upload/format/json',
 		filters : [
 			{title: "Audio Files", extensions: "ogg,mp3"}
 		]
 	});
 
-	var uploader = $("#plupload_files").pluploadQueue();
+	uploader = $("#plupload_files").pluploadQueue();
+
 	uploader.bind('FileUploaded', function(up, file, json) {
 		var j = jQuery.parseJSON(json.response);
 
