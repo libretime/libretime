@@ -247,7 +247,7 @@ function init() {
                    width: 0,
                    radius: 4
                 },
-                name: 'light', // Use the default light style
+                name: 'light' // Use the default light style
              }
         });
 }
