@@ -619,4 +619,3 @@ class Alib {
     } // fn test
 
 } // class Alib
-?>

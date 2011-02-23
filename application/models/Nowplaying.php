@@ -75,23 +75,27 @@ class Application_Model_Nowplaying
                 
         foreach ($previous as $item){
             array_push($rows, array("p", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-                $item["album_title"], $item["name"], $item["show_name"], $item["current_show"], $item["group_id"]));
+                $item["album_title"], $item["name"], $item["show_name"], $item["instance_id"], $item["group_id"]));
         }
         
         foreach ($current as $item){
             array_push($rows, array("c", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-                $item["album_title"], $item["name"], $item["show_name"], $item["current_show"], $item["group_id"]));    
+                $item["album_title"], $item["name"], $item["show_name"], $item["instance_id"], $item["group_id"]));    
         }
         
         foreach ($next as $item){
             array_push($rows, array("n", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-                $item["album_title"], $item["name"], $item["show_name"], $item["current_show"], $item["group_id"]));
+                $item["album_title"], $item["name"], $item["show_name"], $item["instance_id"], $item["group_id"]));
         }
-        
+
+                
         $rows = Application_Model_Nowplaying::FindGaps($rows);
-        $data = array("rows"=>$rows);
+
+        $date = new Application_Model_DateHelper;
+        $timeNow = $date->getDate();
+        
+        $data = array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$rows);
         
         return $data;
     }
 }
-

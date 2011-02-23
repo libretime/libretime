@@ -492,9 +492,9 @@ class StoredFile {
         $escapedValue = pg_escape_string($this->gunid);
         $sql = "SELECT * FROM ".$CC_CONFIG["filesTable"]
         ." WHERE gunid='$escapedValue'";
-        
+
         $this->md = $CC_DBC->getRow($sql);
-       
+
         if (PEAR::isError($this->md)) {
             $error = $this->md;
             $this->md = null;
@@ -511,7 +511,7 @@ class StoredFile {
                 $compatibilityData[$xmlName] = $value;
             }
         }
-        
+
         //$this->md = array_merge($this->md, $compatibilityData);
         $this->md = $compatibilityData;
     }
@@ -706,7 +706,7 @@ class StoredFile {
         $sql = "SELECT *"
         ." FROM ".$CC_CONFIG['filesTable']
         ." WHERE $cond";
-       
+
         $row = $CC_DBC->getRow($sql);
         if (PEAR::isError($row) || is_null($row)) {
             return $row;
@@ -1784,7 +1784,7 @@ class StoredFile {
 		    (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
 
 		return StoredFile::searchFiles($fromTable, $datatables);
-	
+
 	}
 
 	public static function searchPlaylistsForSchedule($p_length, $datatables) {
@@ -1793,9 +1793,9 @@ class StoredFile {
 
 		$datatables["optWhere"][] = "plt.length <= INTERVAL '{$p_length}'";
         $datatables["optWhere"][] = "plt.length > INTERVAL '00:00:00'";
-		
+
 		return StoredFile::searchFiles($fromTable, $datatables);
-	}	
+	}
 
 	public static function searchFiles($fromTable, $data)
 	{
@@ -1814,8 +1814,8 @@ class StoredFile {
 
 		//	Where clause
 		if(isset($data["optWhere"])) {
-		
-			$where[] = join(" AND ", $data["optWhere"]);	
+
+			$where[] = join(" AND ", $data["optWhere"]);
 		}
 
 		if(isset($searchTerms)) {
@@ -1823,7 +1823,7 @@ class StoredFile {
 			$searchCols = array();
 
 			for($i=0; $i<$data["iColumns"]; $i++) {
-		
+
 				if($data["bSearchable_".$i] == "true") {
 					$searchCols[] = $columnsDisplayed[$i];
 				}
@@ -1832,14 +1832,14 @@ class StoredFile {
 			$outerCond = array();
 
 			foreach($searchTerms as $term) {
-			
+
 				$innerCond = array();
 
 				foreach($searchCols as $col) {
-
-					$innerCond[] = "{$col}::text ILIKE '%{$term}%'"; 
+                    $escapedTerm = pg_escape_string($term);
+					$innerCond[] = "{$col}::text ILIKE '%{$escapedTerm}%'"; 
 				}
-				$outerCond[] = "(".join(" OR ", $innerCond).")";			
+				$outerCond[] = "(".join(" OR ", $innerCond).")";
 			}
 			$where[] = "(".join(" AND ", $outerCond).")";
 		}
@@ -1869,12 +1869,12 @@ class StoredFile {
 		else {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
-		
+
 		$results = $CC_DBC->getAll($sql);
 		//echo $results;
 		//echo $sql;
 
-		//put back to default fetch mode.		
+		//put back to default fetch mode.
 		$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 		if(!isset($totalDisplayRows)) {
@@ -1883,8 +1883,8 @@ class StoredFile {
 
 		return array("sEcho" => intval($data["sEcho"]), "iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
 
-		
-		
+
+
 
 		/*
 
@@ -1921,7 +1921,7 @@ class StoredFile {
 
 				$and_cond[] = $string;
 			}
-		
+
 			if(count($and_cond) > 0) {
 				$or_cond[] = "(".join(" ".$inner." ", $and_cond).")";
 			}
@@ -1958,4 +1958,4 @@ class StoredFile {
 	}
 
 }
-?>
+

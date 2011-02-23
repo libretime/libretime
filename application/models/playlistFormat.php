@@ -110,8 +110,3 @@ $playlistFormat = array(
 */
 );
 
-/*
-?
-ls:filename                          Text       auto
-*/
-?>

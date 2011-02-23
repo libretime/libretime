@@ -11,7 +11,7 @@
 
 <div id="Panel">
     <div class="logo"></div>
-    <?= $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs())) ?>
+    <?php echo $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs())) ?>
 
 <?php 	$partial = array('menu.phtml', 'default');
 		$this->navigation()->menu()->setPartial($partial); ?>

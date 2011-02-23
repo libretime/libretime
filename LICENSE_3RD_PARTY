@@ -1,27 +1,72 @@
 This application uses the following 3rd Party software:
- * Zend Framework (New BSD license, compatible with GPL)
- * Liquidsoap (GPLv2, we only call this as an executable)
- * PEAR (Ok to ship with GPLed code, see: http://pear.php.net/manual/en/faq.devs.php, see note [1])
- * poc-streamer (mp3cut)
- * PHP
+
+------------
+Linked code:
+------------
+ * Zend Framework 1.10.3 
+   - Web site: http://framework.zend.com/
+   - License: New BSD license
+   - Compatible with GPLv3: Yes
+
+ * PEAR
+   - Notes: We only use the PEAR base class PEAR_Error, in the "PEAR" PEAR library.
+   - License: New BSD License
+   - Compatible with GPLv3? Yes. 
+
+ * GetID3 
+   - Web site: http://getid3.sourceforge.net/
+   - License: GPLv2
+   - Compatible with GPLv3? Yes
+
+ * Propel ORM
+   - Web site: http://www.propelorm.org/
+   - License: MIT/Expat License
+   - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
+
+ * Phing 
+   - Web site: http://phing.info/trac/
+   - Note: Only used for development, not needed to run Airtime.
+   - License: LGPLv3
+
+----------------
+Non-linked code:
+----------------
+ * Linux
+
+ * Apache Web Server 2.2 
+   - Web site: http://httpd.apache.org/
+
+ * PostgreSQL 8.4 
+   - Web site: http://www.postgresql.org/
+   - License: The PostgreSQL License.  See http://www.opensource.org/licenses/postgresql
+
+ * PHP 5.3 
+   - Web site: http://www.php.net/
+   - License: The PHP License. See http://www.php.net/license/3_01.txt
+
+ * Python 2.6
+   - Web site: http://www.python.org/
+   - License: PSF License. See http://docs.python.org/license.html
+
+ * Liquidsoap (pre-release of 1.0) 
+   - Web site: http://savonet.sourceforge.net/
+   - License: GPLv2
+
+ * mp3cut from the package poc-streamer
+
+ * jQuery 
+   - Web site: http://jquery.com/
+   - License: MIT and GPL.  See http://jquery.org/license
+
+   - jQuery components used:
+     * Full Calendar 
+       - Web site: http://arshaw.com/fullcalendar/
+       - License: Dual licensed under MIT and GPLv2
+
+     * Colorpicker 
+       - Web site: http://www.eyecon.ro/colorpicker/
+       - License: Dual licensed under the MIT and GPL licenses.
 
 
-[1] PEAR Note (from http://pear.php.net/manual/en/faq.devs.php):
-"""
-From time to time people raise concerns of using PEAR packages licensed under the PHP license in GPL'ed code. In a discussion about this topic, the creator of PHP, Rasmus Lerdorf, issued the following statement:
 
-    It all comes down to semantics of what linking means. The PHP license is pretty much identical to the Apache license and you could indeed make a case for not allowing any GPL'ed software to be "linked to" from Apache either.
-
-    See http://www.apache.org/licenses/LICENSE-1.1.
-
-    The PHP license was chosen to match the Apache license because Apache and PHP are tied so closely to each other.
-
-    This hair splitting over linking, derivation and aggregation has been going on since the beginning of time. My stance is that you can indeed ship PHP licensed PEAR components on the same cd or in the same tarball as GPL'ed code because I see it as an aggregate work. This changes if you take PEAR code, modify it and copy-paste it directly into your own work. Then it moves from aggregate to derived. But the intent of the PEAR components is to be used in aggregate form. The PHP license allows you to use it in derived form as well, of course, but then you should be choosing a license other than the GPL for the derived work.
-
-    The FSF has a FAQ on aggregation here: http://www.fsf.org/licensing/licenses/gpl-faq.html#MereAggregation
-
-    That text is heavily biased towards compiled software and they talk about executables and memory spaces which don't really apply in this case. If you don't consider using a PEAR component as aggregation then it logically follows that you also cannot have Apache call your code so you will have to stipulate that nobody can use your code from Apache. I think this is an extreme interpretation that pretty much nobody out there shares.
-
-    In short, I don't see an issue here. Move along.
-"""
 

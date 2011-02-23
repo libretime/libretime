@@ -11,7 +11,7 @@ from xml.dom.minidom import Node
 
 #Read the universal values
 parser = ConfigParser.SafeConfigParser()
-parser.read('database.conf')
+parser.read('airtime.conf')
 section_names = parser.sections();
 items_in_section = parser.items(section_names[0])
 

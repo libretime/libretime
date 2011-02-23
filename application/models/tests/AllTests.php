@@ -21,4 +21,4 @@ $result = PHPUnit::run($suite);
 
 echo $result->toString();
 
-?>
+

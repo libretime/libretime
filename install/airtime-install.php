@@ -15,33 +15,54 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
+createAPIKey();
+
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/../application/models/GreenBox.php');
 require_once(dirname(__FILE__).'/installInit.php');
+
+
+function rand_string($len=20, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+{
+    $string = '';
+    for ($i = 0; $i < $len; $i++)
+    {
+        $pos = mt_rand(0, strlen($chars)-1);
+        $string .= $chars{$pos};
+    }
+    return $string;
+}
+
+function createAPIKey(){
+
+    $api_key = rand_string();
+    updateINIKeyValues('../build/airtime.conf', 'api_key', $api_key);
+    updateINIKeyValues('../pypo/config.cfg', 'api_key', "'$api_key'");
+}
 
 function checkIfRoot(){
     // Need to check that we are superuser before running this.
     if(exec("whoami") != "root"){
       echo "Must be root user.\n";
       exit(1);
-    }    
+    }
 }
 
-// Need to check if build.properties project home is set correctly.
-function setBuildPropertiesPath(){
-    $property = 'project.home';
-    $lines = file('../build/build.properties');
-    foreach ($lines as $key => &$line) {
-        if ($property == substr($line, 0, strlen($property))){
-            $line = $property." = ".realpath(__dir__.'/../')."\n";
-        }
+function updateINIKeyValues($filename, $property, $value){
+    $lines = file($filename);
+    $n=count($lines);
+    for ($i=0; $i<$n; $i++) {
+        if (strlen($lines[$i]) > strlen($property))
+            if ($property == substr($lines[$i], 0, strlen($property))){
+                $lines[$i] = "$property = $value\n";
+            }
     }
 
-    $fp=fopen('../build/build.properties', 'w');
-    foreach($lines as $key => $line){
-        fwrite($fp, $line);
+    $fp=fopen($filename, 'w');
+    for($i=0; $i<$n; $i++){
+        fwrite($fp, $lines[$i]);
     }
-    fclose($fp);         
+    fclose($fp);
 }
 
 function directorySetup($CC_CONFIG){
@@ -69,13 +90,13 @@ echo " *** Directory Setup ***\n";
             //exit(1);
         }
         $CC_CONFIG[$d] = $rp;
-    }   
+    }
 }
 
 
 
 checkIfRoot();
-setBuildPropertiesPath();
+updateINIKeyValues('../build/build.properties', 'project.home', realpath(__dir__.'/../'));
 
 echo "******************************** Install Begin *********************************\n";
 
@@ -132,4 +153,4 @@ $command = __DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/nul
 $command = "python ".__DIR__."/../pypo/install/pypo-install.py";
 system($command);
 echo "******************************* Install Complete *******************************\n";
-?>
+

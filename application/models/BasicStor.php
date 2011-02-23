@@ -2182,5 +2182,5 @@ class BasicStor {
         fclose($fp);
     }
 
-    } // class BasicStor
-    ?>
+} // class BasicStor
+

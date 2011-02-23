@@ -1723,4 +1723,3 @@ class GreenBox extends BasicStor {
     } // fn removePerm
 
 } // class GreenBox
-?>

@@ -8,8 +8,6 @@ import time
 
 import logging
 
-from util import json
-
 import os
 import socket
 

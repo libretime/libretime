@@ -140,4 +140,3 @@ $comm = "ls -l ".$CC_CONFIG['storageDir']."/a23"; echo `$comm`;
 if(file_exists("../trans/log")) echo `tail -n 25 ../trans/log`;
 echo "#Transport test: OK.\n\n";
 */
-?>

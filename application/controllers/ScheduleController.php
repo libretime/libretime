@@ -146,24 +146,23 @@ class ScheduleController extends Zend_Controller_Action
 
 		$params = '/format/json/id/#id#';
 
-		if(strtotime($today_timestamp) < strtotime($show->getShowStart())) {
-
-            if($user->isAdmin()) {
-
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete');
-    
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Cancel Show');
+		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
+            if ($user->isHost($show->getShowId()) || $user->isAdmin()) {	      
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add Content');
             }
-            if($user->isHost($show->getShowId()) || $user->isAdmin()) {
-	      
-			    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Clear');
-
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Schedule');
+    }
+    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 'callback' => 'window["buildContentDialog"]'), 
+							'title' => 'Show Content');
+		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
+            if ($user->isAdmin()) {
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
+            }
+            if ($user->isHost($show->getShowId()) || $user->isAdmin()) {
+			          $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
             }
 		}
 
-        $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 'callback' => 'window["buildContentDialog"]'), 
-							'title' => 'Show Contents');
 		
 		//returns format jjmenu is looking for.
 		die(json_encode($menu));

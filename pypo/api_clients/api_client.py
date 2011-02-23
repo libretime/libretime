@@ -14,7 +14,7 @@ import sys
 import time
 import urllib
 import logging
-from util import json
+import json
 import os
 from urlparse import urlparse
 
@@ -118,7 +118,7 @@ class AirTimeApiClient(ApiClientInterface):
 			response = urllib.urlopen(url)
 			data = response.read()
 			logger.debug("Data: %s", data)
-			response_json = json.read(data)
+			response_json = json.loads(data)
 			version = response_json['version']
 			logger.debug("Airtime Version %s detected", version)    
 		except Exception, e:
@@ -223,7 +223,7 @@ class AirTimeApiClient(ApiClientInterface):
 		try:
 			response_json = urllib.urlopen(export_url).read()
 			#logger.debug("%s", response_json)
-			response = json.read(response_json)
+			response = json.loads(response_json)
 			#logger.info("export status %s", response['check'])
 			status = response['check']
 		except Exception, e:
@@ -281,7 +281,7 @@ class AirTimeApiClient(ApiClientInterface):
 		
 		try:
 			response = urllib.urlopen(url)
-			response = json.read(response.read())
+			response = json.loads(response.read())
 			logger.info("API-Status %s", response['status'])
 			logger.info("API-Message %s", response['message'])
 		
@@ -302,7 +302,7 @@ class AirTimeApiClient(ApiClientInterface):
 		if (data[0] != '{'):
 			return response
 		try:
-			data = json.read(data)
+			data = json.loads(data)
 			logger.debug(str(data))
 			schedule_id = data["schedule_id"]
 			url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
@@ -311,7 +311,7 @@ class AirTimeApiClient(ApiClientInterface):
 			url = url.replace("%%api_key%%", self.config["api_key"])
 			logger.debug(url)
 			response = urllib.urlopen(url)
-			response = json.read(response.read())
+			response = json.loads(response.read())
 			logger.info("API-Status %s", response['status'])
 			logger.info("API-Message %s", response['message'])
 		
@@ -329,7 +329,7 @@ class AirTimeApiClient(ApiClientInterface):
 		#
 		#try:
 		#	response = urllib.urlopen(url, self.api_auth)
-		#	response = json.read(response.read())
+		#	response = json.loads(response.read())
 		#	logger.debug("Trying to contact %s", url)
 		#	logger.info("API-Status %s", response['status'])
 		#	logger.info("API-Message %s", response['message'])
@@ -349,7 +349,7 @@ class AirTimeApiClient(ApiClientInterface):
 			data["schedule_id"] = playlist['id']
 		except Exception, e:
 			data["schedule_id"] = 0
-		data = json.write(data)
+		data = json.dumps(data)
 		return data
 	
 
@@ -404,7 +404,7 @@ class ObpApiClient():
 		try:    
 			logger.debug("Trying to contact %s", url)
 			response = urllib.urlopen(url, self.api_auth)
-			response_json = json.read(response.read())
+			response_json = json.loads(response.read())
 			obp_version = int(response_json['version'])
 			logger.debug("OBP Version %s detected", obp_version)
 	
@@ -471,7 +471,7 @@ class ObpApiClient():
 		try:
 			response_json = urllib.urlopen(export_url).read()
 			logger.debug("%s", response_json)
-			response = json.read(response_json)
+			response = json.loads(response_json)
 			logger.info("export status %s", response['check'])
 			status = response['check']
 		except Exception, e:
@@ -502,7 +502,7 @@ class ObpApiClient():
 		
 		try:
 			response = urllib.urlopen(url, self.api_auth)
-			response = json.read(response.read())
+			response = json.loads(response.read())
 			logger.info("API-Status %s", response['status'])
 			logger.info("API-Message %s", response['message'])
 	
@@ -536,7 +536,7 @@ class ObpApiClient():
 		
 		try:
 			response = urllib.urlopen(url, self.api_auth)
-			response = json.read(response.read())
+			response = json.loads(response.read())
 			logger.info("API-Status %s", response['status'])
 			logger.info("API-Message %s", response['message'])
 			logger.info("TXT %s", response['str_dls'])
@@ -556,7 +556,7 @@ class ObpApiClient():
 		
 		try:
 			response = urllib.urlopen(url, self.api_auth)
-			response = json.read(response.read())
+			response = json.loads(response.read())
 			logger.debug("Trying to contact %s", url)
 			logger.info("API-Status %s", response['status'])
 			logger.info("API-Message %s", response['message'])
@@ -580,6 +580,6 @@ class ObpApiClient():
 			data["playlist_id"] = 0
 			data["user_id"] = 0
 			data["transmission_id"] = 0
-		data = json.write(data)
+		data = json.dumps(data)
 		return data
 	
