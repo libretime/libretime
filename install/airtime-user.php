@@ -80,8 +80,10 @@ if ($action == "addupdate") {
 		$user = new User($id);
 	}
 
-	echo "Enter password: ";
-	$line = trim(fgets(fopen("php://stdin","r")));
+	do{
+		echo "Enter password (min 6 characters): ";
+		$line = trim(fgets(fopen("php://stdin","r")));
+	}while(strlen($line) < 6);
 	$user->setPassword($line);
 	
 	do{
