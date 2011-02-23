@@ -149,25 +149,12 @@ class ApiController extends Zend_Controller_Action
 
         $schedule_group_id = $this->_getParam("schedule_id");
         $media_id = $this->_getParam("media_id");
-        $f = StoredFile::RecallByGunid($media_id);
+        $result = Schedule::UpdateMediaPlayedStatus($media_id);
 
-        if (is_numeric($schedule_group_id)) {
-            $sg = new ScheduleGroup($schedule_group_id);
-            if ($sg->exists()) {
-                $result = $sg->notifyMediaItemStartPlay($f->getId());
-                if (!PEAR::isError($result)) {
-                    echo json_encode(array("status"=>1, "message"=>""));
-                    exit;
-                } else {
-                    echo json_encode(array("status"=>0, "message"=>"DB Error:".$result->getMessage()));
-                    exit;
-                }
-            } else {
-                echo json_encode(array("status"=>0, "message"=>"Schedule group does not exist: ".$schedule_group_id));
-                exit;
-            }
+        if (!PEAR::isError($result)) {
+            echo json_encode(array("status"=>1, "message"=>""));
         } else {
-            echo json_encode(array("status"=>0, "message" => "Incorrect or non-numeric arguments given."));
+            echo json_encode(array("status"=>0, "message"=>"DB Error:".$result->getMessage()));
         }
     }
 

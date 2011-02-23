@@ -400,8 +400,8 @@ class Schedule {
             ." SUM(clip_length) AS clip_length,"
             ." MIN(file_id) AS file_id, COUNT(*) as count,"
             ." MIN(playlist_id) AS playlist_id, MIN(starts) AS starts, MAX(ends) AS ends"
-            ." FROM ".$CC_CONFIG["scheduleTable"]
-            ." LEFT JOIN ".$CC_CONFIG["playListTable"]." ON playlist_id = ".$CC_CONFIG["playListTable"].".id"
+            ." FROM $CC_CONFIG[scheduleTable]"
+            ." LEFT JOIN $CC_CONFIG[playListTable] ON playlist_id = $CC_CONFIG[playListTable].id"
             ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') AND (ends <= TIMESTAMP '$p_toDateTime')"
             ." GROUP BY group_id"
             ." ORDER BY starts";
@@ -473,7 +473,7 @@ class Schedule {
     public static function Get_Scheduled_Item_Data($timeStamp, $timePeriod=0, $count = 0, $interval="0 hours"){
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.group_id, show.name as show_name, st.instance_id"
+        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.media_item_played, st.group_id, show.name as show_name, st.instance_id"
         ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
         ." WHERE st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
@@ -498,6 +498,14 @@ class Schedule {
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
 	}
+
+    public static function UpdateMediaPlayedStatus($id){
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
+                ." SET media_item_played=TRUE"
+                ." WHERE id=$id";
+        return $CC_DBC->query($sql);
+    }
 
 
     /**
@@ -663,7 +671,8 @@ class Schedule {
                     $cueOut = Schedule::WallTimeToMillisecs($item["cue_out"]);
                 }
                 $medias[] = array(
-                    'id' => $storedFile->getGunid(), //$item["file_id"],
+                    'row_id' => $item["id"],
+                    'id' => $storedFile->getGunid(),
                     'uri' => $uri,
                     'fade_in' => Schedule::WallTimeToMillisecs($item["fade_in"]),
                     'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
