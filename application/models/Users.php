@@ -171,5 +171,14 @@ class User {
         
         return $CC_DBC->GetRow($sql);
     }
+    
+    public static function GetUserID($login){
+		$user = CcSubjsQuery::create()->findOneByDbLogin($login);
+		if (is_null($user)){
+			return -1;
+		} else {
+			return $user->getDbId();
+		}
+	}
 
 }

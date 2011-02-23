@@ -1,7 +1,12 @@
 #!/usr/bin/php
 <?php
-require_once(dirname(__FILE__).'/../conf.php');
-require_once(dirname(__FILE__).'/../Subjects.php');
+
+set_include_path('../application/models' . PATH_SEPARATOR . get_include_path());
+require_once(__DIR__.'/../library/propel/runtime/lib/Propel.php');
+Propel::init(__DIR__.'/../application/configs/airtime-conf.php');
+
+require_once(dirname(__FILE__).'/../application/configs/conf.php');
+require_once(dirname(__FILE__).'/../application/models/Users.php');
 require_once('DB.php');
 require_once('Console/Getopt.php');
 
@@ -22,51 +27,36 @@ function printUsage()
     echo "    This program allows you to manage Airtime users.\n";
     echo "\n";
     echo "OPTIONS:\n";
-    echo "    --addupdate <username> <password>\n";
-    echo "        Add the user or update the password for the user.\n";
+    echo "    --addupdate <username>\n";
+    echo "        Add the user or update user information.\n";
     echo "    --delete <username>\n";
     echo "        Remove the user.\n";
     echo "\n";
 }
 
-$parsedCommandLine = Console_Getopt::getopt($argv, null, array("addupdate", "delete"));
 
-if (PEAR::isError($parsedCommandLine)) {
-    printUsage();
-    exit(1);
-}
-$cmdLineOptions = $parsedCommandLine[0];
-if (count($parsedCommandLine[1]) == 0) {
+if (count($argv) != 3) {
     printUsage();
     exit;
 }
 
+
 $action = null;
-foreach ($cmdLineOptions as $tmpValue) {
-    $optionName = $tmpValue[0];
-    $optionValue = $tmpValue[1];
-    switch ($optionName) {
-        case '--addupdate':
-            $action = "addupdate";
-            break 2;
-        case "--delete":
-            $action = "delete";
-            break 2;
-    }
+switch ($argv[1]) {
+	case '--addupdate':
+		$action = "addupdate";
+		break;
+	case '--delete':
+		$action = "delete";
+		break;
 }
+
+$username = $argv[2];
 
 if (is_null($action)) {
     printUsage();
     exit;
 }
-
-if (count($parsedCommandLine) < 1) {
-    printUsage();
-    exit;
-}
-
-$username = $parsedCommandLine[1][0];
-$password = $parsedCommandLine[1][1];
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
@@ -75,28 +65,51 @@ if (PEAR::isError($CC_DBC)) {
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
+
 // Check if the user exists
-$user = Subjects::GetSubject($username);
+$id = User::GetUserID($username);
 
 if ($action == "addupdate") {
-    if (empty($password)) {
-        printUsage();
-        exit;
-    }
-    if (empty($user)) {
-        // Add the user.
-        $r = Subjects::AddSubj($username, $password);
+
+	if ($id < 0) {
+        echo "Creating user\n";
+		$user = new User("");
+		$user->setLogin($username);
     } else {
-        // Update the password
-        $r = Subjects::Passwd($username, NULL, $password);
-    }
-} elseif (($action == "delete") && (is_array($user))) {
-    // Delete the user
-    $r = Subjects::RemoveSubj($username);
-}
+		echo "Updating user\n";
+		$user = new User($id);
+	}
 
-if (PEAR::isError($r)) {
-    die($r->getMessage());
+	echo "Enter password: ";
+	$line = trim(fgets(fopen("php://stdin","r")));
+	$user->setPassword($line);
+	
+	do{
+		echo "Enter first name: ";
+		$line = trim(fgets(fopen("php://stdin","r")));
+	}while(strlen($line) < 1);
+	$user->setFirstName($line);
+	
+	do{
+		echo "Enter last name: ";
+		$line = trim(fgets(fopen("php://stdin","r")));
+	}while(strlen($line) < 1);
+	$user->setLastName($line);
+	
+	do{
+		echo "Enter user type [(A)dmin|(H)ost|(G)uest]: ";
+		$line = trim(fgets(fopen("php://stdin","r")));
+	} while($line != "A" && $line != "H" && $line != "G");
+	$user->setType($line);
+	$user->save();
+	
+} elseif ($action == "delete") {
+    if ($id < 0){  
+		echo "Username not found!\n";
+		exit;
+	} else {
+		echo "Deleting user\n";
+		$user = new User($id);
+		$user->delete();
+	}
 }
-exit(0);
-
