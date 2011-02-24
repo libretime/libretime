@@ -134,12 +134,10 @@ class LibraryController extends Zend_Controller_Action
     public function editFileMdAction()
     {
         $request = $this->getRequest();
-        $form = new Application_Form_EditAudioMD();
+        $form = new Application_Form_EditAudioMD(); 
 
-		$file_id = $this->_getParam('id', null);
-
+        $file_id = $this->_getParam('id', null);
 		$file = StoredFile::Recall($file_id);
-		$form->populate($file->md);  
  
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {  
@@ -150,7 +148,8 @@ class LibraryController extends Zend_Controller_Action
 				$this->_helper->redirector('index');
             }
         }
- 
+
+		$form->populate($file->md); 
         $this->view->form = $form;
     }
 

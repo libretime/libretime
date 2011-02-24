@@ -512,8 +512,8 @@ class StoredFile {
             }
         }
 
-        //$this->md = array_merge($this->md, $compatibilityData);
-        $this->md = $compatibilityData;
+        $this->md = array_merge($this->md, $compatibilityData);
+        //$this->md = $compatibilityData;
     }
 
     public function setFormat($p_value)
