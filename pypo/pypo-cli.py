@@ -692,11 +692,16 @@ class Playout:
 
             # Get any extra information for liquidsoap (which will be sent back to us)
             liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)            
-            logger.debug("Sending additional data to liquidsoap: "+str(liquidsoap_data["schedule_id"]))
+            logger.debug("Sending additional telnet data to liquidsoap: "+str(liquidsoap_data["schedule_id"]))
+
+            #skip the currently playing song if any.
+            logger.debug("source.skip\n")
+            tn.write("source.skip\n")
             
-            #Sending JSON string. Example: {"schedule_id":"13"}
+            #Sending schedule table row id string.
+            logger.debug("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
             tn.write("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
-                          
+                                      
             for line in pl_file.readlines():
                 line = line.strip()
                 logger.debug(line)

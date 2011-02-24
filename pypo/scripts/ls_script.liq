@@ -22,6 +22,22 @@ def crossfade(s)
   cross(fader,s)
 end
 
+# Add a skip function to a source
+# when it does not have one
+# by default
+def add_skip_command(s) =
+ # A command to skip
+ def skip(_) =
+   source.skip(s)
+   "Done!"
+ end
+ # Register the command:
+ server.register(namespace="source",
+                 usage="skip",
+                 description="Skip the current song.",
+                 "skip",skip)
+end
+
 server.register(namespace="vars", "pypo_data", fun (s) ->  begin pypo_data := s "Done" end)
 
 default = single("/opt/pypo/files/basic/silence.mp3")
@@ -31,6 +47,10 @@ s = fallback(track_sensitive=false, [queue, default])
 
 s = on_metadata(notify, s)
 s = crossfade(s)
+
+# Attach a skip command to the source s:
+add_skip_command(s)
+
 
 if output_sound_device then
 	out_device = out(s)
