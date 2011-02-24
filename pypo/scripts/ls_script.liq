@@ -10,9 +10,10 @@ queue = audio_to_stereo(queue)
 
 pypo_data = ref '0'
 
-#def notify(m)
-#  print("./notify.sh --data='#{!pypo_data}' --media-id=#{m['media_id']}")
-#end
+def notify(m)
+  system("./notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
+  print("./notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
+end
 
 def crossfade(s)
   s = fade.in(type="log", s)
@@ -28,7 +29,7 @@ default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 
 s = fallback(track_sensitive=false, [queue, default])
 
-#s = on_metadata(notify, s)
+s = on_metadata(notify, s)
 s = crossfade(s)
 
 if output_sound_device then
