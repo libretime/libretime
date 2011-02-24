@@ -52,7 +52,9 @@ function newSongStart(){
     nextSongPrepare = true;
     currentSong[0] = nextSongs.shift();
 
-    notifySongStart();
+    if (typeof notifySongStart == "function")
+        notifySongStart();
+    
 }
 
 function nextShowStart(){
@@ -60,7 +62,8 @@ function nextShowStart(){
     currentShow[0] = nextShow.shift();
 
     //call function in nowplayingdatagrid.js
-    notifyShowStart(currentShow[0]);
+    if (typeof notifyShowStart == "function")
+        notifyShowStart(currentShow[0]);
 }
 
 /* Called every "uiUpdateInterval" mseconds. */
@@ -82,7 +85,10 @@ function updateProgressBarValue(){
 			songPercentDone = 0;        
             currentSong = new Array();
 		} else {
-			$('#on-air-info').attr("class", "on-air-info on");
+            if (currentSong[0].media_item_played == "t")
+                $('#on-air-info').attr("class", "on-air-info on");
+            else
+                $('#on-air-info').attr("class", "on-air-info off");
             $('#progress-show').attr("class", "progress-show");
 		}
 	} else {
@@ -247,7 +253,7 @@ function init() {
                    width: 0,
                    radius: 4
                 },
-                name: 'light', // Use the default light style
+                name: 'light' // Use the default light style
              }
         });
 }

@@ -80,7 +80,7 @@ class Notify:
         logger.debug('#################################################')
         logger.debug('data = '+ str(data))
         response = self.api_client.notify_media_item_start_playing(data, media_id) 
-        logger.debug("Response: "+str(response))
+        logger.debug("Response: "+json.dumps(response))
 
 
 if __name__ == '__main__':

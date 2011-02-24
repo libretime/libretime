@@ -43,6 +43,6 @@ icecast_url = "http://airtime.sourcefabric.org"
 icecast_description = "Airtime Radio!"
 icecast_genre = "genre"
 
-output_sound_device = true
+output_sound_device = false
 output_icecast_vorbis = true
 output_icecast_mp3 = true

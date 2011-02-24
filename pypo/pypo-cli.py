@@ -383,8 +383,10 @@ class Playout:
                         fsize = 0
                         
                     if fsize > 0:
-                        pl_entry = 'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s":%s' % \
-                        (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), str(float(media['fade_out']) / 1000), dst)
+                        pl_entry = \
+                        'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",schedule_table_id="%s":%s'\
+                        % (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), \
+                            str(float(media['fade_out']) / 1000), media['row_id'],dst)
 
                         logger.debug(pl_entry)
 
@@ -686,6 +688,14 @@ class Playout:
             time.sleep(sleep_time)
                         
             tn = telnetlib.Telnet(LS_HOST, 1234)
+
+
+            # Get any extra information for liquidsoap (which will be sent back to us)
+            liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)            
+            logger.debug("Sending additional data to liquidsoap: "+str(liquidsoap_data["schedule_id"]))
+            
+            #Sending JSON string. Example: {"schedule_id":"13"}
+            tn.write("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
                           
             for line in pl_file.readlines():
                 line = line.strip()
