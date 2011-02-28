@@ -28,16 +28,6 @@ $CC_CONFIG = array(
     // main directory for storing binary media files
     'storageDir'    =>  "$baseFilesDir/stor",
 
-    // directory for temporary files
- 	'bufferDir'     =>  "$baseFilesDir/stor/buffer",
-
-    // directory for incomplete transferred files
- 	'transDir'      =>  "$baseFilesDir/trans",
-
-    // directory for symlinks to accessed files
-    'accessDir'     =>  "$baseFilesDir/access",
-    'cronDir'       =>  "$baseFilesDir/cron",
-
     "rootDir" => __DIR__."/../..",
     'pearPath'      =>  dirname(__FILE__).'/../../library/pear',
     'zendPath'      =>  dirname(__FILE__).'/../../library/Zend',
