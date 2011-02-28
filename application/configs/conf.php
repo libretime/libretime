@@ -6,6 +6,7 @@ define('CAMPCASTER_COPYRIGHT_DATE', '2010');
 global $CC_CONFIG;
 
 $values = load_airtime_config();
+$baseFilesDir = __DIR__.'/../../files';
 
 $CC_CONFIG = array(
     // Database config
@@ -21,21 +22,11 @@ $CC_CONFIG = array(
 
     'apiKey' => $values['api_key'],
 
-    'apiPath' => "/api/",
+    'apiPath' => '/api/',
 
-    'baseFilesDir' => __DIR__."/../../files",
+    'baseFilesDir' => $baseFilesDir,
     // main directory for storing binary media files
-    'storageDir'    =>  __DIR__.'/../../files/stor',
-
-    // directory for temporary files
- 	'bufferDir'     =>  __DIR__.'/../../files/stor/buffer',
-
-    // directory for incomplete transferred files
- 	'transDir'      =>  __DIR__.'/../../files/trans',
-
-    // directory for symlinks to accessed files
-    'accessDir'     =>  __DIR__.'/../../files/access',
-    'cronDir'       =>  __DIR__.'/../../files/cron',
+    'storageDir'    =>  "$baseFilesDir/stor",
 
     "rootDir" => __DIR__."/../..",
     'pearPath'      =>  dirname(__FILE__).'/../../library/pear',

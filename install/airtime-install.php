@@ -73,7 +73,7 @@ echo " *** Directory Setup ***\n";
     foreach (array('baseFilesDir', 'storageDir') as $d) {
         $test = file_exists($CC_CONFIG[$d]);
         if ( $test === FALSE ) {
-            @mkdir($CC_CONFIG[$d], 02775);
+            @mkdir($CC_CONFIG[$d], 02775, true);
             if (file_exists($CC_CONFIG[$d])) {
                 $rp = realpath($CC_CONFIG[$d]);
                 echo "   * Directory $rp created\n";
