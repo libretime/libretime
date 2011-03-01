@@ -177,7 +177,7 @@ function eventRender(event, element, view) {
 function eventAfterRender( event, element, view ) {
 
     $(element)
-		.jjmenu("rightClick", 
+		.jjmenu("click", 
 			[{get:"/Schedule/make-context-menu/format/json/id/#id#"}],  
 			{id: event.id}, 
 			{xposition: "mouse", yposition: "mouse"});

@@ -52,7 +52,7 @@ function addLibraryItemEvents() {
 		});
 
 	$('#library_display tbody tr')
-		.jjmenu("rightClick", 
+		.jjmenu("click", 
 			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],  
 			{id: getId, type: getType}, 
 			{xposition: "mouse", yposition: "mouse"});
@@ -74,7 +74,7 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
 	$(nRow).attr("id", type+'_'+id);
 
-    $(nRow).qtip({
+    $('td:eq(5) img', nRow).qtip({
 
         content: {
             url: '/Library/get-file-meta-data',
@@ -85,20 +85,14 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                button: 'Close' // Show a close link in the title
             }
          },
+        
          position: {
-            corner: {
-               //target: 'leftMiddle'
-               tooltip: 'rightMiddle'
-            },
+        
             adjust: {
                screen: true // Keep the tooltip on-screen at all times
             }
          },
-         show: { 
-            when: 'click', 
-            solo: true // Only show one tooltip at a time
-         },
-         hide: 'click',
+        
          style: {
             border: {
                width: 0,

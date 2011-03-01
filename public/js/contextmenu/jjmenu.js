@@ -44,7 +44,7 @@
 		{
 			global.click( 
                     function(event) {
-                        if (this == event.target) {
+                        if (this == event.currentTarget) {
                             global.pageX = event.pageX;
                             global.pageY = event.pageY;
         					event.preventDefault();
