@@ -2,7 +2,7 @@
 CREDITS
 =======
 
-Version 1.6.0 
+Version 1.6.1
 -------------
 This version marks a major change to the project, completely replacing the
 custom audio player with liquidsoap, dropping the custom desktop GUI, and 

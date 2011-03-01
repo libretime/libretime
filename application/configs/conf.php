@@ -1,5 +1,5 @@
 <?php
-define('CAMPCASTER_VERSION', '1.6.0-alpha');
+define('CAMPCASTER_VERSION', '1.6.1-GA');
 define('CAMPCASTER_COPYRIGHT_DATE', '2010');
 
 // These are the default values for the config.
