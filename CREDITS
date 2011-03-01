@@ -4,6 +4,11 @@ CREDITS
 
 Version 1.6.1
 -------------
+This version fixes an issue with playback problems after 48 hours into a
+schedule, as well as some security fixes.
+
+Version 1.6.0
+-------------
 This version marks a major change to the project, completely replacing the
 custom audio player with liquidsoap, dropping the custom desktop GUI, and 
 completely rewriting the web interface. The project has also been renamed
