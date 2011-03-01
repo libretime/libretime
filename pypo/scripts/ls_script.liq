@@ -5,10 +5,11 @@ set("log.file.path", log_file)
 set("log.stdout", true)
 set("server.telnet", true)
 
-queue = request.queue(conservative=true,length=600.,id="queue")
+queue = request.queue(id="queue")
 queue = audio_to_stereo(queue)
 
 pypo_data = ref '0'
+web_stream_enabled = ref false
 
 def notify(m)
   system("./notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
@@ -39,6 +40,7 @@ def add_skip_command(s) =
 end
 
 server.register(namespace="vars", "pypo_data", fun (s) ->  begin pypo_data := s "Done" end)
+server.register(namespace="vars", "web_stream_enabled", fun (s) ->  begin web_stream_enabled := (s == "true") string_of(!web_stream_enabled) end)
 
 default = single("/opt/pypo/files/basic/silence.mp3")
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
@@ -51,6 +53,14 @@ s = crossfade(s)
 # Attach a skip command to the source s:
 add_skip_command(s)
 
+web_stream_source = input.http(id="web_stream", autostart = false, "")
+
+s = switch(track_sensitive = false,
+    [
+      ({ !web_stream_enabled }, web_stream_source),
+      ({ true }, s)
+    ]
+)
 
 if output_sound_device then
 	out_device = out(s)
