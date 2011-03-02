@@ -36,7 +36,7 @@ from configobj import ConfigObj
 from util import *
 from api_clients import *
 
-PYPO_VERSION = '0.2'
+PYPO_VERSION = '1.1'
 
 # Set up command-line options
 parser = OptionParser()
@@ -75,15 +75,53 @@ except Exception, e:
 
 class Global:
     def __init__(self):
-        print
-
+        self.api_client = api_client.api_client_factory(config)
+        self.cue_file = CueFile()
+        self.set_export_source('scheduler')
+        
     def selfcheck(self):
         self.api_client = api_client.api_client_factory(config)
         if (not self.api_client.is_server_compatible()):
             sys.exit()
 
+    def set_export_source(self, export_source):
+        self.export_source = export_source
+        self.cache_dir = config["cache_dir"] + self.export_source + '/'
+        self.schedule_file = self.cache_dir + 'schedule.pickle'
+        self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
+        
+    def test_api(self):
+        self.api_client.test()
 
-class Playout:
+    def check_schedule(self, export_source):
+        logger = logging.getLogger()
+
+        try:
+            schedule_file = open(self.schedule_file, "r")
+            schedule = pickle.load(schedule_file)
+            schedule_file.close()
+
+        except Exception, e:
+            logger.error("%s", e)
+            schedule = None
+
+        for pkey in sorted(schedule.iterkeys()):
+            playlist = schedule[pkey]
+            print '*****************************************'
+            print '\033[0;32m%s %s\033[m' % ('scheduled at:', str(pkey))
+            print 'cached at :   ' + self.cache_dir + str(pkey)
+            print 'subtype:      ' + str(playlist['subtype'])
+            print 'played:       ' + str(playlist['played'])
+            print 'schedule id:  ' + str(playlist['schedule_id'])
+            print 'duration:     ' + str(playlist['duration'])
+            print 'source id:    ' + str(playlist['x_ident'])
+            print '-----------------------------------------'
+
+            for media in playlist['medias']:
+                print media
+
+
+class PypoPush:
     def __init__(self):
         self.api_client = api_client.api_client_factory(config)
         self.cue_file = CueFile()
@@ -97,20 +135,182 @@ class Playout:
         self.push_ahead = 15
         self.push_ahead2 = 10
 
-        self.range_updated = False
+    def set_export_source(self, export_source):
+        self.export_source = export_source
+        self.cache_dir = config["cache_dir"] + self.export_source + '/'
+        self.schedule_file = self.cache_dir + 'schedule.pickle'
+        self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
+        
+    """
+    The Push Loop - the push loop periodically (minimal 1/2 of the playlist-grid)
+    checks if there is a playlist that should be scheduled at the current time.
+    If yes, the temporary liquidsoap playlist gets replaced with the corresponding one,
+    then liquidsoap is asked (via telnet) to reload and immediately play it.
+    """
+    def push(self, export_source):
+        logger = logging.getLogger()
+
+        self.schedule = self.load_schedule()
+        playedItems = self.load_schedule_tracker()
+
+        tcoming = time.localtime(time.time() + self.push_ahead)
+        tcoming2 = time.localtime(time.time() + self.push_ahead2)
+        tnow = time.localtime(time.time())
+
+        str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
+        str_tcoming2_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming2[0], tcoming2[1], tcoming2[2], tcoming2[3], tcoming2[4], tcoming2[5])
+
+        if self.schedule == None:
+            logger.warn('Unable to loop schedule - maybe write in progress?')
+            logger.warn('Will try again in next loop.')
+
+        else:
+            for pkey in self.schedule:
+                playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
+                if pkey[0:19] == str_tcoming_s or (pkey[0:19] < str_tcoming_s and pkey[0:19] > str_tcoming2_s and not playedFlag):
+                    logger.debug('Preparing to push playlist scheduled at: %s', pkey)
+                    playlist = self.schedule[pkey]
+
+                    ptype = playlist['subtype']
+
+                    # We have a match, replace the current playlist and
+                    # force liquidsoap to refresh.
+                    if (self.push_liquidsoap(pkey, self.schedule, ptype) == 1):
+                        logger.debug("Pushed to liquidsoap, updating 'played' status.")
+                        # Marked the current playlist as 'played' in the schedule tracker
+                        # so it is not called again in the next push loop.
+                        # Write changes back to tracker file.
+                        playedItems[pkey] = playlist
+                        playedItems[pkey]['played'] = 1
+                        schedule_tracker = open(self.schedule_tracker_file, "w")
+                        pickle.dump(playedItems, schedule_tracker)
+                        schedule_tracker.close()
+                        logger.debug("Wrote schedule to disk: "+str(json.dumps(playedItems)))
+
+                        # Call API to update schedule states
+                        logger.debug("Doing callback to server to update 'played' status.")
+                        self.api_client.notify_scheduled_item_start_playing(pkey, self.schedule)
 
 
-    def test_api(self):
-        self.api_client.test()
+    def push_liquidsoap(self, pkey, schedule, ptype):
+        logger = logging.getLogger()
+        src = self.cache_dir + str(pkey) + '/list.lsp'
 
+        try:
+            if True == os.access(src, os.R_OK):
+                logger.debug('OK - Can read playlist file')
+
+            pl_file = open(src, "r")
+            file_content = pl_file.read()
+            pl_file.close()
+            logger.debug('file content: %s' % (file_content))
+            playlist = json.loads(file_content)
+
+            #strptime returns struct_time in local time
+            #mktime takes a time_struct and returns a floating point
+            #gmtime Convert a time expressed in seconds since the epoch to a struct_time in UTC
+            #mktime: expresses the time in local time, not UTC. It returns a floating point number, for compatibility with time().
+            epoch_start = calendar.timegm(time.gmtime(time.mktime(time.strptime(pkey, '%Y-%m-%d-%H-%M-%S'))))
+
+            #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
+            epoch_now = time.time()
+
+            logger.debug("Epoch start: " + str(epoch_start))
+            logger.debug("Epoch now: " + str(epoch_now))
+
+            sleep_time = epoch_start - epoch_now;
+
+            if sleep_time < 0:
+                sleep_time = 0
+
+            logger.debug('sleeping for %s s' % (sleep_time))
+            time.sleep(sleep_time)
+
+            tn = telnetlib.Telnet(LS_HOST, 1234)
+
+            #skip the currently playing song if any.
+            logger.debug("source.skip\n")
+            tn.write("source.skip\n")
+
+            # Get any extra information for liquidsoap (which will be sent back to us)
+            liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)
+
+            #Sending schedule table row id string.
+            logger.debug("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
+            tn.write("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
+
+            for item in playlist:
+                annotate = str(item['annotate'])
+                logger.debug(annotate)
+                tn.write('queue.push %s' % (annotate))
+                tn.write("\n")
+
+            tn.write("exit\n")
+            logger.debug(tn.read_all())
+
+            status = 1
+        except Exception, e:
+            logger.error('%s', e)
+            status = 0
+
+        return status
+
+
+    def load_schedule(self):
+        logger = logging.getLogger()
+        schedule = None
+
+        # create the file if it doesnt exist
+        if (not os.path.exists(self.schedule_file)):
+            logger.debug('creating file ' + self.schedule_file)
+            open(self.schedule_file, 'w').close()
+        else:
+            # load the schedule from cache
+            #logger.debug('loading schedule file '+self.schedule_file)
+            try:
+                schedule_file = open(self.schedule_file, "r")
+                schedule = pickle.load(schedule_file)
+                schedule_file.close()
+
+            except Exception, e:
+                logger.error('%s', e)
+
+        return schedule
+
+
+    def load_schedule_tracker(self):
+        logger = logging.getLogger()
+        playedItems = dict()
+
+        # create the file if it doesnt exist
+        if (not os.path.exists(self.schedule_tracker_file)):
+            logger.debug('creating file ' + self.schedule_tracker_file)
+            schedule_tracker = open(self.schedule_tracker_file, 'w')
+            pickle.dump(playedItems, schedule_tracker)
+            schedule_tracker.close()
+        else:
+            try:
+                schedule_tracker = open(self.schedule_tracker_file, "r")
+                playedItems = pickle.load(schedule_tracker)
+                schedule_tracker.close()
+            except Exception, e:
+                logger.error('Unable to load schedule tracker file: %s', e)
+
+        return playedItems
+
+
+class PypoFetch:
+    def __init__(self):
+        self.api_client = api_client.api_client_factory(config)
+        self.cue_file = CueFile()
+        self.set_export_source('scheduler')
 
     def set_export_source(self, export_source):
         self.export_source = export_source
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
         self.schedule_file = self.cache_dir + 'schedule.pickle'
         self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
-
-
+    
     """
     Fetching part of pypo
     - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
@@ -363,193 +563,6 @@ class Playout:
                     logger.error("%s", e)
 
 
-    """
-    The Push Loop - the push loop periodically (minimal 1/2 of the playlist-grid)
-    checks if there is a playlist that should be scheduled at the current time.
-    If yes, the temporary liquidsoap playlist gets replaced with the corresponding one,
-    then liquidsoap is asked (via telnet) to reload and immediately play it.
-    """
-    def push(self, export_source):
-        logger = logging.getLogger()
-
-        self.schedule = self.load_schedule()
-        playedItems = self.load_schedule_tracker()
-
-        tcoming = time.localtime(time.time() + self.push_ahead)
-        tcoming2 = time.localtime(time.time() + self.push_ahead2)
-        tnow = time.localtime(time.time())
-
-        str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
-        str_tcoming2_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming2[0], tcoming2[1], tcoming2[2], tcoming2[3], tcoming2[4], tcoming2[5])
-
-        if self.schedule == None:
-            logger.warn('Unable to loop schedule - maybe write in progress?')
-            logger.warn('Will try again in next loop.')
-
-        else:
-            for pkey in self.schedule:
-                playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
-                if pkey[0:19] == str_tcoming_s or (pkey[0:19] < str_tcoming_s and pkey[0:19] > str_tcoming2_s and not playedFlag):
-                    logger.debug('Preparing to push playlist scheduled at: %s', pkey)
-                    playlist = self.schedule[pkey]
-
-                    ptype = playlist['subtype']
-
-                    # We have a match, replace the current playlist and
-                    # force liquidsoap to refresh.
-                    if (self.push_liquidsoap(pkey, self.schedule, ptype) == 1):
-                        logger.debug("Pushed to liquidsoap, updating 'played' status.")
-                        # Marked the current playlist as 'played' in the schedule tracker
-                        # so it is not called again in the next push loop.
-                        # Write changes back to tracker file.
-                        playedItems[pkey] = playlist
-                        playedItems[pkey]['played'] = 1
-                        schedule_tracker = open(self.schedule_tracker_file, "w")
-                        pickle.dump(playedItems, schedule_tracker)
-                        schedule_tracker.close()
-                        logger.debug("Wrote schedule to disk: "+str(json.dumps(playedItems)))
-
-                        # Call API to update schedule states
-                        logger.debug("Doing callback to server to update 'played' status.")
-                        self.api_client.notify_scheduled_item_start_playing(pkey, self.schedule)
-
-
-    def load_schedule(self):
-        logger = logging.getLogger()
-        schedule = None
-
-        # create the file if it doesnt exist
-        if (not os.path.exists(self.schedule_file)):
-            logger.debug('creating file ' + self.schedule_file)
-            open(self.schedule_file, 'w').close()
-        else:
-            # load the schedule from cache
-            #logger.debug('loading schedule file '+self.schedule_file)
-            try:
-                schedule_file = open(self.schedule_file, "r")
-                schedule = pickle.load(schedule_file)
-                schedule_file.close()
-
-            except Exception, e:
-                logger.error('%s', e)
-
-        return schedule
-
-
-    def load_schedule_tracker(self):
-        logger = logging.getLogger()
-        playedItems = dict()
-
-        # create the file if it doesnt exist
-        if (not os.path.exists(self.schedule_tracker_file)):
-            logger.debug('creating file ' + self.schedule_tracker_file)
-            schedule_tracker = open(self.schedule_tracker_file, 'w')
-            pickle.dump(playedItems, schedule_tracker)
-            schedule_tracker.close()
-        else:
-            try:
-                schedule_tracker = open(self.schedule_tracker_file, "r")
-                playedItems = pickle.load(schedule_tracker)
-                schedule_tracker.close()
-            except Exception, e:
-                logger.error('Unable to load schedule tracker file: %s', e)
-
-        return playedItems
-
-
-    def push_liquidsoap(self, pkey, schedule, ptype):
-        logger = logging.getLogger()
-        src = self.cache_dir + str(pkey) + '/list.lsp'
-
-        try:
-            if True == os.access(src, os.R_OK):
-                logger.debug('OK - Can read playlist file')
-
-            pl_file = open(src, "r")
-            file_content = pl_file.read()
-            pl_file.close()
-            logger.debug('file content: %s' % (file_content))
-            playlist = json.loads(file_content)
-
-            #strptime returns struct_time in local time
-            #mktime takes a time_struct and returns a floating point
-            #gmtime Convert a time expressed in seconds since the epoch to a struct_time in UTC
-            #mktime: expresses the time in local time, not UTC. It returns a floating point number, for compatibility with time().
-            epoch_start = calendar.timegm(time.gmtime(time.mktime(time.strptime(pkey, '%Y-%m-%d-%H-%M-%S'))))
-
-            #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
-            epoch_now = time.time()
-
-            logger.debug("Epoch start: " + str(epoch_start))
-            logger.debug("Epoch now: " + str(epoch_now))
-
-            sleep_time = epoch_start - epoch_now;
-
-            if sleep_time < 0:
-                sleep_time = 0
-
-            logger.debug('sleeping for %s s' % (sleep_time))
-            time.sleep(sleep_time)
-
-            tn = telnetlib.Telnet(LS_HOST, 1234)
-
-            #skip the currently playing song if any.
-            logger.debug("source.skip\n")
-            tn.write("source.skip\n")
-
-            # Get any extra information for liquidsoap (which will be sent back to us)
-            liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)
-
-            #Sending schedule table row id string.
-            logger.debug("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
-            tn.write("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
-
-            for item in playlist:
-                annotate = str(item['annotate'])
-                logger.debug(annotate)
-                tn.write('queue.push %s' % (annotate))
-                tn.write("\n")
-
-            tn.write("exit\n")
-            logger.debug(tn.read_all())
-
-            status = 1
-        except Exception, e:
-            logger.error('%s', e)
-            status = 0
-
-        return status
-
-    def check_schedule(self, export_source):
-        logger = logging.getLogger()
-
-        try:
-            schedule_file = open(self.schedule_file, "r")
-            schedule = pickle.load(schedule_file)
-            schedule_file.close()
-
-        except Exception, e:
-            logger.error("%s", e)
-            schedule = None
-
-        for pkey in sorted(schedule.iterkeys()):
-            playlist = schedule[pkey]
-            print '*****************************************'
-            print '\033[0;32m%s %s\033[m' % ('scheduled at:', str(pkey))
-            print 'cached at :   ' + self.cache_dir + str(pkey)
-            print 'subtype:      ' + str(playlist['subtype'])
-            print 'played:       ' + str(playlist['played'])
-            print 'schedule id:  ' + str(playlist['schedule_id'])
-            print 'duration:     ' + str(playlist['duration'])
-            print 'source id:    ' + str(playlist['x_ident'])
-            print '-----------------------------------------'
-
-            for media in playlist['medias']:
-                print media
-
-            print
-
-
 if __name__ == '__main__':
     print '###########################################'
     print '#             *** pypo  ***               #'
@@ -560,31 +573,31 @@ if __name__ == '__main__':
     # initialize
     g = Global()
     g.selfcheck()
-    po = Playout()
+    
+    pp = PypoPush()
+    pf = PypoFetch()
 
     while True:
         logger = logging.getLogger()
         loops = 0
 
         if options.test:
-            po.test_api()
+            g.test_api()
             sys.exit()
 
         while options.fetch_scheduler:
-            try: po.fetch('scheduler')
+            try: pf.fetch('scheduler')
             except Exception, e:
                 print e
                 sys.exit()
 
             if (loops%2 == 0):
-                logger.info("heartbeat\n\n\n\n")
+                logger.info("heartbeat")
             loops += 1
             time.sleep(POLL_INTERVAL)
 
         while options.push_scheduler:
-            po.push('scheduler')
-
-            try: po.push('scheduler')
+            try: pp.push('scheduler')
             except Exception, e:
                 print 'PUSH ERROR!! WILL EXIT NOW:('
                 print e
@@ -597,13 +610,13 @@ if __name__ == '__main__':
             time.sleep(PUSH_INTERVAL)
 
         while options.check:
-            try: po.check_schedule()
+            try: g.check_schedule()
             except Exception, e:
                 print e
             sys.exit()
 
         while options.cleanup:
-            try: po.cleanup('scheduler')
+            try: pf.cleanup('scheduler')
             except Exception, e:
                 print e
             sys.exit()

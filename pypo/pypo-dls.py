@@ -39,8 +39,6 @@ from configobj import ConfigObj
 from util import *
 from obp import *
 
-PYPO_VERSION = '0.9'
-
 #set up command-line options
 parser = OptionParser()
 
