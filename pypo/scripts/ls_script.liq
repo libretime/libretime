@@ -5,7 +5,7 @@ set("log.file.path", log_file)
 set("log.stdout", true)
 set("server.telnet", true)
 
-queue = request.queue(id="queue")
+queue = request.queue(id="queue", conservative=true)
 queue = audio_to_stereo(queue)
 
 pypo_data = ref '0'
@@ -23,12 +23,23 @@ def crossfade(s)
   cross(fader,s)
 end
 
+# Define a transition that fades out the
+# old source, adds a single, and then 
+# plays the new source
+def to_live(old,new) = 
+  # Fade out old source
+  old = fade.final(old)
+  # Compose this in sequence with
+  # the new source
+  sequence([old,new])
+end
+
 # Add a skip function to a source
 # when it does not have one
 # by default
-def add_skip_command(s) =
+def add_skip_command(s)
  # A command to skip
- def skip(_) =
+ def skip(_)
    source.skip(s)
    "Done!"
  end
@@ -42,7 +53,7 @@ end
 server.register(namespace="vars", "pypo_data", fun (s) ->  begin pypo_data := s "Done" end)
 server.register(namespace="vars", "web_stream_enabled", fun (s) ->  begin web_stream_enabled := (s == "true") string_of(!web_stream_enabled) end)
 
-default = single("/opt/pypo/files/basic/silence.mp3")
+default = single(conservative=true, "/opt/pypo/files/basic/silence.mp3")
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 
 s = fallback(track_sensitive=false, [queue, default])
@@ -53,9 +64,14 @@ s = crossfade(s)
 # Attach a skip command to the source s:
 add_skip_command(s)
 
-web_stream_source = input.http(id="web_stream", autostart = false, "")
+web_stream_source = input.http(id="web_stream", autostart = false, buffer=0.5, max=20., "")
+
+#once the stream is started, give it a sink so that liquidsoap doesn't
+#create buffer overflow warnings in the log file.
+output.dummy(fallible=true, web_stream_source)
 
 s = switch(track_sensitive = false,
+    transitions=[to_live,to_live],
     [
       ({ !web_stream_enabled }, web_stream_source),
       ({ true }, s)
