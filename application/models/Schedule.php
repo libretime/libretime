@@ -405,7 +405,7 @@ class Schedule {
             ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') AND (ends <= TIMESTAMP '$p_toDateTime')"
             ." GROUP BY group_id"
             ." ORDER BY starts";
-            //var_dump($sql);
+
             $rows = $CC_DBC->GetAll($sql);
             if (!PEAR::isError($rows)) {
                 foreach ($rows as &$row) {
@@ -618,26 +618,24 @@ class Schedule {
     public static function ExportRangeAsJson($p_fromDateTime, $p_toDateTime)
     {
         global $CC_CONFIG, $CC_DBC;
+        
         $range_start = Schedule::PypoTimeToCcTime($p_fromDateTime);
         $range_end = Schedule::PypoTimeToCcTime($p_toDateTime);
-        $range_dt = array('start' => $range_start, 'end' => $range_end);
-        //var_dump($range_dt);
 
         // Scheduler wants everything in a playlist
         $data = Schedule::GetItems($range_start, $range_end, true);
-        //echo "<pre>";var_dump($data);
         $playlists = array();
 
-        if (is_array($data) && count($data) > 0)
+        if (is_array($data))
         {
             foreach ($data as $dx)
             {
-                // Is this the first item in the playlist?
                 $start = $dx['start'];
-                // chop off subseconds
+
+                //chop off subseconds
                 $start = substr($start, 0, 19);
 
-                // Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
+                //Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
                 $pkey = Schedule::CcTimeToPypoTime($start);
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
@@ -686,7 +684,7 @@ class Schedule {
         }
 
         $result = array();
-        $result['status'] = array('range' => $range_dt, 'version' => "0.2");
+        $result['status'] = array('range' => array('start' => $range_start, 'end' => $range_end), 'version' => "1.1");
         $result['playlists'] = $playlists;
         $result['check'] = 1;
 
