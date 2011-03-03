@@ -215,74 +215,6 @@ class BasicStor {
     //    }
 
 
-    /**
-     * Delete file
-     *
-     * @param int $id
-     * 		Virtual file's local id
-     * @param boolean $forced
-     * 		If true don't use trash
-     * @return true|PEAR_Error
-     */
-    //    public function bsDeleteFile($id, $forced=FALSE)
-    //    {
-    //        global $CC_CONFIG;
-    //        // full delete:
-    //        if (!$CC_CONFIG['useTrash'] || $forced) {
-    //            $res = BasicStor::RemoveObj($id, $forced);
-    //            return $res;
-    //        }
-    //
-    //        $storedFile = StoredFile::Recall($id);
-    //
-    //        if (is_null($storedFile) || PEAR::isError($storedFile)) {
-    //            return $storedFile;
-    //        }
-    //        if ($storedFile->isAccessed()) {
-    //             return PEAR::raiseError(
-    //                'Cannot delete an object that is currently accessed.'
-    //            );
-    //        }
-    //        // move to trash:
-    //        switch (BasicStor::GetObjType($id)) {
-    //
-    //            case "audioclip":
-    //                $playLists = $storedFile->getPlaylists();
-    //                $item_gunid = $storedFile->getGunid();
-    //                if( $playLists != NULL) {
-    //
-    //                    foreach($playLists as $key=>$val) {
-    //                        $playList_id = BasicStor::IdFromGunidBigInt($val["gunid"]);
-    //                        $playList_titles[] = BasicStor::bsGetMetadataValue($playList_id, "dc:title");
-    //                    }
-    //                    return PEAR::raiseError(
-    //                        'Please remove this song from all playlists: ' . join(",", $playList_titles)
-    //                    );
-    //                }
-    //                break;
-    //
-    //            case "playlist":
-    //                if($storedFile->isScheduled()) {
-    //                     return PEAR::raiseError(
-    //                        'Cannot delete an object that is scheduled to play.'
-    //                    );
-    //                }
-    //                break;
-    //
-    //            case "webstream":
-    //
-    //                break;
-    //            default:
-    //        }
-    //
-    //        $res = $storedFile->setState('deleted');
-    //        if (PEAR::isError($res)) {
-    //            return $res;
-    //        }
-    //
-    //	    return TRUE;
-    //    }
-
 
     /* ----------------------------------------------------- put, access etc. */
     /**
@@ -1788,51 +1720,6 @@ class BasicStor {
     }
 
 
-    /**
-     * Remove user by login
-     *
-     * @param string $login
-     * @return boolean|PEAR_Error
-     */
-    public function removeSubj($login)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        if (FALSE !== array_search($login, $CC_CONFIG['sysSubjs'])) {
-            return $CC_DBC->raiseError(
-                "BasicStor::removeSubj: cannot remove system user/group");
-        }
-        $uid = Subjects::GetSubjId($login);
-        if (PEAR::isError($uid)) {
-            return $uid;
-        }
-        $res = $CC_DBC->query("
-            DELETE FROM ".$CC_CONFIG['accessTable']." WHERE owner=$uid
-        ");
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        $res = Alib::RemoveSubj($login);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        return TRUE;
-    }
-
-
-    /**
-     * Authenticate and create session
-     *
-     * @param string $login
-     * @param string $pass
-     * @return boolean|sessionId|PEAR_Error
-     */
-    function login($login, $pass)
-    {
-        $r = Alib::Login($login, $pass);
-        return $r;
-    }
-
-
     /* ================================================== "protected" methods */
     /**
      * Check authorization - auxiliary method
@@ -1862,13 +1749,6 @@ class BasicStor {
             $acts = array($acts);
         }
         $perm = true;
-        //        foreach ($acts as $i => $action) {
-        //            $res = Alib::CheckPerm($userid, $action, $pars[$i]);
-        //            if (PEAR::isError($res)) {
-        //                return $res;
-        //            }
-        //            $perm = $perm && $res;
-        //        }
         if ($perm) {
             return TRUE;
         }
@@ -2031,89 +1911,6 @@ class BasicStor {
 
 
     /* ---------------------------------------- redefined "protected" methods */
-    /**
-     * Copy virtual file.
-     * Redefined from parent class.
-     *
-     * @return int
-     * 		New object local id
-     */
-    //    protected static function CopyObj($id, $newParid, $after=NULL)
-    //    {
-    //        switch (BasicStor::GetObjType($id)) {
-    //            case "audioclip":
-    //            case "playlist":
-    //            case "webstream":
-    //                $storedFile = StoredFile::Recall($id);
-    //                if (is_null($storedFile) || PEAR::isError($storedFile)) {
-    //                    return $storedFile;
-    //                }
-    //                $ac2 = StoredFile::CopyOf($storedFile, $nid);
-    //                //$ac2->setName(M2tree::GetObjName($nid));
-    //                break;
-    //            case "File":
-    //            default:
-    //        }
-    //        return $nid;
-    //    }
-
-
-    /**
-     * Remove virtual file.<br>
-     * Redefined from parent class.
-     *
-     * @param int $id
-     * 		Local id of removed object
-     * @param boolean $forced
-     * 		Unconditional delete
-     * @return true|PEAR_Error
-     */
-    //    public static function RemoveObj($id, $forced=FALSE)
-    //    {
-    //        $ot = BasicStor::GetObjType($id);
-    //        if (PEAR::isError($ot)) {
-    //            return $ot;
-    //        }
-    //        switch ($ot) {
-    //            case "audioclip":
-    //            case "playlist":
-    //            case "webstream":
-    //                $storedFile = StoredFile::Recall($id);
-    //                if (is_null($storedFile)) {
-    //                    return TRUE;
-    //                }
-    //                if (PEAR::isError($storedFile)) {
-    //                    return $storedFile;
-    //                }
-    //                if ($storedFile->isEdited() && !$forced) {
-    //                    return PEAR::raiseError(
-    //                        'BasicStor::RemoveObj(): is edited'
-    //                    );
-    //                }
-    //                if ($storedFile->isAccessed() && !$forced) {
-    //                    return PEAR::raiseError(
-    //                        'BasicStor::RemoveObj(): is accessed'
-    //                    );
-    //                }
-    //                $storedFile->delete();
-    //                break;
-    //            case "File":
-    ////            case "Folder":
-    ////            case "Replica":
-    //                break;
-    //            default:
-    //                return PEAR::raiseError(
-    //                    "BasicStor::bsDeleteFile: unknown obj type ($ot)"
-    //                );
-    //        }
-    //        $res = Alib::RemoveObj($id);
-    //        if (PEAR::isError($res)) {
-    //            return $res;
-    //        }
-    //        return TRUE;
-    //    }
-
-
     /* ========================================================= misc methods */
     /**
      * Write string to file

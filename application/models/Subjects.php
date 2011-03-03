@@ -56,38 +56,6 @@ class Subjects {
 
 
     /**
-     * Remove subject by uid or by login
-     *
-     * @param string $login
-     * @param int $uid
-     * @return boolean|PEAR_Error
-     */
-    public static function RemoveSubj($login, $uid=NULL)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        if (is_null($uid)) {
-            $uid = Subjects::GetSubjId($login);
-        }
-        if (PEAR::isError($uid)) {
-            return $uid;
-        }
-        $sql = "DELETE FROM ".$CC_CONFIG['smembTable']
-            ." WHERE (uid='$uid' OR gid='$uid') AND mid is null";
-        $r = $CC_DBC->query($sql);
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        $sql2 = "DELETE FROM ".$CC_CONFIG['subjTable']
-            ." WHERE login='$login'";
-        $r = $CC_DBC->query($sql2);
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        return Subjects::_rebuildRels();
-    } // fn removeSubj
-
-
-    /**
      * Check login and password
      *
      * @param string $login
@@ -213,47 +181,6 @@ class Subjects {
         }
         return $mid;
     } // fn addSubj2Gr
-
-
-    /**
-     * Remove subject from group
-     *
-     * @param string $login
-     * @param string $gname
-     * @return boolean|PEAR_Error
-     */
-    public static function RemoveSubjectFromGroup($login, $gname)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $uid = Subjects::GetSubjId($login);
-        if (PEAR::isError($uid)) {
-            return $uid;
-        }
-        $gid = Subjects::GetSubjId($gname);
-        if (PEAR::isError($gid)) {
-            return $gid;
-        }
-        $sql = "SELECT id FROM ".$CC_CONFIG['smembTable']
-            ." WHERE uid='$uid' AND gid='$gid' AND mid is null";
-        $mid = $CC_DBC->getOne($sql);
-        if (is_null($mid)) {
-            return FALSE;
-        }
-        if (PEAR::isError($mid)) {
-            return $mid;
-        }
-        // remove it:
-        $r = Subjects::_removeMemb($mid);
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        // and rebuild indirect memberships:
-        $r = Subjects::_rebuildRels();
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        return TRUE;
-    } // fn removeSubjFromGr
 
 
     /* --------------------------------------------------------- info methods */
@@ -579,105 +506,6 @@ class Subjects {
         return TRUE;
     } // fn _rebuildRels
 
-
-    /* =============================================== test and debug methods */
-
-    /**
-     * Dump subjects for debug
-     *
-     * @param string $indstr
-     * 		indentation string
-     * @param string $ind
-     * 		actual indentation
-     * @return string
-     */
-    public static function DumpSubjects($indstr='    ', $ind='')
-    {
-        $r = $ind.join(', ', array_map(
-            create_function('$v', 'return "{$v[\'login\']}({$v[\'cnt\']})";'),
-            Subjects::GetSubjectsWCnt()
-        ))."\n";
-        return $r;
-    } // fn dumpSubjects
-
-
-    /**
-     * Delete all subjects and membership records
-     *
-     * @return void
-     */
-    public static function DeleteData()
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $CC_DBC->query("DELETE FROM ".$CC_CONFIG['subjTable']);
-        $CC_DBC->query("DELETE FROM ".$CC_CONFIG['smembTable']);
-        //ObjClasses::DeleteData();
-    } // fn deleteData
-
-
-    /**
-     * Insert test data
-     *
-     * @return array
-     */
-    public function TestData()
-    {
-//        $tdata = ObjClasses::TestData();
-//        $o['root'] = Subjects::AddSubj('root', 'q');
-//        $o['test1'] = Subjects::AddSubj('test1', 'a');
-//        $o['test2'] = Subjects::AddSubj('test2', 'a');
-//        $o['test3'] = Subjects::AddSubj('test3', 'a');
-//        $o['test4'] = Subjects::AddSubj('test4', 'a');
-//        $o['test5'] = Subjects::AddSubj('test5', 'a');
-//        $o['gr1'] = Subjects::AddSubj('gr1');
-//        $o['gr2'] = Subjects::AddSubj('gr2');
-//        $o['gr3'] = Subjects::AddSubj('gr3');
-//        $o['gr4'] = Subjects::AddSubj('gr4');
-//        Subjects::AddSubjectToGroup('test1', 'gr1');
-//        Subjects::AddSubjectToGroup('test2', 'gr2');
-//        Subjects::AddSubjectToGroup('test3', 'gr3');
-//        Subjects::AddSubjectToGroup('test4', 'gr4');
-//        Subjects::AddSubjectToGroup('test5', 'gr1');
-//        Subjects::AddSubjectToGroup('gr4', 'gr3');
-//        Subjects::AddSubjectToGroup('gr3', 'gr2');
-//        $tdata['subjects'] = $o;
-//        return $tdata;
-    } // fn TestData
-
-
-    /**
-     * Make basic test
-     *
-     */
-    public static function Test()
-    {
-//        $p = ObjClasses::Test();
-//        if (PEAR::isError($p)) {
-//            return $p;
-//        }
-//        Subjects::DeleteData();
-//        Subjects::TestData();
-//        $test_correct = "root(0), test1(0), test2(0), test3(0),".
-//            " test4(0), test5(0), gr1(2), gr2(2), gr3(2), gr4(1)\n";
-//        $test_dump = Subjects::DumpSubjects();
-//        Subjects::RemoveSubj('test1');
-//        Subjects::RemoveSubj('test3');
-//        Subjects::RemoveSubjectFromGroup('test5', 'gr1');
-//        Subjects::RemoveSubjectFromGroup('gr3', 'gr2');
-//        $test_correct .= "root(0), test2(0), test4(0), test5(0),".
-//            " gr1(0), gr2(1), gr3(1), gr4(1)\n";
-//        $test_dump .= Subjects::DumpSubjects();
-//        Subjects::DeleteData();
-//        if ($test_dump == $test_correct) {
-//            $test_log .= "subj: OK\n";
-//            return TRUE;
-//        } else {
-//            return PEAR::raiseError(
-//                'Subjects::test:', 1, PEAR_ERROR_DIE, '%s'.
-//                "<pre>\ncorrect:\n{$test_correct}\n".
-//                "dump:\n{$test_dump}\n</pre>\n");
-//        }
-    } // fn test
 
 } // class Subjects
 

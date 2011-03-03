@@ -1,4 +1,7 @@
 <?php
+echo "This file is currently not working. Try again in the next version. :) \n";
+exit;
+
 define('NSPACE', 'lse');
 define('VERBOSE', FALSE);
 #define('VERBOSE', TRUE);

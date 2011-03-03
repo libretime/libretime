@@ -31,7 +31,7 @@ class ApiController extends Zend_Controller_Action
         	print 'You are not allowed to access this resource.';
         	exit;
         }
-        $jsonStr = json_encode(array("version"=>CAMPCASTER_VERSION));
+        $jsonStr = json_encode(array("version"=>AIRTIME_VERSION));
         echo $jsonStr;
     }
 

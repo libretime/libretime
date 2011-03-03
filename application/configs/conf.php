@@ -1,19 +1,42 @@
 <?php
-define('CAMPCASTER_VERSION', '1.6.1-GA');
-define('CAMPCASTER_COPYRIGHT_DATE', '2010');
+define('AIRTIME_VERSION', '1.7.0 alpha');
+define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 
 // These are the default values for the config.
 global $CC_CONFIG;
-
 $values = load_airtime_config();
+
+// ********************************** 
+// ***** START CUSTOMIZING HERE *****
+// ********************************** 
+
+// Set the location where you want to store all of your audio files.
+//
+// For example:
+// $baseFilesDir = '/home/john/radio-files';
 $baseFilesDir = __DIR__.'/../../files';
 
 $CC_CONFIG = array(
-    // Database config
-    'dsn'           => $values['database'],
+
+    // Set the URL of your installation
+ 	'storageUrlHost'        => 'localhost',
+    'storageUrlPort'        => 80,
 
     // Name of the web server user
     'webServerUser' => 'www-data',
+
+// ***********************************************************************
+	// STOP CUSTOMIZING HERE
+	//
+	// You don't need to touch anything below this point. 
+	// ***********************************************************************
+
+    'baseFilesDir' => $baseFilesDir,
+    // main directory for storing binary media files
+    'storageDir'    =>  "$baseFilesDir/stor",
+
+	// Database config
+    'dsn' => $values['database'],
 
     // prefix for table names in the database
     'tblNamePrefix' => 'cc_',
@@ -21,20 +44,12 @@ $CC_CONFIG = array(
     /* ================================================ storage configuration */
 
     'apiKey' => $values['api_key'],
-
     'apiPath' => '/api/',
-
-    'baseFilesDir' => $baseFilesDir,
-    // main directory for storing binary media files
-    'storageDir'    =>  "$baseFilesDir/stor",
 
     "rootDir" => __DIR__."/../..",
     'pearPath'      =>  dirname(__FILE__).'/../../library/pear',
     'zendPath'      =>  dirname(__FILE__).'/../../library/Zend',
     'phingPath'      =>  dirname(__FILE__).'/../../library/phing',
-
-     // secret token cookie name
-    'authCookieName'=> 'campcaster_session_id',
 
     // name of admin group
     //'AdminsGr'      => 'Admins',
@@ -44,47 +59,6 @@ $CC_CONFIG = array(
 
     // name of 'all users' group
     //'AllGr'         => 'All',
-    'TrashName'     => 'trash_',
-
-    // enable/disable validator
-    'validate'      =>  TRUE,
-
-    // enable/disable safe delete (move to trash)
-    'useTrash'      =>  FALSE,
-
-    /* ==================================================== URL configuration */
-    // path-URL-part of storageServer base dir
- 	'storageUrlPath'        => '/campcaster/backend',
-
-    // XMLRPC server script address relative to storageUrlPath
- 	'storageXMLRPC'         => 'xmlrpc/xrLocStor.php',
-
-    // host and port of storageServer
- 	'storageUrlHost'        => 'localhost',
-    'storageUrlPort'        => 80,
-
-    /* ================================================ remote link configuration */
-    // path-URL-part of remote server base dir
-    'archiveUrlPath'        => '/campcaster/backend',
-
-    // XMLRPC server script address relative to archiveUrlPath
-    'archiveXMLRPC'         => 'xmlrpc/xrLocStor.php',
-
-    // host and port of archiveServer
-    'archiveUrlHost'        => 'localhost',
-//    'archiveUrlHost'        => '192.168.30.166',
-    'archiveUrlPort'        => 80,
-
-    // account info for login to archive
-    'archiveAccountLogin'   => 'root',
-    'archiveAccountPass'    => 'q',
-
-    /* ============================================== scheduler configuration */
-    'schedulerUrlPath'        => '',
-    'schedulerXMLRPC'         => 'RC2',
-    'schedulerUrlHost'        => 'localhost',
-    'schedulerUrlPort'        => 3344,
-    'schedulerPass'           => 'change_me',
 
     /* ==================================== application-specific configuration */
     'objtypes'      => array(
@@ -92,21 +66,15 @@ $CC_CONFIG = array(
         'File'          => array(),
         'audioclip'     => array(),
         'playlist'      => array(),
-//        'Replica'       => array(),
     ),
     'allowedActions'=> array(
         'File'          => array('editPrivs', 'write', 'read'),
         'audioclip'     => array('editPrivs', 'write', 'read'),
         'playlist'      => array('editPrivs', 'write', 'read'),
-//        'Replica'       => array('editPrivs', 'write', 'read'),
-//        '_class'        => array('editPrivs', 'write', 'read'),
     ),
     'allActions'    =>  array(
-        'editPrivs', 'write', 'read', /*'classes',*/ 'subjects'
+        'editPrivs', 'write', 'read', 'subjects'
     ),
-
-    /* ============================================== auxiliary configuration */
-    'tmpRootPass'   => 'q',
 
     /* =================================================== cron configuration */
     'cronUserName'      => 'www-data',
