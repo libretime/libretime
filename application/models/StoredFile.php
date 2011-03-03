@@ -907,56 +907,6 @@ class StoredFile {
 
 
     /**
-     * Delete media file from filesystem.
-     * You cant delete a file if it is being accessed.
-     * You cant delete a file if it is scheduled to be played in the future.
-     * The file will be removed from all playlists it is a part of.
-     *
-     * @return boolean|PEAR_Error
-     */
-    public function deleteFile()
-    {
-        global $CC_CONFIG;
-        if (!$this->exists) {
-            return FALSE;
-        }
-        if ($this->isAccessed()) {
-            return PEAR::raiseError(
-                'Cannot delete a file that is currently accessed.'
-                );
-        }
-
-        // Check if the file is scheduled to be played in the future
-        if (Schedule::IsFileScheduledInTheFuture($this->id)) {
-            return PEAR::raiseError(
-                'Cannot delete a file that is scheduled in the future.'
-                );
-        }
-
-        // Delete it from all playlists
-        //Playlist::DeleteFileFromAllPlaylists($this->id);
-
-        // Only delete the file from filesystem if it has been copied to the
-        // storage directory. (i.e. dont delete linked files)
-        if (substr($this->filepath, 0, strlen($CC_CONFIG["storageDir"])) == $CC_CONFIG["storageDir"]) {
-            // Delete the file
-            if (!file_exists($this->filepath) || @unlink($this->filepath)) {
-                $this->exists = FALSE;
-                return TRUE;
-            } else {
-                return PEAR::raiseError(
-                    "StoredFile::deleteFile: unlink failed ({$this->filepath})",
-                GBERR_FILEIO
-                );
-            }
-        } else {
-            $this->exists = FALSE;
-            return TRUE;
-        }
-    }
-
-
-    /**
      * Analyze file with getid3 module.<br>
      * Obtain some metadata stored in media file.<br>
      * This method should be used for prefilling metadata input form.
@@ -998,60 +948,6 @@ class StoredFile {
         $storedFile->replaceMetadata($p_src->getAllMetadata(), 'string');
         return $storedFile;
     }
-
-
-    /**
-     * Replace existing file with new data.
-     *
-     * @param int $p_oid
-     * 		NOT USED
-     * @param string $p_name
-     * 		name of file
-     * @param string $p_localFilePath
-     * 		local path to media file
-     * @param string $p_metadata
-     * 		local path to metadata XML file or XML string
-     * @param string $p_mdataLoc
-     * 		'file'|'string'
-     * @return TRUE|PEAR_Error
-     */
-    //    public function replace($p_oid, $p_name, $p_localFilePath='', $p_metadata='',
-    //        $p_mdataLoc='file')
-    //    {
-    //        global $CC_CONFIG, $CC_DBC;
-    //        $CC_DBC->query("BEGIN");
-    //        $res = $this->setName($p_name);
-    //        if (PEAR::isError($res)) {
-    //            $CC_DBC->query("ROLLBACK");
-    //            return $res;
-    //        }
-    //        if ($p_localFilePath != '') {
-    //            $res = $this->setRawMediaData($p_localFilePath);
-    //        } else {
-    //            $res = $this->deleteFile();
-    //        }
-    //        if (PEAR::isError($res)) {
-    //            $CC_DBC->query("ROLLBACK");
-    //            return $res;
-    //        }
-    //        if ($p_metadata != '') {
-    //            $res = $this->setMetadata($p_metadata, $p_mdataLoc);
-    //        } else {
-    ////            $res = $this->md->delete();
-    //            $res = $this->clearMetadata();
-    //        }
-    //        if (PEAR::isError($res)) {
-    //            $CC_DBC->query("ROLLBACK");
-    //            return $res;
-    //        }
-    //        $res = $CC_DBC->query("COMMIT");
-    //        if (PEAR::isError($res)) {
-    //            $CC_DBC->query("ROLLBACK");
-    //            return $res;
-    //        }
-    //        return TRUE;
-    //    }
-
 
     /**
      * Increase access counter, create access token, insert access record.
@@ -1129,36 +1025,6 @@ class StoredFile {
         }
         return $v;
     }
-
-
-    /**
-     * Replace metadata with new XML file
-     *
-     * @param string $p_metadata
-     * 		local path to metadata XML file or XML string
-     * @param string $p_mdataLoc
-     * 		'file'|'string'
-     * @param string $p_format
-     * 		metadata format for validation
-     *      ('audioclip' | 'playlist' | 'webstream' | NULL)
-     *      (NULL = no validation)
-     * @return boolean
-     */
-    //    public function setMetadata($p_metadata, $p_mdataLoc='file', $p_format=NULL)
-    //    {
-    //        global $CC_CONFIG, $CC_DBC;
-    //        $CC_DBC->query("BEGIN");
-    //        $res = $this->md->replace($p_metadata, $p_mdataLoc, $p_format);
-    //        if (PEAR::isError($res)) {
-    //            $CC_DBC->query("ROLLBACK");
-    //            return $res;
-    //        }
-    //        $res = $CC_DBC->query("COMMIT");
-    //        if (PEAR::isError($res)) {
-    //            return $res;
-    //        }
-    //        return TRUE;
-    //    }
 
     /**
      * Set metadata element value
@@ -1371,6 +1237,54 @@ class StoredFile {
         return TRUE;
     }
 
+    /**
+     * Delete media file from filesystem.
+     * You cant delete a file if it is being accessed.
+     * You cant delete a file if it is scheduled to be played in the future.
+     * The file will be removed from all playlists it is a part of.
+     *
+     * @return boolean|PEAR_Error
+     */
+    public function deleteFile()
+    {
+        global $CC_CONFIG;
+        if (!$this->exists) {
+            return FALSE;
+        }
+        if ($this->isAccessed()) {
+            return PEAR::raiseError(
+                'Cannot delete a file that is currently accessed.'
+                );
+        }
+
+        // Check if the file is scheduled to be played in the future
+        if (Schedule::IsFileScheduledInTheFuture($this->id)) {
+            return PEAR::raiseError(
+                'Cannot delete a file that is scheduled in the future.'
+                );
+        }
+
+        // Only delete the file from filesystem if it has been copied to the
+        // storage directory. (i.e. dont delete linked files)
+        if (substr($this->filepath, 0, strlen($CC_CONFIG["storageDir"])) == $CC_CONFIG["storageDir"]) {
+            // Delete the file
+            if (!file_exists($this->filepath) || @unlink($this->filepath)) {
+                $this->exists = FALSE;
+                return TRUE;
+            } 
+            else {
+                return PEAR::raiseError(
+                    "StoredFile::deleteFile: unlink failed ({$this->filepath})",
+                    GBERR_FILEIO
+                );
+            }
+        } 
+        else {
+            $this->exists = FALSE;
+            return TRUE;
+        }
+    }
+
 
     /**
      * Delete stored virtual file
@@ -1387,25 +1301,10 @@ class StoredFile {
             if (PEAR::isError($res)) {
                 return $res;
             }
+
+            Playlist::DeleteFileFromAllPlaylists($this->id);
         }
-        $sql = "SELECT to_hex(token)as token, ext "
-        ." FROM ".$CC_CONFIG['accessTable']
-        ." WHERE gunid='{$this->gunid}'";
-        $tokens = $CC_DBC->getAll($sql);
-        if (is_array($tokens)) {
-            foreach ($tokens as $i => $item) {
-                $file = $this->_getAccessFileName($item['token'], $item['ext']);
-                if (file_exists($file)) {
-                    @unlink($file);
-                }
-            }
-        }
-        $sql = "DELETE FROM ".$CC_CONFIG['accessTable']
-        ." WHERE gunid='{$this->gunid}'";
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+        
         $sql = "DELETE FROM ".$CC_CONFIG['filesTable']
         ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
@@ -1563,26 +1462,7 @@ class StoredFile {
     public static function generateGunid()
     {
         return md5(uniqid("", true));
-
-        //        $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
-        //        $initString = microtime().$ip.rand();
-        //        $hash = md5($initString);
-        //        // non-negative int8
-        //        $hsd = substr($hash, 0, 1);
-        //        $res = dechex(hexdec($hsd)>>1).substr($hash, 1, 15);
-        //        return StoredFile::NormalizeGunid($res);
     }
-
-
-    /**
-     * Pad the gunid with zeros if it isnt 16 digits.
-     *
-     * @return string
-     */
-    //    public static function NormalizeGunid($p_gunid)
-    //    {
-    //        return str_pad($p_gunid, 16, "0", STR_PAD_LEFT);
-    //    }
 
 
     /**
