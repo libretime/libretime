@@ -8,6 +8,7 @@ import pickle
 import random
 import string
 import json
+import telnetlib
 
 from api_clients import api_client
 from util import CueFile
@@ -82,10 +83,20 @@ class PypoFetch:
         if status == 1:
             logger.info("dump serialized schedule to %s", self.schedule_file)
             schedule = response['playlists']
+            stream_metadata = response['stream_metadata']
             try:
                 schedule_file = open(self.schedule_file, "w")
                 pickle.dump(schedule, schedule_file)
                 schedule_file.close()
+
+                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+
+                #encode in latin-1 due to this bug: http://bugs.python.org/issue1772794
+                tn.write(('vars.stream_metadata_type %s\n' % stream_metadata['format']).encode('latin-1'))
+                tn.write(('vars.show_name %s\n' % stream_metadata['show_name']).encode('latin-1'))
+                tn.write(('vars.station_name %s\n' % stream_metadata['station_name']).encode('latin-1'))
+                tn.write('exit\n')
+                logger.debug(tn.read_all())
 
             except Exception, e:
                 logger.critical("Exception %s", e)

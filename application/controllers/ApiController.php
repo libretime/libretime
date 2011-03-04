@@ -126,7 +126,12 @@ class ApiController extends Zend_Controller_Action
         $from = $this->_getParam("from");
         $to = $this->_getParam("to");
         if (Schedule::ValidPypoTimeFormat($from) && Schedule::ValidPypoTimeFormat($to)) {
-            echo Schedule::ExportRangeAsJson($from, $to);
+            $result = Schedule::ExportRangeAsJson($from, $to);
+            $result['stream_metadata'] = array();
+            $result['stream_metadata']['format'] = "2";
+            $result['stream_metadata']['station_name'] = "z103";
+            $result['stream_metadata']['show_name'] = "dj danny D";
+            echo json_encode($result);
         }
     }
 

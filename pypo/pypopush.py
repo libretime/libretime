@@ -130,7 +130,7 @@ class PypoPush:
             logger.debug('sleeping for %s s' % (sleep_time))
             time.sleep(sleep_time)
 
-            tn = telnetlib.Telnet(LS_HOST, 1234)
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
 
             #skip the currently playing song if any.
             logger.debug("source.skip\n")

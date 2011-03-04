@@ -688,7 +688,7 @@ class Schedule {
         $result['playlists'] = $playlists;
         $result['check'] = 1;
 
-        print json_encode($result);
+        return $result;
     }
 
 
