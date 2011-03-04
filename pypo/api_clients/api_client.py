@@ -174,7 +174,7 @@ class AirTimeApiClient(ApiClientInterface):
                 print 'Unable to get Airtime version number.'
                 print
             return False     
-        elif (version[0:4] != "1.6."): 
+        elif (version[0:4] != "1.7."): 
             if (verbose):
                 print 'Airtime version: ' + str(version)
                 print 'pypo not compatible with this version of Airtime.'
