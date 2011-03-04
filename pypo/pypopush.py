@@ -141,13 +141,13 @@ class PypoPush:
 
             #Sending schedule table row id string.
             logger.debug("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
-            tn.write("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
+            tn.write(("vars.pypo_data %s\n"%str(liquidsoap_data["schedule_id"])).encode('latin-1'))
 
             for item in playlist:
                 annotate = str(item['annotate'])
                 logger.debug(annotate)
-                tn.write('queue.push %s' % (annotate))
-                tn.write("\n")
+                tn.write(('queue.push %s\n' % annotate).encode('latin-1'))
+                tn.write(('vars.show_name %s\n' % item['show_name']).encode('latin-1'))
 
             tn.write("exit\n")
             logger.debug(tn.read_all())

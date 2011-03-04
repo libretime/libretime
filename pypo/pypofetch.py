@@ -93,7 +93,6 @@ class PypoFetch:
 
                 #encode in latin-1 due to this bug: http://bugs.python.org/issue1772794
                 tn.write(('vars.stream_metadata_type %s\n' % stream_metadata['format']).encode('latin-1'))
-                tn.write(('vars.show_name %s\n' % stream_metadata['show_name']).encode('latin-1'))
                 tn.write(('vars.station_name %s\n' % stream_metadata['station_name']).encode('latin-1'))
                 tn.write('exit\n')
                 logger.debug(tn.read_all())
@@ -236,6 +235,7 @@ class PypoFetch:
                         entry = dict()
                         entry['type'] = 'file'
                         entry['annotate'] = pl_entry
+                        entry['show_name'] = playlist['show_name']
                         ls_playlist.append(entry)
 
                         logger.debug("everything ok, adding %s to playlist", pl_entry)

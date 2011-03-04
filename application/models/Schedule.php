@@ -396,14 +396,26 @@ class Schedule {
                 $row["id"] = $row["group_id"];
             }
         } else {
-            $sql = "SELECT MIN(name) AS name, MIN(creator) AS creator, group_id, "
-            ." SUM(clip_length) AS clip_length,"
-            ." MIN(file_id) AS file_id, COUNT(*) as count,"
-            ." MIN(playlist_id) AS playlist_id, MIN(starts) AS starts, MAX(ends) AS ends"
-            ." FROM $CC_CONFIG[scheduleTable]"
-            ." LEFT JOIN $CC_CONFIG[playListTable] ON playlist_id = $CC_CONFIG[playListTable].id"
-            ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') AND (ends <= TIMESTAMP '$p_toDateTime')"
-            ." GROUP BY group_id"
+            $sql = "SELECT MIN(st.name) AS name,"
+            ." MIN(pt.creator) AS creator,"
+            ." st.group_id, "
+            ." SUM(st.clip_length) AS clip_length,"
+            ." MIN(st.file_id) AS file_id,"
+            ." COUNT(*) as count,"
+            ." MIN(st.playlist_id) AS playlist_id,"
+            ." MIN(st.starts) AS starts,"
+            ." MAX(st.ends) AS ends,"
+            ." MIN(sh.name) AS show_name"
+            ." FROM $CC_CONFIG[scheduleTable] as st"
+            ." LEFT JOIN $CC_CONFIG[playListTable] as pt"
+            ." ON st.playlist_id = pt.id"
+            ." LEFT JOIN $CC_CONFIG[showInstances] as si"
+            ." ON st.instance_id = si.id"
+            ." LEFT JOIN $CC_CONFIG[showTable] as sh"
+            ." ON si.show_id = sh.id"
+            ." WHERE (st.starts >= TIMESTAMP '$p_fromDateTime')"
+            ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
+            ." GROUP BY st.group_id"
             ." ORDER BY starts";
 
             $rows = $CC_DBC->GetAll($sql);
@@ -645,6 +657,7 @@ class Schedule {
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
                 $playlists[$pkey]['played'] = '0';
                 $playlists[$pkey]['schedule_id'] = $dx['group_id'];
+                $playlists[$pkey]['show_name'] = $dx['show_name'];
                 $playlists[$pkey]['user_id'] = 0;
                 $playlists[$pkey]['id'] = $dx["playlist_id"];
                 $playlists[$pkey]['start'] = Schedule::CcTimeToPypoTime($dx["start"]);

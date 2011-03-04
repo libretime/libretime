@@ -34,10 +34,20 @@ class Application_Form_Preferences extends Zend_Form
             'value' => $defaultFade
         ));
             
+        $stream_format = new Zend_Form_Element_Radio('streamFormat');
+        $stream_format->setLabel('Stream Label:');
+        $stream_format->setMultiOptions(array("Artist - Title",
+                                            "Show - Artist - Title",
+                                            "Show",
+                                            "Station name - Show name"));
+        $stream_format->setValue(Application_Model_Preference::GetStreamLabelFormat());
+        $this->addElement($stream_format);
+
         $this->addElement('submit', 'submit', array(
             'class'    => 'ui-button ui-state-default',
             'ignore'   => true,
             'label'    => 'Submit',
         ));
+        
     }
 }
