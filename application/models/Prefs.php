@@ -406,37 +406,5 @@ class Prefs {
     }
 
 
-    /* ==================================================== auxiliary methods */
-    /**
-     *  Test method
-     *
-     */
-    function test()
-    {
-        global $CC_CONFIG;
-        $sessid = Alib::Login('root', $CC_CONFIG['tmpRootPass']);
-        $testkey = 'testKey';
-        $testVal = 'abcDef 0123 ěščřžýáíé ĚŠČŘŽÝÁÍÉ';
-        $r = savePref($sessid, $testKey, $testVal);
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        $val = loadPref($sessid, $testKey);
-        if ($val != $testVal) {
-            echo "ERROR: preference storage test failed.\n   ($testVal / $val)\n";
-            return FALSE;
-        }
-        $r = savePref($sessid, $testKey, '');
-        if (PEAR::isError($r)) {
-            return $r;
-        }
-        $val = loadPref($sessid, $testKey);
-        if ($val != $testVal) {
-            echo "ERROR: preference storage test failed.\n   ('' / '$val')\n";
-            return FALSE;
-        }
-        return TRUE;
-    }
-
 } // class Prefs
 

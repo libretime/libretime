@@ -61,7 +61,8 @@ class LoginController extends Zend_Controller_Action
 
 		$this->view->message = $message;
 		$this->view->form = $form;
-
+		$this->view->airtimeVersion = AIRTIME_VERSION;
+		$this->view->airtimeCopyright = AIRTIME_COPYRIGHT_DATE;
     }
 
     public function logoutAction()

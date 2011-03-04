@@ -1692,34 +1692,4 @@ class GreenBox extends BasicStor {
     } // fn addPerm
 
 
-    /**
-     * Remove permission record
-     *
-     * @param int $permid
-     * 		local permission id
-     * @param int $subj
-     * 		local user/group id
-     * @param int $obj
-     * 		local object id
-     * @param string $sessid
-     * 		session id
-     * @return boolean/error
-     */
-    public function removePerm($permid=NULL, $subj=NULL, $obj=NULL, $sessid='')
-    {
-        if (!is_null($permid)) {
-            $oid = Alib::GetPermOid($permid);
-            if (PEAR::isError($oid)) {
-                return $oid;
-            }
-            if (!is_null($oid)) {
-                if (($res = BasicStor::Authorize('editPerms', $oid, $sessid)) !== TRUE) {
-                    return $res;
-                }
-            }
-        }
-        $res = Alib::RemovePerm($permid, $subj, $obj);
-        return $res;
-    } // fn removePerm
-
 } // class GreenBox

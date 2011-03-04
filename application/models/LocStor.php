@@ -1368,7 +1368,7 @@ class LocStor extends BasicStor {
      */
     public static function getVersion()
     {
-        return CAMPCASTER_VERSION;
+        return AIRTIME_VERSION;
     }
 
     /**
