@@ -2,7 +2,7 @@
 
 class Application_Model_Nowplaying
 {
-    
+    /*
     public static function InsertBlankRow($i, $rows){
         $startDateFull = $rows[$i-1][3];
         $endDateFull = $rows[$i][2];
@@ -44,6 +44,40 @@ class Application_Model_Nowplaying
         
         return $rows;
     }
+    */
+
+    public static function FindGapsBetweenShows($showsMap){
+        return $showsMap;
+    }
+
+    public static function FindGapsAtEndOfShows($showsMap){
+        foreach($showsMap as $k => $show){
+            $showStartTime = $show['starts'];
+            $showEndTime = $show['ends'];
+
+            //get the last songs end-time
+            $items = $show['items'];
+            if (count($items) > 1){
+                $lastItem = $items[count($items)-1];
+                $lastItemEndTime = $lastItem[3];
+            } else {
+                $lastItemEndTime = $showStartTime;
+            }
+            
+            $diff = Application_Model_DateHelper::TimeDiff($lastItemEndTime, $showEndTime);
+            //echo $diff."-";
+            if ($diff <= 0){
+                //ok!
+            } else {
+                //There is a gap at the end of the show
+                //insert blank row
+                array_push($items, array("b", $diff, "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"));
+                $showsMap[$k]['items'] = $items;
+            }
+        }
+
+        return $showsMap;
+    }
     
     public static function GetDataGridData($viewType, $dateString){
                 
@@ -60,6 +94,8 @@ class Application_Model_Nowplaying
             $previous = array_reverse(Schedule::Get_Scheduled_Item_Data($timeNow, -1, 1, "60 seconds"));
             $current = Schedule::Get_Scheduled_Item_Data($timeNow, 0);
             $next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, 10, "24 hours");
+
+            $showsMap = Show_DAL::GetShowsInRange($timeNow, "60 seconds", "24 hours");
         } else {
             $date = new Application_Model_DateHelper;
             $time = $date->getTime();
@@ -68,33 +104,39 @@ class Application_Model_Nowplaying
             
             $previous = array_reverse(Schedule::Get_Scheduled_Item_Data($timeNow, -1, "ALL", $date->getNowDayStartDiff()." seconds"));
             $current = Schedule::Get_Scheduled_Item_Data($timeNow, 0);
-            $next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, "ALL", $date->getNowDayEndDiff()." seconds");                        
+            $next = Schedule::Get_Scheduled_Item_Data($timeNow, 1, "ALL", $date->getNowDayEndDiff()." seconds");
+
+            $showsMap = Show_DAL::GetShowsInRange($timeNow, $date->getNowDayStartDiff(), $date->getNowDayEndDiff());                     
         }
-        
-        $rows = array();
+
+        //$rows = array();
+        //print_r($showsMap);
                 
         foreach ($previous as $item){
-            array_push($rows, array("p", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
+            array_push($showsMap[$item["instance_id"]]['items'], array("p", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
                 $item["album_title"], $item["name"], $item["show_name"], $item["instance_id"], $item["group_id"]));
         }
         
         foreach ($current as $item){
-            array_push($rows, array("c", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
+            array_push($showsMap[$item["instance_id"]]['items'], array("c", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
                 $item["album_title"], $item["name"], $item["show_name"], $item["instance_id"], $item["group_id"]));    
         }
         
         foreach ($next as $item){
-            array_push($rows, array("n", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
+            array_push($showsMap[$item["instance_id"]]['items'], array("n", $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
                 $item["album_title"], $item["name"], $item["show_name"], $item["instance_id"], $item["group_id"]));
         }
 
-                
-        $rows = Application_Model_Nowplaying::FindGaps($rows);
+        
 
+        //$showsMap = Application_Model_Nowplaying::FindGapsBetweenShows($showsMap);
+        $showsMap = Application_Model_Nowplaying::FindGapsAtEndOfShows($showsMap);
+                
+        //$rows = Application_Model_Nowplaying::FindGaps($rows);
         $date = new Application_Model_DateHelper;
         $timeNow = $date->getDate();
         
-        $data = array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$rows);
+        $data = array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$showsMap);
         
         return $data;
     }

@@ -60,7 +60,7 @@ var columns = [{"sTitle": "type", "bVisible":false},
     {"sTitle":"Album"},
     {"sTitle":"Playlist"},
     {"sTitle":"Show"},
-    {"sTitle":"bgcolor", "bVisible":false},
+    {"sTitle":"instance_id", "bVisible":true},
     {"sTitle":"group_id", "bVisible":false}];
 
 function getDateString(){
@@ -85,7 +85,9 @@ function updateDataTable(){
     //function can be called before ajax call has been returned.
     if (datagridData != null){
         table.fnClearTable(false);
-        table.fnAddData(datagridData.rows, false);
+        for (var show in datagridData.rows){
+            table.fnAddData(datagridData.rows[show].items, false);
+        }
         table.fnDraw(true);
     }
 }
@@ -133,6 +135,35 @@ function createDataGrid(){
                 $(nRow).attr("class", "gap");
 			return nRow;
 		},
+        "fnDrawCallback": function(oSettings){
+            //check if there are any rows to display
+            if (oSettings.aiDisplay.length == 0)
+                return;
+
+            var nTrs = $('#nowplayingtable tbody tr');
+            var iColspan = nTrs[0].getElementsByTagName('td').length;
+
+            for (var i=0; i<nTrs.length; i++){
+                
+                var iDisplayIndex = oSettings._iDisplayStart + i;
+                var sType = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[0];
+
+                var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[9];
+                var startTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[2];
+                var endTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[3];
+
+                if ( sType == "s" ){
+                    var nGroup = document.createElement('tr');
+                    var nCell = document.createElement('td');
+                    nCell.colSpan = iColspan;
+                    nCell.className = "group";
+                    nCell.innerHTML = showName + ": " + startTime + " - " + endTime;
+                    nGroup.appendChild(nCell);
+                    nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);
+                }
+            }
+            
+        },
         "bAutoWidth":false
 	} );
 }

@@ -29,6 +29,10 @@ class Application_Model_DateHelper
        $dayEndTS = strtotime(date("Y-m-d", $this->_timestamp+(86400)));
        return $dayEndTS - $this->_timestamp;
    }
+
+   public static function TimeDiff($time1, $time2){
+        return strtotime($time2) - strtotime($time1);
+   }
    
     public static function ConvertMSToHHMMSSmm($time){
         $hours = floor($time / 3600000);
