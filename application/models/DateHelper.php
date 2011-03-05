@@ -30,6 +30,10 @@ class Application_Model_DateHelper
        return $dayEndTS - $this->_timestamp;
    }
 
+   function getEpochTime(){
+        return $this->_timestamp;
+   }
+
    public static function TimeDiff($time1, $time2){
         return strtotime($time2) - strtotime($time1);
    }

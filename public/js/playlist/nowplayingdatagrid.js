@@ -148,11 +148,11 @@ function createDataGrid(){
                 var iDisplayIndex = oSettings._iDisplayStart + i;
                 var sType = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[0];
 
-                var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[9];
-                var startTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[2];
-                var endTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[3];
-
                 if ( sType == "s" ){
+                    var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[9];
+                    var startTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[2];
+                    var endTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[3];
+
                     var nGroup = document.createElement('tr');
                     var nCell = document.createElement('td');
                     nCell.colSpan = iColspan;
@@ -160,6 +160,16 @@ function createDataGrid(){
                     nCell.innerHTML = showName + ": " + startTime + " - " + endTime;
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);
+                } else if ( sType == "b" ){
+                    var gapTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];
+                    
+                    var nGroup = document.createElement('tr');
+                    var nCell = document.createElement('td');
+                    nCell.colSpan = iColspan;
+                    nCell.className = "gap";
+                    nCell.innerHTML = "Gap until show end: " + gapTime + " seconds";
+                    nGroup.appendChild(nCell);
+                    nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);                   
                 }
             }
             

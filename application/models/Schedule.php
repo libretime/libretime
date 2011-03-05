@@ -511,6 +511,22 @@ class Schedule {
         return $rows;
 	}
 
+    public static function GetShowInstanceItems($instance_id){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.media_item_played, st.group_id, show.name as show_name, st.instance_id"
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
+        ." WHERE st.playlist_id = pt.id"
+        ." AND st.file_id = ft.id"
+        ." AND st.instance_id = si.id"
+        ." AND si.show_id = show.id"
+        ." AND instance_id = $instance_id"
+        ." ORDER BY st.starts";
+
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+    }
+
     public static function UpdateMediaPlayedStatus($id){
         global $CC_CONFIG, $CC_DBC;
         $sql = "UPDATE ".$CC_CONFIG['scheduleTable']

@@ -36,8 +36,6 @@ class NowplayingController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/playlist/nowplayingdatagrid.js','text/javascript');
         $this->view->headScript()->appendFile('/js/playlist/dayview.js','text/javascript');
     }
-
-
 }
 
 

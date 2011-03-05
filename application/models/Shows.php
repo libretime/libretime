@@ -768,7 +768,9 @@ class Show_DAL{
 		." $CC_CONFIG[showInstances] si,"
         ." $CC_CONFIG[showTable] s"
 		." WHERE si.show_id = s.id"
-		." AND (si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' OR si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
+		." AND ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
+        ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
+        ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
         ." ORDER BY si.starts";
 
         $rows = $CC_DBC->GetAll($sql);
