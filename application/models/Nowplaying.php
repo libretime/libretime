@@ -2,92 +2,90 @@
 
 class Application_Model_Nowplaying
 {
-    /*
-    public static function InsertBlankRow($i, $rows){
-        $startDateFull = $rows[$i-1][3];
-        $endDateFull = $rows[$i][2];
 
-        $startDate = explode(".", $startDateFull);
-        $endDate = explode(".", $endDateFull);
+    public static function FindBeginningOfShow($rows){
+        $numRows = count($rows);
 
-        $epochStartMS =  strtotime($startDate[0])*1000;
-        $epochEndMS =  strtotime($endDate[0])*1000;
+        $newCopy = array();
 
-        if (count($startDate) > 1)
-            $epochStartMS += $startDate[1];
-        if (count($endDate) > 1)
-            $epochEndMS += $endDate[1];
+        for ($i=0; $i<$numRows; $i++){
+            $currentRow = $rows[$i];
+            if ($i == 0 || ($i != 0 && $currentRow['instance_id'] != $rows[$i-1]['instance_id'])){
+                //$currentRow is first instance of a show.
+                $group = $currentRow;
+                $group['group'] = 'x';
+                $group['item_starts'] = $group['show_starts'];
+                $group['item_ends'] = $group['show_ends'];
 
-        $blankRow = array(array("b", $startDateFull, $startDateFull, $endDate, Application_Model_DateHelper::ConvertMSToHHMMSSmm($epochEndMS - $epochStartMS), "-", "-", "-", "-" , "-", "", ""));
-        array_splice($rows, $i, 0, $blankRow);
-        return $rows;
-    }
-
-    public static function FindGaps($rows){
-        $n = count($rows);
-
-        $blankRowIndices = array();
-        $arrayIndexOffset = 0;
-
-        if ($n < 2)
-            return $rows;
-
-        for ($i=1; $i<$n; $i++){
-            if ($rows[$i-1][3] != $rows[$i][2])
-                array_push($blankRowIndices, $i);
+                array_push($newCopy, $group);
+            }
+            array_push($newCopy, $currentRow);
         }
 
-        for ($i=0, $n=count($blankRowIndices); $i<$n; $i++){
-            $rows = Application_Model_Nowplaying::InsertBlankRow($blankRowIndices[$i]+$arrayIndexOffset, $rows);
-            $arrayIndexOffset++;
-        }
-
-        return $rows;
+        return $newCopy;
     }
-    */
 
-    
-/*
-    public static function FindGapsBetweenShows($showsMap){
+    public static function FindGapAtEndOfShow($rows){
+        $numRows = count($rows);
 
-        $previousShow = null;
-        foreach($showsMap as $k => $show){
-            $currentShow = $showsMap[$k];
+        $newCopy = array();
 
-            if (!is_null($previousShow)){
-                $diff = strtotime($currentShow['starts']) - strtotime($previousShow['ends'])
-                if ($$diff != 0){
-                    //array_splice($showsMap, $i, 0, $blankRow);
+        for ($i=0; $i<$numRows; $i++){
+            $currentRow = $rows[$i];
+            array_push($newCopy, $currentRow);
+            if ($i+1 == $numRows || ($i+1 !=$numRows && $currentRow['instance_id'] != $rows[$i+1]['instance_id'])){
+                //$row is the last instance in the show.
 
+                if ($currentRow['item_ends'] == ""){
+                    //show is empty and has no scheduled items in it. Therefore
+                    //the gap is the entire length of the show.
+                    $currentRow['item_ends'] = $currentRow['show_starts'];
+                }
+                
+                $diff = strtotime($currentRow['show_ends']) - strtotime($currentRow['item_ends']);
+                if ($diff > 0){
+                    //gap at the end of show. Lets create a "gap" row
+                    $gap = $currentRow;
+                    $gap['gap'] = '';
+                    $gap['item_starts'] = $diff;
+
+                    array_push($newCopy, $gap);
                 }
             }
-
-            $previousShow = $showsMap[$k];
         }
-        
-        return $showsMap;
+        return $newCopy;
     }
-*/
-    public static function FindGapAtEndOfShow($show, $rows){
-        $showStartTime = $show['starts'];
-        $showEndTime = $show['ends'];
 
-        if (count($rows) > 1){
-            $lastItem = $rows[count($rows)-1];
-            $lastItemEndTime = $lastItem['ends'];
-        } else {
-            $lastItemEndTime = $showStartTime;
+    public static function FilterRowsByDate($rows, $date, $startCutoff, $endCutoff){
+        $dateNow = new Application_Model_DateHelper;
+        $timeNow = $dateNow->getDate();
+
+        $data = array();
+        //iterate over each show, and calculate information for it.
+        $numItems = count($rows);
+        for ($i=0; $i<$numItems; $i++){
+            $item = $rows[$i];
+
+            if ((strtotime($item['item_ends']) > $date->getEpochTime() - $startCutoff
+                && strtotime($item['item_starts']) < $date->getEpochTime() + $endCutoff) || array_key_exists("group", $item) || array_key_exists("gap", $item)){
+
+                if (array_key_exists("group", $item)){
+                    $type = "g";
+                } else if (array_key_exists("gap", $item)){
+                    $type = "b";
+                } else if (strtotime($item['item_ends']) < strtotime($timeNow)){
+                    $type = "p";
+                } else if (strtotime($item['item_starts']) < strtotime($timeNow) && strtotime($timeNow) < strtotime($item['item_ends'])){
+                    $type = "c";
+                } else {
+                    $type = "n";
+                }
+
+                array_push($data, array($type, $item["item_starts"], $item["item_starts"], $item["item_ends"], $item["clip_length"], $item["track_title"], $item["artist_name"], $item["album_title"], $item["playlist_name"], $item["show_name"], $item["instance_id"]));
+            }
         }
 
-        $diff = Application_Model_DateHelper::TimeDiff($lastItemEndTime, $showEndTime);
-
-        if ($diff <= 0){
-            //ok!
-            return null;
-        } else {
-            //There is a gap at the end of the show. Return blank row
-            return array("b", $diff, "-", "-", "-", "-", "-", "-", "-", "-", "-", "-");
-        }
+        return $data;
     }
 
     public static function GetDataGridData($viewType, $dateString){
@@ -105,44 +103,19 @@ class Application_Model_Nowplaying
             $timeNow = $date->getDate();
 
             $startCutoff = $date->getNowDayStartDiff();
-            $endCutoff = $date->getNowDayEndDiff();            
+            $endCutoff = $date->getNowDayEndDiff();
         }
 
 
-        $showsMap = Show_DAL::GetShowsInRange($timeNow, $startCutoff, $endCutoff);
+        $rows = Show_DAL::GetShowsInRange($timeNow, $startCutoff, $endCutoff);
+        $rows = Application_Model_Nowplaying::FindBeginningOfShow($rows);
+        $rows = Application_Model_Nowplaying::FindGapAtEndOfShow($rows);
+        //$rows = FindGapsBetweenShows
+        $data = Application_Model_Nowplaying::FilterRowsByDate($rows, $date, $startCutoff, $endCutoff);
 
-        //iterate over each show, and calculate information for it.
-        foreach($showsMap as $k => $show){
-            $rows = Schedule::GetShowInstanceItems($k);
-            $gapRow = Application_Model_Nowplaying::FindGapAtEndOfShow($showsMap[$k], $rows);
-            foreach ($rows as $item){
-                //check if this item is in todays date range
-                if (strtotime($item['ends']) > $date->getEpochTime() - $startCutoff
-                    && strtotime($item['starts']) < $date->getEpochTime() + $endCutoff){
 
-                    if ($item['ends'] < $timeNow){
-                        $type = "p";
-                    } else if ($item['starts'] < $timeNow && $timeNow < $item['ends']){
-                        $type = "c";
-                    } else {
-                        $type = "n";
-                    }
-                    
-                    array_push($showsMap[$k]['items'], array($type, $item["starts"], $item["starts"], $item["ends"], $item["clip_length"], $item["track_title"], $item["artist_name"],
-                        $item["album_title"], $item["name"], $item["show_name"], $item["instance_id"], $item["group_id"]));
-                }
-            }
-
-            if (!is_null($gapRow))
-                array_push($showsMap[$k]['items'], $gapRow);
-        }
-
-        //$showsMap = Application_Model_Nowplaying::FindGapsBetweenShows($showsMap);
-
-       
         $date = new Application_Model_DateHelper;
         $timeNow = $date->getDate();
-
-        return array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$showsMap);
+        return array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$data);
     }
 }

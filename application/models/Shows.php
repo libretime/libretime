@@ -770,32 +770,33 @@ class Show_DAL{
 
     public static function GetShowsInRange($timeNow, $start, $end){
         global $CC_CONFIG, $CC_DBC;
-		$sql = "SELECT *,"
-        ." si.starts as start_timestamp,"
-        ." si.ends as end_timestamp,"
-        ." si.id as instance_id"
-        ." FROM "
-		." $CC_CONFIG[showInstances] si,"
-        ." $CC_CONFIG[showTable] s"
-		." WHERE si.show_id = s.id"
-		." AND ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
+		$sql = "SELECT"
+        ." si.starts as show_starts,"
+        ." si.ends as show_ends,"
+        ." st.starts as item_starts,"
+        ." st.ends as item_ends,"
+        ." st.clip_length as clip_length,"
+        ." ft.track_title as track_title,"
+        ." ft.artist_name as artist_name,"
+        ." ft.album_title as album_title,"
+        ." s.name as show_name,"
+        ." si.id as instance_id,"
+        ." pt.name as playlist_name"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." LEFT JOIN $CC_CONFIG[scheduleTable] st"
+        ." ON st.instance_id = si.id"
+        ." LEFT JOIN $CC_CONFIG[playListTable] pt"
+        ." ON st.playlist_id = pt.id"
+        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." ON st.file_id = ft.id"
+        ." LEFT JOIN $CC_CONFIG[showTable] s"
+		." ON si.show_id = s.id"
+		." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
         ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
         ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
-        ." ORDER BY si.starts";
+        ." ORDER BY st.starts";
 
-        $rows = $CC_DBC->GetAll($sql);
-
-        $showsMap = array();
-        $rowsCount = count($rows);
-        
-        for ($i=0; $i<$rowsCount; $i++){
-            $rows[$i]['items'] = array();
-            array_push($rows[$i]['items'],
-                array("s", $rows[$i]["starts"], $rows[$i]["starts"], $rows[$i]["ends"], "", "", "", "", "", $rows[$i]["name"], $rows[$i]["instance_id"], ""));
-            $showsMap[$rows[$i]['instance_id']] = $rows[$i];
-        }
-
-        return $showsMap;
+        return $CC_DBC->GetAll($sql);
     }
     
 }
