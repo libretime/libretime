@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>scapi.Scope</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="scapi-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >SoundCloud API</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="scapi-module.html">Package&nbsp;scapi</a> ::
+        Class&nbsp;Scope
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="scapi.Scope-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class Scope</h1><p class="nomargin-top"><span class="codelink"><a href="scapi-pysrc.html#Scope">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+object --+
+         |
+        <strong class="uidshort">Scope</strong>
+</pre>
+
+<hr />
+<p>The basic means to query and create resources. The Scope uses the <a 
+  href="scapi.ApiConnector-class.html" class="link" 
+  onclick="show_private();">ApiConnector</a> to create the proper URIs for 
+  querying or creating resources.</p>
+  <p>For accessing resources from the root level, you explcitly create a 
+  Scope and pass it an <a href="scapi.ApiConnector-class.html" class="link"
+  onclick="show_private();">ApiConnector</a>-instance. Then you can query 
+  it or create new resources like this:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>connector = scapi.ApiConnector(host=<span class="py-string">'host'</span>, user=<span class="py-string">'user'</span>, password=<span class="py-string">'password'</span>) <span class="py-comment"># initialize the API</span>
+<span class="py-prompt">&gt;&gt;&gt; </span>scope = scapi.Scope(connector) <span class="py-comment"># get the root scope</span>
+<span class="py-prompt">&gt;&gt;&gt; </span>users = list(scope.users())
+<span class="py-output">[&lt;scapi.User object at 0x12345&gt;, ...]</span></pre>
+  <p>Please not that all resources that are lists are returned as 
+  <b>generator</b>. So you need to either iterate over them, or call 
+  list(resources) on them.</p>
+  <p>When accessing resources that belong to another resource, like 
+  contacts of a user, you access the parent's resource scope implicitly 
+  through the resource instance like this:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>user = scope.users().next()
+<span class="py-prompt">&gt;&gt;&gt; </span>list(user.contacts())
+<span class="py-output">[&lt;scapi.Contact object at 0x12345&gt;, ...]</span></pre>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">connector</span>,
+        <span class="summary-sig-arg">scope</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">parent</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Create the Scope.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_get_connector"></a><span class="summary-sig-name">_get_connector</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope._get_connector">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#oauth_sign_get_request" class="summary-sig-name">oauth_sign_get_request</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>)</span><br />
+      This method will take an arbitrary url, and rewrite it so that the 
+      current authenticator's oauth-headers are appended as 
+      query-parameters.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope.oauth_sign_get_request">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">urllib2.Request</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#_create_request" class="summary-sig-name" onclick="show_private();">_create_request</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">connector</span>,
+        <span class="summary-sig-arg">parameters</span>,
+        <span class="summary-sig-arg">queryparams</span>,
+        <span class="summary-sig-arg">alternate_http_method</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">use_multipart</span>=<span class="summary-sig-default">False</span>)</span><br />
+      This method returnes the urllib2.Request to perform the actual 
+      HTTP-request.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope._create_request">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">str</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#_create_query_string" class="summary-sig-name" onclick="show_private();">_create_query_string</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">queryparams</span>)</span><br />
+      Small helpermethod to create the querystring from a dict.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope._create_query_string">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#_call" class="summary-sig-name" onclick="show_private();">_call</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">method</span>,
+        <span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**kwargs</span>)</span><br />
+      The workhorse.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope._call">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#_map" class="summary-sig-name" onclick="show_private();">_map</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">res</span>,
+        <span class="summary-sig-arg">method</span>,
+        <span class="summary-sig-arg">continue_list_fetching</span>)</span><br />
+      This method will take the JSON-result of a HTTP-call and return our 
+      domain-objects.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope._map">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#__getattr__" class="summary-sig-name">__getattr__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">_name</span>)</span><br />
+      Retrieve an API-method or a scoped domain-class.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope.__getattr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      repr(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope.__repr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.Scope-class.html#__str__" class="summary-sig-name">__str__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      str(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#Scope.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">connector</span>,
+        <span class="sig-arg">scope</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">parent</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Create the Scope. It can have a resource as scope, and possibly a 
+  parent-scope.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>connector</code></strong> (ApiConnector) - The connector to use.</li>
+        <li><strong class="pname"><code>scope</code></strong> (scapi.RESTBase) - the resource to make this scope belong to</li>
+        <li><strong class="pname"><code>parent</code></strong> (scapi.Scope) - the parent scope of this scope</li>
+    </ul></dd>
+    <dt>Overrides:
+        object.__init__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="oauth_sign_get_request"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">oauth_sign_get_request</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope.oauth_sign_get_request">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>This method will take an arbitrary url, and rewrite it so that the 
+  current authenticator's oauth-headers are appended as 
+  query-parameters.</p>
+  <p>This is used in streaming and downloading, because those content isn't
+  served from the SoundCloud servers themselves.</p>
+  <p>A usage example would look like this:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>sca = scapi.Scope(connector)
+<span class="py-prompt">&gt;&gt;&gt; </span>track = sca.tracks(params={
+<span class="py-output">      &quot;filter&quot; : &quot;downloadable&quot;,</span>
+<span class="py-output">      }).next()</span></pre>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>download_url = track.download_url
+<span class="py-prompt">&gt;&gt;&gt; </span>signed_url = track.oauth_sign_get_request(download_url)
+<span class="py-prompt">&gt;&gt;&gt; </span>data = urllib2.urlopen(signed_url).read()</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_create_request"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_create_request</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">connector</span>,
+        <span class="sig-arg">parameters</span>,
+        <span class="sig-arg">queryparams</span>,
+        <span class="sig-arg">alternate_http_method</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">use_multipart</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope._create_request">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>This method returnes the urllib2.Request to perform the actual 
+  HTTP-request.</p>
+  <p>We return a subclass that overload the get_method-method to return a 
+  custom method like &quot;PUT&quot;. Additionally, the request is enhanced
+  with the current authenticators authorization scheme headers.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>url</code></strong> - the destination url</li>
+        <li><strong class="pname"><code>connector</code></strong> - our connector-instance</li>
+        <li><strong class="pname"><code>parameters</code></strong> (None|dict&lt;str, basestring|list&lt;basestring&gt;&gt;) - the POST-parameters to use.</li>
+        <li><strong class="pname"><code>queryparams</code></strong> (None|dict&lt;str, basestring|list&lt;basestring&gt;&gt;) - the queryparams to use</li>
+        <li><strong class="pname"><code>alternate_http_method</code></strong> (str) - an alternate HTTP-method to use</li>
+    </ul></dd>
+    <dt>Returns: urllib2.Request</dt>
+        <dd>the fully equipped request</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_create_query_string"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_create_query_string</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">queryparams</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope._create_query_string">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Small helpermethod to create the querystring from a dict.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>queryparams</code></strong> (None|dict&lt;str, basestring|list&lt;basestring&gt;&gt;) - the queryparameters.</li>
+    </ul></dd>
+    <dt>Returns: str</dt>
+        <dd>either the empty string, or a &quot;?&quot; followed by the 
+          parameters joined by &quot;&amp;&quot;</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_call"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_call</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">method</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope._call">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>The workhorse. It's complicated, convoluted and beyond understanding 
+  of a mortal being.</p>
+  <p>You have been warned.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_map"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_map</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">res</span>,
+        <span class="sig-arg">method</span>,
+        <span class="sig-arg">continue_list_fetching</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope._map">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>This method will take the JSON-result of a HTTP-call and return our 
+  domain-objects.</p>
+  <p>It's also deep magic, don't look.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="__getattr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__getattr__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">_name</span>)</span>
+    <br /><em class="fname">(Qualification operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope.__getattr__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Retrieve an API-method or a scoped domain-class.</p>
+  <p>If the former, result is a callable that supports the following 
+  invocations:</p>
+  <ul>
+    <li>
+      calling (...), with possible arguments (positional/keyword), return 
+      the resulting resource or list of resources. When calling, you can 
+      pass a keyword-argument <b>params</b>. This must be a dict or <a 
+      href="scapi.util.MultiDict-class.html" class="link">MultiDict</a> and
+      will be used to add additional query-get-parameters.
+    </li>
+    <li>
+      invoking append(resource) on it will PUT the resource, making it part
+      of the current resource. Makes sense only if it's a collection of 
+      course.
+    </li>
+    <li>
+      invoking remove(resource) on it will DELETE the resource from it's 
+      container. Also only usable on collections.
+      <p>TODO: describe the latter</p>
+    </li>
+  </ul>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="__repr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope.__repr__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>repr(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__repr__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__str__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__str__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Informal representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#Scope.__str__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>str(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__str__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="scapi-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >SoundCloud API</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 10 00:58:49 2009
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

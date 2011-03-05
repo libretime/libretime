@@ -1,0 +1,895 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>scapi.RESTBase</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="scapi-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >SoundCloud API</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="scapi-module.html">Package&nbsp;scapi</a> ::
+        Class&nbsp;RESTBase
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="scapi.RESTBase-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class RESTBase</h1><p class="nomargin-top"><span class="codelink"><a href="scapi-pysrc.html#RESTBase">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+object --+
+         |
+        <strong class="uidshort">RESTBase</strong>
+</pre>
+
+<dl><dt>Known Subclasses:</dt>
+<dd>
+      <ul class="subclass-list">
+<li><a href="scapi.Comment-class.html">Comment</a></li><li>, <a href="scapi.Event-class.html">Event</a></li><li>, <a href="scapi.Group-class.html">Group</a></li><li>, <a href="scapi.Playlist-class.html">Playlist</a></li><li>, <a href="scapi.Track-class.html">Track</a></li><li>, <a href="scapi.User-class.html">User</a></li>  </ul>
+</dd></dl>
+
+<hr />
+<p>The baseclass for all our domain-objects/resources.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">data</span>,
+        <span class="summary-sig-arg">scope</span>,
+        <span class="summary-sig-arg">path_stack</span>=<span class="summary-sig-default">None</span>)</span><br />
+      x.__init__(...) initializes x; see x.__class__.__doc__ for signature</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__getattr__"></a><span class="summary-sig-name">__getattr__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.__getattr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#__setattr__" class="summary-sig-name">__setattr__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">value</span>)</span><br />
+      This method is used to set a property, a resource or a list of 
+      resources as property of the resource the method is invoked on.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.__setattr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_as_arguments"></a><span class="summary-sig-name">_as_arguments</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Converts a resource to a argument-string the way Rails expects it.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase._as_arguments">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_convert_value"></a><span class="summary-sig-name">_convert_value</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">value</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase._convert_value">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#_scope" class="summary-sig-name" onclick="show_private();">_scope</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return the scope this resource lives in, which is the KIND and id</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase._scope">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      repr(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.__repr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#__hash__" class="summary-sig-name">__hash__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      hash(x)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.__hash__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#__eq__" class="summary-sig-name">__eq__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">other</span>)</span><br />
+      Test for equality.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.__eq__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__ne__"></a><span class="summary-sig-name">__ne__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">other</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.__ne__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__str__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS METHODS ==================== -->
+<a name="section-ClassMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#create" class="summary-sig-name">create</a>(<span class="summary-sig-arg">cls</span>,
+        <span class="summary-sig-arg">scope</span>,
+        <span class="summary-sig-arg">**data</span>)</span><br />
+      This is a convenience-method for creating an object that will be 
+      passed as parameter - e.g.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.create">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#new" class="summary-sig-name">new</a>(<span class="summary-sig-arg">cls</span>,
+        <span class="summary-sig-arg">scope</span>,
+        <span class="summary-sig-arg">**data</span>)</span><br />
+      Create a new resource inside a given Scope.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.new">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#get" class="summary-sig-name">get</a>(<span class="summary-sig-arg">cls</span>,
+        <span class="summary-sig-arg">scope</span>,
+        <span class="summary-sig-arg">id</span>)</span><br />
+      Fetch a resource by id.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase.get">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="scapi.RESTBase-class.html#_singleton" class="summary-sig-name" onclick="show_private();">_singleton</a>(<span class="summary-sig-arg">cls</span>)</span><br />
+      This method will take a resource name like &quot;users&quot; and 
+      return the single-case, in the example &quot;user&quot;.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="scapi-pysrc.html#RESTBase._singleton">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="scapi.RESTBase-class.html#REGISTRY" class="summary-name">REGISTRY</a> = <code title="{'comments': &lt;class 'scapi.Comment'&gt;,
+ 'contacts': &lt;class 'scapi.User'&gt;,
+ 'events': &lt;class 'scapi.Event'&gt;,
+ 'favorites': &lt;class 'scapi.Track'&gt;,
+ 'groups': &lt;class 'scapi.Group'&gt;,
+ 'me': &lt;class 'scapi.User'&gt;,
+ 'permissions': &lt;class 'scapi.User'&gt;,
+ 'playlists': &lt;class 'scapi.Playlist'&gt;,
+..."><code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">comments</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Comment'&gt;<code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">contacts</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="scapi.RESTBase-class.html#ALL_DOMAIN_CLASSES" class="summary-name">ALL_DOMAIN_CLASSES</a> = <code title="{'Comment': &lt;class 'scapi.Comment'&gt;,
+ 'Event': &lt;class 'scapi.Event'&gt;,
+ 'Group': &lt;class 'scapi.Group'&gt;,
+ 'Playlist': &lt;class 'scapi.Playlist'&gt;,
+ 'Track': &lt;class 'scapi.Track'&gt;,
+ 'User': &lt;class 'scapi.User'&gt;}"><code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">Comment</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Comment'&gt;<code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">Eve</code><code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ALIASES"></a><span class="summary-name">ALIASES</span> = <code title="[]"><code class="variable-group">[</code><code class="variable-group">]</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="KIND"></a><span class="summary-name">KIND</span> = <code title="None">None</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">data</span>,
+        <span class="sig-arg">scope</span>,
+        <span class="sig-arg">path_stack</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>x.__init__(...) initializes x; see x.__class__.__doc__ for 
+  signature</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__setattr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__setattr__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>,
+        <span class="sig-arg">value</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase.__setattr__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>This method is used to set a property, a resource or a list of 
+  resources as property of the resource the method is invoked on.</p>
+  <p>For example, to set a comment on a track, do</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>sca = scapi.Scope(connector)
+<span class="py-prompt">&gt;&gt;&gt; </span>track = scapi.Track.new(title=<span class="py-string">'bar'</span>, sharing=<span class="py-string">&quot;private&quot;</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>comment = scapi.Comment.create(body=<span class="py-string">&quot;This is the body of my comment&quot;</span>, timestamp=10)    
+<span class="py-prompt">&gt;&gt;&gt; </span>track.comments = comment</pre>
+  <p>To set a list of users as permissions, do</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>sca = scapi.Scope(connector)
+<span class="py-prompt">&gt;&gt;&gt; </span>me = sca.me()
+<span class="py-prompt">&gt;&gt;&gt; </span>track = scapi.Track.new(title=<span class="py-string">'bar'</span>, sharing=<span class="py-string">&quot;private&quot;</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>users = sca.users()
+<span class="py-prompt">&gt;&gt;&gt; </span>users_to_set = [user  <span class="py-keyword">for</span> user <span class="py-keyword">in</span> users[:10] <span class="py-keyword">if</span> user != me]
+<span class="py-prompt">&gt;&gt;&gt; </span>track.permissions = users_to_set</pre>
+  <p>And finally, to simply change the title of a track, do</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>sca = scapi.Scope(connector)
+<span class="py-prompt">&gt;&gt;&gt; </span>track = sca.Track.get(track_id)
+<span class="py-prompt">&gt;&gt;&gt; </span>track.title = <span class="py-string">&quot;new_title&quot;</span></pre>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>name</code></strong> (str) - the property name</li>
+        <li><strong class="pname"><code>value</code></strong> (RESTBase | list&lt;RESTBase&gt; | basestring | long | int | float) - the property, resource or resources to set</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>None</dd>
+    <dt>Overrides:
+        object.__setattr__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="create"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">create</span>(<span class="sig-arg">cls</span>,
+        <span class="sig-arg">scope</span>,
+        <span class="sig-arg">**data</span>)</span>
+    <br /><em class="fname">Class Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase.create">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>This is a convenience-method for creating an object that will be 
+  passed as parameter - e.g. a comment. A usage would look like this:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>sca = scapi.Scope(connector)
+<span class="py-prompt">&gt;&gt;&gt; </span>track = sca.Track.new(title=<span class="py-string">'bar'</span>, sharing=<span class="py-string">&quot;private&quot;</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>comment = sca.Comment.create(body=<span class="py-string">&quot;This is the body of my comment&quot;</span>, timestamp=10)    
+<span class="py-prompt">&gt;&gt;&gt; </span>track.comments = comment</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="new"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">new</span>(<span class="sig-arg">cls</span>,
+        <span class="sig-arg">scope</span>,
+        <span class="sig-arg">**data</span>)</span>
+    <br /><em class="fname">Class Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase.new">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Create a new resource inside a given Scope. The actual values are in 
+  data.</p>
+  <p>So for creating new resources, you have two options:</p>
+  <ul>
+    <li>
+      create an instance directly using the class:
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>scope = scapi.Scope(connector)
+<span class="py-prompt">&gt;&gt;&gt; </span>scope.User.new(...)
+<span class="py-output">&lt;scapi.User object at 0x1234&gt;</span></pre>
+    </li>
+    <li>
+      create a instance in a certain scope:
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>scope = scapi.Scope(connector)
+<span class="py-prompt">&gt;&gt;&gt; </span>user = scapi.User(<span class="py-string">&quot;1&quot;</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>track = user.tracks.new()
+<span class="py-output">&lt;scapi.Track object at 0x1234&gt;</span></pre>
+    </li>
+  </ul>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>scope</code></strong> (tuple&lt;Scope&gt;[1]) - if not empty, a one-element tuple containing the Scope</li>
+        <li><strong class="pname"><code>data</code></strong> (dict) - the data</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>new instance of the resource</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get</span>(<span class="sig-arg">cls</span>,
+        <span class="sig-arg">scope</span>,
+        <span class="sig-arg">id</span>)</span>
+    <br /><em class="fname">Class Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase.get">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Fetch a resource by id.</p>
+  <p>Simply pass a known id as argument. For example</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>sca = scapi.Scope(connector)
+<span class="py-prompt">&gt;&gt;&gt; </span>track = sca.Track.get(id)</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_scope"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_scope</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase._scope">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the scope this resource lives in, which is the KIND and id</p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>&quot;&lt;KIND&gt;/&lt;id&gt;&quot;</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_singleton"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_singleton</span>(<span class="sig-arg">cls</span>)</span>
+    <br /><em class="fname">Class Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase._singleton">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>This method will take a resource name like &quot;users&quot; and 
+  return the single-case, in the example &quot;user&quot;.</p>
+  <p>Currently, it's not very sophisticated, only strips a trailing s.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="__repr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase.__repr__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>repr(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__repr__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__hash__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__hash__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Hashing function)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase.__hash__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>hash(x)</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__hash__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__eq__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__eq__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">other</span>)</span>
+    <br /><em class="fname">(Equality operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="scapi-pysrc.html#RESTBase.__eq__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Test for equality.</p>
+  <p>Resources are considered equal if the have the same kind and id.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="REGISTRY"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">REGISTRY</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+<code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">comments</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Comment'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">contacts</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.User'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">events</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Event'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">favorites</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Track'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">groups</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Group'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">me</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.User'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">permissions</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.User'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">playlists</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Playlist'&gt;<code class="variable-op">,</code>
+<code class="variable-ellipsis">...</code>
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="ALL_DOMAIN_CLASSES"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">ALL_DOMAIN_CLASSES</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+<code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">Comment</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Comment'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Event</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Event'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Group</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Group'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Playlist</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Playlist'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Track</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.Track'&gt;<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">User</code><code class="variable-quote">'</code><code class="variable-op">: </code>&lt;class 'scapi.User'&gt;<code class="variable-group">}</code>
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="scapi-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >SoundCloud API</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 10 00:58:49 2009
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

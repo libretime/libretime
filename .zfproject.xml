@@ -100,6 +100,10 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="help"/>
         </controllerFile>
+        <controllerFile controllerName="Recorder">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="getShowSchedule"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Login"/>
@@ -325,6 +329,12 @@
           <viewControllerScriptsDirectory forControllerName="Schedule">
             <viewScriptFile forActionName="cancelShow"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Recorder">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Recorder">
+            <viewScriptFile forActionName="getShowSchedule"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
@@ -370,6 +380,7 @@
           <testApplicationControllerFile filesystemName="NowplayingControllerTest.php"/>
           <testApplicationControllerFile filesystemName="PreferenceControllerTest.php"/>
           <testApplicationControllerFile filesystemName="DashboardControllerTest.php"/>
+          <testApplicationControllerFile filesystemName="RecorderControllerTest.php"/>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>
       <testLibraryDirectory>

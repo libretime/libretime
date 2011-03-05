@@ -175,15 +175,26 @@ class Show {
         Show::populateShowUntilLastGeneratedDate($showId);
 	}
 
-    public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL) {
+    public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=FALSE) {
         global $CC_DBC;
 
         $sql = "SELECT starts, ends, show_id, name, description, color, background_color, cc_show_instances.id AS instance_id  
             FROM cc_show_instances 
-            LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id 
-            WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
+            LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id";
+
+        //only want shows that are starting at the time or later.
+        if($onlyRecord) {
+
+            $sql = $sql." WHERE (starts >= '{$start_timestamp}' AND starts < timestamp '{$start_timestamp}' + interval '2 hours')";
+            $sql = $sql." AND (record = TRUE)";
+        }
+        else {
+
+            $sql = $sql." WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
                 OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}')
                 OR (starts <= '{$start_timestamp}' AND ends >= '{$end_timestamp}'))";
+        } 
+            
 
         if(isset($excludeInstance)) {
             foreach($excludeInstance as $instance) {
@@ -196,7 +207,6 @@ class Show {
         }
 
 		//echo $sql;
-
 		return $CC_DBC->GetAll($sql);
     }
 

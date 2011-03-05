@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>scapi.tests.test_oauth</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="scapi-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >SoundCloud API</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="scapi-module.html">Package&nbsp;scapi</a> ::
+        <a href="scapi.tests-module.html">Package&nbsp;tests</a> ::
+        Module&nbsp;test_oauth
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="scapi.tests.test_oauth-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="scapi.tests.test_oauth-module.html">Module scapi.tests.test_oauth</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">pkg_resources</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Package scapi=scapi-module.html"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-0', 'scapi', 'link-0');">scapi</a></tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-1" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-1', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module scapi.authentication=scapi.authentication-module.html"><a title="scapi.authentication" class="py-name" href="#" onclick="return doclink('link-2', 'authentication', 'link-2');">authentication</a></tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">urllib</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt id="link-3" class="py-name" targets="Variable scapi.authentication.logger=scapi.authentication-module.html#logger,Variable scapi.logger=scapi-module.html#logger,Variable scapi.tests.scapi_tests.logger=scapi.tests.scapi_tests-module.html#logger,Variable scapi.tests.test_connect.logger=scapi.tests.test_connect-module.html#logger,Variable scapi.tests.test_oauth.logger=scapi.tests.test_oauth-module.html#logger"><a title="scapi.authentication.logger
+scapi.logger
+scapi.tests.scapi_tests.logger
+scapi.tests.test_connect.logger
+scapi.tests.test_oauth.logger" class="py-name" href="#" onclick="return doclink('link-3', 'logger', 'link-3');">logger</a></tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">getLogger</tt><tt class="py-op">(</tt><tt class="py-name">__name__</tt><tt class="py-op">)</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt id="link-4" class="py-name"><a title="scapi.authentication.logger
+scapi.logger
+scapi.tests.scapi_tests.logger
+scapi.tests.test_connect.logger
+scapi.tests.test_oauth.logger" class="py-name" href="#" onclick="return doclink('link-4', 'logger', 'link-3');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">DEBUG</tt><tt class="py-op">)</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt id="link-5" class="py-name" targets="Variable scapi.tests.test_connect._logger=scapi.tests.test_connect-module.html#_logger,Variable scapi.tests.test_oauth._logger=scapi.tests.test_oauth-module.html#_logger"><a title="scapi.tests.test_connect._logger
+scapi.tests.test_oauth._logger" class="py-name" href="#" onclick="return doclink('link-5', '_logger', 'link-5');">_logger</a></tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">getLogger</tt><tt class="py-op">(</tt><tt class="py-string">"scapi"</tt><tt class="py-op">)</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt id="link-6" class="py-name"><a title="scapi.tests.test_connect._logger
+scapi.tests.test_oauth._logger" class="py-name" href="#" onclick="return doclink('link-6', '_logger', 'link-5');">_logger</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">DEBUG</tt><tt class="py-op">)</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt id="link-7" class="py-name" targets="Variable scapi.tests.scapi_tests.SCAPITests.TOKEN=scapi.tests.scapi_tests.SCAPITests-class.html#TOKEN,Variable scapi.tests.test_connect.TOKEN=scapi.tests.test_connect-module.html#TOKEN,Variable scapi.tests.test_oauth.TOKEN=scapi.tests.test_oauth-module.html#TOKEN"><a title="scapi.tests.scapi_tests.SCAPITests.TOKEN
+scapi.tests.test_connect.TOKEN
+scapi.tests.test_oauth.TOKEN" class="py-name" href="#" onclick="return doclink('link-7', 'TOKEN', 'link-7');">TOKEN</a></tt>  <tt class="py-op">=</tt> <tt class="py-string">"QcciYu1FSwDSGKAG2mNw"</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt id="link-8" class="py-name" targets="Variable scapi.tests.scapi_tests.SCAPITests.SECRET=scapi.tests.scapi_tests.SCAPITests-class.html#SECRET,Variable scapi.tests.test_connect.SECRET=scapi.tests.test_connect-module.html#SECRET,Variable scapi.tests.test_oauth.SECRET=scapi.tests.test_oauth-module.html#SECRET"><a title="scapi.tests.scapi_tests.SCAPITests.SECRET
+scapi.tests.test_connect.SECRET
+scapi.tests.test_oauth.SECRET" class="py-name" href="#" onclick="return doclink('link-8', 'SECRET', 'link-8');">SECRET</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"gJ2ok6ULUsYQB3rsBmpHCRHoFCAPOgK8ZjoIyxzris"</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt id="link-9" class="py-name" targets="Variable scapi.tests.scapi_tests.SCAPITests.CONSUMER=scapi.tests.scapi_tests.SCAPITests-class.html#CONSUMER,Variable scapi.tests.test_connect.CONSUMER=scapi.tests.test_connect-module.html#CONSUMER,Variable scapi.tests.test_oauth.CONSUMER=scapi.tests.test_oauth-module.html#CONSUMER"><a title="scapi.tests.scapi_tests.SCAPITests.CONSUMER
+scapi.tests.test_connect.CONSUMER
+scapi.tests.test_oauth.CONSUMER" class="py-name" href="#" onclick="return doclink('link-9', 'CONSUMER', 'link-9');">CONSUMER</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Cy2eLPrIMp4vOxjz9icdQ"</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt id="link-10" class="py-name" targets="Variable scapi.tests.scapi_tests.SCAPITests.CONSUMER_SECRET=scapi.tests.scapi_tests.SCAPITests-class.html#CONSUMER_SECRET,Variable scapi.tests.test_connect.CONSUMER_SECRET=scapi.tests.test_connect-module.html#CONSUMER_SECRET,Variable scapi.tests.test_oauth.CONSUMER_SECRET=scapi.tests.test_oauth-module.html#CONSUMER_SECRET"><a title="scapi.tests.scapi_tests.SCAPITests.CONSUMER_SECRET
+scapi.tests.test_connect.CONSUMER_SECRET
+scapi.tests.test_oauth.CONSUMER_SECRET" class="py-name" href="#" onclick="return doclink('link-10', 'CONSUMER_SECRET', 'link-10');">CONSUMER_SECRET</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"KsBa272x6M2to00Vo5FdvZXt9kakcX7CDIPJoGwTro"</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"> </tt>
+<a name="test_base64_connect"></a><div id="test_base64_connect-def"><a name="L17"></a><tt class="py-lineno">17</tt> <a class="py-toggle" href="#" id="test_base64_connect-toggle" onclick="return toggle('test_base64_connect');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="scapi.tests.test_oauth-module.html#test_base64_connect">test_base64_connect</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="test_base64_connect-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="test_base64_connect-expanded"><a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">    <tt id="link-11" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-11', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Variable scapi.USE_PROXY=scapi-module.html#USE_PROXY"><a title="scapi.USE_PROXY" class="py-name" href="#" onclick="return doclink('link-12', 'USE_PROXY', 'link-12');">USE_PROXY</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">    <tt id="link-13" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-13', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-14" class="py-name" targets="Variable scapi.PROXY=scapi-module.html#PROXY"><a title="scapi.PROXY" class="py-name" href="#" onclick="return doclink('link-14', 'PROXY', 'link-14');">PROXY</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'http://127.0.0.1:10000/'</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">    <tt id="link-15" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-15', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt class="py-name">SoundCloudAPI</tt><tt class="py-op">(</tt><tt class="py-name">host</tt><tt class="py-op">=</tt><tt class="py-string">'192.168.2.31:3000'</tt><tt class="py-op">,</tt> <tt class="py-name">authenticator</tt><tt class="py-op">=</tt><tt id="link-16" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-16', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="scapi.authentication" class="py-name" href="#" onclick="return doclink('link-17', 'authentication', 'link-2');">authentication</a></tt><tt class="py-op">.</tt><tt id="link-18" class="py-name" targets="Class scapi.authentication.BasicAuthenticator=scapi.authentication.BasicAuthenticator-class.html"><a title="scapi.authentication.BasicAuthenticator" class="py-name" href="#" onclick="return doclink('link-18', 'BasicAuthenticator', 'link-18');">BasicAuthenticator</a></tt><tt class="py-op">(</tt><tt class="py-string">'tiga'</tt><tt class="py-op">,</tt> <tt class="py-string">'test'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">    <tt class="py-name">sca</tt> <tt class="py-op">=</tt> <tt id="link-19" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-19', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-20" class="py-name" targets="Class scapi.Scope=scapi.Scope-class.html"><a title="scapi.Scope" class="py-name" href="#" onclick="return doclink('link-20', 'Scope', 'link-20');">Scope</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">sca</tt><tt class="py-op">.</tt><tt class="py-name">me</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-21" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-21', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-22" class="py-name" targets="Class scapi.User=scapi.User-class.html"><a title="scapi.User" class="py-name" href="#" onclick="return doclink('link-22', 'User', 'link-22');">User</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"> </tt>
+<a name="test_oauth_connect"></a><div id="test_oauth_connect-def"><a name="L25"></a><tt class="py-lineno">25</tt> <a class="py-toggle" href="#" id="test_oauth_connect-toggle" onclick="return toggle('test_oauth_connect');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="scapi.tests.test_oauth-module.html#test_oauth_connect">test_oauth_connect</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="test_oauth_connect-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="test_oauth_connect-expanded"><a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">    <tt id="link-23" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-23', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-24" class="py-name"><a title="scapi.USE_PROXY" class="py-name" href="#" onclick="return doclink('link-24', 'USE_PROXY', 'link-12');">USE_PROXY</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">    <tt id="link-25" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-25', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-26" class="py-name"><a title="scapi.PROXY" class="py-name" href="#" onclick="return doclink('link-26', 'PROXY', 'link-14');">PROXY</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'http://127.0.0.1:10000/'</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">    <tt id="link-27" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-27', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt class="py-name">SoundCloudAPI</tt><tt class="py-op">(</tt><tt class="py-name">host</tt><tt class="py-op">=</tt><tt class="py-string">'192.168.2.31:3000'</tt><tt class="py-op">,</tt>  </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">                        <tt class="py-name">authenticator</tt><tt class="py-op">=</tt><tt id="link-28" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-28', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-29" class="py-name"><a title="scapi.authentication" class="py-name" href="#" onclick="return doclink('link-29', 'authentication', 'link-2');">authentication</a></tt><tt class="py-op">.</tt><tt id="link-30" class="py-name" targets="Class scapi.authentication.OAuthAuthenticator=scapi.authentication.OAuthAuthenticator-class.html"><a title="scapi.authentication.OAuthAuthenticator" class="py-name" href="#" onclick="return doclink('link-30', 'OAuthAuthenticator', 'link-30');">OAuthAuthenticator</a></tt><tt class="py-op">(</tt><tt id="link-31" class="py-name"><a title="scapi.tests.scapi_tests.SCAPITests.CONSUMER
+scapi.tests.test_connect.CONSUMER
+scapi.tests.test_oauth.CONSUMER" class="py-name" href="#" onclick="return doclink('link-31', 'CONSUMER', 'link-9');">CONSUMER</a></tt><tt class="py-op">,</tt>  </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">                                                                              <tt id="link-32" class="py-name"><a title="scapi.tests.scapi_tests.SCAPITests.CONSUMER_SECRET
+scapi.tests.test_connect.CONSUMER_SECRET
+scapi.tests.test_oauth.CONSUMER_SECRET" class="py-name" href="#" onclick="return doclink('link-32', 'CONSUMER_SECRET', 'link-10');">CONSUMER_SECRET</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">                                                                              <tt id="link-33" class="py-name"><a title="scapi.tests.scapi_tests.SCAPITests.TOKEN
+scapi.tests.test_connect.TOKEN
+scapi.tests.test_oauth.TOKEN" class="py-name" href="#" onclick="return doclink('link-33', 'TOKEN', 'link-7');">TOKEN</a></tt><tt class="py-op">,</tt> <tt id="link-34" class="py-name"><a title="scapi.tests.scapi_tests.SCAPITests.SECRET
+scapi.tests.test_connect.SECRET
+scapi.tests.test_oauth.SECRET" class="py-name" href="#" onclick="return doclink('link-34', 'SECRET', 'link-8');">SECRET</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">    <tt class="py-name">sca</tt> <tt class="py-op">=</tt> <tt id="link-35" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-35', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-36" class="py-name"><a title="scapi.Scope" class="py-name" href="#" onclick="return doclink('link-36', 'Scope', 'link-20');">Scope</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">sca</tt><tt class="py-op">.</tt><tt class="py-name">me</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-37" class="py-name"><a title="scapi" class="py-name" href="#" onclick="return doclink('link-37', 'scapi', 'link-0');">scapi</a></tt><tt class="py-op">.</tt><tt id="link-38" class="py-name"><a title="scapi.User" class="py-name" href="#" onclick="return doclink('link-38', 'User', 'link-22');">User</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="scapi-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >SoundCloud API</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 10 00:58:50 2009
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
