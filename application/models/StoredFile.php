@@ -1271,14 +1271,14 @@ class StoredFile {
             if (!file_exists($this->filepath) || @unlink($this->filepath)) {
                 $this->exists = FALSE;
                 return TRUE;
-            } 
+            }
             else {
                 return PEAR::raiseError(
                     "StoredFile::deleteFile: unlink failed ({$this->filepath})",
                     GBERR_FILEIO
                 );
             }
-        } 
+        }
         else {
             $this->exists = FALSE;
             return TRUE;
@@ -1304,7 +1304,7 @@ class StoredFile {
 
             Playlist::DeleteFileFromAllPlaylists($this->id);
         }
-        
+
         $sql = "DELETE FROM ".$CC_CONFIG['filesTable']
         ." WHERE gunid='{$this->gunid}'";
         $res = $CC_DBC->query($sql);
@@ -1717,7 +1717,7 @@ class StoredFile {
 
 				foreach($searchCols as $col) {
                     $escapedTerm = pg_escape_string($term);
-					$innerCond[] = "{$col}::text ILIKE '%{$escapedTerm}%'"; 
+					$innerCond[] = "{$col}::text ILIKE '%{$escapedTerm}%'";
 				}
 				$outerCond[] = "(".join(" OR ", $innerCond).")";
 			}

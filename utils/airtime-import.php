@@ -13,7 +13,7 @@ error_reporting(E_ALL);
 set_error_handler("camp_import_error_handler", E_ALL & !E_NOTICE);
 
 require_once(dirname(__FILE__)."/../application/configs/conf.php");
-require_once(dirname(__FILE__)."/../application/models/GreenBox.php");
+require_once(dirname(__FILE__)."/../application/models/StoredFile.php");
 require_once('DB.php');
 require_once('Console/Getopt.php');
 
@@ -103,8 +103,6 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
     if (!in_array($p_importMode, array("copy", "link"))) {
         return;
     }
-
-    $greenbox = new GreenBox();
 
     $fileCount = 0;
     $duplicates = 0;

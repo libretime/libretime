@@ -1,7 +1,4 @@
 <?php
-
-require_once("GreenBox.php");
-
 /**
  * Preference storage class.
  *
@@ -14,17 +11,11 @@ require_once("GreenBox.php");
 /* ================== Prefs ================== */
 class Prefs {
 
-    public $gb;
-
     /**
      *  Constructor
-     *
-     * @param GreenBox $gb
-     * 		GreenBox object reference
      */
-    public function __construct(&$gb)
+    public function __construct()
     {
-        $this->gb =& $gb;
     }
 
 
@@ -42,7 +33,7 @@ class Prefs {
      */
     function loadPref($sessid, $key)
     {
-        $subjid = GreenBox::GetSessUserId($sessid);
+        $subjid = Alib::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
             return $subjid;
         }
@@ -75,7 +66,7 @@ class Prefs {
      */
     function savePref($sessid, $key, $value)
     {
-        $subjid = GreenBox::GetSessUserId($sessid);
+        $subjid = Alib::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
             return $subjid;
         }
@@ -107,7 +98,7 @@ class Prefs {
      */
     function delPref($sessid, $key)
     {
-        $subjid = GreenBox::GetSessUserId($sessid);
+        $subjid = Alib::GetSessUserId($sessid);
         if (PEAR::isError($subjid)) {
             return $subjid;
         }
@@ -180,7 +171,7 @@ class Prefs {
      */
     function saveGroupPref($sessid, $group, $key, $value)
     {
-        $uid = GreenBox::GetSessUserId($sessid);
+        $uid = Alib::GetSessUserId($sessid);
         if (PEAR::isError($uid)) {
             return $uid;
         }
@@ -230,7 +221,7 @@ class Prefs {
      */
     function delGroupPref($sessid, $group, $key)
     {
-        $uid = GreenBox::GetSessUserId($sessid);
+        $uid = Alib::GetSessUserId($sessid);
         if (PEAR::isError($uid)) {
             return $uid;
         }

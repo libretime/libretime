@@ -20,33 +20,6 @@ class Alib {
 
     /* -------------------------------------------------------- authorization */
     /**
-     * Insert permission record
-     *
-     * @param int $sid
-     * 		local user/group id
-     * @param string $action
-     * @param int $oid
-     * 		local object id
-     * @param string $type
-     * 		'A'|'D' (allow/deny)
-     * @return int
-     * 		local permission id
-     */
-    public static function AddPerm($sid, $action, $oid, $type='A')
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $permid = $CC_DBC->nextId($CC_CONFIG['permSequence']);
-        $sql = "INSERT INTO ".$CC_CONFIG['permTable']." (permid, subj, action, obj, type)"
-        ." VALUES ($permid, $sid, '$action', $oid, '$type')";
-        $r = $CC_DBC->query($sql);
-        if (PEAR::isError($r)) {
-            return($r);
-        }
-        return $permid;
-    } // fn addPerm
-
-
-    /**
      * Remove permission record
      *
      * @param int $permid

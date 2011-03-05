@@ -1,0 +1,9 @@
+2009-09-10  Diez Roggisch  <deets@web.de>
+
+	* OAuth 1.0a working
+	* Query-Parameters for GET-requests to allow e.g. filtering
+	* Setting file-objects as attributes working.
+	* share to emails working.
+	* groups 
+	* downloading/streaming private tracks
+

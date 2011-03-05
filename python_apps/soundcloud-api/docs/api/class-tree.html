@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class Hierarchy</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="scapi-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Trees&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >SoundCloud API</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">&nbsp;</td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="class-tree.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<center><b>
+ [ <a href="module-tree.html">Module Hierarchy</a>
+ | <a href="class-tree.html">Class Hierarchy</a> ]
+</b></center><br />
+<h1 class="epydoc">Class Hierarchy</h1>
+<ul class="nomargin-top">
+    <li> <strong class="uidlink">urllib2.BaseHandler</strong>
+    <ul>
+    <li> <strong class="uidlink">urllib2.HTTPRedirectHandler</strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="scapi.SCRedirectHandler-class.html" onclick="show_private();">scapi.SCRedirectHandler</a></strong>:
+      <em class="summary">A urllib2-Handler to deal with the redirects the RESTful API of SC 
+        uses.</em>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink">object</strong>:
+      <em class="summary">The most base type</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="scapi.ApiConnector-class.html" onclick="show_private();">scapi.ApiConnector</a></strong>:
+      <em class="summary">The ApiConnector holds all the data necessary to authenticate 
+        against the soundcloud-api.</em>
+    </li>
+    <li> <strong class="uidlink">exceptions.BaseException</strong>:
+      <em class="summary">Common base class for all exceptions</em>
+    <ul>
+    <li> <strong class="uidlink">exceptions.Exception</strong>:
+      <em class="summary">Common base class for all non-exit exceptions.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="scapi.InvalidMethodException-class.html" onclick="show_private();">scapi.InvalidMethodException</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.NoResultFromRequest-class.html" onclick="show_private();">scapi.NoResultFromRequest</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.json.ReadException-class.html">scapi.json.ReadException</a></strong>
+    </li>
+    <li> <strong class="uidlink">exceptions.StandardError</strong>:
+      <em class="summary">Base class for all standard Python exceptions that do not represent
+        interpreter exiting.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="exceptions.AssertionError-class.html">exceptions.AssertionError</a></strong>:
+      <em class="summary">Assertion failed.</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.UnknownContentType-class.html" onclick="show_private();">scapi.UnknownContentType</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.json.WriteException-class.html">scapi.json.WriteException</a></strong>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.authentication.BasicAuthenticator-class.html">scapi.authentication.BasicAuthenticator</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.json.JsonReader-class.html">scapi.json.JsonReader</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.json.JsonWriter-class.html">scapi.json.JsonWriter</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.authentication.OAuthAuthenticator-class.html">scapi.authentication.OAuthAuthenticator</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.authentication.OAuthSignatureMethod_HMAC_SHA1-class.html">scapi.authentication.OAuthSignatureMethod_HMAC_SHA1</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.RESTBase-class.html" onclick="show_private();">scapi.RESTBase</a></strong>:
+      <em class="summary">The baseclass for all our domain-objects/resources.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="scapi.Comment-class.html">scapi.Comment</a></strong>:
+      <em class="summary">A comment domain object/resource.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.Event-class.html">scapi.Event</a></strong>:
+      <em class="summary">A event domain object/resource.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.Group-class.html">scapi.Group</a></strong>:
+      <em class="summary">A group domain object/resource</em>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.Playlist-class.html">scapi.Playlist</a></strong>:
+      <em class="summary">A playlist/set domain object/resource</em>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.Track-class.html">scapi.Track</a></strong>:
+      <em class="summary">A track domain object/resource.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.User-class.html">scapi.User</a></strong>:
+      <em class="summary">A user domain object/resource.</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.Scope-class.html" onclick="show_private();">scapi.Scope</a></strong>:
+      <em class="summary">The basic means to query and create resources.</em>
+    </li>
+    <li> <strong class="uidlink">unittest.TestCase</strong>:
+      <em class="summary">A class whose instances are single test cases.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="scapi.tests.scapi_tests.SCAPITests-class.html">scapi.tests.scapi_tests.SCAPITests</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="scapi.json._StringGenerator-class.html" onclick="show_private();">scapi.json._StringGenerator</a></strong>
+    </li>
+    <li> <strong class="uidlink">dict</strong>:
+      <em class="summary">dict() -&gt; new empty dictionary.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="scapi.util.MultiDict-class.html">scapi.util.MultiDict</a></strong>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+</ul>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="scapi-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Trees&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >SoundCloud API</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 10 00:58:49 2009
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
