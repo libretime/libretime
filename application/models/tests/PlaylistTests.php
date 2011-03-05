@@ -118,64 +118,6 @@ class PlaylistTests extends PHPUnit_TestCase {
         }
     }
 
-    function testAddAudioClip() {
-
-        $pl = new Playlist();
-        $pl_id = $pl->create("Playlist Unit Test ". date("g:i a"));
-        $res = $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
-        if($res !== TRUE) {
-           $this->fail("problems adding audioclip to playlist.");
-           return;
-        }
-
-        $res = $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
-        if($res !== TRUE) {
-           $this->fail("problems adding audioclip 2 to playlist.");
-           return;
-        }
-    }
-
-    function testMoveAudioClip() {
-        $pl = new Playlist();
-        $pl_id = $pl->create("Playlist Unit Test: Move ". date("g:i a"));
-
-        $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
-        $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
-
-        $res = $this->greenbox->moveAudioClipInPlaylist($pl_id, 0, 1);
-
-        if($res !== TRUE) {
-           $this->fail("problems moving audioclip in playlist.");
-           return;
-        }
-    }
-
-    function testDeleteAudioClip() {
-        $pl = new Playlist();
-        $pl_id = $pl->create("Playlist UnitTest: Delete ".date("g:i a"));
-
-        $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile->getId());
-        $res = $this->greenbox->delAudioClipFromPlaylist($pl_id, 0);
-
-        if($res !== TRUE) {
-           $this->fail("problems deleting audioclip from playlist.");
-           return;
-        }
-    }
-
-    function testFadeInfo() {
-        $pl = new Playlist();
-        $pl_id = $pl->create("Playlist Unit Test: Fade Info " . date("g:i a"));
-
-        $this->greenbox->addAudioClipToPlaylist($pl_id, $this->storedFile2->getId());
-
-        $res = $this->greenbox->changeFadeInfo($pl_id, 0, '00:00:01.14', null);
-
-        if(!is_array($res) && count($res) !== 2) {
-           $this->fail("problems setting fade in playlist.");
-           return;
-        }
-    }
 }
 
 
