@@ -1,10 +1,7 @@
 <?php
-
 define('INDCH', ' ');
 
 /**
- * Auxiliary class for GreenBox playlist editing methods.
- *
  * remark: dcterms:extent format: hh:mm:ss.ssssss
  *
  * @package Airtime

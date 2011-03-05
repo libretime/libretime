@@ -1,7 +1,4 @@
 <?php
-
-require_once("GreenBox.php");
-
 /**
  * Preference storage class.
  *
@@ -14,17 +11,11 @@ require_once("GreenBox.php");
 /* ================== Prefs ================== */
 class Prefs {
 
-    public $gb;
-
     /**
      *  Constructor
-     *
-     * @param GreenBox $gb
-     * 		GreenBox object reference
      */
-    public function __construct(&$gb)
+    public function __construct()
     {
-        $this->gb =& $gb;
     }
 
 

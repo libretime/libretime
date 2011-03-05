@@ -56,7 +56,6 @@ define('GBERR_NOTIMPL', 69);
 
 require_once(dirname(__FILE__)."/Alib.php");
 require_once(dirname(__FILE__)."/StoredFile.php");
-require_once(dirname(__FILE__)."/Transport.php");
 require_once(dirname(__FILE__)."/Playlist.php");
 
 /**
