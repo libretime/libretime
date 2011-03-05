@@ -31,7 +31,7 @@ class ApiController extends Zend_Controller_Action
         	print 'You are not allowed to access this resource.';
         	exit;
         }
-        $jsonStr = json_encode(array("version"=>CAMPCASTER_VERSION));
+        $jsonStr = json_encode(array("version"=>AIRTIME_VERSION));
         echo $jsonStr;
     }
 
@@ -126,7 +126,11 @@ class ApiController extends Zend_Controller_Action
         $from = $this->_getParam("from");
         $to = $this->_getParam("to");
         if (Schedule::ValidPypoTimeFormat($from) && Schedule::ValidPypoTimeFormat($to)) {
-            echo Schedule::ExportRangeAsJson($from, $to);
+            $result = Schedule::ExportRangeAsJson($from, $to);
+            $result['stream_metadata'] = array();
+            $result['stream_metadata']['format'] = Application_Model_Preference::GetStreamLabelFormat();
+            $result['stream_metadata']['station_name'] = Application_Model_Preference::GetStationName();
+            echo json_encode($result);
         }
     }
 

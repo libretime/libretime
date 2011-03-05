@@ -39,9 +39,6 @@ from util import *
 from api_clients import *
 from dls import *
 
-PYPO_VERSION = '0.9'
-
-
 # Set up command-line options
 parser = OptionParser()
 

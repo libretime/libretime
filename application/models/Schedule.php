@@ -396,16 +396,28 @@ class Schedule {
                 $row["id"] = $row["group_id"];
             }
         } else {
-            $sql = "SELECT MIN(name) AS name, MIN(creator) AS creator, group_id, "
-            ." SUM(clip_length) AS clip_length,"
-            ." MIN(file_id) AS file_id, COUNT(*) as count,"
-            ." MIN(playlist_id) AS playlist_id, MIN(starts) AS starts, MAX(ends) AS ends"
-            ." FROM $CC_CONFIG[scheduleTable]"
-            ." LEFT JOIN $CC_CONFIG[playListTable] ON playlist_id = $CC_CONFIG[playListTable].id"
-            ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') AND (ends <= TIMESTAMP '$p_toDateTime')"
-            ." GROUP BY group_id"
+            $sql = "SELECT MIN(st.name) AS name,"
+            ." MIN(pt.creator) AS creator,"
+            ." st.group_id, "
+            ." SUM(st.clip_length) AS clip_length,"
+            ." MIN(st.file_id) AS file_id,"
+            ." COUNT(*) as count,"
+            ." MIN(st.playlist_id) AS playlist_id,"
+            ." MIN(st.starts) AS starts,"
+            ." MAX(st.ends) AS ends,"
+            ." MIN(sh.name) AS show_name"
+            ." FROM $CC_CONFIG[scheduleTable] as st"
+            ." LEFT JOIN $CC_CONFIG[playListTable] as pt"
+            ." ON st.playlist_id = pt.id"
+            ." LEFT JOIN $CC_CONFIG[showInstances] as si"
+            ." ON st.instance_id = si.id"
+            ." LEFT JOIN $CC_CONFIG[showTable] as sh"
+            ." ON si.show_id = sh.id"
+            ." WHERE (st.starts >= TIMESTAMP '$p_fromDateTime')"
+            ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
+            ." GROUP BY st.group_id"
             ." ORDER BY starts";
-            //var_dump($sql);
+
             $rows = $CC_DBC->GetAll($sql);
             if (!PEAR::isError($rows)) {
                 foreach ($rows as &$row) {
@@ -498,6 +510,22 @@ class Schedule {
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
 	}
+
+    public static function GetShowInstanceItems($instance_id){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.media_item_played, st.group_id, show.name as show_name, st.instance_id"
+        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
+        ." WHERE st.playlist_id = pt.id"
+        ." AND st.file_id = ft.id"
+        ." AND st.instance_id = si.id"
+        ." AND si.show_id = show.id"
+        ." AND instance_id = $instance_id"
+        ." ORDER BY st.starts";
+
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+    }
 
     public static function UpdateMediaPlayedStatus($id){
         global $CC_CONFIG, $CC_DBC;
@@ -618,26 +646,24 @@ class Schedule {
     public static function ExportRangeAsJson($p_fromDateTime, $p_toDateTime)
     {
         global $CC_CONFIG, $CC_DBC;
+        
         $range_start = Schedule::PypoTimeToCcTime($p_fromDateTime);
         $range_end = Schedule::PypoTimeToCcTime($p_toDateTime);
-        $range_dt = array('start' => $range_start, 'end' => $range_end);
-        //var_dump($range_dt);
 
         // Scheduler wants everything in a playlist
         $data = Schedule::GetItems($range_start, $range_end, true);
-        //echo "<pre>";var_dump($data);
         $playlists = array();
 
-        if (is_array($data) && count($data) > 0)
+        if (is_array($data))
         {
             foreach ($data as $dx)
             {
-                // Is this the first item in the playlist?
                 $start = $dx['start'];
-                // chop off subseconds
+
+                //chop off subseconds
                 $start = substr($start, 0, 19);
 
-                // Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
+                //Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
                 $pkey = Schedule::CcTimeToPypoTime($start);
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
@@ -647,6 +673,7 @@ class Schedule {
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
                 $playlists[$pkey]['played'] = '0';
                 $playlists[$pkey]['schedule_id'] = $dx['group_id'];
+                $playlists[$pkey]['show_name'] = $dx['show_name'];
                 $playlists[$pkey]['user_id'] = 0;
                 $playlists[$pkey]['id'] = $dx["playlist_id"];
                 $playlists[$pkey]['start'] = Schedule::CcTimeToPypoTime($dx["start"]);
@@ -686,11 +713,11 @@ class Schedule {
         }
 
         $result = array();
-        $result['status'] = array('range' => $range_dt, 'version' => "0.2");
+        $result['status'] = array('range' => array('start' => $range_start, 'end' => $range_end), 'version' => "1.1");
         $result['playlists'] = $playlists;
         $result['check'] = 1;
 
-        print json_encode($result);
+        return $result;
     }
 
 

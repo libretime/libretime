@@ -5,62 +5,50 @@ set("log.file.path", log_file)
 set("log.stdout", true)
 set("server.telnet", true)
 
-queue = request.queue(id="queue")
+queue = request.queue(id="queue", conservative=true)
 queue = audio_to_stereo(queue)
 
 pypo_data = ref '0'
 web_stream_enabled = ref false
+stream_metadata_type = ref 0
+station_name = ref ''
+show_name = ref ''
 
-def notify(m)
-  system("./notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
-  print("./notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
-end
+%include "lib.liq"
 
-def crossfade(s)
-  s = fade.in(type="log", s)
-  s = fade.out(type="log", s)
-  fader = fun (a,b) -> add(normalize=false,[b,a])
-  cross(fader,s)
-end
+server.register(namespace="vars", "pypo_data", fun (s) -> begin pypo_data := s "Done" end)
+server.register(namespace="vars", "web_stream_enabled", fun (s) -> begin web_stream_enabled := (s == "true") string_of(!web_stream_enabled) end)
+server.register(namespace="vars", "stream_metadata_type", fun (s) -> begin stream_metadata_type := int_of_string(s) s end)
+server.register(namespace="vars", "show_name", fun (s) -> begin show_name := s s end)
+server.register(namespace="vars", "station_name", fun (s) -> begin station_name := s s end)
 
-# Add a skip function to a source
-# when it does not have one
-# by default
-def add_skip_command(s) =
- # A command to skip
- def skip(_) =
-   source.skip(s)
-   "Done!"
- end
- # Register the command:
- server.register(namespace="source",
-                 usage="skip",
-                 description="Skip the current song.",
-                 "skip",skip)
-end
 
-server.register(namespace="vars", "pypo_data", fun (s) ->  begin pypo_data := s "Done" end)
-server.register(namespace="vars", "web_stream_enabled", fun (s) ->  begin web_stream_enabled := (s == "true") string_of(!web_stream_enabled) end)
-
-default = single("/opt/pypo/files/basic/silence.mp3")
+default = single(conservative=true, "/opt/pypo/files/basic/silence.mp3")
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 
 s = fallback(track_sensitive=false, [queue, default])
 
 s = on_metadata(notify, s)
 s = crossfade(s)
-
 # Attach a skip command to the source s:
 add_skip_command(s)
 
-web_stream_source = input.http(id="web_stream", autostart = false, "")
+web_stream_source = input.http(id="web_stream", autostart = false, buffer=0.5, max=20., "")
+
+#once the stream is started, give it a sink so that liquidsoap doesn't
+#create buffer overflow warnings in the log file.
+output.dummy(fallible=true, web_stream_source)
 
 s = switch(track_sensitive = false,
+    transitions=[to_live,to_live],
     [
       ({ !web_stream_enabled }, web_stream_source),
       ({ true }, s)
     ]
 )
+
+s = map_metadata(append_title, s)
+
 
 if output_sound_device then
 	out_device = out(s)

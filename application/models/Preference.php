@@ -86,5 +86,16 @@ class Application_Model_Preference
         return Application_Model_Preference::GetValue("default_fade");
     }
 
+    public static function SetStreamLabelFormat($type){
+        Application_Model_Preference::SetValue("stream_label_format", $type);
+    }
+
+    public static function GetStreamLabelFormat(){
+        return Application_Model_Preference::getValue("stream_label_format");
+    }
+
+    public static function GetStationName(){
+        return Application_Model_Preference::getValue("station_name");
+    }
 }
 

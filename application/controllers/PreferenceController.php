@@ -29,6 +29,7 @@ class PreferenceController extends Zend_Controller_Action
             $values = $form->getValues();
             Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view); 
             Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);                      
+            Application_Model_Preference::SetStreamLabelFormat($values["streamFormat"]);                      
             
             $this->view->statusMsg = "Preferences Updated.";
         }

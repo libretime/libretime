@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
 <!-- 
-    <changeSet id="1" author="bob">
+    <changeSet id="2011-03-01-16-30-00" author="bob">
         <createTable tableName="department">
             <column name="id" type="int">
                 <constraints primaryKey="true" nullable="false"/>
