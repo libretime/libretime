@@ -1,0 +1,21 @@
+# --------------------------------------------------------------------
+# ecasound / generic oscillator presets 
+# --------------------------------------------------------------------
+#
+# - all lines beginning with a '#' are ignored
+# - '\' can be used to break long lines
+# - preset format:
+#   "preset_number start_value end_value pos1 value1 pos2 value2 ..."
+# - requirements:
+#   -  all specified positions and values must be between 0.0 and 1.0
+#   - pos1 < pos2 < ... < posN
+#   - there must be a posN for every valueN
+#
+# --------------------------------------------------------------------
+#
+# a triangle wave - start=0.0, end=0.0, pos1=0.5, value1=1.00
+0 = 0.0 0.0 0.5 1.00
+# linear wave - start=0.0 end=1.0
+1 = 0.0 1.0
+# random bounces
+2 = 0.5 0.5 0.2 0.1 0.3 0.7 0.4 0.1 0.5 0.9 0.6 0.05 0.8 0.9 0.2

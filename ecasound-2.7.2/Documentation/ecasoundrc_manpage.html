@@ -1,0 +1,252 @@
+<html><head>
+<title>ecasoundrc</title>
+<link rev="made" href="mailto:kvehmanen -at- eca -dot- cx">
+</head>
+<body>
+<hr>
+<h1>ecasoundrc</h1>
+<h2>22.03.2009</h2>
+
+<html><head>
+<link rev="made" href="mailto:kvehmanen -at- eca -dot- cx">
+</head>
+<body>
+<hr>
+<h1></h1>
+
+<html><head>
+<title>ecasoundrc(5)</title>
+<link rev="made" href="mailto:kvehmanen -at- eca -dot- cx">
+</head>
+<body>
+<hr>
+<h1>ecasoundrc(5)</h1>
+<h2> Multimedia software</h2>
+<h2>22.03.2009</h2>
+
+
+<p>
+<h2>NAME</h2>ecasoundrc - ecasound rcfile
+<p>
+<h2>SYNOPSIS</h2>
+    {prefix}/share/ecasound/ecasoundrc (for instance '/usr/local/share/ecasound/ecasoundrc')
+    $HOME/.ecasound/ecasoundrc
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<strong>ecasoundrc</strong> is the main configuration file for ecasound. 
+	Any user-specific modification should be done to 
+	$HOME/.ecasound/ecasoundrc, not to the global resource file. Ecasound 
+	also allows to disable the normal policy and only read from a specific
+	resource file (see ecasound (1) and documentation for the <strong>-R</strong> option).
+<p>
+The format is quite simple. One line consists of 
+	a configuration variable and its value. Variable and value 
+	are separated with either '=' or ' '. Lines beginning with a
+	"#" are ignored (comment lines). 
+<p>
+<h2>VARIABLES</h2>
+<p>
+<dl>
+<p>
+<p><dt><strong>midi-device</strong><dd>
+  	MIDI-device. If the device name is given in <em>rawmidi,/dev/midi*</em> 
+	format, OSS/Linux or OSS/Lite drivers are used. 
+	Device <em>rawmidi,/dev/snd/midiCxDy</em> opens an ALSA raw-MIDI 
+	device with card number 'x' and device number 'y'. 
+	See ecasound (1) man page (the '-Md option) for more info.
+	Defaults to <em>rawmidi,/dev/midi</em>.
+<p>
+<p><dt><strong>default-output</strong><dd>
+  	Output device to use by default. If a chainsetup with zero
+  	outputs, but with one or more inputs, is connected, a default output
+	is added and all the chains are connected to it. If the special-case
+	value 'autodetect' is specified, ecasound will try to auto-detect 
+	a suitable device (JACK -&gt; ALSA -&gt; OSS -&gt; rtnull). 
+	Defaults to <em>autodetect</em>.
+<p>
+<p><dt><strong>default-audio-format</strong><dd>
+  	Default values for sample format, channel count, sampling rate
+  	and channel interleaving. Syntax is the same as used by
+  	ecasound's <em>-f</em> option (see ecasound (1)). 
+	Defaults to <em>s16_le,2,44100,i</em>.
+<p>
+<p><dt><strong>default-to-precise-sample-rates</strong><dd> 
+	Whether to ignore sample rate differences (and possibly avoid 
+	resampling). Currently only affects OSS-devices. Defaults to <em>false</em>.
+<p>
+<p><dt><strong>default-mix-mode</strong><dd>
+	If <em>default-mix-mode</em> is <em>sum</em>, engine will mix multiple channels into
+	one output channel by summing all input channels. In mode <em>avg</em>, 
+	mixing is done by taking the average of all input channels. The
+	<em>avg</em> mode is safe from clipping, while <em>sum</em> is closer
+	to the way analog mixers work. Defaults to <em>avg</em>.
+<p>
+<p><dt><strong>bmode-defaults-nonrt</strong><dd>
+	Selects the default parameters to use with buffering 
+	mode 'nonrt' (other modes are 'rt' and 'rtlowlatency). 
+	Parameters are given as a comma-separated tuple of values:
+	1) buffersize (number,-b), 2) raised priority (true/false,-r), 
+	3) sched_priority (number,-r:X), 4) double buffering
+	(true/false,-z:db), 5) db-bufsize (number,-z:db,X), and
+	6) max intbuf (true/false,-z:intbuf). Defaults to
+	<em>1024,false,50,false,100000,true</em>.
+<p>
+<p><dt><strong>bmode-defaults-rt</strong><dd>
+	See 'bmode-defaults-nonrt'. Defaults to 
+	<em>1024,true,50,true,100000,true</em>.
+<p>
+<p><dt><strong>bmode-defaults-rtlowlatency</strong><dd>
+	See 'bmode-defaults-nonrt'. Defaults to 
+	<em>256,true,50,true,100000,false</em>.
+<p>
+<p><dt><strong>resource-directory</strong><dd> 
+  	Directory for global ecasound configuration files. 
+  	Defaults to <em>{prefix-dir}/share/ecasound</em>.
+	Note! User-specific resource files can be be stored 
+	to '$(HOME)/.ecasound/'. For instance you can 
+	add your own presets definitions to 
+	'$(HOME)/.ecasound/effect_presets'.
+<p>
+<p><dt><strong>resource-file-genosc-envelopes</strong><dd> 
+  	Configuration file for generic oscillators. Is located in the 
+  	resource directory. Defaults to <em>generic_oscillators</em>.
+<p>
+<p><dt><strong>resource-file-effect-presets</strong><dd>
+  	Configuration file for effect presets. Is located in the 
+  	resource directory. Defaults to <em>effect_presets</em>.
+<p>
+<p><dt><strong>ladspa-plugin-directory</strong><dd>
+	Directory containing LADSPA effect plugins. Defaults to <em>{prefix-dir}/lib/ladspa</em>.
+	If environment variable <em>LADSPA_PATH</em> exists, directories
+	specified in it are automatically searched for plugins.
+	Note! To match the syntax of the <em>LADSPA_PATH</em> environment 
+	variable, 'ladspa-plugin-directory' can contain multiple
+	directories, separated by ':' characters.
+<p>
+<p><dt><strong>ext-cmd-text-editor</strong><dd>
+        If <em>ext-cmd-text-editor-use-getenv</em> is <em>false</em> or "EDITOR" 
+        is null, value of this field is used.
+<p>
+<p><dt><strong>ext-cmd-text-editor-use-getenv</strong><dd>
+	Should ecasound try to query environment variable "EDITOR".
+	Defaults to <em>true</em>.
+<p>
+<p><dt><strong>ext-cmd-mp3-input</strong><dd>
+	Command for starting mp3 input. Ecasound expects to read signed,
+	16bit, little-endian stereo audio samples from its standard
+	input. Ecsound will query other audio format parameters by parsing 
+	the mp3 file header. Before execution, %f is replaced with
+	path to the input mp3. If exists, "%o" is replaced with he
+	start offset in mp3 frames. Double-quotes and backslash-espacing 
+	can be used to include white-space to individual parameters.
+	By default, <em>mpg123</em> is launched.
+<p>
+<p><dt><strong>ext-cmd-mp3-output</strong><dd>
+	Command for starting mp3 output. Ecasound will write stereo, 
+	signed, 16bit, little-endian samples to standard output. Sample
+	rate is configurable. Before execution, %f is replaced with 
+	path to the output mp3, %S with sample rate in kHz, and 
+	%B with encoding bitrate in kbps. Double-quotes and 
+	backslash-espacing can be used to include white-space to 
+	individual parameters. By default Ecasound will try to
+	launch <em>lame</em>. As a special exception (added to Ecasound
+	2.7.0), if the output program is "lame" and options 
+	include "--big-endian", Ecasound will detect this and output
+	big-endian samples.
+<p>
+<p><dt><strong>ext-cmd-ogg-input</strong><dd>
+	Command for starting Ogg Vorbis input. Ecasound expects that audio samples
+	are written to standard output. It should be noted that
+	Ecasound is not able to query the audio format parameters from
+	ogg files, so these need to be set manually by the user.
+	Before execution, %f is replaced with path to the input ogg. 
+	Double-quotes and backslash-espacing can be used to include white-space 
+	to individual parameters. By default Ecasound will try to
+	launch (ogg123).
+<p>
+<p><dt><strong>ext-cmd-ogg-output</strong><dd>
+	Command for starting Ogg Vorbis output. Ecasound will write
+	samples in little-endian format to standard output. Other 
+	audio parameters are configurable. Before execution, %f is
+	replaced with path to the output ogg, %c, %s and %b with matching audio
+	format parameters, and %B with encoding bitrate in kbps.
+	Double-quotes and backslash-espacing can be used to include white-space to 
+	individual parameters. By default Ecasound will try to
+	launch (oggenc).
+<p>
+<p><dt><strong>ext-cmd-mikmod</strong><dd>
+	Command for starting mikmod input. Ecasound expects that 
+	signed, 16bit, stereo audio samples are written to standard 
+	output. Before execution, %f is replaced with 
+	file path, and %s with selected sample rate. Double-quotes 
+	and backslash-espacing can be used to include white-space to 
+	individual parameters. By default Ecasound will try to launch
+	<em>mikmod</em>.
+<p>
+<p><dt><strong>ext-cmd-timidity</strong><dd>
+	Command for starting timidity++ input. Ecasound expects that
+	signed, 16bit, stereo audio samples are written to standard
+	output. Before execution, %f is replaced with file path, and
+	%s with sample rate. Double-quotes and backslash-espacing can 
+	be used to include white-space to individual parameters.
+	By default Ecasound will try to launch <em>timidity</em>.
+<p>
+<p><dt><strong>ext-cmd-flac-input</strong><dd>
+	Command for starting FLAC input. Ecasound expects that audio samples
+	are written to standard output. It should be noted that
+	Ecasound is not able to query the audio format parameters from
+	FLAC files, so these need to be set manually by the user. 
+	Before execution, %f is replaced with path to the input FLAC
+	file. Double-quotes and backslash-espacing can be used to include 
+	white-space to individual parameters. By default Ecasound will
+	try to launch (flac).
+<p>
+<p><dt><strong>ext-cmd-flac-output</strong><dd>
+	Command for starting FLAC output. Ecasound will write
+	samples to standard output. All audio parameters are
+	configurable. Before execution, %f is replaced with path to
+	the output flac, %c, %b and %s with matching audio
+        format parameters, %I with either 'signed' or 'unsigned', and
+	%E with either 'little' or 'big'. Double-quotes and backslash-espacing 
+	can be used to include white-space to individual parameters. By default 
+	Ecasound will try to launch (flac).
+<p>
+<p><dt><strong>ext-cmd-aac-input</strong><dd>
+	Command for starting AAC input. Ecasound expects that signed,
+	16bit, stereo, big-endian audio samplesare written to standard 
+	output. It should be noted that	Ecasound is not able to query 
+	the input sample rate, so this needs to be set manually by the user. 
+	Before execution, %f is replaced with path to the input AAC
+	file. Note! FAAC must be compiled with MP4 support. Double-quotes 
+	and backslash-espacing can be used to include white-space to 
+	individual parameters. By default Ecasound will try to 
+	laucnh <em>faad</em>.
+<p>
+<p><dt><strong>ext-cmd-aac-output</strong><dd>
+	Command for starting AAC output. Ecasound will write big-endian
+	audio samples to standard output. All other audio parameters are
+	configurable. Before execution, %f is replaced with path to
+	the output AAC file, %c, %b and %s with matching audio format 
+	parameters. Note! FAAC must be compiled with MP4 support. Double-quotes 
+	and backslash-espacing can be used to include white-space to 
+	individual parameters. By default Ecasound will try to launch
+	<em>faac</em>.
+<p>
+</dl>
+<p>
+<h2>DEPRECATED</h2>
+<p>
+<dl>
+<p>
+<p><dt><strong>ext-cmd-wave-editor</strong><dd>
+<p>
+</dl>
+<p>
+<h2>SEE ALSO</h2>
+<p>
+ecasound (1), ecatools (1), ecasound-iam (1)
+<p>
+<h2>AUTHOR</h2>
+<p>
+Kai Vehmanen, &lt;<a href="mailto:kvehmanen -at- eca -dot- cx"><em>kvehmanen -at- eca -dot- cx</em></a>&gt;

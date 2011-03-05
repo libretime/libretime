@@ -1,0 +1,5 @@
+-------------------
+* pyecasound TODO *
+-------------------
+
+- finish eiam-class, in which eiam commands are seen as python-methods

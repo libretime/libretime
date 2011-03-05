@@ -1,0 +1,21 @@
+=======================================================================
+*** Ecasound - Miscellanous example source code                     ***
+=======================================================================
+
+This directory contains various clips of example code demonstrating
+the use of libecasound and the ecasound control interface (ECI). 
+To see examples of ecasound use (not programming related), see 
+the file 'Documentation/examples.html'.
+
+-----------------------------------------------------------------------
+ Included files
+-----------------------------------------------------------------------
+
+- example programs from the "Ecasound Control Interface Documentation"
+	- ecadoc_example.c [C]
+	- ecadoc_example.cpp [C++]
+	- ecadoc_example.py [Python]
+- Python scripts 
+	- normalize.py
+
+=======================================================================

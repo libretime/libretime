@@ -1,0 +1,279 @@
+=======================================================================
+*** Ecasound - INSTALL                                              ***
+=======================================================================
+
+   The `configure' shell script attempts to guess correct values for
+various system-dependent variables used during compilation.  It uses
+those values to create a `Makefile' in each directory of the package.
+It also creates the file `config.h' in the top-level source directory.
+This file contains system-dependent definitions.  Finally, it creates
+a shell script `config.status' that you can run in the future to
+recreate the current configuration, a file `config.cache' that saves
+the results of its tests to speed up reconfiguring, and a file 
+`config.log' containing compiler output (useful mainly for debugging 
+`configure').
+
+   If you need to do unusual things to compile the package, please try
+to figure out how `configure' could check whether to do them, and mail
+diffs or instructions to the address given in the `README' so they can
+be considered for the next release.  If at some point `config.cache'
+contains results you don't want to keep, you may remove or edit it.
+
+   The file `configure.in' is used to create `configure' by a program
+called `autoconf'.  You only need `configure.in' if you want to change
+it or regenerate `configure' using a newer version of `autoconf'.
+
+The simplest way to compile this package is:
+
+  1. `cd' to the directory containing the package's source code and type
+     `./configure' to configure the package for your system.  If you're
+     using `csh' on an old version of System V, you might need to type
+     `sh ./configure' instead to prevent `csh' from trying to execute
+     `configure' itself.
+
+     Running `configure' takes awhile.  While running, it prints some
+     messages telling which features it is checking for.
+
+  2. Type `make' to compile the package.
+
+  3. Type `make install' to install the programs and any data files and
+     documentation.
+
+  4. If you have not specified an alternative install prefix with --prefix
+     option, make sure that you have `/usr/local/lib´ in your
+     `/etc/ld.so.conf' and then run `/sbin/ldconfig´ (as root).
+
+  5. You can remove the program binaries and object files from the
+     source code directory by typing `make clean'.  To also remove the
+     files that `configure' created (so you can compile the package for
+     a different kind of computer), type `make distclean'.  There is
+     also a `make maintainer-clean' target, but that is intended mainly
+     for the package's developers.  If you use it, you may have to get
+     all sorts of other programs in order to regenerate files that came
+     with the distribution.
+
+Ecasound specific options
+=========================
+
+`--enable-all-static'
+	Build static binaries that are not linked against any
+	shared libraries. Disabled by default. Note! This is 
+        an experimental option and may not work in all 
+	circumstances.
+
+`--enable-debug'
+	Disables optimizations and other things preventing 
+	efficient debugging. Created executables and libraries
+	have a "_debug" suffix. Disabled by default.
+
+`--enable-experimental' 
+	Turns on some suspicious features. Not recommended.
+	Disabled by default.
+
+`--enable-python-force-site-packages' 
+	Force install of python modules into site-packages 
+	directory even when it doesn't exist. Disabled by 
+	default.
+
+`--enable-sys-readline'
+	If installed, link to system's default libreadline.
+	Disabled by default.
+
+`--disable-alsa'
+	Don't compile support for ALSA-drivers (otherwise 
+	links to libasound). By default ALSA support is
+	enabled if all the necessary header and library
+	files are found.
+
+`--disable-arts'
+	Don't compile aRts client support. See http://www.arts-project.org 
+	for more info about aRts. By default aRts support is
+	enabled if all the necessary header and library
+	files are found.
+
+`--disable-audiofile'
+	Don't link to libaudiofile. By default libaudiofile support is
+	enabled if all the necessary header and library
+	files are found.
+
+`--disable-dbc'
+	Don't check design-by-contract assertions. Enabled by default.
+
+`--disable-effects'
+	Build ecasound without effect and controller components.
+	Enabled by default.
+
+`--disable-jack'
+	Don't compile JACK client support. See 
+	http://jackit.sf.net for more info about JACK. 
+	By default JACK support is enabled if all the 
+	necessary header and library files are found.
+
+`--disable-libsamplerate'
+	Don't compile libsamplerate support. See 
+	http://www.mega-nerd.com/SRC for more info about 
+	libsamplerate. By default libsamplerate support is 
+	enabled if all the necessary header and library files 
+	are found.
+
+`--disable-ncurses'
+	Don't link against ncurses (known bug: even if this is 
+	specified, you're still required to have a working
+	ncurses/termcap installation to compile). Enabled
+	by default.
+
+`--disable-oss'
+	Don't compile support for OSS-drivers. Enabled by
+	default.
+
+`--disable-osstrigger'
+	Disable the use of OSS trigger functions. Enabled
+	by default.
+
+`--disable-sndfile'
+	Don't link to libsndfile. By default libsndfile support is
+	enabled if all the necessary header and library
+	files are found.
+
+`--disable-largefile'
+	Explicitly disable large file (>2GB) support.
+
+`--with-jack=JACK_PREFIX'
+	Enable JACK support and compile against JACK installed
+	in 'JACK_PREFIX'.
+
+`--with-libsamplerate=LIBSAMPLERATE_PREFIX'
+	Enable libsamplerate support and compile against libsamplerate 
+	installed in 'LIBSAMPLERATE_PREFIX'.
+
+`--enable-pyecasound={c,python,none}'
+	Enable pyecasound and select which implementation to use. 
+	Default value based on target platform.
+
+`--with-python-includes=DIR'
+	Python include files are located in 'DIR'.
+
+`--with-python-modules=DIR'
+	Python modules should be installed to 'DIR'.
+
+`--enable-rubyecasound={yes,no}'
+	Enable rubyecasound. Defaults to yes if Ruby interpreter 
+        is found on the system.
+
+`--with-extra-cppflags=ARG´
+	Pass extra options to preprocessor (cpp). This option should 
+	be used to add non-standard header paths to the search path.
+
+`--with-extra-libs=ARG´
+	Pass extra options to linked (ld). This option should 
+	be used to add non-standard library paths to the search 
+	path, as well as additional libraries to link against.
+
+Supported automake/autoconf features
+====================================
+
+Ecasound uses the autotools (automake, automake and libtool) 
+build system framework. Standard practises (see below for 
+references) are followed where applicable.
+
+Some features offered by the autotools do not work without
+explicit support from the package. Following is a short list of
+features that Ecasound _does_ support. If you encounter any
+problems in using these features with Ecasound, please report
+them as bugs.
+
+1. Building Ecasound in a directory separate from the source 
+   directory.
+   Example: "mkdir objdir ; cd objdir ; ../configure ; make"
+
+2. 'uninstall' make target
+   You should be able to uninstall Ecasound by running "make uninstall".
+   Note that if you override any make variable when running "make install",
+   you should specify the same variables also when running "make uninstall".
+   Reference: Automake manual (see below)
+
+3. 'DESTDIR' make variable for staging installs
+   Reference: http://sources.redhat.com/automake/automake.html#Install
+
+4. 'prefix', 'datadir', pkgdatadir' make variables
+   You should be able to override any of the make variables 
+   on the make command-line. But remember to always override 
+   the same variables when you switch between make targets (see
+   notes on (2)). 
+   Example: make prefix=/tmp/ecasound-foobar install
+
+5. Overriding CPPFLAGS, CFLAGS, CXXFLAGS, etc variables.
+   It is possible to override these parameters both before
+   running the configure script (specify new values as
+   environment variables), or at make time (specify new
+   values on the make command-line). Note that these 
+   mechanisms are exclusive to each other.
+
+   To specify extra preprocessing and compile flags that are
+   applied when building libecasound components, but not when 
+   building the test programs run by 'configure' script, one can 
+   use the environment variables ECA_S_EXTRA_CPPFLAGS and 
+   ECA_S_EXTRA_CFLAGS (define before running 'configure').
+ 
+General references:
+
+o Automake manual
+  http://sources.redhat.com/automake/automake.html
+
+o Autoconf manual
+  http://www.gnu.org/software/autoconf/manual/
+
+o GNU Coding Standards
+  http://www.gnu.org/prep/standards/
+
+
+Specifying the System Type
+==========================
+
+   There may be some features `configure' can not figure out
+automatically, but needs to determine by the type of host the package
+will run on.  Usually `configure' can figure that out, but if it prints
+a message saying it can not guess the host type, give it the
+`--host=TYPE' option.  TYPE can either be a short name for the system
+type, such as `sun4', or a canonical name with three fields:
+     CPU-COMPANY-SYSTEM
+
+See the file `config.sub' for the possible values of each field.  If
+`config.sub' isn't included in this package, then this package doesn't
+need to know the host type.
+
+   If you are building compiler tools for cross-compiling, you can also
+use the `--target=TYPE' option to select the type of system they will
+produce code for and the `--build=TYPE' option to select the type of
+system on which you are compiling the package.
+
+Operation Controls
+==================
+
+   `configure' recognizes the following options to control how it
+operates.
+
+`--cache-file=FILE'
+     Use and save the results of the tests in FILE instead of
+     `./config.cache'.  Set FILE to `/dev/null' to disable caching, for
+     debugging `configure'.
+
+`--help'
+     Print a summary of the options to `configure', and exit.
+
+`--quiet'
+`--silent'
+`-q'
+     Do not print messages saying which checks are being made.  To
+     suppress all normal output, redirect it to `/dev/null' (any error
+     messages will still be shown).
+
+`--srcdir=DIR'
+     Look for the package's source code in directory DIR.  Usually
+     `configure' can determine that directory automatically.
+
+`--version'
+     Print the version of Autoconf used to generate the `configure'
+     script, and exit.
+
+`configure' also accepts some other, not widely useful, options.
