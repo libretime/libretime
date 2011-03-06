@@ -110,6 +110,7 @@ function viewDisplay( view ) {
         var calendarEl = this;
 
         var select = $('<select class="schedule_change_slots input_select"/>')
+            .append('<option value="1">1m</option>')
             .append('<option value="5">5m</option>')
             .append('<option value="10">10m</option>')
             .append('<option value="15">15m</option>')
