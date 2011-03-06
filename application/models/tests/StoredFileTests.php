@@ -20,7 +20,7 @@ class StoredFileTest extends PHPUnit_TestCase {
 
     function testGetAudioMetadata() {
         $filePath = dirname(__FILE__)."/ex1.mp3";
-        $metadata = camp_get_audio_metadata($filePath);
+        $metadata = Metadata::LoadFromFile($filePath);
         if (PEAR::isError($metadata)) {
             $this->fail($metadata->getMessage());
             return;
