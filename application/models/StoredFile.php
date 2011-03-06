@@ -4,55 +4,58 @@ require_once(dirname(__FILE__)."/../../library/getid3/var/getid3.php");
 require_once("BasicStor.php");
 require_once("Schedule.php");
 
-global $g_metadata_xml_to_db_mapping;
-$g_metadata_xml_to_db_mapping = array(
-	"ls:type" => "ftype",
-    "dc:format" => "format",
-    "ls:bitrate" => "bit_rate",
-    "ls:samplerate" => "sample_rate",
-    "dcterms:extent" => "length",
-    "dc:title" => "track_title",
-    "dc:description" => "comments",
-    "dc:type" => "genre",
-    "dc:creator" => "artist_name",
-    "dc:source" => "album_title",
-    "ls:channels" => "channels",
-    "ls:filename" => "name",
-    "ls:year" => "year",
-    "ls:url" => "url",
-    "ls:track_num" => "track_number",
-    "ls:mood" => "mood",
-    "ls:bpm" => "bpm",
-    "ls:disc_num" => "disc_number",
-    "ls:rating" => "rating",
-    "ls:encoded_by" => "encoded_by",
-    "dc:publisher" => "label",
-    "ls:composer" => "composer",
-    "ls:encoder" => "encoder",
-    "ls:crc" => "checksum",
-    "ls:lyrics" => "lyrics",
-    "ls:orchestra" => "orchestra",
-    "ls:conductor" => "conductor",
-    "ls:lyricist" => "lyricist",
-    "ls:originallyricist" => "original_lyricist",
-    "ls:radiostationname" => "radio_station_name",
-    "ls:audiofileinfourl" => "info_url",
-    "ls:artisturl" => "artist_url",
-    "ls:audiosourceurl" => "audio_source_url",
-    "ls:radiostationurl" => "radio_station_url",
-    "ls:buycdurl" => "buy_this_url",
-    "ls:isrcnumber" => "isrc_number",
-    "ls:catalognumber" => "catalog_number",
-    "ls:originalartist" => "original_artist",
-    "dc:rights" => "copyright",
-    "dcterms:temporal" => "report_datetime",
-    "dcterms:spatial" => "report_location",
-    "dcterms:entity" => "report_organization",
-    "dc:subject" => "subject",
-    "dc:contributor" => "contributor",
-    "dc:language" => "language");
-
 class Metadata {
+
+    private static $MAP_METADATA_XML_TO_DB = array(
+    	"ls:type" => "ftype",
+        "dc:format" => "format",
+        "ls:bitrate" => "bit_rate",
+        "ls:samplerate" => "sample_rate",
+        "dcterms:extent" => "length",
+        "dc:title" => "track_title",
+        "dc:description" => "comments",
+        "dc:type" => "genre",
+        "dc:creator" => "artist_name",
+        "dc:source" => "album_title",
+        "ls:channels" => "channels",
+        "ls:filename" => "name",
+        "ls:year" => "year",
+        "ls:url" => "url",
+        "ls:track_num" => "track_number",
+        "ls:mood" => "mood",
+        "ls:bpm" => "bpm",
+        "ls:disc_num" => "disc_number",
+        "ls:rating" => "rating",
+        "ls:encoded_by" => "encoded_by",
+        "dc:publisher" => "label",
+        "ls:composer" => "composer",
+        "ls:encoder" => "encoder",
+        "ls:crc" => "checksum",
+        "ls:lyrics" => "lyrics",
+        "ls:orchestra" => "orchestra",
+        "ls:conductor" => "conductor",
+        "ls:lyricist" => "lyricist",
+        "ls:originallyricist" => "original_lyricist",
+        "ls:radiostationname" => "radio_station_name",
+        "ls:audiofileinfourl" => "info_url",
+        "ls:artisturl" => "artist_url",
+        "ls:audiosourceurl" => "audio_source_url",
+        "ls:radiostationurl" => "radio_station_url",
+        "ls:buycdurl" => "buy_this_url",
+        "ls:isrcnumber" => "isrc_number",
+        "ls:catalognumber" => "catalog_number",
+        "ls:originalartist" => "original_artist",
+        "dc:rights" => "copyright",
+        "dcterms:temporal" => "report_datetime",
+        "dcterms:spatial" => "report_location",
+        "dcterms:entity" => "report_organization",
+        "dc:subject" => "subject",
+        "dc:contributor" => "contributor",
+        "dc:language" => "language");
+
+    public static function GetMapMetadataXmlToDb() {
+        return Metadata::$MAP_METADATA_XML_TO_DB;
+    }
 
     /**
      * Track numbers in metadata tags can come in many formats:
@@ -458,9 +461,9 @@ class StoredFile {
      */
     public static function xmlCategoryToDbColumn($p_category)
     {
-        global $g_metadata_xml_to_db_mapping;
-        if (array_key_exists($p_category, $g_metadata_xml_to_db_mapping)) {
-            return $g_metadata_xml_to_db_mapping[$p_category];
+        $map = Metadata::GetMapMetadataXmlToDb();
+        if (array_key_exists($p_category, $map)) {
+            return $map[$p_category];
         }
         return null;
     }
@@ -474,8 +477,7 @@ class StoredFile {
      */
     public static function dbColumnToXmlCatagory($p_dbColumn)
     {
-        global $g_metadata_xml_to_db_mapping;
-        $str = array_search($p_dbColumn, $g_metadata_xml_to_db_mapping);
+        $str = array_search($p_dbColumn, Metadata::GetMapMetadataXmlToDb());
         // make return value consistent with xmlCategoryToDbColumn()
         if ($str === FALSE) {
             $str = null;
@@ -1605,13 +1607,13 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-	public static function searchFilesForPlaylistBuilder($datatables) {
 
-		global $CC_CONFIG, $g_metadata_xml_to_db_mapping;
+	public static function searchFilesForPlaylistBuilder($datatables) {
+		global $CC_CONFIG;
 
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
-        foreach ($g_metadata_xml_to_db_mapping as $key => $val){
+        foreach (Metadata::GetMapMetadataXmlToDb() as $key => $val){
 
             if($key === "dc:title"){
                 $plSelect .= "name AS ".$val.", ";
@@ -1651,15 +1653,14 @@ class StoredFile {
 
 	}
 
+
 	public static function searchPlaylistsForSchedule($p_length, $datatables) {
-
 		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
-
         $datatables["optWhere"][] = "INTERVAL '{$p_length}' > INTERVAL '00:00:00'";
         $datatables["optWhere"][] = "plt.length > INTERVAL '00:00:00'";
-
 		return StoredFile::searchFiles($fromTable, $datatables);
 	}
+
 
 	public static function searchFiles($fromTable, $data)
 	{
@@ -1678,16 +1679,12 @@ class StoredFile {
 
 		//	Where clause
 		if(isset($data["optWhere"])) {
-
 			$where[] = join(" AND ", $data["optWhere"]);
 		}
 
 		if(isset($searchTerms)) {
-
 			$searchCols = array();
-
 			for($i=0; $i<$data["iColumns"]; $i++) {
-
 				if($data["bSearchable_".$i] == "true") {
 					$searchCols[] = $columnsDisplayed[$i];
 				}
@@ -1696,7 +1693,6 @@ class StoredFile {
 			$outerCond = array();
 
 			foreach($searchTerms as $term) {
-
 				$innerCond = array();
 
 				foreach($searchCols as $col) {
@@ -1722,12 +1718,9 @@ class StoredFile {
 		$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
 
 		if(isset($where)) {
-
 			$where = join(" AND ", $where);
-
 			$sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
 			$totalDisplayRows = $CC_DBC->getOne($sql);
-
 			$sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 		else {
@@ -1746,79 +1739,6 @@ class StoredFile {
 		}
 
 		return array("sEcho" => intval($data["sEcho"]), "iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
-
-
-
-
-		/*
-
-		$match = array(
-			"0" => "ILIKE",
-			"1" => "=",
-			"2" => "<",
-			"3" => "<=",
-			"4" => ">",
-			"5" => ">=",
-			"6" => "!=",
-		);
-
-		$or_cond = array();
-		$inner = $quick ? 'OR':'AND';
-		$outer = $quick ? 'AND':'OR';
-		foreach (array_keys($md) as $group) {
-
-			if(strpos($group, 'group') === false) {
-				continue;
-			}
-
-			$and_cond = array();
-			foreach (array_keys($md[$group]) as $row) {
-
-				$string = $g_metadata_xml_to_db_mapping[$md[$group][$row]["metadata"]];
-
-				$string = $string ." ".$match[$md[$group][$row]["match"]];
-
-				if ($md[$group][$row]["match"] === "0")
-					$string = $string." '%". $md[$group][$row]["search"]."%'";
-				else
-					$string = $string." '". $md[$group][$row]["search"]."'";
-
-				$and_cond[] = $string;
-			}
-
-			if(count($and_cond) > 0) {
-				$or_cond[] = "(".join(" ".$inner." ", $and_cond).")";
-			}
-		}
-
-		if(count($or_cond) > 0) {
-			$where = " WHERE ". join(" ".$outer." ", $or_cond);
-			$sql = $sql . $where;
-		}
-
-		if($count) {
-			return $CC_DBC->getOne($sql);
-		}
-
-		if(!is_null($order)) {
-			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]]." ".$order["order"].", id ";
-			$sql = $sql . $ob;
-		}
-		else{
-			$ob = " ORDER BY artist_name asc, id";
-			$sql = $sql . $ob;
-		}
-
-		if(!is_null($page) && !is_null($limit)) {
-			$offset = $page * $limit - ($limit);
-			$paginate = " LIMIT ".$limit. " OFFSET " .$offset;
-			$sql = $sql . $paginate;
-		}
-		//echo var_dump($md);
-		//echo $sql;
-		*/
-
-		//return $CC_DBC->getAll($sql);
 	}
 
 }

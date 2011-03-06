@@ -443,11 +443,10 @@ class BasicStor {
         //"dc:creator" => "artist_name",
         //dc:description
 
-        global $g_metadata_xml_to_db_mapping;
         $plSelect = "SELECT ";
         $fileSelect = "SELECT ";
         $_SESSION["br"] = "";
-        foreach ($g_metadata_xml_to_db_mapping as $key => $val){
+        foreach (Metadata::GetMapMetadataXmlToDb() as $key => $val){
             $_SESSION["br"] .= "key: ".$key." value:".$val.", ";
             if($key === "dc:title"){
                 $plSelect .= "name AS ".$val.", ";
