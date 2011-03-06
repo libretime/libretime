@@ -5,22 +5,13 @@ class PluploadController extends Zend_Controller_Action
 
     public function init()
     {
-		if(!Zend_Auth::getInstance()->hasIdentity())
-        {
-            $this->_redirect('login/index');
-        }
-
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('upload', 'json')
+                    ->addActionContext('upload-recorded', 'json')
 				    ->initContext();
     }
 
-    public function indexAction()
-    {
-        // action body
-    }
-
-    public function uploadAction()
+    public function upload($targetDir)
     {
         // HTTP headers for no cache etc
 		header('Content-type: text/plain; charset=UTF-8');
@@ -31,7 +22,7 @@ class PluploadController extends Zend_Controller_Action
 		header("Pragma: no-cache");
 
 		// Settings
-		$targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+		//$targetDir = ini_get("upload_tmp_dir"); //. DIRECTORY_SEPARATOR . "plupload";
 		$cleanupTargetDir = false; // Remove old files
 		$maxFileAge = 60 * 60; // Temp file age in seconds
 
@@ -157,6 +148,23 @@ class PluploadController extends Zend_Controller_Action
 
 		// Return JSON-RPC response
 		die('{"jsonrpc" : "2.0", "id" : '.$storedFile->getId().' }');
+    }
+
+    public function indexAction()
+    {
+        // action body
+    }
+
+    public function uploadAction()
+    {
+        $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+        $this->upload($upload_dir);
+    }
+
+    public function uploadRecordedAction()
+    {
+        $upload_dir = ini_get("upload_tmp_dir");
+        $this->upload($upload_dir);  
     }
 
     public function pluploadAction()

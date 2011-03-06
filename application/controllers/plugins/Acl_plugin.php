@@ -110,7 +110,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     {
 		$controller = strtolower($request->getControllerName());
 		
-		if ($controller == 'api' || $controller == 'recorder'){
+		if ($controller == 'api' || $controller == 'recorder' || $controller == 'plupload' && $request->getActionName() == 'upload-recorded'){
 
 			$this->setRoleName("G");	
 		} 
@@ -143,8 +143,9 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 			$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 			$this->setRoleName($userInfo->type);
 
+            Zend_View_Helper_Navigation_HelperAbstract::setDefaultAcl($this->_acl);
 			Zend_View_Helper_Navigation_HelperAbstract::setDefaultRole($this->_roleName);
-
+           
 		    $resourceName = '';
 
 		    if ($request->getModuleName() != 'default') {

@@ -7,6 +7,7 @@ class RecorderController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('contextSwitch');
         $ajaxContext->addActionContext('get-show-schedule', 'json')
+                    ->addActionContext('get-uploaded-file', 'json')
                     ->initContext();
     }
 
@@ -17,14 +18,9 @@ class RecorderController extends Zend_Controller_Action
 
     public function getShowScheduleAction()
     {
-        //$from = $this->_getParam("from");
-        //$to = $this->_getParam("to");
-
         $today_timestamp = date("Y-m-d H:i:s");
-
         $this->view->shows = Show::getShows($today_timestamp, null, $excludeInstance=NULL, $onlyRecord=TRUE);
     }
-
 
 }
 
