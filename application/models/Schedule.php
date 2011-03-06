@@ -128,9 +128,6 @@ class ScheduleGroup {
             if (empty($length)) {
                 return new PEAR_Error("Length is empty.");
             }
-            if (!Schedule::isScheduleEmptyInRange($p_datetime, $length)) {
-                return new PEAR_Error("Schedule conflict.", 555);
-            }
 
             // Insert all items into the schedule
             $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
