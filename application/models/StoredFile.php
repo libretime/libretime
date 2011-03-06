@@ -4,309 +4,314 @@ require_once(dirname(__FILE__)."/../../library/getid3/var/getid3.php");
 require_once("BasicStor.php");
 require_once("Schedule.php");
 
-global $g_metadata_xml_to_db_mapping;
-$g_metadata_xml_to_db_mapping = array(
-	"ls:type" => "ftype",
-    "dc:format" => "format",
-    "ls:bitrate" => "bit_rate",
-    "ls:samplerate" => "sample_rate",
-    "dcterms:extent" => "length",
-    "dc:title" => "track_title",
-    "dc:description" => "comments",
-    "dc:type" => "genre",
-    "dc:creator" => "artist_name",
-    "dc:source" => "album_title",
-    "ls:channels" => "channels",
-    "ls:filename" => "name",
-    "ls:year" => "year",
-    "ls:url" => "url",
-    "ls:track_num" => "track_number",
-    "ls:mood" => "mood",
-    "ls:bpm" => "bpm",
-    "ls:disc_num" => "disc_number",
-    "ls:rating" => "rating",
-    "ls:encoded_by" => "encoded_by",
-    "dc:publisher" => "label",
-    "ls:composer" => "composer",
-    "ls:encoder" => "encoder",
-    "ls:crc" => "checksum",
-    "ls:lyrics" => "lyrics",
-    "ls:orchestra" => "orchestra",
-    "ls:conductor" => "conductor",
-    "ls:lyricist" => "lyricist",
-    "ls:originallyricist" => "original_lyricist",
-    "ls:radiostationname" => "radio_station_name",
-    "ls:audiofileinfourl" => "info_url",
-    "ls:artisturl" => "artist_url",
-    "ls:audiosourceurl" => "audio_source_url",
-    "ls:radiostationurl" => "radio_station_url",
-    "ls:buycdurl" => "buy_this_url",
-    "ls:isrcnumber" => "isrc_number",
-    "ls:catalognumber" => "catalog_number",
-    "ls:originalartist" => "original_artist",
-    "dc:rights" => "copyright",
-    "dcterms:temporal" => "report_datetime",
-    "dcterms:spatial" => "report_location",
-    "dcterms:entity" => "report_organization",
-    "dc:subject" => "subject",
-    "dc:contributor" => "contributor",
-    "dc:language" => "language");
+class Metadata {
 
-/**
- * Track numbers in metadata tags can come in many formats:
- * "1 of 20", "1/20", "20/1".  This function parses the track
- * number and gets the real number so that we can sort by it
- * in the database.
- *
- * @param string $p_trackNumber
- * @return int
- */
-function camp_parse_track_number($p_trackNumber)
-{
-    $num = trim($p_trackNumber);
-    if (!is_numeric($num)) {
-        $matches = preg_match("/\s*([0-9]+)([^0-9]*)([0-9]*)\s*/", $num, $results);
-        $trackNum = 0;
-        foreach ($results as $result) {
-            if (is_numeric($result)) {
-                if ($trackNum == 0) {
-                    $trackNum = $result;
-                } elseif ($result < $trackNum) {
-                    $trackNum = $result;
-                }
-            }
-        }
-    } else {
-        $trackNum = $num;
-    }
-    return $trackNum;
-}
+    private static $MAP_METADATA_XML_TO_DB = array(
+    	"ls:type" => "ftype",
+        "dc:format" => "format",
+        "ls:bitrate" => "bit_rate",
+        "ls:samplerate" => "sample_rate",
+        "dcterms:extent" => "length",
+        "dc:title" => "track_title",
+        "dc:description" => "comments",
+        "dc:type" => "genre",
+        "dc:creator" => "artist_name",
+        "dc:source" => "album_title",
+        "ls:channels" => "channels",
+        "ls:filename" => "name",
+        "ls:year" => "year",
+        "ls:url" => "url",
+        "ls:track_num" => "track_number",
+        "ls:mood" => "mood",
+        "ls:bpm" => "bpm",
+        "ls:disc_num" => "disc_number",
+        "ls:rating" => "rating",
+        "ls:encoded_by" => "encoded_by",
+        "dc:publisher" => "label",
+        "ls:composer" => "composer",
+        "ls:encoder" => "encoder",
+        "ls:crc" => "checksum",
+        "ls:lyrics" => "lyrics",
+        "ls:orchestra" => "orchestra",
+        "ls:conductor" => "conductor",
+        "ls:lyricist" => "lyricist",
+        "ls:originallyricist" => "original_lyricist",
+        "ls:radiostationname" => "radio_station_name",
+        "ls:audiofileinfourl" => "info_url",
+        "ls:artisturl" => "artist_url",
+        "ls:audiosourceurl" => "audio_source_url",
+        "ls:radiostationurl" => "radio_station_url",
+        "ls:buycdurl" => "buy_this_url",
+        "ls:isrcnumber" => "isrc_number",
+        "ls:catalognumber" => "catalog_number",
+        "ls:originalartist" => "original_artist",
+        "dc:rights" => "copyright",
+        "dcterms:temporal" => "report_datetime",
+        "dcterms:spatial" => "report_location",
+        "dcterms:entity" => "report_organization",
+        "dc:subject" => "subject",
+        "dc:contributor" => "contributor",
+        "dc:language" => "language");
 
-
-/**
- * Add data to the global array $mdata, also sets global variables
- * $titleHaveSet and $titleKey.
- *
- * Converts the given string ($val) into UTF-8.
- *
- * @param array $p_mdata
- * 		The array to add the metadata to.
- * @param string $p_key
- * 		Metadata key.
- * @param string $p_val
- * 		Metadata value.
- * @param string $p_inputEncoding
- * 		Encoding type of the input value.
- */
-function camp_add_metadata(&$p_mdata, $p_key, $p_val, $p_inputEncoding='iso-8859-1')
-{
-    if (!is_null($p_val)) {
-        $data = $p_val;
-        $outputEncoding = 'UTF-8';
-        //if (function_exists('iconv') && ($p_inputEncoding != $outputEncoding) ) {
-        if (function_exists('iconv') && is_string($p_val)) {
-            $newData = @iconv($p_inputEncoding, $outputEncoding, $data);
-            if ($newData === FALSE) {
-                echo "Warning: convert $key data to unicode failed\n";
-            } elseif ($newData != $data) {
-                echo "Converted string: '$data' (".gettype($data).") -> '$newData' (".gettype($newData).").\n";
-                $data = $newData;
-            }
-        }
-        $p_mdata[$p_key] = trim($data);
-    }
-}
-
-
-/**
- * Return an array with the given audio file's ID3 tags.  The keys in the
- * array can be:
- * <pre>
- * 		dc:format ("mime type")
- * 		dcterms:extent ("duration")
- * 		dc:title
- * 		dc:creator ("artist")
- * 		dc:source ("album")
- *      dc:type ("genre")
- * 		ls:bitrate
- * 		ls:encoded_by
- * 		ls:track_num
- * 		ls:channels
- * 		ls:year
- * 		ls:filename
- * </pre>
- *
- * @param string $p_filename
- * @param boolean $p_testonly
- * 		For diagnostic and debugging purposes - setting this to TRUE
- * 		will print out the values found in the file and the ones assigned
- * 		to the return array.
- * @return array|PEAR_Error
- */
-function camp_get_audio_metadata($p_filename, $p_testonly = false)
-{
-    $getID3 = new getID3();
-    $infoFromFile = $getID3->analyze($p_filename);
-    if (PEAR::isError($infoFromFile)) {
-        return $infoFromFile;
-    }
-    if (isset($infoFromFile['error'])) {
-        return new PEAR_Error(array_pop($infoFromFile['error']));
-    }
-    if (!$infoFromFile['bitrate']) {
-        return new PEAR_Error("File given is not an audio file.");
+    public static function GetMapMetadataXmlToDb() {
+        return Metadata::$MAP_METADATA_XML_TO_DB;
     }
 
-    if ($p_testonly) {
-        print_r($infoFromFile);
-    }
-    $titleKey = 'dc:title';
-    $flds = array(
-        'dc:format' => array(
-    array('path'=>"['mime_type']", 'ignoreEnc'=>TRUE),
-    ),
-        'ls:bitrate' => array(
-    array('path'=>"['bitrate']", 'ignoreEnc'=>TRUE),
-    array('path'=>"['audio']['bitrate']", 'ignoreEnc'=>TRUE),
-    ),
-        'ls:samplerate' => array(
-    array('path'=>"['audio']['sample_rate']", 'ignoreEnc'=>TRUE),
-    ),
-        'ls:encoder' => array(
-    array('path'=>"['audio']['codec']", 'ignoreEnc'=>TRUE),
-    ),
-        'dcterms:extent'=> array(
-    array('path'=>"['playtime_seconds']", 'ignoreEnc'=>TRUE),
-    ),
-        'ls:composer'=> array(
-    array('path'=>"['id3v2']['comments']['composer']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-    array('path'=>"['id3v2']['TCOM'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['id3v2']['composer']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-    array('path'=>"['ogg']['comments']['composer']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['composer']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-        'dc:description'=> array(
-    array('path'=>"['id3v1']['comments']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['comments']['comments']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-    array('path'=>"['id3v2']['COMM'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['id3v2']['comments']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-    array('path'=>"['ogg']['comments']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-        'dc:type'=> array(
-    array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-    array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-        'dc:title' => array(
-    array('path'=>"['id3v2']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['TIT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['TT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v1']", 'dataPath'=>"['title']", 'encPath'=>"['encoding']"),
-    array('path'=>"['ogg']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-        'dc:creator' => array(
-    array('path'=>"['id3v2']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['TPE1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['TP1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v1']", 'dataPath'=>"['artist']", 'encPath'=>"['encoding']"),
-    array('path'=>"['ogg']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-        'dc:source' => array(
-    array('path'=>"['id3v2']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['TALB'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['TAL'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['ogg']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-        'ls:encoded_by'	=> array(
-    array('path'=>"['id3v2']['TENC'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['TEN'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['ogg']['comments']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-        'ls:track_num' => array(
-    array('path'=>"['id3v2']['TRCK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['id3v2']['TRK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    array('path'=>"['ogg']['comments']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-    //	    'ls:genre'	    => array(
-    //	        array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
-    //	        array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
-    //	        array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
-    //	        array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    //	        array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    //	    ),
-        'ls:channels' => array(
-    array('path'=>"['audio']['channels']", 'ignoreEnc'=>TRUE),
-    ),
-        'ls:year' => array(
-    array('path'=>"['comments']['date']"),
-    array('path'=>"['ogg']['comments']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    array('path'=>"['tags']['vorbiscomment']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
-    ),
-        'ls:filename' => array(
-    array('path'=>"['filename']"),
-    ),
-    );
-    $mdata = array();
-    if (isset($infoFromFile['audio'])) {
-        $mdata['audio'] = $infoFromFile['audio'];
-    }
-    if (isset($infoFromFile['playtime_seconds'])) {
-        $mdata['playtime_seconds'] = $infoFromFile['playtime_seconds'];
-    }
-
-    $titleHaveSet = FALSE;
-    foreach ($flds as $key => $getid3keys) {
-        foreach ($getid3keys as $getid3key) {
-            $path = $getid3key["path"];
-            $ignoreEnc = isset($getid3key["ignoreEnc"])?
-            $getid3key["ignoreEnc"]:FALSE;
-            $dataPath = isset($getid3key["dataPath"])?$getid3key["dataPath"]:"";
-            $encPath = isset($getid3key["encPath"])?$getid3key["encPath"]:"";
-            $enc = "UTF-8";
-
-            $tagElement = "\$infoFromFile$path$dataPath";
-            eval("\$tagExists = isset($tagElement);");
-            if ($tagExists) {
-                //echo "ignore encoding: ".($ignoreEnc?"yes":"no")."\n";
-                //echo "tag exists\n";
-                //echo "encode path: $encPath\n";
-                eval("\$data = $tagElement;");
-                if (!$ignoreEnc && $encPath != "") {
-                    $encodedElement = "\$infoFromFile$path$encPath";
-                    eval("\$encodedElementExists = isset($encodedElement);");
-                    if ($encodedElementExists) {
-                        eval("\$enc = $encodedElement;");
+    /**
+     * Track numbers in metadata tags can come in many formats:
+     * "1 of 20", "1/20", "20/1".  This function parses the track
+     * number and gets the real number so that we can sort by it
+     * in the database.
+     *
+     * @param string $p_trackNumber
+     * @return int
+     */
+    public static function ParseTrackNumber($p_trackNumber)
+    {
+        $num = trim($p_trackNumber);
+        if (!is_numeric($num)) {
+            $matches = preg_match("/\s*([0-9]+)([^0-9]*)([0-9]*)\s*/", $num, $results);
+            $trackNum = 0;
+            foreach ($results as $result) {
+                if (is_numeric($result)) {
+                    if ($trackNum == 0) {
+                        $trackNum = $result;
+                    } elseif ($result < $trackNum) {
+                        $trackNum = $result;
                     }
                 }
-
-                // Special case handling for track number
-                if ($key == "ls:track_num") {
-                    $data = camp_parse_track_number($data);
-                }
-                camp_add_metadata($mdata, $key, $data, $enc);
-                if ($key == $titleKey) {
-                    $titleHaveSet = TRUE;
-                }
-                break;
             }
+        } else {
+            $trackNum = $num;
+        }
+        return $trackNum;
+    }
+
+
+    /**
+     * Add data to the array $p_mdata.
+     *
+     * Converts the given string ($val) into UTF-8.
+     *
+     * @param array $p_mdata
+     * 		The array to add the metadata to.
+     * @param string $p_key
+     * 		Metadata key.
+     * @param string $p_val
+     * 		Metadata value.
+     * @param string $p_inputEncoding
+     * 		Encoding type of the input value.
+     */
+    public static function AddToArray(&$p_mdata, $p_key, $p_val, $p_inputEncoding='iso-8859-1')
+    {
+        if (!is_null($p_val)) {
+            $data = $p_val;
+            $outputEncoding = 'UTF-8';
+            //if (function_exists('iconv') && ($p_inputEncoding != $outputEncoding) ) {
+            if (function_exists('iconv') && is_string($p_val)) {
+                $newData = @iconv($p_inputEncoding, $outputEncoding, $data);
+                if ($newData === FALSE) {
+                    echo "Warning: convert $key data to unicode failed\n";
+                } elseif ($newData != $data) {
+                    echo "Converted string: '$data' (".gettype($data).") -> '$newData' (".gettype($newData).").\n";
+                    $data = $newData;
+                }
+            }
+            $p_mdata[$p_key] = trim($data);
         }
     }
-    if ($p_testonly) {
-        var_dump($mdata);
-    }
 
-    if (!$titleHaveSet || trim($mdata[$titleKey]) == '') {
-        camp_add_metadata($mdata, $titleKey, basename($p_filename));
+
+    /**
+     * Return an array with the given audio file's ID3 tags.  The keys in the
+     * array can be:
+     * <pre>
+     * 		dc:format ("mime type")
+     * 		dcterms:extent ("duration")
+     * 		dc:title
+     * 		dc:creator ("artist")
+     * 		dc:source ("album")
+     *      dc:type ("genre")
+     * 		ls:bitrate
+     * 		ls:encoded_by
+     * 		ls:track_num
+     * 		ls:channels
+     * 		ls:year
+     * 		ls:filename
+     * </pre>
+     *
+     * @param string $p_filename
+     * @param boolean $p_testonly
+     * 		For diagnostic and debugging purposes - setting this to TRUE
+     * 		will print out the values found in the file and the ones assigned
+     * 		to the return array.
+     * @return array|PEAR_Error
+     */
+    public static function LoadFromFile($p_filename, $p_testonly = false)
+    {
+        $getID3 = new getID3();
+        $infoFromFile = $getID3->analyze($p_filename);
+        if (PEAR::isError($infoFromFile)) {
+            return $infoFromFile;
+        }
+        if (isset($infoFromFile['error'])) {
+            return new PEAR_Error(array_pop($infoFromFile['error']));
+        }
+        if (!$infoFromFile['bitrate']) {
+            return new PEAR_Error("File given is not an audio file.");
+        }
+
+        if ($p_testonly) {
+            print_r($infoFromFile);
+        }
+        $titleKey = 'dc:title';
+        $flds = array(
+            'dc:format' => array(
+        array('path'=>"['mime_type']", 'ignoreEnc'=>TRUE),
+        ),
+            'ls:bitrate' => array(
+        array('path'=>"['bitrate']", 'ignoreEnc'=>TRUE),
+        array('path'=>"['audio']['bitrate']", 'ignoreEnc'=>TRUE),
+        ),
+            'ls:samplerate' => array(
+        array('path'=>"['audio']['sample_rate']", 'ignoreEnc'=>TRUE),
+        ),
+            'ls:encoder' => array(
+        array('path'=>"['audio']['codec']", 'ignoreEnc'=>TRUE),
+        ),
+            'dcterms:extent'=> array(
+        array('path'=>"['playtime_seconds']", 'ignoreEnc'=>TRUE),
+        ),
+            'ls:composer'=> array(
+        array('path'=>"['id3v2']['comments']['composer']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+        array('path'=>"['id3v2']['TCOM'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['id3v2']['composer']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+        array('path'=>"['ogg']['comments']['composer']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['composer']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+            'dc:description'=> array(
+        array('path'=>"['id3v1']['comments']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['comments']['comments']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+        array('path'=>"['id3v2']['COMM'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['id3v2']['comments']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+        array('path'=>"['ogg']['comments']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['comment']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+            'dc:type'=> array(
+        array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+        array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+            'dc:title' => array(
+        array('path'=>"['id3v2']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['TIT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['TT2'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v1']", 'dataPath'=>"['title']", 'encPath'=>"['encoding']"),
+        array('path'=>"['ogg']['comments']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['title']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+            'dc:creator' => array(
+        array('path'=>"['id3v2']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['TPE1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['TP1'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v1']", 'dataPath'=>"['artist']", 'encPath'=>"['encoding']"),
+        array('path'=>"['ogg']['comments']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['artist']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+            'dc:source' => array(
+        array('path'=>"['id3v2']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['TALB'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['TAL'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['ogg']['comments']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['album']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+            'ls:encoded_by'	=> array(
+        array('path'=>"['id3v2']['TENC'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['TEN'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['ogg']['comments']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['encoded-by']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+            'ls:track_num' => array(
+        array('path'=>"['id3v2']['TRCK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['id3v2']['TRK'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        array('path'=>"['ogg']['comments']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['tracknumber']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+        //	    'ls:genre'	    => array(
+        //	        array('path'=>"['id3v1']", 'dataPath'=>"['genre']", 'encPath'=>"['encoding']"),
+        //	        array('path'=>"['id3v2']['TCON'][0]", 'dataPath'=>"['data']", 'encPath'=>"['encoding']"),
+        //	        array('path'=>"['id3v2']['comments']['content_type']", 'dataPath'=>"[0]", 'ignoreEnc'=>TRUE),
+        //	        array('path'=>"['ogg']['comments']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        //	        array('path'=>"['tags']['vorbiscomment']['genre']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        //	    ),
+            'ls:channels' => array(
+        array('path'=>"['audio']['channels']", 'ignoreEnc'=>TRUE),
+        ),
+            'ls:year' => array(
+        array('path'=>"['comments']['date']"),
+        array('path'=>"['ogg']['comments']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        array('path'=>"['tags']['vorbiscomment']['date']", 'dataPath'=>"[0]", 'encPath'=>"['encoding']"),
+        ),
+            'ls:filename' => array(
+        array('path'=>"['filename']"),
+        ),
+        );
+        $mdata = array();
+        if (isset($infoFromFile['audio'])) {
+            $mdata['audio'] = $infoFromFile['audio'];
+        }
+        if (isset($infoFromFile['playtime_seconds'])) {
+            $mdata['playtime_seconds'] = $infoFromFile['playtime_seconds'];
+        }
+
+        $titleHaveSet = FALSE;
+        foreach ($flds as $key => $getid3keys) {
+            foreach ($getid3keys as $getid3key) {
+                $path = $getid3key["path"];
+                $ignoreEnc = isset($getid3key["ignoreEnc"])?
+                $getid3key["ignoreEnc"]:FALSE;
+                $dataPath = isset($getid3key["dataPath"])?$getid3key["dataPath"]:"";
+                $encPath = isset($getid3key["encPath"])?$getid3key["encPath"]:"";
+                $enc = "UTF-8";
+
+                $tagElement = "\$infoFromFile$path$dataPath";
+                eval("\$tagExists = isset($tagElement);");
+                if ($tagExists) {
+                    //echo "ignore encoding: ".($ignoreEnc?"yes":"no")."\n";
+                    //echo "tag exists\n";
+                    //echo "encode path: $encPath\n";
+                    eval("\$data = $tagElement;");
+                    if (!$ignoreEnc && $encPath != "") {
+                        $encodedElement = "\$infoFromFile$path$encPath";
+                        eval("\$encodedElementExists = isset($encodedElement);");
+                        if ($encodedElementExists) {
+                            eval("\$enc = $encodedElement;");
+                        }
+                    }
+
+                    // Special case handling for track number
+                    if ($key == "ls:track_num") {
+                        $data = Metadata::ParseTrackNumber($data);
+                    }
+                    Metadata::AddToArray($mdata, $key, $data, $enc);
+                    if ($key == $titleKey) {
+                        $titleHaveSet = TRUE;
+                    }
+                    break;
+                }
+            }
+        }
+        if ($p_testonly) {
+            var_dump($mdata);
+        }
+
+        if (!$titleHaveSet || trim($mdata[$titleKey]) == '') {
+            Metadata::AddToArray($mdata, $titleKey, basename($p_filename));
+        }
+        return $mdata;
     }
-    return $mdata;
 }
 
 
@@ -316,7 +321,7 @@ function camp_get_audio_metadata($p_filename, $p_testonly = false)
  *  Airtime file storage support class.<br>
  *  Represents one virtual file in storage. Virtual file has up to two parts:
  *  <ul>
- *      <li>metadata in database - represented by MetaData class</li>
+ *      <li>metadata in database </li>
  *      <li>binary media data in real file</li>
  *  </ul>
  *
@@ -456,9 +461,9 @@ class StoredFile {
      */
     public static function xmlCategoryToDbColumn($p_category)
     {
-        global $g_metadata_xml_to_db_mapping;
-        if (array_key_exists($p_category, $g_metadata_xml_to_db_mapping)) {
-            return $g_metadata_xml_to_db_mapping[$p_category];
+        $map = Metadata::GetMapMetadataXmlToDb();
+        if (array_key_exists($p_category, $map)) {
+            return $map[$p_category];
         }
         return null;
     }
@@ -472,8 +477,7 @@ class StoredFile {
      */
     public static function dbColumnToXmlCatagory($p_dbColumn)
     {
-        global $g_metadata_xml_to_db_mapping;
-        $str = array_search($p_dbColumn, $g_metadata_xml_to_db_mapping);
+        $str = array_search($p_dbColumn, Metadata::GetMapMetadataXmlToDb());
         // make return value consistent with xmlCategoryToDbColumn()
         if ($str === FALSE) {
             $str = null;
@@ -607,7 +611,7 @@ class StoredFile {
         if (isset($p_values["metadata"])) {
             $metadata = $p_values['metadata'];
         } else {
-            $metadata = camp_get_audio_metadata($p_values["filepath"]);
+            $metadata = Metadata::LoadFromFile($p_values["filepath"]);
         }
 
         $storedFile->name = isset($p_values['filename']) ? $p_values['filename'] : $p_values["filepath"];
@@ -903,24 +907,6 @@ class StoredFile {
     public function existsFile()
     {
         return $this->exists;
-    }
-
-
-    /**
-     * Analyze file with getid3 module.<br>
-     * Obtain some metadata stored in media file.<br>
-     * This method should be used for prefilling metadata input form.
-     *
-     * @return array
-     * 		hierarchical hasharray with information about media file
-     */
-    public function analyzeFile()
-    {
-        if (!$this->exists) {
-            return FALSE;
-        }
-        $ia = camp_get_audio_metadata($this->filepath);
-        return $ia;
     }
 
 
@@ -1511,7 +1497,7 @@ class StoredFile {
      */
     public function getMime()
     {
-        $a = $this->analyzeFile();
+        $a = Metadata::LoadFromFile($this->filepath);
         if (PEAR::isError($a)) {
             return $a;
         }
@@ -1621,13 +1607,13 @@ class StoredFile {
         return $CC_CONFIG['accessDir']."/$p_token.$p_ext";
     }
 
-	public static function searchFilesForPlaylistBuilder($datatables) {
 
-		global $CC_CONFIG, $g_metadata_xml_to_db_mapping;
+	public static function searchFilesForPlaylistBuilder($datatables) {
+		global $CC_CONFIG;
 
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
-        foreach ($g_metadata_xml_to_db_mapping as $key => $val){
+        foreach (Metadata::GetMapMetadataXmlToDb() as $key => $val){
 
             if($key === "dc:title"){
                 $plSelect .= "name AS ".$val.", ";
@@ -1667,15 +1653,14 @@ class StoredFile {
 
 	}
 
+
 	public static function searchPlaylistsForSchedule($p_length, $datatables) {
-
 		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
-
         $datatables["optWhere"][] = "INTERVAL '{$p_length}' > INTERVAL '00:00:00'";
         $datatables["optWhere"][] = "plt.length > INTERVAL '00:00:00'";
-
 		return StoredFile::searchFiles($fromTable, $datatables);
 	}
+
 
 	public static function searchFiles($fromTable, $data)
 	{
@@ -1694,16 +1679,12 @@ class StoredFile {
 
 		//	Where clause
 		if(isset($data["optWhere"])) {
-
 			$where[] = join(" AND ", $data["optWhere"]);
 		}
 
 		if(isset($searchTerms)) {
-
 			$searchCols = array();
-
 			for($i=0; $i<$data["iColumns"]; $i++) {
-
 				if($data["bSearchable_".$i] == "true") {
 					$searchCols[] = $columnsDisplayed[$i];
 				}
@@ -1712,7 +1693,6 @@ class StoredFile {
 			$outerCond = array();
 
 			foreach($searchTerms as $term) {
-
 				$innerCond = array();
 
 				foreach($searchCols as $col) {
@@ -1738,12 +1718,9 @@ class StoredFile {
 		$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
 
 		if(isset($where)) {
-
 			$where = join(" AND ", $where);
-
 			$sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
 			$totalDisplayRows = $CC_DBC->getOne($sql);
-
 			$sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 		else {
@@ -1762,79 +1739,6 @@ class StoredFile {
 		}
 
 		return array("sEcho" => intval($data["sEcho"]), "iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
-
-
-
-
-		/*
-
-		$match = array(
-			"0" => "ILIKE",
-			"1" => "=",
-			"2" => "<",
-			"3" => "<=",
-			"4" => ">",
-			"5" => ">=",
-			"6" => "!=",
-		);
-
-		$or_cond = array();
-		$inner = $quick ? 'OR':'AND';
-		$outer = $quick ? 'AND':'OR';
-		foreach (array_keys($md) as $group) {
-
-			if(strpos($group, 'group') === false) {
-				continue;
-			}
-
-			$and_cond = array();
-			foreach (array_keys($md[$group]) as $row) {
-
-				$string = $g_metadata_xml_to_db_mapping[$md[$group][$row]["metadata"]];
-
-				$string = $string ." ".$match[$md[$group][$row]["match"]];
-
-				if ($md[$group][$row]["match"] === "0")
-					$string = $string." '%". $md[$group][$row]["search"]."%'";
-				else
-					$string = $string." '". $md[$group][$row]["search"]."'";
-
-				$and_cond[] = $string;
-			}
-
-			if(count($and_cond) > 0) {
-				$or_cond[] = "(".join(" ".$inner." ", $and_cond).")";
-			}
-		}
-
-		if(count($or_cond) > 0) {
-			$where = " WHERE ". join(" ".$outer." ", $or_cond);
-			$sql = $sql . $where;
-		}
-
-		if($count) {
-			return $CC_DBC->getOne($sql);
-		}
-
-		if(!is_null($order)) {
-			$ob = " ORDER BY ".$g_metadata_xml_to_db_mapping[$order["category"]]." ".$order["order"].", id ";
-			$sql = $sql . $ob;
-		}
-		else{
-			$ob = " ORDER BY artist_name asc, id";
-			$sql = $sql . $ob;
-		}
-
-		if(!is_null($page) && !is_null($limit)) {
-			$offset = $page * $limit - ($limit);
-			$paginate = " LIMIT ".$limit. " OFFSET " .$offset;
-			$sql = $sql . $paginate;
-		}
-		//echo var_dump($md);
-		//echo $sql;
-		*/
-
-		//return $CC_DBC->getAll($sql);
 	}
 
 }
