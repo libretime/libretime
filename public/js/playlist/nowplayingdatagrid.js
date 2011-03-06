@@ -60,8 +60,7 @@ var columns = [{"sTitle": "type", "bVisible":false},
     {"sTitle":"Album"},
     {"sTitle":"Playlist"},
     {"sTitle":"Show"},
-    {"sTitle":"instance_id", "bVisible":true},
-    {"sTitle":"group_id", "bVisible":false}];
+    {"sTitle":"instance_id", "bVisible":false}];
 
 function getDateString(){
     var date0 = $("#datepicker").datepicker("getDate");
@@ -85,9 +84,7 @@ function updateDataTable(){
     //function can be called before ajax call has been returned.
     if (datagridData != null){
         table.fnClearTable(false);
-        for (var show in datagridData.rows){
-            table.fnAddData(datagridData.rows[show].items, false);
-        }
+        table.fnAddData(datagridData.rows, false);
         table.fnDraw(true);
     }
 }
@@ -131,8 +128,6 @@ function createDataGrid(){
                 $(nRow).addClass("playing-list");
             if (aData[0] == "c")
 				$(nRow).attr("class", "playing-song");
-            else if (aData[0] == "b")
-                $(nRow).attr("class", "gap");
 			return nRow;
 		},
         "fnDrawCallback": function(oSettings){
@@ -148,7 +143,7 @@ function createDataGrid(){
                 var iDisplayIndex = oSettings._iDisplayStart + i;
                 var sType = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[0];
 
-                if ( sType == "s" ){
+                if ( sType == "g" ){
                     var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[9];
                     var startTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[2];
                     var endTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[3];

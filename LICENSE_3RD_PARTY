@@ -28,6 +28,10 @@ Linked code:
    - Note: Only used for development, not needed to run Airtime.
    - License: LGPLv3
 
+ * Soundcloud php api wrapper
+   - https://github.com/mptre/php-soundcloud/blob/master/Services/Soundcloud.php
+   - License: MIT   
+
 ----------------
 Non-linked code:
 ----------------

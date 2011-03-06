@@ -1,0 +1,24 @@
+2003-03-18  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* ecacontrol.py: support for ECASOUND environment variable
+
+2003-03-11  Janne Halttunen <jhalttun@.devtag.AUTHORS>
+
+       * python module name change from ecanative to ecacontrol
+       * support for multiple functional instances of ECI class
+       * disabled curses output from ecasound engine
+       * added check for ecasound version number
+
+2003-02-22  Janne Halttunen <jhalttun@.devtag.AUTHORS>
+
+	* native python ECI implementation
+
+2001-04-27  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version 0:0:0 frozen	
+	
+2000-12-06  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* development started; libtool version number 0:0:0 
+
+-----------------------------------------------------------------------

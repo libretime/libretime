@@ -175,15 +175,26 @@ class Show {
         Show::populateShowUntilLastGeneratedDate($showId);
 	}
 
-    public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL) {
+    public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=FALSE) {
         global $CC_DBC;
 
         $sql = "SELECT starts, ends, show_id, name, description, color, background_color, cc_show_instances.id AS instance_id  
             FROM cc_show_instances 
-            LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id 
-            WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
+            LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id";
+
+        //only want shows that are starting at the time or later.
+        if($onlyRecord) {
+
+            $sql = $sql." WHERE (starts >= '{$start_timestamp}' AND starts < timestamp '{$start_timestamp}' + interval '2 hours')";
+            $sql = $sql." AND (record = TRUE)";
+        }
+        else {
+
+            $sql = $sql." WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
                 OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}')
                 OR (starts <= '{$start_timestamp}' AND ends >= '{$end_timestamp}'))";
+        } 
+            
 
         if(isset($excludeInstance)) {
             foreach($excludeInstance as $instance) {
@@ -196,7 +207,6 @@ class Show {
         }
 
 		//echo $sql;
-
 		return $CC_DBC->GetAll($sql);
     }
 
@@ -446,6 +456,10 @@ class ShowInstance {
         return $showInstance->getDbShowId();
     }
 
+    public function getShowInstanceId() {
+        return $this->_instanceId;
+    }
+
     public function getName() {
         $show = CcShowQuery::create()->findPK($this->getShowId());
         return $show->getDbName();
@@ -625,11 +639,8 @@ class ShowInstance {
 	}
 
     public function getTimeScheduled() {
-
-        $start_timestamp = $this->getShowStart(); 
-        $end_timestamp = $this->getShowEnd();
-
-		$time = Schedule::getTimeScheduledInRange($start_timestamp, $end_timestamp);
+        $instance_id = $this->getShowInstanceId();
+		$time = Schedule::GetTotalShowTime($instance_id);
 
 		return $time;
 	}
@@ -638,8 +649,9 @@ class ShowInstance {
 
         $start_timestamp = $this->getShowStart(); 
         $end_timestamp = $this->getShowEnd();
+        $instance_id = $this->getShowInstanceId();
 
-		$time = Schedule::getTimeUnScheduledInRange($start_timestamp, $end_timestamp);
+		$time = Schedule::getTimeUnScheduledInRange($instance_id, $start_timestamp, $end_timestamp);
 
 		return $time;
 	}
@@ -650,6 +662,14 @@ class ShowInstance {
         $end_timestamp = $this->getShowEnd();
 
         return Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+    }
+
+    public function getPercentScheduled(){
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
+        $instance_id = $this->getShowInstanceId();
+
+        return Schedule::GetPercentScheduled($instance_id, $start_timestamp, $end_timestamp);
     }
 
     public function getShowLength(){
@@ -760,32 +780,34 @@ class Show_DAL{
 
     public static function GetShowsInRange($timeNow, $start, $end){
         global $CC_CONFIG, $CC_DBC;
-		$sql = "SELECT *,"
-        ." si.starts as start_timestamp,"
-        ." si.ends as end_timestamp,"
-        ." si.id as instance_id"
-        ." FROM "
-		." $CC_CONFIG[showInstances] si,"
-        ." $CC_CONFIG[showTable] s"
-		." WHERE si.show_id = s.id"
-		." AND ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
+		$sql = "SELECT"
+        ." si.starts as show_starts,"
+        ." si.ends as show_ends,"
+        ." st.starts as item_starts,"
+        ." st.ends as item_ends,"
+        ." st.clip_length as clip_length,"
+        ." ft.track_title as track_title,"
+        ." ft.artist_name as artist_name,"
+        ." ft.album_title as album_title,"
+        ." s.name as show_name,"
+        ." si.id as instance_id,"
+        ." pt.name as playlist_name"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." LEFT JOIN $CC_CONFIG[scheduleTable] st"
+        ." ON st.instance_id = si.id"
+        ." LEFT JOIN $CC_CONFIG[playListTable] pt"
+        ." ON st.playlist_id = pt.id"
+        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." ON st.file_id = ft.id"
+        ." LEFT JOIN $CC_CONFIG[showTable] s"
+		." ON si.show_id = s.id"
+		." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
         ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
         ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
-        ." ORDER BY si.starts";
+        ." AND (st.starts < si.ends)"
+        ." ORDER BY st.starts";
 
-        $rows = $CC_DBC->GetAll($sql);
-
-        $showsMap = array();
-        $rowsCount = count($rows);
-        
-        for ($i=0; $i<$rowsCount; $i++){
-            $rows[$i]['items'] = array();
-            array_push($rows[$i]['items'],
-                array("s", $rows[$i]["starts"], $rows[$i]["starts"], $rows[$i]["ends"], "", "", "", "", "", $rows[$i]["name"], $rows[$i]["instance_id"], ""));
-            $showsMap[$rows[$i]['instance_id']] = $rows[$i];
-        }
-
-        return $showsMap;
+        return $CC_DBC->GetAll($sql);
     }
     
 }

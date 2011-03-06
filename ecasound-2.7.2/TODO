@@ -1,0 +1,23 @@
+-----------------------------------------------------------------------
+*** Ecasound - To do list / Plans                                   ***
+-----------------------------------------------------------------------
+
+Ecasound bug tracker at sourceforge.net
+-----------------------------------------------------------------------
+
+The Ecasound bug tracker at sourceforge.net is also used to track
+feature requests:
+
+   - https://sourceforge.net/tracker/?group_id=4605&atid=104605
+
+This same tracker is used for both longstanding bugs, as well as
+for keeping tracking of feature/improvement requests. It replaces 
+the old Ecasound Development Item practise (items marked with 'edi-x' 
+tags) that was used during years 2002-08.
+
+Active development areas
+-----------------------------------------------------------------------
+
+Probably the best way to follow active development is to
+subscribe to the ecasound-list mailing list (see the "Mailing
+lists" section in README).

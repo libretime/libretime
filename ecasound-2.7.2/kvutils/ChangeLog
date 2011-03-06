@@ -1,0 +1,204 @@
+2009-10-17  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library interface version 9:0:5 frozen (2.7.0 release)
+
+2009-04-12  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_message_queue.h: file added.
+
+2009-03-27  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_timestamp.h: New interface.
+
+2009-03-21  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_dbc.h: Added DBC_NEVER_REACHED macro.
+	* kvu_debug.h: File added.
+	* library version changed to 9:0:5
+
+2006-12-06  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library interface version 8 frozen (2.4.5 release)
+	* library version changed to 8:0:4
+	* kvu_utils.cpp (kvu_string_strip_outer_quotes): Added.
+	
+2005-03-12  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+        * library interface version 7 frozen (2.4.0 release)
+
+2004-12-15  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_utils.cpp (kvu_string_regex_meta_escape): Added.
+	* kvu_utils.cpp (kvu_string_search_and_replace): Added.
+
+2004-12-14  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_value_queue.h (VALUE_QUEUE_RT_C): Added.
+
+2004-12-12  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_utils.h (kvu_vector_search_and_replace): Added.
+	* kvu_utils.h (kvu_string_shell_meta_escape): Added.
+	* library version changed to 7:0:3
+	
+2003-08-29  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+        * library interface version 6 frozen
+
+2003-05-29  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_rtcaps.h (kvu_set_thread_scheduling): added
+	* library version changed to 6:0:2
+	
+2003-02-13  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_inttypes.h: file added
+	* library version changed to 5:0:1
+
+2003-01-07  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library interface version 4 frozen
+
+2002-11-05  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_locks.h: removed dependency to asm/atomic.h
+	* kvu_locks.h (add,sub,increment,decrement): removed
+	
+2002-10-16  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* NOTE: from now on, the library version 
+	presents the public API version number, not 
+	the ABI version.
+	* removed interface version from library 
+	base name
+	* library version changed to 4:0:0
+
+2002-06-29  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_fd_io.h: file added
+
+2002-06-28  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvu_com_line.h (COMMAND_LINE): iterators
+	functions to const members
+	* kvu_com_line.h (COMMAND_LINE): added 
+	constructor that takes 'void' as its argument
+
+2002-04-29  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+	
+	* kvu_locks.h (KVU_GUARD_LOCK): class added
+	
+2002-04-28  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* all files renamed to have a 'kvu_' prefix
+	* 'kvu_' prefix added to all free operators
+	
+2002-04-25  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version number added to library name; current
+	  name is libkvutils3
+	
+2002-04-19  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvutils.h (kvu_sleep): added
+	
+2002-02-27  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* threads.h (all): added
+	* locks.h (pthread_mutex_spinlock): moved to threads.h
+	
+2002-02-26  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version changed to 3:0:0 (change in 
+	  binary-level API)
+	* procedure_timer.h (last_duration_seconds): added
+	
+2001-12-22  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* kvutils.h (string_to_words): marked obsolete - not removed 
+	from the library
+	* kvutils.h (string_to_tokens): replaces string_to_words()
+	* kvutils.h (string_to_tokens_quoted): added
+	
+2001-11-29  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* message_item.h (<<operator): added overloaded versions
+	for handling (un)signed long long ints
+	* kvu_numtostr.h (kvu_numtostr): added overloaded versions
+	for handling (un)signed long long ints
+	
+2001-10-15  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+
+	* procudure_timer.h (set_upper_bound_seconds,
+	set_lower_bound_seconds): added
+	
+2001-10-09  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* locks.h (all): made function member of ATOMIC_INTEGER 
+	non-inlined to better hide the actual implementation
+	
+2001-10-03  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* dbc.h (DBC_DECLARE): added
+	* kvurtcaps.h (all): added
+	
+2001-08-19  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version changed to 3:0:1
+	* dbc.h (all): added, makes definition_by_contract.h obsolete
+	
+2001-04-27  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library interface version 2 frozen
+	
+2001-04-23  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+	
+	* kvutils.h (string_to_int_vector): added
+	
+2001-03-22  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+	
+	* temporary_file_directory.h (all): added
+	
+2001-02-19  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* value_queue.h (poll): added
+		
+2000-11-18  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+
+	* procedure_timer.h (all): added
+	
+2000-11-16  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+
+	* locks.h (read): renamed to 'get'
+	* locks.h (write): renamed to 'set'
+	* locks.h (add, subtract, increment, decrement): added
+	
+2000-10-17  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+
+	* object_queue.h (all): few member functions renamed, pthread
+	locking changes
+	* command_queue.h (all): removed as obsolete
+	* locks.h (pthread_mutex_spinlock): added
+	
+2000-09-30  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+
+	* definition_by_contract.h (all): lots of changes in the public
+	interface
+	* library version changed to 2:0:0
+	
+2000-04-11  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+
+	* kvutils.h (print_time_stamp): added
+	* library version changed to 1:0:0
+	
+2000-03-24  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+
+	* com_line.h (combine): a new overloaded version
+	
+2000-03-21  Kai Vehmanen  <kaiv@.devtag.AUTHORS>	
+
+	* object_queue.h: added
+	* changes in all interfaces
+	* library version set to 0:0:0 (current:revision:age)
+	
+-----------------------------------------------------------------------

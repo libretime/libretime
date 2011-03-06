@@ -1,0 +1,212 @@
+# --------------------------------------------------------------------
+# ecasound effect presets definitions
+# --------------------------------------------------------------------
+#
+# - all lines beginning with a '#' are ignored
+# - preset format:
+#   "preset_name_or_number = <chain-1object> | ... | <chain-N objects>"
+# - you can use '\' sign to split lines
+# - preset parameters and available descriptors:
+#     -efl:%1,100 = first param of -efl is a public preset parameter
+#     -pd:name_of_preset = preset description
+#     -ppn:par1,...,parN = parameter names (public params)
+#     -ppd:val1,...,valN = default param values
+#     -ppl:val1,...,valN = lower bounds for param values
+#     -ppu:val1,...,valN = upper bounds for param values
+#     -ppt:flags1,...,flagsN = special flags for parameter N
+#                              ('i'=integer, 'l'=logarithmic, 'o'=output, 't'=toggle)
+#
+# --------------------------------------------------------------------
+
+# ======
+# Compression/dynamics (dyn_)
+#
+
+dyn_compress_supersoft = -eca:69,0,0.25,0.25 -ea:%1 \
+	-pd:Supersoft_compressor -ppn:gain-% -ppd:100 -ppl:0 -ppu:1000
+dyn_compress_soft = -eca:69,0,0.25,0.5 -ea:%1 \
+	-pd:Soft_compressor -ppn:gain-% -ppd:100 -ppl:0 -ppu:1000
+dyn_compress_medium = -eca:69,0,0.25,1.0 -ea:%1 \
+	-pd:Medium_compressor -ppn:gain-% -ppd:100 -ppl:0 -ppu:1000
+dyn_compress_hard = -eca:69,0,0.5,1.0 -ea:%1 \
+	-pd:Hard_compressor -ppn:gain-% -ppd:100 -ppl:0 -ppu:1000
+dyn_compress_infinite = -eca:69,0,1.0,1.0 -ea:%1 \
+	-pd:Infinite_to_one_compressor -ppn:gain-% -ppd:100 -ppl:0 -ppu:1000
+dyn_compress_brutal = -ec:999,10 -ea:%1 \
+	-pd:Ultra_brutal_compressor -ppn:gain-% -ppd:100 -ppl:0 -ppu:1000
+
+# ======
+# EQ (eq_)
+#
+eq_template = -efb:10,20 -ea:%1 | \
+	-efb:40,40 -ea:%2 | \
+	-efb:100,80 -ea:%3 | \
+	-efb:220,160 -ea:%4 | \
+	-efb:460,320 -ea:%5 | \
+	-efb:940,640 -ea:%6 | \
+	-efb:1900,1280 -ea:%7 | \
+	-efb:3800,2520 -ea:%8 | \
+	-efb:7620,5120 -ea:%9 | \
+	-efb:15300,10240 -ea:%10 \
+	-pd:Big_eq_template \
+	-ppn:10hz,40hz,100hz,220hz,460hz,940hz,1900hz,3800hz,7620hz,15300hz \
+	-ppd:100,100,100,100,100,100,100,100,100,100 \
+	-ppl:0,0,0,0,0,0,0,0,0,0 \
+	-ppu:500,500,500,500,500,500,500,500,500,500
+eq_template2 = -efb:1000,2000 -ea:%1 | \
+	-efb:4000,2000 -ea:%2 \
+	-pd:Dual_band_eq_template \
+	-ppn:1000hz,4000hz -ppd:100,100 \
+	-ppl:0,0 -ppu:500,500
+
+# ======
+# Filters (f_)
+# 
+
+f_lowp_sine = -ef3:800,1.5,0.9 -kos:1,400,4200,0.2,0 \
+	-pd:Reson_lowpass_filter_controlled_by_a_sine_oscillator
+f_lowp_sine2 = -efl:400 -kos:1,200,2000,0.5,0 \
+    	-pd:Lowpass_filter_controlled_by_a_sine_oscillator
+f_high_and_low = -efl:400 | -efh:4000 -ea:800 \
+	-pd:Parallel_high_and_lowpass_filters
+f_res_bandpass = -ef1:%1,%2 \
+	-pd:Reson_bandpass_filter -ppn:freq,width -ppd:1500,700 -ppl:0,1
+f_res_lowpass = -ef3:%1,1.5,0.7 \
+    	-pd:Reson_lowpass_filter -ppd:800 -ppl:0
+f_lowpass = -efl:%1 -ppn:freq_hz -ppd:300  -pd:Simple_lowpass_filter
+f_bandpass = -efb:%1,%2 \
+    	-pd:Bandpass_filter -ppn:freq,width -ppd:1500,700 -ppl:0,1
+f_rejectband = -efr:1500,1000 -pd:Band_reject_filter
+f_highpass = -efh:2000 \
+	-pd:Reson_lowpass -ppd:1500 -ppl:0
+f_inverse_comb = -efi:8,0.999 \
+	-pd:Inverse_comb_filter
+f_resonator = -efs:1500,1000 -pd:Resonator_filter
+f_two_filters = -efl:800 -ea:%1 | -efh:800 -ea:%2 \
+	 	-pd:Parallel_highpass_and_lowpass_filters \
+		-ppl:0,0 -ppu:1000,- \
+		-ppd:100,100 -ppn:lowgain,highgain
+f_two_filters_pareq = -efl:%1 -ea:%2 | \
+	-efh:%3 -ea:%4 \
+	-ppn:lowfreq,lowgain,highfreq,highgain \
+	-ppd:200,100,2000,100 \
+	-pd:Two_paraller_filters_with_gain_controls
+f_filtertest = -efl:%1 -ea:100 | \
+       -efh:%2 -ea:100 | \
+       -ea:100 -ppd:100 -ppn:freq1,freq2 \
+	-pd:Two_paraller_filters
+ 
+# ======
+# Gates (gate_)
+
+gate_noisegate_1 = -enm:18,20,50,50,50 -pd:Noise_gate
+gate_noisegate_delanalog = -enm:0.20,0.1,1000,50,0 -pd:Noise_gate_for_analog_hum_removal
+gate_crop = -gc:1,0.5 -pd:Crop_gate_example
+gate_threshold = -ge:15,20,1 -pd:Threshold_gate_example
+
+# ======
+# Time/delay effects (time_)
+
+time_reverb1 = -etr:40,0,85 -pd:Bathroom_reverb
+time_reverb2 = -etr:60,0,70 -pd:Plain_reverb
+time_reverb3 = -etf:30 -pd:Fake_stereo
+time_reverb4 = -pn:reverb1 -pn:reverb2 -pd:Reverb_combo
+time_delay1 = -etd:200,0,3,60 -pd:200ms_triple_delay
+time_delay2 = -etm:200,3,60 -pd:200ms_triple_multidelay
+time_wicked_dub = -etm:500,1,90 -epp:100 -kos:1,0,100,0.3,0.5 | \
+	-etm:333,1,90 -epp:0 -kos:1,0,100,0.8,0 | -ea:90 \
+	-pd:Wicked_dub_mix
+time_flanger1 = -etl:2,20,50,0.5 -pd:Flanger
+time_chorus1 = -etc:2,20,50,0.5 -pd:Chorus
+time_phaser1 = -etp:2,50,50,0.05 -pd:Phaser
+
+# ======
+# Various / mixes (var_)
+
+var_sweeping_pan = -epp:0 -kos:1,0,100,%1,5 \
+	-pd:Sweeping_pan_envelope -ppn:speed_hz -ppd:0.2
+var_switching_pan = -epp:0 -kf:1,0,100,%1,0,0 \
+	-pd:Panner_that_alternates_between_left_and_right -ppn:speed_hz -ppd:0.2
+var_chipmunk = -ei:400 -efl:400 -kos:1,400,10000,2,0 \
+	-pd:Chipmunk_generator
+var_parchip = -ei:%1 -efl:400 -kos:1,400,10000,%2,0 \
+	-ppn:pitch,modfreq -ppd:100,0.5 \
+	-pd:Chipmunk_sweep
+var_paralmadness = -efb:0,2000 -kos:1,1,3000,%1,0 -ea:150 | \
+	-efb:0,2000 -kos:1,3000,5000,%2,0 -ea:150 | \
+	-efh:0 -kos:1,3000,5000,%3,0 -ea:200 \
+	-ppn:freq1,freq2,freq3 -ppd:0.2,0.2,0.2 \
+	-pd:Parallel_madness
+
+# ======
+# Contributed / Arto Hamara [artham]
+
+var_stretched_tape = -ei:100 -kos:1,93,100,.5,0 -kx -kos:4,.1,1,.1 \
+	-pd:Stretched_tape
+var_molten_tape = -ei:100 -kos:1,85,105,.5,0 -kx -kos:4,.1,2,.1 \
+	-pd:Molten_tape
+var_dali = -ei:100 -kos:1,85,105,.5,0 -kx -kos:4,.1,2,.1 \
+           -etd:100,1,0,70 -epp:0 -kos:1,20,80,.5,0 -kx -kos:4,.1,2,.1 \
+	-pd:Dali
+
+# ======
+# Contributed / S.Massy [smassy]
+# Results of spending an hour messing around.
+#
+
+var_aw = -efl:0 -kos:1,500,5500,%1,0 -ppn:speed -ppd:0.5 \
+	-pd:Classic_auto_wah
+var_aw_custom = -efl:0 -kos:1,%1,%2,%3,0 -ppn:low,high,speed -ppd:100,8000,0.5 \ 
+	-pd:Class_auto_wah_with_controls
+
+# Now the autowah again but with the triangular osc which gives a sharper
+# movement. It really depends of what you're playing, can sound as good as it
+# can sound bad. That's the joy of autowahs.
+var_aw_tri = -efl:0 -kf:1,500,5500,%1,1,0 -ppn:speed -ppd:0.5 \
+	-pd:Auto_wah_triangular_osc
+
+# Now once again we define another version with more definable params.
+var_aw_tri_custom = -efl:0 -kf:1,%low,%high,%1,1,0 -ppn:speed -ppd:0.5 \
+	-pd:Auto_wah_triangular_osc_with_control
+
+# Experimental stuff:
+# I was trying to have a wah reacting to the volume, it doesn't work very
+# well but I still end up with a "to dig up" envelope shaper.
+var_aw_ksv = -eS:0 -efl:0 -ksv:1,1000,6000,0,1 \
+	-pd:Volume_sensitive_wah
+
+# ======
+# Presets using LADSPA plugins (lad_)
+
+lad_hermes = \
+	-eli:1200,3,%1,0.27,%2,100,%3,40,%4,1.5,1,2,-4,-4,-50,-20,-20,-20,200,1000,3,1,3,5,1500,0.65,0,130,0,5,400,0.8,0,0,-177,1,150,0.9,0.97,30,30,0.025,0.9,0.5,0.05,0.7,0.5,0.1,0.5,0.5,0,20,20 \
+	-pd:LADSPA_hermesFilter -ppn:p1,p2,p3,p4 -ppd:1,1,1,1
+lad_sc4 = \
+	-eli:1882,0,40,40,-18,6,6,6,%1,%2 \
+	-pd:LADSPA_SC4_compressor -ppn:output-amplitude-dB,output-gain-reduction-dB \
+	-ppd:0,0 -ppt:lo,lo
+lad_sc4_rg = \
+	-eli:1882,0,40,40,-18,%1,6,%2,%3,%4 \
+	-pd:LADSPA_SC4_compressor -ppn:ratio,gain-dB,output-amplitude-dB,output-gain-reduction-dB \
+	-ppd:6,3,0,0 -ppl:1,-40 -ppu:20,12 -ppt:-,-,lo,lo
+lad_metronome = -el:sine_fcac,880,1 -eemb:%1,10 -efl:2000 \
+	-pd:LADSPA_sineosc_metronome -ppn:bpm -ppd:120 -ppl:1
+lad_oscillator_test = -eli:1205,%1,0 -ea:%2 \
+	-pd:LADSPA_Oscillator_test \
+	-ppn:freq,gain1 \
+	-ppd:200,100 \
+	-ppl:1,0 -ppu:1300,1000 \
+	-ppt:-,-
+lad_oscillator_stack = -el:analogueOsc,%1,%2 -ea:%4 | \
+	-el:analogueOsc,%1,%3 -ea:%5 \
+	-pd:LADSPA_stack_of_analogue_oscillators \
+	-ppn:freq,osctype1,osctype2,gain1,gain2 \
+	-ppd:200,0,0,100,100 \
+	-ppl:1,0,0,0,0 -ppu:1300,3,3,1000,1000 \
+	-ppt:-,i,i,-
+
+# ======
+# Other / compatibility presets
+
+metronome = -el:sine_fcac,880,1 -eemb:%1,10 -efl:2000 \
+	-ppn:bpm -ppd:100 -pd:Sineosc_metronome

@@ -1,0 +1,45 @@
+-----------------------------------------------------------------------
+*** ecasound - changes and additions to libecasoundc interface      ***
+-----------------------------------------------------------------------
+
+2009-02-08  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* ecasoundc.h (eci_ready): Added.
+	* ecasoundc.h (eci_ready_r): Added.
+	* eca-control-interface.cpp (ready): 
+	* library version 2:0:1 frozen
+	
+2003-01-07  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version 1:0:0 frozen
+
+2002-10-05  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version changed back to 1:0:0
+	* library version number dropped from the library name
+	
+2002-04-25  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version changed to 2:0:0
+	* library version number added to library name; current
+	  name is libecasoundc2
+	
+2001-06-04  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version changed to 1:0:1
+	* added reentrant variants for all ECI routines (submitted
+	  by Aymeric Jeanneau)
+	
+2001-04-27  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* library version 0:0:0 frozen	
+	
+2000-12-12  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* ecasoundc.h (eci_error): added
+	
+2000-12-06  Kai Vehmanen  <kaiv@.devtag.AUTHORS>
+
+	* development started; libtool version number 0:0:0 
+
+-----------------------------------------------------------------------

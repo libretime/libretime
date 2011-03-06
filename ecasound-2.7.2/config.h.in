@@ -1,0 +1,269 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* disable all use of shared libs */
+#undef ECA_ALL_STATIC
+
+/* enable ALSA support */
+#undef ECA_COMPILE_ALSA
+
+/* enable aRts support */
+#undef ECA_COMPILE_ARTS
+
+/* enable libaudiofile support */
+#undef ECA_COMPILE_AUDIOFILE
+
+/* enable JACK support */
+#undef ECA_COMPILE_JACK
+
+/* enable OSS audio input/output */
+#undef ECA_COMPILE_OSS
+
+/* enable libsamplerate support */
+#undef ECA_COMPILE_SAMPLERATE
+
+/* enable libsndfile support */
+#undef ECA_COMPILE_SNDFILE
+
+/* debugging mode build */
+#undef ECA_DEBUG_MODE
+
+/* disable all effects */
+#undef ECA_DISABLE_EFFECTS
+
+/* disable use of OSS trigger API */
+#undef ECA_DISABLE_OSS_TRIGGER
+
+/* enable experimental features */
+#undef ECA_FEELING_EXPERIMENTAL
+
+/* version of JACK transport API to use */
+#undef ECA_JACK_TRANSPORT_API
+
+/* enable ecasound curses console interface */
+#undef ECA_PLATFORM_CURSES
+
+/* Ecasound configure script prefix */
+#undef ECA_PREFIX
+
+/* use ncurses.h for curses interface */
+#undef ECA_USE_CURSES_H
+
+/* use C++ std namespace */
+#undef ECA_USE_CXX_STD_NAMESPACE
+
+/* Use liblo for OSC support */
+#undef ECA_USE_LIBLO
+
+/* Use liboil */
+#undef ECA_USE_LIBOIL
+
+/* use curses.h for curses interface */
+#undef ECA_USE_NCURSES_H
+
+/* ncurses headers are installed in ncurses subdir <ncurses/ncurses.h> */
+#undef ECA_USE_NCURSES_NCURSES_H
+
+/* Define to 1 if you have the `clock_gettime' function. */
+#undef HAVE_CLOCK_GETTIME
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you have the <errno.h> header file. */
+#undef HAVE_ERRNO_H
+
+/* Define to 1 if you have the <execinfo.h> header file. */
+#undef HAVE_EXECINFO_H
+
+/* Define to 1 if you have the `execvp' function. */
+#undef HAVE_EXECVP
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define to 1 if you have the <features.h> header file. */
+#undef HAVE_FEATURES_H
+
+/* Define to 1 if you have the `getpagesize' function. */
+#undef HAVE_GETPAGESIZE
+
+/* Define to 1 if you have the `gettimeofday' function. */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <ladspa.h> header file. */
+#undef HAVE_LADSPA_H
+
+/* Define to 1 if you have the <locale.h> header file. */
+#undef HAVE_LOCALE_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `mlockall' function. */
+#undef HAVE_MLOCKALL
+
+/* Define to 1 if you have a working `mmap' system call. */
+#undef HAVE_MMAP
+
+/* Define to 1 if you have the `munlockall' function. */
+#undef HAVE_MUNLOCKALL
+
+/* Define to 1 if you have the `nanosleep' function. */
+#undef HAVE_NANOSLEEP
+
+/* Define to 1 if you have the `pause' function. */
+#undef HAVE_PAUSE
+
+/* Define to 1 if you have the `posix_memalign' function. */
+#undef HAVE_POSIX_MEMALIGN
+
+/* Define to 1 if you have the `pthread_getschedparam' function. */
+#undef HAVE_PTHREAD_GETSCHEDPARAM
+
+/* Define to 1 if you have the `pthread_kill' function. */
+#undef HAVE_PTHREAD_KILL
+
+/* Define to 1 if you have the `pthread_mutexattr_init' function. */
+#undef HAVE_PTHREAD_MUTEXATTR_INIT
+
+/* Define to 1 if you have the `pthread_self' function. */
+#undef HAVE_PTHREAD_SELF
+
+/* Define to 1 if you have the `pthread_setschedparam' function. */
+#undef HAVE_PTHREAD_SETSCHEDPARAM
+
+/* Define to 1 if you have the `pthread_sigmask' function. */
+#undef HAVE_PTHREAD_SIGMASK
+
+/* Define to 1 if you have the <regex.h> header file. */
+#undef HAVE_REGEX_H
+
+/* Define to 1 if you have the `sched_getparam' function. */
+#undef HAVE_SCHED_GETPARAM
+
+/* Define to 1 if you have the `sched_getscheduler' function. */
+#undef HAVE_SCHED_GETSCHEDULER
+
+/* Define to 1 if you have the `sched_get_priority_max' function. */
+#undef HAVE_SCHED_GET_PRIORITY_MAX
+
+/* Define to 1 if you have the <sched.h> header file. */
+#undef HAVE_SCHED_H
+
+/* Define to 1 if you have the `sched_setscheduler' function. */
+#undef HAVE_SCHED_SETSCHEDULER
+
+/* Define to 1 if you have the `setlocale' function. */
+#undef HAVE_SETLOCALE
+
+/* Define to 1 if you have the <signal.h> header file. */
+#undef HAVE_SIGNAL_H
+
+/* Define to 1 if you have the `sigprocmask' function. */
+#undef HAVE_SIGPROCMASK
+
+/* Define to 1 if you have the `sigwait' function. */
+#undef HAVE_SIGWAIT
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/mman.h> header file. */
+#undef HAVE_SYS_MMAN_H
+
+/* Define to 1 if you have the <sys/poll.h> header file. */
+#undef HAVE_SYS_POLL_H
+
+/* Define to 1 if you have the <sys/select.h> header file. */
+#undef HAVE_SYS_SELECT_H
+
+/* Define to 1 if you have the <sys/socket.h> header file. */
+#undef HAVE_SYS_SOCKET_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <sys/wait.h> header file. */
+#undef HAVE_SYS_WAIT_H
+
+/* Define to 1 if you have the <termios.h> header file. */
+#undef HAVE_TERMIOS_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `usleep' function. */
+#undef HAVE_USLEEP
+
+/* libecasoundc interface version */
+#undef LIBECASOUNDC_VERSION
+
+/* libecasound interface version */
+#undef LIBECASOUND_VERSION
+
+/* libecasound interface age */
+#undef LIBECASOUND_VERSION_AGE
+
+/* libkvutils interface version */
+#undef LIBKVUTILS_VERSION
+
+/* libkvutils interface age */
+#undef LIBKVUTILS_VERSION_AGE
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
+
+/* Version number of package */
+#undef VERSION
+
+/* Define to 1 if your processor stores words with the most significant byte
+   first (like Motorola and SPARC, unlike Intel and VAX). */
+#undef WORDS_BIGENDIAN
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+#undef _FILE_OFFSET_BITS
+
+/* Define for large files, on AIX-style hosts. */
+#undef _LARGE_FILES
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t

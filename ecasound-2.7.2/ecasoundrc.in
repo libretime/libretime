@@ -1,0 +1,31 @@
+# settings decided at build time
+ecasound-version = @VERSION@
+resource-directory = @pkgdatadir@
+resource-file-genosc-envelopes = generic_oscillators
+resource-file-effect-presets = effect_presets
+ladspa-plugin-directory = @prefix@/lib/ladspa
+
+# settings that affect creation of chainsetups (examples)
+#midi-device = rawmidi,/dev/midi
+#default-output = autodetect
+#default-audio-format = s16_le,2,44100,i
+#default-to-precise-sample-rates = false
+default-mix-mode = avg
+#bmode-defaults-nonrt = 1024,false,50,false,100000,true
+#bmode-defaults-rt = 1024,true,50,true,100000,true
+#bmode-defaults-rtlowlatency = 256,true,50,true,100000,false
+
+# commands for launching external programs
+#ext-cmd-text-editor = nano
+#ext-cmd-text-editor-use-getenv = true
+#ext-cmd-wave-editor = ecawave
+#ext-cmd-mp3-input = mpg123 --stereo -r %s -b 0 -q -s -k %o %f
+#ext-cmd-mp3-output = lame -b %B -s %S --little-endian -S - %f
+#ext-cmd-ogg-input = ogg123 -d raw -o byteorder:%E --file=- %f
+#ext-cmd-ogg-output = oggenc -b %B --raw --raw-bits=%b --raw-chan=%c --raw-rate=%s --raw-endianness 0 --output=%f -
+#ext-cmd-mikmod = mikmod -d stdout -o 16s -q -f %s -p 0 --noloops %f
+#ext-cmd-timidity = timidity -Or1S -id -s %s -o - %f
+#ext-cmd-flac-input = flac -d -c %f
+#ext-cmd-flac-output = flac -o %f -f --force-raw-format --channels=%c --bps=%b --sample-rate=%s --sign=%I --endian=%E -
+#ext-cmd-aac-input = faad -w -b 1 -f 2 -d %f
+#ext-cmd-aac-output = faac -P -o %f -R %s -B %b -C %c -

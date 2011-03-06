@@ -1,0 +1,1486 @@
+dnl ---
+dnl configure.in for ecasound
+dnl 
+dnl Many of the tests and macros in this file have been borrowed from 
+dnl other GPL-licensed packages (Alsaplayer, ALSA, SIP, PyQt, 
+dnl kpackage, etc, etc).
+dnl
+dnl refs:
+dnl  - http://www.gnu.org/software/autoconf/manual/
+dnl  - http://www.gnu.org/software/automake/manual/
+dnl  - http://www.gnu.org/software/libtool/manual/
+dnl ---
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Initialize autoconf and automake
+dnl ---
+AC_INIT([ecasound], [2.7.2])
+AC_PREREQ(2.50)
+AC_CONFIG_SRCDIR([libecasound/audiofx.h])
+AM_INIT_AUTOMAKE([1.6.1])
+
+dnl FIXME: replace with AC_CONFIG_HEADERS when upgrading to a newer automake
+AM_CONFIG_HEADER([config.h]) 
+
+dnl ------------------------------------------------------------------
+
+echo "------------------------------------------------------------------"
+echo "1. Section: Basic setup"
+echo "------------------------------------------------------------------"
+
+dnl ---
+dnl Set library interface version numbers
+dnl
+dnl defines: LIBECASOUND_VERSION, LIBECASOUNDC_VERSION, LIBKVUTILS_VERSION
+dnl ---
+
+LIBECASOUND_VERSION=22
+LIBECASOUND_VERSION_AGE=0
+LIBECASOUNDC_VERSION=2
+LIBECASOUNDC_VERSION_AGE=1
+LIBKVUTILS_VERSION=9
+LIBKVUTILS_VERSION_AGE=5
+
+AC_SUBST(LIBECASOUND_VERSION)
+AC_SUBST(LIBECASOUND_VERSION_AGE)
+AC_SUBST(LIBECASOUNDC_VERSION)
+AC_SUBST(LIBECASOUNDC_VERSION_AGE)
+AC_SUBST(LIBKVUTILS_VERSION)
+AC_SUBST(LIBKVUTILS_VERSION_AGE)
+
+AC_DEFINE_UNQUOTED([LIBECASOUND_VERSION], ${LIBECASOUND_VERSION}, [libecasound interface version])
+AC_DEFINE_UNQUOTED([LIBECASOUND_VERSION_AGE], ${LIBECASOUND_VERSION_AGE}, [libecasound interface age])
+AC_DEFINE_UNQUOTED([LIBECASOUNDC_VERSION], ${LIBECASOUNDC_VERSION}, [libecasoundc interface version])
+AC_DEFINE_UNQUOTED([LIBKVUTILS_VERSION], ${LIBKVUTILS_VERSION}, [libkvutils interface version])
+AC_DEFINE_UNQUOTED([LIBKVUTILS_VERSION_AGE], ${LIBKVUTILS_VERSION_AGE}, [libkvutils interface age])
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Initialize default flags
+dnl --
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_CPP
+AC_LANG_CPLUSPLUS
+AC_CANONICAL_HOST
+
+dnl ---
+dnl Set compiler flags
+dnl
+dnl AM_xxx flags are global flags that are always utilized 
+dnl for compiling and linking. 
+dnl
+dnl It is possible to add custom options by adding them
+dnl to the CPPFLAGS/CFLAGS/CXXFLAGS/LDFLAGS shell variables
+dnl when invoking the configure script. It is not possible
+dnl to override AM_xxx flags.
+dnl
+dnl modifies: AM_CXXFLAGS, AM_CFLAGS
+dnl ---
+EXTRACPPFLAGS="-D_REENTRANT -D_XOPEN_SOURCE=500"
+EXTRAGCCFLAGS="-ffast-math -fstrict-aliasing"
+if test x${GXX} = xyes; then
+   AM_CXXFLAGS="$AM_CXXFLAGS $EXTRAGCCFLAGS"
+fi
+if test x${GCC} = xyes; then
+   AM_CFLAGS="$AM_CFLAGS $EXTRAGCCFLAGS"
+fi
+AM_CPPFLAGS="$AM_CPPFLAGS $EXTRACPPFLAGS"
+
+AC_SUBST(AM_CFLAGS)
+AC_SUBST(AM_CXXFLAGS)
+AC_SUBST(AM_CPPFLAGS)
+AC_SUBST(AM_LDFLAGS)
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Sets up default values 
+dnl ---
+
+dnl Selected the Python ECI implementation.
+eca_platform_python_impl="python"
+
+dnl All components required by ecasound curses are found
+eca_platform_curses_support="yes"
+
+dnl ---
+dnl Sets up some operating system specific options
+dnl
+dnl modifies: AM_CXXFLAGS, AM_CFLAGS, AM_CPPFLAGS, AM_LIBS
+dnl ---
+
+case "$host" in
+	*-*-openbsd*)
+               AM_CFLAGS="$AM_CFLAGS -pthread"
+               AM_CXXFLAGS="$AM_CXXFLAGS -pthread"
+               echo "Setting OpenBSD compilation options for POSIX threads"
+               ;;
+	*-*-freebsd*)
+               AM_CFLAGS="$AM_CFLAGS -pthread"
+               AM_CPPFLAGS="$AM_CPPFLAGS -D_THREAD_SAFE -D_P1003_1B_VISIBLE"
+               AM_CXXFLAGS="$AM_CXXFLAGS -pthread"
+               echo "Setting FreeBSD compilation options for POSIX threads"
+               ;;
+	*-*-solaris*)
+               AM_CPPFLAGS="$AM_CPPFLAGS -D_POSIX_PTHREAD_SEMANTICS -DUSE_SOLARIS"
+	       LIBS="$LIBS -lposix4 -lpthread"
+	       echo "Setting Solaris compilation options for POSIX threads"
+	       if test x$CXX = xCC; then
+	          LIBS="$LIBS -mt"
+		  AM_CXXFLAGS="$AM_CXXFLAGS -instances=static"
+		  echo "Sun Workshop C++ compiler detected. Enabling static template instantation."
+	       fi
+               ;;
+	*-*-linux-gnu)
+	       eca_platform_python_impl="c"
+	       ;;
+	alpha*-*-linux-*)
+	       AM_CFLAGS="$AM_CFLAGS -mieee"
+	       AM_CXXFLAGS="$AM_CXXFLAGS -mieee"
+	       echo "Enabling fully IEEE compliant floating-point code generation on Alpha."
+	       ;;
+	*darwin*)
+	       if test "$GCC" = yes; then
+		  AM_CPPFLAGS="$AM_CPPFLAGS -D_P1003_1B_VISIBLE"
+	       fi
+	       ;;
+	*)
+	       echo "Using generic settings for POSIX thread support."
+	       ;;
+esac
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check pthread and rt support
+dnl ---
+
+dnl switch to C while testing for pthread support
+AC_LANG_C
+AC_SEARCH_LIBS(pthread_create, pthread c_r,,
+		AC_MSG_ERROR([** POSIX.4 threads not installed or broken **]))
+AC_SEARCH_LIBS(clock_gettime, rt)
+dnl switch back to C++
+AC_LANG_CPLUSPLUS
+
+echo "------------------------------------------------------------------"
+echo "2. Section: Options for the configure script"
+echo "------------------------------------------------------------------"
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check whether to enable debugging
+dnl
+dnl defines: ECA_AM_DEBUG_MODE
+dnl modifies: AM_CXXFLAGS, AM_CFLAGS
+dnl ---
+
+AC_MSG_CHECKING(whether to enable debugging)
+AC_ARG_ENABLE(debug,
+[  --enable-debug	  Enable debugging (default = no)],
+  [
+    case "$enableval" in
+      y | yes)
+        AC_MSG_RESULT(yes)
+	include_debug=yes
+      ;;
+
+      n | no)
+        AC_MSG_RESULT(no)
+	include_debug=no
+      ;;
+        
+      *)
+        AC_MSG_ERROR([Invalid parameter value for --enable-debug: $enableval])
+      ;;
+    esac
+ ]
+
+)
+AM_CONDITIONAL(ECA_AM_DEBUG_MODE, test x$include_debug = xyes)
+if test x$include_debug = xyes; then
+    EXTRADEBUGFLAGS="-Wall -O"
+    AC_DEFINE([ECA_DEBUG_MODE], 1, [debugging mode build])
+else
+    EXTRADEBUGFLAGS="-DNDEBUG"
+fi                                     
+AM_CXXFLAGS="$AM_CXXFLAGS $EXTRADEBUGFLAGS"
+AM_CFLAGS="$AM_CFLAGS $EXTRADEBUGFLAGS"
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check for experimental mode
+dnl
+dnl defines: ECA_FEELING_EXPERIMENTAL, ECA_AM_FEELING_EXPERIMENTAL
+dnl ---
+AC_ARG_ENABLE(experimental,
+	      [  --enable-experimental	  Enable experimental code (default = no)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  experimental=yes
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  experimental=no
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-experimental: $enableval])
+		;;
+	      esac
+	      ])
+if test x$experimental = xyes; then
+    AC_DEFINE([ECA_FEELING_EXPERIMENTAL], 1, [enable experimental features])
+fi
+AM_CONDITIONAL(ECA_AM_FEELING_EXPERIMENTAL, test x$experimental = xyes)
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Sets the ecasound prefix variable
+dnl
+dnl defines: ECA_PREFIX, ECA_S_PREFIX
+dnl ---
+
+dnl Define ecaprefix, prefer user-specified prefix if given
+if test "x${prefix}" = "xNONE"; then
+    ecaprefix=${ac_default_prefix}
+else
+    ecaprefix=${prefix}
+fi
+ECA_S_PREFIX=${ecaprefix}
+
+AC_SUBST(ECA_S_PREFIX)
+AC_DEFINE_UNQUOTED([ECA_PREFIX], "${ecaprefix}", [Ecasound configure script prefix])
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check whether to enable design-by-contract assertations
+dnl
+dnl modifies: AM_CXXFLAGS, AM_CFLAGS
+dnl ---
+
+AC_MSG_CHECKING(whether to check design-by-contract assertions)
+enable_dbc_d=yes
+AC_ARG_ENABLE(dbc,
+[  --disable-dbc		  Don't check design-by-contract assertions (default = check)],
+  [
+    case "$enableval" in
+      y | yes)
+        AC_MSG_RESULT(yes)
+	enable_dbc_d=yes
+      ;;
+
+      n | no)
+        AC_MSG_RESULT(no)
+	enable_dbc_d=no
+      ;;
+        
+      *)
+        AC_MSG_ERROR([Invalid parameter value for --enable-dbc: $enableval])
+      ;;
+    esac
+ ],[
+    AC_MSG_RESULT(yes)
+ ]
+)
+if test x$enable_dbc_d = xyes; then
+AM_CXXFLAGS="$AM_CXXFLAGS -DENABLE_DBC"
+AM_CFLAGS="$AM_CFLAGS -DENABLE_DBC"
+fi                                     
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check whether to disable effects
+dnl
+dnl defines: ECA_AM_DISABLE_EFFECTS, ECA_DISABLE_EFFECTS
+dnl ---
+
+AC_MSG_CHECKING(whether to enable effects)
+AC_ARG_ENABLE(effects,
+[  --disable-effects	  Disable effects (default = no)],
+  [
+    echo "Enableval: ${enableval}."
+    case "$enableval" in
+      y | yes)
+        AC_MSG_RESULT(yes)
+	enable_effects_d=yes
+      ;;
+
+      n | no)
+        AC_MSG_RESULT(no)
+	enable_effects_d=no
+      ;;
+        
+      *)
+        AC_MSG_ERROR([Invalid parameter value for --enable-effects: $enableval])
+      ;;
+    esac
+  ],[
+    AC_MSG_RESULT(yes)
+    enable_effects_d=yes
+  ]
+)
+AM_CONDITIONAL(ECA_AM_DISABLE_EFFECTS, test x$enable_effects_d = xno)
+if test x$enable_effects_d = xno; then
+    AC_DEFINE([ECA_DISABLE_EFFECTS], 1, [disable all effects])
+fi                                     
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check for extra compile flags
+dnl
+dnl modifies: ECA_S_EXTRA_CPPFLAGS, ECA_S_EXTRA_LIBS
+dnl ---
+
+AC_ARG_WITH(extra-cppflags,
+	[  --with-extra-cppflags=FLAGS pass extra flags to cpp ],
+	[
+	    ECA_S_EXTRA_CPPFLAGS="${ECA_S_EXTRA_CPPFLAGS} ${withval}"
+	])
+AC_ARG_WITH(extra-libs,
+	[  --with-extra-libs=FLAGS pass extra flags to linker ],
+	[
+	    ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} ${withval}"
+	])
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check for LFS (--with-largefile, --disable-largefile
+dnl 
+dnl NOTE: AC_CHECK_LARGEFILE is defined in acinlude.m4 and
+dnl       use AC_SYS_LARGEFILE to perform the check.
+dnl
+dnl Refs:
+dnl   http://www.gnu.org/software/hello/manual/autoconf/System-Services.html
+dnl   http://ac-archive.sourceforge.net/largefile/future.html
+dnl
+dnl defines: enable_largefile
+dnl ---
+AC_CHECK_LARGEFILE
+
+dnl ------------------------------------------------------------------
+
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check for OSS driver support
+dnl
+dnl defines: ECA_COMPILE_OSS, ECA_AM_COMPILE_OSS
+dnl ---
+
+AC_CHECK_HEADER(sys/soundcard.h,oss_support=yes,oss_support=no)
+AC_ARG_ENABLE(oss,
+              [  --disable-oss		  Disable OSS (default = no)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  oss_support=yes
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  oss_support=no
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-oss: $enableval])
+		;;
+	      esac
+	      ])
+AM_CONDITIONAL(ECA_AM_COMPILE_OSS, test x$oss_support = xyes)
+if test x$oss_support = xyes; then
+    AC_DEFINE([ECA_COMPILE_OSS], 1, [enable OSS audio input/output])
+fi                                     
+
+dnl ---
+dnl Disabling OSS trigger functions
+dnl
+dnl defines: ECA_DISABLE_OSS_TRIGGER
+dnl ---
+AC_ARG_ENABLE(osstrigger,
+	      [  --disable-osstrigger 	  Disable the use of OSS trigger functions (default = no)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  osstrigger=yes
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  osstrigger=no
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-osstrigger: $enableval])
+		;;
+	      esac
+	      ])
+if test x$osstrigger = xyes; then
+    AC_DEFINE([ECA_DISABLE_OSS_TRIGGER], 1, [disable use of OSS trigger API])
+fi
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Check for aRts support
+dnl
+dnl defines: ECA_AM_COMPILE_ARTS, ECA_COMPILE_ARTS
+dnl modifies: ECA_S_EXTRA_CPPFLAGS, ECA_S_EXTRA_LIBS
+dnl --
+AC_PATH_PROG(ARTSC_CONFIG,artsc-config,none)
+if test x$ARTSC_CONFIG = xnone; then
+  arts_support=no
+else
+  arts_support=yes
+  ECA_ARTSC_CFLAGS="`$ARTSC_CONFIG --cflags`"
+  ECA_ARTSC_LIBS="`$ARTSC_CONFIG --libs`"
+fi
+
+if test x$arts_support = xyes; then
+  old_LIBS=$LIBS
+  LIBS="$LIBS $ECA_ARTSC_LIBS"
+  old_CFLAGS=$CFLAGS
+  CFLAGS="$CFLAGS $ECA_ARTSC_CFLAGS"
+  AC_LANG_C
+  AC_TRY_LINK(
+  [ #include <artsc.h> ],
+  [
+	arts_init();
+	return 0;
+  ],
+  [ /bin/true ],
+  [ arts_support=no ]
+  )
+  AC_LANG_CPLUSPLUS
+  LIBS=${old_LIBS}
+  CFLAGS=${old_CFLAGS}
+fi
+
+AC_ARG_ENABLE(arts,
+	      [  --disable-arts	  Disable aRts support (default = no)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  arts_support=yes
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  arts_support=no
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-arts: $enableval])
+		;;
+	      esac
+	      ])
+AM_CONDITIONAL(ECA_AM_COMPILE_ARTS, test x$arts_support = xyes) 
+if test x$arts_support = xyes; then
+    ECA_S_EXTRA_CPPFLAGS="${ECA_S_EXTRA_CPPFLAGS} ${ECA_ARTSC_CFLAGS}"
+    ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} ${ECA_ARTSC_LIBS}"
+    AC_DEFINE([ECA_COMPILE_ARTS], 1, [enable aRts support])
+fi                                     
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Check for libsamplerate
+dnl
+dnl defines: ECA_AM_COMPILE_SAMPLERATE, ECA_COMPILE_SAMPLERATE
+dnl modifies: ECA_S_EXTRA_CPPFLAGS, ECA_S_EXTRA_LIBS
+dnl --
+AC_CHECK_HEADER(samplerate.h,samplerate_support=yes,samplerate_support=no)
+AC_ARG_WITH(libsamplerate,
+	    [  --with-libsamplerate=DIR	Compile against libsamplerate installed in DIR],
+	    [
+	        ECA_SAMPLERATE_LIBS="-L${withval}/lib"
+		ECA_SAMPLERATE_INCLUDES="-I${withval}/include"
+		samplerate_support=yes
+	    ])
+AC_ARG_ENABLE(libsamplerate,
+	      [  --disable-libsamplerate Disable libsamplerate support (default = no)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  samplerate_support=yes
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  samplerate_support=no
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-samplerate: $enableval])
+		;;
+	      esac
+	      ])
+AM_CONDITIONAL(ECA_AM_COMPILE_SAMPLERATE, test x$samplerate_support = xyes)
+
+if test x$samplerate_support = xyes; then
+    ECA_S_EXTRA_CPPFLAGS="${ECA_S_EXTRA_CPPFLAGS} ${ECA_SAMPLERATE_INCLUDES}"
+    ECA_SAMPLERATE_LIBS="${ECA_SAMPLERATE_LIBS} -lsamplerate"
+    ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} ${ECA_SAMPLERATE_LIBS}"
+    AC_DEFINE([ECA_COMPILE_SAMPLERATE], 1, [enable libsamplerate support])
+fi                                     
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Checks for pyecasound
+dnl
+dnl defines: ECA_S_PYTHON_INCLUDES, ECA_S_PYTHON_DLMODULES, 
+dnl          ECA_AM_PYECASOUND_CEXT, ECA_AM_PYECASOUND_INSTALL
+dnl --
+
+dnl default impl depends on target platform
+pyecasound_support=${eca_platform_python_impl}
+
+AC_ARG_ENABLE(pyecasound,
+	      [  --enable-pyecasound 	  Enable compilation of pyecasound (default = python)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  pyecasound_support=c
+		;;
+
+		n | no | none)
+		  pyecasound_support=none
+		;;
+
+		python)
+		  pyecasound_support=python
+		;;
+
+		c)
+		  pyecasound_support=c
+		;;
+        
+		*)
+		  pyecasound_support=python
+		;;
+	      esac
+	      ])
+
+dnl --
+dnl Python interpreter and installation prefix
+
+AC_PATH_PROG(PYTHONPATH,python,none)
+if test x$PYTHONPATH = xnone; then
+  pyecasound_support=none
+  python_install_prefix=""
+else
+  python_install_prefix=`python -c "import sys; print (sys.prefix)"`
+fi
+
+dnl --
+dnl Python header files
+
+ECA_S_PYTHON_INCLUDES=
+AC_MSG_CHECKING([for Python include files])
+
+AC_ARG_WITH(python-includes, [  --with-python-includes=DIR  Python include files are in DIR])
+if test ! "X$with_python_includes" = "X"
+then
+	python_incdirs=$with_python_includes
+else
+	python_incdirs="/usr/local/include /usr/include"
+	dnl -- Double-brackets to espace the real brackets
+	python_incdirsmore=`python -c "import sys; print (sys.prefix + '/include/python' + sys.version[[:3]])"`
+	python_incdirs="$python_incdirs $python_incdirsmore"
+fi
+
+for d in $python_incdirs
+do
+	if test -r $d/Python.h
+	then
+		ECA_S_PYTHON_INCLUDES=$d
+		break
+	fi
+done
+
+AC_SUBST(ECA_S_PYTHON_INCLUDES)
+if test "X$ECA_S_PYTHON_INCLUDES" = "X"
+then
+	AC_MSG_WARN([Python.h not found])
+	if test x${pyecasound_support} = xc; then
+	    dnl -- No python headers found, cannot compile C extension
+	    pyecasound_support=python
+	fi
+else
+	AC_MSG_RESULT($ECA_S_PYTHON_INCLUDES)
+fi
+
+dnl --
+dnl Python modules
+
+AC_MSG_CHECKING([for Python libraries])
+AC_ARG_WITH(python-modules,
+	    [  --with-python-modules=DIR install Python modules in DIR])
+
+if test "X$with_python_modules" = "X"
+then
+    if test x${python_install_prefix} != x${ecaprefix} -a \
+            x${ecaprefix} != x/usr -a \
+	    x${ecaprefix} != x/usr/local ; then
+        pyecasound_support=none
+	AC_MSG_RESULT([none])
+	if test x$PYTHONPATH != xnone; then
+	    python_prefix_tmp=`python -c "import sys; print (sys.prefix + '/lib/python' + sys.version[[:3]])"`
+	else
+	    python_prefix_tmp="DIR"
+	fi
+        AC_MSG_WARN([
+	***
+	*** Python modules won't be installed as the module install prefix does
+	*** not match ecasound's build prefix! To override, set python
+	*** module directory explicitly (for example 
+	*** "--with-python-modules=${python_prefix_tmp}").
+	***
+	])
+    else
+        pymoddirs="/usr/local/lib /usr/lib"
+        dnl -- Double-brackets to espace the real brackets
+        pymoddirsmore=`python -c "import sys; print (sys.prefix + '/lib/python' + sys.version[[:3]])"`
+        pymoddirs="$pymoddirs $pymoddirsmore"
+	AC_MSG_RESULT($pymoddirs)
+    fi
+else
+    pymoddirs=$with_python_modules
+    AC_MSG_RESULT($pymoddirs)
+fi
+
+dnl ---
+dnl a hack to support broken debian python installs
+
+AC_ARG_ENABLE(python-force-site-packages,
+	      [  --enable-python-force-site-packages force install Python modules into site-packages even when it doesn't exist [default=no] ],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  python_force_site_packages=yes
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  python_force_site_packages=no
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-python-force-site-packages: $enableval])
+		;;
+	      esac
+	      ])
+            
+AC_FIND_FILE(lib-dynload,$pymoddirs,ECA_S_PYTHON_MODULES)
+dnl Use site-packages in preference if it is there.
+if test -d $ECA_S_PYTHON_MODULES/site-packages -o "X$python_force_site_packages" = "Xyes"
+then
+    ECA_S_PYTHON_MODULES=$ECA_S_PYTHON_MODULES/site-packages
+    ECA_S_PYTHON_DLMODULES=$ECA_S_PYTHON_MODULES
+else
+    ECA_S_PYTHON_DLMODULES=$ECA_S_PYTHON_MODULES/lib-dynload
+fi
+AC_SUBST(ECA_S_PYTHON_MODULES)
+AC_SUBST(ECA_S_PYTHON_DLMODULES)
+
+dnl if test x$disable_pyecasound = xyes ; then pyecasound_support=no ; fi
+AM_CONDITIONAL(ECA_AM_PYECASOUND_CEXT, test x$pyecasound_support = xc)
+AM_CONDITIONAL(ECA_AM_PYECASOUND_INSTALL, test x$pyecasound_support != xnone)
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Checks for rubyecasound
+dnl
+dnl defines: ECA_S_RUBY_SITEDIR, 
+dnl          ECA_AM_RUBYECASOUND_INSTALL
+dnl --
+
+dnl default to enabled if Ruby interpreter available
+rubyecasound_support=yes
+
+AC_ARG_ENABLE(rubyecasound,
+	      [  --enable-rubyecasound	  Enable rubyecasound (default = yes)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  rubyecasound_support=yes
+		;;
+
+		n | no | none)
+		  rubyecasound_support=no
+		;;
+
+		*)
+		  rubyecasound_support=no
+		;;
+	      esac
+	      ])
+
+dnl --
+dnl Ruby interpreter and installation prefix
+
+AC_PATH_PROG(RUBYPATH,ruby,none)
+if test x$RUBYPATH = xnone; then
+  rubyecasound_support=no
+  ECA_S_RUBY_SITEDIR=""
+else
+  ECA_S_RUBY_SITEDIR="`ruby -e 'require "rbconfig"; include Config; print CONFIG[["sitedir"]] + "/" + CONFIG[["MAJOR"]] + "." + CONFIG[["MINOR"]]'`"
+fi
+
+AC_SUBST(ECA_S_RUBY_SITEDIR)
+AM_CONDITIONAL(ECA_AM_RUBYECASOUND_INSTALL, test x$rubyecasound_support = xyes)
+
+dnl ------------------------------------------------------------------
+
+echo "------------------------------------------------------------------"
+echo "3. Section: Programs "
+echo "------------------------------------------------------------------"
+
+dnl ------------------------------------------------------------------
+
+AC_CHECK_CXX_NAMESPACE_SUPPORT
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Autotools and libtool
+dnl --
+AC_LANG_C
+dnl do not add 'AC_DISABLE_SHARED' as pyecasound needs shared
+dnl objects at link time (note that all the major libs are static)
+AC_PROG_LIBTOOL
+AC_LANG_CPLUSPLUS
+
+dnl ------------------------------------------------------------------
+
+echo "------------------------------------------------------------------"
+echo "4. Section: Libraries"
+echo "------------------------------------------------------------------"
+
+dnl ---
+dnl Check system libraries
+dnl ---
+
+dnl switch to C for testing
+AC_LANG_C
+dnl see also section 7 - functions 
+AC_SEARCH_LIBS(inet_ntoa, socket nsl,, AC_MSG_ERROR([*** required inet_ntoa() function not found! ***]))
+AC_SEARCH_LIBS(nanosleep, rt posix4)
+AC_SEARCH_LIBS(sched_setscheduler, rt posix4)
+AC_SEARCH_LIBS(socket, socket nsl,, AC_MSG_ERROR([*** required socket() function not found! ***]))
+AC_SEARCH_LIBS(sin, m,, AC_MSG_ERROR([*** required sin() function not found! ***]))
+AC_SEARCH_LIBS(dlopen, dl,, AC_MSG_ERROR([*** required dlopen() function not found! ***]))
+dnl switch back to C++
+AC_LANG_CPLUSPLUS
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Checks for ncurses/termcap
+dnl
+dnl defines: ECA_AM_USE_NCURSES, ECA_AM_USE_TERMCAP, ECA_USE_NCURSES_H,
+dnl          ECA_USE_CURSES_H, ECA_HAVE_NCURSES_CURSES_H
+dnl ---
+
+dnl switch to C for testing
+AC_LANG_C
+
+AC_CHECK_LIB(ncurses, main, termcap_library=ncurses,
+	AC_CHECK_LIB(termcap, main, termcap_library=termcap,
+		termcap_library=none))
+
+AC_ARG_ENABLE(ncurses,
+	      [  --disable-ncurses	  Disable ncurses (default = no)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  termcap_library=ncurses
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  termcap_library=none
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-ncurses: $enableval])
+		;;
+	      esac
+	      ])
+
+AM_CONDITIONAL(ECA_AM_USE_NCURSES, test $termcap_library = ncurses)
+AM_CONDITIONAL(ECA_AM_USE_TERMCAP, test $termcap_library = termcap)
+
+if test x$termcap_library = xtermcap; then
+    AC_CHECK_HEADER(curses.h,
+        AC_DEFINE([ECA_USE_CURSES_H], 1, [use ncurses.h for curses interface]),
+	AC_MSG_ERROR([*** curses.h not found! Try with "./configure --disable-ncurses". ***]))
+fi
+
+if test x$termcap_library = xncurses; then
+    AC_CHECK_HEADER(ncurses/ncurses.h,
+        AC_DEFINE([ECA_USE_NCURSES_NCURSES_H], 1, [ncurses headers are installed in ncurses subdir <ncurses/ncurses.h>]),
+        [
+	    AC_CHECK_HEADER(ncurses.h,
+		AC_DEFINE([ECA_USE_NCURSES_H], 1, [use curses.h for curses interface]),
+		AC_MSG_ERROR([*** Neither ncurses.h or ncurses/ncurses.h found! Try with "./configure --disable-ncurses". ***]))
+	])
+fi
+
+if test $termcap_library = xnone ; then
+    eca_platform_curses_support=no
+fi
+
+dnl switch back to C++
+AC_LANG_CPLUSPLUS
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Audiofile library
+dnl 
+dnl defines: ECA_AM_COMPILE_AUDIOFILE, ECA_COMPILE_AUDIOFILE
+dnl modifies: ECA_S_EXTRA_LIBS
+dnl ---
+AC_CHECK_LIB(audiofile,main,af_support=yes,af_support=no)
+AC_ARG_ENABLE(audiofile,
+  [  --disable-audiofile	  Disable libaudiofile (default = no)],
+  [
+    case "$enableval" in
+      y | yes)
+        AC_MSG_RESULT(yes)
+	af_support=yes
+      ;;
+
+      n | no)
+        AC_MSG_RESULT(no)
+	af_support=no
+      ;;
+        
+      *)
+        AC_MSG_ERROR([Invalid parameter value for --enable-audiofile: $enableval])
+      ;;
+    esac
+ ]
+)
+AM_CONDITIONAL(ECA_AM_COMPILE_AUDIOFILE, test x$af_support = xyes) 
+
+if test x$af_support = xyes; then
+    ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} -laudiofile"
+    AC_DEFINE([ECA_COMPILE_AUDIOFILE], 1, [enable libaudiofile support])
+fi                                     
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Libsndfile support
+dnl 
+dnl defines: ECA_AM_COMPILE_SNDFILE, ECA_COMPILE_SNDFILE
+dnl ---
+AC_CHECK_LIB(sndfile,main,sndfile_support=yes,sndfile_support=no)
+AC_ARG_ENABLE(sndfile,
+  [  --disable-sndfile	  Disable libsndfile (default = no)],
+  [
+    case "$enableval" in
+      y | yes)
+        AC_MSG_RESULT(yes)
+	sndfile_support=yes
+      ;;
+
+      n | no)
+        AC_MSG_RESULT(no)
+	sndfile_support=no
+      ;;
+        
+      *)
+        AC_MSG_ERROR([Invalid parameter value for --enable-sndfile: $enableval])
+      ;;
+    esac
+  ]
+)
+
+if test x$sndfile_support = xyes; then
+  AC_LANG_C
+  AC_TRY_LINK(
+  [ #include <sndfile.h> ],
+  [
+	SF_INFO sfinfo;
+	sfinfo.frames = 0;
+	return 0;
+  ],
+  [ /bin/true ],
+  [ 
+    sndfile_support=no 
+    AC_MSG_WARN([Found an old version of libsndfile. Libsndfile 1.0.0 or newer is required.])
+  ]
+  )
+  AC_LANG_CPLUSPLUS
+fi
+
+AM_CONDITIONAL(ECA_AM_COMPILE_SNDFILE, test x$sndfile_support = xyes)
+
+if test x$sndfile_support = xyes; then
+    ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} -lsndfile"
+    AC_DEFINE([ECA_COMPILE_SNDFILE], 1, [enable libsndfile support])
+fi                                     
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check for ALSA driver support
+dnl
+dnl defines: ECA_AM_COMPILE_ALSA
+dnl ---
+
+AC_ARG_ENABLE(alsa,
+              [  --disable-alsa	  Disable ALSA (default = no)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  alsa_support=yes
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  alsa_support=no
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-alsa: $enableval])
+		;;
+	      esac
+	      ])
+if test x$alsa_support = x; then
+    AC_CHECK_LIB(asound, snd_pcm_delay,
+		 alsa_support=yes,
+	         [
+		   alsa_support=no 
+		   AC_MSG_WARN([ALSA version older than 0.9.0 not supported - update to a newer version or compile with --disable-alsa])
+		 ])
+fi
+
+AM_CONDITIONAL(ECA_AM_COMPILE_ALSA, test x$alsa_support = xyes)
+
+if test x$alsa_support = xyes; then
+    ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} -lasound"
+    AC_DEFINE([ECA_COMPILE_ALSA], 1, [enable ALSA support])
+fi    
+
+dnl ------------------------------------------------------------------
+
+AC_CHECK_JACK
+ECA_S_EXTRA_CPPFLAGS="${ECA_S_EXTRA_CPPFLAGS} ${ECA_S_JACK_INCLUDES}"
+ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} ${ECA_S_JACK_LIBS}"
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check for already installed libkvutils
+dnl
+dnl defines: ECA_AM_KVUTILS_INSTALLED
+dnl ---
+AC_CHECK_LIB(kvutils,main,kvutils_installed=yes,kvutils_installed=no)
+AM_CONDITIONAL(ECA_AM_KVUTILS_INSTALLED, test x$kvutils_installed = xyes)
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Check whether to use an already installed readline library
+dnl
+dnl defines: ECA_AM_SYSTEM_READLINE, ECA_S_READLINE_INCLUDES, 
+dnl          ECA_S_READLINE_LIBS
+dnl --
+
+AC_MSG_CHECKING(whether to build with system readline)
+AC_ARG_ENABLE(sys_readline,
+  [  --enable-sys-readline	  Compile with system readline (default=yes)],
+  [
+    case "$enableval" in
+      y | yes)
+        AC_MSG_RESULT(yes)
+        enable_sysreadline=yes 
+      ;;
+
+      n | no)
+        AC_MSG_RESULT(no)
+        enable_sysreadline=no
+      ;;
+        
+      *)
+        AC_MSG_ERROR([Invalid parameter value for --enable-sys-readline: $enableval])
+      ;;
+    esac
+  ],
+  [
+    AC_MSG_RESULT(yes)
+    enable_sysreadline=yes
+  ]
+)
+
+dnl Check for readline.h or readline/readline.h (same with history.h)
+dnl and for readline and history libraries
+
+if test x$enable_sysreadline = xyes; then
+  AC_CHECK_HEADER(readline.h, ECA_S_READLINE_INCLUDES=/usr/include, 
+    [AC_CHECK_HEADER(readline/readline.h,
+		     ECA_S_READLINE_INCLUDES=/usr/include/readline,
+      [
+        AC_MSG_WARN([*** readline headers not installed ***])
+	enable_sysreadline=no	 
+      ])])
+
+  AC_CHECK_HEADER(history.h,,
+    [AC_CHECK_HEADER(readline/history.h,,
+      [
+        AC_MSG_WARN([*** readline history headers not installed ***])
+	enable_sysreadline=no
+      ])
+    ])
+
+  if test x${termcap_library} = xnone; then
+     readline_extra_libs="";
+  else
+     readline_extra_libs="-l${termcap_library}"
+  fi
+
+  AC_CHECK_LIB(readline, main, ECA_S_READLINE_LIBS="-lreadline", 
+    [
+      AC_MSG_WARN([*** readline support not installed ***])
+      enable_sysreadline=no
+    ], ${readline_extra_libs})
+
+  AC_CHECK_LIB(history, main, ECA_S_READLINE_LIBS="${ECA_S_READLINE_LIBS} -lhistory", 
+    [
+      AC_MSG_WARN([*** readline support not installed ***])
+      enable_sysreadline=no
+    ], ${readline_extra_libs})
+
+else
+  ECA_S_READLINE_INCLUDES=""
+  ECA_S_READLINE_LIBS=""
+fi
+
+# if no readline library is found, disable platform-curses toggle
+if test $enable_sysreadline = no ; then
+    eca_platform_curses_support=no
+fi
+
+AM_CONDITIONAL(ECA_AM_SYSTEM_READLINE, test x$enable_sysreadline = xyes)
+AC_SUBST(ECA_S_READLINE_INCLUDES)
+AC_SUBST(ECA_S_READLINE_LIBS)
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Check for liboil (optional)
+dnl --
+
+PKG_CHECK_MODULES([LIBOIL], [liboil-0.3], HAVE_LIBOIL=yes, HAVE_LIBOIL=no)
+AC_MSG_CHECKING(whether to use liboil)
+AC_ARG_ENABLE(liboil,
+  [  --enable-liboil		Use liboil if available (default=no)],
+  [
+    case "$enableval" in
+      y | yes)
+        if test "x${HAVE_LIBOIL}" = xyes ; then 
+	  AC_MSG_RESULT(yes)
+          enable_liboil=yes 
+        else
+          AC_MSG_RESULT(no)
+	  AC_MSG_WARN([--enable-liboil given but liboil library not available])
+        fi
+      ;;
+
+      n | no)
+        AC_MSG_RESULT(no)
+        enable_liboil=no
+      ;;
+        
+      *)
+        AC_MSG_ERROR([Invalid parameter value for --enable-liboil: $enableval])
+      ;;
+    esac
+  ],
+  [
+    if test "x${HAVE_LIBOIL}" = xyes ; then 
+      AC_MSG_RESULT(yes)
+      enable_liboil=yes 
+    else
+      AC_MSG_RESULT(no)
+      AC_MSG_WARN([disabling liboil as library devel files are not available])
+    fi
+  ]
+)
+
+if test "x${enable_liboil}" = "xyes" ; then
+  ECA_S_EXTRA_CPPFLAGS="${ECA_S_EXTRA_CPPFLAGS} ${LIBOIL_CFLAGS}"
+  ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} ${LIBOIL_LIBS}"
+  AC_DEFINE([ECA_USE_LIBOIL], 1, [Use liboil])
+fi
+
+dnl ------------------------------------------------------------------
+
+dnl --
+dnl Check for liblo (optional)
+dnl --
+
+PKG_CHECK_MODULES([LIBLO], [liblo], HAVE_LIBLO=yes, HAVE_LIBLO=no)
+AC_MSG_CHECKING(whether to use liblo for OSC support)
+AC_ARG_ENABLE(liblo,
+  [  --enable-liblo		Use liblo if available (default=yes)],
+  [
+    case "$enableval" in
+      y | yes)
+        if test "x${HAVE_LIBLO}" = xyes ; then 
+	  AC_MSG_RESULT(yes)
+          enable_liblo=yes 
+        else
+          AC_MSG_RESULT(no)
+	  AC_MSG_WARN([--enable-liblo given but liblo library not available])
+        fi
+      ;;
+
+      n | no)
+        AC_MSG_RESULT(no)
+        enable_liblo=no
+      ;;
+        
+      *)
+        AC_MSG_ERROR([Invalid parameter value for --enable-liblo: $enableval])
+      ;;
+    esac
+  ],
+  [
+    enable_liblo=${HAVE_LIBLO}
+    AC_MSG_RESULT(${enable_liblo})
+  ]
+)
+
+if test "x${enable_liblo}" = "xyes" ; then
+  ECA_S_EXTRA_CPPFLAGS="${ECA_S_EXTRA_CPPFLAGS} ${LIBLO_CFLAGS}"
+  ECA_S_EXTRA_LIBS="${ECA_S_EXTRA_LIBS} ${LIBLO_LIBS}"
+  AC_DEFINE([ECA_USE_LIBLO], 1, [Use liblo for OSC support])
+fi
+
+dnl ------------------------------------------------------------------
+
+dnl All non-std external libraries that libecasound depends on
+AC_SUBST(ECA_S_EXTRA_CPPFLAGS)
+AC_SUBST(ECA_S_EXTRA_LIBS)
+
+dnl ------------------------------------------------------------------
+
+echo "------------------------------------------------------------------"
+echo "5. Section: Headers"
+echo "------------------------------------------------------------------"
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Checks for system header files.
+dnl ---
+AC_HEADER_TIME
+dnl Note! Header filenames must be on the same line!
+AC_CHECK_HEADERS(dlfcn.h errno.h fcntl.h regex.h signal.h unistd.h sys/poll.h sys/stat.h sys/socket.h sys/time.h sys/types.h sys/wait.h sys/select.h,,
+		 AC_MSG_ERROR([*** not all required header files were found ***]))
+AC_CHECK_HEADERS(execinfo.h features.h inttypes.h locale.h ladspa.h sched.h stdint.h sys/mman.h termios.h)
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl C++ specific checks
+dnl ---
+dnl AC_HEADER_STDC
+AC_HEADER_STDC
+dnl --- AC_CHECK_HEADER(stl.h,, 
+dnl ---	AC_MSG_WARN([** C++/STL header files not found! ***]))
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADER(map,nostlmap=0,nostlmap=1)
+if test "x$nostlmap" = "x1" ; then
+	AC_MSG_ERROR([C++ header files not found! Searched for '<map>' (STL).])
+fi
+
+dnl ------------------------------------------------------------------
+
+echo "------------------------------------------------------------------"
+echo "6. Section: Typedefs and structures"
+echo "------------------------------------------------------------------"
+
+dnl ---
+dnl Checks for typedefs, structures, and compiler characteristics.
+dnl ---
+
+AC_LANG_C
+dnl AC_C_CONST
+AC_C_BIGENDIAN
+AC_TYPE_SIZE_T
+AC_LANG_CPLUSPLUS
+
+dnl ------------------------------------------------------------------
+
+echo "------------------------------------------------------------------"
+echo "7. Section: Functions"
+echo "------------------------------------------------------------------"
+
+dnl ---
+dnl Checks for functions.
+dnl ---
+AC_FUNC_MMAP
+AC_CHECK_FUNCS(execvp gettimeofday pthread_mutexattr_init,,
+		      AC_MSG_ERROR([*** not all required library functions were found ***]))
+
+AC_CHECK_FUNCS(clock_gettime)
+AC_CHECK_FUNCS(mlockall)
+AC_CHECK_FUNCS(munlockall)
+AC_CHECK_FUNCS(nanosleep)
+AC_CHECK_FUNCS(pause)
+AC_CHECK_FUNCS(posix_memalign)
+AC_CHECK_FUNCS(pthread_self)
+AC_CHECK_FUNCS(pthread_getschedparam)
+AC_CHECK_FUNCS(pthread_setschedparam)
+AC_CHECK_FUNCS(pthread_sigmask)
+AC_CHECK_FUNCS(pthread_kill)
+AC_CHECK_FUNCS(sched_get_priority_max)
+AC_CHECK_FUNCS(sched_getparam)
+AC_CHECK_FUNCS(sched_getscheduler)
+AC_CHECK_FUNCS(sched_setscheduler)
+AC_CHECK_FUNCS(setlocale)
+AC_CHECK_FUNCS(sigprocmask)
+AC_CHECK_FUNCS(sigwait)
+AC_CHECK_FUNCS(usleep)
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Check whether to disable all use of shared libs
+dnl 
+dnl Note! Must be run after all other autoconf tests as 
+dnl       'ld' doesn't understand -all-static. 
+dnl
+dnl defines: ECA_STATIC_ONLY, ECA_AM_STATIC_ONLY
+dnl modifies: AM_CXXFLAGS, AM_CFLAGS, AM_LDFLAGS
+dnl ---
+AC_ARG_ENABLE(all-static,
+	      [  --enable-all-static	  Build only static binaries (default = no)],
+	      [
+	      case "$enableval" in
+	        y | yes)
+		  AC_MSG_RESULT(yes)
+		  enable_all_static=yes
+		;;
+
+		n | no)
+		  AC_MSG_RESULT(no)
+		  enable_all_static=no
+		;;
+        
+		*)
+		  AC_MSG_ERROR([Invalid parameter value for --enable-all-static: $enableval])
+		;;
+	      esac
+	      ])
+if test x$enable_all_static = xyes; then
+    AC_DEFINE([ECA_ALL_STATIC], 1, [disable all use of shared libs])
+    AM_CXXFLAGS="$AM_CXXFLAGS -static"
+    AM_CFLAGS="$AM_CFLAGS -static"
+    AM_LDFLAGS="$AM_LDFLAGS -Bstatic -all-static"
+fi
+AM_CONDITIONAL(ECA_AM_ALL_STATIC, test x$enable_all_static = xyes)
+
+dnl ------------------------------------------------------------------
+
+dnl ---
+dnl Checks for platform options
+dnl ---
+
+if test $eca_platform_curses_support == yes ; then
+    AC_DEFINE([ECA_PLATFORM_CURSES], 1, [enable ecasound curses console interface])
+fi
+
+dnl ------------------------------------------------------------------
+
+echo "------------------------------------------------------------------"
+echo "8. Section: Output"
+echo "------------------------------------------------------------------"
+
+dnl ---
+dnl Create output files
+dnl ---
+
+AC_OUTPUT([
+Makefile
+ecasound.spec
+libecasound/Makefile
+libecasound/libecasound-config
+libecasound/plugins/Makefile
+libecasoundc/Makefile
+libecasoundc/libecasoundc-config
+pyecasound/Makefile
+rubyecasound/Makefile
+ecasound/Makefile
+ecatools/Makefile
+kvutils/Makefile
+Documentation/Makefile
+Documentation/users_guide/Makefile
+Documentation/programmers_guide/Makefile
+examples/Makefile
+])
+
+dnl ---
+dnl Print summary of the configured options
+dnl ---
+
+echo "-----------------------------------------------------------------"
+echo "Following packages are now configured:"
+echo "ecasound:               yes (ecasound,libecasound,libecasoundc)"
+echo "ecatools:               yes"
+if test x$pyecasound_support != xnone ; then
+	if test x$pyecasound_support = xc ; then
+		echo "pyecasound:             yes (as Python C extension module)"
+	else
+		echo "pyecasound:             yes (as native Python module)"
+	fi
+else
+	echo "pyecasound:             no"
+fi
+if test x$rubyecasound_support = xyes ; then
+	echo "rubyecasound:           yes"
+else
+	echo "rubyecasound:           no"
+fi
+echo "libkvutils:             yes"
+
+echo "-----------------------------------------------------------------"
+echo "Compiler options:"
+echo "CFLAGS:                 $AM_CFLAGS $CFLAGS"
+echo "CXXFLAGS:               $AM_CXXFLAGS $CXXFLAGS"
+echo "CPPFLAGS:               $AM_CPPFLAGS $CPPFLAGS"
+echo "LDFLAGS:                $AM_LDFLAGS $LDFLAGS"
+
+echo "-----------------------------------------------------------------"
+echo "Following features were selected:"
+if test x$include_debug = xyes ; then
+	echo "Debugging info:         yes"
+else
+	echo "Debugging info:         no"	
+fi
+if test x$enable_effects_d = xyes ; then
+	echo "Effects enabled:        yes"
+else
+	echo "Effects enabled:        no"	
+fi
+if test x$enable_largefile = xyes ; then
+	echo "Largefile support:      yes"
+else
+	echo "Largefile support:      no"
+fi
+if test x$termcap_library = xtermcap ; then
+	echo "Termcap:                termcap"
+fi
+if test x$termcap_library = xncurses; then
+	echo "Termcap:                ncurses"
+fi
+if test x$termcap_library = xnone; then
+	echo "Termcap:                none"
+fi
+if test x$enable_sysreadline = xyes ; then
+	echo "Use system readline:    yes"
+else
+	echo "Use system readline:    no"
+fi
+	echo "Use curses interface:   $eca_platform_curses_support"
+if test x$af_support = xyes ; then
+	echo "Libaudiofile:           yes"
+else
+	echo "Libaudiofile:           no"
+fi
+if test x$sndfile_support = xyes ; then
+	echo "Libsndfile:             yes"
+else
+	echo "Libsndfile:             no"
+fi
+if test x$alsa_support = xyes ; then
+	echo "ALSA support:           yes"
+else
+	echo "ALSA support:           no"
+fi
+if test x$oss_support = xyes ; then
+	echo "OSS support:            yes"
+else
+	echo "OSS support:            no"
+fi
+if test x$arts_support = xyes ; then
+	echo "aRts support:           yes"
+else
+	echo "aRts support:           no"
+fi
+if test x$jack_support = xyes ; then
+	echo "JACK support:           yes"
+else
+	echo "JACK support:           no"
+fi
+if test x$samplerate_support = xyes ; then
+	echo "Libsamplerate support   yes"
+else
+	echo "Libsamplerate support   no"
+fi
+if test x$enable_liboil = xyes ; then
+	echo "Liboil support:         yes"
+else
+	echo "Liboil support:         no"
+fi
+if test x$enable_liblo = xyes ; then
+	echo "Liblo (OSC) support:    yes"
+else
+	echo "Liblo (OSC) support:    no"
+fi
+
+echo "-----------------------------------------------------------------"
+echo "Following directories are used:"
+echo "Directory prefix:       "$ECA_S_PREFIX
+if test x$pyecasound_support != xnone ; then
+	echo "Python include dir:     "$ECA_S_PYTHON_INCLUDES
+	echo "Python module dir:      "$ECA_S_PYTHON_MODULES
+fi
+if test x$rubyecasound_support != xnone ; then
+	echo "Ruby module dir:        "$ECA_S_RUBY_SITEDIR
+fi
+if test "x$ECA_S_EXTRA_CPPFLAGS" != "x" ; then
+	echo "Extra headers:          "$ECA_S_EXTRA_CPPFLAGS
+fi
+if test "x$ECA_S_EXTRA_LIBS" != "x" ; then
+	echo "Extra libs:            "$ECA_S_EXTRA_LIBS
+fi
+
+echo "-------------------------------------------------------------------"
+echo "Type 'make' to compile the package and 'make install' to install."
+echo "Remember to use GNU Make, often installed as 'gmake'."
+echo "-------------------------------------------------------------------"
+
+dnl ------------------------------------------------------------------
+dnl X. Section: End
+dnl ------------------------------------------------------------------

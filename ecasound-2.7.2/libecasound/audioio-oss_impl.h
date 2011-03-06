@@ -1,0 +1,7 @@
+#ifndef _AUDIOIO_OSS_IMPL_H
+#define _AUDIOIO_OSS_IMPL_H
+
+#define DEFAULT_FRAGMENT_SIZE       0
+#define DEFAULT_FRAGMENT_COUNT      0
+
+#endif
