@@ -75,7 +75,8 @@ class Application_Model_Nowplaying
                     $type = "b";
                 } else if (strtotime($item['item_ends']) < strtotime($timeNow)){
                     $type = "p";
-                } else if (strtotime($item['item_starts']) < strtotime($timeNow) && strtotime($timeNow) < strtotime($item['item_ends'])){
+                } else if (strtotime($item['item_starts']) < strtotime($timeNow) && strtotime($timeNow) < strtotime($item['item_ends'])
+                    && strtotime($item['show_starts']) < strtotime($timeNow) && strtotime($timeNow) < strtotime($item['show_ends'])){
                     $type = "c";
                 } else {
                     $type = "n";

@@ -188,7 +188,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$this->view->showContent = $show->getShowContent();
 		$this->view->timeFilled = $show->getTimeScheduled();
-		$this->view->percentFilled = $show->getPercentScheduledInRange();
+		$this->view->percentFilled = $show->getPercentScheduled();
 
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
 		unset($this->view->showContent);
@@ -237,7 +237,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$this->view->showContent = $show->getShowContent();
 		$this->view->timeFilled = $show->getTimeScheduled();
-		$this->view->percentFilled = $show->getPercentScheduledInRange();
+		$this->view->percentFilled = $show->getPercentScheduled();
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
 		unset($this->view->showContent);
     }
@@ -268,7 +268,7 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->timeFilled = $show->getTimeScheduled();
         $this->view->showName = $show->getName();
 		$this->view->showLength = $show->getShowLength();
-		$this->view->percentFilled = $show->getPercentScheduledInRange();
+		$this->view->percentFilled = $show->getPercentScheduled();
 
         $this->view->s_wday = $dateInfo_s['weekday'];
         $this->view->s_month = $dateInfo_s['month'];

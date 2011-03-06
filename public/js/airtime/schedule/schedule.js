@@ -22,6 +22,15 @@ function setScheduleDialogHtml(json) {
 
 	$("#show_time_filled").empty().append(json.timeFilled);
 	$("#show_progressbar").progressbar( "value" , json.percentFilled );
+
+    var showFilled = $("#show_time_filled").text().split('.')[0];
+    var showLength = $("#show_length").text();
+
+    if (showFilled > showLength){
+        $("#show_time_warning").text("Shows longer than their scheduled time will be cut off by a following show.");
+    } else {
+        $("#show_time_warning").empty();
+    }
 }
 
 function setScheduleDialogEvents(dialog) {

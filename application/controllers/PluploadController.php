@@ -115,7 +115,7 @@ class PluploadController extends Zend_Controller_Action
 			}
 		}
 
-		$metadata = camp_get_audio_metadata($audio_file);
+		$metadata = Metadata::LoadFromFile($audio_file);
 
 		if (PEAR::isError($metadata)) {
 			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $metadata->getMessage() + '}}');
@@ -168,7 +168,7 @@ class PluploadController extends Zend_Controller_Action
     }
 
     public function pluploadAction()
-    {                 
+    {
         $this->view->headScript()->appendFile('/js/plupload/plupload.full.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/plupload/jquery.plupload.queue.min.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/airtime/library/plupload.js','text/javascript');
