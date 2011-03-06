@@ -18,7 +18,7 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 createAPIKey();
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
-require_once(dirname(__FILE__).'/../application/models/GreenBox.php');
+//require_once(dirname(__FILE__).'/../application/models/GreenBox.php');
 require_once(dirname(__FILE__).'/installInit.php');
 
 
