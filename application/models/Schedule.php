@@ -278,12 +278,11 @@ class Schedule {
         return ($count == '0');
     }
 
-    public static function getTimeUnScheduledInRange($s_datetime, $e_datetime) {
+    public static function getTimeUnScheduledInRange($instance_id, $s_datetime, $e_datetime) {
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]."
-            WHERE (starts >= '{$s_datetime}')
-            AND (ends <= '{$e_datetime}')";
+        $sql = "SELECT SUM(clip_length) FROM $CC_CONFIG[scheduleTable]"
+            ." WHERE instance_id = $instance_id";
 
         $time = $CC_DBC->GetOne($sql);
 
@@ -313,6 +312,20 @@ class Schedule {
 
         return $res;
     }
+    
+    public static function GetTotalShowTime($instance_id) {
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT SUM(clip_length) FROM $CC_CONFIG[scheduleTable]"
+            ." WHERE instance_id = $instance_id";
+
+        $res = $CC_DBC->GetOne($sql);
+
+        if(is_null($res))
+            return 0;
+
+        return $res;
+    }
 
     public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
 
@@ -333,6 +346,25 @@ class Schedule {
         $i_epoch = $r->fetchColumn(0);
 
         $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
+
+        return $percent;
+    }
+
+    public static function GetPercentScheduled($instance_id, $s_datetime, $e_datetime){
+        $time = Schedule::GetTotalShowTime($instance_id);
+
+        $s_epoch = strtotime($s_datetime);
+        $e_epoch = strtotime($e_datetime);
+
+        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $sql = "SELECT EXTRACT(EPOCH FROM INTERVAL '{$time}')";
+        $r = $con->query($sql);
+        $i_epoch = $r->fetchColumn(0);
+
+        $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
+
+        if ($percent > 100)
+            $percent = 100;
 
         return $percent;
     }
@@ -490,7 +522,8 @@ class Schedule {
         ." WHERE st.playlist_id = pt.id"
         ." AND st.file_id = ft.id"
         ." AND st.instance_id = si.id"
-        ." AND si.show_id = show.id";
+        ." AND si.show_id = show.id"
+        ." AND st.starts < si.ends";
 
         if ($timePeriod < 0){
         	$sql .= " AND st.ends < TIMESTAMP '$timeStamp'"

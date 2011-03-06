@@ -456,6 +456,10 @@ class ShowInstance {
         return $showInstance->getDbShowId();
     }
 
+    public function getShowInstanceId() {
+        return $this->_instanceId;
+    }
+
     public function getName() {
         $show = CcShowQuery::create()->findPK($this->getShowId());
         return $show->getDbName();
@@ -635,11 +639,8 @@ class ShowInstance {
 	}
 
     public function getTimeScheduled() {
-
-        $start_timestamp = $this->getShowStart(); 
-        $end_timestamp = $this->getShowEnd();
-
-		$time = Schedule::getTimeScheduledInRange($start_timestamp, $end_timestamp);
+        $instance_id = $this->getShowInstanceId();
+		$time = Schedule::GetTotalShowTime($instance_id);
 
 		return $time;
 	}
@@ -648,8 +649,9 @@ class ShowInstance {
 
         $start_timestamp = $this->getShowStart(); 
         $end_timestamp = $this->getShowEnd();
+        $instance_id = $this->getShowInstanceId();
 
-		$time = Schedule::getTimeUnScheduledInRange($start_timestamp, $end_timestamp);
+		$time = Schedule::getTimeUnScheduledInRange($instance_id, $start_timestamp, $end_timestamp);
 
 		return $time;
 	}
@@ -660,6 +662,14 @@ class ShowInstance {
         $end_timestamp = $this->getShowEnd();
 
         return Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
+    }
+
+    public function getPercentScheduled(){
+        $start_timestamp = $this->getShowStart(); 
+        $end_timestamp = $this->getShowEnd();
+        $instance_id = $this->getShowInstanceId();
+
+        return Schedule::GetPercentScheduled($instance_id, $start_timestamp, $end_timestamp);
     }
 
     public function getShowLength(){
@@ -794,6 +804,7 @@ class Show_DAL{
 		." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
         ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
         ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
+        ." AND (st.starts < si.ends)"
         ." ORDER BY st.starts";
 
         return $CC_DBC->GetAll($sql);

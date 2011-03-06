@@ -60,7 +60,7 @@ var columns = [{"sTitle": "type", "bVisible":false},
     {"sTitle":"Album"},
     {"sTitle":"Playlist"},
     {"sTitle":"Show"},
-    {"sTitle":"instance_id", "bVisible":true}];
+    {"sTitle":"instance_id", "bVisible":false}];
 
 function getDateString(){
     var date0 = $("#datepicker").datepicker("getDate");
