@@ -1558,10 +1558,11 @@ class StoredFile {
 	}
 
 
-	public static function searchPlaylistsForSchedule($p_length, $datatables) {
+	public static function searchPlaylistsForSchedule($datatables) 
+    {
 		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
-        $datatables["optWhere"][] = "INTERVAL '{$p_length}' > INTERVAL '00:00:00'";
         $datatables["optWhere"][] = "plt.length > INTERVAL '00:00:00'";
+
 		return StoredFile::searchFiles($fromTable, $datatables);
 	}
 

@@ -204,10 +204,6 @@ function buildEditDialog(json){
 
 }
 
-function scheduleRefetchEvents() {
-    $("#schedule_calendar").fullCalendar( 'refetchEvents' );
-}
-
 $(window).load(function() {
     var mainHeight = document.documentElement.clientHeight - 200 - 50;
 

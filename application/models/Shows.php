@@ -435,7 +435,7 @@ class Show {
 			$event[$key] = $value;
 		}
 
-		$percent = Schedule::getPercentScheduledInRange($show["starts"], $show["ends"]);
+		$percent = Schedule::GetPercentScheduled($show["instance_id"], $show["starts"], $show["ends"]);
 		$event["percent"] = $percent;
 
 		return $event;
@@ -491,10 +491,9 @@ class ShowInstance {
         global $CC_DBC;
 
         $sql = "UPDATE cc_schedule
-                    SET starts = (starts + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}'),
+                   SET starts = (starts + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}'),
                         ends = (ends + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}')
-                    WHERE (starts >= '{$this->getShowStart()}')  
-                        AND (ends <= '{$this->getShowEnd()}')";
+                   WHERE instance_id = '{$this->_instanceId}'";
 
         $CC_DBC->query($sql);
     }
@@ -560,17 +559,8 @@ class ShowInstance {
 			    return "Should not overlap shows";
 		    }
         }
-        //have to check if any scheduled content still fits.
-        else{
-            $scheduledTime = $this->getTimeScheduled();
-            $sql = "SELECT (timestamp '{$new_ends}' - timestamp '{$starts}') >= interval '{$scheduledTime}'";
-		    $scheduledContentFits = $CC_DBC->GetOne($sql);
-
-            if($scheduledContentFits != "t") {
-                return "Must remove some scheduled content.";
-            }
-        }
-
+        //with overbooking no longer need to check already scheduled content still fits.
+    
         $this->setShowEnd($new_ends);
 	}
 
@@ -639,6 +629,7 @@ class ShowInstance {
 	}
 
     public function getTimeScheduled() {
+
         $instance_id = $this->getShowInstanceId();
 		$time = Schedule::GetTotalShowTime($instance_id);
 
@@ -656,15 +647,8 @@ class ShowInstance {
 		return $time;
 	}
 
-    public function getPercentScheduledInRange(){
+    public function getPercentScheduled() {
 
-        $start_timestamp = $this->getShowStart(); 
-        $end_timestamp = $this->getShowEnd();
-
-        return Schedule::getPercentScheduledInRange($start_timestamp, $end_timestamp);
-    }
-
-    public function getPercentScheduled(){
         $start_timestamp = $this->getShowStart(); 
         $end_timestamp = $this->getShowEnd();
         $instance_id = $this->getShowInstanceId();
@@ -672,7 +656,7 @@ class ShowInstance {
         return Schedule::GetPercentScheduled($instance_id, $start_timestamp, $end_timestamp);
     }
 
-    public function getShowLength(){
+    public function getShowLength() {
 		global $CC_DBC;
 
         $start_timestamp = $this->getShowStart(); 
@@ -686,9 +670,9 @@ class ShowInstance {
 
 	public function searchPlaylistsForShow($datatables){
 
-		$length = $this->getTimeUnScheduled();
-
-		return StoredFile::searchPlaylistsForSchedule($length, $datatables);
+		//$length = $this->getTimeUnScheduled();
+		//return StoredFile::searchPlaylistsForSchedule($length, $datatables);
+        return StoredFile::searchPlaylistsForSchedule($datatables);
 	}
 
     public function getShowListContent() {
