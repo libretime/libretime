@@ -216,8 +216,19 @@ class ScheduleGroup {
      */
     public function getItems() {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT * FROM {$CC_CONFIG['scheduleTable']}"
-        ." WHERE group_id={$this->groupId}";
+        $sql = "SELECT "
+        ." st.id,"
+        ." st.file_id,"
+        ." st.cue_in,"
+        ." st.cue_out,"
+        ." st.clip_length,"
+        ." st.fade_in,"
+        ." st.fade_out"
+        ." FROM $CC_CONFIG[scheduleTable] as st"
+        ." LEFT JOIN $CC_CONFIG[showInstances] as si"
+        ." ON st.instance_id = si.id"
+        ." WHERE st.group_id=$this->groupId"
+        ." AND st.starts < si.ends";
         return $CC_DBC->GetAll($sql);
     }
 
@@ -444,6 +455,9 @@ class Schedule {
             ." ON si.show_id = sh.id"
             ." WHERE (st.starts >= TIMESTAMP '$p_fromDateTime')"
             ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
+            //next line makes sure that we aren't returning items that
+            //are past the show's scheduled timeslot.
+            ." AND (st.starts < si.ends)" 
             ." GROUP BY st.group_id"
             ." ORDER BY starts";
 
