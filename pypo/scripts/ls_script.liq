@@ -14,7 +14,7 @@ stream_metadata_type = ref 0
 station_name = ref ''
 show_name = ref ''
 
-%include "lib.liq"
+%include "ls_lib.liq"
 
 server.register(namespace="vars", "pypo_data", fun (s) -> begin pypo_data := s "Done" end)
 server.register(namespace="vars", "web_stream_enabled", fun (s) -> begin web_stream_enabled := (s == "true") string_of(!web_stream_enabled) end)
