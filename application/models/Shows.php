@@ -788,7 +788,7 @@ class Show_DAL{
 		." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
         ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
         ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
-        ." AND (st.starts < si.ends)"
+        ." AND (st.starts < si.ends OR st.starts IS NULL)"
         ." ORDER BY st.starts";
 
         return $CC_DBC->GetAll($sql);
