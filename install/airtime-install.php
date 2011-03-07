@@ -18,7 +18,6 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 createAPIKey();
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
-//require_once(dirname(__FILE__).'/../application/models/GreenBox.php');
 require_once(dirname(__FILE__).'/installInit.php');
 
 
@@ -36,8 +35,8 @@ function rand_string($len=20, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
 function createAPIKey(){
 
     $api_key = rand_string();
-    updateINIKeyValues('../build/airtime.conf', 'api_key', $api_key);
-    updateINIKeyValues('../pypo/config.cfg', 'api_key', "'$api_key'");
+    updateINIKeyValues(__DIR__.'/../build/airtime.conf', 'api_key', $api_key);
+    updateINIKeyValues(__DIR__.'/../pypo/config.cfg', 'api_key', "'$api_key'");
 }
 
 function checkIfRoot(){
