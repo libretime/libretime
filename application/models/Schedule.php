@@ -1,6 +1,5 @@
 <?php
 require_once("StoredFile.php");
-require_once("BasicStor.php");
 
 class ScheduleGroup {
 
@@ -312,7 +311,7 @@ class Schedule {
 
         return $res;
     }
-    
+
     public static function GetTotalShowTime($instance_id) {
         global $CC_CONFIG, $CC_DBC;
 
@@ -679,7 +678,7 @@ class Schedule {
     public static function ExportRangeAsJson($p_fromDateTime, $p_toDateTime)
     {
         global $CC_CONFIG, $CC_DBC;
-        
+
         $range_start = Schedule::PypoTimeToCcTime($p_fromDateTime);
         $range_end = Schedule::PypoTimeToCcTime($p_toDateTime);
 

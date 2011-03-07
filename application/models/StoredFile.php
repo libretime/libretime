@@ -1,7 +1,6 @@
 <?php
 require_once("Playlist.php");
 require_once(dirname(__FILE__)."/../../library/getid3/var/getid3.php");
-require_once("BasicStor.php");
 require_once("Schedule.php");
 
 class Metadata {
@@ -572,7 +571,6 @@ class StoredFile {
     }
 
 
-    /* ========= 'factory' methods - should be called to construct StoredFile */
     /**
      *  Create instance of StoredFile object and insert new file
      *
@@ -760,32 +758,6 @@ class StoredFile {
 
 
     /**
-     * Create instance of StoreFile object and recall existing file
-     * by access token.
-     *
-     * @param string $p_token
-     * 		access token
-     * @return StoredFile
-     */
-    public static function RecallByToken($p_token)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT gunid"
-        ." FROM ".$CC_CONFIG['accessTable']
-        ." WHERE token=x'$p_token'::bigint";
-        $gunid = $CC_DBC->getOne($sql);
-        if (PEAR::isError($gunid)) {
-            return $gunid;
-        }
-        if (is_null($gunid)) {
-            return PEAR::raiseError(
-            "StoredFile::RecallByToken: invalid token ($p_token)", GBERR_AOBJNEX);
-        }
-        return StoredFile::Recall(null, $gunid);
-    }
-
-
-    /**
      * Generate the location to store the file.
      * It creates the subdirectory if needed.
      */
@@ -793,7 +765,6 @@ class StoredFile {
     {
         global $CC_CONFIG, $CC_DBC;
         $resDir = $CC_CONFIG['storageDir']."/".substr($this->gunid, 0, 3);
-        // see Transport::_getResDir too for resDir name create code
         if (!is_dir($resDir)) {
             mkdir($resDir, 02775);
             chmod($resDir, 02775);
@@ -838,7 +809,6 @@ class StoredFile {
         } else {
             $dstFile = $p_localFilePath;
             $r = TRUE;
-            //$r = @symlink($p_localFilePath, $dstFile);
         }
         $this->filepath = $dstFile;
         $sqlPath = pg_escape_string($this->filepath);
@@ -933,72 +903,6 @@ class StoredFile {
         }
         $storedFile->replaceMetadata($p_src->getAllMetadata(), 'string');
         return $storedFile;
-    }
-
-    /**
-     * Increase access counter, create access token, insert access record.
-     *
-     * @param int $parent
-     * 		parent token
-     * @return array
-     * 		array with: access URL, access token
-     */
-    public function accessRawMediaData($p_parent='0')
-    {
-        $realFname = $this->getRealFilePath();
-        $ext = $this->getFileExtension();
-        $res = BasicStor::bsAccess($realFname, $ext, $this->gunid, 'access', $p_parent);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        $resultArray =
-        array('url'=>"file://{$res['fname']}", 'token'=>$res['token']);
-        return $resultArray;
-    }
-
-
-    /**
-     * Decrease access couter, delete access record.
-     *
-     * @param string $p_token
-     * 		access token
-     * @return boolean
-     */
-    public function releaseRawMediaData($p_token)
-    {
-        $res = BasicStor::bsRelease($p_token);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        return TRUE;
-    }
-
-
-    /**
-     * Replace media file only with new binary file
-     *
-     * @param string $p_localFilePath
-     * 		local path to media file
-     * @return TRUE|PEAR_Error
-     */
-    public function setRawMediaData($p_localFilePath)
-    {
-        $res = $this->replaceFile($p_localFilePath);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        $mime = $this->getMime();
-        if ($mime !== FALSE) {
-            $res = $this->setMime($mime);
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-        }
-        //        $r = $this->md->regenerateXmlFile();
-        //        if (PEAR::isError($r)) {
-        //            return $r;
-        //        }
-        return TRUE;
     }
 
 
