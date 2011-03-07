@@ -4,10 +4,14 @@ import logging
 import json
 import time
 import datetime
+import os
 
 from eci import *
 from configobj import ConfigObj
-import subprocess
+
+from poster.encode import multipart_encode
+from poster.streaminghttp import register_openers
+import urllib2
 
 # loading config file
 try:
@@ -73,11 +77,6 @@ def check_record():
     start_time = sorted_show_keys[0]
     next_show = getDateTimeObj(start_time)
 
-    #print tnow, next_show
-
-    #tnow = getDateTimeObj("2011-03-04 16:00:00")
-    #next_show = getDateTimeObj("2011-03-04 16:00:01")
-
     delta = next_show - tnow
 
     if delta <= datetime.timedelta(seconds=60):
@@ -85,20 +84,15 @@ def check_record():
     
         show_length = shows_to_record[start_time]
         filepath = record_show(show_length.seconds, start_time)
-        #filepath = record_show(10, "2011-03-04 16:00:00")
-      
-        command = "%s -c %s" %("../../utils/airtime-import", filepath)
-        subprocess.call([command],shell=True)
+        upload_file(filepath)
     
 
 def get_shows():
 
     url = config["base_url"] + config["show_schedule_url"]
-    #url = url.replace("%%from%%", "2011-03-13 20:00:00")
-    #url = url.replace("%%to%%", "2011-04-17 21:00:00")
-
     response = urllib.urlopen(url)
     data = response.read()
+
     response_json = json.loads(data)
     shows = response_json[u'shows']
     print shows
@@ -107,22 +101,16 @@ def get_shows():
         process_shows(shows)
         check_record()
 
-def upload_file():
+def upload_file(filepath):
 
-    from poster.encode import multipart_encode
-    from poster.streaminghttp import register_openers
-    import urllib2
+    filename = os.path.split(filepath)[1]
 
     # Register the streaming http handlers with urllib2
     register_openers()
 
-    # Start the multipart/form-data encoding of the file "DSC0001.jpg"
-    # "image1" is the name of the parameter, which is normally set
-    # via the "name" parameter of the HTML <input> tag.
-
     # headers contains the necessary Content-Type and Content-Length
     # datagen is a generator object that yields the encoded parameters
-    datagen, headers = multipart_encode({"file": open("/home/naomi/Music/testoutput.mp3", "rb"), 'name': 'crazy.mp3'})
+    datagen, headers = multipart_encode({"file": open(filepath, "rb"), 'name': filename})
 
     url = config["base_url"] + config["upload_file_url"]
    
@@ -133,11 +121,11 @@ def upload_file():
 
 if __name__ == '__main__':
 
-    # while True:
-    #     get_shows()
-    #     time.sleep(30)
+    while True:
+        get_shows()
+        time.sleep(30)
 
-    upload_file()
+    
     
    
 

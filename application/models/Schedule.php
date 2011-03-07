@@ -1,6 +1,5 @@
 <?php
 require_once("StoredFile.php");
-require_once("BasicStor.php");
 
 class ScheduleGroup {
 
@@ -320,7 +319,7 @@ class Schedule {
 
         return $res;
     }
-    
+
     public static function GetTotalShowTime($instance_id) {
         global $CC_CONFIG, $CC_DBC;
 
@@ -335,32 +334,9 @@ class Schedule {
         return $res;
     }
 
-    public static function getPercentScheduledInRange($s_datetime, $e_datetime) {
-
-        $time = Schedule::getTimeScheduledInRange($s_datetime, $e_datetime);
-
-        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-
-        $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$s_datetime}')";
-        $r = $con->query($sql);
-        $s_epoch = $r->fetchColumn(0);
-
-        $sql = "SELECT EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE '{$e_datetime}')";
-        $r = $con->query($sql);
-        $e_epoch = $r->fetchColumn(0);
-
-        $sql = "SELECT EXTRACT(EPOCH FROM INTERVAL '{$time}')";
-        $r = $con->query($sql);
-        $i_epoch = $r->fetchColumn(0);
-
-        $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
-
-        return $percent;
-    }
-
     public static function GetPercentScheduled($instance_id, $s_datetime, $e_datetime){
         $time = Schedule::GetTotalShowTime($instance_id);
-
+       
         $s_epoch = strtotime($s_datetime);
         $e_epoch = strtotime($e_datetime);
 
@@ -690,7 +666,7 @@ class Schedule {
     public static function ExportRangeAsJson($p_fromDateTime, $p_toDateTime)
     {
         global $CC_CONFIG, $CC_DBC;
-        
+
         $range_start = Schedule::PypoTimeToCcTime($p_fromDateTime);
         $range_end = Schedule::PypoTimeToCcTime($p_toDateTime);
 

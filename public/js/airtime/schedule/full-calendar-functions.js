@@ -4,6 +4,10 @@
 *
 */
 
+function scheduleRefetchEvents() {
+    $("#schedule_calendar").fullCalendar( 'refetchEvents' );
+}
+
 function openAddShowForm() {
 
      if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none')) {
@@ -221,6 +225,8 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
                 alert(json.error);
 				revertFunc();
 			}
+        
+            scheduleRefetchEvents();
 		});
 }
 
