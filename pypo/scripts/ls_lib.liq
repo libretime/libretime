@@ -42,10 +42,6 @@ end
 def add_skip_command(s)
  # A command to skip
   def skip(_)
-    l = list.hd(server.execute("queue.queue"))
-    l = string.split(separator=" ",l)
-    list.iter(fun (rid) -> ignore(server.execute("queue.ignore #{rid}")), l)
-
     source.skip(s)
     "Done!"
   end
