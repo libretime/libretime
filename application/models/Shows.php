@@ -670,9 +670,9 @@ class ShowInstance {
 
 	public function searchPlaylistsForShow($datatables){
 
-		//$length = $this->getTimeUnScheduled();
-		//return StoredFile::searchPlaylistsForSchedule($length, $datatables);
-        return StoredFile::searchPlaylistsForSchedule($datatables);
+		$time_remaining = $this->getTimeUnScheduled();
+
+		return StoredFile::searchPlaylistsForSchedule($time_remaining, $datatables);
 	}
 
     public function getShowListContent() {
