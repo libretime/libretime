@@ -10,6 +10,6 @@
 
     <table name="doctrine_migration_versions" />
 
-    <migrations-directory>/home/martin/workspace/airtime/install/DoctrineMigrations</migrations-directory>
+    <migrations-directory>./</migrations-directory>
 
 </doctrine-migrations>
