@@ -82,6 +82,9 @@ class Application_Model_Nowplaying
                     $type = "n";
                 }
 
+                if (strtotime($item['item_ends']) > strtotime($item['show_ends']))
+                    $type = "over";
+
                 array_push($data, array($type, $item["item_starts"], $item["item_starts"], $item["item_ends"], $item["clip_length"], $item["track_title"], $item["artist_name"], $item["album_title"], $item["playlist_name"], $item["show_name"], $item["instance_id"]));
             }
         }

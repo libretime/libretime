@@ -128,6 +128,9 @@ function createDataGrid(){
                 $(nRow).addClass("playing-list");
             if (aData[0] == "c")
 				$(nRow).attr("class", "playing-song");
+            else if (aData[0] == "over"){
+                //$(nRow).attr("class", "over-booked-song");
+            }
 			return nRow;
 		},
         "fnDrawCallback": function(oSettings){

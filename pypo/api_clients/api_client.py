@@ -111,6 +111,7 @@ class AirTimeApiClient(ApiClientInterface):
     def __get_airtime_version(self, verbose = True):
         logger = logging.getLogger()
         url = self.config["base_url"] + self.config["api_base"] + self.config["version_url"]
+        logger.debug("Trying to contact %s", url)
         url = url.replace("%%api_key%%", self.config["api_key"])
 
         try:
@@ -159,7 +160,6 @@ class AirTimeApiClient(ApiClientInterface):
         for pkey in sorted(schedule.iterkeys()):
             logger.debug("Playlist #%s",str(count))
             count+=1
-            #logger.info("found playlist at %s", pkey)
             playlist = schedule[pkey]
             for item in playlist["medias"]:
                 filename = urlparse(item["uri"])
@@ -210,21 +210,18 @@ class AirTimeApiClient(ApiClientInterface):
         
         # Construct the URL
         export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
-        #logger.debug("Exporting schedule using URL: "+export_url)
         
         # Insert the start and end times into the URL        
-        export_url = export_url.replace('%%api_key%%', self.config["api_key"])
         export_url = export_url.replace('%%from%%', range['start'])
         export_url = export_url.replace('%%to%%', range['end'])
         logger.info("Fetching schedule from %s", export_url)
-    
+        export_url = export_url.replace('%%api_key%%', self.config["api_key"])
+        
         response = ""
         status = 0
         try:
             response_json = urllib.urlopen(export_url).read()
-            #logger.debug("%s", response_json)
             response = json.loads(response_json)
-            #logger.info("export status %s", response['check'])
             status = response['check']
         except Exception, e:
             print e
@@ -242,12 +239,9 @@ class AirTimeApiClient(ApiClientInterface):
         #           toRemove.append(pkey)
         #       else:
         #           break
-        #   #logger.debug("Remove keys: %s", toRemove)
         #   for index in toRemove:
         #       del schedule[index]
-        #   #logger.debug("Schedule dict: %s", schedule)
         #except Exception, e:
-        #   logger.debug("'Ignore Past Playlists' feature not supported by API: %s", e)
         #response["playlists"] = schedule
 
         return status, response
@@ -257,12 +251,10 @@ class AirTimeApiClient(ApiClientInterface):
         logger = logging.getLogger()
         
         try:
+            logger.info("try to download from %s to %s", src, dst)
             src = src + "/api_key/" + self.config["api_key"]
-            logger.debug("try to download from %s to %s", src, dst)
             # check if file exists already before downloading again
             filename, headers = urllib.urlretrieve(src, dst)
-            
-            logger.info("downloaded %s to %s", src, dst)
         except Exception, e:
             logger.error("%s", e)
 
@@ -276,8 +268,8 @@ class AirTimeApiClient(ApiClientInterface):
         schedule_id = playlist["schedule_id"]       
         url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
         url = url.replace("%%schedule_id%%", str(schedule_id))
-        url = url.replace("%%api_key%%", self.config["api_key"])
         logger.debug(url)
+        url = url.replace("%%api_key%%", self.config["api_key"])
         
         try:
             response = urllib.urlopen(url)
@@ -304,8 +296,8 @@ class AirTimeApiClient(ApiClientInterface):
             url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
             url = url.replace("%%media_id%%", str(media_id))
             url = url.replace("%%schedule_id%%", str(schedule_id))
-            url = url.replace("%%api_key%%", self.config["api_key"])
             logger.debug(url)
+            url = url.replace("%%api_key%%", self.config["api_key"])
             response = urllib.urlopen(url)
             response = json.loads(response.read())
             logger.info("API-Status %s", response['status'])
@@ -316,27 +308,6 @@ class AirTimeApiClient(ApiClientInterface):
         
         return response
     
-    
-    def generate_range_dp(self):
-        pass
-        #logger = logging.getLogger()
-        #
-        #url = self.api_url + 'schedule/generate_range_dp.php'
-        #
-        #try:
-        #   response = urllib.urlopen(url, self.api_auth)
-        #   response = json.loads(response.read())
-        #   logger.debug("Trying to contact %s", url)
-        #   logger.info("API-Status %s", response['status'])
-        #   logger.info("API-Message %s", response['message'])
-        #
-        #except Exception, e:
-        #   print e
-        #   api_status = False
-        #   logger.critical("Unable to handle the request - %s", e)
-        #   
-        #return response
-
     def get_liquidsoap_data(self, pkey, schedule):
         logger = logging.getLogger()
         playlist = schedule[pkey]
