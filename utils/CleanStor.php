@@ -29,7 +29,7 @@ function printUsage() {
     echo "Storage server: ". $CC_CONFIG["storageDir"] ."\n\n\n";
 }
 
-function camp_clean_files($p_path) {
+function airtime_clean_files($p_path) {
     if (!empty($p_path) && (strlen($p_path) > 4)) {
         list($dirList,$fileList) = File_Find::maptree($p_path);
 
@@ -62,7 +62,7 @@ function camp_clean_files($p_path) {
     }
 }
 
-function camp_remove_files($p_path) {
+function airtime_remove_files($p_path) {
 
     if (!empty($p_path) && (strlen($p_path) > 4)) {
         list($dirList,$fileList) = File_Find::maptree($p_path);
@@ -80,14 +80,14 @@ function camp_remove_files($p_path) {
     }
 }
 
-function camp_empty_db($db) {
+function airtime_empty_db($db) {
     global $CC_CONFIG;
 
     if (!PEAR::isError($db)) {
-        if (camp_db_table_exists($CC_CONFIG['filesTable'])) {
+        if (airtime_db_table_exists($CC_CONFIG['filesTable'])) {
             echo " * Deleting from database table ".$CC_CONFIG['filesTable']."\n";
             $sql = "DELETE FROM ".$CC_CONFIG['filesTable'];
-            camp_install_query($sql, false);
+            airtime_install_query($sql, false);
         }
         else {
             echo " * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
@@ -110,12 +110,12 @@ switch($argv[1]){
 
     case '-e':
     case '--empty':
-        camp_empty_db($CC_DBC);
-        camp_remove_files($CC_CONFIG['storageDir']);
+        airtime_empty_db($CC_DBC);
+        airtime_remove_files($CC_CONFIG['storageDir']);
         break;
     case '-c':
     case '--clean':
-        camp_clean_files($CC_CONFIG['storageDir']);
+        airtime_clean_files($CC_CONFIG['storageDir']);
         break;
     default:
         printUsage();

@@ -70,8 +70,7 @@ function directorySetup($CC_CONFIG){
 //------------------------------------------------------------------------
 echo " *** Directory Setup ***\n";
     foreach (array('baseFilesDir', 'storageDir') as $d) {
-        $test = file_exists($CC_CONFIG[$d]);
-        if ( $test === FALSE ) {
+        if ( !file_exists($CC_CONFIG[$d]) ) {
             @mkdir($CC_CONFIG[$d], 02775, true);
             if (file_exists($CC_CONFIG[$d])) {
                 $rp = realpath($CC_CONFIG[$d]);
@@ -86,26 +85,21 @@ echo " *** Directory Setup ***\n";
         } else {
             $rp = realpath($CC_CONFIG[$d]);
             echo "   * WARNING: Directory already exists, but is not writable: $rp\n";
-            //exit(1);
         }
         $CC_CONFIG[$d] = $rp;
     }
 }
 
-
-
 checkIfRoot();
 updateINIKeyValues('../build/build.properties', 'project.home', realpath(__dir__.'/../'));
 
 echo "******************************** Install Begin *********************************\n";
-
 echo " *** Database Installation ***\n";
-
 
 // Create the database user
 $command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
   ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
-//echo $command."\n";
+  
 @exec($command, $output, $results);
 if ($results == 0) {
   echo "   * User {$CC_CONFIG['dsn']['username']} created.\n";
@@ -114,7 +108,6 @@ if ($results == 0) {
 }
 
 $command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} --owner {$CC_CONFIG['dsn']['username']} 2> /dev/null";
-//echo $command."\n";
 @exec($command, $output, $results);
 if ($results == 0) {
   echo "   * Database '{$CC_CONFIG['dsn']['database']}' created.\n";
@@ -123,14 +116,14 @@ if ($results == 0) {
 }
 
 // Connect to DB
-campcaster_db_connect(true);
+airtime_db_connect(true);
 
 // Install postgres scripting language
 $langIsInstalled = $CC_DBC->GetOne('SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'');
 if ($langIsInstalled == '0') {
   echo " * Installing Postgres scripting language\n";
   $sql = "CREATE LANGUAGE 'plpgsql'";
-  camp_install_query($sql, false);
+  airtime_install_query($sql, false);
 } else {
   echo " * Postgres scripting language already installed\n";
 }

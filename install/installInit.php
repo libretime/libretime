@@ -6,7 +6,7 @@ if (!function_exists('pg_connect')) {
 
 require_once(dirname(__FILE__).'/../library/pear/DB.php');
 
-function camp_db_table_exists($p_name)
+function airtime_db_table_exists($p_name)
 {
     global $CC_DBC;
     $sql = "SELECT * FROM ".$p_name;
@@ -17,18 +17,7 @@ function camp_db_table_exists($p_name)
     return true;
 }
 
-function camp_db_sequence_exists($p_name)
-{
-    global $CC_DBC;
-    $sql = "SELECT 1 FROM pg_class where relname = '$p_name'";
-    $result = $CC_DBC->GetOne($sql);
-    if (!PEAR::isError($result) && $result == "1") {
-        return true;
-    }
-    return false;
-}
-
-function camp_install_query($sql, $verbose = true)
+function airtime_install_query($sql, $verbose = true)
 {
     global $CC_DBC;
     $result = $CC_DBC->query($sql);
@@ -43,7 +32,7 @@ function camp_install_query($sql, $verbose = true)
     }
 }
 
-function campcaster_db_connect($p_exitOnError = true) {
+function airtime_db_connect($p_exitOnError = true) {
     global $CC_DBC, $CC_CONFIG;
     $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
     if (PEAR::isError($CC_DBC)) {
