@@ -10,21 +10,20 @@ $arr = array_diff_assoc($_SERVER, $_ENV);
 if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     header("HTTP/1.1 400");
     header("Content-type: text/plain; charset=UTF-8");
-    echo "400 Not executable\r\n";
+    echo "400 Not executable".PHP_EOL;
     exit;
 }
 
-// Need to check that we are superuser before running this.
-if(exec("whoami") != "root"){
-  echo "Must be root user.\n";
-  exit(1);
-}
-
-
-echo "******************************* Uninstall Begin ********************************\n";
-
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/installInit.php');
+
+// Need to check that we are superuser before running this.
+checkIfRoot();
+
+
+echo "******************************* Uninstall Begin ********************************".PHP_EOL;
+
+
 
 function airtime_uninstall_delete_files($p_path)
 {
@@ -38,7 +37,7 @@ function airtime_uninstall_delete_files($p_path)
 // before this function, even if you called $CC_DBC->disconnect(), there will
 // still be a connection to the database and you wont be able to delete it.
 //------------------------------------------------------------------------
-echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...\n";
+echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...".PHP_EOL;
 $command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']} 2> /dev/null";
 @exec($command, $output, $dbDeleteFailed);
 
@@ -47,7 +46,7 @@ $command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']} 2> /dev/null
 // We do this if dropping the database fails above.
 //------------------------------------------------------------------------
 if ($dbDeleteFailed) {
-  echo " * Couldn't delete the database, so deleting all the DB tables...\n";
+  echo " * Couldn't delete the database, so deleting all the DB tables...".PHP_EOL;
   airtime_db_connect(true);
   if (!PEAR::isError($CC_DBC)) {
       if (airtime_db_table_exists($CC_CONFIG['prefTable'])) {
@@ -56,9 +55,9 @@ if ($dbDeleteFailed) {
           airtime_install_query($sql, false);
 
           $CC_DBC->dropSequence($CC_CONFIG['prefTable']."_id");
-          echo "done.\n";
+          echo "done.".PHP_EOL;
       } else {
-          echo "   * Skipping: database table ".$CC_CONFIG['prefTable']."\n";
+          echo "   * Skipping: database table $CC_CONFIG[prefTable]".PHP_EOL;
       }
   }
 
@@ -68,9 +67,9 @@ if ($dbDeleteFailed) {
       airtime_install_query($sql, false);
 
       $CC_DBC->dropSequence($CC_CONFIG['transTable']."_id");
-      echo "done.\n";
+      echo "done.".PHP_EOL;
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['transTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[transTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['filesTable'])) {
@@ -80,7 +79,7 @@ if ($dbDeleteFailed) {
       $CC_DBC->dropSequence($CC_CONFIG['filesTable']."_id");
 
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['filesTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[filesTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['playListTable'])) {
@@ -90,7 +89,7 @@ if ($dbDeleteFailed) {
       $CC_DBC->dropSequence($CC_CONFIG['playListTable']."_id");
 
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['playListTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[playListTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['playListContentsTable'])) {
@@ -100,7 +99,7 @@ if ($dbDeleteFailed) {
       $CC_DBC->dropSequence($CC_CONFIG['playListContentsTable']."_id");
 
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['playListContentsTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[playListContentsTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['accessTable'])) {
@@ -108,7 +107,7 @@ if ($dbDeleteFailed) {
       $sql = "DROP TABLE ".$CC_CONFIG['accessTable'];
       airtime_install_query($sql);
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['accessTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[accessTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['permTable'])) {
@@ -117,9 +116,9 @@ if ($dbDeleteFailed) {
       airtime_install_query($sql, false);
 
       $CC_DBC->dropSequence($CC_CONFIG['permTable']."_id");
-      echo "done.\n";
+      echo "done.".PHP_EOL;
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['permTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[permTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['sessTable'])) {
@@ -127,7 +126,7 @@ if ($dbDeleteFailed) {
       $sql = "DROP TABLE ".$CC_CONFIG['sessTable'];
       airtime_install_query($sql);
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['sessTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[sessTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['subjTable'])) {
@@ -137,9 +136,9 @@ if ($dbDeleteFailed) {
       $sql = "DROP TABLE ".$CC_CONFIG['subjTable']." CASCADE";
       airtime_install_query($sql, false);
 
-      echo "done.\n";
+      echo "done.".PHP_EOL;
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['subjTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[subjTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['smembTable'])) {
@@ -148,68 +147,53 @@ if ($dbDeleteFailed) {
       airtime_install_query($sql, false);
 
       $CC_DBC->dropSequence($CC_CONFIG['smembTable']."_id");
-      echo "done.\n";
+      echo "done.".PHP_EOL;
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['smembTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[smembTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['scheduleTable'])) {
       echo "   * Removing database table ".$CC_CONFIG['scheduleTable']."...";
       airtime_install_query("DROP TABLE ".$CC_CONFIG['scheduleTable']);
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['scheduleTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[scheduleTable]".PHP_EOL;
   }
 
   if (airtime_db_table_exists($CC_CONFIG['backupTable'])) {
       echo "   * Removing database table ".$CC_CONFIG['backupTable']."...";
       airtime_install_query("DROP TABLE ".$CC_CONFIG['backupTable']);
   } else {
-      echo "   * Skipping: database table ".$CC_CONFIG['backupTable']."\n";
+      echo "   * Skipping: database table $CC_CONFIG[backupTable]".PHP_EOL;
   }
 }
 
-
-//------------------------------------------------------------------------
-// Uninstall Cron job
-//------------------------------------------------------------------------
+//Delete Database
+//system("dropdb -h localhost -U airtime -W airtime");
+//select * from pg_stat_activity where datname='airtime';
 /*
-$old_regex = '/transportCron\.php/';
-echo " * Uninstalling cron job...";
-
-$cron = new Cron();
-$access = $cron->openCrontab('write');
-if ($access != 'write') {
-    do {
-       $r = $cron->forceWriteable();
-    } while ($r);
+$rows = airtime_get_query("select procpid from pg_stat_activity where datname='airtime'");
+$rowsCount = count($rows);
+for ($i=0; $i<$rowsCount; $i++){
+    $command = "kill -2 {$rows[$i]['procpid']}";
+    echo $command.PHP_EOL;
+    system($command);
 }
-foreach ($cron->ct->getByType(CRON_CMD) as $id => $line) {
-    if (preg_match($old_regex, $line['command'])) {
-        //echo "    removing cron entry\n";
-        $cron->ct->delEntry($id);
-    }
-}
-$cron->closeCrontab();
-echo "done.\n";
+echo "still here!";
+system("dropdb -h localhost -U airtime -W airtime");
+exit;
 */
 
 
 //------------------------------------------------------------------------
-// Disconnect from the database
-//------------------------------------------------------------------------
-//echo " * Disconnecting from database...\n";
-//$CC_DBC->disconnect();
-
-//------------------------------------------------------------------------
 // Delete the user
 //------------------------------------------------------------------------
-echo " * Deleting database user '{$CC_CONFIG['dsn']['username']}'...\n";
+echo " * Deleting database user '{$CC_CONFIG['dsn']['username']}'...".PHP_EOL;
 $command = "sudo -u postgres psql postgres --command \"DROP USER {$CC_CONFIG['dsn']['username']}\" 2> /dev/null";
 @exec($command, $output, $results);
 if ($results == 0) {
-  echo "   * User '{$CC_CONFIG['dsn']['username']}' deleted.\n";
+  echo "   * User '{$CC_CONFIG['dsn']['username']}' deleted.".PHP_EOL;
 } else {
-  echo "   * Nothing to delete..\n";
+  echo "   * Nothing to delete..".PHP_EOL;
 }
 
 
@@ -221,5 +205,5 @@ airtime_uninstall_delete_files($CC_CONFIG['storageDir']);
 
 $command = "python ".__DIR__."/../pypo/install/pypo-uninstall.py";
 system($command);
-echo "****************************** Uninstall Complete ******************************\n";
+echo "****************************** Uninstall Complete ******************************".PHP_EOL;
 
