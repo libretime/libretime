@@ -183,3 +183,8 @@ function createAirtimeDatabaseTables(){
     $command = __DIR__."/../library/propel/generator/bin/propel-gen ../build/ insert-sql 2>propel-error.log";
     @exec($command, $output, $results);
 }
+
+function doctrineMigrateTables($dir){
+    $command = "php $dir/../library/doctrine/migrations/doctrine-migrations.phar --configuration=$dir/DoctrineMigrations/migrations.xml --db-configuration=$dir/../library/doctrine/migrations/migrations-db.php --no-interaction migrations:migrate";
+    system($command);
+}
