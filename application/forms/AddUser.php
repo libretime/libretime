@@ -81,7 +81,7 @@ class Application_Form_AddUser extends Zend_Form
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setAttrib('class', 'ui-button ui-state-default right-floated');
         $submit->setIgnore(true);
-        $submit->setLabel('submit');
+        $submit->setLabel('Submit');
         $this->addElement($submit);
     }
     
