@@ -153,6 +153,15 @@ class ScheduleController extends Zend_Controller_Action
     }
     $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 'callback' => 'window["buildContentDialog"]'), 
 							'title' => 'Show Content');
+                            
+        if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
+                strtotime($today_timestamp) < strtotime($show->getShowEnd())) {
+            $menu[] = array('action' => array('type' => 'fn',
+                                              //'url' => '/Schedule/cancel-current-show'.$params,
+                                              'callback' => "window['confirmCancelShow']($id)"), 
+                            'title' => 'Cancel Current Show');            
+        }
+                            
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
             if ($user->isAdmin()) {
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
@@ -391,6 +400,19 @@ class ScheduleController extends Zend_Controller_Action
 
             $show->cancelShow($showInstance->getShowStart());
         }   
+    }
+
+    public function cancelCurrentShowAction()
+    {
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
+		
+        if($user->isAdmin()) {
+            $showInstanceId = $this->_getParam('id');
+            $show = new ShowInstance($showInstanceId);
+            $show->clearShow();
+            $show->deleteShow();
+        }
     }
 }
 

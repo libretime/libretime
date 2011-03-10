@@ -155,6 +155,16 @@ function makeScheduleDialog(dialog, json) {
 	setScheduleDialogEvents(dialog);
 }
 
+function confirmCancelShow(show_instance_id){
+    if(confirm('Erase current show and stop playback?')){
+        var url = "/Schedule/cancel-current-show/id/"+show_instance_id;
+        $.ajax({
+          url: url,
+          success: function(data){scheduleRefetchEvents();}
+        });
+    }
+}
+
 function buildContentDialog(json){
 	var dialog = $(json.dialog);
 
