@@ -4,8 +4,9 @@
 set("log.file.path", log_file)
 set("log.stdout", true)
 set("server.telnet", true)
+set("server.telnet.port", 1234)
 
-queue = request.queue(id="queue", conservative=true)
+queue = request.queue(id="queue", length=0.5)
 queue = audio_to_stereo(queue)
 
 pypo_data = ref '0'
@@ -31,22 +32,22 @@ s = fallback(track_sensitive=false, [queue, default])
 s = on_metadata(notify, s)
 s = crossfade(s)
 # Attach a skip command to the source s:
-add_skip_command(s)
 
-web_stream_source = input.http(id="web_stream", autostart = false, buffer=0.5, max=20., "")
+#web_stream_source = input.http(id="web_stream", autostart = false, buffer=0.5, max=20., "")
 
 #once the stream is started, give it a sink so that liquidsoap doesn't
 #create buffer overflow warnings in the log file.
-output.dummy(fallible=true, web_stream_source)
+#output.dummy(fallible=true, web_stream_source)
 
-s = switch(track_sensitive = false,
-    transitions=[to_live,to_live],
-    [
-      ({ !web_stream_enabled }, web_stream_source),
-      ({ true }, s)
-    ]
-)
+#s = switch(track_sensitive = false,
+#    transitions=[to_live,to_live],
+#    [
+#      ({ !web_stream_enabled }, web_stream_source),
+#      ({ true }, s)
+#    ]
+#)
 
+add_skip_command(s)
 s = map_metadata(append_title, s)
 
 

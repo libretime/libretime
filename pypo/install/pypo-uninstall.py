@@ -15,7 +15,7 @@ def remove_path(path):
     os.system("rm -rf " + path)
 
 def remove_user(username):
-    os.system("killall -u " + username)
+    os.system("killall -u %s 2>&1 1>/dev/null" % username)
     
     #allow all process to be completely closed before we attempt to delete user
     print "Waiting for processes to close..."

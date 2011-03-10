@@ -115,7 +115,6 @@ class AirTimeApiClient(ApiClientInterface):
         url = url.replace("%%api_key%%", self.config["api_key"])
 
         try:
-            logger.debug("Trying to contact %s", url)
             response = urllib.urlopen(url)
             data = response.read()
             logger.debug("Data: %s", data)
@@ -278,7 +277,7 @@ class AirTimeApiClient(ApiClientInterface):
             logger.info("API-Message %s", response['message'])
         
         except Exception, e:
-            logger.critical("Unable to connect - %s", e)
+            logger.error("Unable to connect - %s", e)
         
         return response
     
@@ -304,7 +303,7 @@ class AirTimeApiClient(ApiClientInterface):
             logger.info("API-Message %s", response['message'])
         
         except Exception, e:
-            logger.critical("Exception: %s", e)
+            logger.error("Exception: %s", e)
         
         return response
     
@@ -475,7 +474,7 @@ class ObpApiClient():
         except Exception, e:
             print e
             api_status = False
-            logger.critical("Unable to connect to the OBP API - %s", e)
+            logger.error("Unable to connect to the OBP API - %s", e)
     
         return response
     
@@ -510,7 +509,7 @@ class ObpApiClient():
         except Exception, e:
             print e
             api_status = False
-            logger.critical("Unable to connect to the OBP API - %s", e)
+            logger.error("Unable to connect to the OBP API - %s", e)
     
         return response
     
@@ -530,7 +529,7 @@ class ObpApiClient():
         except Exception, e:
             print e
             api_status = False
-            logger.critical("Unable to handle the OBP API request - %s", e)
+            logger.error("Unable to handle the OBP API request - %s", e)
         
         return response
 
