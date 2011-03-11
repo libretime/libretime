@@ -50,6 +50,14 @@ function notifyShowStart(show){
 	updateDataTable();
 }
 
+function statusColumn(obj) {
+    var sReturn = obj.aData[ obj.iDataColumn ];
+    if ( sReturn == "x" ) {
+        sReturn = '<img class="info-icon" src="/css/images/icon_overlap.png" width="51" height="15" alt="" />';
+    }
+    return sReturn;
+}
+
 var columns = [{"sTitle": "type", "bVisible":false},
     {"sTitle":"Date"},
     {"sTitle":"Start"},
@@ -60,6 +68,7 @@ var columns = [{"sTitle": "type", "bVisible":false},
     {"sTitle":"Album"},
     {"sTitle":"Playlist"},
     {"sTitle":"Show"},
+    {"sTitle":"Status", "fnRender":statusColumn},
     {"sTitle":"instance_id", "bVisible":false}];
 
 function getDateString(){

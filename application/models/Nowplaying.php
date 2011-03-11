@@ -82,10 +82,11 @@ class Application_Model_Nowplaying
                     $type = "n";
                 }
 
+                $over = "";
                 if (strtotime($item['item_ends']) > strtotime($item['show_ends']))
-                    $type = "over";
+                    $over = "x";
 
-                array_push($data, array($type, $item["item_starts"], $item["item_starts"], $item["item_ends"], $item["clip_length"], $item["track_title"], $item["artist_name"], $item["album_title"], $item["playlist_name"], $item["show_name"], $item["instance_id"]));
+                array_push($data, array($type, $item["item_starts"], $item["item_starts"], $item["item_ends"], $item["clip_length"], $item["track_title"], $item["artist_name"], $item["album_title"], $item["playlist_name"], $item["show_name"], $over, $item["instance_id"]));
             }
         }
 

@@ -91,14 +91,15 @@ class PypoFetch:
 
                 tn = telnetlib.Telnet(LS_HOST, LS_PORT)
 
-                #encode in latin-1 due to this bug: http://bugs.python.org/issue1772794
+                #encode in latin-1 due to telnet protocol not supporting utf-8
                 tn.write(('vars.stream_metadata_type %s\n' % stream_metadata['format']).encode('latin-1'))
                 tn.write(('vars.station_name %s\n' % stream_metadata['station_name']).encode('latin-1'))
+
                 tn.write('exit\n')
                 logger.debug(tn.read_all())
 
             except Exception, e:
-                logger.critical("Exception %s", e)
+                logger.error("Exception %s", e)
                 status = 0
 
         return status

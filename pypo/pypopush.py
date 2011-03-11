@@ -36,8 +36,8 @@ class PypoPush:
         gives the number of seconds of the window of opportunity for the scheduler
         to catch when a playlist is to be played.
         """
-        self.push_ahead = 15
-        self.push_ahead2 = 10
+        self.push_ahead = 10
+        self.push_ahead2 = self.push_ahead -5
 
     def set_export_source(self, export_source):
         self.export_source = export_source
@@ -59,23 +59,30 @@ class PypoPush:
 
         tcoming = time.localtime(time.time() + self.push_ahead)
         tcoming2 = time.localtime(time.time() + self.push_ahead2)
-        tnow = time.localtime(time.time())
+        
 
         str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
         str_tcoming2_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming2[0], tcoming2[1], tcoming2[2], tcoming2[3], tcoming2[4], tcoming2[5])
 
+        currently_on_air = False
         if self.schedule == None:
             logger.warn('Unable to loop schedule - maybe write in progress?')
             logger.warn('Will try again in next loop.')
 
         else:
             for pkey in self.schedule:
+                plstart = pkey[0:19]
+                start = self.schedule[pkey]['start']
+                end = self.schedule[pkey]['end']
+          
                 playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
-                if pkey[0:19] == str_tcoming_s or (pkey[0:19] < str_tcoming_s and pkey[0:19] > str_tcoming2_s and not playedFlag):
+                
+                if plstart == str_tcoming_s or (plstart < str_tcoming_s and plstart > str_tcoming2_s and not playedFlag):
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = self.schedule[pkey]
 
                     ptype = playlist['subtype']
+                    currently_on_air = True
 
                     # We have a match, replace the current playlist and
                     # force liquidsoap to refresh.
@@ -95,6 +102,23 @@ class PypoPush:
                         logger.debug("Doing callback to server to update 'played' status.")
                         self.api_client.notify_scheduled_item_start_playing(pkey, self.schedule)
 
+        if self.schedule != None:
+            tnow = time.localtime(time.time())
+            str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
+            for pkey in self.schedule:
+                start = self.schedule[pkey]['start']
+                end = self.schedule[pkey]['end']
+
+                if start <= str_tnow_s and str_tnow_s < end:
+                    currently_on_air = True
+
+        if not currently_on_air:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn.write('source.skip\n'.encode('latin-1'))
+            tn.write('exit\n')
+            tn.read_all()
+            #logger.info('source.skip')
+            #logger.debug(tn.read_all())
 
     def push_liquidsoap(self, pkey, schedule, ptype):
         logger = logging.getLogger()
