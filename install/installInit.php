@@ -188,3 +188,9 @@ function doctrineMigrateTables($dir){
     $command = "php $dir/../library/doctrine/migrations/doctrine-migrations.phar --configuration=$dir/DoctrineMigrations/migrations.xml --db-configuration=$dir/../library/doctrine/migrations/migrations-db.php --no-interaction migrations:migrate";
     system($command);
 }
+
+function airtime_uninstall_delete_files($p_path)
+{
+	$command = "rm -rf $p_path";
+	exec($command);
+}

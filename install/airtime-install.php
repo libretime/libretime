@@ -41,6 +41,7 @@ installPostgresScriptingLanguage();
 
 echo "* Creating Database Tables".PHP_EOL;
 createAirtimeDatabaseTables();
+doctrineMigrateTables(__DIR__);
 
 echo "* Storage Directory Setup".PHP_EOL;
 storageDirectorySetup($CC_CONFIG);
