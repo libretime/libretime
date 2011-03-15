@@ -2945,7 +2945,8 @@ function AgendaEventRenderer() {
 				"<span class='fc-event-time'>" + htmlEscape(formatDates(event.start, event.end, opt('timeFormat'))) + "</span>" +
 				"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>" +
 			"</a>" +
-			((event.editable || event.editable === undefined && opt('editable')) && !opt('disableResizing') && $.fn.resizable ?
+			((event.editable || event.editable === undefined && opt('editable')) && 
+            (!event.disableResizing || event.disableResizing === undefined && !opt('disableResizing')) && $.fn.resizable ?
 				"<div class='ui-resizable-handle ui-resizable-s'>=</div>"
 				: '') +
 		"</div>";
@@ -3178,7 +3179,7 @@ function AgendaEventRenderer() {
 	
 	
 	function resizableSlotEvent(event, eventElement, timeElement) {
-		if (!opt('disableResizing') && eventElement.resizable) {
+		if ((!event.disableResizing || event.disableResizing === undefined && !opt('disableResizing')) && eventElement.resizable) {
 			var slotDelta, prevSlotDelta;
 			var slotHeight = getSlotHeight();
 			eventElement.resizable({
@@ -3641,7 +3642,8 @@ function DayEventRenderer() {
 						:'') +
 						"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>" +
 					"</a>" +
-					(seg.isEnd && (event.editable || event.editable === undefined && opt('editable')) && !opt('disableResizing') ?
+					(seg.isEnd && (event.editable || event.editable === undefined && opt('editable')) && 
+                        (!event.disableResizing || event.disableResizing === undefined && !opt('disableResizing')) ?
 						"<div class='ui-resizable-handle ui-resizable-" + (rtl ? 'w' : 'e') + "'></div>"
 						: '') +
 				"</div>";
@@ -3831,7 +3833,7 @@ function DayEventRenderer() {
 	
 	
 	function resizableDayEvent(event, element, seg) {
-		if (!opt('disableResizing') && seg.isEnd) {
+		if ((!event.disableResizing || event.disableResizing === undefined && !opt('disableResizing')) && seg.isEnd) {
 			var rtl = opt('isRTL');
 			var direction = rtl ? 'w' : 'e';
 			var handle = element.find('div.ui-resizable-' + direction);

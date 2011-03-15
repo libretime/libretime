@@ -34,7 +34,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.js','text/javascript');
         $this->view->headScript()->appendFile('/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
