@@ -185,8 +185,8 @@ CREATE TABLE "cc_show_instances"
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
 	"show_id" INTEGER  NOT NULL,
-	"record" INT2,
-	"rebroadcast" INT2,
+	"record" INT2 default 0,
+	"rebroadcast" INT2 default 0,
 	"instance_id" INTEGER,
 	"file_id" INTEGER,
 	PRIMARY KEY ("id")

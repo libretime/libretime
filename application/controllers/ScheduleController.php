@@ -55,6 +55,7 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
         $formRecord = new Application_Form_AddShowRR();
+        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
         $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
 		$formWhat->removeDecorator('DtDdWrapper');
@@ -63,6 +64,7 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
         $formRecord->removeDecorator('DtDdWrapper');
+        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
         $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $this->view->what = $formWhat;
@@ -71,6 +73,7 @@ class ScheduleController extends Zend_Controller_Action
 	    $this->view->who = $formWho;
 	    $this->view->style = $formStyle;
         $this->view->rr = $formRecord;
+        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
         $this->view->rebroadcast = $formRebroadcast;
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -149,28 +152,38 @@ class ScheduleController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-
         $show = new ShowInstance($id);
 
 		$params = '/format/json/id/#id#';
 
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
-            if ($user->isHost($show->getShowId()) || $user->isAdmin()) {	      
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add Content');
+
+            if (($user->isHost($show->getShowId()) || $user->isAdmin()) && !$show->isRecorded() && !$show->isRebroadcast()) {
+	      
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 
+                    'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add Content');
             }
-    }
-    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 'callback' => 'window["buildContentDialog"]'), 
-							'title' => 'Show Content');
+        }
+
+        $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 
+                'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
+
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
+
             if ($user->isAdmin()) {
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
+
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 
+                        'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params, 
+                        'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
             }
+
             if ($user->isHost($show->getShowId()) || $user->isAdmin()) {
-			          $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
+
+			          $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 
+                            'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
             }
 		}
-
 		
 		//returns format jjmenu is looking for.
 		die(json_encode($menu));

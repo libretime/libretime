@@ -173,13 +173,35 @@ class Show {
 		    }
         }
 
-        if($data['add_show_rebroadcast']) {
+        //adding rows to cc_show_rebroadcast
+        if($repeat_type != -1) {
 
-            $showRebroad = new CcShowRebroadcast();
-            $showRebroad->setDbDayOffset($data['add_show_rebroadcast_date_1']);
-            $showRebroad->setDbStartTime($data['add_show_start_time_1']);
-            $showRebroad->setDbShowId($showId);
-            $showRebroad->save();
+            for($i=1; $i<=1; $i++) {
+
+                $showRebroad = new CcShowRebroadcast();
+                $showRebroad->setDbDayOffset($data['add_show_rebroadcast_date_'.$i]);
+                $showRebroad->setDbStartTime($data['add_show_start_time_'.$i]);
+                $showRebroad->setDbShowId($showId);
+                $showRebroad->save();
+            }
+        }
+        else {
+            
+            for($i=1; $i<=1; $i++) {
+
+                if($data['add_show_rebroadcast_absolute_date_'.$i]) {
+
+                    $sql = "SELECT date '{$data['add_show_rebroadcast_absolute_date_'.$i]}' - date '{$data['add_show_start_date']}' ";
+				    $r = $con->query($sql);
+				    $offset_days = $r->fetchColumn(0); 
+
+                    $showRebroad = new CcShowRebroadcast();
+                    $showRebroad->setDbDayOffset($offset_days." days");
+                    $showRebroad->setDbStartTime($data['add_show_rebroadcast_absolute_time_'.$i]);
+                    $showRebroad->setDbShowId($showId);
+                    $showRebroad->save();
+                }
+            }
         }
 		
         if(is_array($data['add_show_hosts'])) {
@@ -263,6 +285,31 @@ class Show {
             $newShow->setDbEnds($end);
             $newShow->setDbRecord($record);
 		    $newShow->save();
+
+            $show_instance_id = $newShow->getDbId();
+
+            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
+		    $rebroadcasts = $CC_DBC->GetAll($sql);
+
+            foreach($rebroadcasts as $rebroadcast) {
+
+                $timeinfo = explode(" ", $start);
+                
+                $sql = "SELECT timestamp '{$timeinfo[0]}' + interval '{$rebroadcast["day_offset"]}' + interval '{$rebroadcast["start_time"]}'";
+		        $rebroadcast_start_time = $CC_DBC->GetOne($sql);
+               
+                $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
+		        $rebroadcast_end_time = $CC_DBC->GetOne($sql);
+
+                $newRebroadcastInstance = new CcShowInstances();
+                $newRebroadcastInstance->setDbShowId($show_id);
+                $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
+                $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
+                $newRebroadcastInstance->setDbRecord(0);
+                $newRebroadcastInstance->setDbRebroadcast(1);
+                $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
+		        $newRebroadcastInstance->save();
+            }
         }
     }
 
@@ -426,7 +473,9 @@ class Show {
 			"description" => $show["description"],
 			"color" => $show["color"],
 			"backgroundColor" => $show["background_color"],
-            "showId" => $show["show_id"]
+            "showId" => $show["show_id"],
+            "record" => intval($show["record"]),
+            "rebroadcast" => intval($show["rebroadcast"])
 		);
 
 		foreach($options as $key=>$value) {
@@ -456,6 +505,16 @@ class ShowInstance {
 
     public function getShowInstanceId() {
         return $this->_instanceId;
+    }
+
+    public function isRebroadcast() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbRebroadcast();
+    }
+
+    public function isRecorded() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbRecord();
     }
 
     public function getName() {
