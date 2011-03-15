@@ -9,13 +9,13 @@ class Version20110308003959 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $table = $schema->createTable('users');
-        $table->addColumn('username', 'string');
-        $table->addColumn('password', 'string');
+        $table = $schema->getTable("cc_show_instances");
+        $table->addColumn("record", "boolean", array( 'notnull' => 0, 'default' => 0));
     }
 
     public function down(Schema $schema)
     {
-        $schema->dropTable('users');
+        $table = $schema->getTable("cc_show_instances");
+        $table->dropColumn("record");
     }
 }

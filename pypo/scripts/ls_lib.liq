@@ -7,9 +7,9 @@ end
 def append_title(m) =  
   if !stream_metadata_type == 1 then
     [("artist","#{!show_name} - #{m['title']}")]
+  #elsif !stream_metadata_type == 2 then
+  #  [("artist", ""), ("title", !show_name)]
   elsif !stream_metadata_type == 2 then
-    [("artist", ""), ("title", !show_name)]
-  elsif !stream_metadata_type == 3 then
     [("artist",!station_name), ("title", !show_name)]
   else
     []
@@ -42,8 +42,19 @@ end
 def add_skip_command(s)
  # A command to skip
   def skip(_)
-    source.skip(s)
-    "Done!"
+    # get playing (active) queue and flush it
+    l = list.hd(server.execute("queue.secondary_queue"))
+    l = string.split(separator=" ",l)
+    list.iter(fun (rid) -> ignore(server.execute("queue.ignore #{rid}")), l)
+
+    l = list.hd(server.execute("queue.primary_queue"))
+    l = string.split(separator=" ", l)
+    if list.length(l) > 0 then
+      source.skip(s)
+      "Skipped"
+    else
+      "Not skipped"
+    end
   end
  # Register the command:
  server.register(namespace="source",

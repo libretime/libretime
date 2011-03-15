@@ -16,6 +16,16 @@ class ApiController extends Zend_Controller_Action
         // action body
     }
 
+	/**
+	 * Returns Airtime version. i.e "1.7.0 alpha"
+	 *
+	 * First checks to ensure the correct API key was
+	 * supplied, then returns AIRTIME_VERSION as defined
+	 * in application/conf.php
+	 *
+	 * @return void
+	 * 
+	 */
     public function versionAction()
     {
         global $CC_CONFIG;
@@ -35,7 +45,12 @@ class ApiController extends Zend_Controller_Action
         echo $jsonStr;
     }
 
-
+	/**
+	 * Allows remote client to download requested media file.
+	 *
+	 * @return void
+	 *      The given value increased by the increment amount.
+	 */
     public function getMediaAction()
     {
         global $CC_CONFIG;
@@ -67,23 +82,9 @@ class ApiController extends Zend_Controller_Action
 
             // !! binary mode !!
             $fp = fopen($filepath, 'rb');
-        	$mtype = '';
 
-            /*
-        	// magic_mime module installed?
-        	if (function_exists('mime_content_type')) {
-        		$mtype = mime_content_type($file_path);
-        	}
-        	// fileinfo module installed?
-        	else if (function_exists('finfo_file')) {
-        		$finfo = finfo_open(FILEINFO_MIME); // return mime type
-        		$mtype = finfo_file($finfo, $file_path);
-        		finfo_close($finfo);
-        	}
-
-            //header("Content-Type: $mtype");
-            */
-
+        	// possibly use fileinfo module here in the future.
+        	// http://www.php.net/manual/en/book.fileinfo.php
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
             if ($ext == "ogg")
                 header("Content-Type: audio/ogg");
@@ -92,17 +93,12 @@ class ApiController extends Zend_Controller_Action
 
 
             header("Content-Length: " . filesize($filepath));
-            //header('Content-Disposition: attachment; filename="'.$media->getRealMetadataFileName().'"');
             fpassthru($fp);
+            return;
           }
-          else {
-              header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-              exit;
-          }
-        } else {
-          header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-          exit;
-        }
+      }
+	  header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+	  exit;
     }
 
     public function scheduleAction()

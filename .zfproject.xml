@@ -71,6 +71,7 @@
           <actionMethod actionName="editShow"/>
           <actionMethod actionName="addShow"/>
           <actionMethod actionName="cancelShow"/>
+          <actionMethod actionName="cancelCurrentShow"/>
         </controllerFile>
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
@@ -337,6 +338,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Recorder">
             <viewScriptFile forActionName="getShowSchedule"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Schedule">
+            <viewScriptFile forActionName="cancelCurrentShow"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

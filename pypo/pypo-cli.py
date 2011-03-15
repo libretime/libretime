@@ -67,8 +67,7 @@ logging.config.fileConfig("logging.cfg")
 try:
     config = ConfigObj('config.cfg')
     POLL_INTERVAL = float(config['poll_interval'])
-    PUSH_INTERVAL = 0.5
-    #PUSH_INTERVAL = float(config['push_interval'])
+    PUSH_INTERVAL = float(config['push_interval'])
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
 except Exception, e:

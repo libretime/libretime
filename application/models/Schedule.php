@@ -733,7 +733,8 @@ class Schedule {
         }
 
         $result = array();
-        $result['status'] = array('range' => array('start' => $range_start, 'end' => $range_end), 'version' => "1.1");
+        $result['status'] = array('range' => array('start' => $range_start, 'end' => $range_end),
+                                  'version' => "1.1");
         $result['playlists'] = $playlists;
         $result['check'] = 1;
 

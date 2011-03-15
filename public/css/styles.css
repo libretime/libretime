@@ -442,7 +442,7 @@ dl.inline-list dd {
 .datatable tr.odd.selected td {
     background-color: #c5deeb;
 }
-.datatable tr:hover td {
+.datatable tr.odd:hover td, .datatable tr.even:hover td  {
     background-color: #95d5f7 !important;
 }
 
@@ -825,6 +825,7 @@ div.ui-datepicker {
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e,
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-s {
 	float:left;
+
 	margin-right: 8px;
 }
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-close {
@@ -1299,8 +1300,8 @@ ul.errors li {
 }
 
 /*---//////////////////// NOW PLAYING COLORS ////////////////////---*/
-.playing-song {
-	background-color:#ff753c;
+.playing-song, .datatable tr.playing-song:hover td {
+	background-color:#ff753c !important;
 }
 .playing-list {
 	background-color:#b0dcf2;
@@ -1308,9 +1309,15 @@ ul.errors li {
 .odd.playing-list {
 	background-color:#bfe5f8;
 }
-.gap {
-	background-color:#da5454;
+.gap, .datatable tr.gap:hover td {
+	background-color:#da5454 !important;
 }
+.group, tr td.group {
+	background-color:#0aa2be;
+	color:#FFF;
+}
+
+
 /*---//////////////////// END NOW PLAYING COLORS ////////////////////---*/
 .icon-link, .ui-widget-content a.icon-link {
     color: #646464;
@@ -1462,3 +1469,14 @@ ul.errors li {
 	width:23px;
 	height:23px;
 }
+
+.datatable td .info-icon {
+	margin:-4px	3px -3px 0;
+	float:right;
+}
+
+.time-flow {
+ float:right;
+ margin-right:4px;
+}
+

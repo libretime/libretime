@@ -38,7 +38,6 @@ class Application_Form_Preferences extends Zend_Form
         $stream_format->setLabel('Stream Label:');
         $stream_format->setMultiOptions(array("Artist - Title",
                                             "Show - Artist - Title",
-                                            "Show",
                                             "Station name - Show name"));
         $stream_format->setValue(Application_Model_Preference::GetStreamLabelFormat());
         $this->addElement($stream_format);

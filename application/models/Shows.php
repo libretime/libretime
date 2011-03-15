@@ -795,7 +795,7 @@ class Show_DAL{
 		$date = $timestamp[0];
 		$time = $timestamp[1];
         
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id"
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts <= TIMESTAMP '$timeNow'"
@@ -846,6 +846,7 @@ class Show_DAL{
 		." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
         ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
         ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
+        //checking for st.starts IS NULL so that the query also returns shows that do not have any items scheduled.
         ." AND (st.starts < si.ends OR st.starts IS NULL)"
         ." ORDER BY st.starts";
 
