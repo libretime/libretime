@@ -142,6 +142,9 @@ select {
 	color:#969696;
 	padding-right:12px;
 }
+.text-row.rebroadcast, #master-panel .text-row.rebroadcast {
+	color:#969696;
+}
 .now-playing-info {
 	height:25px;
 	background:#3a3a3a url(images/playinfo_bg.png) repeat-x 0 0;
@@ -156,10 +159,6 @@ select {
 	text-indent:5px;	
 	overflow:hidden;
 	margin-bottom:3px;
-}
-.now-playing-info .time-flow {
-	float:right;
-	margin-right:6px;
 }
 .time-elapsed {
 	color:#9b9b9b;
@@ -1198,10 +1197,12 @@ button, input {
 	height:25px;
 	margin-right:6px
 }
-.button-bar-top .input_text.hasDatepicker {
+.button-bar-top .input_text.hasDatepicker, .input_text.hasDatepicker {
 	background:url(images/input_with_calendar_bg.png) no-repeat right 0;
 }
-
+.input_text.hasTimepicker {
+	background:url(images/input_with_time_bg.png) no-repeat right 0;
+}
 ul.errors {
 	display:block;
 	clear:left;
@@ -1412,4 +1413,52 @@ ul.errors li {
 }
 .gray-logo {
 	margin:5px 0 0 20px;
+}
+.formrow-repeat {
+	list-style-type:none;
+	margin:0;
+	padding:0;
+}
+.formrow-repeat li {
+	list-style-type:none;
+	margin:0 0 7px 0;
+	padding:0;
+	height:26px;
+	display:block;
+}
+.formrow-repeat li .ui-button-icon-only {
+	width:1.8em;
+}
+.formrow-repeat li .ui-button-icon-only .ui-button-text, .formrow-repeat li .ui-button-icons-only .ui-button-text {
+	padding: 3px 3px 4px;
+}
+
+.formrow-repeat li .ui-button-icon-only .ui-icon {
+    left: 48%;
+    margin-top: -9px;
+    position: absolute;
+    top: 50%;
+}
+.formrow-repeat li .ui-button .ui-button-text {
+    display: block;
+    line-height: 110%;
+}
+.formrow-repeat li .inline-text {
+    color: #666666;
+	padding: 0 6px 0 0;
+}
+.formrow-repeat li .input_text, .formrow-repeat li .input_select {
+	margin-right:6px;
+}
+.formrow-repeat li .hasDatepicker, .formrow-repeat li .input_select {
+	width:160px;
+}
+.formrow-repeat li .hasTimepicker {
+	width:80px;
+}
+.recording-show {
+	float: right;
+	background:url(images/record_icon.png) no-repeat 0 0;
+	width:23px;
+	height:23px;
 }

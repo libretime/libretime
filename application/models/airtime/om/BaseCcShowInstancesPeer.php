@@ -26,7 +26,7 @@ abstract class BaseCcShowInstancesPeer {
 	const TM_CLASS = 'CcShowInstancesTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 4;
+	const NUM_COLUMNS = 8;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -42,6 +42,18 @@ abstract class BaseCcShowInstancesPeer {
 
 	/** the column name for the SHOW_ID field */
 	const SHOW_ID = 'cc_show_instances.SHOW_ID';
+
+	/** the column name for the RECORD field */
+	const RECORD = 'cc_show_instances.RECORD';
+
+	/** the column name for the REBROADCAST field */
+	const REBROADCAST = 'cc_show_instances.REBROADCAST';
+
+	/** the column name for the INSTANCE_ID field */
+	const INSTANCE_ID = 'cc_show_instances.INSTANCE_ID';
+
+	/** the column name for the FILE_ID field */
+	const FILE_ID = 'cc_show_instances.FILE_ID';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcShowInstances objects.
@@ -59,12 +71,12 @@ abstract class BaseCcShowInstancesPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbStarts', 'DbEnds', 'DbShowId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbStarts', 'dbEnds', 'dbShowId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::STARTS, self::ENDS, self::SHOW_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STARTS', 'ENDS', 'SHOW_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'starts', 'ends', 'show_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbStarts', 'DbEnds', 'DbShowId', 'DbRecord', 'DbRebroadcast', 'DbOriginalShow', 'DbRecordedFile', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbStarts', 'dbEnds', 'dbShowId', 'dbRecord', 'dbRebroadcast', 'dbOriginalShow', 'dbRecordedFile', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::STARTS, self::ENDS, self::SHOW_ID, self::RECORD, self::REBROADCAST, self::INSTANCE_ID, self::FILE_ID, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STARTS', 'ENDS', 'SHOW_ID', 'RECORD', 'REBROADCAST', 'INSTANCE_ID', 'FILE_ID', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'starts', 'ends', 'show_id', 'record', 'rebroadcast', 'instance_id', 'file_id', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	/**
@@ -74,12 +86,12 @@ abstract class BaseCcShowInstancesPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbStarts' => 1, 'DbEnds' => 2, 'DbShowId' => 3, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbStarts' => 1, 'dbEnds' => 2, 'dbShowId' => 3, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::STARTS => 1, self::ENDS => 2, self::SHOW_ID => 3, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STARTS' => 1, 'ENDS' => 2, 'SHOW_ID' => 3, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'starts' => 1, 'ends' => 2, 'show_id' => 3, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbStarts' => 1, 'DbEnds' => 2, 'DbShowId' => 3, 'DbRecord' => 4, 'DbRebroadcast' => 5, 'DbOriginalShow' => 6, 'DbRecordedFile' => 7, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbStarts' => 1, 'dbEnds' => 2, 'dbShowId' => 3, 'dbRecord' => 4, 'dbRebroadcast' => 5, 'dbOriginalShow' => 6, 'dbRecordedFile' => 7, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::STARTS => 1, self::ENDS => 2, self::SHOW_ID => 3, self::RECORD => 4, self::REBROADCAST => 5, self::INSTANCE_ID => 6, self::FILE_ID => 7, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STARTS' => 1, 'ENDS' => 2, 'SHOW_ID' => 3, 'RECORD' => 4, 'REBROADCAST' => 5, 'INSTANCE_ID' => 6, 'FILE_ID' => 7, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'starts' => 1, 'ends' => 2, 'show_id' => 3, 'record' => 4, 'rebroadcast' => 5, 'instance_id' => 6, 'file_id' => 7, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	/**
@@ -155,11 +167,19 @@ abstract class BaseCcShowInstancesPeer {
 			$criteria->addSelectColumn(CcShowInstancesPeer::STARTS);
 			$criteria->addSelectColumn(CcShowInstancesPeer::ENDS);
 			$criteria->addSelectColumn(CcShowInstancesPeer::SHOW_ID);
+			$criteria->addSelectColumn(CcShowInstancesPeer::RECORD);
+			$criteria->addSelectColumn(CcShowInstancesPeer::REBROADCAST);
+			$criteria->addSelectColumn(CcShowInstancesPeer::INSTANCE_ID);
+			$criteria->addSelectColumn(CcShowInstancesPeer::FILE_ID);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.STARTS');
 			$criteria->addSelectColumn($alias . '.ENDS');
 			$criteria->addSelectColumn($alias . '.SHOW_ID');
+			$criteria->addSelectColumn($alias . '.RECORD');
+			$criteria->addSelectColumn($alias . '.REBROADCAST');
+			$criteria->addSelectColumn($alias . '.INSTANCE_ID');
+			$criteria->addSelectColumn($alias . '.FILE_ID');
 		}
 	}
 
@@ -353,6 +373,9 @@ abstract class BaseCcShowInstancesPeer {
 	 */
 	public static function clearRelatedInstancePool()
 	{
+		// Invalidate objects in CcShowInstancesPeer instance pool, 
+		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+		CcShowInstancesPeer::clearInstancePool();
 		// Invalidate objects in CcSchedulePeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcSchedulePeer::clearInstancePool();
@@ -499,6 +522,56 @@ abstract class BaseCcShowInstancesPeer {
 
 
 	/**
+	 * Returns the number of rows matching criteria, joining the related CcFiles table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinCcFiles(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcShowInstancesPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcShowInstancesPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcShowInstancesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
 	 * Selects a collection of CcShowInstances objects pre-filled with their CcShow objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
@@ -565,6 +638,72 @@ abstract class BaseCcShowInstancesPeer {
 
 
 	/**
+	 * Selects a collection of CcShowInstances objects pre-filled with their CcFiles objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcShowInstances objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinCcFiles(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcShowInstancesPeer::addSelectColumns($criteria);
+		$startcol = (CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcFilesPeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(CcShowInstancesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcShowInstancesPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcShowInstancesPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = CcShowInstancesPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcShowInstancesPeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = CcFilesPeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = CcFilesPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcFilesPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					CcFilesPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (CcShowInstances) to $obj2 (CcFiles)
+				$obj2->addCcShowInstances($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
 	 * Returns the number of rows matching criteria, joining all related tables
 	 *
 	 * @param      Criteria $criteria
@@ -602,6 +741,8 @@ abstract class BaseCcShowInstancesPeer {
 
 		$criteria->addJoin(CcShowInstancesPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
 
+		$criteria->addJoin(CcShowInstancesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
 		$stmt = BasePeer::doCount($criteria, $con);
 
 		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -638,7 +779,12 @@ abstract class BaseCcShowInstancesPeer {
 		CcShowPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS);
 
+		CcFilesPeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
+
 		$criteria->addJoin(CcShowInstancesPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcShowInstancesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -674,6 +820,419 @@ abstract class BaseCcShowInstancesPeer {
 				// Add the $obj1 (CcShowInstances) to the collection in $obj2 (CcShow)
 				$obj2->addCcShowInstances($obj1);
 			} // if joined row not null
+
+			// Add objects for joined CcFiles rows
+
+			$key3 = CcFilesPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+			if ($key3 !== null) {
+				$obj3 = CcFilesPeer::getInstanceFromPool($key3);
+				if (!$obj3) {
+
+					$cls = CcFilesPeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CcFilesPeer::addInstanceToPool($obj3, $key3);
+				} // if obj3 loaded
+
+				// Add the $obj1 (CcShowInstances) to the collection in $obj3 (CcFiles)
+				$obj3->addCcShowInstances($obj1);
+			} // if joined row not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcShow table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCcShow(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcShowInstancesPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcShowInstancesPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$criteria->addJoin(CcShowInstancesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcShowInstancesRelatedByDbOriginalShow table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCcShowInstancesRelatedByDbOriginalShow(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcShowInstancesPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcShowInstancesPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$criteria->addJoin(CcShowInstancesPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcShowInstancesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcFiles table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCcFiles(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcShowInstancesPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcShowInstancesPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$criteria->addJoin(CcShowInstancesPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Selects a collection of CcShowInstances objects pre-filled with all related objects except CcShow.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcShowInstances objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAllExceptCcShow(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcShowInstancesPeer::addSelectColumns($criteria);
+		$startcol2 = (CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcFilesPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcShowInstancesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcShowInstancesPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcShowInstancesPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcShowInstancesPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcShowInstancesPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+				// Add objects for joined CcFiles rows
+
+				$key2 = CcFilesPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+				if ($key2 !== null) {
+					$obj2 = CcFilesPeer::getInstanceFromPool($key2);
+					if (!$obj2) {
+	
+						$cls = CcFilesPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcFilesPeer::addInstanceToPool($obj2, $key2);
+				} // if $obj2 already loaded
+
+				// Add the $obj1 (CcShowInstances) to the collection in $obj2 (CcFiles)
+				$obj2->addCcShowInstances($obj1);
+
+			} // if joined row is not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Selects a collection of CcShowInstances objects pre-filled with all related objects except CcShowInstancesRelatedByDbOriginalShow.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcShowInstances objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAllExceptCcShowInstancesRelatedByDbOriginalShow(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcShowInstancesPeer::addSelectColumns($criteria);
+		$startcol2 = (CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcShowPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcFilesPeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcShowInstancesPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcShowInstancesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcShowInstancesPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcShowInstancesPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcShowInstancesPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcShowInstancesPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+				// Add objects for joined CcShow rows
+
+				$key2 = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+				if ($key2 !== null) {
+					$obj2 = CcShowPeer::getInstanceFromPool($key2);
+					if (!$obj2) {
+	
+						$cls = CcShowPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcShowPeer::addInstanceToPool($obj2, $key2);
+				} // if $obj2 already loaded
+
+				// Add the $obj1 (CcShowInstances) to the collection in $obj2 (CcShow)
+				$obj2->addCcShowInstances($obj1);
+
+			} // if joined row is not null
+
+				// Add objects for joined CcFiles rows
+
+				$key3 = CcFilesPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+				if ($key3 !== null) {
+					$obj3 = CcFilesPeer::getInstanceFromPool($key3);
+					if (!$obj3) {
+	
+						$cls = CcFilesPeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CcFilesPeer::addInstanceToPool($obj3, $key3);
+				} // if $obj3 already loaded
+
+				// Add the $obj1 (CcShowInstances) to the collection in $obj3 (CcFiles)
+				$obj3->addCcShowInstances($obj1);
+
+			} // if joined row is not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Selects a collection of CcShowInstances objects pre-filled with all related objects except CcFiles.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcShowInstances objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAllExceptCcFiles(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcShowInstancesPeer::addSelectColumns($criteria);
+		$startcol2 = (CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcShowPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcShowInstancesPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcShowInstancesPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcShowInstancesPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcShowInstancesPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcShowInstancesPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+				// Add objects for joined CcShow rows
+
+				$key2 = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+				if ($key2 !== null) {
+					$obj2 = CcShowPeer::getInstanceFromPool($key2);
+					if (!$obj2) {
+	
+						$cls = CcShowPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcShowPeer::addInstanceToPool($obj2, $key2);
+				} // if $obj2 already loaded
+
+				// Add the $obj1 (CcShowInstances) to the collection in $obj2 (CcShow)
+				$obj2->addCcShowInstances($obj1);
+
+			} // if joined row is not null
 
 			$results[] = $obj1;
 		}

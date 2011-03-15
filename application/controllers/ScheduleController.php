@@ -48,22 +48,30 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
         $request = $this->getRequest();
+
         $formWhat = new Application_Form_AddShowWhat();
-		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho = new Application_Form_AddShowWho();
-		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen = new Application_Form_AddShowWhen();
-		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats = new Application_Form_AddShowRepeats();
-		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle = new Application_Form_AddShowStyle();
+        $formRecord = new Application_Form_AddShowRR();
+        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
+        $formRecord->removeDecorator('DtDdWrapper');
+        $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $this->view->what = $formWhat;
-		$this->view->when = $formWhen;
-		$this->view->repeats = $formRepeats;
-		$this->view->who = $formWho;
-		$this->view->style = $formStyle;
+	    $this->view->when = $formWhen;
+	    $this->view->repeats = $formRepeats;
+	    $this->view->who = $formWho;
+	    $this->view->style = $formStyle;
+        $this->view->rr = $formRecord;
+        $this->view->rebroadcast = $formRebroadcast;
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
@@ -319,18 +327,24 @@ class ScheduleController extends Zend_Controller_Action
 		$formWhen = new Application_Form_AddShowWhen();
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
+        $formRecord = new Application_Form_AddShowRR();
+        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
 		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
+        $formRecord->removeDecorator('DtDdWrapper');
+        $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $this->view->what = $formWhat;
 	    $this->view->when = $formWhen;
 	    $this->view->repeats = $formRepeats;
 	    $this->view->who = $formWho;
 	    $this->view->style = $formStyle;
+        $this->view->rr = $formRecord;
+        $this->view->rebroadcast = $formRebroadcast;
 
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);

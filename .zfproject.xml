@@ -121,6 +121,8 @@
         <formFile formName="AddShowWhat"/>
         <formFile formName="AddShowRepeats"/>
         <formFile formName="Preferences"/>
+        <formFile formName="AddShowRR"/>
+        <formFile formName="AddShowRebroadcastDates"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory>

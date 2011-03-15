@@ -10,11 +10,19 @@
  * @method     CcShowInstancesQuery orderByDbStarts($order = Criteria::ASC) Order by the starts column
  * @method     CcShowInstancesQuery orderByDbEnds($order = Criteria::ASC) Order by the ends column
  * @method     CcShowInstancesQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
+ * @method     CcShowInstancesQuery orderByDbRecord($order = Criteria::ASC) Order by the record column
+ * @method     CcShowInstancesQuery orderByDbRebroadcast($order = Criteria::ASC) Order by the rebroadcast column
+ * @method     CcShowInstancesQuery orderByDbOriginalShow($order = Criteria::ASC) Order by the instance_id column
+ * @method     CcShowInstancesQuery orderByDbRecordedFile($order = Criteria::ASC) Order by the file_id column
  *
  * @method     CcShowInstancesQuery groupByDbId() Group by the id column
  * @method     CcShowInstancesQuery groupByDbStarts() Group by the starts column
  * @method     CcShowInstancesQuery groupByDbEnds() Group by the ends column
  * @method     CcShowInstancesQuery groupByDbShowId() Group by the show_id column
+ * @method     CcShowInstancesQuery groupByDbRecord() Group by the record column
+ * @method     CcShowInstancesQuery groupByDbRebroadcast() Group by the rebroadcast column
+ * @method     CcShowInstancesQuery groupByDbOriginalShow() Group by the instance_id column
+ * @method     CcShowInstancesQuery groupByDbRecordedFile() Group by the file_id column
  *
  * @method     CcShowInstancesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowInstancesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -23,6 +31,18 @@
  * @method     CcShowInstancesQuery leftJoinCcShow($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShow relation
  * @method     CcShowInstancesQuery rightJoinCcShow($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShow relation
  * @method     CcShowInstancesQuery innerJoinCcShow($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShow relation
+ *
+ * @method     CcShowInstancesQuery leftJoinCcShowInstancesRelatedByDbOriginalShow($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstancesRelatedByDbOriginalShow relation
+ * @method     CcShowInstancesQuery rightJoinCcShowInstancesRelatedByDbOriginalShow($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstancesRelatedByDbOriginalShow relation
+ * @method     CcShowInstancesQuery innerJoinCcShowInstancesRelatedByDbOriginalShow($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstancesRelatedByDbOriginalShow relation
+ *
+ * @method     CcShowInstancesQuery leftJoinCcFiles($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcFiles relation
+ * @method     CcShowInstancesQuery rightJoinCcFiles($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcFiles relation
+ * @method     CcShowInstancesQuery innerJoinCcFiles($relationAlias = '') Adds a INNER JOIN clause to the query using the CcFiles relation
+ *
+ * @method     CcShowInstancesQuery leftJoinCcShowInstancesRelatedByDbId($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstancesRelatedByDbId relation
+ * @method     CcShowInstancesQuery rightJoinCcShowInstancesRelatedByDbId($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstancesRelatedByDbId relation
+ * @method     CcShowInstancesQuery innerJoinCcShowInstancesRelatedByDbId($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstancesRelatedByDbId relation
  *
  * @method     CcShowInstancesQuery leftJoinCcSchedule($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcSchedule relation
  * @method     CcShowInstancesQuery rightJoinCcSchedule($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSchedule relation
@@ -35,11 +55,19 @@
  * @method     CcShowInstances findOneByDbStarts(string $starts) Return the first CcShowInstances filtered by the starts column
  * @method     CcShowInstances findOneByDbEnds(string $ends) Return the first CcShowInstances filtered by the ends column
  * @method     CcShowInstances findOneByDbShowId(int $show_id) Return the first CcShowInstances filtered by the show_id column
+ * @method     CcShowInstances findOneByDbRecord(int $record) Return the first CcShowInstances filtered by the record column
+ * @method     CcShowInstances findOneByDbRebroadcast(int $rebroadcast) Return the first CcShowInstances filtered by the rebroadcast column
+ * @method     CcShowInstances findOneByDbOriginalShow(int $instance_id) Return the first CcShowInstances filtered by the instance_id column
+ * @method     CcShowInstances findOneByDbRecordedFile(int $file_id) Return the first CcShowInstances filtered by the file_id column
  *
  * @method     array findByDbId(int $id) Return CcShowInstances objects filtered by the id column
  * @method     array findByDbStarts(string $starts) Return CcShowInstances objects filtered by the starts column
  * @method     array findByDbEnds(string $ends) Return CcShowInstances objects filtered by the ends column
  * @method     array findByDbShowId(int $show_id) Return CcShowInstances objects filtered by the show_id column
+ * @method     array findByDbRecord(int $record) Return CcShowInstances objects filtered by the record column
+ * @method     array findByDbRebroadcast(int $rebroadcast) Return CcShowInstances objects filtered by the rebroadcast column
+ * @method     array findByDbOriginalShow(int $instance_id) Return CcShowInstances objects filtered by the instance_id column
+ * @method     array findByDbRecordedFile(int $file_id) Return CcShowInstances objects filtered by the file_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -260,6 +288,130 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 	}
 
 	/**
+	 * Filter the query on the record column
+	 * 
+	 * @param     int|array $dbRecord The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByDbRecord($dbRecord = null, $comparison = null)
+	{
+		if (is_array($dbRecord)) {
+			$useMinMax = false;
+			if (isset($dbRecord['min'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::RECORD, $dbRecord['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbRecord['max'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::RECORD, $dbRecord['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowInstancesPeer::RECORD, $dbRecord, $comparison);
+	}
+
+	/**
+	 * Filter the query on the rebroadcast column
+	 * 
+	 * @param     int|array $dbRebroadcast The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByDbRebroadcast($dbRebroadcast = null, $comparison = null)
+	{
+		if (is_array($dbRebroadcast)) {
+			$useMinMax = false;
+			if (isset($dbRebroadcast['min'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::REBROADCAST, $dbRebroadcast['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbRebroadcast['max'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::REBROADCAST, $dbRebroadcast['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowInstancesPeer::REBROADCAST, $dbRebroadcast, $comparison);
+	}
+
+	/**
+	 * Filter the query on the instance_id column
+	 * 
+	 * @param     int|array $dbOriginalShow The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByDbOriginalShow($dbOriginalShow = null, $comparison = null)
+	{
+		if (is_array($dbOriginalShow)) {
+			$useMinMax = false;
+			if (isset($dbOriginalShow['min'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::INSTANCE_ID, $dbOriginalShow['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbOriginalShow['max'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::INSTANCE_ID, $dbOriginalShow['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowInstancesPeer::INSTANCE_ID, $dbOriginalShow, $comparison);
+	}
+
+	/**
+	 * Filter the query on the file_id column
+	 * 
+	 * @param     int|array $dbRecordedFile The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByDbRecordedFile($dbRecordedFile = null, $comparison = null)
+	{
+		if (is_array($dbRecordedFile)) {
+			$useMinMax = false;
+			if (isset($dbRecordedFile['min'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::FILE_ID, $dbRecordedFile['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbRecordedFile['max'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::FILE_ID, $dbRecordedFile['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowInstancesPeer::FILE_ID, $dbRecordedFile, $comparison);
+	}
+
+	/**
 	 * Filter the query by a related CcShow object
 	 *
 	 * @param     CcShow $ccShow  the related object to use as filter
@@ -321,6 +473,198 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 		return $this
 			->joinCcShow($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcShow', 'CcShowQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcShowInstances object
+	 *
+	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowInstancesRelatedByDbOriginalShow($ccShowInstances, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcShowInstancesPeer::INSTANCE_ID, $ccShowInstances->getDbId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowInstancesRelatedByDbOriginalShow relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function joinCcShowInstancesRelatedByDbOriginalShow($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowInstancesRelatedByDbOriginalShow');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowInstancesRelatedByDbOriginalShow');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowInstancesRelatedByDbOriginalShow relation CcShowInstances object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowInstancesRelatedByDbOriginalShowQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcShowInstancesRelatedByDbOriginalShow($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowInstancesRelatedByDbOriginalShow', 'CcShowInstancesQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcFiles object
+	 *
+	 * @param     CcFiles $ccFiles  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByCcFiles($ccFiles, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcShowInstancesPeer::FILE_ID, $ccFiles->getDbId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcFiles relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function joinCcFiles($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcFiles');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcFiles');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcFiles relation CcFiles object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcFilesQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcFilesQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcFiles($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcFiles', 'CcFilesQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcShowInstances object
+	 *
+	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowInstancesRelatedByDbId($ccShowInstances, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcShowInstancesPeer::ID, $ccShowInstances->getDbOriginalShow(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowInstancesRelatedByDbId relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function joinCcShowInstancesRelatedByDbId($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowInstancesRelatedByDbId');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowInstancesRelatedByDbId');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowInstancesRelatedByDbId relation CcShowInstances object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowInstancesRelatedByDbIdQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcShowInstancesRelatedByDbId($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowInstancesRelatedByDbId', 'CcShowInstancesQuery');
 	}
 
 	/**

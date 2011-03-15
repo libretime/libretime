@@ -124,6 +124,10 @@
  * @method     CcFilesQuery rightJoinCcSubjs($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method     CcFilesQuery innerJoinCcSubjs($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSubjs relation
  *
+ * @method     CcFilesQuery leftJoinCcShowInstances($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcFilesQuery rightJoinCcShowInstances($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcFilesQuery innerJoinCcShowInstances($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstances relation
+ *
  * @method     CcFilesQuery leftJoinCcPlaylistcontents($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPlaylistcontents relation
  * @method     CcFilesQuery rightJoinCcPlaylistcontents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylistcontents relation
  * @method     CcFilesQuery innerJoinCcPlaylistcontents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylistcontents relation
@@ -1648,6 +1652,70 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 		return $this
 			->joinCcSubjs($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcSubjs', 'CcSubjsQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcShowInstances object
+	 *
+	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowInstances($ccShowInstances, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcFilesPeer::ID, $ccShowInstances->getDbRecordedFile(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowInstances relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function joinCcShowInstances($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowInstances');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowInstances');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowInstances relation CcShowInstances object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowInstancesQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcShowInstances($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', 'CcShowInstancesQuery');
 	}
 
 	/**

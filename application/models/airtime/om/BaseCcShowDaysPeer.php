@@ -26,7 +26,7 @@ abstract class BaseCcShowDaysPeer {
 	const TM_CLASS = 'CcShowDaysTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 9;
+	const NUM_COLUMNS = 10;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -58,6 +58,9 @@ abstract class BaseCcShowDaysPeer {
 	/** the column name for the SHOW_ID field */
 	const SHOW_ID = 'cc_show_days.SHOW_ID';
 
+	/** the column name for the RECORD field */
+	const RECORD = 'cc_show_days.RECORD';
+
 	/**
 	 * An identiy map to hold any loaded instances of CcShowDays objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
@@ -74,12 +77,12 @@ abstract class BaseCcShowDaysPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFirstShow', 'DbLastShow', 'DbStartTime', 'DbDuration', 'DbDay', 'DbRepeatType', 'DbNextPopDate', 'DbShowId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFirstShow', 'dbLastShow', 'dbStartTime', 'dbDuration', 'dbDay', 'dbRepeatType', 'dbNextPopDate', 'dbShowId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::FIRST_SHOW, self::LAST_SHOW, self::START_TIME, self::DURATION, self::DAY, self::REPEAT_TYPE, self::NEXT_POP_DATE, self::SHOW_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FIRST_SHOW', 'LAST_SHOW', 'START_TIME', 'DURATION', 'DAY', 'REPEAT_TYPE', 'NEXT_POP_DATE', 'SHOW_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'first_show', 'last_show', 'start_time', 'duration', 'day', 'repeat_type', 'next_pop_date', 'show_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFirstShow', 'DbLastShow', 'DbStartTime', 'DbDuration', 'DbDay', 'DbRepeatType', 'DbNextPopDate', 'DbShowId', 'DbRecord', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFirstShow', 'dbLastShow', 'dbStartTime', 'dbDuration', 'dbDay', 'dbRepeatType', 'dbNextPopDate', 'dbShowId', 'dbRecord', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::FIRST_SHOW, self::LAST_SHOW, self::START_TIME, self::DURATION, self::DAY, self::REPEAT_TYPE, self::NEXT_POP_DATE, self::SHOW_ID, self::RECORD, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FIRST_SHOW', 'LAST_SHOW', 'START_TIME', 'DURATION', 'DAY', 'REPEAT_TYPE', 'NEXT_POP_DATE', 'SHOW_ID', 'RECORD', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'first_show', 'last_show', 'start_time', 'duration', 'day', 'repeat_type', 'next_pop_date', 'show_id', 'record', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	/**
@@ -89,12 +92,12 @@ abstract class BaseCcShowDaysPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFirstShow' => 1, 'DbLastShow' => 2, 'DbStartTime' => 3, 'DbDuration' => 4, 'DbDay' => 5, 'DbRepeatType' => 6, 'DbNextPopDate' => 7, 'DbShowId' => 8, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFirstShow' => 1, 'dbLastShow' => 2, 'dbStartTime' => 3, 'dbDuration' => 4, 'dbDay' => 5, 'dbRepeatType' => 6, 'dbNextPopDate' => 7, 'dbShowId' => 8, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::FIRST_SHOW => 1, self::LAST_SHOW => 2, self::START_TIME => 3, self::DURATION => 4, self::DAY => 5, self::REPEAT_TYPE => 6, self::NEXT_POP_DATE => 7, self::SHOW_ID => 8, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FIRST_SHOW' => 1, 'LAST_SHOW' => 2, 'START_TIME' => 3, 'DURATION' => 4, 'DAY' => 5, 'REPEAT_TYPE' => 6, 'NEXT_POP_DATE' => 7, 'SHOW_ID' => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'first_show' => 1, 'last_show' => 2, 'start_time' => 3, 'duration' => 4, 'day' => 5, 'repeat_type' => 6, 'next_pop_date' => 7, 'show_id' => 8, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFirstShow' => 1, 'DbLastShow' => 2, 'DbStartTime' => 3, 'DbDuration' => 4, 'DbDay' => 5, 'DbRepeatType' => 6, 'DbNextPopDate' => 7, 'DbShowId' => 8, 'DbRecord' => 9, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFirstShow' => 1, 'dbLastShow' => 2, 'dbStartTime' => 3, 'dbDuration' => 4, 'dbDay' => 5, 'dbRepeatType' => 6, 'dbNextPopDate' => 7, 'dbShowId' => 8, 'dbRecord' => 9, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::FIRST_SHOW => 1, self::LAST_SHOW => 2, self::START_TIME => 3, self::DURATION => 4, self::DAY => 5, self::REPEAT_TYPE => 6, self::NEXT_POP_DATE => 7, self::SHOW_ID => 8, self::RECORD => 9, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FIRST_SHOW' => 1, 'LAST_SHOW' => 2, 'START_TIME' => 3, 'DURATION' => 4, 'DAY' => 5, 'REPEAT_TYPE' => 6, 'NEXT_POP_DATE' => 7, 'SHOW_ID' => 8, 'RECORD' => 9, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'first_show' => 1, 'last_show' => 2, 'start_time' => 3, 'duration' => 4, 'day' => 5, 'repeat_type' => 6, 'next_pop_date' => 7, 'show_id' => 8, 'record' => 9, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	/**
@@ -175,6 +178,7 @@ abstract class BaseCcShowDaysPeer {
 			$criteria->addSelectColumn(CcShowDaysPeer::REPEAT_TYPE);
 			$criteria->addSelectColumn(CcShowDaysPeer::NEXT_POP_DATE);
 			$criteria->addSelectColumn(CcShowDaysPeer::SHOW_ID);
+			$criteria->addSelectColumn(CcShowDaysPeer::RECORD);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.FIRST_SHOW');
@@ -185,6 +189,7 @@ abstract class BaseCcShowDaysPeer {
 			$criteria->addSelectColumn($alias . '.REPEAT_TYPE');
 			$criteria->addSelectColumn($alias . '.NEXT_POP_DATE');
 			$criteria->addSelectColumn($alias . '.SHOW_ID');
+			$criteria->addSelectColumn($alias . '.RECORD');
 		}
 	}
 

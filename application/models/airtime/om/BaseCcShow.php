@@ -66,6 +66,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $collCcShowDayss;
 
 	/**
+	 * @var        array CcShowRebroadcast[] Collection to store aggregation of CcShowRebroadcast objects.
+	 */
+	protected $collCcShowRebroadcasts;
+
+	/**
 	 * @var        array CcShowHosts[] Collection to store aggregation of CcShowHosts objects.
 	 */
 	protected $collCcShowHostss;
@@ -370,6 +375,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 			$this->collCcShowDayss = null;
 
+			$this->collCcShowRebroadcasts = null;
+
 			$this->collCcShowHostss = null;
 
 		} // if (deep)
@@ -521,6 +528,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcShowRebroadcasts !== null) {
+				foreach ($this->collCcShowRebroadcasts as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collCcShowHostss !== null) {
 				foreach ($this->collCcShowHostss as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -610,6 +625,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 				if ($this->collCcShowDayss !== null) {
 					foreach ($this->collCcShowDayss as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcShowRebroadcasts !== null) {
+					foreach ($this->collCcShowRebroadcasts as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -874,6 +897,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				}
 			}
 
+			foreach ($this->getCcShowRebroadcasts() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcShowRebroadcast($relObj->copy($deepCopy));
+				}
+			}
+
 			foreach ($this->getCcShowHostss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcShowHosts($relObj->copy($deepCopy));
@@ -1034,6 +1063,56 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		}
 	}
 
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShow is new, it will return
+	 * an empty collection; or if this CcShow has previously
+	 * been saved, it will retrieve related CcShowInstancess from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShow.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 */
+	public function getCcShowInstancessJoinCcShowInstancesRelatedByDbOriginalShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowInstancesQuery::create(null, $criteria);
+		$query->joinWith('CcShowInstancesRelatedByDbOriginalShow', $join_behavior);
+
+		return $this->getCcShowInstancess($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShow is new, it will return
+	 * an empty collection; or if this CcShow has previously
+	 * been saved, it will retrieve related CcShowInstancess from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShow.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 */
+	public function getCcShowInstancessJoinCcFiles($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowInstancesQuery::create(null, $criteria);
+		$query->joinWith('CcFiles', $join_behavior);
+
+		return $this->getCcShowInstancess($query, $con);
+	}
+
 	/**
 	 * Clears out the collCcShowDayss collection
 	 *
@@ -1139,6 +1218,115 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		}
 		if (!$this->collCcShowDayss->contains($l)) { // only add it if the **same** object is not already associated
 			$this->collCcShowDayss[]= $l;
+			$l->setCcShow($this);
+		}
+	}
+
+	/**
+	 * Clears out the collCcShowRebroadcasts collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcShowRebroadcasts()
+	 */
+	public function clearCcShowRebroadcasts()
+	{
+		$this->collCcShowRebroadcasts = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcShowRebroadcasts collection.
+	 *
+	 * By default this just sets the collCcShowRebroadcasts collection to an empty array (like clearcollCcShowRebroadcasts());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcShowRebroadcasts()
+	{
+		$this->collCcShowRebroadcasts = new PropelObjectCollection();
+		$this->collCcShowRebroadcasts->setModel('CcShowRebroadcast');
+	}
+
+	/**
+	 * Gets an array of CcShowRebroadcast objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcShow is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcShowRebroadcast[] List of CcShowRebroadcast objects
+	 * @throws     PropelException
+	 */
+	public function getCcShowRebroadcasts($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowRebroadcasts || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowRebroadcasts) {
+				// return empty collection
+				$this->initCcShowRebroadcasts();
+			} else {
+				$collCcShowRebroadcasts = CcShowRebroadcastQuery::create(null, $criteria)
+					->filterByCcShow($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcShowRebroadcasts;
+				}
+				$this->collCcShowRebroadcasts = $collCcShowRebroadcasts;
+			}
+		}
+		return $this->collCcShowRebroadcasts;
+	}
+
+	/**
+	 * Returns the number of related CcShowRebroadcast objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcShowRebroadcast objects.
+	 * @throws     PropelException
+	 */
+	public function countCcShowRebroadcasts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowRebroadcasts || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowRebroadcasts) {
+				return 0;
+			} else {
+				$query = CcShowRebroadcastQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcShow($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcShowRebroadcasts);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcShowRebroadcast object to this object
+	 * through the CcShowRebroadcast foreign key attribute.
+	 *
+	 * @param      CcShowRebroadcast $l CcShowRebroadcast
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcShowRebroadcast(CcShowRebroadcast $l)
+	{
+		if ($this->collCcShowRebroadcasts === null) {
+			$this->initCcShowRebroadcasts();
+		}
+		if (!$this->collCcShowRebroadcasts->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcShowRebroadcasts[]= $l;
 			$l->setCcShow($this);
 		}
 	}
@@ -1318,6 +1506,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcShowRebroadcasts) {
+				foreach ((array) $this->collCcShowRebroadcasts as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCcShowHostss) {
 				foreach ((array) $this->collCcShowHostss as $o) {
 					$o->clearAllReferences($deep);
@@ -1327,6 +1520,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 		$this->collCcShowInstancess = null;
 		$this->collCcShowDayss = null;
+		$this->collCcShowRebroadcasts = null;
 		$this->collCcShowHostss = null;
 	}
 

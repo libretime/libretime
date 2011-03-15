@@ -42,6 +42,10 @@ class CcShowInstancesTableMap extends TableMap {
 		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
 		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
 		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
+		$this->addColumn('RECORD', 'DbRecord', 'TINYINT', false, null, null);
+		$this->addColumn('REBROADCAST', 'DbRebroadcast', 'TINYINT', false, null, null);
+		$this->addForeignKey('INSTANCE_ID', 'DbOriginalShow', 'INTEGER', 'cc_show_instances', 'ID', false, null, null);
+		$this->addForeignKey('FILE_ID', 'DbRecordedFile', 'INTEGER', 'cc_files', 'ID', false, null, null);
 		// validators
 	} // initialize()
 
@@ -51,6 +55,9 @@ class CcShowInstancesTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcShow', 'CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcShowInstancesRelatedByDbOriginalShow', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcShowInstancesRelatedByDbId', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
 	} // buildRelations()
 

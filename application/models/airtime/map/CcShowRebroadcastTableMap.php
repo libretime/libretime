@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_show_days' table.
+ * This class defines the structure of the 'cc_show_rebroadcast' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcShowDaysTableMap extends TableMap {
+class CcShowRebroadcastTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'airtime.map.CcShowDaysTableMap';
+	const CLASS_NAME = 'airtime.map.CcShowRebroadcastTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,23 +31,17 @@ class CcShowDaysTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('cc_show_days');
-		$this->setPhpName('CcShowDays');
-		$this->setClassname('CcShowDays');
+		$this->setName('cc_show_rebroadcast');
+		$this->setPhpName('CcShowRebroadcast');
+		$this->setClassname('CcShowRebroadcast');
 		$this->setPackage('airtime');
 		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_show_days_id_seq');
+		$this->setPrimaryKeyMethodInfo('cc_show_rebroadcast_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('FIRST_SHOW', 'DbFirstShow', 'DATE', true, null, null);
-		$this->addColumn('LAST_SHOW', 'DbLastShow', 'DATE', false, null, null);
+		$this->addColumn('DAY_OFFSET', 'DbDayOffset', 'VARCHAR', true, 255, null);
 		$this->addColumn('START_TIME', 'DbStartTime', 'TIME', true, null, null);
-		$this->addColumn('DURATION', 'DbDuration', 'VARCHAR', true, 255, null);
-		$this->addColumn('DAY', 'DbDay', 'TINYINT', false, null, null);
-		$this->addColumn('REPEAT_TYPE', 'DbRepeatType', 'TINYINT', true, null, null);
-		$this->addColumn('NEXT_POP_DATE', 'DbNextPopDate', 'DATE', false, null, null);
 		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
-		$this->addColumn('RECORD', 'DbRecord', 'TINYINT', false, null, null);
 		// validators
 	} // initialize()
 
@@ -59,4 +53,4 @@ class CcShowDaysTableMap extends TableMap {
     $this->addRelation('CcShow', 'CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
-} // CcShowDaysTableMap
+} // CcShowRebroadcastTableMap
