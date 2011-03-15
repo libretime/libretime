@@ -341,6 +341,7 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
         $formRecord = new Application_Form_AddShowRR();
+        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
         $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
 		$formWhat->removeDecorator('DtDdWrapper');
@@ -349,6 +350,7 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
         $formRecord->removeDecorator('DtDdWrapper');
+        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
         $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $this->view->what = $formWhat;
@@ -357,8 +359,8 @@ class ScheduleController extends Zend_Controller_Action
 	    $this->view->who = $formWho;
 	    $this->view->style = $formStyle;
         $this->view->rr = $formRecord;
+        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
         $this->view->rebroadcast = $formRebroadcast;
-
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
         if($when) {

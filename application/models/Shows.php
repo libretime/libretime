@@ -456,27 +456,28 @@ class Show {
 
 	private static function makeFullCalendarEvent($show, $options=array()) {
 		global $CC_DBC;
+    
+        $event = array();
 
         if($show["rebroadcast"]) {
             $title = "REBROADCAST ".$show["name"];
+            $event["disableResizing"] = true;
         }
         else {
             $title = $show["name"];
         }
 
-		$event = array(
-			"id" => $show["instance_id"],
-			"title" => $title,
-			"start" => $show["starts"],
-			"end" => $show["ends"],
-			"allDay" => false,
-			"description" => $show["description"],
-			"color" => $show["color"],
-			"backgroundColor" => $show["background_color"],
-            "showId" => $show["show_id"],
-            "record" => intval($show["record"]),
-            "rebroadcast" => intval($show["rebroadcast"])
-		);
+		$event["id"] = $show["instance_id"];
+		$event["title"] = $title;
+		$event["start"] = $show["starts"];
+		$event["end"] = $show["ends"];
+		$event["allDay"] = false;
+		$event["description"] = $show["description"];
+		$event["color"] = $show["color"];
+		$event["backgroundColor"] = $show["background_color"];
+        $event["showId"] = $show["show_id"];
+        $event["record"] = intval($show["record"]);
+        $event["rebroadcast"] = intval($show["rebroadcast"]);
 
 		foreach($options as $key=>$value) {
 			$event[$key] = $value;
