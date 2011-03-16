@@ -185,6 +185,10 @@ CREATE TABLE "cc_show_instances"
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
 	"show_id" INTEGER  NOT NULL,
+	"record" INT2 default 0,
+	"rebroadcast" INT2 default 0,
+	"instance_id" INTEGER,
+	"file_id" INTEGER,
 	PRIMARY KEY ("id")
 );
 
@@ -210,10 +214,31 @@ CREATE TABLE "cc_show_days"
 	"repeat_type" INT2  NOT NULL,
 	"next_pop_date" DATE,
 	"show_id" INTEGER  NOT NULL,
+	"record" INT2,
 	PRIMARY KEY ("id")
 );
 
 COMMENT ON TABLE "cc_show_days" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_show_rebroadcast
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_show_rebroadcast" CASCADE;
+
+
+CREATE TABLE "cc_show_rebroadcast"
+(
+	"id" serial  NOT NULL,
+	"day_offset" VARCHAR(255)  NOT NULL,
+	"start_time" TIME  NOT NULL,
+	"show_id" INTEGER  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_show_rebroadcast" IS '';
 
 
 SET search_path TO public;
@@ -469,7 +494,13 @@ ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey" FOREIGN KEY ("subj") 
 
 ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 
+ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_original_show_instance_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_recorded_file_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
+
 ALTER TABLE "cc_show_days" ADD CONSTRAINT "cc_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_rebroadcast" ADD CONSTRAINT "cc_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_show_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
 

@@ -49,9 +49,50 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	protected $show_id;
 
 	/**
+	 * The value for the record field.
+	 * Note: this column has a database default value of: 0
+	 * @var        int
+	 */
+	protected $record;
+
+	/**
+	 * The value for the rebroadcast field.
+	 * Note: this column has a database default value of: 0
+	 * @var        int
+	 */
+	protected $rebroadcast;
+
+	/**
+	 * The value for the instance_id field.
+	 * @var        int
+	 */
+	protected $instance_id;
+
+	/**
+	 * The value for the file_id field.
+	 * @var        int
+	 */
+	protected $file_id;
+
+	/**
 	 * @var        CcShow
 	 */
 	protected $aCcShow;
+
+	/**
+	 * @var        CcShowInstances
+	 */
+	protected $aCcShowInstancesRelatedByDbOriginalShow;
+
+	/**
+	 * @var        CcFiles
+	 */
+	protected $aCcFiles;
+
+	/**
+	 * @var        array CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
+	 */
+	protected $collCcShowInstancessRelatedByDbId;
 
 	/**
 	 * @var        array CcSchedule[] Collection to store aggregation of CcSchedule objects.
@@ -71,6 +112,28 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	 * @var        boolean
 	 */
 	protected $alreadyInValidation = false;
+
+	/**
+	 * Applies default values to this object.
+	 * This method should be called from the object's constructor (or
+	 * equivalent initialization method).
+	 * @see        __construct()
+	 */
+	public function applyDefaultValues()
+	{
+		$this->record = 0;
+		$this->rebroadcast = 0;
+	}
+
+	/**
+	 * Initializes internal state of BaseCcShowInstances object.
+	 * @see        applyDefaults()
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->applyDefaultValues();
+	}
 
 	/**
 	 * Get the [id] column value.
@@ -156,6 +219,46 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	public function getDbShowId()
 	{
 		return $this->show_id;
+	}
+
+	/**
+	 * Get the [record] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbRecord()
+	{
+		return $this->record;
+	}
+
+	/**
+	 * Get the [rebroadcast] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbRebroadcast()
+	{
+		return $this->rebroadcast;
+	}
+
+	/**
+	 * Get the [instance_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbOriginalShow()
+	{
+		return $this->instance_id;
+	}
+
+	/**
+	 * Get the [file_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbRecordedFile()
+	{
+		return $this->file_id;
 	}
 
 	/**
@@ -301,6 +404,94 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	} // setDbShowId()
 
 	/**
+	 * Set the value of [record] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbRecord($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->record !== $v || $this->isNew()) {
+			$this->record = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::RECORD;
+		}
+
+		return $this;
+	} // setDbRecord()
+
+	/**
+	 * Set the value of [rebroadcast] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbRebroadcast($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->rebroadcast !== $v || $this->isNew()) {
+			$this->rebroadcast = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::REBROADCAST;
+		}
+
+		return $this;
+	} // setDbRebroadcast()
+
+	/**
+	 * Set the value of [instance_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbOriginalShow($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->instance_id !== $v) {
+			$this->instance_id = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::INSTANCE_ID;
+		}
+
+		if ($this->aCcShowInstancesRelatedByDbOriginalShow !== null && $this->aCcShowInstancesRelatedByDbOriginalShow->getDbId() !== $v) {
+			$this->aCcShowInstancesRelatedByDbOriginalShow = null;
+		}
+
+		return $this;
+	} // setDbOriginalShow()
+
+	/**
+	 * Set the value of [file_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbRecordedFile($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->file_id !== $v) {
+			$this->file_id = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::FILE_ID;
+		}
+
+		if ($this->aCcFiles !== null && $this->aCcFiles->getDbId() !== $v) {
+			$this->aCcFiles = null;
+		}
+
+		return $this;
+	} // setDbRecordedFile()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -310,6 +501,14 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	 */
 	public function hasOnlyDefaultValues()
 	{
+			if ($this->record !== 0) {
+				return false;
+			}
+
+			if ($this->rebroadcast !== 0) {
+				return false;
+			}
+
 		// otherwise, everything was equal, so return TRUE
 		return true;
 	} // hasOnlyDefaultValues()
@@ -336,6 +535,10 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$this->starts = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
 			$this->ends = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->show_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+			$this->record = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+			$this->rebroadcast = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+			$this->instance_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+			$this->file_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -344,7 +547,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 4; // 4 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 8; // 8 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowInstances object", $e);
@@ -369,6 +572,12 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 
 		if ($this->aCcShow !== null && $this->show_id !== $this->aCcShow->getDbId()) {
 			$this->aCcShow = null;
+		}
+		if ($this->aCcShowInstancesRelatedByDbOriginalShow !== null && $this->instance_id !== $this->aCcShowInstancesRelatedByDbOriginalShow->getDbId()) {
+			$this->aCcShowInstancesRelatedByDbOriginalShow = null;
+		}
+		if ($this->aCcFiles !== null && $this->file_id !== $this->aCcFiles->getDbId()) {
+			$this->aCcFiles = null;
 		}
 	} // ensureConsistency
 
@@ -410,6 +619,10 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aCcShow = null;
+			$this->aCcShowInstancesRelatedByDbOriginalShow = null;
+			$this->aCcFiles = null;
+			$this->collCcShowInstancessRelatedByDbId = null;
+
 			$this->collCcSchedules = null;
 
 		} // if (deep)
@@ -534,6 +747,20 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->setCcShow($this->aCcShow);
 			}
 
+			if ($this->aCcShowInstancesRelatedByDbOriginalShow !== null) {
+				if ($this->aCcShowInstancesRelatedByDbOriginalShow->isModified() || $this->aCcShowInstancesRelatedByDbOriginalShow->isNew()) {
+					$affectedRows += $this->aCcShowInstancesRelatedByDbOriginalShow->save($con);
+				}
+				$this->setCcShowInstancesRelatedByDbOriginalShow($this->aCcShowInstancesRelatedByDbOriginalShow);
+			}
+
+			if ($this->aCcFiles !== null) {
+				if ($this->aCcFiles->isModified() || $this->aCcFiles->isNew()) {
+					$affectedRows += $this->aCcFiles->save($con);
+				}
+				$this->setCcFiles($this->aCcFiles);
+			}
+
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = CcShowInstancesPeer::ID;
 			}
@@ -555,6 +782,14 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
+			}
+
+			if ($this->collCcShowInstancessRelatedByDbId !== null) {
+				foreach ($this->collCcShowInstancessRelatedByDbId as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
 			}
 
 			if ($this->collCcSchedules !== null) {
@@ -642,11 +877,31 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->aCcShowInstancesRelatedByDbOriginalShow !== null) {
+				if (!$this->aCcShowInstancesRelatedByDbOriginalShow->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcShowInstancesRelatedByDbOriginalShow->getValidationFailures());
+				}
+			}
+
+			if ($this->aCcFiles !== null) {
+				if (!$this->aCcFiles->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcFiles->getValidationFailures());
+				}
+			}
+
 
 			if (($retval = CcShowInstancesPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collCcShowInstancessRelatedByDbId !== null) {
+					foreach ($this->collCcShowInstancessRelatedByDbId as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 				if ($this->collCcSchedules !== null) {
 					foreach ($this->collCcSchedules as $referrerFK) {
@@ -701,6 +956,18 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			case 3:
 				return $this->getDbShowId();
 				break;
+			case 4:
+				return $this->getDbRecord();
+				break;
+			case 5:
+				return $this->getDbRebroadcast();
+				break;
+			case 6:
+				return $this->getDbOriginalShow();
+				break;
+			case 7:
+				return $this->getDbRecordedFile();
+				break;
 			default:
 				return null;
 				break;
@@ -729,10 +996,20 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$keys[1] => $this->getDbStarts(),
 			$keys[2] => $this->getDbEnds(),
 			$keys[3] => $this->getDbShowId(),
+			$keys[4] => $this->getDbRecord(),
+			$keys[5] => $this->getDbRebroadcast(),
+			$keys[6] => $this->getDbOriginalShow(),
+			$keys[7] => $this->getDbRecordedFile(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
 				$result['CcShow'] = $this->aCcShow->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+			if (null !== $this->aCcShowInstancesRelatedByDbOriginalShow) {
+				$result['CcShowInstancesRelatedByDbOriginalShow'] = $this->aCcShowInstancesRelatedByDbOriginalShow->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+			if (null !== $this->aCcFiles) {
+				$result['CcFiles'] = $this->aCcFiles->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 		}
 		return $result;
@@ -777,6 +1054,18 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			case 3:
 				$this->setDbShowId($value);
 				break;
+			case 4:
+				$this->setDbRecord($value);
+				break;
+			case 5:
+				$this->setDbRebroadcast($value);
+				break;
+			case 6:
+				$this->setDbOriginalShow($value);
+				break;
+			case 7:
+				$this->setDbRecordedFile($value);
+				break;
 		} // switch()
 	}
 
@@ -805,6 +1094,10 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if (array_key_exists($keys[1], $arr)) $this->setDbStarts($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbEnds($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setDbShowId($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbRecord($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbRebroadcast($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbOriginalShow($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbRecordedFile($arr[$keys[7]]);
 	}
 
 	/**
@@ -820,6 +1113,10 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowInstancesPeer::STARTS)) $criteria->add(CcShowInstancesPeer::STARTS, $this->starts);
 		if ($this->isColumnModified(CcShowInstancesPeer::ENDS)) $criteria->add(CcShowInstancesPeer::ENDS, $this->ends);
 		if ($this->isColumnModified(CcShowInstancesPeer::SHOW_ID)) $criteria->add(CcShowInstancesPeer::SHOW_ID, $this->show_id);
+		if ($this->isColumnModified(CcShowInstancesPeer::RECORD)) $criteria->add(CcShowInstancesPeer::RECORD, $this->record);
+		if ($this->isColumnModified(CcShowInstancesPeer::REBROADCAST)) $criteria->add(CcShowInstancesPeer::REBROADCAST, $this->rebroadcast);
+		if ($this->isColumnModified(CcShowInstancesPeer::INSTANCE_ID)) $criteria->add(CcShowInstancesPeer::INSTANCE_ID, $this->instance_id);
+		if ($this->isColumnModified(CcShowInstancesPeer::FILE_ID)) $criteria->add(CcShowInstancesPeer::FILE_ID, $this->file_id);
 
 		return $criteria;
 	}
@@ -884,11 +1181,21 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$copyObj->setDbStarts($this->starts);
 		$copyObj->setDbEnds($this->ends);
 		$copyObj->setDbShowId($this->show_id);
+		$copyObj->setDbRecord($this->record);
+		$copyObj->setDbRebroadcast($this->rebroadcast);
+		$copyObj->setDbOriginalShow($this->instance_id);
+		$copyObj->setDbRecordedFile($this->file_id);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
+
+			foreach ($this->getCcShowInstancessRelatedByDbId() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcShowInstancesRelatedByDbId($relObj->copy($deepCopy));
+				}
+			}
 
 			foreach ($this->getCcSchedules() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -988,6 +1295,263 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			 */
 		}
 		return $this->aCcShow;
+	}
+
+	/**
+	 * Declares an association between this object and a CcShowInstances object.
+	 *
+	 * @param      CcShowInstances $v
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setCcShowInstancesRelatedByDbOriginalShow(CcShowInstances $v = null)
+	{
+		if ($v === null) {
+			$this->setDbOriginalShow(NULL);
+		} else {
+			$this->setDbOriginalShow($v->getDbId());
+		}
+
+		$this->aCcShowInstancesRelatedByDbOriginalShow = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the CcShowInstances object, it will not be re-added.
+		if ($v !== null) {
+			$v->addCcShowInstancesRelatedByDbId($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated CcShowInstances object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     CcShowInstances The associated CcShowInstances object.
+	 * @throws     PropelException
+	 */
+	public function getCcShowInstancesRelatedByDbOriginalShow(PropelPDO $con = null)
+	{
+		if ($this->aCcShowInstancesRelatedByDbOriginalShow === null && ($this->instance_id !== null)) {
+			$this->aCcShowInstancesRelatedByDbOriginalShow = CcShowInstancesQuery::create()->findPk($this->instance_id, $con);
+			/* The following can be used additionally to
+			   guarantee the related object contains a reference
+			   to this object.  This level of coupling may, however, be
+			   undesirable since it could result in an only partially populated collection
+			   in the referenced object.
+			   $this->aCcShowInstancesRelatedByDbOriginalShow->addCcShowInstancessRelatedByDbId($this);
+			 */
+		}
+		return $this->aCcShowInstancesRelatedByDbOriginalShow;
+	}
+
+	/**
+	 * Declares an association between this object and a CcFiles object.
+	 *
+	 * @param      CcFiles $v
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setCcFiles(CcFiles $v = null)
+	{
+		if ($v === null) {
+			$this->setDbRecordedFile(NULL);
+		} else {
+			$this->setDbRecordedFile($v->getDbId());
+		}
+
+		$this->aCcFiles = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the CcFiles object, it will not be re-added.
+		if ($v !== null) {
+			$v->addCcShowInstances($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated CcFiles object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     CcFiles The associated CcFiles object.
+	 * @throws     PropelException
+	 */
+	public function getCcFiles(PropelPDO $con = null)
+	{
+		if ($this->aCcFiles === null && ($this->file_id !== null)) {
+			$this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
+			/* The following can be used additionally to
+			   guarantee the related object contains a reference
+			   to this object.  This level of coupling may, however, be
+			   undesirable since it could result in an only partially populated collection
+			   in the referenced object.
+			   $this->aCcFiles->addCcShowInstancess($this);
+			 */
+		}
+		return $this->aCcFiles;
+	}
+
+	/**
+	 * Clears out the collCcShowInstancessRelatedByDbId collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcShowInstancessRelatedByDbId()
+	 */
+	public function clearCcShowInstancessRelatedByDbId()
+	{
+		$this->collCcShowInstancessRelatedByDbId = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcShowInstancessRelatedByDbId collection.
+	 *
+	 * By default this just sets the collCcShowInstancessRelatedByDbId collection to an empty array (like clearcollCcShowInstancessRelatedByDbId());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcShowInstancessRelatedByDbId()
+	{
+		$this->collCcShowInstancessRelatedByDbId = new PropelObjectCollection();
+		$this->collCcShowInstancessRelatedByDbId->setModel('CcShowInstances');
+	}
+
+	/**
+	 * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcShowInstances is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 * @throws     PropelException
+	 */
+	public function getCcShowInstancessRelatedByDbId($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowInstancessRelatedByDbId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowInstancessRelatedByDbId) {
+				// return empty collection
+				$this->initCcShowInstancessRelatedByDbId();
+			} else {
+				$collCcShowInstancessRelatedByDbId = CcShowInstancesQuery::create(null, $criteria)
+					->filterByCcShowInstancesRelatedByDbOriginalShow($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcShowInstancessRelatedByDbId;
+				}
+				$this->collCcShowInstancessRelatedByDbId = $collCcShowInstancessRelatedByDbId;
+			}
+		}
+		return $this->collCcShowInstancessRelatedByDbId;
+	}
+
+	/**
+	 * Returns the number of related CcShowInstances objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcShowInstances objects.
+	 * @throws     PropelException
+	 */
+	public function countCcShowInstancessRelatedByDbId(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowInstancessRelatedByDbId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowInstancessRelatedByDbId) {
+				return 0;
+			} else {
+				$query = CcShowInstancesQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcShowInstancesRelatedByDbOriginalShow($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcShowInstancessRelatedByDbId);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcShowInstances object to this object
+	 * through the CcShowInstances foreign key attribute.
+	 *
+	 * @param      CcShowInstances $l CcShowInstances
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcShowInstancesRelatedByDbId(CcShowInstances $l)
+	{
+		if ($this->collCcShowInstancessRelatedByDbId === null) {
+			$this->initCcShowInstancessRelatedByDbId();
+		}
+		if (!$this->collCcShowInstancessRelatedByDbId->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcShowInstancessRelatedByDbId[]= $l;
+			$l->setCcShowInstancesRelatedByDbOriginalShow($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShowInstances is new, it will return
+	 * an empty collection; or if this CcShowInstances has previously
+	 * been saved, it will retrieve related CcShowInstancessRelatedByDbId from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShowInstances.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 */
+	public function getCcShowInstancessRelatedByDbIdJoinCcShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowInstancesQuery::create(null, $criteria);
+		$query->joinWith('CcShow', $join_behavior);
+
+		return $this->getCcShowInstancessRelatedByDbId($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShowInstances is new, it will return
+	 * an empty collection; or if this CcShowInstances has previously
+	 * been saved, it will retrieve related CcShowInstancessRelatedByDbId from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShowInstances.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 */
+	public function getCcShowInstancessRelatedByDbIdJoinCcFiles($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowInstancesQuery::create(null, $criteria);
+		$query->joinWith('CcFiles', $join_behavior);
+
+		return $this->getCcShowInstancessRelatedByDbId($query, $con);
 	}
 
 	/**
@@ -1108,9 +1672,14 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$this->starts = null;
 		$this->ends = null;
 		$this->show_id = null;
+		$this->record = null;
+		$this->rebroadcast = null;
+		$this->instance_id = null;
+		$this->file_id = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
+		$this->applyDefaultValues();
 		$this->resetModified();
 		$this->setNew(true);
 		$this->setDeleted(false);
@@ -1128,6 +1697,11 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collCcShowInstancessRelatedByDbId) {
+				foreach ((array) $this->collCcShowInstancessRelatedByDbId as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCcSchedules) {
 				foreach ((array) $this->collCcSchedules as $o) {
 					$o->clearAllReferences($deep);
@@ -1135,8 +1709,11 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
+		$this->collCcShowInstancessRelatedByDbId = null;
 		$this->collCcSchedules = null;
 		$this->aCcShow = null;
+		$this->aCcShowInstancesRelatedByDbOriginalShow = null;
+		$this->aCcFiles = null;
 	}
 
 	/**

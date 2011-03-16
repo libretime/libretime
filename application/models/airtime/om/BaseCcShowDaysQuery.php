@@ -15,6 +15,7 @@
  * @method     CcShowDaysQuery orderByDbRepeatType($order = Criteria::ASC) Order by the repeat_type column
  * @method     CcShowDaysQuery orderByDbNextPopDate($order = Criteria::ASC) Order by the next_pop_date column
  * @method     CcShowDaysQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
+ * @method     CcShowDaysQuery orderByDbRecord($order = Criteria::ASC) Order by the record column
  *
  * @method     CcShowDaysQuery groupByDbId() Group by the id column
  * @method     CcShowDaysQuery groupByDbFirstShow() Group by the first_show column
@@ -25,6 +26,7 @@
  * @method     CcShowDaysQuery groupByDbRepeatType() Group by the repeat_type column
  * @method     CcShowDaysQuery groupByDbNextPopDate() Group by the next_pop_date column
  * @method     CcShowDaysQuery groupByDbShowId() Group by the show_id column
+ * @method     CcShowDaysQuery groupByDbRecord() Group by the record column
  *
  * @method     CcShowDaysQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowDaysQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,6 +48,7 @@
  * @method     CcShowDays findOneByDbRepeatType(int $repeat_type) Return the first CcShowDays filtered by the repeat_type column
  * @method     CcShowDays findOneByDbNextPopDate(string $next_pop_date) Return the first CcShowDays filtered by the next_pop_date column
  * @method     CcShowDays findOneByDbShowId(int $show_id) Return the first CcShowDays filtered by the show_id column
+ * @method     CcShowDays findOneByDbRecord(int $record) Return the first CcShowDays filtered by the record column
  *
  * @method     array findByDbId(int $id) Return CcShowDays objects filtered by the id column
  * @method     array findByDbFirstShow(string $first_show) Return CcShowDays objects filtered by the first_show column
@@ -56,6 +59,7 @@
  * @method     array findByDbRepeatType(int $repeat_type) Return CcShowDays objects filtered by the repeat_type column
  * @method     array findByDbNextPopDate(string $next_pop_date) Return CcShowDays objects filtered by the next_pop_date column
  * @method     array findByDbShowId(int $show_id) Return CcShowDays objects filtered by the show_id column
+ * @method     array findByDbRecord(int $record) Return CcShowDays objects filtered by the record column
  *
  * @package    propel.generator.airtime.om
  */
@@ -419,6 +423,37 @@ abstract class BaseCcShowDaysQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowDaysPeer::SHOW_ID, $dbShowId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the record column
+	 * 
+	 * @param     int|array $dbRecord The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowDaysQuery The current query, for fluid interface
+	 */
+	public function filterByDbRecord($dbRecord = null, $comparison = null)
+	{
+		if (is_array($dbRecord)) {
+			$useMinMax = false;
+			if (isset($dbRecord['min'])) {
+				$this->addUsingAlias(CcShowDaysPeer::RECORD, $dbRecord['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbRecord['max'])) {
+				$this->addUsingAlias(CcShowDaysPeer::RECORD, $dbRecord['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowDaysPeer::RECORD, $dbRecord, $comparison);
 	}
 
 	/**

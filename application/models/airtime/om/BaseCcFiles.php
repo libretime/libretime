@@ -360,6 +360,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $aCcSubjs;
 
 	/**
+	 * @var        array CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
+	 */
+	protected $collCcShowInstancess;
+
+	/**
 	 * @var        array CcPlaylistcontents[] Collection to store aggregation of CcPlaylistcontents objects.
 	 */
 	protected $collCcPlaylistcontentss;
@@ -2316,6 +2321,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aCcSubjs = null;
+			$this->collCcShowInstancess = null;
+
 			$this->collCcPlaylistcontentss = null;
 
 		} // if (deep)
@@ -2463,6 +2470,14 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
+			if ($this->collCcShowInstancess !== null) {
+				foreach ($this->collCcShowInstancess as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collCcPlaylistcontentss !== null) {
 				foreach ($this->collCcPlaylistcontentss as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -2553,6 +2568,14 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collCcShowInstancess !== null) {
+					foreach ($this->collCcShowInstancess as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 				if ($this->collCcPlaylistcontentss !== null) {
 					foreach ($this->collCcPlaylistcontentss as $referrerFK) {
@@ -3296,6 +3319,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
 
+			foreach ($this->getCcShowInstancess() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcShowInstances($relObj->copy($deepCopy));
+				}
+			}
+
 			foreach ($this->getCcPlaylistcontentss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcPlaylistcontents($relObj->copy($deepCopy));
@@ -3394,6 +3423,165 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			 */
 		}
 		return $this->aCcSubjs;
+	}
+
+	/**
+	 * Clears out the collCcShowInstancess collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcShowInstancess()
+	 */
+	public function clearCcShowInstancess()
+	{
+		$this->collCcShowInstancess = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcShowInstancess collection.
+	 *
+	 * By default this just sets the collCcShowInstancess collection to an empty array (like clearcollCcShowInstancess());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcShowInstancess()
+	{
+		$this->collCcShowInstancess = new PropelObjectCollection();
+		$this->collCcShowInstancess->setModel('CcShowInstances');
+	}
+
+	/**
+	 * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcFiles is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 * @throws     PropelException
+	 */
+	public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowInstancess || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowInstancess) {
+				// return empty collection
+				$this->initCcShowInstancess();
+			} else {
+				$collCcShowInstancess = CcShowInstancesQuery::create(null, $criteria)
+					->filterByCcFiles($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcShowInstancess;
+				}
+				$this->collCcShowInstancess = $collCcShowInstancess;
+			}
+		}
+		return $this->collCcShowInstancess;
+	}
+
+	/**
+	 * Returns the number of related CcShowInstances objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcShowInstances objects.
+	 * @throws     PropelException
+	 */
+	public function countCcShowInstancess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowInstancess || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowInstancess) {
+				return 0;
+			} else {
+				$query = CcShowInstancesQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcFiles($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcShowInstancess);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcShowInstances object to this object
+	 * through the CcShowInstances foreign key attribute.
+	 *
+	 * @param      CcShowInstances $l CcShowInstances
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcShowInstances(CcShowInstances $l)
+	{
+		if ($this->collCcShowInstancess === null) {
+			$this->initCcShowInstancess();
+		}
+		if (!$this->collCcShowInstancess->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcShowInstancess[]= $l;
+			$l->setCcFiles($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcShowInstancess from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 */
+	public function getCcShowInstancessJoinCcShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowInstancesQuery::create(null, $criteria);
+		$query->joinWith('CcShow', $join_behavior);
+
+		return $this->getCcShowInstancess($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcShowInstancess from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+	 */
+	public function getCcShowInstancessJoinCcShowInstancesRelatedByDbOriginalShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowInstancesQuery::create(null, $criteria);
+		$query->joinWith('CcShowInstancesRelatedByDbOriginalShow', $join_behavior);
+
+		return $this->getCcShowInstancess($query, $con);
 	}
 
 	/**
@@ -3610,6 +3798,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collCcShowInstancess) {
+				foreach ((array) $this->collCcShowInstancess as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCcPlaylistcontentss) {
 				foreach ((array) $this->collCcPlaylistcontentss as $o) {
 					$o->clearAllReferences($deep);
@@ -3617,6 +3810,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
+		$this->collCcShowInstancess = null;
 		$this->collCcPlaylistcontentss = null;
 		$this->aCcSubjs = null;
 	}

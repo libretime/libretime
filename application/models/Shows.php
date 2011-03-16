@@ -117,8 +117,16 @@ class Show {
 
 		$showId = $show->getDbId();
 
+        if($data['add_show_record']){
+            $isRecorded = 1;
+        }
+        else {
+            $isRecorded = 0;
+        }
+
         //don't set day for monthly repeat type, it's invalid.
         if($data['add_show_repeats'] && $data["add_show_repeat_type"] == 2) {
+
             $showDay = new CcShowDays();
 	        $showDay->setDbFirstShow($data['add_show_start_date']);
 	        $showDay->setDbLastShow($endDate);
@@ -126,7 +134,9 @@ class Show {
 	        $showDay->setDbDuration($data['add_show_duration']);
             $showDay->setDbRepeatType($repeat_type);
 	        $showDay->setDbShowId($showId);
+            $showDay->setDbRecord($isRecorded);
 	        $showDay->save();
+
         }
         else {
 
@@ -157,9 +167,41 @@ class Show {
 			        $showDay->setDbDay($day);
                     $showDay->setDbRepeatType($repeat_type);
 			        $showDay->setDbShowId($showId);
+                    $showDay->setDbRecord($isRecorded);
 			        $showDay->save();
                 }
 		    }
+        }
+
+        //adding rows to cc_show_rebroadcast
+        if($repeat_type != -1) {
+
+            for($i=1; $i<=1; $i++) {
+
+                $showRebroad = new CcShowRebroadcast();
+                $showRebroad->setDbDayOffset($data['add_show_rebroadcast_date_'.$i]);
+                $showRebroad->setDbStartTime($data['add_show_start_time_'.$i]);
+                $showRebroad->setDbShowId($showId);
+                $showRebroad->save();
+            }
+        }
+        else {
+            
+            for($i=1; $i<=1; $i++) {
+
+                if($data['add_show_rebroadcast_absolute_date_'.$i]) {
+
+                    $sql = "SELECT date '{$data['add_show_rebroadcast_absolute_date_'.$i]}' - date '{$data['add_show_start_date']}' ";
+				    $r = $con->query($sql);
+				    $offset_days = $r->fetchColumn(0); 
+
+                    $showRebroad = new CcShowRebroadcast();
+                    $showRebroad->setDbDayOffset($offset_days." days");
+                    $showRebroad->setDbStartTime($data['add_show_rebroadcast_absolute_time_'.$i]);
+                    $showRebroad->setDbShowId($showId);
+                    $showRebroad->save();
+                }
+            }
         }
 		
         if(is_array($data['add_show_hosts'])) {
@@ -178,7 +220,8 @@ class Show {
     public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=FALSE) {
         global $CC_DBC;
 
-        $sql = "SELECT starts, ends, show_id, name, description, color, background_color, cc_show_instances.id AS instance_id  
+        $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, description, 
+                color, background_color, cc_show_instances.id AS instance_id  
             FROM cc_show_instances 
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id";
 
@@ -210,8 +253,21 @@ class Show {
 		return $CC_DBC->GetAll($sql);
     }
 
-     //for a show with repeat_type == -1
-    private static function populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $end_timestamp) {
+    private static function setNextPop($next_date, $show_id, $day) {
+
+        $nextInfo = explode(" ", $next_date);
+
+        $repeatInfo = CcShowDaysQuery::create()
+            ->filterByDbShowId($show_id)
+            ->filterByDbDay($day)
+            ->findOne();
+
+        $repeatInfo->setDbNextPopDate($nextInfo[0])
+            ->save();
+    }
+
+    //for a show with repeat_type == -1
+    private static function populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp) {
         global $CC_DBC;
        
         $next_date = $first_show." ".$start_time;
@@ -227,25 +283,39 @@ class Show {
 		    $newShow->setDbShowId($show_id);
             $newShow->setDbStarts($start);
             $newShow->setDbEnds($end);
+            $newShow->setDbRecord($record);
 		    $newShow->save();
+
+            $show_instance_id = $newShow->getDbId();
+
+            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
+		    $rebroadcasts = $CC_DBC->GetAll($sql);
+
+            foreach($rebroadcasts as $rebroadcast) {
+
+                $timeinfo = explode(" ", $start);
+                
+                $sql = "SELECT timestamp '{$timeinfo[0]}' + interval '{$rebroadcast["day_offset"]}' + interval '{$rebroadcast["start_time"]}'";
+		        $rebroadcast_start_time = $CC_DBC->GetOne($sql);
+               
+                $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
+		        $rebroadcast_end_time = $CC_DBC->GetOne($sql);
+
+                $newRebroadcastInstance = new CcShowInstances();
+                $newRebroadcastInstance->setDbShowId($show_id);
+                $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
+                $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
+                $newRebroadcastInstance->setDbRecord(0);
+                $newRebroadcastInstance->setDbRebroadcast(1);
+                $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
+		        $newRebroadcastInstance->save();
+            }
         }
     }
 
-    private static function setNextPop($next_date, $show_id, $day) {
-
-        $nextInfo = explode(" ", $next_date);
-
-        $repeatInfo = CcShowDaysQuery::create()
-            ->filterByDbShowId($show_id)
-            ->filterByDbDay($day)
-            ->findOne();
-
-        $repeatInfo->setDbNextPopDate($nextInfo[0])
-            ->save();
-    }
-
-    //for a show with repeat_type == 0
-    private static function populateWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
+    //for a show with repeat_type == 0,1,2
+    private static function populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show, 
+                                $start_time, $duration, $day, $record, $end_timestamp, $interval) {
         global $CC_DBC;        
 
         if(isset($next_pop_date)) {
@@ -254,6 +324,9 @@ class Show {
         else {
             $next_date = $first_show." ".$start_time;
         }
+
+        $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
+		$rebroadcasts = $CC_DBC->GetAll($sql);
 
         while(strtotime($next_date) < strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
             
@@ -266,90 +339,55 @@ class Show {
 		    $newShow->setDbShowId($show_id);
             $newShow->setDbStarts($start);
             $newShow->setDbEnds($end);
+            $newShow->setDbRecord($record);
 		    $newShow->save();
 
-            $sql = "SELECT timestamp '{$start}' + interval '7 days'";
+            $show_instance_id = $newShow->getDbId();
+
+            foreach($rebroadcasts as $rebroadcast) {
+
+                $timeinfo = explode(" ", $next_date);
+                
+                $sql = "SELECT timestamp '{$timeinfo[0]}' + interval '{$rebroadcast["day_offset"]}' + interval '{$rebroadcast["start_time"]}'";
+		        $rebroadcast_start_time = $CC_DBC->GetOne($sql);
+               
+                $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
+		        $rebroadcast_end_time = $CC_DBC->GetOne($sql);
+
+                $newRebroadcastInstance = new CcShowInstances();
+                $newRebroadcastInstance->setDbShowId($show_id);
+                $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
+                $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
+                $newRebroadcastInstance->setDbRecord(0);
+                $newRebroadcastInstance->setDbRebroadcast(1);
+                $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
+		        $newRebroadcastInstance->save();
+            }
+
+            $sql = "SELECT timestamp '{$start}' + interval '{$interval}'";
 		    $next_date = $CC_DBC->GetOne($sql);
         }
 
         Show::setNextPop($next_date, $show_id, $day);
     }
 
-    //for a show with repeat_type == 1
-    private static function populateBiWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
-        global $CC_DBC;        
-
-        if(isset($next_pop_date)) {
-            $next_date = $next_pop_date." ".$start_time;
-        }
-        else {
-            $next_date = $first_show." ".$start_time;
-        }
-
-        while(strtotime($next_date) < strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
-            
-            $start = $next_date;
-            
-            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
-		    $end = $CC_DBC->GetOne($sql);
-
-            $newShow = new CcShowInstances();
-		    $newShow->setDbShowId($show_id);
-            $newShow->setDbStarts($start);
-            $newShow->setDbEnds($end);
-		    $newShow->save();
-
-            $sql = "SELECT timestamp '{$start}' + interval '14 days'";
-		    $next_date = $CC_DBC->GetOne($sql);
-        }
-
-        Show::setNextPop($next_date, $show_id, $day);
-    }
-
-    //for a show with repeat_type == 2
-    private static function populateMonthlyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
-        global $CC_DBC;        
-
-        if(isset($next_pop_date)) {
-            $next_date = $next_pop_date." ".$start_time;
-        }
-        else {
-            $next_date = $first_show." ".$start_time;
-        }
-
-        while(strtotime($next_date) < strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
-            
-            $start = $next_date;
-            
-            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
-		    $end = $CC_DBC->GetOne($sql);
-
-            $newShow = new CcShowInstances();
-		    $newShow->setDbShowId($show_id);
-            $newShow->setDbStarts($start);
-            $newShow->setDbEnds($end);
-		    $newShow->save();
-
-            $sql = "SELECT timestamp '{$start}' + interval '1 month'";
-		    $next_date = $CC_DBC->GetOne($sql);
-        }
-
-        Show::setNextPop($next_date, $show_id, $day);
-    }
-
-    private static function populateShow($repeat_type, $show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp) {
+    private static function populateShow($repeat_type, $show_id, $next_pop_date, 
+                $first_show, $last_show, $start_time, $duration, $day, $record, $end_timestamp) {
 
         if($repeat_type == -1) {
-            Show::populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $end_timestamp);
+            Show::populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp);
         }
         else if($repeat_type == 0) {
-            Show::populateWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
+            Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show, 
+                    $start_time, $duration, $day, $record, $end_timestamp, '7 days');
         }
         else if($repeat_type == 1) {
-            Show::populateBiWeeklyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
+            Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show, 
+                    $start_time, $duration, $day, $record, $end_timestamp, '14 days');
         }
         else if($repeat_type == 2) {
-            Show::populateMonthlyShow($show_id, $next_pop_date, $first_show, $last_show, $start_time, $duration, $day, $end_timestamp);
+            Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show, 
+                    $start_time, $duration, $day, $record, $end_timestamp, '1 month');
         }
     } 
 
@@ -363,7 +401,7 @@ class Show {
 
         foreach($res as $row) {
             Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"], 
-                                    $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $showsPopUntil);    
+                                    $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $showsPopUntil);    
         } 
     }
 
@@ -387,7 +425,7 @@ class Show {
 
         foreach($res as $row) {
             Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"], 
-                                    $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $end_timestamp);    
+                                    $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $end_timestamp);    
         }    
     }
 
@@ -418,18 +456,28 @@ class Show {
 
 	private static function makeFullCalendarEvent($show, $options=array()) {
 		global $CC_DBC;
+    
+        $event = array();
 
-		$event = array(
-			"id" => $show["instance_id"],
-			"title" => $show["name"],
-			"start" => $show["starts"],
-			"end" => $show["ends"],
-			"allDay" => false,
-			"description" => $show["description"],
-			"color" => $show["color"],
-			"backgroundColor" => $show["background_color"],
-            "showId" => $show["show_id"]
-		);
+        if($show["rebroadcast"]) {
+            $title = "REBROADCAST ".$show["name"];
+            $event["disableResizing"] = true;
+        }
+        else {
+            $title = $show["name"];
+        }
+
+		$event["id"] = $show["instance_id"];
+		$event["title"] = $title;
+		$event["start"] = $show["starts"];
+		$event["end"] = $show["ends"];
+		$event["allDay"] = false;
+		$event["description"] = $show["description"];
+		$event["color"] = $show["color"];
+		$event["backgroundColor"] = $show["background_color"];
+        $event["showId"] = $show["show_id"];
+        $event["record"] = intval($show["record"]);
+        $event["rebroadcast"] = intval($show["rebroadcast"]);
 
 		foreach($options as $key=>$value) {
 			$event[$key] = $value;
@@ -458,6 +506,16 @@ class ShowInstance {
 
     public function getShowInstanceId() {
         return $this->_instanceId;
+    }
+
+    public function isRebroadcast() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbRebroadcast();
+    }
+
+    public function isRecorded() {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbRecord();
     }
 
     public function getName() {
@@ -560,6 +618,13 @@ class ShowInstance {
 		    }
         }
         //with overbooking no longer need to check already scheduled content still fits.
+
+        //must update length of all rebroadcast instances.
+        if($this->isRecorded()) {
+            $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
+                    WHERE rebroadcast = 1 AND instance_id = {$this->_instanceId}";
+		    $CC_DBC->query($sql);
+        }
     
         $this->setShowEnd($new_ends);
 	}

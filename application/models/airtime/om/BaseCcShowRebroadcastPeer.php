@@ -2,55 +2,52 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'cc_show' table.
+ * Base static class for performing query and update operations on the 'cc_show_rebroadcast' table.
  *
  * 
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcShowPeer {
+abstract class BaseCcShowRebroadcastPeer {
 
 	/** the default database name for this class */
 	const DATABASE_NAME = 'airtime';
 
 	/** the table name for this class */
-	const TABLE_NAME = 'cc_show';
+	const TABLE_NAME = 'cc_show_rebroadcast';
 
 	/** the related Propel class for this table */
-	const OM_CLASS = 'CcShow';
+	const OM_CLASS = 'CcShowRebroadcast';
 
 	/** A class that can be returned by this peer. */
-	const CLASS_DEFAULT = 'airtime.CcShow';
+	const CLASS_DEFAULT = 'airtime.CcShowRebroadcast';
 
 	/** the related TableMap class for this table */
-	const TM_CLASS = 'CcShowTableMap';
+	const TM_CLASS = 'CcShowRebroadcastTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 5;
+	const NUM_COLUMNS = 4;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
 	/** the column name for the ID field */
-	const ID = 'cc_show.ID';
+	const ID = 'cc_show_rebroadcast.ID';
 
-	/** the column name for the NAME field */
-	const NAME = 'cc_show.NAME';
+	/** the column name for the DAY_OFFSET field */
+	const DAY_OFFSET = 'cc_show_rebroadcast.DAY_OFFSET';
 
-	/** the column name for the DESCRIPTION field */
-	const DESCRIPTION = 'cc_show.DESCRIPTION';
+	/** the column name for the START_TIME field */
+	const START_TIME = 'cc_show_rebroadcast.START_TIME';
 
-	/** the column name for the COLOR field */
-	const COLOR = 'cc_show.COLOR';
-
-	/** the column name for the BACKGROUND_COLOR field */
-	const BACKGROUND_COLOR = 'cc_show.BACKGROUND_COLOR';
+	/** the column name for the SHOW_ID field */
+	const SHOW_ID = 'cc_show_rebroadcast.SHOW_ID';
 
 	/**
-	 * An identiy map to hold any loaded instances of CcShow objects.
+	 * An identiy map to hold any loaded instances of CcShowRebroadcast objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
 	 * queries.
-	 * @var        array CcShow[]
+	 * @var        array CcShowRebroadcast[]
 	 */
 	public static $instances = array();
 
@@ -62,12 +59,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbDescription', 'DbColor', 'DbBackgroundColor', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbDescription', 'dbColor', 'dbBackgroundColor', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::DESCRIPTION, self::COLOR, self::BACKGROUND_COLOR, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'description', 'color', 'background_color', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbDayOffset', 'DbStartTime', 'DbShowId', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbDayOffset', 'dbStartTime', 'dbShowId', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::DAY_OFFSET, self::START_TIME, self::SHOW_ID, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'DAY_OFFSET', 'START_TIME', 'SHOW_ID', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'day_offset', 'start_time', 'show_id', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -77,12 +74,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbDescription' => 2, 'DbColor' => 3, 'DbBackgroundColor' => 4, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbDescription' => 2, 'dbColor' => 3, 'dbBackgroundColor' => 4, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::DESCRIPTION => 2, self::COLOR => 3, self::BACKGROUND_COLOR => 4, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'COLOR' => 3, 'BACKGROUND_COLOR' => 4, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'description' => 2, 'color' => 3, 'background_color' => 4, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbDayOffset' => 1, 'DbStartTime' => 2, 'DbShowId' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbDayOffset' => 1, 'dbStartTime' => 2, 'dbShowId' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::DAY_OFFSET => 1, self::START_TIME => 2, self::SHOW_ID => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'DAY_OFFSET' => 1, 'START_TIME' => 2, 'SHOW_ID' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'day_offset' => 1, 'start_time' => 2, 'show_id' => 3, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -131,12 +128,12 @@ abstract class BaseCcShowPeer {
 	 *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
 	 * </code>
 	 * @param      string $alias The alias for the current table.
-	 * @param      string $column The column name for current table. (i.e. CcShowPeer::COLUMN_NAME).
+	 * @param      string $column The column name for current table. (i.e. CcShowRebroadcastPeer::COLUMN_NAME).
 	 * @return     string
 	 */
 	public static function alias($alias, $column)
 	{
-		return str_replace(CcShowPeer::TABLE_NAME.'.', $alias.'.', $column);
+		return str_replace(CcShowRebroadcastPeer::TABLE_NAME.'.', $alias.'.', $column);
 	}
 
 	/**
@@ -154,17 +151,15 @@ abstract class BaseCcShowPeer {
 	public static function addSelectColumns(Criteria $criteria, $alias = null)
 	{
 		if (null === $alias) {
-			$criteria->addSelectColumn(CcShowPeer::ID);
-			$criteria->addSelectColumn(CcShowPeer::NAME);
-			$criteria->addSelectColumn(CcShowPeer::DESCRIPTION);
-			$criteria->addSelectColumn(CcShowPeer::COLOR);
-			$criteria->addSelectColumn(CcShowPeer::BACKGROUND_COLOR);
+			$criteria->addSelectColumn(CcShowRebroadcastPeer::ID);
+			$criteria->addSelectColumn(CcShowRebroadcastPeer::DAY_OFFSET);
+			$criteria->addSelectColumn(CcShowRebroadcastPeer::START_TIME);
+			$criteria->addSelectColumn(CcShowRebroadcastPeer::SHOW_ID);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
-			$criteria->addSelectColumn($alias . '.NAME');
-			$criteria->addSelectColumn($alias . '.DESCRIPTION');
-			$criteria->addSelectColumn($alias . '.COLOR');
-			$criteria->addSelectColumn($alias . '.BACKGROUND_COLOR');
+			$criteria->addSelectColumn($alias . '.DAY_OFFSET');
+			$criteria->addSelectColumn($alias . '.START_TIME');
+			$criteria->addSelectColumn($alias . '.SHOW_ID');
 		}
 	}
 
@@ -184,21 +179,21 @@ abstract class BaseCcShowPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcShowPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcShowRebroadcastPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcShowPeer::addSelectColumns($criteria);
+			CcShowRebroadcastPeer::addSelectColumns($criteria);
 		}
 
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 		$criteria->setDbName(self::DATABASE_NAME); // Set the correct dbName
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 		// BasePeer returns a PDOStatement
 		$stmt = BasePeer::doCount($criteria, $con);
@@ -216,7 +211,7 @@ abstract class BaseCcShowPeer {
 	 *
 	 * @param      Criteria $criteria object used to create the SELECT statement.
 	 * @param      PropelPDO $con
-	 * @return     CcShow
+	 * @return     CcShowRebroadcast
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -224,7 +219,7 @@ abstract class BaseCcShowPeer {
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
-		$objects = CcShowPeer::doSelect($critcopy, $con);
+		$objects = CcShowRebroadcastPeer::doSelect($critcopy, $con);
 		if ($objects) {
 			return $objects[0];
 		}
@@ -241,7 +236,7 @@ abstract class BaseCcShowPeer {
 	 */
 	public static function doSelect(Criteria $criteria, PropelPDO $con = null)
 	{
-		return CcShowPeer::populateObjects(CcShowPeer::doSelectStmt($criteria, $con));
+		return CcShowRebroadcastPeer::populateObjects(CcShowRebroadcastPeer::doSelectStmt($criteria, $con));
 	}
 	/**
 	 * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -259,12 +254,12 @@ abstract class BaseCcShowPeer {
 	public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		if (!$criteria->hasSelectClause()) {
 			$criteria = clone $criteria;
-			CcShowPeer::addSelectColumns($criteria);
+			CcShowRebroadcastPeer::addSelectColumns($criteria);
 		}
 
 		// Set the correct dbName
@@ -282,10 +277,10 @@ abstract class BaseCcShowPeer {
 	 * to the cache in order to ensure that the same objects are always returned by doSelect*()
 	 * and retrieveByPK*() calls.
 	 *
-	 * @param      CcShow $value A CcShow object.
+	 * @param      CcShowRebroadcast $value A CcShowRebroadcast object.
 	 * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
 	 */
-	public static function addInstanceToPool(CcShow $obj, $key = null)
+	public static function addInstanceToPool(CcShowRebroadcast $obj, $key = null)
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
@@ -303,18 +298,18 @@ abstract class BaseCcShowPeer {
 	 * methods in your stub classes -- you may need to explicitly remove objects
 	 * from the cache in order to prevent returning objects that no longer exist.
 	 *
-	 * @param      mixed $value A CcShow object or a primary key value.
+	 * @param      mixed $value A CcShowRebroadcast object or a primary key value.
 	 */
 	public static function removeInstanceFromPool($value)
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
-			if (is_object($value) && $value instanceof CcShow) {
+			if (is_object($value) && $value instanceof CcShowRebroadcast) {
 				$key = (string) $value->getDbId();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;
 			} else {
-				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcShow object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcShowRebroadcast object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
 				throw $e;
 			}
 
@@ -329,7 +324,7 @@ abstract class BaseCcShowPeer {
 	 * a multi-column primary key, a serialize()d version of the primary key will be returned.
 	 *
 	 * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-	 * @return     CcShow Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+	 * @return     CcShowRebroadcast Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
 	 * @see        getPrimaryKeyHash()
 	 */
 	public static function getInstanceFromPool($key)
@@ -353,23 +348,11 @@ abstract class BaseCcShowPeer {
 	}
 	
 	/**
-	 * Method to invalidate the instance pool of all tables related to cc_show
+	 * Method to invalidate the instance pool of all tables related to cc_show_rebroadcast
 	 * by a foreign key with ON DELETE CASCADE
 	 */
 	public static function clearRelatedInstancePool()
 	{
-		// Invalidate objects in CcShowInstancesPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcShowInstancesPeer::clearInstancePool();
-		// Invalidate objects in CcShowDaysPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcShowDaysPeer::clearInstancePool();
-		// Invalidate objects in CcShowRebroadcastPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcShowRebroadcastPeer::clearInstancePool();
-		// Invalidate objects in CcShowHostsPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcShowHostsPeer::clearInstancePool();
 	}
 
 	/**
@@ -417,11 +400,11 @@ abstract class BaseCcShowPeer {
 		$results = array();
 	
 		// set the class once to avoid overhead in the loop
-		$cls = CcShowPeer::getOMClass(false);
+		$cls = CcShowRebroadcastPeer::getOMClass(false);
 		// populate the object(s)
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key = CcShowPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj = CcShowPeer::getInstanceFromPool($key))) {
+			$key = CcShowRebroadcastPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj = CcShowRebroadcastPeer::getInstanceFromPool($key))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj->hydrate($row, 0, true); // rehydrate
@@ -430,7 +413,7 @@ abstract class BaseCcShowPeer {
 				$obj = new $cls();
 				$obj->hydrate($row);
 				$results[] = $obj;
-				CcShowPeer::addInstanceToPool($obj, $key);
+				CcShowRebroadcastPeer::addInstanceToPool($obj, $key);
 			} // if key exists
 		}
 		$stmt->closeCursor();
@@ -443,24 +426,258 @@ abstract class BaseCcShowPeer {
 	 * @param      int $startcol The 0-based offset for reading from the resultset row.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
-	 * @return     array (CcShow object, last column rank)
+	 * @return     array (CcShowRebroadcast object, last column rank)
 	 */
 	public static function populateObject($row, $startcol = 0)
 	{
-		$key = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol);
-		if (null !== ($obj = CcShowPeer::getInstanceFromPool($key))) {
+		$key = CcShowRebroadcastPeer::getPrimaryKeyHashFromRow($row, $startcol);
+		if (null !== ($obj = CcShowRebroadcastPeer::getInstanceFromPool($key))) {
 			// We no longer rehydrate the object, since this can cause data loss.
 			// See http://www.propelorm.org/ticket/509
 			// $obj->hydrate($row, $startcol, true); // rehydrate
-			$col = $startcol + CcShowPeer::NUM_COLUMNS;
+			$col = $startcol + CcShowRebroadcastPeer::NUM_COLUMNS;
 		} else {
-			$cls = CcShowPeer::OM_CLASS;
+			$cls = CcShowRebroadcastPeer::OM_CLASS;
 			$obj = new $cls();
 			$col = $obj->hydrate($row, $startcol);
-			CcShowPeer::addInstanceToPool($obj, $key);
+			CcShowRebroadcastPeer::addInstanceToPool($obj, $key);
 		}
 		return array($obj, $col);
 	}
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcShow table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinCcShow(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcShowRebroadcastPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcShowRebroadcastPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcShowRebroadcastPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Selects a collection of CcShowRebroadcast objects pre-filled with their CcShow objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcShowRebroadcast objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinCcShow(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcShowRebroadcastPeer::addSelectColumns($criteria);
+		$startcol = (CcShowRebroadcastPeer::NUM_COLUMNS - CcShowRebroadcastPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcShowPeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(CcShowRebroadcastPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcShowRebroadcastPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcShowRebroadcastPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = CcShowRebroadcastPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcShowRebroadcastPeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = CcShowPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcShowPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					CcShowPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (CcShowRebroadcast) to $obj2 (CcShow)
+				$obj2->addCcShowRebroadcast($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining all related tables
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAll(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcShowRebroadcastPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcShowRebroadcastPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcShowRebroadcastPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+	/**
+	 * Selects a collection of CcShowRebroadcast objects pre-filled with all related objects.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcShowRebroadcast objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAll(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcShowRebroadcastPeer::addSelectColumns($criteria);
+		$startcol2 = (CcShowRebroadcastPeer::NUM_COLUMNS - CcShowRebroadcastPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcShowPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcShowRebroadcastPeer::SHOW_ID, CcShowPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcShowRebroadcastPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcShowRebroadcastPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcShowRebroadcastPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcShowRebroadcastPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+			// Add objects for joined CcShow rows
+
+			$key2 = CcShowPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+			if ($key2 !== null) {
+				$obj2 = CcShowPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcShowPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcShowPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 loaded
+
+				// Add the $obj1 (CcShowRebroadcast) to the collection in $obj2 (CcShow)
+				$obj2->addCcShowRebroadcast($obj1);
+			} // if joined row not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
 	/**
 	 * Returns the TableMap related to this peer.
 	 * This method is not needed for general use but a specific application could have a need.
@@ -478,10 +695,10 @@ abstract class BaseCcShowPeer {
 	 */
 	public static function buildTableMap()
 	{
-	  $dbMap = Propel::getDatabaseMap(BaseCcShowPeer::DATABASE_NAME);
-	  if (!$dbMap->hasTable(BaseCcShowPeer::TABLE_NAME))
+	  $dbMap = Propel::getDatabaseMap(BaseCcShowRebroadcastPeer::DATABASE_NAME);
+	  if (!$dbMap->hasTable(BaseCcShowRebroadcastPeer::TABLE_NAME))
 	  {
-	    $dbMap->addTableObject(new CcShowTableMap());
+	    $dbMap->addTableObject(new CcShowRebroadcastTableMap());
 	  }
 	}
 
@@ -498,13 +715,13 @@ abstract class BaseCcShowPeer {
 	 */
 	public static function getOMClass($withPrefix = true)
 	{
-		return $withPrefix ? CcShowPeer::CLASS_DEFAULT : CcShowPeer::OM_CLASS;
+		return $withPrefix ? CcShowRebroadcastPeer::CLASS_DEFAULT : CcShowRebroadcastPeer::OM_CLASS;
 	}
 
 	/**
-	 * Method perform an INSERT on the database, given a CcShow or Criteria object.
+	 * Method perform an INSERT on the database, given a CcShowRebroadcast or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcShow object containing data that is used to create the INSERT statement.
+	 * @param      mixed $values Criteria or CcShowRebroadcast object containing data that is used to create the INSERT statement.
 	 * @param      PropelPDO $con the PropelPDO connection to use
 	 * @return     mixed The new primary key.
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -513,17 +730,17 @@ abstract class BaseCcShowPeer {
 	public static function doInsert($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 		} else {
-			$criteria = $values->buildCriteria(); // build Criteria from CcShow object
+			$criteria = $values->buildCriteria(); // build Criteria from CcShowRebroadcast object
 		}
 
-		if ($criteria->containsKey(CcShowPeer::ID) && $criteria->keyContainsValue(CcShowPeer::ID) ) {
-			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcShowPeer::ID.')');
+		if ($criteria->containsKey(CcShowRebroadcastPeer::ID) && $criteria->keyContainsValue(CcShowRebroadcastPeer::ID) ) {
+			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcShowRebroadcastPeer::ID.')');
 		}
 
 
@@ -545,9 +762,9 @@ abstract class BaseCcShowPeer {
 	}
 
 	/**
-	 * Method perform an UPDATE on the database, given a CcShow or Criteria object.
+	 * Method perform an UPDATE on the database, given a CcShowRebroadcast or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcShow object containing data that is used to create the UPDATE statement.
+	 * @param      mixed $values Criteria or CcShowRebroadcast object containing data that is used to create the UPDATE statement.
 	 * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -556,7 +773,7 @@ abstract class BaseCcShowPeer {
 	public static function doUpdate($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$selectCriteria = new Criteria(self::DATABASE_NAME);
@@ -564,15 +781,15 @@ abstract class BaseCcShowPeer {
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 
-			$comparison = $criteria->getComparison(CcShowPeer::ID);
-			$value = $criteria->remove(CcShowPeer::ID);
+			$comparison = $criteria->getComparison(CcShowRebroadcastPeer::ID);
+			$value = $criteria->remove(CcShowRebroadcastPeer::ID);
 			if ($value) {
-				$selectCriteria->add(CcShowPeer::ID, $value, $comparison);
+				$selectCriteria->add(CcShowRebroadcastPeer::ID, $value, $comparison);
 			} else {
-				$selectCriteria->setPrimaryTableName(CcShowPeer::TABLE_NAME);
+				$selectCriteria->setPrimaryTableName(CcShowRebroadcastPeer::TABLE_NAME);
 			}
 
-		} else { // $values is CcShow object
+		} else { // $values is CcShowRebroadcast object
 			$criteria = $values->buildCriteria(); // gets full criteria
 			$selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
 		}
@@ -584,26 +801,26 @@ abstract class BaseCcShowPeer {
 	}
 
 	/**
-	 * Method to DELETE all rows from the cc_show table.
+	 * Method to DELETE all rows from the cc_show_rebroadcast table.
 	 *
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	public static function doDeleteAll($con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		$affectedRows = 0; // initialize var to track total num of affected rows
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			$affectedRows += BasePeer::doDeleteAll(CcShowPeer::TABLE_NAME, $con, CcShowPeer::DATABASE_NAME);
+			$affectedRows += BasePeer::doDeleteAll(CcShowRebroadcastPeer::TABLE_NAME, $con, CcShowRebroadcastPeer::DATABASE_NAME);
 			// Because this db requires some delete cascade/set null emulation, we have to
 			// clear the cached instance *after* the emulation has happened (since
 			// instances get re-added by the select statement contained therein).
-			CcShowPeer::clearInstancePool();
-			CcShowPeer::clearRelatedInstancePool();
+			CcShowRebroadcastPeer::clearInstancePool();
+			CcShowRebroadcastPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -613,9 +830,9 @@ abstract class BaseCcShowPeer {
 	}
 
 	/**
-	 * Method perform a DELETE on the database, given a CcShow or Criteria object OR a primary key value.
+	 * Method perform a DELETE on the database, given a CcShowRebroadcast or Criteria object OR a primary key value.
 	 *
-	 * @param      mixed $values Criteria or CcShow object or primary key or array of primary keys
+	 * @param      mixed $values Criteria or CcShowRebroadcast object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
 	 * @param      PropelPDO $con the connection to use
 	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -626,27 +843,27 @@ abstract class BaseCcShowPeer {
 	 public static function doDelete($values, PropelPDO $con = null)
 	 {
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			// invalidate the cache for all objects of this type, since we have no
 			// way of knowing (without running a query) what objects should be invalidated
 			// from the cache based on this Criteria.
-			CcShowPeer::clearInstancePool();
+			CcShowRebroadcastPeer::clearInstancePool();
 			// rename for clarity
 			$criteria = clone $values;
-		} elseif ($values instanceof CcShow) { // it's a model object
+		} elseif ($values instanceof CcShowRebroadcast) { // it's a model object
 			// invalidate the cache for this single object
-			CcShowPeer::removeInstanceFromPool($values);
+			CcShowRebroadcastPeer::removeInstanceFromPool($values);
 			// create criteria based on pk values
 			$criteria = $values->buildPkeyCriteria();
 		} else { // it's a primary key, or an array of pks
 			$criteria = new Criteria(self::DATABASE_NAME);
-			$criteria->add(CcShowPeer::ID, (array) $values, Criteria::IN);
+			$criteria->add(CcShowRebroadcastPeer::ID, (array) $values, Criteria::IN);
 			// invalidate the cache for this object(s)
 			foreach ((array) $values as $singleval) {
-				CcShowPeer::removeInstanceFromPool($singleval);
+				CcShowRebroadcastPeer::removeInstanceFromPool($singleval);
 			}
 		}
 
@@ -661,7 +878,7 @@ abstract class BaseCcShowPeer {
 			$con->beginTransaction();
 			
 			$affectedRows += BasePeer::doDelete($criteria, $con);
-			CcShowPeer::clearRelatedInstancePool();
+			CcShowRebroadcastPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -671,24 +888,24 @@ abstract class BaseCcShowPeer {
 	}
 
 	/**
-	 * Validates all modified columns of given CcShow object.
+	 * Validates all modified columns of given CcShowRebroadcast object.
 	 * If parameter $columns is either a single column name or an array of column names
 	 * than only those columns are validated.
 	 *
 	 * NOTICE: This does not apply to primary or foreign keys for now.
 	 *
-	 * @param      CcShow $obj The object to validate.
+	 * @param      CcShowRebroadcast $obj The object to validate.
 	 * @param      mixed $cols Column name or array of column names.
 	 *
 	 * @return     mixed TRUE if all columns are valid or the error message of the first invalid column.
 	 */
-	public static function doValidate(CcShow $obj, $cols = null)
+	public static function doValidate(CcShowRebroadcast $obj, $cols = null)
 	{
 		$columns = array();
 
 		if ($cols) {
-			$dbMap = Propel::getDatabaseMap(CcShowPeer::DATABASE_NAME);
-			$tableMap = $dbMap->getTable(CcShowPeer::TABLE_NAME);
+			$dbMap = Propel::getDatabaseMap(CcShowRebroadcastPeer::DATABASE_NAME);
+			$tableMap = $dbMap->getTable(CcShowRebroadcastPeer::TABLE_NAME);
 
 			if (! is_array($cols)) {
 				$cols = array($cols);
@@ -704,7 +921,7 @@ abstract class BaseCcShowPeer {
 
 		}
 
-		return BasePeer::doValidate(CcShowPeer::DATABASE_NAME, CcShowPeer::TABLE_NAME, $columns);
+		return BasePeer::doValidate(CcShowRebroadcastPeer::DATABASE_NAME, CcShowRebroadcastPeer::TABLE_NAME, $columns);
 	}
 
 	/**
@@ -712,23 +929,23 @@ abstract class BaseCcShowPeer {
 	 *
 	 * @param      int $pk the primary key.
 	 * @param      PropelPDO $con the connection to use
-	 * @return     CcShow
+	 * @return     CcShowRebroadcast
 	 */
 	public static function retrieveByPK($pk, PropelPDO $con = null)
 	{
 
-		if (null !== ($obj = CcShowPeer::getInstanceFromPool((string) $pk))) {
+		if (null !== ($obj = CcShowRebroadcastPeer::getInstanceFromPool((string) $pk))) {
 			return $obj;
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria = new Criteria(CcShowPeer::DATABASE_NAME);
-		$criteria->add(CcShowPeer::ID, $pk);
+		$criteria = new Criteria(CcShowRebroadcastPeer::DATABASE_NAME);
+		$criteria->add(CcShowRebroadcastPeer::ID, $pk);
 
-		$v = CcShowPeer::doSelect($criteria, $con);
+		$v = CcShowRebroadcastPeer::doSelect($criteria, $con);
 
 		return !empty($v) > 0 ? $v[0] : null;
 	}
@@ -744,23 +961,23 @@ abstract class BaseCcShowPeer {
 	public static function retrieveByPKs($pks, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcShowRebroadcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		$objs = null;
 		if (empty($pks)) {
 			$objs = array();
 		} else {
-			$criteria = new Criteria(CcShowPeer::DATABASE_NAME);
-			$criteria->add(CcShowPeer::ID, $pks, Criteria::IN);
-			$objs = CcShowPeer::doSelect($criteria, $con);
+			$criteria = new Criteria(CcShowRebroadcastPeer::DATABASE_NAME);
+			$criteria->add(CcShowRebroadcastPeer::ID, $pks, Criteria::IN);
+			$objs = CcShowRebroadcastPeer::doSelect($criteria, $con);
 		}
 		return $objs;
 	}
 
-} // BaseCcShowPeer
+} // BaseCcShowRebroadcastPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseCcShowPeer::buildTableMap();
+BaseCcShowRebroadcastPeer::buildTableMap();
 

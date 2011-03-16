@@ -34,7 +34,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.min.js','text/javascript');
+        $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.js','text/javascript');
         $this->view->headScript()->appendFile('/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
     	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
@@ -48,22 +48,33 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
         $request = $this->getRequest();
+
         $formWhat = new Application_Form_AddShowWhat();
-		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho = new Application_Form_AddShowWho();
-		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen = new Application_Form_AddShowWhen();
-		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats = new Application_Form_AddShowRepeats();
-		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle = new Application_Form_AddShowStyle();
+        $formRecord = new Application_Form_AddShowRR();
+        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
+        $formRecord->removeDecorator('DtDdWrapper');
+        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+        $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $this->view->what = $formWhat;
-		$this->view->when = $formWhen;
-		$this->view->repeats = $formRepeats;
-		$this->view->who = $formWho;
-		$this->view->style = $formStyle;
+	    $this->view->when = $formWhen;
+	    $this->view->repeats = $formRepeats;
+	    $this->view->who = $formWho;
+	    $this->view->style = $formStyle;
+        $this->view->rr = $formRecord;
+        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+        $this->view->rebroadcast = $formRebroadcast;
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
@@ -141,19 +152,27 @@ class ScheduleController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-
         $show = new ShowInstance($id);
 
 		$params = '/format/json/id/#id#';
 
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
-            if ($user->isHost($show->getShowId()) || $user->isAdmin()) {	      
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add Content');
+
+            if (($user->isHost($show->getShowId()) || $user->isAdmin()) && !$show->isRecorded() && !$show->isRebroadcast()) {
+	      
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 
+                    'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add Content');
+
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 
+                            'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
             }
-    }
-    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 'callback' => 'window["buildContentDialog"]'), 
-							'title' => 'Show Content');
-                            
+
+        }
+
+        $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 
+                'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
+
+                         
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
                 strtotime($today_timestamp) < strtotime($show->getShowEnd())) {
             $menu[] = array('action' => array('type' => 'fn',
@@ -163,15 +182,15 @@ class ScheduleController extends Zend_Controller_Action
         }
                             
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
+
             if ($user->isAdmin()) {
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
-            }
-            if ($user->isHost($show->getShowId()) || $user->isAdmin()) {
-			          $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
+
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 
+                        'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params, 
+                        'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
             }
 		}
-
 		
 		//returns format jjmenu is looking for.
 		die(json_encode($menu));
@@ -328,19 +347,27 @@ class ScheduleController extends Zend_Controller_Action
 		$formWhen = new Application_Form_AddShowWhen();
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
+        $formRecord = new Application_Form_AddShowRR();
+        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
 		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
+        $formRecord->removeDecorator('DtDdWrapper');
+        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+        $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $this->view->what = $formWhat;
 	    $this->view->when = $formWhen;
 	    $this->view->repeats = $formRepeats;
 	    $this->view->who = $formWho;
 	    $this->view->style = $formStyle;
-
+        $this->view->rr = $formRecord;
+        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+        $this->view->rebroadcast = $formRebroadcast;
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
         if($when) {
