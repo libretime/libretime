@@ -17,13 +17,13 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
 
 require_once(dirname(__FILE__).'/installInit.php');
 
-checkIfRoot();
+AirtimeInstall::ExitIfNotRoot();
 
 echo "******************************** Update Begin *********************************".PHP_EOL;
-updateINIKeyValues('../build/build.properties', 'project.home', realpath(__dir__.'/../'));
+AirtimeInstall::UpdateIniValue('../build/build.properties', 'project.home', realpath(__dir__.'/../'));
 
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
-doctrineMigrateTables(__DIR__);
+AirtimeInstall::MigrateTables(__DIR__);
 
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
 system("python ".__DIR__."/../pypo/install/pypo-install.py");

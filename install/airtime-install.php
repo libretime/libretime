@@ -1,7 +1,6 @@
 <?php
 /**
  * @package Airtime
- * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
@@ -20,34 +19,33 @@ require_once(dirname(__FILE__).'/installInit.php');
 
 echo "******************************** Install Begin *********************************".PHP_EOL;
 
-checkIfRoot();
-createAPIKey();
-updateINIKeyValues('../build/build.properties', 'project.home', realpath(__dir__.'/../'));
+AirtimeInstall::ExitIfNotRoot();
+AirtimeInstall::CreateApiKey();
+AirtimeInstall::UpdateIniValue('../build/build.properties', 'project.home', realpath(__dir__.'/../'));
 
 
 echo PHP_EOL."*** Database Installation ***".PHP_EOL;
 
 echo "* Creating Airtime Database User".PHP_EOL;
-createAirtimeDatabaseUser();
+AirtimeInstall::CreateDatabaseUser();
 
 echo "* Creating Airtime Database".PHP_EOL;
-createAirtimeDatabase();
+AirtimeInstall::CreateDatabase();
 
-
-airtime_db_connect(true);
+AirtimeInstall::DbConnect(true);
 
 echo "* Install Postgresql Scripting Language".PHP_EOL;
-installPostgresScriptingLanguage();
+AirtimeInstall::InstallPostgresScriptingLanguage();
 
 echo "* Creating Database Tables".PHP_EOL;
-createAirtimeDatabaseTables();
-doctrineMigrateTables(__DIR__);
+AirtimeInstall::CreateDatabaseTables();
+AirtimeInstall::MigrateTables(__DIR__);
 
 echo "* Storage Directory Setup".PHP_EOL;
-storageDirectorySetup($CC_CONFIG);
+AirtimeInstall::SetupStorageDirectory($CC_CONFIG);
 
 echo "* Setting Dir Permissions".PHP_EOL;
-install_setDirPermissions($CC_CONFIG["storageDir"]);
+AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
 echo "* Importing Sample Audio Clips".PHP_EOL;
 system(__DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null");
