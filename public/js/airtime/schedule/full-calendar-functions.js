@@ -148,7 +148,8 @@ function viewDisplay( view ) {
 
 function eventRender(event, element, view) { 
 
-	if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
+    //only put progress bar on shows that aren't being recorded and are not a rebroadcast.
+	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0 && event.rebroadcast === 0) {
 		var div = $('<div/>');
 		div
 			.height('5px')

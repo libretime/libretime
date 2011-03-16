@@ -618,6 +618,13 @@ class ShowInstance {
 		    }
         }
         //with overbooking no longer need to check already scheduled content still fits.
+
+        //must update length of all rebroadcast instances.
+        if($this->isRecorded()) {
+            $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
+                    WHERE rebroadcast = 1 AND instance_id = {$this->_instanceId}";
+		    $CC_DBC->query($sql);
+        }
     
         $this->setShowEnd($new_ends);
 	}
