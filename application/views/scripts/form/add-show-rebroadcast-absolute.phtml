@@ -1,0 +1,18 @@
+<fieldset>
+    <dl>
+    <dt id="add_show_hosts_rebroadcast_day-label" class="block-display">
+        <label for="add_show_rebroadcast_day" class="optional">Choose Days:</label>
+    </dt> 
+    <dd id="add_show_rebroadcast_day-element" class="block-display clearfix">
+    <ul class="formrow-repeat">
+        <?php for($i=1; $i<=5; $i++): ?>
+            <li>
+                <?php echo $this->element->getElement('add_show_rebroadcast_absolute_date_'.$i) ?>
+                <span class="inline-text">@</span>
+                <?php echo $this->element->getElement('add_show_rebroadcast_absolute_time_'.$i) ?>
+            </li>
+        <?php endfor; ?>
+    </ul>
+    </dd>          
+    </dl>
+</fieldset>

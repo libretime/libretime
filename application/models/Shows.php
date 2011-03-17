@@ -111,6 +111,7 @@ class Show {
 		$show = new CcShow();
 		$show->setDbName($data['add_show_name']);
 		$show->setDbDescription($data['add_show_description']);
+        $show->setDbUrl($data['add_show_url']);
 		$show->setDbColor($data['add_show_color']);
 		$show->setDbBackgroundColor($data['add_show_background_color']);
 		$show->save();      
@@ -174,7 +175,7 @@ class Show {
         }
 
         //adding rows to cc_show_rebroadcast
-        if($repeat_type != -1) {
+        if($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type != -1) {
 
             for($i=1; $i<=1; $i++) {
 
@@ -185,9 +186,9 @@ class Show {
                 $showRebroad->save();
             }
         }
-        else {
+        else if($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type == -1){
             
-            for($i=1; $i<=1; $i++) {
+            for($i=1; $i<=5; $i++) {
 
                 if($data['add_show_rebroadcast_absolute_date_'.$i]) {
 
