@@ -58,6 +58,10 @@ Non-linked code:
 
  * mp3cut from the package poc-streamer
 
+ * ecasound 2.7.2
+   - Web site: http://www.eca.cx/ecasound/
+   - License: GPLv2
+
  * jQuery 
    - Web site: http://jquery.com/
    - License: MIT and GPL.  See http://jquery.org/license

@@ -84,10 +84,10 @@ function airtime_empty_db($db) {
     global $CC_CONFIG;
 
     if (!PEAR::isError($db)) {
-        if (airtime_db_table_exists($CC_CONFIG['filesTable'])) {
+        if (AirtimeInstall::DbTableExists($CC_CONFIG['filesTable'])) {
             echo " * Deleting from database table ".$CC_CONFIG['filesTable']."\n";
             $sql = "DELETE FROM ".$CC_CONFIG['filesTable'];
-            airtime_install_query($sql, false);
+            AirtimeInstall::InstallQuery($sql, false);
         }
         else {
             echo " * Skipping: database table ".$CC_CONFIG['filesTable']."\n";

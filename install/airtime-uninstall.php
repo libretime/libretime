@@ -18,13 +18,13 @@ require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/installInit.php');
 
 // Need to check that we are superuser before running this.
-checkIfRoot();
+AirtimeInstall::ExitIfNotRoot();
 
 
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
 //------------------------------------------------------------------------
 // Delete the database
-// Note: Do not put a call to airtime_db_connect()
+// Note: Do not put a call to AirtimeInstall::DbConnect()
 // before this function, even if you called $CC_DBC->disconnect(), there will
 // still be a connection to the database and you wont be able to delete it.
 //------------------------------------------------------------------------
@@ -37,26 +37,29 @@ $command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']} 2> /dev/null
 // We do this if dropping the database fails above.
 //------------------------------------------------------------------------
 if ($dbDeleteFailed) {
-  echo " * Couldn't delete the database, so deleting all the DB tables...".PHP_EOL;
-  airtime_db_connect(true);
+    echo " * Couldn't delete the database, so deleting all the DB tables...".PHP_EOL;
+    AirtimeInstall::DbConnect(true);
 
-  if (!PEAR::isError($CC_DBC)) {
-      $sql = "select * from pg_tables where tableowner = 'airtime'";
-      $rows = airtime_get_query($sql);
+    if (!PEAR::isError($CC_DBC)) {
+        $sql = "select * from pg_tables where tableowner = 'airtime'";
+        $rows = $CC_DBC->GetAll($sql);
+        if (PEAR::isError($result)) {
+            $rows = array();
+        }
 
-      foreach ($rows as $row){
-          $tablename = $row["tablename"];
-          echo "   * Removing database table $tablename...";
+        foreach ($rows as $row) {
+            $tablename = $row["tablename"];
+            echo "   * Removing database table $tablename...";
 
-          if (airtime_db_table_exists($tablename)){
-              $sql = "DROP TABLE $tablename CASCADE";
-              airtime_install_query($sql, false);
-                  
-              $CC_DBC->dropSequence($tablename."_id");
-          }
-          echo "done.".PHP_EOL;
-      }
-  }
+            if (AirtimeInstall::DbTableExists($tablename)){
+                $sql = "DROP TABLE $tablename CASCADE";
+                AirtimeInstall::InstallQuery($sql, false);
+
+                $CC_DBC->dropSequence($tablename."_id");
+            }
+            echo "done.".PHP_EOL;
+        }
+    }
 }
 
 //------------------------------------------------------------------------
@@ -66,16 +69,16 @@ echo " * Deleting database user '{$CC_CONFIG['dsn']['username']}'...".PHP_EOL;
 $command = "sudo -u postgres psql postgres --command \"DROP USER {$CC_CONFIG['dsn']['username']}\" 2> /dev/null";
 @exec($command, $output, $results);
 if ($results == 0) {
-  echo "   * User '{$CC_CONFIG['dsn']['username']}' deleted.".PHP_EOL;
+    echo "   * User '{$CC_CONFIG['dsn']['username']}' deleted.".PHP_EOL;
 } else {
-  echo "   * Nothing to delete..".PHP_EOL;
+    echo "   * Nothing to delete..".PHP_EOL;
 }
 
 
 //------------------------------------------------------------------------
 // Delete files
 //------------------------------------------------------------------------
-airtime_uninstall_delete_files($CC_CONFIG['storageDir']);
+AirtimeInstall::DeleteFilesRecursive($CC_CONFIG['storageDir']);
 
 
 $command = "python ".__DIR__."/../pypo/install/pypo-uninstall.py";
