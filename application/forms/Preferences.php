@@ -7,7 +7,7 @@ class Application_Form_Preferences extends Zend_Form
     {
         $this->setAction('/Preference/update')->setMethod('post');
         
-        // Add login element
+        //Station name
         $this->addElement('text', 'stationName', array(
             'class'      => 'input_text',
             'label'      => 'Station Name:',
@@ -22,7 +22,7 @@ class Application_Form_Preferences extends Zend_Form
             $defaultFade = '00:00:00.000000';
         }
 
-         // Add login element
+        //Default station fade
         $this->addElement('text', 'stationDefaultFade', array(
             'class'      => 'input_text',
             'label'      => 'Default Fade:',
@@ -42,11 +42,38 @@ class Application_Form_Preferences extends Zend_Form
         $stream_format->setValue(Application_Model_Preference::GetStreamLabelFormat());
         $this->addElement($stream_format);
 
+
+		$this->addElement('checkbox', 'UseSoundCloud', array(
+            'label'      => 'Automatically Upload Recorded Shows To SoundCloud',
+            'required'   => false,
+            'value' => Application_Model_Preference::GetValue("soundcloud_upload")
+		));
+
+        //SoundCloud Username
+        $this->addElement('text', 'SoundCloudUser', array(
+            'class'      => 'input_text',
+            'label'      => 'SoundCloud Username:',
+            'required'   => false,
+            'filters'    => array('StringTrim'),
+            'value' => Application_Model_Preference::GetValue("soundcloud_user")
+        ));
+
+        //SoundCloud Password
+        $this->addElement('password', 'SoundCloudPassword', array(
+            'class'      => 'input_text',
+            'label'      => 'SoundCloud Password:',
+            'required'   => false,
+            'filters'    => array('StringTrim'),
+            'value' => Application_Model_Preference::GetValue("soundcloud_pass")
+        ));
+
         $this->addElement('submit', 'submit', array(
             'class'    => 'ui-button ui-state-default',
             'ignore'   => true,
             'label'    => 'Submit',
         ));
+
+        
         
     }
 }

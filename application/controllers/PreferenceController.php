@@ -29,7 +29,10 @@ class PreferenceController extends Zend_Controller_Action
             $values = $form->getValues();
             Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view); 
             Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);                      
-            Application_Model_Preference::SetStreamLabelFormat($values["streamFormat"]);                      
+            Application_Model_Preference::SetStreamLabelFormat($values["streamFormat"]);
+            Application_Model_Preference::SetDoSoundCloudUpload($values["UseSoundCloud"]);  
+            Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
+            Application_Model_Preference::SetSoundCloudPassword($values["SoundCloudPassword"]);                    
             
             $this->view->statusMsg = "Preferences Updated.";
         }

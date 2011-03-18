@@ -78,7 +78,7 @@ class Application_Model_Preference
         return Application_Model_Preference::GetValue("shows_populated_until");
     }
 
-     public static function SetDefaultFade($fade) { 
+    public static function SetDefaultFade($fade) { 
         Application_Model_Preference::SetValue("default_fade", $fade); 
     }
 
@@ -97,5 +97,30 @@ class Application_Model_Preference
     public static function GetStationName(){
         return Application_Model_Preference::getValue("station_name");
     }
+
+    public static function SetDoSoundCloudUpload($upload) { 
+        Application_Model_Preference::SetValue("soundcloud_upload", $upload); 
+    }
+
+    public static function GetDoSoundCloudUpload() {
+        return Application_Model_Preference::GetValue("soundcloud_upload");
+    }
+
+    public static function SetSoundCloudUser($user) { 
+        Application_Model_Preference::SetValue("soundcloud_user", $user); 
+    }
+
+    public static function GetSoundCloudUser() {
+        return Application_Model_Preference::GetValue("soundcloud_user");
+    }
+
+    public static function SetSoundCloudPassword($password) { 
+        Application_Model_Preference::SetValue("soundcloud_password", $password); 
+    }
+
+    public static function GetSoundCloudUserPassword() {
+        return Application_Model_Preference::GetValue("soundcloud_password");
+    }
+
 }
 

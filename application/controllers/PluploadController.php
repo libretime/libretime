@@ -146,8 +146,7 @@ class PluploadController extends Zend_Controller_Action
 
 		$storedFile->setMetadataBatch($metadata);
 
-		// Return JSON-RPC response
-		die('{"jsonrpc" : "2.0", "id" : '.$storedFile->getId().' }');
+		return $storedFile;
     }
 
     public function indexAction()
@@ -158,13 +157,18 @@ class PluploadController extends Zend_Controller_Action
     public function uploadAction()
     {
         $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $this->upload($upload_dir);
+        $file = $this->upload($upload_dir);
+
+		die('{"jsonrpc" : "2.0", "id" : '.$file->getId().' }');
     }
 
     public function uploadRecordedAction()
     {
         $upload_dir = ini_get("upload_tmp_dir");
-        $this->upload($upload_dir);  
+        $file = $this->upload($upload_dir);
+
+        //$file->getRealFilePath(); 
+        die('{"jsonrpc" : "2.0", "id" : '.$file->getId().' }'); 
     }
 
     public function pluploadAction()
