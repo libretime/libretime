@@ -177,13 +177,16 @@ class Show {
         //adding rows to cc_show_rebroadcast
         if($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type != -1) {
 
-            for($i=1; $i<=1; $i++) {
+            for($i=1; $i<=5; $i++) {
 
-                $showRebroad = new CcShowRebroadcast();
-                $showRebroad->setDbDayOffset($data['add_show_rebroadcast_date_'.$i]);
-                $showRebroad->setDbStartTime($data['add_show_start_time_'.$i]);
-                $showRebroad->setDbShowId($showId);
-                $showRebroad->save();
+                if($data['add_show_rebroadcast_date_'.$i]) {
+
+                    $showRebroad = new CcShowRebroadcast();
+                    $showRebroad->setDbDayOffset($data['add_show_rebroadcast_date_'.$i]);
+                    $showRebroad->setDbStartTime($data['add_show_rebroadcast_time_'.$i]);
+                    $showRebroad->setDbShowId($showId);
+                    $showRebroad->save();
+                }
             }
         }
         else if($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type == -1){
@@ -511,7 +514,7 @@ class ShowInstance {
 
     public function isRebroadcast() {
         $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        return $showInstance->getDbRebroadcast();
+        return $showInstance->getDbOriginalShow();
     }
 
     public function isRecorded() {
@@ -587,6 +590,16 @@ class ShowInstance {
 		if(count($overlap) > 0) {
 			return "Should not overlap shows";
 		}
+
+        $rebroadcast = $this->isRebroadcast();
+        if($rebroadcast) {
+            $sql = "SELECT timestamp '{$new_starts}' < (SELECT starts FROM cc_show_instances WHERE id = {$rebroadcast})";
+		    $isBeforeRecordedOriginal = $CC_DBC->GetOne($sql);
+           
+            if($isBeforeRecordedOriginal === 't'){
+                return "Cannot move a rebroadcast show before its original";
+            }
+        }
     
         $this->moveScheduledShowContent($deltaDay, $hours, $mins);
         $this->setShowStart($new_starts);

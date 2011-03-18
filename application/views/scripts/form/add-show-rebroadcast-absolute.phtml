@@ -10,6 +10,9 @@
                 <?php echo $this->element->getElement('add_show_rebroadcast_absolute_date_'.$i) ?>
                 <span class="inline-text">@</span>
                 <?php echo $this->element->getElement('add_show_rebroadcast_absolute_time_'.$i) ?>
+                <?php if($this->element->getElement('add_show_rebroadcast_absolute_time_'.$i)->hasErrors()) : ?>
+                    <?php echo var_dump($this->element->getElement('add_show_rebroadcast_absolute_time_'.$i)->getMessages()); ?>
+                <?php endif; ?>
             </li>
         <?php endfor; ?>
     </ul>

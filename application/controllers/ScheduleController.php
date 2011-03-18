@@ -168,8 +168,10 @@ class ScheduleController extends Zend_Controller_Action
 
         }
 
-        $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 
-                'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
+        if(!$show->isRecorded()) {
+            $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 
+                    'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
+        }
 
                          
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
