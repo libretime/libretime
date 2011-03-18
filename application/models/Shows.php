@@ -233,7 +233,7 @@ class Show {
         if($onlyRecord) {
 
             $sql = $sql." WHERE (starts >= '{$start_timestamp}' AND starts < timestamp '{$start_timestamp}' + interval '2 hours')";
-            $sql = $sql." AND (record = TRUE)";
+            $sql = $sql." AND (record = 1)";
         }
         else {
 
