@@ -8,12 +8,14 @@
  *
  * @method     CcShowQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcShowQuery orderByDbName($order = Criteria::ASC) Order by the name column
+ * @method     CcShowQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
  * @method     CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method     CcShowQuery orderByDbColor($order = Criteria::ASC) Order by the color column
  * @method     CcShowQuery orderByDbBackgroundColor($order = Criteria::ASC) Order by the background_color column
  *
  * @method     CcShowQuery groupByDbId() Group by the id column
  * @method     CcShowQuery groupByDbName() Group by the name column
+ * @method     CcShowQuery groupByDbUrl() Group by the url column
  * @method     CcShowQuery groupByDbDescription() Group by the description column
  * @method     CcShowQuery groupByDbColor() Group by the color column
  * @method     CcShowQuery groupByDbBackgroundColor() Group by the background_color column
@@ -43,12 +45,14 @@
  *
  * @method     CcShow findOneByDbId(int $id) Return the first CcShow filtered by the id column
  * @method     CcShow findOneByDbName(string $name) Return the first CcShow filtered by the name column
+ * @method     CcShow findOneByDbUrl(string $url) Return the first CcShow filtered by the url column
  * @method     CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
  * @method     CcShow findOneByDbColor(string $color) Return the first CcShow filtered by the color column
  * @method     CcShow findOneByDbBackgroundColor(string $background_color) Return the first CcShow filtered by the background_color column
  *
  * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
+ * @method     array findByDbUrl(string $url) Return CcShow objects filtered by the url column
  * @method     array findByDbDescription(string $description) Return CcShow objects filtered by the description column
  * @method     array findByDbColor(string $color) Return CcShow objects filtered by the color column
  * @method     array findByDbBackgroundColor(string $background_color) Return CcShow objects filtered by the background_color column
@@ -198,6 +202,28 @@ abstract class BaseCcShowQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowPeer::NAME, $dbName, $comparison);
+	}
+
+	/**
+	 * Filter the query on the url column
+	 * 
+	 * @param     string $dbUrl The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByDbUrl($dbUrl = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbUrl)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbUrl)) {
+				$dbUrl = str_replace('*', '%', $dbUrl);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcShowPeer::URL, $dbUrl, $comparison);
 	}
 
 	/**

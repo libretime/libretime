@@ -5,6 +5,10 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     public function init()
     {
+
+        //$this->setDisableLoadDefaultDecorators(true);
+        //$this->removeDecorator('DtDdWrapper');
+
 		// Add start date element
         $this->addElement('text', 'add_show_start_date', array(
             'label'      => 'Date Start:',

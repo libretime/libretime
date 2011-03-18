@@ -66,8 +66,48 @@ function setAddShowEvents() {
         form.find("#schedule-show-when > fieldset:last").hide();
     }
 
+    if(!form.find("#add_show_record").attr('checked')) {
+        form.find("#add_show_rebroadcast").hide();
+    }
+
+    if(!form.find("#add_show_rebroadcast").attr('checked')) {
+        form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
+    }
+
     form.find("#add_show_repeats").click(function(){
+        $(this).blur();
         form.find("#schedule-show-when > fieldset:last").toggle();
+
+        //must switch rebroadcast displays
+        if(form.find("#add_show_rebroadcast").attr('checked')) {
+
+            if($(this).attr('checked')){
+                form.find("#schedule-record-rebroadcast > fieldset:eq(1)").hide();
+                form.find("#schedule-record-rebroadcast > fieldset:last").show();
+            }
+            else {
+                form.find("#schedule-record-rebroadcast > fieldset:eq(1)").show();
+                form.find("#schedule-record-rebroadcast > fieldset:last").hide();
+            }
+        }
+    });
+
+    form.find("#add_show_record").click(function(){
+        $(this).blur();
+        form.find("#add_show_rebroadcast").toggle();
+    });
+
+    form.find("#add_show_rebroadcast").click(function(){
+        $(this).blur();
+        if($(this).attr('checked') && !form.find("#add_show_repeats").attr('checked')) {
+            form.find("#schedule-record-rebroadcast > fieldset:eq(1)").show();
+        }
+        else if($(this).attr('checked') && form.find("#add_show_repeats").attr('checked')) {
+            form.find("#schedule-record-rebroadcast > fieldset:last").show();
+        }
+        else {
+            form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
+        }
     });
 
     form.find("#add_show_repeat_type").change(function(){
@@ -91,12 +131,23 @@ function setAddShowEvents() {
 	createDateInput(form.find("#add_show_start_date"), startDpSelect);
 	createDateInput(form.find("#add_show_end_date"), endDpSelect);
 
-    form.find("#add_show_start_time").timepicker();
+    form.find("#add_show_start_time").timepicker({
+        amPmText: ['', '']
+    });
     form.find("#add_show_duration").timepicker({
         amPmText: ['', ''],
         defaultTime: '01:00' 
     });
 
+    form.find('input[name^="add_show_rebroadcast_absolute_date"]').datepicker({
+		//minDate: new Date(),
+		dateFormat: 'yy-mm-dd' 
+	});
+    form.find('input[name^="add_show_rebroadcast_absolute_time"], input[name^="add_show_rebroadcast_time"]').timepicker({
+        amPmText: ['', ''],
+        defaultTime: '' 
+    });
+    
 	form.find("#add_show_hosts_autocomplete").autocomplete({
 		source: findHosts,
 		select: autoSelect,
@@ -193,6 +244,11 @@ function showErrorSections() {
 }
 
 $(document).ready(function() {
+
+	//setAddShowEvents();
+});
+
+$(window).load(function() {
 
 	setAddShowEvents();
 });

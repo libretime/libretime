@@ -64,8 +64,7 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
         $formRecord->removeDecorator('DtDdWrapper');
-        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-        $formRebroadcast->removeDecorator('DtDdWrapper');
+       
 
         $this->view->what = $formWhat;
 	    $this->view->when = $formWhen;
@@ -169,8 +168,10 @@ class ScheduleController extends Zend_Controller_Action
 
         }
 
-        $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 
-                'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
+        if(!$show->isRecorded()) {
+            $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 
+                    'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
+        }
 
                          
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
@@ -368,6 +369,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->rr = $formRecord;
         $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
         $this->view->rebroadcast = $formRebroadcast;
+
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
         if($when) {
@@ -386,8 +388,11 @@ class ScheduleController extends Zend_Controller_Action
 
 		$who = $formWho->isValid($data);
 		$style = $formStyle->isValid($data);
+        $record = $formRecord->isValid($data);
+        $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
+        $rebroad = $formRebroadcast->isValid($data);
 
-        if ($what && $when && $repeats && $who && $style) {  
+        if ($what && $when && $repeats && $who && $style && $record && $rebroadAb && $rebroad) {  
 		
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $user = new User($userInfo->id);
@@ -405,6 +410,9 @@ class ScheduleController extends Zend_Controller_Action
 		    $formRepeats->reset();
             $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
 		    $formStyle->reset();
+            $formRecord->reset();
+            $formAbsoluteRebroadcast->reset();
+            $formRebroadcast->reset();
             
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 		}

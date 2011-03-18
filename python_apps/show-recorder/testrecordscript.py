@@ -6,12 +6,13 @@ import time
 import datetime
 import os
 
-from eci import *
 from configobj import ConfigObj
 
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import urllib2
+
+from subprocess import call
 
 # loading config file
 try:
@@ -29,25 +30,9 @@ def record_show(filelength, filename, filetype="mp3"):
     filename = filename.replace(" ", "-")
     filepath = "%s%s.%s" % (config["base_recorded_files"], filename, filetype)
 
-    e = ECI()
+    command = "ecasound -i alsa -o %s -t:%s" % (filepath, filelength)
 
-    e("cs-add play_chainsetup")
-    e("c-add 1st_chain")
-    e("ai-add alsa")
-    e("ao-add "+filepath)
-    e("cs-set-length "+length)
-    e("cop-select 1")
-    e("cs-connect")
-    e("start")
-
-    while 1:
-        time.sleep(1)
-
-        if e("engine-status") != "running":
-                break
-
-    e("stop")
-    e("cs-disconnect")
+    call(command, shell=True)
 
     return filepath
 
@@ -92,6 +77,7 @@ def get_shows():
     url = config["base_url"] + config["show_schedule_url"]
     response = urllib.urlopen(url)
     data = response.read()
+    print data
 
     response_json = json.loads(data)
     shows = response_json[u'shows']

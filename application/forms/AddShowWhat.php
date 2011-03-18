@@ -14,13 +14,14 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'validators' => array('NotEmpty')
         ));
 
-        $nameInput = $this->getElement('add_show_name');
-
-        $nameInput->setDecorators(array(array('ViewScript', array(
-            'viewScript' => 'form/add-show-block.phtml',
-            'class'      => 'block-display'
-        ))));
-        
+         // Add URL element
+        $this->addElement('text', 'add_show_url', array(
+            'label'      => 'Show URL:',
+            'class'      => 'input_text',
+            'required'   => false,
+            'filters'    => array('StringTrim'),
+            'validators' => array('NotEmpty')
+        ));      
 
 		 // Add the description element
         $this->addElement('textarea', 'add_show_description', array(
