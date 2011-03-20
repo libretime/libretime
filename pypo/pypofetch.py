@@ -9,35 +9,39 @@ import random
 import string
 import json
 import telnetlib
+import math
+from threading import Thread
 
 from api_clients import api_client
 from util import CueFile
 
 from configobj import ConfigObj
 
+# configure logging
+logging.config.fileConfig("logging.cfg")
+
 # loading config file
 try:
     config = ConfigObj('config.cfg')
-    POLL_INTERVAL = float(config['poll_interval'])
-    PUSH_INTERVAL = 0.5
-    #PUSH_INTERVAL = float(config['push_interval'])
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
+    POLL_INTERVAL = 5
+
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
 
-class PypoFetch:
-    def __init__(self):
+class PypoFetch(Thread):
+    def __init__(self, q):
+        Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.cue_file = CueFile()
         self.set_export_source('scheduler')
+        self.queue = q
 
     def set_export_source(self, export_source):
         self.export_source = export_source
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule.pickle'
-        self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
     
     """
     Fetching part of pypo
@@ -48,10 +52,8 @@ class PypoFetch:
     - runs the cleanup routine, to get rid of unused cashed files
     """
     def fetch(self, export_source):
-        """
-        wrapper script for fetching the whole schedule (in json)
-        """
-        logger = logging.getLogger()
+        #wrapper script for fetching the whole schedule (in json)
+        logger = logging.getLogger('fetch')
 
         try: os.mkdir(self.cache_dir)
         except Exception, e: pass
@@ -65,30 +67,29 @@ class PypoFetch:
         except Exception, e: logger.error("%s", e)
 
         # prepare the playlists
-        if config["cue_style"] == 'pre':
-            try: self.prepare_playlists_cue()
-            except Exception, e: logger.error("%s", e)
-        elif config["cue_style"] == 'otf':
-            try: self.prepare_playlists(self.export_source)
-            except Exception, e: logger.error("%s", e)
+        try:
+            playlists = self.prepare_playlists()
+        except Exception, e: logger.error("%s", e)
+
+
+        scheduled_data = dict()
+        scheduled_data['playlists'] = playlists
+        scheduled_data['schedule'] = self.schedule
+        self.queue.put(scheduled_data)
 
         # cleanup
         try: self.cleanup(self.export_source)
         except Exception, e: logger.error("%s", e)
 
     def get_schedule(self):
-        logger = logging.getLogger()
+        logger = logging.getLogger('fetch')
         status, response = self.api_client.get_schedule()
 
         if status == 1:
-            logger.info("dump serialized schedule to %s", self.schedule_file)
             schedule = response['playlists']
             stream_metadata = response['stream_metadata']
             try:
-                schedule_file = open(self.schedule_file, "w")
-                pickle.dump(schedule, schedule_file)
-                schedule_file.close()
-
+                self.schedule = schedule
                 tn = telnetlib.Telnet(LS_HOST, LS_PORT)
 
                 #encode in latin-1 due to telnet protocol not supporting utf-8
@@ -96,7 +97,7 @@ class PypoFetch:
                 tn.write(('vars.station_name %s\n' % stream_metadata['station_name']).encode('latin-1'))
 
                 tn.write('exit\n')
-                logger.debug(tn.read_all())
+                tn.read_all()
 
             except Exception, e:
                 logger.error("Exception %s", e)
@@ -104,45 +105,22 @@ class PypoFetch:
 
         return status
 
-    #TODO this is a duplicate function!!!
-    def load_schedule(self):
-        logger = logging.getLogger()
-        schedule = None
-
-        # create the file if it doesnt exist
-        if (not os.path.exists(self.schedule_file)):
-            logger.debug('creating file ' + self.schedule_file)
-            open(self.schedule_file, 'w').close()
-        else:
-            # load the schedule from cache
-            #logger.debug('loading schedule file '+self.schedule_file)
-            try:
-                schedule_file = open(self.schedule_file, "r")
-                schedule = pickle.load(schedule_file)
-                schedule_file.close()
-
-            except Exception, e:
-                logger.error('%s', e)
-
-        return schedule
-
-
     """
     Alternative version of playout preparation. Every playlist entry is
     pre-cued if neccessary (cue_in/cue_out != 0) and stored in the
     playlist folder.
     file is eg 2010-06-23-15-00-00/17_cue_10.132-123.321.mp3
     """
-    def prepare_playlists_cue(self):
-        logger = logging.getLogger()
+    def prepare_playlists(self):
+        logger = logging.getLogger('fetch')
 
-        # Load schedule from disk
-        schedule = self.load_schedule()
+        schedule = self.schedule
+        playlists = dict()
 
         # Dont do anything if schedule is empty
-        if (not schedule):
+        if not schedule:
             logger.debug("Schedule is empty.")
-            return
+            return playlists
 
         scheduleKeys = sorted(schedule.iterkeys())
 
@@ -173,14 +151,10 @@ class PypoFetch:
                 elif int(playlist['subtype']) > 0 and int(playlist['subtype']) < 5:
                     ls_playlist = self.handle_media_file(playlist, pkey)
 
-                # write playlist file
-                plfile = open(self.cache_dir + str(pkey) + '/list.lsp', "w")
-                plfile.write(json.dumps(ls_playlist))
-                plfile.close()
-                logger.info('ls playlist file written to %s', self.cache_dir + str(pkey) + '/list.lsp')
-
+                playlists[pkey] = ls_playlist
         except Exception, e:
             logger.info("%s", e)
+        return playlists
 
     def handle_media_file(self, playlist, pkey):
         """
@@ -189,7 +163,7 @@ class PypoFetch:
         """
         ls_playlist = []
 
-        logger = logging.getLogger()
+        logger = logging.getLogger('fetch')
         for media in playlist['medias']:
             logger.debug("Processing track %s", media['uri'])
 
@@ -252,7 +226,7 @@ class PypoFetch:
 
 
     def handle_remote_file(self, media, dst, do_cue):
-        logger = logging.getLogger()
+        logger = logging.getLogger('fetch')
         if do_cue == False:
             if os.path.isfile(dst):
                 logger.debug("file already in cache: %s", dst)
@@ -301,7 +275,7 @@ class PypoFetch:
         Cleans up folders in cache_dir. Look for modification date older than "now - CACHE_FOR"
         and deletes them.
         """
-        logger = logging.getLogger()
+        logger = logging.getLogger('fetch')
 
         offset = 3600 * int(config["cache_for"])
         now = time.time()
@@ -323,3 +297,18 @@ class PypoFetch:
                     print e
                     logger.error("%s", e)
 
+    def run(self):
+        loops = 0
+        heartbeat_period = math.floor(30/POLL_INTERVAL)
+        logger = logging.getLogger('fetch')
+        
+        while True:
+            if loops % heartbeat_period == 0:
+                logger.info("heartbeat")
+                loops = 0
+            try: self.fetch('scheduler')
+            except Exception, e:
+                logger.error('Pypo Fetch Error, exiting: %s', e)
+                sys.exit()
+            time.sleep(POLL_INTERVAL)
+            loops += 1

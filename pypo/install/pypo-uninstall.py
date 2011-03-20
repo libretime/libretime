@@ -37,12 +37,9 @@ try:
     print "Removing pypo files"
     remove_path(BASE_PATH)
     
-    print "Removing daemontool script pypo-fetch"
-    remove_path("rm -rf /etc/service/pypo-fetch")
-    
-    print "Removing daemontool script pypo-push"
-    remove_path("rm -rf /etc/service/pypo-push")
-    
+    print "Removing daemontool script pypo"
+    remove_path("rm -rf /etc/service/pypo")
+        
     print "Removing daemontool script pypo-liquidsoap"
     remove_path("rm -rf /etc/service/pypo-liquidsoap")
 

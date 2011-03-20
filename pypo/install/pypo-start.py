@@ -9,12 +9,9 @@ if os.geteuid() != 0:
     sys.exit(1)
     
 try:
-    print "Starting daemontool script pypo-fetch"
-    os.system("svc -u /etc/service/pypo-fetch")
-    
-    print "Starting daemontool script pypo-push"
-    os.system("svc -u /etc/service/pypo-push")
-    
+    print "Starting daemontool script pypo"
+    os.system("svc -u /etc/service/pypo")
+        
     print "Starting daemontool script pypo-liquidsoap"
     os.system("svc -u /etc/service/pypo-liquidsoap")
     

@@ -36,7 +36,7 @@ def create_user(username):
     os.system("adduser --system --quiet --group --shell /bin/bash "+username)
     
     #set pypo password
-    p = os.popen('/usr/bin/passwd pypo', 'w')
+    p = os.popen('/usr/bin/passwd pypo 2>&1 1>/dev/null', 'w')
     p.write('pypo\n')
     p.write('pypo\n')
     p.close()
@@ -103,23 +103,15 @@ try:
   os.system("chmod -R 755 "+BASE_PATH)
   os.system("chown -R pypo:pypo "+BASE_PATH)
   
-  print "Installing daemontool script pypo-fetch"
-  create_path("/etc/service/pypo-fetch")
-  create_path("/etc/service/pypo-fetch/log")
-  shutil.copy("%s/pypo-daemontools-fetch.sh"%current_script_dir, "/etc/service/pypo-fetch/run")
-  shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-fetch/log/run")
-  os.system("chmod -R 755 /etc/service/pypo-fetch")
-  os.system("chown -R pypo:pypo /etc/service/pypo-fetch")
+  print "Installing pypo daemon"
+  create_path("/etc/service/pypo")
+  create_path("/etc/service/pypo/log")
+  shutil.copy("%s/pypo-daemontools.sh"%current_script_dir, "/etc/service/pypo/run")
+  shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo/log/run")
+  os.system("chmod -R 755 /etc/service/pypo")
+  os.system("chown -R pypo:pypo /etc/service/pypo")
   
-  print "Installing daemontool script pypo-push"
-  create_path("/etc/service/pypo-push")
-  create_path("/etc/service/pypo-push/log")
-  shutil.copy("%s/pypo-daemontools-push.sh"%current_script_dir, "/etc/service/pypo-push/run")
-  shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-push/log/run")
-  os.system("chmod -R 755 /etc/service/pypo-push")
-  os.system("chown -R pypo:pypo /etc/service/pypo-push")
-
-  print "Installing daemontool script pypo-liquidsoap"
+  print "Installing liquidsoap daemon"
   create_path("/etc/service/pypo-liquidsoap")  
   create_path("/etc/service/pypo-liquidsoap/log")  
   shutil.copy("%s/pypo-daemontools-liquidsoap.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/run")
@@ -134,16 +126,12 @@ try:
 
   found = True
 
-  p = Popen('svstat /etc/service/pypo-fetch', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+  p = Popen('svstat /etc/service/pypo', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
   if (output.find("unable to open supervise/ok: file does not exist") >= 0):
     found = False
   print output
-  
-  p = Popen('svstat /etc/service/pypo-push', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-  output = p.stdout.read()
-  print output
-  
+    
   p = Popen('svstat /etc/service/pypo-liquidsoap', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
   print output
@@ -152,6 +140,7 @@ try:
     print "Pypo install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
 except Exception, e:
   print "exception:" + str(e)
+  sys.exit(1)
   
 
 

@@ -27,6 +27,7 @@ import logging.config
 #import string
 #import operator
 #import inspect
+from Queue import Queue
 
 from pypopush import PypoPush
 from pypofetch import PypoFetch
@@ -66,10 +67,6 @@ logging.config.fileConfig("logging.cfg")
 # loading config file
 try:
     config = ConfigObj('config.cfg')
-    POLL_INTERVAL = float(config['poll_interval'])
-    PUSH_INTERVAL = float(config['push_interval'])
-    LS_HOST = config['ls_host']
-    LS_PORT = config['ls_port']
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
@@ -135,41 +132,23 @@ if __name__ == '__main__':
     g.selfcheck()
     
     logger = logging.getLogger()
-    loops = 0
 
     if options.test:
         g.test_api()
         sys.exit()
 
-    
-    if options.fetch_scheduler:
-        pf = PypoFetch()
-        while True:
-            try: pf.fetch('scheduler')
-            except Exception, e:
-                print e
-                sys.exit()
+    q = Queue()
 
-            if (loops%2 == 0):
-                logger.info("heartbeat")
-            loops += 1
-            time.sleep(POLL_INTERVAL)
+    pp = PypoPush(q)
+    pp.start()
 
-    if options.push_scheduler:
-        pp = PypoPush()
-        while True:
-            try: pp.push('scheduler')
-            except Exception, e:
-                print 'PUSH ERROR!! WILL EXIT NOW:('
-                print e
-                sys.exit()
+    pf = PypoFetch(q)
+    pf.start()
 
-            if (loops%60 == 0):
-                logger.info("heartbeat")
+    pp.join()
+    pf.join()
 
-            loops += 1
-            time.sleep(PUSH_INTERVAL)
-
+"""
     if options.check:
         try: g.check_schedule()
         except Exception, e:
@@ -179,4 +158,4 @@ if __name__ == '__main__':
         try: pf.cleanup('scheduler')
         except Exception, e:
             print e
-        sys.exit()
+"""

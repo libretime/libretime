@@ -39,7 +39,6 @@ AirtimeInstall::InstallPostgresScriptingLanguage();
 
 echo "* Creating Database Tables".PHP_EOL;
 AirtimeInstall::CreateDatabaseTables();
-AirtimeInstall::MigrateTables(__DIR__);
 
 echo "* Storage Directory Setup".PHP_EOL;
 AirtimeInstall::SetupStorageDirectory($CC_CONFIG);
