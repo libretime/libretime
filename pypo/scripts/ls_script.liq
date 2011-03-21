@@ -24,7 +24,7 @@ server.register(namespace="vars", "show_name", fun (s) -> begin show_name := s s
 server.register(namespace="vars", "station_name", fun (s) -> begin station_name := s s end)
 
 
-default = single(audio_to_stereo("/opt/pypo/bin/files/sleeper_03.mp3"))
+default = audio_to_stereo(single("/opt/pypo/bin/files/sleeper_03.mp3"))
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 
 s = fallback(track_sensitive=false, [queue, default])
