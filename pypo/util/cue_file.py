@@ -64,7 +64,7 @@ class CueFile():
             print command
             os.system(command + ' > /dev/null 2>&1')
 
-            command = 'lame -b 32 %s %s' % (dst + '.tmp.mp3', dst);
+            command = 'lame -b 128 %s %s' % (dst + '.tmp.mp3', dst);
             logger.info("command: %s", command)
             print command
             os.system(command + ' > /dev/null 2>&1')
