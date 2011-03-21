@@ -118,7 +118,7 @@ class Application_Model_Preference
         Application_Model_Preference::SetValue("soundcloud_password", $password); 
     }
 
-    public static function GetSoundCloudUserPassword() {
+    public static function GetSoundCloudPassword() {
         return Application_Model_Preference::GetValue("soundcloud_password");
     }
 

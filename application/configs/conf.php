@@ -46,6 +46,9 @@ $CC_CONFIG = array(
     'apiKey' => $values['api_key'],
     'apiPath' => '/api/',
 
+    'soundcloud-client-id' => '2CLCxcSXYzx7QhhPVHN4A',
+    'soundcloud-client-secret' => 'pZ7beWmF06epXLHVUP1ufOg2oEnIt9XhE8l8xt0bBs',
+
     "rootDir" => __DIR__."/../..",
     'pearPath'      =>  dirname(__FILE__).'/../../library/pear',
     'zendPath'      =>  dirname(__FILE__).'/../../library/Zend',

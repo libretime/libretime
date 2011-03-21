@@ -49,6 +49,9 @@ AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 echo "* Importing Sample Audio Clips".PHP_EOL;
 system(__DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null");
 
+echo "* Python eggs Setup".PHP_EOL;
+AirtimeInstall::SetUpPythonEggs();
+
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
 system("python ".__DIR__."/../pypo/install/pypo-install.py");
 

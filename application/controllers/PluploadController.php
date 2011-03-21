@@ -167,7 +167,12 @@ class PluploadController extends Zend_Controller_Action
         $upload_dir = ini_get("upload_tmp_dir");
         $file = $this->upload($upload_dir);
 
-        //$file->getRealFilePath(); 
+        if(Application_Model_Preference::GetDoSoundCloudUpload())
+        {
+            $soundcloud = new ATSoundcloud();
+            $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName());
+        }
+
         die('{"jsonrpc" : "2.0", "id" : '.$file->getId().' }'); 
     }
 
