@@ -36,14 +36,14 @@ def create_user(username):
     os.system("adduser --system --quiet --group --shell /bin/bash "+username)
     
     #set pypo password
-    p = os.popen('/usr/bin/passwd pypo 2>&1 1>/dev/null', 'w')
+    p = os.popen('/usr/bin/passwd pypo 1>/dev/null 2>&1', 'w')
     p.write('pypo\n')
     p.write('pypo\n')
     p.close()
   else:
     print "User already exists."
   #add pypo to audio group
-  os.system("adduser " + username + " audio 2>&1 1>/dev/null")
+  os.system("adduser " + username + " audio 1>/dev/null 2>&1")
 
 def copy_dir(src_dir, dest_dir):
   if (os.path.exists(dest_dir)) and (dest_dir != "/"):
@@ -63,7 +63,7 @@ def get_current_script_dir():
 try:
   current_script_dir = get_current_script_dir()
   print "Checking and removing any existing pypo processes"
-  os.system("python %s/pypo-uninstall.py 2>&1 1>/dev/null"% current_script_dir)
+  os.system("python %s/pypo-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
   time.sleep(5)
 
   # Create users
