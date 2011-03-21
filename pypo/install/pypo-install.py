@@ -79,14 +79,8 @@ try:
   create_path(BASE_PATH+"cache")
   create_path(BASE_PATH+"files")
   create_path(BASE_PATH+"tmp")
-  create_path(BASE_PATH+"files/basic")
-  create_path(BASE_PATH+"files/fallback")
-  create_path(BASE_PATH+"files/jingles")
   create_path(BASE_PATH+"archive")
-  
-  print "Copying pypo files"
-  shutil.copy("%s/../scripts/silence.mp3"%current_script_dir, BASE_PATH+"files/basic")
-  
+    
   if platform.architecture()[0] == '64bit':
       print "Installing 64-bit liquidsoap binary"
       shutil.copy("%s/../liquidsoap/liquidsoap64"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
