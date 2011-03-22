@@ -24,7 +24,7 @@ class ApiController extends Zend_Controller_Action
 	 * in application/conf.php
 	 *
 	 * @return void
-	 * 
+	 *
 	 */
     public function versionAction()
     {
@@ -123,13 +123,9 @@ class ApiController extends Zend_Controller_Action
         $to = $this->_getParam("to");
         if (Schedule::ValidPypoTimeFormat($from) && Schedule::ValidPypoTimeFormat($to)) {
             $result = Schedule::ExportRangeAsJson($from, $to);
-            $result['stream_metadata'] = array();
-            $result['stream_metadata']['format'] = Application_Model_Preference::GetStreamLabelFormat();
-            $result['stream_metadata']['station_name'] = Application_Model_Preference::GetStationName();
             echo json_encode($result);
         }
     }
-
 
     public function notifyMediaItemStartPlayAction()
     {

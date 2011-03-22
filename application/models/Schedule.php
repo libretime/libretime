@@ -110,7 +110,6 @@ class ScheduleGroup {
                 //var_dump($sql);
                 return $result;
             }
-            return $this->groupId;
 
         } elseif (!is_null($p_playlistId)){
             // Schedule a whole playlist
@@ -153,8 +152,9 @@ class ScheduleGroup {
                 $itemStartTime = $CC_DBC->getOne("SELECT TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'");
                 $id = $this->dateToId($itemStartTime);
             }
-            return $this->groupId;
         }
+        RabbitMq::PushSchedule();
+        return $this->groupId;
     }
 
     public function addAfter($show_instance, $p_groupId, $p_audioFileId) {
@@ -176,10 +176,6 @@ class ScheduleGroup {
         return $this->add($show_instance, $startTime, null, $p_playlistId);
     }
 
-    public function update() {
-
-    }
-
     /**
      * Remove the group from the schedule.
      * Note: does not check if it is in the past, you can remove anything.
@@ -195,7 +191,9 @@ class ScheduleGroup {
         $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE group_id = ".$this->groupId;
         //echo $sql;
-        return $CC_DBC->query($sql);
+        $retVal = $CC_DBC->query($sql);
+        RabbitMq::PushSchedule();
+        return $retVal;
     }
 
     /**
@@ -231,17 +229,14 @@ class ScheduleGroup {
         return $CC_DBC->GetAll($sql);
     }
 
-    public function reschedule($toDateTime) {
-        global $CC_CONFIG, $CC_DBC;
-        //    $sql = "UPDATE ".$CC_CONFIG["scheduleTable"]. " SET id=, starts=,ends="
-    }
-
     public function notifyGroupStartPlay() {
         global $CC_CONFIG, $CC_DBC;
         $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
                 ." SET schedule_group_played=TRUE"
                 ." WHERE group_id=".$this->groupId;
-        return $CC_DBC->query($sql);
+        $retVal = $CC_DBC->query($sql);
+        RabbitMq::PushSchedule();
+        return $retVal;
     }
 
     public function notifyMediaItemStartPlay($p_fileId) {
@@ -250,7 +245,9 @@ class ScheduleGroup {
                 ." SET media_item_played=TRUE"
                 ." WHERE group_id=".$this->groupId
                 ." AND file_id=".pg_escape_string($p_fileId);
-        return $CC_DBC->query($sql);
+        $retVal = $CC_DBC->query($sql);
+        RabbitMq::PushSchedule();
+        return $retVal;
     }
 }
 
@@ -334,9 +331,10 @@ class Schedule {
         return $res;
     }
 
-    public static function GetPercentScheduled($instance_id, $s_datetime, $e_datetime){
+    public static function GetPercentScheduled($instance_id, $s_datetime, $e_datetime)
+    {
         $time = Schedule::GetTotalShowTime($instance_id);
-       
+
         $s_epoch = strtotime($s_datetime);
         $e_epoch = strtotime($e_datetime);
 
@@ -396,7 +394,8 @@ class Schedule {
      * @return array
      *      Returns empty array if nothing found
      */
-    public static function GetItems($p_fromDateTime, $p_toDateTime, $p_playlistsOnly = true) {
+    public static function GetItems($p_fromDateTime, $p_toDateTime, $p_playlistsOnly = true)
+    {
         global $CC_CONFIG, $CC_DBC;
         $rows = array();
         if (!$p_playlistsOnly) {
@@ -433,7 +432,7 @@ class Schedule {
             ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
             //next line makes sure that we aren't returning items that
             //are past the show's scheduled timeslot.
-            ." AND (st.starts < si.ends)" 
+            ." AND (st.starts < si.ends)"
             ." GROUP BY st.group_id"
             ." ORDER BY starts";
 
@@ -457,7 +456,8 @@ class Schedule {
      * @param int $next
      * @return date
      */
-    public static function GetPlayOrderRange($prev = 1, $next = 1) {
+    public static function GetPlayOrderRange($prev = 1, $next = 1)
+    {
         if (!is_int($prev) || !is_int($next)){
             //must enter integers to specify ranges
             return array();
@@ -469,9 +469,9 @@ class Schedule {
         $timeNow = $date->getDate();
         return array("env"=>APPLICATION_ENV,
             "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-            "previous"=>Schedule::Get_Scheduled_Item_Data($timeNow, -1, $prev, "24 hours"),
-            "current"=>Schedule::Get_Scheduled_Item_Data($timeNow, 0),
-            "next"=>Schedule::Get_Scheduled_Item_Data($timeNow, 1, $next, "48 hours"),
+            "previous"=>Schedule::GetScheduledItemData($timeNow, -1, $prev, "24 hours"),
+            "current"=>Schedule::GetScheduledItemData($timeNow, 0),
+            "next"=>Schedule::GetScheduledItemData($timeNow, 1, $next, "48 hours"),
             "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
             "nextShow"=>Show_DAL::GetNextShow($timeNow),
             "timezone"=> date("T"),
@@ -501,7 +501,8 @@ class Schedule {
      * want to search the database. For example "5 days", "18 hours", "60 minutes",
      * "30 seconds" etc.
      */
-    public static function Get_Scheduled_Item_Data($timeStamp, $timePeriod=0, $count = 0, $interval="0 hours"){
+    public static function GetScheduledItemData($timeStamp, $timePeriod=0, $count = 0, $interval="0 hours")
+    {
         global $CC_CONFIG, $CC_DBC;
 
         $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.media_item_played, st.group_id, show.name as show_name, st.instance_id"
@@ -531,7 +532,8 @@ class Schedule {
         return $rows;
 	}
 
-    public static function GetShowInstanceItems($instance_id){
+    public static function GetShowInstanceItems($instance_id)
+    {
         global $CC_CONFIG, $CC_DBC;
 
         $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.media_item_played, st.group_id, show.name as show_name, st.instance_id"
@@ -547,12 +549,15 @@ class Schedule {
         return $rows;
     }
 
-    public static function UpdateMediaPlayedStatus($id){
+    public static function UpdateMediaPlayedStatus($p_id)
+    {
         global $CC_CONFIG, $CC_DBC;
         $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
                 ." SET media_item_played=TRUE"
-                ." WHERE id=$id";
-        return $CC_DBC->query($sql);
+                ." WHERE id=$p_id";
+        $retVal = $CC_DBC->query($sql);
+        RabbitMq::PushSchedule();
+        return $retVal;
     }
 
 
@@ -563,7 +568,7 @@ class Schedule {
      * @param string $p_time
      * @return string
      */
-    private static function CcTimeToPypoTime($p_time)
+    private static function AirtimeTimeToPypoTime($p_time)
     {
         $p_time = substr($p_time, 0, 19);
         $p_time = str_replace(" ", "-", $p_time);
@@ -578,7 +583,7 @@ class Schedule {
      * @param string $p_time
      * @return string
      */
-    private static function PypoTimeToCcTime($p_time)
+    private static function PypoTimeToAirtimeTime($p_time)
     {
         $t = explode("-", $p_time);
         return $t[0]."-".$t[1]."-".$t[2]." ".$t[3].":".$t[4].":00";
@@ -658,17 +663,29 @@ class Schedule {
     /**
      * Export the schedule in json formatted for pypo (the liquidsoap scheduler)
      *
-     * @param string $range
-     *      In the format "YYYY-MM-DD HH:mm:ss"
-     * @param string $source
-     *      In the format "YYYY-MM-DD HH:mm:ss"
+     * @param string $p_fromDateTime
+     *      In the format "YYYY-MM-DD-HH-mm-SS"
+     * @param string $p_toDateTime
+     *      In the format "YYYY-MM-DD-HH-mm-SS"
      */
-    public static function ExportRangeAsJson($p_fromDateTime, $p_toDateTime)
+    public static function ExportRangeAsJson($p_fromDateTime = null , $p_toDateTime = null)
     {
         global $CC_CONFIG, $CC_DBC;
 
-        $range_start = Schedule::PypoTimeToCcTime($p_fromDateTime);
-        $range_end = Schedule::PypoTimeToCcTime($p_toDateTime);
+        if (is_null($p_fromDateTime)) {
+            $t1 = new DateTime();
+            $t1->sub(new DateInterval("PT24H"));
+            $range_start = $t1->format("Y-m-d H:i:s");
+        } else {
+            $range_start = Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
+        }
+        if (is_null($p_fromDateTime)) {
+            $t2 = new DateTime();
+            $t2->add(new DateInterval("PT24H"));
+            $range_end = $t2->format("Y-m-d H:i:s");
+        } else {
+            $range_end = Schedule::PypoTimeToAirtimeTime($p_toDateTime);
+        }
 
         // Scheduler wants everything in a playlist
         $data = Schedule::GetItems($range_start, $range_end, true);
@@ -684,7 +701,7 @@ class Schedule {
                 $start = substr($start, 0, 19);
 
                 //Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
-                $pkey = Schedule::CcTimeToPypoTime($start);
+                $pkey = Schedule::AirtimeTimeToPypoTime($start);
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
                 $playlists[$pkey]['x_ident'] = $dx["playlist_id"];
@@ -696,8 +713,8 @@ class Schedule {
                 $playlists[$pkey]['show_name'] = $dx['show_name'];
                 $playlists[$pkey]['user_id'] = 0;
                 $playlists[$pkey]['id'] = $dx["playlist_id"];
-                $playlists[$pkey]['start'] = Schedule::CcTimeToPypoTime($dx["start"]);
-                $playlists[$pkey]['end'] = Schedule::CcTimeToPypoTime($dx["end"]);
+                $playlists[$pkey]['start'] = Schedule::AirtimeTimeToPypoTime($dx["start"]);
+                $playlists[$pkey]['end'] = Schedule::AirtimeTimeToPypoTime($dx["end"]);
             }
         }
 
@@ -734,9 +751,12 @@ class Schedule {
 
         $result = array();
         $result['status'] = array('range' => array('start' => $range_start, 'end' => $range_end),
-                                  'version' => "1.1");
+                                  'version' => AIRTIME_REST_VERSION);
         $result['playlists'] = $playlists;
         $result['check'] = 1;
+        $result['stream_metadata'] = array();
+        $result['stream_metadata']['format'] = Application_Model_Preference::GetStreamLabelFormat();
+        $result['stream_metadata']['station_name'] = Application_Model_Preference::GetStationName();
 
         return $result;
     }
@@ -757,6 +777,7 @@ class Schedule {
             $scheduleGroup = new ScheduleGroup($item["group_id"]);
             $scheduleGroup->remove();
         }
+        RabbitMq::PushSchedule();
     }
 
 }

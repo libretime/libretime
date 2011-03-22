@@ -19,8 +19,10 @@ require_once 'StoredFile.php';
 require_once 'Schedule.php';
 require_once 'Shows.php';
 require_once 'Users.php';
+require_once 'RabbitMq.php';
 
-global $CC_CONFIG, $CC_DBC;	
+
+global $CC_CONFIG, $CC_DBC;
 $dsn = $CC_CONFIG['dsn'];
 
 $CC_DBC = DB::connect($dsn, FALSE);
@@ -64,14 +66,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
 		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
 
-        $view->headScript()->appendFile('/js/airtime/common/common.js','text/javascript');   
+        $view->headScript()->appendFile('/js/airtime/common/common.js','text/javascript');
     }
-    
+
     protected function _initViewHelpers(){
         $view = $this->getResource('view');
         $view->addHelperPath('../application/views/helpers', 'Airtime_View_Helper');
     }
-    
+
     protected function _initTitle(){
         $view = $this->getResource('view');
         $view->headTitle(Application_Model_Preference::GetHeadTitle());
