@@ -101,6 +101,19 @@ class ApiController extends Zend_Controller_Action
 	  exit;
     }
 
+    public function liveInfoAction(){
+        global $CC_CONFIG;
+
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $result = Schedule::GetPlayOrderRange(0, 1);
+        //echo json_encode($result);
+        header("Content-type: text/javascript");
+        echo $_GET['callback'].'('.json_encode($result).')';
+    }
+
     public function scheduleAction()
     {
         global $CC_CONFIG;
