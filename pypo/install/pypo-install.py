@@ -45,7 +45,7 @@ def create_user(username):
   #add pypo to audio group
   os.system("adduser " + username + " audio 1>/dev/null 2>&1")
   #add pypo to pulse-access group
-  os.system("adduser " + username + " pulse-access 1>/dev/null 2>&1")
+  #os.system("adduser " + username + " pulse-access 1>/dev/null 2>&1")
 
 def copy_dir(src_dir, dest_dir):
   if (os.path.exists(dest_dir)) and (dest_dir != "/"):

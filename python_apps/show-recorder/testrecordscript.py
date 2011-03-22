@@ -39,7 +39,7 @@ class Recorder(Thread):
         filename = self.filename.replace(" ", "-")
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
-        command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
+        command = "ecasound -i alsahw,0,0 -o %s -t:%s" % (filepath, length)
         call(command, shell=True)
 
         return filepath
