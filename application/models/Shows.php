@@ -707,6 +707,14 @@ class ShowInstance {
             ->delete();
 	}
 
+    public function setRecordedFile($file_id) {
+
+        $showInstance = CcShowInstancesQuery::create()
+            ->findPK($this->_instanceId);
+        $showInstance->setDbRecordedFile($file_id)
+            ->save(); 
+    }
+
     public function getTimeScheduled() {
 
         $instance_id = $this->getShowInstanceId();
