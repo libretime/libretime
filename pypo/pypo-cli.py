@@ -7,14 +7,13 @@ Python part of radio playout (pypo)
 The main functions are "fetch" (./pypo_cli.py -f) and "push" (./pypo_cli.py -p)
 """
 
-# python defaults (debian default)
 import time
 #import calendar
-
-
 #import traceback
 from optparse import *
 import sys
+import os
+import signal
 #import datetime
 import logging
 import logging.config
@@ -32,7 +31,6 @@ from Queue import Queue
 from pypopush import PypoPush
 from pypofetch import PypoFetch
 
-# additional modules (should be checked)
 from configobj import ConfigObj
 
 # custom imports
@@ -54,7 +52,6 @@ parser.add_option("-v", "--compat", help="Check compatibility with server API ve
 parser.add_option("-t", "--test", help="Do a test to make sure everything is working properly.", default=False, action="store_true", dest="test")
 parser.add_option("-f", "--fetch-scheduler", help="Fetch the schedule from server.  This is a polling process that runs forever.", default=False, action="store_true", dest="fetch_scheduler")
 parser.add_option("-p", "--push-scheduler", help="Push the schedule to Liquidsoap. This is a polling process that runs forever.", default=False, action="store_true", dest="push_scheduler")
-
 parser.add_option("-b", "--cleanup", help="Cleanup", default=False, action="store_true", dest="cleanup")
 parser.add_option("-c", "--check", help="Check the cached schedule and exit", default=False, action="store_true", dest="check")
 
@@ -118,15 +115,19 @@ class Global:
             for media in playlist['medias']:
                 print media
 
+def keyboardInterruptHandler(signum, frame):
+    print "\nKeyboard Interrupt\n"
+    sys.exit();
 
 
 if __name__ == '__main__':
     print '###########################################'
     print '#             *** pypo  ***               #'
-    print '#      Liquidsoap + External Scheduler    #'
-    print '#            Playout System               #'
+    print '#   Liquidsoap Scheduled Playout System   #'
     print '###########################################'
 
+    signal.signal(signal.SIGINT, keyboardInterruptHandler)
+ 
     # initialize
     g = Global()
     g.selfcheck()
@@ -140,14 +141,17 @@ if __name__ == '__main__':
     q = Queue()
 
     pp = PypoPush(q)
+    pp.daemon = True
     pp.start()
 
     pf = PypoFetch(q)
+    pf.daemon = True
     pf.start()
 
-    pp.join()
-    pf.join()
+    while True: time.sleep(3600)
 
+    #pp.join()
+    #pf.join()
 """
     if options.check:
         try: g.check_schedule()

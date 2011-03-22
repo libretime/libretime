@@ -19,9 +19,9 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('schedule-show-dialog', 'json')
                     ->addActionContext('show-content-dialog', 'json')
 					->addActionContext('clear-show', 'json')
-                    ->addActionContext('get-current-playlist', 'json')	
+                    ->addActionContext('get-current-playlist', 'json')
 					->addActionContext('find-playlists', 'json')
-					->addActionContext('remove-group', 'json')	
+					->addActionContext('remove-group', 'json')
                     ->addActionContext('edit-show', 'json')
                     ->addActionContext('add-show', 'json')
                     ->addActionContext('cancel-show', 'json')
@@ -64,7 +64,7 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
         $formRecord->removeDecorator('DtDdWrapper');
-       
+
 
         $this->view->what = $formWhat;
 	    $this->view->when = $formWhen;
@@ -84,7 +84,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $start = $this->_getParam('start', null);
 		$end = $this->_getParam('end', null);
-		
+
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
         if($user->isAdmin())
@@ -111,6 +111,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		if(isset($error))
 			$this->view->error = $error;
+
     }
 
     public function resizeShowAction()
@@ -134,7 +135,7 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $showInstanceId = $this->_getParam('id');
-                        		                                       
+
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 		$user = new User($userInfo->id);
 
@@ -158,41 +159,41 @@ class ScheduleController extends Zend_Controller_Action
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
 
             if (($user->isHost($show->getShowId()) || $user->isAdmin()) && !$show->isRecorded() && !$show->isRebroadcast()) {
-	      
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params, 
+
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params,
                     'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add Content');
 
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params, 
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params,
                             'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
             }
 
         }
 
         if(!$show->isRecorded()) {
-            $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params, 
+            $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params,
                     'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
         }
 
-                         
+
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
                 strtotime($today_timestamp) < strtotime($show->getShowEnd())) {
             $menu[] = array('action' => array('type' => 'fn',
                                               //'url' => '/Schedule/cancel-current-show'.$params,
-                                              'callback' => "window['confirmCancelShow']($id)"), 
-                            'title' => 'Cancel Current Show');            
+                                              'callback' => "window['confirmCancelShow']($id)"),
+                            'title' => 'Cancel Current Show');
         }
-                            
+
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
 
             if ($user->isAdmin()) {
 
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params, 
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params,
                         'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params, 
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
                         'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
             }
 		}
-		
+
 		//returns format jjmenu is looking for.
 		die(json_encode($menu));
     }
@@ -219,7 +220,7 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->timeFilled = $show->getTimeScheduled();
 		$this->view->percentFilled = $show->getPercentScheduled();
 
-		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
+		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
 		unset($this->view->showContent);
     }
 
@@ -242,7 +243,7 @@ class ScheduleController extends Zend_Controller_Action
     public function findPlaylistsAction()
     {
         $post = $this->getRequest()->getPost();
-                        
+
 		$show = new ShowInstance($this->sched_sess->showInstanceId);
 		$playlists = $show->searchPlaylistsForShow($post);
 
@@ -267,7 +268,7 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->showContent = $show->getShowContent();
 		$this->view->timeFilled = $show->getTimeScheduled();
 		$this->view->percentFilled = $show->getPercentScheduled();
-		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
+		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
 		unset($this->view->showContent);
     }
 
@@ -275,7 +276,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $showInstanceId = $this->_getParam('id');
         $this->sched_sess->showInstanceId = $showInstanceId;
-        
+
         $show = new ShowInstance($showInstanceId);
         $start_timestamp = $show->getShowStart();
 		$end_timestamp = $show->getShowEnd();
@@ -285,14 +286,14 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->error = "cannot schedule an overlapping show.";
             return;
         }
-		
+
         $start = explode(" ", $start_timestamp);
         $end = explode(" ", $end_timestamp);
         $startTime = explode(":", $start[1]);
         $endTime = explode(":", $end[1]);
         $dateInfo_s = getDate(strtotime($start_timestamp));
         $dateInfo_e = getDate(strtotime($end_timestamp));
-		
+
 		$this->view->showContent = $show->getShowContent();
 		$this->view->timeFilled = $show->getTimeScheduled();
         $this->view->showName = $show->getName();
@@ -308,7 +309,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->startTime = sprintf("%d:%02d", $startTime[0], $startTime[1]);
         $this->view->endTime = sprintf("%d:%02d", $endTime[0], $endTime[1]);
 
-		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');	
+		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
 		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
 		unset($this->view->showContent);
     }
@@ -335,7 +336,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $js = $this->_getParam('data');
         $data = array();
-       
+
         //need to convert from serialized jQuery array.
         foreach($js as $j){
             $data[$j["name"]] = $j["value"];
@@ -392,8 +393,8 @@ class ScheduleController extends Zend_Controller_Action
         $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
         $rebroad = $formRebroadcast->isValid($data);
 
-        if ($what && $when && $repeats && $who && $style && $record && $rebroadAb && $rebroad) {  
-		
+        if ($what && $when && $repeats && $who && $style && $record && $rebroadAb && $rebroad) {
+
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $user = new User($userInfo->id);
 			if($user->isAdmin()) {
@@ -413,7 +414,7 @@ class ScheduleController extends Zend_Controller_Action
             $formRecord->reset();
             $formAbsoluteRebroadcast->reset();
             $formRebroadcast->reset();
-            
+
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 		}
         else {
@@ -426,7 +427,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-		
+
         if($user->isAdmin()) {
 		    $showInstanceId = $this->_getParam('id');
 
@@ -434,14 +435,14 @@ class ScheduleController extends Zend_Controller_Action
             $show = new Show($showInstance->getShowId());
 
             $show->cancelShow($showInstance->getShowStart());
-        }   
+        }
     }
 
     public function cancelCurrentShowAction()
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-		
+
         if($user->isAdmin()) {
             $showInstanceId = $this->_getParam('id');
             $show = new ShowInstance($showInstanceId);

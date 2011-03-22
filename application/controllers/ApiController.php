@@ -24,7 +24,7 @@ class ApiController extends Zend_Controller_Action
 	 * in application/conf.php
 	 *
 	 * @return void
-	 * 
+	 *
 	 */
     public function versionAction()
     {
@@ -101,6 +101,19 @@ class ApiController extends Zend_Controller_Action
 	  exit;
     }
 
+    public function liveInfoAction(){
+        global $CC_CONFIG;
+
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $result = Schedule::GetPlayOrderRange(0, 1);
+        //echo json_encode($result);
+        header("Content-type: text/javascript");
+        echo $_GET['callback'].'('.json_encode($result).')';
+    }
+
     public function scheduleAction()
     {
         global $CC_CONFIG;
@@ -123,13 +136,9 @@ class ApiController extends Zend_Controller_Action
         $to = $this->_getParam("to");
         if (Schedule::ValidPypoTimeFormat($from) && Schedule::ValidPypoTimeFormat($to)) {
             $result = Schedule::ExportRangeAsJson($from, $to);
-            $result['stream_metadata'] = array();
-            $result['stream_metadata']['format'] = Application_Model_Preference::GetStreamLabelFormat();
-            $result['stream_metadata']['station_name'] = Application_Model_Preference::GetStationName();
             echo json_encode($result);
         }
     }
-
 
     public function notifyMediaItemStartPlayAction()
     {
