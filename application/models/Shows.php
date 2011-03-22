@@ -652,8 +652,8 @@ class ShowInstance {
 		return $res;
 	}
 
-	public function addPlaylistToShow($plId) {
-		
+	public function addPlaylistToShow($plId)
+    {
 		$sched = new ScheduleGroup();
 		$lastGroupId = $this->getLastGroupId();
         
@@ -665,6 +665,20 @@ class ShowInstance {
 			$groupId = $sched->addPlaylistAfter($this->_instanceId, $lastGroupId, $plId);
 		}
 	}
+
+    public function addFileToShow($file_id) 
+    {
+        $sched = new ScheduleGroup();
+		$lastGroupId = $this->getLastGroupId();
+        
+		if(is_null($lastGroupId)) {
+
+			$groupId = $sched->add($this->_instanceId, $this->getShowStart(), $file_id);		
+		}
+		else {
+			$groupId = $sched->addFileAfter($this->_instanceId, $lastGroupId, $file_id);
+		}
+    }
 
 	public function scheduleShow($plIds) {
 		
@@ -712,7 +726,17 @@ class ShowInstance {
         $showInstance = CcShowInstancesQuery::create()
             ->findPK($this->_instanceId);
         $showInstance->setDbRecordedFile($file_id)
-            ->save(); 
+            ->save();
+
+        $rebroadcasts =  CcShowInstancesQuery::create()
+            ->filterByDbOriginalShow($this->_instanceId)
+            ->find();
+
+        foreach ($rebroadcasts as $rebroadcast) {
+
+            $rebroad = new ShowInstance($rebroadcast->getDbId());
+            $rebroad->addFileToShow($file_id);
+        }
     }
 
     public function getTimeScheduled() {

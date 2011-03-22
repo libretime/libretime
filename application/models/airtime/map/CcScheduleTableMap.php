@@ -39,7 +39,7 @@ class CcScheduleTableMap extends TableMap {
 		$this->setPrimaryKeyMethodInfo('cc_schedule_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', true, null, null);
+		$this->addColumn('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', false, null, null);
 		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
 		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
 		$this->addColumn('GROUP_ID', 'DbGroupId', 'INTEGER', false, null, null);
