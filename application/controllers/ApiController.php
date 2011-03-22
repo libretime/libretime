@@ -109,6 +109,16 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $result = Schedule::GetPlayOrderRange(0, 1);
+
+        $date = new Application_Model_DateHelper;
+        $timeNow = $date->getDate();
+        $result = array("env"=>APPLICATION_ENV,
+            "schedulerTime"=>gmdate("Y-m-d H:i:s"),
+            "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
+            "nextShow"=>Show_DAL::GetNextShows($timeNow, 5),
+            "timezone"=> date("T"),
+            "timezoneOffset"=> date("Z"));
+            
         //echo json_encode($result);
         header("Content-type: text/javascript");
         echo $_GET['callback'].'('.json_encode($result).')';

@@ -889,7 +889,7 @@ class Show_DAL {
         return $rows;
     }
 
-    public static function GetNextShow($timeNow)
+    public static function GetNextShows($timeNow, $limit)
     {
         global $CC_CONFIG, $CC_DBC;
 
@@ -899,7 +899,7 @@ class Show_DAL {
 		." AND si.starts >= TIMESTAMP '$timeNow'"
 		." AND si.starts < TIMESTAMP '$timeNow' + INTERVAL '48 hours'"
         ." ORDER BY si.starts"
-        ." LIMIT 1";
+        ." LIMIT $limit";
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
