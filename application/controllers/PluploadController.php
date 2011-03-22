@@ -173,7 +173,12 @@ class PluploadController extends Zend_Controller_Action
             $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName());
         }
 
-        die('{"jsonrpc" : "2.0", "id" : '.$file->getId().' }'); 
+        $show_instance  = $this->_getParam('show_instance');
+
+        $show = new ShowInstance($show_instance);
+        $show->setRecordedFile($file->getId());
+
+        die('{"jsonrpc" : "2.0", "id" : '.$file->getId().'}'); 
     }
 
     public function pluploadAction()
