@@ -113,7 +113,6 @@ class ScheduleGroup {
                     return $result;
                 }
                 $itemStartTime = $CC_DBC->getOne("SELECT TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'");
-                $id = $this->dateToId($itemStartTime);
             }
         }
         RabbitMq::PushSchedule();
