@@ -2,25 +2,64 @@
  $.fn.airtimeShowSchedule = function(options) {
 
     var defaults = {
-        updatePeriod: 5, //seconds
+        updatePeriod: 20, //seconds
+        sourceDomain: "http://localhost/", //where to get show status from
     };
     var options = $.extend(defaults, options);
 
     return this.each(function() {
         var obj = $(this);
+        var sd;
 
-        obj.append("<h3>On air today</h3>");
-        obj.append(
-            "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget no-playing-list small'>"+
-            "<tbody><tr>" +
-            "<td class='time'>13:15 - 13:30</td>" +
-            "<td><a href='#'>Program name</a> <a href='#' class='listen'>Listen</a></td>" +
-            "</tr>"+
-            "<tr>"+
-            "<td class='time'>13:15 - 13:30</td>"+
-            "<td><a href='#'>Lorem ipsum dolor</a></td>"+
-            "</tr>"+
-            "</tbody></table>");
+        getServerData();
+
+        function updateWidget(){
+            var currentShow = sd.getCurrentShow();
+            var nextShows = sd.getNextShows();
+
+            var currentShowName = "";
+            var nextShowName = ""
+
+            if (currentShow.length > 0){
+                currentShowName = currentShow[0].getName();
+            }
+            
+            if (nextShows.length > 0){
+                nextShowName = nextShows[0].getName();
+            }
+
+            tableString = "";
+            tableString += "<h3>On air today</h3>";
+            tableString += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget no-playing-list small'>"+
+                "<tbody>";
+            
+            var shows=currentShow.concat(nextShows);
+            
+            obj.empty();
+            for (var i=0; i<shows.length; i++){
+                tableString +=
+                "<tr>" +
+                "<td class='time'>"+shows[i].getRange()+"</td>" +
+                "<td><a href='#'>"+shows[i].getName()+"</a> <a href='#' class='listen'>Listen</a></td>" +
+                "</tr>";
+            }
+
+            tableString += "</tbody></table>";
+            
+            obj.append(tableString);
+        }
+
+        function processData(data){
+            sd = new ScheduleData(data);
+            updateWidget();
+        }
+
+        function getServerData(){
+            $.ajax({ url: options.sourceDomain + "api/live-info/", dataType:"jsonp", success:function(data){
+                        processData(data);
+                  }, error:function(jqXHR, textStatus, errorThrown){}});
+            setTimeout(getServerData, defaults.updatePeriod*1000);
+        }
     });
  };
 })(jQuery);
@@ -42,24 +81,42 @@
         getServerData();
 
         function updateWidget(){
-            var currentShow = sd.getCurrentShowName();
-            var timeRemaining = sd.getCurrentShowTimeRemaining();
-            var timeElapsed = sd.getCurrentShowTimeElapsed();
-            var showStatus = sd.getCurrentShowStatus();
+            var currentShow = sd.getCurrentShow();
+            var nextShows = sd.getNextShows();
 
-            var nextShow = sd.getNextShowName();
-            var nextShowRange = sd.getNextShowRange();
+            var showStatus = "Offline";
+            var currentShowName = "";
+            var timeElapsed = "";
+            var timeRemaining = "";
+
+            var nextShowName = "";
+            var nextShowRange = "";
+
+            if (currentShow.length > 0){
+                showStatus = "On Air Now";
+                currentShowName = currentShow[0].getName();
+
+                timeElapsed = sd.getShowTimeElapsed(currentShow[0]);
+                timeRemaining = sd.getShowTimeRemaining(currentShow[0]);
+            }
+
+            if (nextShows.length > 0){
+                nextShowName = nextShows[0].getName();
+                nextShowRange = nextShows[0].getRange();
+            }
 
             obj.empty();
             obj.append("<a id='listenWadrLive'><span>Listen WADR Live</span></a>");
             obj.append("<h4>"+showStatus+" &gt;&gt;</h4>");
             obj.append("<ul class='widget no-playing-bar'>" +
-                "<li class='current'>"+currentShow+ "<span id='time-elapsed' class='time-elapsed'>"+timeElapsed+"</span>" +
-                "<span id='time-remaining' class='time-remaining'>"+timeRemaining+"</span></li>" +
-                "<li class='next'>"+nextShow+"<span>"+nextShowRange+"</span></li>" +
+                "<li class='current'>Current: "+currentShowName+
+                "<span id='time-elapsed' class='time-elapsed'>"+timeElapsed+"</span>" +
+                "<span id='time-remaining' class='time-remaining'>"+timeRemaining+"</span>"+
+                "</li>" +
+                "<li class='next'>Next: "+nextShowName+"<span>"+nextShowRange+"</span></li>" +
                 "</ul>");
 
-            //refresh the UI
+            //refresh the UI to update the elapsed/remaining time
             setTimeout(updateWidget, 1000);
         }
 
@@ -78,12 +135,23 @@
  };
 })(jQuery);
 
-/* The rest of this file is the ScheduleData class */
+/* ScheduleData class BEGIN */
 function ScheduleData(data){
     this.data = data;
     this.estimatedSchedulePosixTime;
 
-    this.schedulePosixTime = this.convertDateToPosixTime(data.schedulerTime);
+    this.currentShow = new Array();
+    for (var i=0; i< data.currentShow.length; i++){
+        this.currentShow[i] = new Show(data.currentShow[i]);
+    }
+
+    this.nextShows = new Array();
+    for (var i=0; i< data.nextShow.length; i++){
+        this.nextShows[i] = new Show(data.nextShow[i]);
+    }
+    
+
+    this.schedulePosixTime = convertDateToPosixTime(data.schedulerTime);
     this.schedulePosixTime += parseInt(data.timezoneOffset)*1000;
     var date = new Date();
     this.localRemoteTimeOffset = date.getTime() - this.schedulePosixTime;
@@ -95,72 +163,57 @@ ScheduleData.prototype.secondsTimer = function(){
     this.estimatedSchedulePosixTime = date.getTime() - this.localRemoteTimeOffset;
 }
 
-ScheduleData.prototype.getCurrentShowName = function() {
-    var currentShow = this.data.currentShow;
-    if (currentShow.length > 0){
-        return "Current: " + currentShow[0].name;
-    } else {
-        return "";
-    }
-};
+ScheduleData.prototype.getCurrentShow = function(){
+    return this.currentShow;
+}
 
-ScheduleData.prototype.getCurrentShowStatus = function() {
-    var currentShow = this.data.currentShow;
-    if (currentShow.length > 0){
-        return "On Air Now";
-    } else {
-        return "Offline";
-    }
-};
+ScheduleData.prototype.getNextShows = function() {
+    return this.nextShows;
+}
 
-ScheduleData.prototype.getNextShowName = function() {
-    var nextShow = this.data.nextShow;
-    if (nextShow.length > 0){
-        return "Next: " + nextShow[0].name;
-    } else {
-        return "";
-    }
-};
-
-ScheduleData.prototype.getNextShowRange = function() {
-    var nextShow = this.data.nextShow;
-    if (nextShow.length > 0){
-        return this.getTime(nextShow[0].start_timestamp) + " - " + this.getTime(nextShow[0].end_timestamp);
-    } else {
-        return "";
-    }
-};
-
-ScheduleData.prototype.getCurrentShowTimeElapsed = function() {
+ScheduleData.prototype.getShowTimeElapsed = function(show) {
     this.secondsTimer();
-    var currentShow = this.data.currentShow;
-    if (currentShow.length > 0){
-        var showStart = this.convertDateToPosixTime(currentShow[0].start_timestamp);
-        return this.convertToHHMMSS(this.estimatedSchedulePosixTime - showStart);
-    } else {
-        return "";
-    }
+
+    var showStart = convertDateToPosixTime(show.getStartTimestamp());
+    return convertToHHMMSS(this.estimatedSchedulePosixTime - showStart);
 };
 
-ScheduleData.prototype.getCurrentShowTimeRemaining = function() {
+ScheduleData.prototype.getShowTimeRemaining = function(show) {
     this.secondsTimer();
-    var currentShow = this.data.currentShow;
-    if (currentShow.length > 0){
-        var showEnd = this.convertDateToPosixTime(currentShow[0].end_timestamp);
-        return this.convertToHHMMSS(showEnd - this.estimatedSchedulePosixTime);
-    } else {
-        return "";
-    }
-};
 
-ScheduleData.prototype.getTime = function(timestamp) {
-    return timestamp.split(" ")[1];
+    var showEnd = convertDateToPosixTime(show.getEndTimestamp());
+    return convertToHHMMSS(showEnd - this.estimatedSchedulePosixTime);
 };
+/* ScheduleData class END */
 
+/* Show class BEGIN */
+function Show(showData){
+    this.showData = showData;
+}
+
+Show.prototype.getName = function(){
+    return this.showData.name;
+}
+Show.prototype.getRange = function(){
+    return getTime(this.showData.start_timestamp) + " - " + getTime(this.showData.end_timestamp);
+}
+Show.prototype.getStartTimestamp = function(){
+    return this.showData.start_timestamp;
+}
+Show.prototype.getEndTimestamp = function(){
+    return this.showData.end_timestamp;
+}
+/* Show class END */
+
+
+function getTime(timestamp) {
+    var time = timestamp.split(" ")[1].split(":");
+    return time[0] + ":" + time[1];
+};
 
 /* Takes an input parameter of milliseconds and converts these into
  * the format HH:MM:SS */
-ScheduleData.prototype.convertToHHMMSS = function(timeInMS){
+function convertToHHMMSS(timeInMS){
 	var time = parseInt(timeInMS);
 
 	var hours = parseInt(time / 3600000);
@@ -189,7 +242,7 @@ ScheduleData.prototype.convertToHHMMSS = function(timeInMS){
 
 /* Takes in a string of format similar to 2011-02-07 02:59:57,
  * and converts this to epoch/posix time. */
-ScheduleData.prototype.convertDateToPosixTime = function(s){
+function convertDateToPosixTime(s){
     var datetime = s.split(" ");
 
     var date = datetime[0].split("-");

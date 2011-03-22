@@ -436,7 +436,7 @@ class Schedule {
             "current"=>Schedule::GetScheduledItemData($timeNow, 0),
             "next"=>Schedule::GetScheduledItemData($timeNow, 1, $next, "48 hours"),
             "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
-            "nextShow"=>Show_DAL::GetNextShow($timeNow),
+            "nextShow"=>Show_DAL::GetNextShows($timeNow, 1),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"),
             "apiKey"=>$CC_CONFIG['apiKey'][0]);
