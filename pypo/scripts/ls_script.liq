@@ -24,7 +24,7 @@ server.register(namespace="vars", "show_name", fun (s) -> begin show_name := s s
 server.register(namespace="vars", "station_name", fun (s) -> begin station_name := s s end)
 
 
-default = single(conservative=true, "/opt/pypo/files/basic/silence.mp3")
+default = amplify(0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 
 s = fallback(track_sensitive=false, [queue, default])
@@ -69,6 +69,9 @@ if output_icecast_mp3 then
 end
 
 if output_icecast_vorbis then
+    #remove metadata from ogg source and merge tracks to fix bug
+    #with vlc and mplayer disconnecting at the end of every track
+    ogg_s = add(normalize=false, [amplify(0.00001, noise()),s])
 	out_vorbis = output.icecast(%vorbis,
 			host = icecast_host, port = icecast_port,
 			password = icecast_pass, mount = mount_point_vorbis,
@@ -78,5 +81,5 @@ if output_icecast_vorbis then
 			url = icecast_url,
 			description = icecast_description,
 			genre = icecast_genre,
-			s)
+			ogg_s)
 end

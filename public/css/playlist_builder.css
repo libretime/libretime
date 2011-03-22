@@ -15,7 +15,11 @@
 #spl_sortable > li, 
 #side_playlist > div,
 #spl_editor,
-.spl_artist {
+.spl_artist,
+.spl_cue_in,
+.spl_fade_in,
+.spl_cue_out,
+.spl_fade_out {
 	clear: left;
 }
 
@@ -35,8 +39,8 @@
 #spl_sortable {
 	list-style: none;
 	padding:0;
-    height: 400px;
-	overflow-y: scroll;
+	height: 300px;
+	overflow: auto;
 	width:100%;
 	margin-top:0;
 }
@@ -50,6 +54,10 @@
 #side_playlist li div.list-item-container, #side_playlist li div.list-item-container.ui-state-active {
 	height:56px;
 	border: none;
+}
+
+#spl_name {
+
 }
 
 .ui-icon-closethick {
@@ -70,6 +78,15 @@
 
 .spl_artist {
 	font-size:12px;
+}
+
+/*#spl_editor {
+	height: 50px;
+}*/
+
+#spl_editor > div > span {
+/*	display: inline-block;
+	width: 150px;*/
 }
 
 .ui-icon-closethick,
@@ -239,13 +256,12 @@
     margin: 0;
 
 }
-dd.edit-error {
+.edit-error {
 	color:#b80000;
 	margin:0;
 	padding-bottom:0;
 	font-size:12px;
 	display:none;
-    clear: left;
 }
 	
 /*.edit-error:last-child {
@@ -275,4 +291,27 @@ dd.edit-error {
     right: 6px;
     top: 3px;
     z-index: 3;
+}
+
+#spl_sortable li .spl_cue {
+    background-color: transparent;
+	float:right;
+    font-size: 9px;
+    height: 15px;
+    right: 35px;
+    width: 33px;
+	margin-top:2px;
+	cursor:pointer;
+}
+#spl_sortable li .spl_cue.ui-state-default {
+	background: transparent url(images/cue_playlist.png) no-repeat 0 0;
+	border:none;
+}
+#spl_sortable li .spl_cue.ui-state-default:hover {
+	background: transparent url(images/cue_playlist.png) no-repeat 0 -15px;
+	border:none;
+}
+#spl_sortable li .spl_cue.ui-state-active, #spl_sortable li .spl_cue.ui-state-active:hover {
+	background: transparent url(images/cue_playlist.png) no-repeat 0 -30px;
+	border:none;
 }

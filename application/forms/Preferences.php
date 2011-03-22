@@ -17,7 +17,7 @@ class Application_Form_Preferences extends Zend_Form
             'value' => Application_Model_Preference::GetValue("station_name")
         ));
 
-        $defaultFade = Application_Model_Preference::GetValue("default_fade");
+        $defaultFade = Application_Model_Preference::GetDefaultFade();
         if($defaultFade == ""){
             $defaultFade = '00:00:00.000000';
         }
@@ -46,7 +46,7 @@ class Application_Form_Preferences extends Zend_Form
 		$this->addElement('checkbox', 'UseSoundCloud', array(
             'label'      => 'Automatically Upload Recorded Shows To SoundCloud',
             'required'   => false,
-            'value' => Application_Model_Preference::GetValue("soundcloud_upload")
+            'value' => Application_Model_Preference::GetDoSoundCloudUpload()
 		));
 
         //SoundCloud Username
@@ -55,16 +55,16 @@ class Application_Form_Preferences extends Zend_Form
             'label'      => 'SoundCloud Username:',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::GetValue("soundcloud_user")
+            'value' => Application_Model_Preference::GetSoundCloudUser()
         ));
 
         //SoundCloud Password
-        $this->addElement('password', 'SoundCloudPassword', array(
+        $this->addElement('text', 'SoundCloudPassword', array(
             'class'      => 'input_text',
             'label'      => 'SoundCloud Password:',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::GetValue("soundcloud_pass")
+            'value' => Application_Model_Preference::GetSoundCloudPassword()
         ));
 
         $this->addElement('submit', 'submit', array(

@@ -1,5 +1,5 @@
 .*
 *.pyc
-files/
+/files
 pypo/liquidsoap/liquidsoap
 build/build.properties
