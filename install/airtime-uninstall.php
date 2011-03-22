@@ -83,5 +83,8 @@ AirtimeInstall::DeleteFilesRecursive($CC_CONFIG['storageDir']);
 
 $command = "python ".__DIR__."/../pypo/install/pypo-uninstall.py";
 system($command);
+
+$command = "python ".__DIR__."/../python_apps/show-recorder/install/recorder-uninstall.py";
+system($command);
 echo "****************************** Uninstall Complete ******************************".PHP_EOL;
 
