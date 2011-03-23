@@ -554,7 +554,6 @@ class Schedule {
                 ." SET media_item_played=TRUE"
                 ." WHERE id=$p_id";
         $retVal = $CC_DBC->query($sql);
-        RabbitMq::PushSchedule();
         return $retVal;
     }
 
