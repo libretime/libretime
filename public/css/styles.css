@@ -825,7 +825,6 @@ div.ui-datepicker {
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e,
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-s {
 	float:left;
-
 	margin-right: 8px;
 }
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-close {
@@ -1474,9 +1473,21 @@ ul.errors li {
 	margin:-4px	3px -3px 0;
 	float:right;
 }
-
 .time-flow {
- float:right;
- margin-right:4px;
+	float:right;
+	margin-right:4px;
 }
-
+.small-icon {
+	display:block;
+	width:21px;
+	height:10px;
+	float:right;
+	margin-left:3px;
+}
+.small-icon.recording {
+	background:url(images/icon_record.png) no-repeat 0 0;
+}
+.small-icon.rebroadcast {
+	background:url(images/icon_rebroadcast.png) no-repeat 0 0;
+}
+	
