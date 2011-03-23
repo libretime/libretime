@@ -169,7 +169,7 @@ function updatePlaybar(){
     	$('#playlist').text(currentShow[0].name);
 
         var recElem = $('.recording-show');
-        currentShow[0].record ? recElem.show(): recElem.hide();
+        (currentShow[0].record == "1") ? recElem.show(): recElem.hide();
     }
 
     $('#show-length').empty();

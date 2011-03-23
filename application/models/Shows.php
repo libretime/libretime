@@ -678,7 +678,7 @@ class ShowInstance {
 	}
 
 	public function addPlaylistToShow($plId)
-	{
+    {
 		$sched = new ScheduleGroup();
 		$lastGroupId = $this->getLastGroupId();
 
@@ -692,12 +692,26 @@ class ShowInstance {
 		RabbitMq::PushSchedule();
 	}
 
-	public function scheduleShow($plIds)
-	{
+    public function addFileToShow($file_id) 
+    {
+        $sched = new ScheduleGroup();
+		$lastGroupId = $this->getLastGroupId();
+        
+		if(is_null($lastGroupId)) {
+
+			$groupId = $sched->add($this->_instanceId, $this->getShowStart(), $file_id);		
+		}
+		else {
+			$groupId = $sched->addFileAfter($this->_instanceId, $lastGroupId, $file_id);
+		}
+        RabbitMq::PushSchedule();
+    }
+
+	public function scheduleShow($plIds) {
+
 		foreach($plIds as $plId) {
 			$this->addPlaylistToShow($plId);
 		}
-		RabbitMq::PushSchedule();
 	}
 
 	public function removeGroupFromShow($group_id)
@@ -744,6 +758,17 @@ class ShowInstance {
             ->findPK($this->_instanceId);
         $showInstance->setDbRecordedFile($file_id)
             ->save();
+
+        $rebroadcasts =  CcShowInstancesQuery::create()
+            ->filterByDbOriginalShow($this->_instanceId)
+            ->find();
+
+        foreach ($rebroadcasts as $rebroadcast) {
+
+            $rebroad = new ShowInstance($rebroadcast->getDbId());
+            $rebroad->addFileToShow($file_id);
+            RabbitMq::PushSchedule();
+        }
     }
 
     public function getTimeScheduled()
@@ -864,7 +889,7 @@ class Show_DAL {
         return $rows;
     }
 
-    public static function GetNextShow($timeNow)
+    public static function GetNextShows($timeNow, $limit)
     {
         global $CC_CONFIG, $CC_DBC;
 
@@ -874,7 +899,7 @@ class Show_DAL {
 		." AND si.starts >= TIMESTAMP '$timeNow'"
 		." AND si.starts < TIMESTAMP '$timeNow' + INTERVAL '48 hours'"
         ." ORDER BY si.starts"
-        ." LIMIT 1";
+        ." LIMIT $limit";
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;

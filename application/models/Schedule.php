@@ -25,41 +25,6 @@ class ScheduleGroup {
     }
 
     /**
-     * Convert a date to an ID by stripping out all characters
-     * and padding with zeros.
-     *
-     * @param string $p_dateStr
-     */
-    public static function dateToId($p_dateStr) {
-        $p_dateStr = str_replace(":", "", $p_dateStr);
-        $p_dateStr = str_replace(" ", "", $p_dateStr);
-        $p_dateStr = str_replace(".", "", $p_dateStr);
-        $p_dateStr = str_replace("-", "", $p_dateStr);
-        $p_dateStr = substr($p_dateStr, 0, 17);
-        $p_dateStr = str_pad($p_dateStr, 17, "0");
-        return $p_dateStr;
-    }
-
-    /**
-     * Add the two times together, return the result.
-     *
-     * @param string $p_baseTime
-     *  Specified as YYYY-MM-DD HH:MM:SS
-     *
-     * @param string $p_addTime
-     *  Specified as HH:MM:SS.nnnnnn
-     *
-     * @return string
-     *    The end time, to the nearest second.
-     */
-    //  protected function calculateEndTime($p_startTime, $p_trackTime) {
-    //    $p_trackTime = substr($p_startTime, 0, );
-    //    $start = new DateTime();
-    //    $interval = new DateInterval()
-    //
-    //  }
-
-    /**
      * Add a music clip or playlist to the schedule.
      *
      * @param $p_datetime
@@ -77,6 +42,7 @@ class ScheduleGroup {
      */
     public function add($show_instance, $p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
         global $CC_CONFIG, $CC_DBC;
+
         if (!is_null($p_audioFileId)) {
             // Schedule a single audio track
 
@@ -92,26 +58,24 @@ class ScheduleGroup {
             if (empty($length)) {
                 return new PEAR_Error("Length is empty.");
             }
-            if (!Schedule::isScheduleEmptyInRange($p_datetime, $length)) {
-                return new PEAR_Error("Schedule conflict.", 555);
-            }
-
+           
             // Insert into the table
             $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
-            $id = $this->dateToId($p_datetime);
+           
             $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-            ." (playlist_id, starts, ends, clip_length, group_id, file_id)"
-            ." VALUES (0, TIMESTAMP '$p_datetime', "
+            ." (instance_id, starts, ends, clip_length, group_id, file_id, cue_out)"
+            ." VALUES ($show_instance, TIMESTAMP '$p_datetime', "
             ." (TIMESTAMP '$p_datetime' + INTERVAL '$length'),"
             ." '$length',"
-            ." {$this->groupId}, $p_audioFileId)";
+            ." {$this->groupId}, $p_audioFileId, '$length')";
             $result = $CC_DBC->query($sql);
             if (PEAR::isError($result)) {
                 //var_dump($sql);
                 return $result;
             }
 
-        } elseif (!is_null($p_playlistId)){
+        } 
+        elseif (!is_null($p_playlistId)){
             // Schedule a whole playlist
 
             // Load existing playlist
@@ -129,7 +93,6 @@ class ScheduleGroup {
 
             // Insert all items into the schedule
             $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
-            $id = $this->dateToId($p_datetime);
             $itemStartTime = $p_datetime;
 
             $plItems = $playlist->getContents();
@@ -150,14 +113,13 @@ class ScheduleGroup {
                     return $result;
                 }
                 $itemStartTime = $CC_DBC->getOne("SELECT TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'");
-                $id = $this->dateToId($itemStartTime);
             }
         }
         RabbitMq::PushSchedule();
         return $this->groupId;
     }
 
-    public function addAfter($show_instance, $p_groupId, $p_audioFileId) {
+    public function addFileAfter($show_instance, $p_groupId, $p_audioFileId) {
         global $CC_CONFIG, $CC_DBC;
         // Get the end time for the given entry
         $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
@@ -471,7 +433,7 @@ class Schedule {
             "current"=>Schedule::GetScheduledItemData($timeNow, 0),
             "next"=>Schedule::GetScheduledItemData($timeNow, 1, $next, "48 hours"),
             "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
-            "nextShow"=>Show_DAL::GetNextShow($timeNow),
+            "nextShow"=>Show_DAL::GetNextShows($timeNow, 1),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"),
             "apiKey"=>$CC_CONFIG['apiKey'][0]);

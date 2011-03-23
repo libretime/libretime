@@ -234,7 +234,7 @@
   </table>
   <table name="cc_schedule" phpName="CcSchedule">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="true"/>
+    <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false"/>
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
     <column name="group_id" phpName="DbGroupId" type="INTEGER" required="false"/>
