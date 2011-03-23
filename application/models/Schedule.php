@@ -663,7 +663,7 @@ class Schedule {
                 $pkey = Schedule::AirtimeTimeToPypoTime($start);
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
-                $playlists[$pkey]['x_ident'] = $dx["playlist_id"];
+                $playlists[$pkey]['x_ident'] = $dx['group_id'];
                 $playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
                 $playlists[$pkey]['timestamp'] = $timestamp;
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
@@ -671,7 +671,7 @@ class Schedule {
                 $playlists[$pkey]['schedule_id'] = $dx['group_id'];
                 $playlists[$pkey]['show_name'] = $dx['show_name'];
                 $playlists[$pkey]['user_id'] = 0;
-                $playlists[$pkey]['id'] = $dx["playlist_id"];
+                $playlists[$pkey]['id'] = $dx['group_id'];
                 $playlists[$pkey]['start'] = Schedule::AirtimeTimeToPypoTime($dx["start"]);
                 $playlists[$pkey]['end'] = Schedule::AirtimeTimeToPypoTime($dx["end"]);
             }
