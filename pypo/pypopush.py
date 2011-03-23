@@ -38,6 +38,7 @@ class PypoPush(Thread):
 
         self.schedule = dict()
         self.playlists = dict()
+        self.stream_metadata = dict()
 
         """
         push_ahead2 MUST be < push_ahead. The difference in these two values
@@ -53,18 +54,21 @@ class PypoPush(Thread):
         self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
         
     """
-    The Push Loop - the push loop periodically (minimal 1/2 of the playlist-grid)
-    checks if there is a playlist that should be scheduled at the current time.
-    If yes, the temporary liquidsoap playlist gets replaced with the corresponding one,
+    The Push Loop - the push loop periodically checks if there is a playlist 
+    that should be scheduled at the current time.
+    If yes, the current liquidsoap playlist gets replaced with the corresponding one,
     then liquidsoap is asked (via telnet) to reload and immediately play it.
     """
     def push(self, export_source):
         logger = logging.getLogger('push')
 
+        # get a new schedule from pypo-fetch
         if not self.queue.empty():
             scheduled_data = self.queue.get()
+            logger.debug("Received data from pypo-fetch")
             self.schedule = scheduled_data['schedule']
             self.playlists = scheduled_data['playlists']
+            self.stream_metadata = scheduled_data['stream_metadata']
 
         schedule = self.schedule
         playlists = self.playlists
@@ -120,7 +124,8 @@ class PypoPush(Thread):
                 if start <= str_tnow_s and str_tnow_s < end:
                     currently_on_air = True
         else:
-            logger.debug('Empty schedule')
+            pass
+            #logger.debug('Empty schedule')
             
         if not currently_on_air:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
@@ -184,7 +189,7 @@ class PypoPush(Thread):
 
     def load_schedule_tracker(self):
         logger = logging.getLogger('push')
-        logger.debug('load_schedule_tracker')
+        #logger.debug('load_schedule_tracker')
         playedItems = dict()
 
         # create the file if it doesnt exist
@@ -197,7 +202,7 @@ class PypoPush(Thread):
             except Exception, e:
                 logger.error('Error creating schedule tracker file: %s', e)
         else:
-            logger.debug('schedule tracker file exists, opening: ' + self.schedule_tracker_file)
+            #logger.debug('schedule tracker file exists, opening: ' + self.schedule_tracker_file)
             try:
                 schedule_tracker = open(self.schedule_tracker_file, "r")
                 playedItems = pickle.load(schedule_tracker)
