@@ -69,13 +69,22 @@ class PypoFetch(Thread):
         consumer.register_callback(handle_message)
         consumer.consume()
         
-        logger.info("PypoFetch: init complete");
+        logger.info("PypoFetch: init complete")
 
 
     def set_export_source(self, export_source):
         self.export_source = export_source
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
 
+    def check_matching_timezones(self, server_timezone):
+        logger = logging.getLogger('fetch')
+        f = open('/etc/timezone', 'r')
+        pypo_timezone = f.readline().strip(' \t\n\r')
+        f.close()
+        if server_timezone != pypo_timezone:
+            logger.error("Server and pypo timezones do not match. Audio playback may not start when expected!")
+            logger.error("Server timezone: %s", server_timezone)
+            logger.error("Pypo timezone: %s", pypo_timezone)
     
     """
     Process the schedule
@@ -88,7 +97,9 @@ class PypoFetch(Thread):
     def process_schedule(self, schedule_data, export_source):
         logger = logging.getLogger('fetch')
         self.schedule = schedule_data["playlists"]
-        
+
+        self.check_matching_timezones(schedule_data["server_timezone"])
+            
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         stream_metadata = schedule_data['stream_metadata']
