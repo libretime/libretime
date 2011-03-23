@@ -235,7 +235,6 @@ class ScheduleGroup {
                 ." SET schedule_group_played=TRUE"
                 ." WHERE group_id=".$this->groupId;
         $retVal = $CC_DBC->query($sql);
-        RabbitMq::PushSchedule();
         return $retVal;
     }
 
@@ -246,7 +245,6 @@ class ScheduleGroup {
                 ." WHERE group_id=".$this->groupId
                 ." AND file_id=".pg_escape_string($p_fileId);
         $retVal = $CC_DBC->query($sql);
-        RabbitMq::PushSchedule();
         return $retVal;
     }
 }
