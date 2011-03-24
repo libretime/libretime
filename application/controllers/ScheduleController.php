@@ -161,7 +161,7 @@ class ScheduleController extends Zend_Controller_Action
             if (($user->isHost($show->getShowId()) || $user->isAdmin()) && !$show->isRecorded() && !$show->isRebroadcast()) {
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params,
-                    'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add Content');
+                    'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add / Remove Content');
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params,
                             'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
