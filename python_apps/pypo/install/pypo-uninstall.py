@@ -50,6 +50,6 @@ try:
     remove_path("/etc/service/pypo-liquidsoap")
 
     remove_user("pypo")
-    print "Uninstall complete."
+    print "Pypo uninstall complete."
 except Exception, e:
     print "exception:" + str(e)

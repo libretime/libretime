@@ -214,8 +214,8 @@ class AirtimeInstall {
     }
 
     public static function RemoveSymlinks(){
-        exec("rm /usr/bin/airtime-import");
-        exec("rm /usr/bin/airtime-clean-storage");
+        exec("rm /usr/bin/airtime-import >/dev/null 2>&1");
+        exec("rm /usr/bin/airtime-clean-storage >/dev/null 2>&1");
     }
 
 
