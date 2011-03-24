@@ -716,7 +716,7 @@ class Schedule {
         $result['stream_metadata'] = array();
         $result['stream_metadata']['format'] = Application_Model_Preference::GetStreamLabelFormat();
         $result['stream_metadata']['station_name'] = Application_Model_Preference::GetStationName();
-        $result['server_timezone'] = date_default_timezone_get();
+        $result['server_timezone'] = date('O');
 
         return $result;
     }

@@ -11,6 +11,7 @@ import json
 import telnetlib
 import math
 from threading import Thread
+from subprocess import Popen, PIPE
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
@@ -78,13 +79,14 @@ class PypoFetch(Thread):
 
     def check_matching_timezones(self, server_timezone):
         logger = logging.getLogger('fetch')
-        f = open('/etc/timezone', 'r')
-        pypo_timezone = f.readline().strip(' \t\n\r')
-        f.close()
+
+        process = Popen(["date", "+%z"], stdout=PIPE)
+        pypo_timezone = (process.communicate()[0]).strip(' \r\n\t')
+
         if server_timezone != pypo_timezone:
-            logger.error("Server and pypo timezones do not match. Audio playback may not start when expected!")
-            logger.error("Server timezone: %s", server_timezone)
-            logger.error("Pypo timezone: %s", pypo_timezone)
+            logger.error("Server and pypo timezone offsets do not match. Audio playback may not start when expected!")
+            logger.error("Server timezone offset: %s", server_timezone)
+            logger.error("Pypo timezone offset: %s", pypo_timezone)
     
     """
     Process the schedule
