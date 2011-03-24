@@ -80,6 +80,7 @@ class AirtimeInstall {
         $api_key = AirtimeInstall::GenerateRandomString();
         AirtimeInstall::UpdateIniValue(__DIR__.'/../build/airtime.conf', 'api_key', $api_key);
         AirtimeInstall::UpdateIniValue(__DIR__.'/../python_apps/pypo/config.cfg', 'api_key', "'$api_key'");
+        AirtimeInstall::UpdateIniValue(__DIR__.'/../python_apps/show-recorder/config.cfg', 'api_key', "'$api_key'");
     }
 
     public static function ExitIfNotRoot()

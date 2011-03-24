@@ -150,6 +150,12 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
+    public function recordedShowsAction()
+    {
+        $today_timestamp = date("Y-m-d H:i:s");
+        $this->view->shows = Show::getShows($today_timestamp, null, $excludeInstance=NULL, $onlyRecord=TRUE);
+    }
+
     public function notifyMediaItemStartPlayAction()
     {
         global $CC_CONFIG;
