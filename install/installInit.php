@@ -112,7 +112,7 @@ class AirtimeInstall {
     public static function SetupStorageDirectory($CC_CONFIG)
     {
         global $CC_CONFIG, $CC_DBC;
-         
+
         echo PHP_EOL."*** Directory Setup ***".PHP_EOL;
         foreach (array('baseFilesDir', 'storageDir') as $d) {
             if ( !file_exists($CC_CONFIG[$d]) ) {
@@ -141,7 +141,7 @@ class AirtimeInstall {
         // Create the database user
         $command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
         ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
-         
+
         @exec($command, $output, $results);
         if ($results == 0) {
             echo "* User {$CC_CONFIG['dsn']['username']} created.".PHP_EOL;
@@ -153,7 +153,7 @@ class AirtimeInstall {
     public static function CreateDatabase()
     {
         global $CC_CONFIG;
-         
+
         $command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} --owner {$CC_CONFIG['dsn']['username']} 2> /dev/null";
         @exec($command, $output, $results);
         if ($results == 0) {
@@ -205,7 +205,7 @@ class AirtimeInstall {
 
     public static function CreateSymlinks(){
         AirtimeInstall::RemoveSymlinks();
-        
+
         $dir = realpath(__DIR__."/../utils/airtime-import");
         exec("ln -s $dir /usr/bin/airtime-import");
 
@@ -214,8 +214,8 @@ class AirtimeInstall {
     }
 
     public static function RemoveSymlinks(){
-        exec("rm /usr/bin/airtime-import");
-        exec("rm /usr/bin/airtime-clean-storage");
+        exec("rm -f /usr/bin/airtime-import");
+        exec("rm -f /usr/bin/airtime-clean-storage");
     }
 
 

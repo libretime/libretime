@@ -39,7 +39,7 @@ $command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']} 2> /dev/null
 //------------------------------------------------------------------------
 if ($dbDeleteFailed) {
     echo " * Couldn't delete the database, so deleting all the DB tables...".PHP_EOL;
-    AirtimeInstall::DbConnect(true);
+    AirtimeInstall::DbConnect(false);
 
     if (!PEAR::isError($CC_DBC)) {
         $sql = "select * from pg_tables where tableowner = 'airtime'";
