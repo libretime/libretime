@@ -68,12 +68,13 @@ class Application_Form_AddUser extends Zend_Form
         $this->addElement($jabber);
 
         $select = new Zend_Form_Element_Select('type');
+        $select->setLabel('User Type:');
         $select->setAttrib('class', 'input_select');
         $select->setAttrib('style', 'width: 40%');
         $select->setMultiOptions(array(
-                "A" => "admin",
-                "H" => "host",
                 "G" => "guest",
+                "H" => "host",
+                "A" => "admin"
             ));
         $select->setRequired(true);
         $this->addElement($select);

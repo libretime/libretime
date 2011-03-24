@@ -38,16 +38,16 @@ try:
     remove_path(BASE_PATH)
     
     print "Removing daemontool script pypo"
-    remove_path("rm -rf /etc/service/pypo")
+    remove_path("/etc/service/pypo")
 
     if os.path.exists("/etc/service/pypo-fetch"):
-        remove_path("rm -rf /etc/service/pypo-fetch")
+        remove_path("/etc/service/pypo-fetch")
 
     if os.path.exists("/etc/service/pypo-push"):
-        remove_path("rm -rf /etc/service/pypo-push")
+        remove_path("/etc/service/pypo-push")
         
     print "Removing daemontool script pypo-liquidsoap"
-    remove_path("rm -rf /etc/service/pypo-liquidsoap")
+    remove_path("/etc/service/pypo-liquidsoap")
 
     remove_user("pypo")
     print "Uninstall complete."
