@@ -473,15 +473,11 @@ class Show {
         $event = array();
 
         if($show["rebroadcast"]) {
-            $title = "REBROADCAST ".$show["name"];
             $event["disableResizing"] = true;
-        }
-        else {
-            $title = $show["name"];
         }
 
 		$event["id"] = $show["instance_id"];
-		$event["title"] = $title;
+		$event["title"] = $show["name"];
 		$event["start"] = $show["starts"];
 		$event["end"] = $show["ends"];
 		$event["allDay"] = false;
