@@ -9,17 +9,8 @@ if os.geteuid() != 0:
     sys.exit(1)
     
 try:
-    print "Stopping daemontool script pypo"
-    os.system("svc -dx /etc/service/pypo 1>/dev/null 2>&1")
-
-    if os.path.exists("/etc/service/pypo-fetch"):
-        os.system("svc -dx /etc/service/pypo-fetch 1>/dev/null 2>&1")
-    if os.path.exists("/etc/service/pypo-push"):
-        os.system("svc -dx /etc/service/pypo-push 1>/dev/null 2>&1")
- 
-    print "Stopping daemontool script pypo-liquidsoap"
-    os.system("svc -dx /etc/service/pypo-liquidsoap 1>/dev/null 2>&1")
-    os.system("killall liquidsoap")
+    print "Stopping daemontool script recorder"
+    os.system("svc -dx /etc/service/recorder 1>/dev/null 2>&1")
     
 except Exception, e:
     print "exception:" + str(e)
