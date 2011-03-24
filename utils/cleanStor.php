@@ -18,7 +18,7 @@ function printUsage() {
     global $CC_CONFIG;
 
     echo "Usage:\n";
-    echo "  ./CleanStor [OPTION] \n";
+    echo "  ./cleanStor [OPTION] \n";
     echo "\n";
     echo "Options:\n";
     echo "  -c, --clean     Removes all broken links from the storage server\n";

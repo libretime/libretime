@@ -29,15 +29,16 @@
 #-------------------------------------------------------------------------------
 #  Determine directories, files
 #-------------------------------------------------------------------------------
-reldir=`dirname $0`
-phpdir=$reldir
-filelistpathname=.
+
+# Absolute path to this script
+SCRIPT=`readlink -f $0`
+# Absolute path this script is in
+SCRIPTPATH=`dirname $SCRIPT`
 
 #-------------------------------------------------------------------------------
 #   Do import
 #-------------------------------------------------------------------------------
 invokePwd=$PWD
-#echo $invokePwd
-cd $phpdir
+cd $SCRIPTPATH
 
 php -q airtime-import.php --dir "$invokePwd" "$@" || exit 1

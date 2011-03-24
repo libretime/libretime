@@ -203,4 +203,20 @@ class AirtimeInstall {
         exec($command);
     }
 
+    public static function CreateSymlinks(){
+        AirtimeInstall::RemoveSymlinks();
+        
+        $dir = realpath(__DIR__."/../utils/airtime-import");
+        exec("ln -s $dir /usr/bin/airtime-import");
+
+        $dir = realpath(__DIR__."/../utils/airtime-clean-storage");
+        exec("ln -s $dir /usr/bin/airtime-clean-storage");
+    }
+
+    public static function RemoveSymlinks(){
+        exec("rm /usr/bin/airtime-import");
+        exec("rm /usr/bin/airtime-clean-storage");
+    }
+
+
 }

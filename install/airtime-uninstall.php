@@ -20,6 +20,7 @@ require_once(dirname(__FILE__).'/installInit.php');
 // Need to check that we are superuser before running this.
 AirtimeInstall::ExitIfNotRoot();
 
+AirtimeInstall::RemoveSymlinks();
 
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
 //------------------------------------------------------------------------

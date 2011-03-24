@@ -46,6 +46,9 @@ AirtimeInstall::SetupStorageDirectory($CC_CONFIG);
 echo "* Setting Dir Permissions".PHP_EOL;
 AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
+echo "* Creating /usr/bin symlinks".PHP_EOL;
+AirtimeInstall::CreateSymlinks($CC_CONFIG["storageDir"]);
+
 echo "* Importing Sample Audio Clips".PHP_EOL;
 system(__DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null");
 
