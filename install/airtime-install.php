@@ -53,7 +53,7 @@ echo "* Python eggs Setup".PHP_EOL;
 AirtimeInstall::SetUpPythonEggs();
 
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
-system("python ".__DIR__."/../pypo/install/pypo-install.py");
+system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 
 echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
