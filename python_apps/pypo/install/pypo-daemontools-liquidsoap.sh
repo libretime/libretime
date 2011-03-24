@@ -11,6 +11,5 @@ PYTHONPATH=${api_client_path}:$PYTHONPATH
 export PYTHONPATH
 
 cd /opt/pypo/bin/scripts
-exec setuidgid ${ls_user} \
-               ${ls_path} ${ls_param}
+sudo -u ${ls_user} ${ls_path} ${ls_param}
 # EOF

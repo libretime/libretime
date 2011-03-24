@@ -4,7 +4,6 @@
 # needed here to keep dirs/configs clean   #
 # and maybe to set user-rights             #
 ############################################
-pwd
 
 # Absolute path to this script
 SCRIPT=`readlink -f $0`
