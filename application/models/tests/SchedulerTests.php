@@ -110,6 +110,7 @@ class SchedulerTests extends PHPUnit_TestCase {
         }
     }
 
+/*
     function testGetItems() {
         $i1 = new ScheduleGroup();
         $groupId1 = $i1->add('2008-01-01 12:00:00.000', $this->storedFile->getId());
@@ -123,5 +124,6 @@ class SchedulerTests extends PHPUnit_TestCase {
         $i1->remove();
         $i2->remove();
     }
+*/
 }
 

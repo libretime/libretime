@@ -354,13 +354,14 @@ class Schedule {
      * @return array
      *      Returns empty array if nothing found
      */
-    public static function GetItems($p_fromDateTime, $p_toDateTime, $p_playlistsOnly = true)
+
+    public static function GetItems($p_currentDateTime, $p_toDateTime, $p_playlistsOnly = true)
     {
         global $CC_CONFIG, $CC_DBC;
         $rows = array();
         if (!$p_playlistsOnly) {
             $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
-            ." WHERE (starts >= TIMESTAMP '$p_fromDateTime') "
+            ." WHERE (starts >= TIMESTAMP '$p_currentDateTime') "
             ." AND (ends <= TIMESTAMP '$p_toDateTime')";
             $rows = $CC_DBC->GetAll($sql);
             foreach ($rows as &$row) {
@@ -388,7 +389,7 @@ class Schedule {
             ." ON st.instance_id = si.id"
             ." LEFT JOIN $CC_CONFIG[showTable] as sh"
             ." ON si.show_id = sh.id"
-            ." WHERE (st.starts >= TIMESTAMP '$p_fromDateTime')"
+            ." WHERE (st.ends >= TIMESTAMP '$p_currentDateTime')"
             ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
             //next line makes sure that we aren't returning items that
             //are past the show's scheduled timeslot.
@@ -627,24 +628,16 @@ class Schedule {
      * @param string $p_toDateTime
      *      In the format "YYYY-MM-DD-HH-mm-SS"
      */
-    public static function ExportRangeAsJson($p_fromDateTime = null , $p_toDateTime = null)
+    public static function GetScheduledPlaylists()
     {
         global $CC_CONFIG, $CC_DBC;
 
-        if (is_null($p_fromDateTime)) {
-            $t1 = new DateTime();
-            $t1->sub(new DateInterval("PT24H"));
-            $range_start = $t1->format("Y-m-d H:i:s");
-        } else {
-            $range_start = Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
-        }
-        if (is_null($p_fromDateTime)) {
-            $t2 = new DateTime();
-            $t2->add(new DateInterval("PT24H"));
-            $range_end = $t2->format("Y-m-d H:i:s");
-        } else {
-            $range_end = Schedule::PypoTimeToAirtimeTime($p_toDateTime);
-        }
+        $t1 = new DateTime();
+        $range_start = $t1->format("Y-m-d H:i:s");
+
+        $t2 = new DateTime();
+        $t2->add(new DateInterval("PT24H"));
+        $range_end = $t2->format("Y-m-d H:i:s");
 
         // Scheduler wants everything in a playlist
         $data = Schedule::GetItems($range_start, $range_end, true);
@@ -720,25 +713,5 @@ class Schedule {
 
         return $result;
     }
-
-
-    /**
-     * Remove all items from the schedule in the given range.
-     *
-     * @param string $p_start
-     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-     * @param string $p_end
-     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-     */
-    public static function RemoveItemsInRange($p_start, $p_end)
-    {
-        $items = Schedule::GetItems($p_start, $p_end);
-        foreach ($items as $item) {
-            $scheduleGroup = new ScheduleGroup($item["group_id"]);
-            $scheduleGroup->remove();
-        }
-        RabbitMq::PushSchedule();
-    }
-
 }
 

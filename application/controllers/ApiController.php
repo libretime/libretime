@@ -135,6 +135,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
+        
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
@@ -144,12 +145,8 @@ class ApiController extends Zend_Controller_Action
 
         PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
-        $from = $this->_getParam("from");
-        $to = $this->_getParam("to");
-        if (Schedule::ValidPypoTimeFormat($from) && Schedule::ValidPypoTimeFormat($to)) {
-            $result = Schedule::ExportRangeAsJson($from, $to);
-            echo json_encode($result);
-        }
+        $result = Schedule::GetScheduledPlaylists();
+        echo json_encode($result);
     }
 
     public function notifyMediaItemStartPlayAction()

@@ -79,7 +79,7 @@ $endTime = date("Y-m-d H:i:s", time()+(60*60));
 
 echo "Removing everything from the scheduler between $startTime and $endTime...";
 // Scheduler: remove any playlists for the next hour
-Schedule::RemoveItemsInRange($startTime, $endTime);
+//Schedule::RemoveItemsInRange($startTime, $endTime);
 // Check for succcess
 $scheduleClear = Schedule::isScheduleEmptyInRange($startTime, "01:00:00");
 if (!$scheduleClear) {
