@@ -196,6 +196,7 @@ select {
 .time-info-block  {
 	padding:0 14px 0 2px;
 	background:url(images/masterpanel_spacer.png) no-repeat right 0;
+	min-width:105px;
 }
 .time-info-block ul {
 	margin:0;
@@ -1479,7 +1480,7 @@ ul.errors li {
 }
 .small-icon {
 	display:block;
-	width:21px;
+	width:20px;
 	height:10px;
 	float:right;
 	margin-left:3px;
@@ -1489,5 +1490,19 @@ ul.errors li {
 }
 .small-icon.rebroadcast {
 	background:url(images/icon_rebroadcast.png) no-repeat 0 0;
+}
+
+.medium-icon {
+	display:block;
+	width:25px;
+	height:12px;
+	float:right;
+	margin-left:4px;
+}
+.medium-icon.recording {
+	background:url(images/icon_record_m.png) no-repeat 0 0;
+}
+.medium-icon.rebroadcast {
+	background:url(images/icon_rebroadcast_m.png) no-repeat 0 0;
 }
 	
