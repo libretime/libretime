@@ -182,7 +182,6 @@ function setAddShowEvents() {
 		});
 
 	form.find("#add-show-submit")
-		.button()
 		.click(function(event){
             event.preventDefault();
 
