@@ -16,7 +16,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
          // Add URL element
         $this->addElement('text', 'add_show_url', array(
-            'label'      => 'Show URL:',
+            'label'      => 'Website:',
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
