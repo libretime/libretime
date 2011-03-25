@@ -13,7 +13,8 @@ from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import urllib2
 
-from subprocess import call
+#from subprocess import call
+from subprocess import Popen, PIPE
 from threading import Thread
 
 # For RabbitMQ
@@ -56,8 +57,10 @@ class ShowRecorder(Thread):
         filename = self.filename.replace(" ", "-")
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
-        command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
-        call(command, shell=True)
+        command = ("ecasound -i alsa -o %s -t:%s" % (filepath, length)).split(' ')
+        print(command)
+        Popen(command, stdout=PIPE)
+        #call(command, shell=False)
 
         return filepath
 

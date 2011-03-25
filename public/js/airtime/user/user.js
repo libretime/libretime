@@ -2,6 +2,7 @@ function populateForm(entries){
     //$('#user_details').show();
         
     $('.errors').remove();
+    $('.success').remove();
     
     $('#user_id').val(entries.id);
     $('#login').val(entries.login);

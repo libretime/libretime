@@ -23,6 +23,8 @@ class UserController extends Zend_Controller_Action
         $this->view->headScript()->appendFile('/js/airtime/user/user.js','text/javascript');
         $request = $this->getRequest();
         $form = new Application_Form_AddUser();
+
+        $this->view->successMessage = "";
  
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {  
@@ -42,6 +44,12 @@ class UserController extends Zend_Controller_Action
                     $user->save();
                     
                     $form->reset();
+
+                    if (strlen($formdata['user_id']) == 0){
+                        $this->view->successMessage = "<div class='success'>User added successfully!</div>";
+                    } else {
+                        $this->view->successMessage = "<div class='success'>User updated successfully!</div>";
+                    }
                 }
             }
         }
