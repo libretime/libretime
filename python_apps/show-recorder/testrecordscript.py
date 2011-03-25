@@ -88,7 +88,7 @@ class ShowRecorder(Thread):
     def run(self):
         code, filepath = self.record_show()
 
-        if code === 0:
+        if code == 0:
             self.upload_file(filepath)
         else:
             print "problem recording show"
