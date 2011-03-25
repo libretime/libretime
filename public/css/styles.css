@@ -184,7 +184,7 @@ select {
 .progressbar .progress-show-error {
 	background:#d40000 url(images/progressbar_show_error.png) repeat-x 0 0;
 }
-.now-playing-info .lenght {
+.now-playing-info .show-length {
 	color:#c4c4c4;
 	padding-left:6px; 
 }
