@@ -13,6 +13,7 @@
 import sys
 import time
 import urllib
+import urllib2
 import logging
 import json
 import os
@@ -89,6 +90,12 @@ class ApiClientInterface:
     # Return a dict of extra info you want to pass to liquidsoap
     # You will be able to use this data in update_start_playing
     def get_liquidsoap_data(self, pkey, schedule):
+        pass
+
+    def get_shows_to_record(self):
+        pass
+
+    def upload_recorded_show(self):
         pass
         
     # Put here whatever tests you want to run to make sure your API is working
@@ -189,30 +196,10 @@ class AirTimeApiClient(ApiClientInterface):
 
     def get_schedule(self, start=None, end=None):
         logger = logging.getLogger()
-        
-        """
-        calculate start/end time range (format: YYYY-DD-MM-hh-mm-ss,YYYY-DD-MM-hh-mm-ss)
-        (seconds are ignored, just here for consistency)
-        """
-        tnow = time.localtime(time.time())
-        if (not start):
-            tstart = time.localtime(time.time() - 3600 * int(self.config["cache_for"]))
-            start = "%04d-%02d-%02d-%02d-%02d" % (tstart[0], tstart[1], tstart[2], tstart[3], tstart[4])
-            
-        if (not end):           
-            tend = time.localtime(time.time() + 3600 * int(self.config["prepare_ahead"]))
-            end = "%04d-%02d-%02d-%02d-%02d" % (tend[0], tend[1], tend[2], tend[3], tend[4])
-            
-        range = {}
-        range['start'] = start
-        range['end'] = end
-        
+                
         # Construct the URL
         export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
         
-        # Insert the start and end times into the URL        
-        export_url = export_url.replace('%%from%%', range['start'])
-        export_url = export_url.replace('%%to%%', range['end'])
         logger.info("Fetching schedule from %s", export_url)
         export_url = export_url.replace('%%api_key%%', self.config["api_key"])
         
@@ -224,24 +211,6 @@ class AirTimeApiClient(ApiClientInterface):
             status = response['check']
         except Exception, e:
             print e
-
-        #schedule = response["playlists"]
-        #scheduleKeys = sorted(schedule.iterkeys())
-        #
-        ## Remove all playlists that have passed current time
-        #try:
-        #   tnow = time.localtime(time.time())
-        #   str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-        #   toRemove = []
-        #   for pkey in scheduleKeys:
-        #       if (str_tnow_s > schedule[pkey]['end']):
-        #           toRemove.append(pkey)
-        #       else:
-        #           break
-        #   for index in toRemove:
-        #       del schedule[index]
-        #except Exception, e:
-        #response["playlists"] = schedule
 
         return status, response
 
@@ -316,6 +285,42 @@ class AirTimeApiClient(ApiClientInterface):
         except Exception, e:
             data["schedule_id"] = 0
         return data
+
+    def get_shows_to_record(self):
+        logger = logging.getLogger()
+        response = ''
+        try:
+            url = self.config["base_url"] + self.config["api_base"] + self.config["show_schedule_url"]
+            #logger.debug(url)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            logger.debug(url)
+            response = urllib.urlopen(url)
+            response = json.loads(response.read())
+            logger.info("shows %s", response)
+        
+        except Exception, e:
+            logger.error("Exception: %s", e)
+        
+        return response[u'shows']
+
+    def upload_recorded_show(self, data, headers):
+        logger = logging.getLogger()
+        response = ''
+        try:
+            url = self.config["base_url"] + self.config["api_base"] + self.config["upload_file_url"]
+            #logger.debug(url)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            logger.debug(url)
+
+            request = urllib2.Request(url, data, headers)
+            response = urllib2.urlopen(request).read().strip()
+
+            logger.info("uploaded show result %s", response)
+        
+        except Exception, e:
+            logger.error("Exception: %s", e)
+        
+        return response
     
 
         

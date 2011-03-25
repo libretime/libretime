@@ -1,10 +1,12 @@
 #!/usr/local/bin/python
 import urllib
 import logging
+import logging.config
 import json
 import time
 import datetime
 import os
+import sys
 
 from configobj import ConfigObj
 
@@ -15,6 +17,19 @@ import urllib2
 from subprocess import call
 from threading import Thread
 
+# For RabbitMQ
+from kombu.connection import BrokerConnection
+from kombu.messaging import Exchange, Queue, Consumer, Producer
+
+from api_clients import api_client
+
+# configure logging
+try:
+    logging.config.fileConfig("logging.cfg")
+except Exception, e:
+    print 'Error configuring logging: ', e
+    sys.exit()
+
 # loading config file
 try:
     config = ConfigObj('config.cfg')
@@ -22,12 +37,19 @@ except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
 
-shows_to_record = {}
+def getDateTimeObj(time):
 
-class Recorder(Thread):
+    timeinfo = time.split(" ")
+    date = timeinfo[0].split("-")
+    time = timeinfo[1].split(":")
+
+    return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(time[2])) 
+
+class ShowRecorder(Thread):
 
     def __init__ (self, show_instance, filelength, filename, filetype):
         Thread.__init__(self)
+        self.api_client = api_client.api_client_factory(config)
         self.filelength = filelength
         self.filename = filename
         self.filetype = filetype
@@ -40,9 +62,15 @@ class Recorder(Thread):
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
         command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
-        call(command, shell=True)
+        args = command.split(" ")
 
-        return filepath
+        print "starting record"
+
+        code = call(args)
+
+        print "finishing record, return code %s" % (code)
+
+        return code, filepath
 
     def upload_file(self, filepath):
 
@@ -55,83 +83,77 @@ class Recorder(Thread):
         # datagen is a generator object that yields the encoded parameters
         datagen, headers = multipart_encode({"file": open(filepath, "rb"), 'name': filename, 'show_instance': self.show_instance})
 
-        url = config["base_url"] + config["upload_file_url"]
-       
-        req = urllib2.Request(url, datagen, headers)
-        response = urllib2.urlopen(req).read().strip()
-        print response
+        self.api_client.upload_recorded_show(datagen, headers)
 
     def run(self):
-        filepath = self.record_show()
-        self.upload_file(filepath)
+        code, filepath = self.record_show()
+
+        if code == 0:
+            self.upload_file(filepath)
+        else:
+            print "problem recording show"
 
 
-def getDateTimeObj(time):
+class Record():
 
-    timeinfo = time.split(" ")
-    date = timeinfo[0].split("-")
-    time = timeinfo[1].split(":")
+    def __init__(self):
+        self.api_client = api_client.api_client_factory(config) 
+        self.shows_to_record = {}  
 
-    return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(time[2]))    
+    def process_shows(self, shows):
 
-def process_shows(shows):
-
-    global shows_to_record
-    shows_to_record = {}
-    
-    for show in shows:
-        show_starts = getDateTimeObj(show[u'starts'])
-        show_end = getDateTimeObj(show[u'ends'])
-        time_delta = show_end - show_starts
+        self.shows_to_record = {}
         
-        shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id']]
+        for show in shows:
+            show_starts = getDateTimeObj(show[u'starts'])
+            show_end = getDateTimeObj(show[u'ends'])
+            time_delta = show_end - show_starts
+            
+            self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id']]
 
 
-def check_record():
-    
-    tnow = datetime.datetime.now()
-    sorted_show_keys = sorted(shows_to_record.keys())
-    print sorted_show_keys
-    start_time = sorted_show_keys[0]
-    next_show = getDateTimeObj(start_time)
+    def check_record(self):
+        
+        tnow = datetime.datetime.now()
+        sorted_show_keys = sorted(self.shows_to_record.keys())
+        print sorted_show_keys
+        start_time = sorted_show_keys[0]
+        next_show = getDateTimeObj(start_time)
 
-    print next_show
-    print tnow
-    delta = next_show - tnow
-    print delta    
+        print next_show
+        print tnow
 
-    if delta <= datetime.timedelta(seconds=60):
-        print "sleeping %s seconds until show" % (delta.seconds)
-        time.sleep(delta.seconds)
-       
-        show_length = shows_to_record[start_time][0]
-        show_instance = shows_to_record[start_time][1]
-        show = Recorder(show_instance, show_length.seconds, start_time, filetype="mp3")
-        show.start()
-     
-        #remove show from shows to record.
-        del shows_to_record[start_time]
-    
+        delta = next_show - tnow
+        min_delta = datetime.timedelta(seconds=60)
 
-def get_shows():
+        if delta <= min_delta:
+            print "sleeping %s seconds until show" % (delta.seconds)
+            time.sleep(delta.seconds)
+           
+            show_length = self.shows_to_record[start_time][0]
+            show_instance = self.shows_to_record[start_time][1]
+            show = ShowRecorder(show_instance, show_length.seconds, start_time, filetype="mp3")
+            show.start()
+         
+            #remove show from shows to record.
+            del self.shows_to_record[start_time]
+        
 
-    url = config["base_url"] + config["show_schedule_url"]
-    response = urllib.urlopen(url)
-    data = response.read()
-   
-    response_json = json.loads(data)
-    shows = response_json[u'shows']
-    print shows
+    def get_shows(self):
 
-    if len(shows):
-        process_shows(shows)
-        check_record() 
+        shows = self.api_client.get_shows_to_record()
+
+        if len(shows):
+            self.process_shows(shows)
+            self.check_record() 
 
 
 if __name__ == '__main__':
 
+    recorder = Record()
+
     while True:
-        get_shows()
+        recorder.get_shows()
         time.sleep(5)
 
     

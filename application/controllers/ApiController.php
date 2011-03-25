@@ -6,8 +6,10 @@ class ApiController extends Zend_Controller_Action
     public function init()
     {
         /* Initialize action controller here */
-        $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('version', 'json')
+        $context = $this->_helper->getHelper('contextSwitch');
+        $context->addActionContext('version', 'json')
+                    ->addActionContext('recorded-shows', 'json')
+                    ->addActionContext('upload-recorded', 'json')
                     ->initContext();
     }
 
@@ -133,6 +135,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
+        
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
@@ -142,12 +145,8 @@ class ApiController extends Zend_Controller_Action
 
         PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
-        $from = $this->_getParam("from");
-        $to = $this->_getParam("to");
-        if (Schedule::ValidPypoTimeFormat($from) && Schedule::ValidPypoTimeFormat($to)) {
-            $result = Schedule::ExportRangeAsJson($from, $to);
-            echo json_encode($result);
-        }
+        $result = Schedule::GetScheduledPlaylists();
+        echo json_encode($result);
     }
 
     public function notifyMediaItemStartPlayAction()
@@ -215,6 +214,55 @@ class ApiController extends Zend_Controller_Action
             echo json_encode(array("status"=>0, "message"=>"Incorrect or non-numeric arguments given."));
             exit;
         }
+    }
+
+    public function recordedShowsAction()
+    {
+        global $CC_CONFIG;
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+        	header('HTTP/1.0 401 Unauthorized');
+        	print 'You are not allowed to access this resource.';
+        	exit;
+        }
+
+        $today_timestamp = date("Y-m-d H:i:s");
+        $this->view->shows = Show::getShows($today_timestamp, null, $excludeInstance=NULL, $onlyRecord=TRUE);
+    }
+
+    public function uploadRecordedAction()
+    {
+        global $CC_CONFIG;
+
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+        	header('HTTP/1.0 401 Unauthorized');
+        	print 'You are not allowed to access this resource.';
+        	exit;
+        }
+
+        $upload_dir = ini_get("upload_tmp_dir");
+        $file = StoredFile::uploadFile($upload_dir);
+
+        if(Application_Model_Preference::GetDoSoundCloudUpload())
+        {
+            $soundcloud = new ATSoundcloud();
+            $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName());
+        }
+
+        $show_instance  = $this->_getParam('show_instance');
+
+        $show = new ShowInstance($show_instance);
+        $show->setRecordedFile($file->getId());
+
+        $this->view->id = $file->getId(); 
     }
 }
 

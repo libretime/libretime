@@ -14,7 +14,7 @@
       <div class="now-playing-info show">
         <div class="recording-show" style="display: none;"></div>
         <span id="playlist"></span>
-        <span class="lenght">00:00</span>
+        <span id="show-length" class="show-length"></span>
       </div>
       <div class="progressbar">
         <div class="progress-show" id='progress-show' style="width:0%;"></div>
@@ -43,6 +43,6 @@
 <div id="jquery_jplayer_1" class="jp-jplayer" style="width:0px; height:0px;"></div>
 
 <div id="about-txt" style="display: none;">
-<a href="http://airtime.sourcefabric.org">Airtime</a> 1.7, the open radio software for scheduling and remote station management.<br>
+<a href="http://airtime.sourcefabric.org">Airtime</a> <?php echo AIRTIME_VERSION ?>, the open radio software for scheduling and remote station management.<br>
 © 2011 <a href="http://www.sourcefabric.org">Sourcefabric</a> o.p.s 2011. Airtime is distributed under the <a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">GNU GPL v.3</a>
 </div>

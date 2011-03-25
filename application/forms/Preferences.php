@@ -52,7 +52,7 @@ class Application_Form_Preferences extends Zend_Form
         //SoundCloud Username
         $this->addElement('text', 'SoundCloudUser', array(
             'class'      => 'input_text',
-            'label'      => 'SoundCloud Username:',
+            'label'      => 'SoundCloud Email:',
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetSoundCloudUser()
