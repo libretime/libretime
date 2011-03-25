@@ -1,6 +1,7 @@
 #!/bin/sh
 recorder_user="pypo"
 export HOME="/home/pypo/"
+export TERM=xterm
 
 # Location of pypo_cli.py Python script
 recorder_path="/opt/recorder/bin/"

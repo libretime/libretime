@@ -62,9 +62,15 @@ class ShowRecorder(Thread):
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
         command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
-        call(command, shell=True)
+        args = command.split(" ")
 
-        return filepath
+        print "starting record"
+
+        code = call(args)
+
+        print "finishing record, return code %s" % (code)
+
+        return code, filepath
 
     def upload_file(self, filepath):
 
@@ -80,8 +86,12 @@ class ShowRecorder(Thread):
         self.api_client.upload_recorded_show(datagen, headers)
 
     def run(self):
-        filepath = self.record_show()
-        self.upload_file(filepath)
+        code, filepath = self.record_show()
+
+        if code === 0:
+            self.upload_file(filepath)
+        else:
+            print "problem recording show"
 
 
 class Record():
