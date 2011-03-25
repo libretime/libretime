@@ -1219,6 +1219,16 @@ ul.errors li {
 	margin-bottom:2px;
 	border:1px solid #c83f3f;
 }
+
+div.success{
+	color:#3B5323;
+	font-size:11px;
+	padding:2px 4px;
+	background:#93DB70;
+	margin-bottom:2px;
+	border:1px solid #488214;
+}
+
 .collapsible-header {
 	border: 1px solid #8f8f8f;
 	background-color: #cccccc;

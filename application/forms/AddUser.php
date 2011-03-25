@@ -72,9 +72,9 @@ class Application_Form_AddUser extends Zend_Form
         $select->setAttrib('class', 'input_select');
         $select->setAttrib('style', 'width: 40%');
         $select->setMultiOptions(array(
-                "G" => "guest",
-                "H" => "host",
-                "A" => "admin"
+                "G" => "Guest",
+                "H" => "Host",
+                "A" => "Admin"
             ));
         $select->setRequired(true);
         $this->addElement($select);
