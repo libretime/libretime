@@ -6,9 +6,9 @@ end
 # A function applied to each metadata chunk
 def append_title(m) =  
   if !stream_metadata_type == 1 then
-    [("artist","#{!show_name} - #{m['title']}")]
-  #elsif !stream_metadata_type == 2 then
-  #  [("artist", ""), ("title", !show_name)]
+    [("artist","#{!show_name} - #{m['artist']}")]
+  #####elsif !stream_metadata_type == 2 then
+  #####  [("artist", ""), ("title", !show_name)]
   elsif !stream_metadata_type == 2 then
     [("artist",!station_name), ("title", !show_name)]
   else

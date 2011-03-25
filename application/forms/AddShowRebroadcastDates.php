@@ -9,17 +9,18 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/add-show-rebroadcast.phtml'))
         ));
 
+
+        $relativeDates = array();
+        $relativeDates[""] = "";
+        for($i=0; $i <=30; $i++) {
+           $relativeDates["$i days"] = "+$i days";  
+        }
+
         //Add date select
 		$this->addElement('select', 'add_show_rebroadcast_date_1', array(
             'required' => false,
             'class' => ' input_select',
-            'multiOptions' => array(
-                "" => "",
-                "0 days" => "+0 days",
-				"1 day" => "+1 day",
-                "2 days" => "+2 days",
-                "3 days" => "+3 days"
-            ),
+            'multiOptions' => $relativeDates,
             'decorators' => array(
                 'ViewHelper'
             )  
@@ -44,13 +45,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 		$this->addElement('select', 'add_show_rebroadcast_date_2', array(
             'required' => false,
             'class' => ' input_select',
-            'multiOptions' => array(
-                "" => "",
-                "0 days" => "+0 days",
-				"1 day" => "+1 day",
-                "2 days" => "+2 days",
-                "3 days" => "+3 days"
-            ),
+            'multiOptions' => $relativeDates,
             'decorators' => array(
                 'ViewHelper'
             )  
@@ -75,13 +70,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 		$this->addElement('select', 'add_show_rebroadcast_date_3', array(
             'required' => false,
             'class' => ' input_select',
-            'multiOptions' => array(
-                "" => "",
-                "0 days" => "+0 days",
-				"1 day" => "+1 day",
-                "2 days" => "+2 days",
-                "3 days" => "+3 days"
-            ),
+            'multiOptions' => $relativeDates,
             'decorators' => array(
                 'ViewHelper'
             )  
@@ -106,13 +95,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 		$this->addElement('select', 'add_show_rebroadcast_date_4', array(
             'required' => false,
             'class' => ' input_select',
-            'multiOptions' => array(
-                "" => "",
-                "0 days" => "+0 days",
-				"1 day" => "+1 day",
-                "2 days" => "+2 days",
-                "3 days" => "+3 days"
-            ),
+            'multiOptions' => $relativeDates,
             'decorators' => array(
                 'ViewHelper'
             )  
@@ -137,13 +120,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 		$this->addElement('select', 'add_show_rebroadcast_date_5', array(
             'required' => false,
             'class' => ' input_select',
-            'multiOptions' => array(
-                "" => "",
-                "0 days" => "+0 days",
-				"1 day" => "+1 day",
-                "2 days" => "+2 days",
-                "3 days" => "+3 days"
-            ),
+            'multiOptions' => $relativeDates,
             'decorators' => array(
                 'ViewHelper'
             )  
