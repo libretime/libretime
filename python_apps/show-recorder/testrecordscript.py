@@ -6,6 +6,7 @@ import json
 import time
 import datetime
 import os
+import sys
 
 from configobj import ConfigObj
 
@@ -13,8 +14,7 @@ from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import urllib2
 
-#from subprocess import call
-from subprocess import Popen, PIPE
+from subprocess import call
 from threading import Thread
 
 # For RabbitMQ
@@ -24,7 +24,11 @@ from kombu.messaging import Exchange, Queue, Consumer, Producer
 from api_clients import api_client
 
 # configure logging
-logging.config.fileConfig("logging.cfg")
+try:
+    logging.config.fileConfig("logging.cfg")
+except Exception, e:
+    print 'Error configuring logging: ', e
+    sys.exit()
 
 # loading config file
 try:
@@ -57,10 +61,8 @@ class ShowRecorder(Thread):
         filename = self.filename.replace(" ", "-")
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
-        command = ("ecasound -i alsa -o %s -t:%s" % (filepath, length)).split(' ')
-        print(command)
-        Popen(command, stdout=PIPE)
-        #call(command, shell=False)
+        command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
+        call(command, shell=True)
 
         return filepath
 
