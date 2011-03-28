@@ -109,14 +109,14 @@ class Record():
             show_end = getDateTimeObj(show[u'ends'])
             time_delta = show_end - show_starts
             
-            self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id']]
+            self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name']]
 
 
     def check_record(self):
         
         tnow = datetime.datetime.now()
         sorted_show_keys = sorted(self.shows_to_record.keys())
-        print sorted_show_keys
+      
         start_time = sorted_show_keys[0]
         next_show = getDateTimeObj(start_time)
 
@@ -132,7 +132,10 @@ class Record():
            
             show_length = self.shows_to_record[start_time][0]
             show_instance = self.shows_to_record[start_time][1]
-            show = ShowRecorder(show_instance, show_length.seconds, start_time, filetype="mp3")
+            show_name = self.shows_to_record[start_time][2]
+            filename = show_name+"-"+start_time
+
+            show = ShowRecorder(show_instance, show_length.seconds, filename, filetype="mp3")
             show.start()
          
             #remove show from shows to record.

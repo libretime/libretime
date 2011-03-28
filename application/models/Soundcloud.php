@@ -28,14 +28,18 @@ class ATSoundcloud {
         return $token;
     }
 
-    public function uploadTrack($filepath, $filename) 
+    public function uploadTrack($filepath, $filename, $description, $tags=array()) 
     {
         if($this->getToken())
         {
+            $tags = join(" ", $tags);
+
             $track_data = array(
                 'track[sharing]' => 'private',
                 'track[title]' => $filename,
-                'track[asset_data]' => '@' . $filepath
+                'track[asset_data]' => '@' . $filepath,
+                'track[tag_list]' => $tags,
+                'track[description]' => $description
             );
 
             try {
@@ -46,7 +50,6 @@ class ATSoundcloud {
             } 
             catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
                 echo $e->getMessage();
-                echo var_dump($track_data);
             }
         }
     }
