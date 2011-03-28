@@ -67,6 +67,14 @@ class Application_Form_Preferences extends Zend_Form
             'value' => Application_Model_Preference::GetSoundCloudPassword()
         ));
 
+         // Add the description element
+        $this->addElement('textarea', 'SoundCloudTags', array(
+            'label'      => 'space separated SoundCloud Tags',
+            'required'   => false,
+            'class'      => 'input_text_area',
+            'value' => Application_Model_Preference::GetSoundCloudTags()
+		));
+
         $this->addElement('submit', 'submit', array(
             'class'    => 'ui-button ui-state-default',
             'ignore'   => true,
