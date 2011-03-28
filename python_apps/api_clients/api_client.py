@@ -291,9 +291,9 @@ class AirTimeApiClient(ApiClientInterface):
         response = ''
         try:
             url = self.config["base_url"] + self.config["api_base"] + self.config["show_schedule_url"]
-            #logger.debug(url)
-            url = url.replace("%%api_key%%", self.config["api_key"])
             logger.debug(url)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+           
             response = urllib.urlopen(url)
             response = json.loads(response.read())
             logger.info("shows %s", response)
@@ -308,9 +308,8 @@ class AirTimeApiClient(ApiClientInterface):
         response = ''
         try:
             url = self.config["base_url"] + self.config["api_base"] + self.config["upload_file_url"]
-            #logger.debug(url)
-            url = url.replace("%%api_key%%", self.config["api_key"])
             logger.debug(url)
+            url = url.replace("%%api_key%%", self.config["api_key"])
 
             request = urllib2.Request(url, data, headers)
             response = urllib2.urlopen(request).read().strip()
