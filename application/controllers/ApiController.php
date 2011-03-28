@@ -104,8 +104,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function liveInfoAction(){
-        global $CC_CONFIG;
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -122,6 +120,22 @@ class ApiController extends Zend_Controller_Action
             "timezoneOffset"=> date("Z"));
             
         //echo json_encode($result);
+        header("Content-type: text/javascript");
+        echo $_GET['callback'].'('.json_encode($result).')';
+    }
+
+    public function weekInfoAction(){
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $dow = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
+
+        $result = array();
+        for ($i=0; $i<7; $i++){
+            $result[$dow[$i]] = Show_DAL::GetShowsByDayOfWeek($i);
+        }
+
         header("Content-type: text/javascript");
         echo $_GET['callback'].'('.json_encode($result).')';
     }

@@ -935,4 +935,28 @@ class Show_DAL {
         return $CC_DBC->GetAll($sql);
     }
 
+    public static function GetShowsByDayOfWeek($day){
+        //DOW FROM TIMESTAMP
+        //The day of the week (0 - 6; Sunday is 0) (for timestamp values only)
+
+        //SELECT EXTRACT(DOW FROM TIMESTAMP '2001-02-16 20:38:40');
+        //Result: 5
+
+        global $CC_CONFIG, $CC_DBC;
+		$sql = "SELECT"        
+        ." si.starts as show_starts,"
+        ." si.ends as show_ends,"
+        ." s.name as show_name,"
+        ." s.url as url"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." LEFT JOIN $CC_CONFIG[showTable] s"
+		." ON si.show_id = s.id"
+        ." WHERE EXTRACT(DOW FROM si.starts) = $day"
+        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)";
+
+        //echo $sql;
+
+        return $CC_DBC->GetAll($sql);
+    }
+
 }
