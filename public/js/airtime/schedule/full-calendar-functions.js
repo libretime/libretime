@@ -165,6 +165,25 @@ function eventRender(event, element, view) {
 		}
 
 		$(element).find(".fc-event-title").after(div);
+	}
+
+    //add the record/rebroadcast icons if needed.
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1) {
+		
+		$(element).find(".fc-event-time").after('<span class="small-icon recording"></span>');
+	}
+    if(view.name === 'month' && event.record === 1) {
+		
+		$(element).find(".fc-event-title").after('<span class="small-icon recording"></span>');
+	}
+
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
+		
+		$(element).find(".fc-event-time").after('<span class="small-icon rebroadcast"></span>');
+	}
+    if(view.name === 'month' && event.rebroadcast === 1) {
+		
+		$(element).find(".fc-event-title").after('<span class="small-icon rebroadcast"></span>');
 	}	
 
 	if(event.backgroundColor !== "") {

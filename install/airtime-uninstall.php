@@ -20,6 +20,7 @@ require_once(dirname(__FILE__).'/installInit.php');
 // Need to check that we are superuser before running this.
 AirtimeInstall::ExitIfNotRoot();
 
+AirtimeInstall::RemoveSymlinks();
 
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
 //------------------------------------------------------------------------
@@ -38,7 +39,7 @@ $command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']} 2> /dev/null
 //------------------------------------------------------------------------
 if ($dbDeleteFailed) {
     echo " * Couldn't delete the database, so deleting all the DB tables...".PHP_EOL;
-    AirtimeInstall::DbConnect(true);
+    AirtimeInstall::DbConnect(false);
 
     if (!PEAR::isError($CC_DBC)) {
         $sql = "select * from pg_tables where tableowner = 'airtime'";
@@ -81,7 +82,10 @@ if ($results == 0) {
 AirtimeInstall::DeleteFilesRecursive($CC_CONFIG['storageDir']);
 
 
-$command = "python ".__DIR__."/../pypo/install/pypo-uninstall.py";
+$command = "python ".__DIR__."/../python_apps/pypo/install/pypo-uninstall.py";
+system($command);
+
+$command = "python ".__DIR__."/../python_apps/show-recorder/install/recorder-uninstall.py";
 system($command);
 echo "****************************** Uninstall Complete ******************************".PHP_EOL;
 

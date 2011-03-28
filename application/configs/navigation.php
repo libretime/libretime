@@ -2,7 +2,7 @@
 
 /*
 * Navigation container (config/array)
- 
+
 * Each element in the array will be passed to
 * Zend_Navigation_Page::factory() when constructing
 * the navigation container below.
@@ -16,7 +16,7 @@ $pages = array(
         'resource'	=>	'nowplaying'
 	),
 	array(
-		'label'      => 'Add Audio',
+		'label'      => 'Add Media',
 		'module'     => 'default',
 		'controller' => 'Plupload',
 		'action'     => 'plupload',
@@ -51,7 +51,7 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'user',
                 'action'     => 'add-user',
-                'resource'	=>	'user'	
+                'resource'	=>	'user'
             )
         )
     ),
@@ -64,10 +64,10 @@ $pages = array(
 	)
 );
 
- 
+
 // Create container from array
 $container = new Zend_Navigation($pages);
 $container->id = "nav";
- 
+
 //store it in the registry:
 Zend_Registry::set('Zend_Navigation', $container);

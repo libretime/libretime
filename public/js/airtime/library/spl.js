@@ -205,13 +205,15 @@ function openFadeEditor(event) {
 function openCueEditor(event) {
 	event.stopPropagation();
 
-	var pos, url, li;
+	var pos, url, li, icon;
 
 	li = $(this).parent().parent().parent();
+    icon = $(this);
     pos = li.attr("id").split("_").pop();
 
 	if(li.hasClass("ui-state-active")) {
 		li.removeClass("ui-state-active");
+        icon.attr("class", "spl_cue ui-state-default");
 
         $("#cues_"+pos)
 			.empty()
@@ -220,6 +222,7 @@ function openCueEditor(event) {
 		return;
 	}
 
+    icon.attr("class", "spl_cue ui-state-default ui-state-active");
 	url = '/Playlist/set-cue';
 
 	highlightActive(li);
@@ -253,7 +256,8 @@ function setSPLContent(json) {
 
 	$("#spl_sortable .ui-icon-closethick").click(deleteSPLItem);
 	$(".spl_fade_control").click(openFadeEditor);
-	$(".spl_playlength").click(openCueEditor);
+	//$(".spl_playlength").click(openCueEditor);
+	$(".spl_cue").click(openCueEditor);
 
 	return false;
 }
@@ -487,7 +491,8 @@ function setUpSPL() {
 
 	$("#spl_sortable .ui-icon-closethick").click(deleteSPLItem);
 	$(".spl_fade_control").click(openFadeEditor);
-	$(".spl_playlength").click(openCueEditor);
+	//$(".spl_playlength").click(openCueEditor);
+	$(".spl_cue").click(openCueEditor);
 
 	$("#spl_sortable").droppable();
 	$("#spl_sortable" ).bind( "drop", addSPLItem);

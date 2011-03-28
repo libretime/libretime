@@ -56,7 +56,7 @@ function printUsage()
     echo "  -h, --help     Print this message and exit.\n";
     echo "\n";
     echo "Files will be imported to directory:\n";
-    echo "  ". $CC_CONFIG["storageDir"] ."\n";
+    echo "  ". realpath($CC_CONFIG["storageDir"]) ."\n";
     echo "\n";
 }
 

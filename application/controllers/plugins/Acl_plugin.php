@@ -110,7 +110,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     {
 		$controller = strtolower($request->getControllerName());
 		
-		if ($controller == 'api' || $controller == 'recorder' || $controller == 'plupload' && $request->getActionName() == 'upload-recorded'){
+		if ($controller == 'api'){
 
 			$this->setRoleName("G");	
 		} 

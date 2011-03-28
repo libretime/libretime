@@ -165,11 +165,12 @@ function updatePlaybar(){
 
     /* Column 1 update */
     $('#playlist').text("Current Show:");
+    var recElem = $('.recording-show');
     if (currentShow.length > 0){
     	$('#playlist').text(currentShow[0].name);
-
-        var recElem = $('.recording-show');
-        currentShow[0].record ? recElem.show(): recElem.hide();
+        (currentShow[0].record == "1") ? recElem.show(): recElem.hide();
+    } else {
+        recElem.hide();
     }
 
     $('#show-length').empty();

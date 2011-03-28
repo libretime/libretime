@@ -345,7 +345,7 @@ DROP TABLE "cc_schedule" CASCADE;
 CREATE TABLE "cc_schedule"
 (
 	"id" serial  NOT NULL,
-	"playlist_id" INTEGER  NOT NULL,
+	"playlist_id" INTEGER,
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
 	"group_id" INTEGER,

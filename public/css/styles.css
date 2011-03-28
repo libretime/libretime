@@ -184,7 +184,7 @@ select {
 .progressbar .progress-show-error {
 	background:#d40000 url(images/progressbar_show_error.png) repeat-x 0 0;
 }
-.now-playing-info .lenght {
+.now-playing-info .show-length {
 	color:#c4c4c4;
 	padding-left:6px; 
 }
@@ -196,6 +196,7 @@ select {
 .time-info-block  {
 	padding:0 14px 0 2px;
 	background:url(images/masterpanel_spacer.png) no-repeat right 0;
+	min-width:105px;
 }
 .time-info-block ul {
 	margin:0;
@@ -825,7 +826,6 @@ div.ui-datepicker {
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-e,
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-triangle-1-s {
 	float:left;
-
 	margin-right: 8px;
 }
 #schedule_playlist_chosen li > h3 > span.ui-icon.ui-icon-close {
@@ -1219,6 +1219,16 @@ ul.errors li {
 	margin-bottom:2px;
 	border:1px solid #c83f3f;
 }
+
+div.success{
+	color:#3B5323;
+	font-size:11px;
+	padding:2px 4px;
+	background:#93DB70;
+	margin-bottom:2px;
+	border:1px solid #488214;
+}
+
 .collapsible-header {
 	border: 1px solid #8f8f8f;
 	background-color: #cccccc;
@@ -1474,9 +1484,35 @@ ul.errors li {
 	margin:-4px	3px -3px 0;
 	float:right;
 }
-
 .time-flow {
- float:right;
- margin-right:4px;
+	float:right;
+	margin-right:4px;
+}
+.small-icon {
+	display:block;
+	width:20px;
+	height:10px;
+	float:right;
+	margin-left:3px;
+}
+.small-icon.recording {
+	background:url(images/icon_record.png) no-repeat 0 0;
+}
+.small-icon.rebroadcast {
+	background:url(images/icon_rebroadcast.png) no-repeat 0 0;
 }
 
+.medium-icon {
+	display:block;
+	width:25px;
+	height:12px;
+	float:right;
+	margin-left:4px;
+}
+.medium-icon.recording {
+	background:url(images/icon_record_m.png) no-repeat 0 0;
+}
+.medium-icon.rebroadcast {
+	background:url(images/icon_rebroadcast_m.png) no-repeat 0 0;
+}
+	

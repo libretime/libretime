@@ -7,7 +7,9 @@
         <div id="users_wrapper" class="dataTables_wrapper">
           
         <div class="button-holder">
-         <button type="button" id="add_user_button" name="search_add_group" class="ui-button ui-widget ui-state-default ui-button-text-icon-primary"><span class="ui-button-text">New User</span></button>
+         <button type="button" id="add_user_button" name="search_add_group" class="ui-button ui-widget ui-state-default ui-button-text-icon-primary">
+            <span class="ui-icon ui-icon-plusthick"></span>
+            <span class="ui-button-text">New User</span></button>
         </div>
           
           <table cellspacing="0" cellpadding="0" style="" id="users_datatable" class="datatable">
@@ -26,6 +28,7 @@
         </div>
       </div>
       <div class="user-data simple-formblock" id="user_details">
+      <?php echo $this->successMessage ?>
 	  <fieldset class="padded">
       <?php echo $this->form ?>
       </fieldset>

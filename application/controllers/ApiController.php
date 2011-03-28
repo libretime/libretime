@@ -6,8 +6,10 @@ class ApiController extends Zend_Controller_Action
     public function init()
     {
         /* Initialize action controller here */
-        $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('version', 'json')
+        $context = $this->_helper->getHelper('contextSwitch');
+        $context->addActionContext('version', 'json')
+                    ->addActionContext('recorded-shows', 'json')
+                    ->addActionContext('upload-recorded', 'json')
                     ->initContext();
     }
 
@@ -24,7 +26,7 @@ class ApiController extends Zend_Controller_Action
 	 * in application/conf.php
 	 *
 	 * @return void
-	 * 
+	 *
 	 */
     public function versionAction()
     {
@@ -101,6 +103,29 @@ class ApiController extends Zend_Controller_Action
 	  exit;
     }
 
+    public function liveInfoAction(){
+        global $CC_CONFIG;
+
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $result = Schedule::GetPlayOrderRange(0, 1);
+
+        $date = new Application_Model_DateHelper;
+        $timeNow = $date->getDate();
+        $result = array("env"=>APPLICATION_ENV,
+            "schedulerTime"=>gmdate("Y-m-d H:i:s"),
+            "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
+            "nextShow"=>Show_DAL::GetNextShows($timeNow, 5),
+            "timezone"=> date("T"),
+            "timezoneOffset"=> date("Z"));
+            
+        //echo json_encode($result);
+        header("Content-type: text/javascript");
+        echo $_GET['callback'].'('.json_encode($result).')';
+    }
+
     public function scheduleAction()
     {
         global $CC_CONFIG;
@@ -110,6 +135,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
+        
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
@@ -119,17 +145,9 @@ class ApiController extends Zend_Controller_Action
 
         PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
-        $from = $this->_getParam("from");
-        $to = $this->_getParam("to");
-        if (Schedule::ValidPypoTimeFormat($from) && Schedule::ValidPypoTimeFormat($to)) {
-            $result = Schedule::ExportRangeAsJson($from, $to);
-            $result['stream_metadata'] = array();
-            $result['stream_metadata']['format'] = Application_Model_Preference::GetStreamLabelFormat();
-            $result['stream_metadata']['station_name'] = Application_Model_Preference::GetStationName();
-            echo json_encode($result);
-        }
+        $result = Schedule::GetScheduledPlaylists();
+        echo json_encode($result);
     }
-
 
     public function notifyMediaItemStartPlayAction()
     {
@@ -196,6 +214,54 @@ class ApiController extends Zend_Controller_Action
             echo json_encode(array("status"=>0, "message"=>"Incorrect or non-numeric arguments given."));
             exit;
         }
+    }
+
+    public function recordedShowsAction()
+    {
+        global $CC_CONFIG;
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+        	header('HTTP/1.0 401 Unauthorized');
+        	print 'You are not allowed to access this resource.';
+        	exit;
+        }
+
+        $today_timestamp = date("Y-m-d H:i:s");
+        $this->view->shows = Show::getShows($today_timestamp, null, $excludeInstance=NULL, $onlyRecord=TRUE);
+    }
+
+    public function uploadRecordedAction()
+    {
+        global $CC_CONFIG;
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+        	header('HTTP/1.0 401 Unauthorized');
+        	print 'You are not allowed to access this resource.';
+        	exit;
+        }
+
+        $upload_dir = ini_get("upload_tmp_dir");
+        $file = StoredFile::uploadFile($upload_dir);
+
+        $show_instance  = $this->_getParam('show_instance');
+
+        $show_inst = new ShowInstance($show_instance);
+        $show_inst->setRecordedFile($file->getId());
+
+        if(Application_Model_Preference::GetDoSoundCloudUpload())
+        {
+            $show = new Show($show_inst->getShowId());
+            $description = $show->getDescription();
+
+            $soundcloud = new ATSoundcloud();
+            $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description);
+        }
+
+        $this->view->id = $file->getId(); 
     }
 }
 

@@ -39,7 +39,6 @@ AirtimeInstall::InstallPostgresScriptingLanguage();
 
 echo "* Creating database tables".PHP_EOL;
 AirtimeInstall::CreateDatabaseTables();
-AirtimeInstall::MigrateTables(__DIR__);
 
 echo "* Storage directory setup".PHP_EOL;
 AirtimeInstall::SetupStorageDirectory($CC_CONFIG);
@@ -47,11 +46,20 @@ AirtimeInstall::SetupStorageDirectory($CC_CONFIG);
 echo "* Giving Apache permission to access the storage directory".PHP_EOL;
 AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
+echo "* Creating /usr/bin symlinks".PHP_EOL;
+AirtimeInstall::CreateSymlinks($CC_CONFIG["storageDir"]);
+
 echo "* Importing sample audio clips".PHP_EOL;
 system(__DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null");
 
+echo "* Python eggs Setup".PHP_EOL;
+AirtimeInstall::SetUpPythonEggs();
+
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
-system("python ".__DIR__."/../pypo/install/pypo-install.py");
+system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
+
+echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
+system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
 
 
 echo "******************************* Install Complete *******************************".PHP_EOL;
