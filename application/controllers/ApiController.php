@@ -250,10 +250,6 @@ class ApiController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
 
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $api_key = $this->_getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -265,16 +261,19 @@ class ApiController extends Zend_Controller_Action
         $upload_dir = ini_get("upload_tmp_dir");
         $file = StoredFile::uploadFile($upload_dir);
 
-        if(Application_Model_Preference::GetDoSoundCloudUpload())
-        {
-            $soundcloud = new ATSoundcloud();
-            $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName());
-        }
-
         $show_instance  = $this->_getParam('show_instance');
 
-        $show = new ShowInstance($show_instance);
-        $show->setRecordedFile($file->getId());
+        $show_inst = new ShowInstance($show_instance);
+        $show_inst->setRecordedFile($file->getId());
+
+        if(Application_Model_Preference::GetDoSoundCloudUpload())
+        {
+            $show = new Show($show_inst->getShowId());
+            $description = $show->getDescription();
+
+            $soundcloud = new ATSoundcloud();
+            $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description);
+        }
 
         $this->view->id = $file->getId(); 
     }

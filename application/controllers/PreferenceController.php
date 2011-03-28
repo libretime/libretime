@@ -32,7 +32,8 @@ class PreferenceController extends Zend_Controller_Action
             Application_Model_Preference::SetStreamLabelFormat($values["streamFormat"]);
             Application_Model_Preference::SetDoSoundCloudUpload($values["UseSoundCloud"]);  
             Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
-            Application_Model_Preference::SetSoundCloudPassword($values["SoundCloudPassword"]);                    
+            Application_Model_Preference::SetSoundCloudPassword($values["SoundCloudPassword"]); 
+            Application_Model_Preference::SetSoundCloudTags($values["SoundCloudTags"]);                    
             
             $this->view->statusMsg = "Preferences Updated.";
         }

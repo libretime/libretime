@@ -28,14 +28,24 @@ class ATSoundcloud {
         return $token;
     }
 
-    public function uploadTrack($filepath, $filename) 
+    public function uploadTrack($filepath, $filename, $description, $tags=array()) 
     {
         if($this->getToken())
         {
+            if(count($tags)) {
+                $tags = join(" ", $tags);
+                $tags = $tags." ".Application_Model_Preference::GetSoundCloudTags();
+            }
+            else {
+                $tags = Application_Model_Preference::GetSoundCloudTags();
+            }
+
             $track_data = array(
                 'track[sharing]' => 'private',
                 'track[title]' => $filename,
-                'track[asset_data]' => '@' . $filepath
+                'track[asset_data]' => '@' . $filepath,
+                'track[tag_list]' => $tags,
+                'track[description]' => $description
             );
 
             try {
@@ -43,11 +53,16 @@ class ATSoundcloud {
                     $this->_soundcloud->post('tracks', $track_data),
                     true
                 );
+
+                echo var_dump($response);
             } 
             catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
                 echo $e->getMessage();
-                echo var_dump($track_data);
             }
+        }
+        else
+        {
+            echo "could not get soundcloud token";
         }
     }
 
