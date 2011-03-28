@@ -466,6 +466,30 @@ class Schedule {
     {
         global $CC_CONFIG, $CC_DBC;
 
+        $sql = "SELECT DISTINCT"
+        ." pt.name,"
+        ." ft.track_title,"
+        ." ft.artist_name,"
+        ." ft.album_title,"
+        ." st.starts,"
+        ." st.ends,"
+        ." st.clip_length,"
+        ." st.media_item_played,"
+        ." st.group_id,"
+        ." show.name as show_name,"
+        ." st.instance_id"
+        ." FROM $CC_CONFIG[scheduleTable] st"
+        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." ON st.file_id = ft.id"
+        ." LEFT JOIN $CC_CONFIG[playListTable] pt"
+        ." ON st.playlist_id = pt.id"
+        ." LEFT JOIN $CC_CONFIG[showInstances] si"
+        ." ON st.instance_id = si.id"
+        ." LEFT JOIN $CC_CONFIG[showTable] show"
+        ." ON si.show_id = show.id"
+        ." WHERE st.starts < si.ends";
+
+/*
         $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.media_item_played, st.group_id, show.name as show_name, st.instance_id"
         ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
         ." WHERE st.playlist_id = pt.id"
@@ -473,6 +497,7 @@ class Schedule {
         ." AND st.instance_id = si.id"
         ." AND si.show_id = show.id"
         ." AND st.starts < si.ends";
+*/
 
         if ($timePeriod < 0){
         	$sql .= " AND st.ends < TIMESTAMP '$timeStamp'"

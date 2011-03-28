@@ -930,7 +930,7 @@ class Show_DAL {
         ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
         //checking for st.starts IS NULL so that the query also returns shows that do not have any items scheduled.
         ." AND (st.starts < si.ends OR st.starts IS NULL)"
-        ." ORDER BY st.starts";
+        ." ORDER BY si.starts, st.starts";
 
         return $CC_DBC->GetAll($sql);
     }
