@@ -29,8 +29,19 @@ Linked code:
    - License: LGPLv3
 
  * Soundcloud php api wrapper
-   - https://github.com/mptre/php-soundcloud/blob/master/Services/Soundcloud.php
+   - Web site: https://github.com/mptre/php-soundcloud/blob/master/Services/Soundcloud.php
    - License: MIT   
+   - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
+
+ * Kombu
+   - Web site: http://pypi.python.org/pypi/kombu/
+   - License: New BSD
+   - Compatible with GPLv3? Yes. 
+
+ * PHP-AMQPLIB
+   - Web site: https://github.com/tnc/php-amqplib 
+   - License: LGPLv2.1
+   - Compatible with GPLv3? Yes
 
 ----------------
 Non-linked code:
