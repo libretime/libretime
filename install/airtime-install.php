@@ -11,13 +11,10 @@ require_once(dirname(__FILE__).'/include/installInit.php');
 
 ExitIfNotRoot();
 CreateINIFile();
+UpdateINIFiles();
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
-
-AirtimeInstall::CreateApiKey();
-AirtimeInstall::UpdateIniValue('../build/build.properties', 'project.home', realpath(__dir__.'/../'));
-
 
 echo PHP_EOL."*** Database Installation ***".PHP_EOL;
 

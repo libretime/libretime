@@ -60,43 +60,6 @@ class AirtimeInstall {
         chmod($filePath, $fileperms);
     }
 
-    private static function GenerateRandomString($len=20, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    {
-        $string = '';
-        for ($i = 0; $i < $len; $i++)
-        {
-            $pos = mt_rand(0, strlen($chars)-1);
-            $string .= $chars{$pos};
-        }
-        return $string;
-    }
-
-    public static function CreateApiKey()
-    {
-        $api_key = AirtimeInstall::GenerateRandomString();
-        AirtimeInstall::UpdateIniValue('/etc/airtime/airtime.conf', 'api_key', $api_key);
-        AirtimeInstall::UpdateIniValue('/etc/airtime/pypo.cfg', 'api_key', "'$api_key'");
-        AirtimeInstall::UpdateIniValue('/etc/airtime/recorder.cfg', 'api_key', "'$api_key'");
-    }
-
-    public static function UpdateIniValue($filename, $property, $value)
-    {
-        $lines = file($filename);
-        $n=count($lines);
-        for ($i=0; $i<$n; $i++) {
-            if (strlen($lines[$i]) > strlen($property))
-            if ($property == substr($lines[$i], 0, strlen($property))){
-                $lines[$i] = "$property = $value\n";
-            }
-        }
-
-        $fp=fopen($filename, 'w');
-        for($i=0; $i<$n; $i++){
-            fwrite($fp, $lines[$i]);
-        }
-        fclose($fp);
-    }
-
     public static function SetupStorageDirectory($CC_CONFIG)
     {
         global $CC_CONFIG, $CC_DBC;
