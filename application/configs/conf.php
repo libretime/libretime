@@ -61,38 +61,6 @@ $CC_CONFIG = array(
     'zendPath'      =>  dirname(__FILE__).'/../../library/Zend',
     'phingPath'      =>  dirname(__FILE__).'/../../library/phing',
 
-    // name of admin group
-    //'AdminsGr'      => 'Admins',
-
-    // name of station preferences group
-//    'StationPrefsGr'=> 'StationPrefs',
-
-    // name of 'all users' group
-    //'AllGr'         => 'All',
-
-    /* ==================================== application-specific configuration */
-//    'objtypes'      => array(
-//        'Storage'       => array(/*'Folder',*/ 'File' /*, 'Replica'*/),
-//        'File'          => array(),
-//        'audioclip'     => array(),
-//        'playlist'      => array(),
-//    ),
-//    'allowedActions'=> array(
-//        'File'          => array('editPrivs', 'write', 'read'),
-//        'audioclip'     => array('editPrivs', 'write', 'read'),
-//        'playlist'      => array('editPrivs', 'write', 'read'),
-//    ),
-//    'allActions'    =>  array(
-//        'editPrivs', 'write', 'read', 'subjects'
-//    ),
-
-    /* =================================================== cron configuration */
-    'cronUserName'      => 'www-data',
-#    'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
-    'lockfile'     =>  dirname(__FILE__).'/stor/buffer/cron.lock',
-    'cronfile'          => dirname(__FILE__).'/cron/croncall.php',
-    'paramdir'          => dirname(__FILE__).'/cron/params',
-//    'systemPrefId' => "0", // ID for system prefs in prefs table
 );
 
 // Add database table names
@@ -118,11 +86,6 @@ $CC_CONFIG['prefSequence'] = $CC_CONFIG['prefTable'].'_id';
 $CC_CONFIG['permSequence'] = $CC_CONFIG['permTable'].'_id';
 $CC_CONFIG['subjSequence'] = $CC_CONFIG['subjTable'].'_id';
 $CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
-
-// System users/groups - they cannot be deleted
-//$CC_CONFIG['sysSubjs'] = array(
-//    'root', /*$CC_CONFIG['AdminsGr'],*/ /*$CC_CONFIG['AllGr'],*/ $CC_CONFIG['StationPrefsGr']
-//);
 
 // Add libs to the PHP path
 $old_include_path = get_include_path();

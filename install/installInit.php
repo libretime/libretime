@@ -203,13 +203,6 @@ class AirtimeInstall {
         system($command);
     }
 
-    public static function SetUpPythonEggs()
-    {
-        //install poster streaming upload
-        $command = "sudo easy_install poster";
-        @exec($command);
-    }
-
     public static function DeleteFilesRecursive($p_path)
     {
         $command = "rm -rf $p_path";

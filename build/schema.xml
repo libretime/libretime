@@ -24,13 +24,6 @@
       <index-column name="token"/>
     </index>
   </table>
-  <table name="cc_backup" phpName="CcBackup">
-    <column name="token" phpName="Token" type="VARCHAR" size="64" primaryKey="true" required="true"/>
-    <column name="sessionid" phpName="Sessionid" type="VARCHAR" size="64" required="true"/>
-    <column name="status" phpName="Status" type="VARCHAR" size="32" required="true"/>
-    <column name="fromtime" phpName="Fromtime" type="TIMESTAMP" required="true"/>
-    <column name="totime" phpName="Totime" type="TIMESTAMP" required="true"/>
-  </table>
   <table name="cc_files" phpName="CcFiles">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="gunid" phpName="DbGunid" type="char" size="32" required="true"/>
@@ -293,47 +286,6 @@
     </unique>
     <unique name="cc_subjs_login_idx">
       <unique-column name="login"/>
-    </unique>
-  </table>
-  <table name="cc_trans" phpName="CcTrans">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="trtok" phpName="Trtok" type="CHAR" size="16" required="true"/>
-    <column name="direction" phpName="Direction" type="VARCHAR" size="128" required="true"/>
-    <column name="state" phpName="State" type="VARCHAR" size="128" required="true"/>
-    <column name="trtype" phpName="Trtype" type="VARCHAR" size="128" required="true"/>
-    <column name="lock" phpName="Lock" type="CHAR" size="1" required="true" defaultValue="N"/>
-    <column name="target" phpName="Target" type="VARCHAR" size="255" required="false" defaultValue="NULL"/>
-    <column name="rtrtok" phpName="Rtrtok" type="CHAR" size="16" required="false" defaultValue="NULL"/>
-    <column name="mdtrtok" phpName="Mdtrtok" type="CHAR" size="16" required="false"/>
-    <column name="gunid" phpName="Gunid" type="char" size="32" required="false"/>
-    <column name="pdtoken" phpName="Pdtoken" type="BIGINT" required="false"/>
-    <column name="url" phpName="Url" type="VARCHAR" size="255" required="false"/>
-    <column name="localfile" phpName="Localfile" type="VARCHAR" size="255" required="false"/>
-    <column name="fname" phpName="Fname" type="VARCHAR" size="255" required="false"/>
-    <column name="title" phpName="Title" type="VARCHAR" size="255" required="false"/>
-    <column name="expectedsum" phpName="Expectedsum" type="CHAR" size="32" required="false"/>
-    <column name="realsum" phpName="Realsum" type="CHAR" size="32" required="false"/>
-    <column name="expectedsize" phpName="Expectedsize" type="INTEGER" required="false"/>
-    <column name="realsize" phpName="Realsize" type="INTEGER" required="false"/>
-    <column name="uid" phpName="Uid" type="INTEGER" required="false"/>
-    <column name="errmsg" phpName="Errmsg" type="VARCHAR" size="255" required="false"/>
-    <column name="jobpid" phpName="Jobpid" type="INTEGER" required="false"/>
-    <column name="start" phpName="Start" type="TIMESTAMP" required="false"/>
-    <column name="ts" phpName="Ts" type="TIMESTAMP" required="false"/>
-    <index name="cc_trans_gunid_idx">
-      <index-column name="gunid"/>
-    </index>
-    <unique name="cc_trans_id_idx">
-      <unique-column name="id"/>
-    </unique>
-    <index name="cc_trans_state_idx">
-      <index-column name="state"/>
-    </index>
-    <unique name="cc_trans_token_idx">
-      <unique-column name="pdtoken"/>
-    </unique>
-    <unique name="cc_trans_trtok_idx">
-      <unique-column name="trtok"/>
     </unique>
   </table>
 </database>
