@@ -191,18 +191,6 @@ class AirtimeInstall {
         system($command);
     }
 
-    public static function SetUpPythonEggs()
-    {
-        //install poster streaming upload
-        $command = "pip install poster";
-        @exec($command);
-    }
-
-    public static function RemovePythonPackages(){
-        $command = "pip uninstall poster";
-        @exec($command);    
-    }
-
     public static function DeleteFilesRecursive($p_path)
     {
         $command = "rm -rf $p_path";
