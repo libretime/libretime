@@ -54,3 +54,42 @@ function ExitIfNotRoot()
         exit(1);
     }
 }
+
+function GenerateRandomString($len=20, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+{
+    $string = '';
+    for ($i = 0; $i < $len; $i++)
+    {
+        $pos = mt_rand(0, strlen($chars)-1);
+        $string .= $chars{$pos};
+    }
+    return $string;
+}
+
+function UpdateIniValue($filename, $property, $value)
+{
+    $lines = file($filename);
+    $n=count($lines);
+    for ($i=0; $i<$n; $i++) {
+        if (strlen($lines[$i]) > strlen($property))
+        if ($property == substr($lines[$i], 0, strlen($property))){
+            $lines[$i] = "$property = $value\n";
+        }
+    }
+
+    $fp=fopen($filename, 'w');
+    for($i=0; $i<$n; $i++){
+        fwrite($fp, $lines[$i]);
+    }
+    fclose($fp);
+}
+
+function UpdateINIFiles()
+{
+    $api_key = GenerateRandomString();
+    UpdateIniValue('/etc/airtime/airtime.conf', 'api_key', $api_key);
+    UpdateIniValue('/etc/airtime/airtime.conf', 'baseFilesDir', realpath(__DIR__.'/../../files'));
+    UpdateIniValue('/etc/airtime/pypo.cfg', 'api_key', "'$api_key'");
+    UpdateIniValue('/etc/airtime/recorder.cfg', 'api_key', "'$api_key'");
+    UpdateIniValue(__DIR__.'/../../build/build.properties', 'project.home', realpath(__dir__.'/../../'));
+}

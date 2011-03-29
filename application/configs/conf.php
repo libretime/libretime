@@ -1,24 +1,15 @@
 <?php
-// **********************************
-// ***** START CUSTOMIZING HERE *****
-// **********************************
-
-// Set the location where you want to store all of your audio files.
-//
-// For example:
-// $baseFilesDir = '/home/john/radio-files';
-$baseFilesDir = __DIR__.'/../../files';
-// ***********************************************************************
-// STOP CUSTOMIZING HERE
-//
-// You don't need to touch anything below this point.
-// ***********************************************************************
-
+/* THIS FILE IS NOT MEANT FOR CUSTOMIZING.
+ * PLEASE EDIT THE FOLLOWING TO CHANGE YOUR CONFIG:
+ * /etc/airtime/airtime.conf
+ * /etc/airtime/pypo.cfg
+ * /etc/airtime/recorder.cfg
+ */
+ 
 define('AIRTIME_VERSION', '1.7.0-alpha');
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
 
-// These are the default values for the config.
 global $CC_CONFIG;
 $values = load_airtime_config();
 
@@ -29,9 +20,9 @@ $CC_CONFIG = array(
 
     'rabbitmq' => $values['rabbitmq'],
 
-    'baseFilesDir' => $baseFilesDir,
+    'baseFilesDir' => $values['general']['baseFilesDir'],
     // main directory for storing binary media files
-    'storageDir'    =>  "$baseFilesDir/stor",
+    'storageDir'    =>  $values['general']['baseFilesDir']."/stor",
 
 	// Database config
     'dsn' => array(
