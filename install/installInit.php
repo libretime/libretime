@@ -198,6 +198,11 @@ class AirtimeInstall {
         @exec($command);
     }
 
+    public static function RemovePythonPackages(){
+        $command = "pip uninstall poster";
+        @exec($command);    
+    }
+
     public static function DeleteFilesRecursive($p_path)
     {
         $command = "rm -rf $p_path";

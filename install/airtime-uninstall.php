@@ -21,6 +21,7 @@ require_once(dirname(__FILE__).'/installInit.php');
 AirtimeInstall::ExitIfNotRoot();
 
 AirtimeInstall::RemoveSymlinks();
+AirtimeInstall::RemovePythonPackages();
 
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
 //------------------------------------------------------------------------
