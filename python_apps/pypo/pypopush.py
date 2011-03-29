@@ -20,7 +20,7 @@ logging.config.fileConfig("logging.cfg")
 
 # loading config file
 try:
-    config = ConfigObj('config.cfg')
+    config = ConfigObj('/etc/airtime/pypo.cfg')
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
     PUSH_INTERVAL = 2

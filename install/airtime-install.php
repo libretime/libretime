@@ -5,21 +5,16 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 
-// Do not allow remote execution
-$arr = array_diff_assoc($_SERVER, $_ENV);
-if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
-    header("HTTP/1.1 400");
-    header("Content-type: text/plain; charset=UTF-8");
-    echo "400 Not executable\r\n";
-    exit(1);
-}
-
-require_once(dirname(__FILE__).'/../application/configs/conf.php');
-require_once(dirname(__FILE__).'/installInit.php');
-
 echo "******************************** Install Begin *********************************".PHP_EOL;
 
-AirtimeInstall::ExitIfNotRoot();
+require_once(dirname(__FILE__).'/include/installInit.php');
+
+ExitIfNotRoot();
+CreateINIFile();
+
+require_once(dirname(__FILE__).'/../application/configs/conf.php');
+require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
+
 AirtimeInstall::CreateApiKey();
 AirtimeInstall::UpdateIniValue('../build/build.properties', 'project.home', realpath(__dir__.'/../'));
 

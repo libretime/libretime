@@ -117,7 +117,7 @@ class AirTimeApiClient(ApiClientInterface):
 
     def __get_airtime_version(self, verbose = True):
         logger = logging.getLogger()
-        url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["version_url"])
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["version_url"])
         logger.debug("Trying to contact %s", url)
         url = url.replace("%%api_key%%", self.config["api_key"])
 
@@ -199,7 +199,7 @@ class AirTimeApiClient(ApiClientInterface):
                 
         # Construct the URL
         #export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
-        export_url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["export_url"])
+        export_url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["export_url"])
         
         logger.info("Fetching schedule from %s", export_url)
         export_url = export_url.replace('%%api_key%%', self.config["api_key"])
@@ -239,7 +239,7 @@ class AirTimeApiClient(ApiClientInterface):
         playlist = schedule[pkey]
         schedule_id = playlist["schedule_id"]       
         #url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
-        url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["update_item_url"])
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_item_url"])
         
         url = url.replace("%%schedule_id%%", str(schedule_id))
         logger.debug(url)
@@ -268,7 +268,7 @@ class AirTimeApiClient(ApiClientInterface):
         try:
             schedule_id = data
             #url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["update_start_playing_url"])
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_start_playing_url"])
             url = url.replace("%%media_id%%", str(media_id))
             url = url.replace("%%schedule_id%%", str(schedule_id))
             logger.debug(url)
@@ -297,7 +297,7 @@ class AirTimeApiClient(ApiClientInterface):
         logger = logging.getLogger()
         response = ''
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["show_schedule_url"])
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["show_schedule_url"])
             #url = self.config["base_url"] + self.config["api_base"] + self.config["show_schedule_url"]
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
@@ -316,7 +316,7 @@ class AirTimeApiClient(ApiClientInterface):
         response = ''
         try:
             #url = self.config["base_url"] + self.config["api_base"] + self.config["upload_file_url"]
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["upload_file_url"])
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_file_url"])
 
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
@@ -379,7 +379,7 @@ class ObpApiClient():
 
         # lookup OBP version        
         #url = self.config["base_url"] + self.config["api_base"]+ self.config["version_url"]
-        url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["version_url"])
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["version_url"])
         
         
         try:    
@@ -440,7 +440,7 @@ class ObpApiClient():
         
         # Construct the URL
         #export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
-        export_url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["export_url"])
+        export_url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["export_url"])
         
         # Insert the start and end times into the URL        
         export_url = export_url.replace('%%api_key%%', self.config["api_key"])
@@ -479,7 +479,7 @@ class ObpApiClient():
     #def update_scheduled_item(self, item_id, value):
         logger = logging.getLogger()
         #url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
-        url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["update_item_url"])
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_item_url"])
         url = url.replace("%%item_id%%", str(schedule[pkey]["id"]))
         url = url.replace("%%played%%", "1")
         
@@ -510,7 +510,7 @@ class ObpApiClient():
         transmission_id = data["transmission_id"]
         
         #url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
-        url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["update_start_playing_url"])
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_start_playing_url"])
         url = url.replace("%%playlist_type%%", str(playlist_type))
         url = url.replace("%%export_source%%", str(export_source))
         url = url.replace("%%media_id%%", str(media_id))
@@ -537,7 +537,7 @@ class ObpApiClient():
         logger = logging.getLogger()
     
         #url = self.config["base_url"] + self.config["api_base"] + self.config["generate_range_url"]
-        url = "http://%s:%s/%s/%s" % (self.config["base_url"], self.config["base_port"], self.config["api_base"], self.config["generate_range_url"])
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["generate_range_url"])
         
         try:
             response = urllib.urlopen(url, self.api_auth)

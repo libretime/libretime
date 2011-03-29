@@ -31,7 +31,7 @@ import unittest
 logging.config.fileConfig("logging-api-validator.cfg")
 
 try:
-    config = ConfigObj('config.cfg')
+    config = ConfigObj('/etc/airtime/pypo.cfg')
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()

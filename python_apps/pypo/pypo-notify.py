@@ -58,7 +58,7 @@ logging.config.fileConfig("logging.cfg")
 
 # loading config file
 try:
-    config = ConfigObj('config.cfg')
+    config = ConfigObj('/etc/airtime/pypo.cfg')
     
 except Exception, e:
     print 'error: ', e

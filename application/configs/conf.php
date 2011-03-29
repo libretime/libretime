@@ -1,12 +1,4 @@
 <?php
-define('AIRTIME_VERSION', '1.7.0-alpha');
-define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
-define('AIRTIME_REST_VERSION', '1.1');
-
-// These are the default values for the config.
-global $CC_CONFIG;
-$values = load_airtime_config();
-
 // **********************************
 // ***** START CUSTOMIZING HERE *****
 // **********************************
@@ -16,37 +8,45 @@ $values = load_airtime_config();
 // For example:
 // $baseFilesDir = '/home/john/radio-files';
 $baseFilesDir = __DIR__.'/../../files';
+// ***********************************************************************
+// STOP CUSTOMIZING HERE
+//
+// You don't need to touch anything below this point.
+// ***********************************************************************
+
+define('AIRTIME_VERSION', '1.7.0-alpha');
+define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
+define('AIRTIME_REST_VERSION', '1.1');
+
+// These are the default values for the config.
+global $CC_CONFIG;
+$values = load_airtime_config();
 
 $CC_CONFIG = array(
 
     // Name of the web server user
-    'webServerUser' => 'www-data',
+    'webServerUser' => $values['general']['webServerUser'],
 
-    'rabbitmq' => array("host" => "127.0.0.1",
-                        "port" => "5672",
-                        "user" => "guest",
-                        "password" => "guest",
-                        "vhost" => "/"),
-
-    // ***********************************************************************
-	// STOP CUSTOMIZING HERE
-	//
-	// You don't need to touch anything below this point.
-	// ***********************************************************************
+    'rabbitmq' => $values['rabbitmq'],
 
     'baseFilesDir' => $baseFilesDir,
     // main directory for storing binary media files
     'storageDir'    =>  "$baseFilesDir/stor",
 
 	// Database config
-    'dsn' => $values['database'],
+    'dsn' => array(
+                'username'      => $values['database']['dbuser'],
+                'password'      => $values['database']['dbpass'],
+                'hostspec'      => $values['database']['host'],
+                'phptype'       => 'pgsql',
+                'database'      => $values['database']['dbname']),
 
     // prefix for table names in the database
     'tblNamePrefix' => 'cc_',
 
     /* ================================================ storage configuration */
 
-    'apiKey' => $values['api_key'],
+    'apiKey' => array($values['general']['api_key']),
     'apiPath' => '/api/',
 
     'soundcloud-client-id' => '2CLCxcSXYzx7QhhPVHN4A',
@@ -90,8 +90,9 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 					.PATH_SEPARATOR.$old_include_path);
 
 function load_airtime_config(){
-	$ini_array = parse_ini_file(dirname(__FILE__).'/../../build/airtime.conf', true);
-
+	$ini_array = parse_ini_file('/etc/airtime/airtime.conf', true);
+    return $ini_array;
+    /*
 	return array(
             'database' => array(
                 'username'      => $ini_array['database']['dbuser'],
@@ -101,4 +102,5 @@ function load_airtime_config(){
                 'database'      => $ini_array['database']['dbname']),
             'api_key' => array($ini_array['general']['api_key'])
         );
+        */
 }

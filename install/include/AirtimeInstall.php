@@ -1,11 +1,7 @@
 <?php
-if (!function_exists('pg_connect')) {
-    trigger_error("PostgreSQL PHP extension required and not found.", E_USER_ERROR);
-    exit(2);
-}
 
-require_once(dirname(__FILE__).'/../library/pear/DB.php');
-require_once(dirname(__FILE__).'/../application/configs/conf.php');
+require_once(dirname(__FILE__).'/../../library/pear/DB.php');
+require_once(dirname(__FILE__).'/../../application/configs/conf.php');
 
 class AirtimeInstall {
 
@@ -78,18 +74,9 @@ class AirtimeInstall {
     public static function CreateApiKey()
     {
         $api_key = AirtimeInstall::GenerateRandomString();
-        AirtimeInstall::UpdateIniValue(__DIR__.'/../build/airtime.conf', 'api_key', $api_key);
-        AirtimeInstall::UpdateIniValue(__DIR__.'/../python_apps/pypo/config.cfg', 'api_key', "'$api_key'");
-        AirtimeInstall::UpdateIniValue(__DIR__.'/../python_apps/show-recorder/config.cfg', 'api_key', "'$api_key'");
-    }
-
-    public static function ExitIfNotRoot()
-    {
-        // Need to check that we are superuser before running this.
-        if(exec("whoami") != "root"){
-            echo "Must be root user.\n";
-            exit(1);
-        }
+        AirtimeInstall::UpdateIniValue('/etc/airtime/airtime.conf', 'api_key', $api_key);
+        AirtimeInstall::UpdateIniValue('/etc/airtime/pypo.cfg', 'api_key', "'$api_key'");
+        AirtimeInstall::UpdateIniValue('/etc/airtime/recorder.cfg', 'api_key', "'$api_key'");
     }
 
     public static function UpdateIniValue($filename, $property, $value)
@@ -181,7 +168,7 @@ class AirtimeInstall {
     public static function CreateDatabaseTables()
     {
         // Put Propel sql files in Database
-        $command = __DIR__."/../library/propel/generator/bin/propel-gen ../build/ insert-sql 2>propel-error.log";
+        $command = __DIR__."/../../library/propel/generator/bin/propel-gen ../build/ insert-sql 2>propel-error.log";
         @exec($command, $output, $results);
     }
 
@@ -200,10 +187,10 @@ class AirtimeInstall {
     public static function CreateSymlinks(){
         AirtimeInstall::RemoveSymlinks();
 
-        $dir = realpath(__DIR__."/../utils/airtime-import");
+        $dir = realpath(__DIR__."/../../utils/airtime-import");
         exec("ln -s $dir /usr/bin/airtime-import");
 
-        $dir = realpath(__DIR__."/../utils/airtime-clean-storage");
+        $dir = realpath(__DIR__."/../../utils/airtime-clean-storage");
         exec("ln -s $dir /usr/bin/airtime-clean-storage");
     }
 
@@ -211,6 +198,4 @@ class AirtimeInstall {
         exec("rm -f /usr/bin/airtime-import");
         exec("rm -f /usr/bin/airtime-clean-storage");
     }
-
-
 }

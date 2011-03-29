@@ -32,7 +32,7 @@ except Exception, e:
 
 # loading config file
 try:
-    config = ConfigObj('config.cfg')
+    config = ConfigObj('/etc/airtime/recorder.cfg')
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
