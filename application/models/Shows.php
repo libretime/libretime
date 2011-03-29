@@ -58,6 +58,24 @@ class Show {
         $show->setDbBackgroundColor($backgroundColor);
     }
 
+    public function getHosts()
+    {
+        global $CC_DBC;
+
+        $sql = "SELECT first_name, last_name 
+                FROM cc_show_hosts LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
+			        WHERE show_id = {$this->_showId}";
+
+        $hosts = $CC_DBC->GetAll($sql);
+
+        $res = array();
+        foreach($hosts as $host) {
+            $res[] = $host['first_name']." ".$host['last_name'];     
+        }
+
+        return $res;
+    }
+
     public function cancelShow($day_timestamp)
     {
         global $CC_DBC;
