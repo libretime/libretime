@@ -295,7 +295,7 @@ class AirTimeApiClient(ApiClientInterface):
 
     def get_shows_to_record(self):
         logger = logging.getLogger()
-        response = ''
+        response = None
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["show_schedule_url"])
             #url = self.config["base_url"] + self.config["api_base"] + self.config["show_schedule_url"]
@@ -309,25 +309,40 @@ class AirTimeApiClient(ApiClientInterface):
         except Exception, e:
             logger.error("Exception: %s", e)
         
-        return response[u'shows']
+        return response
 
     def upload_recorded_show(self, data, headers):
         logger = logging.getLogger()
         response = ''
-        try:
-            #url = self.config["base_url"] + self.config["api_base"] + self.config["upload_file_url"]
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_file_url"])
 
-            logger.debug(url)
-            url = url.replace("%%api_key%%", self.config["api_key"])
+        retries = int(self.config["upload_retries"])
+        retries_wait = int(self.config["upload_wait"])
 
-            request = urllib2.Request(url, data, headers)
-            response = urllib2.urlopen(request).read().strip()
+        #url = self.config["base_url"] + self.config["api_base"] + self.config["upload_file_url"]
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_file_url"])
 
-            logger.info("uploaded show result %s", response)
-        
-        except Exception, e:
-            logger.error("Exception: %s", e)
+        logger.debug(url)
+        url = url.replace("%%api_key%%", self.config["api_key"])
+
+        for i in range(0, retries):
+            logger.debug("Upload attempt: %s", i+1)
+
+            try:   
+                request = urllib2.Request(url, data, headers)
+                response = urllib2.urlopen(request).read().strip()
+
+                logger.info("uploaded show result %s", response)
+                break
+            
+            except urllib2.HTTPError, e:
+                logger.error("Http error code: %s", e.code)
+            except urllib2.URLError, e:
+                logger.error("Server is down: %s", e.args)
+            except Exception, e:
+                logger.error("Exception: %s", e)
+
+            #wait some time before next retry
+            time.sleep(retries_wait)
         
         return response
     
