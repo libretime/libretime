@@ -208,12 +208,8 @@ class PypoFetch(Thread):
                     (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000), str(fileExt))
                     do_cue = True
 
-                # check if it is a remote file, if yes download
-                if media['uri'][0:4] == 'http':
-                    self.handle_remote_file(media, dst, do_cue)
-                else:
-                    logger.debug("invalid media uri: %s", media['uri'])
-
+                # download media file
+                self.handle_remote_file(media, dst, do_cue)
                 
                 if True == os.access(dst, os.R_OK):
                     # check filesize (avoid zero-byte files)

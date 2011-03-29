@@ -19,10 +19,6 @@ $baseFilesDir = __DIR__.'/../../files';
 
 $CC_CONFIG = array(
 
-    // Set the URL of your installation
- 	'storageUrlHost'        => 'localhost',
-    'storageUrlPort'        => 80,
-
     // Name of the web server user
     'webServerUser' => 'www-data',
 
