@@ -6,6 +6,7 @@
         sourceDomain: "http://localhost/", //where to get show status from
     };
     var options = $.extend(defaults, options);
+    options.sourceDomain = addEndingBackslash(options.sourceDomain);
 
     return this.each(function() {
         var obj = $(this);
@@ -58,7 +59,7 @@
             $.ajax({ url: options.sourceDomain + "api/live-info/", dataType:"jsonp", success:function(data){
                         processData(data);
                   }, error:function(jqXHR, textStatus, errorThrown){}});
-            setTimeout(getServerData, defaults.updatePeriod*1000);
+            setTimeout(getServerData, options.updatePeriod*1000);
         }
     });
  };
@@ -71,9 +72,10 @@
     var defaults = {
         updatePeriod: 5, //seconds
         sourceDomain: "http://localhost/", //where to get show status from
-        audioStreamSource: "" //where to get audio stream from
+        audioStreamSource: "http://localhost:8000/airtime.mp3" //where to get audio stream from
     };
     var options = $.extend(defaults, options);
+    options.sourceDomain = addEndingBackslash(options.sourceDomain);
 
     return this.each(function() {
         var obj = $(this);
@@ -106,7 +108,7 @@
             }
 
             obj.empty();
-            obj.append("<a id='listenWadrLive'><span>Listen WADR Live</span></a>");
+            obj.append("<a id='listenWadrLive' href='"+options.audioStreamSource+"'><span>Listen WADR Live</span></a>");
             obj.append("<h4>"+showStatus+" &gt;&gt;</h4>");
             obj.append("<ul class='widget no-playing-bar'>" +
                 "<li class='current'>Current: "+currentShowName+
@@ -129,11 +131,110 @@
             $.ajax({ url: options.sourceDomain + "api/live-info/", dataType:"jsonp", success:function(data){
                         processData(data);
                   }, error:function(jqXHR, textStatus, errorThrown){}});
-            setTimeout(getServerData, defaults.updatePeriod*1000);
+            setTimeout(getServerData, options.updatePeriod*1000);
         }
     });
  };
 })(jQuery);
+
+(function($){
+ $.fn.airtimeWeekSchedule = function(options) {
+
+    var defaults = {
+        sourceDomain: "http://localhost/", //where to get show status from
+        updatePeriod: 600,
+        dowText: {monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
+        miscText: {time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"}
+    };
+    var options = $.extend(defaults, options);
+    options.sourceDomain = addEndingBackslash(options.sourceDomain);
+    
+    return this.each(function() {
+        var obj = $(this);
+        obj.empty();
+
+        obj.attr("class", "ui-tabs");
+
+        var dow = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+        var html = '<ul>';
+        for (var i=0; i<dow.length; i++){
+            html += '<li><a href="#'+dow[i]+'">'+options.dowText[dow[i]]+'</a></li>';
+        }
+        html += '</ul>';
+
+        for (var i=0; i<dow.length; i++){
+            html += '<div id="'+dow[i]+'" class="ui-tabs-hide"></div>'
+        }
+        obj.append(html);
+        getServerData();
+
+        function updateWidget(data){
+            for (var i=0; i<dow.length; i++){
+                var html = 
+                  '<table class="widget widget no-playing-list">'+
+                    '<colgroup>'+
+                      '<col width="150" />'+
+                      '<col width="350" />'+
+                      '<col width="240" />'+
+                    '</colgroup>'+
+                    '<thead>'+
+                      '<tr>'+
+                        '<td>'+options.miscText.time+'</td>'+
+                        '<td>'+options.miscText.programName+'</td>'+
+                        '<td>'+options.miscText.details+'</td>'+
+                      '</tr>'+
+                    '</thead>'+
+                    '<tfoot>'+
+                      '<tr>'+
+                        '<td></td>'+
+                      '</tr>'+
+                    '</tfoot>'+
+                    '<tbody>';
+                var daySchedule = data[dow[i]];
+                for (var j=0; j<daySchedule.length; j++){
+                    var url = daySchedule[j].url;
+                    html +=
+                      '<tr>'+
+                        '<td>'+getTime(daySchedule[j].show_starts)+ " - " + getTime(daySchedule[j].show_ends)+'</td>'+
+                        '<td>'+
+                          '<h4>'+daySchedule[j].show_name+'</h4>'+
+                        '</td>'+
+                        '<td>'+
+                          '<ul>'+
+                            '<li>'+(url.length > 0 ? '<a href="'+url+'">'+options.miscText.readMore+'</a>':'')+'</li>'+
+                          '</ul>'+
+                        '</td>'+
+                      '</tr>';
+                }
+                html +=
+                    '</tbody>'+
+                  '</table>';
+                  
+                $("#"+dow[i]).empty();
+                $("#"+dow[i]).append(html);
+            }
+        }
+
+        function processData(data){
+            updateWidget(data);
+        }
+
+        function getServerData(){
+            $.ajax({ url: options.sourceDomain + "api/week-info/", dataType:"jsonp", success:function(data){
+                        processData(data);
+                  }, error:function(jqXHR, textStatus, errorThrown){}});
+            setTimeout(getServerData, options.updatePeriod*1000);
+        }
+    });
+ };
+})(jQuery);
+
+function addEndingBackslash(str){
+    if (str.charAt(str.length-1) != '/')
+        return str+'/';
+    else return str;
+}
 
 /* ScheduleData class BEGIN */
 function ScheduleData(data){
