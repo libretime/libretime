@@ -58,6 +58,24 @@ class Show {
         $show->setDbBackgroundColor($backgroundColor);
     }
 
+    public function getHosts()
+    {
+        global $CC_DBC;
+
+        $sql = "SELECT first_name, last_name 
+                FROM cc_show_hosts LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
+			        WHERE show_id = {$this->_showId}";
+
+        $hosts = $CC_DBC->GetAll($sql);
+
+        $res = array();
+        foreach($hosts as $host) {
+            $res[] = $host['first_name']." ".$host['last_name'];     
+        }
+
+        return $res;
+    }
+
     public function cancelShow($day_timestamp)
     {
         global $CC_DBC;
@@ -930,7 +948,31 @@ class Show_DAL {
         ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
         //checking for st.starts IS NULL so that the query also returns shows that do not have any items scheduled.
         ." AND (st.starts < si.ends OR st.starts IS NULL)"
-        ." ORDER BY st.starts";
+        ." ORDER BY si.starts, st.starts";
+
+        return $CC_DBC->GetAll($sql);
+    }
+
+    public static function GetShowsByDayOfWeek($day){
+        //DOW FROM TIMESTAMP
+        //The day of the week (0 - 6; Sunday is 0) (for timestamp values only)
+
+        //SELECT EXTRACT(DOW FROM TIMESTAMP '2001-02-16 20:38:40');
+        //Result: 5
+
+        global $CC_CONFIG, $CC_DBC;
+		$sql = "SELECT"        
+        ." si.starts as show_starts,"
+        ." si.ends as show_ends,"
+        ." s.name as show_name,"
+        ." s.url as url"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." LEFT JOIN $CC_CONFIG[showTable] s"
+		." ON si.show_id = s.id"
+        ." WHERE EXTRACT(DOW FROM si.starts) = $day"
+        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)";
+
+        //echo $sql;
 
         return $CC_DBC->GetAll($sql);
     }

@@ -124,5 +124,13 @@ class Application_Model_Preference
         return Application_Model_Preference::GetValue("soundcloud_password");
     }
 
+    public static function SetSoundCloudTags($tags) {
+        Application_Model_Preference::SetValue("soundcloud_tags", $tags);
+    }
+
+    public static function GetSoundCloudTags() {
+        return Application_Model_Preference::GetValue("soundcloud_tags");
+    }
+
 }
 
