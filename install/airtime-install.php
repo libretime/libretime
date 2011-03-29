@@ -26,30 +26,30 @@ AirtimeInstall::UpdateIniValue('../build/build.properties', 'project.home', real
 
 echo PHP_EOL."*** Database Installation ***".PHP_EOL;
 
-echo "* Creating Airtime Database User".PHP_EOL;
+echo "* Creating Airtime database user".PHP_EOL;
 AirtimeInstall::CreateDatabaseUser();
 
-echo "* Creating Airtime Database".PHP_EOL;
+echo "* Creating Airtime database".PHP_EOL;
 AirtimeInstall::CreateDatabase();
 
 AirtimeInstall::DbConnect(true);
 
-echo "* Install Postgresql Scripting Language".PHP_EOL;
+echo "* Installing Postgresql scripting language".PHP_EOL;
 AirtimeInstall::InstallPostgresScriptingLanguage();
 
-echo "* Creating Database Tables".PHP_EOL;
+echo "* Creating database tables".PHP_EOL;
 AirtimeInstall::CreateDatabaseTables();
 
-echo "* Storage Directory Setup".PHP_EOL;
+echo "* Storage directory setup".PHP_EOL;
 AirtimeInstall::SetupStorageDirectory($CC_CONFIG);
 
-echo "* Setting Dir Permissions".PHP_EOL;
+echo "* Giving Apache permission to access the storage directory".PHP_EOL;
 AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
 echo "* Creating /usr/bin symlinks".PHP_EOL;
 AirtimeInstall::CreateSymlinks($CC_CONFIG["storageDir"]);
 
-echo "* Importing Sample Audio Clips".PHP_EOL;
+echo "* Importing sample audio clips".PHP_EOL;
 system(__DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null");
 
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;

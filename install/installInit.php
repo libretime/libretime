@@ -145,9 +145,15 @@ class AirtimeInstall {
 
         @exec($command, $output, $results);
         if ($results == 0) {
-            echo "* User {$CC_CONFIG['dsn']['username']} created.".PHP_EOL;
+            echo "* Database user '{$CC_CONFIG['dsn']['username']}' created.".PHP_EOL;
         } else {
-            echo "* Could not create user {$CC_CONFIG['dsn']['username']}: $output".PHP_EOL;
+            if (count($output) > 0) {
+                echo "* Could not create user '{$CC_CONFIG['dsn']['username']}': ".PHP_EOL;
+                echo implode(PHP_EOL, $output);
+            }
+            else {
+                echo "* Database user '{$CC_CONFIG['dsn']['username']}' already exists.".PHP_EOL;
+            }
         }
     }
 
@@ -160,7 +166,13 @@ class AirtimeInstall {
         if ($results == 0) {
             echo "* Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
         } else {
-            echo "* Could not create database '{$CC_CONFIG['dsn']['database']}': $output".PHP_EOL;
+            if (count($output) > 0) {
+                echo "* Could not create database '{$CC_CONFIG['dsn']['database']}': ".PHP_EOL;
+                echo implode(PHP_EOL, $output);
+            }
+            else {
+                echo "* Database '{$CC_CONFIG['dsn']['database']}' already exists.".PHP_EOL;
+            }
         }
     }
 
