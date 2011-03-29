@@ -194,7 +194,7 @@ class AirtimeInstall {
     public static function SetUpPythonEggs()
     {
         //install poster streaming upload
-        $command = "sudo easy_install poster";
+        $command = "pip install poster";
         @exec($command);
     }
 
