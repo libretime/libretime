@@ -84,9 +84,12 @@ class PypoFetch(Thread):
         pypo_timezone = (process.communicate()[0]).strip(' \r\n\t')
 
         if server_timezone != pypo_timezone:
-            logger.error("Server and pypo timezone offsets do not match. Audio playback may not start when expected!")
-            logger.error("Server timezone offset: %s", server_timezone)
-            logger.error("Pypo timezone offset: %s", pypo_timezone)
+            logger.error("ERROR: Airtime server and pypo timezone offsets do not match. Audio playback will not start when expected!!!")
+            logger.error("  * Server timezone offset: %s", server_timezone)
+            logger.error("  * Pypo timezone offset: %s", pypo_timezone)
+            logger.error("  * To fix this, you need to set the 'date.timezone' value in your php.ini file and restart apache.")
+            logger.error("  * See this page for more info (v1.7): http://wiki.sourcefabric.org/x/BQBF")
+            logger.error("  * and also the 'FAQ and Support' page underneath it.")  
     
     """
     Process the schedule
