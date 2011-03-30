@@ -397,8 +397,8 @@ class ScheduleController extends Zend_Controller_Action
 
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $user = new User($userInfo->id);
-			if($user->isAdmin()) {
-			    Show::addShow($data);
+			if ($user->isAdmin()) {
+			    Show::create($data);
             }
 
             //send back a new form for the user.

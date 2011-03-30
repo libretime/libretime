@@ -27,6 +27,8 @@ class ScheduleGroup {
     /**
      * Add a music clip or playlist to the schedule.
      *
+     * @param int $p_showInstance
+     * 	  ID of the show.
      * @param $p_datetime
      *    In the format YYYY-MM-DD HH:MM:SS.mmmmmm
      * @param $p_audioFileId
@@ -40,7 +42,7 @@ class ScheduleGroup {
      *    Return PEAR_Error if the item could not be added.
      *    Error code 555 is a scheduling conflict.
      */
-    public function add($show_instance, $p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
+    public function add($p_showInstance, $p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
         global $CC_CONFIG, $CC_DBC;
 
         if (!is_null($p_audioFileId)) {
@@ -64,7 +66,7 @@ class ScheduleGroup {
            
             $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
             ." (instance_id, starts, ends, clip_length, group_id, file_id, cue_out)"
-            ." VALUES ($show_instance, TIMESTAMP '$p_datetime', "
+            ." VALUES ($p_showInstance, TIMESTAMP '$p_datetime', "
             ." (TIMESTAMP '$p_datetime' + INTERVAL '$length'),"
             ." '$length',"
             ." {$this->groupId}, $p_audioFileId, '$length')";
@@ -103,7 +105,7 @@ class ScheduleGroup {
                 $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
                 ." (instance_id, playlist_id, starts, ends, group_id, file_id,"
                 ." clip_length, cue_in, cue_out, fade_in, fade_out)"
-                ." VALUES ($show_instance, $p_playlistId, TIMESTAMP '$itemStartTime', "
+                ." VALUES ($p_showInstance, $p_playlistId, TIMESTAMP '$itemStartTime', "
                 ." (TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'),"
                 ." '{$this->groupId}', '{$row['file_id']}', '$trackLength', '{$row['cuein']}',"
                 ." '{$row['cueout']}', '{$row['fadein']}','{$row['fadeout']}')";
