@@ -42,6 +42,13 @@ class Application_Form_Preferences extends Zend_Form
         $stream_format->setValue(Application_Model_Preference::GetStreamLabelFormat());
         $this->addElement($stream_format);
 
+        $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
+        $third_party_api->setLabel('Allow Remote Websites To Access Show Schedule Info');
+        $third_party_api->setMultiOptions(array("Disabled",
+                                            "Enabled"));
+        $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
+        $this->addElement($third_party_api);
+
 
 		$this->addElement('checkbox', 'UseSoundCloud', array(
             'label'      => 'Automatically Upload Recorded Shows To SoundCloud',

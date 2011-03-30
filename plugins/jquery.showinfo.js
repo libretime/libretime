@@ -4,6 +4,7 @@
     var defaults = {
         updatePeriod: 20, //seconds
         sourceDomain: "http://localhost/", //where to get show status from
+        text: {onAirToday:"On air today"}
     };
     var options = $.extend(defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
@@ -30,7 +31,7 @@
             }
 
             tableString = "";
-            tableString += "<h3>On air today</h3>";
+            tableString += "<h3>"+options.text.onAirToday+"</h3>";
             tableString += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget no-playing-list small'>"+
                 "<tbody>";
             
@@ -41,7 +42,7 @@
                 tableString +=
                 "<tr>" +
                 "<td class='time'>"+shows[i].getRange()+"</td>" +
-                "<td><a href='#'>"+shows[i].getName()+"</a> <a href='#' class='listen'>Listen</a></td>" +
+                "<td><a href='#'>"+shows[i].getName()+"</a></td>" +
                 "</tr>";
             }
 
@@ -55,10 +56,13 @@
             updateWidget();
         }
 
+        function airtimeScheduleJsonpError(jqXHR, textStatus, errorThrown){
+        }
+
         function getServerData(){
             $.ajax({ url: options.sourceDomain + "api/live-info/", dataType:"jsonp", success:function(data){
                         processData(data);
-                  }, error:function(jqXHR, textStatus, errorThrown){}});
+                  }, error:airtimeScheduleJsonpError});
             setTimeout(getServerData, options.updatePeriod*1000);
         }
     });
@@ -72,7 +76,8 @@
     var defaults = {
         updatePeriod: 5, //seconds
         sourceDomain: "http://localhost/", //where to get show status from
-        audioStreamSource: "http://localhost:8000/airtime.mp3" //where to get audio stream from
+        audioStreamSource: "http://localhost:8000/airtime.mp3", //where to get audio stream from
+        text: {listenLive:"Listen WADR Live", onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"}
     };
     var options = $.extend(defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
@@ -86,7 +91,7 @@
             var currentShow = sd.getCurrentShow();
             var nextShows = sd.getNextShows();
 
-            var showStatus = "Offline";
+            var showStatus = options.text.offline;
             var currentShowName = "";
             var timeElapsed = "";
             var timeRemaining = "";
@@ -95,7 +100,7 @@
             var nextShowRange = "";
 
             if (currentShow.length > 0){
-                showStatus = "On Air Now";
+                showStatus = options.text.onAirNow;
                 currentShowName = currentShow[0].getName();
 
                 timeElapsed = sd.getShowTimeElapsed(currentShow[0]);
@@ -108,14 +113,14 @@
             }
 
             obj.empty();
-            obj.append("<a id='listenWadrLive' href='"+options.audioStreamSource+"'><span>Listen WADR Live</span></a>");
+            obj.append("<a id='listenWadrLive' href='"+options.audioStreamSource+"'><span>"+options.text.listenLive+"</span></a>");
             obj.append("<h4>"+showStatus+" &gt;&gt;</h4>");
             obj.append("<ul class='widget no-playing-bar'>" +
-                "<li class='current'>Current: "+currentShowName+
+                "<li class='current'>"+options.text.current+": "+currentShowName+
                 "<span id='time-elapsed' class='time-elapsed'>"+timeElapsed+"</span>" +
                 "<span id='time-remaining' class='time-remaining'>"+timeRemaining+"</span>"+
                 "</li>" +
-                "<li class='next'>Next: "+nextShowName+"<span>"+nextShowRange+"</span></li>" +
+                "<li class='next'>"+options.text.next+": "+nextShowName+"<span>"+nextShowRange+"</span></li>" +
                 "</ul>");
 
             //refresh the UI to update the elapsed/remaining time
@@ -127,10 +132,13 @@
             updateWidget();
         }
 
+        function airtimeScheduleJsonpError(jqXHR, textStatus, errorThrown){
+        }
+
         function getServerData(){
             $.ajax({ url: options.sourceDomain + "api/live-info/", dataType:"jsonp", success:function(data){
                         processData(data);
-                  }, error:function(jqXHR, textStatus, errorThrown){}});
+                  }, error:airtimeScheduleJsonpError});
             setTimeout(getServerData, options.updatePeriod*1000);
         }
     });
@@ -220,10 +228,13 @@
             updateWidget(data);
         }
 
+        function airtimeScheduleJsonpError(jqXHR, textStatus, errorThrown){
+        }
+
         function getServerData(){
             $.ajax({ url: options.sourceDomain + "api/week-info/", dataType:"jsonp", success:function(data){
                         processData(data);
-                  }, error:function(jqXHR, textStatus, errorThrown){}});
+                  }, error:airtimeScheduleJsonpError});
             setTimeout(getServerData, options.updatePeriod*1000);
         }
     });
