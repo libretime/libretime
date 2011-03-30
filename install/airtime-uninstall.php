@@ -5,9 +5,9 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 
-require_once(dirname(__FILE__).'/include/installInit.php');
+require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 // Need to check that we are superuser before running this.
-ExitIfNotRoot();
+AirtimeIni::ExitIfNotRoot();
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
@@ -73,7 +73,7 @@ if ($results == 0) {
 // Delete files
 //------------------------------------------------------------------------
 AirtimeInstall::DeleteFilesRecursive($CC_CONFIG['storageDir']);
-RemoveINIFile();
+AirtimeIni::RemoveIniFiles();
 
 $command = "python ".__DIR__."/../python_apps/pypo/install/pypo-uninstall.py";
 system($command);

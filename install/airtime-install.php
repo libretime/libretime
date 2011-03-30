@@ -7,11 +7,11 @@
 
 echo "******************************** Install Begin *********************************".PHP_EOL;
 
-require_once(dirname(__FILE__).'/include/installInit.php');
+require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 
-ExitIfNotRoot();
-CreateINIFile();
-UpdateINIFiles();
+AirtimeIni::ExitIfNotRoot();
+AirtimeIni::CreateIniFile();
+AirtimeIni::UpdateIniFiles();
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
