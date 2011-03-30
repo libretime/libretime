@@ -280,7 +280,7 @@ class ApiController extends Zend_Controller_Action
                 }
                 catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
                     $code = $e->getHttpCode();
-                    if($code != 0) {
+                    if($code != 0 || $code != 100) {
                         break;
                     }
                 }
