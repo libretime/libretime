@@ -83,15 +83,4 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 function load_airtime_config(){
 	$ini_array = parse_ini_file('/etc/airtime/airtime.conf', true);
     return $ini_array;
-    /*
-	return array(
-            'database' => array(
-                'username'      => $ini_array['database']['dbuser'],
-                'password'      => $ini_array['database']['dbpass'],
-                'hostspec'      => $ini_array['database']['host'],
-                'phptype'       => 'pgsql',
-                'database'      => $ini_array['database']['dbname']),
-            'api_key' => array($ini_array['general']['api_key'])
-        );
-        */
 }
