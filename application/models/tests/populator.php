@@ -1,12 +1,12 @@
 <?php
 set_include_path(__DIR__.'/..' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../library' . PATH_SEPARATOR . get_include_path());
-require_once __DIR__.'/../Shows.php'; 
-require_once __DIR__.'/../StoredFile.php'; 
-require_once __DIR__.'/../Playlist.php'; 
-require_once __DIR__.'/../Schedule.php'; 
-require_once __DIR__.'/../Preference.php'; 
-require_once __DIR__.'/../RabbitMq.php'; 
+require_once __DIR__.'/../Shows.php';
+require_once __DIR__.'/../StoredFile.php';
+require_once __DIR__.'/../Playlist.php';
+require_once __DIR__.'/../Schedule.php';
+require_once __DIR__.'/../Preference.php';
+require_once __DIR__.'/../RabbitMq.php';
 require_once __DIR__.'/../../configs/conf.php';
 require_once __DIR__.'/../../../install/include/AirtimeIni.php';
 require_once __DIR__.'/../../../install/include/AirtimeInstall.php';
@@ -18,18 +18,18 @@ Propel::init(__DIR__.'/../../configs/airtime-conf.php');
 AirtimeInstall::DbConnect(true);
 
 // Create a playlist
+$playlist = new Playlist();
+$playlist->create("Calendar Load test playlist ".uniqid());
 
 // Add a file
 $values = array("filepath" => __DIR__."/test10001.mp3");
 $storedFile = StoredFile::Insert($values, false);
+$result = $playlist->addAudioClip($storedFile->getId());
 
 // Add a file
 $values = array("filepath" => __DIR__."/test10002.mp3");
 $storedFile2 = StoredFile::Insert($values, false);
 
-$playlist = new Playlist();
-$playlist->create("Calendar Load test playlist ".uniqid());
-$result = $playlist->addAudioClip($storedFile->getId());
 $result = $playlist->addAudioClip($storedFile2->getId());
 $result = $playlist->addAudioClip($storedFile2->getId());
 
@@ -73,11 +73,11 @@ for ($days=1; $days<100; $days=$days+1)
       $data['add_show_hosts'] ="";
       $showId = Show::create($data);
       Show::populateShowUntil($showId, "2012-01-01 00:00:00");
-      
+
       // populating the show with a playlist
       $show = new ShowInstance($showId);
       $show->scheduleShow(array($playlist->getId()));
-      
+
       $setHour = $setHour + 1;
     }
     // set the next day
