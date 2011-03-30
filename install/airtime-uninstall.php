@@ -15,6 +15,8 @@ require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 AirtimeInstall::RemoveSymlinks();
 
+echo "Uninstalling Airtime alpha 1.7".PHP_EOL;
+
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
 //------------------------------------------------------------------------
 // Delete the database
