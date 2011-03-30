@@ -132,5 +132,18 @@ class Application_Model_Preference
         return Application_Model_Preference::GetValue("soundcloud_tags");
     }
 
+    public static function SetAllow3rdPartyApi($bool) {
+        Application_Model_Preference::SetValue("third_party_api", $bool);
+    }
+
+    public static function GetAllow3rdPartyApi() {
+        $val = Application_Model_Preference::GetValue("third_party_api");
+        if (strlen($val) == 0){
+            return "0";
+        } else {
+            return $val;
+        }
+    }
+
 }
 
