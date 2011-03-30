@@ -61,7 +61,8 @@ class ShowRecorder(Thread):
         filename = self.filename.replace(" ", "-")
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
-        command = "ecasound -i alsa -o %s -t:%s -ge:0.1,0.1,0,-1" % (filepath, length)
+        command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
+        #-ge:0.1,0.1,0,-1
         args = command.split(" ")
 
         print "starting record"
