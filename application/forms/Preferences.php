@@ -59,7 +59,7 @@ class Application_Form_Preferences extends Zend_Form
         ));
 
         //SoundCloud Password
-        $this->addElement('text', 'SoundCloudPassword', array(
+        $this->addElement('password', 'SoundCloudPassword', array(
             'class'      => 'input_text',
             'label'      => 'SoundCloud Password:',
             'required'   => false,
