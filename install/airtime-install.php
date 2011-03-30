@@ -16,6 +16,8 @@ UpdateINIFiles();
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
+echo PHP_EOL."*** Installing Airtime 1.7 ***".PHP_EOL;
+
 echo PHP_EOL."*** Database Installation ***".PHP_EOL;
 
 echo "* Creating Airtime database user".PHP_EOL;
