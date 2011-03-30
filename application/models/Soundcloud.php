@@ -48,22 +48,12 @@ class ATSoundcloud {
                 'track[description]' => $description
             );
 
-            try {
-                $response = json_decode(
-                    $this->_soundcloud->post('tracks', $track_data),
-                    true
-                );
-
-                echo var_dump($response);
-            } 
-            catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
-                echo $e->getMessage();
-            }
-        }
-        else
-        {
-            echo "could not get soundcloud token";
-        }
+          
+            $response = json_decode(
+                $this->_soundcloud->post('tracks', $track_data),
+                true
+            );
+        }  
     }
 
 }
