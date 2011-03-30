@@ -36,7 +36,6 @@ class AirtimeIni{
             echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-
         if (!copy(__DIR__."/../../python_apps/pypo/scripts/liquidsoap.cfg", "/etc/airtime/liquidsoap.cfg")){
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
@@ -107,7 +106,7 @@ class AirtimeIni{
     {
         $api_key = AirtimeIni::GenerateRandomString();
         AirtimeIni::UpdateIniValue('/etc/airtime/airtime.conf', 'api_key', $api_key);
-        AirtimeIni::UpdateIniValue('/etc/airtime/airtime.conf', 'baseFilesDir', realpath(__DIR__.'/../../files'));
+        AirtimeIni::UpdateIniValue('/etc/airtime/airtime.conf', 'baseFilesDir', realpath(__DIR__.'/../../').'/files');
         AirtimeIni::UpdateIniValue('/etc/airtime/pypo.cfg', 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue('/etc/airtime/recorder.cfg', 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(__DIR__.'/../../build/build.properties', 'project.home', realpath(__dir__.'/../../'));
