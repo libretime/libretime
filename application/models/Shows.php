@@ -567,6 +567,19 @@ class ShowInstance {
         return $showInstance->getDbEnds();
     }
 
+    public function setSoundCloudFileId($p_soundcloud_id)
+    {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $showInstance->setDbSoundCloudId($p_soundcloud_id)
+            ->save();
+    }
+
+    public function getSoundCloudFileId()
+    {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        return $showInstance->getDbSoundCloudId();
+    }
+
     public function setShowStart($start)
     {
         $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);

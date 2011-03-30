@@ -282,7 +282,7 @@ class ApiController extends Zend_Controller_Action
 
         if(Application_Model_Preference::GetDoSoundCloudUpload())
         {
-            for($i=0; $i<3; $i++) {
+            for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
 
                 $show = new Show($show_inst->getShowId());
                 $description = $show->getDescription();
@@ -290,7 +290,8 @@ class ApiController extends Zend_Controller_Action
 
                 try {
                     $soundcloud = new ATSoundcloud();
-                    $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $hosts);
+                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $hosts);
+                    $show_inst->setSoundCloudFileId($soundcloud_id);
                     break;
                 }
                 catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
@@ -300,7 +301,7 @@ class ApiController extends Zend_Controller_Action
                     }
                 }
 
-                sleep(60);
+                sleep($CC_CONFIG['soundcloud-connection-wait']);
             }
         }
 

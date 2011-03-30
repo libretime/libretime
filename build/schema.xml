@@ -131,6 +131,7 @@
     <column name="rebroadcast" phpName="DbRebroadcast" type="TINYINT" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
+    <column name="soundcloud_id" phpName="DbSoundCloudId" type="INTEGER" required="false"/>
 	<foreign-key foreignTable="cc_show" name="cc_show_fkey" onDelete="CASCADE">
       <reference local="show_id" foreign="id"/>
     </foreign-key>

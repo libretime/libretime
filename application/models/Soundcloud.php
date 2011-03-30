@@ -50,11 +50,12 @@ class ATSoundcloud {
                 
             );
 
-          
             $response = json_decode(
                 $this->_soundcloud->post('tracks', $track_data),
                 true
             );
+
+            return $response["id"];
         }  
     }
 

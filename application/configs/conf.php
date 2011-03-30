@@ -43,6 +43,9 @@ $CC_CONFIG = array(
     'soundcloud-client-id' => '2CLCxcSXYzx7QhhPVHN4A',
     'soundcloud-client-secret' => 'pZ7beWmF06epXLHVUP1ufOg2oEnIt9XhE8l8xt0bBs',
 
+    'soundcloud-connection-retries' => $values['soundcloud']['connection_retries'],
+    'soundcloud-connection-wait' => $values['soundcloud']['time_between_retries'], 
+
     "rootDir" => __DIR__."/../..",
     'pearPath'      =>  dirname(__FILE__).'/../../library/pear',
     'zendPath'      =>  dirname(__FILE__).'/../../library/Zend',
