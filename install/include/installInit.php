@@ -34,6 +34,11 @@ function CreateINIFile(){
         echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
         exit(1);
     }
+
+    if (!copy(__DIR__."/../../python_apps/pypo/scripts/liquidsoap.cfg", "/etc/airtime/liquidsoap.cfg")){
+        echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
+        exit(1);
+    }
 }
 
 function RemoveINIFile(){
