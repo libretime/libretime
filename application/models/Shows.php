@@ -58,11 +58,16 @@ class Show {
         $show->setDbBackgroundColor($backgroundColor);
     }
 
+    public function getId()
+    {
+        return $this->_showId;
+    }
+
     public function getHosts()
     {
         global $CC_DBC;
 
-        $sql = "SELECT first_name, last_name 
+        $sql = "SELECT first_name, last_name
                 FROM cc_show_hosts LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
 			        WHERE show_id = {$this->_showId}";
 
@@ -70,7 +75,7 @@ class Show {
 
         $res = array();
         foreach($hosts as $host) {
-            $res[] = $host['first_name']." ".$host['last_name'];     
+            $res[] = $host['first_name']." ".$host['last_name'];
         }
 
         return $res;
@@ -93,8 +98,17 @@ class Show {
         RabbitMq::PushSchedule();
     }
 
-	//end dates are non inclusive.
-	public static function addShow($data)
+
+    /**
+     * Create a show.
+     *
+     * Note: end dates are non inclusive.
+     *
+     * @param array $data
+     * @return int
+     *     Show ID
+     */
+    public static function create($data)
 	{
 		$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
 
@@ -106,11 +120,11 @@ class Show {
 		$r = $con->query($sql);
         $startDow = $r->fetchColumn(0);
 
-		if($data['add_show_no_end']) {
+		if ($data['add_show_no_end']) {
 			$endDate = NULL;
 			$data['add_show_repeats'] = 1;
 		}
-		else if($data['add_show_repeats']) {
+		else if ($data['add_show_repeats']) {
 			$sql = "SELECT date '{$data['add_show_end_date']}' + INTERVAL '1 day' ";
 			$r = $con->query($sql);
         	$endDate = $r->fetchColumn(0);
@@ -122,15 +136,15 @@ class Show {
 		}
 
         //only want the day of the week from the start date.
-		if(!$data['add_show_repeats']) {
+		if (!$data['add_show_repeats']) {
 			$data['add_show_day_check'] = array($startDow);
 		}
-        else if($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
+        else if ($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = array($startDow);
         }
 
         //find repeat type or set to a non repeating show.
-        if($data['add_show_repeats']) {
+        if ($data['add_show_repeats']) {
             $repeat_type = $data["add_show_repeat_type"];
         }
         else {
@@ -147,7 +161,7 @@ class Show {
 
 		$showId = $show->getDbId();
 
-        if($data['add_show_record']){
+        if ($data['add_show_record']){
             $isRecorded = 1;
         }
         else {
@@ -155,7 +169,7 @@ class Show {
         }
 
         //don't set day for monthly repeat type, it's invalid.
-        if($data['add_show_repeats'] && $data["add_show_repeat_type"] == 2) {
+        if ($data['add_show_repeats'] && $data["add_show_repeat_type"] == 2) {
             $showDay = new CcShowDays();
 	        $showDay->setDbFirstShow($data['add_show_start_date']);
 	        $showDay->setDbLastShow($endDate);
@@ -168,7 +182,7 @@ class Show {
         }
         else {
             foreach ($data['add_show_day_check'] as $day) {
-			    if($startDow !== $day){
+			    if ($startDow !== $day){
 
 				    if ($startDow > $day)
 					    $daysAdd = 6 - $startDow + 1 + $day;
@@ -183,7 +197,7 @@ class Show {
 				    $start = $data['add_show_start_date'];
 			    }
 
-                if(strtotime($start) < strtotime($endDate) || is_null($endDate)) {
+                if (strtotime($start) < strtotime($endDate) || is_null($endDate)) {
 			        $showDay = new CcShowDays();
 			        $showDay->setDbFirstShow($start);
 			        $showDay->setDbLastShow($endDate);
@@ -199,11 +213,11 @@ class Show {
         }
 
         //adding rows to cc_show_rebroadcast
-        if($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type != -1) {
+        if ($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type != -1) {
 
-            for($i=1; $i<=5; $i++) {
+            for ($i=1; $i<=5; $i++) {
 
-                if($data['add_show_rebroadcast_date_'.$i]) {
+                if ($data['add_show_rebroadcast_date_'.$i]) {
                     $showRebroad = new CcShowRebroadcast();
                     $showRebroad->setDbDayOffset($data['add_show_rebroadcast_date_'.$i]);
                     $showRebroad->setDbStartTime($data['add_show_rebroadcast_time_'.$i]);
@@ -212,11 +226,11 @@ class Show {
                 }
             }
         }
-        else if($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type == -1){
+        else if ($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type == -1){
 
-            for($i=1; $i<=5; $i++) {
+            for ($i=1; $i<=5; $i++) {
 
-                if($data['add_show_rebroadcast_absolute_date_'.$i]) {
+                if ($data['add_show_rebroadcast_absolute_date_'.$i]) {
                     $sql = "SELECT date '{$data['add_show_rebroadcast_absolute_date_'.$i]}' - date '{$data['add_show_start_date']}' ";
 				    $r = $con->query($sql);
 				    $offset_days = $r->fetchColumn(0);
@@ -230,7 +244,7 @@ class Show {
             }
         }
 
-        if(is_array($data['add_show_hosts'])) {
+        if (is_array($data['add_show_hosts'])) {
             //add selected hosts to cc_show_hosts table.
 		    foreach ($data['add_show_hosts'] as $host) {
 			    $showHost = new CcShowHosts();
@@ -240,10 +254,19 @@ class Show {
 		    }
         }
 
-        Show::populateShowUntilLastGeneratedDate($showId);
+        Show::populateShowUntil($showId);
         RabbitMq::PushSchedule();
+        return $showId;
 	}
 
+    /**
+     * @param string $start_timestamp
+     *      In the format "YYYY-MM-DD HH:mm:ss"
+     * @param string $end_timestamp
+     *      In the format "YYYY-MM-DD HH:mm:ss"
+     * @param unknown_type $excludeInstance
+     * @param boolean $onlyRecord
+     */
     public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=FALSE)
     {
         global $CC_DBC;
@@ -301,7 +324,7 @@ class Show {
 
         $next_date = $first_show." ".$start_time;
 
-        if(strtotime($next_date) < strtotime($end_timestamp)) {
+        if (strtotime($next_date) < strtotime($end_timestamp)) {
 
             $start = $next_date;
 
@@ -345,7 +368,8 @@ class Show {
 
     //for a show with repeat_type == 0,1,2
     private static function populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
-                                $start_time, $duration, $day, $record, $end_timestamp, $interval) {
+                                $start_time, $duration, $day, $record, $end_timestamp, $interval)
+    {
         global $CC_DBC;
 
         if(isset($next_pop_date)) {
@@ -422,53 +446,81 @@ class Show {
         }
     }
 
-    //used to catch up a newly added show
-    private static function populateShowUntilLastGeneratedDate($show_id) {
-        global $CC_DBC;
-        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
-        $sql = "SELECT * FROM cc_show_days WHERE show_id = {$show_id}";
+    /**
+     * Generate repeating show instances for a single show up to the given date.
+     * If no date is given, use the one in the user's preferences, which is stored
+     * automatically by FullCalendar as the furthest date in the future the user
+     * has looked at.
+     *
+     * @param int $p_showId
+     * @param string $p_date
+     * 	   In the format "YYYY-MM-DD HH:mm:ss"
+     */
+    public static function populateShowUntil($p_showId, $p_date = NULL)
+    {
+        global $CC_DBC;
+        if (is_null($p_date)) {
+            $p_date = Application_Model_Preference::GetShowsPopulatedUntil();
+        }
+
+        $sql = "SELECT * FROM cc_show_days WHERE show_id = {$p_showId}";
 		$res = $CC_DBC->GetAll($sql);
 
-        foreach($res as $row) {
+        foreach ($res as $row) {
             Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"],
-                                    $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $showsPopUntil);
+                               $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $p_date);
         }
     }
 
-    public static function populateShowsUntil($pop_timestamp, $end_timestamp) {
+    /**
+     * Generate all the repeating shows in the given range.
+     *
+     * @param string $p_startTimestamp
+     * 	    In the format "YYYY-MM-DD HH:mm:ss"
+     * @param string $p_endTimestamp
+     * 	    In the format "YYYY-MM-DD HH:mm:ss"
+     */
+    public static function populateAllShowsInRange($p_startTimestamp, $p_endTimestamp)
+    {
         global $CC_DBC;
 
-        if($pop_timestamp != "") {
+        if ($pop_timestamp != "") {
             $sql = "SELECT * FROM cc_show_days
-                WHERE last_show IS NULL
-                    OR first_show < '{$end_timestamp}' AND last_show > '{$pop_timestamp}'";
+                	WHERE last_show IS NULL
+                    OR first_show < '{$p_endTimestamp}' AND last_show > '{$p_startTimestamp}'";
         }
         else {
             $today_timestamp = date("Y-m-d");
-
             $sql = "SELECT * FROM cc_show_days
-                WHERE last_show IS NULL
-                    OR first_show < '{$end_timestamp}' AND last_show > '{$today_timestamp}'";
+                	WHERE last_show IS NULL
+                    OR first_show < '{$p_endTimestamp}' AND last_show > '{$today_timestamp}'";
         }
 
 		$res = $CC_DBC->GetAll($sql);
 
-        foreach($res as $row) {
+        foreach ($res as $row) {
             Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"],
-                                    $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $end_timestamp);
+                               $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $p_endTimestamp);
         }
     }
 
-    public static function getFullCalendarEvents($start, $end, $editable=false) {
-
+    /**
+     *
+     * @param string $start
+     *      In the format "YYYY-MM-DD HH:mm:ss"
+     * @param string $end
+     * 	    In the format "YYYY-MM-DD HH:mm:ss"
+     * @param boolean $editable
+     */
+    public static function getFullCalendarEvents($start, $end, $editable=false)
+    {
         $events = array();
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
         //if fullcalendar is requesting shows past our previous populated until date, generate shows up until this point.
-        if($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end)) {
-
-            Show::populateShowsUntil($showsPopUntil, $end);
+        if ($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end)) {
+            Show::populateAllShowsInRange($showsPopUntil, $end);
             Application_Model_Preference::SetShowsPopulatedUntil($end);
         }
 
@@ -476,7 +528,7 @@ class Show {
 
         $today_timestamp = date("Y-m-d H:i:s");
         foreach ($shows as $show) {
-            if($editable && strtotime($today_timestamp) < strtotime($show["starts"]))
+            if ($editable && strtotime($today_timestamp) < strtotime($show["starts"]))
 			    $events[] = Show::makeFullCalendarEvent($show, array("editable" => true));
             else
                 $events[] = Show::makeFullCalendarEvent($show);
@@ -683,6 +735,10 @@ class ShowInstance {
         RabbitMq::PushSchedule();
 	}
 
+	/**
+	 * Get the group ID for this show.
+	 *
+	 */
 	private function getLastGroupId()
 	{
 		global $CC_DBC;
@@ -691,13 +747,18 @@ class ShowInstance {
 		return $res;
 	}
 
+	/**
+	 * Add a playlist as the last item of the current show.
+	 *
+	 * @param int $plId
+	 * 		Playlist ID.
+	 */
 	public function addPlaylistToShow($plId)
     {
 		$sched = new ScheduleGroup();
 		$lastGroupId = $this->getLastGroupId();
 
-		if(is_null($lastGroupId)) {
-
+		if (is_null($lastGroupId)) {
 			$groupId = $sched->add($this->_instanceId, $this->getShowStart(), null, $plId);
 		}
 		else {
@@ -706,14 +767,18 @@ class ShowInstance {
 		RabbitMq::PushSchedule();
 	}
 
-    public function addFileToShow($file_id) 
+    /**
+     * Add a media file as the last item in the show.
+     *
+     * @param int $file_id
+     */
+    public function addFileToShow($file_id)
     {
         $sched = new ScheduleGroup();
 		$lastGroupId = $this->getLastGroupId();
-        
-		if(is_null($lastGroupId)) {
 
-			$groupId = $sched->add($this->_instanceId, $this->getShowStart(), $file_id);		
+		if (is_null($lastGroupId)) {
+			$groupId = $sched->add($this->_instanceId, $this->getShowStart(), $file_id);
 		}
 		else {
 			$groupId = $sched->addFileAfter($this->_instanceId, $lastGroupId, $file_id);
@@ -721,12 +786,18 @@ class ShowInstance {
         RabbitMq::PushSchedule();
     }
 
-	public function scheduleShow($plIds) {
-
-		foreach($plIds as $plId) {
-			$this->addPlaylistToShow($plId);
-		}
-	}
+    /**
+     * Add the given playlists to the show.
+     *
+     * @param array $plIds
+     * 		An array of playlist IDs.
+     */
+    public function scheduleShow($plIds)
+    {
+        foreach ($plIds as $plId) {
+            $this->addPlaylistToShow($plId);
+        }
+    }
 
 	public function removeGroupFromShow($group_id)
 	{
@@ -961,7 +1032,7 @@ class Show_DAL {
         //Result: 5
 
         global $CC_CONFIG, $CC_DBC;
-		$sql = "SELECT"        
+		$sql = "SELECT"
         ." si.starts as show_starts,"
         ." si.ends as show_ends,"
         ." s.name as show_name,"

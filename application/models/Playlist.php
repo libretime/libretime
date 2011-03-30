@@ -102,27 +102,9 @@ class Playlist {
        return $res;
     }
 
-    public static function Insert($p_values)
+
+    public static function Delete($id)
     {
-         // Create the StoredPlaylist object
-        $storedPlaylist = new Playlist();
-        $storedPlaylist->name = isset($p_values['filename']) ? $p_values['filename'] : date("H:i:s");
-    	$storedPlaylist->mtime = new DateTime("now");
-
-    	$pl = new CcPlaylist();
-    	$pl->setDbName($storedPlaylist->name);
-    	$pl->setDbState("incomplete");
-    	$pl->setDbMtime($storedPlaylist->mtime);
-    	$pl->save();
-
-    	$storedPlaylist->id = $pl->getDbId();
-        $storedPlaylist->setState('ready');
-
-	    return $storedPlaylist->id;
-
-    }
-
-    public static function Delete($id) {
 		$pl = CcPlaylistQuery::create()->findPK($id);
 		if($pl === NULL)
 			return FALSE;
@@ -207,7 +189,7 @@ class Playlist {
             return $this->name;
         }
         $pl = CcPlaylistQuery::create()->findPK($id);
-        if($pl === NULL)
+        if ($pl === NULL)
     	    return FALSE;
 
         return $pl->getDbName();
@@ -395,18 +377,27 @@ class Playlist {
     }
 
     /**
-     * Create instance of Playlist object and insert empty file
+     * Create instance of a Playlist object.
      *
-     * @param string $fname
-     * 		name of new file
-     * @return instance of Playlist object
+     * @param string $p_fname
+     * 		Name of the playlist
+     * @return Playlist
      */
-    public function create($fname=NULL)
+    public function create($p_fname=NULL)
     {
-        $values = array("filename" => $fname);
-        $pl_id = Playlist::Insert($values);
-        $this->id = $pl_id;
-        return $this->id;
+        $this->name = !empty($p_fname) ? $p_fname : date("H:i:s");
+    	$this->mtime = new DateTime("now");
+
+    	$pl = new CcPlaylist();
+    	$pl->setDbName($this->name);
+    	$pl->setDbState("incomplete");
+    	$pl->setDbMtime($this->mtime);
+    	$pl->save();
+
+    	$this->id = $pl->getDbId();
+        $this->setState('ready');
+
+        return $this;
     }
 
     /**
