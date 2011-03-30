@@ -1211,6 +1211,10 @@ ul.errors {
 	margin:0;
 }
 
+.formrow-repeat ul.errors {
+	width:278px;
+}
+
 ul.errors li {
 	color:#902d2d;
 	font-size:11px;
@@ -1440,7 +1444,7 @@ div.success{
 	list-style-type:none;
 	margin:0 0 7px 0;
 	padding:0;
-	height:26px;
+	/*height:26px;*/
 	display:block;
 }
 .formrow-repeat li .ui-button-icon-only {
@@ -1501,7 +1505,10 @@ div.success{
 .small-icon.rebroadcast {
 	background:url(images/icon_rebroadcast.png) no-repeat 0 0;
 }
-
+.small-icon.soundcloud {
+	background:url(images/icon_soundcloud.png) no-repeat 0 0;
+	width:21px;
+}
 .medium-icon {
 	display:block;
 	width:25px;
@@ -1511,8 +1518,23 @@ div.success{
 }
 .medium-icon.recording {
 	background:url(images/icon_record_m.png) no-repeat 0 0;
+	width:20px;
 }
 .medium-icon.rebroadcast {
 	background:url(images/icon_rebroadcast_m.png) no-repeat 0 0;
 }
-	
+.medium-icon.soundcloud {
+	background:url(images/icon_soundcloud_m.png) no-repeat 0 0;
+	width:21px;
+}
+.medium-icon.nowplaying, .medium-icon.finishedplaying {
+	background:url(images/icon_nowplaying_m.png) no-repeat 0 0;
+	width:12px;
+	height:9px;
+	float:left;
+	margin-left:6px;
+	margin-right:0;
+}
+.medium-icon.finishedplaying {
+	background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
+}
