@@ -45,7 +45,9 @@ class ATSoundcloud {
                 'track[title]' => $filename,
                 'track[asset_data]' => '@' . $filepath,
                 'track[tag_list]' => $tags,
-                'track[description]' => $description
+                'track[description]' => $description,
+                'track[downloadable]' => true,
+                
             );
 
           

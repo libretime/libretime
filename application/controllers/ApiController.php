@@ -272,10 +272,11 @@ class ApiController extends Zend_Controller_Action
 
                 $show = new Show($show_inst->getShowId());
                 $description = $show->getDescription();
+                $hosts = $show->getHosts();
 
                 try {
                     $soundcloud = new ATSoundcloud();
-                    $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description);
+                    $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $hosts);
                     break;
                 }
                 catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
