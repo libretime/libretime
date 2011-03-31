@@ -462,6 +462,11 @@ class Show {
         global $CC_DBC;
         if (is_null($p_date)) {
             $p_date = Application_Model_Preference::GetShowsPopulatedUntil();
+
+            if ($p_date == "") {
+                $today_timestamp = date("Y-m-d");
+                Application_Model_Preference::SetShowsPopulatedUntil($today_timestamp);
+            }
         }
 
         $sql = "SELECT * FROM cc_show_days WHERE show_id = {$p_showId}";
@@ -485,7 +490,7 @@ class Show {
     {
         global $CC_DBC;
 
-        if ($pop_timestamp != "") {
+        if ($p_startTimestamp != "") {
             $sql = "SELECT * FROM cc_show_days
                 	WHERE last_show IS NULL
                     OR first_show < '{$p_endTimestamp}' AND last_show > '{$p_startTimestamp}'";
