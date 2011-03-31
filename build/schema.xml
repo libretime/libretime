@@ -152,7 +152,7 @@
     <column name="repeat_type" phpName="DbRepeatType" type="TINYINT" required="true"/>
     <column name="next_pop_date" phpName="DbNextPopDate" type="DATE" required="false"/>
 	<column name="show_id" phpName="DbShowId" type="INTEGER" required="true"/>
-    <column name="record" phpName="DbRecord" type="TINYINT" required="false"/>
+    <column name="record" phpName="DbRecord" type="TINYINT" required="false" defaultValue="0"/>
 	<foreign-key foreignTable="cc_show" name="cc_show_fkey" onDelete="CASCADE">
       <reference local="show_id" foreign="id"/>
     </foreign-key>
