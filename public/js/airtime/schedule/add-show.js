@@ -181,7 +181,7 @@ function setAddShowEvents() {
             makeAddShowButton();
 		});
 
-	form.find("#add-show-submit")
+	form.find(".add-show-submit")
 		.click(function(event){
             event.preventDefault();
 

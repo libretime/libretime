@@ -1,7 +1,7 @@
 <div id="schedule-add-show" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded">
     <div class="button-bar">
         <a href="#" id="add-show-close" class="icon-link"><span class="ui-icon ui-icon-circle-close"></span>Close</a>
-        <button aria-disabled="false" role="button" id="add-show-submit" class="right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary"> 
+        <button aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary"> 
             <span class="ui-icon ui-icon-plusthick"></span> 
             <span class="ui-button-text">Add this show</span> 
         </button>
@@ -29,6 +29,12 @@
     <h3 class="collapsible-header"><span class="arrow-icon"></span>Style</h3>
     <div id="schedule-show-style" class="collapsible-content">
         <?php echo $this->style; ?>
+    </div>
+    <div class="button-bar">
+        <button aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary"> 
+            <span class="ui-icon ui-icon-plusthick"></span> 
+            <span class="ui-button-text">Add this show</span> 
+        </button>
     </div>
 </div>
 
