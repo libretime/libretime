@@ -195,7 +195,7 @@ CREATE TABLE "cc_show_days"
 	"repeat_type" INT2  NOT NULL,
 	"next_pop_date" DATE,
 	"show_id" INTEGER  NOT NULL,
-	"record" INT2,
+	"record" INT2 default 0,
 	PRIMARY KEY ("id")
 );
 

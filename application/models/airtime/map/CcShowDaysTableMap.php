@@ -47,7 +47,7 @@ class CcShowDaysTableMap extends TableMap {
 		$this->addColumn('REPEAT_TYPE', 'DbRepeatType', 'TINYINT', true, null, null);
 		$this->addColumn('NEXT_POP_DATE', 'DbNextPopDate', 'DATE', false, null, null);
 		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
-		$this->addColumn('RECORD', 'DbRecord', 'TINYINT', false, null, null);
+		$this->addColumn('RECORD', 'DbRecord', 'TINYINT', false, null, 0);
 		// validators
 	} // initialize()
 

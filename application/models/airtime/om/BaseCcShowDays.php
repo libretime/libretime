@@ -80,6 +80,7 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the record field.
+	 * Note: this column has a database default value of: 0
 	 * @var        int
 	 */
 	protected $record;
@@ -102,6 +103,27 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 	 * @var        boolean
 	 */
 	protected $alreadyInValidation = false;
+
+	/**
+	 * Applies default values to this object.
+	 * This method should be called from the object's constructor (or
+	 * equivalent initialization method).
+	 * @see        __construct()
+	 */
+	public function applyDefaultValues()
+	{
+		$this->record = 0;
+	}
+
+	/**
+	 * Initializes internal state of BaseCcShowDays object.
+	 * @see        applyDefaults()
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->applyDefaultValues();
+	}
 
 	/**
 	 * Get the [id] column value.
@@ -607,7 +629,7 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 			$v = (int) $v;
 		}
 
-		if ($this->record !== $v) {
+		if ($this->record !== $v || $this->isNew()) {
 			$this->record = $v;
 			$this->modifiedColumns[] = CcShowDaysPeer::RECORD;
 		}
@@ -625,6 +647,10 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 	 */
 	public function hasOnlyDefaultValues()
 	{
+			if ($this->record !== 0) {
+				return false;
+			}
+
 		// otherwise, everything was equal, so return TRUE
 		return true;
 	} // hasOnlyDefaultValues()
@@ -1357,6 +1383,7 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
+		$this->applyDefaultValues();
 		$this->resetModified();
 		$this->setNew(true);
 		$this->setDeleted(false);

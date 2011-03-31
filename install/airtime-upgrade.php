@@ -21,6 +21,9 @@ AirtimeInstall::MigrateTables(__DIR__);
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 
+echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
+system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
+
 echo "******************************* Update Complete *******************************".PHP_EOL;
 
 
