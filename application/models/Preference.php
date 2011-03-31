@@ -117,7 +117,8 @@ class Application_Model_Preference
     }
 
     public static function SetSoundCloudPassword($password) {
-        Application_Model_Preference::SetValue("soundcloud_password", $password);
+        if (strlen($password) > 0)
+            Application_Model_Preference::SetValue("soundcloud_password", $password);
     }
 
     public static function GetSoundCloudPassword() {
