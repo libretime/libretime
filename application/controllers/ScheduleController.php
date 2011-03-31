@@ -319,6 +319,17 @@ class ScheduleController extends Zend_Controller_Action
         $showInstanceId = $this->_getParam('id');
 		$show = new ShowInstance($showInstanceId);
 
+        $originalShowId = $show->isRebroadcast();
+        if (!is_null($originalShowId)){
+            $originalShow = new ShowInstance($originalShowId);
+            $originalShowName = $originalShow->getName();
+            $originalShowStart = $originalShow->getShowStart();
+
+            $timestamp  = strtotime($originalShowStart);
+            $this->view->additionalShowInfo =
+                "Rebroadcast of show \"$originalShowName\" from "
+                .date("l, F jS", $timestamp)." at ".date("G:i", $timestamp);
+        }
 		$this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         unset($this->view->showContent);
