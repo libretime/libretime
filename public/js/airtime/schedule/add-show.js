@@ -181,8 +181,15 @@ function setAddShowEvents() {
             makeAddShowButton();
 		});
 
-	form.find("#add-show-submit")
+	form.find(".add-show-submit")
 		.click(function(event){
+            var addShowButton = $(this);
+            if (!addShowButton.hasClass("disabled")){
+                addShowButton.addClass("disabled");
+            } else {
+                return;
+            }
+
             event.preventDefault();
 
 			var data = $("form").serializeArray();
@@ -203,6 +210,7 @@ function setAddShowEvents() {
             var end_date = $("#add_show_end_date").val();
 
             $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts, days: days}, function(json){
+                addShowButton.removeClass("disabled");
                 if(json.form) {
                     $("#add-show-form")
                         .empty()
