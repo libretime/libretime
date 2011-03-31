@@ -1085,7 +1085,7 @@ button.ui-button-icons-only {
 	padding-right: 2.1em;
 }
 /* no icon support for input elements, provide padding by default */
-input.ui-button {
+input.ui-button, button.ui-button {
 	padding: .4em 1em;
 }
 /*button icon element(s) */

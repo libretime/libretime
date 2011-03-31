@@ -89,7 +89,28 @@ class Application_Form_EditAudioMD extends Zend_Form
             'ignore'   => true,
             'class'    => 'ui-button ui-state-default',
             'label'    => 'Submit',
+            'decorators' => array( 
+                'ViewHelper'
+            ) 
         ));
+
+		// Add the submit button
+        $this->addElement('button', 'cancel', array(
+            'ignore'   => true,
+            'class'    => 'ui-button ui-state-default',
+            'label'    => 'Cancel',
+            'onclick' => 'javascript:document.location="/Library"',
+            'decorators' => array( 
+                'ViewHelper'
+            )
+        ));
+
+        $this->addDisplayGroup(array('submit', 'cancel'), 'submitButtons', array( 
+                'decorators' => array( 
+                    'FormElements', 
+                    array('HtmlTag', array('tag' => 'dd', 'class' => 'element')), 
+            ), 
+        )); 
     }
 
 
