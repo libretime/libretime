@@ -16,7 +16,7 @@ $values = load_airtime_config();
 $CC_CONFIG = array(
 
     // Name of the web server user
-    'webServerUser' => $values['general']['webServerUser'],
+    'webServerUser' => $values['general']['web_server_user'],
 
     'rabbitmq' => $values['rabbitmq'],
 
