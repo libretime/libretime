@@ -260,12 +260,15 @@ class Show {
 	}
 
     /**
+     * Get all the show instances in the given time range.
+     *
      * @param string $start_timestamp
-     *      In the format "YYYY-MM-DD HH:mm:ss"
+     *      In the format "YYYY-MM-DD HH:mm:ss".  This time is inclusive.
      * @param string $end_timestamp
-     *      In the format "YYYY-MM-DD HH:mm:ss"
+     *      In the format "YYYY-MM-DD HH:mm:ss". This time is inclusive.
      * @param unknown_type $excludeInstance
      * @param boolean $onlyRecord
+     * @return array
      */
     public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=FALSE)
     {
