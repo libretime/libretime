@@ -76,8 +76,7 @@
     var defaults = {
         updatePeriod: 5, //seconds
         sourceDomain: "http://localhost/", //where to get show status from
-        audioStreamSource: "http://localhost:8000/airtime.mp3", //where to get audio stream from
-        text: {listenLive:"Listen WADR Live", onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"}
+        text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"}
     };
     var options = $.extend(defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
@@ -113,7 +112,6 @@
             }
 
             obj.empty();
-            obj.append("<a id='listenWadrLive' href='"+options.audioStreamSource+"'><span>"+options.text.listenLive+"</span></a>");
             obj.append("<h4>"+showStatus+" &gt;&gt;</h4>");
             obj.append("<ul class='widget no-playing-bar'>" +
                 "<li class='current'>"+options.text.current+": "+currentShowName+
@@ -165,9 +163,16 @@
 
         var dow = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
+        var date = new Date();
+        //subtract 1 because javascript date function returns
+        //sunday as 0 based, but we want Monday to be 0-based.
+        var todayInt = (date.getDay()-1);
+        if (todayInt < 0)
+            todayInt += 7;
+
         var html = '<ul>';
         for (var i=0; i<dow.length; i++){
-            html += '<li><a href="#'+dow[i]+'">'+options.dowText[dow[i]]+'</a></li>';
+            html += '<li'+ (i==todayInt?' class="ui-tabs-selected ui-state-active"':'')+'><a href="#'+dow[i]+'">'+options.dowText[dow[i]]+'</a></li>';
         }
         html += '</ul>';
 

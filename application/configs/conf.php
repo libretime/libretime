@@ -6,7 +6,7 @@
  * /etc/airtime/recorder.cfg
  */
  
-define('AIRTIME_VERSION', '1.7.0-alpha');
+define('AIRTIME_VERSION', '1.7.0-beta');
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
 
@@ -16,13 +16,13 @@ $values = load_airtime_config();
 $CC_CONFIG = array(
 
     // Name of the web server user
-    'webServerUser' => $values['general']['webServerUser'],
+    'webServerUser' => $values['general']['web_server_user'],
 
     'rabbitmq' => $values['rabbitmq'],
 
-    'baseFilesDir' => $values['general']['baseFilesDir'],
+    'baseFilesDir' => $values['general']['base_files_dir'],
     // main directory for storing binary media files
-    'storageDir'    =>  $values['general']['baseFilesDir']."/stor",
+    'storageDir'    =>  $values['general']['base_files_dir']."/stor",
 
 	// Database config
     'dsn' => array(

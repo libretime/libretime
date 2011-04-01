@@ -167,10 +167,14 @@ class AirtimeInstall {
 
         $dir = realpath(__DIR__."/../../utils/airtime-clean-storage");
         exec("ln -s $dir /usr/bin/airtime-clean-storage");
+
+        $dir = realpath(__DIR__."/../../utils/airtime-update-db-settings");
+        exec("ln -s $dir /usr/bin/airtime-update-db-settings");
     }
 
     public static function RemoveSymlinks(){
         exec("rm -f /usr/bin/airtime-import");
         exec("rm -f /usr/bin/airtime-clean-storage");
+        exec("rm -f /usr/bin/airtime-update-db-settings");
     }
 }
