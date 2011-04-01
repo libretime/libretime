@@ -32,26 +32,31 @@ class ATSoundcloud {
     {
         if($this->getToken())
         {
-            $tags = join(" ", $tags);
+            if(count($tags)) {
+                $tags = join(" ", $tags);
+                $tags = $tags." ".Application_Model_Preference::GetSoundCloudTags();
+            }
+            else {
+                $tags = Application_Model_Preference::GetSoundCloudTags();
+            }
 
             $track_data = array(
                 'track[sharing]' => 'private',
                 'track[title]' => $filename,
                 'track[asset_data]' => '@' . $filepath,
                 'track[tag_list]' => $tags,
-                'track[description]' => $description
+                'track[description]' => $description,
+                'track[downloadable]' => true,
+                
             );
 
-            try {
-                $response = json_decode(
-                    $this->_soundcloud->post('tracks', $track_data),
-                    true
-                );
-            } 
-            catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
-                echo $e->getMessage();
-            }
-        }
+            $response = json_decode(
+                $this->_soundcloud->post('tracks', $track_data),
+                true
+            );
+
+            return $response["id"];
+        }  
     }
 
 }

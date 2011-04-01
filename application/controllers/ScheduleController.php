@@ -176,11 +176,11 @@ class ScheduleController extends Zend_Controller_Action
 
 
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
-                strtotime($today_timestamp) < strtotime($show->getShowEnd())) {
+                strtotime($today_timestamp) < strtotime($show->getShowEnd()) &&
+                $user->isAdmin()) {
             $menu[] = array('action' => array('type' => 'fn',
-                                              //'url' => '/Schedule/cancel-current-show'.$params,
-                                              'callback' => "window['confirmCancelShow']($id)"),
-                            'title' => 'Cancel Current Show');
+                'callback' => "window['confirmCancelShow']($id)"),
+                'title' => 'Cancel Current Show');
         }
 
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
@@ -319,6 +319,17 @@ class ScheduleController extends Zend_Controller_Action
         $showInstanceId = $this->_getParam('id');
 		$show = new ShowInstance($showInstanceId);
 
+        $originalShowId = $show->isRebroadcast();
+        if (!is_null($originalShowId)){
+            $originalShow = new ShowInstance($originalShowId);
+            $originalShowName = $originalShow->getName();
+            $originalShowStart = $originalShow->getShowStart();
+
+            $timestamp  = strtotime($originalShowStart);
+            $this->view->additionalShowInfo =
+                "Rebroadcast of show \"$originalShowName\" from "
+                .date("l, F jS", $timestamp)." at ".date("G:i", $timestamp);
+        }
 		$this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         unset($this->view->showContent);
@@ -397,8 +408,8 @@ class ScheduleController extends Zend_Controller_Action
 
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $user = new User($userInfo->id);
-			if($user->isAdmin()) {
-			    Show::addShow($data);
+			if ($user->isAdmin()) {
+			    Show::create($data);
             }
 
             //send back a new form for the user.

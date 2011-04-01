@@ -1,5 +1,5 @@
 %include "library/pervasives.liq"
-%include "ls_config.liq"
+%include "/etc/airtime/liquidsoap.cfg"
 
 set("log.file.path", log_file)
 set("log.stdout", true)

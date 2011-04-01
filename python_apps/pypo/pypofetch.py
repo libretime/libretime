@@ -27,7 +27,7 @@ logging.config.fileConfig("logging.cfg")
 
 # loading config file
 try:
-    config = ConfigObj('config.cfg')
+    config = ConfigObj('/etc/airtime/pypo.cfg')
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
     POLL_INTERVAL = int(config['poll_interval'])
@@ -84,9 +84,12 @@ class PypoFetch(Thread):
         pypo_timezone = (process.communicate()[0]).strip(' \r\n\t')
 
         if server_timezone != pypo_timezone:
-            logger.error("Server and pypo timezone offsets do not match. Audio playback may not start when expected!")
-            logger.error("Server timezone offset: %s", server_timezone)
-            logger.error("Pypo timezone offset: %s", pypo_timezone)
+            logger.error("ERROR: Airtime server and pypo timezone offsets do not match. Audio playback will not start when expected!!!")
+            logger.error("  * Server timezone offset: %s", server_timezone)
+            logger.error("  * Pypo timezone offset: %s", pypo_timezone)
+            logger.error("  * To fix this, you need to set the 'date.timezone' value in your php.ini file and restart apache.")
+            logger.error("  * See this page for more info (v1.7): http://wiki.sourcefabric.org/x/BQBF")
+            logger.error("  * and also the 'FAQ and Support' page underneath it.")  
     
     """
     Process the schedule
@@ -208,12 +211,8 @@ class PypoFetch(Thread):
                     (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000), str(fileExt))
                     do_cue = True
 
-                # check if it is a remote file, if yes download
-                if media['uri'][0:4] == 'http':
-                    self.handle_remote_file(media, dst, do_cue)
-                else:
-                    logger.debug("invalid media uri: %s", media['uri'])
-
+                # download media file
+                self.handle_remote_file(media, dst, do_cue)
                 
                 if True == os.access(dst, os.R_OK):
                     # check filesize (avoid zero-byte files)

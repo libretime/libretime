@@ -1,11 +1,7 @@
 <?php
-if (!function_exists('pg_connect')) {
-    trigger_error("PostgreSQL PHP extension required and not found.", E_USER_ERROR);
-    exit(2);
-}
 
-require_once(dirname(__FILE__).'/../library/pear/DB.php');
-require_once(dirname(__FILE__).'/../application/configs/conf.php');
+require_once(dirname(__FILE__).'/../../library/pear/DB.php');
+require_once(dirname(__FILE__).'/../../application/configs/conf.php');
 
 class AirtimeInstall {
 
@@ -64,52 +60,6 @@ class AirtimeInstall {
         chmod($filePath, $fileperms);
     }
 
-    private static function GenerateRandomString($len=20, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    {
-        $string = '';
-        for ($i = 0; $i < $len; $i++)
-        {
-            $pos = mt_rand(0, strlen($chars)-1);
-            $string .= $chars{$pos};
-        }
-        return $string;
-    }
-
-    public static function CreateApiKey()
-    {
-        $api_key = AirtimeInstall::GenerateRandomString();
-        AirtimeInstall::UpdateIniValue(__DIR__.'/../build/airtime.conf', 'api_key', $api_key);
-        AirtimeInstall::UpdateIniValue(__DIR__.'/../python_apps/pypo/config.cfg', 'api_key', "'$api_key'");
-        AirtimeInstall::UpdateIniValue(__DIR__.'/../python_apps/show-recorder/config.cfg', 'api_key', "'$api_key'");
-    }
-
-    public static function ExitIfNotRoot()
-    {
-        // Need to check that we are superuser before running this.
-        if(exec("whoami") != "root"){
-            echo "Must be root user.\n";
-            exit(1);
-        }
-    }
-
-    public static function UpdateIniValue($filename, $property, $value)
-    {
-        $lines = file($filename);
-        $n=count($lines);
-        for ($i=0; $i<$n; $i++) {
-            if (strlen($lines[$i]) > strlen($property))
-            if ($property == substr($lines[$i], 0, strlen($property))){
-                $lines[$i] = "$property = $value\n";
-            }
-        }
-
-        $fp=fopen($filename, 'w');
-        for($i=0; $i<$n; $i++){
-            fwrite($fp, $lines[$i]);
-        }
-        fclose($fp);
-    }
-
     public static function SetupStorageDirectory($CC_CONFIG)
     {
         global $CC_CONFIG, $CC_DBC;
@@ -145,9 +95,15 @@ class AirtimeInstall {
 
         @exec($command, $output, $results);
         if ($results == 0) {
-            echo "* User {$CC_CONFIG['dsn']['username']} created.".PHP_EOL;
+            echo "* Database user '{$CC_CONFIG['dsn']['username']}' created.".PHP_EOL;
         } else {
-            echo "* Could not create user {$CC_CONFIG['dsn']['username']}: $output".PHP_EOL;
+            if (count($output) > 0) {
+                echo "* Could not create user '{$CC_CONFIG['dsn']['username']}': ".PHP_EOL;
+                echo implode(PHP_EOL, $output);
+            }
+            else {
+                echo "* Database user '{$CC_CONFIG['dsn']['username']}' already exists.".PHP_EOL;
+            }
         }
     }
 
@@ -160,7 +116,13 @@ class AirtimeInstall {
         if ($results == 0) {
             echo "* Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
         } else {
-            echo "* Could not create database '{$CC_CONFIG['dsn']['database']}': $output".PHP_EOL;
+            if (count($output) > 0) {
+                echo "* Could not create database '{$CC_CONFIG['dsn']['database']}': ".PHP_EOL;
+                echo implode(PHP_EOL, $output);
+            }
+            else {
+                echo "* Database '{$CC_CONFIG['dsn']['database']}' already exists.".PHP_EOL;
+            }
         }
     }
 
@@ -181,7 +143,7 @@ class AirtimeInstall {
     public static function CreateDatabaseTables()
     {
         // Put Propel sql files in Database
-        $command = __DIR__."/../library/propel/generator/bin/propel-gen ../build/ insert-sql 2>propel-error.log";
+        $command = __DIR__."/../../library/propel/generator/bin/propel-gen ../build/ insert-sql 2>propel-error.log";
         @exec($command, $output, $results);
     }
 
@@ -189,13 +151,6 @@ class AirtimeInstall {
     {
         $command = "php $dir/../library/doctrine/migrations/doctrine-migrations.phar --configuration=$dir/DoctrineMigrations/migrations.xml --db-configuration=$dir/../library/doctrine/migrations/migrations-db.php --no-interaction migrations:migrate";
         system($command);
-    }
-
-    public static function SetUpPythonEggs()
-    {
-        //install poster streaming upload
-        $command = "sudo easy_install poster";
-        @exec($command);
     }
 
     public static function DeleteFilesRecursive($p_path)
@@ -207,10 +162,10 @@ class AirtimeInstall {
     public static function CreateSymlinks(){
         AirtimeInstall::RemoveSymlinks();
 
-        $dir = realpath(__DIR__."/../utils/airtime-import");
+        $dir = realpath(__DIR__."/../../utils/airtime-import");
         exec("ln -s $dir /usr/bin/airtime-import");
 
-        $dir = realpath(__DIR__."/../utils/airtime-clean-storage");
+        $dir = realpath(__DIR__."/../../utils/airtime-clean-storage");
         exec("ln -s $dir /usr/bin/airtime-clean-storage");
     }
 
@@ -218,6 +173,4 @@ class AirtimeInstall {
         exec("rm -f /usr/bin/airtime-import");
         exec("rm -f /usr/bin/airtime-clean-storage");
     }
-
-
 }

@@ -103,27 +103,55 @@ class ApiController extends Zend_Controller_Action
 	  exit;
     }
 
-    public function liveInfoAction(){
-        global $CC_CONFIG;
+    public function liveInfoAction()
+    {
+        if (Application_Model_Preference::GetAllow3rdPartyApi()){
+            // disable the view and the layout
+            $this->view->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
 
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+            $result = Schedule::GetPlayOrderRange(0, 1);
 
-        $result = Schedule::GetPlayOrderRange(0, 1);
+            $date = new Application_Model_DateHelper;
+            $timeNow = $date->getDate();
+            $result = array("env"=>APPLICATION_ENV,
+                "schedulerTime"=>gmdate("Y-m-d H:i:s"),
+                "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
+                "nextShow"=>Show_DAL::GetNextShows($timeNow, 5),
+                "timezone"=> date("T"),
+                "timezoneOffset"=> date("Z"));
+                
+            //echo json_encode($result);
+            header("Content-type: text/javascript");
+            echo $_GET['callback'].'('.json_encode($result).')';
+        } else {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource. ';
+            exit;
+        }
+    }
 
-        $date = new Application_Model_DateHelper;
-        $timeNow = $date->getDate();
-        $result = array("env"=>APPLICATION_ENV,
-            "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-            "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
-            "nextShow"=>Show_DAL::GetNextShows($timeNow, 5),
-            "timezone"=> date("T"),
-            "timezoneOffset"=> date("Z"));
-            
-        //echo json_encode($result);
-        header("Content-type: text/javascript");
-        echo $_GET['callback'].'('.json_encode($result).')';
+    public function weekInfoAction()
+    {
+        if (Application_Model_Preference::GetAllow3rdPartyApi()){
+            // disable the view and the layout
+            $this->view->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
+
+            $dow = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
+
+            $result = array();
+            for ($i=0; $i<7; $i++){
+                $result[$dow[$i]] = Show_DAL::GetShowsByDayOfWeek($i);
+            }
+
+            header("Content-type: text/javascript");
+            echo $_GET['callback'].'('.json_encode($result).')';
+        } else {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource. ';
+            exit;
+        }
     }
 
     public function scheduleAction()
@@ -254,11 +282,27 @@ class ApiController extends Zend_Controller_Action
 
         if(Application_Model_Preference::GetDoSoundCloudUpload())
         {
-            $show = new Show($show_inst->getShowId());
-            $description = $show->getDescription();
+            for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
 
-            $soundcloud = new ATSoundcloud();
-            $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description);
+                $show = new Show($show_inst->getShowId());
+                $description = $show->getDescription();
+                $hosts = $show->getHosts();
+
+                try {
+                    $soundcloud = new ATSoundcloud();
+                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $hosts);
+                    $show_inst->setSoundCloudFileId($soundcloud_id);
+                    break;
+                }
+                catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+                    $code = $e->getHttpCode();
+                    if(!in_array($code, array(0, 100))) {
+                        break;
+                    }
+                }
+
+                sleep($CC_CONFIG['soundcloud-connection-wait']);
+            }
         }
 
         $this->view->id = $file->getId(); 

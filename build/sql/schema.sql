@@ -31,27 +31,6 @@ CREATE INDEX "cc_access_parent_idx" ON "cc_access" ("parent");
 CREATE INDEX "cc_access_token_idx" ON "cc_access" ("token");
 
 -----------------------------------------------------------------------------
--- cc_backup
------------------------------------------------------------------------------
-
-DROP TABLE "cc_backup" CASCADE;
-
-
-CREATE TABLE "cc_backup"
-(
-	"token" VARCHAR(64)  NOT NULL,
-	"sessionid" VARCHAR(64)  NOT NULL,
-	"status" VARCHAR(32)  NOT NULL,
-	"fromtime" TIMESTAMP  NOT NULL,
-	"totime" TIMESTAMP  NOT NULL,
-	PRIMARY KEY ("token")
-);
-
-COMMENT ON TABLE "cc_backup" IS '';
-
-
-SET search_path TO public;
------------------------------------------------------------------------------
 -- cc_files
 -----------------------------------------------------------------------------
 
@@ -190,6 +169,7 @@ CREATE TABLE "cc_show_instances"
 	"rebroadcast" INT2 default 0,
 	"instance_id" INTEGER,
 	"file_id" INTEGER,
+	"soundcloud_id" INTEGER,
 	PRIMARY KEY ("id")
 );
 
@@ -215,7 +195,7 @@ CREATE TABLE "cc_show_days"
 	"repeat_type" INT2  NOT NULL,
 	"next_pop_date" DATE,
 	"show_id" INTEGER  NOT NULL,
-	"record" INT2,
+	"record" INT2 default 0,
 	PRIMARY KEY ("id")
 );
 
@@ -440,53 +420,6 @@ COMMENT ON TABLE "cc_subjs" IS '';
 
 
 SET search_path TO public;
------------------------------------------------------------------------------
--- cc_trans
------------------------------------------------------------------------------
-
-DROP TABLE "cc_trans" CASCADE;
-
-
-CREATE TABLE "cc_trans"
-(
-	"id" serial  NOT NULL,
-	"trtok" CHAR(16)  NOT NULL,
-	"direction" VARCHAR(128)  NOT NULL,
-	"state" VARCHAR(128)  NOT NULL,
-	"trtype" VARCHAR(128)  NOT NULL,
-	"lock" CHAR(1) default 'N' NOT NULL,
-	"target" VARCHAR(255),
-	"rtrtok" CHAR(16),
-	"mdtrtok" CHAR(16),
-	"gunid" CHAR(32),
-	"pdtoken" INT8,
-	"url" VARCHAR(255),
-	"localfile" VARCHAR(255),
-	"fname" VARCHAR(255),
-	"title" VARCHAR(255),
-	"expectedsum" CHAR(32),
-	"realsum" CHAR(32),
-	"expectedsize" INTEGER,
-	"realsize" INTEGER,
-	"uid" INTEGER,
-	"errmsg" VARCHAR(255),
-	"jobpid" INTEGER,
-	"start" TIMESTAMP,
-	"ts" TIMESTAMP,
-	PRIMARY KEY ("id"),
-	CONSTRAINT "cc_trans_id_idx" UNIQUE ("id"),
-	CONSTRAINT "cc_trans_token_idx" UNIQUE ("pdtoken"),
-	CONSTRAINT "cc_trans_trtok_idx" UNIQUE ("trtok")
-);
-
-COMMENT ON TABLE "cc_trans" IS '';
-
-
-SET search_path TO public;
-CREATE INDEX "cc_trans_gunid_idx" ON "cc_trans" ("gunid");
-
-CREATE INDEX "cc_trans_state_idx" ON "cc_trans" ("state");
-
 ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");

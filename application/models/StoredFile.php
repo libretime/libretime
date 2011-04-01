@@ -1481,9 +1481,7 @@ class StoredFile {
     public function getFileUrl()
     {
         global $CC_CONFIG;
-        return "http://".$CC_CONFIG["storageUrlHost"]
-        .$CC_CONFIG["apiPath"]."get-media/file/"
-        .$this->gunid.".".$this->getFileExtension();
+        return $this->gunid.".".$this->getFileExtension();
     }
 
     /**

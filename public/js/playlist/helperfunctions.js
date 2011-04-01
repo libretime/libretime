@@ -134,7 +134,7 @@ function convertDateToPosixTime(s){
     } else
         sec = time[2];
 
-	return Date.UTC(year, month, day, hour, minute, sec, msec);
+	return Date.UTC(year, month-1, day, hour, minute, sec, msec);
 }
 
 function getFileExt(filename){

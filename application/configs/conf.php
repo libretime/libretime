@@ -1,98 +1,56 @@
 <?php
+/* THIS FILE IS NOT MEANT FOR CUSTOMIZING.
+ * PLEASE EDIT THE FOLLOWING TO CHANGE YOUR CONFIG:
+ * /etc/airtime/airtime.conf
+ * /etc/airtime/pypo.cfg
+ * /etc/airtime/recorder.cfg
+ */
+ 
 define('AIRTIME_VERSION', '1.7.0-alpha');
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
 
-// These are the default values for the config.
 global $CC_CONFIG;
 $values = load_airtime_config();
 
-// **********************************
-// ***** START CUSTOMIZING HERE *****
-// **********************************
-
-// Set the location where you want to store all of your audio files.
-//
-// For example:
-// $baseFilesDir = '/home/john/radio-files';
-$baseFilesDir = __DIR__.'/../../files';
-
 $CC_CONFIG = array(
 
-    // Set the URL of your installation
- 	'storageUrlHost'        => 'localhost',
-    'storageUrlPort'        => 80,
-
     // Name of the web server user
-    'webServerUser' => 'www-data',
+    'webServerUser' => $values['general']['webServerUser'],
 
-    'rabbitmq' => array("host" => "127.0.0.1",
-                        "port" => "5672",
-                        "user" => "guest",
-                        "password" => "guest",
-                        "vhost" => "/"),
+    'rabbitmq' => $values['rabbitmq'],
 
-    // ***********************************************************************
-	// STOP CUSTOMIZING HERE
-	//
-	// You don't need to touch anything below this point.
-	// ***********************************************************************
-
-    'baseFilesDir' => $baseFilesDir,
+    'baseFilesDir' => $values['general']['baseFilesDir'],
     // main directory for storing binary media files
-    'storageDir'    =>  "$baseFilesDir/stor",
+    'storageDir'    =>  $values['general']['baseFilesDir']."/stor",
 
 	// Database config
-    'dsn' => $values['database'],
+    'dsn' => array(
+                'username'      => $values['database']['dbuser'],
+                'password'      => $values['database']['dbpass'],
+                'hostspec'      => $values['database']['host'],
+                'phptype'       => 'pgsql',
+                'database'      => $values['database']['dbname']),
 
     // prefix for table names in the database
     'tblNamePrefix' => 'cc_',
 
     /* ================================================ storage configuration */
 
-    'apiKey' => $values['api_key'],
+    'apiKey' => array($values['general']['api_key']),
     'apiPath' => '/api/',
 
     'soundcloud-client-id' => '2CLCxcSXYzx7QhhPVHN4A',
     'soundcloud-client-secret' => 'pZ7beWmF06epXLHVUP1ufOg2oEnIt9XhE8l8xt0bBs',
+
+    'soundcloud-connection-retries' => $values['soundcloud']['connection_retries'],
+    'soundcloud-connection-wait' => $values['soundcloud']['time_between_retries'], 
 
     "rootDir" => __DIR__."/../..",
     'pearPath'      =>  dirname(__FILE__).'/../../library/pear',
     'zendPath'      =>  dirname(__FILE__).'/../../library/Zend',
     'phingPath'      =>  dirname(__FILE__).'/../../library/phing',
 
-    // name of admin group
-    //'AdminsGr'      => 'Admins',
-
-    // name of station preferences group
-//    'StationPrefsGr'=> 'StationPrefs',
-
-    // name of 'all users' group
-    //'AllGr'         => 'All',
-
-    /* ==================================== application-specific configuration */
-//    'objtypes'      => array(
-//        'Storage'       => array(/*'Folder',*/ 'File' /*, 'Replica'*/),
-//        'File'          => array(),
-//        'audioclip'     => array(),
-//        'playlist'      => array(),
-//    ),
-//    'allowedActions'=> array(
-//        'File'          => array('editPrivs', 'write', 'read'),
-//        'audioclip'     => array('editPrivs', 'write', 'read'),
-//        'playlist'      => array('editPrivs', 'write', 'read'),
-//    ),
-//    'allActions'    =>  array(
-//        'editPrivs', 'write', 'read', 'subjects'
-//    ),
-
-    /* =================================================== cron configuration */
-    'cronUserName'      => 'www-data',
-#    'lockfile'          => dirname(__FILE__).'/cron/cron.lock',
-    'lockfile'     =>  dirname(__FILE__).'/stor/buffer/cron.lock',
-    'cronfile'          => dirname(__FILE__).'/cron/croncall.php',
-    'paramdir'          => dirname(__FILE__).'/cron/params',
-//    'systemPrefId' => "0", // ID for system prefs in prefs table
 );
 
 // Add database table names
@@ -119,11 +77,6 @@ $CC_CONFIG['permSequence'] = $CC_CONFIG['permTable'].'_id';
 $CC_CONFIG['subjSequence'] = $CC_CONFIG['subjTable'].'_id';
 $CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
 
-// System users/groups - they cannot be deleted
-//$CC_CONFIG['sysSubjs'] = array(
-//    'root', /*$CC_CONFIG['AdminsGr'],*/ /*$CC_CONFIG['AllGr'],*/ $CC_CONFIG['StationPrefsGr']
-//);
-
 // Add libs to the PHP path
 $old_include_path = get_include_path();
 set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
@@ -131,15 +84,6 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 					.PATH_SEPARATOR.$old_include_path);
 
 function load_airtime_config(){
-	$ini_array = parse_ini_file(dirname(__FILE__).'/../../build/airtime.conf', true);
-
-	return array(
-            'database' => array(
-                'username'      => $ini_array['database']['dbuser'],
-                'password'      => $ini_array['database']['dbpass'],
-                'hostspec'      => $ini_array['database']['host'],
-                'phptype'       => 'pgsql',
-                'database'      => $ini_array['database']['dbname']),
-            'api_key' => array($ini_array['general']['api_key'])
-        );
+	$ini_array = parse_ini_file('/etc/airtime/airtime.conf', true);
+    return $ini_array;
 }

@@ -117,11 +117,33 @@ class Application_Model_Preference
     }
 
     public static function SetSoundCloudPassword($password) {
-        Application_Model_Preference::SetValue("soundcloud_password", $password);
+        if (strlen($password) > 0)
+            Application_Model_Preference::SetValue("soundcloud_password", $password);
     }
 
     public static function GetSoundCloudPassword() {
         return Application_Model_Preference::GetValue("soundcloud_password");
+    }
+
+    public static function SetSoundCloudTags($tags) {
+        Application_Model_Preference::SetValue("soundcloud_tags", $tags);
+    }
+
+    public static function GetSoundCloudTags() {
+        return Application_Model_Preference::GetValue("soundcloud_tags");
+    }
+
+    public static function SetAllow3rdPartyApi($bool) {
+        Application_Model_Preference::SetValue("third_party_api", $bool);
+    }
+
+    public static function GetAllow3rdPartyApi() {
+        $val = Application_Model_Preference::GetValue("third_party_api");
+        if (strlen($val) == 0){
+            return "0";
+        } else {
+            return $val;
+        }
     }
 
 }

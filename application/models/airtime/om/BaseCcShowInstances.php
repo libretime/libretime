@@ -75,6 +75,12 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	protected $file_id;
 
 	/**
+	 * The value for the soundcloud_id field.
+	 * @var        int
+	 */
+	protected $soundcloud_id;
+
+	/**
 	 * @var        CcShow
 	 */
 	protected $aCcShow;
@@ -259,6 +265,16 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	public function getDbRecordedFile()
 	{
 		return $this->file_id;
+	}
+
+	/**
+	 * Get the [soundcloud_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbSoundCloudId()
+	{
+		return $this->soundcloud_id;
 	}
 
 	/**
@@ -492,6 +508,26 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	} // setDbRecordedFile()
 
 	/**
+	 * Set the value of [soundcloud_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbSoundCloudId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->soundcloud_id !== $v) {
+			$this->soundcloud_id = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::SOUNDCLOUD_ID;
+		}
+
+		return $this;
+	} // setDbSoundCloudId()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -539,6 +575,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$this->rebroadcast = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
 			$this->instance_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
 			$this->file_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+			$this->soundcloud_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -547,7 +584,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 8; // 8 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 9; // 9 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowInstances object", $e);
@@ -968,6 +1005,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			case 7:
 				return $this->getDbRecordedFile();
 				break;
+			case 8:
+				return $this->getDbSoundCloudId();
+				break;
 			default:
 				return null;
 				break;
@@ -1000,6 +1040,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$keys[5] => $this->getDbRebroadcast(),
 			$keys[6] => $this->getDbOriginalShow(),
 			$keys[7] => $this->getDbRecordedFile(),
+			$keys[8] => $this->getDbSoundCloudId(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
@@ -1066,6 +1107,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			case 7:
 				$this->setDbRecordedFile($value);
 				break;
+			case 8:
+				$this->setDbSoundCloudId($value);
+				break;
 		} // switch()
 	}
 
@@ -1098,6 +1142,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if (array_key_exists($keys[5], $arr)) $this->setDbRebroadcast($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setDbOriginalShow($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbRecordedFile($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbSoundCloudId($arr[$keys[8]]);
 	}
 
 	/**
@@ -1117,6 +1162,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowInstancesPeer::REBROADCAST)) $criteria->add(CcShowInstancesPeer::REBROADCAST, $this->rebroadcast);
 		if ($this->isColumnModified(CcShowInstancesPeer::INSTANCE_ID)) $criteria->add(CcShowInstancesPeer::INSTANCE_ID, $this->instance_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::FILE_ID)) $criteria->add(CcShowInstancesPeer::FILE_ID, $this->file_id);
+		if ($this->isColumnModified(CcShowInstancesPeer::SOUNDCLOUD_ID)) $criteria->add(CcShowInstancesPeer::SOUNDCLOUD_ID, $this->soundcloud_id);
 
 		return $criteria;
 	}
@@ -1185,6 +1231,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$copyObj->setDbRebroadcast($this->rebroadcast);
 		$copyObj->setDbOriginalShow($this->instance_id);
 		$copyObj->setDbRecordedFile($this->file_id);
+		$copyObj->setDbSoundCloudId($this->soundcloud_id);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1676,6 +1723,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$this->rebroadcast = null;
 		$this->instance_id = null;
 		$this->file_id = null;
+		$this->soundcloud_id = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

@@ -32,7 +32,7 @@ except Exception, e:
 
 # loading config file
 try:
-    config = ConfigObj('config.cfg')
+    config = ConfigObj('/etc/airtime/recorder.cfg')
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
@@ -62,6 +62,7 @@ class ShowRecorder(Thread):
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
         command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
+        #-ge:0.1,0.1,0,-1
         args = command.split(" ")
 
         print "starting record"
@@ -145,6 +146,10 @@ class Record():
     def get_shows(self):
 
         shows = self.api_client.get_shows_to_record()
+        if shows is not None:
+            shows = shows[u'shows']
+        else:
+            shows = []
 
         if len(shows):
             self.process_shows(shows)

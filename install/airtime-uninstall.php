@@ -5,22 +5,17 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 
-// Do not allow remote execution.
-$arr = array_diff_assoc($_SERVER, $_ENV);
-if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
-    header("HTTP/1.1 400");
-    header("Content-type: text/plain; charset=UTF-8");
-    echo "400 Not executable".PHP_EOL;
-    exit;
-}
+require_once(dirname(__FILE__).'/include/AirtimeIni.php');
+// Need to check that we are superuser before running this.
+AirtimeIni::ExitIfNotRoot();
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
-require_once(dirname(__FILE__).'/installInit.php');
+require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
-// Need to check that we are superuser before running this.
-AirtimeInstall::ExitIfNotRoot();
 
 AirtimeInstall::RemoveSymlinks();
+
+echo "Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
 
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
 //------------------------------------------------------------------------
@@ -80,7 +75,7 @@ if ($results == 0) {
 // Delete files
 //------------------------------------------------------------------------
 AirtimeInstall::DeleteFilesRecursive($CC_CONFIG['storageDir']);
-
+AirtimeIni::RemoveIniFiles();
 
 $command = "python ".__DIR__."/../python_apps/pypo/install/pypo-uninstall.py";
 system($command);

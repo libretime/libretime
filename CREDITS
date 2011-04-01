@@ -2,10 +2,29 @@
 CREDITS
 =======
 
+Version 1.7.0
+-------------
+Naomi Aro (naomi.aro@sourcefabric.org)
+  Role: Software Developer
+
+Martin Konecny (martin.konecny@sourcefabric.org)
+  Role: Software Developer
+
+Ofir Gal (ofir.gal@sourcefabric.org)
+  Role: QA
+
+Daniel James
+  Role: Documentor & QA
+
+Paul Baranowski (paul.baranowski@sourcefabric.org)
+  Role: Project Manager
+
+
 Version 1.6.1
 -------------
 Version 1.6.1 fixes a problem with playout being interrupted after 48 
 hours. It also fixes some security issues.
+
 
 Version 1.6.0 
 -------------
@@ -27,10 +46,13 @@ Naomi Aro (naomi.aro@sourcefabric.org)
     - Conversion to Propel DB backend
 
 Martin Konecny (martin.konecny@sourcefabric.org)
-  Role:Software Developer
+  Role: Software Developer
   Highlights:
     - New User Interface
     - Scheduler/Backend
+
+Ofir Gal (ofir.gal@sourcefabric.org)
+  Role: QA
 
 Daniel James
   Role: Documentor & QA
