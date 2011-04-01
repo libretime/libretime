@@ -14,9 +14,15 @@ require_once __DIR__.'/../../../library/propel/runtime/lib/Propel.php';
 
 Propel::init(__DIR__.'/../../configs/airtime-conf.php');
 
-
 AirtimeInstall::DbConnect(true);
+$sql = "DELETE FROM cc_show";
+$CC_DBC->query($sql);
+$sql = "DELETE FROM cc_show_days";
+$CC_DBC->query($sql);
+$sql = "DELETE FROM cc_show_instances";
+$CC_DBC->query($sql);
 
+/*
 // Create a playlist
 $playlist = new Playlist();
 $playlist->create("Calendar Load test playlist ".uniqid());
@@ -34,65 +40,64 @@ $result = $playlist->addAudioClip($storedFile2->getId());
 $result = $playlist->addAudioClip($storedFile2->getId());
 
 echo "Created playlist ".$playlist->getName()." with ID ".$playlist->getId()."\n";
-
+*/
 // Create the shows
 
-$data = array();
 
-$currentDate = date("Y\\-m\\-d");
-
-$year = date("Y");
-$month = date("m");
-$day = date("d");
-
-$nextDay = $currentDate;
-
-#echo $currentDate;
-$currentHour = date("H");
-$setHour = $currentHour + 1;
-
-$showNumber = 1;
-for ($days=1; $days<100; $days=$days+1)
+function createTestShow($showNumber, $showTime, $duration = "1:00")
 {
-    // Adding shows until the end of the day
-    while ($setHour < 24)
-    {
-      echo 'Adding show: '.$nextDay. '   '.$setHour.":00\n";
-      $data['add_show_name'] = 'automated show '.$showNumber;
-      $data['add_show_start_date'] = $nextDay;
-      $data['add_show_start_time'] = $setHour.':00';
-      $showNumber = $showNumber + 1;
-      $data['add_show_duration'] = '1:00';
-      $data['add_show_no_end'] = 0;
-      $data['add_show_repeats'] = 0;
-      $data['add_show_description'] = 'automated show';
-      $data['add_show_url'] = 'http://www.OfirGal.com';
-      $data['add_show_color'] = "";
-      $data['add_show_background_color'] = "";
-      $data['add_show_record'] = 0;
-      $data['add_show_hosts'] ="";
-      $showId = Show::create($data);
-      Show::populateShowUntil($showId, "2012-01-01 00:00:00");
+    $data = array();
+    $strTime = $showTime->format("Y-m-d H:i");
+    echo "Adding show: $strTime\n";
+    $data['add_show_name'] = 'automated show '.$showNumber;
+    $data['add_show_start_date'] = $showTime->format("Y-m-d");
+    $data['add_show_start_time'] = $showTime->format("H:i");
+    $data['add_show_duration'] = $duration;
+    $data['add_show_no_end'] = 0;
+    $data['add_show_repeats'] = 0;
+    $data['add_show_description'] = 'automated show';
+    $data['add_show_url'] = 'http://www.OfirGal.com';
+    $data['add_show_color'] = "";
+    $data['add_show_background_color'] = "";
+    $data['add_show_record'] = 0;
+    $data['add_show_hosts'] ="";
+    $showId = Show::create($data);
+    //echo "show created, ID: $showId\n";
 
-      // populating the show with a playlist
-      $show = new ShowInstance($showId);
-      $show->scheduleShow(array($playlist->getId()));
-
-      $setHour = $setHour + 1;
-    }
-    // set the next day
-    $setHour = 0;
-    if ($day<30) {
-      $day = $day + 1;
-    } else {
-      $day = 1;
-      if ($month<12)
-      {
-        $month = $month + 1;
-      } else {
-        $month = 1;
-        $year = $year + 1;
-      }
-    }
-    $nextDay = $year."-".$month."-".$day;
+    // populating the show with a playlist
+    $instances = Show::getShows($showTime->format("Y-m-d H:i:s"), $showTime->format("Y-m-d H:i:s"));
+    $instance = array_pop($instances);
+    $show = new ShowInstance($instance["instance_id"]);
+    //echo "Adding playlist to show instance ".$show->getShowInstanceId()."\n";
+    $show->scheduleShow(array(1));
+    //echo "done\n";
+    //$show->scheduleShow(array($playlist->getId()));
 }
+
+$showTime = new DateTime();
+
+$resolution = "minute";
+$showNumber = 1;
+$numberOfDays = 0;
+$numberOfHours = 1;
+$endDate = new DateTime();
+$endDate->add(new DateInterval("P".$numberOfDays."DT".$numberOfHours."H"));
+echo "End date: ".$endDate->format("Y-m-d H:i")."\n";
+
+while ($showTime < $endDate) {
+    echo $showTime->format("Y-m-d H:i")." < " .$endDate->format("Y-m-d H:i")."\n";
+    if ($resolution == "minute") {
+        createTestShow($showNumber, $showTime, "0:01");	
+        $showTime->add(new DateInterval("PT1M"));
+    } elseif ($resolution == "hour") {
+        createTestShow($showNumber, $showTime);	
+        $showTime->add(new DateInterval("PT1H"));
+    }
+    $showNumber = $showNumber + 1;
+}
+RabbitMq::PushScheduleFinal();
+
+
+
+
+
