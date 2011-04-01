@@ -72,6 +72,9 @@ class PypoPush(Thread):
 
         schedule = self.schedule
         playlists = self.playlists
+
+        logger.debug('schedule %s' % json.dumps(schedule))
+        logger.debug('playlists %s' % json.dumps(playlists))
         
         currently_on_air = False
         if schedule:
@@ -112,7 +115,7 @@ class PypoPush(Thread):
                         schedule_tracker = open(self.schedule_tracker_file, "w")
                         pickle.dump(playedItems, schedule_tracker)
                         schedule_tracker.close()
-                        logger.debug("Wrote schedule to disk: "+str(json.dumps(playedItems)))
+                        #logger.debug("Wrote schedule to disk: "+str(json.dumps(playedItems)))
 
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
@@ -172,9 +175,10 @@ class PypoPush(Thread):
             logger.debug("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
             tn.write(("vars.pypo_data %s\n"%str(liquidsoap_data["schedule_id"])).encode('latin-1'))
 
+            logger.debug('Preparing to push playlist %s' % pkey)
             for item in playlist:
                 annotate = str(item['annotate'])
-                logger.debug(annotate)
+                #logger.debug(annotate)
                 tn.write(('queue.push %s\n' % annotate).encode('latin-1'))
                 tn.write(('vars.show_name %s\n' % item['show_name']).encode('latin-1'))
 
