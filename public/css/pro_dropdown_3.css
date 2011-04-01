@@ -53,7 +53,7 @@ way to fit your requirements.
 	background:url(images/down_arrow.png) no-repeat right 50%;
 
 }
-#nav li:hover a.top_link {
+#nav li:hover a.top_link, #nav li.active a.top_link, #nav li.active:hover a.top_link {
 	color:#fff;
 	background:#000;
 	-moz-border-radius: 3px;

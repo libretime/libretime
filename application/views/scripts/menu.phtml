@@ -1,7 +1,7 @@
 <ul id="nav">
 <?php foreach ($this->container as $page) : ?>
     <?php if($this->navigation()->accept($page)) : ?>
-	    <li class="top">
+	    <li class="top <?php if($page->isActive(true)){echo 'active';} ?>">
 		    <?php if($page->hasPages()) : ?>
 		    <a class="top_link" href="<?php echo $page->getHref(); ?>">
         		<span class="down"><?php echo $page->getLabel(); ?></span>
