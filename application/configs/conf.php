@@ -20,9 +20,9 @@ $CC_CONFIG = array(
 
     'rabbitmq' => $values['rabbitmq'],
 
-    'baseFilesDir' => $values['general']['baseFilesDir'],
+    'baseFilesDir' => $values['general']['base_files_dir'],
     // main directory for storing binary media files
-    'storageDir'    =>  $values['general']['baseFilesDir']."/stor",
+    'storageDir'    =>  $values['general']['base_files_dir']."/stor",
 
 	// Database config
     'dsn' => array(
