@@ -64,6 +64,10 @@ function setAddShowEvents() {
 
     if(!form.find("#add_show_repeats").attr('checked')) {
         form.find("#schedule-show-when > fieldset:last").hide();
+        $("#add_show_rebroadcast_relative").hide();
+    }
+    else {
+        $("#add_show_rebroadcast_absolute").hide();
     }
 
     if(!form.find("#add_show_record").attr('checked')) {
@@ -82,12 +86,12 @@ function setAddShowEvents() {
         if(form.find("#add_show_rebroadcast").attr('checked')) {
 
             if($(this).attr('checked')){
-                form.find("#schedule-record-rebroadcast > fieldset:eq(1)").hide();
-                form.find("#schedule-record-rebroadcast > fieldset:last").show();
+                form.find("#add_show_rebroadcast_absolute").hide();
+                form.find("#add_show_rebroadcast_relative").show();
             }
             else {
-                form.find("#schedule-record-rebroadcast > fieldset:eq(1)").show();
-                form.find("#schedule-record-rebroadcast > fieldset:last").hide();
+                form.find("#add_show_rebroadcast_absolute").show();
+                form.find("#add_show_rebroadcast_relative").hide();
             }
         }
     });
@@ -100,10 +104,10 @@ function setAddShowEvents() {
     form.find("#add_show_rebroadcast").click(function(){
         $(this).blur();
         if($(this).attr('checked') && !form.find("#add_show_repeats").attr('checked')) {
-            form.find("#schedule-record-rebroadcast > fieldset:eq(1)").show();
+            form.find("#add_show_rebroadcast_absolute").show();
         }
         else if($(this).attr('checked') && form.find("#add_show_repeats").attr('checked')) {
-            form.find("#schedule-record-rebroadcast > fieldset:last").show();
+            form.find("#add_show_rebroadcast_relative").show();
         }
         else {
             form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
@@ -247,6 +251,14 @@ function showErrorSections() {
     }
     if($("#schedule-show-style .errors").length > 0) {
         $("#schedule-show-style").show();
+    }
+    if($("#add_show_rebroadcast_absolute .errors").length > 0) {
+        $("#schedule-record-rebroadcast").show();
+        $("#add_show_rebroadcast_absolute").show();
+    }
+    if($("#add_show_rebroadcast_relative .errors").length > 0) {
+        $("#schedule-record-rebroadcast").show();
+        $("#add_show_rebroadcast_relative").show();
     }
 }
 

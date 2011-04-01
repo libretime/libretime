@@ -355,6 +355,10 @@ class ScheduleController extends Zend_Controller_Action
         $data['add_show_hosts'] =  $this->_getParam('hosts');
         $data['add_show_day_check'] =  $this->_getParam('days');
 
+        if($data['add_show_day_check'] == "") {
+            $data['add_show_day_check'] = null;
+        }
+
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
 		$formWhen = new Application_Form_AddShowWhen();
@@ -389,20 +393,40 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         if($data["add_show_repeats"]) {
+     
 		    $repeats = $formRepeats->isValid($data);
             if($repeats) {
                 $repeats = $formRepeats->checkReliantFields($data);
             }
+
+            $formAbsoluteRebroadcast->reset();
+            //make it valid, results don't matter anyways.
+            $rebroadAb = 1;
+
+            if ($data["add_show_rebroadcast"]) {  
+                $rebroad = $formRebroadcast->isValid($data);
+                if($rebroad) {
+                    $rebroad = $formRebroadcast->checkReliantFields($data);
+                }
+            }
         }
         else {
-            $repeats = 1; //make it valid, results don't matter anyways.
+            $formRebroadcast->reset();
+             //make it valid, results don't matter anyways.
+            $repeats = 1;
+            $rebroad = 1;
+
+            if ($data["add_show_rebroadcast"]) { 
+                $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
+                if($rebroadAb) {
+                    $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
+                }
+            }
         }
 
 		$who = $formWho->isValid($data);
 		$style = $formStyle->isValid($data);
-        $record = $formRecord->isValid($data);
-        $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
-        $rebroad = $formRebroadcast->isValid($data);
+        $record = $formRecord->isValid($data);        
 
         if ($what && $when && $repeats && $who && $style && $record && $rebroadAb && $rebroad) {
 
@@ -421,6 +445,7 @@ class ScheduleController extends Zend_Controller_Action
                                       'add_show_duration' => '1:00'));
 		    $formRepeats->reset();
             $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
+
 		    $formStyle->reset();
             $formRecord->reset();
             $formAbsoluteRebroadcast->reset();
