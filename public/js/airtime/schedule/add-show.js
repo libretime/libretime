@@ -12,6 +12,7 @@ function startDpSelect(dateText, inst) {
 	date = new Date(time[0], time[1] - 1, time[2]);
 
 	$("#add_show_end_date").datepicker("option", "minDate", date);
+    $('input[name^="add_show_rebroadcast_absolute_date"]').datepicker("option", "minDate", date);
 }
 
 function endDpSelect(dateText, inst) {
@@ -144,7 +145,7 @@ function setAddShowEvents() {
     });
 
     form.find('input[name^="add_show_rebroadcast_absolute_date"]').datepicker({
-		//minDate: new Date(),
+		minDate: new Date(),
 		dateFormat: 'yy-mm-dd' 
 	});
     form.find('input[name^="add_show_rebroadcast_absolute_time"], input[name^="add_show_rebroadcast_time"]').timepicker({

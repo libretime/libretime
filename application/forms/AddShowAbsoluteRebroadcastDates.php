@@ -36,8 +36,8 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             'value'     => '',
             'filters'    => array('StringTrim'),
 			'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('HH:mm'))
+        		array('date', false, array('HH:mm')),
+                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
     		),
             'decorators' => array(
                 'ViewHelper'
@@ -69,8 +69,8 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             'value'     => '',
             'filters'    => array('StringTrim'),
 			'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('HH:mm'))
+        		array('date', false, array('HH:mm')),
+                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
     		),
             'decorators' => array(
                 'ViewHelper'
@@ -102,8 +102,8 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             'value'     => '',
             'filters'    => array('StringTrim'),
 			'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('HH:mm'))
+        		array('date', false, array('HH:mm')),
+                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
     		),
             'decorators' => array(
                 'ViewHelper'
@@ -135,8 +135,8 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             'value'     => '',
             'filters'    => array('StringTrim'),
 			'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('HH:mm'))
+        		array('date', false, array('HH:mm')),
+                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
     		),
             'decorators' => array(
                 'ViewHelper'
@@ -168,8 +168,8 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             'value'     => '',
             'filters'    => array('StringTrim'),
 			'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('HH:mm'))
+        		array('date', false, array('HH:mm')),
+                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
     		),
             'decorators' => array(
                 'ViewHelper'

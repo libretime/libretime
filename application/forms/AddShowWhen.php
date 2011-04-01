@@ -31,7 +31,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'filters'    => array('StringTrim'),
 			'validators' => array(
 				'NotEmpty',
-        		array('date', false, array('HH:mm'))
+        		array('date', false, array('HH:mm')),
+                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
     		) 
         ));
 
