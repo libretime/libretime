@@ -409,6 +409,9 @@ class ScheduleController extends Zend_Controller_Action
                     $rebroad = $formRebroadcast->checkReliantFields($data);
                 }
             }
+            else {
+                $rebroad = 1;
+            }
         }
         else {
             $formRebroadcast->reset();
@@ -421,6 +424,9 @@ class ScheduleController extends Zend_Controller_Action
                 if($rebroadAb) {
                     $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
                 }
+            }
+            else {
+                $rebroadAb = 1;
             }
         }
 

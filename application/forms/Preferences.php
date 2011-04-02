@@ -82,6 +82,56 @@ class Application_Form_Preferences extends Zend_Form
             'value' => Application_Model_Preference::GetSoundCloudTags()
 		));
 
+        //SoundCloud default genre
+        $this->addElement('text', 'SoundCloudGenre', array(
+            'class'      => 'input_text',
+            'label'      => 'Default Genre:',
+            'required'   => false,
+            'filters'    => array('StringTrim'),
+            'value' => Application_Model_Preference::GetSoundCloudGenre()
+        ));
+
+        $select = new Zend_Form_Element_Select('SoundCloudTrackType');
+        $select->setLabel('Default Track Type:');
+        $select->setAttrib('class', 'input_select');
+        $select->setMultiOptions(array(
+                "" => "",
+                "original" => "Original",
+                "remix" => "Remix",
+                "live" => "Live",
+                "recording" => "Recording",
+                "spoken" => "Spoken",
+                "podcast" => "Podcast",
+                "demo" => "Demo",
+                "in progress" => "Work in progress",
+                "stem" => "Stem",
+                "loop" => "Loop",
+                "sound effect" => "Sound Effect",
+                "sample" => "One Shot Sample",
+                "other" => "Other"
+            ));
+        $select->setRequired(false);
+        $select->setValue(Application_Model_Preference::GetSoundCloudTrackType());
+        $this->addElement($select);
+
+        $select = new Zend_Form_Element_Select('SoundCloudLicense');
+        $select->setLabel('Default License:');
+        $select->setAttrib('class', 'input_select');
+        $select->setMultiOptions(array(
+                "" => "",
+                "no-rights-reserved" => "The work is in the public domain",
+                "all-rights-reserved" => "All rights are reserved",
+                "cc-by" => "Creative Commons Attribution",
+                "cc-by-nc" => "Creative Commons Attribution Noncommercial",
+                "cc-by-nd" => "Creative Commons Attribution No Derivative Works",
+                "cc-by-sa" => "Creative Commons Attribution Share Alike",
+                "cc-by-nc-nd" => "Creative Commons Attribution Noncommercial Non Derivate Works",
+                "cc-by-nc-sa" => "Creative Commons Attribution Noncommercial Share Alike"
+            ));
+        $select->setRequired(false);
+        $select->setValue(Application_Model_Preference::GetSoundCloudLicense());
+        $this->addElement($select);
+
         $this->addElement('submit', 'submit', array(
             'class'    => 'ui-button ui-state-default',
             'ignore'   => true,

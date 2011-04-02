@@ -34,7 +34,10 @@ class PreferenceController extends Zend_Controller_Action
             Application_Model_Preference::SetDoSoundCloudUpload($values["UseSoundCloud"]);  
             Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
             Application_Model_Preference::SetSoundCloudPassword($values["SoundCloudPassword"]); 
-            Application_Model_Preference::SetSoundCloudTags($values["SoundCloudTags"]);                    
+            Application_Model_Preference::SetSoundCloudTags($values["SoundCloudTags"]);
+            Application_Model_Preference::SetSoundCloudGenre($values["SoundCloudGenre"]);
+            Application_Model_Preference::SetSoundCloudTrackType($values["SoundCloudTrackType"]);
+            Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);                       
             
             $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
         }

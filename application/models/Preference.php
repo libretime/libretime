@@ -133,6 +133,30 @@ class Application_Model_Preference
         return Application_Model_Preference::GetValue("soundcloud_tags");
     }
 
+    public static function SetSoundCloudGenre($genre) {
+        Application_Model_Preference::SetValue("soundcloud_genre", $genre);
+    }
+
+    public static function GetSoundCloudGenre() {
+        return Application_Model_Preference::GetValue("soundcloud_genre");
+    }
+
+    public static function SetSoundCloudTrackType($track_type) {
+        Application_Model_Preference::SetValue("soundcloud_tracktype", $track_type);
+    }
+
+    public static function GetSoundCloudTrackType() {
+        return Application_Model_Preference::GetValue("soundcloud_tracktype");
+    }
+
+    public static function SetSoundCloudLicense($license) {
+        Application_Model_Preference::SetValue("soundcloud_license", $license);
+    }
+
+    public static function GetSoundCloudLicense() {
+        return Application_Model_Preference::GetValue("soundcloud_license");
+    }
+
     public static function SetAllow3rdPartyApi($bool) {
         Application_Model_Preference::SetValue("third_party_api", $bool);
     }

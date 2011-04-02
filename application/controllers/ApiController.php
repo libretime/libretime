@@ -276,6 +276,8 @@ class ApiController extends Zend_Controller_Action
         $file = StoredFile::uploadFile($upload_dir);
 
         $show_instance  = $this->_getParam('show_instance');
+        $show_name  = $this->_getParam('show_name');
+        $start_time  = $this->_getParam('start_time');
 
         $show_inst = new ShowInstance($show_instance);
         $show_inst->setRecordedFile($file->getId());
@@ -288,9 +290,11 @@ class ApiController extends Zend_Controller_Action
                 $description = $show->getDescription();
                 $hosts = $show->getHosts();
 
+                $tags = array_merge($hosts, array($show_name));
+
                 try {
                     $soundcloud = new ATSoundcloud();
-                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $hosts);
+                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $start_time);
                     $show_inst->setSoundCloudFileId($soundcloud_id);
                     break;
                 }
