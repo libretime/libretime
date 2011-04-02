@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset id="add_show_rebroadcast_absolute">
     <dl>
     <dt id="add_show_hosts_rebroadcast_day-label" class="block-display">
         <label for="add_show_rebroadcast_day" class="optional">Choose Days:</label>
@@ -10,10 +10,21 @@
                 <?php echo $this->element->getElement('add_show_rebroadcast_absolute_date_'.$i) ?>
                 <span class="inline-text">@</span>
                 <?php echo $this->element->getElement('add_show_rebroadcast_absolute_time_'.$i) ?>
-                <?php if($this->element->getElement('add_show_rebroadcast_absolute_time_'.$i)->hasErrors()) : ?>
-                    <?php echo var_dump($this->element->getElement('add_show_rebroadcast_absolute_time_'.$i)->getMessages()); ?>
-                <?php endif; ?>
             </li>
+            <?php if(($this->element->getElement('add_show_rebroadcast_absolute_date_'.$i)->hasErrors()) 
+                  || ($this->element->getElement('add_show_rebroadcast_absolute_time_'.$i)->hasErrors())) : ?>
+                <ul class='errors'>
+                    <?php $errors = array_merge(
+                            $this->element->getElement('add_show_rebroadcast_absolute_date_'.$i)->getMessages(),
+                            $this->element->getElement('add_show_rebroadcast_absolute_time_'.$i)->getMessages()
+                            );
+                    ?> 
+
+                    <?php foreach($errors as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         <?php endfor; ?>
     </ul>
     </dd>          

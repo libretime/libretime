@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset id="add_show_rebroadcast_relative">
     <dl>
         <dt id="add_show_hosts_rebroadcast_repeat_day-label" class="block-display">
           <label for="add_show_rebroadcast_repeat_day" class="optional">Repeat Days:</label>
@@ -11,6 +11,21 @@
                 <span class="inline-text">@</span>
                 <?php echo $this->element->getElement('add_show_rebroadcast_time_'.$i) ?>
             </li>
+
+            <?php if(($this->element->getElement('add_show_rebroadcast_date_'.$i)->hasErrors()) 
+                  || ($this->element->getElement('add_show_rebroadcast_time_'.$i)->hasErrors())) : ?>
+                <ul class='errors'>
+                    <?php $errors = array_merge(
+                            $this->element->getElement('add_show_rebroadcast_date_'.$i)->getMessages(),
+                            $this->element->getElement('add_show_rebroadcast_time_'.$i)->getMessages()
+                            );
+                    ?> 
+
+                    <?php foreach($errors as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
             <?php endfor; ?>
           </ul>
         </dd>
