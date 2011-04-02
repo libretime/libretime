@@ -1268,6 +1268,9 @@ div.success{
     height: 28px;
     margin: 0 0 8px 0;
 }
+#schedule-add-show .button-bar.bottom {
+    margin: 16px 0 0 0;
+}
 	
 .schedule {
 	text-align:left;

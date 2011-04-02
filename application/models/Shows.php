@@ -274,7 +274,7 @@ class Show {
     {
         global $CC_DBC;
 
-        $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, description,
+        $sql = "SELECT starts, ends, record, rebroadcast, soundcloud_id, instance_id, show_id, name, description,
                 color, background_color, cc_show_instances.id AS instance_id
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id";
@@ -565,6 +565,7 @@ class Show {
         $event["showId"] = $show["show_id"];
         $event["record"] = intval($show["record"]);
         $event["rebroadcast"] = intval($show["rebroadcast"]);
+        $event["soundcloud_id"] = (is_null($show["soundcloud_id"]) ? -1 : $show["soundcloud_id"]);
 
 		foreach($options as $key=>$value) {
 			$event[$key] = $value;
@@ -1013,6 +1014,7 @@ class Show_DAL {
 		$sql = "SELECT"
         ." si.starts as show_starts,"
         ." si.ends as show_ends,"
+        ." si.rebroadcast as rebroadcast,"
         ." st.starts as item_starts,"
         ." st.ends as item_ends,"
         ." st.clip_length as clip_length,"
