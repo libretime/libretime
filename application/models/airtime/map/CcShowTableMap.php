@@ -41,6 +41,7 @@ class CcShowTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, '');
 		$this->addColumn('URL', 'DbUrl', 'VARCHAR', false, 255, '');
+		$this->addColumn('GENRE', 'DbGenre', 'VARCHAR', false, 255, '');
 		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', false, 512, null);
 		$this->addColumn('COLOR', 'DbColor', 'VARCHAR', false, 6, null);
 		$this->addColumn('BACKGROUND_COLOR', 'DbBackgroundColor', 'VARCHAR', false, 6, null);

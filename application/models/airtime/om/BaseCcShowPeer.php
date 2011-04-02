@@ -26,7 +26,7 @@ abstract class BaseCcShowPeer {
 	const TM_CLASS = 'CcShowTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 6;
+	const NUM_COLUMNS = 7;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -39,6 +39,9 @@ abstract class BaseCcShowPeer {
 
 	/** the column name for the URL field */
 	const URL = 'cc_show.URL';
+
+	/** the column name for the GENRE field */
+	const GENRE = 'cc_show.GENRE';
 
 	/** the column name for the DESCRIPTION field */
 	const DESCRIPTION = 'cc_show.DESCRIPTION';
@@ -65,12 +68,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbDescription', 'DbColor', 'DbBackgroundColor', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbDescription', 'dbColor', 'dbBackgroundColor', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::URL, self::DESCRIPTION, self::COLOR, self::BACKGROUND_COLOR, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'description', 'color', 'background_color', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::URL, self::GENRE, self::DESCRIPTION, self::COLOR, self::BACKGROUND_COLOR, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
 	);
 
 	/**
@@ -80,12 +83,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbDescription' => 3, 'DbColor' => 4, 'DbBackgroundColor' => 5, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbDescription' => 3, 'dbColor' => 4, 'dbBackgroundColor' => 5, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::URL => 2, self::DESCRIPTION => 3, self::COLOR => 4, self::BACKGROUND_COLOR => 5, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'DESCRIPTION' => 3, 'COLOR' => 4, 'BACKGROUND_COLOR' => 5, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'description' => 3, 'color' => 4, 'background_color' => 5, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbGenre' => 3, 'DbDescription' => 4, 'DbColor' => 5, 'DbBackgroundColor' => 6, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbGenre' => 3, 'dbDescription' => 4, 'dbColor' => 5, 'dbBackgroundColor' => 6, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::URL => 2, self::GENRE => 3, self::DESCRIPTION => 4, self::COLOR => 5, self::BACKGROUND_COLOR => 6, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
 	);
 
 	/**
@@ -160,6 +163,7 @@ abstract class BaseCcShowPeer {
 			$criteria->addSelectColumn(CcShowPeer::ID);
 			$criteria->addSelectColumn(CcShowPeer::NAME);
 			$criteria->addSelectColumn(CcShowPeer::URL);
+			$criteria->addSelectColumn(CcShowPeer::GENRE);
 			$criteria->addSelectColumn(CcShowPeer::DESCRIPTION);
 			$criteria->addSelectColumn(CcShowPeer::COLOR);
 			$criteria->addSelectColumn(CcShowPeer::BACKGROUND_COLOR);
@@ -167,6 +171,7 @@ abstract class BaseCcShowPeer {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.NAME');
 			$criteria->addSelectColumn($alias . '.URL');
+			$criteria->addSelectColumn($alias . '.GENRE');
 			$criteria->addSelectColumn($alias . '.DESCRIPTION');
 			$criteria->addSelectColumn($alias . '.COLOR');
 			$criteria->addSelectColumn($alias . '.BACKGROUND_COLOR');

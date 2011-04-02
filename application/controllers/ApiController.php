@@ -276,11 +276,12 @@ class ApiController extends Zend_Controller_Action
         $file = StoredFile::uploadFile($upload_dir);
 
         $show_instance  = $this->_getParam('show_instance');
-        $show_name  = $this->_getParam('show_name');
-        $start_time  = $this->_getParam('start_time');
-
         $show_inst = new ShowInstance($show_instance);
+
         $show_inst->setRecordedFile($file->getId());
+        $show_name = $show_inst->getName();
+        $show_genre = $show_inst->getGenre();
+        $show_start_time = $show_inst->getShowStart();
 
         if(Application_Model_Preference::GetDoSoundCloudUpload())
         {
@@ -294,7 +295,7 @@ class ApiController extends Zend_Controller_Action
 
                 try {
                     $soundcloud = new ATSoundcloud();
-                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $start_time);
+                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
                     $show_inst->setSoundCloudFileId($soundcloud_id);
                     break;
                 }

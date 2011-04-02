@@ -84,8 +84,7 @@ class ShowRecorder(Thread):
 
         # headers contains the necessary Content-Type and Content-Length
         # datagen is a generator object that yields the encoded parameters
-        datagen, headers = multipart_encode({"file": open(filepath, "rb"), 'name': filename, 'show_instance': self.show_instance, \
-                                'show_name': self.show_name, 'start_time': self.start_time})
+        datagen, headers = multipart_encode({"file": open(filepath, "rb"), 'name': filename, 'show_instance': self.show_instance})
 
         self.api_client.upload_recorded_show(datagen, headers)
 

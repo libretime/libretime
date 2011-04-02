@@ -155,6 +155,7 @@ class Show {
 		$show->setDbName($data['add_show_name']);
 		$show->setDbDescription($data['add_show_description']);
         $show->setDbUrl($data['add_show_url']);
+        $show->setDbGenre($data['add_show_genre']);
 		$show->setDbColor($data['add_show_color']);
 		$show->setDbBackgroundColor($data['add_show_background_color']);
 		$show->save();
@@ -614,6 +615,12 @@ class ShowInstance {
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
         return $show->getDbName();
+    }
+
+    public function getGenre()
+    {
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+        return $show->getDbGenre();
     }
 
     public function getShowStart()
