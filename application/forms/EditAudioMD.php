@@ -107,10 +107,10 @@ class Application_Form_EditAudioMD extends Zend_Form
 
         $this->addDisplayGroup(array('submit', 'cancel'), 'submitButtons', array( 
                 'decorators' => array( 
-                    'FormElements', 
-                    array('HtmlTag', array('tag' => 'dd', 'class' => 'element')), 
-            ), 
-        )); 
+                    'FormElements',
+                    'DtDdWrapper'
+                    )
+        ));
     }
 
 
