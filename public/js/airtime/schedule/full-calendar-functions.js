@@ -149,7 +149,7 @@ function viewDisplay( view ) {
 function eventRender(event, element, view) { 
 
     //only put progress bar on shows that aren't being recorded and are not a rebroadcast.
-	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0 && event.rebroadcast === 0) {
+	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0 /* && event.rebroadcast === 0 */) {
 		var div = $('<div/>');
 		div
 			.height('5px')
@@ -184,7 +184,16 @@ function eventRender(event, element, view) {
     if(view.name === 'month' && event.rebroadcast === 1) {
 		
 		$(element).find(".fc-event-title").after('<span class="small-icon rebroadcast"></span>');
-	}	
+	}
+
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id != -1 && event.record === 1) {
+		
+		$(element).find(".fc-event-time").after('<span class="small-icon soundcloud"></span>');
+	}
+    if(view.name === 'month' && event.soundcloud_id != -1 && event.record === 1) {
+		
+		$(element).find(".fc-event-title").after('<span class="small-icon soundcloud"></span>');
+	}
 
 	if(event.backgroundColor !== "") {
 		$(element)

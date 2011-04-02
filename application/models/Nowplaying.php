@@ -93,6 +93,27 @@ class Application_Model_Nowplaying
         return $data;
     }
 
+    public static function HandleRebroadcastShows($rows){
+        $newCopy = array();
+
+        $numRows = count($rows);
+        for ($i=0; $i<$numRows; $i++){
+            $currentRow = $rows[$i];
+            if ($currentRow["rebroadcast"] == 1 && !array_key_exists("group", $currentRow)){
+                $newRow = $currentRow;
+                unset($newRow['group']);
+                $newRow['item_starts'] = $newRow['show_starts'];
+                $newRow['item_ends'] = $newRow['show_ends'];
+
+                array_push($newCopy, $newRow);
+            } else {
+                array_push($newCopy, $currentRow);
+            }
+        }
+
+        return $newCopy;
+    }
+
     public static function GetDataGridData($viewType, $dateString){
 
         if ($viewType == "now"){
@@ -111,13 +132,12 @@ class Application_Model_Nowplaying
             $endCutoff = $date->getNowDayEndDiff();
         }
 
-
         $rows = Show_DAL::GetShowsInRange($timeNow, $startCutoff, $endCutoff);
         $rows = Application_Model_Nowplaying::FindBeginningOfShow($rows);
+        $rows = Application_Model_Nowplaying::HandleRebroadcastShows($rows);
         $rows = Application_Model_Nowplaying::FindGapAtEndOfShow($rows);
-        //$rows = FindGapsBetweenShows
+        //$rows = FindGapsBetweenShows()
         $data = Application_Model_Nowplaying::FilterRowsByDate($rows, $date, $startCutoff, $endCutoff);
-
 
         $date = new Application_Model_DateHelper;
         $timeNow = $date->getDate();
