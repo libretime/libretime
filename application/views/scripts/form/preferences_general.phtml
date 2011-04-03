@@ -1,0 +1,50 @@
+<fieldset class="padded">
+    <dl class="zend_form">
+
+        <dt id="stationName-label" class="block-display">
+            <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?></label>
+        </dt>
+        <dd id="stationName-element" class="block-display">
+            <?php echo $this->element->getElement('stationName') ?>
+        </dd>
+        <dt id="stationDefaultFade-label" class="block-display">
+            <label class="optional" for="stationDefaultFade"><?php echo $this->element->getElement('stationDefaultFade')->getLabel() ?></label>
+        </dt>
+        <dd id="stationDefaultFade-element" class="block-display">
+            <?php echo $this->element->getElement('stationDefaultFade') ?>
+        </dd>
+        <dt id="streamFormat-label" class="block-display">
+            <label class="optional"><?php echo $this->element->getElement('streamFormat')->getLabel() ?></label>
+        </dt>
+        <dd id="streamFormat-element" class="block-display radio-inline-list">
+            <?php $i=0; 
+                  $value = $this->element->getElement('streamFormat')->getValue();
+            ?>
+            <?php foreach ($this->element->getElement('streamFormat')->getMultiOptions() as $radio) : ?>
+                <label for="streamFormat-<?php echo $i ?>">
+                    <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?>/>
+                        <?php echo $radio ?>
+                    </input>
+                </label>
+                <?php $i = $i + 1; ?>
+            <?php endforeach; ?>
+        </dd>
+        <dt id="thirdPartyApi-label" class="block-display">
+            <label class="optional"><?php echo $this->element->getElement('thirdPartyApi')->getLabel() ?></label>
+        </dt>
+        <dd id="thirdPartyApi-element" class="block-display  radio-inline-list">
+            <?php $i=0; 
+                  $value = $this->element->getElement('thirdPartyApi')->getValue();
+            ?>
+            <?php foreach ($this->element->getElement('thirdPartyApi')->getMultiOptions() as $radio) : ?>
+                <label for="thirdPartyApi-<?php echo $i ?>">
+                    <input type="radio" value="<?php echo $i ?>" id="thirdPartyApi-<?php echo $i ?>" name="thirdPartyApi" <?php if($i == $value){echo 'checked="checked"';}?> />
+                        <?php echo $radio ?>
+                    </input>
+                </label>
+            <?php $i = $i + 1; ?>
+            <?php endforeach; ?> 
+       </dd>
+
+    </dl>
+</fieldset>
