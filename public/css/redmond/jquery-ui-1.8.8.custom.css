@@ -1085,7 +1085,7 @@ button.ui-button-icons-only {
 	padding-right: 2.1em;
 }
 /* no icon support for input elements, provide padding by default */
-input.ui-button, button.ui-button {
+input.ui-button {
 	padding: .4em 1em;
 }
 /*button icon element(s) */
@@ -1093,6 +1093,7 @@ input.ui-button, button.ui-button {
 	position: absolute;
 	top: 50%;
 	margin-top: -8px;
+	left: 0.2em;
 }
 .ui-button-icon-only .ui-icon {
 	left: 50%;
@@ -1117,10 +1118,12 @@ input.ui-button, button.ui-button {
 }
 
 /* workarounds */
-/*button.ui-button::-moz-focus-inner {
-border: 0;
-padding: 0;
-}*/
+
+button.ui-button.::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
  /* reset extra padding in Firefox */
 /*
  * jQuery UI Dialog 1.8.6
