@@ -1,9 +1,9 @@
-<form method="post" action="/Preference/update" enctype="application/x-www-form-urlencoded">
+<form method="<?php echo $this->element->getMethod() ?>" action="<?php echo $this->element->getAction() ?>" enctype="application/x-www-form-urlencoded">
 
     <?php echo $this->element->getSubform('preferences_general') ?>
 
     <h3 class="collapsible-header"><span class="arrow-icon"></span>SoundCloud settings</h3>
-    <div class="collapsible-content" id="soundcloud-settings" style="display: block;">
+    <div class="collapsible-content" id="soundcloud-settings" style="display: none;">
         <?php echo $this->element->getSubform('preferences_soundcloud') ?>
     </div>
 

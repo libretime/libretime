@@ -5,7 +5,8 @@ class Application_Form_Preferences extends Zend_Form
 
     public function init()
     {
-        $this->setAction('/Preference/update')->setMethod('post');
+        $this->setAction('/Preference');
+        $this->setMethod('post');
 
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences.phtml'))
