@@ -1060,7 +1060,8 @@ class Show_DAL {
         ." LEFT JOIN $CC_CONFIG[showTable] s"
 		." ON si.show_id = s.id"
         ." WHERE EXTRACT(DOW FROM si.starts) = $day"
-        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)";
+        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)"
+        ." ORDER BY si.starts";
 
         //echo $sql;
 
