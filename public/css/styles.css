@@ -1591,3 +1591,6 @@ dd.radio-inline-list, .preferences dd.radio-inline-list {
 .preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text {
     width: 99.5%;
 }
+.preferences dd#SoundCloudTags-element.block-display .input_text_area {
+    height: 120px;
+}
