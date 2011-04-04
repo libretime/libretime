@@ -148,8 +148,8 @@ function viewDisplay( view ) {
 
 function eventRender(event, element, view) { 
 
-    //only put progress bar on shows that aren't being recorded and are not a rebroadcast.
-	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0 /* && event.rebroadcast === 0 */) {
+    //only put progress bar on shows that aren't being recorded.
+	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0) {
 		var div = $('<div/>');
 		div
 			.height('5px')
@@ -168,15 +168,17 @@ function eventRender(event, element, view) {
 	}
 
     //add the record/rebroadcast icons if needed.
-    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1) {
+
+    //record icon (only if not on soundcloud, will always be true for future events)
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -1) {
 		
 		$(element).find(".fc-event-time").after('<span class="small-icon recording"></span>');
 	}
-    if(view.name === 'month' && event.record === 1) {
+    if(view.name === 'month' && event.record === 1 && event.soundcloud_id === -1) {
 		
 		$(element).find(".fc-event-title").after('<span class="small-icon recording"></span>');
 	}
-
+    //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
 		
 		$(element).find(".fc-event-time").after('<span class="small-icon rebroadcast"></span>');
@@ -185,12 +187,12 @@ function eventRender(event, element, view) {
 		
 		$(element).find(".fc-event-title").after('<span class="small-icon rebroadcast"></span>');
 	}
-
-    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id != -1 && event.record === 1) {
+    //soundcloud icon
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id !== -1 && event.record === 1) {
 		
 		$(element).find(".fc-event-time").after('<span class="small-icon soundcloud"></span>');
 	}
-    if(view.name === 'month' && event.soundcloud_id != -1 && event.record === 1) {
+    if(view.name === 'month' && event.soundcloud_id !== -1 && event.record === 1) {
 		
 		$(element).find(".fc-event-title").after('<span class="small-icon soundcloud"></span>');
 	}

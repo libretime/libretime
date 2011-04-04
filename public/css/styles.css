@@ -1511,6 +1511,11 @@ div.success{
 	background:url(images/icon_soundcloud.png) no-repeat 0 0;
 	width:21px;
 }
+.small-icon.progress {
+	background:url(images/upload-icon.gif) no-repeat;
+    background-color:black;
+    background-position:center;
+}
 .medium-icon {
 	display:block;
 	width:25px;

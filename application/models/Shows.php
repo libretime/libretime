@@ -648,6 +648,26 @@ class ShowInstance {
         return $showInstance->getDbSoundCloudId();
     }
 
+    public function getRecordedFile()
+    {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $file_id =  $showInstance->getDbRecordedFile();
+
+        if(isset($file_id)) {
+            $file =  StoredFile::Recall($file_id);
+
+            if (PEAR::isError($file)) {
+                return null;
+            }
+
+            if(file_exists($file->getRealFilePath())) {
+                return $file;
+            }
+        }
+        
+        return null;
+    }
+
     public function setShowStart($start)
     {
         $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
