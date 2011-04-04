@@ -97,7 +97,7 @@ class Application_Form_EditAudioMD extends Zend_Form
 		// Add the submit button
         $this->addElement('button', 'cancel', array(
             'ignore'   => true,
-            'class'    => 'ui-button ui-state-default',
+            'class'    => 'ui-button ui-state-default ui-button-text-only md-cancel',
             'label'    => 'Cancel',
             'onclick' => 'javascript:document.location="/Library"',
             'decorators' => array( 

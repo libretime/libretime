@@ -1594,3 +1594,8 @@ dd.radio-inline-list, .preferences dd.radio-inline-list {
 .preferences dd#SoundCloudTags-element.block-display .input_text_area {
     height: 120px;
 }
+
+/* HACK, to be removed after 1.7.0 */
+button.ui-button.md-cancel {
+        padding: .4em 1em;
+}
