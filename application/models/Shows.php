@@ -155,6 +155,7 @@ class Show {
 		$show->setDbName($data['add_show_name']);
 		$show->setDbDescription($data['add_show_description']);
         $show->setDbUrl($data['add_show_url']);
+        $show->setDbGenre($data['add_show_genre']);
 		$show->setDbColor($data['add_show_color']);
 		$show->setDbBackgroundColor($data['add_show_background_color']);
 		$show->save();
@@ -274,6 +275,14 @@ class Show {
     {
         global $CC_DBC;
 
+        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+        //if application is requesting shows past our previous populated until date, generate shows up until this point.
+        if ($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end_timestamp)) {
+            Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
+            Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
+        }
+
         $sql = "SELECT starts, ends, record, rebroadcast, soundcloud_id, instance_id, show_id, name, description,
                 color, background_color, cc_show_instances.id AS instance_id
             FROM cc_show_instances
@@ -282,7 +291,7 @@ class Show {
         //only want shows that are starting at the time or later.
         if ($onlyRecord) {
 
-            $sql = $sql." WHERE (starts >= '{$start_timestamp}' AND starts < timestamp '{$start_timestamp}' + interval '2 hours')";
+            $sql = $sql." WHERE (starts >= '{$start_timestamp}' AND starts < timestamp '{$end_timestamp}')";
             $sql = $sql." AND (record = 1)";
         }
         else {
@@ -524,13 +533,6 @@ class Show {
     public static function getFullCalendarEvents($start, $end, $editable=false)
     {
         $events = array();
-        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
-
-        //if fullcalendar is requesting shows past our previous populated until date, generate shows up until this point.
-        if ($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end)) {
-            Show::populateAllShowsInRange($showsPopUntil, $end);
-            Application_Model_Preference::SetShowsPopulatedUntil($end);
-        }
 
         $shows = Show::getShows($start, $end);
 
@@ -616,6 +618,12 @@ class ShowInstance {
         return $show->getDbName();
     }
 
+    public function getGenre()
+    {
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+        return $show->getDbGenre();
+    }
+
     public function getShowStart()
     {
         $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
@@ -639,6 +647,26 @@ class ShowInstance {
     {
         $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
         return $showInstance->getDbSoundCloudId();
+    }
+
+    public function getRecordedFile()
+    {
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $file_id =  $showInstance->getDbRecordedFile();
+
+        if(isset($file_id)) {
+            $file =  StoredFile::Recall($file_id);
+
+            if (PEAR::isError($file)) {
+                return null;
+            }
+
+            if(file_exists($file->getRealFilePath())) {
+                return $file;
+            }
+        }
+        
+        return null;
     }
 
     public function setShowStart($start)

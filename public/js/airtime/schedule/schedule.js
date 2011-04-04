@@ -165,6 +165,29 @@ function confirmCancelShow(show_instance_id){
     }
 }
 
+function uploadToSoundCloud(show_instance_id){
+    
+    var url = "/Schedule/upload-to-sound-cloud";
+    var span = $(window.triggerElement).find(".recording");
+
+    span.removeClass("recording")
+        .addClass("progress");
+
+    $.post(url,
+        {id: show_instance_id, format: "json"},
+        function(data){
+            if(data.error) {
+                span.removeClass("progress")
+                    .addClass("recording");
+
+                alert(data.error);
+                return;
+            }
+            scheduleRefetchEvents();
+    });
+
+}
+
 function buildContentDialog(json){
 	var dialog = $(json.dialog);
 

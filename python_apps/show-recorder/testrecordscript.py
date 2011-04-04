@@ -47,18 +47,20 @@ def getDateTimeObj(time):
 
 class ShowRecorder(Thread):
 
-    def __init__ (self, show_instance, filelength, filename, filetype):
+    def __init__ (self, show_instance, filelength, show_name, start_time, filetype):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.filelength = filelength
-        self.filename = filename
+        self.show_name = show_name
+        self.start_time = start_time
         self.filetype = filetype
         self.show_instance = show_instance
 
     def record_show(self):
 
         length = str(self.filelength)+".0"
-        filename = self.filename.replace(" ", "-")
+        filename = self.show_name+" "+self.start_time
+        filename = filename.replace(" ", "-")
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
         command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
@@ -134,9 +136,8 @@ class Record():
             show_length = self.shows_to_record[start_time][0]
             show_instance = self.shows_to_record[start_time][1]
             show_name = self.shows_to_record[start_time][2]
-            filename = show_name+"-"+start_time
-
-            show = ShowRecorder(show_instance, show_length.seconds, filename, filetype="mp3")
+            
+            show = ShowRecorder(show_instance, show_length.seconds, show_name, start_time, filetype="mp3", )
             show.start()
          
             #remove show from shows to record.

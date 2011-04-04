@@ -6,19 +6,38 @@ class Application_Model_Preference
     public static function SetValue($key, $value){
         global $CC_CONFIG, $CC_DBC;
 
-        $auth = Zend_Auth::getInstance();
-        $id = $auth->getIdentity()->id;
+        //called from a daemon process
+        if(!Zend_Auth::getInstance()->hasIdentity()) {
+            $id = NULL;
+        }
+        else {
+            $auth = Zend_Auth::getInstance();
+            $id = $auth->getIdentity()->id;
+        }
+
+        $key = pg_escape_string($key);
+        $value = pg_escape_string($value);
 
         //Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_pref"
         ." WHERE keystr = '$key'";
         $result = $CC_DBC->GetOne($sql);
 
-        if ($result == 1){
+        if ($result == 1 && is_null($id)){
+            $sql = "UPDATE cc_pref"
+            ." SET subjid = NULL, valstr = '$value'"
+            ." WHERE keystr = '$key'";
+        }
+        else if ($result == 1 && !is_null($id)){
             $sql = "UPDATE cc_pref"
             ." SET subjid = $id, valstr = '$value'"
             ." WHERE keystr = '$key'";
-        } else {
+        }
+        else if(is_null($id)) {
+            $sql = "INSERT INTO cc_pref (keystr, valstr)"
+            ." VALUES ('$key', '$value')";
+        } 
+        else {
             $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
             ." VALUES ($id, '$key', '$value')";
         }
@@ -131,6 +150,30 @@ class Application_Model_Preference
 
     public static function GetSoundCloudTags() {
         return Application_Model_Preference::GetValue("soundcloud_tags");
+    }
+
+    public static function SetSoundCloudGenre($genre) {
+        Application_Model_Preference::SetValue("soundcloud_genre", $genre);
+    }
+
+    public static function GetSoundCloudGenre() {
+        return Application_Model_Preference::GetValue("soundcloud_genre");
+    }
+
+    public static function SetSoundCloudTrackType($track_type) {
+        Application_Model_Preference::SetValue("soundcloud_tracktype", $track_type);
+    }
+
+    public static function GetSoundCloudTrackType() {
+        return Application_Model_Preference::GetValue("soundcloud_tracktype");
+    }
+
+    public static function SetSoundCloudLicense($license) {
+        Application_Model_Preference::SetValue("soundcloud_license", $license);
+    }
+
+    public static function GetSoundCloudLicense() {
+        return Application_Model_Preference::GetValue("soundcloud_license");
     }
 
     public static function SetAllow3rdPartyApi($bool) {

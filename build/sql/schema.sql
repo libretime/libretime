@@ -142,6 +142,7 @@ CREATE TABLE "cc_show"
 	"id" serial  NOT NULL,
 	"name" VARCHAR(255) default '' NOT NULL,
 	"url" VARCHAR(255) default '',
+	"genre" VARCHAR(255) default '',
 	"description" VARCHAR(512),
 	"color" VARCHAR(6),
 	"background_color" VARCHAR(6),

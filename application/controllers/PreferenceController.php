@@ -10,37 +10,37 @@ class PreferenceController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        $this->view->headScript()->appendFile('/js/airtime/preferences/preferences.js','text/javascript');
+
+        $request = $this->getRequest();
         $this->view->statusMsg = "";
         
         $form = new Application_Form_Preferences();
-        $this->view->form = $form;
-    }
+       
+        if ($request->isPost()) {
+      
+            if ($form->isValid($request->getPost())) {
 
-    public function updateAction()
-    {
-        $request = $this->getRequest();
-        if (!$this->getRequest()->isPost()) {
-            return $this->_forward('Preference/index');
-        }
+                $values = $form->getValues();
                 
-        $form = new Application_Form_Preferences();
-        if ($form->isValid($request->getPost())) {
+                Application_Model_Preference::SetHeadTitle($values["preferences_general"]["stationName"], $this->view); 
+                Application_Model_Preference::SetDefaultFade($values["preferences_general"]["stationDefaultFade"]);                      
+                Application_Model_Preference::SetStreamLabelFormat($values["preferences_general"]["streamFormat"]);
+                Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
 
-            $values = $form->getValues();
-            Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view); 
-            Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);                      
-            Application_Model_Preference::SetStreamLabelFormat($values["streamFormat"]);
-            Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
-            Application_Model_Preference::SetDoSoundCloudUpload($values["UseSoundCloud"]);  
-            Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
-            Application_Model_Preference::SetSoundCloudPassword($values["SoundCloudPassword"]); 
-            Application_Model_Preference::SetSoundCloudTags($values["SoundCloudTags"]);                    
-            
-            $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
+                Application_Model_Preference::SetDoSoundCloudUpload($values["preferences_soundcloud"]["UseSoundCloud"]);  
+                Application_Model_Preference::SetSoundCloudUser($values["preferences_soundcloud"]["SoundCloudUser"]);
+                Application_Model_Preference::SetSoundCloudPassword($values["preferences_soundcloud"]["SoundCloudPassword"]); 
+                Application_Model_Preference::SetSoundCloudTags($values["preferences_soundcloud"]["SoundCloudTags"]);
+                Application_Model_Preference::SetSoundCloudGenre($values["preferences_soundcloud"]["SoundCloudGenre"]);
+                Application_Model_Preference::SetSoundCloudTrackType($values["preferences_soundcloud"]["SoundCloudTrackType"]);
+                Application_Model_Preference::SetSoundCloudLicense($values["preferences_soundcloud"]["SoundCloudLicense"]);                       
+                
+                $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
+            }
         }
                   
         $this->view->form = $form;
-        return $this->render('index'); //render the phtml file
     }
 }
 

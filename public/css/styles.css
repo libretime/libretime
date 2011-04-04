@@ -1269,9 +1269,8 @@ div.success{
     margin: 0 0 8px 0;
 }
 #schedule-add-show .button-bar.bottom {
-    margin: 16px 0 0 0;
+    margin: 16px 0 0;
 }
-	
 .schedule {
 	text-align:left;
 	height:38px;
@@ -1512,6 +1511,11 @@ div.success{
 	background:url(images/icon_soundcloud.png) no-repeat 0 0;
 	width:21px;
 }
+.small-icon.progress {
+	background:url(images/upload-icon.gif) no-repeat;
+    background-color:black;
+    background-position:center;
+}
 .medium-icon {
 	display:block;
 	width:25px;
@@ -1540,4 +1544,53 @@ div.success{
 }
 .medium-icon.finishedplaying {
 	background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
+}
+.preferences {
+    width: 500px;
+}
+
+dt.block-display, dd.block-display {
+    display: block;
+    float: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+.preferences dt.block-display, .preferences dd.block-display {
+    padding: 0 0 5px 0;
+}
+.preferences dd.block-display {
+	margin-bottom:4px;
+}
+.preferences dd.block-display:last-child {
+	margin-bottom:0;
+}
+.simple-formblock dd.block-display {
+    width: 100%;
+}
+.preferences input[type="radio"] {
+	margin:0;
+}
+.preferences label input[type="radio"] {
+	margin:0 1px 0 0;
+}
+.preferences label input[type="checkbox"] {
+	margin:0 5px 0 0;
+}
+dd.radio-inline-list, .preferences dd.radio-inline-list {
+	margin-bottom:6px;
+}
+.radio-inline-list label {
+	margin-right:12px;
+}
+.preferences.simple-formblock dd.block-display {
+    width: 100%;
+}
+.preferences dd.block-display .input_select {
+    width: 100%;
+}
+.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text {
+    width: 99.5%;
+}
+.preferences dd#SoundCloudTags-element.block-display .input_text_area {
+    height: 120px;
 }

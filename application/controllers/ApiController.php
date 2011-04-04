@@ -257,7 +257,10 @@ class ApiController extends Zend_Controller_Action
         }
 
         $today_timestamp = date("Y-m-d H:i:s");
-        $this->view->shows = Show::getShows($today_timestamp, null, $excludeInstance=NULL, $onlyRecord=TRUE);
+        $now = new DateTime($today_timestamp);
+        $end_timestamp = $now->add(new DateInterval("PT2H"));
+        $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
+        $this->view->shows = Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
     }
 
     public function uploadRecordedAction()
@@ -276,9 +279,12 @@ class ApiController extends Zend_Controller_Action
         $file = StoredFile::uploadFile($upload_dir);
 
         $show_instance  = $this->_getParam('show_instance');
-
         $show_inst = new ShowInstance($show_instance);
+
         $show_inst->setRecordedFile($file->getId());
+        $show_name = $show_inst->getName();
+        $show_genre = $show_inst->getGenre();
+        $show_start_time = $show_inst->getShowStart();
 
         if(Application_Model_Preference::GetDoSoundCloudUpload())
         {
@@ -288,9 +294,11 @@ class ApiController extends Zend_Controller_Action
                 $description = $show->getDescription();
                 $hosts = $show->getHosts();
 
+                $tags = array_merge($hosts, array($show_name));
+
                 try {
                     $soundcloud = new ATSoundcloud();
-                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $hosts);
+                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
                     $show_inst->setSoundCloudFileId($soundcloud_id);
                     break;
                 }

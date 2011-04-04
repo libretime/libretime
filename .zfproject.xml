@@ -125,6 +125,8 @@
         <formFile formName="AddShowRR"/>
         <formFile formName="AddShowRebroadcastDates"/>
         <formFile formName="AddShowAbsoluteRebroadcastDates"/>
+        <formFile formName="SoundcloudPreferences"/>
+        <formFile formName="GeneralPreferences"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory>

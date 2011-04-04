@@ -25,6 +25,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('edit-show', 'json')
                     ->addActionContext('add-show', 'json')
                     ->addActionContext('cancel-show', 'json')
+                    ->addActionContext('upload-to-sound-cloud', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -145,6 +146,52 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
+    public function uploadToSoundCloudAction()
+    {
+        global $CC_CONFIG;
+        $show_instance = $this->_getParam('id');
+        $show_inst = new ShowInstance($show_instance);
+
+        $file = $show_inst->getRecordedFile();
+
+        if(is_null($file)) {
+            $this->view->error = "Recorded file does not exist";
+            return;
+        }
+
+        $show_name = $show_inst->getName();
+        $show_genre = $show_inst->getGenre();
+        $show_start_time = $show_inst->getShowStart();
+
+        if(Application_Model_Preference::GetDoSoundCloudUpload())
+        {
+            for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
+
+                $show = new Show($show_inst->getShowId());
+                $description = $show->getDescription();
+                $hosts = $show->getHosts();
+
+                $tags = array_merge($hosts, array($show_name));
+
+                try {
+                    $soundcloud = new ATSoundcloud();
+                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
+                    $show_inst->setSoundCloudFileId($soundcloud_id);
+                    $this->view->soundcloud_id = $soundcloud_id;
+                    break;
+                }
+                catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+                    $code = $e->getHttpCode();
+                    if(!in_array($code, array(0, 100))) {
+                        break;
+                    }
+                }
+
+                sleep($CC_CONFIG['soundcloud-connection-wait']);
+            }
+        }
+    }
+
     public function makeContextMenuAction()
     {
         $id = $this->_getParam('id');
@@ -174,10 +221,18 @@ class ScheduleController extends Zend_Controller_Action
                     'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
         }
 
+        if (strtotime($show->getShowEnd()) <= strtotime($today_timestamp) 
+            && is_null($show->getSoundCloudFileId())
+            && Application_Model_Preference::GetDoSoundCloudUpload()) {
+            $menu[] = array('action' => array('type' => 'fn',
+                'callback' => "window['uploadToSoundCloud']($id)"),
+                'title' => 'Upload to Soundcloud');
+        }
+
 
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
                 strtotime($today_timestamp) < strtotime($show->getShowEnd()) &&
-                $user->isAdmin()) {
+                $user->isAdmin() && !$show->isRecorded()) {
             $menu[] = array('action' => array('type' => 'fn',
                 'callback' => "window['confirmCancelShow']($id)"),
                 'title' => 'Cancel Current Show');
@@ -409,6 +464,9 @@ class ScheduleController extends Zend_Controller_Action
                     $rebroad = $formRebroadcast->checkReliantFields($data);
                 }
             }
+            else {
+                $rebroad = 1;
+            }
         }
         else {
             $formRebroadcast->reset();
@@ -421,6 +479,9 @@ class ScheduleController extends Zend_Controller_Action
                 if($rebroadAb) {
                     $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
                 }
+            }
+            else {
+                $rebroadAb = 1;
             }
         }
 

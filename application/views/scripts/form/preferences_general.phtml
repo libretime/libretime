@@ -1,0 +1,78 @@
+<fieldset class="padded">
+    <dl class="zend_form">
+
+        <dt id="stationName-label" class="block-display">
+            <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?></label>
+        </dt>
+        <dd id="stationName-element" class="block-display">
+            <?php echo $this->element->getElement('stationName') ?>
+            <?php if($this->element->getElement('stationName')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('stationName')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <dt id="stationDefaultFade-label" class="block-display">
+            <label class="optional" for="stationDefaultFade"><?php echo $this->element->getElement('stationDefaultFade')->getLabel() ?></label>
+        </dt>
+        <dd id="stationDefaultFade-element" class="block-display">
+            <?php echo $this->element->getElement('stationDefaultFade') ?>
+            <?php if($this->element->getElement('stationDefaultFade')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('stationDefaultFade')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <dt id="streamFormat-label" class="block-display">
+            <label class="optional"><?php echo $this->element->getElement('streamFormat')->getLabel() ?></label>
+        </dt>
+        <dd id="streamFormat-element" class="block-display radio-inline-list">
+            <?php $i=0; 
+                  $value = $this->element->getElement('streamFormat')->getValue();
+            ?>
+            <?php foreach ($this->element->getElement('streamFormat')->getMultiOptions() as $radio) : ?>
+                <label for="streamFormat-<?php echo $i ?>">
+                    <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?>/>
+                        <?php echo $radio ?>
+                    </input>
+                </label>
+                <?php $i = $i + 1; ?>
+            <?php endforeach; ?>
+            <?php if($this->element->getElement('streamFormat')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('streamFormat')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <dt id="thirdPartyApi-label" class="block-display">
+            <label class="optional"><?php echo $this->element->getElement('thirdPartyApi')->getLabel() ?></label>
+        </dt>
+        <dd id="thirdPartyApi-element" class="block-display  radio-inline-list">
+            <?php $i=0; 
+                  $value = $this->element->getElement('thirdPartyApi')->getValue();
+            ?>
+            <?php foreach ($this->element->getElement('thirdPartyApi')->getMultiOptions() as $radio) : ?>
+                <label for="thirdPartyApi-<?php echo $i ?>">
+                    <input type="radio" value="<?php echo $i ?>" id="thirdPartyApi-<?php echo $i ?>" name="thirdPartyApi" <?php if($i == $value){echo 'checked="checked"';}?> />
+                        <?php echo $radio ?>
+                    </input>
+                </label>
+            <?php $i = $i + 1; ?>
+            <?php endforeach; ?>
+            <?php if($this->element->getElement('thirdPartyApi')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('thirdPartyApi')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+       </dd>
+
+    </dl>
+</fieldset>

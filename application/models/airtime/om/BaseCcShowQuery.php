@@ -9,6 +9,7 @@
  * @method     CcShowQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcShowQuery orderByDbName($order = Criteria::ASC) Order by the name column
  * @method     CcShowQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
+ * @method     CcShowQuery orderByDbGenre($order = Criteria::ASC) Order by the genre column
  * @method     CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method     CcShowQuery orderByDbColor($order = Criteria::ASC) Order by the color column
  * @method     CcShowQuery orderByDbBackgroundColor($order = Criteria::ASC) Order by the background_color column
@@ -16,6 +17,7 @@
  * @method     CcShowQuery groupByDbId() Group by the id column
  * @method     CcShowQuery groupByDbName() Group by the name column
  * @method     CcShowQuery groupByDbUrl() Group by the url column
+ * @method     CcShowQuery groupByDbGenre() Group by the genre column
  * @method     CcShowQuery groupByDbDescription() Group by the description column
  * @method     CcShowQuery groupByDbColor() Group by the color column
  * @method     CcShowQuery groupByDbBackgroundColor() Group by the background_color column
@@ -46,6 +48,7 @@
  * @method     CcShow findOneByDbId(int $id) Return the first CcShow filtered by the id column
  * @method     CcShow findOneByDbName(string $name) Return the first CcShow filtered by the name column
  * @method     CcShow findOneByDbUrl(string $url) Return the first CcShow filtered by the url column
+ * @method     CcShow findOneByDbGenre(string $genre) Return the first CcShow filtered by the genre column
  * @method     CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
  * @method     CcShow findOneByDbColor(string $color) Return the first CcShow filtered by the color column
  * @method     CcShow findOneByDbBackgroundColor(string $background_color) Return the first CcShow filtered by the background_color column
@@ -53,6 +56,7 @@
  * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
  * @method     array findByDbUrl(string $url) Return CcShow objects filtered by the url column
+ * @method     array findByDbGenre(string $genre) Return CcShow objects filtered by the genre column
  * @method     array findByDbDescription(string $description) Return CcShow objects filtered by the description column
  * @method     array findByDbColor(string $color) Return CcShow objects filtered by the color column
  * @method     array findByDbBackgroundColor(string $background_color) Return CcShow objects filtered by the background_color column
@@ -224,6 +228,28 @@ abstract class BaseCcShowQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowPeer::URL, $dbUrl, $comparison);
+	}
+
+	/**
+	 * Filter the query on the genre column
+	 * 
+	 * @param     string $dbGenre The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByDbGenre($dbGenre = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbGenre)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbGenre)) {
+				$dbGenre = str_replace('*', '%', $dbGenre);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcShowPeer::GENRE, $dbGenre, $comparison);
 	}
 
 	/**
