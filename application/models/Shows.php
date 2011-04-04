@@ -1010,7 +1010,7 @@ class Show_DAL {
     {
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record"
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts <= TIMESTAMP '$timeNow'"
@@ -1088,7 +1088,8 @@ class Show_DAL {
         ." LEFT JOIN $CC_CONFIG[showTable] s"
 		." ON si.show_id = s.id"
         ." WHERE EXTRACT(DOW FROM si.starts) = $day"
-        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)";
+        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)"
+        ." ORDER BY si.starts";
 
         //echo $sql;
 

@@ -41,9 +41,15 @@
             for (var i=0; i<shows.length; i++){
                 tableString +=
                 "<tr>" +
-                "<td class='time'>"+shows[i].getRange()+"</td>" +
-                "<td><a href='#'>"+shows[i].getName()+"</a></td>" +
-                "</tr>";
+                "<td class='time'>"+shows[i].getRange()+"</td>";
+
+                var url = shows[i].getURL();
+
+                if (url.length > 0)
+                    tableString += "<td><a href='"+shows[i].getURL()+"'>"+shows[i].getName()+"</a></td></tr>";
+                else
+                    tableString += "<td>"+shows[i].getName()+"</td></tr>";
+                    
             }
 
             tableString += "</tbody></table>";
@@ -308,6 +314,9 @@ function Show(showData){
     this.showData = showData;
 }
 
+Show.prototype.getURL = function(){
+    return this.showData.url;
+}
 Show.prototype.getName = function(){
     return this.showData.name;
 }
