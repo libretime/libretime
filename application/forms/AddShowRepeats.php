@@ -14,7 +14,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 				"0" => "weekly",
                 "1" => "bi-weekly",
                 "2" => "monthly"
-            ), 
+            ),
         ));
 
         // Add days checkboxes
@@ -45,18 +45,18 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 			'validators' => array(
 				'NotEmpty',
         		array('date', false, array('YYYY-MM-DD'))
-    		) 
+    		)
         ));
 
 		// Add no end element
 		$this->addElement('checkbox', 'add_show_no_end', array(
-            'label'      => 'no end',
+            'label'      => 'No End?',
             'required'   => false,
 		));
     }
 
     public function checkReliantFields($formData) {
-       
+
         $start_timestamp = $formData['add_show_start_date'];
         $end_timestamp = $formData['add_show_end_date'];
 
@@ -67,7 +67,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             $this->getElement('add_show_end_date')->setErrors(array('End date must be after start date'));
             return false;
         }
- 
+
         return true;
     }
 

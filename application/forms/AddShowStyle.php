@@ -21,7 +21,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
 
 	// Add show color input
         $this->addElement('text', 'add_show_color', array(
-            'label'      => 'Text Colour',
+            'label'      => 'Text Colour:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));

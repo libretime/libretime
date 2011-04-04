@@ -7,7 +7,7 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
     {
         // Add hosts autocomplete
         $this->addElement('text', 'add_show_hosts_autocomplete', array(
-            'label'      => 'Type a Host:',
+            'label'      => 'Search Users:',
             'class'      => 'input_text ui-autocomplete-input',
             'required'   => false
 		)); 

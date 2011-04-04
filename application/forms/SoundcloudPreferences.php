@@ -45,7 +45,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
          // Add the description element
         $this->addElement('textarea', 'SoundCloudTags', array(
-            'label'      => 'space separated SoundCloud Tags',
+            'label'      => 'SoundCloud Tags: (separate tags with spaces)',
             'required'   => false,
             'class'      => 'input_text_area',
             'value' => Application_Model_Preference::GetSoundCloudTags(),
