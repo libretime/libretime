@@ -20,16 +20,16 @@ function openAddShowForm() {
 }
 
 function makeAddShowButton(){
-    $('.fc-header-left tbody tr:first')
-        .append('<td><span class="fc-header-space"></span></td>')
-        .append('<td><a href="#" class="add-button"><span class="add-icon"></span>Show</a></td>')
-        .find('td:last > a')
+    $('.fc-header-left')
+        .append('<span class="fc-header-space"></span>')
+        .append('<span class="fc-button"><a href="#" class="add-button"><span class="add-icon"></span>Show</a></span>')
+        .find('span.fc-button:last > a')
             .click(function(){
                 openAddShowForm();         
 
-                var td = $(this).parent();
-                $(td).prev().remove();
-                $(td).remove();
+                var span = $(this).parent();
+                $(span).prev().remove();
+                $(span).remove();
             });
 }
 
@@ -65,9 +65,9 @@ function dayClick(date, allDay, jsEvent, view) {
 
         //remove the +show button if it exists.
         if(addShow.length == 1){
-             var td = $(addShow).parent();
-            $(td).prev().remove();
-            $(td).remove();
+             var span = $(addShow).parent();
+            $(span).prev().remove();
+            $(span).remove();
         }
 
         chosenDate = selected.getFullYear();
@@ -121,27 +121,34 @@ function viewDisplay( view ) {
             .append('<option value="30">30m</option>')
             .append('<option value="60">60m</option>')
             .change(function(){
-                var x = $(this).val();
+                var slotMin = $(this).val();
                 var opt = view.calendar.options;
-                var d = $(calendarEl).fullCalendar('getDate');
-                opt.slotMinutes = parseInt(x);
+                var date = $(calendarEl).fullCalendar('getDate');
+
+                opt.slotMinutes = parseInt(slotMin);
                 opt.events = getFullCalendarEvents;
                 opt.defaultView = view.name;
-                $(calendarEl).fullCalendar('destroy');
-                $(calendarEl).fullCalendar(opt); 
-                $(calendarEl).fullCalendar( 'gotoDate', d );
+
+                //re-initialize calendar with new slotmin options
+                $(calendarEl)
+                    .fullCalendar('destroy')
+                    .fullCalendar(opt) 
+                    .fullCalendar( 'gotoDate', date );
             });
 
-        var x = $(view.element).find(".fc-agenda-head th:first");
-        select.width(x.width());
-        x.empty();
-        x.append(select);
+        var topLeft = $(view.element).find("table.fc-agenda-days > thead th:first");
+
+        select.width(topLeft.width())
+            .height(topLeft.height());
+
+        topLeft.empty()
+            .append(select);
 
         var slotMin = view.calendar.options.slotMinutes;
         $('.schedule_change_slots option[value="'+slotMin+'"]').attr('selected', 'selected');
     }
 
-    if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left tbody td').length == 5)) {
+    if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left > span').length == 5)) {
         makeAddShowButton();
     }
 }
@@ -172,7 +179,7 @@ function eventRender(event, element, view) {
     //record icon (only if not on soundcloud, will always be true for future events)
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -1) {
 		
-		$(element).find(".fc-event-time").after('<span class="small-icon recording"></span>');
+		$(element).find(".fc-event-time").before('<span class="small-icon recording"></span>');
 	}
     if(view.name === 'month' && event.record === 1 && event.soundcloud_id === -1) {
 		
@@ -181,7 +188,7 @@ function eventRender(event, element, view) {
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
 		
-		$(element).find(".fc-event-time").after('<span class="small-icon rebroadcast"></span>');
+		$(element).find(".fc-event-time").before('<span class="small-icon rebroadcast"></span>');
 	}
     if(view.name === 'month' && event.rebroadcast === 1) {
 		
@@ -190,23 +197,11 @@ function eventRender(event, element, view) {
     //soundcloud icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id !== -1 && event.record === 1) {
 		
-		$(element).find(".fc-event-time").after('<span class="small-icon soundcloud"></span>');
+		$(element).find(".fc-event-time").before('<span class="small-icon soundcloud"></span>');
 	}
     if(view.name === 'month' && event.soundcloud_id !== -1 && event.record === 1) {
 		
 		$(element).find(".fc-event-title").after('<span class="small-icon soundcloud"></span>');
-	}
-
-	if(event.backgroundColor !== "") {
-		$(element)
-			.css({'border-color': '#'+event.backgroundColor})
-			.find(".fc-event-time, a")
-				.css({'background-color': '#'+event.backgroundColor, 'border-color': '#'+event.backgroundColor});
-	}
-	if(event.color !== "") {
-		$(element)
-			.find(".fc-event-time, a")
-				.css({'color': '#'+event.color});
 	}
 }
 

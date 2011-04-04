@@ -255,6 +255,7 @@ $(window).load(function() {
             month: 'H:mm{ - H:mm}'
         },
         contentHeight: mainHeight,
+        theme: true,
        
 		events: getFullCalendarEvents,
 

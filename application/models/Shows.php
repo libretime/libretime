@@ -562,12 +562,18 @@ class Show {
 		$event["end"] = $show["ends"];
 		$event["allDay"] = false;
 		$event["description"] = $show["description"];
-		$event["color"] = $show["color"];
-		$event["backgroundColor"] = $show["background_color"];
         $event["showId"] = $show["show_id"];
         $event["record"] = intval($show["record"]);
         $event["rebroadcast"] = intval($show["rebroadcast"]);
         $event["soundcloud_id"] = (is_null($show["soundcloud_id"]) ? -1 : $show["soundcloud_id"]);
+
+        //event colouring
+        if($show["color"] != "") {
+            $event["textColor"] = "#".$show["color"];
+        }
+        if($show["background_color"] != "") {
+            $event["color"] = "#".$show["background_color"];
+        }	
 
 		foreach($options as $key=>$value) {
 			$event[$key] = $value;
