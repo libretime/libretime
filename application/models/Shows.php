@@ -275,6 +275,14 @@ class Show {
     {
         global $CC_DBC;
 
+        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+        //if application is requesting shows past our previous populated until date, generate shows up until this point.
+        if ($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end_timestamp)) {
+            Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
+            Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
+        }
+
         $sql = "SELECT starts, ends, record, rebroadcast, soundcloud_id, instance_id, show_id, name, description,
                 color, background_color, cc_show_instances.id AS instance_id
             FROM cc_show_instances
@@ -283,7 +291,7 @@ class Show {
         //only want shows that are starting at the time or later.
         if ($onlyRecord) {
 
-            $sql = $sql." WHERE (starts >= '{$start_timestamp}' AND starts < timestamp '{$start_timestamp}' + interval '2 hours')";
+            $sql = $sql." WHERE (starts >= '{$start_timestamp}' AND starts < timestamp '{$end_timestamp}')";
             $sql = $sql." AND (record = 1)";
         }
         else {
@@ -525,13 +533,6 @@ class Show {
     public static function getFullCalendarEvents($start, $end, $editable=false)
     {
         $events = array();
-        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
-
-        //if fullcalendar is requesting shows past our previous populated until date, generate shows up until this point.
-        if ($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end)) {
-            Show::populateAllShowsInRange($showsPopUntil, $end);
-            Application_Model_Preference::SetShowsPopulatedUntil($end);
-        }
 
         $shows = Show::getShows($start, $end);
 

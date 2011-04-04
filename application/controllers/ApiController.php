@@ -257,7 +257,10 @@ class ApiController extends Zend_Controller_Action
         }
 
         $today_timestamp = date("Y-m-d H:i:s");
-        $this->view->shows = Show::getShows($today_timestamp, null, $excludeInstance=NULL, $onlyRecord=TRUE);
+        $now = new DateTime($today_timestamp);
+        $end_timestamp = $now->add(new DateInterval("PT2H"));
+        $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
+        $this->view->shows = Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
     }
 
     public function uploadRecordedAction()

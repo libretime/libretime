@@ -165,7 +165,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 
             $show_end->add(new DateInterval("PT$duration[0]H"));
             $show_end->add(new DateInterval("PT$duration[1]M"));
-             $show_end->add(new DateInterval("PT1H"));//min time to wait until a rebroadcast
+            $show_end->add(new DateInterval("PT1H"));//min time to wait until a rebroadcast
            
             $rebroad_start = $formData['add_show_start_date']."".$formData['add_show_rebroadcast_time_'.$i];
             $rebroad_start = new DateTime($rebroad_start);
