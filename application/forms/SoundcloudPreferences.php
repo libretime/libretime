@@ -11,7 +11,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
         //enable soundcloud uploads
         $this->addElement('checkbox', 'UseSoundCloud', array(
-            'label'      => 'Automatically Upload Recorded Shows To SoundCloud',
+            'label'      => 'Upload Recorded Shows To SoundCloud',
             'required'   => false,
             'value' => Application_Model_Preference::GetDoSoundCloudUpload(),
             'decorators' => array(
