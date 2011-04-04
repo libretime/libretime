@@ -19,7 +19,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'validators' => array(
 				'NotEmpty',
         		array('date', false, array('YYYY-MM-DD'))
-    		) 
+    		)
         ));
 
 		// Add start time element
@@ -33,7 +33,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 				'NotEmpty',
         		array('date', false, array('HH:mm')),
                 array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		) 
+    		)
         ));
 
 		// Add duration element
@@ -45,22 +45,22 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'filters'    => array('StringTrim'),
             'validators' => array(
                 'NotEmpty',
-                array('regex', false, 
-                    array('/^\d+:[0-5][0-9]$/', 
+                array('regex', false,
+                    array('/^\d+:[0-5][0-9]$/',
                     'messages' => 'enter a duration: HH:mm'))
                 )
         ));
 
 		// Add repeats element
 		$this->addElement('checkbox', 'add_show_repeats', array(
-            'label'      => 'repeats',
+            'label'      => 'Repeats?',
             'required'   => false,
 		));
 
     }
 
     public function checkReliantFields($formData) {
-       
+
         $valid = true;
 
         $now_timestamp = date("Y-m-d H:i:s");
@@ -78,7 +78,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00:00'));
             $valid = false;
         }
- 
+
         return $valid;
     }
 

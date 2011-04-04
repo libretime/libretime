@@ -16,7 +16,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
          // Add URL element
         $this->addElement('text', 'add_show_url', array(
-            'label'      => 'Website:',
+            'label'      => 'URL:',
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
@@ -29,7 +29,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim')
-        ));       
+        ));
 
 		 // Add the description element
         $this->addElement('textarea', 'add_show_description', array(
