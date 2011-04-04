@@ -183,8 +183,7 @@ function uploadToSoundCloud(show_instance_id){
                 alert(data.error);
                 return;
             }
-            span.removeClass("progress")
-                .addClass("soundcloud");
+            scheduleRefetchEvents();
     });
 
 }
