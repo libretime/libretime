@@ -160,8 +160,11 @@ function eventRender(event, element, view) {
 		var div = $('<div/>');
 		div
 			.height('5px')
-			.width('100px')
+			.width('95%')
 			.css('margin-top', '5px')
+            .css('margin-left', 'auto')
+            .css('margin-right', 'auto')
+            .css('text-align', 'center')
 			.progressbar({
 				value: event.percent
 			});
