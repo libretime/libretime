@@ -58,6 +58,7 @@ function createTestShow($showNumber, $showTime, $duration = "1:00")
     $data['add_show_description'] = 'automated show';
     $data['add_show_url'] = 'http://www.OfirGal.com';
     $data['add_show_color'] = "";
+    $data['add_show_genre'] = "Ofir";
     $data['add_show_background_color'] = "";
     $data['add_show_record'] = 0;
     $data['add_show_hosts'] ="";
@@ -76,10 +77,10 @@ function createTestShow($showNumber, $showTime, $duration = "1:00")
 
 $showTime = new DateTime();
 
-$resolution = "minute";
+$resolution = "hour";
 $showNumber = 1;
-$numberOfDays = 0;
-$numberOfHours = 1;
+$numberOfDays = 180;
+$numberOfHours = 0;
 $endDate = new DateTime();
 $endDate->add(new DateInterval("P".$numberOfDays."DT".$numberOfHours."H"));
 echo "End date: ".$endDate->format("Y-m-d H:i")."\n";
