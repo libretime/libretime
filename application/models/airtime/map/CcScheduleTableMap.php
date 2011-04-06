@@ -63,4 +63,17 @@ class CcScheduleTableMap extends TableMap {
     $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
+	/**
+	 * 
+	 * Gets the list of behaviors registered for this table
+	 * 
+	 * @return array Associative array (name => parameters) of behaviors
+	 */
+	public function getBehaviors()
+	{
+		return array(
+			'aggregate_column_relation' => array('foreign_table' => 'cc_show_instances', 'update_method' => 'updateDbTimeFilled', ),
+		);
+	} // getBehaviors()
+
 } // CcScheduleTableMap

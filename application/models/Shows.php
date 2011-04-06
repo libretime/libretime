@@ -533,23 +533,37 @@ class Show {
     public static function getFullCalendarEvents($start, $end, $editable=false)
     {
         $events = array();
+        $options = array();
+
+        $start_range = new DateTime($start);
+        $end_range = new DateTime($end);
+        $interval = $start_range->diff($end_range);
+        $days =  $interval->format('%a');
 
         $shows = Show::getShows($start, $end);
 
         $today_timestamp = date("Y-m-d H:i:s");
         foreach ($shows as $show) {
-            if ($editable && strtotime($today_timestamp) < strtotime($show["starts"]))
-			    $events[] = Show::makeFullCalendarEvent($show, array("editable" => true));
-            else
-                $events[] = Show::makeFullCalendarEvent($show);
+            //only bother calculating percent for week or day view.
+            if(intval($days) <= 7) {
+                $show_instance = new ShowInstance($show["instance_id"]);
+                $options["percent"] =  $show_instance->getPercentScheduled();
+            }
+
+            if ($editable && strtotime($today_timestamp) < strtotime($show["starts"])) {
+                $options["editable"] = true;
+			    $events[] = Show::makeFullCalendarEvent($show, $options);
+            }
+            else {
+                $events[] = Show::makeFullCalendarEvent($show, $options);
+            }
         }
 
         return $events;
     }
 
-	private static function makeFullCalendarEvent($show, $options=array()) {
-		global $CC_DBC;
-
+	private static function makeFullCalendarEvent($show, $options=array()) 
+    {
         $event = array();
 
         if($show["rebroadcast"]) {
@@ -578,9 +592,6 @@ class Show {
 		foreach($options as $key=>$value) {
 			$event[$key] = $value;
 		}
-
-		$percent = Schedule::GetPercentScheduled($show["instance_id"], $show["starts"], $show["ends"]);
-		$event["percent"] = $percent;
 
 		return $event;
 	}
@@ -689,6 +700,13 @@ class ShowInstance {
         $showInstance->setDbEnds($end)
             ->save();
         RabbitMq::PushSchedule();
+    }
+
+    public function updateScheduledTime()
+    {
+        $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $showInstance->updateDbTimeFilled($con);
     }
 
     public function moveScheduledShowContent($deltaDay, $deltaHours, $deltaMin)
@@ -821,6 +839,7 @@ class ShowInstance {
 			$groupId = $sched->addPlaylistAfter($this->_instanceId, $lastGroupId, $plId);
 		}
 		RabbitMq::PushSchedule();
+        $this->updateScheduledTime();
 	}
 
     /**
@@ -840,6 +859,7 @@ class ShowInstance {
 			$groupId = $sched->addFileAfter($this->_instanceId, $lastGroupId, $file_id);
 		}
         RabbitMq::PushSchedule();
+        $this->updateScheduledTime();
     }
 
     /**
@@ -875,6 +895,7 @@ class ShowInstance {
 
 		$CC_DBC->query($sql);
 		RabbitMq::PushSchedule();
+        $this->updateScheduledTime();
 	}
 
     public function clearShow()
@@ -883,6 +904,7 @@ class ShowInstance {
 			->filterByDbInstanceId($this->_instanceId)
 			->delete();
 		RabbitMq::PushSchedule();
+        $this->updateScheduledTime();
 	}
 
     public function deleteShow()
@@ -900,7 +922,7 @@ class ShowInstance {
         $showInstance->setDbRecordedFile($file_id)
             ->save();
 
-        $rebroadcasts =  CcShowInstancesQuery::create()
+        $rebroadcasts = CcShowInstancesQuery::create()
             ->filterByDbOriginalShow($this->_instanceId)
             ->find();
 
@@ -908,32 +930,36 @@ class ShowInstance {
 
             $rebroad = new ShowInstance($rebroadcast->getDbId());
             $rebroad->addFileToShow($file_id);
-            RabbitMq::PushSchedule();
         }
     }
 
     public function getTimeScheduled()
     {
-        $instance_id = $this->getShowInstanceId();
-		$time = Schedule::GetTotalShowTime($instance_id);
-		return $time;
-	}
+        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
+        $time = $showInstance->getDbTimeFilled();
 
-	public function getTimeUnScheduled()
-	{
-        $start_timestamp = $this->getShowStart();
-        $end_timestamp = $this->getShowEnd();
-        $instance_id = $this->getShowInstanceId();
-		$time = Schedule::getTimeUnScheduledInRange($instance_id, $start_timestamp, $end_timestamp);
-		return $time;
+        if(is_null($time)) {
+            $time = "00:00:00";
+        }
+        return $time;
 	}
 
     public function getPercentScheduled()
     {
         $start_timestamp = $this->getShowStart();
         $end_timestamp = $this->getShowEnd();
-        $instance_id = $this->getShowInstanceId();
-        return Schedule::GetPercentScheduled($instance_id, $start_timestamp, $end_timestamp);
+        $time_filled = $this->getTimeScheduled();
+        
+        $s_epoch = strtotime($start_timestamp);
+        $e_epoch = strtotime($end_timestamp);
+        $i_epoch = Schedule::WallTimeToMillisecs($time_filled) / 1000;
+
+        $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
+
+        if ($percent > 100)
+            $percent = 100;
+
+        return $percent;
     }
 
     public function getShowLength()
@@ -951,8 +977,7 @@ class ShowInstance {
 
 	public function searchPlaylistsForShow($datatables)
 	{
-		$time_remaining = $this->getTimeUnScheduled();
-		return StoredFile::searchPlaylistsForSchedule($time_remaining, $datatables);
+		return StoredFile::searchPlaylistsForSchedule($datatables);
 	}
 
     public function getShowListContent()

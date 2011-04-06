@@ -117,6 +117,7 @@ class ScheduleGroup {
                 $itemStartTime = $CC_DBC->getOne("SELECT TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'");
             }
         }
+
         RabbitMq::PushSchedule();
         return $this->groupId;
     }
@@ -243,76 +244,6 @@ class Schedule {
         //var_dump($count);
         return ($count == '0');
     }
-
-    public static function getTimeUnScheduledInRange($instance_id, $s_datetime, $e_datetime) {
-        global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT SUM(clip_length) FROM $CC_CONFIG[scheduleTable]"
-            ." WHERE instance_id = $instance_id";
-
-        $time = $CC_DBC->GetOne($sql);
-
-        if(is_null($time))
-            $time = 0;
-
-        $sql = "SELECT TIMESTAMP '{$e_datetime}' - TIMESTAMP '{$s_datetime}'";
-        $length = $CC_DBC->GetOne($sql);
-
-        $sql = "SELECT INTERVAL '{$length}' - INTERVAL '{$time}'";
-        $time_left =$CC_DBC->GetOne($sql);
-
-        return $time_left;
-    }
-
-    public static function getTimeScheduledInRange($s_datetime, $e_datetime) {
-        global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT SUM(clip_length) FROM ".$CC_CONFIG["scheduleTable"]."
-            WHERE (starts >= '{$s_datetime}')
-            AND (ends <= '{$e_datetime}')";
-
-        $res = $CC_DBC->GetOne($sql);
-
-        if(is_null($res))
-            return 0;
-
-        return $res;
-    }
-
-    public static function GetTotalShowTime($instance_id) {
-        global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT SUM(clip_length) FROM $CC_CONFIG[scheduleTable]"
-            ." WHERE instance_id = $instance_id";
-
-        $res = $CC_DBC->GetOne($sql);
-
-        if(is_null($res))
-            return 0;
-
-        return $res;
-    }
-
-    public static function GetPercentScheduled($instance_id, $s_datetime, $e_datetime)
-    {
-        $time = Schedule::GetTotalShowTime($instance_id);
-
-        $s_epoch = strtotime($s_datetime);
-        $e_epoch = strtotime($e_datetime);
-
-        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-        $sql = "SELECT EXTRACT(EPOCH FROM INTERVAL '{$time}')";
-        $r = $con->query($sql);
-        $i_epoch = $r->fetchColumn(0);
-
-        $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
-
-        if ($percent > 100)
-            $percent = 100;
-
-        return $percent;
-    }
-
 
     /**
      * Return TRUE if file is going to be played in the future.
@@ -603,7 +534,7 @@ class Schedule {
      * @param string $p_time
      * @return int
      */
-    private static function WallTimeToMillisecs($p_time)
+    public static function WallTimeToMillisecs($p_time)
     {
         $t = explode(":", $p_time);
         $millisecs = 0;

@@ -47,6 +47,7 @@ class CcShowInstancesTableMap extends TableMap {
 		$this->addForeignKey('INSTANCE_ID', 'DbOriginalShow', 'INTEGER', 'cc_show_instances', 'ID', false, null, null);
 		$this->addForeignKey('FILE_ID', 'DbRecordedFile', 'INTEGER', 'cc_files', 'ID', false, null, null);
 		$this->addColumn('SOUNDCLOUD_ID', 'DbSoundCloudId', 'INTEGER', false, null, null);
+		$this->addColumn('TIME_FILLED', 'DbTimeFilled', 'TIME', false, null, null);
 		// validators
 	} // initialize()
 
@@ -61,5 +62,18 @@ class CcShowInstancesTableMap extends TableMap {
     $this->addRelation('CcShowInstancesRelatedByDbId', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
 	} // buildRelations()
+
+	/**
+	 * 
+	 * Gets the list of behaviors registered for this table
+	 * 
+	 * @return array Associative array (name => parameters) of behaviors
+	 */
+	public function getBehaviors()
+	{
+		return array(
+			'aggregate_column' => array('name' => 'time_filled', 'expression' => 'SUM(clip_length)', 'foreign_table' => 'cc_schedule', ),
+		);
+	} // getBehaviors()
 
 } // CcShowInstancesTableMap

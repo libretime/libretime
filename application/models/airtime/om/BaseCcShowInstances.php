@@ -81,6 +81,12 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	protected $soundcloud_id;
 
 	/**
+	 * The value for the time_filled field.
+	 * @var        string
+	 */
+	protected $time_filled;
+
+	/**
 	 * @var        CcShow
 	 */
 	protected $aCcShow;
@@ -275,6 +281,39 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	public function getDbSoundCloudId()
 	{
 		return $this->soundcloud_id;
+	}
+
+	/**
+	 * Get the [optionally formatted] temporal [time_filled] column value.
+	 * 
+	 *
+	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 *							If format is NULL, then the raw DateTime object will be returned.
+	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 */
+	public function getDbTimeFilled($format = '%X')
+	{
+		if ($this->time_filled === null) {
+			return null;
+		}
+
+
+
+		try {
+			$dt = new DateTime($this->time_filled);
+		} catch (Exception $x) {
+			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->time_filled, true), $x);
+		}
+
+		if ($format === null) {
+			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+			return $dt;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $dt->format('U'));
+		} else {
+			return $dt->format($format);
+		}
 	}
 
 	/**
@@ -528,6 +567,55 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	} // setDbSoundCloudId()
 
 	/**
+	 * Sets the value of [time_filled] column to a normalized version of the date/time value specified.
+	 * 
+	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+	 *						be treated as NULL for temporal objects.
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbTimeFilled($v)
+	{
+		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
+		// -- which is unexpected, to say the least.
+		if ($v === null || $v === '') {
+			$dt = null;
+		} elseif ($v instanceof DateTime) {
+			$dt = $v;
+		} else {
+			// some string/numeric value passed; we normalize that so that we can
+			// validate it.
+			try {
+				if (is_numeric($v)) { // if it's a unix timestamp
+					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+					// We have to explicitly specify and then change the time zone because of a
+					// DateTime bug: http://bugs.php.net/bug.php?id=43003
+					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+				} else {
+					$dt = new DateTime($v);
+				}
+			} catch (Exception $x) {
+				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+			}
+		}
+
+		if ( $this->time_filled !== null || $dt !== null ) {
+			// (nested ifs are a little easier to read in this case)
+
+			$currNorm = ($this->time_filled !== null && $tmpDt = new DateTime($this->time_filled)) ? $tmpDt->format('H:i:s') : null;
+			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
+
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
+					)
+			{
+				$this->time_filled = ($dt ? $dt->format('H:i:s') : null);
+				$this->modifiedColumns[] = CcShowInstancesPeer::TIME_FILLED;
+			}
+		} // if either are not null
+
+		return $this;
+	} // setDbTimeFilled()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -576,6 +664,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$this->instance_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
 			$this->file_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
 			$this->soundcloud_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
+			$this->time_filled = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -584,7 +673,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 9; // 9 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 10; // 10 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowInstances object", $e);
@@ -1008,6 +1097,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			case 8:
 				return $this->getDbSoundCloudId();
 				break;
+			case 9:
+				return $this->getDbTimeFilled();
+				break;
 			default:
 				return null;
 				break;
@@ -1041,6 +1133,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$keys[6] => $this->getDbOriginalShow(),
 			$keys[7] => $this->getDbRecordedFile(),
 			$keys[8] => $this->getDbSoundCloudId(),
+			$keys[9] => $this->getDbTimeFilled(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
@@ -1110,6 +1203,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			case 8:
 				$this->setDbSoundCloudId($value);
 				break;
+			case 9:
+				$this->setDbTimeFilled($value);
+				break;
 		} // switch()
 	}
 
@@ -1143,6 +1239,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if (array_key_exists($keys[6], $arr)) $this->setDbOriginalShow($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbRecordedFile($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setDbSoundCloudId($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbTimeFilled($arr[$keys[9]]);
 	}
 
 	/**
@@ -1163,6 +1260,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowInstancesPeer::INSTANCE_ID)) $criteria->add(CcShowInstancesPeer::INSTANCE_ID, $this->instance_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::FILE_ID)) $criteria->add(CcShowInstancesPeer::FILE_ID, $this->file_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::SOUNDCLOUD_ID)) $criteria->add(CcShowInstancesPeer::SOUNDCLOUD_ID, $this->soundcloud_id);
+		if ($this->isColumnModified(CcShowInstancesPeer::TIME_FILLED)) $criteria->add(CcShowInstancesPeer::TIME_FILLED, $this->time_filled);
 
 		return $criteria;
 	}
@@ -1232,6 +1330,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$copyObj->setDbOriginalShow($this->instance_id);
 		$copyObj->setDbRecordedFile($this->file_id);
 		$copyObj->setDbSoundCloudId($this->soundcloud_id);
+		$copyObj->setDbTimeFilled($this->time_filled);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1724,6 +1823,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$this->instance_id = null;
 		$this->file_id = null;
 		$this->soundcloud_id = null;
+		$this->time_filled = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
@@ -1762,6 +1862,34 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$this->aCcShow = null;
 		$this->aCcShowInstancesRelatedByDbOriginalShow = null;
 		$this->aCcFiles = null;
+	}
+
+	// aggregate_column behavior
+	
+	/**
+	 * Computes the value of the aggregate column time_filled 
+	 *
+	 * @param PropelPDO $con A connection object
+	 *
+	 * @return mixed The scalar result from the aggregate query
+	 */
+	public function computeDbTimeFilled(PropelPDO $con)
+	{
+		$stmt = $con->prepare('SELECT SUM(clip_length) FROM "cc_schedule" WHERE cc_schedule.INSTANCE_ID = :p1');
+	  $stmt->bindValue(':p1', $this->getDbId());
+		$stmt->execute();
+		return $stmt->fetchColumn();
+	}
+	
+	/**
+	 * Updates the aggregate column time_filled 
+	 *
+	 * @param PropelPDO $con A connection object
+	 */
+	public function updateDbTimeFilled(PropelPDO $con)
+	{
+		$this->setDbTimeFilled($this->computeDbTimeFilled($con));
+		$this->save($con);
 	}
 
 	/**
