@@ -1,0 +1,36 @@
+1.7.0 - April 4, 2011
+  * Recording and automatic scheduling/broadcasting of live shows
+    o Recording/rebroadcast status of a show is shown in "Now Playing" and "Calendar"
+    o Can rebroadcast a show at multiple times and dates
+  * Automatic upload of recorded shows to Soundcloud
+  * Frontend JQuery widgets for public-facing websites to show your visitors what's playing and the upcoming schedule.
+  * Ability to over-book a show and automatically cut and fade out song if it goes beyond the show time
+  * Ability to delete audio files
+  * Ability to cancel the currently playing show
+  * Any changes to the schedule are immediately seen by the playout engine
+    o In version 1.6, you had to make sure that your show was ready to go 30 seconds before it started.
+  * Upgrade support (should be able to upgrade from any version, unlike 1.6.1 which required an uninstall of 1.6.0 first)
+  * "Now Playing" list view:
+     o audio items are now grouped by show.
+     o If a show is not fully scheduled, the user is notified how many seconds of silence are at the end of the show in this View.
+     o Audio items that play past the show's end time have a visual notification that they will be cut off
+  * Ability to change metadata tag display format for web streams
+  * Config files moved to /etc/airtime.  This means all config files are in one convenient location and separated from the code, so you can upgrade your code independently of your config files.
+  * Redesign of Preferences screen
+  * Bug fixes:
+    o CC-2082 OGG stream dies after every song when using MPlayer
+    o CC-1894 Warn users about time zone differences or clock drift problems on the server 
+    o CC-2058 Utilities are not in the system $PATH
+    o CC-2051 Unable to change user password
+    o CC-2030 Icon needed for Cue In/Out
+    o CC-1955 Special character support in the library search
+
+1.6.1 - Feb 23, 2011
+Bug fixes:
+  * CC-1973 Liquidsoap crashes after multi-day playout
+  * CC-1970 API key fix (Security fix) - Each time you run the install scripts, a new API key is now generated.
+  * CC-1992 Editing metadata goes blank on 'submit' 
+  * CC-1993 ui start time and song time unsynchronized
+
+1.6.0 - Feb 14, 2011
+First official version of Airtime.
