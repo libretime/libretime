@@ -11,7 +11,7 @@ require_once __DIR__.'/../../../application/configs/conf.php';
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
-AirtimeInstall::MigrateTables(__DIR__);
+AirtimeInstall::MigrateTables(__DIR__, '20110406182005');
 
 //setting data for new aggregate show length column.
 AirtimeInstall::DbConnect(true);

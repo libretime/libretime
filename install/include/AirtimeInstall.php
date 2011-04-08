@@ -147,9 +147,12 @@ class AirtimeInstall {
         @exec($command, $output, $results);
     }
 
-    public static function MigrateTables($dir)
+    public static function MigrateTables($dir, $version)
     {
-        $command = "php $dir/../library/doctrine/migrations/doctrine-migrations.phar --configuration=$dir/DoctrineMigrations/migrations.xml --db-configuration=$dir/../library/doctrine/migrations/migrations-db.php --no-interaction migrations:migrate";
+        $command = "php $dir/../../../library/doctrine/migrations/doctrine-migrations.phar 
+                    --configuration=$dir/../../DoctrineMigrations/migrations.xml 
+                    --db-configuration=$dir/../../../library/doctrine/migrations/migrations-db.php 
+                    --no-interaction migrations:migrate $version";
         system($command);
     }
 
