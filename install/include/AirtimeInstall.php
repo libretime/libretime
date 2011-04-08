@@ -147,12 +147,12 @@ class AirtimeInstall {
         @exec($command, $output, $results);
     }
 
-    public static function MigrateTables($dir, $version)
+    public static function ExecuteDoctrineMigration($dir, $version)
     {
         $command = "php $dir/../../../library/doctrine/migrations/doctrine-migrations.phar ". 
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ". 
                     "--db-configuration=$dir/../../../library/doctrine/migrations/migrations-db.php ".
-                    "--no-interaction migrations:migrate $version";
+                    "--no-interaction migrations:execute $version";
         system($command);
     }
 

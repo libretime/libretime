@@ -13,7 +13,10 @@ require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 AirtimeInstall::DbConnect(true);
 
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
-AirtimeInstall::MigrateTables(__DIR__, '20110406182005');
+$migrations = array('20110406182005');
+foreach($migrations as $migration) {
+    AirtimeInstall::ExecuteDoctrineMigration(__DIR__, $migration);
+}
 
 //setting data for new aggregate show length column.
 $sql = "SELECT id FROM cc_show_instances";

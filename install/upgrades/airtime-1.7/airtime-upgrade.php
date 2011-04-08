@@ -13,7 +13,10 @@ AirtimeIni::CreateIniFile();
 AirtimeIni::UpdateIniFiles();
 
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
-AirtimeInstall::MigrateTables(__DIR__, '20110402164819');
+$migrations = array('20110312121200', '20110331111708', '20110402164819');
+foreach($migrations as $migration) {
+    AirtimeInstall::ExecuteDoctrineMigration(__DIR__, $migration);
+}
 
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
 system("python ".__DIR__."/../../../python_apps/pypo/install/pypo-install.py");
