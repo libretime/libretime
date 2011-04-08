@@ -27,7 +27,7 @@ $sql = "SELECT id FROM cc_show_instances";
 $show_instances = $CC_DBC->GetAll($sql);
 
 foreach ($show_instances as $show_instance) {
-    $sql = "UPDATE cc_show_instances SET time_filled = (SELECT SUM(clip_length) FROM cc_schedule WHERE instance_id = {$show_instance}) WHERE id = {$show_instance}";
+    $sql = "UPDATE cc_show_instances SET time_filled = (SELECT SUM(clip_length) FROM cc_schedule WHERE instance_id = {$show_instance["id"]}) WHERE id = {$show_instance["id"]}";
     $CC_DBC->query($sql);
 }
 //end setting data for new aggregate show length column.
