@@ -9,6 +9,11 @@ require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 // Need to check that we are superuser before running this.
 AirtimeIni::ExitIfNotRoot();
 
+if (!file_exists('/etc/airtime/airtime.conf')) {
+    echo PHP_EOL."Airtime config file '/etc/airtime/airtime.conf' does not exist.".PHP_EOL;
+    echo "Most likely this means that Airtime is not installed, so there is nothing to do.".PHP_EOL.PHP_EOL;
+    exit();
+}
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
@@ -39,7 +44,7 @@ if ($dbDeleteFailed) {
     if (!PEAR::isError($CC_DBC)) {
         $sql = "select * from pg_tables where tableowner = 'airtime'";
         $rows = $CC_DBC->GetAll($sql);
-        if (PEAR::isError($result)) {
+        if (PEAR::isError($rows)) {
             $rows = array();
         }
 
