@@ -12,7 +12,7 @@ AirtimeIni::ExitIfNotRoot();
 
 echo "******************************** Update Begin *********************************".PHP_EOL;
 
-system("php ".__DIR__."/upgrades/airtime-1.7/airtime-upgrade.php");
+//system("php ".__DIR__."/upgrades/airtime-1.7/airtime-upgrade.php");
 system("php ".__DIR__."/upgrades/airtime-1.8/airtime-upgrade.php");
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
