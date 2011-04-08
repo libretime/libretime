@@ -7,22 +7,13 @@
  */
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
-require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 AirtimeIni::ExitIfNotRoot();
 
 echo "******************************** Update Begin *********************************".PHP_EOL;
-AirtimeIni::CreateIniFile();
-AirtimeIni::UpdateIniFiles();
 
-echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
-AirtimeInstall::MigrateTables(__DIR__);
-
-echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
-
-echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
+system("php ".__DIR__."/upgrades/airtime-1.7/airtime-upgrade.php");
+system("php ".__DIR__."/upgrades/airtime-1.8/airtime-upgrade.php");
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
 
