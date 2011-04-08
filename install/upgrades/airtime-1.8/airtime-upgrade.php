@@ -10,12 +10,12 @@ set_include_path(__DIR__.'/../../../library' . PATH_SEPARATOR . get_include_path
 require_once __DIR__.'/../../../application/configs/conf.php';
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 
+AirtimeInstall::DbConnect(true);
+
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
 AirtimeInstall::MigrateTables(__DIR__, '20110406182005');
 
 //setting data for new aggregate show length column.
-AirtimeInstall::DbConnect(true);
-
 $sql = "SELECT id FROM cc_show_instances";
 $show_instances = $CC_DBC->GetAll($sql);
 
