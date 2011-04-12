@@ -32,7 +32,7 @@ if(strcmp($version, "1.8.0") < 0) {
     system("php ".__DIR__."/upgrades/airtime-1.8/airtime-upgrade.php");
 }
 
-AirtimeInstall::SetAirtimeVersion("1.8.0");
+AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
 
