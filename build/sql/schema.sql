@@ -171,6 +171,7 @@ CREATE TABLE "cc_show_instances"
 	"instance_id" INTEGER,
 	"file_id" INTEGER,
 	"soundcloud_id" INTEGER,
+	"time_filled" TIME,
 	PRIMARY KEY ("id")
 );
 

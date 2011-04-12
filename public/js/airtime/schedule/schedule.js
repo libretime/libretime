@@ -256,6 +256,7 @@ $(window).load(function() {
         },
         contentHeight: mainHeight,
         theme: true,
+        lazyFetching: false,
        
 		events: getFullCalendarEvents,
 

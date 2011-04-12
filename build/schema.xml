@@ -133,6 +133,12 @@
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
     <column name="soundcloud_id" phpName="DbSoundCloudId" type="INTEGER" required="false"/>
+    <column name="time_filled" phpName="DbTimeFilled" type="TIME" />
+    <behavior name="aggregate_column">
+      <parameter name="name" value="time_filled" />
+      <parameter name="foreign_table" value="cc_schedule" />
+      <parameter name="expression" value="SUM(clip_length)" />
+    </behavior>
 	<foreign-key foreignTable="cc_show" name="cc_show_fkey" onDelete="CASCADE">
       <reference local="show_id" foreign="id"/>
     </foreign-key>

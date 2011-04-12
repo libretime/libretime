@@ -134,6 +134,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	protected $alreadyInValidation = false;
 
+	// aggregate_column_relation behavior
+	protected $oldCcShowInstances;
+
 	/**
 	 * Applies default values to this object.
 	 * This method should be called from the object's constructor (or
@@ -1183,6 +1186,8 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 					$this->postUpdate($con);
 				}
 				$this->postSave($con);
+				// aggregate_column_relation behavior
+				$this->updateRelatedCcShowInstances($con);
 				CcSchedulePeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
@@ -1710,6 +1715,10 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	public function setCcShowInstances(CcShowInstances $v = null)
 	{
+		// aggregate_column_relation behavior
+		if (null !== $this->aCcShowInstances && $v !== $this->aCcShowInstances) {
+			$this->oldCcShowInstances = $this->aCcShowInstances;
+		}
 		if ($v === null) {
 			$this->setDbInstanceId(NULL);
 		} else {
@@ -1793,6 +1802,24 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if ($deep)
 
 		$this->aCcShowInstances = null;
+	}
+
+	// aggregate_column_relation behavior
+	
+	/**
+	 * Update the aggregate column in the related CcShowInstances object
+	 *
+	 * @param PropelPDO $con A connection object
+	 */
+	protected function updateRelatedCcShowInstances(PropelPDO $con)
+	{
+		if ($ccShowInstances = $this->getCcShowInstances()) {
+			$ccShowInstances->updateDbTimeFilled($con);
+		}
+		if ($this->oldCcShowInstances) {
+			$this->oldCcShowInstances->updateDbTimeFilled($con);
+			$this->oldCcShowInstances = null;
+		}
 	}
 
 	/**
