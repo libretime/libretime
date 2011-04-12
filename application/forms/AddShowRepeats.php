@@ -57,15 +57,17 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 
     public function checkReliantFields($formData) {
 
-        $start_timestamp = $formData['add_show_start_date'];
-        $end_timestamp = $formData['add_show_end_date'];
+        if (!$formData['add_show_no_end']){        
+            $start_timestamp = $formData['add_show_start_date'];
+            $end_timestamp = $formData['add_show_end_date'];
+            
+            $start_epoch = strtotime($start_timestamp);
+            $end_epoch = strtotime($end_timestamp);
 
-        $start_epoch = strtotime($start_timestamp);
-        $end_epoch = strtotime($end_timestamp);
-
-        if($end_epoch < $start_epoch) {
-            $this->getElement('add_show_end_date')->setErrors(array('End date must be after start date'));
-            return false;
+            if($end_epoch < $start_epoch) {
+                $this->getElement('add_show_end_date')->setErrors(array('End date must be after start date'));
+                return false;
+            }
         }
 
         return true;

@@ -5,6 +5,12 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
     public function init()
     {
+        // Hidden element to indicate whether the show is new or
+        // whether we are updating an existing show.
+        $this->addElement('hidden', 'add_show_id', array(
+            'decorators' => array('ViewHelper')
+        ));
+        
         // Add name element
         $this->addElement('text', 'add_show_name', array(
             'label'      => 'Name:',

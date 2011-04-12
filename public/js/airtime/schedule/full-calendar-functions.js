@@ -33,6 +33,17 @@ function makeAddShowButton(){
             });
 }
 
+function beginEditShow(data){
+    //alert (data.entries);
+
+    $("#add-show-form")
+        .empty()
+        .append(data.newForm);
+
+    setAddShowEvents();
+    openAddShowForm();
+}
+
 function makeTimeStamp(date){
 	var sy, sm, sd, h, m, s, timestamp;
 	sy = date.getFullYear();

@@ -75,6 +75,9 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->rr = $formRecord;
         $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
         $this->view->rebroadcast = $formRebroadcast;
+        $this->view->addNewShow = true;
+
+        $formWhat->populate(array('add_show_id' => '-1'));
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
@@ -233,15 +236,19 @@ class ScheduleController extends Zend_Controller_Action
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
                 strtotime($today_timestamp) < strtotime($show->getShowEnd()) &&
                 $user->isAdmin() && !$show->isRecorded()) {
-            $menu[] = array('action' => array('type' => 'fn',
-                'callback' => "window['confirmCancelShow']($id)"),
-                'title' => 'Cancel Current Show');
+                $menu[] = array('action' => array('type' => 'fn',
+                    'callback' => "window['confirmCancelShow']($id)"),
+                    'title' => 'Cancel Current Show');
         }
 
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
 
             if ($user->isAdmin()) {
 
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/edit-show/format/json/id/'.$id,
+                        'callback' => 'window["beginEditShow"]'), 'title' => 'Edit This Instance');
+                //$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
+                //        'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Edit This Instance and All Following');
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params,
                         'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
@@ -393,9 +400,76 @@ class ScheduleController extends Zend_Controller_Action
     public function editShowAction()
     {
         $showInstanceId = $this->_getParam('id');
-        $showInstance = new ShowInstance($showInstanceId);
+        
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWho = new Application_Form_AddShowWho();
+		$formWhen = new Application_Form_AddShowWhen();
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formStyle = new Application_Form_AddShowStyle();
+        $formRecord = new Application_Form_AddShowRR();
+        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle->removeDecorator('DtDdWrapper');
+        $formRecord->removeDecorator('DtDdWrapper');
+        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+        $formRebroadcast->removeDecorator('DtDdWrapper');
+
+        $this->view->what = $formWhat;
+	    $this->view->when = $formWhen;
+	    $this->view->repeats = $formRepeats;
+	    $this->view->who = $formWho;
+	    $this->view->style = $formStyle;
+        $this->view->rr = $formRecord;
+        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+        $this->view->rebroadcast = $formRebroadcast;
+        $this->view->addNewShow = false;
+
+        $showInstance = new ShowInstance($showInstanceId);
         $show = new Show($showInstance->getShowId());
+        
+        $formWhat->populate(array('add_show_id' => $show->getId(),
+                    'add_show_name' => $show->getName(),
+                    'add_show_url' => $show->getUrl(),
+                    'add_show_genre' => $show->getGenre(),
+                    'add_show_description' => $show->getDescription()));
+
+        $formWhen->populate(array('add_show_start_date' => $show->getStartDate(),
+                                  'add_show_start_time' => Show::removeSecondsFromTime($show->getStartTime()),
+                                  'add_show_duration' => $show->getDuration(),
+                                  'add_show_repeats' => $show->isRepeating() ? 1 : 0));
+
+        $days = array();
+        $showDays = CcShowDaysQuery::create()->filterByDbShowId($showInstance->getShowId())->find();
+        foreach($showDays as $showDay){
+            array_push($days, $showDay->getDbDay());
+        }
+        
+        $formRepeats->populate(array('add_show_repeat_type' => $show->getRepeatType(),
+                                    'add_show_day_check' => $days,
+                                    'add_show_end_date' => $show->getRepeatingEndDate(),
+                                    'add_show_no_end' => ($show->getRepeatingEndDate() == '')));
+
+        $formRecord->populate(array('add_show_record' => $show->isRecorded(),
+                                'add_show_rebroadcast' => $show->isRebroadcast()));
+
+        $hosts = array();
+        $showHosts = CcShowHostsQuery::create()->filterByDbShow($showInstance->getShowId())->find();
+        foreach($showHosts as $showHost){
+            array_push($hosts, $showHost->getDbHost());
+        }
+        $formWho->populate(array('add_show_hosts' => $hosts));
+
+
+        $formStyle->populate(array('add_show_background_color' => $show->getBackgroundColor(),
+                                    'add_show_color' => $show->getColor()));
+        
+        $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+        $this->view->entries = 5;
     }
 
     public function addShowAction()
@@ -407,6 +481,7 @@ class ScheduleController extends Zend_Controller_Action
         foreach($js as $j){
             $data[$j["name"]] = $j["value"];
         }
+     
         $data['add_show_hosts'] =  $this->_getParam('hosts');
         $data['add_show_day_check'] =  $this->_getParam('days');
 
@@ -440,6 +515,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->rr = $formRecord;
         $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
         $this->view->rebroadcast = $formRebroadcast;
+        $this->view->addNewShow = true;
 
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
@@ -494,11 +570,13 @@ class ScheduleController extends Zend_Controller_Action
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $user = new User($userInfo->id);
 			if ($user->isAdmin()) {
-			    Show::create($data);
+                Show::create($data);
             }
 
             //send back a new form for the user.
             $formWhat->reset();
+            $formWhat->populate(array('add_show_id' => '-1'));
+            
 		    $formWho->reset();
 		    $formWhen->reset();
             $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
