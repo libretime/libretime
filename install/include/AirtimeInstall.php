@@ -171,7 +171,7 @@ class AirtimeInstall {
         $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
         $CC_DBC->query($sql);
 
-        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', $p_version)";
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$p_version')";
         $result = $CC_DBC->query($sql);
         if (PEAR::isError($result)) {
             return false;
