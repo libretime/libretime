@@ -10,11 +10,8 @@ require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 AirtimeIni::ExitIfNotRoot();
+AirtimeInstall::DbConnect(true);
 
-//if(file_exists(dirname(__FILE__).'/../VERSION')) {
-//    $version = file_get_contents(dirname(__FILE__).'/../VERSION');
-//    echo "Airtime Version: ".$version." ".PHP_EOL;
-//}
 if(AirtimeInstall::DbTableExists('cc_show_rebroadcast') === true) {
     $version = "1.7.0";
     echo "Airtime Version: ".$version." ".PHP_EOL;
