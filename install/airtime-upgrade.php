@@ -7,14 +7,15 @@
  */
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
+require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 AirtimeIni::ExitIfNotRoot();
 
-if(file_exists(dirname(__FILE__).'/../VERSION')) {
-    $version = file_get_contents(dirname(__FILE__).'/../VERSION');
-    echo "Airtime Version: ".$version." ".PHP_EOL;
-}
-else if(AirtimeInstall::DbTableExists('cc_show_rebroadcast') === true) {
+//if(file_exists(dirname(__FILE__).'/../VERSION')) {
+//    $version = file_get_contents(dirname(__FILE__).'/../VERSION');
+//    echo "Airtime Version: ".$version." ".PHP_EOL;
+//}
+if(AirtimeInstall::DbTableExists('cc_show_rebroadcast') === true) {
     $version = "1.7.0";
     echo "Airtime Version: ".$version." ".PHP_EOL;
 }
@@ -31,6 +32,8 @@ if(strcmp($version, "1.7.0") < 0) {
 if(strcmp($version, "1.8.0") < 0) {
     system("php ".__DIR__."/upgrades/airtime-1.8/airtime-upgrade.php");
 }
+
+AirtimeInstall::SetAirtimeVersion("1.8.0");
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
 
