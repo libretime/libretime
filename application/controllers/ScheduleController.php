@@ -456,6 +456,29 @@ class ScheduleController extends Zend_Controller_Action
 
         $formRecord->populate(array('add_show_record' => $show->isRecorded(),
                                 'add_show_rebroadcast' => $show->isRebroadcast()));
+        $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
+
+
+
+        $rebroadcastsRelative = $show->getRebroadcastsRelative();
+        $rebroadcastFormValues = array();
+        $i = 1;
+        foreach ($rebroadcastsRelative as $rebroadcast){
+            $rebroadcastFormValues["add_show_rebroadcast_date_$i"] = $rebroadcast['day_offset'];
+            $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = Show::removeSecondsFromTime($rebroadcast['start_time']);
+            $i++;
+        }
+        $formRebroadcast->populate($rebroadcastFormValues); 
+
+        $rebroadcastsAbsolute = $show->getRebroadcastsAbsolute();
+        $rebroadcastAbsoluteFormValues = array();
+        $i = 1;
+        foreach ($rebroadcastsAbsolute as $rebroadcast){
+            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_absolute_date_$i"] = $rebroadcast['start_date'];
+            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_absolute_time_$i"] = Show::removeSecondsFromTime($rebroadcast['start_time']);
+            $i++;
+        }
+        $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
 
         $hosts = array();
         $showHosts = CcShowHostsQuery::create()->filterByDbShow($showInstance->getShowId())->find();

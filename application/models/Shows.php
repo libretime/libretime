@@ -153,7 +153,7 @@ class Show {
      */
     public function isRecorded(){
         $showInstancesRow = CcShowInstancesQuery::create()
-        ->filterByDbShowId($this->_showId)
+        ->filterByDbShowId($this->getId())
         ->filterByDbRecord(1)
         ->findOne();
 
@@ -175,6 +175,36 @@ class Show {
         ->findOne();
 
         return !is_null($showInstancesRow);       
+    }
+
+    public function getRebroadcastsAbsolute()
+    {
+        global $CC_DBC;
+    
+        $showId = $this->getId();
+        $sql = "SELECT date(starts) "
+                ."FROM cc_show_instances "
+                ."WHERE show_id = $showId "
+                ."AND record = 1";
+        $baseDate = $CC_DBC->GetOne($sql);
+
+        $sql = "SELECT date(DATE '$baseDate' + day_offset::INTERVAL) as start_date, start_time FROM cc_show_rebroadcast "
+            ."WHERE show_id = $showId "
+            ."ORDER BY start_date";
+            
+        return $CC_DBC->GetAll($sql);
+    }
+
+    public function getRebroadcastsRelative()
+    {
+        global $CC_DBC;
+    
+        $showId = $this->getId();
+        $sql = "SELECT day_offset, start_time FROM cc_show_rebroadcast "
+            ."WHERE show_id = $showId "
+            ."ORDER BY day_offset";
+            
+        return $CC_DBC->GetAll($sql);
     }
     
     /**
@@ -240,10 +270,14 @@ class Show {
     }
     
     public function deleteAllInstances(){
-        CcShowInstancesQuery::create()
-        ->filterByDbShowId($this->getId())
-        ->find()
-        ->delete();
+        global $CC_DBC;
+
+        $showId = $this->getId();
+        $sql = "DELETE FROM cc_show_instances "
+                ."WHERE starts > current_timestamp "
+                ."AND show_id = $showId";
+                   
+        $CC_DBC->query($sql); 
     }
     
     public function removeAllInstancesAfterDate($p_date){
@@ -416,11 +450,12 @@ class Show {
         return CcShowInstancesQuery::create()->findPk($row);
     }
     
-    public static function deletePossiblyInvalidInstances($p_data, $p_show, $p_endDate)
+    public static function deletePossiblyInvalidInstances($p_data, $p_show, $p_endDate, $isRecorded, $repeatType)
     {
              
-        if ($p_data['add_show_repeats'] != $p_show->isRepeating()){
-            //repeat option was toggled.
+        if ($p_data['add_show_repeats'] != $p_show->isRepeating()
+            || $isRecorded){
+            //repeat option was toggled or show is recorded.
             $p_show->deleteAllInstances();
         }
         if ($p_data['add_show_start_date'] != $p_show->getStartDate()
@@ -441,7 +476,7 @@ class Show {
         }
     
         if ($p_data['add_show_repeats']){
-            if ($p_data['add_show_repeat_type'] != $p_show->getRepeatType()){
+            if ($repeatType != $p_show->getRepeatType()){
                 //repeat type changed.
                 $p_show->deleteAllInstances();
             } else {
@@ -530,10 +565,10 @@ class Show {
 
         //find repeat type or set to a non repeating show.
         if ($data['add_show_repeats']) {
-            $repeat_type = $data["add_show_repeat_type"];
+            $repeatType = $data["add_show_repeat_type"];
         }
         else {
-            $repeat_type = -1;
+            $repeatType = -1;
         }
 
         if ($data['add_show_id'] == -1){
@@ -549,13 +584,22 @@ class Show {
         $ccShow->setDbBackgroundColor($data['add_show_background_color']);
         $ccShow->save();
 
-        $isRecorded = ($data['add_show_record']) ? 1 : 0;
-
         $showId = $ccShow->getDbId();
         $show = new Show($showId);
+
+        //If show is a new show (not updated), then get
+        //isRecorded from POST data. Otherwise get it from
+        //the database since the user is not allowed to
+        //update this option.
+        if ($data['add_show_id'] == -1){
+            $isRecorded = ($data['add_show_record']) ? 1 : 0;
+        } else {
+            $isRecorded = $show->isRecorded();
+        } 
+
         
         if ($data['add_show_id'] != -1){
-            Show::deletePossiblyInvalidInstances($data, $show, $endDate);
+            Show::deletePossiblyInvalidInstances($data, $show, $endDate, $isRecorded, $repeatType);
         }
         
         //check if we are adding or updating a show, and if updating
@@ -571,12 +615,11 @@ class Show {
             $showDay->setDbLastShow($endDate);
             $showDay->setDbStartTime($data['add_show_start_time']);
             $showDay->setDbDuration($data['add_show_duration']);
-            $showDay->setDbRepeatType($repeat_type);
+            $showDay->setDbRepeatType($repeatType);
             $showDay->setDbShowId($showId);
             $showDay->setDbRecord($isRecorded);
             $showDay->save();
-        }
-        else {
+        } else {
             foreach ($data['add_show_day_check'] as $day) {
                 if ($startDow !== $day){
 
@@ -600,7 +643,7 @@ class Show {
                     $showDay->setDbStartTime($data['add_show_start_time']);
                     $showDay->setDbDuration($data['add_show_duration']);
                     $showDay->setDbDay($day);
-                    $showDay->setDbRepeatType($repeat_type);
+                    $showDay->setDbRepeatType($repeatType);
                     $showDay->setDbShowId($showId);
                     $showDay->setDbRecord($isRecorded);
                     $showDay->save();
@@ -614,7 +657,7 @@ class Show {
             CcShowRebroadcastQuery::create()->filterByDbShowId($data['add_show_id'])->delete();
         }
         //adding rows to cc_show_rebroadcast
-        if ($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type != -1) {
+        if ($isRecorded && $data['add_show_rebroadcast'] && $repeatType != -1) {
 
             for ($i=1; $i<=5; $i++) {
 
@@ -626,8 +669,7 @@ class Show {
                     $showRebroad->save();
                 }
             }
-        }
-        else if ($data['add_show_record'] && $data['add_show_rebroadcast'] && $repeat_type == -1){
+        } else if ($isRecorded && $data['add_show_rebroadcast'] && $repeatType == -1){
 
             for ($i=1; $i<=5; $i++) {
 
@@ -857,21 +899,21 @@ class Show {
         RabbitMq::PushSchedule();
     }
 
-    private static function populateShow($repeat_type, $show_id, $next_pop_date,
+    private static function populateShow($repeatType, $show_id, $next_pop_date,
                 $first_show, $last_show, $start_time, $duration, $day, $record, $end_timestamp) {
 
-        if($repeat_type == -1) {
+        if($repeatType == -1) {
             Show::populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp);
         }
-        else if($repeat_type == 0) {
+        else if($repeatType == 0) {
             Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
                     $start_time, $duration, $day, $record, $end_timestamp, '7 days');
         }
-        else if($repeat_type == 1) {
+        else if($repeatType == 1) {
             Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
                     $start_time, $duration, $day, $record, $end_timestamp, '14 days');
         }
-        else if($repeat_type == 2) {
+        else if($repeatType == 2) {
             Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
                     $start_time, $duration, $day, $record, $end_timestamp, '1 month');
         }
