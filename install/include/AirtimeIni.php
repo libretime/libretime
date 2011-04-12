@@ -35,7 +35,7 @@ class AirtimeIni{
                 exit(1);
             }
         }
-        
+
         if (!copy(__DIR__."/../../build/airtime.conf", "/etc/airtime/airtime.conf")){
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
@@ -82,20 +82,6 @@ class AirtimeIni{
     }
 
     /**
-     * Ensures that the user is running this PHP script with root
-     * permissions. If not running with root permissions, causes the
-     * script to exit. 
-     */
-    static function ExitIfNotRoot()
-    {
-        // Need to check that we are superuser before running this.
-        if(exec("whoami") != "root"){
-            echo "Must be root user.\n";
-            exit(1);
-        }
-    }
-
-    /**
      * This function generates a random string.
      *
      * The random string uses two parameters: $p_len and $p_chars. These
@@ -132,7 +118,7 @@ class AirtimeIni{
      *      The property to look for in order to change its value.
      * @param string $p_value
      *      The value the property should be changed to.
-     *      
+     *
      */
     static function UpdateIniValue($p_filename, $p_property, $p_value)
     {
