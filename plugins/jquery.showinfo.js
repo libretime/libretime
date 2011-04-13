@@ -89,10 +89,18 @@
 
     return this.each(function() {
         var obj = $(this);
-        var sd;
+        var sd = null;
         getServerData();
 
+        //refresh the UI to update the elapsed/remaining time
+        setInterval(updateWidget, 1000);
+
         function updateWidget(){
+
+            if (sd == null){
+                return;
+            }
+            
             var currentShow = sd.getCurrentShow();
             var nextShows = sd.getNextShows();
 
@@ -126,14 +134,10 @@
                 "</li>" +
                 "<li class='next'>"+options.text.next+": "+nextShowName+"<span>"+nextShowRange+"</span></li>" +
                 "</ul>");
-
-            //refresh the UI to update the elapsed/remaining time
-            setTimeout(updateWidget, 1000);
         }
 
         function processData(data){
             sd = new ScheduleData(data);
-            updateWidget();
         }
 
         function airtimeScheduleJsonpError(jqXHR, textStatus, errorThrown){

@@ -56,7 +56,7 @@ function findHosts(request, callback) {
 }
 
 function setAddShowEvents() {
-	
+
     var form = $("#add-show-form");
 
 	form.find("h3").click(function(){
@@ -129,9 +129,15 @@ function setAddShowEvents() {
     form.find("#add_show_day_check-element label").addClass("wrapp-label");
     form.find("#add_show_day_check-element br").remove();
 
-    form.find("#add_show_no_end").click(function(){
-        form.find("#add_show_end_date").toggle();
-    });
+    function endDateVisibility(){
+        if(form.find("#add_show_no_end").is(':checked')){
+            form.find("#add_show_end_date").hide();
+        } else {
+            form.find("#add_show_end_date").show();
+        }
+    }
+    endDateVisibility();
+    form.find("#add_show_no_end").click(endDateVisibility);
 
 	createDateInput(form.find("#add_show_start_date"), startDpSelect);
 	createDateInput(form.find("#add_show_end_date"), endDpSelect);

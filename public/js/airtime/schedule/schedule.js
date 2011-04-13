@@ -265,9 +265,6 @@ $(window).load(function() {
 		dayClick: dayClick,
 		eventRender: eventRender,
 		eventAfterRender: eventAfterRender,
-		eventClick: eventClick,
-		eventMouseover: eventMouseover,
-		eventMouseout: eventMouseout,
 		eventDrop: eventDrop,
 		eventResize: eventResize 
     });

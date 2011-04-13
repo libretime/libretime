@@ -33,6 +33,17 @@ function makeAddShowButton(){
             });
 }
 
+function beginEditShow(data){
+    //alert (data.entries);
+
+    $("#add-show-form")
+        .empty()
+        .append(data.newForm);
+
+    setAddShowEvents();
+    openAddShowForm();
+}
+
 function makeTimeStamp(date){
 	var sy, sm, sd, h, m, s, timestamp;
 	sy = date.getFullYear();
@@ -164,17 +175,11 @@ function eventRender(event, element, view) {
 			.css('margin-top', '5px')
             .css('margin-left', 'auto')
             .css('margin-right', 'auto')
-            .css('text-align', 'center')
 			.progressbar({
 				value: event.percent
 			});
 
-		if(event.percent === 0) {
-			// even at 0, the bar still seems to display a little bit of progress...
-			div.find("div").hide();
-		}
-
-		$(element).find(".fc-event-title").after(div);
+		$(element).find(".fc-event-content").append(div);
 	}
 
     //add the record/rebroadcast icons if needed.
@@ -215,16 +220,6 @@ function eventAfterRender( event, element, view ) {
 			[{get:"/Schedule/make-context-menu/format/json/id/#id#"}],  
 			{id: event.id}, 
 			{xposition: "mouse", yposition: "mouse"});
-}
-
-function eventClick(event, jsEvent, view) { 
-	var x;
-}
-
-function eventMouseover(event, jsEvent, view) { 
-}
-
-function eventMouseout(event, jsEvent, view) { 
 }
 
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {

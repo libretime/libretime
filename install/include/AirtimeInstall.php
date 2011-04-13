@@ -179,6 +179,32 @@ class AirtimeInstall {
         system($command);
     }
 
+    public static function SetAirtimeVersion($p_version)
+    {
+        global $CC_DBC;
+        $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
+        $CC_DBC->query($sql);
+
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$p_version')";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function GetAirtimeVersion()
+    {
+        global $CC_DBC;
+        $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
+        $version = $CC_DBC->GetOne($sql);
+
+        if (PEAR::isError($version)) {
+            return false;
+        }
+        return $version;
+    }
+
     public static function DeleteFilesRecursive($p_path)
     {
         $command = "rm -rf $p_path";
