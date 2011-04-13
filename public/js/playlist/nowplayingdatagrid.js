@@ -76,7 +76,7 @@ function getDateString(){
     return (date0.getFullYear() + "-" + (parseInt(date0.getMonth())+1) + "-" + date0.getDate());
 }
 
-function getAJAXURL(){
+function getAjaxUrl(){
     var url = "/Nowplaying/get-data-grid-data/format/json/view/"+viewType;
     
     if (viewType == "day"){
@@ -99,7 +99,7 @@ function updateDataTable(){
 }
 
 function getData(){
-       $.ajax({ url: getAJAXURL(), dataType:"json", success:function(data){
+       $.ajax({ url: getAjaxUrl(), dataType:"json", success:function(data){
 		datagridData = data.entries;
         if (datagridData.currentShow.length > 0)
             currentShowInstanceID = datagridData.currentShow[0].instance_id;

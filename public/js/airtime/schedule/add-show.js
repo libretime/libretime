@@ -189,6 +189,13 @@ function setAddShowEvents() {
             $("#schedule_calendar").width(y+z+50);
             $("#schedule_calendar").fullCalendar('render');
 			$("#add-show-form").hide();
+            $.get("/Schedule/get-form", {format:"json"}, function(json){
+                    $("#add-show-form")
+                        .empty()
+                        .append(json.form);
+
+                    setAddShowEvents();
+            }); 
             makeAddShowButton();
 		});
 
