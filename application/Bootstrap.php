@@ -59,7 +59,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	protected function _initHeadScript()
 	{
 		$view = $this->getResource('view');
-        $view->headScript()->appendFile('/js/libs/jquery-1.5.1.min.js','text/javascript');
+        $view->headScript()->appendFile('/js/libs/jquery-1.5.2.min.js','text/javascript');
 		$view->headScript()->appendFile('/js/libs/jquery-ui-1.8.11.custom.min.js','text/javascript');
         $view->headScript()->appendFile('/js/libs/jquery.stickyPanel.js','text/javascript');
         $view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');

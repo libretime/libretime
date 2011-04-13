@@ -188,6 +188,10 @@ class Show {
                 ."AND record = 1";
         $baseDate = $CC_DBC->GetOne($sql);
 
+        if (is_null($baseDate)){
+            return array();
+        }
+
         $sql = "SELECT date(DATE '$baseDate' + day_offset::INTERVAL) as start_date, start_time FROM cc_show_rebroadcast "
             ."WHERE show_id = $showId "
             ."ORDER BY start_date";

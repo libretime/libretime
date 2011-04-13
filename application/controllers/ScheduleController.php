@@ -246,7 +246,7 @@ class ScheduleController extends Zend_Controller_Action
             if ($user->isAdmin()) {
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/edit-show/format/json/id/'.$id,
-                        'callback' => 'window["beginEditShow"]'), 'title' => 'Edit This Instance');
+                        'callback' => 'window["beginEditShow"]'), 'title' => 'Edit Show');
                 //$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
                 //        'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Edit This Instance and All Following');
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params,
