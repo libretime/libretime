@@ -1,11 +1,11 @@
 /*
- * FullCalendar v1.5 Stylesheet
+ * FullCalendar v1.5.1 Stylesheet
  *
  * Copyright (c) 2011 Adam Shaw
  * Dual licensed under the MIT and GPL licenses, located in
  * MIT-LICENSE.txt and GPL-LICENSE.txt respectively.
  *
- * Date: Sat Mar 19 18:59:37 2011 -0700
+ * Date: Sat Apr 9 14:09:51 2011 -0700
  *
  */
 
@@ -245,6 +245,10 @@ html .fc,
 	border-color: #ddd;
 	}
 	
+.fc-state-disabled {
+	cursor: default;
+	}
+	
 .fc-state-disabled .fc-button-effect {
 	display: none;
 	}
@@ -286,6 +290,7 @@ a.fc-event {
 	height: 100%;
 	border-style: solid;
 	border-width: 0;
+	overflow: hidden;
 	}
 	
 .fc-event-time,
@@ -609,5 +614,33 @@ table.fc-border-separate {
 .fc-agenda .ui-resizable-resizing { /* TODO: better selector */
 	_overflow: hidden;
 	}
-	
-	
+
+/*---////////////////////////////////////////// CUSTOM OVERRIDES ////////////////////////////////---*/	
+
+html .fc, .fc table {
+    font-size: 12px;
+}
+.fc table thead tr.fc-first th, .fc table thead tr.fc-first th.fc-agenda-axis {
+	height:26px !important;
+	vertical-align:middle;
+}
+.fc-agenda-axis input.input_select {
+	height:22px !important;
+	font-size:11px;
+}
+.fc-header-title h2 {
+	font-size: 18px;
+    font-weight: normal;
+	margin-top:2px;
+}
+.fc-event-vert .fc-event-time {
+	font-size: 11px;
+}	
+.fc-event-time, .fc-event-title {
+    font-size: 11px;
+    padding: 0 2px;
+}
+
+/*.fc-event {
+	overflow:hidden;
+}*/	
