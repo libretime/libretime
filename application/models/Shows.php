@@ -452,7 +452,6 @@ class Show {
     
     public static function deletePossiblyInvalidInstances($p_data, $p_show, $p_endDate, $isRecorded, $repeatType)
     {
-             
         if ($p_data['add_show_repeats'] != $p_show->isRepeating()
             || $isRecorded){
             //repeat option was toggled or show is recorded.
@@ -542,7 +541,7 @@ class Show {
 
         if ($data['add_show_no_end']) {
             $endDate = NULL;
-            $data['add_show_repeats'] = 1;
+            //$data['add_show_repeats'] = 1;
         }
         else if ($data['add_show_repeats']) {
             $sql = "SELECT date '{$data['add_show_end_date']}' + INTERVAL '1 day' ";
@@ -558,18 +557,12 @@ class Show {
         //only want the day of the week from the start date.
         if (!$data['add_show_repeats']) {
             $data['add_show_day_check'] = array($startDow);
-        }
-        else if ($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
+        } else if ($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = array($startDow);
         }
 
         //find repeat type or set to a non repeating show.
-        if ($data['add_show_repeats']) {
-            $repeatType = $data["add_show_repeat_type"];
-        }
-        else {
-            $repeatType = -1;
-        }
+        $repeatType = ($data['add_show_repeats']) ? $data['add_show_repeat_type'] : -1;
 
         if ($data['add_show_id'] == -1){
             $ccShow = new CcShow();
@@ -606,10 +599,10 @@ class Show {
         //erase all the show's show_days information first.
         if ($data['add_show_id'] != -1){
             CcShowDaysQuery::create()->filterByDbShowId($data['add_show_id'])->delete();
-        }        
+        }
         
         //don't set day for monthly repeat type, it's invalid.
-        if ($data['add_show_repeats'] && $data['add_show_repeat_type'] == 2) {
+        if ($data['add_show_repeats'] && $data['add_show_repeat_type'] == 2){
             $showDay = new CcShowDays();
             $showDay->setDbFirstShow($data['add_show_start_date']);
             $showDay->setDbLastShow($endDate);
