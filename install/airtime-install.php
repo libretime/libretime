@@ -43,9 +43,6 @@ AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 echo "* Creating /usr/bin symlinks".PHP_EOL;
 AirtimeInstall::CreateSymlinks($CC_CONFIG["storageDir"]);
 
-echo "* Importing sample audio clips".PHP_EOL;
-system(__DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null");
-
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 
