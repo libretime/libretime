@@ -5,177 +5,29 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
 
     public function init()
     {
-        //$this->setDisableLoadDefaultDecorators(true);
-
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/add-show-rebroadcast-absolute.phtml'))
         ));
 
-		// Add start date element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_date_1', array(
-            'label'      => 'Rebroadcast Date:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-            'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('YYYY-MM-DD'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            ) 
-        ));
+        for($i=1; $i<=10; $i++) {
 
-        
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_time_1', array(
-            'label'      => 'Rebroadcast Time:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
+            $text = new Zend_Form_Element_Text("add_show_rebroadcast_absolute_date_$i");
+            $text->setAttrib('class', 'input_text');
+            $text->addFilter('StringTrim');
+            $text->addValidator('date', false, array('YYYY-MM-DD'));
+            $text->setRequired(false);
+            $text->setDecorators(array('ViewHelper'));
+            $this->addElement($text);
 
-        // Add start date element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_date_2', array(
-            'label'      => 'Rebroadcast Date:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-            'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('YYYY-MM-DD'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            ) 
-        ));
-
-        
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_time_2', array(
-            'label'      => 'Rebroadcast Time:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-         // Add start date element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_date_3', array(
-            'label'      => 'Rebroadcast Date:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-            'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('YYYY-MM-DD'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            ) 
-        ));
-
-        
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_time_3', array(
-            'label'      => 'Rebroadcast Time:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-         // Add start date element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_date_4', array(
-            'label'      => 'Rebroadcast Date:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-            'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('YYYY-MM-DD'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            ) 
-        ));
-
-        
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_time_4', array(
-            'label'      => 'Rebroadcast Time:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-         // Add start date element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_date_5', array(
-            'label'      => 'Rebroadcast Date:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-            'validators' => array(
-				'NotEmpty',
-        		array('date', false, array('YYYY-MM-DD'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            ) 
-        ));
-
-        
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_absolute_time_5', array(
-            'label'      => 'Rebroadcast Time:',
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
+            $text = new Zend_Form_Element_Text("add_show_rebroadcast_absolute_time_$i");
+            $text->setAttrib('class', 'input_text');
+            $text->addFilter('StringTrim');
+            $text->addValidator('date', false, array('HH:mm'));
+            $text->addValidator('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'));
+            $text->setRequired(false);
+            $text->setDecorators(array('ViewHelper'));
+            $this->addElement($text);
+        }
     }
 
     public function checkReliantFields($formData) {

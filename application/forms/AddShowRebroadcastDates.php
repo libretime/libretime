@@ -9,137 +9,30 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/add-show-rebroadcast.phtml'))
         ));
 
-
         $relativeDates = array();
         $relativeDates[""] = "";
-        for($i=0; $i <=30; $i++) {
+        for($i=0; $i<=30; $i++) {
            $relativeDates["$i days"] = "+$i days";  
         }
 
-        //Add date select
-		$this->addElement('select', 'add_show_rebroadcast_date_1', array(
-            'required' => false,
-            'class' => ' input_select',
-            'multiOptions' => $relativeDates,
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
+        for($i=1; $i<=10; $i++) {
 
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_time_1', array(
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
+            $select = new Zend_Form_Element_Select("add_show_rebroadcast_date_$i");
+            $select->setAttrib('class', 'input_select');
+            $select->setMultiOptions($relativeDates);
+            $select->setRequired(false);
+            $select->setDecorators(array('ViewHelper'));
+            $this->addElement($select);
 
-        //Add date select
-		$this->addElement('select', 'add_show_rebroadcast_date_2', array(
-            'required' => false,
-            'class' => ' input_select',
-            'multiOptions' => $relativeDates,
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_time_2', array(
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-        //Add date select
-		$this->addElement('select', 'add_show_rebroadcast_date_3', array(
-            'required' => false,
-            'class' => ' input_select',
-            'multiOptions' => $relativeDates,
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_time_3', array(
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-        //Add date select
-		$this->addElement('select', 'add_show_rebroadcast_date_4', array(
-            'required' => false,
-            'class' => ' input_select',
-            'multiOptions' => $relativeDates,
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_time_4', array(
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-        //Add date select
-		$this->addElement('select', 'add_show_rebroadcast_date_5', array(
-            'required' => false,
-            'class' => ' input_select',
-            'multiOptions' => $relativeDates,
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
-
-        // Add start time element
-        $this->addElement('text', 'add_show_rebroadcast_time_5', array(
-            'class'      => 'input_text',
-            'required' => false,
-            'value'     => '',
-            'filters'    => array('StringTrim'),
-			'validators' => array(
-        		array('date', false, array('HH:mm')),
-                array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))
-    		),
-            'decorators' => array(
-                'ViewHelper'
-            )  
-        ));
+            $text = new Zend_Form_Element_Text("add_show_rebroadcast_time_$i");
+            $text->setAttrib('class', 'input_text');
+            $text->addFilter('StringTrim');
+            $text->addValidator('date', false, array('HH:mm'));
+            $text->addValidator('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'));
+            $text->setRequired(false);
+            $text->setDecorators(array('ViewHelper'));
+            $this->addElement($text);
+        }
     }
 
     public function checkReliantFields($formData) {
