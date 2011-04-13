@@ -4,6 +4,20 @@ require_once(dirname(__FILE__).'/../../library/pear/DB.php');
 require_once(dirname(__FILE__).'/../../application/configs/conf.php');
 
 class AirtimeInstall {
+    /**
+     * Ensures that the user is running this PHP script with root
+     * permissions. If not running with root permissions, causes the
+     * script to exit.
+     */
+    static function ExitIfNotRoot()
+    {
+        // Need to check that we are superuser before running this.
+        if(exec("whoami") != "root"){
+            echo "Must be root user.\n";
+            exit(1);
+        }
+    }
+
 
     static function DbTableExists($p_name)
     {

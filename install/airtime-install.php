@@ -8,13 +8,13 @@
 echo "******************************** Install Begin *********************************".PHP_EOL;
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
+require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
-AirtimeIni::ExitIfNotRoot();
+AirtimeInstall::ExitIfNotRoot();
 AirtimeIni::CreateIniFile();
 AirtimeIni::UpdateIniFiles();
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
-require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 echo PHP_EOL."*** Installing Airtime ".AIRTIME_VERSION." ***".PHP_EOL;
 
@@ -42,9 +42,6 @@ AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
 echo "* Creating /usr/bin symlinks".PHP_EOL;
 AirtimeInstall::CreateSymlinks($CC_CONFIG["storageDir"]);
-
-echo "* Importing sample audio clips".PHP_EOL;
-system(__DIR__."/../utils/airtime-import --copy ../audio_samples/ > /dev/null");
 
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
