@@ -78,6 +78,7 @@
 
 .spl_artist {
 	font-size:12px;
+	color:#d5d5d5;
 }
 
 /*#spl_editor {
@@ -108,10 +109,10 @@
 }
 
 #side_playlist h3 {
-	font-size:17px;
+	font-size:20px;
 	margin:9px 0 3px 0;
 	padding:0;
-	color:#1c1c1c;
+	color:#444444;
 	font-weight:normal;
 	clear:both;
 	float:left;
@@ -120,7 +121,7 @@
 	font-size:15px;
 	margin:8px 0 10px 0;
 	padding:0;
-	color:#1c1c1c;
+	color:#6e6e6e;
 	font-weight:normal;
 	clear:both;
 	float:left;

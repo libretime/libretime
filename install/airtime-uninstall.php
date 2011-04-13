@@ -6,8 +6,9 @@
  */
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
+require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 // Need to check that we are superuser before running this.
-AirtimeIni::ExitIfNotRoot();
+AirtimeInstall::ExitIfNotRoot();
 
 if (!file_exists('/etc/airtime/airtime.conf')) {
     echo PHP_EOL."Airtime config file '/etc/airtime/airtime.conf' does not exist.".PHP_EOL;
@@ -15,7 +16,6 @@ if (!file_exists('/etc/airtime/airtime.conf')) {
     exit();
 }
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
-require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 
 AirtimeInstall::RemoveSymlinks();

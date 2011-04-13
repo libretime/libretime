@@ -899,6 +899,7 @@ div.ui-datepicker {
 }
 #show_time_info {
 	font-size:12px;
+	height:30px;
 }
 
 #show_time_info > div, #show_time_info > span{
@@ -1593,6 +1594,19 @@ dd.radio-inline-list, .preferences dd.radio-inline-list {
 }
 .preferences dd#SoundCloudTags-element.block-display .input_text_area {
     height: 120px;
+}
+
+#show_time_info {
+	font-size:12px;
+	height:30px;
+}
+#show_time_warning {
+	background:#c83f3f url(images/icon_alert_ffffff.png) no-repeat 5px 4px;
+	border:1px solid #9d1010;
+	color:#fff;
+	padding: 2px 5px 2px 24px;
+    font-size: 12px;
+    line-height: 140%;
 }
 
 /* HACK, to be removed after 1.7.0 */
