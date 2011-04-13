@@ -172,7 +172,7 @@ function eventRender(event, element, view) {
 		div
 			.height('5px')
 			.width('95%')
-			.css('margin-top', '5px')
+			.css('margin-top', '1px')
             .css('margin-left', 'auto')
             .css('margin-right', 'auto')
 			.progressbar({
