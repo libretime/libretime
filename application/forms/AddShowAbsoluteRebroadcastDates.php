@@ -11,7 +11,7 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
 
         for($i=1; $i<=10; $i++) {
 
-            $text = new Zend_Form_Element_Text("add_show_rebroadcast_absolute_date_$i");
+            $text = new Zend_Form_Element_Text("add_show_rebroadcast_date_absolute_$i");
             $text->setAttrib('class', 'input_text');
             $text->addFilter('StringTrim');
             $text->addValidator('date', false, array('YYYY-MM-DD'));
@@ -19,7 +19,7 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             $text->setDecorators(array('ViewHelper'));
             $this->addElement($text);
 
-            $text = new Zend_Form_Element_Text("add_show_rebroadcast_absolute_time_$i");
+            $text = new Zend_Form_Element_Text("add_show_rebroadcast_time_absolute_$i");
             $text->setAttrib('class', 'input_text');
             $text->addFilter('StringTrim');
             $text->addValidator('date', false, array('HH:mm'));
@@ -34,9 +34,9 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
 
         $valid = true;
 
-        for($i=1; $i<=5; $i++) {
+        for($i=1; $i<=10; $i++) {
         
-            $day = $formData['add_show_rebroadcast_absolute_date_'.$i];
+            $day = $formData['add_show_rebroadcast_date_absolute_'.$i];
 
             if($day == "") {
                 continue;
@@ -52,11 +52,11 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             $show_end->add(new DateInterval("PT$duration[1]M"));
             $show_end->add(new DateInterval("PT1H"));//min time to wait until a rebroadcast
            
-            $rebroad_start = $day."".$formData['add_show_rebroadcast_absolute_time_'.$i];
+            $rebroad_start = $day."".$formData['add_show_rebroadcast_time_absolute_'.$i];
             $rebroad_start = new DateTime($rebroad_start);
             
             if($rebroad_start < $show_end) {
-                $this->getElement('add_show_rebroadcast_absolute_time_'.$i)->setErrors(array("Must wait at least 1 hour to rebroadcast"));
+                $this->getElement('add_show_rebroadcast_time_absolute_'.$i)->setErrors(array("Must wait at least 1 hour to rebroadcast"));
                 $valid = false;
             }
         }           

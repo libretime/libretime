@@ -656,7 +656,7 @@ class Show {
         //adding rows to cc_show_rebroadcast
         if ($isRecorded && $data['add_show_rebroadcast'] && $repeatType != -1) {
 
-            for ($i=1; $i<=5; $i++) {
+            for ($i=1; $i<=10; $i++) {
 
                 if ($data['add_show_rebroadcast_date_'.$i]) {
                     $showRebroad = new CcShowRebroadcast();
@@ -668,16 +668,16 @@ class Show {
             }
         } else if ($isRecorded && $data['add_show_rebroadcast'] && $repeatType == -1){
 
-            for ($i=1; $i<=5; $i++) {
+            for ($i=1; $i<=10; $i++) {
 
-                if ($data['add_show_rebroadcast_absolute_date_'.$i]) {
-                    $sql = "SELECT date '{$data['add_show_rebroadcast_absolute_date_'.$i]}' - date '{$data['add_show_start_date']}' ";
+                if ($data['add_show_rebroadcast_date_absolute_'.$i]) {
+                    $sql = "SELECT date '{$data['add_show_rebroadcast_date_absolute_'.$i]}' - date '{$data['add_show_start_date']}' ";
                     $r = $con->query($sql);
                     $offset_days = $r->fetchColumn(0);
 
                     $showRebroad = new CcShowRebroadcast();
                     $showRebroad->setDbDayOffset($offset_days." days");
-                    $showRebroad->setDbStartTime($data['add_show_rebroadcast_absolute_time_'.$i]);
+                    $showRebroad->setDbStartTime($data['add_show_rebroadcast_time_absolute_'.$i]);
                     $showRebroad->setDbShowId($showId);
                     $showRebroad->save();
                 }

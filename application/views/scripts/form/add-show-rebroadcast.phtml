@@ -4,30 +4,40 @@
           <label for="add_show_rebroadcast_repeat_day" class="optional">Repeat Days:</label>
         </dt> 
         <dd id="add_show_rebroadcast_repeat_day-element" class="block-display clearfix">
-          <ul class="formrow-repeat"> 
-            <?php for($i=1; $i<=5; $i++): ?>
-            <li>
-                <?php echo $this->element->getElement('add_show_rebroadcast_date_'.$i) ?>
-                <span class="inline-text">@</span>
-                <?php echo $this->element->getElement('add_show_rebroadcast_time_'.$i) ?>
-            </li>
+            <ul class="formrow-repeat"> 
+                <?php for($i=1; $i<=10; $i++): ?>
+                <li <?php if($i > 1){echo 'style=display:none';} ?>>
+                    <?php echo $this->element->getElement('add_show_rebroadcast_date_'.$i) ?>
+                    <span class="inline-text">@</span>
+                    <?php echo $this->element->getElement('add_show_rebroadcast_time_'.$i) ?>
+                    <?php if($i > 1): ?>
+                        <a class="ui-button ui-button-icon-only  ui-widget ui-state-default" id="remove_rebroadcast_<?php echo $i ?>">
+                            <span class="ui-icon ui-icon-closethick"></span>
+                            <span class="ui-button-text">Remove</span>
+                        </a>
+                    <?php endif; ?>
+                </li>
 
-            <?php if(($this->element->getElement('add_show_rebroadcast_date_'.$i)->hasErrors()) 
-                  || ($this->element->getElement('add_show_rebroadcast_time_'.$i)->hasErrors())) : ?>
-                <ul class='errors'>
-                    <?php $errors = array_merge(
-                            $this->element->getElement('add_show_rebroadcast_date_'.$i)->getMessages(),
-                            $this->element->getElement('add_show_rebroadcast_time_'.$i)->getMessages()
-                            );
-                    ?> 
+                <?php if(($this->element->getElement('add_show_rebroadcast_date_'.$i)->hasErrors()) 
+                      || ($this->element->getElement('add_show_rebroadcast_time_'.$i)->hasErrors())) : ?>
+                    <ul class='errors'>
+                        <?php $errors = array_merge(
+                                $this->element->getElement('add_show_rebroadcast_date_'.$i)->getMessages(),
+                                $this->element->getElement('add_show_rebroadcast_time_'.$i)->getMessages()
+                                );
+                        ?> 
 
-                    <?php foreach($errors as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-            <?php endfor; ?>
-          </ul>
+                        <?php foreach($errors as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                <?php endfor; ?>
+            </ul>
+        <a class="ui-button ui-button-icon-only  ui-widget ui-state-default add_absolute_rebroadcast_day">
+            <span class="ui-icon ui-icon-plusthick"></span>
+            <span class="ui-button-text">Add</span>
+        </a>
         </dd>
     </dl>
 </fieldset>
