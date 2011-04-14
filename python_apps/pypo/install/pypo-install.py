@@ -72,9 +72,13 @@ try:
   create_user("pypo")
 
   print "Creating log directories"
-  create_path("/var/log/pypo")
-  os.system("chmod -R 755 /var/log/pypo")
-  os.system("chown -R pypo:pypo /var/log/pypo")
+  create_path("/var/log/airtime/pypo")
+  os.system("chmod -R 755 /var/log/airtime/pypo")
+  os.system("chown -R pypo:pypo /var/log/airtime/pypo")
+
+  create_path("/var/log/airtime/pypo-liquidsoap")
+  os.system("chmod -R 755 /var/log/airtime/pypo-liquidsoap")
+  os.system("chown -R pypo:pypo /var/log/airtime/pypo-liquidsoap")
 
   create_path(BASE_PATH)
   create_path(BASE_PATH+"bin")
@@ -112,7 +116,7 @@ try:
   create_path("/etc/service/pypo-liquidsoap")  
   create_path("/etc/service/pypo-liquidsoap/log")  
   shutil.copy("%s/pypo-daemontools-liquidsoap.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/run")
-  shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/log/run")
+  shutil.copy("%s/pypo-liquidsoap-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/log/run")
   os.system("chmod -R 755 /etc/service/pypo-liquidsoap")
   os.system("chown -R pypo:pypo /etc/service/pypo-liquidsoap")
 
