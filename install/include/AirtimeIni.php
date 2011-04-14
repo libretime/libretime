@@ -22,12 +22,40 @@ if (!function_exists('pg_connect')) {
 }
 
 class AirtimeIni{
+    const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
+    const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
+    const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
+    const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
+
+
+    static function ExitIfIniFilesExist()
+    {
+        $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
+                             AirtimeIni::CONF_FILE_PYPO,
+                             AirtimeIni::CONF_FILE_RECORDER,
+                             AirtimeIni::CONF_FILE_LIQUIDSOAP);
+        $exist = false;
+        foreach ($configFiles as $conf) {
+            if (file_exists($conf)) {
+                echo "Existing config file detected at $conf".PHP_EOL;
+                $exist = true;
+            }
+        }
+        if ($exist) {
+            echo PHP_EOL."Existing config files will be overwritten.  Do you want to continue? (y/N) ";
+            $response = trim(fgets(STDIN));
+            if ($response != "Y" && $response != "y") {
+                echo "Install process stopped.".PHP_EOL.PHP_EOL;
+                exit();
+            }
+        }
+    }
 
     /**
      * This function creates the /etc/airtime configuration folder
      * and copies the default config files to it.
      */
-    static function CreateIniFile()
+    static function CreateIniFiles()
     {
         if (!file_exists("/etc/airtime/")){
             if (!mkdir("/etc/airtime/", 0755, true)){
@@ -36,19 +64,19 @@ class AirtimeIni{
             }
         }
 
-        if (!copy(__DIR__."/../../build/airtime.conf", "/etc/airtime/airtime.conf")){
+        if (!copy(__DIR__."/../../build/airtime.conf", AirtimeIni::CONF_FILE_AIRTIME)){
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."/../../python_apps/pypo/pypo.cfg", "/etc/airtime/pypo.cfg")){
+        if (!copy(__DIR__."/../../python_apps/pypo/pypo.cfg", AirtimeIni::CONF_FILE_PYPO)){
             echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."/../../python_apps/show-recorder/recorder.cfg", "/etc/airtime/recorder.cfg")){
+        if (!copy(__DIR__."/../../python_apps/show-recorder/recorder.cfg", AirtimeIni::CONF_FILE_RECORDER)){
             echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."/../../python_apps/pypo/scripts/liquidsoap.cfg", "/etc/airtime/liquidsoap.cfg")){
+        if (!copy(__DIR__."/../../python_apps/pypo/scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
@@ -60,20 +88,20 @@ class AirtimeIni{
      */
     static function RemoveIniFiles()
     {
-        if (file_exists("/etc/airtime/airtime.conf")){
-            unlink("/etc/airtime/airtime.conf");
+        if (file_exists(AirtimeIni::CONF_FILE_AIRTIME)){
+            unlink(AirtimeIni::CONF_FILE_AIRTIME);
         }
 
-        if (file_exists("/etc/airtime/pypo.cfg")){
-            unlink("/etc/airtime/pypo.cfg");
+        if (file_exists(AirtimeIni::CONF_FILE_PYPO)){
+            unlink(AirtimeIni::CONF_FILE_PYPO);
         }
 
-        if (file_exists("/etc/airtime/recorder.cfg")){
-            unlink("/etc/airtime/recorder.cfg");
+        if (file_exists(AirtimeIni::CONF_FILE_RECORDER)){
+            unlink(AirtimeIni::CONF_FILE_RECORDER);
         }
 
-        if (file_exists("/etc/airtime/liquidsoap.cfg")){
-            unlink("/etc/airtime/liquidsoap.cfg");
+        if (file_exists(AirtimeIni::CONF_FILE_LIQUIDSOAP)){
+            unlink(AirtimeIni::CONF_FILE_LIQUIDSOAP);
         }
 
         if (file_exists("etc/airtime")){
@@ -146,11 +174,11 @@ class AirtimeIni{
     static function UpdateIniFiles()
     {
         $api_key = AirtimeIni::GenerateRandomString();
-        AirtimeIni::UpdateIniValue('/etc/airtime/airtime.conf', 'api_key', $api_key);
-        AirtimeIni::UpdateIniValue('/etc/airtime/airtime.conf', 'base_files_dir', realpath(__DIR__.'/../../').'/files');
-        AirtimeIni::UpdateIniValue('/etc/airtime/airtime.conf', 'airtime_dir', realpath(__DIR__.'/../../'));
-        AirtimeIni::UpdateIniValue('/etc/airtime/pypo.cfg', 'api_key', "'$api_key'");
-        AirtimeIni::UpdateIniValue('/etc/airtime/recorder.cfg', 'api_key', "'$api_key'");
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'api_key', $api_key);
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'base_files_dir', realpath(__DIR__.'/../../').'/files');
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'airtime_dir', realpath(__DIR__.'/../../'));
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_PYPO, 'api_key', "'$api_key'");
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_RECORDER, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(__DIR__.'/../../build/build.properties', 'project.home', realpath(__dir__.'/../../'));
     }
 }

@@ -5,13 +5,15 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 
+echo PHP_EOL;
 echo "******************************** Install Begin *********************************".PHP_EOL;
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 AirtimeInstall::ExitIfNotRoot();
-AirtimeIni::CreateIniFile();
+AirtimeIni::ExitIfIniFilesExist();
+AirtimeIni::CreateIniFiles();
 AirtimeIni::UpdateIniFiles();
 
 require_once(dirname(__FILE__).'/../application/configs/conf.php');

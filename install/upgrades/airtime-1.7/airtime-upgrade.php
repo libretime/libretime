@@ -9,7 +9,7 @@
 require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 
-AirtimeIni::CreateIniFile();
+AirtimeIni::CreateIniFiles();
 AirtimeIni::UpdateIniFiles();
 
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;

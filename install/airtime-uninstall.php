@@ -10,8 +10,8 @@ require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 // Need to check that we are superuser before running this.
 AirtimeInstall::ExitIfNotRoot();
 
-if (!file_exists('/etc/airtime/airtime.conf')) {
-    echo PHP_EOL."Airtime config file '/etc/airtime/airtime.conf' does not exist.".PHP_EOL;
+if (!file_exists(AirtimeIni::CONF_FILE_AIRTIME)) {
+    echo PHP_EOL."Airtime config file '".AirtimeIni::CONF_FILE_AIRTIME."' does not exist.".PHP_EOL;
     echo "Most likely this means that Airtime is not installed, so there is nothing to do.".PHP_EOL.PHP_EOL;
     exit();
 }
@@ -72,7 +72,7 @@ $command = "sudo -u postgres psql postgres --command \"DROP USER {$CC_CONFIG['ds
 if ($results == 0) {
     echo "   * User '{$CC_CONFIG['dsn']['username']}' deleted.".PHP_EOL;
 } else {
-    echo "   * Nothing to delete..".PHP_EOL;
+    echo "   * Nothing to delete.".PHP_EOL;
 }
 
 
