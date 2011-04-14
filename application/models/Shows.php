@@ -1304,19 +1304,6 @@ class ShowInstance {
         $showInstance->updateDbTimeFilled($con);
     }
 
-    public function moveScheduledShowContent($deltaDay, $deltaHours, $deltaMin)
-    {
-        global $CC_DBC;
-
-        $sql = "UPDATE cc_schedule
-                   SET starts = (starts + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}'),
-                        ends = (ends + interval '{$deltaDay} days' + interval '{$deltaHours}:{$deltaMin}')
-                   WHERE instance_id = '{$this->_instanceId}'";
-
-        $CC_DBC->query($sql);
-        RabbitMq::PushSchedule();
-    }
-
     public function correctScheduleStartTimes(){
         global $CC_DBC;
         
@@ -1343,6 +1330,7 @@ class ShowInstance {
                 $CC_DBC->query($sql);
             }
         }
+        RabbitMq::PushSchedule();
     }
 
     public function moveShow($deltaDay, $deltaMin)
@@ -1387,9 +1375,9 @@ class ShowInstance {
             }
         }
 
-        $this->moveScheduledShowContent($deltaDay, $hours, $mins);
         $this->setShowStart($new_starts);
         $this->setShowEnd($new_ends);
+        $this->correctScheduleStartTimes();
         RabbitMq::PushSchedule();
     }
 
