@@ -57,8 +57,8 @@ class Application_Model_Nowplaying
     }
 
     public static function FilterRowsByDate($rows, $date, $startCutoff, $endCutoff){
-        $dateNow = new Application_Model_DateHelper;
-        $timeNow = $dateNow->getDate();
+        $dateNow = new DateHelper;
+        $timeNow = $dateNow->getTimestamp();
 
         $data = array();
         //iterate over each show, and calculate information for it.
@@ -117,16 +117,16 @@ class Application_Model_Nowplaying
     public static function GetDataGridData($viewType, $dateString){
 
         if ($viewType == "now"){
-            $date = new Application_Model_DateHelper;
-            $timeNow = $date->getDate();
+            $date = new DateHelper;
+            $timeNow = $date->getTimestamp();
 
             $startCutoff = 60;
             $endCutoff = 86400; //60*60*24 - seconds in a day
         } else {
-            $date = new Application_Model_DateHelper;
+            $date = new DateHelper;
             $time = $date->getTime();
             $date->setDate($dateString." ".$time);
-            $timeNow = $date->getDate();
+            $timeNow = $date->getTimestamp();
 
             $startCutoff = $date->getNowDayStartDiff();
             $endCutoff = $date->getNowDayEndDiff();
@@ -139,8 +139,8 @@ class Application_Model_Nowplaying
         //$rows = FindGapsBetweenShows()
         $data = Application_Model_Nowplaying::FilterRowsByDate($rows, $date, $startCutoff, $endCutoff);
 
-        $date = new Application_Model_DateHelper;
-        $timeNow = $date->getDate();
+        $date = new DateHelper;
+        $timeNow = $date->getTimestamp();
         return array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$data);
     }
 }
