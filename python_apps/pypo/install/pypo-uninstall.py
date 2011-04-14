@@ -32,7 +32,7 @@ try:
     os.system("python %s/pypo-stop.py" % get_current_script_dir())
     
     print "Removing log directories"
-    remove_path("/var/log/pypo")
+    remove_path("/var/log/airtime/pypo")
     
     print "Removing pypo files"
     remove_path(BASE_PATH)

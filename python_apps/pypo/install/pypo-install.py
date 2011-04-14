@@ -72,9 +72,9 @@ try:
   create_user("pypo")
 
   print "Creating log directories"
-  create_path("/var/log/pypo")
-  os.system("chmod -R 755 /var/log/pypo")
-  os.system("chown -R pypo:pypo /var/log/pypo")
+  create_path("/var/log/airtime/pypo")
+  os.system("chmod -R 755 /var/log/airtime/pypo")
+  os.system("chown -R pypo:pypo /var/log/airtime/pypo")
 
   create_path(BASE_PATH)
   create_path(BASE_PATH+"bin")

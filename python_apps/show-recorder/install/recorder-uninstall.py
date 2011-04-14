@@ -32,7 +32,7 @@ try:
     os.system("python %s/recorder-stop.py" % get_current_script_dir())
     
     print "Removing log directories"
-    remove_path("/var/log/recorder")
+    remove_path("/var/log/airtime/recorder")
     
     print "Removing recorder files"
     remove_path(BASE_PATH)
