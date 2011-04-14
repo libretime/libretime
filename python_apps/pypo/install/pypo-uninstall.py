@@ -33,6 +33,7 @@ try:
     
     print "Removing log directories"
     remove_path("/var/log/airtime/pypo")
+    remove_path("/var/log/airtime/pypo-liquidsoap")
     
     print "Removing pypo files"
     remove_path(BASE_PATH)
