@@ -85,7 +85,7 @@ function updateProgressBarValue(){
 			songPercentDone = 0;        
             currentSong = new Array();
 		} else {
-            if (currentSong[0].media_item_played == "t")
+            if (currentSong[0].media_item_played == "t" && currentShow.length > 0)
                 $('#on-air-info').attr("class", "on-air-info on");
             else
                 $('#on-air-info').attr("class", "on-air-info off");

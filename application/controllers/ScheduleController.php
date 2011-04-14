@@ -25,6 +25,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('edit-show', 'json')
                     ->addActionContext('add-show', 'json')
                     ->addActionContext('cancel-show', 'json')
+                    ->addActionContext('get-form', 'json')
                     ->addActionContext('upload-to-sound-cloud', 'json')
                     ->initContext();
 
@@ -48,8 +49,6 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet('/css/add-show.css');
         $this->view->headLink()->appendStylesheet('/css/contextmenu.css');
 
-        $request = $this->getRequest();
-
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
 		$formWhen = new Application_Form_AddShowWhen();
@@ -65,7 +64,6 @@ class ScheduleController extends Zend_Controller_Action
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
         $formRecord->removeDecorator('DtDdWrapper');
-
 
         $this->view->what = $formWhat;
 	    $this->view->when = $formWhen;
@@ -399,6 +397,12 @@ class ScheduleController extends Zend_Controller_Action
 
     public function editShowAction()
     {
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
+        if(!$user->isAdmin()) {
+            return;
+        }
+        
         $showInstanceId = $this->_getParam('id');
         
         $formWhat = new Application_Form_AddShowWhat();
@@ -474,8 +478,8 @@ class ScheduleController extends Zend_Controller_Action
         $rebroadcastAbsoluteFormValues = array();
         $i = 1;
         foreach ($rebroadcastsAbsolute as $rebroadcast){
-            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_absolute_date_$i"] = $rebroadcast['start_date'];
-            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_absolute_time_$i"] = Show::removeSecondsFromTime($rebroadcast['start_time']);
+            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_date_absolute_$i"] = $rebroadcast['start_date'];
+            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_time_absolute_$i"] = Show::removeSecondsFromTime($rebroadcast['start_time']);
             $i++;
         }
         $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
@@ -493,6 +497,38 @@ class ScheduleController extends Zend_Controller_Action
         
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         $this->view->entries = 5;
+    }
+
+    public function getFormAction(){
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWho = new Application_Form_AddShowWho();
+		$formWhen = new Application_Form_AddShowWhen();
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formStyle = new Application_Form_AddShowStyle();
+        $formRecord = new Application_Form_AddShowRR();
+        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle->removeDecorator('DtDdWrapper');
+        $formRecord->removeDecorator('DtDdWrapper');
+
+        $this->view->what = $formWhat;
+	    $this->view->when = $formWhen;
+	    $this->view->repeats = $formRepeats;
+	    $this->view->who = $formWho;
+	    $this->view->style = $formStyle;
+        $this->view->rr = $formRecord;
+        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+        $this->view->rebroadcast = $formRebroadcast;
+        $this->view->addNewShow = true;
+
+        $formWhat->populate(array('add_show_id' => '-1'));
+
+        $this->view->form = $this->view->render('schedule/add-show-form.phtml');
     }
 
     public function addShowAction()

@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_DateHelper
+class DateHelper
 {
     private $_timestamp;
 
@@ -13,7 +13,7 @@ class Application_Model_DateHelper
      * Get time of object construction in the format
      * YYYY-MM-DD HH:mm:ss
      */
-    function getDate()
+    function getTimestamp()
     {
         return date("Y-m-d H:i:s", $this->_timestamp);
     }

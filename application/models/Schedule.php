@@ -314,7 +314,9 @@ class Schedule {
             ." MIN(st.playlist_id) AS playlist_id,"
             ." MIN(st.starts) AS starts,"
             ." MAX(st.ends) AS ends,"
-            ." MIN(sh.name) AS show_name"
+            ." MIN(sh.name) AS show_name,"
+            ." MIN(si.starts) AS show_start,"
+            ." MAX(si.ends) AS show_end"
             ." FROM $CC_CONFIG[scheduleTable] as st"
             ." LEFT JOIN $CC_CONFIG[playListTable] as pt"
             ." ON st.playlist_id = pt.id"
@@ -359,8 +361,8 @@ class Schedule {
 
         global $CC_CONFIG;
 
-        $date = new Application_Model_DateHelper;
-        $timeNow = $date->getDate();
+        $date = new DateHelper;
+        $timeNow = $date->getTimestamp();
         return array("env"=>APPLICATION_ENV,
             "schedulerTime"=>gmdate("Y-m-d H:i:s"),
             "previous"=>Schedule::GetScheduledItemData($timeNow, -1, $prev, "24 hours"),
@@ -608,10 +610,8 @@ class Schedule {
         $data = Schedule::GetItems($range_start, $range_end, true);
         $playlists = array();
 
-        if (is_array($data))
-        {
-            foreach ($data as $dx)
-            {
+        if (is_array($data)){
+            foreach ($data as $dx){
                 $start = $dx['start'];
 
                 //chop off subseconds
@@ -628,6 +628,8 @@ class Schedule {
                 $playlists[$pkey]['played'] = '0';
                 $playlists[$pkey]['schedule_id'] = $dx['group_id'];
                 $playlists[$pkey]['show_name'] = $dx['show_name'];
+                $playlists[$pkey]['show_start'] = Schedule::AirtimeTimeToPypoTime($dx['show_start']);
+                $playlists[$pkey]['show_end'] = Schedule::AirtimeTimeToPypoTime($dx['show_end']);
                 $playlists[$pkey]['user_id'] = 0;
                 $playlists[$pkey]['id'] = $dx['group_id'];
                 $playlists[$pkey]['start'] = Schedule::AirtimeTimeToPypoTime($dx["start"]);

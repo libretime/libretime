@@ -101,7 +101,7 @@ class PypoFetch(Thread):
     """
     def process_schedule(self, schedule_data, export_source):
         logger = logging.getLogger('fetch')
-        self.schedule = schedule_data["playlists"]
+        playlists = schedule_data["playlists"]
 
         self.check_matching_timezones(schedule_data["server_timezone"])
             
@@ -121,13 +121,13 @@ class PypoFetch(Thread):
 
         # Download all the media and put playlists in liquidsoap format
         try:
-             playlists = self.prepare_playlists()
+             liquidsoap_playlists = self.prepare_playlists(playlists)
         except Exception, e: logger.error("%s", e)
 
         # Send the data to pypo-push
         scheduled_data = dict()
-        scheduled_data['playlists'] = playlists
-        scheduled_data['schedule'] = self.schedule
+        scheduled_data['liquidsoap_playlists'] = liquidsoap_playlists
+        scheduled_data['schedule'] = playlists
         scheduled_data['stream_metadata'] = schedule_data["stream_metadata"]        
         self.queue.put(scheduled_data)
 
@@ -141,23 +141,22 @@ class PypoFetch(Thread):
     and stored in a playlist folder.
     file is e.g. 2010-06-23-15-00-00/17_cue_10.132-123.321.mp3
     """
-    def prepare_playlists(self):
+    def prepare_playlists(self, playlists):
         logger = logging.getLogger('fetch')
 
-        schedule = self.schedule
-        playlists = dict()
+        liquidsoap_playlists = dict()
 
-        # Dont do anything if schedule is empty
-        if not schedule:
+        # Dont do anything if playlists is empty
+        if not playlists:
             logger.debug("Schedule is empty.")
-            return playlists
+            return liquidsoap_playlists
 
-        scheduleKeys = sorted(schedule.iterkeys())
+        scheduleKeys = sorted(playlists.iterkeys())
 
         try:
             for pkey in scheduleKeys:
                 logger.info("Playlist starting at %s", pkey)
-                playlist = schedule[pkey]
+                playlist = playlists[pkey]
 
                 # create playlist directory
                 try:
@@ -181,10 +180,10 @@ class PypoFetch(Thread):
                 elif int(playlist['subtype']) > 0 and int(playlist['subtype']) < 5:
                     ls_playlist = self.handle_media_file(playlist, pkey)
 
-                playlists[pkey] = ls_playlist
+                liquidsoap_playlists[pkey] = ls_playlist
         except Exception, e:
             logger.info("%s", e)
-        return playlists
+        return liquidsoap_playlists
 
 
     """

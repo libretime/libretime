@@ -150,13 +150,54 @@ function setAddShowEvents() {
         defaultTime: '01:00' 
     });
 
-    form.find('input[name^="add_show_rebroadcast_absolute_date"]').datepicker({
+    form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
 		minDate: new Date(),
 		dateFormat: 'yy-mm-dd' 
 	});
-    form.find('input[name^="add_show_rebroadcast_absolute_time"], input[name^="add_show_rebroadcast_time"]').timepicker({
+    form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
         defaultTime: '' 
+    });
+
+    form.find(".add_absolute_rebroadcast_day").click(function(){
+        var li = $(this).prev().find("li:visible:last").next();
+       
+        li.show();
+        li = li.next();
+        if(li.length === 0) {   
+            $(this).hide();
+        }
+    });
+
+    form.find('a[id^="remove_rebroadcast"]').click(function(){
+        var list = $(this).parent().parent();
+        var li_num = $(this).parent().index();
+        var num = list.find("li").length;
+        var count = num - li_num;
+
+        var curr = $(this).parent();
+        var next = curr.next();
+
+        for(var i=0; i<=count; i++) {
+            var date = next.find('[name^="add_show_rebroadcast_date"]').val();
+            curr.find('[name^="add_show_rebroadcast_date"]').val(date);
+            var time = next.find('[name^="add_show_rebroadcast_time"]').val();
+            curr.find('[name^="add_show_rebroadcast_time"]').val(time);
+
+            curr = next;
+            next = curr.next();
+        }
+
+        list.find("li:visible:last")
+                .find('[name^="add_show_rebroadcast_date"]')
+                    .val('')
+                .end()
+                .find('[name^="add_show_rebroadcast_time"]')
+                    .val('')
+                .end()
+            .hide();
+
+        list.next().show();
     });
     
 	form.find("#add_show_hosts_autocomplete").autocomplete({
@@ -166,7 +207,7 @@ function setAddShowEvents() {
 	});
 
 	form.find("#schedule-show-style input").ColorPicker({
-       onChange: function (hsb, hex, rgb, el) {
+        onChange: function (hsb, hex, rgb, el) {
 		    $(el).val(hex);
 	    },
 		onSubmit: function(hsb, hex, rgb, el) {
@@ -186,9 +227,18 @@ function setAddShowEvents() {
 
             var y = $("#schedule_calendar").width();
             var z = $("#schedule-add-show").width();
-            $("#schedule_calendar").width(y+z+50);
-            $("#schedule_calendar").fullCalendar('render');
+
+            $("#schedule_calendar").width(y+z+50)
+                .fullCalendar('render');
+
 			$("#add-show-form").hide();
+            $.get("/Schedule/get-form", {format:"json"}, function(json){
+                $("#add-show-form")
+                    .empty()
+                    .append(json.form);
+
+                setAddShowEvents();
+            }); 
             makeAddShowButton();
 		});
 
@@ -197,7 +247,8 @@ function setAddShowEvents() {
             var addShowButton = $(this);
             if (!addShowButton.hasClass("disabled")){
                 addShowButton.addClass("disabled");
-            } else {
+            } 
+            else {
                 return;
             }
 

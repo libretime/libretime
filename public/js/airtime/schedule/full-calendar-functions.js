@@ -25,21 +25,26 @@ function makeAddShowButton(){
         .append('<span class="fc-button"><a href="#" class="add-button"><span class="add-icon"></span>Show</a></span>')
         .find('span.fc-button:last > a')
             .click(function(){
-                openAddShowForm();         
-
-                var span = $(this).parent();
-                $(span).prev().remove();
-                $(span).remove();
+                openAddShowForm();
+                removeAddShowButton();
             });
 }
 
-function beginEditShow(data){
-    //alert (data.entries);
+function removeAddShowButton(){
+    var aTag = $('.fc-header-left')
+        .find("span.fc-button:last > a");
 
+    var span = aTag.parent();
+    span.prev().remove();
+    span.remove();
+}
+
+function beginEditShow(data){
     $("#add-show-form")
         .empty()
         .append(data.newForm);
 
+    removeAddShowButton();
     setAddShowEvents();
     openAddShowForm();
 }

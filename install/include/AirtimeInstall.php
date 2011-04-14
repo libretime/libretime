@@ -1,7 +1,8 @@
 <?php
 
-require_once(dirname(__FILE__).'/../../library/pear/DB.php');
-require_once(dirname(__FILE__).'/../../application/configs/conf.php');
+//Pear classes.
+set_include_path(__DIR__.'/../../library/pear' . PATH_SEPARATOR . get_include_path());
+require_once('DB.php');
 
 class AirtimeInstall {
     /**
@@ -47,8 +48,8 @@ class AirtimeInstall {
 
     static function DbConnect($p_exitOnError = true)
     {
-        global $CC_DBC, $CC_CONFIG;
-        $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+        global $CC_DBC, $CC_CONFIG;        
+        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
         if (PEAR::isError($CC_DBC)) {
             echo $CC_DBC->getMessage().PHP_EOL;
             echo $CC_DBC->getUserInfo().PHP_EOL;
