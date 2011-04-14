@@ -35,11 +35,17 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
         $valid = true;
 
         for($i=1; $i<=10; $i++) {
-        
+
             $day = $formData['add_show_rebroadcast_date_absolute_'.$i];
 
-            if($day == "") {
+            if(trim($day) == "") {
                 continue;
+            }
+            
+            $time = $formData['add_show_rebroadcast_time_absolute_'.$i];
+            if (trim($time) == ""){
+                $this->getElement('add_show_rebroadcast_time_absolute_'.$i)->setErrors(array("Time must be specified"));
+                $valid = false;
             }
 
             $show_start_time = $formData['add_show_start_date']."".$formData['add_show_start_time'];
@@ -51,16 +57,16 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             $show_end->add(new DateInterval("PT$duration[0]H"));
             $show_end->add(new DateInterval("PT$duration[1]M"));
             $show_end->add(new DateInterval("PT1H"));//min time to wait until a rebroadcast
-           
+
             $rebroad_start = $day."".$formData['add_show_rebroadcast_time_absolute_'.$i];
             $rebroad_start = new DateTime($rebroad_start);
-            
+
             if($rebroad_start < $show_end) {
                 $this->getElement('add_show_rebroadcast_time_absolute_'.$i)->setErrors(array("Must wait at least 1 hour to rebroadcast"));
                 $valid = false;
             }
-        }           
- 
+        }
+
         return $valid;
     }
 }
