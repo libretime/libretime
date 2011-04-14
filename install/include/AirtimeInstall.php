@@ -2,9 +2,7 @@
 
 //Pear classes.
 set_include_path(__DIR__.'/../../library/pear' . PATH_SEPARATOR . get_include_path());
-
 require_once('DB.php');
-require_once(dirname(__FILE__).'/../../application/configs/conf.php');
 
 class AirtimeInstall {
     /**

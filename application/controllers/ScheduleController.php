@@ -478,8 +478,8 @@ class ScheduleController extends Zend_Controller_Action
         $rebroadcastAbsoluteFormValues = array();
         $i = 1;
         foreach ($rebroadcastsAbsolute as $rebroadcast){
-            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_absolute_date_$i"] = $rebroadcast['start_date'];
-            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_absolute_time_$i"] = Show::removeSecondsFromTime($rebroadcast['start_time']);
+            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_date_absolute_$i"] = $rebroadcast['start_date'];
+            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_time_absolute_$i"] = Show::removeSecondsFromTime($rebroadcast['start_time']);
             $i++;
         }
         $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
