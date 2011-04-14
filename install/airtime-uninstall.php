@@ -15,14 +15,15 @@ if (!file_exists(AirtimeIni::CONF_FILE_AIRTIME)) {
     echo "Most likely this means that Airtime is not installed, so there is nothing to do.".PHP_EOL.PHP_EOL;
     exit();
 }
-require_once(dirname(__FILE__).'/../application/configs/conf.php');
-
-
-AirtimeInstall::RemoveSymlinks();
+require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
 echo "Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
 
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
+AirtimeInstall::RemoveSymlinks();
+AirtimeInstall::UninstallBinaries();
+AirtimeInstall::UninstallPhpCode();
+
 //------------------------------------------------------------------------
 // Delete the database
 // Note: Do not put a call to AirtimeInstall::DbConnect()
@@ -79,7 +80,7 @@ if ($results == 0) {
 //------------------------------------------------------------------------
 // Delete files
 //------------------------------------------------------------------------
-AirtimeInstall::DeleteFilesRecursive($CC_CONFIG['storageDir']);
+AirtimeInstall::DeleteFilesRecursive(AirtimeInstall::CONF_DIR_STORAGE);
 AirtimeIni::RemoveIniFiles();
 
 $command = "python ".__DIR__."/../python_apps/pypo/install/pypo-uninstall.py";

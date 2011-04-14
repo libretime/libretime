@@ -13,37 +13,34 @@ require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 AirtimeInstall::ExitIfNotRoot();
 AirtimeIni::ExitIfIniFilesExist();
+echo "* Creating INI files".PHP_EOL;
 AirtimeIni::CreateIniFiles();
+AirtimeInstall::InstallPhpCode();
+AirtimeInstall::InstallBinaries();
+
 AirtimeIni::UpdateIniFiles();
 
-require_once(dirname(__FILE__).'/../application/configs/conf.php');
+require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
-echo PHP_EOL."*** Installing Airtime ".AIRTIME_VERSION." ***".PHP_EOL;
+echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
-echo PHP_EOL."*** Database Installation ***".PHP_EOL;
+//echo PHP_EOL."*** Database Installation ***".PHP_EOL;
 
-echo "* Creating Airtime database user".PHP_EOL;
 AirtimeInstall::CreateDatabaseUser();
 
-echo "* Creating Airtime database".PHP_EOL;
 AirtimeInstall::CreateDatabase();
 
 AirtimeInstall::DbConnect(true);
 
-echo "* Installing Postgresql scripting language".PHP_EOL;
 AirtimeInstall::InstallPostgresScriptingLanguage();
 
-echo "* Creating database tables".PHP_EOL;
 AirtimeInstall::CreateDatabaseTables();
 
-echo "* Storage directory setup".PHP_EOL;
-AirtimeInstall::SetupStorageDirectory($CC_CONFIG);
+AirtimeInstall::InstallStorageDirectory($CC_CONFIG);
 
-echo "* Giving Apache permission to access the storage directory".PHP_EOL;
 AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
-echo "* Creating /usr/bin symlinks".PHP_EOL;
-AirtimeInstall::CreateSymlinks($CC_CONFIG["storageDir"]);
+AirtimeInstall::CreateSymlinksToUtils($CC_CONFIG["storageDir"]);
 
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");

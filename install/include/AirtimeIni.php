@@ -21,14 +21,15 @@ if (!function_exists('pg_connect')) {
     exit(2);
 }
 
-class AirtimeIni{
+class AirtimeIni
+{
     const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
     const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
     const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
 
 
-    static function ExitIfIniFilesExist()
+    public static function ExitIfIniFilesExist()
     {
         $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
                              AirtimeIni::CONF_FILE_PYPO,
@@ -55,7 +56,7 @@ class AirtimeIni{
      * This function creates the /etc/airtime configuration folder
      * and copies the default config files to it.
      */
-    static function CreateIniFiles()
+    public static function CreateIniFiles()
     {
         if (!file_exists("/etc/airtime/")){
             if (!mkdir("/etc/airtime/", 0755, true)){
@@ -64,7 +65,7 @@ class AirtimeIni{
             }
         }
 
-        if (!copy(__DIR__."/../../build/airtime.conf", AirtimeIni::CONF_FILE_AIRTIME)){
+        if (!copy(AirtimeInstall::GetAirtimeSrcDir()."/build/airtime.conf", AirtimeIni::CONF_FILE_AIRTIME)){
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
         }
@@ -86,7 +87,7 @@ class AirtimeIni{
      * This function removes /etc/airtime and the configuration
      * files present within it.
      */
-    static function RemoveIniFiles()
+    public static function RemoveIniFiles()
     {
         if (file_exists(AirtimeIni::CONF_FILE_AIRTIME)){
             unlink(AirtimeIni::CONF_FILE_AIRTIME);
@@ -123,7 +124,7 @@ class AirtimeIni{
      * @return string
      *      The generated random string.
      */
-    static function GenerateRandomString($p_len=20, $p_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+    public static function GenerateRandomString($p_len=20, $p_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
     {
         $string = '';
         for ($i = 0; $i < $p_len; $i++)
@@ -148,7 +149,7 @@ class AirtimeIni{
      *      The value the property should be changed to.
      *
      */
-    static function UpdateIniValue($p_filename, $p_property, $p_value)
+    public static function UpdateIniValue($p_filename, $p_property, $p_value)
     {
         $lines = file($p_filename);
         $n=count($lines);
@@ -171,14 +172,14 @@ class AirtimeIni{
      * this function will update them to values unique to this
      * particular installation.
      */
-    static function UpdateIniFiles()
+    public static function UpdateIniFiles()
     {
         $api_key = AirtimeIni::GenerateRandomString();
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'api_key', $api_key);
-        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'base_files_dir', realpath(__DIR__.'/../../').'/files');
-        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'airtime_dir', realpath(__DIR__.'/../../'));
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'base_files_dir', AirtimeInstall::CONF_DIR_STORAGE);
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'airtime_dir', AirtimeInstall::CONF_DIR_WWW);
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_PYPO, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_RECORDER, 'api_key', "'$api_key'");
-        AirtimeIni::UpdateIniValue(__DIR__.'/../../build/build.properties', 'project.home', realpath(__dir__.'/../../'));
+        AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
     }
 }

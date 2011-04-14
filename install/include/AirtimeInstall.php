@@ -1,16 +1,30 @@
 <?php
-
 //Pear classes.
-set_include_path(__DIR__.'/../../library/pear' . PATH_SEPARATOR . get_include_path());
+set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once('DB.php');
 
-class AirtimeInstall {
+class AirtimeInstall
+{
+    const CONF_DIR_BINARIES = "/usr/lib/airtime";
+    const CONF_DIR_STORAGE = "/srv/airtime";
+    const CONF_DIR_WWW = "/var/www/airtime";
+
+    public static function GetAirtimeSrcDir()
+    {
+        return __DIR__."/../../airtime_mvc";
+    }
+
+    public static function GetUtilsSrcDir()
+    {
+        return __DIR__."/../../utils";
+    }
+
     /**
      * Ensures that the user is running this PHP script with root
      * permissions. If not running with root permissions, causes the
      * script to exit.
      */
-    static function ExitIfNotRoot()
+    public static function ExitIfNotRoot()
     {
         // Need to check that we are superuser before running this.
         if(exec("whoami") != "root"){
@@ -20,7 +34,7 @@ class AirtimeInstall {
     }
 
 
-    static function DbTableExists($p_name)
+    public static function DbTableExists($p_name)
     {
         global $CC_DBC;
         $sql = "SELECT * FROM ".$p_name;
@@ -31,7 +45,7 @@ class AirtimeInstall {
         return true;
     }
 
-    static function InstallQuery($sql, $verbose = true)
+    public static function InstallQuery($sql, $verbose = true)
     {
         global $CC_DBC;
         $result = $CC_DBC->query($sql);
@@ -46,9 +60,9 @@ class AirtimeInstall {
         }
     }
 
-    static function DbConnect($p_exitOnError = true)
+    public static function DbConnect($p_exitOnError = true)
     {
-        global $CC_DBC, $CC_CONFIG;        
+        global $CC_DBC, $CC_CONFIG;
         $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
         if (PEAR::isError($CC_DBC)) {
             echo $CC_DBC->getMessage().PHP_EOL;
@@ -65,9 +79,11 @@ class AirtimeInstall {
         }
     }
 
-    static function ChangeDirOwnerToWebserver($filePath)
+    public static function ChangeDirOwnerToWebserver($filePath)
     {
         global $CC_CONFIG;
+        echo "* Giving Apache permission to access $filePath".PHP_EOL;
+
         $success = chgrp($filePath, $CC_CONFIG["webServerUser"]);
         $fileperms=@fileperms($filePath);
         $fileperms = $fileperms | 0x0010; // group write bit
@@ -75,11 +91,11 @@ class AirtimeInstall {
         chmod($filePath, $fileperms);
     }
 
-    public static function SetupStorageDirectory($CC_CONFIG)
+    public static function InstallStorageDirectory($CC_CONFIG)
     {
         global $CC_CONFIG, $CC_DBC;
+        echo "* Storage directory setup".PHP_EOL;
 
-        echo PHP_EOL."*** Directory Setup ***".PHP_EOL;
         foreach (array('baseFilesDir', 'storageDir') as $d) {
             if ( !file_exists($CC_CONFIG[$d]) ) {
                 @mkdir($CC_CONFIG[$d], 02775, true);
@@ -104,6 +120,9 @@ class AirtimeInstall {
     public static function CreateDatabaseUser()
     {
         global $CC_CONFIG;
+
+        echo "* Creating Airtime database user".PHP_EOL;
+
         // Create the database user
         $command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
         ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
@@ -126,6 +145,8 @@ class AirtimeInstall {
     {
         global $CC_CONFIG;
 
+        echo "* Creating Airtime database".PHP_EOL;
+
         $command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} --owner {$CC_CONFIG['dsn']['username']} 2> /dev/null";
         @exec($command, $output, $results);
         if ($results == 0) {
@@ -144,6 +165,9 @@ class AirtimeInstall {
     public static function InstallPostgresScriptingLanguage()
     {
         global $CC_DBC;
+
+        echo "* Installing Postgresql scripting language".PHP_EOL;
+
         // Install postgres scripting language
         $langIsInstalled = $CC_DBC->GetOne('SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'');
         if ($langIsInstalled == '0') {
@@ -157,25 +181,29 @@ class AirtimeInstall {
 
     public static function CreateDatabaseTables()
     {
+        echo "* Creating database tables".PHP_EOL;
+
         // Put Propel sql files in Database
-        $command = __DIR__."/../../library/propel/generator/bin/propel-gen ../build/ insert-sql 2>propel-error.log";
+        $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>propel-error.log";
         @exec($command, $output, $results);
     }
 
     public static function BypassMigrations($dir, $version)
     {
-        $command = "php $dir/../../../library/doctrine/migrations/doctrine-migrations.phar ". 
-                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ". 
-                    "--db-configuration=$dir/../../../library/doctrine/migrations/migrations-db.php ".
+        $appDir = AirtimeInstall::GetAirtimeSrcDir();
+        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction --add migrations:version $version";
         system($command);
     }
 
     public static function MigrateTablesToVersion($dir, $version)
     {
-        $command = "php $dir/../../../library/doctrine/migrations/doctrine-migrations.phar ". 
-                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ". 
-                    "--db-configuration=$dir/../../../library/doctrine/migrations/migrations-db.php ".
+        $appDir = AirtimeInstall::GetAirtimeSrcDir();
+        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction migrations:migrate $version";
         system($command);
     }
@@ -212,22 +240,77 @@ class AirtimeInstall {
         exec($command);
     }
 
-    public static function CreateSymlinks(){
+    public static function CreateSymlinksToUtils()
+    {
+        echo "* Creating /usr/bin symlinks".PHP_EOL;
         AirtimeInstall::RemoveSymlinks();
 
-        $dir = realpath(__DIR__."/../../utils/airtime-import");
+        echo "* Installing airtime-import".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-import";
         exec("ln -s $dir /usr/bin/airtime-import");
 
-        $dir = realpath(__DIR__."/../../utils/airtime-clean-storage");
+        echo "* Installing airtime-clean-storage".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-clean-storage";
         exec("ln -s $dir /usr/bin/airtime-clean-storage");
 
-        $dir = realpath(__DIR__."/../../utils/airtime-update-db-settings");
+        echo "* Installing airtime-update-db-settings".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
         exec("ln -s $dir /usr/bin/airtime-update-db-settings");
     }
 
-    public static function RemoveSymlinks(){
+    public static function RemoveSymlinks()
+    {
         exec("rm -f /usr/bin/airtime-import");
         exec("rm -f /usr/bin/airtime-clean-storage");
         exec("rm -f /usr/bin/airtime-update-db-settings");
+    }
+
+    public static function InstallPhpCode()
+    {
+        global $CC_CONFIG;
+        echo "* Installing PHP code to ".AirtimeInstall::CONF_DIR_WWW.PHP_EOL;
+        exec("mkdir -p ".AirtimeInstall::CONF_DIR_WWW);
+        exec("cp -R ".AirtimeInstall::GetAirtimeSrcDir()."/* ".AirtimeInstall::CONF_DIR_WWW);
+
+    }
+
+    public static function UninstallPhpCode()
+    {
+        echo "* Removing PHP code from ".AirtimeInstall::CONF_DIR_WWW.PHP_EOL;
+        exec("rm -rf ".AirtimeInstall::CONF_DIR_WWW);
+    }
+
+    public static function InstallBinaries()
+    {
+        echo "* Installing binaries to ".AirtimeInstall::CONF_DIR_BINARIES.PHP_EOL;
+        exec("mkdir -p ".AirtimeInstall::CONF_DIR_BINARIES);
+        exec("cp -R ".AirtimeInstall::GetUtilsSrcDir()." ".AirtimeInstall::CONF_DIR_BINARIES);
+    }
+
+    public static function UninstallBinaries()
+    {
+        echo "* Removing Airtime binaries from ".AirtimeInstall::CONF_DIR_BINARIES.PHP_EOL;
+        exec("rm -rf ".AirtimeInstall::CONF_DIR_BINARIES);
+    }
+
+    public static function DirCheck()
+    {
+        echo "Legend: \"+\" means the dir/file exists, \"-\" means that it does not.".PHP_EOL;
+        $dirs = array(AirtimeInstall::CONF_DIR_BINARIES,
+                      AirtimeInstall::CONF_DIR_STORAGE,
+                      AirtimeInstall::CONF_DIR_WWW,
+                      AirtimeIni::CONF_FILE_AIRTIME,
+                      AirtimeIni::CONF_FILE_LIQUIDSOAP,
+                      AirtimeIni::CONF_FILE_PYPO,
+                      AirtimeIni::CONF_FILE_RECORDER,
+                      "/usr/lib/pypo",
+                      "/usr/lib/show-recorder");
+         foreach ($dirs as $f) {
+             if (file_exists($f)) {
+                 echo "+ $f".PHP_EOL;
+             } else {
+                 echo "- $f".PHP_EOL;
+             }
+         }
     }
 }
