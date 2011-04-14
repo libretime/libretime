@@ -80,9 +80,9 @@ try:
   os.system("chown -R pypo:pypo /home/pypo/Music")
 
   print "Creating log directories"
-  create_path("/var/log/recorder")
-  os.system("chmod -R 755 /var/log/recorder")
-  os.system("chown -R pypo:pypo /var/log/recorder")
+  create_path("/var/log/airtime/recorder")
+  os.system("chmod -R 755 /var/log/airtime/recorder")
+  os.system("chown -R pypo:pypo /var/log/airtime/recorder")
 
   create_path(BASE_PATH)
   create_path(BASE_PATH+"bin")
