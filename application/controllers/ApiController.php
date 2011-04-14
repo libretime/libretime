@@ -112,8 +112,8 @@ class ApiController extends Zend_Controller_Action
 
             $result = Schedule::GetPlayOrderRange(0, 1);
 
-            $date = new Application_Model_DateHelper;
-            $timeNow = $date->getDate();
+            $date = new DateHelper;
+            $timeNow = $date->getTimestamp();
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
                 "currentShow"=>Show_DAL::GetCurrentShow($timeNow),

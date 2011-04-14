@@ -361,8 +361,8 @@ class Schedule {
 
         global $CC_CONFIG;
 
-        $date = new Application_Model_DateHelper;
-        $timeNow = $date->getDate();
+        $date = new DateHelper;
+        $timeNow = $date->getTimestamp();
         return array("env"=>APPLICATION_ENV,
             "schedulerTime"=>gmdate("Y-m-d H:i:s"),
             "previous"=>Schedule::GetScheduledItemData($timeNow, -1, $prev, "24 hours"),

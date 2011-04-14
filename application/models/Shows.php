@@ -136,9 +136,13 @@ class Show {
         
         $uncheckedDaysImploded = implode(",", $p_uncheckedDays);
         $showId = $this->getId();
+
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
+        
         $sql = "DELETE FROM cc_show_instances"
             ." WHERE EXTRACT(DOW FROM starts) IN ($uncheckedDaysImploded)"
-            ." AND starts > current_timestamp "
+            ." AND starts > TIMESTAMP '$timestamp'"
             ." AND show_id = $showId";
 
         $CC_DBC->query($sql);        
@@ -177,6 +181,14 @@ class Show {
         return !is_null($showInstancesRow);       
     }
 
+    /**
+     * Get start time and absolute start date for a recorded
+     * shows rebroadcasts. For example start date format would be
+     * YYYY-MM-DD and time would HH:MM
+     *
+     * @return array
+     *      array of associate arrays containing "start_date" and "start_time" 
+     */
     public function getRebroadcastsAbsolute()
     {
         global $CC_DBC;
@@ -199,6 +211,14 @@ class Show {
         return $CC_DBC->GetAll($sql);
     }
 
+    /**
+     * Get start time and relative start date for a recorded
+     * shows rebroadcasts. For example start date format would be
+     * "x days" and time would HH:MM:SS
+     *
+     * @return array
+     *      array of associate arrays containing "day_offset" and "start_time" 
+     */
     public function getRebroadcastsRelative()
     {
         global $CC_DBC;
@@ -272,42 +292,76 @@ class Show {
             return $endDate;
         }
     }
-    
+
+    /**
+     * Deletes all future instances of the current show object
+     * from the show_instances table.
+     *
+     */
     public function deleteAllInstances(){
         global $CC_DBC;
 
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
+
         $showId = $this->getId();
-        $sql = "DELETE FROM cc_show_instances "
-                ."WHERE starts > current_timestamp "
-                ."AND show_id = $showId";
+        $sql = "DELETE FROM cc_show_instances"
+                ." WHERE starts > TIMESTAMP '$timestamp'"
+                ." AND show_id = $showId";
                    
         $CC_DBC->query($sql); 
     }
-    
+
+    /**
+     * Deletes all show instances of current show after a
+     * certain date.
+     *
+     * @param string $p_date
+     *      The date which to delete after
+     */
     public function removeAllInstancesAfterDate($p_date){
         global $CC_DBC;
 
-        $showId = $this->getId();
-        $sql = "DELETE FROM cc_show_instances "
-                ."WHERE date(starts) > DATE '$p_date' "
-                ."AND starts > current_timestamp "
-                ."AND show_id = $showId";
-                   
-        $CC_DBC->query($sql); 
-    }
-    
-    public function removeAllInstancesBeforeDate($p_date){
-        global $CC_DBC;
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances "
-                ."WHERE date(starts) < DATE '$p_date' "
-                ."AND starts > current_timestamp "
-                ."AND show_id = $showId";
+                ." WHERE date(starts) > DATE '$p_date'"
+                ." AND starts > TIMESTAMP '$timestamp'"
+                ." AND show_id = $showId";
+                   
+        $CC_DBC->query($sql); 
+    }
+
+    /**
+     * Deletes all show instances of current show before a
+     * certain date.
+     *
+     * @param string $p_date
+     *      The date which to delete before
+     */
+    public function removeAllInstancesBeforeDate($p_date){
+        global $CC_DBC;
+
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
+
+        $showId = $this->getId();
+        $sql = "DELETE FROM cc_show_instances "
+                ." WHERE date(starts) < DATE '$p_date'"
+                ." AND starts > TIMESTAMP '$timestamp'"
+                ." AND show_id = $showId";
                    
         $CC_DBC->query($sql);     
     }
-    
+
+    /**
+     * Get the start date of the current show.
+     *
+     * @return string
+     *      The start date in the format YYYY-MM-DD
+     */ 
     public function getStartDate(){
         global $CC_DBC;
     
@@ -323,7 +377,13 @@ class Show {
             return $firstDate;
         }
     }
-        
+
+    /**
+     * Get the start time of the current show.
+     *
+     * @return string
+     *      The start time in the format HH:MM:SS
+     */ 
     public function getStartTime(){
         global $CC_DBC;
     
@@ -339,14 +399,23 @@ class Show {
             return $startTime;
         }
     }
-    
+
+    /**
+     * Get the ID's of future instance of the current show.
+     *
+     * @return array
+     *      A simple array containing all future instance ID's
+     */     
     public function getAllFutureInstanceIds(){
         global $CC_DBC;
+
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
         
         $showId = $this->getId();
-        $sql = "SELECT id from cc_show_instances "
+        $sql = "SELECT id from cc_show_instances"
             ." WHERE show_id = $showId"
-            ." AND starts > current_timestamp";
+            ." AND starts > TIMESTAMP '$timestamp'";
                       
         $rows = $CC_DBC->GetAll($sql);
 
@@ -361,6 +430,9 @@ class Show {
         //need to update cc_show_instances, cc_show_days
     
         global $CC_DBC;
+
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
         
         $sql = "UPDATE cc_show_days "
                 ."SET duration = '$p_data[add_show_duration]' "
@@ -370,7 +442,7 @@ class Show {
         $sql = "UPDATE cc_show_instances "
                 ."SET ends = starts + INTERVAL '$p_data[add_show_duration]' "
                 ."WHERE show_id = $p_data[add_show_id] "
-                ."AND starts > current_timestamp";              
+                ."AND starts > TIMESTAMP '$timestamp'";              
         $CC_DBC->query($sql);
 
     }
@@ -379,6 +451,9 @@ class Show {
         //need to update cc_schedule, cc_show_instances, cc_show_days
         
         global $CC_DBC;
+
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
         
         $sql = "UPDATE cc_show_days "
                 ."SET start_time = TIME '$p_data[add_show_start_time]', "
@@ -399,7 +474,7 @@ class Show {
                 ."SET starts = starts + INTERVAL '$diff sec', "
                 ."ends = ends + INTERVAL '$diff sec' "
                 ."WHERE show_id = $p_data[add_show_id] "
-                ."AND starts > current_timestamp";                  
+                ."AND starts > TIMESTAMP '$timestamp'";                  
         $CC_DBC->query($sql);
         
         $showInstanceIds = $this->getAllFutureInstanceIds();
