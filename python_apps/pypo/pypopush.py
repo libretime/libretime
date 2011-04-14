@@ -48,6 +48,10 @@ class PypoPush(Thread):
         self.push_ahead = 10
         self.push_ahead2 = self.push_ahead -5
 
+        #toggle between "stop" and "play". Keeps track of the state of
+        #liquidsoap
+        self.liquidsoap_state_play = True
+
     def set_export_source(self, export_source):
         self.export_source = export_source
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
@@ -67,14 +71,13 @@ class PypoPush(Thread):
             scheduled_data = self.queue.get()
             logger.debug("Received data from pypo-fetch")
             self.schedule = scheduled_data['schedule']
-            self.playlists = scheduled_data['playlists']
+            self.playlists = scheduled_data['liquidsoap_playlists']
             self.stream_metadata = scheduled_data['stream_metadata']
+            logger.debug('schedule %s' % json.dumps(self.schedule))
+            logger.debug('playlists %s' % json.dumps(self.playlists))
 
         schedule = self.schedule
         playlists = self.playlists
-
-        logger.debug('schedule %s' % json.dumps(schedule))
-        logger.debug('playlists %s' % json.dumps(playlists))
         
         currently_on_air = False
         if schedule:
@@ -92,9 +95,7 @@ class PypoPush(Thread):
             
             for pkey in schedule:
                 plstart = pkey[0:19]
-                start = schedule[pkey]['start']
-                end = schedule[pkey]['end']
-          
+         
                 playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
                 
                 if plstart == str_tcoming_s or (plstart < str_tcoming_s and plstart > str_tcoming2_s and not playedFlag):
@@ -120,21 +121,23 @@ class PypoPush(Thread):
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
                         self.api_client.notify_scheduled_item_start_playing(pkey, schedule)
-                        
-                start = schedule[pkey]['start']
-                end = schedule[pkey]['end']
 
-                if start <= str_tnow_s and str_tnow_s < end:
+                show_start = schedule[pkey]['show_start']
+                show_end = schedule[pkey]['show_end']
+                        
+                if show_start <= str_tnow_s and str_tnow_s < show_end:
                     currently_on_air = True
         else:
             pass
             #logger.debug('Empty schedule')
             
-        if not currently_on_air:
+        if not currently_on_air and self.liquidsoap_state_play:
+            logger.debug('Notifying Liquidsoap to stop playback.')
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write('source.skip\n')
             tn.write('exit\n')
             tn.read_all()
+            self.liquidsoap_state_play = False
 
     def push_liquidsoap(self, pkey, schedule, playlists):
         logger = logging.getLogger('push')
@@ -184,6 +187,8 @@ class PypoPush(Thread):
 
             tn.write("exit\n")
             logger.debug(tn.read_all())
+
+            self.liquidsoap_state_play = True
 
             status = 1
         except Exception, e:
