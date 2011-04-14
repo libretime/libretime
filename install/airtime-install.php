@@ -8,13 +8,14 @@
 echo "******************************** Install Begin *********************************".PHP_EOL;
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
-require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
-AirtimeInstall::ExitIfNotRoot();
 AirtimeIni::CreateIniFile();
 AirtimeIni::UpdateIniFiles();
 
+require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 require_once(dirname(__FILE__).'/../application/configs/conf.php');
+
+AirtimeInstall::ExitIfNotRoot();
 
 echo PHP_EOL."*** Installing Airtime ".AIRTIME_VERSION." ***".PHP_EOL;
 
