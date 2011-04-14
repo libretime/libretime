@@ -652,6 +652,11 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 		}
         else {
+            //the form still needs to be "update" since
+            //the validity test failed.
+            if ($data['add_show_id'] != -1){
+                $this->view->addNewShow = false;
+            }
 
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }

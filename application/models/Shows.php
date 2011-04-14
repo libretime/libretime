@@ -536,24 +536,26 @@ class Show {
             //repeat option was toggled or show is recorded.
             $p_show->deleteAllInstances();
         }
-        if ($p_data['add_show_start_date'] != $p_show->getStartDate()
-            || $p_data['add_show_start_time'] != $p_show->getStartTime()){
-            //start date/time has changed
-            
-            $newDate = strtotime($p_data['add_show_start_date']);
-            $oldDate = strtotime($p_show->getStartDate());
-            if ($newDate > $oldDate){
-                $p_show->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
-            }            
 
-            $p_show->updateStartDateTime($p_data, $p_endDate);
-        }
         if ($p_data['add_show_duration'] != $p_show->getDuration()){
             //duration has changed
             $p_show->updateDurationTime($p_data);
         }
     
         if ($p_data['add_show_repeats']){
+            if ($p_data['add_show_start_date'] != $p_show->getStartDate()
+                || $p_data['add_show_start_time'] != $p_show->getStartTime()){
+                //start date/time has changed
+                
+                $newDate = strtotime($p_data['add_show_start_date']);
+                $oldDate = strtotime($p_show->getStartDate());
+                if ($newDate > $oldDate){
+                    $p_show->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
+                }            
+
+                $p_show->updateStartDateTime($p_data, $p_endDate);
+            }
+
             if ($repeatType != $p_show->getRepeatType()){
                 //repeat type changed.
                 $p_show->deleteAllInstances();
@@ -863,21 +865,26 @@ class Show {
             
             $show = new Show($show_id);
             if ($show->hasInstance()){
-                $showInstance = $show->getInstance();
+                $ccShowInstance = $show->getInstance();
+                $newInstance = false;
             } else {
-                $showInstance = new CcShowInstances();
+                $ccShowInstance = new CcShowInstances();
+                $newInstance = true;
             }
             
-            $showInstance->setDbShowId($show_id);
-            $showInstance->setDbStarts($start);
-            $showInstance->setDbEnds($end);
-            $showInstance->setDbRecord($record);
-            $showInstance->save();
-            //$show->addInstance($showInstance);
-        
+            $ccShowInstance->setDbShowId($show_id);
+            $ccShowInstance->setDbStarts($start);
+            $ccShowInstance->setDbEnds($end);
+            $ccShowInstance->setDbRecord($record);
+            $ccShowInstance->save();
 
-            $show_instance_id = $showInstance->getDbId();
+            $show_instance_id = $ccShowInstance->getDbId();
+            $showInstance = new ShowInstance($show_instance_id);
 
+            if (!$newInstance){
+                $showInstance->correctScheduleStartTimes();
+            }
+            
             $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
             $rebroadcasts = $CC_DBC->GetAll($sql);
 
@@ -929,19 +936,24 @@ class Show {
             $end = $CC_DBC->GetOne($sql);
            
             if ($show->hasInstanceOnDate($start)){
-                $showInstance = $show->getInstanceOnDate($start);
+                $ccShowInstance = $show->getInstanceOnDate($start);
+                $newInstance = false;
             } else {
-                $showInstance = new CcShowInstances();
+                $ccShowInstance = new CcShowInstances();
+                $newInstance = true;
             }
-            $showInstance->setDbShowId($show_id);
-            $showInstance->setDbStarts($start);
-            $showInstance->setDbEnds($end);
-            $showInstance->setDbRecord($record);
-            $showInstance->save();
-            //$show->addInstance($showInstance);
-        
+            $ccShowInstance->setDbShowId($show_id);
+            $ccShowInstance->setDbStarts($start);
+            $ccShowInstance->setDbEnds($end);
+            $ccShowInstance->setDbRecord($record);
+            $ccShowInstance->save();
 
-            $show_instance_id = $showInstance->getDbId();
+            $show_instance_id = $ccShowInstance->getDbId();
+            $showInstance = new ShowInstance($show_instance_id);
+
+            if (!$newInstance){
+                $showInstance->correctScheduleStartTimes();
+            }
 
             foreach($rebroadcasts as $rebroadcast) {
 
@@ -1303,6 +1315,34 @@ class ShowInstance {
 
         $CC_DBC->query($sql);
         RabbitMq::PushSchedule();
+    }
+
+    public function correctScheduleStartTimes(){
+        global $CC_DBC;
+        
+        $instance_id = $this->getShowInstanceId();
+        $sql = "SELECT starts from cc_schedule"
+            ." WHERE instance_id = $instance_id"
+            ." ORDER BY starts"
+            ." LIMIT 1";
+
+        $scheduleStarts = $CC_DBC->GetOne($sql);
+                
+        if (!is_null($scheduleStarts)){
+            $scheduleStartsEpoch = strtotime($scheduleStarts);
+            $showStartsEpoch = strtotime($this->getShowStart());
+
+            $diff = $showStartsEpoch - $scheduleStartsEpoch;
+
+            if ($diff != 0){
+                $sql = "UPDATE cc_schedule"
+                ." SET starts = starts + INTERVAL '$diff' second,"
+                ." ends = ends + INTERVAL '$diff' second"
+                ." WHERE instance_id = $instance_id";       
+
+                $CC_DBC->query($sql);
+            }
+        }
     }
 
     public function moveShow($deltaDay, $deltaMin)
