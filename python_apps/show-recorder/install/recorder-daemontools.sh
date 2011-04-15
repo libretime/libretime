@@ -4,8 +4,8 @@ export HOME="/var/tmp/airtime/show-recorder/"
 export TERM=xterm
 
 # Location of pypo_cli.py Python script
-recorder_path="/usr/lib/airtime/show-recorder/bin/"
-recorder_script="testrecordscript.py"
+recorder_path="/usr/lib/airtime/show-recorder/"
+recorder_script="recorder.py"
 
 api_client_path="/usr/lib/airtime/pypo/"
 cd ${recorder_path}

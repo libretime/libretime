@@ -92,6 +92,12 @@ try:
   print "Setting permissions"
   os.system("chmod -R 755 "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["bin_dir"])
+
+  print "Creating symbolic links"
+  os.system("rm -f /usr/bin/airtime-show-recorder-start")
+  os.system("ln -s "+config["bin_dir"]+"/airtime-show-recorder-start /usr/bin/")
+  os.system("rm -f /usr/bin/airtime-show-recorder-stop")
+  os.system("ln -s "+config["bin_dir"]+"/airtime-show-recorder-stop /usr/bin/")
   
   print "Installing recorder daemon"
   create_path("/etc/service/recorder")
@@ -103,7 +109,7 @@ try:
   
   print "Waiting for processes to start..."
   time.sleep(5)
-  os.system("python %s/recorder-start.py" % (get_current_script_dir()))
+  os.system("python /usr/bin/airtime-show-recorder-start")
   time.sleep(2)
 
   found = True

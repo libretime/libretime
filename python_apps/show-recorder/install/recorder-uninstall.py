@@ -37,10 +37,14 @@ try:
         print 'Error loading config file: ', e
         sys.exit()
 
-    os.system("python %s/recorder-stop.py" % get_current_script_dir())
+    os.system("python /usr/bin/airtime-show-recorder-stop")
     
     print "Removing log directories"
     remove_path(config["log_dir"])
+    
+    print "Removing symlinks"
+    os.system("rm -f /usr/bin/airtime-show-recorder-start")
+    os.system("rm -f /usr/bin/airtime-show-recorder-stop")
     
     print "Removing application files"
     remove_path(config["bin_dir"])

@@ -28,8 +28,7 @@ class AirtimeIni
     const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
 
-
-    public static function ExitIfIniFilesExist()
+    public static function IniFilesExist()
     {
         $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
                              AirtimeIni::CONF_FILE_PYPO,
@@ -42,14 +41,7 @@ class AirtimeIni
                 $exist = true;
             }
         }
-        if ($exist) {
-            echo PHP_EOL."Existing config files will be overwritten.  Do you want to continue? (y/N) ";
-            $response = trim(fgets(STDIN));
-            if ($response != "Y" && $response != "y") {
-                echo "Install process stopped.".PHP_EOL.PHP_EOL;
-                exit();
-            }
-        }
+        return $exist;
     }
 
     /**

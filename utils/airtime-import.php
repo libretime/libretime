@@ -336,6 +336,7 @@ if ($time > 0) {
 
 echo "==========================================================================\n";
 echo " *** Import mode: $importMode\n";
+echo " *** Destination folder: ".$CC_CONFIG['storageDir']."\n";
 echo " *** Files imported: $g_fileCount\n";
 echo " *** Duplicate files (not imported): $g_duplicates\n";
 if ($g_errors > 0) {

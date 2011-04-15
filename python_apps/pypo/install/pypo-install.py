@@ -112,6 +112,12 @@ try:
   os.system("chown -R pypo:pypo "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["cache_base_dir"])
   
+  print "Creating symbolic links"
+  os.system("rm -f /usr/bin/airtime-pypo-start")
+  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-pypo-start /usr/bin/")
+  os.system("rm -f /usr/bin/airtime-pypo-stop")
+  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-pypo-stop /usr/bin/")
+  
   print "Installing pypo daemon"
   create_path("/etc/service/pypo")
   create_path("/etc/service/pypo/log")
@@ -130,7 +136,7 @@ try:
 
   print "Waiting for processes to start..."
   time.sleep(5)
-  os.system("python %s/pypo-start.py" % (get_current_script_dir()))
+  os.system("python /usr/bin/airtime-pypo-start")
   time.sleep(2)
 
   found = True
