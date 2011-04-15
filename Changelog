@@ -1,3 +1,11 @@
+1.8.0 - April 19, 2011
+  * Ability to edit a show
+  * Speedup of calendar (approx to 5-8x faster now)
+  * Install process now put files in the right place for linux systems
+  * Improvements to upgrade framework
+  * Bug fixes:
+    o CC-2192 Schedule sent to pypo is not sorted by start time.
+
 1.7.0 - April 4, 2011
   * Recording and automatic scheduling/broadcasting of live shows
     o Recording/rebroadcast status of a show is shown in "Now Playing" and "Calendar"
