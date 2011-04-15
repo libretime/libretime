@@ -7,11 +7,11 @@
  */
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
-set_include_path(__DIR__.'/../library' . PATH_SEPARATOR . get_include_path());
-require_once __DIR__.'/../application/configs/conf.php';
+set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
+require_once __DIR__.'/../airtime_mvc/application/configs/conf.php';
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
-AirtimeIni::ExitIfNotRoot();
+AirtimeInstall::ExitIfNotRoot();
 AirtimeInstall::DbConnect(true);
 
 if(AirtimeInstall::DbTableExists('cc_show_rebroadcast') === true) {
@@ -33,6 +33,12 @@ if(strcmp($version, "1.8.0") < 0) {
 }
 
 AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
+
+echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
+system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
+
+echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
+system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
 

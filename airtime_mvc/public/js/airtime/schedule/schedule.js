@@ -9,6 +9,22 @@ function closeDialog(event, ui) {
 	$(this).remove();
 }
 
+function checkShowLength() {
+    var showFilled = $("#show_time_filled").text().split('.')[0];
+    var showLength = $("#show_length").text();
+
+    if (showFilled > showLength){
+        $("#show_time_warning")
+            .text("Shows longer than their scheduled time will be cut off by a following show.")
+            .show();
+    }
+    else {
+        $("#show_time_warning")
+            .empty()
+            .hide();
+    }
+}
+
 
 function setScheduleDialogHtml(json) {
 	var dt;
@@ -23,14 +39,7 @@ function setScheduleDialogHtml(json) {
 	$("#show_time_filled").empty().append(json.timeFilled);
 	$("#show_progressbar").progressbar( "value" , json.percentFilled );
 
-    var showFilled = $("#show_time_filled").text().split('.')[0];
-    var showLength = $("#show_length").text();
-
-    if (showFilled > showLength){
-        $("#show_time_warning").text("Shows longer than their scheduled time will be cut off by a following show.");
-    } else {
-        $("#show_time_warning").empty();
-    }
+    checkShowLength();
 }
 
 function setScheduleDialogEvents(dialog) {
@@ -221,7 +230,7 @@ function buildScheduleDialog(json){
 		autoOpen: false,
 		title: 'Schedule Playlist',
 		width: 1100,
-		height: 500,
+		height: 550,
 		modal: true,
 		close: closeDialog,
 		buttons: {"Ok": function() {
@@ -231,6 +240,7 @@ function buildScheduleDialog(json){
 	});
 
 	dialog.dialog('open');
+    checkShowLength();
 }
 
 function buildEditDialog(json){
