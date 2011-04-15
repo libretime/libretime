@@ -6,7 +6,9 @@
     <dd id="add_show_rebroadcast_day-element" class="block-display clearfix">
     <ul class="formrow-repeat">
         <?php for($i=1; $i<=10; $i++): ?>
-            <li <?php if(($i > 1) && ($this->element->getElement('add_show_rebroadcast_date_absolute_'.$i)->getValue() == "")){echo 'style=display:none';} ?>>
+            <li <?php if(($i > 1) 
+                        && ($this->element->getElement('add_show_rebroadcast_date_absolute_'.$i)->getValue() == "" 
+                        && $this->element->getElement('add_show_rebroadcast_time_absolute_'.$i)->getValue() == "")){echo 'style=display:none';} ?>>
                 <?php echo $this->element->getElement('add_show_rebroadcast_date_absolute_'.$i) ?>
                 <span class="inline-text">@</span>
                 <?php echo $this->element->getElement('add_show_rebroadcast_time_absolute_'.$i) ?>
