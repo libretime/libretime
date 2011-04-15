@@ -190,7 +190,8 @@ class ScheduleGroup {
         ." LEFT JOIN $CC_CONFIG[showInstances] as si"
         ." ON st.instance_id = si.id"
         ." WHERE st.group_id=$this->groupId"
-        ." AND st.starts < si.ends";
+        ." AND st.starts < si.ends"
+        ." ORDER BY st.starts";
         return $CC_DBC->GetAll($sql);
     }
 
