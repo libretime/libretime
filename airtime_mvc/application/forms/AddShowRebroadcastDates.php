@@ -37,6 +37,8 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 
     public function checkReliantFields($formData) {
 
+        $noError = true;
+
         for($i=1; $i<=10; $i++) {
 
             $valid = true;
@@ -58,6 +60,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             }
 
             if($valid === false) {
+                $noError = false;
                 continue;
             }
 
@@ -81,10 +84,11 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             if($rebroad_start < $show_end) {
                 $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array("Must wait at least 1 hour to rebroadcast"));
                 $valid = false;
+                $noError = false;
             }
         }
 
-        return $valid;
+        return $noError;
     }
 }
 
