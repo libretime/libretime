@@ -59,7 +59,10 @@ if ($overwrite) {
 AirtimeInstall::InstallPhpCode();
 AirtimeInstall::InstallBinaries();
 
-AirtimeIni::UpdateIniFiles();
+if ($overwrite) {
+    echo "* Initializing INI files".PHP_EOL;
+    AirtimeIni::UpdateIniFiles();
+}
 
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
