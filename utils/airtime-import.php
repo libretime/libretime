@@ -12,8 +12,8 @@ set_time_limit(0);
 error_reporting(E_ALL);
 set_error_handler("camp_import_error_handler", E_ALL & !E_NOTICE);
 
-require_once(dirname(__FILE__)."/../application/configs/conf.php");
-require_once(dirname(__FILE__)."/../application/models/StoredFile.php");
+require_once("/var/www/airtime/application/configs/conf.php");
+require_once("/var/www/airtime/application/models/StoredFile.php");
 require_once('DB.php');
 require_once('Console/Getopt.php');
 

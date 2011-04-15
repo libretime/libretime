@@ -9,9 +9,10 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-require_once('../application/configs/conf.php');
-require_once('../install/installInit.php');
-require_once('../application/models/StoredFile.php');
+require_once('/var/www/airtime/application/configs/conf.php');
+//require_once('/var/www/airtime/install/installInit.php');
+require_once('/var/www/airtime/application/models/StoredFile.php');
+require_once('DB.php');
 
 function printUsage() {
 
