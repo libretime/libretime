@@ -32,10 +32,9 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
 
     public function checkReliantFields($formData) {
 
-        $valid = true;
-
         for($i=1; $i<=10; $i++) {
 
+            $valid = true;
             $day = $formData['add_show_rebroadcast_date_absolute_'.$i];
 
             if(trim($day) == "" && trim($time) == "") {
@@ -54,7 +53,7 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             }
 
             if($valid === false) {
-                return false;
+                continue;
             }
 
             $show_start_time = $formData['add_show_start_date']."".$formData['add_show_start_time'];

@@ -37,10 +37,9 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 
     public function checkReliantFields($formData) {
 
-        $valid = true;
-
         for($i=1; $i<=10; $i++) {
 
+            $valid = true;
             $days = $formData['add_show_rebroadcast_date_'.$i];
 
             if(trim($days) == "" && trim($time) == "") {
@@ -59,7 +58,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             }
 
             if($valid === false) {
-                return false;
+                continue;
             }
 
             $days = explode(" ", $days);
