@@ -38,14 +38,23 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
 
             $day = $formData['add_show_rebroadcast_date_absolute_'.$i];
 
-            if(trim($day) == "") {
+            if(trim($day) == "" && trim($time) == "") {
                 continue;
+            }
+
+            if (trim($day) == ""){
+                $this->getElement('add_show_rebroadcast_date_absolute_'.$i)->setErrors(array("Day must be specified"));
+                $valid = false;
             }
             
             $time = $formData['add_show_rebroadcast_time_absolute_'.$i];
             if (trim($time) == ""){
                 $this->getElement('add_show_rebroadcast_time_absolute_'.$i)->setErrors(array("Time must be specified"));
                 $valid = false;
+            }
+
+            if($valid === false) {
+                return false;
             }
 
             $show_start_time = $formData['add_show_start_date']."".$formData['add_show_start_time'];
