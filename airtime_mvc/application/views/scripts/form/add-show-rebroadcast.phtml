@@ -18,22 +18,22 @@
                             <span class="ui-button-text">Remove</span>
                         </a>
                     <?php endif; ?>
+                    <?php if(($this->element->getElement('add_show_rebroadcast_date_'.$i)->hasErrors()) 
+                      || ($this->element->getElement('add_show_rebroadcast_time_'.$i)->hasErrors())) : ?>
+                        <ul class='errors'>
+                            <?php $errors = array_merge(
+                                    $this->element->getElement('add_show_rebroadcast_date_'.$i)->getMessages(),
+                                    $this->element->getElement('add_show_rebroadcast_time_'.$i)->getMessages()
+                                    );
+                            ?> 
+
+                            <?php foreach($errors as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
                 </li>
 
-                <?php if(($this->element->getElement('add_show_rebroadcast_date_'.$i)->hasErrors()) 
-                      || ($this->element->getElement('add_show_rebroadcast_time_'.$i)->hasErrors())) : ?>
-                    <ul class='errors'>
-                        <?php $errors = array_merge(
-                                $this->element->getElement('add_show_rebroadcast_date_'.$i)->getMessages(),
-                                $this->element->getElement('add_show_rebroadcast_time_'.$i)->getMessages()
-                                );
-                        ?> 
-
-                        <?php foreach($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
                 <?php endfor; ?>
             </ul>
         <a class="ui-button ui-button-icon-only  ui-widget ui-state-default add_absolute_rebroadcast_day">

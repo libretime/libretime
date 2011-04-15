@@ -160,7 +160,7 @@ function setAddShowEvents() {
     });
 
     form.find(".add_absolute_rebroadcast_day").click(function(){
-        var li = $(this).prev().find("li:visible:last").next();
+        var li = $(this).parent().find("ul.formrow-repeat > li:visible:last").next(); 
        
         li.show();
         li = li.next();
