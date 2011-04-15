@@ -4,12 +4,13 @@
 import os
 import sys
 import time
+from configobj import ConfigObj
 
 if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
     
-BASE_PATH = '/opt/pypo/'
+PATH_INI_FILE = '/etc/airtime/pypo.cfg'
 
 def remove_path(path):
     os.system("rm -rf " + path)
@@ -29,14 +30,23 @@ def get_current_script_dir():
   return current_script_dir[0:index]
     
 try:
+    # load config file
+    try:
+        config = ConfigObj(PATH_INI_FILE)
+    except Exception, e:
+        print 'Error loading config file: ', e
+        sys.exit()
+        
     os.system("python %s/pypo-stop.py" % get_current_script_dir())
     
     print "Removing log directories"
-    remove_path("/var/log/airtime/pypo")
-    remove_path("/var/log/airtime/pypo-liquidsoap")
+    remove_path(config["log_base_dir"])
+    
+    print "Removing cache directories"
+    remove_path(config["cache_base_dir"])
     
     print "Removing pypo files"
-    remove_path(BASE_PATH)
+    remove_path(config["bin_dir"])
     
     print "Removing daemontool script pypo"
     remove_path("/etc/service/pypo")

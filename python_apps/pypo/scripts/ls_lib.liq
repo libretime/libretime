@@ -1,6 +1,6 @@
 def notify(m)
-  system("/opt/pypo/bin/scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
-  print("/opt/pypo/bin/scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
+  system("/usr/lib/airtime/pypo/bin/scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
+  print("/usr/lib/airtime/pypo/bin/scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
 end
 
 # A function applied to each metadata chunk

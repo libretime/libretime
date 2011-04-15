@@ -13,18 +13,21 @@ import logging.config
 import shutil
 import string
 import platform
+from configobj import ConfigObj
 from subprocess import Popen, PIPE, STDOUT
 
 if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
 
-BASE_PATH = '/opt/pypo/'
+PATH_INI_FILE = '/etc/airtime/pypo.cfg'
 
 def create_path(path):
   if not (os.path.exists(path)):
     print "Creating directory " + path
     os.makedirs(path)
+  else:
+    print "Directory already exists " + path
 
 def create_user(username):
   print "Checking for user "+username
@@ -49,20 +52,27 @@ def create_user(username):
 
 def copy_dir(src_dir, dest_dir):
   if (os.path.exists(dest_dir)) and (dest_dir != "/"):
-    print "Removing old directory "+dest_dir
+    #print "Removing old directory "+dest_dir
     shutil.rmtree(dest_dir)
   if not (os.path.exists(dest_dir)):
-    print "Copying directory "+src_dir+" to "+dest_dir
+    print "Copying directory "+os.path.realpath(src_dir)+" to "+os.path.realpath(dest_dir)
     shutil.copytree(src_dir, dest_dir)
                     
 def get_current_script_dir():
   current_script_dir = os.path.realpath(__file__)
   index = current_script_dir.rindex('/')
-  print current_script_dir[0:index]
+  #print current_script_dir[0:index]
   return current_script_dir[0:index]
 
 
 try:
+  # load config file
+  try:
+    config = ConfigObj(PATH_INI_FILE)
+  except Exception, e:
+    print 'Error loading config file: ', e
+    sys.exit()
+
   current_script_dir = get_current_script_dir()
   print "Checking and removing any existing pypo processes"
   os.system("python %s/pypo-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
@@ -71,21 +81,18 @@ try:
   # Create users
   create_user("pypo")
 
-  print "Creating log directories"
-  create_path("/var/log/airtime/pypo")
-  os.system("chmod -R 755 /var/log/airtime/pypo")
-  os.system("chown -R pypo:pypo /var/log/airtime/pypo")
+  create_path(config["pypo_log_dir"])
+  os.system("chmod -R 755 " + config["pypo_log_dir"])
+  os.system("chown -R pypo:pypo "+config["pypo_log_dir"])
 
-  create_path("/var/log/airtime/pypo-liquidsoap")
-  os.system("chmod -R 755 /var/log/airtime/pypo-liquidsoap")
-  os.system("chown -R pypo:pypo /var/log/airtime/pypo-liquidsoap")
+  create_path(config["liquidsoap_log_dir"])
+  os.system("chmod -R 755 " + config["liquidsoap_log_dir"])
+  os.system("chown -R pypo:pypo "+config["liquidsoap_log_dir"])
 
-  create_path(BASE_PATH)
-  create_path(BASE_PATH+"bin")
-  create_path(BASE_PATH+"cache")
-  create_path(BASE_PATH+"files")
-  create_path(BASE_PATH+"tmp")
-  create_path(BASE_PATH+"archive")
+  create_path(config["bin_dir"]+"/bin")
+  create_path(config["cache_dir"])
+  create_path(config["file_dir"])
+  create_path(config["tmp_dir"])
     
   if platform.architecture()[0] == '64bit':
       print "Installing 64-bit liquidsoap binary"
@@ -97,12 +104,13 @@ try:
       print "Unknown system architecture."
       sys.exit(1)
   
-  copy_dir("%s/.."%current_script_dir, BASE_PATH+"bin/")
-  copy_dir("%s/../../api_clients"%current_script_dir, BASE_PATH+"api_clients/")
+  copy_dir("%s/.."%current_script_dir, config["bin_dir"]+"/bin/")
+  copy_dir("%s/../../api_clients"%current_script_dir, config["bin_dir"]+"/api_clients/")
   
   print "Setting permissions"
-  os.system("chmod -R 755 "+BASE_PATH)
-  os.system("chown -R pypo:pypo "+BASE_PATH)
+  os.system("chmod -R 755 "+config["bin_dir"])
+  os.system("chown -R pypo:pypo "+config["bin_dir"])
+  os.system("chown -R pypo:pypo "+config["cache_base_dir"])
   
   print "Installing pypo daemon"
   create_path("/etc/service/pypo")

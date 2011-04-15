@@ -17,9 +17,9 @@ if (!file_exists(AirtimeIni::CONF_FILE_AIRTIME)) {
 }
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
-echo "Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
-
+echo PHP_EOL;
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
+echo "* Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
 AirtimeInstall::RemoveSymlinks();
 AirtimeInstall::UninstallBinaries();
 AirtimeInstall::UninstallPhpCode();
@@ -76,17 +76,24 @@ if ($results == 0) {
     echo "   * Nothing to delete.".PHP_EOL;
 }
 
+# Disabled as this should be a manual process
+#AirtimeInstall::DeleteFilesRecursive(AirtimeInstall::CONF_DIR_STORAGE);
 
-//------------------------------------------------------------------------
-// Delete files
-//------------------------------------------------------------------------
-AirtimeInstall::DeleteFilesRecursive(AirtimeInstall::CONF_DIR_STORAGE);
-AirtimeIni::RemoveIniFiles();
-
+echo PHP_EOL."*** Uninstalling Pypo ***".PHP_EOL;
 $command = "python ".__DIR__."/../python_apps/pypo/install/pypo-uninstall.py";
 system($command);
 
+echo PHP_EOL."*** Uninstalling Show Recorder ***".PHP_EOL;
 $command = "python ".__DIR__."/../python_apps/show-recorder/install/recorder-uninstall.py";
 system($command);
-echo "****************************** Uninstall Complete ******************************".PHP_EOL;
 
+#Disabled as this should be a manual process
+#AirtimeIni::RemoveIniFiles();
+
+echo PHP_EOL;
+echo "****************************** Uninstall Complete ******************************".PHP_EOL;
+echo PHP_EOL;
+echo "NOTE: To fully remove all Airtime files, you will also have to manually delete".PHP_EOL;
+echo "      the directories '".AirtimeInstall::CONF_DIR_STORAGE."'(where the media files are stored)".PHP_EOL;
+echo "      and '/etc/airtime'(where the config files are stored).".PHP_EOL;
+echo PHP_EOL;

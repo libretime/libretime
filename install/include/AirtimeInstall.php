@@ -303,8 +303,13 @@ class AirtimeInstall
                       AirtimeIni::CONF_FILE_LIQUIDSOAP,
                       AirtimeIni::CONF_FILE_PYPO,
                       AirtimeIni::CONF_FILE_RECORDER,
-                      "/usr/lib/pypo",
-                      "/usr/lib/show-recorder");
+                      "/usr/lib/airtime/pypo",
+                      "/usr/lib/airtime/show-recorder",
+                      "/var/log/airtime",
+                      "/var/log/airtime/pypo",
+                      "/var/log/airtime/show-recorder",
+                      "/var/tmp/airtime/pypo",
+                      "/var/tmp/airtime/show-recorder");
          foreach ($dirs as $f) {
              if (file_exists($f)) {
                  echo "+ $f".PHP_EOL;

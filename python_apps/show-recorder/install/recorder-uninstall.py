@@ -4,12 +4,13 @@
 import os
 import sys
 import time
+from configobj import ConfigObj
 
 if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
     
-BASE_PATH = '/opt/recorder/'
+PATH_INI_FILE = '/etc/airtime/recorder.cfg'
 
 def remove_path(path):
     os.system("rm -rf " + path)
@@ -29,13 +30,23 @@ def get_current_script_dir():
   return current_script_dir[0:index]
     
 try:
+    # load config file
+    try:
+        config = ConfigObj(PATH_INI_FILE)
+    except Exception, e:
+        print 'Error loading config file: ', e
+        sys.exit()
+
     os.system("python %s/recorder-stop.py" % get_current_script_dir())
     
     print "Removing log directories"
-    remove_path("/var/log/airtime/recorder")
+    remove_path(config["log_dir"])
     
-    print "Removing recorder files"
-    remove_path(BASE_PATH)
+    print "Removing application files"
+    remove_path(config["bin_dir"])
+    
+    print "Removing media files"
+    remove_path(config["base_recorded_files"])
     
     print "Removing daemontool script recorder"
     remove_path("rm -rf /etc/service/recorder")

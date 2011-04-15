@@ -1,9 +1,9 @@
 #!/bin/sh
 pypo_user="pypo"
-export HOME="/home/pypo/"
+export HOME="/var/tmp/airtime/pypo/"
 # Location of pypo_cli.py Python script
-pypo_path="/opt/pypo/bin/"
-api_client_path="/opt/pypo/"
+pypo_path="/usr/lib/airtime/pypo/bin/"
+api_client_path="/usr/lib/airtime/pypo/"
 pypo_script="pypo-cli.py"
 echo "*** Daemontools: starting daemon"
 cd ${pypo_path}

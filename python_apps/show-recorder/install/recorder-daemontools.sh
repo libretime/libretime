@@ -1,13 +1,13 @@
 #!/bin/sh
 recorder_user="pypo"
-export HOME="/home/pypo/"
+export HOME="/var/tmp/airtime/show-recorder/"
 export TERM=xterm
 
 # Location of pypo_cli.py Python script
-recorder_path="/opt/recorder/bin/"
+recorder_path="/usr/lib/airtime/show-recorder/bin/"
 recorder_script="testrecordscript.py"
 
-api_client_path="/opt/pypo/"
+api_client_path="/usr/lib/airtime/pypo/"
 cd ${recorder_path}
 
 echo "*** Daemontools: starting daemon"

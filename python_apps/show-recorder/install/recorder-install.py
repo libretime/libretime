@@ -13,13 +13,14 @@ import logging.config
 import shutil
 import string
 import platform
+from configobj import ConfigObj
 from subprocess import Popen, PIPE, STDOUT
 
 if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
 
-BASE_PATH = '/opt/recorder/'
+PATH_INI_FILE = '/etc/airtime/recorder.cfg'
 
 def create_path(path):
   if not (os.path.exists(path)):
@@ -50,17 +51,24 @@ def copy_dir(src_dir, dest_dir):
     print "Removing old directory "+dest_dir
     shutil.rmtree(dest_dir)
   if not (os.path.exists(dest_dir)):
-    print "Copying directory "+src_dir+" to "+dest_dir
+    print "Copying directory "+os.path.realpath(src_dir)+" to "+os.path.realpath(dest_dir)
     shutil.copytree(src_dir, dest_dir)
                     
 def get_current_script_dir():
   current_script_dir = os.path.realpath(__file__)
   index = current_script_dir.rindex('/')
-  print current_script_dir[0:index]
+  #print current_script_dir[0:index]
   return current_script_dir[0:index]
 
 
 try:
+  # load config file
+  try:
+    config = ConfigObj(PATH_INI_FILE)
+  except Exception, e:
+    print 'Error loading config file: ', e
+    sys.exit()
+
   current_script_dir = get_current_script_dir()
   print "Checking and removing any existing recorder processes"
   os.system("python %s/recorder-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
@@ -69,33 +77,21 @@ try:
   # Create users
   create_user("pypo")
 
-  print "Creating home directory"
-  create_path("/home/pypo")
-  os.system("chmod -R 755 /home/pypo")
-  os.system("chown -R pypo:pypo /home/pypo")
-
-  print "Creating home directory"
-  create_path("/home/pypo/Music")
-  os.system("chmod -R 755 /home/pypo/Music")
-  os.system("chown -R pypo:pypo /home/pypo/Music")
+  print "Creating temporary media storage directory"
+  create_path(config["base_recorded_files"])
+  os.system("chmod -R 755 "+config["base_recorded_files"])
+  os.system("chown -R pypo:pypo "+config["base_recorded_files"])
 
   print "Creating log directories"
-  create_path("/var/log/airtime/recorder")
-  os.system("chmod -R 755 /var/log/airtime/recorder")
-  os.system("chown -R pypo:pypo /var/log/airtime/recorder")
+  create_path(config["log_dir"])
+  os.system("chmod -R 755 " + config["log_dir"])
+  os.system("chown -R pypo:pypo "+config["log_dir"])
 
-  create_path(BASE_PATH)
-  create_path(BASE_PATH+"bin")
-  create_path(BASE_PATH+"cache")
-  create_path(BASE_PATH+"files")
-  create_path(BASE_PATH+"tmp")
-  create_path(BASE_PATH+"archive")
-  
-  copy_dir("%s/.."%current_script_dir, BASE_PATH+"bin/")
+  copy_dir("%s/.."%current_script_dir, config["bin_dir"])
   
   print "Setting permissions"
-  os.system("chmod -R 755 "+BASE_PATH)
-  os.system("chown -R pypo:pypo "+BASE_PATH)
+  os.system("chmod -R 755 "+config["bin_dir"])
+  os.system("chown -R pypo:pypo "+config["bin_dir"])
   
   print "Installing recorder daemon"
   create_path("/etc/service/recorder")
