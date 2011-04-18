@@ -48,7 +48,7 @@ $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
 
 foreach ($configFiles as $conf) {
     if (file_exists($conf)) {
-        echo "Backing up $conf".PHP_EOL;
+        echo "Backing up $conf to $conf.bak".PHP_EOL;
         exec("cp $conf $conf.bak");
     }
 }
