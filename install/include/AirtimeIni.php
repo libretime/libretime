@@ -1,7 +1,6 @@
 <?php
 /**
- * @package Newscoop
- * @subpackage Subscriptions
+ * @package Airtime
  * @copyright 2011 Sourcefabric o.p.s.
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */

@@ -86,4 +86,30 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 function load_airtime_config(){
 	$ini_array = parse_ini_file('/etc/airtime/airtime.conf', true);
     return $ini_array;
+} 
+
+class Config {
+    public static function reload_config() {
+        global $CC_CONFIG;
+        $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+
+        // Name of the web server user
+        $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
+        $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
+
+        $CC_CONFIG['baseFilesDir'] = $values['general']['base_files_dir'];
+        // main directory for storing binary media files
+        $CC_CONFIG['storageDir'] =  $values['general']['base_files_dir']."/stor";
+
+	    // Database config
+        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
+        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
+        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+
+        $CC_CONFIG['apiKey'] = array($values['general']['api_key']);
+
+        $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
+        $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
+    }
 }
