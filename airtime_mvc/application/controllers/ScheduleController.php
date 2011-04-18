@@ -34,20 +34,23 @@ class ScheduleController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/fullcalendar/fullcalendar.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/colorpicker/js/colorpicker.js','text/javascript');
-    	$this->view->headScript()->appendFile('/js/airtime/schedule/full-calendar-functions.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/airtime/schedule/add-show.js','text/javascript');
-    	$this->view->headScript()->appendFile('/js/airtime/schedule/schedule.js','text/javascript');
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
 
-		$this->view->headLink()->appendStylesheet('/css/jquery-ui-timepicker.css');
-        $this->view->headLink()->appendStylesheet('/css/fullcalendar.css');
-		$this->view->headLink()->appendStylesheet('/css/colorpicker/css/colorpicker.css');
-		$this->view->headLink()->appendStylesheet('/css/add-show.css');
-        $this->view->headLink()->appendStylesheet('/css/contextmenu.css');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js','text/javascript');
+		$this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
+		$this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js','text/javascript');
+    	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js','text/javascript');
+		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js','text/javascript');
+    	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js','text/javascript');
+
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery-ui-timepicker.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/fullcalendar.css');
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css');
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
 
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
