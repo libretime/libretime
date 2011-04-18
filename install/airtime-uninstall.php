@@ -20,8 +20,6 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 echo PHP_EOL;
 echo "******************************* Uninstall Begin ********************************".PHP_EOL;
 echo "* Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
-AirtimeInstall::RemoveSymlinks();
-AirtimeInstall::UninstallBinaries();
 AirtimeInstall::UninstallPhpCode();
 
 //------------------------------------------------------------------------
@@ -89,6 +87,9 @@ system($command);
 
 #Disabled as this should be a manual process
 #AirtimeIni::RemoveIniFiles();
+
+AirtimeInstall::RemoveSymlinks();
+AirtimeInstall::UninstallBinaries();
 
 echo PHP_EOL;
 echo "****************************** Uninstall Complete ******************************".PHP_EOL;
