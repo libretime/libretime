@@ -61,3 +61,6 @@ AirtimeInstall::InstallBinaries();
 
 echo "* Initializing INI files".PHP_EOL;
 AirtimeIni::UpdateIniFiles();
+
+echo "* Creating default storage directory".PHP_EOL;
+AirtimeInstall::InstallStorageDirectory();

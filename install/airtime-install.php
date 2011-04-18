@@ -80,7 +80,7 @@ AirtimeInstall::InstallPostgresScriptingLanguage();
 
 AirtimeInstall::CreateDatabaseTables();
 
-AirtimeInstall::InstallStorageDirectory($CC_CONFIG);
+AirtimeInstall::InstallStorageDirectory();
 
 AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 

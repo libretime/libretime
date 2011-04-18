@@ -91,7 +91,7 @@ class AirtimeInstall
         chmod($filePath, $fileperms);
     }
 
-    public static function InstallStorageDirectory($CC_CONFIG)
+    public static function InstallStorageDirectory()
     {
         global $CC_CONFIG, $CC_DBC;
         echo "* Storage directory setup".PHP_EOL;
