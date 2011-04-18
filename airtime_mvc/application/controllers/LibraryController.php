@@ -21,14 +21,17 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/contextmenu/jjmenu.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/jplayer/jquery.jplayer.min.js');
-        $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/airtime/library/library.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/airtime/library/advancedsearch.js','text/javascript');
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
 
-		$this->view->headLink()->appendStylesheet('/css/media_library.css'); 
-		$this->view->headLink()->appendStylesheet('/css/contextmenu.css');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
+
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css'); 
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
 	
 		$this->_helper->layout->setLayout('library');
         $this->_helper->viewRenderer->setResponseSegment('library');

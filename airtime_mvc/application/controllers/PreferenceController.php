@@ -10,9 +10,10 @@ class PreferenceController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/airtime/preferences/preferences.js','text/javascript');
-
         $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js','text/javascript');
         $this->view->statusMsg = "";
         
         $form = new Application_Form_Preferences();

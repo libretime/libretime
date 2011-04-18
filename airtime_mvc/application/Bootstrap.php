@@ -52,24 +52,28 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	protected function _initHeadLink()
 	{
 		$view = $this->getResource('view');
-		$view->headLink()->appendStylesheet('/css/redmond/jquery-ui-1.8.8.custom.css');
-        $this->view->headLink()->appendStylesheet('/css/pro_dropdown_3.css');
-		$this->view->headLink()->appendStylesheet('/css/styles.css');
+        $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
+
+		$view->headLink()->appendStylesheet($baseUrl.'/css/redmond/jquery-ui-1.8.8.custom.css');
+        $view->headLink()->appendStylesheet($baseUrl.'/css/pro_dropdown_3.css');
+		$view->headLink()->appendStylesheet($baseUrl.'/css/styles.css');
 	}
 
 	protected function _initHeadScript()
 	{
 		$view = $this->getResource('view');
-        $view->headScript()->appendFile('/js/libs/jquery-1.5.2.min.js','text/javascript');
-		$view->headScript()->appendFile('/js/libs/jquery-ui-1.8.11.custom.min.js','text/javascript');
-        $view->headScript()->appendFile('/js/libs/jquery.stickyPanel.js','text/javascript');
-        $view->headScript()->appendFile('/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
+        $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
+
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.5.2.min.js','text/javascript');
+		$view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.11.custom.min.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
 
         //scripts for now playing bar
-        $this->view->headScript()->appendFile('/js/playlist/helperfunctions.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/playlist/playlist.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/playlist/helperfunctions.js','text/javascript');
+		$view->headScript()->appendFile($baseUrl.'/js/playlist/playlist.js','text/javascript');
 
-        $view->headScript()->appendFile('/js/airtime/common/common.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js','text/javascript');
     }
 
     protected function _initViewHelpers()

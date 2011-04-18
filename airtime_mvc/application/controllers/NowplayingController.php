@@ -12,9 +12,12 @@ class NowplayingController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.min.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/playlist/nowplayingdatagrid.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/playlist/nowview.js','text/javascript');
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/playlist/nowplayingdatagrid.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/playlist/nowview.js','text/javascript');
     }
 
     public function getDataGridDataAction()
@@ -27,14 +30,17 @@ class NowplayingController extends Zend_Controller_Action
     public function livestreamAction()
     {
         //use bare bones layout (no header bar or menu)
-                $this->_helper->layout->setLayout('bare');
+        $this->_helper->layout->setLayout('bare');
     }
 
     public function dayViewAction()
     {
-        $this->view->headScript()->appendFile('/js/datatables/js/jquery.dataTables.min.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/playlist/nowplayingdatagrid.js','text/javascript');
-        $this->view->headScript()->appendFile('/js/playlist/dayview.js','text/javascript');
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/playlist/nowplayingdatagrid.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/playlist/dayview.js','text/javascript');
     }
 }
 

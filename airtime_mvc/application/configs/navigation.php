@@ -19,7 +19,7 @@ $pages = array(
 		'label'      => 'Add Media',
 		'module'     => 'default',
 		'controller' => 'Plupload',
-		'action'     => 'plupload',
+		'action'     => 'index',
 		'resource'	=>	'plupload'
 	),
 	array(

@@ -7,14 +7,19 @@ class PluploadController extends Zend_Controller_Action
     {
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('upload', 'json')
-                    ->addActionContext('upload-recorded', 'json')
 				    ->initContext();
     }
 
-
     public function indexAction()
     {
-        // action body
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/plupload/plupload.full.min.js','text/javascript');
+		$this->view->headScript()->appendFile($baseUrl.'/js/plupload/jquery.plupload.queue.min.js','text/javascript');
+		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/plupload.js','text/javascript');
+
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/plupload.queue.css');
     }
 
     public function uploadAction()
@@ -24,18 +29,6 @@ class PluploadController extends Zend_Controller_Action
 
 		die('{"jsonrpc" : "2.0", "id" : '.$file->getId().' }');
     }
-
-    public function pluploadAction()
-    {
-        $this->view->headScript()->appendFile('/js/plupload/plupload.full.min.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/plupload/jquery.plupload.queue.min.js','text/javascript');
-		$this->view->headScript()->appendFile('/js/airtime/library/plupload.js','text/javascript');
-
-		$this->view->headLink()->appendStylesheet('/css/plupload.queue.css');
-
-    }
-
-
 }
 
 
