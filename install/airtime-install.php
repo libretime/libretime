@@ -50,6 +50,10 @@ else if (!isset($opts->p) && !isset($opts->o)) {
             $overwrite = true;
         }
     }
+    else {
+        echo "* Creating INI files".PHP_EOL;
+        AirtimeIni::CreateIniFiles();
+    }
 }
 if ($overwrite) {
     echo "* Creating INI files".PHP_EOL;
