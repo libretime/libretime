@@ -80,11 +80,11 @@ AirtimeInstall::InstallPostgresScriptingLanguage();
 
 AirtimeInstall::CreateDatabaseTables();
 
-AirtimeInstall::InstallStorageDirectory($CC_CONFIG);
+AirtimeInstall::InstallStorageDirectory();
 
 AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
-AirtimeInstall::CreateSymlinksToUtils($CC_CONFIG["storageDir"]);
+AirtimeInstall::CreateSymlinksToUtils();
 
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");

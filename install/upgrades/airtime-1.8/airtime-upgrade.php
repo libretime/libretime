@@ -48,7 +48,7 @@ $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
 
 foreach ($configFiles as $conf) {
     if (file_exists($conf)) {
-        echo "Backing up $conf".PHP_EOL;
+        echo "Backing up $conf to $conf.bak".PHP_EOL;
         exec("cp $conf $conf.bak");
     }
 }
@@ -61,3 +61,9 @@ AirtimeInstall::InstallBinaries();
 
 echo "* Initializing INI files".PHP_EOL;
 AirtimeIni::UpdateIniFiles();
+Config::reload_config();
+
+echo "* Creating default storage directory".PHP_EOL;
+AirtimeInstall::InstallStorageDirectory();
+AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
+AirtimeInstall::CreateSymlinksToUtils();
