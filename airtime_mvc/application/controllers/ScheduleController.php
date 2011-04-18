@@ -622,10 +622,22 @@ class ScheduleController extends Zend_Controller_Action
 
 		$who = $formWho->isValid($data);
 		$style = $formStyle->isValid($data);
-        $record = $formRecord->isValid($data);        
+
+        //If show is a new show (not updated), then get
+        //isRecorded from POST data. Otherwise get it from
+        //the database since the user is not allowed to
+        //update this option.
+        $record = false;
+        if ($data['add_show_id'] != -1){
+            $show = new Show($data['add_show_id']);
+            $data['add_show_record'] = $show->isRecorded();
+            $record = $formRecord->isValid($data);  
+            $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
+        } else {
+            $record = $formRecord->isValid($data);  
+        }
 
         if ($what && $when && $repeats && $who && $style && $record && $rebroadAb && $rebroad) {
-
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $user = new User($userInfo->id);
 			if ($user->isAdmin()) {
