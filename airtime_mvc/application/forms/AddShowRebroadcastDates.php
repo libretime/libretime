@@ -43,6 +43,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 
             $valid = true;
             $days = $formData['add_show_rebroadcast_date_'.$i];
+            $time = $formData['add_show_rebroadcast_time_'.$i];
 
             if(trim($days) == "" && trim($time) == "") {
                 continue;
@@ -53,7 +54,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
                 $valid = false;
             }
             
-            $time = $formData['add_show_rebroadcast_time_'.$i];
+            
             if (trim($time) == ""){
                 $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array("Time must be specified"));
                 $valid = false;

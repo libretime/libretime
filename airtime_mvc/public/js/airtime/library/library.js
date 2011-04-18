@@ -24,7 +24,6 @@ function deleteItem(type, id) {
 	dt.fnDeleteRow( tr );
 }
 
-//callbacks called by jjmenu
 function deleteAudioClip(json) {
 	if(json.message) {  
 		alert(json.message);	
@@ -32,6 +31,28 @@ function deleteAudioClip(json) {
 	}
 
 	deleteItem("au", json.id);
+}
+
+//callbacks called by jjmenu
+function confirmDeleteAudioClip(params){
+    if(confirm('Are you sure you want to delete?')){
+        var url = '/Library/delete' + params;
+        $.ajax({
+          url: url,
+          success: deleteAudioClip
+        });
+    }	
+}
+
+//callbacks called by jjmenu
+function confirmDeletePlaylist(params){
+    if(confirm('Are you sure you want to delete?')){
+        var url = '/Playlist/delete' + params;
+        $.ajax({
+          url: url,
+          success: deletePlaylist
+        });
+    }	
 }
 
 function deletePlaylist(json) {
