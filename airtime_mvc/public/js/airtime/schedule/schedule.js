@@ -228,7 +228,7 @@ function buildScheduleDialog(json){
 
 	dialog.dialog({
 		autoOpen: false,
-		title: 'Schedule Playlist',
+		title: 'Schedule Media',
 		width: 1100,
 		height: 550,
 		modal: true,
