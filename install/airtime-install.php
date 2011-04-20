@@ -90,6 +90,8 @@ AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
 AirtimeInstall::CreateSymlinksToUtils();
 
+AirtimeInstall::CreateZendPhpLogFile();
+
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 

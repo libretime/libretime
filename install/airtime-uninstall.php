@@ -90,6 +90,7 @@ system($command);
 
 AirtimeInstall::RemoveSymlinks();
 AirtimeInstall::UninstallBinaries();
+AirtimeInstall::RemoveLogDirectories();
 
 echo PHP_EOL;
 echo "****************************** Uninstall Complete ******************************".PHP_EOL;
