@@ -19,51 +19,24 @@ Daniel James
 Paul Baranowski (paul.baranowski@sourcefabric.org)
   Role: Project Manager
 
-Version 1.8.0
--------------
--The calendar is now faster by 5-8X.  For example, if the "month" calendar view had shows scheduled for every hour of every day, it used to take 16 seconds to load.  Now it takes 2 seconds. 
--Users can now edit shows. Now it is possible to change a show after it is created - you can change the simple stuff, like "Name", "Description", and "URL", but also change the complex stuff like repeat days and rebroadcast days.
--It is possible to have up to ten rebroadcast shows now, previously it was only up to five.  Rebroadcast shows are hidden
--New improved look & feel of the calendar (thanks to the "FullCalendar" jQuery project).
--Installation now puts files in standard locations in the Linux file hierarchy, which prepares the project to be accepted into Ubuntu and Debian.  Also because of our wish to be part of those projects, the default output stream type is now OGG instead of MP3 -- due to MP3 licensing issues. This configuration can be changed in "/etc/airtime/liquidsoap.conf".
--You now have the ability to start and stop pypo and the show recorder from the command line with the commands "airtime-pypo-start", "airtime-pypo-stop", "airtime-show-recorder-start", and "airtime-show-recorder-stop".
--The installation script now has two options:  --perserve to keep your existing config files, or --overwrite to replace your existing config files with new ones.
--Uninstall will no longer remove your Airtime config files or remove your music storage directory.
--Bug fixes:
-    -CC-2192 Schedule sent to pypo is not sorted by start time.
-    -CC-2175 Overbooking: Cut off shows when they are done
-    -CC-2174 Need formatting and a warning icon for the message for overbooking a show
-    -CC-2039 Upload file: file name cropped
-    -CC-2177 Schedule editing does not work under Firefox 4
-  
 
 Version 1.7.0
 -------------
--Recording and automatic scheduling/broadcasting of live shows
-    -Recording/rebroadcast status of a show is shown in "Now Playing" and "Calendar"
-    -Can rebroadcast a show at multiple times and dates
--Automatic upload of recorded shows to Soundcloud
--Frontend JQuery widgets for public-facing websites to show your visitors what's playing and the upcoming schedule
--Ability to over-book a show and automatically cut and fade out song if it goes beyond the show time
--Ability to delete audio files
--Ability to cancel the currently playing show
--Any changes to the schedule are immediately seen by the playout engine
-    -In version 1.6, you had to make sure that your show was ready to go 30 seconds before it started.
--Upgrade support (should be able to upgrade from any version, unlike 1.6.1 which required an uninstall of 1.6.0 first)
--"Now Playing" list view:
-    -audio items are now grouped by show.
-    -If a show is not fully scheduled, the user is notified how many seconds of silence are at the end of the show in this View.
-    -Audio items that play past the show's end time have a visual notification that they will be cut off
--Ability to change metadata tag display format for web streams
--Config files moved to /etc/airtime.  This means all config files are in one convenient location and separated from the code, so you can -upgrade your code independently of your config files.
--Redesign of Preferences screen
--Bug fixes:
-    -CC-2082 OGG stream dies after every song when using MPlayer
-    -CC-1894 Warn users about time zone differences or clock drift problems on the server 
-    -CC-2058 Utilities are not in the system $PATH
-    -CC-2051 Unable to change user password
-    -CC-2030 Icon needed for Cue In/Out
-    -CC-1955 Special character support in the library search
+Naomi Aro (naomi.aro@sourcefabric.org)
+  Role: Software Developer
+
+Martin Konecny (martin.konecny@sourcefabric.org)
+  Role: Software Developer
+
+Ofir Gal (ofir.gal@sourcefabric.org)
+  Role: QA
+
+Daniel James
+  Role: Documentor & QA
+
+Paul Baranowski (paul.baranowski@sourcefabric.org)
+  Role: Project Manager
+
 
 Version 1.6.1
 -------------
