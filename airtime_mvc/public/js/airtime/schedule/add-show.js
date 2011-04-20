@@ -104,15 +104,17 @@ function setAddShowEvents() {
 
     form.find("#add_show_rebroadcast").click(function(){
         $(this).blur();
-        if($(this).attr('checked') && !form.find("#add_show_repeats").attr('checked')) {
-            form.find("#add_show_rebroadcast_absolute").show();
-        }
-        else if($(this).attr('checked') && form.find("#add_show_repeats").attr('checked')) {
-            form.find("#add_show_rebroadcast_relative").show();
-        }
-        else {
-            form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
-        }
+        if(form.find("#add_show_record").attr('checked')){
+	        if($(this).attr('checked') && !form.find("#add_show_repeats").attr('checked')) {
+	            form.find("#add_show_rebroadcast_absolute").show();
+	        }
+	        else if($(this).attr('checked') && form.find("#add_show_repeats").attr('checked')) {
+	            form.find("#add_show_rebroadcast_relative").show();
+	        }
+	        else {
+	            form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
+	        }
+    	}
     });
 
     form.find("#add_show_repeat_type").change(function(){
