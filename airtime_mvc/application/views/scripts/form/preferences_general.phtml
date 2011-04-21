@@ -36,7 +36,7 @@
             ?>
             <?php foreach ($this->element->getElement('streamFormat')->getMultiOptions() as $radio) : ?>
                 <label for="streamFormat-<?php echo $i ?>">
-                    <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?>/>
+                    <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?> >
                         <?php echo $radio ?>
                     </input>
                 </label>
@@ -59,7 +59,7 @@
             ?>
             <?php foreach ($this->element->getElement('thirdPartyApi')->getMultiOptions() as $radio) : ?>
                 <label for="thirdPartyApi-<?php echo $i ?>">
-                    <input type="radio" value="<?php echo $i ?>" id="thirdPartyApi-<?php echo $i ?>" name="thirdPartyApi" <?php if($i == $value){echo 'checked="checked"';}?> />
+                    <input type="radio" value="<?php echo $i ?>" id="thirdPartyApi-<?php echo $i ?>" name="thirdPartyApi" <?php if($i == $value){echo 'checked="checked"';}?>>
                         <?php echo $radio ?>
                     </input>
                 </label>
