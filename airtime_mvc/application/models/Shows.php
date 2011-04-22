@@ -282,7 +282,7 @@ class Show {
     
         $showId = $this->getId();
         $sql = "SELECT last_show FROM cc_show_days"
-            ." WHERE show_id = $showId";
+            ." WHERE show_id = $showId"
             ." ORDER BY last_show DESC";
             
         $endDate = $CC_DBC->GetOne($sql);
