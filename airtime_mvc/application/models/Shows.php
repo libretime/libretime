@@ -283,6 +283,7 @@ class Show {
         $showId = $this->getId();
         $sql = "SELECT last_show FROM cc_show_days"
             ." WHERE show_id = $showId";
+            ." ORDER BY last_show DESC";
             
         $endDate = $CC_DBC->GetOne($sql);
         
@@ -367,7 +368,8 @@ class Show {
     
         $showId = $this->getId();
         $sql = "SELECT first_show FROM cc_show_days"
-            ." WHERE show_id = $showId";
+            ." WHERE show_id = $showId"
+            ." ORDER BY first_show";
             
         $firstDate = $CC_DBC->GetOne($sql);
         
@@ -661,16 +663,7 @@ class Show {
         $showId = $ccShow->getDbId();
         $show = new Show($showId);
 
-        //If show is a new show (not updated), then get
-        //isRecorded from POST data. Otherwise get it from
-        //the database since the user is not allowed to
-        //update this option.
-        if ($data['add_show_id'] == -1){
-            $isRecorded = ($data['add_show_record']) ? 1 : 0;
-        } else {
-            $isRecorded = $show->isRecorded();
-        } 
-
+        $isRecorded = ($data['add_show_record']) ? 1 : 0;
         
         if ($data['add_show_id'] != -1){
             Show::deletePossiblyInvalidInstances($data, $show, $endDate, $isRecorded, $repeatType);
