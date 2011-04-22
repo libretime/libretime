@@ -283,6 +283,7 @@ class Show {
         $showId = $this->getId();
         $sql = "SELECT last_show FROM cc_show_days"
             ." WHERE show_id = $showId";
+            ." ORDER BY last_show DESC";
             
         $endDate = $CC_DBC->GetOne($sql);
         
@@ -367,7 +368,8 @@ class Show {
     
         $showId = $this->getId();
         $sql = "SELECT first_show FROM cc_show_days"
-            ." WHERE show_id = $showId";
+            ." WHERE show_id = $showId"
+            ." ORDER BY first_show";
             
         $firstDate = $CC_DBC->GetOne($sql);
         
