@@ -124,9 +124,9 @@ class AirtimeInstall
 
         echo "* Creating Airtime database user".PHP_EOL;
 
-        // Create the database user
-        $command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
-        ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
+        $username = $CC_CONFIG['dsn']['username'];
+        $password = $CC_CONFIG['dsn']['password'];
+        $command = "echo \"CREATE USER $username ENCRYPTED PASSWORD '$password' LOGIN CREATEDB NOCREATEUSER;\" | sudo -u postgres psql";
 
         @exec($command, $output, $results);
         if ($results == 0) {
@@ -148,7 +148,9 @@ class AirtimeInstall
 
         echo "* Creating Airtime database".PHP_EOL;
 
-        $command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} --owner {$CC_CONFIG['dsn']['username']} 2> /dev/null";
+        $database = $CC_CONFIG['dsn']['database'];
+        $username = $CC_CONFIG['dsn']['username'];
+        $command = "echo \"CREATE DATABASE $database OWNER $username\" | sudo -u postgres psql";
         @exec($command, $output, $results);
         if ($results == 0) {
             echo "* Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
