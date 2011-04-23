@@ -8,7 +8,7 @@ class AirtimeInstall
     const CONF_DIR_BINARIES = "/usr/lib/airtime";
     const CONF_DIR_STORAGE = "/srv/airtime";
     const CONF_DIR_WWW = "/var/www/airtime";
-
+    
     public static function GetAirtimeSrcDir()
     {
         return __DIR__."/../../airtime_mvc";
@@ -125,7 +125,7 @@ class AirtimeInstall
 
         $username = $CC_CONFIG['dsn']['username'];
         $password = $CC_CONFIG['dsn']['password'];
-        $command = "echo \"CREATE USER $username ENCRYPTED PASSWORD '$password' LOGIN CREATEDB NOCREATEUSER;\" | sudo -u postgres psql";
+        $command = "echo \"CREATE USER $username ENCRYPTED PASSWORD '$password' LOGIN CREATEDB NOCREATEUSER;\" | su postgres -c psql";
 
         @exec($command, $output, $results);
         if ($results == 0) {
@@ -149,7 +149,7 @@ class AirtimeInstall
 
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
-        $command = "echo \"CREATE DATABASE $database OWNER $username\" | sudo -u postgres psql";
+        $command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql";
         @exec($command, $output, $results);
         if ($results == 0) {
             echo "* Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
