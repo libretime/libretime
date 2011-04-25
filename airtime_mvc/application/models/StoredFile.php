@@ -431,20 +431,16 @@ class StoredFile {
      *
      * @param string $p_gunid
      *  	globally unique id of file
-     * @param boolean $p_autoload
-     * 		if TRUE, automatically load the row from the DB
      */
-    public function __construct($p_gunid=NULL, $p_autoload=TRUE)
+    public function __construct($p_gunid=NULL)
     {
         $this->gunid = $p_gunid;
         if (empty($this->gunid)) {
             $this->gunid = StoredFile::generateGunid();
         }
         else {
-            if ($p_autoload) {
-                $this->loadMetadata();
-                $this->exists = is_file($this->filepath) && is_readable($this->filepath);
-            }
+            $this->loadMetadata();
+            $this->exists = is_file($this->filepath) && is_readable($this->filepath);
         }
     }
 

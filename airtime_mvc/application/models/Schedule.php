@@ -60,7 +60,6 @@ class ScheduleGroup {
             if (empty($length)) {
                 return new PEAR_Error("Length is empty.");
             }
-
             // Insert into the table
             $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
 

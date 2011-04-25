@@ -124,9 +124,9 @@ class AirtimeInstall
 
         echo "* Creating Airtime database user".PHP_EOL;
 
-        // Create the database user
-        $command = "sudo -u postgres psql postgres --command \"CREATE USER {$CC_CONFIG['dsn']['username']} "
-        ." ENCRYPTED PASSWORD '{$CC_CONFIG['dsn']['password']}' LOGIN CREATEDB NOCREATEUSER;\" 2>/dev/null";
+        $username = $CC_CONFIG['dsn']['username'];
+        $password = $CC_CONFIG['dsn']['password'];
+        $command = "echo \"CREATE USER $username ENCRYPTED PASSWORD '$password' LOGIN CREATEDB NOCREATEUSER;\" | sudo -u postgres psql";
 
         @exec($command, $output, $results);
         if ($results == 0) {
@@ -148,7 +148,9 @@ class AirtimeInstall
 
         echo "* Creating Airtime database".PHP_EOL;
 
-        $command = "sudo -u postgres createdb {$CC_CONFIG['dsn']['database']} --owner {$CC_CONFIG['dsn']['username']} 2> /dev/null";
+        $database = $CC_CONFIG['dsn']['database'];
+        $username = $CC_CONFIG['dsn']['username'];
+        $command = "echo \"CREATE DATABASE $database OWNER $username\" | sudo -u postgres psql";
         @exec($command, $output, $results);
         if ($results == 0) {
             echo "* Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
@@ -324,13 +326,13 @@ class AirtimeInstall
         global $CC_CONFIG;
 
         echo "* Creating logs directory ".AirtimeInstall::CONF_DIR_LOG.PHP_EOL;
-        
+
         $path = AirtimeInstall::CONF_DIR_LOG;
         $file = $path.'/zendphp.log';
         if (!file_exists($path)){
             mkdir($path, 0755, true);
         }
-        
+
         touch($file);
         chmod($file, 0755);
         chown($file, $CC_CONFIG['webServerUser']);
@@ -340,7 +342,7 @@ class AirtimeInstall
     public static function RemoveLogDirectories(){
         $path = AirtimeInstall::CONF_DIR_LOG;
         echo "* Removing logs directory ".$path.PHP_EOL;
-        
+
         exec("rm -rf $path");
     }
 }

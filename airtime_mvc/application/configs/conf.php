@@ -5,8 +5,8 @@
  * /etc/airtime/pypo.cfg
  * /etc/airtime/recorder.cfg
  */
- 
-define('AIRTIME_VERSION', '1.8.0');
+
+define('AIRTIME_VERSION', '1.9.0-beta');
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
 
@@ -44,7 +44,7 @@ $CC_CONFIG = array(
     'soundcloud-client-secret' => 'pZ7beWmF06epXLHVUP1ufOg2oEnIt9XhE8l8xt0bBs',
 
     'soundcloud-connection-retries' => $values['soundcloud']['connection_retries'],
-    'soundcloud-connection-wait' => $values['soundcloud']['time_between_retries'], 
+    'soundcloud-connection-wait' => $values['soundcloud']['time_between_retries'],
 
     "rootDir" => __DIR__."/../..",
     'pearPath'      =>  dirname(__FILE__).'/../../library/pear',
@@ -86,7 +86,7 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 function load_airtime_config(){
 	$ini_array = parse_ini_file('/etc/airtime/airtime.conf', true);
     return $ini_array;
-} 
+}
 
 class Config {
     public static function reload_config() {

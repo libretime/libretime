@@ -8,6 +8,7 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     echo "400 Not executable\r\n";
     exit(1);
 }
+
 set_include_path('/var/www/airtime/library' . PATH_SEPARATOR . get_include_path());
 set_include_path('/var/www/airtime/application/models' . PATH_SEPARATOR . get_include_path());
 require_once('/var/www/airtime/application/configs/conf.php');
