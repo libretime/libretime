@@ -60,7 +60,10 @@ function airtime_empty_db($db)
     Playlist::deleteAll();
 
     echo " * Clearing files table...".PHP_EOL;
-    StoredFile::deleteAll();
+    $result = StoredFile::deleteAll();
+    if (PEAR::isError($result)) {
+        echo $result->getMessage().PHP_EOL;
+    }
 }
 
 
@@ -87,6 +90,12 @@ if (isset($opts->h)) {
     echo $opts->getUsageMessage();
     echo "Storage directory: ". realpath($CC_CONFIG["storageDir"]).PHP_EOL.PHP_EOL;
     exit;
+}
+
+// Need to check that we are superuser before running this.
+if (exec("whoami") != "root") {
+    echo PHP_EOL."You must be root to use this script.".PHP_EOL.PHP_EOL;
+    exit(1);
 }
 
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
