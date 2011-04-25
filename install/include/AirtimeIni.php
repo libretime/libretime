@@ -26,13 +26,15 @@ class AirtimeIni
     const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
     const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
+    const CONF_FILE_MEDIAMONITOR = "/etc/airtime/MediaMonitor.cfg";
 
     public static function IniFilesExist()
     {
         $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
                              AirtimeIni::CONF_FILE_PYPO,
                              AirtimeIni::CONF_FILE_RECORDER,
-                             AirtimeIni::CONF_FILE_LIQUIDSOAP);
+                             AirtimeIni::CONF_FILE_LIQUIDSOAP,
+                             AirtimeIni::CONF_FILE_MEDIAMONITOR);
         $exist = false;
         foreach ($configFiles as $conf) {
             if (file_exists($conf)) {
@@ -72,6 +74,10 @@ class AirtimeIni
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
+        if (!copy(__DIR__."/../../python_apps/pytag-fs/MediaMonitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
+            echo "Could not copy MediaMonitor.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
     }
 
     /**
@@ -94,6 +100,10 @@ class AirtimeIni
 
         if (file_exists(AirtimeIni::CONF_FILE_LIQUIDSOAP)){
             unlink(AirtimeIni::CONF_FILE_LIQUIDSOAP);
+        }
+
+        if (file_exists(AirtimeIni::CONF_FILE_MEDIAMONITOR)){
+            unlink(AirtimeIni::CONF_FILE_MEDIAMONITOR);
         }
 
         if (file_exists("etc/airtime")){
@@ -171,6 +181,7 @@ class AirtimeIni
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'airtime_dir', AirtimeInstall::CONF_DIR_WWW);
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_PYPO, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_RECORDER, 'api_key', "'$api_key'");
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
     }
 }
