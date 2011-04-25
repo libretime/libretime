@@ -51,10 +51,10 @@ else if (!isset($opts->p) && !isset($opts->o)) {
         }
     }
     else {
-        echo "* Creating INI files".PHP_EOL;
-        AirtimeIni::CreateIniFiles();
+        $overwrite = true;
     }
 }
+
 if ($overwrite) {
     echo "* Creating INI files".PHP_EOL;
     AirtimeIni::CreateIniFiles();
@@ -89,6 +89,8 @@ AirtimeInstall::InstallStorageDirectory();
 AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
 
 AirtimeInstall::CreateSymlinksToUtils();
+
+AirtimeInstall::CreateZendPhpLogFile();
 
 echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");

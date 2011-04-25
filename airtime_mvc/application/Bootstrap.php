@@ -10,6 +10,7 @@ Propel::init(__DIR__."/configs/airtime-conf.php");
 $tz = ini_get('date.timezone') ? ini_get('date.timezone') : 'UTC';
 date_default_timezone_set($tz);
 
+require_once __DIR__."/logging/Logging.php";
 require_once __DIR__."/configs/constants.php";
 require_once __DIR__."/configs/conf.php";
 require_once 'DB.php';
@@ -33,8 +34,8 @@ if (PEAR::isError($CC_DBC)) {
 	exit(1);
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+Logging::setLogPath('/var/log/airtime/zendphp.log');
 
-//Zend_Session::start();
 Zend_Validate::setDefaultNamespaces("Zend");
 
 $front = Zend_Controller_Front::getInstance();

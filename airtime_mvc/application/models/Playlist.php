@@ -113,6 +113,12 @@ class Playlist {
 		return TRUE;
     }
 
+    public static function deleteAll()
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = 'DELETE FROM '.$CC_CONFIG["playListTable"];
+		$CC_DBC->query($sql);
+    }
 
     /**
      * Delete the file from all playlists.

@@ -10,14 +10,16 @@
 ini_set('memory_limit', '128M');
 set_time_limit(0);
 error_reporting(E_ALL);
-set_error_handler("camp_import_error_handler", E_ALL & !E_NOTICE);
+set_error_handler("import_error_handler", E_ALL & !E_NOTICE);
+
+set_include_path('/var/www/airtime/library' . PATH_SEPARATOR . get_include_path());
 
 require_once("/var/www/airtime/application/configs/conf.php");
 require_once("/var/www/airtime/application/models/StoredFile.php");
 require_once('DB.php');
 require_once('Console/Getopt.php');
 
-function camp_import_error_handler()
+function import_error_handler()
 {
     echo var_dump(debug_backtrace());
     exit();
@@ -92,7 +94,7 @@ function import_err($p_pearErrorObj, $txt='')
  *
  * @return int
  */
-function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly = false)
+function import_audio_file($p_filepath, $p_importMode = null, $p_testOnly = false)
 {
     global $STORAGE_SERVER_PATH;
     global $g_fileCount;
@@ -126,7 +128,7 @@ function camp_import_audio_file($p_filepath, $p_importMode = null, $p_testOnly =
         while (false !== ($file = readdir($d))) {
             if ($file != "." && $file != "..") {
                 $path = "$p_filepath/$file";
-                camp_import_audio_file($path, $p_importMode, $p_testOnly);
+                import_audio_file($path, $p_importMode, $p_testOnly);
             }
         }
         closedir($d);
@@ -241,7 +243,7 @@ if ($DEBUG_IMPORT) {
     $dsn = $CC_CONFIG['dsn'];
 }
 //PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, "camp_import_error_handler");
+PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, "import_error_handler");
 $CC_DBC = DB::connect($dsn, TRUE);
 if (PEAR::isError($CC_DBC)) {
     echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
@@ -301,13 +303,14 @@ if (is_null($importMode)) {
 
 global $CC_CONFIG;
 
-if (!is_writable($CC_CONFIG["storageDir"])) {
+if ( ($importMode == "copy") && !is_writable($CC_CONFIG["storageDir"])) {
     echo "ERROR: You do not have write permissions to the directory you are trying to import to:\n " . $CC_CONFIG["storageDir"] . "\n\n";
     exit;
 }
 
 global $g_fileCount;
 global $g_duplicates;
+$g_fileCount = 0;
 if (is_array($files)) {
     foreach ($files as $filepath) {
         // absolute path
@@ -323,7 +326,7 @@ if (is_array($files)) {
             echo "ERROR: I cant find the given file: $filepath\n\n";
             exit;
         }
-        camp_import_audio_file($fullPath, $importMode, $testonly);
+        import_audio_file($fullPath, $importMode, $testonly);
     }
 }
 $end = intval(date('U'));
@@ -336,7 +339,9 @@ if ($time > 0) {
 
 echo "==========================================================================\n";
 echo " *** Import mode: $importMode\n";
-echo " *** Destination folder: ".$CC_CONFIG['storageDir']."\n";
+if ($importMode == "copy") {
+    echo " *** Destination folder: ".$CC_CONFIG['storageDir']."\n";
+}
 echo " *** Files imported: $g_fileCount\n";
 echo " *** Duplicate files (not imported): $g_duplicates\n";
 if ($g_errors > 0) {

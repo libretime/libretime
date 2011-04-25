@@ -1,6 +1,6 @@
 <?php
 require_once("Playlist.php");
-require_once(dirname(__FILE__)."/../../library/getid3/var/getid3.php");
+require_once("getid3/var/getid3.php");
 require_once("Schedule.php");
 
 class Metadata {
@@ -431,16 +431,20 @@ class StoredFile {
      *
      * @param string $p_gunid
      *  	globally unique id of file
+     * @param boolean $p_autoload
+     * 		if TRUE, automatically load the row from the DB
      */
-    public function __construct($p_gunid=NULL)
+    public function __construct($p_gunid=NULL, $p_autoload=TRUE)
     {
         $this->gunid = $p_gunid;
         if (empty($this->gunid)) {
             $this->gunid = StoredFile::generateGunid();
         }
         else {
-            $this->loadMetadata();
-            $this->exists = is_file($this->filepath) && is_readable($this->filepath);
+            if ($p_autoload) {
+                $this->loadMetadata();
+                $this->exists = is_file($this->filepath) && is_readable($this->filepath);
+            }
         }
     }
 
@@ -730,7 +734,6 @@ class StoredFile {
         return $storedFile;
     }
 
-
     /**
      * Create instance of StoreFile object and recall existing file
      * by gunid.
@@ -756,6 +759,14 @@ class StoredFile {
         return StoredFile::Recall(null, null, $p_md5sum);
     }
 
+
+    public static function GetAll()
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT * FROM ".$CC_CONFIG["filesTable"];
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+    }
 
     /**
      * Generate the location to store the file.
@@ -1205,6 +1216,31 @@ class StoredFile {
     }
 
 
+    public static function deleteById($p_id)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        if (!is_numeric($p_id)) {
+            return FALSE;
+        }
+        $sql = "DELETE FROM ".$CC_CONFIG["filesTable"]." WHERE id=$p_id";
+
+        $res = $CC_DBC->query($sql);
+        if (PEAR::isError($res)) {
+            return $res;
+        }
+        return TRUE;
+    }
+
+    public static function deleteAll()
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $files = StoredFile::getAll();
+        foreach ($files as $file) {
+            $media = StoredFile::Recall($file["id"]);
+            $media->delete();
+        }
+    }
+
     /**
      * Returns an array of playlist objects that this file is a part of.
      * @return array
@@ -1555,7 +1591,7 @@ class StoredFile {
 
 	}
 
-	public static function searchPlaylistsForSchedule($datatables) 
+	public static function searchPlaylistsForSchedule($datatables)
     {
 		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
         //$datatables["optWhere"][] = "INTERVAL '{$time_remaining}' > INTERVAL '00:00:00'";
