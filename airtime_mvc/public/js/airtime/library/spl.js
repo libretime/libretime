@@ -258,6 +258,10 @@ function setSPLContent(json) {
 	$(".spl_fade_control").click(openFadeEditor);
 	//$(".spl_playlength").click(openCueEditor);
 	$(".spl_cue").click(openCueEditor);
+	
+	//Update length on library list
+	$("#pl_"+json.pl_id).children("#length").empty().append(json.length);
+	//var pos = dt.fnGetPosition($("#pl_"+json.pl_id));
 
 	return false;
 }
@@ -360,6 +364,10 @@ function createPlaylistMetaForm(json) {
 			$.post(url, data, function(json){
 				openDiffSPL(json);
 			})
+			
+			//redraw the library list
+			dt = $("#library_display").dataTable();
+			dt.fnDraw();
 		});
 
 	$("#side_playlist")

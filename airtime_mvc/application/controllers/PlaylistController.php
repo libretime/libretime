@@ -173,6 +173,7 @@ class PlaylistController extends Zend_Controller_Action
 			$this->view->html = $this->view->render('playlist/update.phtml');
 			$this->view->name = $pl->getName();
 			$this->view->length = $pl->getLength();
+			$this->view->pl_id = $pl->getid();
 
 			unset($this->view->pl);
 			return;
@@ -218,8 +219,11 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->html = $this->view->render('playlist/update.phtml');
 		$this->view->name = $pl->getName();
 		$this->view->length = $pl->getLength();
+		$this->view->pl_id = $pl->getid();
 
 		unset($this->view->pl);
+		
+		return;
     }
 
     public function setCueAction()
