@@ -1,6 +1,20 @@
+#!/usr/local/bin/python
+import urllib
+import urllib2
+import logging
+import logging.config
+import json
+import time
+import datetime
 import os
+import sys
+
+from configobj import ConfigObj
+
 import pyinotify
 from pyinotify import WatchManager, Notifier, ThreadedNotifier, EventsCodes, ProcessEvent
+
+from api_clients import api_client
 
 # configure logging
 try:
@@ -11,7 +25,7 @@ except Exception, e:
 
 # loading config file
 try:
-    config = ConfigObj('/etc/airtime/recorder.cfg')
+    config = ConfigObj('/etc/airtime/MediaMonitor.cfg')
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
@@ -41,6 +55,8 @@ class PTmp(ProcessEvent):
         print "%s: %s" %  (event.maskname, os.path.join(event.path, event.name))
 
 if __name__ == '__main__':
+
+    print 'Media Monitor'
 
     try:
         notifier = Notifier(wm, PTmp(), read_freq=2, timeout=1)

@@ -316,5 +316,18 @@ class ApiController extends Zend_Controller_Action
 
         $this->view->id = $file->getId(); 
     }
+
+    public function reloadMetadataAction() {
+        
+        global $CC_CONFIG;
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+        	header('HTTP/1.0 401 Unauthorized');
+        	print 'You are not allowed to access this resource.';
+        	exit;
+        }
+    }
 }
 

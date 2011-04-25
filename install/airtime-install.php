@@ -98,6 +98,9 @@ system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
 
+echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
+system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
+
 AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
 echo "******************************* Install Complete *******************************".PHP_EOL;

@@ -97,6 +97,9 @@ class ApiClientInterface:
 
     def upload_recorded_show(self):
         pass
+
+    def update_media_metadata(self):
+        pass
         
     # Put here whatever tests you want to run to make sure your API is working
     def test(self):
@@ -344,6 +347,24 @@ class AirTimeApiClient(ApiClientInterface):
 
             #wait some time before next retry
             time.sleep(retries_wait)
+        
+        return response
+
+    def update_media_metadata(self):
+        logger = logging.getLogger()
+        response = None
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["show_schedule_url"])
+            #url = self.config["base_url"] + self.config["api_base"] + self.config["show_schedule_url"]
+            logger.debug(url)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+           
+            response = urllib.urlopen(url)
+            response = json.loads(response.read())
+            logger.info("shows %s", response)
+        
+        except Exception, e:
+            logger.error("Exception: %s", e)
         
         return response
     
