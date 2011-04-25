@@ -8,6 +8,7 @@ import time
 import datetime
 import os
 import sys
+from subprocess import Popen, PIPE, STDOUT
 
 from configobj import ConfigObj
 
@@ -34,20 +35,41 @@ except Exception, e:
 mask = pyinotify.ALL_EVENTS
 
 wm = WatchManager()
-wdd = wm.add_watch('/srv/airtime/stor', mask, rec=True) 
+wdd = wm.add_watch('/srv/airtime/stor', mask, rec=True)
 
-class PTmp(ProcessEvent):
+class MediaMonitor(ProcessEvent):
+
+    def my_init(self):
+        """
+        Method automatically called from ProcessEvent.__init__(). Additional
+        keyworded arguments passed to ProcessEvent.__init__() are then
+        delegated to my_init().
+        """
+        self.api_client = api_client.api_client_factory(config)
+
     def process_IN_CREATE(self, event):
         if event.dir :
             global wm
             wdd = wm.add_watch(event.pathname, mask, rec=True)
             #print wdd.keys()
-        
+
         print "%s: %s" %  (event.maskname, os.path.join(event.path, event.name))
 
     def process_IN_MODIFY(self, event):
         if not event.dir :
-            print event.path            
+            p = Popen(["pytags", event.pathname], stdout=PIPE, stderr=STDOUT)
+            output = p.stdout.read().decode("utf-8").strip()
+            print output.split("\n")
+
+            md = {'filepath':event.pathname}
+
+            for tag in output.split("\n")[2:] :
+                key,value = tag.split("=")
+                md[key] = value
+
+            data = {'md': md}
+
+            response = self.api_client.update_media_metadata(data)
 
         print "%s: %s" %  (event.maskname, os.path.join(event.path, event.name))
 
@@ -59,7 +81,7 @@ if __name__ == '__main__':
     print 'Media Monitor'
 
     try:
-        notifier = Notifier(wm, PTmp(), read_freq=2, timeout=1)
+        notifier = Notifier(wm, MediaMonitor(), read_freq=2, timeout=1)
         notifier.coalesce_events()
         notifier.loop()
     except KeyboardInterrupt:
