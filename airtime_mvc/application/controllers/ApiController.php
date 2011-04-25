@@ -10,6 +10,7 @@ class ApiController extends Zend_Controller_Action
         $context->addActionContext('version', 'json')
                     ->addActionContext('recorded-shows', 'json')
                     ->addActionContext('upload-recorded', 'json')
+                    ->addActionContext('reload-metadata', 'json')
                     ->initContext();
     }
 
@@ -121,7 +122,7 @@ class ApiController extends Zend_Controller_Action
                 "nextShow"=>Show_DAL::GetNextShows($timeNow, 5),
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"));
-                
+
             //echo json_encode($result);
             header("Content-type: text/javascript");
             echo $_GET['callback'].'('.json_encode($result).')';
@@ -314,11 +315,11 @@ class ApiController extends Zend_Controller_Action
             }
         }
 
-        $this->view->id = $file->getId(); 
+        $this->view->id = $file->getId();
     }
 
     public function reloadMetadataAction() {
-        
+
         global $CC_CONFIG;
 
         $api_key = $this->_getParam('api_key');
@@ -328,6 +329,10 @@ class ApiController extends Zend_Controller_Action
         	print 'You are not allowed to access this resource.';
         	exit;
         }
+
+        $md = $this->_getParam('md');
+
+        $this->view->response = $md;
     }
 }
 
