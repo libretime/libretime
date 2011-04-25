@@ -1174,10 +1174,7 @@ class StoredFile {
                 return TRUE;
             }
             else {
-                return PEAR::raiseError(
-                    "StoredFile::deleteFile: unlink failed ({$this->filepath})",
-                    GBERR_FILEIO
-                );
+                return PEAR::raiseError("StoredFile::deleteFile: unlink failed ({$this->filepath})");
             }
         }
         else {
@@ -1237,7 +1234,10 @@ class StoredFile {
         $files = StoredFile::getAll();
         foreach ($files as $file) {
             $media = StoredFile::Recall($file["id"]);
-            $media->delete();
+            $result = $media->delete();
+            if (PEAR::isError($result)) {
+                return $result;
+            }
         }
     }
 
