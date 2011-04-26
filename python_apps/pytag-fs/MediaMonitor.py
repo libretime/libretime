@@ -31,12 +31,6 @@ except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
 
-# watched events
-mask = pyinotify.ALL_EVENTS
-
-wm = WatchManager()
-wdd = wm.add_watch('/srv/airtime/stor', mask, rec=True)
-
 class MediaMonitor(ProcessEvent):
 
     def my_init(self):
@@ -48,18 +42,14 @@ class MediaMonitor(ProcessEvent):
         self.api_client = api_client.api_client_factory(config)
 
     def process_IN_CREATE(self, event):
-        if event.dir :
-            global wm
-            wdd = wm.add_watch(event.pathname, mask, rec=True)
-            #print wdd.keys()
-
-        print "%s: %s" %  (event.maskname, os.path.join(event.path, event.name))
+        if not event.dir :
+            #This is a newly imported file.
+            print "%s: %s" %  (event.maskname, os.path.join(event.path, event.name))
 
     def process_IN_MODIFY(self, event):
         if not event.dir :
             p = Popen(["pytags", event.pathname], stdout=PIPE, stderr=STDOUT)
             output = p.stdout.read().decode("utf-8").strip()
-            print output.split("\n")
 
             md = {'filepath':event.pathname}
 
@@ -81,7 +71,13 @@ if __name__ == '__main__':
     print 'Media Monitor'
 
     try:
-        notifier = Notifier(wm, MediaMonitor(), read_freq=2, timeout=1)
+        # watched events
+        mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY
+
+        wm = WatchManager()
+        wdd = wm.add_watch('/srv/airtime/stor', mask, rec=True, auto_add=True)
+
+        notifier = Notifier(wm, MediaMonitor(), read_freq=10, timeout=1)
         notifier.coalesce_events()
         notifier.loop()
     except KeyboardInterrupt:
