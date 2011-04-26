@@ -74,6 +74,7 @@ function updateProgressBarValue(){
 		if (showPercentDone < 0 || showPercentDone > 100){
 			showPercentDone = 0;
 			currentShow = new Array();
+			currentSong = new Array();
 		}
 	}
     $('#progress-show').attr("style", "width:"+showPercentDone+"%");
@@ -162,7 +163,6 @@ function updatePlaybar(){
         $('#time-remaining').text(convertToHHMMSS(songEndRoughly - estimatedSchedulePosixTime));
         $('#song-length').text(convertToHHMMSSmm(currentSong[i].songLengthMs));
     }
-
     /* Column 1 update */
     $('#playlist').text("Current Show:");
     var recElem = $('.recording-show');
@@ -205,14 +205,16 @@ function parseItems(obj){
     $('#time-zone').text(obj.timezone);
 
     previousSongs = obj.previous;
-    currentSong = obj.current;
     nextSongs = obj.next;
     
     calcAdditionalData(previousSongs);
-    calcAdditionalData(currentSong);
     calcAdditionalData(nextSongs);
     
     currentShow = obj.currentShow;
+    if(currentShow.length > 0){
+    	currentSong = obj.current;
+    	calcAdditionalData(currentSong);
+    }
     nextShow = obj.nextShow;
     
     calcAdditionalShowData(obj.currentShow);
