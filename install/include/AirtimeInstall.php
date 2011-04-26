@@ -8,6 +8,7 @@ class AirtimeInstall
     const CONF_DIR_BINARIES = "/usr/lib/airtime";
     const CONF_DIR_STORAGE = "/srv/airtime";
     const CONF_DIR_WWW = "/var/www/airtime";
+    const CONF_DIR_LOG = "/var/log/airtime";
 
     public static function GetAirtimeSrcDir()
     {
@@ -320,5 +321,29 @@ class AirtimeInstall
                  echo "- $f".PHP_EOL;
              }
          }
+    }
+
+    public static function CreateZendPhpLogFile(){
+        global $CC_CONFIG;
+
+        echo "* Creating logs directory ".AirtimeInstall::CONF_DIR_LOG.PHP_EOL;
+
+        $path = AirtimeInstall::CONF_DIR_LOG;
+        $file = $path.'/zendphp.log';
+        if (!file_exists($path)){
+            mkdir($path, 0755, true);
+        }
+
+        touch($file);
+        chmod($file, 0755);
+        chown($file, $CC_CONFIG['webServerUser']);
+        chgrp($file, $CC_CONFIG['webServerUser']);
+    }
+
+    public static function RemoveLogDirectories(){
+        $path = AirtimeInstall::CONF_DIR_LOG;
+        echo "* Removing logs directory ".$path.PHP_EOL;
+
+        exec("rm -rf $path");
     }
 }

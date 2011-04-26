@@ -38,10 +38,7 @@ try:
         sys.exit()
         
     os.system("python /usr/bin/airtime-pypo-stop")
-    
-    print "Removing log directories"
-    remove_path(config["log_base_dir"])
-    
+        
     print "Removing cache directories"
     remove_path(config["cache_base_dir"])
     

@@ -21,6 +21,14 @@
 #
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-#  This script cleans audio files in the Airtime storageServer.
+#  This script cleans audio files in Airtime.
+#
+# Absolute path to this script
+SCRIPT=`readlink -f $0`
+# Absolute path this script is in
+SCRIPTPATH=`dirname $SCRIPT`
 
-php -q airtime-clean-storage.php  "$@" || exit 1
+invokePwd=$PWD
+cd $SCRIPTPATH
+
+php -q airtime-clean-storage.php "$@" || exit 1

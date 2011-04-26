@@ -1,6 +1,6 @@
 <?php
 require_once("Playlist.php");
-require_once(dirname(__FILE__)."/../../library/getid3/var/getid3.php");
+require_once("getid3/var/getid3.php");
 require_once("Schedule.php");
 
 class Metadata {
@@ -730,7 +730,6 @@ class StoredFile {
         return $storedFile;
     }
 
-
     /**
      * Create instance of StoreFile object and recall existing file
      * by gunid.
@@ -756,6 +755,14 @@ class StoredFile {
         return StoredFile::Recall(null, null, $p_md5sum);
     }
 
+
+    public static function GetAll()
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT * FROM ".$CC_CONFIG["filesTable"];
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+    }
 
     /**
      * Generate the location to store the file.
@@ -1163,10 +1170,7 @@ class StoredFile {
                 return TRUE;
             }
             else {
-                return PEAR::raiseError(
-                    "StoredFile::deleteFile: unlink failed ({$this->filepath})",
-                    GBERR_FILEIO
-                );
+                return PEAR::raiseError("StoredFile::deleteFile: unlink failed ({$this->filepath})");
             }
         }
         else {
@@ -1204,6 +1208,34 @@ class StoredFile {
         return TRUE;
     }
 
+
+    public static function deleteById($p_id)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        if (!is_numeric($p_id)) {
+            return FALSE;
+        }
+        $sql = "DELETE FROM ".$CC_CONFIG["filesTable"]." WHERE id=$p_id";
+
+        $res = $CC_DBC->query($sql);
+        if (PEAR::isError($res)) {
+            return $res;
+        }
+        return TRUE;
+    }
+
+    public static function deleteAll()
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $files = StoredFile::getAll();
+        foreach ($files as $file) {
+            $media = StoredFile::Recall($file["id"]);
+            $result = $media->delete();
+            if (PEAR::isError($result)) {
+                return $result;
+            }
+        }
+    }
 
     /**
      * Returns an array of playlist objects that this file is a part of.
@@ -1555,7 +1587,7 @@ class StoredFile {
 
 	}
 
-	public static function searchPlaylistsForSchedule($datatables) 
+	public static function searchPlaylistsForSchedule($datatables)
     {
 		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
         //$datatables["optWhere"][] = "INTERVAL '{$time_remaining}' > INTERVAL '00:00:00'";

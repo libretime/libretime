@@ -60,10 +60,9 @@ class ScheduleGroup {
             if (empty($length)) {
                 return new PEAR_Error("Length is empty.");
             }
-           
             // Insert into the table
             $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
-           
+
             $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
             ." (instance_id, starts, ends, clip_length, group_id, file_id, cue_out)"
             ." VALUES ($p_showInstance, TIMESTAMP '$p_datetime', "
@@ -76,7 +75,7 @@ class ScheduleGroup {
                 return $result;
             }
 
-        } 
+        }
         elseif (!is_null($p_playlistId)){
             // Schedule a whole playlist
 
@@ -606,7 +605,7 @@ class Schedule {
         } else {
             $range_end = Schedule::PypoTimeToAirtimeTime($p_toDateTime);
         }
-        
+
         // Scheduler wants everything in a playlist
         $data = Schedule::GetItems($range_start, $range_end, true);
         $playlists = array();
@@ -680,6 +679,12 @@ class Schedule {
         $result['server_timezone'] = date('O');
 
         return $result;
+    }
+
+    public static function deleteAll()
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $CC_DBC->query("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
     }
 }
 

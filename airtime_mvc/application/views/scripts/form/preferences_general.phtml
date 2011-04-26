@@ -31,12 +31,12 @@
             <label class="optional"><?php echo $this->element->getElement('streamFormat')->getLabel() ?></label>
         </dt>
         <dd id="streamFormat-element" class="block-display radio-inline-list">
-            <?php $i=0; 
+            <?php $i=0;
                   $value = $this->element->getElement('streamFormat')->getValue();
             ?>
             <?php foreach ($this->element->getElement('streamFormat')->getMultiOptions() as $radio) : ?>
                 <label for="streamFormat-<?php echo $i ?>">
-                    <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?>/>
+                    <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?> >
                         <?php echo $radio ?>
                     </input>
                 </label>
@@ -54,12 +54,12 @@
             <label class="optional"><?php echo $this->element->getElement('thirdPartyApi')->getLabel() ?></label>
         </dt>
         <dd id="thirdPartyApi-element" class="block-display  radio-inline-list">
-            <?php $i=0; 
+            <?php $i=0;
                   $value = $this->element->getElement('thirdPartyApi')->getValue();
             ?>
             <?php foreach ($this->element->getElement('thirdPartyApi')->getMultiOptions() as $radio) : ?>
                 <label for="thirdPartyApi-<?php echo $i ?>">
-                    <input type="radio" value="<?php echo $i ?>" id="thirdPartyApi-<?php echo $i ?>" name="thirdPartyApi" <?php if($i == $value){echo 'checked="checked"';}?> />
+                    <input type="radio" value="<?php echo $i ?>" id="thirdPartyApi-<?php echo $i ?>" name="thirdPartyApi" <?php if($i == $value){echo 'checked="checked"';}?>>
                         <?php echo $radio ?>
                     </input>
                 </label>
@@ -71,7 +71,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
        </dd>
 
     </dl>

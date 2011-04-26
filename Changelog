@@ -1,10 +1,36 @@
 1.8.0 - April 19, 2011
-  * Ability to edit a show
-  * Speedup of calendar (approx to 5-8x faster now)
-  * Install process now put files in the right place for linux systems
-  * Improvements to upgrade framework
+  * The biggest feature of this release is the ability to edit shows. You can
+    change everything from ‘Name’, ‘Description’, and ‘URL’, to repeat and 
+    rebroadcast days. Show instances will be dynamically created or removed as
+    needed.  Radio stations will be pleased to know they can now have up to 
+    ten rebroadcast shows too.
+  * Airtime’s calendar now looks, feels and performs better than ever. Loading
+    a station schedule is now five to eight times faster. In our tests of 1.7, 
+    if the month calendar had shows scheduled for every hour of every day, it 
+    used to take 16 seconds to load. Now in 1.8 it takes two seconds.
+  * It is possible to have up to ten rebroadcast shows now, in 1.7 it was only
+    up to five.
+  * Airtime’s new installation script has two options for increased install 
+    flexibility:  --preserve to keep your existing config files, or --overwrite 
+    to replace your existing config files with new ones. Uninstall no longer 
+    removes Airtime config files or the music storage directory.
+  * New improved look & feel of the calendar (thanks to the "FullCalendar" 
+    jQuery project).
+  * Installation now puts files in standard locations in the Linux file 
+    hierarchy, which prepares the project to be accepted into Ubuntu and Debian.
+    Also because of our wish to be part of those projects, the default output 
+    stream type is now OGG instead of MP3 -- due to MP3 licensing issues. 
+    This configuration can be changed in "/etc/airtime/liquidsoap.conf".
+  * You now have the ability to start and stop pypo and the show recorder from 
+    the command line with the commands "airtime-pypo-start", 
+    "airtime-pypo-stop", "airtime-show-recorder-start", and 
+    "airtime-show-recorder-stop".
   * Bug fixes:
-    o CC-2192 Schedule sent to pypo is not sorted by start time.
+    * CC-2192 Schedule sent to pypo is not sorted by start time.
+    * CC-2175 Overbooking: Cut off shows when they are done
+    * CC-2174 Need formatting and a warning icon for the message for overbooking a show
+    * CC-2039 Upload file: file name cropped
+    * CC-2177 Schedule editing does not work under Firefox 4
 
 1.7.0 - April 4, 2011
   * Recording and automatic scheduling/broadcasting of live shows
