@@ -389,6 +389,10 @@ function deleteSPL() {
 	url = '/Playlist/delete-active/format/json';
 
 	$.post(url, noOpenPL);
+	
+	//redraw the library list
+	dt = $("#library_display").dataTable();
+	dt.fnStandingRedraw();
 }
 
 function openDiffSPL(json) {
