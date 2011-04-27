@@ -290,6 +290,7 @@ class PlaylistController extends Zend_Controller_Action
 		}
 
 		$this->view->id = $id;
+		$this->view->html = $this->view->render('playlist/index.phtml');
     }
 
     public function deleteActiveAction()
