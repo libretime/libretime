@@ -259,9 +259,9 @@ function setSPLContent(json) {
 	//$(".spl_playlength").click(openCueEditor);
 	$(".spl_cue").click(openCueEditor);
 	
-	//Update length on library list
-	$("#pl_"+json.pl_id).children("#length").empty().append(json.length);
-	//var pos = dt.fnGetPosition($("#pl_"+json.pl_id));
+	//redraw the library list
+	dt = $("#library_display").dataTable();
+	dt.fnStandingRedraw();
 
 	return false;
 }
@@ -367,7 +367,7 @@ function createPlaylistMetaForm(json) {
 			
 			//redraw the library list
 			dt = $("#library_display").dataTable();
-			dt.fnDraw();
+			dt.fnStandingRedraw();
 		});
 
 	$("#side_playlist")
