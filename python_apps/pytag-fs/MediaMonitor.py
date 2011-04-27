@@ -15,6 +15,8 @@ from configobj import ConfigObj
 import pyinotify
 from pyinotify import WatchManager, Notifier, ProcessEvent
 
+import mutagen
+
 from api_clients import api_client
 
 # configure logging
@@ -58,9 +60,11 @@ class MediaMonitor(ProcessEvent):
             f = file(event.pathname, 'rb')
             m = hashlib.md5()
             m.update(f.read())
-            md5 = m.hexdigest()
 
-            md = {'filepath':event.pathname, 'md5':md5}
+            md5 = m.hexdigest()
+            gunid = event.name.split('.')[0]
+
+            md = {'gunid':gunid, 'md5':md5}
             for tag in output.split("\n")[2:] :
                 key,value = tag.split("=")
                 md[key] = value
