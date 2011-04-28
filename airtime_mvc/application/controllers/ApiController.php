@@ -8,10 +8,10 @@ class ApiController extends Zend_Controller_Action
         /* Initialize action controller here */
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
-                    ->addActionContext('recorded-shows', 'json')
-                    ->addActionContext('upload-recorded', 'json')
-                    ->addActionContext('reload-metadata', 'json')
-                    ->initContext();
+                ->addActionContext('recorded-shows', 'json')
+                ->addActionContext('upload-recorded', 'json')
+                ->addActionContext('reload-metadata', 'json')
+                ->initContext();
     }
 
     public function indexAction()
@@ -332,7 +332,20 @@ class ApiController extends Zend_Controller_Action
 
         $md = $this->_getParam('md');
 
-        $this->view->response = $md;
+        $file = StoredFile::Recall(null, $md['gunid']);
+        if (PEAR::isError($file) || is_null($file)) {
+            $this->view->response = "File not in Airtime's Database";
+            return;
+        }
+
+        $res = $file->replaceDbMetadata($md);
+
+        if (PEAR::isError($res)) {
+            $this->view->response = "Metadata Change Failed";
+        }
+        else {
+            $this->view->response = "Success!";
+        }
     }
 }
 

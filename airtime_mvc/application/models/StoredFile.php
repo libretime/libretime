@@ -543,15 +543,24 @@ class StoredFile {
 	public function replaceDbMetadata($p_values)
     {
         global $CC_CONFIG, $CC_DBC;
+
+        $data = array();
         foreach ($p_values as $category => $value) {
             $escapedValue = pg_escape_string($value);
             $columnName = $category;
             if (!is_null($columnName)) {
-                $sql = "UPDATE ".$CC_CONFIG["filesTable"]
-                ." SET $columnName='$escapedValue'"
-                ." WHERE gunid = '".$this->gunid."'";
-                $CC_DBC->query($sql);
+                $data[] = "$columnName='$escapedValue'";
             }
+        }
+
+        $data = join(",", $data);
+        $sql = "UPDATE ".$CC_CONFIG["filesTable"]
+        ." SET $data"
+        ." WHERE gunid = '".$this->gunid."'";
+        $res = $CC_DBC->query($sql);
+        if (PEAR::isError($res)) {
+            $CC_DBC->query("ROLLBACK");
+            return $res;
         }
     }
 
