@@ -29,7 +29,25 @@ def api_client_factory(config):
         print 'API Client "'+config["api_client"]+'" not supported.  Please check your config file.'
         print
         sys.exit()
-    
+
+def recursive_urlencode(d):
+    def recursion(d, base=None):
+        pairs = []
+
+        for key, value in d.items():
+            if hasattr(value, 'values'):
+                pairs += recursion(value, key)
+            else:
+                new_pair = None
+                if base:
+                    new_pair = "%s[%s]=%s" % (base, urllib.quote(unicode(key)), urllib.quote(unicode(value)))
+                else:
+                    new_pair = "%s=%s" % (urllib.quote(unicode(key)), urllib.quote(unicode(value)))
+                pairs.append(new_pair)
+        return pairs
+
+    return '&'.join(recursion(d))
+
 class ApiClientInterface:
 
     # Implementation: optional
@@ -158,7 +176,6 @@ class AirTimeApiClient(ApiClientInterface):
             logger.error("Unable to detect Airtime Version - %s, Response: %s", e, response)
 
         return version
-
 
     def test(self):
         logger = logging.getLogger()
@@ -355,14 +372,16 @@ class AirTimeApiClient(ApiClientInterface):
         response = None
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
-            logger.debug(url)
+            #logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
+            logger.debug(url)
 
-            data = urllib.urlencode(md)
+            data = recursive_urlencode(md)
             req = urllib2.Request(url, data)
-            response = urllib2.urlopen(req)
-           
-            response = json.loads(response.read())
+
+            response = urllib2.urlopen(req).read()
+            logger.info("update media %s", response)
+            response = json.loads(response)
             logger.info("update media %s", response)
         
         except Exception, e:

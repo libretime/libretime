@@ -84,12 +84,12 @@ class MediaMonitor(ProcessEvent):
             gunid = event.name.split('.')[0]
 
             md = {'gunid':gunid, 'md5':md5}
-           
+
             file_info = mutagen.File(event.pathname, easy=True)
             attrs = self.mutagen2airtime
             for key in file_info.keys() :
                 if key in attrs :
-                    md[attrs[key]] = file_info[key]     
+                    md[attrs[key]] = file_info[key][0]
 
             data = {'md': md}
 
