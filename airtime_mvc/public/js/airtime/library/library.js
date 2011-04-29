@@ -97,6 +97,9 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
     }
 
 	$(nRow).attr("id", type+'_'+id);
+	
+	// insert id on lenth field
+	$('td:eq(4)', nRow).attr("id", "length");
 
     $('td:eq(5) img', nRow).qtip({
 

@@ -220,6 +220,8 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->length = $pl->getLength();
 
 		unset($this->view->pl);
+		
+		return;
     }
 
     public function setCueAction()

@@ -258,6 +258,10 @@ function setSPLContent(json) {
 	$(".spl_fade_control").click(openFadeEditor);
 	//$(".spl_playlength").click(openCueEditor);
 	$(".spl_cue").click(openCueEditor);
+	
+	//redraw the library list
+	dt = $("#library_display").dataTable();
+	dt.fnStandingRedraw();
 
 	return false;
 }
@@ -359,7 +363,11 @@ function createPlaylistMetaForm(json) {
 
 			$.post(url, data, function(json){
 				openDiffSPL(json);
+				//redraw the library list
+				dt = $("#library_display").dataTable();
+				dt.fnStandingRedraw();
 			})
+			
 		});
 
 	$("#side_playlist")
@@ -381,6 +389,10 @@ function deleteSPL() {
 	url = '/Playlist/delete-active/format/json';
 
 	$.post(url, noOpenPL);
+	
+	//redraw the library list
+	dt = $("#library_display").dataTable();
+	dt.fnStandingRedraw();
 }
 
 function openDiffSPL(json) {

@@ -377,7 +377,7 @@ class Playlist {
             ->computeLength();
 
         if(is_null($res))
-            return '00:00:00.000000';
+            return '00:00:00';
 
         return $res;
     }
