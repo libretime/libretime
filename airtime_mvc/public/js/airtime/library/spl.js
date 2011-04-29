@@ -363,11 +363,11 @@ function createPlaylistMetaForm(json) {
 
 			$.post(url, data, function(json){
 				openDiffSPL(json);
+				//redraw the library list
+				dt = $("#library_display").dataTable();
+				dt.fnStandingRedraw();
 			})
 			
-			//redraw the library list
-			dt = $("#library_display").dataTable();
-			dt.fnStandingRedraw();
 		});
 
 	$("#side_playlist")
