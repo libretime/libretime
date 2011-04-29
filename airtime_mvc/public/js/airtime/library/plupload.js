@@ -5,6 +5,7 @@ $(document).ready(function() {
 		// General settings
 		runtimes : 'html5,html4',
 		url : '/Plupload/upload/format/json',
+		multiple_queues : 'true',
 		filters : [
 			{title: "Audio Files", extensions: "ogg,mp3"}
 		]
