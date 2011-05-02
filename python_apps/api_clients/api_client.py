@@ -220,9 +220,9 @@ class AirTimeApiClient(ApiClientInterface):
         logger = logging.getLogger()
         
         try:
-            src = "http://%s:%s/%s/%s" % \
-            (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_media_url"])
-            src = src.replace("%%file%%", uri)
+            #src = "http://%s:%s/%s/%s" % \
+            #(self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_media_url"])
+            src = uri
             logger.info("try to download from %s to %s", src, dst)
             src = src.replace("%%api_key%%", self.config["api_key"])
             # check if file exists already before downloading again

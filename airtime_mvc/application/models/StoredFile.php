@@ -1513,7 +1513,8 @@ class StoredFile {
     public function getFileUrl()
     {
         global $CC_CONFIG;
-        return $this->gunid.".".$this->getFileExtension();
+        return "http://$CC_CONFIG[baseUrl]:$CC_CONFIG[basePort]/".$this->gunid.".".$this->getFileExtension();
+        //return $CC_CONFIG["base_url"]..$this->gunid.".".$this->getFileExtension();
     }
 
     /**
