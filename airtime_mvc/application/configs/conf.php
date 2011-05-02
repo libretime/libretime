@@ -6,7 +6,7 @@
  * /etc/airtime/recorder.cfg
  */
  
-define('AIRTIME_VERSION', '1.8.1');
+define('AIRTIME_VERSION', '1.9.0-devel');
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
 
@@ -78,6 +78,7 @@ class Config {
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
         $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
         $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
         $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
 
         $CC_CONFIG['apiKey'] = array($values['general']['api_key']);

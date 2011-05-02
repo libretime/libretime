@@ -96,10 +96,10 @@ try:
     
   if platform.architecture()[0] == '64bit':
       print "Installing 64-bit liquidsoap binary"
-      shutil.copy("%s/../liquidsoap/liquidsoap64"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
+      shutil.copy("%s/../liquidsoap/liquidsoap-amd64"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
   elif platform.architecture()[0] == '32bit':
       print "Installing 32-bit liquidsoap binary"
-      shutil.copy("%s/../liquidsoap/liquidsoap32"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
+      shutil.copy("%s/../liquidsoap/liquidsoap-i386"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
   else:
       print "Unknown system architecture."
       sys.exit(1)
