@@ -18,7 +18,11 @@ function openAddShowForm() {
             $("#schedule_calendar").width(y-z-50);
             $("#schedule_calendar").fullCalendar('render');
         }
-        $("#schedule-show-what").show();
+        $("#schedule-show-what").show(0, function(){
+        	$add_show_name = $("#add_show_name");
+        	$add_show_name.focus();
+        	$add_show_name.select();
+        });
     }
 }
 
