@@ -29,7 +29,7 @@ AirtimeInstall::UninstallPhpCode();
 // still be a connection to the database and you wont be able to delete it.
 //------------------------------------------------------------------------
 echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...".PHP_EOL;
-$command = "sudo -u postgres dropdb {$CC_CONFIG['dsn']['database']} 2> /dev/null";
+$command = "su postgres -c \"dropdb {$CC_CONFIG['dsn']['database']}\"";
 @exec($command, $output, $dbDeleteFailed);
 
 //------------------------------------------------------------------------
@@ -66,7 +66,7 @@ if ($dbDeleteFailed) {
 // Delete the user
 //------------------------------------------------------------------------
 echo " * Deleting database user '{$CC_CONFIG['dsn']['username']}'...".PHP_EOL;
-$command = "sudo -u postgres psql postgres --command \"DROP USER {$CC_CONFIG['dsn']['username']}\" 2> /dev/null";
+$command = "echo \"DROP USER {$CC_CONFIG['dsn']['username']}\" | su postgres -c psql";
 @exec($command, $output, $results);
 if ($results == 0) {
     echo "   * User '{$CC_CONFIG['dsn']['username']}' deleted.".PHP_EOL;
