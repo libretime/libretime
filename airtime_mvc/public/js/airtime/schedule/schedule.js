@@ -197,6 +197,15 @@ function uploadToSoundCloud(show_instance_id){
 
 }
 
+//used by jjmenu
+function getId() { 
+	var tr_id =  $(this.triggerElement).attr("id");
+	tr_id = tr_id.split("_");
+
+	return tr_id[1];
+}
+//end functions used by jjmenu
+
 function buildContentDialog(json){
 	var dialog = $(json.dialog);
 
@@ -213,6 +222,12 @@ function buildContentDialog(json){
 	});
 
 	dialog.dialog('open');
+	
+	$('#show_content_dialog tbody tr')
+	.jjmenu("click", 
+		[{get:"/Schedule/content-context-menu/format/json/id/#id#"}],  
+		{id: getId}, 
+		{xposition: "mouse", yposition: "mouse"});
 }
 
 function buildScheduleDialog(json){

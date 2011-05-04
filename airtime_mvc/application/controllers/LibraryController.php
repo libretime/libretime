@@ -50,6 +50,8 @@ class LibraryController extends Zend_Controller_Action
 
     public function contextMenuAction()
     {
+    	global $CC_CONFIG;
+    	
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
 
@@ -69,6 +71,16 @@ class LibraryController extends Zend_Controller_Action
 
             $menu[] = array('action' => array('type' => 'gourl', 'url' => '/Library/edit-file-md/id/#id#'), 
                             'title' => 'Edit Metadata');
+
+            // added for downlaod
+	    	$id = $this->_getParam('id');
+	    	
+	    	$file_id = $this->_getParam('id', null);
+	        $file = StoredFile::Recall($file_id);
+	         
+	        $url = 'api/get-media/file/'.$file->getFileURL().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
+            $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
+            				'title' => 'Download');
 
             $menu[] = array('action' => array('type' => 'fn',
                     'callback' => "window['confirmDeleteAudioClip']('$paramsPop')"), 

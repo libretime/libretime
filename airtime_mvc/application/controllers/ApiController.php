@@ -62,6 +62,8 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
+        $downlaod = $this->_getParam('download');
+        
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
         	header('HTTP/1.0 401 Unauthorized');
@@ -92,8 +94,9 @@ class ApiController extends Zend_Controller_Action
                 header("Content-Type: audio/ogg");
             else if ($ext == "mp3")
                 header("Content-Type: audio/mpeg");
-
-
+			if ($downlaod){
+				header('Content-Disposition: attachment; filename="'.$media->getName().'"');
+			}
             header("Content-Length: " . filesize($filepath));
             fpassthru($fp);
             return;

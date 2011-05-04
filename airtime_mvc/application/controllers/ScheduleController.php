@@ -27,6 +27,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('cancel-show', 'json')
                     ->addActionContext('get-form', 'json')
                     ->addActionContext('upload-to-sound-cloud', 'json')
+                    ->addActionContext('content-context-menu', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -702,6 +703,29 @@ class ScheduleController extends Zend_Controller_Action
             $show->clearShow();
             $show->deleteShow();
         }
+    }
+    
+    public function contentContextMenuAction(){
+    	global $CC_CONFIG;
+    	
+    	$id = $this->_getParam('id');
+
+        $params = '/format/json/id/#id#/';
+
+        $paramsPop = str_replace('#id#', $id, $params);
+
+        // added for downlaod
+        $id = $this->_getParam('id');
+
+        $file_id = $this->_getParam('id', null);
+        $file = StoredFile::Recall($file_id);
+
+        $url = 'api/get-media/file/'.$file->getFileURL().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
+        $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
+            				'title' => 'Download');
+
+        //returns format jjmenu is looking for.
+        die(json_encode($menu));
     }
 }
 

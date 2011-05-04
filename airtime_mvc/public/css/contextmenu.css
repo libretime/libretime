@@ -5,7 +5,7 @@ div.jjmenu {
 	border-bottom:2px solid #5b5b5b;
 	border-right:1px solid #5b5b5b;
 	padding:0px;
-    z-index: 100;
+    z-index: 1011;
 	font-size:11px;
 }
 
