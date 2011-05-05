@@ -159,7 +159,25 @@ class User {
 	public static function getUsersDataTablesInfo($datatables_post) {
 
 		$fromTable = "cc_subjs";
-		return StoredFile::searchFiles($fromTable, $datatables_post);
+		
+		// get current user
+		$username = "";
+        $auth = Zend_Auth::getInstance();
+
+        if ($auth->hasIdentity()) {
+            $username = $auth->getIdentity()->login;
+        }
+		
+		$res = StoredFile::searchFiles($fromTable, $datatables_post);
+		
+		// mark record which is for the current user
+		foreach($res['aaData'] as &$record){
+			if($record[1] == $username){
+				$record[5] = "self";
+			}
+		}
+		
+		return $res;
 	}
     
     public static function getUserData($id){
