@@ -7,16 +7,19 @@ import datetime
 import os
 import sys
 import hashlib
+import json
 
 from subprocess import Popen, PIPE, STDOUT
 
 from configobj import ConfigObj
 
+import mutagen
 import pyinotify
 from pyinotify import WatchManager, Notifier, ProcessEvent
 
-import mutagen
-
+# For RabbitMQ
+from kombu.connection import BrokerConnection
+from kombu.messaging import Exchange, Queue, Consumer, Producer
 from api_clients import api_client
 
 # configure logging
@@ -37,6 +40,59 @@ except Exception, e:
 list of supported easy tags in mutagen version 1.20
 ['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
 """
+
+def checkRabbitMQ(notifier):
+    try:
+        notifier.connection.drain_events(timeout=5)
+    except Exception, e:
+            logger = logging.getLogger('root')
+            logger.info("%s", e)
+
+class AirtimeNotifier(Notifier):
+
+    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None):
+        Notifier.__init__(self, watch_manager, default_proc_fun, read_freq, threshold, timeout)
+
+        self.airtime2mutagen = {\
+        "track_title": "title",\
+        "artist_name": "artist",\
+        "album_title": "album",\
+        "genre": "genre",\
+        "mood": "mood",\
+        "track_number": "tracknumber",\
+        "bpm": "bpm",\
+        "label": "organization",\
+        "composer": "composer",\
+        "encoded_by": "encodedby",\
+        "conductor": "conductor",\
+        "year": "date",\
+        "info_url": "website",\
+        "isrc_number": "isrc",\
+        "copyright": "copyright",\
+        }
+        
+        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
+        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
+        self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
+        channel = self.connection.channel()
+        consumer = Consumer(channel, schedule_queue)
+        consumer.register_callback(self.handle_message)
+        consumer.consume()
+
+    def handle_message(self, body, message):
+        # ACK the message to take it off the queue
+        message.ack()
+
+        logger = logging.getLogger('root')
+        logger.info("Received md from RabbitMQ: " + body)
+
+        m =  json.loads(message.body) 
+        airtime_file = mutagen.File(m['filepath'], easy=True)
+        del m['filepath']
+        for key in m.keys() :
+            airtime_file[self.airtime2mutagen[key]] = m[key]
+
+        airtime_file.save()
 
 class MediaMonitor(ProcessEvent):
 
@@ -69,7 +125,7 @@ class MediaMonitor(ProcessEvent):
     def process_IN_CREATE(self, event):
         if not event.dir :
             #This is a newly imported file.
-            print "%s: %s%s" %  (event.maskname, event.path, event.name)
+            print "%s: %s" %  (event.maskname, event.pathname)
 
     #event.path : /srv/airtime/stor/bd2
     #event.name : bd2aa73b58d9c8abcced989621846e99.mp3
@@ -98,11 +154,9 @@ class MediaMonitor(ProcessEvent):
         print "%s: path: %s name: %s" %  (event.maskname, event.path, event.name)
 
     def process_default(self, event):
-        print "%s: %s%s" %  (event.maskname, event.path, event.name)
+        print "%s: %s" %  (event.maskname, event.pathname)
 
 if __name__ == '__main__':
-
-    print 'Media Monitor'
 
     try:
         # watched events
@@ -111,9 +165,9 @@ if __name__ == '__main__':
         wm = WatchManager()
         wdd = wm.add_watch('/srv/airtime/stor', mask, rec=True, auto_add=True)
 
-        notifier = Notifier(wm, MediaMonitor(), read_freq=10, timeout=1)
+        notifier = AirtimeNotifier(wm, MediaMonitor(), read_freq=10, timeout=1)
         notifier.coalesce_events()
-        notifier.loop()
+        notifier.loop(callback=checkRabbitMQ)
     except KeyboardInterrupt:
         notifier.stop()
 

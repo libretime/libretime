@@ -2,6 +2,24 @@
 
 class Application_Form_EditAudioMD extends Zend_Form
 {
+    /*
+        "title": "track_title",\
+        "artist": "artist_name",\
+        "album": "album_title",\
+        "genre": "genre",\
+        "mood": "mood",\
+        "tracknumber": "track_number",\
+        "bpm": "bpm",\
+        "organization": "label",\
+        "composer": "composer",\
+        "encodedby": "encoded_by",\
+        "conductor": "conductor",\
+        "date": "year",\
+        "website": "info_url",\
+        "isrc": "isrc_number",\
+        "copyright": "copyright",\
+    */
+
 
     public function init()
     {
@@ -33,6 +51,13 @@ class Application_Form_EditAudioMD extends Zend_Form
 		// Add album field
         $this->addElement('text', 'album_title', array(
             'label'      => 'Album:',
+            'class'      => 'input_text',
+            'filters'    => array('StringTrim')
+        ));
+
+        // Add mood field
+        $this->addElement('text', 'track_number', array(
+            'label'      => 'Track:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
@@ -77,9 +102,30 @@ class Application_Form_EditAudioMD extends Zend_Form
             'filters'    => array('StringTrim')
         ));
 
-		// Add language field
-        $this->addElement('text', 'language', array(
-            'label'      => 'Language:',
+        // Add mood field
+        $this->addElement('text', 'bpm', array(
+            'label'      => 'BPM:',
+            'class'      => 'input_text',
+            'filters'    => array('StringTrim')
+        ));
+
+        // Add mood field
+        $this->addElement('text', 'copyright', array(
+            'label'      => 'Copyright:',
+            'class'      => 'input_text',
+            'filters'    => array('StringTrim')
+        ));
+
+        // Add mood field
+        $this->addElement('text', 'isrc_number', array(
+            'label'      => 'ISRC Number:',
+            'class'      => 'input_text',
+            'filters'    => array('StringTrim')
+        ));
+
+        // Add mood field
+        $this->addElement('text', 'info_url', array(
+            'label'      => 'Website:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
