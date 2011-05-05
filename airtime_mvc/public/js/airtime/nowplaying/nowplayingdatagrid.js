@@ -68,8 +68,7 @@ var columns = [{"sTitle": "type", "bVisible":false},
     {"sTitle":"Album"},
     {"sTitle":"Playlist"},
     {"sTitle":"Show"},
-    {"sTitle":"Status", "fnRender":statusColumn},
-    {"sTitle":"instance_id", "bVisible":false}];
+    {"sTitle":"Status", "fnRender":statusColumn}];
 
 function getDateString(){
     var date0 = $("#datepicker").datepicker("getDate");
@@ -155,8 +154,10 @@ function createDataGrid(){
                 var iDisplayIndex = oSettings._iDisplayStart + i;
                 var sType = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[0];
 
-                if ( sType == "g" ){
-                    var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[9];
+                if ( sType == "h" ){
+					//show header row found 
+					
+                    var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];
                     var startTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[2];
                     var endTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[3];
 
@@ -167,7 +168,9 @@ function createDataGrid(){
                     nCell.innerHTML = showName + ": " + startTime + " - " + endTime;
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);
-                } else if ( sType == "b" ){
+                } else if ( sType == "g" ){
+					//gap row found
+					
                     var gapTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];
                     
                     var nGroup = document.createElement('tr');

@@ -1657,7 +1657,7 @@ class ShowInstance {
 	
     public function getScheduleItemsInRange($timeNow, $start, $end)
     {
-        global $CC_DBC;
+        global $CC_DBC, $CC_CONFIG;
         
         $instanceId = $this->_instanceId;
         
@@ -1686,16 +1686,36 @@ class ShowInstance {
         ." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
         ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
         ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
-        //checking for st.starts IS NULL so that the query also returns shows that do not have any items scheduled.
-        ." AND (st.starts < si.ends OR st.starts IS NULL)"
+        ." AND (st.starts < si.ends)"
         ." AND si.id = $instanceId"
         ." ORDER BY si.starts, st.starts";
 
         return $CC_DBC->GetAll($sql);
     }
     
+    public function getLastAudioItemEnd(){
+		global $CC_DBC;
+		
+		$sql = "SELECT ends FROM cc_schedule "
+			."WHERE instance_id = {$this->_instanceId} "
+			."ORDER BY ends DESC "
+			."LIMIT 1";
+			
+		return $CC_DBC->GetOne($sql); 
+	}
+    
     public function getShowEndGapTime(){
-		return 5;
+		$showEnd = $this->getShowEnd();
+		$lastItemEnd = $this->getLastAudioItemEnd();
+		
+		if (is_null($lastItemEnd)){
+			$lastItemEnd = $this->getShowStart();
+		}
+		
+				
+		$diff = strtotime($showEnd) - strtotime($lastItemEnd);
+		
+		return ($diff < 0) ? 0 : $diff;	
 	}
 }
 

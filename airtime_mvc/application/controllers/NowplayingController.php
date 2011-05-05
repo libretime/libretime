@@ -16,26 +16,16 @@ class NowplayingController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/playlist/nowplayingdatagrid.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/playlist/nowview.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowview.js','text/javascript');
     }
 
     public function getDataGridDataAction()
     {
-		$iTotal = 5;
-		$iFilteredTotal = 5;
-		
-		$output = array(
-			"sEcho" => intval($this->_request->getParam('sEcho')),
-			"iTotalRecords" => $iTotal,
-			"iTotalDisplayRecords" => $iFilteredTotal
-		);
-		
         $viewType = $this->_request->getParam('view');
         $dateString = $this->_request->getParam('date');
-        $output["aaData"] = Application_Model_Nowplaying::GetDataGridData($viewType, $dateString);
+        $this->view->entries = Application_Model_Nowplaying::GetDataGridData($viewType, $dateString);
         
-        die(json_encode($output));
     }
 
     public function livestreamAction()
@@ -50,8 +40,8 @@ class NowplayingController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/playlist/nowplayingdatagrid.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/playlist/dayview.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/dayview.js','text/javascript');
     }
 }
 
