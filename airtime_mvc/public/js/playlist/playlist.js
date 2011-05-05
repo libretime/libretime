@@ -139,7 +139,11 @@ function updatePlaybar(){
     }
     if (currentSong.length > 0){
         $('#current').text(getTrackInfo(currentSong[0]));
-    }
+    } else if (currentShow.length > 0){
+		if (currentShow[0].record == "1"){
+			$('#current').html("Current: <span style='color:red; font-weight:bold'>Recording</span>");
+		}
+	}
     if (nextSongs.length > 0){
         $('#next').text(getTrackInfo(nextSongs[0]));
         $('#next-length').text(convertToHHMMSSmm(nextSongs[0].songLengthMs));

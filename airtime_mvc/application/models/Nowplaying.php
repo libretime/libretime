@@ -32,6 +32,10 @@ class Application_Model_Nowplaying
 	public static function CreateGapRow($p_gapTime){
 		return array("g", $p_gapTime, "", "", "", "", "", "", "", "", "");
 	}
+	
+	public static function CreateRecordingRow($p_showInstance){
+		return array("r", $p_showInstance->getName(), "", "", "", "", "", "", "", "", "");
+	}
 
 	public static function GetDataGridData($viewType, $dateString){
 
@@ -73,7 +77,9 @@ class Application_Model_Nowplaying
 			
 			//append show gap time row
 			$gapTime = $si->getShowEndGapTime();
-			if ($gapTime > 0)
+			if ($si->isRecorded())
+				$data[] = Application_Model_Nowplaying::CreateRecordingRow($si);
+			else if ($gapTime > 0)
 				$data[] = Application_Model_Nowplaying::CreateGapRow($gapTime);
 		}
 		

@@ -178,6 +178,18 @@ function createDataGrid(){
                     nCell.innerHTML = "Gap until show end: " + gapTime + " seconds";
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);                   
+                } else if ( sType.indexOf("r") != -1 ){
+					//gap row found
+					
+                    var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];
+                    
+                    var nGroup = document.createElement('tr');
+                    var nCell = document.createElement('td');
+                    nCell.colSpan = iColspan;
+                    nCell.className = "record";
+                    nCell.innerHTML = "Recording show \"" + showName + "\"";
+                    nGroup.appendChild(nCell);
+                    nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);                   
                 }
             }
             
