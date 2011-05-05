@@ -720,7 +720,7 @@ class ScheduleController extends Zend_Controller_Action
         $file_id = $this->_getParam('id', null);
         $file = StoredFile::Recall($file_id);
 
-        $url = 'api/get-media/file/'.$file->getFileURL().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
+        $url = $file->getFileURL().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
         $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
 
