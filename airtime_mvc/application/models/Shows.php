@@ -1636,6 +1636,28 @@ class ShowInstance {
 
         return $items;
     }
+    
+    public static function GetShowsInstancesInRange($p_timeNow, $p_start, $p_end)
+    {
+		global $CC_DBC;
+		
+		$sql = "SELECT id FROM cc_show_instances AS si "			
+			."WHERE ("
+			."(si.starts < TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
+			."AND si.ends > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds') "
+			."OR (si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' " 
+			."AND si.ends < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
+			."OR (si.starts < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds' "
+			."AND si.ends > TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
+			.")";
+		$rows = $CC_DBC->GetAll($sql);
+
+		$showInstances = array();
+		foreach ($rows as $row){
+			$shows[] = new ShowInstance($row['id']);
+		}
+		return $showInstances;
+	}
 }
 
 /* Show Data Access Layer */

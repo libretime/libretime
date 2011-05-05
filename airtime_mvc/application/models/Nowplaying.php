@@ -2,7 +2,7 @@
 
 class Application_Model_Nowplaying
 {
-
+/*
     public static function FindBeginningOfShow($rows){
         $numRows = count($rows);
 
@@ -143,4 +143,44 @@ class Application_Model_Nowplaying
         $timeNow = $date->getTimestamp();
         return array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$data);
     }
+*/
+
+	public static function GetDataGridData($viewType, $dateString){
+
+        if ($viewType == "now"){
+            $date = new DateHelper;
+            $timeNow = $date->getTimestamp();
+
+            $startCutoff = 60;
+            $endCutoff = 86400; //60*60*24 - seconds in a day
+        } else {
+            $date = new DateHelper;
+            $time = $date->getTime();
+            $date->setDate($dateString." ".$time);
+            $timeNow = $date->getTimestamp();
+
+            $startCutoff = $date->getNowDayStartDiff();
+            $endCutoff = $date->getNowDayEndDiff();
+        }
+        
+        $showInstances = Show::GetShowsInstancesInRange($timeNow, $startCutoff, $endCutoff);
+
+		$output = array(
+			"sEcho" => intval($_GET['sEcho']),
+			"iTotalRecords" => $iTotal,
+			"iTotalDisplayRecords" => $iFilteredTotal,
+			"aaData" => array()
+		);
+
+        foreach ($showInstances as $si){
+			$rows = $si->getShowContent();
+			foreach ($rows as $row){				
+				$output['aaData'][] = $row;
+			}
+			$output['aaData'][] = $si->getShowEndGap();
+		}
+		
+		return $output;
+	}
+
 }
