@@ -18,7 +18,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validators' => array('NotEmpty'),
-        	'value'		=> 'Untitled Show 1'
+        	'value'		=> 'Untitled Show'
         ));
 
          // Add URL element
