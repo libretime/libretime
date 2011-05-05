@@ -43,7 +43,7 @@ list of supported easy tags in mutagen version 1.20
 
 def checkRabbitMQ(notifier):
     try:
-        notifier.connection.drain_events(timeout=5)
+        notifier.connection.drain_events(timeout=int(config["check_airtime_events"]))
     except Exception, e:
             logger = logging.getLogger('root')
             logger.info("%s", e)
@@ -90,7 +90,8 @@ class AirtimeNotifier(Notifier):
         airtime_file = mutagen.File(m['filepath'], easy=True)
         del m['filepath']
         for key in m.keys() :
-            airtime_file[self.airtime2mutagen[key]] = m[key]
+            if m[key] != "" :
+                airtime_file[self.airtime2mutagen[key]] = m[key]
 
         airtime_file.save()
 
@@ -122,17 +123,14 @@ class MediaMonitor(ProcessEvent):
         "copyright": "copyright",\
         }
 
-    def process_IN_CREATE(self, event):
-        if not event.dir :
-            #This is a newly imported file.
-            print "%s: %s" %  (event.maskname, event.pathname)
+        self.logger = logging.getLogger('root')
 
-    #event.path : /srv/airtime/stor/bd2
-    #event.name : bd2aa73b58d9c8abcced989621846e99.mp3
-    #event.pathname : /srv/airtime/stor/bd2/bd2aa73b58d9c8abcced989621846e99.mp3
-    def process_IN_MODIFY(self, event):
-        if not event.dir :
-            f = file(event.pathname, 'rb')
+        self.temp_files = {}
+
+    def update_airtime(self, event):
+        self.logger.info("Updating Change to Airtime")
+        try: 
+            f = open(event.pathname, 'rb')
             m = hashlib.md5()
             m.update(f.read())
 
@@ -151,21 +149,63 @@ class MediaMonitor(ProcessEvent):
 
             response = self.api_client.update_media_metadata(data)
 
-        print "%s: path: %s name: %s" %  (event.maskname, event.path, event.name)
+        except Exception, e:
+            self.logger.info("%s", e)
+
+    def process_IN_CREATE(self, event):
+        if not event.dir :
+            filename_info = event.name.split(".")
+
+            #file created is a tmp file which will be modified and then moved back to the original filename.
+            if len(filename_info) > 2 :
+                self.temp_files[event.pathname] = None
+            #This is a newly imported file.
+            else :
+                pass
+
+            self.logger.info("%s: %s", event.maskname, event.pathname)
+
+    #event.path : /srv/airtime/stor/bd2
+    #event.name : bd2aa73b58d9c8abcced989621846e99.mp3
+    #event.pathname : /srv/airtime/stor/bd2/bd2aa73b58d9c8abcced989621846e99.mp3
+    def process_IN_MODIFY(self, event):
+        if not event.dir :
+            filename_info = event.name.split(".")
+
+            #file modified is not a tmp file.
+            if len(filename_info) == 2 :
+                self.update_airtime(event) 
+
+        self.logger.info("%s: path: %s name: %s", event.maskname, event.path, event.name)
+
+    def process_IN_MOVED_FROM(self, event):
+        if event.pathname in self.temp_files :
+            del self.temp_files[event.pathname]
+            self.temp_files[event.cookie] = event.pathname
+
+        self.logger.info("%s: %s", event.maskname, event.pathname)
+
+    def process_IN_MOVED_TO(self, event):
+        if event.cookie in self.temp_files :
+            del self.temp_files[event.cookie]
+            self.update_airtime(event)
+       
+        self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_default(self, event):
-        print "%s: %s" %  (event.maskname, event.pathname)
+        self.logger.info("%s: %s", event.maskname, event.pathname)
 
 if __name__ == '__main__':
 
     try:
         # watched events
-        mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY
+        mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
+        #mask = pyinotify.ALL_EVENTS
 
         wm = WatchManager()
         wdd = wm.add_watch('/srv/airtime/stor', mask, rec=True, auto_add=True)
 
-        notifier = AirtimeNotifier(wm, MediaMonitor(), read_freq=10, timeout=1)
+        notifier = AirtimeNotifier(wm, MediaMonitor(), read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()
         notifier.loop(callback=checkRabbitMQ)
     except KeyboardInterrupt:
