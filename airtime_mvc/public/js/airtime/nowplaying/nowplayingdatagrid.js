@@ -55,6 +55,7 @@ function statusColumn(obj) {
     if ( sReturn == "x" ) {
         sReturn = '<img class="info-icon" src="/css/images/icon_overlap.png" width="51" height="15" alt="" />';
     }
+    
     return sReturn;
 }
 
@@ -132,13 +133,10 @@ function createDataGrid(){
         "bPaginate": false,
 		"aoColumns": columns,
 		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-            if (aData[aData.length-2] == currentShowInstanceID)
-                $(nRow).addClass("playing-list");
-            if (aData[0] == "c")
+            //if (aData[aData.length-2] == currentShowInstanceID)
+            //    $(nRow).addClass("playing-list");
+            if (aData[0].indexOf("c") != -1)
 				$(nRow).attr("class", "playing-song");
-            else if (aData[0] == "over"){
-                //$(nRow).attr("class", "over-booked-song");
-            }
 			return nRow;
 		},
         "fnDrawCallback": function(oSettings){
@@ -154,7 +152,7 @@ function createDataGrid(){
                 var iDisplayIndex = oSettings._iDisplayStart + i;
                 var sType = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[0];
 
-                if ( sType == "h" ){
+                if ( sType.indexOf("h") != -1 ){
 					//show header row found 
 					
                     var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];
@@ -168,7 +166,7 @@ function createDataGrid(){
                     nCell.innerHTML = showName + ": " + startTime + " - " + endTime;
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);
-                } else if ( sType == "g" ){
+                } else if ( sType.indexOf("g") != -1 ){
 					//gap row found
 					
                     var gapTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];

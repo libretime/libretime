@@ -11,10 +11,19 @@ class Application_Model_Nowplaying
 		
 		$dataTablesRows = array();
 		
+		$date = new DateHelper;
+		$timeNow = $date->getTimestamp();
+		
+		
 		foreach ($p_dbRows as $dbRow){
-			$dataTablesRows[] = array('a', $dbRow['show_starts'], $dbRow['show_starts'], $dbRow['show_ends'],
+			$status = ($dbRow['show_ends'] < $dbRow['item_ends']) ? "x" : "";
+			
+			$type = "a";
+			$type .= ($dbRow['item_ends'] > $timeNow && $dbRow['item_starts'] <= $timeNow) ? "c" : "";
+			
+			$dataTablesRows[] = array($type, $dbRow['show_starts'], $dbRow['item_starts'], $dbRow['item_ends'],
 					$dbRow['clip_length'], $dbRow['track_title'], $dbRow['artist_name'], $dbRow['album_title'],
-					$dbRow['playlist_name'], $dbRow['playlist_name'], $dbRow['show_name']);
+					$dbRow['playlist_name'], $dbRow['show_name'], $status);
 		}
 
 		return $dataTablesRows;

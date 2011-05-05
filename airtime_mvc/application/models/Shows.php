@@ -1649,7 +1649,8 @@ class ShowInstance {
 			."AND si.ends < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
 			."OR (si.starts < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds' "
 			."AND si.ends > TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
-			.")";
+			.") "
+			." ORDER BY si.starts";
 			
 		$rows = $CC_DBC->GetAll($sql);
 		return $rows;
