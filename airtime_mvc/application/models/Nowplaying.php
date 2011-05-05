@@ -73,7 +73,8 @@ class Application_Model_Nowplaying
 			
 			//append show gap time row
 			$gapTime = $si->getShowEndGapTime();
-			$data[] = Application_Model_Nowplaying::CreateGapRow($gapTime);
+			if ($gapTime > 0)
+				$data[] = Application_Model_Nowplaying::CreateGapRow($gapTime);
 		}
 		
 		return array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$data);
