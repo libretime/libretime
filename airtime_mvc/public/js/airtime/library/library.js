@@ -64,7 +64,9 @@ function deletePlaylist(json) {
 	deleteItem("pl", json.id);
 
 	// display noOpenPL on the left window
-	noOpenPL(json);
+	if( currentlyOpenedSplId == json.id){
+		noOpenPL(json);
+	}
 }
 //end callbacks called by jjmenu
 

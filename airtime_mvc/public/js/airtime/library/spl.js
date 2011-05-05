@@ -373,6 +373,8 @@ function createPlaylistMetaForm(json) {
 	$("#side_playlist")
 		.empty()
 		.append(form);
+	
+	currentlyOpenedSplId = json.pl_id;
 }
 
 function newSPL() {
@@ -401,6 +403,8 @@ function openDiffSPL(json) {
 	$("#side_playlist")
 		.empty()
 		.append(json.html);
+	
+	currentlyOpenedSplId = json.pl_id;
 
 		setUpSPL();
 }
@@ -512,5 +516,6 @@ function setUpSPL() {
 }
 
 $(document).ready(function() {
+	var currentlyOpenedSplId;
 	setUpSPL();
 });

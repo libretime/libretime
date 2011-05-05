@@ -136,6 +136,7 @@ class PlaylistController extends Zend_Controller_Action
 			unset($this->view->pl);
         }
 
+        $this->view->pl_id = $pl_id;
         $this->view->fieldset = $form;
         $this->view->form = $this->view->render('playlist/new.phtml');
     }
@@ -151,6 +152,7 @@ class PlaylistController extends Zend_Controller_Action
 		$pl = $this->getPlaylist();
 
 		$this->view->pl = $pl;
+		$this->view->pl_id = $pl->getId();
 		$this->view->html = $this->view->render('playlist/index.phtml');
 		unset($this->view->pl);
     }
