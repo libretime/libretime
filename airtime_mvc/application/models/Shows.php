@@ -1636,8 +1636,8 @@ class ShowInstance {
 
         return $items;
     }
-    
-    public static function GetShowsInstancesInRange($p_timeNow, $p_start, $p_end)
+        
+    public static function GetShowsInstancesIdsInRange($p_timeNow, $p_start, $p_end)
     {
 		global $CC_DBC;
 		
@@ -1650,13 +1650,52 @@ class ShowInstance {
 			."OR (si.starts < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds' "
 			."AND si.ends > TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
 			.")";
+			
 		$rows = $CC_DBC->GetAll($sql);
+		return $rows;
+	}
+	
+    public function getScheduleItemsInRange($timeNow, $start, $end)
+    {
+        global $CC_DBC;
+        
+        $instanceId = $this->_instanceId;
+        
+        $sql = "SELECT"
+        ." si.starts as show_starts,"
+        ." si.ends as show_ends,"
+        ." si.rebroadcast as rebroadcast,"
+        ." st.starts as item_starts,"
+        ." st.ends as item_ends,"
+        ." st.clip_length as clip_length,"
+        ." ft.track_title as track_title,"
+        ." ft.artist_name as artist_name,"
+        ." ft.album_title as album_title,"
+        ." s.name as show_name,"
+        ." si.id as instance_id,"
+        ." pt.name as playlist_name"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." LEFT JOIN $CC_CONFIG[scheduleTable] st"
+        ." ON st.instance_id = si.id"
+        ." LEFT JOIN $CC_CONFIG[playListTable] pt"
+        ." ON st.playlist_id = pt.id"
+        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." ON st.file_id = ft.id"
+        ." LEFT JOIN $CC_CONFIG[showTable] s"
+        ." ON si.show_id = s.id"
+        ." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
+        ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
+        ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
+        //checking for st.starts IS NULL so that the query also returns shows that do not have any items scheduled.
+        ." AND (st.starts < si.ends OR st.starts IS NULL)"
+        ." AND si.id = $instanceId"
+        ." ORDER BY si.starts, st.starts";
 
-		$showInstances = array();
-		foreach ($rows as $row){
-			$shows[] = new ShowInstance($row['id']);
-		}
-		return $showInstances;
+        return $CC_DBC->GetAll($sql);
+    }
+    
+    public function getShowEndGapTime(){
+		return 5;
 	}
 }
 
@@ -1693,41 +1732,6 @@ class Show_DAL {
         return $rows;
     }
 
-    public static function GetShowsInRange($timeNow, $start, $end)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT"
-        ." si.starts as show_starts,"
-        ." si.ends as show_ends,"
-        ." si.rebroadcast as rebroadcast,"
-        ." st.starts as item_starts,"
-        ." st.ends as item_ends,"
-        ." st.clip_length as clip_length,"
-        ." ft.track_title as track_title,"
-        ." ft.artist_name as artist_name,"
-        ." ft.album_title as album_title,"
-        ." s.name as show_name,"
-        ." si.id as instance_id,"
-        ." pt.name as playlist_name"
-        ." FROM $CC_CONFIG[showInstances] si"
-        ." LEFT JOIN $CC_CONFIG[scheduleTable] st"
-        ." ON st.instance_id = si.id"
-        ." LEFT JOIN $CC_CONFIG[playListTable] pt"
-        ." ON st.playlist_id = pt.id"
-        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
-        ." ON st.file_id = ft.id"
-        ." LEFT JOIN $CC_CONFIG[showTable] s"
-        ." ON si.show_id = s.id"
-        ." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
-        ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
-        ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
-        //checking for st.starts IS NULL so that the query also returns shows that do not have any items scheduled.
-        ." AND (st.starts < si.ends OR st.starts IS NULL)"
-        ." ORDER BY si.starts, st.starts";
-
-        return $CC_DBC->GetAll($sql);
-    }
-
     public static function GetShowsByDayOfWeek($day){
         //DOW FROM TIMESTAMP
         //The day of the week (0 - 6; Sunday is 0) (for timestamp values only)
@@ -1747,8 +1751,6 @@ class Show_DAL {
         ." WHERE EXTRACT(DOW FROM si.starts) = $day"
         ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)"
         ." ORDER BY si.starts";
-
-        //echo $sql;
 
         return $CC_DBC->GetAll($sql);
     }

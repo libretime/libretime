@@ -22,9 +22,20 @@ class NowplayingController extends Zend_Controller_Action
 
     public function getDataGridDataAction()
     {
+		$iTotal = 5;
+		$iFilteredTotal = 5;
+		
+		$output = array(
+			"sEcho" => intval($this->_request->getParam('sEcho')),
+			"iTotalRecords" => $iTotal,
+			"iTotalDisplayRecords" => $iFilteredTotal
+		);
+		
         $viewType = $this->_request->getParam('view');
         $dateString = $this->_request->getParam('date');
-        $this->view->entries = Application_Model_Nowplaying::GetDataGridData($viewType, $dateString);
+        $output["aaData"] = Application_Model_Nowplaying::GetDataGridData($viewType, $dateString);
+        
+        die(json_encode($output));
     }
 
     public function livestreamAction()
