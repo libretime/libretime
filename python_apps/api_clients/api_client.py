@@ -372,18 +372,16 @@ class AirTimeApiClient(ApiClientInterface):
         response = None
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
-            #logger.debug(url)
-            url = url.replace("%%api_key%%", self.config["api_key"])
             logger.debug(url)
-
+            url = url.replace("%%api_key%%", self.config["api_key"])
+           
             data = recursive_urlencode(md)
             req = urllib2.Request(url, data)
 
             response = urllib2.urlopen(req).read()
             logger.info("update media %s", response)
             response = json.loads(response)
-            logger.info("update media %s", response)
-        
+
         except Exception, e:
             logger.error("Exception: %s", e)
         
