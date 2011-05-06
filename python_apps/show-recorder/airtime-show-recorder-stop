@@ -10,7 +10,7 @@ if os.geteuid() != 0:
     sys.exit(1)
     
 try:
-    print "Stopping daemontool script recorder"
+    print "Stopping daemontool script recorder...",
 
     p1 = subprocess.Popen(["ps", "aux"], stdout=subprocess.PIPE)
     p2 = subprocess.Popen(["awk", "/recorder.py/ && !/awk/ {print $2}"], stdin=p1.stdout, stdout=subprocess.PIPE)
@@ -18,7 +18,10 @@ try:
     if (len(recorder_pid) > 0):
         os.system("svc -d /etc/service/recorder 1>/dev/null 2>&1")
         os.system("svc -d /etc/service/recorder/log 1>/dev/null 2>&1")
-        os.system("kill -2 %s" % recorder_pid)
+        
+        pids = recorder_pid.split("\n")
+        for pid in pids:
+            os.system("kill -2 %s" % pid)
         print "Success."
     else:
         print "Not Running."

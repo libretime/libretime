@@ -28,7 +28,10 @@ try:
     if (len(liquidsoap_pid) > 0):
         os.system("svc -d /etc/service/pypo-liquidsoap 1>/dev/null 2>&1")
         os.system("svc -d /etc/service/pypo-liquidsoap/log 1>/dev/null 2>&1")
-        os.system("kill -2 %s" % liquidsoap_pid)
+        
+        pids = liquidsoap_pid.split("\n")
+        for pid in pids:
+            os.system("kill -2 %s" % pid)
         print "Success."
     else:
         print "Not Running."

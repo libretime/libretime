@@ -15,7 +15,9 @@ exec 2>&1
 # Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
 
 export PYTHONPATH=${api_client_path}
-su ${recorder_user} -c "python -u ${recorder_path}${recorder_script}"
+#su ${recorder_user} -c "python -u ${recorder_path}${recorder_script}"
+
+setuidgid ${recorder_user} ${recorder_path}${recorder_script}
 
 
 # EOF
