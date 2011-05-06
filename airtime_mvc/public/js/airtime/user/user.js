@@ -39,7 +39,7 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     if( aData[5] != "self"){
     	$('td:eq(4)', nRow).append( '<span class="ui-icon ui-icon-closethick"></span>').children('span').click(function(e){e.stopPropagation(); removeUserCallback(aData[0], nRow)});
     }else{
-    	$('td:eq(4)', nRow).empty();
+    	$('td:eq(4)', nRow).empty().append( '<span class="ui-icon ui-icon-closethick"></span>').children('span').click(function(e){e.stopPropagation(); alert("Can't delete yourself!")});
     }
 
     if ( aData[4] == "A" )
