@@ -1,9 +1,9 @@
 var estimatedSchedulePosixTime = null;
 var localRemoteTimeOffset = null;
 
-var previousSongs = new Array();
-var currentSong = new Array();
-var nextSongs = new Array();
+var previousSong = null;
+var currentSong = null;
+var nextSong = null;
 
 var currentShow = new Array();
 var nextShow = new Array();
@@ -25,21 +25,8 @@ var nextShowPrepare = true;
 
 var apiKey = "";
 
-function getTrackInfo(song){
-    var str = "";
-
-    if (song.track_title != null)
-        str += song.track_title;
-    if (song.artist_name != null)
-        str += " - " + song.artist_name;
-
-    str += ","
-
-    return str;
-}
-
 function secondsTimer(){
-    if (localRemoteTimeOffset != null){
+    if (localRemoteTimeOffset !== null){
 		var date = new Date();
         estimatedSchedulePosixTime = date.getTime() - localRemoteTimeOffset;
 		updateProgressBarValue();
@@ -50,9 +37,10 @@ function secondsTimer(){
 
 function newSongStart(){
     nextSongPrepare = true;
-    currentSong[0] = nextSongs.shift();
+    currentSong = nextSong;
+    nextSong = null;
 
-    if (typeof notifySongStart == "function")
+    if (typeof notifySongStart == "function")   
         notifySongStart();
     
 }
@@ -80,13 +68,13 @@ function updateProgressBarValue(){
     $('#progress-show').attr("style", "width:"+showPercentDone+"%");
 
 	var songPercentDone = 0;
-	if (currentSong.length > 0){
-		songPercentDone = (estimatedSchedulePosixTime - currentSong[0].songStartPosixTime)/currentSong[0].songLengthMs*100;
+	if (currentSong !== null){
+		songPercentDone = (estimatedSchedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
 		if (songPercentDone < 0 || songPercentDone > 100){
 			songPercentDone = 0;        
-            currentSong = new Array();
+            currentSong = null;
 		} else {
-            if (currentSong[0].media_item_played == "t" && currentShow.length > 0)
+            if (currentSong.media_item_played == "t" && currentShow.length > 0)
                 $('#on-air-info').attr("class", "on-air-info on");
             else
                 $('#on-air-info').attr("class", "on-air-info off");
@@ -99,8 +87,8 @@ function updateProgressBarValue(){
 	$('#progress-bar').attr("style", "width:"+songPercentDone+"%");
 
 	//calculate how much time left to next song if there is any
-	if (nextSongs.length > 0 && nextSongPrepare){
-		var diff = nextSongs[0].songStartPosixTime - estimatedSchedulePosixTime;
+	if (nextSong !== null && nextSongPrepare){
+		var diff = nextSong.songStartPosixTime - estimatedSchedulePosixTime;
 		if (diff < serverUpdateInterval){
             
             //sometimes the diff is negative (-100ms for example). Still looking
@@ -133,20 +121,26 @@ function updatePlaybar(){
     $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
     $('#next').empty();
     $('#next-length').empty();
-    if (previousSongs.length > 0){
-        $('#previous').text(getTrackInfo(previousSongs[previousSongs.length-1]));
-        $('#prev-length').text(convertToHHMMSSmm(previousSongs[previousSongs.length-1].songLengthMs));
+    if (previousSong !== null){
+        $('#previous').text(previousSong.name+",");
+        $('#prev-length').text(convertToHHMMSSmm(previousSong.songLengthMs));
     }
-    if (currentSong.length > 0){
-        $('#current').text(getTrackInfo(currentSong[0]));
-    } else if (currentShow.length > 0){
+    if (currentSong !== null){
+        if (currentSong.record == "1")
+            $('#current').html("<span style='color:red; font-weight:bold'>Recording: </span>"+currentSong.name+",");
+        else
+            $('#current').text(currentSong.name+",");
+    }
+    /*
+    else if (currentShow.length > 0){
 		if (currentShow[0].record == "1"){
 			$('#current').html("Current: <span style='color:red; font-weight:bold'>Recording</span>");
 		}
 	}
-    if (nextSongs.length > 0){
-        $('#next').text(getTrackInfo(nextSongs[0]));
-        $('#next-length').text(convertToHHMMSSmm(nextSongs[0].songLengthMs));
+    * */
+    if (nextSong !== null){
+        $('#next').text(nextSong.name+",");
+        $('#next-length').text(convertToHHMMSSmm(nextSong.songLengthMs));
     }
 
     $('#start').empty();
@@ -154,18 +148,18 @@ function updatePlaybar(){
     $('#time-elapsed').empty();
     $('#time-remaining').empty();
     $('#song-length').empty();
-    for (var i=0; i<currentSong.length; i++){
-        $('#start').text(currentSong[i].starts.substring(currentSong[i].starts.indexOf(" ")+1));
-        $('#end').text(currentSong[i].ends.substring(currentSong[i].starts.indexOf(" ")+1));
+    if (currentSong !== null){
+        $('#start').text(currentSong.starts.substring(currentSong.starts.indexOf(" ")+1));
+        $('#end').text(currentSong.ends.substring(currentSong.starts.indexOf(" ")+1));
 
         /* Get rid of the millisecond accuracy so that the second counters for both
          * show and song change at the same time. */
-        var songStartRoughly = parseInt(Math.round(currentSong[i].songStartPosixTime/1000))*1000;
-        var songEndRoughly = parseInt(Math.round(currentSong[i].songEndPosixTime/1000))*1000;
+        var songStartRoughly = parseInt(Math.round(currentSong.songStartPosixTime/1000))*1000;
+        var songEndRoughly = parseInt(Math.round(currentSong.songEndPosixTime/1000))*1000;
 
         $('#time-elapsed').text(convertToHHMMSS(estimatedSchedulePosixTime - songStartRoughly));
         $('#time-remaining').text(convertToHHMMSS(songEndRoughly - estimatedSchedulePosixTime));
-        $('#song-length').text(convertToHHMMSSmm(currentSong[i].songLengthMs));
+        $('#song-length').text(convertToHHMMSSmm(currentSong.songLengthMs));
     }
     /* Column 1 update */
     $('#playlist').text("Current Show:");
@@ -187,11 +181,9 @@ function updatePlaybar(){
 }
 
 function calcAdditionalData(currentItem){
-    for (var i=0; i<currentItem.length; i++){
-        currentItem[i].songStartPosixTime = convertDateToPosixTime(currentItem[i].starts);
-        currentItem[i].songEndPosixTime = convertDateToPosixTime(currentItem[i].ends);
-        currentItem[i].songLengthMs = currentItem[i].songEndPosixTime - currentItem[i].songStartPosixTime;
-    }
+    currentItem.songStartPosixTime = convertDateToPosixTime(currentItem.starts);
+    currentItem.songEndPosixTime = convertDateToPosixTime(currentItem.ends);
+    currentItem.songLengthMs = currentItem.songEndPosixTime - currentItem.songStartPosixTime;
 }
 
 function calcAdditionalShowData(show){
@@ -208,17 +200,18 @@ function parseItems(obj){
         
     $('#time-zone').text(obj.timezone);
 
-    previousSongs = obj.previous;
-    nextSongs = obj.next;
-    
-    calcAdditionalData(previousSongs);
-    calcAdditionalData(nextSongs);
+    previousSong = obj.previous;
+    currentSong = obj.current;
+    nextSong = obj.next;
+
+    if (previousSong !== null)
+        calcAdditionalData(previousSong);
+    if (currentSong !== null)
+        calcAdditionalData(currentSong);
+    if (nextSong !== null)
+        calcAdditionalData(nextSong);
     
     currentShow = obj.currentShow;
-    if(currentShow.length > 0){
-    	currentSong = obj.current;
-    	calcAdditionalData(currentSong);
-    }
     nextShow = obj.nextShow;
     
     calcAdditionalShowData(obj.currentShow);
@@ -238,17 +231,10 @@ function getScheduleFromServer(){
     setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
 
-
-function init() {
-    //begin producer "thread"
-    getScheduleFromServer();
-	
-    //begin consumer "thread"
-    secondsTimer();
-
+function setupQtip(){
     var qtipElem = $('#about-link');
 
-    if (qtipElem.length > 0)
+    if (qtipElem.length > 0){
         qtipElem.qtip({
             content: $('#about-txt').html(),
             show: 'mouseover',
@@ -267,6 +253,17 @@ function init() {
                 name: 'light' // Use the default light style
              }
         });
+    }
+}
+
+function init() {
+    //begin producer "thread"
+    getScheduleFromServer();
+	
+    //begin consumer "thread"
+    secondsTimer();
+
+    setupQtip();
 }
 
 $(document).ready(function() {

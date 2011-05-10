@@ -113,8 +113,6 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
-            $result = Schedule::GetPlayOrderRange(0, 1);
-
             $date = new DateHelper;
             $timeNow = $date->getTimestamp();
             $result = array("env"=>APPLICATION_ENV,
