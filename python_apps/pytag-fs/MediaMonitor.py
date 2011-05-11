@@ -1,6 +1,4 @@
 #!/usr/local/bin/python
-import urllib
-import urllib2
 import logging
 import logging.config
 import json
@@ -8,12 +6,14 @@ import time
 import datetime
 import os
 import sys
+import hashlib
+
 from subprocess import Popen, PIPE, STDOUT
 
 from configobj import ConfigObj
 
 import pyinotify
-from pyinotify import WatchManager, Notifier, ThreadedNotifier, EventsCodes, ProcessEvent
+from pyinotify import WatchManager, Notifier, ProcessEvent
 
 from api_clients import api_client
 
@@ -46,13 +46,21 @@ class MediaMonitor(ProcessEvent):
             #This is a newly imported file.
             print "%s: %s" %  (event.maskname, os.path.join(event.path, event.name))
 
+    #event.path : /srv/airtime/stor/bd2
+    #event.name : bd2aa73b58d9c8abcced989621846e99.mp3
+    #event.pathname : /srv/airtime/stor/bd2/bd2aa73b58d9c8abcced989621846e99.mp3
     def process_IN_MODIFY(self, event):
         if not event.dir :
             p = Popen(["pytags", event.pathname], stdout=PIPE, stderr=STDOUT)
             output = p.stdout.read().decode("utf-8").strip()
 
-            md = {'filepath':event.pathname}
+            #get md5, most likely different
+            f = file(event.pathname, 'rb')
+            m = hashlib.md5()
+            m.update(f.read())
+            md5 = m.hexdigest()
 
+            md = {'filepath':event.pathname, 'md5':md5}
             for tag in output.split("\n")[2:] :
                 key,value = tag.split("=")
                 md[key] = value
@@ -61,7 +69,7 @@ class MediaMonitor(ProcessEvent):
 
             response = self.api_client.update_media_metadata(data)
 
-        print "%s: %s" %  (event.maskname, os.path.join(event.path, event.name))
+        print "%s: path: %s name: %s" %  (event.maskname, event.path, event.name)
 
     def process_default(self, event):
         print "%s: %s" %  (event.maskname, os.path.join(event.path, event.name))
