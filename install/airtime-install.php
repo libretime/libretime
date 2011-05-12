@@ -22,7 +22,8 @@ try {
         array(
             'help|h' => 'Displays usage information.',
             'overwrite|o' => 'Overwrite any existing config files.',
-            'preserve|p' => 'Keep any existing config files.'
+            'preserve|p' => 'Keep any existing config files.',
+			'no-db|n' => 'Turn off database install.'
         )
     );
     $opts->parse();
@@ -33,6 +34,10 @@ try {
 if (isset($opts->h)) {
     echo $opts->getUsageMessage();
     exit;
+}
+$db_install = true;
+if (isset($opts->n)){
+	$db_install = false;
 }
 
 $overwrite = false;
@@ -72,17 +77,21 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 
 echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
+if ($db_install) {
+
 //echo PHP_EOL."*** Database Installation ***".PHP_EOL;
 
-AirtimeInstall::CreateDatabaseUser();
+/*	AirtimeInstall::CreateDatabaseUser();
 
-AirtimeInstall::CreateDatabase();
+	AirtimeInstall::CreateDatabase();
 
-AirtimeInstall::DbConnect(true);
+	AirtimeInstall::DbConnect(true);
 
-AirtimeInstall::InstallPostgresScriptingLanguage();
+	AirtimeInstall::InstallPostgresScriptingLanguage();
 
-AirtimeInstall::CreateDatabaseTables();
+	AirtimeInstall::CreateDatabaseTables();*/
+	require( 'airtime-db-install.php' );
+}
 
 AirtimeInstall::InstallStorageDirectory();
 
