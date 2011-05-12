@@ -29,7 +29,9 @@ AirtimeInstall::UninstallPhpCode();
 // still be a connection to the database and you wont be able to delete it.
 //------------------------------------------------------------------------
 echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...".PHP_EOL;
-$command = "su postgres -c \"dropdb {$CC_CONFIG['dsn']['database']}\"";
+
+// check if DB exists
+$command = "echo \"DROP DATABASE IF EXISTS ".$CC_CONFIG['dsn']['database']."\" | sudo -u postgres psql";
 @exec($command, $output, $dbDeleteFailed);
 
 //------------------------------------------------------------------------
