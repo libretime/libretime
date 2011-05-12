@@ -43,7 +43,7 @@ def getDateTimeObj(time):
     date = timeinfo[0].split("-")
     time = timeinfo[1].split(":")
 
-    return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(time[2])) 
+    return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(time[2]))
 
 class ShowRecorder(Thread):
 
@@ -55,6 +55,7 @@ class ShowRecorder(Thread):
         self.start_time = start_time
         self.filetype = filetype
         self.show_instance = show_instance
+        self.logger = logging.getLogger('root')
 
     def record_show(self):
 
@@ -67,11 +68,9 @@ class ShowRecorder(Thread):
         #-ge:0.1,0.1,0,-1
         args = command.split(" ")
 
-        print "starting record"
-
+        self.logger.info("starting record")
         code = call(args)
-
-        print "finishing record, return code %s" % (code)
+        self.logger.info("finishing record, return code %s", code)
 
         return code, filepath
 
@@ -94,55 +93,56 @@ class ShowRecorder(Thread):
         if code == 0:
             self.upload_file(filepath)
         else:
-            print "problem recording show"
+            self.logger.info("problem recording show")
 
 
 class Record():
 
     def __init__(self):
-        self.api_client = api_client.api_client_factory(config) 
-        self.shows_to_record = {}  
+        self.api_client = api_client.api_client_factory(config)
+        self.shows_to_record = {}
+        self.logger = logging.getLogger('root')
 
     def process_shows(self, shows):
 
         self.shows_to_record = {}
-        
+
         for show in shows:
             show_starts = getDateTimeObj(show[u'starts'])
             show_end = getDateTimeObj(show[u'ends'])
             time_delta = show_end - show_starts
-            
+
             self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name']]
 
 
     def check_record(self):
-        
+
         tnow = datetime.datetime.now()
         sorted_show_keys = sorted(self.shows_to_record.keys())
-      
+
         start_time = sorted_show_keys[0]
         next_show = getDateTimeObj(start_time)
 
-        print next_show
-        print tnow
+        self.logger.debug("Next show %s", next_show)
+        self.logger.debug("Now %s", tnow)
 
         delta = next_show - tnow
         min_delta = datetime.timedelta(seconds=60)
 
         if delta <= min_delta:
-            print "sleeping %s seconds until show" % (delta.seconds)
+            self.logger.debug("sleeping %s seconds until show", delta.seconds)
             time.sleep(delta.seconds)
-           
+
             show_length = self.shows_to_record[start_time][0]
             show_instance = self.shows_to_record[start_time][1]
             show_name = self.shows_to_record[start_time][2]
-            
-            show = ShowRecorder(show_instance, show_length.seconds, show_name, start_time, filetype="mp3", )
+
+            show = ShowRecorder(show_instance, show_length.seconds, show_name, start_time, filetype="mp3")
             show.start()
-         
+
             #remove show from shows to record.
             del self.shows_to_record[start_time]
-        
+
 
     def get_shows(self):
 
@@ -154,7 +154,7 @@ class Record():
 
         if len(shows):
             self.process_shows(shows)
-            self.check_record() 
+            self.check_record()
 
 
 if __name__ == '__main__':
@@ -164,8 +164,4 @@ if __name__ == '__main__':
     while True:
         recorder.get_shows()
         time.sleep(5)
-
-    
-    
-   
 
