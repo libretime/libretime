@@ -64,7 +64,7 @@ class ApiController extends Zend_Controller_Action
 
         $api_key = $this->_getParam('api_key');
         $downlaod = $this->_getParam('download');
-        
+
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
         	header('HTTP/1.0 401 Unauthorized');
@@ -331,8 +331,9 @@ class ApiController extends Zend_Controller_Action
         }
 
         $md = $this->_getParam('md');
-
-        $file = StoredFile::Recall(null, $md['gunid']);
+        $filepath = $md['filepath'];
+        $filepath = str_replace("\\", "", $filepath);
+        $file = StoredFile::Recall(null, null, null, $filepath);
         if (PEAR::isError($file) || is_null($file)) {
             $this->view->response = "File not in Airtime's Database";
             return;

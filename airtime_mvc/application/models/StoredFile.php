@@ -701,7 +701,7 @@ class StoredFile {
      * @return StoredFile|Playlist|NULL
      *    Return NULL if the object doesnt exist in the DB.
      */
-    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null)
+    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null)
     {
         global $CC_DBC;
         global $CC_CONFIG;
@@ -711,6 +711,8 @@ class StoredFile {
             $cond = "gunid='$p_gunid'";
         } elseif (!is_null($p_md5sum)) {
             $cond = "md5='$p_md5sum'";
+        } elseif (!is_null($p_filepath)) {
+            $cond = "filepath='$p_filepath'";
         } else {
             return null;
         }
