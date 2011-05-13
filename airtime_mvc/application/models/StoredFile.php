@@ -782,6 +782,31 @@ class StoredFile {
         return $rows;
     }
 
+    private function ensureDir($dir)
+    {
+        if (!is_dir($dir)) {
+            mkdir($dir, 02775);
+            chmod($dir, 02775);
+        }
+    }
+
+    private function createUniqueFilename($base, $ext)
+    {
+        if(file_exists("$base.$ext")) {
+            $i = 1;
+            while(true) {
+                if(file_exists("$base($i).$ext")) {
+                    $i = $i+1;
+                }
+                else {
+                    return "$base($i).$ext";
+                }
+            }
+        }
+
+        return "$base.$ext";
+    }
+
     /**
      * Generate the location to store the file.
      * It creates the subdirectory if needed.
@@ -789,14 +814,48 @@ class StoredFile {
     private function generateFilePath()
     {
         global $CC_CONFIG, $CC_DBC;
-        $resDir = $CC_CONFIG['storageDir']."/".substr($this->gunid, 0, 3);
-        if (!is_dir($resDir)) {
-            mkdir($resDir, 02775);
-            chmod($resDir, 02775);
-        }
+
+        $storageDir = $CC_CONFIG['storageDir'];
         $info = pathinfo($this->name);
+        $origName = $info['filename'];
         $fileExt = strtolower($info["extension"]);
-        return "{$resDir}/{$this->gunid}.{$fileExt}";
+
+        $this->loadMetadata();
+
+        $artist = $this->md["dc:creator"];
+        $album = $this->md["dc:source"];
+        $title = $this->md["dc:title"];
+        $track_num = $this->md["ls:track_num"];
+
+        if(isset($artist) && $artist != "") {
+            $base = "$storageDir/$artist";
+            $this->ensureDir($base);
+
+            if(isset($album) && $album != "") {
+                $base = "$base/$album";
+                $this->ensureDir($base);
+            }
+
+            if(isset($title) && $title != "") {
+                if(isset($track_num) && $track_num != "") {
+                    if($track_num < 10 && strlen($track_num) == 1) {
+                        $track_num = "0$track_num";
+                    }
+                    $base = "$base/$track_num - $title";
+                }
+                else {
+                    $base = "$base/$title";
+                }
+            }
+            else {
+                $base = "$base/$origName";
+            }
+        }
+        else {
+            $base = "$storageDir/$origName";
+        }
+
+        return $this->createUniqueFilename($base, $fileExt);
     }
 
     /**
