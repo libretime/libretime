@@ -64,6 +64,21 @@ def get_current_script_dir():
   #print current_script_dir[0:index]
   return current_script_dir[0:index]
 
+def is_natty():
+    try:
+        f = open('/etc/lsb-release')
+    except IOError as e:
+        #File doesn't exist, so we're not even dealing with Ubuntu
+        return False
+
+    for line in f:
+        split = line.split("=")
+        split[0] = split[0].strip(" \r\n")
+        split[1] = split[1].strip(" \r\n")
+        if split[0] == "DISTRIB_CODENAME" and split[1] == "natty":
+            return True
+    return False
+
 
 try:
   # load config file
@@ -93,11 +108,20 @@ try:
   create_path(config["cache_dir"])
   create_path(config["file_dir"])
   create_path(config["tmp_dir"])
+
+  architecture = platform.architecture()[0]
+  natty = is_natty()
     
-  if platform.architecture()[0] == '64bit':
+  if architecture == '64bit' and natty:
+      print "Installing 64-bit liquidsoap binary (Natty)"
+      shutil.copy("%s/../liquidsoap/liquidsoap-amd64-natty"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
+  elif architecture == '32bit' and natty:
+      print "Installing 32-bit liquidsoap binary (Natty)"
+      shutil.copy("%s/../liquidsoap/liquidsoap-i386-natty"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
+  elif architecture == '64bit' and not natty:
       print "Installing 64-bit liquidsoap binary"
       shutil.copy("%s/../liquidsoap/liquidsoap-amd64"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
-  elif platform.architecture()[0] == '32bit':
+  elif architecture == '32bit' and not natty:
       print "Installing 32-bit liquidsoap binary"
       shutil.copy("%s/../liquidsoap/liquidsoap-i386"%current_script_dir, "%s/../liquidsoap/liquidsoap"%current_script_dir)
   else:
