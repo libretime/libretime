@@ -71,7 +71,7 @@ class AirtimeNotifier(Notifier):
         "isrc_number": "isrc",\
         "copyright": "copyright",\
         }
-        
+
         schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
         schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
         self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
@@ -87,7 +87,7 @@ class AirtimeNotifier(Notifier):
         logger = logging.getLogger('root')
         logger.info("Received md from RabbitMQ: " + body)
 
-        m =  json.loads(message.body) 
+        m =  json.loads(message.body)
         airtime_file = mutagen.File(m['filepath'], easy=True)
         del m['filepath']
         for key in m.keys() :
@@ -124,21 +124,19 @@ class MediaMonitor(ProcessEvent):
         "copyright": "copyright",\
         }
 
+        self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger('root')
-
         self.temp_files = {}
 
     def update_airtime(self, event):
         self.logger.info("Updating Change to Airtime")
-        try: 
+        try:
             f = open(event.pathname, 'rb')
             m = hashlib.md5()
             m.update(f.read())
-
             md5 = m.hexdigest()
-            gunid = event.name.split('.')[0]
 
-            md = {'gunid':gunid, 'md5':md5}
+            md = {'filepath':event.pathname, 'md5':md5}
 
             file_info = mutagen.File(event.pathname, easy=True)
             attrs = self.mutagen2airtime
@@ -153,12 +151,28 @@ class MediaMonitor(ProcessEvent):
         except Exception, e:
             self.logger.info("%s", e)
 
+    def is_temp_file(self, filename):
+        info = filename.split(".")
+
+        if(info[-2] in self.supported_file_formats):
+            return True
+        else :
+            return False
+
+    def is_audio_file(self, filename):
+        info = filename.split(".")
+
+        if(info[-1] in self.supported_file_formats):
+            return True
+        else :
+            return False
+
+
     def process_IN_CREATE(self, event):
         if not event.dir :
-            filename_info = event.name.split(".")
 
             #file created is a tmp file which will be modified and then moved back to the original filename.
-            if len(filename_info) > 2 :
+            if self.is_temp_file(event.name) :
                 self.temp_files[event.pathname] = None
             #This is a newly imported file.
             else :
@@ -166,18 +180,13 @@ class MediaMonitor(ProcessEvent):
 
             self.logger.info("%s: %s", event.maskname, event.pathname)
 
-    #event.path : /srv/airtime/stor/bd2
-    #event.name : bd2aa73b58d9c8abcced989621846e99.mp3
-    #event.pathname : /srv/airtime/stor/bd2/bd2aa73b58d9c8abcced989621846e99.mp3
     def process_IN_MODIFY(self, event):
         if not event.dir :
-            filename_info = event.name.split(".")
 
-            #file modified is not a tmp file.
-            if len(filename_info) == 2 :
-                self.update_airtime(event) 
+            if self.is_audio_file(event.name) :
+                self.update_airtime(event)
 
-        self.logger.info("%s: path: %s name: %s", event.maskname, event.path, event.name)
+        self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MOVED_FROM(self, event):
         if event.pathname in self.temp_files :
@@ -190,7 +199,7 @@ class MediaMonitor(ProcessEvent):
         if event.cookie in self.temp_files :
             del self.temp_files[event.cookie]
             self.update_airtime(event)
-       
+
         self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_default(self, event):
