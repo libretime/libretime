@@ -63,7 +63,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        $download = $this->_getParam('download');
+        $downlaod = $this->_getParam('download');
 
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -100,15 +100,15 @@ class ApiController extends Zend_Controller_Action
 
             // !! binary mode !!
             $fp = fopen($filepath, 'rb');
-            
+
             //We can have multiple levels of output buffering. Need to
             //keep looping until all have been disabled!!!
             //http://www.php.net/manual/en/function.ob-end-flush.php
             while (@ob_end_flush());
-            
+
             fpassthru($fp);
             fclose($fp);
-            
+
             return;
           }
       }
@@ -357,8 +357,9 @@ class ApiController extends Zend_Controller_Action
         }
 
         $md = $this->_getParam('md');
-
-        $file = StoredFile::Recall(null, $md['gunid']);
+        $filepath = $md['filepath'];
+        $filepath = str_replace("\\", "", $filepath);
+        $file = StoredFile::Recall(null, null, null, $filepath);
         if (PEAR::isError($file) || is_null($file)) {
             $this->view->response = "File not in Airtime's Database";
             return;
