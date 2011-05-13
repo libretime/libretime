@@ -98,6 +98,27 @@ class PypoFetch(Thread):
             logger.error("  * To fix this, you need to set the 'date.timezone' value in your php.ini file and restart apache.")
             logger.error("  * See this page for more info (v1.7): http://wiki.sourcefabric.org/x/BQBF")
             logger.error("  * and also the 'FAQ and Support' page underneath it.")  
+
+    def is_playlist_currently_scheduled(playlists):
+        timenow = time.time()
+        tnow = time.localtime(timenow)
+        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
+        
+        for pkey in playlists:
+            start = schedule[pkey]['start']
+            end = schedule[pkey]['end']
+            
+            if start <= str_tnow_s and str_tnow_s < end:
+                return pkey
+                
+        return ""
+
+    def handle_shows_currently_scheduled(playlists):
+        current_pkey = is_playlist_currently_scheduled(playlists)
+        if current_pkey != "":
+            current_playlist = playlists[current_pkey]
+            
+            
     
     """
     Process the schedule
@@ -107,9 +128,12 @@ class PypoFetch(Thread):
        to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
      - runs the cleanup routine, to get rid of unused cashed files
     """
-    def process_schedule(self, schedule_data, export_source):
+    def process_schedule(self, schedule_data, export_source, bootstrapping):
         logger = logging.getLogger('fetch')
         playlists = schedule_data["playlists"]
+
+        if bootstrapping:
+            self.handle_shows_currently_scheduled(playlists)
 
         self.check_matching_timezones(schedule_data["server_timezone"])
             
@@ -354,7 +378,7 @@ class PypoFetch(Thread):
         # most recent schedule.  After that we can just wait for updates. 
         status, schedule_data = self.api_client.get_schedule()
         if status == 1:
-            self.process_schedule(schedule_data, "scheduler")                
+            self.process_schedule(schedule_data, "scheduler", True)                
         logger.info("Bootstrap complete: got initial copy of the schedule")
 
         loops = 1        
@@ -373,6 +397,6 @@ class PypoFetch(Thread):
                 status, schedule_data = self.api_client.get_schedule()
             
             if status == 1:
-                self.process_schedule(schedule_data, "scheduler")                
+                self.process_schedule(schedule_data, "scheduler", False)                
             loops += 1
             
