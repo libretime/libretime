@@ -8,9 +8,10 @@ class ApiController extends Zend_Controller_Action
         /* Initialize action controller here */
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
-                    ->addActionContext('recorded-shows', 'json')
-                    ->addActionContext('upload-recorded', 'json')
-                    ->initContext();
+                ->addActionContext('recorded-shows', 'json')
+                ->addActionContext('upload-recorded', 'json')
+                ->addActionContext('reload-metadata', 'json')
+                ->initContext();
     }
 
     public function indexAction()
@@ -113,8 +114,6 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
-            $result = Schedule::GetPlayOrderRange(0, 1);
-
             $date = new DateHelper;
             $timeNow = $date->getTimestamp();
             $result = array("env"=>APPLICATION_ENV,
@@ -123,7 +122,7 @@ class ApiController extends Zend_Controller_Action
                 "nextShow"=>Show_DAL::GetNextShows($timeNow, 5),
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"));
-                
+
             //echo json_encode($result);
             header("Content-type: text/javascript");
             echo $_GET['callback'].'('.json_encode($result).')';
@@ -316,7 +315,37 @@ class ApiController extends Zend_Controller_Action
             }
         }
 
-        $this->view->id = $file->getId(); 
+        $this->view->id = $file->getId();
+    }
+
+    public function reloadMetadataAction() {
+
+        global $CC_CONFIG;
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+        	header('HTTP/1.0 401 Unauthorized');
+        	print 'You are not allowed to access this resource.';
+        	exit;
+        }
+
+        $md = $this->_getParam('md');
+
+        $file = StoredFile::Recall(null, $md['gunid']);
+        if (PEAR::isError($file) || is_null($file)) {
+            $this->view->response = "File not in Airtime's Database";
+            return;
+        }
+
+        $res = $file->replaceDbMetadata($md);
+
+        if (PEAR::isError($res)) {
+            $this->view->response = "Metadata Change Failed";
+        }
+        else {
+            $this->view->response = "Success!";
+        }
     }
 }
 

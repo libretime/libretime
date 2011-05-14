@@ -1718,6 +1718,57 @@ class ShowInstance {
 		
 		return ($diff < 0) ? 0 : $diff;	
 	}
+
+    public static function GetLastShowInstance($p_timeNow){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT si.id"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." WHERE si.ends < TIMESTAMP '$p_timeNow'"
+        ." ORDER BY si.ends DESC"
+        ." LIMIT 1";
+
+        $id = $CC_DBC->GetOne($sql);
+        if (is_null($id)){
+            return null;
+        } else {
+            return new ShowInstance($id);
+        }
+    }
+
+    public static function GetCurrentShowInstance($p_timeNow){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT si.id"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." WHERE si.starts <= TIMESTAMP '$p_timeNow'"
+        ." AND si.ends > TIMESTAMP '$p_timeNow'"
+        ." LIMIT 1";
+
+        $id = $CC_DBC->GetOne($sql);
+        if (is_null($id)){
+            return null;
+        } else {
+            return new ShowInstance($id);
+        }
+    }
+
+    public static function GetNextShowInstance($p_timeNow){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT si.id"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." WHERE si.starts > TIMESTAMP '$p_timeNow'"
+        ." ORDER BY si.starts"
+        ." LIMIT 1";
+
+        $id = $CC_DBC->GetOne($sql);
+        if (is_null($id)){
+            return null;
+        } else {
+            return new ShowInstance($id);
+        }
+    }
 }
 
 /* Show Data Access Layer */

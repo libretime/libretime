@@ -19,6 +19,7 @@ import json
 import os
 from urlparse import urlparse
 
+AIRTIME_VERSION = "1.9.0"
 
 def api_client_factory(config):
     if config["api_client"] == "airtime":   
@@ -29,7 +30,25 @@ def api_client_factory(config):
         print 'API Client "'+config["api_client"]+'" not supported.  Please check your config file.'
         print
         sys.exit()
-    
+
+def recursive_urlencode(d):
+    def recursion(d, base=None):
+        pairs = []
+
+        for key, value in d.items():
+            if hasattr(value, 'values'):
+                pairs += recursion(value, key)
+            else:
+                new_pair = None
+                if base:
+                    new_pair = "%s[%s]=%s" % (base, urllib.quote(unicode(key)), urllib.quote(unicode(value)))
+                else:
+                    new_pair = "%s=%s" % (urllib.quote(unicode(key)), urllib.quote(unicode(value)))
+                pairs.append(new_pair)
+        return pairs
+
+    return '&'.join(recursion(d))
+
 class ApiClientInterface:
 
     # Implementation: optional
@@ -97,6 +116,9 @@ class ApiClientInterface:
 
     def upload_recorded_show(self):
         pass
+
+    def update_media_metadata(self, md):
+        pass
         
     # Put here whatever tests you want to run to make sure your API is working
     def test(self):
@@ -121,6 +143,8 @@ class AirTimeApiClient(ApiClientInterface):
         logger.debug("Trying to contact %s", url)
         url = url.replace("%%api_key%%", self.config["api_key"])
 
+        version = -1
+        response = None
         try:
             response = urllib.urlopen(url)
             data = response.read()
@@ -129,33 +153,25 @@ class AirTimeApiClient(ApiClientInterface):
             version = response_json['version']
             logger.debug("Airtime Version %s detected", version)    
         except Exception, e:
-            try:
-                if e[1] == 401:
-                    if (verbose):
-                        print '#####################################'
-                        print '# YOUR API KEY SEEMS TO BE INVALID:'
-                        print '# ' + self.config["api_key"]
-                        print '#####################################'
-                    return False
-            except Exception, e:
-                pass
+            if e[1] == 401:
+                if (verbose):
+                    print '#####################################'
+                    print '# YOUR API KEY SEEMS TO BE INVALID:'
+                    print '# ' + self.config["api_key"]
+                    print '#####################################'
+                return -1
 
-            try:
-                if e[1] == 404:
-                    if (verbose):
-                        print '#####################################'
-                        print '# Unable to contact the Airtime-API'
-                        print '# ' + url
-                        print '#####################################'
-                    return False
-            except Exception, e:
-                pass
+            if e[1] == 404:
+                if (verbose):
+                    print '#####################################'
+                    print '# Unable to contact the Airtime-API'
+                    print '# ' + url
+                    print '#####################################'
+                return -1
 
-            version = 0
             logger.error("Unable to detect Airtime Version - %s, Response: %s", e, response)
 
         return version
-
 
     def test(self):
         logger = logging.getLogger()
@@ -175,12 +191,12 @@ class AirTimeApiClient(ApiClientInterface):
 
     def is_server_compatible(self, verbose = True):
         version = self.__get_airtime_version(verbose)
-        if (version == 0 or version == False):
+        if (version == -1):
             if (verbose):
                 print 'Unable to get Airtime version number.'
                 print
             return False     
-        elif (version[0:4] != "1.9."): 
+        elif (version[0:3] != AIRTIME_VERSION): 
             if (verbose):
                 print 'Airtime version: ' + str(version)
                 print 'pypo not compatible with this version of Airtime.'
@@ -198,7 +214,6 @@ class AirTimeApiClient(ApiClientInterface):
         logger = logging.getLogger()
                 
         # Construct the URL
-        #export_url = self.config["base_url"] + self.config["api_base"] + self.config["export_url"]
         export_url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["export_url"])
         
         logger.info("Fetching schedule from %s", export_url)
@@ -220,8 +235,6 @@ class AirTimeApiClient(ApiClientInterface):
         logger = logging.getLogger()
         
         try:
-            #src = "http://%s:%s/%s/%s" % \
-            #(self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_media_url"])
             src = uri + "/api_key/%%api_key%%"
             logger.info("try to download from %s to %s", src, dst)
             src = src.replace("%%api_key%%", self.config["api_key"])
@@ -239,7 +252,6 @@ class AirTimeApiClient(ApiClientInterface):
         logger = logging.getLogger()
         playlist = schedule[pkey]
         schedule_id = playlist["schedule_id"]       
-        #url = self.config["base_url"] + self.config["api_base"] + self.config["update_item_url"]
         url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_item_url"])
         
         url = url.replace("%%schedule_id%%", str(schedule_id))
@@ -268,7 +280,6 @@ class AirTimeApiClient(ApiClientInterface):
         response = ''
         try:
             schedule_id = data
-            #url = self.config["base_url"] + self.config["api_base"] + self.config["update_start_playing_url"]
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_start_playing_url"])
             url = url.replace("%%media_id%%", str(media_id))
             url = url.replace("%%schedule_id%%", str(schedule_id))
@@ -299,7 +310,6 @@ class AirTimeApiClient(ApiClientInterface):
         response = None
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["show_schedule_url"])
-            #url = self.config["base_url"] + self.config["api_base"] + self.config["show_schedule_url"]
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
            
@@ -319,7 +329,6 @@ class AirTimeApiClient(ApiClientInterface):
         retries = int(self.config["upload_retries"])
         retries_wait = int(self.config["upload_wait"])
 
-        #url = self.config["base_url"] + self.config["api_base"] + self.config["upload_file_url"]
         url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_file_url"])
 
         logger.debug(url)
@@ -344,6 +353,26 @@ class AirTimeApiClient(ApiClientInterface):
 
             #wait some time before next retry
             time.sleep(retries_wait)
+        
+        return response
+
+    def update_media_metadata(self, md):
+        logger = logging.getLogger()
+        response = None
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
+            logger.debug(url)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+           
+            data = recursive_urlencode(md)
+            req = urllib2.Request(url, data)
+
+            response = urllib2.urlopen(req).read()
+            logger.info("update media %s", response)
+            response = json.loads(response)
+
+        except Exception, e:
+            logger.error("Exception: %s", e)
         
         return response
     

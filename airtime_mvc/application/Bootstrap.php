@@ -71,8 +71,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
 
         //scripts for now playing bar
-        $view->headScript()->appendFile($baseUrl.'/js/playlist/helperfunctions.js','text/javascript');
-		$view->headScript()->appendFile($baseUrl.'/js/playlist/playlist.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js','text/javascript');
+		$view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js','text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js','text/javascript');
     }

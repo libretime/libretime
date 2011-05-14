@@ -3,29 +3,14 @@
 
 """
 Python part of radio playout (pypo)
-
-The main functions are "fetch" (./pypo_cli.py -f) and "push" (./pypo_cli.py -p)
 """
-
 import time
-#import calendar
-#import traceback
 from optparse import *
 import sys
 import os
 import signal
-#import datetime
 import logging
 import logging.config
-#import shutil
-#import urllib
-#import urllib2
-#import pickle
-#import telnetlib
-#import random
-#import string
-#import operator
-#import inspect
 from Queue import Queue
 
 from pypopush import PypoPush
@@ -50,8 +35,6 @@ parser = OptionParser(usage=usage)
 parser.add_option("-v", "--compat", help="Check compatibility with server API version", default=False, action="store_true", dest="check_compat")
 
 parser.add_option("-t", "--test", help="Do a test to make sure everything is working properly.", default=False, action="store_true", dest="test")
-parser.add_option("-f", "--fetch-scheduler", help="Fetch the schedule from server.  This is a polling process that runs forever.", default=False, action="store_true", dest="fetch_scheduler")
-parser.add_option("-p", "--push-scheduler", help="Push the schedule to Liquidsoap. This is a polling process that runs forever.", default=False, action="store_true", dest="push_scheduler")
 parser.add_option("-b", "--cleanup", help="Cleanup", default=False, action="store_true", dest="cleanup")
 parser.add_option("-c", "--check", help="Check the cached schedule and exit", default=False, action="store_true", dest="check")
 
@@ -76,8 +59,7 @@ class Global:
         
     def selfcheck(self):
         self.api_client = api_client.api_client_factory(config)
-        if (not self.api_client.is_server_compatible()):
-            sys.exit()
+        return self.api_client.is_server_compatible()
 
     def set_export_source(self, export_source):
         self.export_source = export_source
@@ -130,7 +112,8 @@ if __name__ == '__main__':
  
     # initialize
     g = Global()
-    g.selfcheck()
+
+    while not g.selfcheck(): time.sleep(5000)
     
     logger = logging.getLogger()
 
