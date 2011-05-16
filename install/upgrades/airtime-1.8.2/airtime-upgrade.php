@@ -7,8 +7,6 @@
  */
 
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
-require_once __DIR__.'/../../../airtime_mvc/application/configs/conf.php';
-require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
 
 const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
@@ -32,6 +30,10 @@ foreach ($configFiles as $conf) {
 AirtimeIni::CreateIniFiles();
 echo "* Initializing INI files".PHP_EOL;
 AirtimeIni::MergeConfigFiles($configFiles, $suffix);
+
+
+require_once __DIR__.'/../../../airtime_mvc/application/configs/conf.php';
+require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 global $CC_CONFIG;
 $CC_CONFIG = Config::loadConfig($CC_CONFIG);
 
