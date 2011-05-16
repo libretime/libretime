@@ -29,7 +29,10 @@ AirtimeInstall::UninstallPhpCode();
 // still be a connection to the database and you wont be able to delete it.
 //------------------------------------------------------------------------
 echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...".PHP_EOL;
-$command = "su postgres -c \"dropdb {$CC_CONFIG['dsn']['database']}\"";
+
+// check if DB exists
+$command = "echo \"DROP DATABASE IF EXISTS ".$CC_CONFIG['dsn']['database']."\" | sudo -u postgres psql";
+
 @exec($command, $output, $dbDeleteFailed);
 
 //------------------------------------------------------------------------
@@ -66,7 +69,7 @@ if ($dbDeleteFailed) {
 // Delete the user
 //------------------------------------------------------------------------
 echo " * Deleting database user '{$CC_CONFIG['dsn']['username']}'...".PHP_EOL;
-$command = "echo \"DROP USER {$CC_CONFIG['dsn']['username']}\" | su postgres -c psql";
+$command = "echo \"DROP USER IF EXISTS {$CC_CONFIG['dsn']['username']}\" | su postgres -c psql";
 @exec($command, $output, $results);
 if ($results == 0) {
     echo "   * User '{$CC_CONFIG['dsn']['username']}' deleted.".PHP_EOL;
@@ -83,6 +86,10 @@ system($command);
 
 echo PHP_EOL."*** Uninstalling Show Recorder ***".PHP_EOL;
 $command = "python ".__DIR__."/../python_apps/show-recorder/install/recorder-uninstall.py";
+system($command);
+
+echo PHP_EOL."*** Uninstalling Media Monitor ***".PHP_EOL;
+$command = "python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-uninstall.py";
 system($command);
 
 #Disabled as this should be a manual process

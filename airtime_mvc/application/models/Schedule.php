@@ -365,14 +365,63 @@ class Schedule {
         $timeNow = $date->getTimestamp();
         return array("env"=>APPLICATION_ENV,
             "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-            "previous"=>Schedule::GetScheduledItemData($timeNow, -1, $prev, "24 hours"),
-            "current"=>Schedule::GetScheduledItemData($timeNow, 0),
-            "next"=>Schedule::GetScheduledItemData($timeNow, 1, $next, "48 hours"),
+            //"previous"=>Schedule::GetScheduledItemData($timeNow, -1, $prev, "24 hours"),
+            //"current"=>Schedule::GetScheduledItemData($timeNow, 0),
+            //"next"=>Schedule::GetScheduledItemData($timeNow, 1, $next, "48 hours"),
+            "previous"=>Application_Model_Dashboard::GetPreviousItem($timeNow),
+            "current"=>Application_Model_Dashboard::GetCurrentItem($timeNow),
+            "next"=>Application_Model_Dashboard::GetNextItem($timeNow),
             "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
             "nextShow"=>Show_DAL::GetNextShows($timeNow, 1),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"),
             "apiKey"=>$CC_CONFIG['apiKey'][0]);
+    }
+
+    public static function GetLastScheduleItem($p_timeNow){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT *"
+        ." FROM $CC_CONFIG[scheduleTable] st"
+        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." ON st.file_id = ft.id"
+        ." WHERE st.ends < TIMESTAMP '$p_timeNow'"
+        ." ORDER BY st.ends DESC"
+        ." LIMIT 1";
+
+        $row = $CC_DBC->GetAll($sql);
+        return $row;
+    }
+
+
+    public static function GetCurrentScheduleItem($p_timeNow){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT *"
+        ." FROM $CC_CONFIG[scheduleTable] st"
+        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." ON st.file_id = ft.id"
+        ." WHERE st.starts <= TIMESTAMP '$p_timeNow'"
+        ." AND st.ends > TIMESTAMP '$p_timeNow'"
+        ." LIMIT 1";
+
+        $row = $CC_DBC->GetAll($sql);
+        return $row;
+    }
+
+    public static function GetNextScheduleItem($p_timeNow){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT *"
+        ." FROM $CC_CONFIG[scheduleTable] st"
+        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." ON st.file_id = ft.id"
+        ." WHERE st.starts > TIMESTAMP '$p_timeNow'"
+        ." ORDER BY st.starts"
+        ." LIMIT 1";
+
+        $row = $CC_DBC->GetAll($sql);
+        return $row;
     }
 
     /**

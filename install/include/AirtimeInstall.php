@@ -126,7 +126,7 @@ class AirtimeInstall
 
         $username = $CC_CONFIG['dsn']['username'];
         $password = $CC_CONFIG['dsn']['password'];
-        $command = "echo \"CREATE USER $username ENCRYPTED PASSWORD '$password' LOGIN CREATEDB NOCREATEUSER;\" | su postgres -c psql";
+        $command = "echo \"CREATE USER $username ENCRYPTED PASSWORD '$password' LOGIN CREATEDB NOCREATEUSER;\" | su postgres -c psql 2>/dev/null";
 
         @exec($command, $output, $results);
         if ($results == 0) {
@@ -150,7 +150,7 @@ class AirtimeInstall
 
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
-        $command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql";
+        $command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
 
         @exec($command, $output, $results);
         if ($results == 0) {

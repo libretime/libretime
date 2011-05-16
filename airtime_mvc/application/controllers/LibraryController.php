@@ -168,6 +168,10 @@ class LibraryController extends Zend_Controller_Action
                 $formdata = $form->getValues();
                 $file->replaceDbMetadata($formdata);
 
+                $data = $formdata;
+                $data['filepath'] = $file->getRealFilePath();
+                RabbitMq::SendFileMetaData($data);
+
                 $this->_helper->redirector('index');
             }
         }

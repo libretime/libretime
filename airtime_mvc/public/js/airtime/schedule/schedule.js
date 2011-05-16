@@ -208,12 +208,42 @@ function getId() {
 
 function buildContentDialog(json){
 	var dialog = $(json.dialog);
+	
+	var viewportwidth;
+	var viewportheight;
 
+	// the more standards compliant browsers (mozilla/netscape/opera/IE7) use
+	// window.innerWidth and window.innerHeight
+
+	if (typeof window.innerWidth != 'undefined') {
+		viewportwidth = window.innerWidth, viewportheight = window.innerHeight;
+	}
+
+	// IE6 in standards compliant mode (i.e. with a valid doctype as the first
+	// line in the document)
+
+	else if (typeof document.documentElement != 'undefined'
+			&& typeof document.documentElement.clientWidth != 'undefined'
+			&& document.documentElement.clientWidth != 0) {
+		viewportwidth = document.documentElement.clientWidth;
+		viewportheight = document.documentElement.clientHeight;
+	}
+
+	// older versions of IE
+
+	else {
+		viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
+		viewportheight = document.getElementsByTagName('body')[0].clientHeight;
+	}
+	
+	var height = viewportheight * 2/3;
+	var width = viewportwidth * 4/5;
+	
 	dialog.dialog({
 		autoOpen: false,
 		title: 'Show Contents',
-		width: 1100,
-		height: 500,
+		width: width,
+		height: height,
 		modal: true,
 		close: closeDialog,
 		buttons: {"Ok": function() {

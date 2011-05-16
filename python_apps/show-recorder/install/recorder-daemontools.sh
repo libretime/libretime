@@ -17,7 +17,7 @@ exec 2>&1
 export PYTHONPATH=${api_client_path}
 #su ${recorder_user} -c "python -u ${recorder_path}${recorder_script}"
 
-setuidgid ${recorder_user} ${recorder_path}${recorder_script}
+setuidgid ${recorder_user} python -u ${recorder_path}${recorder_script}
 
 
 # EOF
