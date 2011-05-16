@@ -185,6 +185,22 @@ class AirtimeIni
         AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
     }
 
+    public static function ReadPythonConfig($p_filename)
+    {
+        $values = array();
+
+        $lines = file($p_filename);
+        $n=count($lines);
+        for ($i=0; $i<$n; $i++) {
+            if (!in_array(substr($lines[$i], 0, 1), array('#', PHP_EOL))){
+                $info = explode("=", $lines[$i]);
+                $values[trim(info[0]) = trim(info[1]);
+            }
+        }
+
+        return $values;
+    }
+
     public static function MergeConfigFiles($configFiles, $suffix) {
         foreach ($configFiles as $conf) {
             if (file_exists("$conf$suffix.bak")) {
