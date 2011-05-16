@@ -184,4 +184,39 @@ class AirtimeIni
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
     }
+
+    public static function MergeConfigFiles($configFiles, $suffix) {
+        foreach ($configFiles as $conf) {
+            if (file_exists("$conf$suffix.bak")) {
+
+                if($conf === CONF_FILE_AIRTIME) {
+                    // Parse with sections
+                    $newSettings = parse_ini_file($conf, true);
+                    $oldSettings = parse_ini_file("$conf$suffix.bak", true);
+                }
+                else {
+                    $newSettings = AirtimeIni::ReadPythonConfig($conf);
+                    $oldSettings = AirtimeIni::ReadPythonConfig("$conf$suffix.bak");
+                }
+
+                $settings = array_keys($newSettings);
+
+                foreach($settings as $section) {
+                    if(isset($oldSettings[$section])) {
+                        if(is_array($oldSettings[$section])) {
+                            $sectionKeys = array_keys($newSettings[$section]);
+                            foreach($sectionKeys as $sectionKey) {
+                                if(isset($oldSettings[$section][$sectionKey])) {
+                                    AirtimeIni::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                }
+                            }
+                        }
+                        else {
+                            AirtimeIni::UpdateIniValue($conf, $section, $oldSettings[$section]);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
