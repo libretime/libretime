@@ -32,7 +32,8 @@ foreach ($configFiles as $conf) {
 AirtimeIni::CreateIniFiles();
 echo "* Initializing INI files".PHP_EOL;
 AirtimeIni::MergeConfigFiles($configFiles, $suffix);
-Config::loadConfig();
+global $CC_CONFIG;
+$CC_CONFIG = Config::loadConfig($CC_CONFIG);
 
 AirtimeInstall::InstallPhpCode();
 AirtimeInstall::InstallBinaries();
