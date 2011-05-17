@@ -88,9 +88,9 @@ echo PHP_EOL."*** Uninstalling Show Recorder ***".PHP_EOL;
 $command = "python ".__DIR__."/../python_apps/show-recorder/install/recorder-uninstall.py";
 system($command);
 
-echo PHP_EOL."*** Uninstalling Media Monitor ***".PHP_EOL;
-$command = "python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-uninstall.py";
-system($command);
+//echo PHP_EOL."*** Uninstalling Media Monitor ***".PHP_EOL;
+//$command = "python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-uninstall.py";
+//system($command);
 
 #Disabled as this should be a manual process
 #AirtimeIni::RemoveIniFiles();
