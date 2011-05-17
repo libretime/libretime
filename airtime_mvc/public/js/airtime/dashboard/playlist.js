@@ -62,7 +62,7 @@ function updateProgressBarValue(){
 		if (showPercentDone < 0 || showPercentDone > 100){
 			showPercentDone = 0;
 			currentShow = new Array();
-			currentSong = new Array();
+			currentSong = null;
 		}
 	}
     $('#progress-show').attr("style", "width:"+showPercentDone+"%");
@@ -131,13 +131,7 @@ function updatePlaybar(){
         else
             $('#current').text(currentSong.name+",");
     }
-    /*
-    else if (currentShow.length > 0){
-		if (currentShow[0].record == "1"){
-			$('#current').html("Current: <span style='color:red; font-weight:bold'>Recording</span>");
-		}
-	}
-    * */
+
     if (nextSong !== null){
         $('#next').text(nextSong.name+",");
         $('#next-length').text(convertToHHMMSSmm(nextSong.songLengthMs));
@@ -149,8 +143,8 @@ function updatePlaybar(){
     $('#time-remaining').empty();
     $('#song-length').empty();
     if (currentSong !== null){
-        $('#start').text(currentSong.starts.substring(currentSong.starts.indexOf(" ")+1));
-        $('#end').text(currentSong.ends.substring(currentSong.starts.indexOf(" ")+1));
+        $('#start').text(currentSong.starts.split(' ')[1]);
+        $('#end').text(currentSong.ends.split(' ')[1]);
 
         /* Get rid of the millisecond accuracy so that the second counters for both
          * show and song change at the same time. */
