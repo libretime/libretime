@@ -133,7 +133,7 @@ function changeFadeOut(event) {
 		if(json.response.error) {
 			return;
 		}
-        
+
          hideError(span);
 	});
 }
@@ -147,7 +147,7 @@ function submitOnEnter(event) {
 }
 
 function setCueEvents(el) {
-    
+
     $(el).find(".spl_cue_in span:last").blur(changeCueIn);
 	$(el).find(".spl_cue_out span:last").blur(changeCueOut);
 
@@ -173,7 +173,7 @@ function openFadeEditor(event) {
 	event.stopPropagation();
 
     var pos, url, li;
-	
+
     li = $(this).parent().parent();
 	pos = parseInt(li.attr("id").split("_").pop());
 
@@ -228,40 +228,47 @@ function openCueEditor(event) {
 	highlightActive(li);
 
 	$.get(url, {format: "json", pos: pos}, function(json){
-		
+
 		$("#cues_"+pos)
 			.empty()
 			.append(json.html)
 			.show();
 
         setCueEvents(li);
-	});	
+	});
+}
+
+function redrawDataTablePage() {
+    var dt;
+    dt = $("#library_display").dataTable();
+    dt.fnStandingRedraw();
 }
 
 function setSPLContent(json) {
-	
-	if(json.message) {  
+
+	if(json.message) {
 		alert(json.message);
-		return;		
+		return;
 	}
 
-	$('#spl_name').empty()
+	$('#spl_name > a').empty()
 		.append(json.name);
 	$('#spl_length').empty()
-		.append(json.length);		
+		.append(json.length);
+    $('#fieldset-metadate_change textarea')
+        .empty()
+        .val(json.description);
 	$('#spl_sortable').empty()
-		.append(json.html);	
+		.append(json.html);
 	$("#spl_editor")
 		.empty();
 
 	$("#spl_sortable .ui-icon-closethick").click(deleteSPLItem);
 	$(".spl_fade_control").click(openFadeEditor);
-	//$(".spl_playlength").click(openCueEditor);
 	$(".spl_cue").click(openCueEditor);
-	
+
 	//redraw the library list
-	dt = $("#library_display").dataTable();
-	dt.fnStandingRedraw();
+	redrawDataTablePage();
 
 	return false;
 }
@@ -269,8 +276,8 @@ function setSPLContent(json) {
 function addSPLItem(event, ui){
 	var url, tr, id, items, draggableOffset, elOffset, pos;
 
-	tr = ui.helper; 	
-    	
+	tr = ui.helper;
+
 	if(tr.get(0).tagName === 'LI')
 		return;
 
@@ -286,7 +293,7 @@ function addSPLItem(event, ui){
 			return false;
 		}
 	});
-	
+
 	id = tr.attr('id').split("_").pop();
 
 	url = '/Playlist/add-item';
@@ -305,13 +312,13 @@ function deleteSPLItem(event){
 	$.post(url, {format: "json", pos: pos}, setSPLContent);
 }
 
-function moveSPLItem(event, ui) {	
+function moveSPLItem(event, ui) {
 	var li, newPos, oldPos, url;
 
 	li = ui.item;
-	
+
     newPos = li.index();
-    oldPos = li.attr('id').split("_").pop(); 
+    oldPos = li.attr('id').split("_").pop();
 
 	url = '/Playlist/move-item';
 
@@ -359,21 +366,20 @@ function createPlaylistMetaForm(json) {
 			var url, data;
 
 			url = '/Playlist/metadata/format/json';
-			data = $("#side_playlist form").serialize(); 
+			data = $("#side_playlist form").serialize();
 
 			$.post(url, data, function(json){
 				openDiffSPL(json);
 				//redraw the library list
-				dt = $("#library_display").dataTable();
-				dt.fnStandingRedraw();
+				redrawDataTablePage();
 			})
-			
+
 		});
 
 	$("#side_playlist")
 		.empty()
 		.append(form);
-	
+
 	currentlyOpenedSplId = json.pl_id;
 }
 
@@ -393,24 +399,44 @@ function deleteSPL() {
 	$.post(url, function(){
 		noOpenPL;
 		//redraw the library list
-		dt = $("#library_display").dataTable();
-		dt.fnStandingRedraw();
+		redrawDataTablePage();
 	});
 }
 
 function openDiffSPL(json) {
-	
+
 	$("#side_playlist")
 		.empty()
 		.append(json.html);
-	
+
 	currentlyOpenedSplId = json.pl_id;
 
 		setUpSPL();
 }
 
+function editName() {
+    var nameElement = $(this);
+    var playlistName = nameElement.text();
+
+    $("#playlist_name_input")
+        .removeClass('element_hidden')
+        .val(playlistName)
+        .blur(function(){
+            var input = $(this);
+            var url;
+	        url = '/Playlist/set-playlist-name';
+
+	        $.post(url, {format: "json", name: input.val()}, function(json){
+                input.addClass('element_hidden');
+                nameElement.text(json.playlistName);
+                redrawDataTablePage();
+	        });
+        })
+        .keydown(submitOnEnter);
+}
+
 function setUpSPL() {
-    
+
     $("#spl_sortable").sortable({
         handle: 'div.list-item-container'
     });
@@ -446,6 +472,39 @@ function setUpSPL() {
                 $("#crossfade_main").show();
             });
         }
+    });
+
+    $("#playlist_name_display").click(editName);
+    $("#fieldset-metadate_change > legend").click(function(){
+        var descriptionElement = $(this).parent();
+
+        if(descriptionElement.hasClass("closed")) {
+            descriptionElement.removeClass("closed");
+        }
+        else {
+            descriptionElement.addClass("closed");
+        }
+    });
+
+    $("#description_save").click(function(){
+        var textarea = $("#fieldset-metadate_change textarea");
+        var description = textarea.val();
+        var url;
+        url = '/Playlist/set-playlist-description';
+
+        $.post(url, {format: "json", description: description}, function(json){
+            textarea.val(json.playlistDescription);
+        });
+    });
+
+    $("#description_cancel").click(function(){
+        var textarea = $("#fieldset-metadate_change textarea");
+        var url;
+        url = '/Playlist/set-playlist-description';
+
+        $.post(url, {format: "json"}, function(json){
+            textarea.val(json.playlistDescription);
+        });
     });
 
     $("#spl_fade_in_main span:first").blur(function(event){
@@ -508,7 +567,6 @@ function setUpSPL() {
 
 	$("#spl_sortable .ui-icon-closethick").click(deleteSPLItem);
 	$(".spl_fade_control").click(openFadeEditor);
-	//$(".spl_playlength").click(openCueEditor);
 	$(".spl_cue").click(openCueEditor);
 
 	$("#spl_sortable").droppable();
