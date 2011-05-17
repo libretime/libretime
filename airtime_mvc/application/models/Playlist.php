@@ -201,6 +201,30 @@ class Playlist {
         return $pl->getDbName();
     }
 
+    public function setDescription($p_description)
+    {
+        $pl = CcPlaylistQuery::create()->findPK($this->id);
+
+    	if($pl === NULL)
+    	    return FALSE;
+
+    	$pl->setDbDescription($p_description);
+    	$pl->setDbMtime(new DateTime("now"));
+    	$pl->save();
+
+        //$this->name = $p_newname;
+        return TRUE;
+    }
+
+    public function getDescription()
+    {
+        $pl = CcPlaylistQuery::create()->findPK($this->id);
+        if ($pl === NULL)
+    	    return FALSE;
+
+        return $pl->getDbDescription();
+    }
+
 	/**
      * Set state of virtual playlist
      *

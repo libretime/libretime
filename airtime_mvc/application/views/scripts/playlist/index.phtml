@@ -1,35 +1,55 @@
 <button id="spl_new" class="ui-button" role="button" aria-disabled="false">New</button>
 <?php if (isset($this->pl)) : ?>
-<button id="spl_delete" class="ui-button" role="button" aria-disabled="false">Delete</button>
-<a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button">
-    <span class="ui-icon crossfade-main-icon"></span><span class="ui-button-text">Playlist crossfade</span>
-</a>
-<button id="spl_close" class="ui-button right-floated" role="button" aria-disabled="false">Done Editing</button>
+    <button id="spl_delete" class="ui-button" role="button" aria-disabled="false">Delete</button>
+    <a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button">
+        <span class="ui-icon crossfade-main-icon"></span><span class="ui-button-text">Playlist crossfade</span>
+    </a>
+    <button id="spl_close" class="ui-button right-floated" role="button" aria-disabled="false">Done Editing</button>
 <?php endif; ?>
 
 <?php if (isset($this->pl)) : ?>
-<h3 id="spl_name"><?php echo $this->pl->getName(); ?></h3>
-<h4 id="spl_length"><?php echo $this->pl->getLength(); ?></h4>
+    <div class="playlist_title">
+        <h3 id="spl_name">
+            <a id="playlist_name_display"><?php echo $this->pl->getName(); ?></a>
+            <input type="text" maxlength="255" size="40" class="element_hidden" id="playlist_name_input" />
+        </h3>
+        <h4 id="spl_length"><?php echo $this->pl->getLength(); ?></h4>
+    </div>
 
-<div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
-  	<span class="ui-icon ui-icon-closethick"></span>
-	<dl id="spl_editor-main" class="inline-list">
-        <dt>Fade in:</dt>
-        <dd id="spl_fade_in_main"><span contenteditable="true" class="spl_text_input">00:00:00</span></dd>
-        <dd class="edit-error"></dd>
-        <dt>Fade out:</dt>
-        <dd id="spl_fade_out_main"><span contenteditable="true" class="spl_text_input">00:00:00</span></dd>
-        <dd class="edit-error"></dd>
-    </dl>
-</div>
+    <fieldset class="toggle closed" id="fieldset-metadate_change">
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>View / edit description</legend>
+        <dl class="zend_form">
+            <dt id="description-label"><label for="description">Description</label></dt>
+            <dd id="description-element">
+                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->pl->getDescription(); ?></textarea>
+            </dd>
+            <dt id="submit-label" style="display: none;">&nbsp;</dt>
+            <dd id="submit-element" class="buttons">
+                <input class="ui-button ui-state-default" type="submit" value="Cancel" id="description_cancel" name="cancel">
+                <input class="ui-button ui-state-default" type="submit" value="Save" id="description_save" name="submit">
+            </dd>
+        </dl>
+    </fieldset>
 
-<div class="clear"></div>
-<div class="" style="clear:both; float:none; width:100%;">
-	<ul id="spl_sortable">	
-        <?php echo $this->render('playlist/update.phtml') ?>
-	</ul>
-</div>
+    <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
+      	<span class="ui-icon ui-icon-closethick"></span>
+	    <dl id="spl_editor-main" class="inline-list">
+            <dt>Fade in:</dt>
+            <dd id="spl_fade_in_main"><span contenteditable="true" class="spl_text_input">00:00:00</span></dd>
+            <dd class="edit-error"></dd>
+            <dt>Fade out:</dt>
+            <dd id="spl_fade_out_main"><span contenteditable="true" class="spl_text_input">00:00:00</span></dd>
+            <dd class="edit-error"></dd>
+        </dl>
+    </div>
+
+    <div class="clear"></div>
+    <div class="" style="clear:both; float:none; width:100%;">
+	    <ul id="spl_sortable">
+            <?php echo $this->render('playlist/update.phtml') ?>
+	    </ul>
+    </div>
 
 <?php else : ?>
-<div>No open playlist</div>
+    <div>No open playlist</div>
 <?php endif; ?>
