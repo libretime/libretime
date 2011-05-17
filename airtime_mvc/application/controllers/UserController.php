@@ -83,10 +83,16 @@ class UserController extends Zend_Controller_Action
     public function removeUserAction()
     {
         // action body
-        $id = $this->_getParam('id');
-        $user = new User($id);
-        
-        $this->view->entries = $user->delete();
+        $delId = $this->_getParam('id');
+
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $userId = $userInfo->id;
+
+        if ($delId != $userId){
+            $user = new User($delId);
+            $this->view->entries = $user->delete();
+        }
+            
     }
 
 
