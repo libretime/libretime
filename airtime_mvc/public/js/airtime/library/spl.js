@@ -432,7 +432,8 @@ function editName() {
                 redrawDataTablePage();
 	        });
         })
-        .keydown(submitOnEnter);
+        .keydown(submitOnEnter)
+        .focus();
 }
 
 function setUpSPL() {
