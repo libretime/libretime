@@ -7,7 +7,7 @@ require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
-//echo PHP_EOL."*** Database Installation ***".PHP_EOL;
+echo PHP_EOL."*** Database Installation ***".PHP_EOL;
 
 AirtimeInstall::CreateDatabaseUser();
 

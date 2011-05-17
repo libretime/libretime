@@ -78,18 +78,6 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
 if ($db_install) {
-
-//echo PHP_EOL."*** Database Installation ***".PHP_EOL;
-
-/*	AirtimeInstall::CreateDatabaseUser();
-
-	AirtimeInstall::CreateDatabase();
-
-	AirtimeInstall::DbConnect(true);
-
-	AirtimeInstall::InstallPostgresScriptingLanguage();
-
-	AirtimeInstall::CreateDatabaseTables();*/
 	require( 'airtime-db-install.php' );
 }
 
