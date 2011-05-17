@@ -14,12 +14,12 @@ from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import urllib2
 
-from subprocess import call
+from subprocess import Popen
 from threading import Thread
 
-# For RabbitMQ
-from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
+# For RabbitMQ - to be implemented in the future
+#from kombu.connection import BrokerConnection
+#from kombu.messaging import Exchange, Queue, Consumer, Producer
 
 from api_clients import api_client
 
@@ -56,9 +56,9 @@ class ShowRecorder(Thread):
         self.filetype = filetype
         self.show_instance = show_instance
         self.logger = logging.getLogger('root')
+        self.p = None
 
     def record_show(self):
-
         length = str(self.filelength)+".0"
         filename = self.show_name+" "+self.start_time
         filename = filename.replace(" ", "-")
@@ -70,12 +70,27 @@ class ShowRecorder(Thread):
 
         self.logger.info("starting record")
         self.logger.info("command " + command)
-
-        #Run command with arguments. Wait for command to complete, then return the returncode attribute.
-        code = call(args)
+        
+        self.p = Popen(args)
+        
+        #blocks at the following lines until the child process
+        #quits
+        code = self.p.wait()
+        self.p = None
+        
         self.logger.info("finishing record, return code %s", code)
-
         return code, filepath
+        
+    def cancel_recording(self):
+        #send signal interrupt (2)
+        self.logger.info("Show manually cancelled!")
+        if (self.p is not None):
+            self.p.terminate()
+            self.p = None
+            
+    #if self.p is defined, then the child process ecasound is recording
+    def is_recording(self):
+        return (self.p is not None)
 
     def upload_file(self, filepath):
 
@@ -105,6 +120,7 @@ class Record():
         self.api_client = api_client.api_client_factory(config)
         self.shows_to_record = {}
         self.logger = logging.getLogger('root')
+        self.sr = None
 
     def process_shows(self, shows):
 
@@ -116,7 +132,6 @@ class Record():
             time_delta = show_end - show_starts
 
             self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name']]
-
 
     def check_record(self):
 
@@ -140,8 +155,8 @@ class Record():
             show_instance = self.shows_to_record[start_time][1]
             show_name = self.shows_to_record[start_time][2]
 
-            show = ShowRecorder(show_instance, show_length.seconds, show_name, start_time, filetype="mp3")
-            show.start()
+            self.sr = ShowRecorder(show_instance, show_length.seconds, show_name, start_time, filetype="mp3")
+            self.sr.start()
 
             #remove show from shows to record.
             del self.shows_to_record[start_time]
@@ -150,6 +165,12 @@ class Record():
     def get_shows(self):
 
         shows = self.api_client.get_shows_to_record()
+        
+        if self.sr is not None:
+            if not shows['is_recording'] and self.sr.is_recording():
+                self.sr.cancel_recording()
+            
+        
         if shows is not None:
             shows = shows[u'shows']
         else:

@@ -263,6 +263,14 @@ class ApiController extends Zend_Controller_Action
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
         $this->view->shows = Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
+        
+        
+        $this->view->is_recording = false;
+        
+        $rows = Show_DAL::GetCurrentShow($today_timestamp);
+        if (count($rows) > 0){
+            $this->view->is_recording = ($rows[0]['record'] == 1);
+        }
     }
 
     public function uploadRecordedAction()
