@@ -31,7 +31,7 @@ AirtimeInstall::UninstallPhpCode();
 echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...".PHP_EOL;
 
 // check if DB exists
-$command = "echo \"DROP DATABASE IF EXISTS ".$CC_CONFIG['dsn']['database']."\" | sudo -u postgres psql";
+$command = "echo \"DROP DATABASE IF EXISTS ".$CC_CONFIG['dsn']['database']."\" | su postgres -c psql";
 
 @exec($command, $output, $dbDeleteFailed);
 
