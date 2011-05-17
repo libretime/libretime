@@ -69,6 +69,9 @@ class ShowRecorder(Thread):
         args = command.split(" ")
 
         self.logger.info("starting record")
+        self.logger.info("command " + command)
+
+        #Run command with arguments. Wait for command to complete, then return the returncode attribute.
         code = call(args)
         self.logger.info("finishing record, return code %s", code)
 
