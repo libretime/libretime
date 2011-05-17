@@ -46,11 +46,11 @@ if(strcmp($version, "1.8.2") < 0) {
 
 AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
-echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
-
 echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
+
+echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
+system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
 

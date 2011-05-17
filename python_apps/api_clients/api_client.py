@@ -198,14 +198,14 @@ class AirTimeApiClient(ApiClientInterface):
             return False
         elif (version[0:3] != AIRTIME_VERSION):
             if (verbose):
-                print 'Airtime version: ' + str(version)
-                print 'pypo not compatible with this version of Airtime.'
+                print 'Airtime version found: ' + str(version)
+                print 'pypo is at version ' +AIRTIME_VERSION+' and is not compatible with this version of Airtime.'
                 print
             return False
         else:
             if (verbose):
                 print 'Airtime version: ' + str(version)
-                print 'pypo is compatible with this version of Airtime.'
+                print 'pypo is at version ' +AIRTIME_VERSION+' and is compatible with this version of Airtime.'
                 print
             return True
 
