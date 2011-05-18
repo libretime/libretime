@@ -194,7 +194,7 @@ class AirtimeInstall
         echo "* Creating database tables".PHP_EOL;
 
         // Put Propel sql files in Database
-        $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql";
+        $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
         @exec($command, $output, $results);
     }
 
