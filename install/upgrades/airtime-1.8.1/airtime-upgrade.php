@@ -18,9 +18,9 @@ const CONF_DIR_STORAGE = "/srv/airtime";
 const CONF_DIR_WWW = "/var/www/airtime";
 const CONF_DIR_LOG = "/var/log/airtime";
 
-const AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
-const AIRTIME_UTILS = __DIR__.'/../../../utils';
-const AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
+$AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
+$AIRTIME_UTILS = __DIR__.'/../../../utils';
+$AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
 
 $configFiles = array(CONF_FILE_AIRTIME,
                      CONF_FILE_PYPO,
@@ -119,19 +119,19 @@ public static function CreateIniFiles()
         }
     }
 
-    if (!copy(AIRTIME_SRC."/build/airtime.conf", CONF_FILE_AIRTIME)){
+    if (!copy($AIRTIME_SRC."/build/airtime.conf", CONF_FILE_AIRTIME)){
         echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy(AIRTIME_PYTHON_APPS."/pypo/pypo.cfg", CONF_FILE_PYPO)){
+    if (!copy($AIRTIME_PYTHON_APPS."/pypo/pypo.cfg", CONF_FILE_PYPO)){
         echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy(AIRTIME_PYTHON_APPS."/show-recorder/recorder.cfg", CONF_FILE_RECORDER)){
+    if (!copy($AIRTIME_PYTHON_APPS."/show-recorder/recorder.cfg", CONF_FILE_RECORDER)){
         echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy(AIRTIME_PYTHON_APPS."/pypo/scripts/liquidsoap.cfg", CONF_FILE_LIQUIDSOAP)){
+    if (!copy($AIRTIME_PYTHON_APPS."/pypo/scripts/liquidsoap.cfg", CONF_FILE_LIQUIDSOAP)){
         echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
         exit(1);
     }
@@ -212,7 +212,7 @@ public static function InstallPhpCode()
     global $CC_CONFIG;
     echo "* Installing PHP code to ".$CC_CONFIG['phpDir'].PHP_EOL;
     exec("mkdir -p ".$CC_CONFIG['phpDir']);
-    exec("cp -R ".AIRTIME_SRC."/* ".$CC_CONFIG['phpDir']);
+    exec("cp -R ".$AIRTIME_SRC."/* ".$CC_CONFIG['phpDir']);
 
 }
 
@@ -220,7 +220,7 @@ public static function InstallBinaries()
 {
     echo "* Installing binaries to ".CONF_DIR_BINARIES.PHP_EOL;
     exec("mkdir -p ".CONF_DIR_BINARIES);
-    exec("cp -R ".AIRTIME_UTILS." ".CONF_DIR_BINARIES);
+    exec("cp -R ".$AIRTIME_UTILS." ".CONF_DIR_BINARIES);
 }
 
 $suffix = date("Ymdhis");
