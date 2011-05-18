@@ -18,16 +18,20 @@ const CONF_DIR_STORAGE = "/srv/airtime";
 const CONF_DIR_WWW = "/var/www/airtime";
 const CONF_DIR_LOG = "/var/log/airtime";
 
-global $AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
-global $AIRTIME_UTILS = __DIR__.'/../../../utils';
-global $AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
+global $AIRTIME_SRC;
+global $AIRTIME_UTILS;
+global $AIRTIME_PYTHON_APPS;
+
+global $CC_CONFIG;
+
+$AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
+$AIRTIME_UTILS = __DIR__.'/../../../utils';
+$AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
 
 $configFiles = array(CONF_FILE_AIRTIME,
                      CONF_FILE_PYPO,
                      CONF_FILE_RECORDER,
                      CONF_FILE_LIQUIDSOAP);
-
-global $CC_CONFIG;
 
 $CC_CONFIG = array(
     // prefix for table names in the database
