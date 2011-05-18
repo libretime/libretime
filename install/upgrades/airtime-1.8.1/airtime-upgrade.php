@@ -18,9 +18,9 @@ const CONF_DIR_STORAGE = "/srv/airtime";
 const CONF_DIR_WWW = "/var/www/airtime";
 const CONF_DIR_LOG = "/var/log/airtime";
 
-$AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
-$AIRTIME_UTILS = __DIR__.'/../../../utils';
-$AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
+global $AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
+global $AIRTIME_UTILS = __DIR__.'/../../../utils';
+global $AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
 
 $configFiles = array(CONF_FILE_AIRTIME,
                      CONF_FILE_PYPO,
@@ -112,6 +112,9 @@ function LoadConfig($CC_CONFIG) {
  */
 function CreateIniFiles()
 {
+    global $AIRTIME_SRC;
+    global $AIRTIME_PYTHON_APPS;
+
     if (!file_exists("/etc/airtime/")){
         if (!mkdir("/etc/airtime/", 0755, true)){
             echo "Could not create /etc/airtime/ directory. Exiting.";
@@ -210,6 +213,7 @@ function MergeConfigFiles($configFiles, $suffix)
 function InstallPhpCode()
 {
     global $CC_CONFIG;
+    global $AIRTIME_SRC;
     echo "* Installing PHP code to ".$CC_CONFIG['phpDir'].PHP_EOL;
     exec("mkdir -p ".$CC_CONFIG['phpDir']);
     exec("cp -R ".$AIRTIME_SRC."/* ".$CC_CONFIG['phpDir']);
