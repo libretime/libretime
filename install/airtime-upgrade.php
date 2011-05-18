@@ -37,9 +37,9 @@ if(strcmp($version, "1.8.0") < 0) {
 if(strcmp($version, "1.8.1") < 0) {
     system("php ".__DIR__."/upgrades/airtime-1.8.1/airtime-upgrade.php");
 }
-//if(strcmp($version, "1.8.2") < 0) {
-//    system("php ".__DIR__."/upgrades/airtime-1.8.2/airtime-upgrade.php");
-//}
+if(strcmp($version, "1.8.2") < 0) {
+    system("php ".__DIR__."/upgrades/airtime-1.8.2/airtime-upgrade.php");
+}
 //if (strcmp($version, "1.9.0") < 0){
     //system("php ".__DIR__."/upgrades/airtime-1.9/airtime-upgrade.php");
 //}
