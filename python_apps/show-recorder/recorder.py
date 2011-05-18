@@ -73,7 +73,7 @@ class ShowRecorder(Thread):
         
         self.p = Popen(args)
         
-        #blocks at the following lines until the child process
+        #blocks at the following line until the child process
         #quits
         code = self.p.wait()
         self.p = None
@@ -109,6 +109,7 @@ class ShowRecorder(Thread):
         code, filepath = self.record_show()
 
         if code == 0:
+            self.logger.info("Preparing to upload %s" % filepath)
             self.upload_file(filepath)
         else:
             self.logger.info("problem recording show")

@@ -1173,16 +1173,21 @@ class Show {
 class ShowInstance {
 
     private $_instanceId;
+    private $_showInstance;
 
     public function __construct($instanceId)
     {
         $this->_instanceId = $instanceId;
+        $this->_showInstance = CcShowInstancesQuery::create()->findPK($instanceId);
+        
+        if (is_null($this->_showInstance)){
+            throw new Exception();
+        }
     }
 
     public function getShowId()
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        return $showInstance->getDbShowId();
+        return $this->_showInstance->getDbShowId();
     }
 
     public function getShowInstanceId()
@@ -1192,14 +1197,12 @@ class ShowInstance {
 
     public function isRebroadcast()
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        return $showInstance->getDbOriginalShow();
+        return $this->_showInstance->getDbOriginalShow();
     }
 
     public function isRecorded()
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        return $showInstance->getDbRecord();
+        return $this->_showInstance->getDbRecord();
     }
 
     public function getName()
@@ -1216,14 +1219,12 @@ class ShowInstance {
 
     public function getShowStart()
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        return $showInstance->getDbStarts();
+        return $this->_showInstance->getDbStarts();
     }
 
     public function getShowEnd()
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        return $showInstance->getDbEnds();
+        return $this->_showInstance->getDbEnds();
     }
 
     public function getStartDate()
@@ -1243,21 +1244,18 @@ class ShowInstance {
 
     public function setSoundCloudFileId($p_soundcloud_id)
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        $showInstance->setDbSoundCloudId($p_soundcloud_id)
+        $this->_showInstance->setDbSoundCloudId($p_soundcloud_id)
             ->save();
     }
 
     public function getSoundCloudFileId()
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        return $showInstance->getDbSoundCloudId();
+        return $this->_showInstance->getDbSoundCloudId();
     }
 
     public function getRecordedFile()
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        $file_id =  $showInstance->getDbRecordedFile();
+        $file_id =  $this->_showInstance->getDbRecordedFile();
 
         if(isset($file_id)) {
             $file =  StoredFile::Recall($file_id);
@@ -1276,16 +1274,14 @@ class ShowInstance {
 
     public function setShowStart($start)
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        $showInstance->setDbStarts($start)
+        $this->_showInstance->setDbStarts($start)
             ->save();
         RabbitMq::PushSchedule();
     }
 
     public function setShowEnd($end)
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        $showInstance->setDbEnds($end)
+        $this->_showInstance->setDbEnds($end)
             ->save();
         RabbitMq::PushSchedule();
     }
@@ -1293,8 +1289,7 @@ class ShowInstance {
     public function updateScheduledTime()
     {
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        $showInstance->updateDbTimeFilled($con);
+        $this->_showInstance->updateDbTimeFilled($con);
     }
 
     public function correctScheduleStartTimes(){
@@ -1539,8 +1534,7 @@ class ShowInstance {
 
     public function getTimeScheduled()
     {
-        $showInstance = CcShowInstancesQuery::create()->findPK($this->_instanceId);
-        $time = $showInstance->getDbTimeFilled();
+        $time = $this->_showInstance->getDbTimeFilled();
 
         if(is_null($time)) {
             $time = "00:00:00";
