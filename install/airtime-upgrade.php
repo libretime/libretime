@@ -6,8 +6,9 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 
-set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
-
+//Pear classes.
+set_include_path(__DIR__.'/../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
+require_once('DB.php');
 
 if(exec("whoami") != "root"){
     echo "Must be root user.\n";
