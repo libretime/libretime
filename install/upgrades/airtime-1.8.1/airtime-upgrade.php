@@ -88,8 +88,8 @@ function LoadConfig($CC_CONFIG) {
     $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
     $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
 
-    $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
-    $CC_CONFIG['basePort'] = $values['general']['base_port'];
+    //$CC_CONFIG['baseUrl'] = $values['general']['base_url'];
+    //$CC_CONFIG['basePort'] = $values['general']['base_port'];
 
     $CC_CONFIG['baseFilesDir'] = $values['general']['base_files_dir'];
     // main directory for storing binary media files
@@ -226,6 +226,7 @@ function InstallPhpCode()
 
 function InstallBinaries()
 {
+    global $AIRTIME_UTILS;
     echo "* Installing binaries to ".CONF_DIR_BINARIES.PHP_EOL;
     exec("mkdir -p ".CONF_DIR_BINARIES);
     exec("cp -R ".$AIRTIME_UTILS." ".CONF_DIR_BINARIES);
