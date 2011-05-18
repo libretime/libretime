@@ -18,9 +18,9 @@ const CONF_DIR_STORAGE = "/srv/airtime";
 const CONF_DIR_WWW = "/var/www/airtime";
 const CONF_DIR_LOG = "/var/log/airtime";
 
-const AIRTIME_SRC = __DIR__."/../../../airtime_mvc";
-const AIRTIME_UTILS = __DIR__."/../../../utils";
-const AIRTIME_PYTHON_APPS = __DIR__."/../../../python_apps";
+const AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
+const AIRTIME_UTILS = __DIR__.'/../../../utils';
+const AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
 
 $configFiles = array(CONF_FILE_AIRTIME,
                      CONF_FILE_PYPO,
