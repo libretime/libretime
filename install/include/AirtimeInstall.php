@@ -142,6 +142,7 @@ class AirtimeInstall
         }
     }
 
+    
     public static function CreateDatabase()
     {
         global $CC_CONFIG;
@@ -150,8 +151,9 @@ class AirtimeInstall
 
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
-        $command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
-
+        #$command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
+        $command = "su postgres -c \"createdb $database --owner $username\"";
+        
         @exec($command, $output, $results);
         if ($results == 0) {
             echo "* Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
@@ -164,6 +166,10 @@ class AirtimeInstall
                 echo "* Database '{$CC_CONFIG['dsn']['database']}' already exists.".PHP_EOL;
             }
         }
+        
+        $databaseExisted = ($results != 0);
+        
+        return $databaseExisted;
     }
 
     public static function InstallPostgresScriptingLanguage()
