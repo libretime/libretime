@@ -6,17 +6,51 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 
-require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
-require_once __DIR__.'/../airtime_mvc/application/configs/conf.php';
-require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 
-AirtimeInstall::ExitIfNotRoot();
-AirtimeInstall::DbConnect(true);
 
-$version = AirtimeInstall::GetAirtimeVersion();
+if(exec("whoami") != "root"){
+    echo "Must be root user.\n";
+    exit(1);
+}
+
+global $CC_DBC, $CC_CONFIG;
+
+$values = parse_ini_file('/etc/airtime/airtime.conf', true);
+
+// Database config
+$CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
+$CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
+$CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+$CC_CONFIG['dsn']['phptype'] = 'pgsql';
+$CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
+
+if (PEAR::isError($CC_DBC)) {
+    echo $CC_DBC->getMessage().PHP_EOL;
+    echo $CC_DBC->getUserInfo().PHP_EOL;
+    echo "Database connection problem.".PHP_EOL;
+    echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
+        " with corresponding permissions.".PHP_EOL;
+    exit(1);
+} else {
+    echo "* Connected to database".PHP_EOL;
+    $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+}
+
+$sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
+$version = $CC_DBC->GetOne($sql);
+
+if (PEAR::isError($version)) {
+    $version = false;
+}
+
 if (!$version){
-    if(AirtimeInstall::DbTableExists('cc_show_rebroadcast') === true) {
+
+    $sql = "SELECT * FROM ".$p_name;
+    $result = $CC_DBC->GetOne($sql);
+    if (!PEAR::isError($result)) {
         $version = "1.7.0";
         echo "Airtime Version: ".$version." ".PHP_EOL;
     }
@@ -44,7 +78,13 @@ if(strcmp($version, "1.8.2") < 0) {
     //system("php ".__DIR__."/upgrades/airtime-1.9/airtime-upgrade.php");
 //}
 
-AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
+
+//set the new version in the database.
+$sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
+$CC_DBC->query($sql);
+$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '1.8.2')";
+$CC_DBC->query($sql);
+
 
 echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
