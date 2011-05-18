@@ -4,7 +4,7 @@ class Application_Model_Nowplaying
 {
 
 	public static function CreateHeaderRow($p_showName, $p_showStart, $p_showEnd){
-		return array("h", $p_showName, $p_showStart, $p_showEnd, "", "", "", "", "", "", "");
+		return array("h", "", $p_showStart, $p_showEnd, $p_showName, "", "", "", "", "", "");
 	}
 
 	public static function CreateDatatableRows($p_dbRows){
@@ -30,11 +30,11 @@ class Application_Model_Nowplaying
 	}
 	
 	public static function CreateGapRow($p_gapTime){
-		return array("g", $p_gapTime, "", "", "", "", "", "", "", "", "");
+		return array("g", "", "", "", $p_gapTime, "", "", "", "", "", "");
 	}
 	
 	public static function CreateRecordingRow($p_showInstance){
-		return array("r", $p_showInstance->getName(), "", "", "", "", "", "", "", "", "");
+		return array("r", "", "", "", $p_showInstance->getName(), "", "", "", "", "", "");
 	}
 
 	public static function GetDataGridData($viewType, $dateString){

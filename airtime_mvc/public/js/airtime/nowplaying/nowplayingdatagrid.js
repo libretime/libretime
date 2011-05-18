@@ -155,7 +155,7 @@ function createDataGrid(){
                 if ( sType.indexOf("h") != -1 ){
 					//show header row found 
 					
-                    var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];
+                    var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[4];
                     var startTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[2];
                     var endTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[3];
 
@@ -169,7 +169,7 @@ function createDataGrid(){
                 } else if ( sType.indexOf("g") != -1 ){
 					//gap row found
 					
-                    var gapTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];
+                    var gapTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[4];
                     
                     var nGroup = document.createElement('tr');
                     var nCell = document.createElement('td');
@@ -181,7 +181,7 @@ function createDataGrid(){
                 } else if ( sType.indexOf("r") != -1 ){
 					//gap row found
 					
-                    var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[1];
+                    var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[4];
                     
                     var nGroup = document.createElement('tr');
                     var nCell = document.createElement('td');
