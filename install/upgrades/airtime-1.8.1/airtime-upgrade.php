@@ -76,7 +76,7 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 					.PATH_SEPARATOR.$CC_CONFIG['zendPath']
 					.PATH_SEPARATOR.$old_include_path);
 
-public static function LoadConfig($CC_CONFIG) {
+function LoadConfig($CC_CONFIG) {
     $values = parse_ini_file(CONF_FILE_AIRTIME, true);
 
     // Name of the web server user
@@ -110,7 +110,7 @@ public static function LoadConfig($CC_CONFIG) {
  * This function creates the /etc/airtime configuration folder
  * and copies the default config files to it.
  */
-public static function CreateIniFiles()
+function CreateIniFiles()
 {
     if (!file_exists("/etc/airtime/")){
         if (!mkdir("/etc/airtime/", 0755, true)){
@@ -137,7 +137,7 @@ public static function CreateIniFiles()
     }
 }
 
-public static function ReadPythonConfig($p_filename)
+function ReadPythonConfig($p_filename)
 {
     $values = array();
 
@@ -153,7 +153,7 @@ public static function ReadPythonConfig($p_filename)
     return $values;
 }
 
-public static function UpdateIniValue($p_filename, $p_property, $p_value)
+function UpdateIniValue($p_filename, $p_property, $p_value)
 {
     $lines = file($p_filename);
     $n=count($lines);
@@ -171,7 +171,7 @@ public static function UpdateIniValue($p_filename, $p_property, $p_value)
     fclose($fp);
 }
 
-public static function MergeConfigFiles($configFiles, $suffix)
+function MergeConfigFiles($configFiles, $suffix)
 {
     foreach ($configFiles as $conf) {
         if (file_exists("$conf$suffix.bak")) {
@@ -207,7 +207,7 @@ public static function MergeConfigFiles($configFiles, $suffix)
     }
 }
 
-public static function InstallPhpCode()
+function InstallPhpCode()
 {
     global $CC_CONFIG;
     echo "* Installing PHP code to ".$CC_CONFIG['phpDir'].PHP_EOL;
@@ -216,7 +216,7 @@ public static function InstallPhpCode()
 
 }
 
-public static function InstallBinaries()
+function InstallBinaries()
 {
     echo "* Installing binaries to ".CONF_DIR_BINARIES.PHP_EOL;
     exec("mkdir -p ".CONF_DIR_BINARIES);
