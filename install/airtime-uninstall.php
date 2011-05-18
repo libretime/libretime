@@ -88,6 +88,7 @@ echo PHP_EOL."*** Uninstalling Show Recorder ***".PHP_EOL;
 $command = "python ".__DIR__."/../python_apps/show-recorder/install/recorder-uninstall.py";
 system($command);
 
+//wait for 1.9.0 release
 //echo PHP_EOL."*** Uninstalling Media Monitor ***".PHP_EOL;
 //$command = "python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-uninstall.py";
 //system($command);

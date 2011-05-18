@@ -95,6 +95,7 @@ system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
 system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
 
+//wait for 1.9.0 release
 //echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
 //system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
 

@@ -166,7 +166,8 @@ class LibraryController extends Zend_Controller_Action
 
                 $data = $formdata;
                 $data['filepath'] = $file->getRealFilePath();
-                RabbitMq::SendFileMetaData($data);
+                //wait for 1.9.0 release
+                //RabbitMq::SendFileMetaData($data);
 
                 $this->_helper->redirector('index');
             }
