@@ -1,5 +1,9 @@
 <?php
 
+define('AIRTIME_VERSION', '1.8.2');
+define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
+define('AIRTIME_REST_VERSION', '1.1');
+
 // Metadata Keys
 define('UI_MDATA_KEY_TITLE', 'dc:title');
 define('UI_MDATA_KEY_CREATOR', 'dc:creator');

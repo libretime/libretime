@@ -34,6 +34,35 @@ class AirtimeInstall
         }
     }
 
+    public static function CheckForVersionBeforeInstall()
+    {
+        global $CC_DBC, $CC_CONFIG;
+
+        $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+
+	    // Database config
+        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
+        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
+        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
+        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+
+        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
+        if (PEAR::isError($CC_DBC)) {
+            echo "New Airtime Install.".PHP_EOL;
+        }
+        else {
+            $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+            $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
+            $version = $CC_DBC->GetOne($sql);
+
+            if (PEAR::isError($version)) {
+                return null;
+            }
+            return $version;
+        }
+    }
 
     public static function DbTableExists($p_name)
     {
@@ -142,7 +171,7 @@ class AirtimeInstall
         }
     }
 
-    
+
     public static function CreateDatabase()
     {
         global $CC_CONFIG;
@@ -153,7 +182,7 @@ class AirtimeInstall
         $username = $CC_CONFIG['dsn']['username'];
         #$command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
         $command = "su postgres -c \"createdb $database --owner $username\"";
-        
+
         @exec($command, $output, $results);
         if ($results == 0) {
             echo "* Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
@@ -166,9 +195,9 @@ class AirtimeInstall
                 echo "* Database '{$CC_CONFIG['dsn']['database']}' already exists.".PHP_EOL;
             }
         }
-        
+
         $databaseExisted = ($results != 0);
-        
+
         return $databaseExisted;
     }
 

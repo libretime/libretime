@@ -1,3 +1,34 @@
+1.8.2 - May 25, 2011
+Highlights:
+  * Improvements:
+    - You can now download audio files from the search screen and from the "Show Content" screen.
+    - The "Now Playing" screen now shows whether a show is being recorded.
+    - In the "Playlist Builder" screen, you can now edit the title of the playlist and the description inline, without having to switch to another page.
+    - When you click on "Add Show", the cursor is placed on the show title field and a default name is automatically filled in.
+    - It is now possible to cancel a show that was recording.
+    - An new command-line program was added to verify an installation and help identify where problems are: "airtime-check-system"
+    - Airtime now runs on Ubuntu 11.04 (though we do not offer support for this).
+  * Bug fixes:
+    - Fixed serious problem with the upgrading and installing process.  The Airtime install will now automatically detect if you should upgrade or install and take the appropriate action.  Reinstalls cannot happen except by using a specific command.
+    - "Show Contents" screen will now display properly on smaller screens.
+    - Install/uninstall now works on Debian without needing the "sudo" command.
+    - Editing a playlist name or deleting a playlist now reflects immediately in the media search window.
+    - In the "Add Media" page, the "start upload" button vanished after upload.  Now it remains there after upload so it is possible to upload again.
+    - When canceling a playing show, the currently playing audio file still showed as playing.  This has been fixed.
+    - Audio files greater than 100MB were not being played.
+
+
+1.8.1 - May 2, 2011
+  * Fixed issue where an track's progress bar would keep updating, even if the track was no longer playing.
+  * Fixed problem where editing a show would only update some of the show instances.
+  * Fixed an issue related to editing a show that had instances scheduled in the past.
+  * airtime-clean-storage command-line utility should now work properly
+  * Fixed an issue related the "airtime-import" command-line utility
+  * Fixed an issue with the Airtime Debian package overwriting configuration files
+  * Fixed some database install issues on Debian
+  * Fixed an issue with show names and foreign characters causing the show to not start (temporarily disabled allowing the usage of these characters)
+
+
 1.8.0 - April 19, 2011
   * The biggest feature of this release is the ability to edit shows. You can
     change everything from ‘Name’, ‘Description’, and ‘URL’, to repeat and 
@@ -26,38 +57,38 @@
     "airtime-pypo-stop", "airtime-show-recorder-start", and 
     "airtime-show-recorder-stop".
   * Bug fixes:
-    * CC-2192 Schedule sent to pypo is not sorted by start time.
-    * CC-2175 Overbooking: Cut off shows when they are done
-    * CC-2174 Need formatting and a warning icon for the message for overbooking a show
-    * CC-2039 Upload file: file name cropped
-    * CC-2177 Schedule editing does not work under Firefox 4
+    - CC-2192 Schedule sent to pypo is not sorted by start time.
+    - CC-2175 Overbooking: Cut off shows when they are done
+    - CC-2174 Need formatting and a warning icon for the message for overbooking a show
+    - CC-2039 Upload file: file name cropped
+    - CC-2177 Schedule editing does not work under Firefox 4
 
 1.7.0 - April 4, 2011
   * Recording and automatic scheduling/broadcasting of live shows
-    o Recording/rebroadcast status of a show is shown in "Now Playing" and "Calendar"
-    o Can rebroadcast a show at multiple times and dates
+    - Recording/rebroadcast status of a show is shown in "Now Playing" and "Calendar"
+    - Can rebroadcast a show at multiple times and dates
   * Automatic upload of recorded shows to Soundcloud
   * Frontend JQuery widgets for public-facing websites to show your visitors what's playing and the upcoming schedule.
   * Ability to over-book a show and automatically cut and fade out song if it goes beyond the show time
   * Ability to delete audio files
   * Ability to cancel the currently playing show
   * Any changes to the schedule are immediately seen by the playout engine
-    o In version 1.6, you had to make sure that your show was ready to go 30 seconds before it started.
+    - In version 1.6, you had to make sure that your show was ready to go 30 seconds before it started.
   * Upgrade support (should be able to upgrade from any version, unlike 1.6.1 which required an uninstall of 1.6.0 first)
   * "Now Playing" list view:
-     o audio items are now grouped by show.
-     o If a show is not fully scheduled, the user is notified how many seconds of silence are at the end of the show in this View.
-     o Audio items that play past the show's end time have a visual notification that they will be cut off
+    - audio items are now grouped by show.
+    - If a show is not fully scheduled, the user is notified how many seconds of silence are at the end of the show in this View.
+    - Audio items that play past the show's end time have a visual notification that they will be cut off
   * Ability to change metadata tag display format for web streams
   * Config files moved to /etc/airtime.  This means all config files are in one convenient location and separated from the code, so you can upgrade your code independently of your config files.
   * Redesign of Preferences screen
   * Bug fixes:
-    o CC-2082 OGG stream dies after every song when using MPlayer
-    o CC-1894 Warn users about time zone differences or clock drift problems on the server 
-    o CC-2058 Utilities are not in the system $PATH
-    o CC-2051 Unable to change user password
-    o CC-2030 Icon needed for Cue In/Out
-    o CC-1955 Special character support in the library search
+    - CC-2082 OGG stream dies after every song when using MPlayer
+    - CC-1894 Warn users about time zone differences or clock drift problems on the server 
+    - CC-2058 Utilities are not in the system $PATH
+    - CC-2051 Unable to change user password
+    - CC-2030 Icon needed for Cue In/Out
+    - CC-1955 Special character support in the library search
 
 1.6.1 - Feb 23, 2011
 Bug fixes:

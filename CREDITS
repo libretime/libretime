@@ -2,12 +2,17 @@
 CREDITS
 =======
 
-Version 1.8.0
+Version 1.8.2
 -------------
+Welcome to James Moon!
+
 Naomi Aro (naomi.aro@sourcefabric.org)
   Role: Software Developer
 
 Martin Konecny (martin.konecny@sourcefabric.org)
+  Role: Software Developer
+
+James Moon (james.moon@sourcefabric.org)
   Role: Software Developer
 
 Ofir Gal (ofir.gal@sourcefabric.org)
@@ -19,30 +24,25 @@ Daniel James
 Paul Baranowski (paul.baranowski@sourcefabric.org)
   Role: Project Manager
 
+Vladimir Stefanovic (vladimir.stefanovic@sourcefabric.org)
+  Role: User Interface Designer
+
+
+Version 1.8.1
+-------------
+Same as previous version.
+
+Version 1.8.0
+-------------
+Same as previous version.
 
 Version 1.7.0
 -------------
-Naomi Aro (naomi.aro@sourcefabric.org)
-  Role: Software Developer
-
-Martin Konecny (martin.konecny@sourcefabric.org)
-  Role: Software Developer
-
-Ofir Gal (ofir.gal@sourcefabric.org)
-  Role: QA
-
-Daniel James
-  Role: Documentor & QA
-
-Paul Baranowski (paul.baranowski@sourcefabric.org)
-  Role: Project Manager
-
+Same as previous version.
 
 Version 1.6.1
 -------------
-Version 1.6.1 fixes a problem with playout being interrupted after 48 
-hours. It also fixes some security issues.
-
+Same as previous version.
 
 Version 1.6.0 
 -------------
@@ -68,6 +68,9 @@ Martin Konecny (martin.konecny@sourcefabric.org)
   Highlights:
     - New User Interface
     - Scheduler/Backend
+
+Vladimir Stefanovic (vladimir.stefanovic@sourcefabric.org)
+  Role: User Interface Designer
 
 Ofir Gal (ofir.gal@sourcefabric.org)
   Role: QA

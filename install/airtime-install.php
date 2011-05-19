@@ -11,11 +11,51 @@ echo "******************************** Install Begin ***************************
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
+require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.php');
 
 AirtimeInstall::ExitIfNotRoot();
 
+$version = AirtimeInstall::CheckForVersionBeforeInstall();
+$turnOffPreserve = false;
+
+//echo "Airtime version $version found.".PHP_EOL;
+//echo "Airtime version ".AIRTIME_VERSION." found.".PHP_EOL;
+
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
+
+//a previous version exists.
+if(isset($version) && $version != false && $version < AIRTIME_VERSION) {
+
+    echo "Airtime version $version found.".PHP_EOL;
+
+    try {
+        $opts = new Zend_Console_Getopt(
+            array(
+                'upgrade|u' => 'Upgrades Airtime Application.',
+                'install|i' => 'Installs Airtime Application.',
+            )
+        );
+        $opts->parse();
+    }
+    catch (Zend_Console_Getopt_Exception $e) {
+        exit($e->getMessage() ."\n\n". $e->getUsageMessage());
+    }
+
+    $userAnswer = "x";
+    while (!in_array($userAnswer, array("u", "U", "i", "I", ""))) {
+        echo PHP_EOL."You have an older version of Airtime Installed, would you like to (U)pgrade or do a fresh (I)nstall?";
+        $userAnswer = trim(fgets(STDIN));
+    }
+    if (in_array($userAnswer, array("u", "U"))) {
+        $command = "php airtime-upgrade.php";
+        system($command);
+        exit();
+    }
+    else if (in_array($userAnswer, array("i", "I"))) {
+        $turnOffPreserve = true;
+    }
+}
 
 try {
     $opts = new Zend_Console_Getopt(
@@ -45,7 +85,7 @@ if (isset($opts->o)) {
     $overwrite = true;
 }
 else if (!isset($opts->p) && !isset($opts->o)) {
-    if (AirtimeIni::IniFilesExist()) {
+    if (AirtimeIni::IniFilesExist() && !$turnOffPreserve) {
         $userAnswer = "x";
         while (!in_array($userAnswer, array("o", "O", "p", "P", ""))) {
             echo PHP_EOL."You have existing config files. Do you want to (O)verwrite them, or (P)reserve them? (o/P) ";
@@ -78,7 +118,12 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
 if ($db_install) {
-	require( 'airtime-db-install.php' );
+    if($turnOffPreserve) {
+	    system('php airtime-db-install.php y');
+    }
+    else {
+        system('php airtime-db-install.php');
+    }
 }
 
 AirtimeInstall::InstallStorageDirectory();
@@ -98,8 +143,6 @@ system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install
 //wait for 1.9.0 release
 //echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
 //system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
-
-AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
 echo "******************************* Install Complete *******************************".PHP_EOL;
 
