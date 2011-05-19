@@ -11,11 +11,14 @@ echo "******************************** Install Begin ***************************
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
-require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.php');
 
 AirtimeInstall::ExitIfNotRoot();
 
 $version = AirtimeInstall::CheckForVersionBeforeInstall();
+
+require_once('Zend/Loader/Autoloader.php');
+$autoloader = Zend_Loader_Autoloader::getInstance();
 
 //a previous version exists.
 if(isset($version) && $version != false && $version < AIRTIME_VERSION) {
@@ -46,9 +49,6 @@ if(isset($version) && $version != false && $version < AIRTIME_VERSION) {
         exit();
     }
 }
-
-require_once('Zend/Loader/Autoloader.php');
-$autoloader = Zend_Loader_Autoloader::getInstance();
 
 try {
     $opts = new Zend_Console_Getopt(
