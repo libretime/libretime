@@ -11,8 +11,41 @@ echo "******************************** Install Begin ***************************
 
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
+require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
 AirtimeInstall::ExitIfNotRoot();
+
+$version = AirtimeInstall::CheckForVersionBeforeInstall();
+
+//a previous version exists.
+if(isset($version) && $version != false && $version < AIRTIME_VERSION) {
+
+    echo "Airtime version $version found.".PHP_EOL;
+
+    try {
+        $opts = new Zend_Console_Getopt(
+            array(
+                'upgrade|u' => 'Upgrades Airtime Application.',
+                'install|i' => 'Installs Airtime Application.',
+            )
+        );
+        $opts->parse();
+    }
+    catch (Zend_Console_Getopt_Exception $e) {
+        exit($e->getMessage() ."\n\n". $e->getUsageMessage());
+    }
+
+    $userAnswer = "x";
+    while (!in_array($userAnswer, array("u", "U", "i", "I", ""))) {
+        echo PHP_EOL."You have an older version of Airtime Installed, would you like to (U)pgrade or do a fresh (I)nstall?";
+        $userAnswer = trim(fgets(STDIN));
+    }
+    if (in_array($userAnswer, array("u", "U"))) {
+        $command = "php airtime-upgrade.php";
+        system($command);
+        exit();
+    }
+}
 
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
