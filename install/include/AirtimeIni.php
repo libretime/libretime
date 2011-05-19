@@ -155,10 +155,14 @@ class AirtimeIni
     {
         $lines = file($p_filename);
         $n=count($lines);
-        for ($i=0; $i<$n; $i++) {
-            if (strlen($lines[$i]) > strlen($p_property))
-            if ($p_property == substr($lines[$i], 0, strlen($p_property))){
-                $lines[$i] = "$p_property = $p_value\n";
+        foreach ($lines as &$line) {
+            if ($line[0] != "#"){
+                $key_value = split("=", $line);
+                $key = trim($key_value[0]);         
+                
+                if ($key == $p_property){
+                    $line = "$p_property = $p_value".PHP_EOL;
+                }
             }
         }
 
