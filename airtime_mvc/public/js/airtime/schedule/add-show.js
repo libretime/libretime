@@ -100,6 +100,12 @@ function setAddShowEvents() {
     form.find("#add_show_record").click(function(){
         $(this).blur();
         form.find("#add_show_rebroadcast").toggle();
+
+        //uncheck rebroadcast checkbox
+        form.find("#add_show_rebroadcast").attr('checked', false);
+
+        //hide rebroadcast options
+        form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
     });
 
     form.find("#add_show_rebroadcast").click(function(){
