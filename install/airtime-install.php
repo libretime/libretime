@@ -16,9 +16,10 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.
 AirtimeInstall::ExitIfNotRoot();
 
 $version = AirtimeInstall::CheckForVersionBeforeInstall();
+$turnOffPreserve = false;
 
-echo "Airtime version $version found.".PHP_EOL;
-echo "Airtime version ".AIRTIME_VERSION." found.".PHP_EOL;
+//echo "Airtime version $version found.".PHP_EOL;
+//echo "Airtime version ".AIRTIME_VERSION." found.".PHP_EOL;
 
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
@@ -51,6 +52,9 @@ if(isset($version) && $version != false && $version < AIRTIME_VERSION) {
         system($command);
         exit();
     }
+    else if (in_array($userAnswer, array("i", "I"))) {
+        $turnOffPreserve = true;
+    }
 }
 
 try {
@@ -81,7 +85,7 @@ if (isset($opts->o)) {
     $overwrite = true;
 }
 else if (!isset($opts->p) && !isset($opts->o)) {
-    if (AirtimeIni::IniFilesExist()) {
+    if (AirtimeIni::IniFilesExist() && !$turnOffPreserve) {
         $userAnswer = "x";
         while (!in_array($userAnswer, array("o", "O", "p", "P", ""))) {
             echo PHP_EOL."You have existing config files. Do you want to (O)verwrite them, or (P)reserve them? (o/P) ";

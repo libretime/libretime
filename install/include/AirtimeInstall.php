@@ -38,13 +38,16 @@ class AirtimeInstall
     {
         global $CC_DBC, $CC_CONFIG;
 
-        try{
-            $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
-        }
-        catch(Exception $e){
+        $values = parse_ini_file('/etc/airtime/airtime.conf', true);
 
-        }
+	    // Database config
+        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
+        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
+        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
+        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
 
+        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
         if (PEAR::isError($CC_DBC)) {
             echo "New Airtime Install.".PHP_EOL;
         }
