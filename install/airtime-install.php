@@ -17,6 +17,9 @@ AirtimeInstall::ExitIfNotRoot();
 
 $version = AirtimeInstall::CheckForVersionBeforeInstall();
 
+echo "Airtime version $version found.".PHP_EOL;
+echo "Airtime version ".AIRTIME_VERSION." found.".PHP_EOL;
+
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
