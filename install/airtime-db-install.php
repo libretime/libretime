@@ -18,7 +18,10 @@ AirtimeInstall::DbConnect(true);
 
 AirtimeInstall::InstallPostgresScriptingLanguage();
 
-if ($databaseExisted){
+if(isset($argv[1]) && $argv[1] == 'y') {
+    AirtimeInstall::CreateDatabaseTables();
+}
+else if ($databaseExisted){
     //Database already exists. Ask the user how they want to
     //proceed. Warn them that creating the database tables again
     //will cause them to lose their old ones.
@@ -31,7 +34,8 @@ if ($databaseExisted){
     if (in_array($userAnswer, array("y", "Y"))) {
         AirtimeInstall::CreateDatabaseTables();
     }
-} else {
+}
+else {
     //Database was just created, meaning the tables do not
     //exist. Let's create them.
     AirtimeInstall::CreateDatabaseTables();

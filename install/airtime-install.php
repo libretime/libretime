@@ -118,7 +118,12 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
 if ($db_install) {
-	require( 'airtime-db-install.php' );
+    if($turnOffPreserve) {
+	    system('php airtime-db-install.php y');
+    }
+    else {
+        system('php airtime-db-install.php');
+    }
 }
 
 AirtimeInstall::InstallStorageDirectory();
@@ -138,8 +143,6 @@ system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install
 //wait for 1.9.0 release
 //echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
 //system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
-
-AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
 echo "******************************* Install Complete *******************************".PHP_EOL;
 
