@@ -9,14 +9,27 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-set_include_path('/var/www/airtime/library' . PATH_SEPARATOR . get_include_path());
-set_include_path('/var/www/airtime/application/models' . PATH_SEPARATOR . get_include_path());
-require_once('/var/www/airtime/application/configs/conf.php');
-require_once('/var/www/airtime/application/models/StoredFile.php');
+$ini = get_ini_file();
+$airtime_base_dir = $ini['general']['airtime_dir'];
+
+set_include_path("$airtime_base_dir/library" . PATH_SEPARATOR . get_include_path());
+set_include_path("$airtime_base_dir/application/models" . PATH_SEPARATOR . get_include_path());
+require_once("$airtime_base_dir/application/configs/conf.php");
+require_once("$airtime_base_dir/application/models/StoredFile.php");
 require_once('DB.php');
 require_once 'propel/runtime/lib/Propel.php';
-Propel::init('/var/www/airtime/application/configs/airtime-conf.php');
+Propel::init("$airtime_base_dir/application/configs/airtime-conf.php");
 
+
+function get_ini_file(){
+    $ini = parse_ini_file("/etc/airtime/airtime.conf", true);
+    if ($ini === FALSE || !array_key_exists('airtime_dir', $ini['general'])){
+        echo "Could not open /etc/airtime/airtime.conf. Is Airtime installed?".PHP_EOL;
+        exit;
+    }
+    
+    return $ini;
+}
 
 /**
  *
