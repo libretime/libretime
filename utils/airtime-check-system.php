@@ -1,20 +1,18 @@
 <?php
 require_once '../airtime_mvc/library/php-amqplib/amqp.inc';
 
-//Step 1: Verify all config files in /etc/airtime/ exist and have size > 0 bytes.
-
-//echo "*** Airtime System Check Script ***".PHP_EOL;
-
 set_error_handler("myErrorHandler");
 
 AirtimeCheck::CheckOsTypeVersion();
 
 AirtimeCheck::CheckConfigFilesExist();
+
 $airtimeIni = AirtimeCheck::GetAirtimeConf();
 $pypoCfg = AirtimeCheck::GetPypoCfg();
 
 AirtimeCheck::GetDbConnection($airtimeIni);
-//AirtimeCheck::CheckRabbitMqVersion();
+AirtimeCheck::PythonLibrariesInstalled();
+
 AirtimeCheck::CheckRabbitMqConnection($airtimeIni);
 
 AirtimeCheck::CheckApacheVHostFiles();
@@ -31,7 +29,6 @@ class AirtimeCheck{
     const CHECK_FAILED = "FAILED";
 
     public static function CheckPypoRunning(){
-        //check using svstat
         $command = "sudo svstat /etc/service/pypo";
         exec($command, $output, $result);
 
@@ -61,7 +58,6 @@ class AirtimeCheck{
     }
 
     public static function CheckLiquidsoapRunning(){
-        //connect via telnet
         $command = "sudo svstat /etc/service/pypo-liquidsoap";
         exec($command, $output, $result);
 
@@ -101,13 +97,12 @@ class AirtimeCheck{
 
         foreach ($confFiles as $cf){
             $fullPath = "/etc/airtime/$cf";
-            //echo "\t".$fullPath." ... ";
             if (!file_exists($fullPath)){
                 $allFound = AirtimeCheck::CHECK_FAILED;
             }
         }
 
-        echo "AIRTIME_CONFIG=$allFound".PHP_EOL;
+        echo "AIRTIME_CONFIG_FILES=$allFound".PHP_EOL;
         
     }
 
@@ -141,8 +136,6 @@ class AirtimeCheck{
         
         $dbconn = pg_connect("host=$host port=5432 dbname=$dbname user=$dbuser password=$dbpass");
 
-        //echo PHP_EOL."Verifying Airtime Database".PHP_EOL;
-
         if ($dbconn === false){
             $status = AirtimeCheck::CHECK_FAILED;
         } else {
@@ -150,6 +143,31 @@ class AirtimeCheck{
         }
 
         echo "TEST_PGSQL_DATABASE=$status".PHP_EOL;
+    }
+    
+    public static function PythonLibrariesInstalled(){
+        $command = "pip freeze | grep kombu";
+        exec($command, $output, $result);
+        
+        $status = AirtimeCheck::CHECK_FAILED;
+        if (count($output[0]) > 0){
+            $key_value = split("==", $output[0]);
+            $status = trim($key_value[1]);
+        }
+        
+        echo "PYTHON_KOMBU_VERSION=$status".PHP_EOL;
+        
+        unset($output);
+        $command = "pip freeze | grep poster";
+        exec($command, $output, $result);
+            
+        $status = AirtimeCheck::CHECK_FAILED;
+        if (count($output[0]) > 0){
+            $key_value = split("==", $output[0]);
+            $status = trim($key_value[1]);
+        }
+        
+        echo "PYTHON_POSTER_VERSION=$status".PHP_EOL;
     }
 
     public static function CheckDbTables(){
@@ -184,7 +202,6 @@ class AirtimeCheck{
     * */
     
     public static function CheckRabbitMqConnection($airtimeIni){
-        //echo PHP_EOL."Verifying RabbitMQ Service".PHP_EOL;
         try {
             $status = AirtimeCheck::CHECK_OK;
             $conn = new AMQPConnection($airtimeIni["rabbitmq"]["host"],
@@ -192,18 +209,13 @@ class AirtimeCheck{
                                              $airtimeIni["rabbitmq"]["user"],
                                              $airtimeIni["rabbitmq"]["password"]);
         } catch (Exception $e){
-            //echo "\tConnection ... [Failed!]".PHP_EOL;
-            //exit;
             $status = AirtimeCheck::CHECK_FAILED;
         }
-        //echo "\tConnection ... [OK]".PHP_EOL;
-
+        
         echo "TEST_RABBITMQ_SERVER=$status".PHP_EOL;
     }
 
     public static function GetAirtimeServerVersion($pypoCfg){
-
-        //echo PHP_EOL."Checking Airtime Server Version".PHP_EOL;
 
         $baseUrl = $pypoCfg["base_url"];
         $basePort = $pypoCfg["base_port"];
@@ -221,20 +233,14 @@ class AirtimeCheck{
             while (($buffer = fgets($rh)) !== false) {
                 $json = json_decode(trim($buffer), true);
                 if (!is_null($json)){
-                    //echo "\t\tAirtime Version ".$json["version"]." ... [OK] ".PHP_EOL;
                     $version = $json["version"];
                     echo "AIRTIME_VERSION_STRING=$version".PHP_EOL;
                 }
             }
-        } else {
-            //echo "\t\tConnection ... [Failed!]".PHP_EOL;
-            //exit;           
-        }        
+        }
     }
 
     public static function CheckApacheVHostFiles(){
-        //echo PHP_EOL."Checking for Airtime Apache config files".PHP_EOL;
-
         $fileNames = array("/etc/apache2/sites-available/airtime",
                         "/etc/apache2/sites-enabled/airtime");
 
