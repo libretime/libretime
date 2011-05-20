@@ -15,6 +15,7 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.
 
 AirtimeInstall::ExitIfNotRoot();
 
+$newInstall = false;
 $version = AirtimeInstall::CheckForVersionBeforeInstall();
 
 require_once('Zend/Loader/Autoloader.php');
@@ -41,23 +42,31 @@ if (isset($opts->h)) {
     exit;
 }
 
+//the current version exists.
+if(isset($version) && $version != false && $version == AIRTIME_VERSION && !isset($opts->r)) {
+
+    echo "Airtime $version is already installed.".PHP_EOL;
+    exit();
+}
 //a previous version exists.
 if(isset($version) && $version != false && $version < AIRTIME_VERSION) {
 
     echo "Airtime version $version found.".PHP_EOL;
-
     $command = "php airtime-upgrade.php";
     system($command);
     exit();
 }
+if(is_null($version)) {
+    $newInstall = true;
+}
 
 $db_install = true;
-if (is_null($opts->r) && isset($opts->n)){
+if (is_null($opts->r) && isset($opts->n) && !$newInstall){
 	$db_install = false;
 }
 
 $overwrite = false;
-if (isset($opts->o)) {
+if (isset($opts->o) || $newInstall == true) {
     $overwrite = true;
 }
 else if (!isset($opts->p) && !isset($opts->o) && isset($opts->r)) {
@@ -94,7 +103,12 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
 if ($db_install) {
-    require_once('airtime-db-install.php');
+    if($newInstall) {
+        system('php airtime-db-install.php y');
+    }
+    else {
+        require_once('airtime-db-install.php');
+    }
 }
 
 AirtimeInstall::InstallStorageDirectory();
