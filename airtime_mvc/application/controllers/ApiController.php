@@ -63,7 +63,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        $downlaod = $this->_getParam('download');
+        $download = $this->_getParam('download');
 
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -95,11 +95,19 @@ class ApiController extends Zend_Controller_Action
                 header("Content-Type: audio/ogg");
             else if ($ext == "mp3")
                 header("Content-Type: audio/mpeg");
-			if ($downlaod){
+			if ($download){
 				header('Content-Disposition: attachment; filename="'.$media->getName().'"');
 			}
             header("Content-Length: " . filesize($filepath));
-            fpassthru($fp);
+            
+            //flush the file contents 16 KBytes at a time. In the future we may
+            //want to use the "X-Sendfile header" method instead.
+            while (!feof($fp)) {
+                echo fread($fp, 16*1024);
+                ob_end_flush();
+            }
+            fclose($fp);
+            
             return;
           }
       }
