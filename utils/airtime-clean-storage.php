@@ -15,7 +15,7 @@ $airtime_base_dir = $ini['general']['airtime_dir'];
 set_include_path("$airtime_base_dir/library" . PATH_SEPARATOR . get_include_path());
 set_include_path("$airtime_base_dir/application/models" . PATH_SEPARATOR . get_include_path());
 require_once("$airtime_base_dir/application/configs/conf.php");
-require_once("$airtime_base_dir/application/models/StoredFile.php");
+require_once('StoredFile.php');
 require_once('DB.php');
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init("$airtime_base_dir/application/configs/airtime-conf.php");
