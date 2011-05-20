@@ -45,7 +45,8 @@ if (isset($opts->h)) {
 //the current version exists.
 if(isset($version) && $version != false && $version == AIRTIME_VERSION && !isset($opts->r)) {
 
-    echo "Airtime $version is already installed.".PHP_EOL;
+    echo "Airtime $version is already installed.\n".PHP_EOL;
+    echo $opts->getUsageMessage();
     exit();
 }
 //a previous version exists.
