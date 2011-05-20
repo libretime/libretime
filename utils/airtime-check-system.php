@@ -1,5 +1,11 @@
 <?php
-require_once '../airtime_mvc/library/php-amqplib/amqp.inc';
+
+AirtimeCheck::ExitIfNotRoot();
+
+$airtimeIni = AirtimeCheck::GetAirtimeConf();
+$airtime_base_dir = $airtimeIni['general']['airtime_dir'];
+
+require_once "$airtime_base_dir/library/php-amqplib/amqp.inc";
 
 set_error_handler("myErrorHandler");
 
@@ -7,7 +13,7 @@ AirtimeCheck::CheckOsTypeVersion();
 
 AirtimeCheck::CheckConfigFilesExist();
 
-$airtimeIni = AirtimeCheck::GetAirtimeConf();
+
 $pypoCfg = AirtimeCheck::GetPypoCfg();
 
 AirtimeCheck::GetDbConnection($airtimeIni);
@@ -20,13 +26,38 @@ AirtimeCheck::CheckApacheVHostFiles();
 AirtimeCheck::GetAirtimeServerVersion($pypoCfg);
 AirtimeCheck::CheckPypoRunning();
 AirtimeCheck::CheckLiquidsoapRunning();
+AirtimeCheck::CheckIcecastRunning();
 
+if (AirtimeCheck::$check_system_ok){
+    echo PHP_EOL."System setup looks OK!".PHP_EOL;
+} else {
+    echo PHP_EOL."There appears to be problems with your setup. Please visit ".PHP_EOL
+            ."http://wiki.sourcefabric.org/x/HABQ for troubleshooting info.".PHP_EOL;
+}
+
+echo PHP_EOL;
 
 
 class AirtimeCheck{
 
     const CHECK_OK = "OK";
     const CHECK_FAILED = "FAILED";
+    
+    public static $check_system_ok = true;
+    
+    /**
+     * Ensures that the user is running this PHP script with root
+     * permissions. If not running with root permissions, causes the
+     * script to exit.
+     */
+    public static function ExitIfNotRoot()
+    {
+        // Need to check that we are superuser before running this.
+        if(exec("whoami") != "root"){
+            echo "Must be root user.\n";
+            exit(1);
+        }
+    }
 
     public static function CheckPypoRunning(){
         $command = "sudo svstat /etc/service/pypo";
@@ -42,6 +73,8 @@ class AirtimeCheck{
             $start = $pos + 4;
             $end = strpos($value, ")", $start);
             $status = substr($value, $start, $end-$start);
+        } else {
+            self::$check_system_ok = false;
         }
 
         echo "PYPO_PID=".$status.PHP_EOL;
@@ -52,6 +85,8 @@ class AirtimeCheck{
             $start = $pos + 2;
             $end = strpos($value, " ", $start);
             $status = substr($value, $start, $end-$start);
+        } else {
+            self::$check_system_ok = false;
         }
 
         echo "PYPO_RUNNING_SECONDS=".$status.PHP_EOL;
@@ -70,6 +105,8 @@ class AirtimeCheck{
             $start = $pos + 4;
             $end = strpos($value, ")", $start);
             $status = substr($value, $start, $end-$start);
+        } else {
+            self::$check_system_ok = false;
         }
 
         echo "LIQUIDSOAP_PID=".$status.PHP_EOL;
@@ -80,10 +117,25 @@ class AirtimeCheck{
             $start = $pos + 2;
             $end = strpos($value, " ", $start);
             $status = substr($value, $start, $end-$start);
-
+        } else {
+            self::$check_system_ok = false;
         }
 
         echo "LIQUIDSOAP_RUNNING_SECONDS=".$status.PHP_EOL;
+    }
+    
+    public static function CheckIcecastRunning(){
+        $command = "ps aux | grep \"^icecast2\"";
+        exec($command, $output, $result);
+        
+        $status = AirtimeCheck::CHECK_FAILED;
+        if (count($output) > 0){
+            $delimited = split("[ ]+", $output[0]);
+            $status = $delimited[1];
+        } else {
+            self::$check_system_ok = false;
+        }
+        echo "ICECAST_PID=$status".PHP_EOL;
     }
 
     public static function CheckConfigFilesExist(){
@@ -99,6 +151,7 @@ class AirtimeCheck{
             $fullPath = "/etc/airtime/$cf";
             if (!file_exists($fullPath)){
                 $allFound = AirtimeCheck::CHECK_FAILED;
+                self::$check_system_ok = false;
             }
         }
 
@@ -138,11 +191,12 @@ class AirtimeCheck{
 
         if ($dbconn === false){
             $status = AirtimeCheck::CHECK_FAILED;
+            self::$check_system_ok = false;
         } else {
             $status = AirtimeCheck::CHECK_OK;
         }
 
-        echo "TEST_PGSQL_DATABASE=$status".PHP_EOL;
+        echo "PGSQL_DATABASE=$status".PHP_EOL;
     }
     
     public static function PythonLibrariesInstalled(){
@@ -153,6 +207,8 @@ class AirtimeCheck{
         if (count($output[0]) > 0){
             $key_value = split("==", $output[0]);
             $status = trim($key_value[1]);
+        } else {
+            self::$check_system_ok = false;
         }
         
         echo "PYTHON_KOMBU_VERSION=$status".PHP_EOL;
@@ -165,6 +221,8 @@ class AirtimeCheck{
         if (count($output[0]) > 0){
             $key_value = split("==", $output[0]);
             $status = trim($key_value[1]);
+        } else {
+            self::$check_system_ok = false;
         }
         
         echo "PYTHON_POSTER_VERSION=$status".PHP_EOL;
@@ -210,9 +268,10 @@ class AirtimeCheck{
                                              $airtimeIni["rabbitmq"]["password"]);
         } catch (Exception $e){
             $status = AirtimeCheck::CHECK_FAILED;
+            self::$check_system_ok = false;
         }
         
-        echo "TEST_RABBITMQ_SERVER=$status".PHP_EOL;
+        echo "RABBITMQ_SERVER=$status".PHP_EOL;
     }
 
     public static function GetAirtimeServerVersion($pypoCfg){
@@ -249,6 +308,7 @@ class AirtimeCheck{
         foreach ($fileNames as $fn){
             if (!file_exists($fn)){
                 $status = AirtimeCheck::CHECK_FAILED;
+                self::$check_system_ok = false;
             }
         }
 
@@ -298,6 +358,9 @@ class AirtimeCheck{
 // error handler function
 function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
+    return true;
+
+    /*
     if ($errno == E_WARNING){
         if (strpos($errstr, "401") !== false){
             echo "\t\tServer is running but could not find Airtime".PHP_EOL;
@@ -308,6 +371,7 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
         } 
     }
 
-    /* Don't execute PHP internal error handler */
+    //Don't execute PHP internal error handler
     return true;
+    */
 }

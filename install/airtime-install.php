@@ -129,5 +129,9 @@ system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install
 //echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
 //system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
 
+echo PHP_EOL."*** Verifying Correct System Environment ***".PHP_EOL;
+$command = "airtime-check-system";
+system($command);
+
 echo "******************************* Install Complete *******************************".PHP_EOL;
 
