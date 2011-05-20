@@ -12,10 +12,13 @@ set_time_limit(0);
 error_reporting(E_ALL);
 set_error_handler("import_error_handler", E_ALL & !E_NOTICE);
 
-set_include_path('/var/www/airtime/library' . PATH_SEPARATOR . get_include_path());
+$ini = get_ini_file();
+$airtime_base_dir = $ini['general']['airtime_dir'];
 
-require_once("/var/www/airtime/application/configs/conf.php");
-require_once("/var/www/airtime/application/models/StoredFile.php");
+set_include_path("$airtime_base_dir/library" . PATH_SEPARATOR . get_include_path());
+
+require_once("$airtime_base_dir/application/configs/conf.php");
+require_once("$airtime_base_dir/application/models/StoredFile.php");
 require_once('DB.php');
 require_once('Console/Getopt.php');
 
@@ -23,6 +26,16 @@ function import_error_handler()
 {
     echo var_dump(debug_backtrace());
     exit();
+}
+
+function get_ini_file(){
+    $ini = parse_ini_file("/etc/airtime/airtime.conf", true);
+    if ($ini === FALSE || !array_key_exists('airtime_dir', $ini['general'])){
+        echo "Could not open /etc/airtime/airtime.conf. Is Airtime installed?".PHP_EOL;
+        exit;
+    }
+    
+    return $ini;
 }
 
 

@@ -103,7 +103,7 @@ class ApiController extends Zend_Controller_Action
             //flush the file contents 16 KBytes at a time. In the future we may
             //want to use the "X-Sendfile header" method instead.
             while (!feof($fp)) {
-                echo fread($fp, 16*1024);
+                echo fread($fp, 64*1024);
                 ob_end_flush();
             }
             fclose($fp);
