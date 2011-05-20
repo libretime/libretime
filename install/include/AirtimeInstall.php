@@ -38,7 +38,13 @@ class AirtimeInstall
     {
         global $CC_DBC, $CC_CONFIG;
 
-        $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+        if(file_exists('/etc/airtime/airtime.conf')) {
+            $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+        }
+        else {
+            echo "New Airtime Install.".PHP_EOL;
+            return null;
+        }
 
 	    // Database config
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
@@ -50,6 +56,7 @@ class AirtimeInstall
         $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
         if (PEAR::isError($CC_DBC)) {
             echo "New Airtime Install.".PHP_EOL;
+            return null;
         }
         else {
             $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
