@@ -1790,11 +1790,11 @@ class StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
 			}
 			else {
-                if(file_exists($duplicate->getRealFilePath())) {
+                if (file_exists($duplicate->getRealFilePath())) {
 				    $duplicateName = $duplicate->getMetadataValue(UI_MDATA_KEY_TITLE);
 				    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
                 }
-                else{
+                else {
                     $res = $duplicate->replaceFile($audio_file);
                     if (PEAR::isError($res)) {
 				        die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');

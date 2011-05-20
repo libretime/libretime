@@ -211,7 +211,7 @@ function import_audio_file($p_filepath, $p_importMode = null, $p_testOnly = fals
     }
 
     //row exists in database
-    if(isset($duplicate)) {
+    if (isset($duplicate)) {
         if (file_exists($duplicate->getRealFilePath())) {
             echo "DUPLICATE: $p_filepath\n";
             $g_duplicates++;
