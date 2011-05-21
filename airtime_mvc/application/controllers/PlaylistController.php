@@ -20,6 +20,8 @@ class PlaylistController extends Zend_Controller_Action
 					->addActionContext('delete-active', 'json')
 					->addActionContext('delete', 'json')
                     ->addActionContext('set-playlist-fades', 'json')
+                    ->addActionContext('set-playlist-name', 'json')
+					->addActionContext('set-playlist-description', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -175,6 +177,7 @@ class PlaylistController extends Zend_Controller_Action
 			$this->view->html = $this->view->render('playlist/update.phtml');
 			$this->view->name = $pl->getName();
 			$this->view->length = $pl->getLength();
+            $this->view->description = $pl->getDescription();
 
 			unset($this->view->pl);
 			return;
@@ -195,6 +198,7 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->html = $this->view->render('playlist/update.phtml');
 		$this->view->name = $pl->getName();
 		$this->view->length = $pl->getLength();
+        $this->view->description = $pl->getDescription();
 
 		unset($this->view->pl);
     }
@@ -220,9 +224,10 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->html = $this->view->render('playlist/update.phtml');
 		$this->view->name = $pl->getName();
 		$this->view->length = $pl->getLength();
+        $this->view->description = $pl->getDescription();
 
 		unset($this->view->pl);
-		
+
 		return;
     }
 
@@ -339,6 +344,31 @@ class PlaylistController extends Zend_Controller_Action
 
 		$fades = $pl->getFadeInfo($pl->getSize());
 		$this->view->fadeOut = $fades[1];
+    }
+
+    public function setPlaylistNameAction()
+    {
+        $name = $this->_getParam('name', 'Unknown Playlist');
+
+        $pl = $this->getPlaylist();
+        $pl->setName($name);
+
+        $this->view->playlistName = $name;
+    }
+
+    public function setPlaylistDescriptionAction()
+    {
+        $description = $this->_getParam('description', false);
+        $pl = $this->getPlaylist();
+
+        if($description != false) {
+            $pl->setDescription($description);
+        }
+        else {
+            $description = $pl->getDescription();
+        }
+
+        $this->view->playlistDescription = $description;
     }
 
 

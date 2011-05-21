@@ -238,7 +238,7 @@ class ScheduleController extends Zend_Controller_Action
 
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
                 strtotime($today_timestamp) < strtotime($show->getShowEnd()) &&
-                $user->isAdmin() && !$show->isRecorded()) {
+                $user->isAdmin()) {
                 $menu[] = array('action' => array('type' => 'fn',
                     'callback' => "window['confirmCancelShow']($id)"),
                     'title' => 'Cancel Current Show');

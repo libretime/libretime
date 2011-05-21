@@ -34,6 +34,42 @@ class AirtimeInstall
         }
     }
 
+    public static function CheckForVersionBeforeInstall()
+    {
+        global $CC_DBC, $CC_CONFIG;
+
+        if(file_exists('/etc/airtime/airtime.conf')) {
+            $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+        }
+        else {
+            echo "New Airtime Install.".PHP_EOL;
+            return null;
+        }
+
+	    // Database config
+        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
+        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
+        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
+        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+
+        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
+        if (PEAR::isError($CC_DBC)) {
+            echo "New Airtime Install.".PHP_EOL;
+            return null;
+        }
+        else {
+            $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+            $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
+            $version = $CC_DBC->GetOne($sql);
+
+            if (PEAR::isError($version)) {
+                return null;
+            }
+            return $version;
+        }
+    }
 
     public static function DbTableExists($p_name)
     {
@@ -142,6 +178,7 @@ class AirtimeInstall
         }
     }
 
+
     public static function CreateDatabase()
     {
         global $CC_CONFIG;
@@ -150,7 +187,8 @@ class AirtimeInstall
 
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
-        $command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
+        #$command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
+        $command = "su postgres -c \"createdb $database --owner $username\"";
 
         @exec($command, $output, $results);
         if ($results == 0) {
@@ -164,6 +202,10 @@ class AirtimeInstall
                 echo "* Database '{$CC_CONFIG['dsn']['database']}' already exists.".PHP_EOL;
             }
         }
+
+        $databaseExisted = ($results != 0);
+
+        return $databaseExisted;
     }
 
     public static function InstallPostgresScriptingLanguage()
@@ -188,7 +230,7 @@ class AirtimeInstall
         echo "* Creating database tables".PHP_EOL;
 
         // Put Propel sql files in Database
-        $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>propel-error.log";
+        $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
         @exec($command, $output, $results);
     }
 
@@ -260,6 +302,10 @@ class AirtimeInstall
         echo "* Installing airtime-update-db-settings".PHP_EOL;
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
         exec("ln -s $dir /usr/bin/airtime-update-db-settings");
+        
+        echo "* Installing airtime-check-system".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-check-system";
+        exec("ln -s $dir /usr/bin/airtime-check-system");
     }
 
     public static function RemoveSymlinks()
@@ -267,6 +313,7 @@ class AirtimeInstall
         exec("rm -f /usr/bin/airtime-import");
         exec("rm -f /usr/bin/airtime-clean-storage");
         exec("rm -f /usr/bin/airtime-update-db-settings");
+        exec("rm -f /usr/bin/airtime-check-system");
     }
 
     public static function InstallPhpCode()

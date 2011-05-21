@@ -26,15 +26,14 @@ class AirtimeIni
     const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
     const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
-    const CONF_FILE_MEDIAMONITOR = "/etc/airtime/MediaMonitor.cfg";
+    //const CONF_FILE_MEDIAMONITOR = "/etc/airtime/MediaMonitor.cfg";
 
     public static function IniFilesExist()
     {
         $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
                              AirtimeIni::CONF_FILE_PYPO,
                              AirtimeIni::CONF_FILE_RECORDER,
-                             AirtimeIni::CONF_FILE_LIQUIDSOAP,
-                             AirtimeIni::CONF_FILE_MEDIAMONITOR);
+                             AirtimeIni::CONF_FILE_LIQUIDSOAP);
         $exist = false;
         foreach ($configFiles as $conf) {
             if (file_exists($conf)) {
@@ -74,10 +73,11 @@ class AirtimeIni
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."/../../python_apps/pytag-fs/MediaMonitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
-            echo "Could not copy MediaMonitor.cfg to /etc/airtime/. Exiting.";
-            exit(1);
-        }
+        //wait until Airtime 1.9.0
+        //if (!copy(__DIR__."/../../python_apps/pytag-fs/MediaMonitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
+        //    echo "Could not copy MediaMonitor.cfg to /etc/airtime/. Exiting.";
+        //    exit(1);
+        //}
     }
 
     /**
@@ -102,9 +102,10 @@ class AirtimeIni
             unlink(AirtimeIni::CONF_FILE_LIQUIDSOAP);
         }
 
-        if (file_exists(AirtimeIni::CONF_FILE_MEDIAMONITOR)){
-            unlink(AirtimeIni::CONF_FILE_MEDIAMONITOR);
-        }
+        //wait until Airtime 1.9.0
+        //if (file_exists(AirtimeIni::CONF_FILE_MEDIAMONITOR)){
+        //    unlink(AirtimeIni::CONF_FILE_MEDIAMONITOR);
+        //}
 
         if (file_exists("etc/airtime")){
             rmdir("/etc/airtime/");
@@ -154,10 +155,14 @@ class AirtimeIni
     {
         $lines = file($p_filename);
         $n=count($lines);
-        for ($i=0; $i<$n; $i++) {
-            if (strlen($lines[$i]) > strlen($p_property))
-            if ($p_property == substr($lines[$i], 0, strlen($p_property))){
-                $lines[$i] = "$p_property = $p_value\n";
+        foreach ($lines as &$line) {
+            if ($line[0] != "#"){
+                $key_value = split("=", $line);
+                $key = trim($key_value[0]);         
+                
+                if ($key == $p_property){
+                    $line = "$p_property = $p_value".PHP_EOL;
+                }
             }
         }
 
@@ -181,7 +186,58 @@ class AirtimeIni
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'airtime_dir', AirtimeInstall::CONF_DIR_WWW);
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_PYPO, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_RECORDER, 'api_key', "'$api_key'");
-        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, 'api_key', "'$api_key'");
+        //AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
+    }
+
+    public static function ReadPythonConfig($p_filename)
+    {
+        $values = array();
+
+        $lines = file($p_filename);
+        $n=count($lines);
+        for ($i=0; $i<$n; $i++) {
+            if (strlen($lines[$i]) && !in_array(substr($lines[$i], 0, 1), array('#', PHP_EOL))){
+                 $info = explode("=", $lines[$i]);
+                 $values[trim($info[0])] = trim($info[1]);
+             }
+        }
+
+        return $values;
+    }
+
+    public static function MergeConfigFiles($configFiles, $suffix) {
+        foreach ($configFiles as $conf) {
+            if (file_exists("$conf$suffix.bak")) {
+
+                if($conf === CONF_FILE_AIRTIME) {
+                    // Parse with sections
+                    $newSettings = parse_ini_file($conf, true);
+                    $oldSettings = parse_ini_file("$conf$suffix.bak", true);
+                }
+                else {
+                    $newSettings = AirtimeIni::ReadPythonConfig($conf);
+                    $oldSettings = AirtimeIni::ReadPythonConfig("$conf$suffix.bak");
+                }
+
+                $settings = array_keys($newSettings);
+
+                foreach($settings as $section) {
+                    if(isset($oldSettings[$section])) {
+                        if(is_array($oldSettings[$section])) {
+                            $sectionKeys = array_keys($newSettings[$section]);
+                            foreach($sectionKeys as $sectionKey) {
+                                if(isset($oldSettings[$section][$sectionKey])) {
+                                    AirtimeIni::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                }
+                            }
+                        }
+                        else {
+                            AirtimeIni::UpdateIniValue($conf, $section, $oldSettings[$section]);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

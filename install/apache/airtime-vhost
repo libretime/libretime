@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+   ServerAdmin foo@bar.org
+   ServerName inferno.web.id
+   DocumentRoot /var/www/airtime/public
+
+  <Directory /var/www/airtime/public>
+      DirectoryIndex index.php
+      AllowOverride all
+      Order allow,deny
+      Allow from all
+  </Directory>
+</VirtualHost>

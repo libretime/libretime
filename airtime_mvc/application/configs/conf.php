@@ -5,10 +5,6 @@
  * /etc/airtime/pypo.cfg
  * /etc/airtime/recorder.cfg
  */
- 
-define('AIRTIME_VERSION', '1.9.0-devel');
-define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
-define('AIRTIME_REST_VERSION', '1.1');
 
 global $CC_CONFIG;
 

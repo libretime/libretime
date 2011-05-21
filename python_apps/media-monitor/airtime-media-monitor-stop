@@ -19,6 +19,7 @@ try:
         os.system("svc -d /etc/service/recorder 1>/dev/null 2>&1")
         os.system("svc -d /etc/service/recorder/log 1>/dev/null 2>&1")
         os.system("kill -2 %s" % recorder_pid)
+        print "Shutting down process id %s" % recorder_pid
         print "Success."
     else:
         print "Not Running."

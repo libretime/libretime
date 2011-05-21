@@ -10,18 +10,19 @@ if os.geteuid() != 0:
     sys.exit(1)
     
 try:
-    print "Stopping daemontool script pypo...",
+    print "Stopping daemontool script pypo..."
     p1 = subprocess.Popen(["ps", "aux"], stdout=subprocess.PIPE)
     p2 = subprocess.Popen(["awk", "/pypo-cli.py/ && !/awk/ {print $2}"], stdin=p1.stdout, stdout=subprocess.PIPE)
     pypo_pid = p2.communicate()[0].strip(" \n\r\t")
     if (len(pypo_pid) > 0):
         os.system("svc -d /etc/service/pypo 1>/dev/null 2>&1")
         os.system("svc -d /etc/service/pypo/log 1>/dev/null 2>&1")
+        print "Shutting down process id %s" % pypo_pid
         print "Success."
     else:
         print "Not Running."
 
-    print "Stopping daemontool script pypo-liquidsoap...",
+    print "Stopping daemontool script pypo-liquidsoap..."
     p1 = subprocess.Popen(["ps", "aux"], stdout=subprocess.PIPE)
     p2 = subprocess.Popen(["awk", "/ls_script.liq/ && !/awk/ {print $2}"], stdin=p1.stdout, stdout=subprocess.PIPE)
     liquidsoap_pid = p2.communicate()[0].strip(" \n\r\t")
@@ -32,6 +33,7 @@ try:
         pids = liquidsoap_pid.split("\n")
         for pid in pids:
             os.system("kill -2 %s" % pid)
+            print "Shutting down process id %s" % liquidsoap_pid
         print "Success."
     else:
         print "Not Running."

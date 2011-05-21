@@ -63,8 +63,8 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        $downlaod = $this->_getParam('download');
-        
+        $download = $this->_getParam('download');
+
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
         	header('HTTP/1.0 401 Unauthorized');
@@ -95,11 +95,19 @@ class ApiController extends Zend_Controller_Action
                 header("Content-Type: audio/ogg");
             else if ($ext == "mp3")
                 header("Content-Type: audio/mpeg");
-			if ($downlaod){
+			if ($download){
 				header('Content-Disposition: attachment; filename="'.$media->getName().'"');
 			}
             header("Content-Length: " . filesize($filepath));
-            fpassthru($fp);
+            
+            //flush the file contents 16 KBytes at a time. In the future we may
+            //want to use the "X-Sendfile header" method instead.
+            while (!feof($fp)) {
+                echo fread($fp, 64*1024);
+                ob_end_flush();
+            }
+            fclose($fp);
+            
             return;
           }
       }
@@ -263,6 +271,14 @@ class ApiController extends Zend_Controller_Action
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
         $this->view->shows = Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
+
+
+        $this->view->is_recording = false;
+
+        $rows = Show_DAL::GetCurrentShow($today_timestamp);
+        if (count($rows) > 0){
+            $this->view->is_recording = ($rows[0]['record'] == 1);
+        }
     }
 
     public function uploadRecordedAction()
@@ -281,38 +297,47 @@ class ApiController extends Zend_Controller_Action
         $file = StoredFile::uploadFile($upload_dir);
 
         $show_instance  = $this->_getParam('show_instance');
-        $show_inst = new ShowInstance($show_instance);
 
-        $show_inst->setRecordedFile($file->getId());
-        $show_name = $show_inst->getName();
-        $show_genre = $show_inst->getGenre();
-        $show_start_time = $show_inst->getShowStart();
+        try {
+            $show_inst = new ShowInstance($show_instance);
 
-        if(Application_Model_Preference::GetDoSoundCloudUpload())
-        {
-            for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
+            $show_inst->setRecordedFile($file->getId());
+            $show_name = $show_inst->getName();
+            $show_genre = $show_inst->getGenre();
+            $show_start_time = $show_inst->getShowStart();
 
-                $show = new Show($show_inst->getShowId());
-                $description = $show->getDescription();
-                $hosts = $show->getHosts();
+            if(Application_Model_Preference::GetDoSoundCloudUpload())
+            {
+                for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
 
-                $tags = array_merge($hosts, array($show_name));
+                    $show = new Show($show_inst->getShowId());
+                    $description = $show->getDescription();
+                    $hosts = $show->getHosts();
 
-                try {
-                    $soundcloud = new ATSoundcloud();
-                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
-                    $show_inst->setSoundCloudFileId($soundcloud_id);
-                    break;
-                }
-                catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
-                    $code = $e->getHttpCode();
-                    if(!in_array($code, array(0, 100))) {
+                    $tags = array_merge($hosts, array($show_name));
+
+                    try {
+                        $soundcloud = new ATSoundcloud();
+                        $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
+                        $show_inst->setSoundCloudFileId($soundcloud_id);
                         break;
                     }
-                }
+                    catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+                        $code = $e->getHttpCode();
+                        if(!in_array($code, array(0, 100))) {
+                            break;
+                        }
+                    }
 
-                sleep($CC_CONFIG['soundcloud-connection-wait']);
+                    sleep($CC_CONFIG['soundcloud-connection-wait']);
+                }
             }
+        } catch (Exception $e){
+            //we've reached here probably because the show was
+            //cancelled, and therefore the show instance does not
+            //exist anymore (ShowInstance constructor threw this error).
+            //We've done all we can do (upload the file and put it in
+            //the library), now lets just return.
         }
 
         $this->view->id = $file->getId();

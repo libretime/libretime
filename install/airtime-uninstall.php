@@ -15,6 +15,7 @@ if (!file_exists(AirtimeIni::CONF_FILE_AIRTIME)) {
     echo "Most likely this means that Airtime is not installed, so there is nothing to do.".PHP_EOL.PHP_EOL;
     exit();
 }
+require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.php');
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
 echo PHP_EOL;
@@ -31,7 +32,7 @@ AirtimeInstall::UninstallPhpCode();
 echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...".PHP_EOL;
 
 // check if DB exists
-$command = "echo \"DROP DATABASE IF EXISTS ".$CC_CONFIG['dsn']['database']."\" | sudo -u postgres psql";
+$command = "echo \"DROP DATABASE IF EXISTS ".$CC_CONFIG['dsn']['database']."\" | su postgres -c psql";
 
 @exec($command, $output, $dbDeleteFailed);
 
@@ -88,9 +89,10 @@ echo PHP_EOL."*** Uninstalling Show Recorder ***".PHP_EOL;
 $command = "python ".__DIR__."/../python_apps/show-recorder/install/recorder-uninstall.py";
 system($command);
 
-echo PHP_EOL."*** Uninstalling Media Monitor ***".PHP_EOL;
-$command = "python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-uninstall.py";
-system($command);
+//wait for 1.9.0 release
+//echo PHP_EOL."*** Uninstalling Media Monitor ***".PHP_EOL;
+//$command = "python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-uninstall.py";
+//system($command);
 
 #Disabled as this should be a manual process
 #AirtimeIni::RemoveIniFiles();

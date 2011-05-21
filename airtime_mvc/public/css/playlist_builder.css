@@ -121,7 +121,7 @@
 	font-size:15px;
 	margin:8px 0 10px 0;
 	padding:0;
-	color:#6e6e6e;
+	color:#4f4f4f;
 	font-weight:normal;
 	clear:both;
 	float:left;
@@ -315,3 +315,123 @@
 	background: transparent url(images/cue_playlist.png) no-repeat 0 -30px;
 	border:none;
 }
+
+/*--/////////////// Changes 16.05.2011 ////////////--*/
+
+.playlist_title {
+	margin: 16px 0 10px 0;
+	height:26px;
+	clear:both;
+}
+#side_playlist .playlist_title h3, #side_playlist .playlist_title h4 {
+    margin: 0;
+    padding: 0;
+}
+#side_playlist .playlist_title h3 {
+	float:left;
+	width:84%;
+}
+#side_playlist .playlist_title h4 {
+	float:right;
+	clear:none;
+	font-size: 16px;
+	padding-top:4px;
+}
+
+#side_playlist .playlist_title h3 a {
+    padding: 0 22px 0 2px;
+	background:url(images/icon_edit_l.png) no-repeat right center;
+	text-decoration:none;
+
+}
+#side_playlist .playlist_title h3 a:hover {
+	background-color:#D8D8D8;
+}
+.element_hidden {
+	display: none;
+}
+#side_playlist .playlist_title h3 input[type="text"] {
+    background-color: #dddddd;
+    border: 1px solid #8F8F8F;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    height: 23px;
+    margin: 0;
+    padding: 0;
+    text-indent: 3px;
+    -moz-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
+	width:95%;
+}
+
+#side_playlist .zend_form {
+    margin: 0;
+    padding: 0;
+}
+#side_playlist .zend_form dt, #side_playlist .zend_form dd {
+    display: block;
+    float: none;
+    margin: 4px 0 0;
+    padding: 0;
+	width:100%;
+}
+#side_playlist .zend_form dd.buttons {
+    margin-top: 8px;
+	text-align:right;
+}
+#side_playlist .zend_form dd.buttons .ui-button {
+    margin: 0 0 0 10px;
+}
+
+#side_playlist .zend_form dt {
+	color:#5B5B5B;
+    font-weight: bold;
+    margin: 9px 0 0;
+    padding: 0 2px;
+}
+
+#side_playlist .zend_form dt:first-child {
+    margin-top: 0;
+}
+
+#side_playlist .zend_form dd textarea {
+    background-color: #dddddd;
+    border: 1px solid #5B5B5B;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    margin: 0;
+    padding: 2px 0 0 0;
+    text-indent: 3px;
+    -moz-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
+	width:99.7%;
+}
+
+#side_playlist fieldset {
+    border: 1px solid #9a9a9a;
+    margin: 0 0 8px 0;
+    padding: 8px;
+}
+#side_playlist fieldset.closed .zend_form{
+	display:none;
+}
+#side_playlist fieldset.closed {
+    border-width: 1px 0 0;
+    margin-bottom: -6px;
+	margin-left:1px;
+}
+fieldset > legend {
+    color: #4f4f4f;
+    font-size: 12px;
+    line-height: 140%;
+}
+.ui-widget-content fieldset legend .ui-icon {
+    float: left;
+	background-image:url(redmond/images/ui-icons_454545_256x240.png);
+}
+#side_playlist .zend_form input, #side_playlist .zend_form textarea {
+    width: auto;
+}
+	
