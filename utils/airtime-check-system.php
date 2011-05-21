@@ -28,17 +28,29 @@ AirtimeCheck::CheckPypoRunning();
 AirtimeCheck::CheckLiquidsoapRunning();
 AirtimeCheck::CheckIcecastRunning();
 
+echo PHP_EOL;
 if (AirtimeCheck::$check_system_ok){
-    echo PHP_EOL."System setup looks OK!".PHP_EOL;
+    output_msg("System setup looks OK!");
 } else {
-    echo PHP_EOL."There appears to be problems with your setup. Please visit ".PHP_EOL
-            ."http://wiki.sourcefabric.org/x/HABQ for troubleshooting info.".PHP_EOL;
+    output_msg("There appears to be problems with your setup. Please visit");
+    output_msg("http://wiki.sourcefabric.org/x/HABQ for troubleshooting info.");
 }
 
 echo PHP_EOL;
 
+function output_status($key, $value) 
+{
+    echo sprintf("%-31s= %s", $key, $value).PHP_EOL;
+}
 
-class AirtimeCheck{
+function output_msg($msg)
+{
+    //echo "  -- ".PHP_EOL;
+    echo "  -- $msg".PHP_EOL;
+    //echo "  -- ".PHP_EOL;
+}
+
+class AirtimeCheck {
 
     const CHECK_OK = "OK";
     const CHECK_FAILED = "FAILED";
@@ -59,7 +71,8 @@ class AirtimeCheck{
         }
     }
 
-    public static function CheckPypoRunning(){
+    public static function CheckPypoRunning()
+    {
         $command = "sudo svstat /etc/service/pypo";
         exec($command, $output, $result);
 
@@ -77,7 +90,7 @@ class AirtimeCheck{
             self::$check_system_ok = false;
         }
 
-        echo "PYPO_PID=".$status.PHP_EOL;
+        output_status("PLAYOUT_ENGINE_PROCESS_ID", $status);
 
         $status = AirtimeCheck::CHECK_FAILED;
         $pos = strpos($value, ")");
@@ -88,11 +101,20 @@ class AirtimeCheck{
         } else {
             self::$check_system_ok = false;
         }
-
-        echo "PYPO_RUNNING_SECONDS=".$status.PHP_EOL;
+        output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $status);
+        if ((int)$status < 3) {
+            self::$check_system_ok = false;
+            output_msg("WARNING! It looks like the playout engine is continually restarting.");
+            $command = "tail -10 /var/log/airtime/pypo/main/current";
+            exec($command, $output, $result);
+            foreach ($output as $line) {
+                output_msg($line);
+            }
+        } 
     }
 
-    public static function CheckLiquidsoapRunning(){
+    public static function CheckLiquidsoapRunning()
+    {
         $command = "sudo svstat /etc/service/pypo-liquidsoap";
         exec($command, $output, $result);
 
@@ -109,7 +131,7 @@ class AirtimeCheck{
             self::$check_system_ok = false;
         }
 
-        echo "LIQUIDSOAP_PID=".$status.PHP_EOL;
+        output_status("LIQUIDSOAP_PROCESS_ID", $status);
 
         $status = AirtimeCheck::CHECK_FAILED;
         $pos = strpos($value, ")");
@@ -121,10 +143,20 @@ class AirtimeCheck{
             self::$check_system_ok = false;
         }
 
-        echo "LIQUIDSOAP_RUNNING_SECONDS=".$status.PHP_EOL;
+        output_status("LIQUIDSOAP_RUNNING_SECONDS", $status);
+        if ((int)$status < 3) {
+            self::$check_system_ok = false;
+            output_msg("WARNING! It looks like liquidsoap is continually restarting.");
+            $command = "tail -10 /var/log/airtime/pypo-liquidsoap/main/current";
+            exec($command, $output, $result);
+            foreach ($output as $line) {
+                output_msg($line);
+            }
+        } 
     }
     
-    public static function CheckIcecastRunning(){
+    public static function CheckIcecastRunning()
+    {
         $command = "ps aux | grep \"^icecast2\"";
         exec($command, $output, $result);
         
@@ -135,10 +167,11 @@ class AirtimeCheck{
         } else {
             self::$check_system_ok = false;
         }
-        echo "ICECAST_PID=$status".PHP_EOL;
+        output_status("ICECAST_PROCESS_ID", $status);
     }
 
-    public static function CheckConfigFilesExist(){
+    public static function CheckConfigFilesExist()
+    {
         //echo PHP_EOL."Verifying Config Files in /etc/airtime".PHP_EOL;
         $confFiles = array("airtime.conf",
                             "liquidsoap.cfg",
@@ -155,11 +188,12 @@ class AirtimeCheck{
             }
         }
 
-        echo "AIRTIME_CONFIG_FILES=$allFound".PHP_EOL;
+        output_status("AIRTIME_CONFIG_FILES", $allFound);
         
     }
 
-    public static function GetAirtimeConf(){
+    public static function GetAirtimeConf()
+    {
         $ini = parse_ini_file("/etc/airtime/airtime.conf", true);
 
         if ($ini === false){
@@ -170,7 +204,8 @@ class AirtimeCheck{
         return $ini;
     }
 
-    public static function GetPypoCfg(){
+    public static function GetPypoCfg()
+    {
         $ini = parse_ini_file("/etc/airtime/pypo.cfg", false);
 
         if ($ini === false){
@@ -181,7 +216,8 @@ class AirtimeCheck{
         return $ini;
     }
 
-    public static function GetDbConnection($airtimeIni){
+    public static function GetDbConnection($airtimeIni)
+    {
         $host = $airtimeIni["database"]["host"];
         $dbname = $airtimeIni["database"]["dbname"];
         $dbuser = $airtimeIni["database"]["dbuser"];
@@ -196,10 +232,11 @@ class AirtimeCheck{
             $status = AirtimeCheck::CHECK_OK;
         }
 
-        echo "PGSQL_DATABASE=$status".PHP_EOL;
+        output_status("POSTGRESQL_DATABASE", $status);
     }
     
-    public static function PythonLibrariesInstalled(){
+    public static function PythonLibrariesInstalled()
+    {
         $command = "pip freeze | grep kombu";
         exec($command, $output, $result);
         
@@ -211,7 +248,7 @@ class AirtimeCheck{
             self::$check_system_ok = false;
         }
         
-        echo "PYTHON_KOMBU_VERSION=$status".PHP_EOL;
+        output_status("PYTHON_KOMBU_VERSION", $status);
         
         unset($output);
         $command = "pip freeze | grep poster";
@@ -225,10 +262,11 @@ class AirtimeCheck{
             self::$check_system_ok = false;
         }
         
-        echo "PYTHON_POSTER_VERSION=$status".PHP_EOL;
+        output_status("PYTHON_POSTER_VERSION", $status);
     }
 
-    public static function CheckDbTables(){
+    public static function CheckDbTables()
+    {
         
     }
 
@@ -259,7 +297,8 @@ class AirtimeCheck{
     }
     * */
     
-    public static function CheckRabbitMqConnection($airtimeIni){
+    public static function CheckRabbitMqConnection($airtimeIni)
+    {
         try {
             $status = AirtimeCheck::CHECK_OK;
             $conn = new AMQPConnection($airtimeIni["rabbitmq"]["host"],
@@ -271,32 +310,37 @@ class AirtimeCheck{
             self::$check_system_ok = false;
         }
         
-        echo "RABBITMQ_SERVER=$status".PHP_EOL;
+        output_status("RABBITMQ_SERVER", $status);
     }
 
-    public static function GetAirtimeServerVersion($pypoCfg){
+    public static function GetAirtimeServerVersion($pypoCfg)
+    {
 
         $baseUrl = $pypoCfg["base_url"];
         $basePort = $pypoCfg["base_port"];
         $apiKey = "%%api_key%%";
 
         $url = "http://$baseUrl:$basePort/api/version/api_key/$apiKey";
-        echo "AIRTIME_VERSION_URL=$url".PHP_EOL;
+        output_status("AIRTIME_VERSION_URL", $url);
 
         $apiKey = $pypoCfg["api_key"];
         $url = "http://$baseUrl:$basePort/api/version/api_key/$apiKey";
        
         $rh = fopen($url, "r");
 
-        if ($rh !== false){
+        $version = "Could not contact server";
+        if ($rh !== false) {
+            output_status("APACHE_CONFIGURED", "YES");
             while (($buffer = fgets($rh)) !== false) {
                 $json = json_decode(trim($buffer), true);
                 if (!is_null($json)){
                     $version = $json["version"];
-                    echo "AIRTIME_VERSION_STRING=$version".PHP_EOL;
                 }
             }
+        } else {
+            output_status("APACHE_CONFIGURED", "NO");
         }
+        output_status("AIRTIME_VERSION", $version);
     }
 
     public static function CheckApacheVHostFiles(){
@@ -350,7 +394,7 @@ class AirtimeCheck{
             $os_string = "Unknown";
         }
 
-        echo "OS_TYPE=$os_string".PHP_EOL;
+        output_status("OS", $os_string);
     }
 }
 
