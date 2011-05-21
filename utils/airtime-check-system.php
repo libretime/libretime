@@ -102,7 +102,7 @@ class AirtimeCheck {
             self::$check_system_ok = false;
         }
         output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $status);
-        if ((int)$status < 3) {
+        if (is_numeric($status) && (int)$status < 3) {
             self::$check_system_ok = false;
             output_msg("WARNING! It looks like the playout engine is continually restarting.");
             $command = "tail -10 /var/log/airtime/pypo/main/current";
@@ -144,7 +144,7 @@ class AirtimeCheck {
         }
 
         output_status("LIQUIDSOAP_RUNNING_SECONDS", $status);
-        if ((int)$status < 3) {
+        if (is_numeric($status) && (int)$status < 3) {
             self::$check_system_ok = false;
             output_msg("WARNING! It looks like liquidsoap is continually restarting.");
             $command = "tail -10 /var/log/airtime/pypo-liquidsoap/main/current";
