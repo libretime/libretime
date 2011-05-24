@@ -19,16 +19,16 @@ class ApiController extends Zend_Controller_Action
         // action body
     }
 
-	/**
-	 * Returns Airtime version. i.e "1.7.0 alpha"
-	 *
-	 * First checks to ensure the correct API key was
-	 * supplied, then returns AIRTIME_VERSION as defined
-	 * in application/conf.php
-	 *
-	 * @return void
-	 *
-	 */
+    /**
+     * Returns Airtime version. i.e "1.7.0 alpha"
+     *
+     * First checks to ensure the correct API key was
+     * supplied, then returns AIRTIME_VERSION as defined
+     * in application/conf.php
+     *
+     * @return void
+     *
+     */
     public function versionAction()
     {
         global $CC_CONFIG;
@@ -40,20 +40,20 @@ class ApiController extends Zend_Controller_Action
         $api_key = $this->_getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
-        	header('HTTP/1.0 401 Unauthorized');
-        	print 'You are not allowed to access this resource.';
-        	exit;
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
         }
         $jsonStr = json_encode(array("version"=>AIRTIME_VERSION));
         echo $jsonStr;
     }
 
-	/**
-	 * Allows remote client to download requested media file.
-	 *
-	 * @return void
-	 *      The given value increased by the increment amount.
-	 */
+    /**
+     * Allows remote client to download requested media file.
+     *
+     * @return void
+     *      The given value increased by the increment amount.
+     */
     public function getMediaAction()
     {
         global $CC_CONFIG;
@@ -67,9 +67,9 @@ class ApiController extends Zend_Controller_Action
 
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
-        	header('HTTP/1.0 401 Unauthorized');
-        	print 'You are not allowed to access this resource.';
-        	exit;
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
         }
 
         $filename = $this->_getParam("file");
@@ -80,39 +80,40 @@ class ApiController extends Zend_Controller_Action
             $filepath = $media->getRealFilePath();
             if(!is_file($filepath))
             {
-            	header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-            	//print 'Resource in database, but not in storage. Sorry.';
-            	exit;
+                header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+                //print 'Resource in database, but not in storage. Sorry.';
+                exit;
             }
 
-            // !! binary mode !!
-            $fp = fopen($filepath, 'rb');
 
-        	// possibly use fileinfo module here in the future.
-        	// http://www.php.net/manual/en/book.fileinfo.php
+            // possibly use fileinfo module here in the future.
+            // http://www.php.net/manual/en/book.fileinfo.php
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
             if ($ext == "ogg")
                 header("Content-Type: audio/ogg");
             else if ($ext == "mp3")
                 header("Content-Type: audio/mpeg");
-			if ($download){
-				header('Content-Disposition: attachment; filename="'.$media->getName().'"');
-			}
-            header("Content-Length: " . filesize($filepath));
-            
-            //flush the file contents 16 KBytes at a time. In the future we may
-            //want to use the "X-Sendfile header" method instead.
-            while (!feof($fp)) {
-                echo fread($fp, 64*1024);
-                ob_end_flush();
+            if ($download){
+                header('Content-Disposition: attachment; filename="'.$media->getName().'"');
             }
+            header("Content-Length: " . filesize($filepath));
+
+            // !! binary mode !!
+            $fp = fopen($filepath, 'rb');
+            
+            //We can have multiple levels of output buffering. Need to
+            //keep looping until all have been disabled!!!
+            //http://www.php.net/manual/en/function.ob-end-flush.php
+            while (@ob_end_flush());
+            
+            fpassthru($fp);
             fclose($fp);
             
             return;
           }
       }
-	  header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-	  exit;
+      header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+      exit;
     }
 
     public function liveInfoAction()
@@ -261,9 +262,9 @@ class ApiController extends Zend_Controller_Action
         $api_key = $this->_getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
-        	header('HTTP/1.0 401 Unauthorized');
-        	print 'You are not allowed to access this resource.';
-        	exit;
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
         }
 
         $today_timestamp = date("Y-m-d H:i:s");
@@ -288,9 +289,9 @@ class ApiController extends Zend_Controller_Action
         $api_key = $this->_getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
-        	header('HTTP/1.0 401 Unauthorized');
-        	print 'You are not allowed to access this resource.';
-        	exit;
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
         }
 
         $upload_dir = ini_get("upload_tmp_dir");
@@ -350,9 +351,9 @@ class ApiController extends Zend_Controller_Action
         $api_key = $this->_getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
-        	header('HTTP/1.0 401 Unauthorized');
-        	print 'You are not allowed to access this resource.';
-        	exit;
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
         }
 
         $md = $this->_getParam('md');
