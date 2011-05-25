@@ -34,7 +34,7 @@ class AirtimeInstall
         }
     }
 
-    public static function CheckForVersionBeforeInstall()
+    public static function GetVersionInstalled()
     {
         global $CC_DBC, $CC_CONFIG;
 

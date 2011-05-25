@@ -3,6 +3,10 @@
  * @package Airtime
  * @copyright 2011 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
+ *
+ * Checks if a previous version of Airtime is currently installed, upgrades Airtime if so.
+ * Performs a new install (new configs, database install) if a version of Airtime is not found
+ * If the current version is found to be installed the User is presented with the help menu and can choose -r to reinstall.
  */
 set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 
@@ -16,7 +20,7 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.
 AirtimeInstall::ExitIfNotRoot();
 
 $newInstall = false;
-$version = AirtimeInstall::CheckForVersionBeforeInstall();
+$version = AirtimeInstall::GetVersionInstalled();
 
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
@@ -43,17 +47,15 @@ if (isset($opts->h)) {
 }
 
 //the current version exists.
-if(isset($version) && $version != false && $version == AIRTIME_VERSION && !isset($opts->r)) {
-
+if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime $version is already installed.".PHP_EOL;
+    echo $opts->getUsageMessage();
     exit();
 }
 //a previous version exists.
-if(isset($version) && $version != false && $version < AIRTIME_VERSION) {
-
+if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
     echo "Airtime version $version found.".PHP_EOL;
-    $command = "php airtime-upgrade.php";
-    system($command);
+    require_once("airtime-upgrade.php");
     exit();
 }
 if(is_null($version)) {
@@ -61,7 +63,7 @@ if(is_null($version)) {
 }
 
 $db_install = true;
-if (is_null($opts->r) && isset($opts->n) && !$newInstall){
+if (is_null($opts->r) && isset($opts->n)){
 	$db_install = false;
 }
 
