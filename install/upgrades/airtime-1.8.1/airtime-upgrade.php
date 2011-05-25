@@ -236,7 +236,8 @@ function InstallBinaries()
     exec("cp -R ".$AIRTIME_UTILS." ".CONF_DIR_BINARIES);
 }
 
-$suffix = date("Ymdhis");
+// Backup the config files
+$suffix = date("Ymdhis")."-1.8.1";
 foreach ($configFiles as $conf) {
     if (file_exists($conf)) {
         echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
