@@ -113,7 +113,10 @@ if __name__ == '__main__':
     # initialize
     g = Global()
 
-    while not g.selfcheck(): time.sleep(5000)
+    #NOTE: MUST EXIT HERE!! while not g.selfcheck(): time.sleep() 
+    #Causes pypo to hang on system boot!!!
+    if not g.selfcheck():
+        sys.exit()
     
     logger = logging.getLogger()
 
