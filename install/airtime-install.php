@@ -46,18 +46,23 @@ if (isset($opts->h)) {
     exit;
 }
 
-//the current version exists.
+// The current version is already installed.
 if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime $version is already installed.".PHP_EOL;
     echo $opts->getUsageMessage();
     exit();
 }
-//a previous version exists.
+// A previous version exists - if so, upgrade.
 if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
     echo "Airtime version $version found.".PHP_EOL;
     require_once("airtime-upgrade.php");
     exit();
 }
+
+// -------------------------------------------------------------------------
+// The only way we get here is if we are doing a new install or a reinstall.
+// -------------------------------------------------------------------------
+
 if(is_null($version)) {
     $newInstall = true;
 }
