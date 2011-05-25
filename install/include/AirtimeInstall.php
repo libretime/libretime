@@ -212,8 +212,6 @@ class AirtimeInstall
     {
         global $CC_DBC;
 
-        echo "* Installing Postgresql scripting language".PHP_EOL;
-
         // Install postgres scripting language
         $langIsInstalled = $CC_DBC->GetOne('SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'');
         if ($langIsInstalled == '0') {
