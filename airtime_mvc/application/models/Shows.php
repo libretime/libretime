@@ -320,7 +320,7 @@ class Show {
      * @param string $p_date
      *      The date which to delete after
      */
-    public function removeAllInstancesAfterDate($p_date){
+    public function removeAllInstancesFromDate($p_date){
         global $CC_DBC;
 
         $date = new DateHelper;
@@ -328,7 +328,7 @@ class Show {
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances "
-                ." WHERE date(starts) > DATE '$p_date'"
+                ." WHERE date(starts) >= DATE '$p_date'"
                 ." AND starts > TIMESTAMP '$timestamp'"
                 ." AND show_id = $showId";
 
@@ -590,7 +590,7 @@ class Show {
                 //show "Never Ends" option was toggled.
                 if ($p_data['add_show_no_end']){
                 } else {
-                    $p_show->removeAllInstancesAfterDate($p_endDate);
+                    $p_show->removeAllInstancesFromDate($p_endDate);
                 }
             }
             if ($p_show->getRepeatingEndDate() != $p_data['add_show_end_date']){
@@ -599,7 +599,7 @@ class Show {
                 $newDate = strtotime($p_data['add_show_end_date']);
                 $oldDate = strtotime($p_show->getRepeatingEndDate());
                 if ($newDate < $oldDate){
-                    $p_show->removeAllInstancesAfterDate($p_endDate);
+                    $p_show->removeAllInstancesFromDate($p_endDate);
                 }
             }
         }
@@ -608,7 +608,7 @@ class Show {
     /**
      * Create a show.
      *
-     * Note: end dates are non inclusive.
+     * Note: end dates are inclusive.
      *
      * @param array $data
      * @return int
@@ -624,17 +624,18 @@ class Show {
 
         if ($data['add_show_no_end']) {
             $endDate = NULL;
-            //$data['add_show_repeats'] = 1;
         }
         else if ($data['add_show_repeats']) {
-            $sql = "SELECT date '{$data['add_show_end_date']}' + INTERVAL '1 day' ";
-            $r = $con->query($sql);
-            $endDate = $r->fetchColumn(0);
+            //$sql = "SELECT date '{$data['add_show_end_date']}' + INTERVAL '1 day' ";
+            //$r = $con->query($sql);
+            //$endDate = $r->fetchColumn(0);
+            $endDate = $data['add_show_end_date'];
         }
         else {
-            $sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '1 day' ";
-            $r = $con->query($sql);
-            $endDate = $r->fetchColumn(0);
+            //$sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '1 day' ";
+            //$r = $con->query($sql);
+            //$endDate = $r->fetchColumn(0);
+            $endDate = $data['add_show_start_date'];
         }
 
         //only want the day of the week from the start date.
@@ -703,7 +704,7 @@ class Show {
                     $start = $data['add_show_start_date'];
                 }
 
-                if (strtotime($start) < strtotime($endDate) || is_null($endDate)) {
+                if (strtotime($start) <= strtotime($endDate) || is_null($endDate)) {
                     $showDay = new CcShowDays();
                     $showDay->setDbFirstShow($start);
                     $showDay->setDbLastShow($endDate);
@@ -921,7 +922,7 @@ class Show {
         $rebroadcasts = $CC_DBC->GetAll($sql);
         $show = new Show($show_id);
 
-        while(strtotime($next_date) < strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
+        while(strtotime($next_date) <= strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
 
             $start = $next_date;
 
@@ -1179,7 +1180,7 @@ class ShowInstance {
     {
         $this->_instanceId = $instanceId;
         $this->_showInstance = CcShowInstancesQuery::create()->findPK($instanceId);
-        
+
         if (is_null($this->_showInstance)){
             throw new Exception();
         }
@@ -1630,32 +1631,32 @@ class ShowInstance {
 
         return $items;
     }
-        
+
     public static function GetShowsInstancesIdsInRange($p_timeNow, $p_start, $p_end)
     {
 		global $CC_DBC;
-		
-		$sql = "SELECT id FROM cc_show_instances AS si "			
+
+		$sql = "SELECT id FROM cc_show_instances AS si "
 			."WHERE ("
 			."(si.starts < TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
 			."AND si.ends > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds') "
-			."OR (si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' " 
+			."OR (si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
 			."AND si.ends < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
 			."OR (si.starts < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds' "
 			."AND si.ends > TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
 			.") "
 			." ORDER BY si.starts";
-			
+
 		$rows = $CC_DBC->GetAll($sql);
 		return $rows;
 	}
-	
+
     public function getScheduleItemsInRange($timeNow, $start, $end)
     {
         global $CC_DBC, $CC_CONFIG;
-        
+
         $instanceId = $this->_instanceId;
-        
+
         $sql = "SELECT"
         ." si.starts as show_starts,"
         ." si.ends as show_ends,"
@@ -1687,30 +1688,30 @@ class ShowInstance {
 
         return $CC_DBC->GetAll($sql);
     }
-    
+
     public function getLastAudioItemEnd(){
 		global $CC_DBC;
-		
+
 		$sql = "SELECT ends FROM cc_schedule "
 			."WHERE instance_id = {$this->_instanceId} "
 			."ORDER BY ends DESC "
 			."LIMIT 1";
-			
-		return $CC_DBC->GetOne($sql); 
+
+		return $CC_DBC->GetOne($sql);
 	}
-    
+
     public function getShowEndGapTime(){
 		$showEnd = $this->getShowEnd();
 		$lastItemEnd = $this->getLastAudioItemEnd();
-		
+
 		if (is_null($lastItemEnd)){
 			$lastItemEnd = $this->getShowStart();
 		}
-		
-				
+
+
 		$diff = strtotime($showEnd) - strtotime($lastItemEnd);
-		
-		return ($diff < 0) ? 0 : $diff;	
+
+		return ($diff < 0) ? 0 : $diff;
 	}
 
     public static function GetLastShowInstance($p_timeNow){

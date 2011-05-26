@@ -227,7 +227,7 @@ class ScheduleController extends Zend_Controller_Action
                     'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
         }
 
-        if (strtotime($show->getShowEnd()) <= strtotime($today_timestamp) 
+        if (strtotime($show->getShowEnd()) <= strtotime($today_timestamp)
             && is_null($show->getSoundCloudFileId())
             && Application_Model_Preference::GetDoSoundCloudUpload()) {
             $menu[] = array('action' => array('type' => 'fn',
@@ -405,9 +405,9 @@ class ScheduleController extends Zend_Controller_Action
         if(!$user->isAdmin()) {
             return;
         }
-        
+
         $showInstanceId = $this->_getParam('id');
-        
+
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
 		$formWhen = new Application_Form_AddShowWhen();
@@ -438,7 +438,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $showInstance = new ShowInstance($showInstanceId);
         $show = new Show($showInstance->getShowId());
-        
+
         $formWhat->populate(array('add_show_id' => $show->getId(),
                     'add_show_name' => $show->getName(),
                     'add_show_url' => $show->getUrl(),
@@ -455,10 +455,14 @@ class ScheduleController extends Zend_Controller_Action
         foreach($showDays as $showDay){
             array_push($days, $showDay->getDbDay());
         }
-        
+
+        $displayedEndDate = new DateTime($show->getRepeatingEndDate());
+        $displayedEndDate->sub(new DateInterval("P1D"));//end dates are stored non-inclusively.
+        $displayedEndDate = $displayedEndDate->format("Y-m-d");
+
         $formRepeats->populate(array('add_show_repeat_type' => $show->getRepeatType(),
                                     'add_show_day_check' => $days,
-                                    'add_show_end_date' => $show->getRepeatingEndDate(),
+                                    'add_show_end_date' => $displayedEndDate,
                                     'add_show_no_end' => ($show->getRepeatingEndDate() == '')));
 
         $formRecord->populate(array('add_show_record' => $show->isRecorded(),
@@ -475,7 +479,7 @@ class ScheduleController extends Zend_Controller_Action
             $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = Show::removeSecondsFromTime($rebroadcast['start_time']);
             $i++;
         }
-        $formRebroadcast->populate($rebroadcastFormValues); 
+        $formRebroadcast->populate($rebroadcastFormValues);
 
         $rebroadcastsAbsolute = $show->getRebroadcastsAbsolute();
         $rebroadcastAbsoluteFormValues = array();
@@ -497,7 +501,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $formStyle->populate(array('add_show_background_color' => $show->getBackgroundColor(),
                                     'add_show_color' => $show->getColor()));
-        
+
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         $this->view->entries = 5;
     }
@@ -543,7 +547,7 @@ class ScheduleController extends Zend_Controller_Action
         foreach($js as $j){
             $data[$j["name"]] = $j["value"];
         }
-     
+
         $data['add_show_hosts'] =  $this->_getParam('hosts');
         $data['add_show_day_check'] =  $this->_getParam('days');
 
@@ -586,7 +590,7 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         if($data["add_show_repeats"]) {
-     
+
 		    $repeats = $formRepeats->isValid($data);
             if($repeats) {
                 $repeats = $formRepeats->checkReliantFields($data);
@@ -596,7 +600,7 @@ class ScheduleController extends Zend_Controller_Action
             //make it valid, results don't matter anyways.
             $rebroadAb = 1;
 
-            if ($data["add_show_rebroadcast"]) {  
+            if ($data["add_show_rebroadcast"]) {
                 $rebroad = $formRebroadcast->isValid($data);
                 if($rebroad) {
                     $rebroad = $formRebroadcast->checkReliantFields($data);
@@ -612,7 +616,7 @@ class ScheduleController extends Zend_Controller_Action
             $repeats = 1;
             $rebroad = 1;
 
-            if ($data["add_show_rebroadcast"]) { 
+            if ($data["add_show_rebroadcast"]) {
                 $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
                 if($rebroadAb) {
                     $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
@@ -634,10 +638,10 @@ class ScheduleController extends Zend_Controller_Action
         if ($data['add_show_id'] != -1){
             $show = new Show($data['add_show_id']);
             $data['add_show_record'] = $show->isRecorded();
-            $record = $formRecord->isValid($data);  
+            $record = $formRecord->isValid($data);
             $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
         } else {
-            $record = $formRecord->isValid($data);  
+            $record = $formRecord->isValid($data);
         }
 
         if ($what && $when && $repeats && $who && $style && $record && $rebroadAb && $rebroad) {
@@ -650,7 +654,7 @@ class ScheduleController extends Zend_Controller_Action
             //send back a new form for the user.
             $formWhat->reset();
             $formWhat->populate(array('add_show_id' => '-1'));
-            
+
 		    $formWho->reset();
 		    $formWhen->reset();
             $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
@@ -704,10 +708,10 @@ class ScheduleController extends Zend_Controller_Action
             $show->deleteShow();
         }
     }
-    
+
     public function contentContextMenuAction(){
     	global $CC_CONFIG;
-    	
+
     	$id = $this->_getParam('id');
 
         $params = '/format/json/id/#id#/';
