@@ -629,13 +629,11 @@ class Show {
             $sql = "SELECT date '{$data['add_show_end_date']}' + INTERVAL '1 day' ";
             $r = $con->query($sql);
             $endDate = $r->fetchColumn(0);
-            //$endDate = $data['add_show_end_date'];
         }
         else {
             $sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '1 day' ";
             $r = $con->query($sql);
             $endDate = $r->fetchColumn(0);
-            //$endDate = $data['add_show_start_date'];
         }
 
         //only want the day of the week from the start date.
