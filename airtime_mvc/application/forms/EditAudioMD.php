@@ -43,9 +43,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             'required'   => true,
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
-            'validators' => array(
-                'NotEmpty',
-            )
+            'validators' => array('NotEmpty')
         ));
 
 		// Add album field
@@ -55,11 +53,12 @@ class Application_Form_EditAudioMD extends Zend_Form
             'filters'    => array('StringTrim')
         ));
 
-        // Add mood field
+        // Add track number field
         $this->addElement('text', 'track_number', array(
             'label'      => 'Track:',
             'class'      => 'input_text',
-            'filters'    => array('StringTrim')
+            'filters'    => array('StringTrim'),
+            'validators' => array('Int')
         ));
 
 		// Add genre field
@@ -78,7 +77,7 @@ class Application_Form_EditAudioMD extends Zend_Form
 				array('date', false, array('YYYY-MM-DD')),
                 array('date', false, array('YYYY-MM')),
         		array('date', false, array('YYYY'))
-    		) 
+    		)
         ));
 
 		// Add label field
@@ -135,9 +134,9 @@ class Application_Form_EditAudioMD extends Zend_Form
             'ignore'   => true,
             'class'    => 'ui-button ui-state-default',
             'label'    => 'Submit',
-            'decorators' => array( 
+            'decorators' => array(
                 'ViewHelper'
-            ) 
+            )
         ));
 
 		// Add the submit button
@@ -146,13 +145,13 @@ class Application_Form_EditAudioMD extends Zend_Form
             'class'    => 'ui-button ui-state-default ui-button-text-only md-cancel',
             'label'    => 'Cancel',
             'onclick' => 'javascript:document.location="/Library"',
-            'decorators' => array( 
+            'decorators' => array(
                 'ViewHelper'
             )
         ));
 
-        $this->addDisplayGroup(array('submit', 'cancel'), 'submitButtons', array( 
-                'decorators' => array( 
+        $this->addDisplayGroup(array('submit', 'cancel'), 'submitButtons', array(
+                'decorators' => array(
                     'FormElements',
                     'DtDdWrapper'
                     )

@@ -546,10 +546,12 @@ class StoredFile {
 
         $data = array();
         foreach ($p_values as $category => $value) {
-            $escapedValue = pg_escape_string($value);
-            $columnName = $category;
-            if (!is_null($columnName)) {
-                $data[] = "$columnName='$escapedValue'";
+            if (isset($value) && ($value != '')) {
+                $escapedValue = pg_escape_string($value);
+                $columnName = $category;
+                if (!is_null($columnName)) {
+                    $data[] = "$columnName='$escapedValue'";
+                }
             }
         }
 
