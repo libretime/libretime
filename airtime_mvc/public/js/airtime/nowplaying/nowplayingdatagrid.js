@@ -181,7 +181,7 @@ function createDataGrid(){
                     var nCell = document.createElement('td');
                     nCell.colSpan = iColspan;
                     nCell.className = "gap";
-                    nCell.innerHTML = "Gap until show end: " + gapTimeFormat + " seconds";
+                    nCell.innerHTML = "Gap until show end: " + gapTimeFormat;
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);                   
                 } else if ( sType.indexOf("r") != -1 ){
