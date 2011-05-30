@@ -53,8 +53,8 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
                 $this->getElement('add_show_rebroadcast_date_'.$i)->setErrors(array("Day must be specified"));
                 $valid = false;
             }
-            
-            
+
+
             if (trim($time) == ""){
                 $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array("Time must be specified"));
                 $valid = false;
@@ -68,7 +68,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             $days = explode(" ", $days);
             $day = $days[0];
 
-            $show_start_time = $formData['add_show_start_date']."".$formData['add_show_start_time'];
+            $show_start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
             $show_end = new DateTime($show_start_time);
 
             $duration = $formData['add_show_duration'];
@@ -78,7 +78,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             $show_end->add(new DateInterval("PT$duration[1]M"));
             $show_end->add(new DateInterval("PT1H"));//min time to wait until a rebroadcast
 
-            $rebroad_start = $formData['add_show_start_date']."".$formData['add_show_rebroadcast_time_'.$i];
+            $rebroad_start = $formData['add_show_start_date']." ".$formData['add_show_rebroadcast_time_'.$i];
             $rebroad_start = new DateTime($rebroad_start);
             $rebroad_start->add(new DateInterval("P".$day."D"));
 
