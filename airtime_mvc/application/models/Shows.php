@@ -700,7 +700,8 @@ class Show {
             $showDay->setDbShowId($showId);
             $showDay->setDbRecord($isRecorded);
             $showDay->save();
-        } else {
+        }
+        else {
             foreach ($data['add_show_day_check'] as $day) {
                 if ($startDow !== $day){
 
@@ -732,6 +733,9 @@ class Show {
             }
         }
 
+        $date = new DateHelper();
+ 	 	$currentTimestamp = $date->getTimestamp();
+
         //check if we are adding or updating a show, and if updating
         //erase all the show's future show_rebroadcast information first.
         if (($data['add_show_id'] != -1) && $data['add_show_rebroadcast']){
@@ -741,7 +745,7 @@ class Show {
                 ->delete();
         }
         //adding rows to cc_show_rebroadcast
-        if ($isRecorded && $data['add_show_rebroadcast'] && $repeatType != -1) {
+        if (($isRecorded && $data['add_show_rebroadcast']) && $repeatType != -1) {
             for ($i=1; $i<=10; $i++) {
                 if ($data['add_show_rebroadcast_date_'.$i]) {
                     $showRebroad = new CcShowRebroadcast();
@@ -752,7 +756,7 @@ class Show {
                 }
             }
         }
-        else if ($isRecorded && $data['add_show_rebroadcast'] && $repeatType == -1){
+        else if ($isRecorded && $data['add_show_rebroadcast'] && ($repeatType == -1)){
             for ($i=1; $i<=10; $i++) {
                 if ($data['add_show_rebroadcast_date_absolute_'.$i]) {
                     $sql = "SELECT date '{$data['add_show_rebroadcast_date_absolute_'.$i]}' - date '{$data['add_show_start_date']}' ";
@@ -879,11 +883,13 @@ class Show {
                 $newInstance = true;
             }
 
-            $ccShowInstance->setDbShowId($show_id);
-            $ccShowInstance->setDbStarts($start);
-            $ccShowInstance->setDbEnds($end);
-            $ccShowInstance->setDbRecord($record);
-            $ccShowInstance->save();
+            if ($start > $currentTimestamp){
+                $ccShowInstance->setDbShowId($show_id);
+                $ccShowInstance->setDbStarts($start);
+                $ccShowInstance->setDbEnds($end);
+                $ccShowInstance->setDbRecord($record);
+                $ccShowInstance->save();
+            }
 
             $show_instance_id = $ccShowInstance->getDbId();
             $showInstance = new ShowInstance($show_instance_id);
@@ -983,14 +989,16 @@ class Show {
                 $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
                 $rebroadcast_end_time = $CC_DBC->GetOne($sql);
 
-                $newRebroadcastInstance = new CcShowInstances();
-                $newRebroadcastInstance->setDbShowId($show_id);
-                $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
-                $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
-                $newRebroadcastInstance->setDbRecord(0);
-                $newRebroadcastInstance->setDbRebroadcast(1);
-                $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
-                $newRebroadcastInstance->save();
+                if ($rebroadcast_start_time > $currentTimestamp){
+                    $newRebroadcastInstance = new CcShowInstances();
+                    $newRebroadcastInstance->setDbShowId($show_id);
+                    $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
+                    $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
+                    $newRebroadcastInstance->setDbRecord(0);
+                    $newRebroadcastInstance->setDbRebroadcast(1);
+                    $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
+                    $newRebroadcastInstance->save();
+                }
             }
 
             $sql = "SELECT timestamp '{$start}' + interval '{$interval}'";
