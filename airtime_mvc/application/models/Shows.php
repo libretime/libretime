@@ -318,13 +318,18 @@ class Show {
      * certain date.
      *
      * @param string $p_date
-     *      The date which to delete after
+     *      The date which to delete after, if null deletes from the current timestamp.
      */
-    public function removeAllInstancesFromDate($p_date){
+    public function removeAllInstancesFromDate($p_date=null){
         global $CC_DBC;
 
         $date = new DateHelper;
         $timestamp = $date->getTimestamp();
+
+        if(is_null($p_date)) {
+            $date = new DateHelper;
+            $p_date = $date->getDate();
+        }
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances "
@@ -333,6 +338,13 @@ class Show {
                 ." AND show_id = $showId";
 
         $CC_DBC->query($sql);
+
+        /*
+        CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbStartTime($p_date, Criteria::GREATER_EQUAL)
+            ->delete();
+        */
     }
 
     /**
@@ -546,9 +558,12 @@ class Show {
 
     public static function deletePossiblyInvalidInstances($p_data, $p_show, $p_endDate, $isRecorded, $repeatType)
     {
-        if (($p_data['add_show_repeats'] != $p_show->isRepeating()) || $isRecorded){
-            //repeat option was toggled or show is recorded.
+        if (($p_data['add_show_repeats'] != $p_show->isRepeating()) || ($isRecorded && !$p_data['add_show_repeats'])){
+            //repeat option was toggled.
             $p_show->deleteAllInstances();
+        }
+        if($isRecorded && $p_data['add_show_repeats']) {
+            $p_show->removeAllInstancesFromDate();
         }
 
         if ($p_data['add_show_duration'] != $p_show->getDuration()){
@@ -741,11 +756,11 @@ class Show {
         if (($data['add_show_id'] != -1) && $data['add_show_rebroadcast']){
             CcShowRebroadcastQuery::create()
                 ->filterByDbShowId($data['add_show_id'])
-                ->filterByDbStartTime($currentTimestamp, Criteria::GREATER_EQUAL)
+                //->filterByDbStartTime($currentTimestamp, Criteria::GREATER_EQUAL)
                 ->delete();
         }
         //adding rows to cc_show_rebroadcast
-        if (($isRecorded && $data['add_show_rebroadcast']) && $repeatType != -1) {
+        if (($isRecorded && $data['add_show_rebroadcast']) && ($repeatType != -1)) {
             for ($i=1; $i<=10; $i++) {
                 if ($data['add_show_rebroadcast_date_'.$i]) {
                     $showRebroad = new CcShowRebroadcast();
@@ -864,13 +879,11 @@ class Show {
     private static function populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp)
     {
         global $CC_DBC;
-
         $next_date = $first_show." ".$start_time;
 
         if (strtotime($next_date) < strtotime($end_timestamp)) {
 
             $start = $next_date;
-
             $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
             $end = $CC_DBC->GetOne($sql);
 
@@ -878,7 +891,8 @@ class Show {
             if ($show->hasInstance()){
                 $ccShowInstance = $show->getInstance();
                 $newInstance = false;
-            } else {
+            }
+            else {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
             }

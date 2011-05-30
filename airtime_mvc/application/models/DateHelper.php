@@ -19,6 +19,15 @@ class DateHelper
     }
 
     /**
+     * Get date of object construction in the format
+     * YY:mm:dd
+     */
+    function getDate()
+    {
+        return date("Y-m-d", $this->_timestamp);
+    }
+
+    /**
      * Get time of object construction in the format
      * HH:mm:ss
      */
