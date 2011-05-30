@@ -37,14 +37,14 @@ try:
         print 'Error loading config file: ', e
         sys.exit()
         
-    os.system("python /usr/bin/airtime-pypo-stop")
+    os.system("python /usr/bin/airtime-playout-stop")
         
     print "Removing cache directories"
     remove_path(config["cache_base_dir"])
     
     print "Removing symlinks"
-    os.system("rm -f /usr/bin/airtime-pypo-start") 
-    os.system("rm -f /usr/bin/airtime-pypo-stop") 
+    os.system("rm -f /usr/bin/airtime-playout-start") 
+    os.system("rm -f /usr/bin/airtime-playout-stop") 
     
     print "Removing pypo files"
     remove_path(config["bin_dir"])
