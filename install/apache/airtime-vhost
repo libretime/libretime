@@ -1,6 +1,5 @@
 <VirtualHost *:80>
    ServerAdmin foo@bar.org
-   ServerName inferno.web.id
    DocumentRoot /var/www/airtime/public
 
   <Directory /var/www/airtime/public>

@@ -11,6 +11,7 @@ if os.geteuid() != 0:
 try:
     print "Starting daemontool script recorder"
     os.system("svc -u /etc/service/recorder")
+    os.system("svc -u /etc/service/recorder/log")
     
 except Exception, e:
     print "exception:" + str(e)
