@@ -1,0 +1,51 @@
+#!/bin/bash
+
+USERID=pypo
+GROUPID=pypo
+ENABLE="false"
+NAME=Airtime
+ID=airtime
+
+DAEMON=/usr/bin/airtime-pypo
+PIDFILE=/var/run/$ID.pid
+
+start () {    
+        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
+}
+
+stop () {
+        # Send TERM after 5 seconds, wait at most 30 seconds.
+        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE
+        rm $PIDFILE
+}
+
+
+case "${1:-''}" in
+  'start')
+            # start commands here
+            echo -n "Starting $NAME: "
+            start
+            echo "Done."
+        ;;
+  'stop')
+            # stop commands here
+            echo -n "Stopping $NAME: "
+            stop
+            echo "Done."
+        ;;
+  'restart')
+           # restart commands here
+           echo -n "Restarting $NAME: "
+           stop
+           start
+           echo "Done."
+        ;;
+  'status')
+           # status commands here
+           /usr/bin/airtime-check-system
+        ;;
+  *)      # no parameter specified
+        echo "Usage: $SELF start|stop|restart|status"
+        exit 1
+        ;;
+esac

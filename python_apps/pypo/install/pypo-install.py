@@ -135,21 +135,35 @@ try:
   os.system("chmod -R 755 "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["cache_base_dir"])
-  
+
+  """
   print "Creating symbolic links"
   os.system("rm -f /usr/bin/airtime-playout-start")
   os.system("ln -s "+config["bin_dir"]+"/bin/airtime-playout-start /usr/bin/")
   os.system("rm -f /usr/bin/airtime-playout-stop")
   os.system("ln -s "+config["bin_dir"]+"/bin/airtime-playout-stop /usr/bin/")
+  """
+
+  print "Creating symbolic links"
+  os.system("rm -f /usr/bin/airtime-pypo")
+  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-pypo /usr/bin/")
+
   
   print "Installing pypo daemon"
+  shutil.copy(config["bin_dir"]+"/bin/airtime-pypo-init-d", "/etc/init.d/airtime-pypo")
+
+  
+  """
   create_path("/etc/service/pypo")
   create_path("/etc/service/pypo/log")
   shutil.copy("%s/pypo-daemontools.sh"%current_script_dir, "/etc/service/pypo/run")
   shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo/log/run")
   os.system("chmod -R 755 /etc/service/pypo")
   os.system("chown -R pypo:pypo /etc/service/pypo")
+  """
+
   
+  """
   print "Installing liquidsoap daemon"
   create_path("/etc/service/pypo-liquidsoap")  
   create_path("/etc/service/pypo-liquidsoap/log")  
@@ -157,26 +171,15 @@ try:
   shutil.copy("%s/pypo-liquidsoap-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/log/run")
   os.system("chmod -R 755 /etc/service/pypo-liquidsoap")
   os.system("chown -R pypo:pypo /etc/service/pypo-liquidsoap")
-
+  """
+  
   print "Waiting for processes to start..."
-  time.sleep(5)
-  os.system("python /usr/bin/airtime-playout-start")
-  time.sleep(2)
+  os.system("service airtime-pypo start")
+  Popen("service airtime-pypo start".split(" "))
 
-  found = True
+  print "sleeping"
+  time.sleep(10)
 
-  p = Popen('svstat /etc/service/pypo', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-  output = p.stdout.read()
-  if (output.find("unable to open supervise/ok: file does not exist") >= 0):
-    found = False
-  print output
-    
-  p = Popen('svstat /etc/service/pypo-liquidsoap', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-  output = p.stdout.read()
-  print output
-
-  if not found:
-    print "Pypo install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
 except Exception, e:
   print "exception:" + str(e)
   sys.exit(1)
