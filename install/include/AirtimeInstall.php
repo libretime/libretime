@@ -34,7 +34,7 @@ class AirtimeInstall
         }
     }
 
-    public static function CheckForVersionBeforeInstall()
+    public static function GetVersionInstalled()
     {
         global $CC_DBC, $CC_CONFIG;
 
@@ -300,6 +300,10 @@ class AirtimeInstall
         echo "* Installing airtime-update-db-settings".PHP_EOL;
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
         exec("ln -s $dir /usr/bin/airtime-update-db-settings");
+        
+        echo "* Installing airtime-check-system".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-check-system";
+        exec("ln -s $dir /usr/bin/airtime-check-system");
     }
 
     public static function RemoveSymlinks()
@@ -307,6 +311,7 @@ class AirtimeInstall
         exec("rm -f /usr/bin/airtime-import");
         exec("rm -f /usr/bin/airtime-clean-storage");
         exec("rm -f /usr/bin/airtime-update-db-settings");
+        exec("rm -f /usr/bin/airtime-check-system");
     }
 
     public static function InstallPhpCode()

@@ -46,16 +46,6 @@ function removeAddShowButton(){
     span.remove();
 }
 
-function beginEditShow(data){
-    $("#add-show-form")
-        .empty()
-        .append(data.newForm);
-
-    removeAddShowButton();
-    setAddShowEvents();
-    openAddShowForm();
-}
-
 function makeTimeStamp(date){
 	var sy, sm, sd, h, m, s, timestamp;
 	sy = date.getFullYear();
@@ -70,7 +60,7 @@ function makeTimeStamp(date){
 }
 
 function dayClick(date, allDay, jsEvent, view) {
-    var now, today, selected, chosenDate, chosenTime; 
+    var now, today, selected, chosenDate, chosenTime;
 
     now = new Date();
 
@@ -125,7 +115,7 @@ function dayClick(date, allDay, jsEvent, view) {
         $("#add_show_end_date").val(chosenDate);
         $("#add_show_start_time").val(chosenTime);
         $("#schedule-show-when").show();
-        
+
 	    openAddShowForm();
     }
 }
@@ -155,7 +145,7 @@ function viewDisplay( view ) {
                 //re-initialize calendar with new slotmin options
                 $(calendarEl)
                     .fullCalendar('destroy')
-                    .fullCalendar(opt) 
+                    .fullCalendar(opt)
                     .fullCalendar( 'gotoDate', date );
             });
 
@@ -176,7 +166,7 @@ function viewDisplay( view ) {
     }
 }
 
-function eventRender(event, element, view) { 
+function eventRender(event, element, view) {
 
     //only put progress bar on shows that aren't being recorded.
 	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0) {
@@ -198,29 +188,29 @@ function eventRender(event, element, view) {
 
     //record icon (only if not on soundcloud, will always be true for future events)
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -1) {
-		
+
 		$(element).find(".fc-event-time").before('<span class="small-icon recording"></span>');
 	}
     if(view.name === 'month' && event.record === 1 && event.soundcloud_id === -1) {
-		
+
 		$(element).find(".fc-event-title").after('<span class="small-icon recording"></span>');
 	}
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
-		
+
 		$(element).find(".fc-event-time").before('<span class="small-icon rebroadcast"></span>');
 	}
     if(view.name === 'month' && event.rebroadcast === 1) {
-		
+
 		$(element).find(".fc-event-title").after('<span class="small-icon rebroadcast"></span>');
 	}
     //soundcloud icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id !== -1 && event.record === 1) {
-		
+
 		$(element).find(".fc-event-time").before('<span class="small-icon soundcloud"></span>');
 	}
     if(view.name === 'month' && event.soundcloud_id !== -1 && event.record === 1) {
-		
+
 		$(element).find(".fc-event-title").after('<span class="small-icon soundcloud"></span>');
 	}
 }
@@ -228,9 +218,9 @@ function eventRender(event, element, view) {
 function eventAfterRender( event, element, view ) {
 
     $(element)
-		.jjmenu("click", 
-			[{get:"/Schedule/make-context-menu/format/json/id/#id#"}],  
-			{id: event.id}, 
+		.jjmenu("click",
+			[{get:"/Schedule/make-context-menu/format/json/id/#id#"}],
+			{id: event.id},
 			{xposition: "mouse", yposition: "mouse"});
 }
 
@@ -239,7 +229,7 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
 
 	url = '/Schedule/move-show/format/json';
 
-	$.post(url, 
+	$.post(url,
 		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
 			if(json.error) {
@@ -249,19 +239,19 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
 		});
 }
 
-function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ) { 
+function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ) {
 	var url;
 
 	url = '/Schedule/resize-show/format/json';
 
-	$.post(url, 
+	$.post(url,
 		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
 			if(json.error) {
                 alert(json.error);
 				revertFunc();
 			}
-        
+
             scheduleRefetchEvents();
 		});
 }
@@ -273,7 +263,7 @@ function getFullCalendarEvents(start, end, callback) {
 	end_date = makeTimeStamp(end);
 
 	url = '/Schedule/event-feed';
-	
+
 	var d = new Date();
 
 	$.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){

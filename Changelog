@@ -16,6 +16,7 @@ Highlights:
     - In the "Add Media" page, the "start upload" button vanished after upload.  Now it remains there after upload so it is possible to upload again.
     - When canceling a playing show, the currently playing audio file still showed as playing.  This has been fixed.
     - Audio files greater than 100MB were not being played.
+    - Fixed uploading audio on Chrome 11 and higher
 
 
 1.8.1 - May 2, 2011

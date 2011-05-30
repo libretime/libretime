@@ -546,10 +546,12 @@ class StoredFile {
 
         $data = array();
         foreach ($p_values as $category => $value) {
-            $escapedValue = pg_escape_string($value);
-            $columnName = $category;
-            if (!is_null($columnName)) {
-                $data[] = "$columnName='$escapedValue'";
+            if (isset($value) && ($value != '')) {
+                $escapedValue = pg_escape_string($value);
+                $columnName = $category;
+                if (!is_null($columnName)) {
+                    $data[] = "$columnName='$escapedValue'";
+                }
             }
         }
 
@@ -734,7 +736,14 @@ class StoredFile {
         $storedFile->mtime = $row['mtime'];
         $storedFile->md5 = $row['md5'];
         $storedFile->filepath = $row['filepath'];
-        $storedFile->exists = TRUE;
+
+        if(file_exists($row['filepath'])) {
+            $storedFile->exists = true;
+        }
+        else {
+            $storedFile->exists = false;
+        }
+
         $storedFile->setFormat($row['ftype']);
         return $storedFile;
     }
@@ -867,7 +876,7 @@ class StoredFile {
      *      local path
      * @return TRUE|PEAR_Error
      */
-    public function replaceFile($p_localFilePath)
+    public function replaceFile($p_localFilePath, $p_copyMedia=TRUE)
     {
         // Dont do anything if the source and destination files are
         // the same.
@@ -881,7 +890,7 @@ class StoredFile {
                 return $r;
             }
         }
-        return $this->addFile($p_localFilePath);
+        return $this->addFile($p_localFilePath, $p_copyMedia);
     }
 
 
@@ -1783,8 +1792,17 @@ class StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
 			}
 			else {
-				$duplicateName = $duplicate->getMetadataValue(UI_MDATA_KEY_TITLE);
-				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
+                if (file_exists($duplicate->getRealFilePath())) {
+				    $duplicateName = $duplicate->getMetadataValue(UI_MDATA_KEY_TITLE);
+				    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
+                }
+                else {
+                    $res = $duplicate->replaceFile($audio_file);
+                    if (PEAR::isError($res)) {
+				        die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
+			        }
+                    return $duplicate;
+                }
 			}
 		}
 

@@ -164,10 +164,14 @@ function UpdateIniValue($p_filename, $p_property, $p_value)
 {
     $lines = file($p_filename);
     $n=count($lines);
-    for ($i=0; $i<$n; $i++) {
-        if (strlen($lines[$i]) > strlen($p_property))
-        if ($p_property == substr($lines[$i], 0, strlen($p_property))){
-            $lines[$i] = "$p_property = $p_value\n";
+    foreach ($lines as &$line) {
+        if ($line[0] != "#"){
+            $key_value = split("=", $line);
+            $key = trim($key_value[0]);         
+            
+            if ($key == $p_property){
+                $line = "$p_property = $p_value".PHP_EOL;
+            }
         }
     }
 
@@ -232,7 +236,8 @@ function InstallBinaries()
     exec("cp -R ".$AIRTIME_UTILS." ".CONF_DIR_BINARIES);
 }
 
-$suffix = date("Ymdhis");
+// Backup the config files
+$suffix = date("Ymdhis")."-1.8.1";
 foreach ($configFiles as $conf) {
     if (file_exists($conf)) {
         echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;

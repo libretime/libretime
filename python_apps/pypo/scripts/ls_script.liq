@@ -70,20 +70,32 @@ end
 
 if output_icecast_vorbis then
     
-    #remove metadata from ogg source and merge tracks to fix bug
-    #with vlc and mplayer disconnecting at the end of every track
     if output_icecast_vorbis_metadata then
+        out_vorbis = output.icecast(%vorbis,
+                host = icecast_host, port = icecast_port,
+                password = icecast_pass, mount = mount_point_vorbis,
+                fallible = true,
+                restart = true,
+                restart_delay = 5,
+                url = icecast_url,
+                description = icecast_description,
+                genre = icecast_genre,
+                s)
+    else
+        #remove metadata from ogg source and merge tracks to fix bug
+        #with vlc and mplayer disconnecting at the end of every track
         s = add(normalize=false, [amplify(0.00001, noise()),s])
+        out_vorbis = output.icecast(%vorbis,
+                host = icecast_host, port = icecast_port,
+                password = icecast_pass, mount = mount_point_vorbis,
+                fallible = true,
+                restart = true,
+                restart_delay = 5,
+                url = icecast_url,
+                description = icecast_description,
+                genre = icecast_genre,
+                s)    
     end
     
-    out_vorbis = output.icecast(%vorbis,
-            host = icecast_host, port = icecast_port,
-            password = icecast_pass, mount = mount_point_vorbis,
-            fallible = true,
-            restart = true,
-            restart_delay = 5,
-            url = icecast_url,
-            description = icecast_description,
-            genre = icecast_genre,
-            s)
+
 end

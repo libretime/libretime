@@ -74,7 +74,8 @@ function addLibraryItemEvents() {
 
 	$('#library_display tr[id ^= "au"]')
 		.draggable({ 
-			helper: 'clone' 
+			helper: 'clone',
+			cursor: 'pointer'
 		});
 
 	$('#library_display tbody tr')

@@ -19,7 +19,7 @@ import json
 import os
 from urlparse import urlparse
 
-AIRTIME_VERSION = "1.8.2"
+AIRTIME_VERSION = "1.9.0-devel"
 
 def api_client_factory(config):
     if config["api_client"] == "airtime":

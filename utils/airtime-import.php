@@ -112,6 +112,7 @@ function import_audio_file($p_filepath, $p_importMode = null, $p_testOnly = fals
     global $STORAGE_SERVER_PATH;
     global $g_fileCount;
     global $g_duplicates;
+    global $g_replaced;
 
     // Check parameters
     $p_importMode = strtolower($p_importMode);
@@ -204,9 +205,32 @@ function import_audio_file($p_filepath, $p_importMode = null, $p_testOnly = fals
 
     // Look up md5sum in database
     $duplicate = StoredFile::RecallByMd5($md5sum);
-    if ($duplicate) {
-        echo "DUPLICATE: $p_filepath\n";
-        $g_duplicates++;
+    if (PEAR::isError($duplicate)) {
+        echo $duplicate->getMessage();
+        echo "\n";
+    }
+
+    //row exists in database
+    if (isset($duplicate)) {
+        if (file_exists($duplicate->getRealFilePath())) {
+            echo "DUPLICATE: $p_filepath\n";
+            $g_duplicates++;
+        }
+        else{
+            if ($p_importMode == "copy") {
+                $doCopyFiles = true;
+            }
+            else if ($p_importMode == "link") {
+                $doCopyFiles = false;
+            }
+            $res = $duplicate->replaceFile($p_filepath, $doCopyFiles);
+            if (PEAR::isError($res)) {
+		        echo $res->getMessage();
+                echo "\n";
+                return;
+	        }
+            $g_replaced++;
+        }
         return;
     }
 
@@ -323,7 +347,10 @@ if ( ($importMode == "copy") && !is_writable($CC_CONFIG["storageDir"])) {
 
 global $g_fileCount;
 global $g_duplicates;
+global $g_replaced;
 $g_fileCount = 0;
+$g_duplicates = 0;
+$g_replaced = 0;
 if (is_array($files)) {
     foreach ($files as $filepath) {
         // absolute path
@@ -356,6 +383,7 @@ if ($importMode == "copy") {
     echo " *** Destination folder: ".$CC_CONFIG['storageDir']."\n";
 }
 echo " *** Files imported: $g_fileCount\n";
+echo " *** Files restored: $g_replaced\n";
 echo " *** Duplicate files (not imported): $g_duplicates\n";
 if ($g_errors > 0) {
     echo " *** Errors: $g_errors\n";

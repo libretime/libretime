@@ -3,6 +3,10 @@
  * @package Airtime
  * @copyright 2011 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
+ *
+ * Checks if a previous version of Airtime is currently installed, upgrades Airtime if so.
+ * Performs a new install (new configs, database install) if a version of Airtime is not found
+ * If the current version is found to be installed the User is presented with the help menu and can choose -r to reinstall.
  */
 set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 
@@ -16,7 +20,7 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.
 AirtimeInstall::ExitIfNotRoot();
 
 $newInstall = false;
-$version = AirtimeInstall::CheckForVersionBeforeInstall();
+$version = AirtimeInstall::GetVersionInstalled();
 
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
@@ -42,27 +46,29 @@ if (isset($opts->h)) {
     exit;
 }
 
-//the current version exists.
-if(isset($version) && $version != false && $version == AIRTIME_VERSION && !isset($opts->r)) {
-
-    echo "Airtime $version is already installed.\n".PHP_EOL;
+// The current version is already installed.
+if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !isset($opts->r)) {
+    echo "Airtime $version is already installed.".PHP_EOL;
     echo $opts->getUsageMessage();
     exit();
 }
-//a previous version exists.
-if(isset($version) && $version != false && $version < AIRTIME_VERSION) {
-
+// A previous version exists - if so, upgrade.
+if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
     echo "Airtime version $version found.".PHP_EOL;
-    $command = "php airtime-upgrade.php";
-    system($command);
+    require_once("airtime-upgrade.php");
     exit();
 }
+
+// -------------------------------------------------------------------------
+// The only way we get here is if we are doing a new install or a reinstall.
+// -------------------------------------------------------------------------
+
 if(is_null($version)) {
     $newInstall = true;
 }
 
 $db_install = true;
-if (is_null($opts->r) && isset($opts->n) && !$newInstall){
+if (is_null($opts->r) && isset($opts->n)){
 	$db_install = false;
 }
 
@@ -129,6 +135,10 @@ system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install
 //wait for 1.9.0 release
 //echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
 //system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
+
+echo PHP_EOL."*** Verifying Correct System Environment ***".PHP_EOL;
+$command = "airtime-check-system";
+system($command);
 
 echo "******************************* Install Complete *******************************".PHP_EOL;
 

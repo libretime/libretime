@@ -26,11 +26,11 @@ function endDpSelect(dateText, inst) {
 
 function createDateInput(el, onSelect) {
 	var date;
-   
+
 	el.datepicker({
 			minDate: new Date(),
 			onSelect: onSelect,
-			dateFormat: 'yy-mm-dd' 
+			dateFormat: 'yy-mm-dd'
 		});
 }
 
@@ -46,13 +46,23 @@ function findHosts(request, callback) {
 	url = "/User/get-hosts";
 	search = request.term;
 
-	$.post(url, 
-		{format: "json", term: search}, 
-		
+	$.post(url,
+		{format: "json", term: search},
+
 		function(json) {
 			callback(json.hosts);
 		});
-	
+
+}
+
+function beginEditShow(data){
+    $("#add-show-form")
+        .empty()
+        .append(data.newForm);
+
+    removeAddShowButton();
+    setAddShowEvents();
+    openAddShowForm();
 }
 
 function setAddShowEvents() {
@@ -155,24 +165,24 @@ function setAddShowEvents() {
     });
     form.find("#add_show_duration").timepicker({
         amPmText: ['', ''],
-        defaultTime: '01:00' 
+        defaultTime: '01:00'
     });
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
 		minDate: new Date(),
-		dateFormat: 'yy-mm-dd' 
+		dateFormat: 'yy-mm-dd'
 	});
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
-        defaultTime: '' 
+        defaultTime: ''
     });
 
     form.find(".add_absolute_rebroadcast_day").click(function(){
-        var li = $(this).parent().find("ul.formrow-repeat > li:visible:last").next(); 
-       
+        var li = $(this).parent().find("ul.formrow-repeat > li:visible:last").next();
+
         li.show();
         li = li.next();
-        if(li.length === 0) {   
+        if(li.length === 0) {
             $(this).hide();
         }
     });
@@ -207,11 +217,11 @@ function setAddShowEvents() {
 
         list.next().show();
     });
-    
+
 	form.find("#add_show_hosts_autocomplete").autocomplete({
 		source: findHosts,
 		select: autoSelect,
-        delay: 200 
+        delay: 200
 	});
 
 	form.find("#schedule-show-style input").ColorPicker({
@@ -246,7 +256,7 @@ function setAddShowEvents() {
                     .append(json.form);
 
                 setAddShowEvents();
-            }); 
+            });
             makeAddShowButton();
 		});
 
@@ -255,7 +265,7 @@ function setAddShowEvents() {
             var addShowButton = $(this);
             if (!addShowButton.hasClass("disabled")){
                 addShowButton.addClass("disabled");
-            } 
+            }
             else {
                 return;
             }
@@ -290,7 +300,7 @@ function setAddShowEvents() {
 
                     $("#add_show_end_date").val(end_date);
                     $("#add_show_start_date").val(start_date);
-                    showErrorSections();    
+                    showErrorSections();
                 }
                 else {
                      $("#add-show-form")

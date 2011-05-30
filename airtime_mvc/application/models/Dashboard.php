@@ -87,8 +87,9 @@ class Application_Model_Dashboard
             if (count($row) == 0){
                 return null;
             } else {
-                //should never reach here. Doesnt make sense to have
-                //a schedule item not within a show_instance.
+                return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                            "starts"=>$row[0]["starts"],
+                            "ends"=>$row[0]["ends"]);
             }
         } else {
             if (count($row) == 0){
