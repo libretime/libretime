@@ -1,6 +1,6 @@
 <?php
 
-define('AIRTIME_VERSION', '1.8.2');
+define('AIRTIME_VERSION', '1.9.0-devel');
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
 
