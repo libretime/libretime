@@ -25,5 +25,24 @@ $(document).ready(function() {
 			$("#plupload_error").find("table").append(row);
 		}
 	});
+	
+	var uploadProgress = false;
+	
+	uploader.bind('QueueChanged', function(){
+		uploadProgress = true;
+	});
+	
+	uploader.bind('UploadComplete', function(){
+		uploadProgress = false;
+	});
+	
+	
+	$(window).bind('beforeunload', function(){
+		if(uploadProgress){
+			if(!confirm("Are you sure you want to navigate away from the page?\nNavigating away from the page will cancel all the upload process.")){
+				return false;
+			}
+		}
+	});
 
 });
