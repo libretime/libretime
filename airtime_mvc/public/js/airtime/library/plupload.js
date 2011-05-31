@@ -43,7 +43,7 @@ $(document).ready(function() {
 	
 	$(window).bind('beforeunload', function(){
 		if(uploadProgress){
-			if(!confirm("Are you sure you want to navigate away from the page?\nNavigating away from the page will cancel all the upload process.")){
+			if(!confirm("You are currently uploading files.\nGoing to another screen will cancel the upload process.\nAre you sure you want to cancel the upload process and go to the screen you clicked on?")){
 				return false;
 			}
 		}
