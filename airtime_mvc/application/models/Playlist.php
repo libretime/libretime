@@ -91,7 +91,7 @@ class Playlist {
     {
         $seconds = $p_seconds;
         $milliseconds = intval(($seconds - intval($seconds)) * 1000);
-        $milliStr = str_pad($milliseconds, 6, '0');
+        $milliStr = str_pad($milliseconds, 3, '0');
         $hours = floor($seconds / 3600);
         $seconds -= $hours * 3600;
         $minutes = floor($seconds / 60);
@@ -387,9 +387,14 @@ class Playlist {
             ->orderByDbPosition()
             ->filterByDbPlaylistId($this->id)
             ->find();
-
+		
+        $i = 0;
+        $offset = 0;
         foreach ($rows as $row) {
-          $files[] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
+          $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
+          $offset += Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
+          $files[$i]['offset'] = Playlist::secondsToPlaylistTime($offset);
+          $i++;
         }
 
         return $files;

@@ -81,6 +81,13 @@
 	color:#d5d5d5;
 }
 
+.spl_offset	{
+	float: right;
+	text-align: right;
+	padding: 0 5px 0 0;
+	color: #D5D5D5;
+}
+
 /*#spl_editor {
 	height: 50px;
 }*/
