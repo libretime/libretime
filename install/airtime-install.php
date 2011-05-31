@@ -43,20 +43,20 @@ catch (Zend_Console_Getopt_Exception $e) {
 
 if (isset($opts->h)) {
     echo $opts->getUsageMessage();
-    exit;
+    exit(1);
 }
 
 // The current version is already installed.
 if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime $version is already installed.".PHP_EOL;
     echo $opts->getUsageMessage();
-    exit();
+    exit(1);
 }
 // A previous version exists - if so, upgrade.
 if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
     echo "Airtime version $version found.".PHP_EOL;
     require_once("airtime-upgrade.php");
-    exit();
+    exit(1);
 }
 
 // -------------------------------------------------------------------------
@@ -126,19 +126,19 @@ AirtimeInstall::CreateSymlinksToUtils();
 
 AirtimeInstall::CreateZendPhpLogFile();
 
-echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
+#echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
+#system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 
-echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
+#echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
+#system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
 
 //wait for 1.9.0 release
 //echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
 //system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
 
-echo PHP_EOL."*** Verifying Correct System Environment ***".PHP_EOL;
-$command = "airtime-check-system";
-system($command);
+#echo PHP_EOL."*** Verifying Correct System Environment ***".PHP_EOL;
+#$command = "airtime-check-system";
+#system($command);
 
 echo "******************************* Install Complete *******************************".PHP_EOL;
 

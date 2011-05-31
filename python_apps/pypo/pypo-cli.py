@@ -109,6 +109,12 @@ if __name__ == '__main__':
     print '###########################################'
 
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
+
+    #import daemonize
+    #daemonize.createDaemon()
+    #open("airtime.pid", "w").write(str(os.getpid()) + "\n")
+    #daemonize.drop_privileges("pypo", "pypo")
+    
  
     # initialize
     g = Global()
@@ -127,11 +133,9 @@ if __name__ == '__main__':
     q = Queue()
 
     pp = PypoPush(q)
-    pp.daemon = True
     pp.start()
 
     pf = PypoFetch(q)
-    pf.daemon = True
     pf.start()
 
     while True: time.sleep(3600)

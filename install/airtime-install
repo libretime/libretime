@@ -1,0 +1,13 @@
+#!/bin/sh
+
+php airtime-install.php $@ || exit $?
+
+echo "*** Pypo Installation ***"
+#python ".__DIR__."/../python_apps/pypo/install/pypo-install.py || exit $?
+python ../python_apps/pypo/install/pypo-install.py || exit $?
+
+echo "*** Recorder Installation ***"
+#python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py || exit $?
+#python ../python_apps/show-recorder/install/recorder-install.py || exit $?
+
+airtime-check-system

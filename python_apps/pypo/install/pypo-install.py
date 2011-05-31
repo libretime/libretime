@@ -174,12 +174,10 @@ try:
   """
   
   print "Waiting for processes to start..."
-  os.system("service airtime-pypo start")
-  Popen("service airtime-pypo start".split(" "))
 
-  print "sleeping"
-  time.sleep(10)
-
+  p = Popen("/etc/init.d/airtime-pypo start", shell=True)
+  sts = os.waitpid(p.pid, 0)[1]
+  
 except Exception, e:
   print "exception:" + str(e)
   sys.exit(1)
