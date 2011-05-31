@@ -16,6 +16,8 @@ python ../python_apps/pypo/install/pypo-install.py
 #python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py
 #python ../python_apps/show-recorder/install/recorder-install.py
 
+sleep 4
+
 airtime-check-system
 
 echo -e "\n******************************* Install Complete *******************************";

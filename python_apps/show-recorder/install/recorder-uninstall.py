@@ -37,14 +37,13 @@ try:
         print 'Error loading config file: ', e
         sys.exit()
 
-    os.system("python /usr/bin/airtime-show-recorder-stop")
+    os.system("/etc/init.d/airtime-show-recorder stop")
     
     print "Removing log directories"
     remove_path(config["log_dir"])
     
     print "Removing symlinks"
-    os.system("rm -f /usr/bin/airtime-show-recorder-start")
-    os.system("rm -f /usr/bin/airtime-show-recorder-stop")
+    os.system("rm -f /usr/bin/airtime-show-recorder")
     
     print "Removing application files"
     remove_path(config["bin_dir"])
@@ -52,9 +51,6 @@ try:
     print "Removing media files"
     remove_path(config["base_recorded_files"])
     
-    print "Removing daemontool script recorder"
-    remove_path("rm -rf /etc/service/recorder")
-
     remove_user("pypo")
     print "Uninstall complete."
 except Exception, e:

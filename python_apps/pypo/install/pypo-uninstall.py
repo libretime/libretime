@@ -37,30 +37,17 @@ try:
         print 'Error loading config file: ', e
         sys.exit()
         
-    os.system("python /usr/bin/airtime-playout-stop")
+    os.system("/etc/init.d/airtime-playout stop")
         
     print "Removing cache directories"
     remove_path(config["cache_base_dir"])
     
     print "Removing symlinks"
-    os.system("rm -f /usr/bin/airtime-playout-start") 
-    os.system("rm -f /usr/bin/airtime-playout-stop") 
+    os.system("rm -f /usr/bin/airtime-playout")
     
     print "Removing pypo files"
     remove_path(config["bin_dir"])
     
-    print "Removing daemontool script pypo"
-    remove_path("/etc/service/pypo")
-
-    if os.path.exists("/etc/service/pypo-fetch"):
-        remove_path("/etc/service/pypo-fetch")
-
-    if os.path.exists("/etc/service/pypo-push"):
-        remove_path("/etc/service/pypo-push")
-        
-    print "Removing daemontool script pypo-liquidsoap"
-    remove_path("/etc/service/pypo-liquidsoap")
-
     remove_user("pypo")
     print "Pypo uninstall complete."
 except Exception, e:

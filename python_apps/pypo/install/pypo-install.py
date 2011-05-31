@@ -89,9 +89,11 @@ try:
     sys.exit()
 
   current_script_dir = get_current_script_dir()
-  print "Checking and removing any existing pypo processes"
-  os.system("python %s/pypo-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
-  time.sleep(5)
+  #print "Checking and removing any existing pypo processes"
+  #os.system("python %s/pypo-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
+  #time.sleep(5)
+  p = Popen("/etc/init.d/airtime-playout stop", shell=True)
+  sts = os.waitpid(p.pid, 0)[1]
 
   # Create users
   create_user("pypo")

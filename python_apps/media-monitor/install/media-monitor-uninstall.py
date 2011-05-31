@@ -37,20 +37,16 @@ try:
         print 'Error loading config file: ', e
         sys.exit()
 
-    os.system("python /usr/bin/airtime-media-monitor-stop")
+    os.system("/etc/init.d/airtime-media-monitor stop")
     
     print "Removing log directories"
     remove_path(config["log_dir"])
     
     print "Removing symlinks"
-    os.system("rm -f /usr/bin/airtime-media-monitor-start")
-    os.system("rm -f /usr/bin/airtime-media-monitor-stop")
+    os.system("rm -f /usr/bin/airtime-media-monitor")
     
     print "Removing application files"
     remove_path(config["bin_dir"])
-
-    print "Removing daemontool script media-monitor"
-    remove_path("rm -rf /etc/service/media-monitor")
 
     remove_user("pypo")
     print "Uninstall complete."

@@ -70,9 +70,11 @@ try:
     sys.exit()
 
   current_script_dir = get_current_script_dir()
-  print "Checking and removing any existing recorder processes"
-  os.system("python %s/recorder-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
-  time.sleep(5)
+  #print "Checking and removing any existing recorder processes"
+  #os.system("python %s/recorder-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
+  #time.sleep(5)
+  p = Popen("/etc/init.d/airtime-show-recorder stop", shell=True)
+  sts = os.waitpid(p.pid, 0)[1]
 
   # Create users
   create_user("pypo")
@@ -95,7 +97,10 @@ try:
 
   print "Creating symbolic links"
   os.system("rm -f /usr/bin/airtime-show-recorder")
-  os.system("ln -s "+config["bin_dir"]+"/airtime-show-recorder /usr/bin/") 
+  os.system("ln -s "+config["bin_dir"]+"/airtime-show-recorder /usr/bin/")
+
+  print "Installing show-recorder daemon"
+  shutil.copy(config["bin_dir"]+"/airtime-show-recorder-init-d", "/etc/init.d/airtime-show-recorder")
 
   print "Waiting for processes to start..."
   p = Popen("/etc/init.d/airtime-show-recorder start", shell=True)

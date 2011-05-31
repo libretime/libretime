@@ -16,10 +16,11 @@ exec 2>&1
 
 export PYTHONPATH=${api_client_path}
 
-su ${recorder_user} -c "python -u ${recorder_path}${recorder_script}"
+
+#this line works: su ${recorder_user} -c "python -u ${recorder_path}${recorder_script}"
+exec python -u ${recorder_path}${recorder_script}
 
 #ecasound does not work when recorder script is called with setuidgid. 
 #setuidgid ${recorder_user} python -u ${recorder_path}${recorder_script}
-
 
 # EOF

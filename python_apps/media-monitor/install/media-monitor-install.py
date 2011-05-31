@@ -72,9 +72,11 @@ try:
     sys.exit()
 
   current_script_dir = get_current_script_dir()
-  print "Checking and removing any existing media monitor processes"
-  os.system("python %s/media-monitor-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
-  time.sleep(5)
+  #print "Checking and removing any existing media monitor processes"
+  #os.system("python %s/media-monitor-uninstall.py 1>/dev/null 2>&1"% current_script_dir)
+  #time.sleep(5)
+  p = Popen("/etc/init.d/airtime-media-monitor stop", shell=True)
+  sts = os.waitpid(p.pid, 0)[1]
 
   # Create users
   create_user("pypo")
@@ -93,6 +95,9 @@ try:
   print "Creating symbolic links"
   os.system("rm -f /usr/bin/airtime-media-monitor")
   os.system("ln -s "+config["bin_dir"]+"/airtime-media-monitor /usr/bin/")
+
+  print "Installing media-monitor daemon"
+  shutil.copy(config["bin_dir"]+"/airtime-media-monitor-init-d", "/etc/init.d/airtime-media-monitor")
   
   print "Waiting for processes to start..."
   p = Popen("/etc/init.d/airtime-media-monitor start", shell=True)
