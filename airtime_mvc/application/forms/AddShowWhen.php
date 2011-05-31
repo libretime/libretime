@@ -59,20 +59,22 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
-    public function checkReliantFields($formData) {
+    public function checkReliantFields($formData, $startDateModified) {
 
         $valid = true;
 
         $now_timestamp = date("Y-m-d H:i:s");
-        $start_timestamp = $formData['add_show_start_date']."".$formData['add_show_start_time'];
+        $start_timestamp = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
 
         $now_epoch = strtotime($now_timestamp);
         $start_epoch = strtotime($start_timestamp);
 
-        if($start_epoch < $now_epoch) {
-            $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
-            $valid = false;
-        }
+        if ((($formData['add_show_id'] != -1) && $startDateModified) || ($formData['add_show_id'] == -1)){
+            if($start_epoch < $now_epoch) {
+                $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
+                $valid = false;
+            }
+         }
 
         if(strtotime("00:00") == strtotime($formData["add_show_duration"])) {
             $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00:00'));

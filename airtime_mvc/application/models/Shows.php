@@ -318,13 +318,18 @@ class Show {
      * certain date.
      *
      * @param string $p_date
-     *      The date which to delete after
+     *      The date which to delete after, if null deletes from the current timestamp.
      */
-    public function removeAllInstancesFromDate($p_date){
+    public function removeAllInstancesFromDate($p_date=null){
         global $CC_DBC;
 
         $date = new DateHelper;
         $timestamp = $date->getTimestamp();
+
+        if(is_null($p_date)) {
+            $date = new DateHelper;
+            $p_date = $date->getDate();
+        }
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances "
@@ -333,6 +338,13 @@ class Show {
                 ." AND show_id = $showId";
 
         $CC_DBC->query($sql);
+
+        /*
+        CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbStartTime($p_date, Criteria::GREATER_EQUAL)
+            ->delete();
+        */
     }
 
     /**
@@ -400,6 +412,19 @@ class Show {
         } else {
             return $startTime;
         }
+    }
+
+    /**
+     * Indicate whether the starting point of the show is in the
+     * past.
+     *
+     * @return boolean
+     *      true if the StartDate is in the past, false otherwise
+     */
+    public function isStartDateTimeInPast(){
+        $date = new DateHelper;
+        $current_timestamp = $date->getTimestamp();
+        return ($current_timestamp > $this->getStartDate()." ".$this->getStartTime());
     }
 
     /**
@@ -533,10 +558,12 @@ class Show {
 
     public static function deletePossiblyInvalidInstances($p_data, $p_show, $p_endDate, $isRecorded, $repeatType)
     {
-        if ($p_data['add_show_repeats'] != $p_show->isRepeating()
-            || $isRecorded){
-            //repeat option was toggled or show is recorded.
+        if (($p_data['add_show_repeats'] != $p_show->isRepeating()) || ($isRecorded && !$p_data['add_show_repeats'])){
+            //repeat option was toggled.
             $p_show->deleteAllInstances();
+        }
+        if($isRecorded && $p_data['add_show_repeats']) {
+            $p_show->removeAllInstancesFromDate();
         }
 
         if ($p_data['add_show_duration'] != $p_show->getDuration()){
@@ -561,7 +588,8 @@ class Show {
             if ($repeatType != $p_show->getRepeatType()){
                 //repeat type changed.
                 $p_show->deleteAllInstances();
-            } else {
+            }
+            else {
                 //repeat type is the same, check if the days of the week are the same
                 $repeatingDaysChanged = false;
                 $showDaysArray = $p_show->getShowDays();
@@ -571,7 +599,8 @@ class Show {
                     if (count($intersect) != count($p_data['add_show_day_check'])){
                         $repeatingDaysChanged = true;
                     }
-                } else {
+                }
+                else {
                     $repeatingDaysChanged = true;
                 }
 
@@ -589,7 +618,8 @@ class Show {
             if ((strlen($p_show->getRepeatingEndDate()) == 0) == $p_data['add_show_no_end']){
                 //show "Never Ends" option was toggled.
                 if ($p_data['add_show_no_end']){
-                } else {
+                }
+                else {
                     $p_show->removeAllInstancesFromDate($p_endDate);
                 }
             }
@@ -608,7 +638,7 @@ class Show {
     /**
      * Create a show.
      *
-     * Note: end dates are inclusive.
+     * Note: end dates are non inclusive.
      *
      * @param array $data
      * @return int
@@ -685,7 +715,8 @@ class Show {
             $showDay->setDbShowId($showId);
             $showDay->setDbRecord($isRecorded);
             $showDay->save();
-        } else {
+        }
+        else {
             foreach ($data['add_show_day_check'] as $day) {
                 if ($startDow !== $day){
 
@@ -717,16 +748,20 @@ class Show {
             }
         }
 
+        $date = new DateHelper();
+ 	 	$currentTimestamp = $date->getTimestamp();
+
         //check if we are adding or updating a show, and if updating
-        //erase all the show's show_rebroadcast information first.
-        if ($data['add_show_id'] != -1){
-            CcShowRebroadcastQuery::create()->filterByDbShowId($data['add_show_id'])->delete();
+        //erase all the show's future show_rebroadcast information first.
+        if (($data['add_show_id'] != -1) && $data['add_show_rebroadcast']){
+            CcShowRebroadcastQuery::create()
+                ->filterByDbShowId($data['add_show_id'])
+                //->filterByDbStartTime($currentTimestamp, Criteria::GREATER_EQUAL)
+                ->delete();
         }
         //adding rows to cc_show_rebroadcast
-        if ($isRecorded && $data['add_show_rebroadcast'] && $repeatType != -1) {
-
+        if (($isRecorded && $data['add_show_rebroadcast']) && ($repeatType != -1)) {
             for ($i=1; $i<=10; $i++) {
-
                 if ($data['add_show_rebroadcast_date_'.$i]) {
                     $showRebroad = new CcShowRebroadcast();
                     $showRebroad->setDbDayOffset($data['add_show_rebroadcast_date_'.$i]);
@@ -735,10 +770,9 @@ class Show {
                     $showRebroad->save();
                 }
             }
-        } else if ($isRecorded && $data['add_show_rebroadcast'] && $repeatType == -1){
-
+        }
+        else if ($isRecorded && $data['add_show_rebroadcast'] && ($repeatType == -1)){
             for ($i=1; $i<=10; $i++) {
-
                 if ($data['add_show_rebroadcast_date_absolute_'.$i]) {
                     $sql = "SELECT date '{$data['add_show_rebroadcast_date_absolute_'.$i]}' - date '{$data['add_show_start_date']}' ";
                     $r = $con->query($sql);
@@ -845,13 +879,11 @@ class Show {
     private static function populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp)
     {
         global $CC_DBC;
-
         $next_date = $first_show." ".$start_time;
 
         if (strtotime($next_date) < strtotime($end_timestamp)) {
 
             $start = $next_date;
-
             $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
             $end = $CC_DBC->GetOne($sql);
 
@@ -859,16 +891,19 @@ class Show {
             if ($show->hasInstance()){
                 $ccShowInstance = $show->getInstance();
                 $newInstance = false;
-            } else {
+            }
+            else {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
             }
 
-            $ccShowInstance->setDbShowId($show_id);
-            $ccShowInstance->setDbStarts($start);
-            $ccShowInstance->setDbEnds($end);
-            $ccShowInstance->setDbRecord($record);
-            $ccShowInstance->save();
+            if ($start > $currentTimestamp){
+                $ccShowInstance->setDbShowId($show_id);
+                $ccShowInstance->setDbStarts($start);
+                $ccShowInstance->setDbEnds($end);
+                $ccShowInstance->setDbRecord($record);
+                $ccShowInstance->save();
+            }
 
             $show_instance_id = $ccShowInstance->getDbId();
             $showInstance = new ShowInstance($show_instance_id);
@@ -876,6 +911,9 @@ class Show {
             if (!$newInstance){
                 $showInstance->correctScheduleStartTimes();
             }
+
+            $date = new DateHelper();
+ 	 	 	$currentTimestamp = $date->getTimestamp();
 
             $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
             $rebroadcasts = $CC_DBC->GetAll($sql);
@@ -890,14 +928,16 @@ class Show {
                 $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
                 $rebroadcast_end_time = $CC_DBC->GetOne($sql);
 
-                $newRebroadcastInstance = new CcShowInstances();
-                $newRebroadcastInstance->setDbShowId($show_id);
-                $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
-                $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
-                $newRebroadcastInstance->setDbRecord(0);
-                $newRebroadcastInstance->setDbRebroadcast(1);
-                $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
-                $newRebroadcastInstance->save();
+                if ($rebroadcast_start_time > $currentTimestamp){
+                    $newRebroadcastInstance = new CcShowInstances();
+                    $newRebroadcastInstance->setDbShowId($show_id);
+                    $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
+                    $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
+                    $newRebroadcastInstance->setDbRecord(0);
+                    $newRebroadcastInstance->setDbRebroadcast(1);
+                    $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
+                    $newRebroadcastInstance->save();
+                }
             }
         }
         RabbitMq::PushSchedule();
@@ -927,6 +967,9 @@ class Show {
             $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
             $end = $CC_DBC->GetOne($sql);
 
+            $date = new DateHelper();
+ 	 	 	$currentTimestamp = $date->getTimestamp();
+
             if ($show->hasInstanceOnDate($start)){
                 $ccShowInstance = $show->getInstanceOnDate($start);
                 $newInstance = false;
@@ -934,11 +977,14 @@ class Show {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
             }
-            $ccShowInstance->setDbShowId($show_id);
-            $ccShowInstance->setDbStarts($start);
-            $ccShowInstance->setDbEnds($end);
-            $ccShowInstance->setDbRecord($record);
-            $ccShowInstance->save();
+
+            if ($start > $currentTimestamp){
+                $ccShowInstance->setDbShowId($show_id);
+                $ccShowInstance->setDbStarts($start);
+                $ccShowInstance->setDbEnds($end);
+                $ccShowInstance->setDbRecord($record);
+                $ccShowInstance->save();
+            }
 
             $show_instance_id = $ccShowInstance->getDbId();
             $showInstance = new ShowInstance($show_instance_id);
@@ -957,14 +1003,16 @@ class Show {
                 $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
                 $rebroadcast_end_time = $CC_DBC->GetOne($sql);
 
-                $newRebroadcastInstance = new CcShowInstances();
-                $newRebroadcastInstance->setDbShowId($show_id);
-                $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
-                $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
-                $newRebroadcastInstance->setDbRecord(0);
-                $newRebroadcastInstance->setDbRebroadcast(1);
-                $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
-                $newRebroadcastInstance->save();
+                if ($rebroadcast_start_time > $currentTimestamp){
+                    $newRebroadcastInstance = new CcShowInstances();
+                    $newRebroadcastInstance->setDbShowId($show_id);
+                    $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
+                    $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
+                    $newRebroadcastInstance->setDbRecord(0);
+                    $newRebroadcastInstance->setDbRebroadcast(1);
+                    $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
+                    $newRebroadcastInstance->save();
+                }
             }
 
             $sql = "SELECT timestamp '{$start}' + interval '{$interval}'";
@@ -1131,41 +1179,6 @@ class Show {
         }
 
         return $event;
-    }
-
-    public static function getDateFromTimestamp($p_timestamp){
-        $explode = explode(" ", $p_timestamp);
-        return $explode[0];
-    }
-
-    public static function getTimeFromTimestamp($p_timestamp){
-        $explode = explode(" ", $p_timestamp);
-        return $explode[1];
-    }
-
-    /**
-     * This function formats a time by removing seconds
-     *
-     * When we receive a time from the database we get the
-     * format "hh:mm:ss". But when dealing with show times, we
-     * do not care about the seconds.
-     *
-     * @param int $p_timestamp
-     *      The value which to format.
-     * @return int
-     *      The timestamp with the new format "hh:mm", or
-     *      the original input parameter, if it does not have
-     *      the correct format.
-     */
-    public static function removeSecondsFromTime($p_timestamp)
-    {
-        //Format is in hh:mm:ss. We want hh:mm
-        $timeExplode = explode(":", $p_timestamp);
-
-        if (count($timeExplode) == 3)
-            return $timeExplode[0].":".$timeExplode[1];
-        else
-            return $p_timestamp;
     }
 }
 

@@ -19,6 +19,15 @@ class DateHelper
     }
 
     /**
+     * Get date of object construction in the format
+     * YY:mm:dd
+     */
+    function getDate()
+    {
+        return date("Y-m-d", $this->_timestamp);
+    }
+
+    /**
      * Get time of object construction in the format
      * HH:mm:ss
      */
@@ -82,6 +91,41 @@ class DateHelper
         $seconds = "0".$seconds;
 
         return $hours.":".$minutes.":".$seconds.".".$ms;
+    }
+
+    /**
+     * This function formats a time by removing seconds
+     *
+     * When we receive a time from the database we get the
+     * format "hh:mm:ss". But when dealing with show times, we
+     * do not care about the seconds.
+     *
+     * @param int $p_timestamp
+     *      The value which to format.
+     * @return int
+     *      The timestamp with the new format "hh:mm", or
+     *      the original input parameter, if it does not have
+     *      the correct format.
+     */
+    public static function removeSecondsFromTime($p_timestamp)
+    {
+        //Format is in hh:mm:ss. We want hh:mm
+        $timeExplode = explode(":", $p_timestamp);
+
+        if (count($timeExplode) == 3)
+            return $timeExplode[0].":".$timeExplode[1];
+        else
+            return $p_timestamp;
+    }
+
+    public static function getDateFromTimestamp($p_timestamp){
+        $explode = explode(" ", $p_timestamp);
+        return $explode[0];
+    }
+
+    public static function getTimeFromTimestamp($p_timestamp){
+        $explode = explode(" ", $p_timestamp);
+        return $explode[1];
     }
 }
 
