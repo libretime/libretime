@@ -56,9 +56,8 @@
 
 .plupload_header {background: #2A2C2E url('img/backgrounds.gif') repeat-x;}
 .plupload_header_content {
-	background: url('img/backgrounds.gif') no-repeat 0 -317px;
 	min-height: 56px;
-	padding-left: 60px;
+	padding-left: 10px;
 	color: #FFF;
 }
 .plupload_header_title {
