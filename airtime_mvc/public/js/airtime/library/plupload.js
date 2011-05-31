@@ -29,7 +29,11 @@ $(document).ready(function() {
 	var uploadProgress = false;
 	
 	uploader.bind('QueueChanged', function(){
-		uploadProgress = true;
+		if(uploader.files.length > 0){
+			uploadProgress = true;
+		}else{
+			uploadProgress = false;
+		}
 	});
 	
 	uploader.bind('UploadComplete', function(){
