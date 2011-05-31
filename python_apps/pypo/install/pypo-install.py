@@ -136,46 +136,18 @@ try:
   os.system("chown -R pypo:pypo "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["cache_base_dir"])
 
-  """
   print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-playout-start")
-  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-playout-start /usr/bin/")
-  os.system("rm -f /usr/bin/airtime-playout-stop")
-  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-playout-stop /usr/bin/")
-  """
-
-  print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-pypo")
-  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-pypo /usr/bin/")
+  os.system("rm -f /usr/bin/airtime-playout")
+  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-playout /usr/bin/")
+  os.system("rm -f /usr/bin/airtime-liquidsoap")
+  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-liquidsoap /usr/bin/")
 
   
   print "Installing pypo daemon"
-  shutil.copy(config["bin_dir"]+"/bin/airtime-pypo-init-d", "/etc/init.d/airtime-pypo")
+  shutil.copy(config["bin_dir"]+"/bin/airtime-playout-init-d", "/etc/init.d/airtime-playout")
 
-  
-  """
-  create_path("/etc/service/pypo")
-  create_path("/etc/service/pypo/log")
-  shutil.copy("%s/pypo-daemontools.sh"%current_script_dir, "/etc/service/pypo/run")
-  shutil.copy("%s/pypo-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo/log/run")
-  os.system("chmod -R 755 /etc/service/pypo")
-  os.system("chown -R pypo:pypo /etc/service/pypo")
-  """
-
-  
-  """
-  print "Installing liquidsoap daemon"
-  create_path("/etc/service/pypo-liquidsoap")  
-  create_path("/etc/service/pypo-liquidsoap/log")  
-  shutil.copy("%s/pypo-daemontools-liquidsoap.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/run")
-  shutil.copy("%s/pypo-liquidsoap-daemontools-logger.sh"%current_script_dir, "/etc/service/pypo-liquidsoap/log/run")
-  os.system("chmod -R 755 /etc/service/pypo-liquidsoap")
-  os.system("chown -R pypo:pypo /etc/service/pypo-liquidsoap")
-  """
-  
   print "Waiting for processes to start..."
-
-  p = Popen("/etc/init.d/airtime-pypo start", shell=True)
+  p = Popen("/etc/init.d/airtime-playout start", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
   
 except Exception, e:

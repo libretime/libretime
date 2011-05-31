@@ -91,34 +91,13 @@ try:
   os.system("chown -R pypo:pypo "+config["bin_dir"])
 
   print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-media-monitor-start")
-  os.system("ln -s "+config["bin_dir"]+"/airtime-media-monitor-start /usr/bin/")
-  os.system("rm -f /usr/bin/airtime-media-monitor-stop")
-  os.system("ln -s "+config["bin_dir"]+"/airtime-media-monitor-stop /usr/bin/")
-  
-  print "Installing recorder daemon"
-  create_path("/etc/service/media-monitor")
-  create_path("/etc/service/media-monitor/log")
-  shutil.copy("%s/media-monitor-daemontools.sh"%current_script_dir, "/etc/service/media-monitor/run")
-  shutil.copy("%s/media-monitor-daemontools-logger.sh"%current_script_dir, "/etc/service/media-monitor/log/run")
-  os.system("chmod -R 755 /etc/service/media-monitor")
-  os.system("chown -R pypo:pypo /etc/service/media-monitor")
+  os.system("rm -f /usr/bin/airtime-media-monitor")
+  os.system("ln -s "+config["bin_dir"]+"/airtime-media-monitor /usr/bin/")
   
   print "Waiting for processes to start..."
-  time.sleep(5)
-  os.system("python /usr/bin/airtime-media-monitor-start")
-  time.sleep(2)
+  p = Popen("/etc/init.d/airtime-media-monitor start", shell=True)
+  sts = os.waitpid(p.pid, 0)[1]
 
-  found = True
-
-  p = Popen('svstat /etc/service/media-monitor', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-  output = p.stdout.read()
-  if (output.find("unable to open supervise/ok: file does not exist") >= 0):
-    found = False
-  print output
-
-  if not found:
-    print "Media monitor install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
 except Exception, e:
   print "exception:" + str(e)
   sys.exit(1)

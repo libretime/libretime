@@ -4,7 +4,7 @@ USERID=pypo
 GROUPID=pypo
 NAME=Airtime
 
-DAEMON=/usr/bin/airtime-pypo
+DAEMON=/usr/bin/airtime-playout
 PIDFILE=/var/run/airtime.pid
 
 start () {    

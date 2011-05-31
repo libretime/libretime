@@ -94,34 +94,13 @@ try:
   os.system("chown -R pypo:pypo "+config["bin_dir"])
 
   print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-show-recorder-start")
-  os.system("ln -s "+config["bin_dir"]+"/airtime-show-recorder-start /usr/bin/")
-  os.system("rm -f /usr/bin/airtime-show-recorder-stop")
-  os.system("ln -s "+config["bin_dir"]+"/airtime-show-recorder-stop /usr/bin/")
-  
-  print "Installing recorder daemon"
-  create_path("/etc/service/recorder")
-  create_path("/etc/service/recorder/log")
-  shutil.copy("%s/recorder-daemontools.sh"%current_script_dir, "/etc/service/recorder/run")
-  shutil.copy("%s/recorder-daemontools-logger.sh"%current_script_dir, "/etc/service/recorder/log/run")
-  os.system("chmod -R 755 /etc/service/recorder")
-  os.system("chown -R pypo:pypo /etc/service/recorder")
-  
+  os.system("rm -f /usr/bin/airtime-show-recorder")
+  os.system("ln -s "+config["bin_dir"]+"/airtime-show-recorder /usr/bin/") 
+
   print "Waiting for processes to start..."
-  time.sleep(5)
-  os.system("python /usr/bin/airtime-show-recorder-start")
-  time.sleep(2)
+  p = Popen("/etc/init.d/airtime-show-recorder start", shell=True)
+  sts = os.waitpid(p.pid, 0)[1]
 
-  found = True
-
-  p = Popen('svstat /etc/service/recorder', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-  output = p.stdout.read()
-  if (output.find("unable to open supervise/ok: file does not exist") >= 0):
-    found = False
-  print output
-
-  if not found:
-    print "Recorder install has completed, but daemontools is not running, please make sure you have it installed and then reboot."
 except Exception, e:
   print "exception:" + str(e)
   sys.exit(1)

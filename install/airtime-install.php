@@ -10,9 +10,6 @@
  */
 set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 
-echo PHP_EOL;
-echo "******************************** Install Begin *********************************".PHP_EOL;
-
 require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.php');
@@ -126,19 +123,7 @@ AirtimeInstall::CreateSymlinksToUtils();
 
 AirtimeInstall::CreateZendPhpLogFile();
 
-#echo PHP_EOL."*** Pypo Installation ***".PHP_EOL;
-#system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
-
-#echo PHP_EOL."*** Recorder Installation ***".PHP_EOL;
-#system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
-
 //wait for 1.9.0 release
 //echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
 //system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
-
-#echo PHP_EOL."*** Verifying Correct System Environment ***".PHP_EOL;
-#$command = "airtime-check-system";
-#system($command);
-
-echo "******************************* Install Complete *******************************".PHP_EOL;
 

@@ -1,13 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
-php airtime-install.php $@ || exit $?
+#Cause bash script to exit if any of the installers
+#return with a non-zero return value.
+set -e
+
+echo -e "\n******************************** Install Begin *********************************";
+
+php airtime-install.php $@
 
 echo "*** Pypo Installation ***"
-#python ".__DIR__."/../python_apps/pypo/install/pypo-install.py || exit $?
-python ../python_apps/pypo/install/pypo-install.py || exit $?
+#python ".__DIR__."/../python_apps/pypo/install/pypo-install.py
+python ../python_apps/pypo/install/pypo-install.py
 
-echo "*** Recorder Installation ***"
-#python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py || exit $?
-#python ../python_apps/show-recorder/install/recorder-install.py || exit $?
+#echo "*** Recorder Installation ***"
+#python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py
+#python ../python_apps/show-recorder/install/recorder-install.py
 
 airtime-check-system
+
+echo -e "\n******************************* Install Complete *******************************";

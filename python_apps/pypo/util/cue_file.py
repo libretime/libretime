@@ -21,7 +21,7 @@ class CueFile():
 
     def cue(self, src, dst, cue_in, cue_out):
         
-        logger = logging.getLogger("cue_file.cue")
+        logger = logging.getLogger("cue_file")
         logger.debug("cue file: %s %s %s %s", src, dst, cue_in, cue_out)
         
         if src.lower().endswith('.mp3'):

@@ -11,6 +11,7 @@ import os
 import signal
 import logging
 import logging.config
+import logging.handlers
 from Queue import Queue
 
 from pypopush import PypoPush
