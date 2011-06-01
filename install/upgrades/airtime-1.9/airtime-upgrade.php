@@ -14,6 +14,7 @@ require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
 AirtimeInstall::CreateZendPhpLogFile();
 
 const CONF_DIR_BINARIES = "/usr/lib/airtime";
+const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
 
 function InstallPhpCode($phpDir)
 {
@@ -26,7 +27,7 @@ function InstallPhpCode($phpDir)
     exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
 }
 
-public static function InstallBinaries()
+function InstallBinaries()
 {
     $utilsSrc = __DIR__."/../../../utils";
     
@@ -35,7 +36,7 @@ public static function InstallBinaries()
     exec("cp -R ".$utilsSrc." ".CONF_DIR_BINARIES);
 }
 
-public static function UninstallBinaries()
+function UninstallBinaries()
 {
     echo "* Removing Airtime binaries from ".CONF_DIR_BINARIES.PHP_EOL;
     exec("rm -rf ".CONF_DIR_BINARIES);
@@ -46,9 +47,9 @@ public static function UninstallBinaries()
  * init.d daemon system. Let's remove all the daemontools files
  */
 
-exec("airtime-pypo-stop");
-exec("airtime-show-recorder-stop");
-exec("airtime-media-monitor-stop");
+exec("/usr/bin/airtime-pypo-stop");
+exec("/usr/bin/airtime-show-recorder-stop");
+exec("/usr/bin/airtime-media-monitor-stop");
 
 exec("svc -dx /etc/service/pypo");
 exec("svc -dx /etc/service/pypo/log");
