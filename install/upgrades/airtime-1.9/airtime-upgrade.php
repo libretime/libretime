@@ -22,6 +22,13 @@ exec("airtime-pypo-stop");
 exec("airtime-show-recorder-stop");
 exec("airtime-media-monitor-stop");
 
+exec("svc -dx /etc/service/pypo");
+exec("svc -dx /etc/service/pypo/log");
+exec("svc -dx /etc/service/pypo-liquidsoap");
+exec("svc -dx /etc/service/pypo-liquidsoap/log");
+exec("svc -dx /etc/service/recorder");
+exec("svc -dx /etc/service/recorder/log");
+
 $pathnames = array("/usr/bin/airtime-pypo-start",
                 "/usr/bin/airtime-pypo-stop",
                 "/usr/bin/airtime-show-recorder-start",
@@ -37,6 +44,7 @@ $pathnames = array("/usr/bin/airtime-pypo-start",
                 );
 
 foreach ($pathnames as $pn){
+    echo "Removing $pn";
     exec("rm -rf ".$pn);
 }
 
