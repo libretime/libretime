@@ -3,15 +3,9 @@
 
 import time
 import os
-import traceback
 from optparse import *
 import sys
-import time
-import datetime
-import logging
-import logging.config
 import shutil
-import string
 import platform
 from configobj import ConfigObj
 from subprocess import Popen

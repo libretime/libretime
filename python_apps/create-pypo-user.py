@@ -26,4 +26,8 @@ def create_user(username):
 
 
 if __name__ == "__main__":
+    if os.geteuid() != 0:
+        print "Please run this as root."
+        sys.exit(1)
+    
     create_user("pypo")

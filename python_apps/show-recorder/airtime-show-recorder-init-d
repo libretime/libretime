@@ -1,5 +1,14 @@
 #!/bin/bash
 
+### BEGIN INIT INFO
+# Provides:          airtime-show-recorder
+# Required-Start:    $local_fs $remote_fs $network $syslog apache2
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Manage airtime-show-recorder daemon
+### END INIT INFO
+
 USERID=pypo
 GROUPID=pypo
 NAME=Airtime

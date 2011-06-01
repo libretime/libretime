@@ -19,8 +19,8 @@ python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 echo -e "\n*** Pypo Installation ***"
 python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-install.py
 
-#echo -e "\n*** Recorder Installation ***"
-#python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
+echo -e "\n*** Recorder Installation ***"
+python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
 
 #echo -e "\n*** Media Monitor Installation ***"
 #python ${SCRIPTPATH}/../python_apps/pytag-fs/install/media-monitor-install.py

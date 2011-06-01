@@ -3,7 +3,6 @@
 
 import os
 import sys
-import time
 from configobj import ConfigObj
 
 if os.geteuid() != 0:
@@ -30,6 +29,7 @@ try:
 
     os.system("/etc/init.d/airtime-media-monitor stop")
     os.system("rm -f /etc/init.d/airtime-media-monitor")
+    os.system("update-rc.d -f airtime-media-monitor remove")
     
     print "Removing log directories"
     remove_path(config["log_dir"])

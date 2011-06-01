@@ -3,7 +3,6 @@
 
 import os
 import sys
-import time
 from configobj import ConfigObj
 
 if os.geteuid() != 0:
@@ -30,6 +29,7 @@ try:
         
     os.system("/etc/init.d/airtime-playout stop")
     os.system("rm -f /etc/init.d/airtime-playout")
+    os.system("update-rc.d -f airtime-playout remove")
         
     print "Removing cache directories"
     remove_path(config["cache_base_dir"])
