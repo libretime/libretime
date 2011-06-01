@@ -152,14 +152,14 @@ class AirTimeApiClient(ApiClientInterface):
             response_json = json.loads(data)
             version = response_json['version']
             logger.debug("Airtime Version %s detected", version)
-        except Exception, e:
+        except IOError, e:
+            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
             if e[1] == 401:
                 if (verbose):
                     logger.info('#####################################')
                     logger.info('# YOUR API KEY SEEMS TO BE INVALID:')
                     logger.info('# ' + self.config["api_key"])
                     logger.info('#####################################')
-                return -1
 
             if e[1] == 404:
                 if (verbose):
@@ -167,9 +167,10 @@ class AirTimeApiClient(ApiClientInterface):
                     logger.info('# Unable to contact the Airtime-API')
                     logger.info('# ' + url)
                     logger.info('#####################################')
-                return -1
-
-            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, response)
+            return -1
+        except Exception, e:
+            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
+            return -1
 
         return version
 
