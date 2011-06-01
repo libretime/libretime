@@ -20,8 +20,6 @@ def create_path(path):
   if not (os.path.exists(path)):
     print "Creating directory " + path
     os.makedirs(path)
-  else:
-    print "Directory already exists " + path
 
 def copy_dir(src_dir, dest_dir):
   if (os.path.exists(dest_dir)) and (dest_dir != "/"):
@@ -62,7 +60,7 @@ try:
 
   current_script_dir = get_current_script_dir()
 
-  p = Popen("/etc/init.d/airtime-playout stop", shell=True)
+  p = Popen("/etc/init.d/airtime-playout stop >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
 
   create_path(config["pypo_log_dir"])
@@ -111,7 +109,6 @@ try:
   os.system("rm -f /usr/bin/airtime-liquidsoap")
   os.system("ln -s "+config["bin_dir"]+"/bin/airtime-liquidsoap /usr/bin/")
 
-  
   print "Installing pypo daemon"
   shutil.copy(config["bin_dir"]+"/bin/airtime-playout-init-d", "/etc/init.d/airtime-playout")
 
@@ -126,6 +123,5 @@ try:
 except Exception, e:
   print "exception:" + str(e)
   sys.exit(1)
-  
 
 

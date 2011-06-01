@@ -53,7 +53,11 @@ if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !i
 if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
     echo "Airtime version $version found.".PHP_EOL;
     require_once("airtime-upgrade.php");
-    exit(1);
+
+    //Make sure to exit with non-zero error code so that airtime-install
+    //shell script does not continue with installing pypo, show-recorder,
+    //media-monitor etc.
+    exit(2);
 }
 
 // -------------------------------------------------------------------------

@@ -44,7 +44,7 @@ try:
 
   current_script_dir = get_current_script_dir()
 
-  p = Popen("/etc/init.d/airtime-show-recorder stop", shell=True)
+  p = Popen("/etc/init.d/airtime-show-recorder stop >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
 
   print "Creating temporary media storage directory"
@@ -80,6 +80,4 @@ try:
 except Exception, e:
   print "exception:" + str(e)
   sys.exit(1)
-  
-
 

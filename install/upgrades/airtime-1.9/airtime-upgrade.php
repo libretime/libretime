@@ -11,10 +11,38 @@ require_once __DIR__.'/../../../airtime_mvc/application/configs/conf.php';
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
 
-// clean up old files
-@unlink('/usr/bin/airtime-pypo-start');
-@unlink('/usr/bin/airtime-pypo-stop');
-@unlink(dirname(__FILE__).'/../../../python_apps/pypo/airtime-pypo-start');
-@unlink(dirname(__FILE__).'/../../../python_apps/pypo/airtime-pypo-stop');
-
 AirtimeInstall::CreateZendPhpLogFile();
+
+
+/* In version 1.9.0 we have have switched from daemontools to more traditional
+ * init.d daemon system. Let's remove all the daemontools files
+ */
+
+exec("airtime-pypo-stop");
+exec("airtime-show-recorder-stop");
+exec("airtime-media-monitor-stop");
+
+$pathnames = array("/usr/bin/airtime-pypo-start",
+                "/usr/bin/airtime-pypo-stop",
+                "/usr/bin/airtime-show-recorder-start",
+                "/usr/bin/airtime-show-recorder-stop",
+                "/usr/bin/airtime-media-monitor-start",
+                "/usr/bin/airtime-media-monitor-stop",
+                "/etc/service/pypo",
+                "/etc/service/pypo-liquidsoap",
+                "/etc/service/media-monitor",
+                "/etc/service/recorder",
+                "/var/log/airtime/pypo/main",
+                "/var/log/airtime/show-recorder/main"
+                );
+
+foreach ($pathnames as $pn){
+    exec("rm -rf ".$pn);
+}
+
+/* Run install scripts for pypo, show-recorder and media-monitor.
+ * This is to install the init.d scripts. */
+exec("python ".__DIR__."/../../../python_apps/pypo/install/pypo-install.py");
+exec("python ".__DIR__."/../../../python_apps/show-recorder/install/recorder-install.py");
+exec("python ".__DIR__."/../../../python_apps/media-monitor/install/media-monitor-install.py");
+
