@@ -15,15 +15,6 @@ PATH_INI_FILE = '/etc/airtime/recorder.cfg'
 def remove_path(path):
     os.system("rm -rf " + path)
 
-def remove_user(username):
-    os.system("killall -u %s 1>/dev/null 2>&1" % username)
-    
-    #allow all process to be completely closed before we attempt to delete user
-    print "Waiting for processes to close..."
-    time.sleep(5)
-    
-    os.system("deluser --remove-home " + username + " 1>/dev/null 2>&1")
-
 def get_current_script_dir():
   current_script_dir = os.path.realpath(__file__)
   index = current_script_dir.rindex('/')
@@ -35,9 +26,10 @@ try:
         config = ConfigObj(PATH_INI_FILE)
     except Exception, e:
         print 'Error loading config file: ', e
-        sys.exit()
+        sys.exit(1)
 
     os.system("/etc/init.d/airtime-show-recorder stop")
+    os.system("rm -f /etc/init.d/airtime-show-recorder")
     
     print "Removing log directories"
     remove_path(config["log_dir"])
@@ -51,7 +43,6 @@ try:
     print "Removing media files"
     remove_path(config["base_recorded_files"])
     
-    remove_user("pypo")
     print "Uninstall complete."
 except Exception, e:
     print "exception:" + str(e)

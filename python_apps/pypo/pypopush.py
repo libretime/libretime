@@ -27,6 +27,7 @@ try:
     LS_PORT = config['ls_port']
     PUSH_INTERVAL = 2
 except Exception, e:
+    logger = logging.getLogger()
     logger.error('Error loading config file %s', e)
     sys.exit()
 

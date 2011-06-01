@@ -123,7 +123,5 @@ AirtimeInstall::CreateSymlinksToUtils();
 
 AirtimeInstall::CreateZendPhpLogFile();
 
-//wait for 1.9.0 release
-//echo PHP_EOL."*** Media Monitor Installation ***".PHP_EOL;
-//system("python ".__DIR__."/../python_apps/pytag-fs/install/media-monitor-install.py");
 
+/* FINISHED AIRTIME PHP INSTALLER */

@@ -33,7 +33,8 @@ except Exception, e:
 try:
     config = ConfigObj('/etc/airtime/MediaMonitor.cfg')
 except Exception, e:
-    print 'Error loading config file: ', e
+    logger = logging.getLogger();
+    logger.error('Error loading config file: %s', e)
     sys.exit()
 
 """

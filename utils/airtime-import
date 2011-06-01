@@ -32,7 +32,7 @@
 
 # Absolute path to this script
 SCRIPT=`readlink -f $0`
-# Absolute path this script is in
+# Absolute directory this script is in
 SCRIPTPATH=`dirname $SCRIPT`
 
 #-------------------------------------------------------------------------------

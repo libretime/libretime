@@ -49,7 +49,8 @@ logging.config.fileConfig("logging.cfg")
 try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
 except Exception, e:
-    print 'Error loading config file: ', e
+    logger = logging.getLogger()
+    logger.error('Error loading config file: %s', e)
     sys.exit()
 
 class Global:
@@ -71,6 +72,7 @@ class Global:
     def test_api(self):
         self.api_client.test()
 
+"""
     def check_schedule(self, export_source):
         logger = logging.getLogger()
 
@@ -97,17 +99,20 @@ class Global:
 
             for media in playlist['medias']:
                 print media
+"""
 
 def keyboardInterruptHandler(signum, frame):
-    print "\nKeyboard Interrupt\n"
-    sys.exit();
+    logger = logging.getLogger()
+    logger.info('\nKeyboard Interrupt\n')
+    sys.exit(0)
 
 
 if __name__ == '__main__':
-    print '###########################################'
-    print '#             *** pypo  ***               #'
-    print '#   Liquidsoap Scheduled Playout System   #'
-    print '###########################################'
+    logger = logging.getLogger()
+    logger.info('###########################################')
+    logger.info('#             *** pypo  ***               #')
+    logger.info('#   Liquidsoap Scheduled Playout System   #')
+    logger.info('###########################################')
 
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
@@ -120,10 +125,7 @@ if __name__ == '__main__':
     # initialize
     g = Global()
 
-    #NOTE: MUST EXIT HERE!! while not g.selfcheck(): time.sleep() 
-    #Causes pypo to hang on system boot!!!
-    if not g.selfcheck():
-        sys.exit()
+    while not g.selfcheck(): time.sleep(5)
     
     logger = logging.getLogger()
 

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Absolute path to this script
+SCRIPT=`readlink -f $0`
+# Absolute directory this script is in
+SCRIPTPATH=`dirname $SCRIPT`
+
+echo -e "\n******************************* Uninstall Begin ********************************"
+
+php ${SCRIPTPATH}/airtime-uninstall.php
+
+echo -e "\n*** Uninstalling Pypo ***"
+python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-uninstall.py
+
+#echo -e "\n*** Uninstalling Show Recorder ***"
+#python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-uninstall.py
+
+#echo -e "\n*** Uninstalling Media Monitor ***"
+#python ${SCRIPTPATH}/../python_apps/pytag-fs/install/media-monitor-uninstall.py
+
+echo -e "\n*** Removing Pypo User ***"
+python ${SCRIPTPATH}/../python_apps/remove-pypo-user.py
+
+echo -e "\n****************************** Uninstall Complete ******************************\n"
+echo "NOTE: To fully remove all Airtime files, you will also have to manually delete"
+echo "      the directories '/srv/airtime'(default storage location of media files)"
+echo -e "      and '/etc/airtime'(where the config files are stored).\n"
