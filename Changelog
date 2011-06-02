@@ -19,6 +19,7 @@ Highlights:
     - Fixed uploading audio on Chrome 11 and higher
     - Fixed various editing show problems
     - Fixed airtime-pypo-stop/start causing playback problems
+    - Fixed incorrect information being occasionally shown in the top panel
 
 
 1.8.1 - May 2, 2011
