@@ -318,6 +318,7 @@ class AirTimeApiClient(ApiClientInterface):
 
         except Exception, e:
             logger.error("Exception: %s", e)
+            response = None
 
         return response
 

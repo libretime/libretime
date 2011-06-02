@@ -166,21 +166,18 @@ class Record():
 
     def get_shows(self):
 
-        shows = self.api_client.get_shows_to_record()
-        
-        if self.sr is not None:
-            if not shows['is_recording'] and self.sr.is_recording():
-                self.sr.cancel_recording()
-            
-        
-        if shows is not None:
-            shows = shows[u'shows']
-        else:
-            shows = []
+        response = self.api_client.get_shows_to_record()
 
-        if len(shows):
-            self.process_shows(shows)
-            self.check_record()
+        if response is not None and 'is_recording' in response:
+            if self.sr is not None:
+                if not response['is_recording'] and self.sr.is_recording():
+                    self.sr.cancel_recording()
+        
+            shows = response[u'shows']
+            
+            if len(shows):
+                self.process_shows(shows)
+                self.check_record()
 
 
 if __name__ == '__main__':
