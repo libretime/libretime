@@ -63,16 +63,19 @@ if (!$version){
 
 echo "******************************** Update Begin *********************************".PHP_EOL;
 
-if(strcmp($version, "1.7.0") < 0) {
+//convert strings like 1.9.0-devel to 1.9.0
+$version = substr($version, 0, 5);
+
+if (strcmp($version, "1.7.0") < 0){
     system("php ".__DIR__."/upgrades/airtime-1.7/airtime-upgrade.php");
 }
-if(strcmp($version, "1.8.0") < 0) {
+if (strcmp($version, "1.8.0") < 0){
     system("php ".__DIR__."/upgrades/airtime-1.8/airtime-upgrade.php");
 }
-if(strcmp($version, "1.8.1") < 0) {
+if (strcmp($version, "1.8.1") < 0){
     system("php ".__DIR__."/upgrades/airtime-1.8.1/airtime-upgrade.php");
 }
-if(strcmp($version, "1.8.2") < 0) {
+if (strcmp($version, "1.8.2") < 0){
     system("php ".__DIR__."/upgrades/airtime-1.8.2/airtime-upgrade.php");
 }
 if (strcmp($version, "1.9.0") < 0){
@@ -83,7 +86,7 @@ if (strcmp($version, "1.9.0") < 0){
 //set the new version in the database.
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
 $CC_DBC->query($sql);
-$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '1.8.2')";
+$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '1.9.0-devel')";
 $CC_DBC->query($sql);
 
 

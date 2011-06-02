@@ -87,14 +87,18 @@ class AirtimeCheck {
 
         if (file_exists($filename)){
             //first get pid
-            $pid = trim(file_get_contents($filename));
+            $potential_pid = trim(file_get_contents($filename));
 
+            //check if the pid is actually live
+            if (file_exists("/proc/$potential_pid")){
+                $pid = $potential_pid;
 
-            //now lets get the running time
-            $lastModified = filemtime($filename);
-            $currentTime = time();
+                //now lets get the running time
+                $lastModified = filemtime($filename);
+                $currentTime = time();
 
-            $numSecondsRunning = $currentTime - $lastModified;            
+                $numSecondsRunning = $currentTime - $lastModified;
+            }
         }
 
         output_status("PLAYOUT_ENGINE_PROCESS_ID", $pid);
@@ -126,14 +130,18 @@ class AirtimeCheck {
 
         if (file_exists($filename)){
             //first get pid
-            $pid = trim(file_get_contents($filename));
+            $potential_pid = trim(file_get_contents($filename));
 
+            //check if the pid is actually live
+            if (file_exists("/proc/$potential_pid")){
+                $pid = $potential_pid;
 
-            //now lets get the running time
-            $lastModified = filemtime($filename);
-            $currentTime = time();
+                //now lets get the running time
+                $lastModified = filemtime($filename);
+                $currentTime = time();
 
-            $numSecondsRunning = $currentTime - $lastModified;            
+                $numSecondsRunning = $currentTime - $lastModified;
+            }         
         }
 
         output_status("LIQUIDSOAP_PROCESS_ID", $pid);
