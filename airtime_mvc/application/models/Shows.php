@@ -887,6 +887,9 @@ class Show {
             $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
             $end = $CC_DBC->GetOne($sql);
 
+            $date = new DateHelper();
+            $currentTimestamp = $date->getTimestamp();
+
             $show = new Show($show_id);
             if ($show->hasInstance()){
                 $ccShowInstance = $show->getInstance();
@@ -896,8 +899,8 @@ class Show {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
             }
-
-            if ($start > $currentTimestamp){
+                
+            if ($newInstance || $ccShowInstance->getDbStarts() > $currentTimestamp){
                 $ccShowInstance->setDbShowId($show_id);
                 $ccShowInstance->setDbStarts($start);
                 $ccShowInstance->setDbEnds($end);
@@ -911,9 +914,6 @@ class Show {
             if (!$newInstance){
                 $showInstance->correctScheduleStartTimes();
             }
-
-            $date = new DateHelper();
- 	 	 	$currentTimestamp = $date->getTimestamp();
 
             $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
             $rebroadcasts = $CC_DBC->GetAll($sql);
@@ -960,15 +960,15 @@ class Show {
         $rebroadcasts = $CC_DBC->GetAll($sql);
         $show = new Show($show_id);
 
+        $date = new DateHelper();
+        $currentTimestamp = $date->getTimestamp();
+
         while(strtotime($next_date) <= strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
 
             $start = $next_date;
 
             $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
             $end = $CC_DBC->GetOne($sql);
-
-            $date = new DateHelper();
- 	 	 	$currentTimestamp = $date->getTimestamp();
 
             if ($show->hasInstanceOnDate($start)){
                 $ccShowInstance = $show->getInstanceOnDate($start);
@@ -977,8 +977,11 @@ class Show {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
             }
-
-            if ($start > $currentTimestamp){
+            
+            /* When editing the start/end time of a repeating show, we don't want to
+             * change shows that started in the past. So check the start time. 
+             */           
+            if ($newInstance || $ccShowInstance->getDbStarts() > $currentTimestamp){
                 $ccShowInstance->setDbShowId($show_id);
                 $ccShowInstance->setDbStarts($start);
                 $ccShowInstance->setDbEnds($end);
