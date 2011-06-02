@@ -90,11 +90,12 @@ $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '1.9.0-de
 $CC_DBC->query($sql);
 
 
-echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
-
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
+passthru("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
+
+echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
+passthru("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
+
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
 
