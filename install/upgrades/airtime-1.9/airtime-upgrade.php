@@ -51,12 +51,12 @@ exec("/usr/bin/airtime-pypo-stop");
 exec("/usr/bin/airtime-show-recorder-stop");
 exec("/usr/bin/airtime-media-monitor-stop");
 
-exec("svc -dx /etc/service/pypo");
-exec("svc -dx /etc/service/pypo/log");
-exec("svc -dx /etc/service/pypo-liquidsoap");
-exec("svc -dx /etc/service/pypo-liquidsoap/log");
-exec("svc -dx /etc/service/recorder");
-exec("svc -dx /etc/service/recorder/log");
+exec("svc -d /etc/service/pypo");
+exec("svc -d /etc/service/pypo/log");
+exec("svc -d /etc/service/pypo-liquidsoap");
+exec("svc -d /etc/service/pypo-liquidsoap/log");
+exec("svc -d /etc/service/recorder");
+exec("svc -d /etc/service/recorder/log");
 
 $pathnames = array("/usr/bin/airtime-pypo-start",
                 "/usr/bin/airtime-pypo-stop",
