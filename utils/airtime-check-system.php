@@ -1,7 +1,5 @@
 <?php
 
-AirtimeCheck::ExitIfNotRoot();
-
 $airtimeIni = AirtimeCheck::GetAirtimeConf();
 $airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
@@ -57,20 +55,6 @@ class AirtimeCheck {
     
     public static $check_system_ok = true;
     
-    /**
-     * Ensures that the user is running this PHP script with root
-     * permissions. If not running with root permissions, causes the
-     * script to exit.
-     */
-    public static function ExitIfNotRoot()
-    {
-        // Need to check that we are superuser before running this.
-        if(exec("whoami") != "root"){
-            echo "Must be root user.\n";
-            exit(1);
-        }
-    }
-
     public static function CheckAirtimePlayoutRunning()
     {
 
