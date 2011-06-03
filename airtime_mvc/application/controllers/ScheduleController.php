@@ -423,7 +423,9 @@ class ScheduleController extends Zend_Controller_Action
 
         $formWhen->populate(array('add_show_start_date' => $show->getStartDate(),
                                   'add_show_start_time' => DateHelper::removeSecondsFromTime($show->getStartTime()),
-                                  'add_show_duration' => $show->getDuration(),
+        						  'add_show_end_date_no_repeat' => $show->getEndDate(),
+        						  'add_show_end_time'	=> DateHelper::removeSecondsFromTime($show->getEndTime()),
+                                  'add_show_duration' => $show->getDuration(true),
                                   'add_show_repeats' => $show->isRepeating() ? 1 : 0));
 
         if ($show->isStartDateTimeInPast()){
@@ -541,7 +543,23 @@ class ScheduleController extends Zend_Controller_Action
         if($when) {
             $when = $formWhen->checkReliantFields($data, $startDateModified);
         }
-
+        // format add_show_duration value to hh:mm so it can be compatible with
+        // existing code
+        $hPos = strpos($data["add_show_duration"], 'h');
+        $mPos = strpos($data["add_show_duration"], 'm');
+        
+        $hValue = 0;
+        $mValue = 0;
+        
+        if($hPos !== false){
+        	$hValue = trim(substr($data["add_show_duration"], 0, $hPos));
+        }
+        if($mPos !== false){
+        	$mValue = trim(substr($data["add_show_duration"], $hPos+1, -1 ));
+        }
+        
+        $data["add_show_duration"] = $hValue.":".$mValue;
+        
         if($data["add_show_repeats"]) {
 		    $repeats = $formRepeats->isValid($data);
             if($repeats) {

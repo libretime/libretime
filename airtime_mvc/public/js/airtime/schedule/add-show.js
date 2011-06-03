@@ -13,6 +13,8 @@ function startDpSelect(dateText, inst) {
 
 	$("#add_show_end_date").datepicker("option", "minDate", date);
     $('input[name^="add_show_rebroadcast_absolute_date"]').datepicker("option", "minDate", date);
+    if (inst.input)
+        inst.input.trigger('change');
 }
 
 function endDpSelect(dateText, inst) {
@@ -22,6 +24,8 @@ function endDpSelect(dateText, inst) {
 	date = new Date(time[0], time[1] - 1, time[2]);
 
 	$("#add_show_start_date").datepicker( "option", "maxDate", date);
+	if (inst.input)
+        inst.input.trigger('change');
 }
 
 function createDateInput(el, onSelect) {
@@ -158,14 +162,15 @@ function setAddShowEvents() {
     form.find("#add_show_no_end").click(endDateVisibility);
 
 	createDateInput(form.find("#add_show_start_date"), startDpSelect);
+	createDateInput(form.find("#add_show_end_date_no_repeat"), endDpSelect);
 	createDateInput(form.find("#add_show_end_date"), endDpSelect);
 
     form.find("#add_show_start_time").timepicker({
-        amPmText: ['', '']
-    });
-    form.find("#add_show_duration").timepicker({
         amPmText: ['', ''],
-        defaultTime: '01:00'
+        defaultTime: '00:00'
+    });
+    form.find("#add_show_end_time").timepicker({
+        amPmText: ['', '']
     });
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
@@ -312,6 +317,50 @@ function setAddShowEvents() {
                 }
             });
 		});
+	
+	// auto puplate end date and time
+	$('#add_show_start_time, #add_show_start_date, #add_show_end_date_no_repeat, #add_show_end_time').change(function(){
+		var startDate = $('#add_show_start_date').val().split('-');
+		var startDateTime = new Date(startDate[1]+' '+startDate[2]+','+startDate[0]+' '+$('#add_show_start_time').val());
+		
+		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
+		var endDateTime = new Date(endDate[1]+' '+endDate[2]+','+endDate[0]+' '+$('#add_show_end_time').val());
+		
+		// if changed start time is greater than end, set end time to start time + 1 hour
+		if(startDateTime.getTime() > endDateTime.getTime()){
+			endDateTime = new Date(startDateTime.getTime() + (1*60*60*1000));
+		}
+		
+		var endDate = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
+		var endTime = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
+		
+		$('#add_show_end_date_no_repeat').val(endDate);
+		$('#add_show_end_time').val(endTime);
+		
+		// calculate duration
+		calculateDuration(endDateTime, startDateTime)
+	})
+	
+	function calculateDuration(endDateTime, startDateTime){
+		var duration;
+		var durationSeconds = (endDateTime.getTime() - startDateTime.getTime())/1000;
+		if(durationSeconds != 0){
+			var durationHour = parseInt(durationSeconds/3600);
+			var durationMin = parseInt((durationSeconds%3600)/60);
+			duration = (durationHour == 0 ? '' : durationHour+'h'+' ')+(durationMin == 0 ? '' : durationMin+'m');
+		}else{
+			duration = '0m';
+		}
+		$('#add_show_duration').val(duration);
+	}
+	function pad(number, length) {
+	    var str = '' + number;
+	    while (str.length < length) {
+	        str = '0' + str;
+	    }
+	   
+	    return str;
+	}
 }
 
 function showErrorSections() {

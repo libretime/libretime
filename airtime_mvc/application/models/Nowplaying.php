@@ -21,8 +21,17 @@ class Application_Model_Nowplaying
 			$type = "a";
 			$type .= ($dbRow['item_ends'] > $timeNow && $dbRow['item_starts'] <= $timeNow) ? "c" : "";
 			
-			$dataTablesRows[] = array($type, $dbRow['show_starts'], $dbRow['item_starts'], $dbRow['item_ends'],
-					$dbRow['clip_length'], $dbRow['track_title'], $dbRow['artist_name'], $dbRow['album_title'],
+			// remove millisecond from the time format
+			$itemStart = explode('.', $dbRow['item_starts']);
+			$itemEnd = explode('.', $dbRow['item_ends']);
+			
+			//format duration
+			$duration = explode('.', $dbRow['clip_length']);
+			$duration = explode(':', $duration[0]);
+			$duration = $duration[0].'h'.$duration[1].'m'.$duration[2].'s';
+			
+			$dataTablesRows[] = array($type, $dbRow['show_starts'], $itemStart[0], $itemEnd[0],
+					$duration, $dbRow['track_title'], $dbRow['artist_name'], $dbRow['album_title'],
 					$dbRow['playlist_name'], $dbRow['show_name'], $status);
 		}
 
