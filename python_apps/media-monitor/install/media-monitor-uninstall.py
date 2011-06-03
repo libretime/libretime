@@ -9,7 +9,7 @@ if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
     
-PATH_INI_FILE = '/etc/airtime/MediaMonitor.cfg'
+PATH_INI_FILE = '/etc/airtime/media-monitor.cfg'
 
 def remove_path(path):
     os.system("rm -rf " + path)

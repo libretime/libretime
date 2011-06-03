@@ -20,7 +20,7 @@ if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
 
-PATH_INI_FILE = '/etc/airtime/MediaMonitor.cfg'
+PATH_INI_FILE = '/etc/airtime/media-monitor.cfg'
 
 def create_path(path):
   if not (os.path.exists(path)):
