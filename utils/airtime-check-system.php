@@ -7,6 +7,8 @@ require_once "$airtime_base_dir/library/php-amqplib/amqp.inc";
 
 set_error_handler("myErrorHandler");
 
+AirtimeCheck::GetCpuInfo();
+AirtimeCheck::GetRamInfo();
 AirtimeCheck::CheckOsTypeVersion();
 
 AirtimeCheck::CheckConfigFilesExist();
@@ -155,6 +157,32 @@ class AirtimeCheck {
             self::$check_system_ok = false;
         }
         output_status("ICECAST_PROCESS_ID", $status);
+    }
+
+    public static function GetCpuInfo()
+    {
+        $command = "cat /proc/cpuinfo |grep -m 1 'model name' ";
+        exec($command, $output, $result);
+        
+        $choppedStr = split(":", $output[0]);
+        $status = trim($choppedStr[1]);
+        output_status("CPU", $status);
+    }
+
+    public static function GetRamInfo()
+    {
+        $command = "cat /proc/meminfo |grep 'MemTotal' ";
+        exec($command, $output, $result);
+        $choppedStr = split(":", $output[0]);
+        $status = trim($choppedStr[1]);
+        output_status("Total RAM", $status);	
+
+	$output = null;
+        $command = "cat /proc/meminfo |grep 'MemFree' ";
+        exec($command, $output, $result);
+        $choppedStr = split(":", $output[0]);
+        $status = trim($choppedStr[1]);
+        output_status("Free RAM", $status);	
     }
 
     public static function CheckConfigFilesExist()
@@ -380,6 +408,12 @@ class AirtimeCheck {
         } else {
             $os_string = "Unknown";
         }
+
+	// Figure out if 32 or 64 bit
+  	$command = "file -b /sbin/init";
+	exec($command, $output, $result);
+	$splitStr = split(",", $output[0]);
+	$os_string .= $splitStr[1];
 
         output_status("OS", $os_string);
     }

@@ -17,8 +17,9 @@ class Application_Model_Dashboard
                 return null;
             } else {
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
-                            "starts"=>$row[0]["starts"],
-                            "ends"=>$row[0]["ends"]);
+                    "starts"=>$row[0]["starts"],
+                    "ends"=>$row[0]["ends"]);
+
             }
         } else {
             if (count($row) == 0){
@@ -47,9 +48,12 @@ class Application_Model_Dashboard
         //after the last item in the schedule table, then return the show's
         //name. Else return the last item from the schedule.
 
+        $row = array();
         $showInstance = ShowInstance::GetCurrentShowInstance($p_timeNow);
-        $row = Schedule::GetCurrentScheduleItem($p_timeNow);
-
+        if (!is_null($showInstance)){
+            $instanceId = $showInstance->getShowInstanceId();
+            $row = Schedule::GetCurrentScheduleItem($p_timeNow, $instanceId);
+        }
         if (is_null($showInstance)){
             if (count($row) == 0){
                 return null;
