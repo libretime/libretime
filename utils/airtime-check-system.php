@@ -107,7 +107,7 @@ class AirtimeCheck {
         if (is_numeric($numSecondsRunning) && (int)$numSecondsRunning < 3) {
             self::$check_system_ok = false;
             output_msg("WARNING! It looks like the playout engine is continually restarting.");
-            $command = "tail -10 /var/log/airtime/pypo/main/current";
+            $command = "tail -10 /var/log/airtime/pypo/pypo.log";
             exec($command, $output, $result);
             foreach ($output as $line) {
                 output_msg($line);
@@ -150,7 +150,7 @@ class AirtimeCheck {
         if (is_numeric($numSecondsRunning) && (int)$numSecondsRunning < 3) {
             self::$check_system_ok = false;
             output_msg("WARNING! It looks like the playout engine is continually restarting.");
-            $command = "tail -10 /var/log/airtime/pypo/main/current";
+            $command = "tail -10 /var/log/airtime/pypo-liquidsoap/ls_script.log";
             exec($command, $output, $result);
             foreach ($output as $line) {
                 output_msg($line);
