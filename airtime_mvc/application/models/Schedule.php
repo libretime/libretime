@@ -378,7 +378,7 @@ class Schedule {
             "apiKey"=>$CC_CONFIG['apiKey'][0]);
     }
 
-    public static function GetLastScheduleItem($p_timeNow, $p_instanceId){
+    public static function GetLastScheduleItem($p_timeNow){
         global $CC_CONFIG, $CC_DBC;
 
         $sql = "SELECT *"
@@ -386,7 +386,6 @@ class Schedule {
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
         ." ON st.file_id = ft.id"
         ." WHERE st.ends < TIMESTAMP '$p_timeNow'"
-        ." AND st.instance_id = $p_instanceId"
         ." ORDER BY st.ends DESC"
         ." LIMIT 1";
 
@@ -419,7 +418,7 @@ class Schedule {
         return $row;
     }
 
-    public static function GetNextScheduleItem($p_timeNow, $p_instanceId){
+    public static function GetNextScheduleItem($p_timeNow){
         global $CC_CONFIG, $CC_DBC;
 
         $sql = "SELECT *"
@@ -427,7 +426,6 @@ class Schedule {
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
         ." ON st.file_id = ft.id"
         ." WHERE st.starts > TIMESTAMP '$p_timeNow'"
-        ." AND st.instance_id = $p_instanceId"
         ." ORDER BY st.starts"
         ." LIMIT 1";
 
