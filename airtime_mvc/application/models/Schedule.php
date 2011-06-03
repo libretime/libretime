@@ -378,7 +378,7 @@ class Schedule {
             "apiKey"=>$CC_CONFIG['apiKey'][0]);
     }
 
-    public static function GetLastScheduleItem($p_timeNow){
+    public static function GetLastScheduleItem($p_timeNow, $p_instanceId){
         global $CC_CONFIG, $CC_DBC;
 
         $sql = "SELECT *"
@@ -386,6 +386,7 @@ class Schedule {
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
         ." ON st.file_id = ft.id"
         ." WHERE st.ends < TIMESTAMP '$p_timeNow'"
+        ." AND st.instance_id = $p_instanceId"
         ." ORDER BY st.ends DESC"
         ." LIMIT 1";
 
@@ -394,22 +395,31 @@ class Schedule {
     }
 
 
-    public static function GetCurrentScheduleItem($p_timeNow){
+    public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId){
         global $CC_CONFIG, $CC_DBC;
 
+        /* Note that usually there will be one result returned. In some
+ 	 	 * rare cases two songs are returned. This happens when a track
+ 	 	 * that was overbooked from a previous show appears as if it
+ 	 	 * hasnt ended yet (track end time hasn't been reached yet). For
+ 	 	 * this reason,  we need to get the track that starts later, as
+ 	 	 * this is the *real* track that is currently playing. So this
+ 	 	 * is why we are ordering by track start time. */
         $sql = "SELECT *"
         ." FROM $CC_CONFIG[scheduleTable] st"
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
         ." ON st.file_id = ft.id"
         ." WHERE st.starts <= TIMESTAMP '$p_timeNow'"
+        ." AND st.instance_id = $p_instanceId"
         ." AND st.ends > TIMESTAMP '$p_timeNow'"
+        ." ORDER BY st.starts DESC"
         ." LIMIT 1";
 
         $row = $CC_DBC->GetAll($sql);
         return $row;
     }
 
-    public static function GetNextScheduleItem($p_timeNow){
+    public static function GetNextScheduleItem($p_timeNow, $p_instanceId){
         global $CC_CONFIG, $CC_DBC;
 
         $sql = "SELECT *"
@@ -417,6 +427,7 @@ class Schedule {
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
         ." ON st.file_id = ft.id"
         ." WHERE st.starts > TIMESTAMP '$p_timeNow'"
+        ." AND st.instance_id = $p_instanceId"
         ." ORDER BY st.starts"
         ." LIMIT 1";
 

@@ -10,14 +10,16 @@ class Application_Model_Dashboard
         //name. Else return the last item from the schedule.
 
         $showInstance = ShowInstance::GetLastShowInstance($p_timeNow);
-        $row = Schedule::GetLastScheduleItem($p_timeNow);
+        $instanceId = $showInstance->getShowId();
+        $row = Schedule::GetLastScheduleItem($p_timeNow, $instanceId);
 
         if (is_null($showInstance)){
             if (count($row) == 0){
                 return null;
             } else {
-                //should never reach here. Doesnt make sense to have
-                //a schedule item not within a show_instance.
+                return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                    "starts"=>$row[0]["starts"],
+                    "ends"=>$row[0]["ends"]);
             }
         } else {
             if (count($row) == 0){
@@ -47,7 +49,8 @@ class Application_Model_Dashboard
         //name. Else return the last item from the schedule.
 
         $showInstance = ShowInstance::GetCurrentShowInstance($p_timeNow);
-        $row = Schedule::GetCurrentScheduleItem($p_timeNow);
+        $instanceId = $showInstance->getShowId();
+        $row = Schedule::GetCurrentScheduleItem($p_timeNow, $instanceId);
 
         if (is_null($showInstance)){
             if (count($row) == 0){
@@ -62,8 +65,8 @@ class Application_Model_Dashboard
                 return array("name"=>$showInstance->getName(),
                             "starts"=>$showInstance->getShowStart(),
                             "ends"=>$showInstance->getShowEnd(),
-                            "media_item_played"=>false, //TODO
-                            "record"=>$showInstance->isRecorded()); //TODO
+                            "media_item_played"=>false,
+                            "record"=>$showInstance->isRecorded());
             } else {
                  return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                         "starts"=>$row[0]["starts"],
@@ -81,7 +84,8 @@ class Application_Model_Dashboard
         //name. Else return the last item from the schedule.
 
         $showInstance = ShowInstance::GetNextShowInstance($p_timeNow);
-        $row = Schedule::GetNextScheduleItem($p_timeNow);
+        $instanceId = $showInstance->getShowId();
+        $row = Schedule::GetNextScheduleItem($p_timeNow, $instanceId);
 
         if (is_null($showInstance)){
             if (count($row) == 0){
