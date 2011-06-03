@@ -53,34 +53,8 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
-
-        $formWhat = new Application_Form_AddShowWhat();
-		$formWho = new Application_Form_AddShowWho();
-		$formWhen = new Application_Form_AddShowWhen();
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formStyle = new Application_Form_AddShowStyle();
-        $formRecord = new Application_Form_AddShowRR();
-        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWho->removeDecorator('DtDdWrapper');
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formStyle->removeDecorator('DtDdWrapper');
-        $formRecord->removeDecorator('DtDdWrapper');
-
-        $this->view->what = $formWhat;
-	    $this->view->when = $formWhen;
-	    $this->view->repeats = $formRepeats;
-	    $this->view->who = $formWho;
-	    $this->view->style = $formStyle;
-        $this->view->rr = $formRecord;
-        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-        $this->view->rebroadcast = $formRebroadcast;
-        $this->view->addNewShow = true;
-
-        $formWhat->populate(array('add_show_id' => '-1'));
+        
+        Schedule::createNewFormSections($this->view);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
@@ -510,35 +484,8 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->entries = 5;
     }
 
-    public function getFormAction(){
-        $formWhat = new Application_Form_AddShowWhat();
-		$formWho = new Application_Form_AddShowWho();
-		$formWhen = new Application_Form_AddShowWhen();
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formStyle = new Application_Form_AddShowStyle();
-        $formRecord = new Application_Form_AddShowRR();
-        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWho->removeDecorator('DtDdWrapper');
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formStyle->removeDecorator('DtDdWrapper');
-        $formRecord->removeDecorator('DtDdWrapper');
-
-        $this->view->what = $formWhat;
-	    $this->view->when = $formWhen;
-	    $this->view->repeats = $formRepeats;
-	    $this->view->who = $formWho;
-	    $this->view->style = $formStyle;
-        $this->view->rr = $formRecord;
-        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-        $this->view->rebroadcast = $formRebroadcast;
-        $this->view->addNewShow = true;
-
-        $formWhat->populate(array('add_show_id' => '-1'));
-
+    public function getFormAction(){    
+        Schedule::createNewFormSections($this->view);
         $this->view->form = $this->view->render('schedule/add-show-form.phtml');
     }
 
@@ -586,16 +533,6 @@ class ScheduleController extends Zend_Controller_Action
         $formRecord->removeDecorator('DtDdWrapper');
         $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
         $formRebroadcast->removeDecorator('DtDdWrapper');
-
-        $this->view->what = $formWhat;
-	    $this->view->when = $formWhen;
-	    $this->view->repeats = $formRepeats;
-	    $this->view->who = $formWho;
-	    $this->view->style = $formStyle;
-        $this->view->rr = $formRecord;
-        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-        $this->view->rebroadcast = $formRebroadcast;
-        $this->view->addNewShow = true;
 
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
@@ -662,27 +599,23 @@ class ScheduleController extends Zend_Controller_Action
 			if ($user->isAdmin()) {
                 Show::create($data);
             }
-
+            
             //send back a new form for the user.
-            $formWhat->reset();
-            $formWhat->populate(array('add_show_id' => '-1'));
-
-		    $formWho->reset();
-		    $formWhen->reset();
-            $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
-                                      'add_show_start_time' => '0:00',
-                                      'add_show_duration' => '1:00'));
-		    $formRepeats->reset();
-            $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
-
-		    $formStyle->reset();
-            $formRecord->reset();
-            $formAbsoluteRebroadcast->reset();
-            $formRebroadcast->reset();
+            Schedule::createNewFormSections($this->view);
 
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 		}
-        else {
+        else {        
+            $this->view->what = $formWhat;
+            $this->view->when = $formWhen;
+            $this->view->repeats = $formRepeats;
+            $this->view->who = $formWho;
+            $this->view->style = $formStyle;
+            $this->view->rr = $formRecord;
+            $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+            $this->view->rebroadcast = $formRebroadcast;
+            $this->view->addNewShow = true;
+        
             //the form still needs to be "update" since
             //the validity test failed.
             if ($data['add_show_id'] != -1){

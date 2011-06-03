@@ -725,5 +725,37 @@ class Schedule {
         global $CC_CONFIG, $CC_DBC;
         $CC_DBC->query("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
     }
+    
+    public static function createNewFormSections($p_view){
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWho = new Application_Form_AddShowWho();
+		$formWhen = new Application_Form_AddShowWhen();
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formStyle = new Application_Form_AddShowStyle();
+        $formRecord = new Application_Form_AddShowRR();
+        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle->removeDecorator('DtDdWrapper');
+        $formRecord->removeDecorator('DtDdWrapper');
+        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+        $formRebroadcast->removeDecorator('DtDdWrapper');
+    
+        $p_view->what = $formWhat;
+        $p_view->when = $formWhen;
+        $p_view->repeats = $formRepeats;
+        $p_view->who = $formWho;
+        $p_view->style = $formStyle;
+        $p_view->rr = $formRecord;
+        $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+        $p_view->rebroadcast = $formRebroadcast;
+        $p_view->addNewShow = true;
+        
+        $formWhat->populate(array('add_show_id' => '-1'));
+    }
 }
 
