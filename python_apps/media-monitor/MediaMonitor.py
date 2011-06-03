@@ -8,6 +8,7 @@ import os
 import sys
 import hashlib
 import json
+import shutil
 
 from subprocess import Popen, PIPE, STDOUT
 
@@ -21,6 +22,9 @@ from pyinotify import WatchManager, Notifier, ProcessEvent
 from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
 from api_clients import api_client
+
+global storage_directory
+storage_directory = "/srv/airtime/stor"
 
 # configure logging
 try:
@@ -41,6 +45,7 @@ except Exception, e:
 list of supported easy tags in mutagen version 1.20
 ['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
 """
+
 
 def checkRabbitMQ(notifier):
     try:
@@ -128,6 +133,72 @@ class MediaMonitor(ProcessEvent):
         self.logger = logging.getLogger('root')
         self.temp_files = {}
 
+    def ensure_dir(self, filepath):
+
+        directory = os.path.dirname(filepath)
+
+        if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
+            os.makedirs(directory, 02775)
+
+    def create_unique_filename(self, filepath):
+
+        file_dir = os.path.dirname(filepath)
+        print file_dir
+        filename = os.path.basename(filepath).split(".")[0]
+        print filename
+        file_ext = os.path.splitext(filepath)[1]
+        print file_ext
+
+        if(os.path.exists(filepath)):
+            i = 1;
+            while(True):
+                new_filepath = "%s/%s(%s).%s" % (file_dir, filename, i, file_ext)
+
+                if(os.path.exists(new_filepath)):
+                    i = i+1;
+                else:
+                    return new_filepath
+
+        return filepath
+
+    def create_file_path(self, imported_filepath):
+
+        global storage_directory
+
+        original_name = os.path.basename(imported_filepath)
+        file_ext = os.path.splitext(imported_filepath)[1]
+        file_info = mutagen.File(imported_filepath, easy=True)
+
+        metadata = {'artist':None,
+                    'album':None,
+                    'title':None,
+                    'tracknumber':None}
+
+        for key in metadata.keys():
+            if key in file_info:
+                metadata[key] = file_info[key][0]
+
+        if metadata['artist'] is not None:
+            base = "%s/%s" % (storage_directory, metadata['artist'])
+            if metadata['album'] is not None:
+                base = "%s/%s" % (base, metadata['album'])
+            if metadata['title'] is not None:
+                if metadata['tracknumber'] is not None:
+                    metadata['tracknumber'] = "%02d" % (int(metadata['tracknumber']))
+                    base = "%s/%s - %s" % (base, metadata['tracknumber'], metadata['title'])
+                else:
+                    base = "%s/%s" % (base, metadata['title'])
+            else:
+                base = "%s/%s" % (base, original_name)
+        else:
+            base = "%s/%s" % (storage_directory, original_name)
+
+        base = "%s%s" % (base, file_ext)
+
+        filepath = self.create_unique_filename(base)
+        self.ensure_dir(filepath)
+        shutil.move(imported_filepath, filepath)
+
     def update_airtime(self, event):
         self.logger.info("Updating Change to Airtime")
         try:
@@ -145,7 +216,6 @@ class MediaMonitor(ProcessEvent):
                     md[attrs[key]] = file_info[key][0]
 
             data = {'md': md}
-
             response = self.api_client.update_media_metadata(data)
 
         except Exception, e:
@@ -176,7 +246,7 @@ class MediaMonitor(ProcessEvent):
                 self.temp_files[event.pathname] = None
             #This is a newly imported file.
             else :
-                pass
+                self.create_file_path(event.pathname)
 
             self.logger.info("%s: %s", event.maskname, event.pathname)
 
@@ -213,7 +283,7 @@ if __name__ == '__main__':
         #mask = pyinotify.ALL_EVENTS
 
         wm = WatchManager()
-        wdd = wm.add_watch('/srv/airtime/stor', mask, rec=True, auto_add=True)
+        wdd = wm.add_watch(storage_directory, mask, rec=True, auto_add=True)
 
         notifier = AirtimeNotifier(wm, MediaMonitor(), read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()
