@@ -207,6 +207,72 @@ class MediaMonitor(ProcessEvent):
         self.ensure_dir(filepath)
         shutil.move(imported_filepath, filepath)
 
+    def ensure_dir(self, filepath):
+
+        directory = os.path.dirname(filepath)
+
+        if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
+            os.makedirs(directory, 02775)
+
+    def create_unique_filename(self, filepath):
+
+        file_dir = os.path.dirname(filepath)
+        print file_dir
+        filename = os.path.basename(filepath).split(".")[0]
+        print filename
+        file_ext = os.path.splitext(filepath)[1]
+        print file_ext
+
+        if(os.path.exists(filepath)):
+            i = 1;
+            while(True):
+                new_filepath = "%s/%s(%s).%s" % (file_dir, filename, i, file_ext)
+
+                if(os.path.exists(new_filepath)):
+                    i = i+1;
+                else:
+                    return new_filepath
+
+        return filepath
+
+    def create_file_path(self, imported_filepath):
+
+        global storage_directory
+
+        original_name = os.path.basename(imported_filepath)
+        file_ext = os.path.splitext(imported_filepath)[1]
+        file_info = mutagen.File(imported_filepath, easy=True)
+
+        metadata = {'artist':None,
+                    'album':None,
+                    'title':None,
+                    'tracknumber':None}
+
+        for key in metadata.keys():
+            if key in file_info:
+                metadata[key] = file_info[key][0]
+
+        if metadata['artist'] is not None:
+            base = "%s/%s" % (storage_directory, metadata['artist'])
+            if metadata['album'] is not None:
+                base = "%s/%s" % (base, metadata['album'])
+            if metadata['title'] is not None:
+                if metadata['tracknumber'] is not None:
+                    metadata['tracknumber'] = "%02d" % (int(metadata['tracknumber']))
+                    base = "%s/%s - %s" % (base, metadata['tracknumber'], metadata['title'])
+                else:
+                    base = "%s/%s" % (base, metadata['title'])
+            else:
+                base = "%s/%s" % (base, original_name)
+        else:
+            base = "%s/%s" % (storage_directory, original_name)
+
+        base = "%s%s" % (base, file_ext)
+
+        filepath = self.create_unique_filename(base)
+        self.ensure_dir(filepath)
+        shutil.move(imported_filepath, filepath)
+
     def update_airtime(self, event):
         self.logger.info("Updating Change to Airtime")
         try:
@@ -256,10 +322,10 @@ class MediaMonitor(ProcessEvent):
                 self.temp_files[event.pathname] = None
             #This is a newly imported file.
             else :
-                #if not is_renamed_file(event.pathname):
-                self.create_file_path(event.pathname)
+                if not is_renamed_file(event.pathname):
+                    self.create_file_path(event.pathname)
 
-       self.logger.info("%s: %s", event.maskname, event.pathname)
+            self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MODIFY(self, event):
         if not event.dir :
@@ -267,7 +333,7 @@ class MediaMonitor(ProcessEvent):
             if self.is_audio_file(event.name) :
                 self.update_airtime(event)
 
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+            self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MOVED_FROM(self, event):
         if event.pathname in self.temp_files :
