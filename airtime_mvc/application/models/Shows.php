@@ -572,6 +572,16 @@ class Show {
         }
 
         if ($p_data['add_show_repeats']){
+            if (($repeatType == 1 || $repeatType == 2) && 
+                $p_data['add_show_start_date'] != $p_show->getStartDate()){
+                
+                //start date has changed when repeat type is bi-weekly or monthly.
+                //This screws up the repeating positions of show instances, so lets
+                //just delete them for now.
+                
+                $p_show->deleteAllInstances();
+            }
+        
             if ($p_data['add_show_start_date'] != $p_show->getStartDate()
                 || $p_data['add_show_start_time'] != $p_show->getStartTime()){
                 //start date/time has changed
@@ -584,12 +594,11 @@ class Show {
 
                 $p_show->updateStartDateTime($p_data, $p_endDate);
             }
-
+            
             if ($repeatType != $p_show->getRepeatType()){
                 //repeat type changed.
                 $p_show->deleteAllInstances();
-            }
-            else {
+            } else {
                 //repeat type is the same, check if the days of the week are the same
                 $repeatingDaysChanged = false;
                 $showDaysArray = $p_show->getShowDays();
