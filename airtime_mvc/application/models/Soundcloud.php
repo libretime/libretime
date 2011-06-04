@@ -67,7 +67,7 @@ class ATSoundcloud {
             }
             else {
                 $default_genre = Application_Model_Preference::GetSoundCloudGenre();
-                if ($genre != "") {
+                if ($default_genre != "") {
                     $track_data['track[genre]'] = $default_genre;
                 }
             }
