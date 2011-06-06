@@ -312,6 +312,26 @@ class Show {
 
         $CC_DBC->query($sql);
     }
+    
+    /**
+     * Deletes all future rebroadcast instances of the current 
+     * show object from the show_instances table.
+     *
+     */
+    public function deleteAllRebroadcasts(){
+        global $CC_DBC;
+
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
+
+        $showId = $this->getId();
+        $sql = "DELETE FROM cc_show_instances"
+                ." WHERE starts > TIMESTAMP '$timestamp'"
+                ." AND show_id = $showId"
+                ." AND rebroadcast = 1";
+
+        $CC_DBC->query($sql);
+    }
 
     /**
      * Deletes all show instances of current show after a
@@ -566,6 +586,14 @@ class Show {
         if ($p_data['add_show_duration'] != $this->getDuration()){
             //duration has changed
             $this->updateDurationTime($p_data);
+        }
+        
+        if ($isRecorded){
+            //delete all rebroadcasts. They will simply be recreated later
+            //in the execution of this PHP script. This simplifies having to 
+            //reason about whether we should keep individual rebroadcasts or 
+            //delete them or move them around etc.
+            $this->deleteAllRebroadcasts();
         }
 
         if ($p_data['add_show_repeats']){
