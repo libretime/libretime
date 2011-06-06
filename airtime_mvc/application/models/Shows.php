@@ -312,9 +312,9 @@ class Show {
 
         $CC_DBC->query($sql);
     }
-    
+
     /**
-     * Deletes all future rebroadcast instances of the current 
+     * Deletes all future rebroadcast instances of the current
      * show object from the show_instances table.
      *
      */
@@ -587,11 +587,11 @@ class Show {
             //duration has changed
             $this->updateDurationTime($p_data);
         }
-        
+
         if ($isRecorded){
             //delete all rebroadcasts. They will simply be recreated later
-            //in the execution of this PHP script. This simplifies having to 
-            //reason about whether we should keep individual rebroadcasts or 
+            //in the execution of this PHP script. This simplifies having to
+            //reason about whether we should keep individual rebroadcasts or
             //delete them or move them around etc.
             $this->deleteAllRebroadcasts();
         }
@@ -1172,7 +1172,7 @@ class Show {
                 $options["percent"] =  $show_instance->getPercentScheduled();
             }
 
-            if ($editable && strtotime($today_timestamp) < strtotime($show["starts"])) {
+            if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
                 $options["editable"] = true;
                 $events[] = Show::makeFullCalendarEvent($show, $options);
             }
@@ -1382,8 +1382,13 @@ class ShowInstance {
 
         $mins = abs($deltaMin%60);
 
+        $today_timestamp = date("Y-m-d H:i:s");
         $starts = $this->getShowStart();
         $ends = $this->getShowEnd();
+
+        if(strtotime($today_timestamp) > strtotime($starts)) {
+            return "can't move a past show";
+        }
 
         $sql = "SELECT timestamp '{$starts}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_starts = $CC_DBC->GetOne($sql);
@@ -1391,7 +1396,6 @@ class ShowInstance {
         $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_ends = $CC_DBC->GetOne($sql);
 
-        $today_timestamp = date("Y-m-d H:i:s");
         if(strtotime($today_timestamp) > strtotime($new_starts)) {
             return "can't move show into past";
         }
@@ -1430,8 +1434,13 @@ class ShowInstance {
 
         $mins = abs($deltaMin%60);
 
+        $today_timestamp = date("Y-m-d H:i:s");
         $starts = $this->getShowStart();
         $ends = $this->getShowEnd();
+
+        if(strtotime($today_timestamp) > strtotime($starts)) {
+            return "can't resize a past show";
+        }
 
         $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_ends = $CC_DBC->GetOne($sql);
