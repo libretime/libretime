@@ -132,6 +132,15 @@ class MediaMonitor(ProcessEvent):
         self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger('root')
         self.temp_files = {}
+        self.imported_renamed_files = {}
+
+    def get_md5(self, filepath):
+        f = open(filepath, 'rb')
+        m = hashlib.md5()
+        m.update(f.read())
+        md5 = m.hexdigest()
+
+        return md5
 
     def ensure_dir(self, filepath):
 
@@ -143,11 +152,8 @@ class MediaMonitor(ProcessEvent):
     def create_unique_filename(self, filepath):
 
         file_dir = os.path.dirname(filepath)
-        print file_dir
         filename = os.path.basename(filepath).split(".")[0]
-        print filename
         file_ext = os.path.splitext(filepath)[1]
-        print file_ext
 
         if(os.path.exists(filepath)):
             i = 1;
@@ -157,7 +163,9 @@ class MediaMonitor(ProcessEvent):
                 if(os.path.exists(new_filepath)):
                     i = i+1;
                 else:
-                    return new_filepath
+                    filepath = new_filepath
+
+        self.imported_renamed_files[filepath] = 0
 
         return filepath
 
@@ -202,11 +210,7 @@ class MediaMonitor(ProcessEvent):
     def update_airtime(self, event):
         self.logger.info("Updating Change to Airtime")
         try:
-            f = open(event.pathname, 'rb')
-            m = hashlib.md5()
-            m.update(f.read())
-            md5 = m.hexdigest()
-
+            md5 = self.get_md5(event.pathname)
             md = {'filepath':event.pathname, 'md5':md5}
 
             file_info = mutagen.File(event.pathname, easy=True)
@@ -220,6 +224,13 @@ class MediaMonitor(ProcessEvent):
 
         except Exception, e:
             self.logger.info("%s", e)
+
+    def is_renamed_file(self, filename):
+        if filename in self.imported_renamed_files:
+            del self.imported_renamed_files[filename]
+            return True
+
+        return False
 
     def is_temp_file(self, filename):
         info = filename.split(".")
@@ -239,16 +250,17 @@ class MediaMonitor(ProcessEvent):
 
 
     def process_IN_CREATE(self, event):
-        if not event.dir :
+        if not event.dir:
 
             #file created is a tmp file which will be modified and then moved back to the original filename.
             if self.is_temp_file(event.name) :
                 self.temp_files[event.pathname] = None
             #This is a newly imported file.
             else :
+                #if not is_renamed_file(event.pathname):
                 self.create_file_path(event.pathname)
 
-            self.logger.info("%s: %s", event.maskname, event.pathname)
+       self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MODIFY(self, event):
         if not event.dir :
@@ -285,10 +297,11 @@ if __name__ == '__main__':
         wm = WatchManager()
         wdd = wm.add_watch(storage_directory, mask, rec=True, auto_add=True)
 
+        logger = logging.getLogger('root')
+        logger.info("Added watch to %s", storage_directory)
+
         notifier = AirtimeNotifier(wm, MediaMonitor(), read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()
         notifier.loop(callback=checkRabbitMQ)
     except KeyboardInterrupt:
         notifier.stop()
-
-
