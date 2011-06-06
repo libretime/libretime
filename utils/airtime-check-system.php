@@ -1,7 +1,5 @@
 <?php
 
-AirtimeCheck::ExitIfNotRoot();
-
 $airtimeIni = AirtimeCheck::GetAirtimeConf();
 $airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
@@ -26,7 +24,7 @@ AirtimeCheck::CheckRabbitMqConnection($airtimeIni);
 AirtimeCheck::CheckApacheVHostFiles();
 
 AirtimeCheck::GetAirtimeServerVersion($pypoCfg);
-AirtimeCheck::CheckPypoRunning();
+AirtimeCheck::CheckAirtimePlayoutRunning();
 AirtimeCheck::CheckLiquidsoapRunning();
 AirtimeCheck::CheckIcecastRunning();
 
@@ -59,55 +57,43 @@ class AirtimeCheck {
     
     public static $check_system_ok = true;
     
-    /**
-     * Ensures that the user is running this PHP script with root
-     * permissions. If not running with root permissions, causes the
-     * script to exit.
-     */
-    public static function ExitIfNotRoot()
+    public static function CheckAirtimePlayoutRunning()
     {
-        // Need to check that we are superuser before running this.
-        if(exec("whoami") != "root"){
-            echo "Must be root user.\n";
-            exit(1);
+
+        //check if airtime-playout.pid exists
+
+        //if it exists we need to get the process id
+        //from the file as well as the time the process
+        //has been running. We can get the latter from
+        //the timestamp of the file
+        $filename = "/var/run/airtime-playout.pid";
+
+        $pid = false;
+        $numSecondsRunning = 0;
+
+        if (file_exists($filename)){
+            //first get pid
+            $potential_pid = trim(file_get_contents($filename));
+
+            //check if the pid is actually live
+            if (file_exists("/proc/$potential_pid")){
+                $pid = $potential_pid;
+
+                //now lets get the running time
+                $lastModified = filemtime($filename);
+                $currentTime = time();
+
+                $numSecondsRunning = $currentTime - $lastModified;
+            }
         }
-    }
 
-    public static function CheckPypoRunning()
-    {
-        $command = "sudo svstat /etc/service/pypo";
-        exec($command, $output, $result);
+        output_status("PLAYOUT_ENGINE_PROCESS_ID", $pid);
 
-
-        $key_value = split(":", $output[0]);
-        $value = trim($key_value[1]);
-
-        $status = AirtimeCheck::CHECK_FAILED;
-        $pos = strpos($value, "pid");
-        if ($pos !== false){
-            $start = $pos + 4;
-            $end = strpos($value, ")", $start);
-            $status = substr($value, $start, $end-$start);
-        } else {
-            self::$check_system_ok = false;
-        }
-
-        output_status("PLAYOUT_ENGINE_PROCESS_ID", $status);
-
-        $status = AirtimeCheck::CHECK_FAILED;
-        $pos = strpos($value, ")");
-        if ($pos !== false){
-            $start = $pos + 2;
-            $end = strpos($value, " ", $start);
-            $status = substr($value, $start, $end-$start);
-        } else {
-            self::$check_system_ok = false;
-        }
-        output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $status);
-        if (is_numeric($status) && (int)$status < 3) {
+        output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $numSecondsRunning);
+        if (is_numeric($numSecondsRunning) && (int)$numSecondsRunning < 3) {
             self::$check_system_ok = false;
             output_msg("WARNING! It looks like the playout engine is continually restarting.");
-            $command = "tail -10 /var/log/airtime/pypo/main/current";
+            $command = "tail -10 /var/log/airtime/pypo/pypo.log";
             exec($command, $output, $result);
             foreach ($output as $line) {
                 output_msg($line);
@@ -117,39 +103,40 @@ class AirtimeCheck {
 
     public static function CheckLiquidsoapRunning()
     {
-        $command = "sudo svstat /etc/service/pypo-liquidsoap";
-        exec($command, $output, $result);
+        //check if airtime-playout.pid exists
 
-        $key_value = split(":", $output[0]);
-        $value = trim($key_value[1]);
+        //if it exists we need to get the process id
+        //from the file as well as the time the process
+        //has been running. We can get the latter from
+        //the timestamp of the file
+        $filename = "/var/run/airtime-liquidsoap.pid";
 
-        $status = AirtimeCheck::CHECK_FAILED;
-        $pos = strpos($value, "pid");
-        if ($pos !== false){
-            $start = $pos + 4;
-            $end = strpos($value, ")", $start);
-            $status = substr($value, $start, $end-$start);
-        } else {
-            self::$check_system_ok = false;
+        $pid = false;
+        $numSecondsRunning = 0;
+
+        if (file_exists($filename)){
+            //first get pid
+            $potential_pid = trim(file_get_contents($filename));
+
+            //check if the pid is actually live
+            if (file_exists("/proc/$potential_pid")){
+                $pid = $potential_pid;
+
+                //now lets get the running time
+                $lastModified = filemtime($filename);
+                $currentTime = time();
+
+                $numSecondsRunning = $currentTime - $lastModified;
+            }         
         }
 
-        output_status("LIQUIDSOAP_PROCESS_ID", $status);
+        output_status("LIQUIDSOAP_PROCESS_ID", $pid);
 
-        $status = AirtimeCheck::CHECK_FAILED;
-        $pos = strpos($value, ")");
-        if ($pos !== false){
-            $start = $pos + 2;
-            $end = strpos($value, " ", $start);
-            $status = substr($value, $start, $end-$start);
-        } else {
+        output_status("LIQUIDSOAP_RUNNING_SECONDS", $numSecondsRunning);
+        if (is_numeric($numSecondsRunning) && (int)$numSecondsRunning < 3) {
             self::$check_system_ok = false;
-        }
-
-        output_status("LIQUIDSOAP_RUNNING_SECONDS", $status);
-        if (is_numeric($status) && (int)$status < 3) {
-            self::$check_system_ok = false;
-            output_msg("WARNING! It looks like liquidsoap is continually restarting.");
-            $command = "tail -10 /var/log/airtime/pypo-liquidsoap/main/current";
+            output_msg("WARNING! It looks like the playout engine is continually restarting.");
+            $command = "tail -10 /var/log/airtime/pypo-liquidsoap/ls_script.log";
             exec($command, $output, $result);
             foreach ($output as $line) {
                 output_msg($line);

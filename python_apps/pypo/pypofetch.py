@@ -33,7 +33,8 @@ try:
     POLL_INTERVAL = int(config['poll_interval'])
 
 except Exception, e:
-    print 'Error loading config file: ', e
+    logger = logging.getLogger()
+    logger.error('Error loading config file: %s', e)
     sys.exit()
 
 # Yuk - using a global, i know!
@@ -242,8 +243,7 @@ class PypoFetch(Thread):
 
                         #logger.debug("everything ok, adding %s to playlist", pl_entry)
                     else:
-                        print 'zero-file: ' + dst + ' from ' + media['uri']
-                        logger.warning("zero-size file - skipping %s. will not add it to playlist", dst)
+                        logger.warning("zero-size file - skipping %s. will not add it to playlist at %s", media['uri'], dst)
 
                 else:
                     logger.warning("something went wrong. file %s not available. will not add it to playlist", dst)
@@ -325,8 +325,7 @@ class PypoFetch(Thread):
                         else:
                             logger.info('sucessfully removed %s', os.path.join(r, dir))
                 except Exception, e:
-                    print e
-                    logger.error("%s", e)
+                    logger.error(e)
 
 
     """

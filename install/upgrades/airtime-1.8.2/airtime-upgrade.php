@@ -225,7 +225,6 @@ function InstallPhpCode()
     echo "* Installing PHP code to ".$CC_CONFIG['phpDir'].PHP_EOL;
     exec("mkdir -p ".$CC_CONFIG['phpDir']);
     exec("cp -R ".$AIRTIME_SRC."/* ".$CC_CONFIG['phpDir']);
-
 }
 
 function InstallBinaries()

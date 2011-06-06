@@ -16,8 +16,10 @@ class Application_Model_Dashboard
             if (count($row) == 0){
                 return null;
             } else {
-                //should never reach here. Doesnt make sense to have
-                //a schedule item not within a show_instance.
+                return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                    "starts"=>$row[0]["starts"],
+                    "ends"=>$row[0]["ends"]);
+
             }
         } else {
             if (count($row) == 0){
@@ -46,15 +48,23 @@ class Application_Model_Dashboard
         //after the last item in the schedule table, then return the show's
         //name. Else return the last item from the schedule.
 
+        $row = array();
         $showInstance = ShowInstance::GetCurrentShowInstance($p_timeNow);
-        $row = Schedule::GetCurrentScheduleItem($p_timeNow);
-
+        if (!is_null($showInstance)){
+            $instanceId = $showInstance->getShowInstanceId();
+            $row = Schedule::GetCurrentScheduleItem($p_timeNow, $instanceId);
+        }
         if (is_null($showInstance)){
             if (count($row) == 0){
                 return null;
             } else {
-                //should never reach here. Doesnt make sense to have
-                //a schedule item not within a show_instance.
+                /* Should never reach here, but lets return the track information
+                 * just in case we allow tracks to be scheduled without a show
+                 * in the future.
+                 */
+                return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                            "starts"=>$row[0]["starts"],
+                            "ends"=>$row[0]["ends"]);
             }
         } else {
             if (count($row) == 0){
@@ -62,8 +72,8 @@ class Application_Model_Dashboard
                 return array("name"=>$showInstance->getName(),
                             "starts"=>$showInstance->getShowStart(),
                             "ends"=>$showInstance->getShowEnd(),
-                            "media_item_played"=>false, //TODO
-                            "record"=>$showInstance->isRecorded()); //TODO
+                            "media_item_played"=>false,
+                            "record"=>$showInstance->isRecorded());
             } else {
                  return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                         "starts"=>$row[0]["starts"],

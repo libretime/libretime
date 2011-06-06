@@ -63,35 +63,39 @@ if (!$version){
 
 echo "******************************** Update Begin *********************************".PHP_EOL;
 
-if(strcmp($version, "1.7.0") < 0) {
+//convert strings like 1.9.0-devel to 1.9.0
+$version = substr($version, 0, 5);
+
+if (strcmp($version, "1.7.0") < 0){
     system("php ".__DIR__."/upgrades/airtime-1.7/airtime-upgrade.php");
 }
-if(strcmp($version, "1.8.0") < 0) {
+if (strcmp($version, "1.8.0") < 0){
     system("php ".__DIR__."/upgrades/airtime-1.8/airtime-upgrade.php");
 }
-if(strcmp($version, "1.8.1") < 0) {
+if (strcmp($version, "1.8.1") < 0){
     system("php ".__DIR__."/upgrades/airtime-1.8.1/airtime-upgrade.php");
 }
-if(strcmp($version, "1.8.2") < 0) {
+if (strcmp($version, "1.8.2") < 0){
     system("php ".__DIR__."/upgrades/airtime-1.8.2/airtime-upgrade.php");
 }
-//if (strcmp($version, "1.9.0") < 0){
-    //system("php ".__DIR__."/upgrades/airtime-1.9/airtime-upgrade.php");
-//}
+if (strcmp($version, "1.9.0") < 0){
+    system("php ".__DIR__."/upgrades/airtime-1.9/airtime-upgrade.php");
+}
 
 
 //set the new version in the database.
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
 $CC_DBC->query($sql);
-$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '1.8.2')";
+$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '1.9.0-devel')";
 $CC_DBC->query($sql);
 
 
-echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
-
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
-system("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
+passthru("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
+
+echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
+passthru("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
+
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
 

@@ -21,7 +21,7 @@ class CueFile():
 
     def cue(self, src, dst, cue_in, cue_out):
         
-        logger = logging.getLogger("cue_file.cue")
+        logger = logging.getLogger("cue_file")
         logger.debug("cue file: %s %s %s %s", src, dst, cue_in, cue_out)
         
         if src.lower().endswith('.mp3'):
@@ -61,12 +61,10 @@ class CueFile():
 
             command = 'mp3cut -o %s -t %s-%s %s' % (dst + '.tmp.mp3', str_cue_in, str_cue_out, src);
             logger.info("command: %s", command)
-            print command
             os.system(command + ' > /dev/null 2>&1')
 
             command = 'lame -b 128 %s %s' % (dst + '.tmp.mp3', dst);
             logger.info("command: %s", command)
-            print command
             os.system(command + ' > /dev/null 2>&1')
         elif src.lower().endswith('.ogg'):
             audio = OggVorbis(src)

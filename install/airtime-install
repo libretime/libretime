@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#Cause bash script to exit if any of the installers
+#return with a non-zero return value.
+set -e
+
+# Absolute path to this script
+SCRIPT=`readlink -f $0`
+# Absolute directory this script is in
+SCRIPTPATH=`dirname $SCRIPT`
+
+echo -e "\n******************************** Install Begin *********************************"
+
+php ${SCRIPTPATH}/airtime-install.php $@
+
+echo -e "\n*** Creating Pypo User ***"
+python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
+
+echo -e "\n*** Pypo Installation ***"
+python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-install.py
+
+echo -e "\n*** Recorder Installation ***"
+python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
+
+echo -e "\n*** Media Monitor Installation ***"
+python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
+
+sleep 4
+airtime-check-system
+
+echo -e "\n******************************* Install Complete *******************************"

@@ -3,6 +3,7 @@ import sys
 import time
 import logging
 import logging.config
+import logging.handlers
 import pickle
 import telnetlib
 import calendar
@@ -15,6 +16,7 @@ from util import CueFile
 
 from configobj import ConfigObj
 
+
 # configure logging
 logging.config.fileConfig("logging.cfg")
 
@@ -25,6 +27,7 @@ try:
     LS_PORT = config['ls_port']
     PUSH_INTERVAL = 2
 except Exception, e:
+    logger = logging.getLogger()
     logger.error('Error loading config file %s', e)
     sys.exit()
 
@@ -130,14 +133,19 @@ class PypoPush(Thread):
         else:
             pass
             #logger.debug('Empty schedule')
-            
-        if not currently_on_air and self.liquidsoap_state_play:
-            logger.debug('Notifying Liquidsoap to stop playback.')
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            tn.write('source.skip\n')
-            tn.write('exit\n')
-            tn.read_all()
+
+        try:
+            if not currently_on_air and self.liquidsoap_state_play:
+                logger.debug('Notifying Liquidsoap to stop playback.')
+                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                tn.write('source.skip\n')
+                tn.write('exit\n')
+                tn.read_all()
+                self.liquidsoap_state_play = False
+        except Exception, e:
             self.liquidsoap_state_play = False
+            logger.debug('Could not connect to liquidsoap')
+            
 
     def push_liquidsoap(self, pkey, schedule, playlists):
         logger = logging.getLogger('push')

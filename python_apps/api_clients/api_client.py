@@ -22,13 +22,13 @@ from urlparse import urlparse
 AIRTIME_VERSION = "1.9.0-devel"
 
 def api_client_factory(config):
+    logger = logging.getLogger()
     if config["api_client"] == "airtime":
         return AirTimeApiClient(config)
     elif config["api_client"] == "obp":
         return ObpApiClient(config)
     else:
-        print 'API Client "'+config["api_client"]+'" not supported.  Please check your config file.'
-        print
+        logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
         sys.exit()
 
 def recursive_urlencode(d):
@@ -152,24 +152,25 @@ class AirTimeApiClient(ApiClientInterface):
             response_json = json.loads(data)
             version = response_json['version']
             logger.debug("Airtime Version %s detected", version)
-        except Exception, e:
+        except IOError, e:
+            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
             if e[1] == 401:
                 if (verbose):
-                    print '#####################################'
-                    print '# YOUR API KEY SEEMS TO BE INVALID:'
-                    print '# ' + self.config["api_key"]
-                    print '#####################################'
-                return -1
+                    logger.info('#####################################')
+                    logger.info('# YOUR API KEY SEEMS TO BE INVALID:')
+                    logger.info('# ' + self.config["api_key"])
+                    logger.info('#####################################')
 
             if e[1] == 404:
                 if (verbose):
-                    print '#####################################'
-                    print '# Unable to contact the Airtime-API'
-                    print '# ' + url
-                    print '#####################################'
-                return -1
-
-            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, response)
+                    logger.info('#####################################')
+                    logger.info('# Unable to contact the Airtime-API')
+                    logger.info('# ' + url)
+                    logger.info('#####################################')
+            return -1
+        except Exception, e:
+            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
+            return -1
 
         return version
 
@@ -190,23 +191,21 @@ class AirTimeApiClient(ApiClientInterface):
 
 
     def is_server_compatible(self, verbose = True):
+        logger = logging.getLogger()
         version = self.__get_airtime_version(verbose)
         if (version == -1):
             if (verbose):
-                print 'Unable to get Airtime version number.'
-                print
+                logger.info('Unable to get Airtime version number.\n')
             return False
         elif (version[0:3] != AIRTIME_VERSION[0:3]):
             if (verbose):
-                print 'Airtime version found: ' + str(version)
-                print 'pypo is at version ' +AIRTIME_VERSION+' and is not compatible with this version of Airtime.'
-                print
+                logger.info('Airtime version found: ' + str(version))
+                logger.info('pypo is at version ' +AIRTIME_VERSION+' and is not compatible with this version of Airtime.\n')
             return False
         else:
             if (verbose):
-                print 'Airtime version: ' + str(version)
-                print 'pypo is at version ' +AIRTIME_VERSION+' and is compatible with this version of Airtime.'
-                print
+                logger.info('Airtime version: ' + str(version))
+                logger.info('pypo is at version ' +AIRTIME_VERSION+' and is compatible with this version of Airtime.')
             return True
 
 
@@ -226,7 +225,7 @@ class AirTimeApiClient(ApiClientInterface):
             response = json.loads(response_json)
             status = response['check']
         except Exception, e:
-            print e
+            logger.error(e)
 
         return status, response
 
@@ -319,6 +318,7 @@ class AirTimeApiClient(ApiClientInterface):
 
         except Exception, e:
             logger.error("Exception: %s", e)
+            response = None
 
         return response
 
@@ -393,29 +393,25 @@ class ObpApiClient():
         self.api_auth = urllib.urlencode({'api_key': self.config["api_key"]})
 
     def is_server_compatible(self, verbose = True):
+        logger = logging.getLogger()
         obp_version = self.get_obp_version()
 
         if obp_version == 0:
             if (verbose):
-                print '#################################################'
-                print 'Unable to get OBP version. Is OBP up and running?'
-                print '#################################################'
-                print
+                logger.error('Unable to get OBP version. Is OBP up and running?\n')
             return False
         elif obp_version < OBP_MIN_VERSION:
             if (verbose):
-                print 'OBP version: ' + str(obp_version)
-                print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-                print 'pypo not compatible with this version of OBP'
-                print
+                logger.warn('OBP version: ' + str(obp_version))
+                logger.warn('OBP min-version: ' + str(OBP_MIN_VERSION))
+                logger.warn('pypo not compatible with this version of OBP\n')
             return False
         else:
             if (verbose):
-                print 'OBP API: ' + str(API_BASE)
-                print 'OBP version: ' + str(obp_version)
-                print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-                print 'pypo is compatible with this version of OBP'
-                print
+                logger.warn('OBP API: ' + str(API_BASE))
+                logger.warn('OBP version: ' + str(obp_version))
+                logger.warn('OBP min-version: ' + str(OBP_MIN_VERSION))
+                logger.warn('pypo is compatible with this version of OBP\n')
             return True
 
 
@@ -437,10 +433,10 @@ class ObpApiClient():
         except Exception, e:
             try:
                 if e[1] == 401:
-                    print '#####################################'
-                    print '# YOUR API KEY SEEMS TO BE INVALID'
-                    print '# ' + self.config["api_auth"]
-                    print '#####################################'
+                    logger.error('#####################################')
+                    logger.error('# YOUR API KEY SEEMS TO BE INVALID')
+                    logger.error('# ' + self.config["api_auth"])
+                    logger.error('#####################################')
                     sys.exit()
 
             except Exception, e:
@@ -448,10 +444,10 @@ class ObpApiClient():
 
             try:
                 if e[1] == 404:
-                    print '#####################################'
-                    print '# Unable to contact the OBP-API'
-                    print '# ' + url
-                    print '#####################################'
+                    logger.error('#####################################')
+                    logger.error('# Unable to contact the OBP-API')
+                    logger.error('# ' + url)
+                    logger.error('#####################################')
                     sys.exit()
 
             except Exception, e:
@@ -502,15 +498,14 @@ class ObpApiClient():
             logger.info("export status %s", response['check'])
             status = response['check']
         except Exception, e:
-            print e
+            logger.error(e)
 
         return status, response
 
 
     def get_media(self, src, dest):
         try:
-            print '** urllib auth with: ',
-            print self.api_auth
+            logger.info('** urllib auth with: ' + self.api_auth)
             urllib.urlretrieve(src, dst, False, self.api_auth)
             logger.info("downloaded %s to %s", src, dst)
         except Exception, e:
@@ -535,7 +530,6 @@ class ObpApiClient():
             logger.info("API-Message %s", response['message'])
 
         except Exception, e:
-            print e
             api_status = False
             logger.error("Unable to connect to the OBP API - %s", e)
 
@@ -561,7 +555,7 @@ class ObpApiClient():
         url = url.replace("%%media_id%%", str(media_id))
         url = url.replace("%%playlist_id%%", str(playlist_id))
         url = url.replace("%%transmission_id%%", str(transmission_id))
-        print url
+        logger.info(url)
 
         try:
             response = urllib.urlopen(url, self.api_auth)
@@ -571,7 +565,6 @@ class ObpApiClient():
             logger.info("TXT %s", response['str_dls'])
 
         except Exception, e:
-            print e
             api_status = False
             logger.error("Unable to connect to the OBP API - %s", e)
 
@@ -592,7 +585,6 @@ class ObpApiClient():
             logger.info("API-Message %s", response['message'])
 
         except Exception, e:
-            print e
             api_status = False
             logger.error("Unable to handle the OBP API request - %s", e)
 
