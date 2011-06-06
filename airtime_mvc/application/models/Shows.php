@@ -1070,7 +1070,6 @@ class Show {
     public static function getFullCalendarEvents($start, $end, $editable=false)
     {
         $events = array();
-        $options = array();
 
         $start_range = new DateTime($start);
         $end_range = new DateTime($end);
@@ -1081,6 +1080,8 @@ class Show {
 
         $today_timestamp = date("Y-m-d H:i:s");
         foreach ($shows as $show) {
+            $options = array();
+
             //only bother calculating percent for week or day view.
             if(intval($days) <= 7) {
                 $show_instance = new ShowInstance($show["instance_id"]);
