@@ -181,6 +181,7 @@ class MediaMonitor(ProcessEvent):
                     'album':None,
                     'title':None,
                     'tracknumber':None}
+<<<<<<< HEAD
 
         for key in metadata.keys():
             if key in file_info:
@@ -250,8 +251,8 @@ class MediaMonitor(ProcessEvent):
 
 
     def process_IN_CREATE(self, event):
-        if not event.dir:
 
+        if not event.dir:
             #file created is a tmp file which will be modified and then moved back to the original filename.
             if self.is_temp_file(event.name) :
                 self.temp_files[event.pathname] = None
