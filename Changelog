@@ -20,6 +20,9 @@ Highlights:
     - Fixed various editing show problems
     - Fixed airtime-pypo-stop/start causing playback problems
     - Fixed incorrect information being occasionally shown in the top panel
+    - Fixed problem with Record Check box occasionally being greyed-out when creating new show
+    - Fixed a problem with default genre not being applied to recorded shows
+    - Fixed a problem where shows repeating bi-weekly or monthly did not update properly when edited.
 
 
 1.8.1 - May 2, 2011
