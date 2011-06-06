@@ -217,11 +217,8 @@ class MediaMonitor(ProcessEvent):
     def create_unique_filename(self, filepath):
 
         file_dir = os.path.dirname(filepath)
-        print file_dir
         filename = os.path.basename(filepath).split(".")[0]
-        print filename
         file_ext = os.path.splitext(filepath)[1]
-        print file_ext
 
         if(os.path.exists(filepath)):
             i = 1;
@@ -231,7 +228,9 @@ class MediaMonitor(ProcessEvent):
                 if(os.path.exists(new_filepath)):
                     i = i+1;
                 else:
-                    return new_filepath
+                    filepath = new_filepath
+
+        self.imported_renamed_files[filepath] = 0
 
         return filepath
 
@@ -325,7 +324,7 @@ class MediaMonitor(ProcessEvent):
                 if not is_renamed_file(event.pathname):
                     self.create_file_path(event.pathname)
 
-            self.logger.info("%s: %s", event.maskname, event.pathname)
+       self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MODIFY(self, event):
         if not event.dir :
