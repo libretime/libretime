@@ -114,9 +114,15 @@ label.wrapp-label input[type="checkbox"] {
 
 #add_show_start_time	{
 	float: left;
+	width: 100px;
+}
+
+#add_show_end_time, #add_show_end_date_no_repeat, #add_show_start_date  {
+	width: 100px;
 }
 
 #add_show_duration	{
 	background: #AAAAAA;
   	cursor: default;
+  	width: 100px;
 }

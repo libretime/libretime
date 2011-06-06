@@ -104,6 +104,9 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         }elseif(strpos($formData["add_show_duration"], 'h') !== false && intval(substr($formData["add_show_duration"], 0, strpos($formData["add_show_duration"], 'h'))) > 23) {
             $this->getElement('add_show_duration')->setErrors(array('Cannot have duration > 24h'));
             $valid = false;
+        }elseif( strstr($formData["add_show_duration"], '-') ){
+        	$this->getElement('add_show_duration')->setErrors(array('Cannot have duration < 0m'));
+            $valid = false;
         }
 
         return $valid;

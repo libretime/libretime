@@ -28,7 +28,30 @@ class Application_Model_Nowplaying
 			//format duration
 			$duration = explode('.', $dbRow['clip_length']);
 			$duration = explode(':', $duration[0]);
-			$duration = $duration[0].'h'.$duration[1].'m'.$duration[2].'s';
+	
+			if($duration[2] == 0){
+				$duration[2] = '';
+			}else{
+				$duration[2] = intval($duration[2],10).'s';
+			}
+			
+			if($duration[1] == 0){
+				if($duration[2] == ''){
+					$duration[1] = '';
+				}else{
+					$duration[1] = intval($duration[1],10).'m';
+				}
+			}else{
+				$duration[1] = intval($duration[1],10).'m';
+			}
+			
+			if($duration[0] == 0){
+				$duration[0] = '';
+			}else{
+				$duration[0] = intval($duration[0],10).'h';
+			}
+			
+			$duration = $duration[0].$duration[1].$duration[2];
 			
 			$dataTablesRows[] = array($type, $dbRow['show_starts'], $itemStart[0], $itemEnd[0],
 					$duration, $dbRow['track_title'], $dbRow['artist_name'], $dbRow['album_title'],
