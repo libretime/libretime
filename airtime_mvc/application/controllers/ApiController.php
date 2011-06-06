@@ -369,18 +369,25 @@ class ApiController extends Zend_Controller_Action
         $filepath = $md['filepath'];
         $filepath = str_replace("\\", "", $filepath);
         $file = StoredFile::Recall(null, null, null, $filepath);
-        if (PEAR::isError($file) || is_null($file)) {
-            $this->view->response = "File not in Airtime's Database";
+        if (PEAR::isError($file)) {
+            $this->view->response = "Problem recalling file in Airtime";
             return;
         }
 
-        $res = $file->replaceDbMetadata($md);
+        //New file added to Airtime
+        if (is_null($file)) {
 
-        if (PEAR::isError($res)) {
-            $this->view->response = "Metadata Change Failed";
         }
+        //Updating a metadata change.
         else {
-            $this->view->response = "Success!";
+            $res = $file->replaceDbMetadata($md);
+
+            if (PEAR::isError($res)) {
+                $this->view->response = "Metadata Change Failed";
+            }
+            else {
+                $this->view->response = "Success!";
+            }
         }
     }
 }
