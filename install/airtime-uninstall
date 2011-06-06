@@ -12,11 +12,11 @@ php ${SCRIPTPATH}/airtime-uninstall.php
 echo -e "\n*** Uninstalling Pypo ***"
 python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-uninstall.py
 
-#echo -e "\n*** Uninstalling Media Monitor ***"
-#python ${SCRIPTPATH}/../python_apps/pytag-fs/install/media-monitor-uninstall.py
-
 echo -e "\n*** Uninstalling Show Recorder ***"
 python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-uninstall.py
+
+echo -e "\n*** Uninstalling Media Monitor ***"
+python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-uninstall.py
 
 echo -e "\n*** Removing Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/remove-pypo-user.py
