@@ -293,22 +293,17 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-
-        $logger = Logging::getLogger();
         
        	$showCanceled = false;
         $show_instance  = $this->_getParam('show_instance');
-		
-        $logger->info("Show instance:" . $show_instance);
         
         $upload_dir = ini_get("upload_tmp_dir");
         $file = StoredFile::uploadFile($upload_dir);
         
         $show_name = "";
         try {
-        	$logger->info("before declare");
             $show_inst = new ShowInstance($show_instance);
-$logger->info("after");
+            
             $show_inst->setRecordedFile($file->getId());
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
@@ -323,11 +318,8 @@ $logger->info("after");
             $showCanceled = true;
         }
         
-        $logger->info("Show name:" . $show_name);
-        
 		$tmpTitle = !(empty($show_name))?$show_name."-":"";
 		$tmpTitle .= $file->getName();
-		$logger->info("Tmp title".$tmpTitle);
 		
 		$file->setMetadataValue(UI_MDATA_KEY_TITLE, $tmpTitle);
         
