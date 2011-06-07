@@ -28,7 +28,7 @@ class ATSoundcloud {
         return $token;
     }
 
-    public function uploadTrack($filepath, $filename, $description, $tags=array(), $release=null, $genre=null) 
+    public function uploadTrack($filepath, $filename, $description, $tags=array(), $release=null, $genre=null)
     {
         if($this->getToken())
         {
@@ -47,7 +47,7 @@ class ATSoundcloud {
                 'track[tag_list]' => $tags,
                 'track[description]' => $description,
                 'track[downloadable]' => true,
-                
+
             );
 
             if(isset($release)) {
@@ -61,13 +61,13 @@ class ATSoundcloud {
                 $track_data['track[release_month]'] = $release[1];
                 $track_data['track[release_day]'] = $release[2];
             }
-       
+
             if (isset($genre) && $genre != "") {
                 $track_data['track[genre]'] = $genre;
             }
             else {
-                $default_genre = Application_Model_Preference::GetSoundCloudTrackType();
-                if ($genre != "") {
+                $default_genre = Application_Model_Preference::GetSoundCloudGenre();
+                if ($default_genre != "") {
                     $track_data['track[genre]'] = $default_genre;
                 }
             }
@@ -88,7 +88,7 @@ class ATSoundcloud {
             );
 
             return $response["id"];
-        }  
+        }
     }
 
 }

@@ -48,11 +48,10 @@ def getDateTimeObj(time):
 
 class ShowRecorder(Thread):
 
-    def __init__ (self, show_instance, filelength, show_name, start_time, filetype):
+    def __init__ (self, show_instance, filelength, start_time, filetype):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.filelength = filelength
-        self.show_name = show_name
         self.start_time = start_time
         self.filetype = filetype
         self.show_instance = show_instance
@@ -61,7 +60,7 @@ class ShowRecorder(Thread):
 
     def record_show(self):
         length = str(self.filelength)+".0"
-        filename = self.show_name+" "+self.start_time
+        filename = self.start_time
         filename = filename.replace(" ", "-")
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
@@ -155,9 +154,8 @@ class Record():
 
             show_length = self.shows_to_record[start_time][0]
             show_instance = self.shows_to_record[start_time][1]
-            show_name = self.shows_to_record[start_time][2]
 
-            self.sr = ShowRecorder(show_instance, show_length.seconds, show_name, start_time, filetype="mp3")
+            self.sr = ShowRecorder(show_instance, show_length.seconds, start_time, filetype="mp3")
             self.sr.start()
 
             #remove show from shows to record.
