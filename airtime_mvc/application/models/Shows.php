@@ -314,6 +314,26 @@ class Show {
     }
 
     /**
+     * Deletes all future rebroadcast instances of the current
+     * show object from the show_instances table.
+     *
+     */
+    public function deleteAllRebroadcasts(){
+        global $CC_DBC;
+
+        $date = new DateHelper;
+        $timestamp = $date->getTimestamp();
+
+        $showId = $this->getId();
+        $sql = "DELETE FROM cc_show_instances"
+                ." WHERE starts > TIMESTAMP '$timestamp'"
+                ." AND show_id = $showId"
+                ." AND rebroadcast = 1";
+
+        $CC_DBC->query($sql);
+    }
+
+    /**
      * Deletes all show instances of current show after a
      * certain date.
      *
@@ -556,52 +576,57 @@ class Show {
         return CcShowInstancesQuery::create()->findPk($row);
     }
 
-    public static function deletePossiblyInvalidInstances($p_data, $p_show, $p_endDate, $isRecorded, $repeatType)
+    public function deletePossiblyInvalidInstances($p_data, $p_endDate, $isRecorded, $repeatType)
     {
-        if (($p_data['add_show_repeats'] != $p_show->isRepeating()) || ($isRecorded && !$p_data['add_show_repeats'])){
-            //repeat option was toggled.
-            $p_show->deleteAllInstances();
-        }
-        if($isRecorded && $p_data['add_show_repeats']) {
-            $p_show->removeAllInstancesFromDate();
+        if ($p_data['add_show_repeats'] != $this->isRepeating()){
+            //repeat option was toggled
+            $this->deleteAllInstances();
         }
 
-        if ($p_data['add_show_duration'] != $p_show->getDuration()){
+        if ($p_data['add_show_duration'] != $this->getDuration()){
             //duration has changed
-            $p_show->updateDurationTime($p_data);
+            $this->updateDurationTime($p_data);
+        }
+
+        if ($isRecorded){
+            //delete all rebroadcasts. They will simply be recreated later
+            //in the execution of this PHP script. This simplifies having to
+            //reason about whether we should keep individual rebroadcasts or
+            //delete them or move them around etc.
+            $this->deleteAllRebroadcasts();
         }
 
         if ($p_data['add_show_repeats']){
-            if (($repeatType == 1 || $repeatType == 2) && 
-                $p_data['add_show_start_date'] != $p_show->getStartDate()){
-                
+            if (($repeatType == 1 || $repeatType == 2) &&
+                $p_data['add_show_start_date'] != $this->getStartDate()){
+
                 //start date has changed when repeat type is bi-weekly or monthly.
                 //This screws up the repeating positions of show instances, so lets
-                //just delete them for now.
-                
-                $p_show->deleteAllInstances();
+                //just delete them for now. (CC-2351)
+
+                $this->deleteAllInstances();
             }
-        
-            if ($p_data['add_show_start_date'] != $p_show->getStartDate()
-                || $p_data['add_show_start_time'] != $p_show->getStartTime()){
+
+            if ($p_data['add_show_start_date'] != $this->getStartDate()
+                || $p_data['add_show_start_time'] != $this->getStartTime()){
                 //start date/time has changed
 
                 $newDate = strtotime($p_data['add_show_start_date']);
-                $oldDate = strtotime($p_show->getStartDate());
+                $oldDate = strtotime($this->getStartDate());
                 if ($newDate > $oldDate){
-                    $p_show->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
+                    $this->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
                 }
 
-                $p_show->updateStartDateTime($p_data, $p_endDate);
+                $this->updateStartDateTime($p_data, $p_endDate);
             }
-            
-            if ($repeatType != $p_show->getRepeatType()){
+
+            if ($repeatType != $this->getRepeatType()){
                 //repeat type changed.
-                $p_show->deleteAllInstances();
+                $this->deleteAllInstances();
             } else {
                 //repeat type is the same, check if the days of the week are the same
                 $repeatingDaysChanged = false;
-                $showDaysArray = $p_show->getShowDays();
+                $showDaysArray = $this->getShowDays();
                 if (count($p_data['add_show_day_check']) == count($showDaysArray)){
                     //same number of days checked, lets see if they are the same numbers
                     $intersect = array_intersect($p_data['add_show_day_check'], $showDaysArray);
@@ -617,28 +642,28 @@ class Show {
                     $daysRemoved = array_diff($showDaysArray, $p_data['add_show_day_check']);
 
                     if (count($daysRemoved) > 0){
-                        $p_show->removeUncheckedDaysInstances($daysRemoved);
+                        $this->removeUncheckedDaysInstances($daysRemoved);
                     }
                 }
             }
 
             //Check if end date for the repeat option has changed. If so, need to take care
             //of deleting possible invalid Show Instances.
-            if ((strlen($p_show->getRepeatingEndDate()) == 0) == $p_data['add_show_no_end']){
+            if ((strlen($this->getRepeatingEndDate()) == 0) == $p_data['add_show_no_end']){
                 //show "Never Ends" option was toggled.
                 if ($p_data['add_show_no_end']){
                 }
                 else {
-                    $p_show->removeAllInstancesFromDate($p_endDate);
+                    $this->removeAllInstancesFromDate($p_endDate);
                 }
             }
-            if ($p_show->getRepeatingEndDate() != $p_data['add_show_end_date']){
+            if ($this->getRepeatingEndDate() != $p_data['add_show_end_date']){
                 //end date was changed.
 
                 $newDate = strtotime($p_data['add_show_end_date']);
-                $oldDate = strtotime($p_show->getRepeatingEndDate());
+                $oldDate = strtotime($this->getRepeatingEndDate());
                 if ($newDate < $oldDate){
-                    $p_show->removeAllInstancesFromDate($p_endDate);
+                    $this->removeAllInstancesFromDate($p_endDate);
                 }
             }
         }
@@ -704,7 +729,7 @@ class Show {
         $isRecorded = ($data['add_show_record']) ? 1 : 0;
 
         if ($data['add_show_id'] != -1){
-            Show::deletePossiblyInvalidInstances($data, $show, $endDate, $isRecorded, $repeatType);
+            $show->deletePossiblyInvalidInstances($data, $endDate, $isRecorded, $repeatType);
         }
 
         //check if we are adding or updating a show, and if updating
@@ -908,7 +933,7 @@ class Show {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
             }
-                
+
             if ($newInstance || $ccShowInstance->getDbStarts() > $currentTimestamp){
                 $ccShowInstance->setDbShowId($show_id);
                 $ccShowInstance->setDbStarts($start);
@@ -986,10 +1011,10 @@ class Show {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
             }
-            
+
             /* When editing the start/end time of a repeating show, we don't want to
-             * change shows that started in the past. So check the start time. 
-             */           
+             * change shows that started in the past. So check the start time.
+             */
             if ($newInstance || $ccShowInstance->getDbStarts() > $currentTimestamp){
                 $ccShowInstance->setDbShowId($show_id);
                 $ccShowInstance->setDbStarts($start);
@@ -1130,7 +1155,6 @@ class Show {
     public static function getFullCalendarEvents($start, $end, $editable=false)
     {
         $events = array();
-        $options = array();
 
         $start_range = new DateTime($start);
         $end_range = new DateTime($end);
@@ -1141,13 +1165,15 @@ class Show {
 
         $today_timestamp = date("Y-m-d H:i:s");
         foreach ($shows as $show) {
+            $options = array();
+
             //only bother calculating percent for week or day view.
             if(intval($days) <= 7) {
                 $show_instance = new ShowInstance($show["instance_id"]);
                 $options["percent"] =  $show_instance->getPercentScheduled();
             }
 
-            if ($editable && strtotime($today_timestamp) < strtotime($show["starts"])) {
+            if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
                 $options["editable"] = true;
                 $events[] = Show::makeFullCalendarEvent($show, $options);
             }
@@ -1357,8 +1383,13 @@ class ShowInstance {
 
         $mins = abs($deltaMin%60);
 
+        $today_timestamp = date("Y-m-d H:i:s");
         $starts = $this->getShowStart();
         $ends = $this->getShowEnd();
+
+        if(strtotime($today_timestamp) > strtotime($starts)) {
+            return "can't move a past show";
+        }
 
         $sql = "SELECT timestamp '{$starts}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_starts = $CC_DBC->GetOne($sql);
@@ -1366,7 +1397,6 @@ class ShowInstance {
         $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_ends = $CC_DBC->GetOne($sql);
 
-        $today_timestamp = date("Y-m-d H:i:s");
         if(strtotime($today_timestamp) > strtotime($new_starts)) {
             return "can't move show into past";
         }
@@ -1405,8 +1435,13 @@ class ShowInstance {
 
         $mins = abs($deltaMin%60);
 
+        $today_timestamp = date("Y-m-d H:i:s");
         $starts = $this->getShowStart();
         $ends = $this->getShowEnd();
+
+        if(strtotime($today_timestamp) > strtotime($starts)) {
+            return "can't resize a past show";
+        }
 
         $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_ends = $CC_DBC->GetOne($sql);
