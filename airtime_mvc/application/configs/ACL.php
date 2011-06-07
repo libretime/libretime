@@ -6,7 +6,8 @@ $ccAcl = new Zend_Acl();
 
 $ccAcl->addRole(new Zend_Acl_Role('G'))
       ->addRole(new Zend_Acl_Role('H'), 'G')
-      ->addRole(new Zend_Acl_Role('A'), 'H');
+      ->addRole(new Zend_Acl_Role('P'), 'H')
+      ->addRole(new Zend_Acl_Role('A'), 'P');
 
 $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('index'))

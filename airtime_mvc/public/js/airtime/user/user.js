@@ -51,6 +51,9 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     } else if ( aData[4] == "G" )
     {
 	    $('td:eq(3)', nRow).html( 'Guest' );
+    } else if ( aData[4] == "P" )
+    {
+    	$('td:eq(3)', nRow).html( 'Program Manager' );
     }
     
     return nRow;

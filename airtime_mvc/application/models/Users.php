@@ -1,5 +1,10 @@
 <?php
 
+define('UTYPE_HOST', 'H');
+define('UTYPE_ADMIN', 'A');
+define('UTYPE_GUEST', 'G');
+define('UTYPE_PROGRAM_MANAGER', 'P');
+
 class User {
 
     private $_userInstance;
@@ -18,12 +23,44 @@ class User {
     }
 
     public function isHost($showId) {
-        $userId = $this->_userInstance->getDbId();
-        return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
+    	return $this->isUserType(UTYPE_HOST, $showId);
     }
 
     public function isAdmin() {
-        return $this->_userInstance->getDbType() === 'A';
+        return $this->isUserType(UTYPE_ADMIN);
+    }
+    
+    public function isUserType($type, $showId=''){
+    	if(is_array($type)){
+    		$result = false;
+    		foreach($type as $t){
+	    		switch($t){
+		    		case UTYPE_ADMIN:
+		    			$result = $this->_userInstance->getDbType() === 'A';
+		    			break;
+		    		case UTYPE_HOST:
+		    			$userId = $this->_userInstance->getDbId();
+		        		$result = CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
+		        		break;
+		    		case UTYPE_PROGRAM_MANAGER:
+		    			$result = $this->_userInstance->getDbType() === 'P';
+		    			break;
+		    	}
+		    	if($result){
+		    		return $result;
+		    	}
+    		}
+    	}else{
+	    	switch($type){
+	    		case UTYPE_ADMIN:
+	    			return $this->_userInstance->getDbType() === 'A';
+	    		case UTYPE_HOST:
+	    			$userId = $this->_userInstance->getDbId();
+	        		return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
+	    		case UTYPE_PROGRAM_MANAGER:
+	    			return $this->_userInstance->getDbType() === 'P';
+	    	}
+    	}
     }
     
     public function setLogin($login){
