@@ -10,8 +10,8 @@ exec 2>&1
 cd /usr/lib/airtime/pypo/bin/scripts
 
 export PYTHONPATH=${api_client_path}
-#su ${ls_user} -c "${ls_path} ${ls_param}" 2>&1
 
-setuidgid ${ls_user} ${ls_path} ${ls_param}
+#setuidgid does not allow Liquidsoap to access the ALSA device!!! Do NOT use!
+su ${ls_user} -c "${ls_path} ${ls_param}" 2>&1
 
 # EOF
