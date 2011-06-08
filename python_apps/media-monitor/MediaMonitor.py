@@ -148,12 +148,13 @@ class MediaMonitor(ProcessEvent):
     def format_length(self, mutagen_length):
         t = float(mutagen_length)
         h = int(math.floor(t/3600))
-
         t = t % 3600
         m = int(math.floor(t/60))
 
-        # will be ss.uuu
         s = t % 60
+        # will be ss.uuu
+        s = str(s)
+        s = s[:6]
 
         length = "%s:%s:%s" % (h, m, s)
 

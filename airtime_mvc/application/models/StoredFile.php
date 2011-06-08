@@ -47,6 +47,7 @@ class StoredFile {
     {
         $this->_file = new CcFiles();
         $this->_file->setDbGunid(md5(uniqid("", true)));
+        $this->_file->save();
 
         $this->setMetadata($md);
     }
