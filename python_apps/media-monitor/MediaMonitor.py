@@ -212,33 +212,6 @@ class MediaMonitor(ProcessEvent):
         self.ensure_dir(filepath)
         shutil.move(imported_filepath, filepath)
 
-    def ensure_dir(self, filepath):
-
-        directory = os.path.dirname(filepath)
-
-        if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
-            os.makedirs(directory, 02775)
-
-    def create_unique_filename(self, filepath):
-
-        file_dir = os.path.dirname(filepath)
-        filename = os.path.basename(filepath).split(".")[0]
-        file_ext = os.path.splitext(filepath)[1]
-
-        if(os.path.exists(filepath)):
-            i = 1;
-            while(True):
-                new_filepath = "%s/%s(%s).%s" % (file_dir, filename, i, file_ext)
-
-                if(os.path.exists(new_filepath)):
-                    i = i+1;
-                else:
-                    filepath = new_filepath
-
-        self.imported_renamed_files[filepath] = 0
-
-        return filepath
-
     def update_airtime(self, event):
         self.logger.info("Updating Change to Airtime")
         try:
