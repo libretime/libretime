@@ -157,7 +157,7 @@ class AirtimeIni
         $n=count($lines);
         foreach ($lines as &$line) {
             if ($line[0] != "#"){
-                $key_value = split("=", $line);
+                $key_value = explode("=", $line);
                 $key = trim($key_value[0]);
 
                 if ($key == $p_property){
