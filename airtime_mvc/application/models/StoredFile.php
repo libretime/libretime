@@ -51,8 +51,19 @@ class StoredFile {
         $this->setMetadata($md);
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->_file->getDbId();
+    }
+
+    public function getFormat()
+    {
+        return $this->_file->getDbFtype();
+    }
+
+    public function setFormat($p_format)
+    {
+        $this->_file->setDbFtype($p_format);
     }
 
     /**
@@ -220,80 +231,6 @@ class StoredFile {
     }
 
     /**
-     * Delete media file from filesystem.
-     * You cant delete a file if it is being accessed.
-     * You cant delete a file if it is scheduled to be played in the future.
-     * The file will be removed from all playlists it is a part of.
-     *
-     * @return boolean|PEAR_Error
-     */
-    public function deleteFile()
-    {
-        global $CC_CONFIG;
-        if (!$this->exists()) {
-            return FALSE;
-        }
-        if ($this->isAccessed()) {
-            return PEAR::raiseError(
-                'Cannot delete a file that is currently accessed.'
-                );
-        }
-
-        // Check if the file is scheduled to be played in the future
-        if (Schedule::IsFileScheduledInTheFuture($this->id)) {
-            return PEAR::raiseError(
-                'Cannot delete a file that is scheduled in the future.'
-                );
-        }
-
-        // Only delete the file from filesystem if it has been copied to the
-        // storage directory. (i.e. dont delete linked files)
-        if (substr($this->filepath, 0, strlen($CC_CONFIG["storageDir"])) == $CC_CONFIG["storageDir"]) {
-            // Delete the file
-            if (!file_exists($this->filepath) || @unlink($this->filepath)) {
-                $this->exists = FALSE;
-                return TRUE;
-            }
-            else {
-                return PEAR::raiseError("StoredFile::deleteFile: unlink failed ({$this->filepath})");
-            }
-        }
-        else {
-            $this->exists = FALSE;
-            return TRUE;
-        }
-    }
-
-
-    /**
-     * Delete stored virtual file
-     *
-     * @param boolean $p_deleteFile
-     *
-     * @return TRUE|PEAR_Error
-     */
-    public function delete($p_deleteFile = true)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        if ($p_deleteFile) {
-            $res = $this->deleteFile();
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-
-            Playlist::DeleteFileFromAllPlaylists($this->id);
-        }
-
-        $sql = "DELETE FROM ".$CC_CONFIG['filesTable']
-        ." WHERE gunid='{$this->gunid}'";
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        return TRUE;
-    }
-
-    /**
      * Returns an array of playlist objects that this file is a part of.
      * @return array
      */
@@ -312,77 +249,100 @@ class StoredFile {
         return $playlists;
     }
 
-
     /**
-     * Returns true if virtual file is currently in use.<br>
-     * Static or dynamic call is possible.
+     * Delete stored virtual file
      *
-     * @param string $p_gunid
-     * 		optional (for static call), global unique id
-     * @return boolean|PEAR_Error
+     * @param boolean $p_deleteFile
+     *
+     * @return void|PEAR_Error
      */
-    public function isAccessed($p_gunid=NULL)
+    public function delete()
     {
-        global $CC_CONFIG, $CC_DBC;
-        if (is_null($p_gunid)) {
-            return ($this->currentlyaccessing > 0);
+        if (!$this->exists()) {
+            return PEAR::raiseError('File does not exist.');
         }
-        $sql = "SELECT currentlyAccessing FROM ".$CC_CONFIG['filesTable']
-        ." WHERE gunid='$p_gunid'";
-        $ca = $CC_DBC->getOne($sql);
-        if (is_null($ca)) {
-            return PEAR::raiseError(
-                "StoredFile::isAccessed: invalid gunid ($p_gunid)",
-            GBERR_FOBJNEX
-            );
+
+        if ($this->getFormat() == 'audioclip') {
+            $res = $this->deleteFile();
+            if (PEAR::isError($res)) {
+                return $res;
+            }
         }
-        return ($ca > 0);
+
+        Playlist::DeleteFileFromAllPlaylists($this->getId());
+
+        $this->_file->delete();
     }
 
+    /**
+     * Delete media file from filesystem.
+     * You cant delete a file if it is being accessed.
+     * You cant delete a file if it is scheduled to be played in the future.
+     * The file will be removed from all playlists it is a part of.
+     *
+     * @return void|PEAR_Error
+     */
+    public function deleteFile()
+    {
+        global $CC_CONFIG;
+
+        if ($this->isAccessed()) {
+            return PEAR::raiseError('Cannot delete a file that is currently accessed.');
+        }
+
+        // Check if the file is scheduled to be played in the future
+        if (Schedule::IsFileScheduledInTheFuture($this->getId())) {
+            return PEAR::raiseError('Cannot delete a file that is scheduled in the future.');
+        }
+
+        // Only delete the file from filesystem if it has been copied to the storage directory
+        if (substr($this->getFilePath(), 0, strlen($CC_CONFIG["storageDir"])) == $CC_CONFIG["storageDir"]) {
+            // Delete the file
+            $res = unlink($this->getFilePath());
+            if (!$res) {
+                return PEAR::raiseError("StoredFile::deleteFile: unlink failed ({$this->getFilePath()})");
+            }
+        }
+    }
 
     /**
-     * Returns true if virtual file is edited
-     *
-     * @param string $p_playlistId
-     * 		playlist global unique ID
+     * Returns true if media file exists
      * @return boolean
      */
-    public function isEdited()
+    public function exists()
     {
-
+        if ($this->_file->isDeleted()) {
+            return false;
+        }
+        if ($this->getFormat() == 'audioclip') {
+            return $this->existsFile();
+        }
     }
 
     /**
      * Returns true if raw media file exists
-     * @return boolean|PEAR_Error
+     * @return boolean
      */
-    public function exists()
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT gunid "
-        ." FROM ".$CC_CONFIG['filesTable']
-        ." WHERE gunid='{$this->gunid}'";
-        $indb = $CC_DBC->getRow($sql);
-        if (PEAR::isError($indb)) {
-            return $indb;
-        }
-        if (is_null($indb)) {
-            return FALSE;
-        }
-        if ($this->ftype == 'audioclip') {
-            return $this->existsFile();
-        }
-        return TRUE;
-    }
-
     public function existsFile() {
 
-        if (!isset($p_md["filepath"]) || !file_exists($p_md['filepath']) || !is_readable($p_md['filepath'])) {
+        $filepath = $this->_file->getDbFilepath();
+
+        if (!isset($filepath) || !file_exists($filepath) || !is_readable($filepath)) {
             return false;
         }
         else {
             return true;
         }
+    }
+
+     /**
+     * Returns true if virtual file is currently in use.<br>
+     *
+     * @return boolean
+     */
+    public function isAccessed()
+    {
+       return ($this->_file->getDbCurrentlyaccessing() > 0);
     }
 
     /**
@@ -393,33 +353,14 @@ class StoredFile {
      */
     public function getFileExtension()
     {
+        $mime = $this->_file->getDbMime();
 
-    }
-
-    /**
-     * Get storage-internal file state
-     *
-     * @param string $p_gunid
-     * 		global unique id of file
-     * @return string
-     * 		see install()
-     */
-    public function getState()
-    {
-
-    }
-
-
-    /**
-     * Get mnemonic file name
-     *
-     * @param string $p_gunid
-     * 		global unique id of file
-     * @return string
-     */
-    public function getName()
-    {
-
+        if ($mime == "audio/vorbis") {
+            return "ogg";
+        }
+        else if ($mime == "audio/mp3") {
+            return "mp3";
+        }
     }
 
     /**
@@ -427,7 +368,7 @@ class StoredFile {
      *
      * @return string
      */
-    public function getRealFilePath()
+    public function getFilePath()
     {
         return $this->_file->getDbFilepath();
     }
@@ -515,33 +456,31 @@ class StoredFile {
 	public static function searchFilesForPlaylistBuilder($datatables) {
 		global $CC_CONFIG;
 
+		$displayData = array("track_title", "artist_name", "album_title", "track_number", "length", "ftype");
+
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
-        foreach (Metadata::GetMapMetadataXmlToDb() as $key => $val){
+        foreach ($displayData as $key){
 
-            if($key === "dc:title"){
-                $plSelect .= "name AS ".$val.", ";
-                $fileSelect .= $val.", ";
+            if($key === "track_title"){
+                $plSelect .= "name AS ".$key.", ";
+                $fileSelect .= $key.", ";
             }
-			else if ($key === "ls:type"){
-                $plSelect .= "'playlist' AS ".$val.", ";
-                $fileSelect .= $val.", ";
+			else if ($key === "ftype"){
+                $plSelect .= "'playlist' AS ".$key.", ";
+                $fileSelect .= $key.", ";
             }
-            else if ($key === "dc:creator"){
-                $plSelect .= "creator AS ".$val.", ";
-                $fileSelect .= $val.", ";
+            else if ($key === "artist_name"){
+                $plSelect .= "creator AS ".$key.", ";
+                $fileSelect .= $key.", ";
             }
-            else if ($key === "dcterms:extent"){
-                $plSelect .= "length, ";
-                $fileSelect .= "length, ";
-            }
-            else if ($key === "dc:description"){
-                $plSelect .= "text(description) AS ".$val.", ";
-                $fileSelect .= $val.", ";
+            else if ($key === "length"){
+                $plSelect .= $key.", ";
+                $fileSelect .= $key.", ";
             }
             else {
-                $plSelect .= "NULL AS ".$val.", ";
-                $fileSelect .= $val.", ";
+                $plSelect .= "NULL AS ".$key.", ";
+                $fileSelect .= $key.", ";
             }
         }
 
