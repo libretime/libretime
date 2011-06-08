@@ -60,21 +60,21 @@ class AirtimeNotifier(Notifier):
         Notifier.__init__(self, watch_manager, default_proc_fun, read_freq, threshold, timeout)
 
         self.airtime2mutagen = {\
-        "track_title": "title",\
-        "artist_name": "artist",\
-        "album_title": "album",\
-        "genre": "genre",\
-        "mood": "mood",\
-        "track_number": "tracknumber",\
-        "bpm": "bpm",\
-        "label": "organization",\
-        "composer": "composer",\
-        "encoded_by": "encodedby",\
-        "conductor": "conductor",\
-        "year": "date",\
-        "info_url": "website",\
-        "isrc_number": "isrc",\
-        "copyright": "copyright",\
+        "MDATA_KEY_TITLE": "title",\
+        "MDATA_KEY_CREATOR": "artist",\
+        "MDATA_KEY_SOURCE": "album",\
+        "MDATA_KEY_GENRE": "genre",\
+        "MDATA_KEY_MOOD": "mood",\
+        "MDATA_KEY_TRACKNUMBER": "tracknumber",\
+        "MDATA_KEY_BPM": "bpm",\
+        "MDATA_KEY_LABEL": "organization",\
+        "MDATA_KEY_COMPOSER": "composer",\
+        "MDATA_KEY_ENCODER": "encodedby",\
+        "MDATA_KEY_CONDUCTOR": "conductor",\
+        "MDATA_KEY_YEAR": "date",\
+        "MDATA_KEY_URL": "website",\
+        "MDATA_KEY_ISRC": "isrc",\
+        "MDATA_KEY_COPYRIGHT": "copyright",\
         }
 
         schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
@@ -112,21 +112,21 @@ class MediaMonitor(ProcessEvent):
         self.api_client = api_client.api_client_factory(config)
 
         self.mutagen2airtime = {\
-        "title": "track_title",\
-        "artist": "artist_name",\
-        "album": "album_title",\
-        "genre": "genre",\
-        "mood": "mood",\
-        "tracknumber": "track_number",\
-        "bpm": "bpm",\
-        "organization": "label",\
-        "composer": "composer",\
-        "encodedby": "encoded_by",\
-        "conductor": "conductor",\
-        "date": "year",\
-        "website": "info_url",\
-        "isrc": "isrc_number",\
-        "copyright": "copyright",\
+        "title": "MDATA_KEY_TITLE",\
+        "artist": "MDATA_KEY_CREATOR",\
+        "album": "MDATA_KEY_SOURCE",\
+        "genre": "MDATA_KEY_GENRE",\
+        "mood": "MDATA_KEY_MOOD",\
+        "tracknumber": "MDATA_KEY_TRACKNUMBER",\
+        "bpm": "MDATA_KEY_BPM",\
+        "organization": "MDATA_KEY_LABEL",\
+        "composer": "MDATA_KEY_COMPOSER",\
+        "encodedby": "MDATA_KEY_ENCODER",\
+        "conductor": "MDATA_KEY_CONDUCTOR",\
+        "date": "MDATA_KEY_YEAR",\
+        "website": "MDATA_KEY_URL",\
+        "isrc": "MDATA_KEY_ISRC",\
+        "copyright": "MDATA_KEY_COPYRIGHT",\
         }
 
         self.supported_file_formats = ['mp3', 'ogg']
@@ -186,7 +186,6 @@ class MediaMonitor(ProcessEvent):
                     'album':None,
                     'title':None,
                     'tracknumber':None}
-<<<<<<< HEAD
 
         for key in metadata.keys():
             if key in file_info:
@@ -244,7 +243,8 @@ class MediaMonitor(ProcessEvent):
         self.logger.info("Updating Change to Airtime")
         try:
             md5 = self.get_md5(event.pathname)
-            md = {'filepath':event.pathname, 'md5':md5}
+            md['MDATA_KEY_FILEPATH'] = event.pathname
+            md['MDATA_KEY_MD5'] = md5
 
             file_info = mutagen.File(event.pathname, easy=True)
             attrs = self.mutagen2airtime
@@ -252,10 +252,10 @@ class MediaMonitor(ProcessEvent):
                 if key in attrs :
                     md[attrs[key]] = file_info[key][0]
 
-            md['mime'] = file_info.mime[0]
-            md['bitrate'] = file_info.info.bitrate
-            md['samplerate'] = file_info.info.sample_rate
-
+            md['MDATA_KEY_MIME'] = file_info.mime[0]
+            md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
+            md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rated
+            md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
 
             data = {'md': md}
             response = self.api_client.update_media_metadata(data)
