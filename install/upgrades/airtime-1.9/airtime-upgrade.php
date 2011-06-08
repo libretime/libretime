@@ -49,7 +49,6 @@ function UninstallBinaries()
 
 exec("/usr/bin/airtime-pypo-stop");
 exec("/usr/bin/airtime-show-recorder-stop");
-exec("/usr/bin/airtime-media-monitor-stop");
 
 exec("svc -d /etc/service/pypo");
 exec("svc -d /etc/service/pypo/log");
@@ -69,6 +68,7 @@ $pathnames = array("/usr/bin/airtime-pypo-start",
                 "/etc/service/media-monitor",
                 "/etc/service/recorder",
                 "/var/log/airtime/pypo/main",
+                "/var/log/airtime/pypo-liquidsoap/main",
                 "/var/log/airtime/show-recorder/main"
                 );
 

@@ -61,18 +61,25 @@ class PypoFetch(Thread):
         self.cue_file = CueFile()
         self.set_export_source('scheduler')
         self.queue = q
-
-        logger.info("Initializing RabbitMQ stuff")
-        schedule_exchange = Exchange("airtime-schedule", "direct", durable=True, auto_delete=True)
-        schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
-        self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
-        channel = self.connection.channel()
-        consumer = Consumer(channel, schedule_queue)
-        consumer.register_callback(handle_message)
-        consumer.consume()
-        
         logger.info("PypoFetch: init complete")
 
+    def init_rabbit_mq(self):
+        logger = logging.getLogger('fetch')
+        logger.info("Initializing RabbitMQ stuff")
+        try:
+            schedule_exchange = Exchange("airtime-schedule", "direct", durable=True, auto_delete=True)
+            schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
+            self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
+            channel = self.connection.channel()
+            consumer = Consumer(channel, schedule_queue)
+            consumer.register_callback(handle_message)
+            consumer.consume()
+        except Exception, e:
+            logger.error(e)
+            return False
+            
+        return True
+        
 
     def set_export_source(self, export_source):
         self.export_source = export_source
@@ -335,6 +342,10 @@ class PypoFetch(Thread):
     """
     def run(self):
         logger = logging.getLogger('fetch')
+
+        while not self.init_rabbit_mq():
+            logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
+            time.sleep(5)
 
         try: os.mkdir(self.cache_dir)
         except Exception, e: pass

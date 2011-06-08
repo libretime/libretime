@@ -63,7 +63,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        $download = $this->_getParam('download');
+        $downlaod = $this->_getParam('download');
 
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -100,15 +100,15 @@ class ApiController extends Zend_Controller_Action
 
             // !! binary mode !!
             $fp = fopen($filepath, 'rb');
-            
+
             //We can have multiple levels of output buffering. Need to
             //keep looping until all have been disabled!!!
             //http://www.php.net/manual/en/function.ob-end-flush.php
             while (@ob_end_flush());
-            
+
             fpassthru($fp);
             fclose($fp);
-            
+
             return;
           }
       }
@@ -293,52 +293,61 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-
+        
+       	$showCanceled = false;
+        $show_instance  = $this->_getParam('show_instance');
+        
         $upload_dir = ini_get("upload_tmp_dir");
         $file = StoredFile::uploadFile($upload_dir);
-
-        $show_instance  = $this->_getParam('show_instance');
-
+        
+        $show_name = "";
         try {
             $show_inst = new ShowInstance($show_instance);
-
+            
             $show_inst->setRecordedFile($file->getId());
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
             $show_start_time = $show_inst->getShowStart();
 
-            if(Application_Model_Preference::GetDoSoundCloudUpload())
-            {
-                for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
-
-                    $show = new Show($show_inst->getShowId());
-                    $description = $show->getDescription();
-                    $hosts = $show->getHosts();
-
-                    $tags = array_merge($hosts, array($show_name));
-
-                    try {
-                        $soundcloud = new ATSoundcloud();
-                        $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
-                        $show_inst->setSoundCloudFileId($soundcloud_id);
-                        break;
-                    }
-                    catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
-                        $code = $e->getHttpCode();
-                        if(!in_array($code, array(0, 100))) {
-                            break;
-                        }
-                    }
-
-                    sleep($CC_CONFIG['soundcloud-connection-wait']);
-                }
-            }
-        } catch (Exception $e){
+         } catch (Exception $e){
             //we've reached here probably because the show was
             //cancelled, and therefore the show instance does not
             //exist anymore (ShowInstance constructor threw this error).
             //We've done all we can do (upload the file and put it in
             //the library), now lets just return.
+            $showCanceled = true;
+        }
+        
+		$tmpTitle = !(empty($show_name))?$show_name."-":"";
+		$tmpTitle .= $file->getName();
+		
+		$file->setMetadataValue(UI_MDATA_KEY_TITLE, $tmpTitle);
+        
+        if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
+        {
+        	for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
+
+        		$show = new Show($show_inst->getShowId());
+        		$description = $show->getDescription();
+        		$hosts = $show->getHosts();
+
+        		$tags = array_merge($hosts, array($show_name));
+
+        		try {
+        			$soundcloud = new ATSoundcloud();
+        			$soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $tmpTitle, $description, $tags, $show_start_time, $show_genre);
+        			$show_inst->setSoundCloudFileId($soundcloud_id);
+        			break;
+        		}
+        		catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+        			$code = $e->getHttpCode();
+        			if(!in_array($code, array(0, 100))) {
+        				break;
+        			}
+        		}
+
+        		sleep($CC_CONFIG['soundcloud-connection-wait']);
+        	}
         }
 
         $this->view->id = $file->getId();
@@ -357,8 +366,9 @@ class ApiController extends Zend_Controller_Action
         }
 
         $md = $this->_getParam('md');
-
-        $file = StoredFile::Recall(null, $md['gunid']);
+        $filepath = $md['filepath'];
+        $filepath = str_replace("\\", "", $filepath);
+        $file = StoredFile::Recall(null, null, null, $filepath);
         if (PEAR::isError($file) || is_null($file)) {
             $this->view->response = "File not in Airtime's Database";
             return;

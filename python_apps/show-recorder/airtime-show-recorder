@@ -18,6 +18,6 @@ export PYTHONPATH=${api_client_path}
 
 #this line works: su ${recorder_user} -c "python -u ${recorder_path}${recorder_script}"
 # Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
-exec python -u ${recorder_path}${recorder_script}
+exec python -u ${recorder_path}${recorder_script}  > /var/log/airtime/show-recorder/py-interpreter.log 2>&1
 
 # EOF

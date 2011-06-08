@@ -33,7 +33,8 @@ class AirtimeIni
         $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
                              AirtimeIni::CONF_FILE_PYPO,
                              AirtimeIni::CONF_FILE_RECORDER,
-                             AirtimeIni::CONF_FILE_LIQUIDSOAP);
+                             AirtimeIni::CONF_FILE_LIQUIDSOAP,
+                             AirtimeIni::CONF_FILE_MEDIAMONITOR);
         $exist = false;
         foreach ($configFiles as $conf) {
             if (file_exists($conf)) {
@@ -102,9 +103,9 @@ class AirtimeIni
         }
 
         //wait until Airtime 1.9.0
-        //if (file_exists(AirtimeIni::CONF_FILE_MEDIAMONITOR)){
-        //    unlink(AirtimeIni::CONF_FILE_MEDIAMONITOR);
-        //}
+        if (file_exists(AirtimeIni::CONF_FILE_MEDIAMONITOR)){
+            unlink(AirtimeIni::CONF_FILE_MEDIAMONITOR);
+        }
 
         if (file_exists("etc/airtime")){
             rmdir("/etc/airtime/");
@@ -156,9 +157,9 @@ class AirtimeIni
         $n=count($lines);
         foreach ($lines as &$line) {
             if ($line[0] != "#"){
-                $key_value = split("=", $line);
-                $key = trim($key_value[0]);         
-                
+                $key_value = explode("=", $line);
+                $key = trim($key_value[0]);
+
                 if ($key == $p_property){
                     $line = "$p_property = $p_value".PHP_EOL;
                 }
@@ -185,7 +186,7 @@ class AirtimeIni
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'airtime_dir', AirtimeInstall::CONF_DIR_WWW);
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_PYPO, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_RECORDER, 'api_key', "'$api_key'");
-        //AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, 'api_key', "'$api_key'");
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
     }
 

@@ -703,7 +703,7 @@ class StoredFile {
      * @return StoredFile|Playlist|NULL
      *    Return NULL if the object doesnt exist in the DB.
      */
-    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null)
+    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null)
     {
         global $CC_DBC;
         global $CC_CONFIG;
@@ -713,6 +713,8 @@ class StoredFile {
             $cond = "gunid='$p_gunid'";
         } elseif (!is_null($p_md5sum)) {
             $cond = "md5='$p_md5sum'";
+        } elseif (!is_null($p_filepath)) {
+            $cond = "filepath='$p_filepath'";
         } else {
             return null;
         }
@@ -782,6 +784,31 @@ class StoredFile {
         return $rows;
     }
 
+    private function ensureDir($dir)
+    {
+        if (!is_dir($dir)) {
+            mkdir($dir, 02775);
+            chmod($dir, 02775);
+        }
+    }
+
+    private function createUniqueFilename($base, $ext)
+    {
+        if(file_exists("$base.$ext")) {
+            $i = 1;
+            while(true) {
+                if(file_exists("$base($i).$ext")) {
+                    $i = $i+1;
+                }
+                else {
+                    return "$base($i).$ext";
+                }
+            }
+        }
+
+        return "$base.$ext";
+    }
+
     /**
      * Generate the location to store the file.
      * It creates the subdirectory if needed.
@@ -789,14 +816,48 @@ class StoredFile {
     private function generateFilePath()
     {
         global $CC_CONFIG, $CC_DBC;
-        $resDir = $CC_CONFIG['storageDir']."/".substr($this->gunid, 0, 3);
-        if (!is_dir($resDir)) {
-            mkdir($resDir, 02775);
-            chmod($resDir, 02775);
-        }
+
+        $storageDir = $CC_CONFIG['storageDir'];
         $info = pathinfo($this->name);
+        $origName = $info['filename'];
         $fileExt = strtolower($info["extension"]);
-        return "{$resDir}/{$this->gunid}.{$fileExt}";
+
+        $this->loadMetadata();
+
+        $artist = $this->md["dc:creator"];
+        $album = $this->md["dc:source"];
+        $title = $this->md["dc:title"];
+        $track_num = $this->md["ls:track_num"];
+
+        if(isset($artist) && $artist != "") {
+            $base = "$storageDir/$artist";
+            $this->ensureDir($base);
+
+            if(isset($album) && $album != "") {
+                $base = "$base/$album";
+                $this->ensureDir($base);
+            }
+
+            if(isset($title) && $title != "") {
+                if(isset($track_num) && $track_num != "") {
+                    if($track_num < 10 && strlen($track_num) == 1) {
+                        $track_num = "0$track_num";
+                    }
+                    $base = "$base/$track_num - $title";
+                }
+                else {
+                    $base = "$base/$title";
+                }
+            }
+            else {
+                $base = "$base/$origName";
+            }
+        }
+        else {
+            $base = "$storageDir/$origName";
+        }
+
+        return $this->createUniqueFilename($base, $fileExt);
     }
 
     /**
@@ -1693,8 +1754,8 @@ class StoredFile {
 		return array("sEcho" => intval($data["sEcho"]), "iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
 	}
 
-    public static function uploadFile($targetDir) {
-
+    public static function uploadFile($p_targetDir) 
+    {
         // HTTP headers for no cache etc
 		header('Content-type: text/plain; charset=UTF-8');
 		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -1704,7 +1765,7 @@ class StoredFile {
 		header("Pragma: no-cache");
 
 		// Settings
-		//$targetDir = ini_get("upload_tmp_dir"); //. DIRECTORY_SEPARATOR . "plupload";
+		//$p_targetDir = ini_get("upload_tmp_dir"); //. DIRECTORY_SEPARATOR . "plupload";
 		$cleanupTargetDir = false; // Remove old files
 		$maxFileAge = 60 * 60; // Temp file age in seconds
 
@@ -1721,13 +1782,13 @@ class StoredFile {
 		//$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
 
 		// Create target dir
-		if (!file_exists($targetDir))
-			@mkdir($targetDir);
+		if (!file_exists($p_targetDir))
+			@mkdir($p_targetDir);
 
 		// Remove old temp files
-		if (is_dir($targetDir) && ($dir = opendir($targetDir))) {
+		if (is_dir($p_targetDir) && ($dir = opendir($p_targetDir))) {
 			while (($file = readdir($dir)) !== false) {
-				$filePath = $targetDir . DIRECTORY_SEPARATOR . $file;
+				$filePath = $p_targetDir . DIRECTORY_SEPARATOR . $file;
 
 				// Remove temp files if they are older than the max age
 				if (preg_match('/\.tmp$/', $file) && (filemtime($filePath) < time() - $maxFileAge))
@@ -1748,7 +1809,7 @@ class StoredFile {
 		if (strpos($contentType, "multipart") !== false) {
 			if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
 				// Open temp file
-				$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
+				$out = fopen($p_targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
 				if ($out) {
 					// Read binary input stream and append it to temp file
 					$in = fopen($_FILES['file']['tmp_name'], "rb");
@@ -1767,7 +1828,7 @@ class StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
 		} else {
 			// Open temp file
-			$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
+			$out = fopen($p_targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
 			if ($out) {
 				// Read binary input stream and append it to temp file
 				$in = fopen("php://input", "rb");
@@ -1783,7 +1844,7 @@ class StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
 		}
 
-		$audio_file = $targetDir . DIRECTORY_SEPARATOR . $fileName;
+		$audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
 
 		$md5 = md5_file($audio_file);
 		$duplicate = StoredFile::RecallByMd5($md5);
@@ -1812,18 +1873,14 @@ class StoredFile {
 			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $metadata->getMessage() + '}}');
 		}
 
-		// #2196 no id tag -> use the original filename
-		if (basename($audio_file) == $metadata[UI_MDATA_KEY_TITLE]) {
+		// no id3 title tag -> use the original filename for title
+		if (empty($metadata[UI_MDATA_KEY_TITLE])) {
 			$metadata[UI_MDATA_KEY_TITLE] = basename($audio_file);
 			$metadata[UI_MDATA_KEY_FILENAME] = basename($audio_file);
 		}
 
-		// setMetadataBatch doesnt like these values
-		unset($metadata['audio']);
-		unset($metadata['playtime_seconds']);
-
 		$values = array(
-		    "filename" =>  basename($audio_file),
+		    "filename" => basename($audio_file),
 		    "filepath" => $audio_file,
 		    "filetype" => "audioclip",
 		    "mime" => $metadata[UI_MDATA_KEY_FORMAT],
