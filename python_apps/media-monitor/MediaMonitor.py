@@ -260,7 +260,7 @@ class MediaMonitor(ProcessEvent):
                 #if not is_renamed_file(event.pathname):
                 self.create_file_path(event.pathname)
 
-       self.logger.info("%s: %s", event.maskname, event.pathname)
+        self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MODIFY(self, event):
         if not event.dir :
