@@ -10,6 +10,7 @@ class ApiController extends Zend_Controller_Action
         $context->addActionContext('version', 'json')
                 ->addActionContext('recorded-shows', 'json')
                 ->addActionContext('upload-recorded', 'json')
+                ->addActionContext('media-item-status', 'json')
                 ->addActionContext('reload-metadata', 'json')
                 ->initContext();
     }
@@ -293,17 +294,17 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
        	$showCanceled = false;
         $show_instance  = $this->_getParam('show_instance');
-        
+
         $upload_dir = ini_get("upload_tmp_dir");
         $file = StoredFile::uploadFile($upload_dir);
-        
+
         $show_name = "";
         try {
             $show_inst = new ShowInstance($show_instance);
-            
+
             $show_inst->setRecordedFile($file->getId());
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
@@ -317,12 +318,12 @@ class ApiController extends Zend_Controller_Action
             //the library), now lets just return.
             $showCanceled = true;
         }
-        
+
 		$tmpTitle = !(empty($show_name))?$show_name."-":"";
 		$tmpTitle .= $file->getName();
-		
+
 		$file->setMetadataValue(UI_MDATA_KEY_TITLE, $tmpTitle);
-        
+
         if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
         {
         	for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
@@ -353,8 +354,35 @@ class ApiController extends Zend_Controller_Action
         $this->view->id = $file->getId();
     }
 
-    public function reloadMetadataAction() {
+    public function mediaItemStatusAction() {
+        global $CC_CONFIG;
 
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $md5 = $this->_getParam('md5');
+        $file = StoredFile::RecallByMd5($md5);
+
+        //New file added to Airtime
+        if (is_null($file)) {
+            $this->view->airtime_status = 0;
+        }
+        else {
+            $this->view->airtime_status = 1;
+        }
+
+    }
+
+    public function reloadMetadataAction() {
         global $CC_CONFIG;
 
         $api_key = $this->_getParam('api_key');
@@ -366,29 +394,20 @@ class ApiController extends Zend_Controller_Action
         }
 
         $md = $this->_getParam('md');
-        $filepath = $md['filepath'];
+        $filepath = $md['MDATA_KEY_FILEPATH'];
         $filepath = str_replace("\\", "", $filepath);
-        $file = StoredFile::Recall(null, null, null, $filepath);
-        if (PEAR::isError($file)) {
-            $this->view->response = "Problem recalling file in Airtime";
-            return;
-        }
+        $file = StoredFile::RecallByFilepath($filepath);
 
         //New file added to Airtime
         if (is_null($file)) {
-
+            $file = new StoredFile($md);
         }
         //Updating a metadata change.
         else {
-            $res = $file->replaceDbMetadata($md);
-
-            if (PEAR::isError($res)) {
-                $this->view->response = "Metadata Change Failed";
-            }
-            else {
-                $this->view->response = "Success!";
-            }
+            $file->setMetadata($md);
         }
+
+        $this->view->id = $file->getId();
     }
 }
 

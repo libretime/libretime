@@ -25,9 +25,13 @@ class PluploadController extends Zend_Controller_Action
     public function uploadAction()
     {
         $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $file = StoredFile::uploadFile($upload_dir);
+        $res = StoredFile::uploadFile($upload_dir);
 
-		die('{"jsonrpc" : "2.0", "id" : '.$file->getId().' }');
+        if (isset($res)) {
+            die('{"jsonrpc" : "2.0", "id" : '.$file->getMessage().' }');
+        }
+
+		die('{"jsonrpc" : "2.0"}');
     }
 }
 

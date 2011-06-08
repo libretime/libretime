@@ -402,13 +402,19 @@ class StoredFile {
             $storedFile = CcFilesQuery::create()->findPK(intval($p_id));
         }
         else if (isset($p_gunid)) {
-            $storedFile = CcFilesQuery::create()->findByDbGunid($p_gunid);
+            $storedFile = CcFilesQuery::create()
+                            ->filterByDbGunid($p_gunid)
+                            ->findOne();
         }
         else if (isset($p_md5sum)) {
-            $storedFile = CcFilesQuery::create()->findByDbMd5($p_md5sum);
+            $storedFile = CcFilesQuery::create()
+                            ->filterByDbMd5($p_md5sum)
+                            ->findOne();
         }
         else if (isset($p_filepath)) {
-            $storedFile = CcFilesQuery::create()->findByDbFilepath($p_filepath);
+            $storedFile = CcFilesQuery::create()
+                            ->filterByDbFilepath($p_filepath)
+                            ->findOne();
         }
         else {
             return null;
@@ -697,34 +703,6 @@ class StoredFile {
 			}
 		}
 
-		$metadata = Metadata::LoadFromFile($audio_file);
-
-		if (PEAR::isError($metadata)) {
-			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $metadata->getMessage() + '}}');
-		}
-
-		// no id3 title tag -> use the original filename for title
-		if (empty($metadata[UI_MDATA_KEY_TITLE])) {
-			$metadata[UI_MDATA_KEY_TITLE] = basename($audio_file);
-			$metadata[UI_MDATA_KEY_FILENAME] = basename($audio_file);
-		}
-
-		$values = array(
-		    "filename" => basename($audio_file),
-		    "filepath" => $audio_file,
-		    "filetype" => "audioclip",
-		    "mime" => $metadata[UI_MDATA_KEY_FORMAT],
-		    "md5" => $md5
-		);
-		$storedFile = StoredFile::Insert($values);
-
-		if (PEAR::isError($storedFile)) {
-			die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' + $storedFile->getMessage() + '}}');
-		}
-
-		$storedFile->setMetadataBatch($metadata);
-
-		return $storedFile;
     }
 
 }

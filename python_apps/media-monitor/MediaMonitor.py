@@ -9,6 +9,7 @@ import sys
 import hashlib
 import json
 import shutil
+import math
 
 from subprocess import Popen, PIPE, STDOUT
 
@@ -143,9 +144,20 @@ class MediaMonitor(ProcessEvent):
         return md5
 
     ## mutagen_length is in seconds with the format (d+).dd
-    ## return format hh:mm:ss.
+    ## return format hh:mm:ss.uuu
     def format_length(self, mutagen_length):
-        time = mutagen_length.split(".")
+        t = float(mutagen_length)
+        h = int(math.floor(t/3600))
+
+        t = t % 3600
+        m = int(math.floor(t/60))
+
+        # will be ss.uuu
+        s = t % 60
+
+        length = "%s:%s:%s" % (h, m, s)
+
+        return length
 
     def ensure_dir(self, filepath):
 
@@ -210,16 +222,19 @@ class MediaMonitor(ProcessEvent):
 
         filepath = self.create_unique_filename(base)
         self.ensure_dir(filepath)
-        shutil.move(imported_filepath, filepath)
 
-    def update_airtime(self, event):
+        return filepath
+
+
+    def update_airtime(self, filepath):
         self.logger.info("Updating Change to Airtime")
+        md = {}
         try:
-            md5 = self.get_md5(event.pathname)
-            md['MDATA_KEY_FILEPATH'] = event.pathname
+            md5 = self.get_md5(filepath)
+            md['MDATA_KEY_FILEPATH'] = filepath
             md['MDATA_KEY_MD5'] = md5
 
-            file_info = mutagen.File(event.pathname, easy=True)
+            file_info = mutagen.File(filepath, easy=True)
             attrs = self.mutagen2airtime
             for key in file_info.keys() :
                 if key in attrs :
@@ -227,7 +242,7 @@ class MediaMonitor(ProcessEvent):
 
             md['MDATA_KEY_MIME'] = file_info.mime[0]
             md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
-            md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rated
+            md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
             md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
 
             data = {'md': md}
@@ -268,14 +283,21 @@ class MediaMonitor(ProcessEvent):
             #This is a newly imported file.
             else :
                 if not self.is_renamed_file(event.pathname):
-                    self.create_file_path(event.pathname)
+                    md5 = self.get_md5(event.pathname)
+                    response = self.api_client.check_media_status(md5)
+
+                    #this file is new, md5 does not exist in Airtime.
+                    if(response['airtime_status'] == 0):
+                        filepath = self.create_file_path(event.pathname)
+                        shutil.move(event.pathname, filepath)
+                        self.update_airtime(filepath)
 
             self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MODIFY(self, event):
         if not event.dir :
             if self.is_audio_file(event.name) :
-                self.update_airtime(event)
+                self.update_airtime(event.pathname)
 
             self.logger.info("%s: %s", event.maskname, event.pathname)
 
