@@ -13,6 +13,6 @@ export HOME="/var/tmp/airtime/pypo/"
 export PYTHONPATH=${api_client_path}:$PYTHONPATH
 
 # Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
-exec python -u ${pypo_path}${pypo_script}
+exec python -u ${pypo_path}${pypo_script} > /var/log/airtime/pypo/py-interpreter.log 2>&1
 
 # EOF
