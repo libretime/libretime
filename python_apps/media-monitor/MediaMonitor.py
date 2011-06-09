@@ -275,6 +275,8 @@ class MediaMonitor(ProcessEvent):
         else :
             return False
 
+    def setUpMediaMonitor(self, event):
+        pass
 
     def process_IN_CREATE(self, event):
         if not event.dir:

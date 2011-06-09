@@ -43,18 +43,18 @@ class StoredFile {
         "md5" => "DbMd5"
     );
 
-    public function __construct($md)
+    public function __construct()
     {
-        $this->_file = new CcFiles();
-        $this->_file->setDbGunid(md5(uniqid("", true)));
-        $this->_file->save();
 
-        $this->setMetadata($md);
     }
 
     public function getId()
     {
         return $this->_file->getDbId();
+    }
+
+    public function getGunId() {
+        return $this->_file->getDbGunid();
     }
 
     public function getFormat()
@@ -380,7 +380,30 @@ class StoredFile {
     public function getFileUrl()
     {
         global $CC_CONFIG;
-        return "http://$CC_CONFIG[baseUrl]:$CC_CONFIG[basePort]/api/get-media/file/".$this->gunid.".".$this->getFileExtension();
+        return "http://$CC_CONFIG[baseUrl]:$CC_CONFIG[basePort]/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
+    }
+
+    public static function Insert($md=null)
+    {
+        $file = new CcFiles();
+        $file->setDbGunid(md5(uniqid("", true)));
+        $file->save();
+
+        if(isset($md)) {
+            if (preg_match("/mp3/i", $md['MDATA_KEY_MIME'])) {
+                $file->setDbFtype("audioclip");
+            }
+            else if (preg_match("/vorbis/i", $md['MDATA_KEY_MIME'])) {
+                $file->setDbFtype("audioclip");
+            }
+
+            $this->setMetadata($md);
+       }
+
+       $storedFile = new StoredFile();
+       $storedFile->_file = $file;
+
+       return $storedFile;
     }
 
     /**
@@ -394,32 +417,35 @@ class StoredFile {
      * 		global unique id of file
      * @param string $p_md5sum
      *    MD5 sum of the file
-     * @return StoredFile|Playlist|NULL
+     * @return StoredFile|NULL
      *    Return NULL if the object doesnt exist in the DB.
      */
     public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null)
     {
         if (isset($p_id)) {
-            $storedFile = CcFilesQuery::create()->findPK(intval($p_id));
+            $file = CcFilesQuery::create()->findPK(intval($p_id));
         }
         else if (isset($p_gunid)) {
-            $storedFile = CcFilesQuery::create()
+            $file = CcFilesQuery::create()
                             ->filterByDbGunid($p_gunid)
                             ->findOne();
         }
         else if (isset($p_md5sum)) {
-            $storedFile = CcFilesQuery::create()
+            $file = CcFilesQuery::create()
                             ->filterByDbMd5($p_md5sum)
                             ->findOne();
         }
         else if (isset($p_filepath)) {
-            $storedFile = CcFilesQuery::create()
+            $file = CcFilesQuery::create()
                             ->filterByDbFilepath($p_filepath)
                             ->findOne();
         }
         else {
             return null;
         }
+
+        $storedFile = new StoredFile();
+        $storedFile->_file = $file;
 
         return $storedFile;
     }

@@ -78,7 +78,7 @@ class ApiController extends Zend_Controller_Action
         if (ctype_alnum($file_id) && strlen($file_id) == 32) {
           $media = StoredFile::RecallByGunid($file_id);
           if ($media != null && !PEAR::isError($media)) {
-            $filepath = $media->getRealFilePath();
+            $filepath = $media->getFilePath();
             if(!is_file($filepath))
             {
                 header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
@@ -419,7 +419,7 @@ class ApiController extends Zend_Controller_Action
 
         //New file added to Airtime
         if (is_null($file)) {
-            $file = new StoredFile($md);
+            $file = StoredFile::Insert($md);
         }
         //Updating a metadata change.
         else {

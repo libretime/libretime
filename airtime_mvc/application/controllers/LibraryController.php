@@ -78,7 +78,7 @@ class LibraryController extends Zend_Controller_Action
 	    	$file_id = $this->_getParam('id', null);
 	        $file = StoredFile::Recall($file_id);
 
-	        $url = $file->getFileURL().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
+	        $url = $file->getFileUrl().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
 
@@ -162,10 +162,10 @@ class LibraryController extends Zend_Controller_Action
             if ($form->isValid($request->getPost())) {
 
                 $formdata = $form->getValues();
-                $file->replaceDbMetadata($formdata);
+                $file->setDbColMetadata($formdata);
 
                 $data = $formdata;
-                $data['filepath'] = $file->getRealFilePath();
+                $data['filepath'] = $file->getFilePath();
                 //wait for 1.9.0 release
                 //RabbitMq::SendFileMetaData($data);
 
@@ -173,7 +173,7 @@ class LibraryController extends Zend_Controller_Action
             }
         }
 
-        $form->populate($file->md);
+        $form->populate($file->getDbColMetadata());
         $this->view->form = $form;
     }
 
