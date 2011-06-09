@@ -376,10 +376,6 @@ class ApiController extends Zend_Controller_Action
     public function mediaItemStatusAction() {
         global $CC_CONFIG;
 
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $api_key = $this->_getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -415,6 +411,7 @@ class ApiController extends Zend_Controller_Action
         $md = $this->_getParam('md');
         $filepath = $md['MDATA_KEY_FILEPATH'];
         $filepath = str_replace("\\", "", $filepath);
+
         $file = StoredFile::RecallByFilepath($filepath);
 
         //New file added to Airtime

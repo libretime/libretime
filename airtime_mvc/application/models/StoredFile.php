@@ -389,6 +389,9 @@ class StoredFile {
         $file->setDbGunid(md5(uniqid("", true)));
         $file->save();
 
+        $storedFile = new StoredFile();
+        $storedFile->_file = $file;
+
         if(isset($md)) {
             if (preg_match("/mp3/i", $md['MDATA_KEY_MIME'])) {
                 $file->setDbFtype("audioclip");
@@ -397,11 +400,8 @@ class StoredFile {
                 $file->setDbFtype("audioclip");
             }
 
-            $this->setMetadata($md);
+            $storedFile->setMetadata($md);
        }
-
-       $storedFile = new StoredFile();
-       $storedFile->_file = $file;
 
        return $storedFile;
     }
@@ -444,10 +444,15 @@ class StoredFile {
             return null;
         }
 
-        $storedFile = new StoredFile();
-        $storedFile->_file = $file;
+        if (isset($file)) {
+            $storedFile = new StoredFile();
+            $storedFile->_file = $file;
 
-        return $storedFile;
+            return $storedFile;
+        }
+        else{
+            return null;
+        }
     }
 
     /**
