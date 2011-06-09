@@ -1,0 +1,67 @@
+<fieldset class="padded">
+    <dl class="zend_form">
+    	<?php if($this->element->getView()->registered){?>
+    	<div>Registered</div>
+    	<?php }else{?>
+    	<div>Please register your Airtime system by clicking Register button at the bottom.</div>
+    	<?php }?>
+    	<?php if($this->element->getView()->supportFeedback === '0'){?>
+    	<div>Be more awesome by selecting "Support feedback" below. You will be helping Airtim improve!</div>
+    	<?php }?>
+        <dt id="Phone-label" class="block-display">
+            <label class="optional" for="Phone"><?php echo $this->element->getElement('Phone')->getLabel() ?></label>
+        </dt>
+        <dd id="Phone-element" class="block-display">
+            <?php echo $this->element->getElement('Phone') ?>
+            <?php if($this->element->getElement('Phone')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('Phone')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <dt id="Email-label" class="block-display">
+            <label class="optional" for="Email"><?php echo $this->element->getElement('Email')->getLabel() ?></label>
+        </dt>
+        <dd id="Email-element" class="block-display">
+            <?php echo $this->element->getElement('Email') ?>
+            <?php if($this->element->getElement('Email')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('Email')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <dt id="StationWebSite-label" class="block-display">
+            <label class="optional" for="StationWebSite"><?php echo $this->element->getElement('StationWebSite')->getLabel() ?></label>
+        </dt>
+        <dd id="StationWebSite-element" class="block-display clearfix">
+            <?php echo $this->element->getElement('StationWebSite') ?>
+            <?php if($this->element->getElement('StationWebSite')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('StationWebSite')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <dd id="SupportFeedback-element" class="block-display" style=" margin:6px 0 10px 0">
+            <label class="optional" for="SupportFeedback">
+                <?php echo $this->element->getElement('SupportFeedback') ?>
+                <strong><?php echo $this->element->getElement('SupportFeedback')->getLabel() ?></strong>
+            </label>
+            <?php if($this->element->getElement('SupportFeedback')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('SupportFeedback')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <div class="button-bar bottom" id="Register-element">
+	        <?php echo $this->element->getElement('Register') ?>
+	    </div>
+    </dl>
+</fieldset>

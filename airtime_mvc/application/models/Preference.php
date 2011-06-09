@@ -188,6 +188,55 @@ class Application_Model_Preference
             return $val;
         }
     }
-
+    
+    public static function SetPhone($phone){
+    	Application_Model_Preference::SetValue("phone", $phone);
+    }
+    
+    public static function GetPhone(){
+    	return Application_Model_Preference::GetValue("phone");
+    }
+    
+	public static function SetEmail($email){
+    	Application_Model_Preference::SetValue("email", $email);
+    }
+    
+    public static function GetEmail(){
+    	return Application_Model_Preference::GetValue("email");
+    }
+    
+	public static function SetStationWebSite($site){
+    	Application_Model_Preference::SetValue("station_website", $site);
+    }
+    
+    public static function GetStationWebSite(){
+    	return Application_Model_Preference::GetValue("station_website");
+    }
+    
+	public static function SetSupportFeedback($feedback){
+    	Application_Model_Preference::SetValue("support_feedback", $feedback);
+    }
+    
+    public static function GetSupportFeedback(){
+    	return Application_Model_Preference::GetValue("support_feedback");
+    }
+    
+	public static function SetRegistered($registered){
+    	Application_Model_Preference::SetValue("registered", $registered);
+    }
+    
+    public static function GetRegistered(){
+    	return Application_Model_Preference::GetValue("registered");
+    }
+    
+    public static function GetSystemInfo(){
+    	$output;
+    	exec('airtime-check-system', $output);
+    	$out = implode("\n",  preg_replace('/\s+/', ' ', $output));
+    	
+    	// Sever API
+    	$out .= php_sapi_name();
+    	return $out;
+    }
 }
 
