@@ -11,6 +11,7 @@ import json
 import shutil
 import math
 
+from pwd import getpwnam
 from subprocess import Popen, PIPE, STDOUT
 
 from configobj import ConfigObj
@@ -235,27 +236,23 @@ class MediaMonitor(ProcessEvent):
     def update_airtime(self, filepath):
         self.logger.info("Updating Change to Airtime")
         md = {}
-        try:
-            md5 = self.get_md5(filepath)
-            md['MDATA_KEY_FILEPATH'] = filepath
-            md['MDATA_KEY_MD5'] = md5
+        md5 = self.get_md5(filepath)
+        md['MDATA_KEY_FILEPATH'] = filepath
+        md['MDATA_KEY_MD5'] = md5
 
-            file_info = mutagen.File(filepath, easy=True)
-            attrs = self.mutagen2airtime
-            for key in file_info.keys() :
-                if key in attrs :
-                    md[attrs[key]] = file_info[key][0]
+        file_info = mutagen.File(filepath, easy=True)
+        attrs = self.mutagen2airtime
+        for key in file_info.keys() :
+            if key in attrs :
+                md[attrs[key]] = file_info[key][0]
 
-            md['MDATA_KEY_MIME'] = file_info.mime[0]
-            md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
-            md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
-            md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
+        md['MDATA_KEY_MIME'] = file_info.mime[0]
+        md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
+        md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
+        md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
 
-            data = {'md': md}
-            response = self.api_client.update_media_metadata(data)
-
-        except Exception, e:
-            self.logger.info("%s", e)
+        data = {'md': md}
+        response = self.api_client.update_media_metadata(data)
 
     def is_renamed_file(self, filename):
         if filename in self.imported_renamed_files:
@@ -297,14 +294,23 @@ class MediaMonitor(ProcessEvent):
                     #this file is new, md5 does not exist in Airtime.
                     if(response['airtime_status'] == 0):
                         filepath = self.create_file_path(event.pathname)
-                        shutil.move(event.pathname, filepath)
-                        #must change
+                        #shutil.move(event.pathname, filepath)
+                        os.rename(event.pathname, filepath)
+
+                        try:
+                            #set the owner of the imported file.
+                            pypo_uid = getpwnam('pypo')[2]
+                            os.chown(filepath, pypo_uid, -1)
+                        except Exception, e:
+                            self.logger.debug("Cannot change owner of file.")
+                            self.logger.debug("Error: %s:", e)
+
                         self.update_airtime(filepath)
 
             self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MODIFY(self, event):
-        if not event.dir :
+        if not event.dir and os.path.exists(event.pathname):
             if self.is_audio_file(event.name) :
                 self.update_airtime(event.pathname)
 
