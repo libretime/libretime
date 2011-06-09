@@ -164,8 +164,13 @@ class MediaMonitor(ProcessEvent):
 
         directory = os.path.dirname(filepath)
 
-        if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
-            os.makedirs(directory, 02775)
+        try:
+            omask = os.umask(0)
+            if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
+                os.makedirs(directory, 02775)
+        finally:
+            os.umask(omask)
+
 
     def create_unique_filename(self, filepath):
 
@@ -293,6 +298,7 @@ class MediaMonitor(ProcessEvent):
                     if(response['airtime_status'] == 0):
                         filepath = self.create_file_path(event.pathname)
                         shutil.move(event.pathname, filepath)
+                        #must change
                         self.update_airtime(filepath)
 
             self.logger.info("%s: %s", event.maskname, event.pathname)
