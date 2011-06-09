@@ -117,6 +117,9 @@ class ApiClientInterface:
     def upload_recorded_show(self):
         pass
 
+    def check_media_status(self, md5):
+        pass
+
     def update_media_metadata(self, md):
         pass
 
@@ -353,6 +356,25 @@ class AirTimeApiClient(ApiClientInterface):
 
             #wait some time before next retry
             time.sleep(retries_wait)
+
+        return response
+
+    def check_media_status(self, md5):
+        logger = logging.getLogger()
+
+        response = None
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_status_url"])
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%md5%%", md5)
+            logger.debug(url)
+
+            response = urllib.urlopen(url)
+            response = json.loads(response.read())
+            logger.info("Json Media Status %s", response)
+
+        except Exception, e:
+            logger.error("Exception: %s", e)
 
         return response
 

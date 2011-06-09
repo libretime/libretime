@@ -332,7 +332,9 @@ if __name__ == '__main__':
         logger = logging.getLogger('root')
         logger.info("Added watch to %s", storage_directory)
 
-        notifier = AirtimeNotifier(wm, MediaMonitor(), read_freq=int(config["check_filesystem_events"]), timeout=1)
+        mm = MediaMonitor()
+
+        notifier = AirtimeNotifier(wm, mm, read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()
         notifier.loop(callback=checkRabbitMQ)
     except KeyboardInterrupt:

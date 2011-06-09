@@ -354,6 +354,25 @@ class ApiController extends Zend_Controller_Action
         $this->view->id = $file->getId();
     }
 
+    public function mediaMonitorSetupAction() {
+        global $CC_CONFIG;
+
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $this->view->stor = $CC_CONFIG['storageDir'];
+        $this->view->plupload = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+    }
+
     public function mediaItemStatusAction() {
         global $CC_CONFIG;
 
