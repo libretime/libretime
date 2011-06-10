@@ -409,18 +409,35 @@ class ApiController extends Zend_Controller_Action
         }
 
         $md = $this->_getParam('md');
-        $filepath = $md['MDATA_KEY_FILEPATH'];
-        $filepath = str_replace("\\", "", $filepath);
+        $mode = $this->_getParam('mode');
 
-        $file = StoredFile::RecallByFilepath($filepath);
+        if ($mode == "create") {
+            $md5 = $md['MDATA_KEY_MD5'];
 
-        //New file added to Airtime
-        if (is_null($file)) {
-            $file = StoredFile::Insert($md);
+            $file = StoredFile::RecallByMd5($md5);
+
+            if (is_null($file)) {
+                $file = StoredFile::Insert($md);
+            }
+            else {
+                $this->view->error = "File already exists in Airtime.";
+                return;
+            }
         }
-        //Updating a metadata change.
-        else {
-            $file->setMetadata($md);
+        else if ($mode == "modify") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+            $file = StoredFile::RecallByFilepath($filepath);
+
+            //File is not in database anymore.
+            if (is_null($file)) {
+                $this->view->error = "File does not exist in Airtime.";
+                return;
+            }
+            //Updating a metadata change.
+            else {
+                $file->setMetadata($md);
+            }
         }
 
         $this->view->id = $file->getId();

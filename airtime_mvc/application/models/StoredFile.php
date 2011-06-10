@@ -450,7 +450,7 @@ class StoredFile {
 
             return $storedFile;
         }
-        else{
+        else {
             return null;
         }
     }

@@ -25,6 +25,9 @@ from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
 from api_clients import api_client
 
+MODE_CREATE = "create"
+MODE_MODIFY = "modify"
+
 global storage_directory
 storage_directory = "/srv/airtime/stor"
 
@@ -47,14 +50,6 @@ except Exception, e:
 list of supported easy tags in mutagen version 1.20
 ['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
 """
-
-
-def checkRabbitMQ(notifier):
-    try:
-        notifier.connection.drain_events(timeout=int(config["check_airtime_events"]))
-    except Exception, e:
-            logger = logging.getLogger('root')
-            logger.info("%s", e)
 
 class AirtimeNotifier(Notifier):
 
@@ -135,6 +130,14 @@ class MediaMonitor(ProcessEvent):
         self.logger = logging.getLogger('root')
         self.temp_files = {}
         self.imported_renamed_files = {}
+
+        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
+        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
+        connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
+        channel = connection.channel()
+
+        self.producer = Producer(channel, exchange=schedule_exchange, serializer="json")
+        #producer.publish({"name": "/tmp/lolcat1.avi", "size": 1301013})
 
     def get_md5(self, filepath):
         f = open(filepath, 'rb')
@@ -233,7 +236,7 @@ class MediaMonitor(ProcessEvent):
         return filepath
 
 
-    def update_airtime(self, filepath):
+    def update_airtime(self, filepath, mode):
         self.logger.info("Updating Change to Airtime")
         md = {}
         md5 = self.get_md5(filepath)
@@ -252,7 +255,7 @@ class MediaMonitor(ProcessEvent):
         md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
 
         data = {'md': md}
-        response = self.api_client.update_media_metadata(data)
+        response = self.api_client.update_media_metadata(data, mode)
 
     def is_renamed_file(self, filename):
         if filename in self.imported_renamed_files:
@@ -305,14 +308,14 @@ class MediaMonitor(ProcessEvent):
                             self.logger.debug("Cannot change owner of file.")
                             self.logger.debug("Error: %s:", e)
 
-                        self.update_airtime(filepath)
+                        self.update_airtime(filepath, MODE_CREATE)
 
             self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def process_IN_MODIFY(self, event):
         if not event.dir and os.path.exists(event.pathname):
             if self.is_audio_file(event.name) :
-                self.update_airtime(event.pathname)
+                self.update_airtime(event.pathname, MODE_MODIFY)
 
             self.logger.info("%s: %s", event.maskname, event.pathname)
 
@@ -330,14 +333,37 @@ class MediaMonitor(ProcessEvent):
 
         self.logger.info("%s: %s", event.maskname, event.pathname)
 
+    def process_IN_DELETE(self, event):
+
+        self.producer.publish({"name": "Hi!"})
+
+        self.logger.info("%s: %s", event.maskname, event.pathname)
+
+    def process_IN_DELETE_SELF(self, event):
+
+        self.logger.info("%s: %s", event.maskname, event.pathname)
+
     def process_default(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
+
+
+    def check_rabbit_MQ(self, notifier):
+        try:
+            notifier.connection.drain_events(timeout=int(config["check_airtime_events"]))
+        except Exception, e:
+                logger = logging.getLogger('root')
+                logger.info("%s", e)
 
 if __name__ == '__main__':
 
     try:
         # watched events
-        mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
+        mask =  pyinotify.IN_CREATE | \
+                pyinotify.IN_MODIFY | \
+                pyinotify.IN_MOVED_FROM | \
+                pyinotify.IN_MOVED_TO | \
+                pyinotify.IN_DELETE | \
+                pyinotify.IN_DELETE_SELF
         #mask = pyinotify.ALL_EVENTS
 
         wm = WatchManager()
@@ -350,7 +376,7 @@ if __name__ == '__main__':
 
         notifier = AirtimeNotifier(wm, mm, read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()
-        notifier.loop(callback=checkRabbitMQ)
+        notifier.loop(callback=mm.check_rabbit_MQ)
     except KeyboardInterrupt:
         notifier.stop()
     except Exception, e:
