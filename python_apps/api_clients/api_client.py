@@ -414,6 +414,7 @@ class AirTimeApiClient(ApiClientInterface):
             response = json.loads(response)
 
         except Exception, e:
+            response = None
             logger.error("Exception: %s", e)
 
         return response

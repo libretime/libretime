@@ -259,19 +259,16 @@ class StoredFile {
      */
     public function delete()
     {
-        if (!$this->exists()) {
-            return PEAR::raiseError('File does not exist.');
-        }
-
-        if ($this->getFormat() == 'audioclip') {
-            $res = $this->deleteFile();
-            if (PEAR::isError($res)) {
-                return $res;
+        if ($this->exists()) {
+            if ($this->getFormat() == 'audioclip') {
+                $res = $this->deleteFile();
+                if (PEAR::isError($res)) {
+                    return $res;
+                }
             }
         }
 
         Playlist::DeleteFileFromAllPlaylists($this->getId());
-
         $this->_file->delete();
     }
 

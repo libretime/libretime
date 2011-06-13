@@ -440,6 +440,19 @@ class ApiController extends Zend_Controller_Action
                 $file->setMetadata($md);
             }
         }
+        else if ($mode == "delete") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+            $file = StoredFile::RecallByFilepath($filepath);
+
+            if (is_null($file)) {
+                $this->view->error = "File doesn't exist in Airtime.";
+                return;
+            }
+            else {
+                $file->delete();
+            }
+        }
 
         $this->view->id = $file->getId();
     }

@@ -11,6 +11,7 @@ import json
 import shutil
 import math
 
+from collections import deque
 from pwd import getpwnam
 from subprocess import Popen, PIPE, STDOUT
 
@@ -27,6 +28,7 @@ from api_clients import api_client
 
 MODE_CREATE = "create"
 MODE_MODIFY = "modify"
+MODE_DELETE = "delete"
 
 global storage_directory
 
@@ -128,15 +130,12 @@ class MediaMonitor(ProcessEvent):
         self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger('root')
         self.temp_files = {}
-        self.imported_renamed_files = {}
+        self.file_events = deque()
 
         schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
         schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
         connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
         channel = connection.channel()
-
-        #self.producer = Producer(channel, exchange=schedule_exchange, serializer="json")
-        #producer.publish({"name": "/tmp/lolcat1.avi", "size": 1301013})
 
     def get_md5(self, filepath):
         f = open(filepath, 'rb')
@@ -191,8 +190,6 @@ class MediaMonitor(ProcessEvent):
                 else:
                     filepath = new_filepath
 
-        self.imported_renamed_files[filepath] = 0
-
         return filepath
 
     def create_file_path(self, imported_filepath):
@@ -236,39 +233,40 @@ class MediaMonitor(ProcessEvent):
 
 
     def update_airtime(self, filepath, mode):
-        self.logger.info("Updating Change to Airtime")
-        md = {}
-        md5 = self.get_md5(filepath)
-        md['MDATA_KEY_FILEPATH'] = filepath
-        md['MDATA_KEY_MD5'] = md5
 
-        file_info = mutagen.File(filepath, easy=True)
-        attrs = self.mutagen2airtime
-        for key in file_info.keys() :
-            if key in attrs :
-                md[attrs[key]] = file_info[key][0]
+        if ((os.path.exists(filepath) and (mode == MODE_CREATE or mode == MODE_MODIFY)) or mode == MODE_DELETE):
+            self.logger.info("Updating Change to Airtime")
+            md = {}
+            md['MDATA_KEY_FILEPATH'] = filepath
 
-        md['MDATA_KEY_MIME'] = file_info.mime[0]
-        md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
-        md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
-        md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
+            if(mode == MODE_CREATE or mode == MODE_MODIFY):
+                md5 = self.get_md5(filepath)
+                md['MDATA_KEY_MD5'] = md5
 
-        data = {'md': md}
-        response = self.api_client.update_media_metadata(data, mode)
+                file_info = mutagen.File(filepath, easy=True)
+                attrs = self.mutagen2airtime
+                for key in file_info.keys() :
+                    if key in attrs :
+                        md[attrs[key]] = file_info[key][0]
 
-    def is_renamed_file(self, filename):
-        if filename in self.imported_renamed_files:
-            del self.imported_renamed_files[filename]
-            return True
+                md['MDATA_KEY_MIME'] = file_info.mime[0]
+                md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
+                md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
+                md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
 
-        return False
+            data = {'md': md}
+
+            response = None
+            while response is None:
+                response = self.api_client.update_media_metadata(data, mode)
+                time.sleep(5)
 
     def is_temp_file(self, filename):
         info = filename.split(".")
 
         if(info[-2] in self.supported_file_formats):
             return True
-        else :
+        else:
             return False
 
     def is_audio_file(self, filename):
@@ -276,74 +274,60 @@ class MediaMonitor(ProcessEvent):
 
         if(info[-1] in self.supported_file_formats):
             return True
-        else :
+        else:
             return False
 
     def process_IN_CREATE(self, event):
         if not event.dir:
+            self.logger.info("%s: %s", event.maskname, event.pathname)
             #file created is a tmp file which will be modified and then moved back to the original filename.
             if self.is_temp_file(event.name) :
                 self.temp_files[event.pathname] = None
             #This is a newly imported file.
             else :
-                if not self.is_renamed_file(event.pathname):
-                    md5 = self.get_md5(event.pathname)
-                    response = self.api_client.check_media_status(md5)
+                md5 = self.get_md5(event.pathname)
+                response = self.api_client.check_media_status(md5)
 
-                    #this file is new, md5 does not exist in Airtime.
-                    if(response['airtime_status'] == 0):
-                        filepath = self.create_file_path(event.pathname)
-                        #shutil.move(event.pathname, filepath)
-                        os.rename(event.pathname, filepath)
-
-                        #try:
-                            #set the owner of the imported file.
-                            #pypo_uid = getpwnam('pypo')[2]
-                            #os.chown(filepath, pypo_uid, -1)
-                        #except Exception, e:
-                            #self.logger.debug("Cannot change owner of file.")
-                            #self.logger.debug("Error: %s:", e)
-
-                        self.update_airtime(filepath, MODE_CREATE)
-
-            self.logger.info("%s: %s", event.maskname, event.pathname)
+                #this file is new, md5 does not exist in Airtime.
+                if(response['airtime_status'] == 0):
+                    filepath = self.create_file_path(event.pathname)
+                    self.file_events.append({'old_filepath': event.pathname, 'mode': MODE_CREATE, 'filepath': filepath})
 
     def process_IN_MODIFY(self, event):
-        if not event.dir and os.path.exists(event.pathname):
-            if self.is_audio_file(event.name) :
-                self.update_airtime(event.pathname, MODE_MODIFY)
-
+        if not event.dir:
             self.logger.info("%s: %s", event.maskname, event.pathname)
+            if self.is_audio_file(event.name) :
+                self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
 
     def process_IN_MOVED_FROM(self, event):
-        if event.pathname in self.temp_files :
+        self.logger.info("%s: %s", event.maskname, event.pathname)
+        if event.pathname in self.temp_files:
             del self.temp_files[event.pathname]
             self.temp_files[event.cookie] = event.pathname
 
-        self.logger.info("%s: %s", event.maskname, event.pathname)
-
     def process_IN_MOVED_TO(self, event):
-        if event.cookie in self.temp_files :
-            del self.temp_files[event.cookie]
-            self.update_airtime(event)
-
         self.logger.info("%s: %s", event.maskname, event.pathname)
+        if event.cookie in self.temp_files:
+            del self.temp_files[event.cookie]
+            self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
 
     def process_IN_DELETE(self, event):
-
-        #self.producer.publish({"name": "Hi!"})
-
         self.logger.info("%s: %s", event.maskname, event.pathname)
-
-    def process_IN_DELETE_SELF(self, event):
-
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        self.file_events.append({'filepath': event.pathname, 'mode': MODE_DELETE})
 
     def process_default(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
 
+    def notifier_loop_callback(self, notifier):
 
-    def check_rabbit_MQ(self, notifier):
+        while len(self.file_events) > 0:
+            file_info = self.file_events.popleft()
+
+            if(file_info['mode'] == MODE_CREATE):
+                os.rename(file_info['old_filepath'], file_info['filepath'])
+
+            self.update_airtime(file_info['filepath'], file_info['mode'])
+
         try:
             notifier.connection.drain_events(timeout=int(config["check_airtime_events"]))
         except Exception, e:
@@ -371,17 +355,15 @@ if __name__ == '__main__':
             time.sleep(5)
 
         storage_directory = response["stor"]
-        plupload_directory = response["plupload"]
 
         wm = WatchManager()
-
         wdd = wm.add_watch(storage_directory, mask, rec=True, auto_add=True)
         logger.info("Added watch to %s", storage_directory)
         logger.info("wdd result %s", wdd[storage_directory])
 
         notifier = AirtimeNotifier(wm, mm, read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()
-        notifier.loop(callback=mm.check_rabbit_MQ)
+        notifier.loop(callback=mm.notifier_loop_callback)
     except KeyboardInterrupt:
         notifier.stop()
     except Exception, e:
