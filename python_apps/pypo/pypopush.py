@@ -134,15 +134,16 @@ class PypoPush(Thread):
             pass
             #logger.debug('Empty schedule')
 
-        try:
-            if not currently_on_air and self.liquidsoap_state_play:
-                logger.debug('Notifying Liquidsoap to stop playback.')
+        if not currently_on_air and self.liquidsoap_state_play:
+            logger.debug('Notifying Liquidsoap to stop playback.')
+            try:
                 tn = telnetlib.Telnet(LS_HOST, LS_PORT)
                 tn.write('source.skip\n')
                 tn.write('exit\n')
                 tn.read_all()
-                self.liquidsoap_state_play = False
-        except Exception, e:
+            except Exception, e:
+                logger.debug(e)
+
             self.liquidsoap_state_play = False
             logger.debug('Could not connect to liquidsoap')
             
@@ -241,6 +242,5 @@ class PypoPush(Thread):
             try: self.push('scheduler')
             except Exception, e:
                 logger.error('Pypo Push Error, exiting: %s', e)
-                sys.exit()
             time.sleep(PUSH_INTERVAL)
             loops += 1
