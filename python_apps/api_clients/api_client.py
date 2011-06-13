@@ -359,6 +359,25 @@ class AirTimeApiClient(ApiClientInterface):
 
         return response
 
+    def setup_media_monitor(self):
+        logger = logging.getLogger()
+
+        response = None
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_setup_url"])
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            logger.debug(url)
+
+            response = urllib.urlopen(url)
+            response = json.loads(response.read())
+            logger.debug("Json Media Setup %s", response)
+
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+
+        return response
+
     def check_media_status(self, md5):
         logger = logging.getLogger()
 

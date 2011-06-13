@@ -29,7 +29,7 @@ MODE_CREATE = "create"
 MODE_MODIFY = "modify"
 
 global storage_directory
-storage_directory = "/srv/airtime/stor"
+global plupload_directory
 
 # configure logging
 try:
@@ -136,7 +136,7 @@ class MediaMonitor(ProcessEvent):
         connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
         channel = connection.channel()
 
-        self.producer = Producer(channel, exchange=schedule_exchange, serializer="json")
+        #self.producer = Producer(channel, exchange=schedule_exchange, serializer="json")
         #producer.publish({"name": "/tmp/lolcat1.avi", "size": 1301013})
 
     def get_md5(self, filepath):
@@ -280,9 +280,6 @@ class MediaMonitor(ProcessEvent):
         else :
             return False
 
-    def setUpMediaMonitor(self, event):
-        pass
-
     def process_IN_CREATE(self, event):
         if not event.dir:
             #file created is a tmp file which will be modified and then moved back to the original filename.
@@ -335,7 +332,7 @@ class MediaMonitor(ProcessEvent):
 
     def process_IN_DELETE(self, event):
 
-        self.producer.publish({"name": "Hi!"})
+        #self.producer.publish({"name": "Hi!"})
 
         self.logger.info("%s: %s", event.maskname, event.pathname)
 
@@ -366,13 +363,26 @@ if __name__ == '__main__':
                 pyinotify.IN_DELETE_SELF
         #mask = pyinotify.ALL_EVENTS
 
-        wm = WatchManager()
-        wdd = wm.add_watch(storage_directory, mask, rec=True, auto_add=True)
-
         logger = logging.getLogger('root')
-        logger.info("Added watch to %s", storage_directory)
-
         mm = MediaMonitor()
+
+        response = None
+        while response is None:
+            response = mm.api_client.setup_media_monitor()
+            time.sleep(5)
+
+        storage_directory = response["stor"]
+        plupload_directory = response["plupload"]
+
+        wm = WatchManager()
+
+        wdd = wm.add_watch(storage_directory, mask, rec=True, auto_add=True)
+        logger.info("Added watch to %s", storage_directory)
+        logger.info("wdd result %s", wdd[storage_directory])
+
+        wdd = wm.add_watch(plupload_directory, mask, rec=False, auto_add=True)
+        logger.info("Added watch to %s", plupload_directory)
+        logger.info("wdd result %s", wdd[plupload_directory])
 
         notifier = AirtimeNotifier(wm, mm, read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()

@@ -10,6 +10,7 @@ class ApiController extends Zend_Controller_Action
         $context->addActionContext('version', 'json')
                 ->addActionContext('recorded-shows', 'json')
                 ->addActionContext('upload-recorded', 'json')
+                ->addActionContext('media-monitor-setup', 'json')
                 ->addActionContext('media-item-status', 'json')
                 ->addActionContext('reload-metadata', 'json')
                 ->initContext();

@@ -633,7 +633,6 @@ class StoredFile {
 		header("Pragma: no-cache");
 
 		// Settings
-		//$p_targetDir = ini_get("upload_tmp_dir"); //. DIRECTORY_SEPARATOR . "plupload";
 		$cleanupTargetDir = false; // Remove old files
 		$maxFileAge = 60 * 60; // Temp file age in seconds
 
@@ -733,6 +732,9 @@ class StoredFile {
                     return $duplicate;
                 }
 			}
+		}
+		else {
+
 		}
 
     }
