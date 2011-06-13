@@ -29,7 +29,6 @@ MODE_CREATE = "create"
 MODE_MODIFY = "modify"
 
 global storage_directory
-global plupload_directory
 
 # configure logging
 try:
@@ -297,13 +296,13 @@ class MediaMonitor(ProcessEvent):
                         #shutil.move(event.pathname, filepath)
                         os.rename(event.pathname, filepath)
 
-                        try:
+                        #try:
                             #set the owner of the imported file.
-                            pypo_uid = getpwnam('pypo')[2]
-                            os.chown(filepath, pypo_uid, -1)
-                        except Exception, e:
-                            self.logger.debug("Cannot change owner of file.")
-                            self.logger.debug("Error: %s:", e)
+                            #pypo_uid = getpwnam('pypo')[2]
+                            #os.chown(filepath, pypo_uid, -1)
+                        #except Exception, e:
+                            #self.logger.debug("Cannot change owner of file.")
+                            #self.logger.debug("Error: %s:", e)
 
                         self.update_airtime(filepath, MODE_CREATE)
 
@@ -379,10 +378,6 @@ if __name__ == '__main__':
         wdd = wm.add_watch(storage_directory, mask, rec=True, auto_add=True)
         logger.info("Added watch to %s", storage_directory)
         logger.info("wdd result %s", wdd[storage_directory])
-
-        wdd = wm.add_watch(plupload_directory, mask, rec=False, auto_add=True)
-        logger.info("Added watch to %s", plupload_directory)
-        logger.info("wdd result %s", wdd[plupload_directory])
 
         notifier = AirtimeNotifier(wm, mm, read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()

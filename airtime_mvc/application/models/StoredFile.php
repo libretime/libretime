@@ -734,7 +734,10 @@ class StoredFile {
 			}
 		}
 		else {
-
+		    global $CC_CONFIG;
+		    $stor = $CC_CONFIG["storageDir"];
+		    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
+            $r = @copy($audio_file, $audio_stor);
 		}
 
     }
