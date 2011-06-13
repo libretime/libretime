@@ -130,12 +130,25 @@ class MediaMonitor(ProcessEvent):
         self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger('root')
         self.temp_files = {}
+        self.moved_files = {}
         self.file_events = deque()
+
+        self.mask =  pyinotify.IN_CREATE | \
+                pyinotify.IN_MODIFY | \
+                pyinotify.IN_MOVED_FROM | \
+                pyinotify.IN_MOVED_TO | \
+                pyinotify.IN_DELETE | \
+                pyinotify.IN_DELETE_SELF
+
+        self.wm = WatchManager()
 
         schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
         schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
         connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
         channel = connection.channel()
+
+    def watch_directory(self, directory):
+        return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
     def get_md5(self, filepath):
         f = open(filepath, 'rb')
@@ -163,24 +176,22 @@ class MediaMonitor(ProcessEvent):
         return length
 
     def ensure_dir(self, filepath):
-
         directory = os.path.dirname(filepath)
 
         try:
             omask = os.umask(0)
             if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
                 os.makedirs(directory, 02775)
+                self.watch_directory(directory)
         finally:
             os.umask(omask)
 
-
     def create_unique_filename(self, filepath):
 
-        file_dir = os.path.dirname(filepath)
-        filename = os.path.basename(filepath).split(".")[0]
-        file_ext = os.path.splitext(filepath)[1]
-
         if(os.path.exists(filepath)):
+            file_dir = os.path.dirname(filepath)
+            filename = os.path.basename(filepath).split(".")[0]
+            file_ext = os.path.splitext(filepath)[1]
             i = 1;
             while(True):
                 new_filepath = "%s/%s(%s).%s" % (file_dir, filename, i, file_ext)
@@ -329,7 +340,7 @@ class MediaMonitor(ProcessEvent):
             self.update_airtime(file_info['filepath'], file_info['mode'])
 
         try:
-            notifier.connection.drain_events(timeout=int(config["check_airtime_events"]))
+            notifier.connection.drain_events(timeout=1)
         except Exception, e:
                 logger = logging.getLogger('root')
                 logger.info("%s", e)
@@ -337,15 +348,6 @@ class MediaMonitor(ProcessEvent):
 if __name__ == '__main__':
 
     try:
-        # watched events
-        mask =  pyinotify.IN_CREATE | \
-                pyinotify.IN_MODIFY | \
-                pyinotify.IN_MOVED_FROM | \
-                pyinotify.IN_MOVED_TO | \
-                pyinotify.IN_DELETE | \
-                pyinotify.IN_DELETE_SELF
-        #mask = pyinotify.ALL_EVENTS
-
         logger = logging.getLogger('root')
         mm = MediaMonitor()
 
@@ -355,15 +357,26 @@ if __name__ == '__main__':
             time.sleep(5)
 
         storage_directory = response["stor"]
+        plupload_directory = response["plupload"]
 
-        wm = WatchManager()
-        wdd = wm.add_watch(storage_directory, mask, rec=True, auto_add=True)
+        wdd = mm.watch_directory(storage_directory)
         logger.info("Added watch to %s", storage_directory)
         logger.info("wdd result %s", wdd[storage_directory])
+        wdd = mm.watch_directory(plupload_directory)
+        logger.info("Added watch to %s", plupload_directory)
+        logger.info("wdd result %s", wdd[plupload_directory])
 
-        notifier = AirtimeNotifier(wm, mm, read_freq=int(config["check_filesystem_events"]), timeout=1)
+        notifier = AirtimeNotifier(mm.wm, mm, read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()
-        notifier.loop(callback=mm.notifier_loop_callback)
+
+        #notifier.loop(callback=mm.notifier_loop_callback)
+
+        while True:
+            if(notifier.check_events(1)):
+                notifier.read_events()
+                notifier.process_events()
+            mm.notifier_loop_callback(notifier)
+
     except KeyboardInterrupt:
         notifier.stop()
     except Exception, e:
