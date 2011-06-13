@@ -331,8 +331,7 @@ fieldset.plain {
 .padded-strong {
 	padding:10px;
 }
-.input_text {
-    background:#dddddd url("images/input_bg.png") repeat-x scroll 0 0 ;
+.input_text, input[type="text"], input[type="password"] {
 	font-family:Arial, Helvetica, sans-serif;
 	border: 1px solid #5b5b5b;
     font-size: 12px;
@@ -341,14 +340,22 @@ fieldset.plain {
     padding: 0;
     text-indent: 3px;
 	width:auto;
+    background-color: #dddddd;
+	border: 1px solid #5b5b5b;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_text_area:focus {
+	border: 1px solid #0088f1;
 }
 .auto-search {
 	background:#dddddd url(images/search_auto_bg.png) no-repeat 0 0;
 	text-indent:25px;
 }
-.input_text_area {
-    background:#dddddd url("images/input_bg.png") repeat-x scroll 0 0 ;
+.input_text_area, textarea {
+    background-color: #dddddd;
 	border: 1px solid #5b5b5b;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;
     font-size: 13px;
     text-indent: 3px;
 }
@@ -1200,10 +1207,14 @@ button, input {
 	margin-right:6px
 }
 .button-bar-top .input_text.hasDatepicker, .input_text.hasDatepicker {
-	background:url(images/input_with_calendar_bg.png) no-repeat right 0;
+	background-image:url(images/input_with_calendar_bg.png);
+	background-repeat:no-repeat;
+	background-position:right 0;
 }
 .input_text.hasTimepicker {
-	background:url(images/input_with_time_bg.png) no-repeat right 0;
+	background-image:url(images/input_with_time_bg.png);
+	background-repeat:no-repeat;
+	background-position:right 0;
 }
 ul.errors {
 	display:block;
@@ -1445,11 +1456,12 @@ div.success{
 }
 .formrow-repeat li {
 	list-style-type:none;
-	margin:0 0 7px 0;
+	margin:0 0 8px 0;
 	padding:0;
-	/*height:26px;*/
+	height:25px;
 	display:block;
 }
+/*
 .formrow-repeat li .ui-button-icon-only {
 	width:1.8em;
 }
@@ -1467,6 +1479,37 @@ div.success{
     display: block;
     line-height: 110%;
 }
+*/
+
+#add_show_rebroadcast_relative .ui-button-icon-only,
+#add_show_rebroadcast_absolute .ui-button-icon-only {
+    width: 1.8em;
+}
+#add_show_rebroadcast_relative .ui-button-icon-only .ui-button-text,
+#add_show_rebroadcast_absolute .ui-button-icon-only .ui-button-text,
+#add_show_rebroadcast_relative .ui-button-icons-only .ui-button-text,
+#add_show_rebroadcast_absolute .ui-button-icons-only .ui-button-text,
+#add_show_rebroadcast_relative .ui-button-text-icon-primary .ui-button-text,
+#add_show_rebroadcast_absolute .ui-button-text-icon-primary .ui-button-text {
+	font-size:12px;
+}
+
+#add_show_rebroadcast_relative .ui-button-icon-only .ui-icon,
+#add_show_rebroadcast_absolute .ui-button-icon-only .ui-icon {
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+}
+#add_show_rebroadcast_relative .ui-button-text-icon-primary .ui-icon,
+#add_show_rebroadcast_absolute .ui-button-text-icon-primary .ui-icon {
+    left: 0.4em;
+}
+#add_show_rebroadcast_relative .ui-button .ui-button-text,
+#add_show_rebroadcast_absolute .ui-button .ui-button-text {
+    display: block;
+    line-height: 14px;
+}
+
 .formrow-repeat li .inline-text {
     color: #666666;
 	padding: 0 6px 0 0;
@@ -1612,4 +1655,72 @@ dd.radio-inline-list, .preferences dd.radio-inline-list {
 /* HACK, to be removed after 1.7.0 */
 button.ui-button.md-cancel {
         padding: .4em 1em;
+}
+
+/*--//////////////////////// Changes/add-ons Jun 8th, 2011 ////////////////////////--*/
+
+.dialogPopup.ui-dialog-content {
+	padding: 0.9em 1em;
+}
+.dialogPopup dl {
+	margin:0;
+	padding:0;
+}
+.dialogPopup dt {
+	margin:0;
+	padding: 0 0 5px;
+}
+.dialogPopup dt label {
+	font-weight: bold;
+}
+.dialogPopup dd {
+	margin:0 0 4px 0;
+	padding: 0 0 5px;
+}
+.dialogPopup dd input[type="text"]{
+	width:100%;
+}
+
+.info-text p {
+	font-size:12px;
+	color:#5b5b5b;
+	line-height:150%;
+	margin-top:0;
+}
+
+.dialogPopup label input[type="checkbox"] {
+	float:left;
+	margin-right:6px;
+}
+
+.dialogPopup fieldset {
+	padding: 10px;
+}
+.dialogPopup fieldset dd input[type="text"] {
+	width:99%;
+}
+fieldset.display_field {
+	background-color:#d5d5d5;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;
+}
+label span {
+	font-weight:normal;
+}
+
+.dialogPopup .display_field dt, .dialogPopup .display_field dd {
+    color: #353535;
+    float: left;
+    font-size: 13px;
+    margin: 0;
+    min-width: 90px;
+    padding: 6px 0;
+    text-align: left;
+	width:60%;
+
+}
+
+.dialogPopup .display_field dt {
+    clear: left;
+	font-weight:bold;
+	width:40%;
 }
