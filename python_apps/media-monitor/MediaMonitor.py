@@ -258,10 +258,15 @@ class MediaMonitor(ProcessEvent):
             if key in attrs :
                 md[attrs[key]] = file_info[key][0]
 
-        md['MDATA_KEY_MIME'] = file_info.mime[0]
         md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
         md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
         md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
+        md['MDATA_KEY_MIME'] = file_info.mime[0]
+
+        if "mp3" in md['MDATA_KEY_MIME']:
+            md['MDATA_KEY_FTYPE'] = "audioclip"
+        elif "vorbis" in md['MDATA_KEY_MIME']:
+            md['MDATA_KEY_FTYPE'] = "audioclip"
 
         return md
 

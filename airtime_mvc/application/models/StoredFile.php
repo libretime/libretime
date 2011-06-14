@@ -40,7 +40,8 @@ class StoredFile {
         "sample_rate" => "DbSampleRate",
         "mime" => "DbMime",
         "filepath" => "DbFilepath",
-        "md5" => "DbMd5"
+        "md5" => "DbMd5",
+        "ftype" => "DbFtype"
     );
 
     public function __construct()
@@ -390,15 +391,6 @@ class StoredFile {
         $storedFile->_file = $file;
 
         if(isset($md)) {
-            if(isset($md['MDATA_KEY_MIME'])) {
-                if (preg_match("/mp3/i", $md['MDATA_KEY_MIME'])) {
-                    $file->setDbFtype("audioclip");
-                }
-                else if (preg_match("/vorbis/i", $md['MDATA_KEY_MIME'])) {
-                    $file->setDbFtype("audioclip");
-                }
-            }
-
             $storedFile->setMetadata($md);
        }
 

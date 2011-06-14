@@ -12,6 +12,7 @@ define('MDATA_KEY_CREATOR', 'artist_name');
 define('MDATA_KEY_SOURCE', 'album_title');
 define('MDATA_KEY_DURATION', 'length');
 define('MDATA_KEY_MIME', 'mime');
+define('MDATA_KEY_FTYPE', 'ftype');
 define('MDATA_KEY_URL', 'url');
 define('MDATA_KEY_GENRE', 'genre');
 define('MDATA_KEY_MOOD', 'mood');
