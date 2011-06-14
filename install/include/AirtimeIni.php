@@ -70,7 +70,7 @@ class AirtimeIni
             echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."/../../python_apps/pypo/scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
+        if (!copy(__DIR__."/../../python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }

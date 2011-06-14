@@ -138,7 +138,7 @@ function CreateIniFiles()
         echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy($AIRTIME_PYTHON_APPS."/pypo/scripts/liquidsoap.cfg", CONF_FILE_LIQUIDSOAP)){
+    if (!copy($AIRTIME_PYTHON_APPS."/pypo/liquidsoap_scripts/liquidsoap.cfg", CONF_FILE_LIQUIDSOAP)){
         echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
         exit(1);
     }
