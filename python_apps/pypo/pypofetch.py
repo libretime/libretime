@@ -12,6 +12,7 @@ import telnetlib
 import math
 from threading import Thread
 from subprocess import Popen, PIPE
+from datetime import datetime
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
@@ -99,34 +100,50 @@ class PypoFetch(Thread):
             logger.error("  * See this page for more info (v1.7): http://wiki.sourcefabric.org/x/BQBF")
             logger.error("  * and also the 'FAQ and Support' page underneath it.")  
 
-    def is_playlist_currently_scheduled(playlists):
-        timenow = time.time()
-        tnow = time.localtime(timenow)
-        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-        
-        for pkey in playlists:
-            start = schedule[pkey]['start']
-            end = schedule[pkey]['end']
+    def get_currently_scheduled(self, playlistsOrMedias, str_tnow_s):
+        for key in playlistsOrMedias:
+            start = playlistsOrMedias[key]['start']
+            end = playlistsOrMedias[key]['end']
             
             if start <= str_tnow_s and str_tnow_s < end:
-                return pkey
+                return key
                 
-        return ""
+        return None  
 
-    def handle_shows_currently_scheduled(playlists):
-        current_pkey = is_playlist_currently_scheduled(playlists)
-        if current_pkey != "":
-            current_playlist = playlists[current_pkey]
-            
-            
+    def handle_shows_currently_scheduled(self, playlists):
+        logger = logging.getLogger('fetch')
     
+        dtnow = datetime.today()
+        tnow = dtnow.timetuple()
+    
+        #timenow = time.time()
+        #tnow = time.localtime(timenow) #tnow is struct_time. localtime is non-utc
+        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
+        
+        current_pkey = self.get_currently_scheduled(playlists, str_tnow_s)
+        if current_pkey is not None:
+            logger.debug("FOUND CURRENT PLAYLIST %s", current_pkey)
+            # So we have found that a playlist if currently scheduled
+            # even though we just started pypo. Perhaps there was a
+            # system crash. Lets calculate what position in the playlist
+            # we are supposed to be in.
+            medias = playlists[current_pkey]["medias"]
+            current_mkey = self.get_currently_scheduled(medias, str_tnow_s)
+            if current_mkey is not None:
+                mkey_split = map(int, current_mkey.split('-'))
+                media_start = datetime(mkey_split[0], mkey_split[1], mkey_split[2], mkey_split[3], mkey_split[4], mkey_split[5])
+                logger.debug("Found media item that started at %s.", media_start)
+                
+                delta = dtnow - media_start #we get a TimeDelta object from this operation
+                logger.info("Starting media item  at %d second point", delta.seconds)
+
     """
     Process the schedule
      - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
      - Saves a serialized file of the schedule
      - playlists are prepared. (brought to liquidsoap format) and, if not mounted via nsf, files are copied
        to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
-     - runs the cleanup routine, to get rid of unused cashed files
+     - runs the cleanup routine, to get rid of unused cached files
     """
     def process_schedule(self, schedule_data, export_source, bootstrapping):
         logger = logging.getLogger('fetch')
@@ -196,16 +213,6 @@ class PypoFetch(Thread):
                 except Exception, e:
                     pass
 
-                #logger.debug('*****************************************')
-                #logger.debug('pkey:        ' + str(pkey))
-                #logger.debug('cached at :  ' + self.cache_dir + str(pkey))
-                #logger.debug('subtype:     ' + str(playlist['subtype']))
-                #logger.debug('played:      ' + str(playlist['played']))
-                #logger.debug('schedule id: ' + str(playlist['schedule_id']))
-                #logger.debug('duration:    ' + str(playlist['duration']))
-                #logger.debug('source id:   ' + str(playlist['x_ident']))
-                #logger.debug('*****************************************')
-
                 if int(playlist['played']) == 1:
                     logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
 
@@ -227,7 +234,8 @@ class PypoFetch(Thread):
         ls_playlist = []
 
         logger = logging.getLogger('fetch')
-        for media in playlist['medias']:
+        for key in playlist['medias']:
+            media = playlist['medias'][key]
             logger.debug("Processing track %s", media['uri'])
 
             fileExt = os.path.splitext(media['uri'])[1]
@@ -257,8 +265,6 @@ class PypoFetch(Thread):
                         'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",schedule_table_id="%s":%s'\
                         % (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), \
                             str(float(media['fade_out']) / 1000), media['row_id'],dst)
-
-                        #logger.debug(pl_entry)
 
                         """
                         Tracks are only added to the playlist if they are accessible
