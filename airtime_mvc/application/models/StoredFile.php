@@ -390,11 +390,13 @@ class StoredFile {
         $storedFile->_file = $file;
 
         if(isset($md)) {
-            if (preg_match("/mp3/i", $md['MDATA_KEY_MIME'])) {
-                $file->setDbFtype("audioclip");
-            }
-            else if (preg_match("/vorbis/i", $md['MDATA_KEY_MIME'])) {
-                $file->setDbFtype("audioclip");
+            if(isset($md['MDATA_KEY_MIME'])) {
+                if (preg_match("/mp3/i", $md['MDATA_KEY_MIME'])) {
+                    $file->setDbFtype("audioclip");
+                }
+                else if (preg_match("/vorbis/i", $md['MDATA_KEY_MIME'])) {
+                    $file->setDbFtype("audioclip");
+                }
             }
 
             $storedFile->setMetadata($md);
@@ -731,10 +733,18 @@ class StoredFile {
 			}
 		}
 		else {
+
 		    global $CC_CONFIG;
 		    $stor = $CC_CONFIG["storageDir"];
 		    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
-            $r = @copy($audio_file, $audio_stor);
+            $r = @rename($audio_file, $audio_stor);
+
+            $md = array();
+            $md['MDATA_KEY_MD5'] = $md5;
+            $md['MDATA_KEY_FILEPATH'] = $audio_stor;
+            $md['MDATA_KEY_TITLE'] = $fileName;
+
+		    StoredFile::Insert($md);
 		}
 
     }

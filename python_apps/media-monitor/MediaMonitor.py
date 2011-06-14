@@ -28,9 +28,11 @@ from api_clients import api_client
 
 MODE_CREATE = "create"
 MODE_MODIFY = "modify"
+MODE_MOVED = "moved"
 MODE_DELETE = "delete"
 
 global storage_directory
+global plupload_directory
 
 # configure logging
 try:
@@ -150,6 +152,9 @@ class MediaMonitor(ProcessEvent):
     def watch_directory(self, directory):
         return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
+    def is_parent_directory(self, filepath, directory):
+        return (directory == filepath[0:len(directory)])
+
     def get_md5(self, filepath):
         f = open(filepath, 'rb')
         m = hashlib.md5()
@@ -242,31 +247,50 @@ class MediaMonitor(ProcessEvent):
 
         return filepath
 
+    def get_mutagen_info(self, filepath):
+        md = {}
+        md5 = self.get_md5(filepath)
+        md['MDATA_KEY_MD5'] = md5
 
-    def update_airtime(self, filepath, mode):
+        file_info = mutagen.File(filepath, easy=True)
+        attrs = self.mutagen2airtime
+        for key in file_info.keys() :
+            if key in attrs :
+                md[attrs[key]] = file_info[key][0]
 
-        if ((os.path.exists(filepath) and (mode == MODE_CREATE or mode == MODE_MODIFY)) or mode == MODE_DELETE):
-            self.logger.info("Updating Change to Airtime")
-            md = {}
-            md['MDATA_KEY_FILEPATH'] = filepath
+        md['MDATA_KEY_MIME'] = file_info.mime[0]
+        md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
+        md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
+        md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
 
-            if(mode == MODE_CREATE or mode == MODE_MODIFY):
-                md5 = self.get_md5(filepath)
-                md['MDATA_KEY_MD5'] = md5
+        return md
 
-                file_info = mutagen.File(filepath, easy=True)
-                attrs = self.mutagen2airtime
-                for key in file_info.keys() :
-                    if key in attrs :
-                        md[attrs[key]] = file_info[key][0]
 
-                md['MDATA_KEY_MIME'] = file_info.mime[0]
-                md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
-                md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
-                md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
+    def update_airtime(self, **kwargs):
 
+        filepath = kwargs['filepath']
+        mode = kwargs['mode']
+
+        data = None
+        md = {}
+        md['MDATA_KEY_FILEPATH'] = filepath
+
+        if (os.path.exists(filepath) and (mode == MODE_CREATE)):
+            mutagen = self.get_mutagen_info(filepath)
+            md.update(mutagen)
+            data = {'md': md}
+        elif (os.path.exists(filepath) and (mode == MODE_MODIFY)):
+            mutagen = self.get_mutagen_info(filepath)
+            md.update(mutagen)
+            data = {'md': md}
+        elif (mode == MODE_MOVED):
+            md['new_filepath'] = kwargs['new_filepath']
+            data = {'md': md}
+        elif (mode == MODE_DELETE):
             data = {'md': md}
 
+        if data is not None:
+            self.logger.info("Updating Change to Airtime")
             response = None
             while response is None:
                 response = self.api_client.update_media_metadata(data, mode)
@@ -296,13 +320,16 @@ class MediaMonitor(ProcessEvent):
                 self.temp_files[event.pathname] = None
             #This is a newly imported file.
             else :
-                md5 = self.get_md5(event.pathname)
-                response = self.api_client.check_media_status(md5)
+                global plupload_directory
+                #files that have been added through plupload have a placeholder already put in Airtime's database.
+                if not self.is_parent_directory(event.pathname, plupload_directory)
+                    md5 = self.get_md5(event.pathname)
+                    response = self.api_client.check_media_status(md5)
 
-                #this file is new, md5 does not exist in Airtime.
-                if(response['airtime_status'] == 0):
-                    filepath = self.create_file_path(event.pathname)
-                    self.file_events.append({'old_filepath': event.pathname, 'mode': MODE_CREATE, 'filepath': filepath})
+                    #this file is new, md5 does not exist in Airtime.
+                    if(response['airtime_status'] == 0):
+                        filepath = self.create_file_path(event.pathname)
+                        self.file_events.append({'old_filepath': event.pathname, 'mode': MODE_CREATE, 'filepath': filepath})
 
     def process_IN_MODIFY(self, event):
         if not event.dir:
@@ -315,12 +342,18 @@ class MediaMonitor(ProcessEvent):
         if event.pathname in self.temp_files:
             del self.temp_files[event.pathname]
             self.temp_files[event.cookie] = event.pathname
+        else:
+            self.moved_files[event.cookie] = event.pathname
 
     def process_IN_MOVED_TO(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
         if event.cookie in self.temp_files:
             del self.temp_files[event.cookie]
             self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
+        elif event.cookie in self.moved_files:
+            old_filepath = self.moved_files[event.cookie]
+            del self.moved_files[event.cookie]
+            self.file_events.append({'filepath': old_filepath,'new_filepath': event.pathname, 'mode': MODE_MOVED})
 
     def process_IN_DELETE(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
@@ -337,13 +370,12 @@ class MediaMonitor(ProcessEvent):
             if(file_info['mode'] == MODE_CREATE):
                 os.rename(file_info['old_filepath'], file_info['filepath'])
 
-            self.update_airtime(file_info['filepath'], file_info['mode'])
+            self.update_airtime(file_info)
 
         try:
             notifier.connection.drain_events(timeout=1)
         except Exception, e:
-                logger = logging.getLogger('root')
-                logger.info("%s", e)
+            self.logger.info("%s", e)
 
 if __name__ == '__main__':
 
