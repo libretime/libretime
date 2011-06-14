@@ -184,7 +184,9 @@ class ScheduleGroup {
         ." st.cue_out,"
         ." st.clip_length,"
         ." st.fade_in,"
-        ." st.fade_out"
+        ." st.fade_out,"
+        ." st.starts,"
+        ." st.ends"
         ." FROM $CC_CONFIG[scheduleTable] as st"
         ." LEFT JOIN $CC_CONFIG[showInstances] as si"
         ." ON st.instance_id = si.id"
@@ -701,7 +703,8 @@ class Schedule {
                 if (Schedule::TimeDiff($item["cue_out"], $item["clip_length"]) > 0.001) {
                     $cueOut = Schedule::WallTimeToMillisecs($item["cue_out"]);
                 }
-                $medias[] = array(
+                $starts = Schedule::AirtimeTimeToPypoTime($item["starts"]);
+                $medias[$starts] = array(
                     'row_id' => $item["id"],
                     'id' => $storedFile->getGunid(),
                     'uri' => $uri,
@@ -710,7 +713,9 @@ class Schedule {
                     'fade_cross' => 0,
                     'cue_in' => Schedule::WallTimeToMillisecs($item["cue_in"]),
                     'cue_out' => $cueOut,
-                    'export_source' => 'scheduler'
+                    'export_source' => 'scheduler',
+                    'start' => $starts,
+                    'end' => Schedule::AirtimeTimeToPypoTime($item["ends"])
                 );
             }
             $playlist['medias'] = $medias;
