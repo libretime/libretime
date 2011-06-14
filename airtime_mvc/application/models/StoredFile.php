@@ -737,7 +737,6 @@ class StoredFile {
 		    global $CC_CONFIG;
 		    $stor = $CC_CONFIG["storageDir"];
 		    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
-            $r = @rename($audio_file, $audio_stor);
 
             $md = array();
             $md['MDATA_KEY_MD5'] = $md5;
@@ -745,6 +744,7 @@ class StoredFile {
             $md['MDATA_KEY_TITLE'] = $fileName;
 
 		    StoredFile::Insert($md);
+            $r = @rename($audio_file, $audio_stor);
 		}
 
     }

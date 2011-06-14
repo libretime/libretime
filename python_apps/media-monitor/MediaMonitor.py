@@ -266,10 +266,10 @@ class MediaMonitor(ProcessEvent):
         return md
 
 
-    def update_airtime(self, **kwargs):
+    def update_airtime(self, d):
 
-        filepath = kwargs['filepath']
-        mode = kwargs['mode']
+        filepath = d['filepath']
+        mode = d['mode']
 
         data = None
         md = {}
@@ -284,7 +284,8 @@ class MediaMonitor(ProcessEvent):
             md.update(mutagen)
             data = {'md': md}
         elif (mode == MODE_MOVED):
-            md['new_filepath'] = kwargs['new_filepath']
+            mutagen = self.get_mutagen_info(filepath)
+            md.update(mutagen)
             data = {'md': md}
         elif (mode == MODE_DELETE):
             data = {'md': md}
@@ -322,7 +323,7 @@ class MediaMonitor(ProcessEvent):
             else :
                 global plupload_directory
                 #files that have been added through plupload have a placeholder already put in Airtime's database.
-                if not self.is_parent_directory(event.pathname, plupload_directory)
+                if not self.is_parent_directory(event.pathname, plupload_directory):
                     md5 = self.get_md5(event.pathname)
                     response = self.api_client.check_media_status(md5)
 
@@ -334,8 +335,11 @@ class MediaMonitor(ProcessEvent):
     def process_IN_MODIFY(self, event):
         if not event.dir:
             self.logger.info("%s: %s", event.maskname, event.pathname)
-            if self.is_audio_file(event.name) :
-                self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
+            global plupload_directory
+            #files that have been added through plupload have a placeholder already put in Airtime's database.
+            if not self.is_parent_directory(event.pathname, plupload_directory):
+                if self.is_audio_file(event.name) :
+                    self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
 
     def process_IN_MOVED_FROM(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
@@ -353,11 +357,22 @@ class MediaMonitor(ProcessEvent):
         elif event.cookie in self.moved_files:
             old_filepath = self.moved_files[event.cookie]
             del self.moved_files[event.cookie]
-            self.file_events.append({'filepath': old_filepath,'new_filepath': event.pathname, 'mode': MODE_MOVED})
+
+            global plupload_directory
+            #add a modify event to send md to Airtime for the plupload file.
+            if self.is_parent_directory(old_filepath, plupload_directory):
+                #file renamed from /tmp/plupload does not have a path in our naming scheme yet.
+                md_filepath = self.create_file_path(event.pathname)
+                #move the file a second time to its correct Airtime naming schema.
+                os.rename(event.pathname, md_filepath)
+                self.file_events.append({'filepath': md_filepath, 'mode': MODE_MOVED})
+            else:
+                self.file_events.append({'filepath': event.pathname, 'mode': MODE_MOVED})
 
     def process_IN_DELETE(self, event):
-        self.logger.info("%s: %s", event.maskname, event.pathname)
-        self.file_events.append({'filepath': event.pathname, 'mode': MODE_DELETE})
+        if not event.dir:
+            self.logger.info("%s: %s", event.maskname, event.pathname)
+            self.file_events.append({'filepath': event.pathname, 'mode': MODE_DELETE})
 
     def process_default(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)

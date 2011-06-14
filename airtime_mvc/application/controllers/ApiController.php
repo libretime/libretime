@@ -370,8 +370,15 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
+        $plupload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+
+        //need to make sure plupload dir exists so we can watch it.
+        if(!file_exists($plupload_dir)) {
+            @mkdir($plupload_dir, 0755);
+        }
+
         $this->view->stor = $CC_CONFIG['storageDir'];
-        $this->view->plupload = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+        $this->view->plupload = $plupload_dir;
     }
 
     public function mediaItemStatusAction() {
@@ -414,7 +421,6 @@ class ApiController extends Zend_Controller_Action
 
         if ($mode == "create") {
             $md5 = $md['MDATA_KEY_MD5'];
-
             $file = StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {
@@ -441,16 +447,15 @@ class ApiController extends Zend_Controller_Action
             }
         }
         else if ($mode == "moved") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = str_replace("\\", "", $filepath);
-            $file = StoredFile::RecallByFilepath($filepath);
+            $md5 = $md['MDATA_KEY_MD5'];
+            $file = StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
                 return;
             }
             else {
-                $file->setMetadataValue('MDATA_KEY_FILEPATH', $md['new_filepath']);
+                $file->setMetadata($md);
             }
         }
         else if ($mode == "delete") {
