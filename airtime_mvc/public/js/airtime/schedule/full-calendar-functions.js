@@ -109,11 +109,32 @@ function dayClick(date, allDay, jsEvent, view) {
         else {
             chosenTime = hours+":"+min;
         }
+        
+        if(hours < 10){
+        	chosenTime = "0"+chosenTime;
+        }
+        
+        var endHour = hours + 1;
+        var chosenEndTime;
+        
+        if(min < 10){
+        	chosenEndTime = endHour+":0"+min;
+        }
+        else {
+        	chosenEndTime = endHour+":"+min;
+        }
+        
+        if(endHour < 10){
+        	chosenEndTime = "0"+chosenEndTime;
+        }
 
         $("#add_show_start_date").val(chosenDate);
+        $("#add_show_end_date_no_repeat").val(chosenDate);
         $("#add_show_end_date").datepicker("option", "minDate", chosenDate);
         $("#add_show_end_date").val(chosenDate);
         $("#add_show_start_time").val(chosenTime);
+        $("#add_show_end_time").val(chosenEndTime);
+        $("#add_show_duration").val('1h');
         $("#schedule-show-when").show();
 
 	    openAddShowForm();
