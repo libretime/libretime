@@ -145,12 +145,14 @@ class MediaMonitor(ProcessEvent):
         self.moved_files = {}
         self.file_events = deque()
 
-        self.mask =  pyinotify.IN_CREATE | \
-                pyinotify.IN_MODIFY | \
-                pyinotify.IN_MOVED_FROM | \
-                pyinotify.IN_MOVED_TO | \
-                pyinotify.IN_DELETE | \
-                pyinotify.IN_DELETE_SELF
+        #self.mask =  pyinotify.IN_CREATE | \
+                #pyinotify.IN_MODIFY | \
+                #pyinotify.IN_MOVED_FROM | \
+                #pyinotify.IN_MOVED_TO | \
+                #pyinotify.IN_DELETE | \
+                #pyinotify.IN_DELETE_SELF
+
+        self.mask = pyinotify.ALL_EVENTS
 
         self.wm = WatchManager()
 
@@ -206,10 +208,11 @@ class MediaMonitor(ProcessEvent):
         if(os.path.exists(filepath)):
             file_dir = os.path.dirname(filepath)
             filename = os.path.basename(filepath).split(".")[0]
+            #will be in the format .ext
             file_ext = os.path.splitext(filepath)[1]
             i = 1;
             while(True):
-                new_filepath = "%s/%s(%s).%s" % (file_dir, filename, i, file_ext)
+                new_filepath = "%s/%s(%s)%s" % (file_dir, filename, i, file_ext)
 
                 if(os.path.exists(new_filepath)):
                     i = i+1;
@@ -225,42 +228,28 @@ class MediaMonitor(ProcessEvent):
         try:
             #get rid of file extention from original name, name might have more than 1 '.' in it.
             original_name = os.path.basename(imported_filepath)
-            #self.logger.info('original name: %s', original_name)
             original_name = original_name.split(".")[0:-1]
-            #self.logger.info('original name: %s', original_name)
             original_name = ''.join(original_name)
-            #self.logger.info('original name: %s', original_name)
 
+            #will be in the format .ext
             file_ext = os.path.splitext(imported_filepath)[1]
-            file_info = mutagen.File(imported_filepath, easy=True)
+            md = self.get_mutagen_info(imported_filepath)
 
-            metadata = {'artist':None,
-                        'album':None,
-                        'title':None,
-                        'tracknumber':None}
+            path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE', 'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
 
-            for key in metadata.keys():
-                if key in file_info:
-                    metadata[key] = file_info[key][0]
+            for m in path_md:
+                if m not in md:
+                    md[m] = 'unknown'
 
-            if metadata['artist'] is not None:
-                base = "%s/%s" % (storage_directory, metadata['artist'])
-                if metadata['album'] is not None:
-                    base = "%s/%s" % (base, metadata['album'])
-                if metadata['title'] is not None:
-                    if metadata['tracknumber'] is not None:
-                        metadata['tracknumber'] = "%02d" % (int(metadata['tracknumber']))
-                        base = "%s/%s - %s" % (base, metadata['tracknumber'], metadata['title'])
-                    else:
-                        base = "%s/%s" % (base, metadata['title'])
-                else:
-                    base = "%s/%s" % (base, original_name)
+            filepath = None
+            if (md['MDATA_KEY_TITLE'] == 'unknown'):
+                filepath = "%s/%s/%s/%s-%s%s" % (storage_directory, md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], original_name, md['MDATA_KEY_BITRATE'], file_ext)
+            elif(md['MDATA_KEY_TRACKNUMBER'] == 'unknown'):
+                filepath = "%s/%s/%s/%s-%s%s" % (storage_directory, md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
-                base = "%s/%s" % (storage_directory, original_name)
+                filepath = "%s/%s/%s/%s-%s-%s%s" % (storage_directory, md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
-            base = "%s%s" % (base, file_ext)
-
-            filepath = self.create_unique_filename(base)
+            filepath = self.create_unique_filename(filepath)
             self.ensure_dir(filepath)
 
         except Exception, e:
@@ -278,6 +267,8 @@ class MediaMonitor(ProcessEvent):
         for key in file_info.keys() :
             if key in attrs :
                 md[attrs[key]] = file_info[key][0]
+
+        #md['MDATA_KEY_TRACKNUMBER'] = "%02d" % (int(md['MDATA_KEY_TRACKNUMBER']))
 
         md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
         md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
@@ -340,8 +331,8 @@ class MediaMonitor(ProcessEvent):
             return False
 
     def process_IN_CREATE(self, event):
+        self.logger.info("%s: %s", event.maskname, event.pathname)
         if not event.dir:
-            self.logger.info("%s: %s", event.maskname, event.pathname)
             #file created is a tmp file which will be modified and then moved back to the original filename.
             if self.is_temp_file(event.name) :
                 self.temp_files[event.pathname] = None
@@ -359,6 +350,10 @@ class MediaMonitor(ProcessEvent):
                         os.rename(event.pathname, filepath)
                         self.file_events.append({'mode': MODE_CREATE, 'filepath': filepath})
 
+        #immediately add a watch on the new directory.
+        else:
+            self.watch_directory(event.pathname)
+
     def process_IN_MODIFY(self, event):
         if not event.dir:
             self.logger.info("%s: %s", event.maskname, event.pathname)
@@ -370,37 +365,39 @@ class MediaMonitor(ProcessEvent):
 
     def process_IN_MOVED_FROM(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
-        if event.pathname in self.temp_files:
-            del self.temp_files[event.pathname]
-            self.temp_files[event.cookie] = event.pathname
-        else:
-            self.moved_files[event.cookie] = event.pathname
+        if not event.dir:
+            if event.pathname in self.temp_files:
+                del self.temp_files[event.pathname]
+                self.temp_files[event.cookie] = event.pathname
+            else:
+                self.moved_files[event.cookie] = event.pathname
 
     def process_IN_MOVED_TO(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
-        if event.cookie in self.temp_files:
-            del self.temp_files[event.cookie]
-            self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
-        elif event.cookie in self.moved_files:
-            old_filepath = self.moved_files[event.cookie]
-            del self.moved_files[event.cookie]
+        if not event.dir:
+            if event.cookie in self.temp_files:
+                del self.temp_files[event.cookie]
+                self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
+            elif event.cookie in self.moved_files:
+                old_filepath = self.moved_files[event.cookie]
+                del self.moved_files[event.cookie]
 
-            global plupload_directory
-            if self.is_parent_directory(old_filepath, plupload_directory):
-                #file renamed from /tmp/plupload does not have a path in our naming scheme yet.
-                md_filepath = self.create_file_path(event.pathname)
-                #move the file a second time to its correct Airtime naming schema.
-                os.rename(event.pathname, md_filepath)
-                self.file_events.append({'filepath': md_filepath, 'mode': MODE_MOVED})
+                global plupload_directory
+                if self.is_parent_directory(old_filepath, plupload_directory):
+                    #file renamed from /tmp/plupload does not have a path in our naming scheme yet.
+                    md_filepath = self.create_file_path(event.pathname)
+                    #move the file a second time to its correct Airtime naming schema.
+                    os.rename(event.pathname, md_filepath)
+                    self.file_events.append({'filepath': md_filepath, 'mode': MODE_MOVED})
+                else:
+                    self.file_events.append({'filepath': event.pathname, 'mode': MODE_MOVED})
+
             else:
-                self.file_events.append({'filepath': event.pathname, 'mode': MODE_MOVED})
-
-        else:
-            #TODO need to pass in if md5 exists to this file creation function, identical files will just replace current files not have a (1) etc.
-            #file has been most likely dropped into stor folder from an unwatched location. (from gui, mv command not cp)
-            md_filepath = self.create_file_path(event.pathname)
-            os.rename(event.pathname, md_filepath)
-            self.file_events.append({'mode': MODE_CREATE, 'filepath': md_filepath})
+                #TODO need to pass in if md5 exists to this file creation function, identical files will just replace current files not have a (1) etc.
+                #file has been most likely dropped into stor folder from an unwatched location. (from gui, mv command not cp)
+                md_filepath = self.create_file_path(event.pathname)
+                os.rename(event.pathname, md_filepath)
+                self.file_events.append({'mode': MODE_CREATE, 'filepath': md_filepath})
 
     def process_IN_DELETE(self, event):
         if not event.dir:
