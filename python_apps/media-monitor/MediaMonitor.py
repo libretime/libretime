@@ -108,7 +108,7 @@ class AirtimeNotifier(Notifier):
             airtime_file.save()
         except Exception, e:
             self.logger.error('Trying to save md')
-            self.logger.error('Exception: %s', e.value)
+            self.logger.error('Exception: %s', e)
             self.logger.error('Filepath %s', m['MDATA_KEY_FILEPATH'])
 
 class MediaMonitor(ProcessEvent):
@@ -144,13 +144,6 @@ class MediaMonitor(ProcessEvent):
         self.temp_files = {}
         self.moved_files = {}
         self.file_events = deque()
-
-        #self.mask =  pyinotify.IN_CREATE | \
-                #pyinotify.IN_MODIFY | \
-                #pyinotify.IN_MOVED_FROM | \
-                #pyinotify.IN_MOVED_TO | \
-                #pyinotify.IN_DELETE | \
-                #pyinotify.IN_DELETE_SELF
 
         self.mask = pyinotify.ALL_EVENTS
 
