@@ -90,7 +90,6 @@ class Global:
             print '*****************************************'
             print '\033[0;32m%s %s\033[m' % ('scheduled at:', str(pkey))
             print 'cached at :   ' + self.cache_dir + str(pkey)
-            print 'subtype:      ' + str(playlist['subtype'])
             print 'played:       ' + str(playlist['played'])
             print 'schedule id:  ' + str(playlist['schedule_id'])
             print 'duration:     ' + str(playlist['duration'])
