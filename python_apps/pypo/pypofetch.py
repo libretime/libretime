@@ -12,6 +12,7 @@ import math
 from threading import Thread
 from subprocess import Popen, PIPE
 from datetime import datetime
+from datetime import timedelta
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
@@ -99,6 +100,7 @@ class PypoFetch(Thread):
             logger.error("  * See this page for more info (v1.7): http://wiki.sourcefabric.org/x/BQBF")
             logger.error("  * and also the 'FAQ and Support' page underneath it.")  
 
+    """
     def get_currently_scheduled(self, playlistsOrMedias, str_tnow_s):
         for key in playlistsOrMedias:
             start = playlistsOrMedias[key]['start']
@@ -114,9 +116,6 @@ class PypoFetch(Thread):
     
         dtnow = datetime.today()
         tnow = dtnow.timetuple()
-    
-        #timenow = time.time()
-        #tnow = time.localtime(timenow) #tnow is struct_time. localtime is non-utc
         str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
         
         current_pkey = self.get_currently_scheduled(playlists, str_tnow_s)
@@ -135,6 +134,7 @@ class PypoFetch(Thread):
                 
                 delta = dtnow - media_start #we get a TimeDelta object from this operation
                 logger.info("Starting media item  at %d second point", delta.seconds)
+    """
 
     """
     Process the schedule
@@ -148,9 +148,9 @@ class PypoFetch(Thread):
         logger = logging.getLogger('fetch')
         playlists = schedule_data["playlists"]
 
-        if bootstrapping:
+        #if bootstrapping:
             #TODO: possible allow prepare_playlists to handle this.
-            self.handle_shows_currently_scheduled(playlists)
+            #self.handle_shows_currently_scheduled(playlists)
 
         self.check_matching_timezones(schedule_data["server_timezone"])
             
@@ -170,7 +170,7 @@ class PypoFetch(Thread):
 
         # Download all the media and put playlists in liquidsoap "annotate" format
         try:
-             liquidsoap_playlists = self.prepare_playlists(playlists)
+             liquidsoap_playlists = self.prepare_playlists(playlists, bootstrapping)
         except Exception, e: logger.error("%s", e)
 
         # Send the data to pypo-push
@@ -190,7 +190,7 @@ class PypoFetch(Thread):
     and stored in a playlist folder.
     file is e.g. 2010-06-23-15-00-00/17_cue_10.132-123.321.mp3
     """
-    def prepare_playlists(self, playlists):
+    def prepare_playlists(self, playlists, bootstrapping):
         logger = logging.getLogger('fetch')
 
         liquidsoap_playlists = dict()
@@ -211,18 +211,18 @@ class PypoFetch(Thread):
                 try:
                     os.mkdir(self.cache_dir + str(pkey))
                 except Exception, e:
-                    pass
+                    logger.error(e)
 
                 #June 13, 2011: Commented this block out since we are not currently setting this to '1' 
                 #on the server side. Currently using a different method to detect if already played - Martin
                 #if int(playlist['played']) == 1:
                 #    logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
                 
-                ls_playlist = self.handle_media_file(playlist, pkey)
+                ls_playlist = self.handle_media_file(playlist, pkey, bootstrapping)
 
                 liquidsoap_playlists[pkey] = ls_playlist
         except Exception, e:
-            logger.info("%s", e)
+            logger.error("%s", e)
         return liquidsoap_playlists
 
 
@@ -231,17 +231,43 @@ class PypoFetch(Thread):
     This handles both remote and local files.
     Returns an updated ls_playlist string.
     """
-    def handle_media_file(self, playlist, pkey):
-        ls_playlist = []
-
+    def handle_media_file(self, playlist, pkey, bootstrapping):
         logger = logging.getLogger('fetch')
-        for key in playlist['medias']:
+        
+        ls_playlist = []
+        
+        dtnow = datetime.today()
+        str_tnow_s = dtnow.strftime('%Y-%m-%d-%H-%M-%S')
+
+        sortedKeys = sorted(playlist['medias'].iterkeys())
+        
+        for key in sortedKeys:
             media = playlist['medias'][key]
             logger.debug("Processing track %s", media['uri'])
+            
+            if bootstrapping:              
+                start = media['start']
+                end = media['end']
+                
+                if end <= str_tnow_s:
+                    continue
+                elif start <= str_tnow_s and str_tnow_s < end:
+                    #song is currently playing and we just started pypo. Maybe there
+                    #was a power outage? Let's restart playback of this song.
+                    start_split = map(int, start.split('-'))
+                    media_start = datetime(start_split[0], start_split[1], start_split[2], start_split[3], start_split[4], start_split[5])
+                    logger.debug("Found media item that started at %s.", media_start)
+                    
+                    delta = dtnow - media_start #we get a TimeDelta object from this operation
+                    logger.info("Starting media item  at %d second point", delta.seconds)
+                    media['cue_in'] = delta.seconds + 10 #TODO is cue_in in seconds?
+                    td = timedelta(seconds=10)
+                    playlist['start'] = (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S')
+                    logger.info("Crash detected, setting playlist to restart at %s", (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S'))
+            
 
             fileExt = os.path.splitext(media['uri'])[1]
             try:
-                #logger.debug('No cue in/out detected for this file')
                 dst = "%s%s/%s%s" % (self.cache_dir, str(pkey), str(media['id']), str(fileExt))
 
                 # download media file
@@ -256,9 +282,13 @@ class PypoFetch(Thread):
 
                     if fsize > 0:
                         pl_entry = \
-                        'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s'\
-                        % (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), \
-                            str(float(media['fade_out']) / 1000), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000), media['row_id'],dst)
+                        'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
+                        % (str(media['export_source']), media['id'], 0, \
+                            str(float(media['fade_in']) / 1000), \
+                            str(float(media['fade_out']) / 1000), \
+                            str(float(media['cue_in'])), \
+                            str(float(media['cue_out'])), \
+                            media['row_id'], dst)
 
                         """
                         Tracks are only added to the playlist if they are accessible

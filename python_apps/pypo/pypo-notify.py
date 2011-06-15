@@ -37,7 +37,6 @@ from configobj import ConfigObj
 # custom imports
 from util import *
 from api_clients import *
-from dls import *
 
 # Set up command-line options
 parser = OptionParser()
