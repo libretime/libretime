@@ -672,7 +672,7 @@ class Schedule {
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
                 $playlists[$pkey]['x_ident'] = $dx['group_id'];
-                $playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
+                //$playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
                 $playlists[$pkey]['timestamp'] = $timestamp;
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
                 $playlists[$pkey]['played'] = '0';
@@ -692,7 +692,6 @@ class Schedule {
             $scheduleGroup = new ScheduleGroup($playlist["schedule_id"]);
             $items = $scheduleGroup->getItems();
             $medias = array();
-            $playlist['subtype'] = '1';
             foreach ($items as $item)
             {
                 $storedFile = StoredFile::Recall($item["file_id"]);

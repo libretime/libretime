@@ -4,7 +4,6 @@ import time
 import logging
 import logging.config
 import shutil
-import pickle
 import random
 import string
 import json
@@ -150,6 +149,7 @@ class PypoFetch(Thread):
         playlists = schedule_data["playlists"]
 
         if bootstrapping:
+            #TODO: possible allow prepare_playlists to handle this.
             self.handle_shows_currently_scheduled(playlists)
 
         self.check_matching_timezones(schedule_data["server_timezone"])
@@ -168,7 +168,7 @@ class PypoFetch(Thread):
             logger.error("Exception %s", e)
             status = 0
 
-        # Download all the media and put playlists in liquidsoap format
+        # Download all the media and put playlists in liquidsoap "annotate" format
         try:
              liquidsoap_playlists = self.prepare_playlists(playlists)
         except Exception, e: logger.error("%s", e)
@@ -213,11 +213,12 @@ class PypoFetch(Thread):
                 except Exception, e:
                     pass
 
-                if int(playlist['played']) == 1:
-                    logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
-
-                elif int(playlist['subtype']) > 0 and int(playlist['subtype']) < 5:
-                    ls_playlist = self.handle_media_file(playlist, pkey)
+                #June 13, 2011: Commented this block out since we are not currently setting this to '1' 
+                #on the server side. Currently using a different method to detect if already played - Martin
+                #if int(playlist['played']) == 1:
+                #    logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
+                
+                ls_playlist = self.handle_media_file(playlist, pkey)
 
                 liquidsoap_playlists[pkey] = ls_playlist
         except Exception, e:
@@ -240,18 +241,11 @@ class PypoFetch(Thread):
 
             fileExt = os.path.splitext(media['uri'])[1]
             try:
-                if str(media['cue_in']) == '0' and str(media['cue_out']) == '0':
-                    #logger.debug('No cue in/out detected for this file')
-                    dst = "%s%s/%s%s" % (self.cache_dir, str(pkey), str(media['id']), str(fileExt))
-                    do_cue = False
-                else:
-                    #logger.debug('Cue in/out detected')
-                    dst = "%s%s/%s_cue_%s-%s%s" % \
-                    (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000), str(fileExt))
-                    do_cue = True
+                #logger.debug('No cue in/out detected for this file')
+                dst = "%s%s/%s%s" % (self.cache_dir, str(pkey), str(media['id']), str(fileExt))
 
                 # download media file
-                self.handle_remote_file(media, dst, do_cue)
+                self.handle_remote_file(media, dst)
                 
                 if True == os.access(dst, os.R_OK):
                     # check filesize (avoid zero-byte files)
@@ -262,9 +256,9 @@ class PypoFetch(Thread):
 
                     if fsize > 0:
                         pl_entry = \
-                        'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",schedule_table_id="%s":%s'\
+                        'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s'\
                         % (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), \
-                            str(float(media['fade_out']) / 1000), media['row_id'],dst)
+                            str(float(media['fade_out']) / 1000), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000), media['row_id'],dst)
 
                         """
                         Tracks are only added to the playlist if they are accessible
@@ -278,7 +272,6 @@ class PypoFetch(Thread):
                         entry['show_name'] = playlist['show_name']
                         ls_playlist.append(entry)
 
-                        #logger.debug("everything ok, adding %s to playlist", pl_entry)
                     else:
                         logger.warning("zero-size file - skipping %s. will not add it to playlist at %s", media['uri'], dst)
 
@@ -292,51 +285,14 @@ class PypoFetch(Thread):
     """
     Download a file from a remote server and store it in the cache.
     """
-    def handle_remote_file(self, media, dst, do_cue):
+    def handle_remote_file(self, media, dst):
         logger = logging.getLogger('fetch')
-        if do_cue == False:
-            if os.path.isfile(dst):
-                pass
-                #logger.debug("file already in cache: %s", dst)
-            else:
-                logger.debug("try to download %s", media['uri'])
-                self.api_client.get_media(media['uri'], dst)
-
+        if os.path.isfile(dst):
+            pass
+            #logger.debug("file already in cache: %s", dst)
         else:
-            if os.path.isfile(dst):
-                logger.debug("file already in cache: %s", dst)
-
-            else:
-                logger.debug("try to download and cue %s", media['uri'])
-
-                fileExt = os.path.splitext(media['uri'])[1]
-                dst_tmp = config["tmp_dir"] + "".join([random.choice(string.letters) for i in xrange(10)]) + fileExt
-                self.api_client.get_media(media['uri'], dst_tmp)
-
-                # cue
-                logger.debug("STARTING CUE")
-                debugDst = self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
-                logger.debug(debugDst)
-                logger.debug("END CUE")
-
-                if True == os.access(dst, os.R_OK):
-                    try: fsize = os.path.getsize(dst)
-                    except Exception, e:
-                        logger.error("%s", e)
-                        fsize = 0
-
-                if fsize > 0:
-                    logger.debug('try to remove temporary file: %s' + dst_tmp)
-                    try: os.remove(dst_tmp)
-                    except Exception, e:
-                        logger.error("%s", e)
-
-                else:
-                    logger.warning('something went wrong cueing: %s - using uncued file' + dst)
-                    try: os.rename(dst_tmp, dst)
-                    except Exception, e:
-                        logger.error("%s", e)
-
+            logger.debug("try to download %s", media['uri'])
+            self.api_client.get_media(media['uri'], dst)
     
     """
     Cleans up folders in cache_dir. Look for modification date older than "now - CACHE_FOR"
