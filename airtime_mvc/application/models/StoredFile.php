@@ -105,7 +105,7 @@ class StoredFile {
         else {
             foreach ($p_md as $dbColumn => $mdValue) {
                 //don't blank out name, defaults to original filename on first insertion to database.
-                if($p_category == "track_title" && (is_null($p_value) || $p_value == "")) {
+                if($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
                 $propelColumn = $this->_dbMD[$dbColumn];
