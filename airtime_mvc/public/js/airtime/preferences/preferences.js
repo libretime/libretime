@@ -1,51 +1,61 @@
 $(document).ready(function() {
-
 	var form = $("form");
-
-    form.find("h3").click(function(){
-        var h3 = $(this);
-        h3.next().toggle();
-
-        if(h3.hasClass("close")) {
-            h3.removeClass("close");
-        }
-        else {
-            h3.addClass("close");
-        }
-    });
-    
-    $('#Register').click(function(event){
-    	event.preventDefault();
-    	$.get("/Preference/register", {format:"json"}, function(json){
-	    	var dialog = $(json.dialog);
-	    	
-	    	dialog.dialog({
-	    		autoOpen: false,
-	    		title: 'Register Airtime',
-	    		width: 400,
-	    		height: 500,
-	    		modal: true,
-	    		buttons: {"Ok": function() {
-	    			dialog.remove();
-	    		}}
-	    	});
 	
-	    	dialog.dialog('open');
-	    	
-	    	var form = $("form");
-
-	        form.find("h3").click(function(){
-	            var h3 = $(this);
-	            h3.next().toggle();
-
-	            if(h3.hasClass("close")) {
-	                h3.removeClass("close");
-	            }
-	            else {
-	                h3.addClass("close");
-	            }
-	        });
-    	})
-    })
+	$('.collapsible-header').live('click',function() {
+        $(this).next().toggle('fast');
+        $(this).toggleClass("close");
+        return false;
+    }).next().hide();
+    
+    $("#SupportFeedback").click( function(){
+    	var pub = $("#Publicise");
+    	if( !$(this).is(':checked') ){
+    		pub.removeAttr("checked");
+    		pub.attr("disabled", true);
+    	}else{
+    		pub.removeAttr("disabled");
+    	}
+	});
+    
+    showErrorSections();
+    
 });
+
+function showErrorSections() {
+
+    if($("soundcloud-settings .errors").length > 0) {
+        $("#soundcloud-settings").show();
+        $(window).scrollTop($("soundcloud-settings .errors").position().top);
+    }
+    if($("#support-settings .errors").length > 0) {
+        $("#support-settings").show();
+        $(window).scrollTop($("#support-settings .errors").position().top);
+    }
+}
+
+function resizeImg(ele){
+	var img = $(ele);
+	
+	var width = ele.width;
+    var height = ele.height;
+    
+    // resize img proportionaly
+    if( width > height && width > 450){
+    	var ratio = 450/width;
+    	img.css("width", "450px");
+    	var newHeight = height * ratio;
+    	img.css("height", newHeight );
+    	
+    }else if( width < height && height > 450){
+    	var ratio = 450/height;
+    	img.css("height", "450px");
+    	var newWidth = width * ratio;
+		img.css("width", newWidth );
+    }else if( width == height && width > 450){
+    	img.css("height", "450px");
+		img.css("width", "450px" );
+    }
+	
+}
+
 

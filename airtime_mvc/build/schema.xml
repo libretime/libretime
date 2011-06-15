@@ -296,4 +296,8 @@
       <unique-column name="login"/>
     </unique>
   </table>
+  <table name="cc_country" phpName="CcCountry">
+    <column name="isocode" phpName="DbIsoCode" primaryKey="true" type="CHAR" size="3" required="true"/>
+    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true"/> 
+  </table>
 </database>

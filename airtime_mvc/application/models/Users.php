@@ -188,6 +188,33 @@ class User {
     
         return  $CC_DBC->GetAll($sql);  
     }
+    
+    public static function getUserCount($type=NULL){
+    	global $CC_DBC;
+
+        $sql;
+
+        $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs ";
+        
+        if(!isset($type)){
+        	$sql = $sql_gen;
+        }
+        else{
+	        if(is_array($type)) {
+	            for($i=0; $i<count($type); $i++) {
+	                $type[$i] = "type = '{$type[$i]}'";
+	            }
+	            $sql_type = join(" OR ", $type);
+	        }
+	        else {
+	            $sql_type = "type = {$type}";
+	        }
+	        
+	        $sql = $sql_gen ." WHERE (". $sql_type.") ";
+        }
+        
+        return  $CC_DBC->GetOne($sql);
+    }
 
     public static function getHosts($search=NULL) {
         return User::getUsers(array('H'), $search);

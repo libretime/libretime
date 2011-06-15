@@ -88,6 +88,13 @@ class StoredFile {
         }
     }
 
+    public static function getFileCount()
+    {
+		global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"]." WHERE state='ready'";
+        return $CC_DBC->GetOne($sql);    	
+    }
+    
     /**
      * Set multiple metadata values using database columns as indexes.
      *

@@ -119,6 +119,12 @@ class Playlist {
         $sql = 'DELETE FROM '.$CC_CONFIG["playListTable"];
 		$CC_DBC->query($sql);
     }
+    
+    public static function getPlaylistCount(){
+    	global $CC_CONFIG, $CC_DBC;
+        $sql = 'SELECT count(*) as cnt FROM '.$CC_CONFIG["playListTable"];
+		return $CC_DBC->GetOne($sql);
+    }
 
     /**
      * Delete the file from all playlists.

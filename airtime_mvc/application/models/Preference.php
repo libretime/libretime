@@ -221,6 +221,14 @@ class Application_Model_Preference
     	return Application_Model_Preference::GetValue("support_feedback");
     }
     
+	public static function SetPublicise($publicise){
+    	Application_Model_Preference::SetValue("publicise", $publicise);
+    }
+    
+    public static function GetPublicise(){
+    	return Application_Model_Preference::GetValue("publicise");
+    }
+    
 	public static function SetRegistered($registered){
     	Application_Model_Preference::SetValue("registered", $registered);
     }
@@ -229,14 +237,101 @@ class Application_Model_Preference
     	return Application_Model_Preference::GetValue("registered");
     }
     
-    public static function GetSystemInfo(){
-    	$output;
-    	exec('airtime-check-system', $output);
-    	$out = implode("\n",  preg_replace('/\s+/', ' ', $output));
-    	
-    	// Sever API
-    	$out .= php_sapi_name();
+	public static function SetStationCountry($country){
+    	Application_Model_Preference::SetValue("country", $country);
+    }
+    
+    public static function GetStationCountry(){
+    	return Application_Model_Preference::GetValue("country");
+    }
+    
+	public static function SetStationCity($city){
+    	Application_Model_Preference::SetValue("city", $city);
+    }
+    
+	public static function GetStationCity(){
+    	return Application_Model_Preference::GetValue("city");
+    }
+    
+	public static function SetStationDescription($description){
+    	Application_Model_Preference::SetValue("description", $description);
+    }
+    
+	public static function GetStationDescription(){
+    	return Application_Model_Preference::GetValue("description");
+    }
+    
+    public static function SetStationLogo($imagePath){
+    	if(!empty($imagePath)){
+	    	$image = file_get_contents($imagePath);
+	    	$image = base64_encode($image);
+	    	Application_Model_Preference::SetValue("logoImage", $image);
+    	}
+    }
+    
+	public static function GetStationLogo(){
+    	return Application_Model_Preference::GetValue("logoImage");
+    }
+    
+    public static function GetUniqueId(){
+    	return Application_Model_Preference::GetValue("uniqueId");
+    }
+    
+    public static function GetCountryList(){
+    	global $CC_DBC;
+    	$sql = "SELECT * FROM cc_country";
+    	$res =  $CC_DBC->GetAll($sql);
+    	$out = array();
+    	foreach($res as $r){
+    		$out[$r["iso_code"]] = $r["name"];
+    	}
     	return $out;
+    }
+    
+    public static function GetSystemInfo(){
+    	exec('/usr/bin/airtime-check-system', $output);
+    	
+    	$output = preg_replace('/\s+/', ' ', $output);
+    	
+    	$systemInfoArray = array();
+    	foreach( $output as $key => &$out){
+    		$info = explode('=', $out);
+    		if(isset($info[1])){
+    			$key = str_replace(' ', '_', $info[0]);
+    			$key = strtoupper($key);
+    			$systemInfoArray[$key] = $info[1];	
+    		}
+    	}
+    	
+    	$outputArray = array();
+    	
+    	$outputArray['STATION_NAME'] = Application_Model_Preference::GetStationName();
+    	$outputArray['STATION_WEB_SITE'] = Application_Model_Preference::GetStationWebSite();
+    	$outputArray['STATION_COUNTRY'] = Application_Model_Preference::GetStationCountry();
+    	$outputArray['STATION_CITY'] = Application_Model_Preference::GetStationCity();
+    	$outputArrat['STATION_DESCRIPTION'] = Application_Model_Preference::GetStationDescription();
+    	//$outputArray['Version'] = $systemInfoArray['AIRTIME_VERSION'];
+    	$outputArray['WEB_SERVER'] = php_sapi_name();
+    	//$outputArray['OS Info'] = $systemInfoArray['OS'];
+    	$outputArray['NUM_OF_USERS'] = User::getUserCount();
+    	$outputArray['NUM_OF_SONGS'] = StoredFile::getFileCount();
+    	$outputArray['NUM_OF_PLAYLISTS'] = Playlist::getPlaylistCount();
+    	$outputArray['NUM_OF_SCHEDULED_PLAYLIST'] = Schedule::getSchduledPlaylistCount();
+    	$outputArray['UNIQUE_ID'] = Application_Model_Preference::GetUniqueId();
+    	
+    	$outputArray = array_merge($outputArray, $systemInfoArray);
+    	
+    	$outputString = "\n";
+    	foreach($outputArray as $key => $out){
+    		$outputString .= $key.' : '.$out."\n";
+    	}
+    	
+    	return $outputString;
+    }
+    
+    public static function SetRemindMeDate($now){
+    	$weekAfter = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
+   		Application_Model_Preference::SetValue('remindme', $weekAfter);
     }
 }
 

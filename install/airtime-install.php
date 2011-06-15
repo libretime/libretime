@@ -125,5 +125,7 @@ AirtimeInstall::CreateSymlinksToUtils();
 
 AirtimeInstall::CreateZendPhpLogFile();
 
+AirtimeInstall::SetUniqueId();
+
 
 /* FINISHED AIRTIME PHP INSTALLER */

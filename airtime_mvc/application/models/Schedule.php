@@ -527,6 +527,12 @@ class Schedule {
         $retVal = $CC_DBC->query($sql);
         return $retVal;
     }
+    
+    public static function getSchduledPlaylistCount(){
+    	global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['scheduleTable'];
+        return $CC_DBC->GetOne($sql);
+    }
 
 
     /**

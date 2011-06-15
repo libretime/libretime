@@ -1639,6 +1639,10 @@ dd.radio-inline-list, .preferences dd.radio-inline-list {
     height: 120px;
 }
 
+.preferences dd#Description-element.block-display .input_text_area {
+    height: 60px;
+}
+
 #show_time_info {
 	font-size:12px;
 	height:30px;
@@ -1723,4 +1727,9 @@ label span {
     clear: left;
 	font-weight:bold;
 	width:40%;
+}
+
+.sending_textarea   {
+	width: 100%;
+	resize: none;
 }

@@ -8,6 +8,7 @@ class PreferenceController extends Zend_Controller_Action
         /* Initialize action controller here */
     	$ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('register', 'json')
+        			->addActionContext('remindme', 'json')
                     ->initContext();
     }
 
@@ -18,9 +19,6 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js','text/javascript');
         $this->view->statusMsg = "";
-        
-        $this->view->registered = Application_Model_Preference::GetRegistered();
-        $this->view->supportFeedback = Application_Model_Preference::GetSupportFeedback();
         
         $form = new Application_Form_Preferences();
        
@@ -47,10 +45,46 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetEmail($values["preferences_support"]["Email"]);
                 Application_Model_Preference::SetStationWebSite($values["preferences_support"]["StationWebSite"]);
                 Application_Model_Preference::SetSupportFeedback($values["preferences_support"]["SupportFeedback"]);
+                Application_Model_Preference::SetPublicise($values["preferences_support"]["Publicise"]);
+                
+                $imagePath = $form->getSubForm('preferences_support')->Logo->getFileName();
+                
+                Application_Model_Preference::SetStationCountry($values["preferences_support"]["Country"]);
+                Application_Model_Preference::SetStationCity($values["preferences_support"]["City"]);
+                Application_Model_Preference::SetStationDescription($values["preferences_support"]["Description"]);
+                Application_Model_Preference::SetStationLogo($imagePath);
                 
                 $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
+               	
+            }else{
+            	$errors = $form->getErrors();
+            	$firstElementWithError = '';
+            	
+            	foreach($errors as $section => $error){
+            		foreach($error as $name => $er){
+            			if(count($er) > 0){
+            				$firstElementWithError = $name;
+            				break;
+            			}
+            		}
+            		if($section == "preferences_general"){
+            			$this->view->errorGeneral = true;
+            		}elseif($section == "preferences_soundcloud"){
+            			$this->view->errorSoundCloud = true;
+            		}elseif($section == "preferences_support"){
+            			$this->view->errorSupport = true;
+            		}
+            	}
             }
+            
+			            
         }
+        
+        $this->view->supportFeedback = Application_Model_Preference::GetSupportFeedback();
+    	$logo = Application_Model_Preference::GetStationLogo();
+		if($logo){
+			$this->view->logoImg = $logo;
+		}
         $this->view->form = $form;
     }
     
@@ -61,7 +95,19 @@ class PreferenceController extends Zend_Controller_Action
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js','text/javascript');
         
         $form = new Application_Form_RegisterAirtime();
+        
+        $logo = Application_Model_Preference::GetStationLogo();
+		if($logo){
+			$this->view->logoImg = $logo;
+		}
+        
         $this->view->dialog = $form->render($this->view);
+    }
+    
+    public function remindmeAction(){
+    	$now = date("Y-m-d H:i:s");
+    	Application_Model_Preference::SetRemindMeDate($now);
+    	die();
     }
 }
 

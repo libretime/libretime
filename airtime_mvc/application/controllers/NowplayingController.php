@@ -18,6 +18,14 @@ class NowplayingController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowview.js','text/javascript');
+        
+        //popup if previous page was login
+        $refer_sses = new Zend_Session_Namespace('referrer');
+        if($refer_sses->referrer == 'login'){
+        	//unset session
+        	Zend_Session::namespaceUnset('referrer');
+        	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js','text/javascript');
+        }
     }
 
     public function getDataGridDataAction()
