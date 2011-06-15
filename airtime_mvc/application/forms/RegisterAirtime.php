@@ -1,16 +1,27 @@
 <?php
 
-class Application_Form_RegisterAirtime extends Zend_Form_SubForm
+class Application_Form_RegisterAirtime extends Zend_Form
 {
 
     public function init()
     {
+        $this->setAction('/Preference/registersubmit');
+        $this->setMethod('post');
+        
 		$country_list = Application_Model_Preference::GetCountryList();
 		
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/register-dialog.phtml')),
             array('File', array('viewScript' => 'form/register-dialog.phtml', 'placement' => false)))
         );
+        
+        // Station Name
+        $stnName = new Zend_Form_Element_Text("stnName");
+        $stnName->setLabel("Station Name:")
+                ->setRequired(true)
+                ->setValue(Application_Model_Preference::GetStationName())
+                ->setDecorators(array('ViewHelper'));
+        $this->addElement($stnName);
         
         // Phone number
         $this->addElement('text', 'Phone', array(
@@ -105,14 +116,15 @@ class Application_Form_RegisterAirtime extends Zend_Form_SubForm
 		));
 
 		// checkbox for publicise
-        $this->addElement('checkbox', 'Publicise', array(
-            'label'      => 'Publicise my station on Sourcefabric.org',
-            'required'   => false,
-            'value' => Application_Model_Preference::GetPublicise(),
-            'decorators' => array(
-                'ViewHelper'
-            )
-		));
+		$checkboxPublicise = new Zend_Form_Element_Checkbox("Publicise");
+        $checkboxPublicise->setLabel('Publicise my station on Sourcefabric.org')
+                          ->setRequired(false)
+                          ->setDecorators(array('ViewHelper'))
+                          ->setValue(Application_Model_Preference::GetPublicise());
+        if(!Application_Model_Preference::GetSupportFeedback()){
+            $checkboxPublicise->setAttrib("disabled", "disabled");
+        }
+        $this->addElement($checkboxPublicise);
 		
 		// text area for sending detail
         $this->addElement('textarea', 'SendInfo', array(

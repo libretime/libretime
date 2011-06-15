@@ -56,28 +56,7 @@ class PreferenceController extends Zend_Controller_Action
                 
                 $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
                	
-            }else{
-            	$errors = $form->getErrors();
-            	$firstElementWithError = '';
-            	
-            	foreach($errors as $section => $error){
-            		foreach($error as $name => $er){
-            			if(count($er) > 0){
-            				$firstElementWithError = $name;
-            				break;
-            			}
-            		}
-            		if($section == "preferences_general"){
-            			$this->view->errorGeneral = true;
-            		}elseif($section == "preferences_soundcloud"){
-            			$this->view->errorSoundCloud = true;
-            		}elseif($section == "preferences_support"){
-            			$this->view->errorSupport = true;
-            		}
-            	}
-            }
-            
-			            
+            }           
         }
         
         $this->view->supportFeedback = Application_Model_Preference::GetSupportFeedback();
@@ -108,6 +87,41 @@ class PreferenceController extends Zend_Controller_Action
     	$now = date("Y-m-d H:i:s");
     	Application_Model_Preference::SetRemindMeDate($now);
     	die();
+    }
+    
+    public function registersubmitAction(){
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js','text/javascript');
+        $this->view->statusMsg = "";
+        
+        $form = new Application_Form_RegisterAirtime();
+        var_dump($request->getPost());
+        var_dump($form->isValid($request->getPost()));
+        var_dump($form->getMessages());
+        if ($request->isPost()) {
+      
+            if ($form->isValid($request->getPost())) {
+
+                $values = $form->getValues();
+                var_dump($values);
+                Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
+                Application_Model_Preference::SetPhone($values["Phone"]);
+                Application_Model_Preference::SetEmail($values["Email"]);
+                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
+                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                Application_Model_Preference::SetPublicise($values["Publicise"]);
+                
+                $imagePath = $form->Logo->getFileName();
+                
+                Application_Model_Preference::SetStationCountry($values["Country"]);
+                Application_Model_Preference::SetStationCity($values["City"]);
+                Application_Model_Preference::SetStationDescription($values["Description"]);
+                Application_Model_Preference::SetStationLogo($imagePath);
+            }
+        }
+        $this->_redirect('Nowplaying');
     }
 }
 

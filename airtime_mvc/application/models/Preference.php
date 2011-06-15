@@ -331,7 +331,12 @@ class Application_Model_Preference
     
     public static function SetRemindMeDate($now){
     	$weekAfter = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
-   		Application_Model_Preference::SetValue('remindme', $weekAfter);
+   		Application_Model_Preference::SetValue("remindme", $weekAfter);
     }
+    
+    public static function GetRemindMeDate(){
+        return Application_Model_Preference::GetValue("remindme");
+    }
+    
 }
 

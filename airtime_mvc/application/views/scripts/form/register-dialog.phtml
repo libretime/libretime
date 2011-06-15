@@ -1,16 +1,10 @@
 <div class="dialogPopup register-dialog" title="Register Airtime">
-	<div class="info-text">
-		<p>Help Airtime improve by letting us know you are using it. This info
-			will be collected once per month and is anonymous unless you chose to
-			advertise your station on sourcefabric.org</p>
-
-	</div>
-	<form method="<?php echo $this->element->getMethod() ?>" action="<?php echo $this->element->getAction() ?>" enctype="application/x-www-form-urlencoded">
-
+	<form id="register-form" method="<?php echo $this->element->getMethod() ?>" action="<?php echo $this->element->getAction() ?>" enctype="multipart/form-data">
 		    <dl class="zend_form">
-		    	<?php if($this->element->getView()->supportFeedback === '0'){?>
-		    	<div class="info-text"><p>Be more awesome by selecting "Support feedback" below. You will be helping Airtim improve!</p></div>
-		    	<?php }?>
+		    	<div class="info-text">
+            		<p>Help Airtime improve by letting us know you are using it. This info
+            			will be collected regularly in order to improve your user experience.</p>
+            	</div>
 		    	<dd id="SupportFeedback-element">
 		            <label class="optional" for="SupportFeedback">
 		                <?php echo $this->element->getElement('SupportFeedback') ?>
@@ -24,6 +18,9 @@
 		                </ul>
 		            <?php endif; ?> 
 		        </dd>
+		        <div class="info-text">
+            		<p>Click the box below to advertise your station on Sourcefabric.org.</p>
+            	</div>
 				<dd id="publicize-element">
 					<label class="optional" for="Publicise">
 		                <?php echo $this->element->getElement('Publicise') ?>
@@ -38,6 +35,21 @@
 		            <?php endif; ?> 
 				</dd>
 				<div class="info-text" style="clear: both;padding: 4px 0 4px 15px;"><p> Note: In order to publicise your station, "Send support feedback" must be enabled</p></div>
+				<div id="public-info" style="display:none;">
+				
+				<dt id="stnName-label" class="block-display">
+		            <label class="optional" for="stnName"><?php echo $this->element->getElement('stnName')->getLabel() ?></label>
+		        </dt>
+		        <dd id="stnName-element" class="block-display">
+		            <?php echo $this->element->getElement('stnName') ?>
+		            <?php if($this->element->getElement('stnName')->hasErrors()) : ?>
+		                <ul class='errors'>
+		                    <?php foreach($this->element->getElement('stnName')->getMessages() as $error): ?>
+		                        <li><?php echo $error; ?></li>
+		                    <?php endforeach; ?>
+		                </ul>
+		            <?php endif; ?> 
+		        </dd>
 		        <dt id="Phone-label" class="block-display">
 		            <label class="optional" for="Phone"><?php echo $this->element->getElement('Phone')->getLabel() ?></label>
 		        </dt>
@@ -133,7 +145,7 @@
 		                </ul>
 		            <?php endif; ?>
 		        </dd>
-		        
+		        </div>
 		    </dl>
 		    <h3 class="collapsible-header">
 				<span class="arrow-icon"></span>Show me what I am sending

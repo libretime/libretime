@@ -117,4 +117,12 @@ class Application_Model_Nowplaying
 		
 		return array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$data);
 	}
+	
+	public static function ShouldShowPopUp(){
+	    $today = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
+	    $remindDate = Application_Model_Preference::GetRemindMeDate();
+	    if($remindDate == NULL || $today >= $remindDate){
+	        return true;
+	    }
+	}
 }

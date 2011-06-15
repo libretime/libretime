@@ -422,6 +422,24 @@ COMMENT ON TABLE "cc_subjs" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_country
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_country" CASCADE;
+
+
+CREATE TABLE "cc_country"
+(
+	"isocode" CHAR(3)  NOT NULL,
+	"name" VARCHAR(255)  NOT NULL,
+	PRIMARY KEY ("isocode")
+);
+
+COMMENT ON TABLE "cc_country" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");

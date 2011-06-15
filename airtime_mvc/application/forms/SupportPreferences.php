@@ -16,7 +16,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
         $this->addElement('text', 'Phone', array(
             'class'      => 'input_text',
             'label'      => 'Phone:',
-            'required'   => false,
+            'required'   => true,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetPhone(),
             'decorators' => array(
@@ -28,7 +28,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
         $this->addElement('text', 'Email', array(
             'class'      => 'input_text',
             'label'      => 'Email:',
-            'required'   => false,
+            'required'   => true,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetEmail(),
             'decorators' => array(
@@ -50,7 +50,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		// county list dropdown
 		$this->addElement('select', 'Country', array(
 			'label'		=> 'Country:',
-			'required'	=> false,
+			'required'	=> true,
 			'value'		=> Application_Model_Preference::GetStationCountry(),
 			'multiOptions'	=> $country_list,
 			'decorators' => array(
@@ -61,7 +61,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		// Station city
         $this->addElement('text', 'City', array(
             'label'      => 'City:',
-            'required'   => false,
+            'required'   => true,
             'class'      => 'input_text',
             'value' => Application_Model_Preference::GetStationCity(),
             'decorators' => array(
@@ -72,7 +72,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		// Station Description
         $this->addElement('textarea', 'Description', array(
             'label'      => 'Station Description:',
-            'required'   => false,
+            'required'   => true,
             'class'      => 'input_text_area',
             'value' => Application_Model_Preference::GetStationDescription(),
             'decorators' => array(
@@ -105,14 +105,15 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		));
 
 		// checkbox for publicise
-        $this->addElement('checkbox', 'Publicise', array(
-            'label'      => 'Publicise my station on Sourcefabric.org',
-            'required'   => false,
-            'value' => Application_Model_Preference::GetPublicise(),
-            'decorators' => array(
-                'ViewHelper'
-            )
-		));
+        $checkboxPublicise = new Zend_Form_Element_Checkbox("Publicise");
+        $checkboxPublicise->setLabel('Publicise my station on Sourcefabric.org')
+                          ->setRequired(false)
+                          ->setDecorators(array('ViewHelper'))
+                          ->setValue(Application_Model_Preference::GetPublicise());
+        if(Application_Model_Preference::GetSupportFeedback() == '0'){
+            $checkboxPublicise->setAttrib("disabled", "disabled");
+        }
+        $this->addElement($checkboxPublicise);
 		
 		// text area for sending detail
         $this->addElement('textarea', 'SendInfo', array(
