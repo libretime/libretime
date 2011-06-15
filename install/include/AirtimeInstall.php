@@ -116,42 +116,39 @@ class AirtimeInstall
         }
     }
 
-    public static function ChangeDirOwnerToWebserver($filePath)
-    {
-        global $CC_CONFIG;
-        echo "* Giving Apache permission to access $filePath".PHP_EOL;
-
-        $success = chgrp($filePath, $CC_CONFIG["webServerUser"]);
-        $fileperms=@fileperms($filePath);
-        $fileperms = $fileperms | 0x0010; // group write bit
-        $fileperms = $fileperms | 0x0400; // group sticky bit
-        chmod($filePath, $fileperms);
-    }
-
     public static function InstallStorageDirectory()
     {
         global $CC_CONFIG, $CC_DBC;
         echo "* Storage directory setup".PHP_EOL;
 
-        foreach (array('baseFilesDir', 'storageDir') as $d) {
-            if ( !file_exists($CC_CONFIG[$d]) ) {
-                @mkdir($CC_CONFIG[$d], 02775, true);
-                if (file_exists($CC_CONFIG[$d])) {
-                    $rp = realpath($CC_CONFIG[$d]);
-                    echo "* Directory $rp created".PHP_EOL;
-                } else {
-                    echo "* Failed creating {$CC_CONFIG[$d]}".PHP_EOL;
-                    exit(1);
-                }
-            } elseif (is_writable($CC_CONFIG[$d])) {
-                $rp = realpath($CC_CONFIG[$d]);
-                echo "* Skipping directory already exists: $rp".PHP_EOL;
+        $stor_dir = $CC_CONFIG['storageDir'];
+
+        if (!file_exists($stor_dir)) {
+            @mkdir($stor_dir, 02777, true);
+            if (file_exists($stor_dir)) {
+                $rp = realpath($stor_dir);
+                echo "* Directory $rp created".PHP_EOL;
             } else {
-                $rp = realpath($CC_CONFIG[$d]);
-                echo "* WARNING: Directory already exists, but is not writable: $rp".PHP_EOL;
+                echo "* Failed creating {$stor_dir}".PHP_EOL;
+                exit(1);
             }
-            $CC_CONFIG[$d] = $rp;
         }
+        else if (is_writable($stor_dir)) {
+            $rp = realpath($stor_dir);
+            echo "* Skipping directory already exists: $rp".PHP_EOL;
+        }
+        else {
+            $rp = realpath($stor_dir);
+            echo "* WARNING: Directory already exists, but is not writable: $rp".PHP_EOL;
+            return;
+        }
+
+        echo "* Giving Apache permission to access $rp".PHP_EOL;
+        $success = chgrp($rp, $CC_CONFIG["webServerUser"]);
+        $success = chown($rp, "pypo");
+        $success = chmod($rp, 02777);
+        $CC_CONFIG['storageDir'] = $rp;
+
     }
 
     public static function CreateDatabaseUser()
@@ -300,7 +297,7 @@ class AirtimeInstall
         echo "* Installing airtime-update-db-settings".PHP_EOL;
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
         exec("ln -s $dir /usr/bin/airtime-update-db-settings");
-        
+
         echo "* Installing airtime-check-system".PHP_EOL;
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-check-system";
         exec("ln -s $dir /usr/bin/airtime-check-system");

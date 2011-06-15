@@ -121,8 +121,6 @@ if ($db_install) {
 
 AirtimeInstall::InstallStorageDirectory();
 
-AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
-
 AirtimeInstall::CreateSymlinksToUtils();
 
 AirtimeInstall::CreateZendPhpLogFile();

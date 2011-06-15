@@ -9,7 +9,10 @@ import sys
 import hashlib
 import json
 import shutil
+import math
 
+from collections import deque
+from pwd import getpwnam
 from subprocess import Popen, PIPE, STDOUT
 
 from configobj import ConfigObj
@@ -23,8 +26,13 @@ from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
 from api_clients import api_client
 
+MODE_CREATE = "create"
+MODE_MODIFY = "modify"
+MODE_MOVED = "moved"
+MODE_DELETE = "delete"
+
 global storage_directory
-storage_directory = "/srv/airtime/stor"
+global plupload_directory
 
 # configure logging
 try:
@@ -46,35 +54,27 @@ list of supported easy tags in mutagen version 1.20
 ['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
 """
 
-
-def checkRabbitMQ(notifier):
-    try:
-        notifier.connection.drain_events(timeout=int(config["check_airtime_events"]))
-    except Exception, e:
-            logger = logging.getLogger('root')
-            logger.info("%s", e)
-
 class AirtimeNotifier(Notifier):
 
     def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None):
         Notifier.__init__(self, watch_manager, default_proc_fun, read_freq, threshold, timeout)
 
         self.airtime2mutagen = {\
-        "track_title": "title",\
-        "artist_name": "artist",\
-        "album_title": "album",\
-        "genre": "genre",\
-        "mood": "mood",\
-        "track_number": "tracknumber",\
-        "bpm": "bpm",\
-        "label": "organization",\
-        "composer": "composer",\
-        "encoded_by": "encodedby",\
-        "conductor": "conductor",\
-        "year": "date",\
-        "info_url": "website",\
-        "isrc_number": "isrc",\
-        "copyright": "copyright",\
+        "MDATA_KEY_TITLE": "title",\
+        "MDATA_KEY_CREATOR": "artist",\
+        "MDATA_KEY_SOURCE": "album",\
+        "MDATA_KEY_GENRE": "genre",\
+        "MDATA_KEY_MOOD": "mood",\
+        "MDATA_KEY_TRACKNUMBER": "tracknumber",\
+        "MDATA_KEY_BPM": "bpm",\
+        "MDATA_KEY_LABEL": "organization",\
+        "MDATA_KEY_COMPOSER": "composer",\
+        "MDATA_KEY_ENCODER": "encodedby",\
+        "MDATA_KEY_CONDUCTOR": "conductor",\
+        "MDATA_KEY_YEAR": "date",\
+        "MDATA_KEY_URL": "website",\
+        "MDATA_KEY_ISRC": "isrc",\
+        "MDATA_KEY_COPYRIGHT": "copyright",\
         }
 
         schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
@@ -112,27 +112,48 @@ class MediaMonitor(ProcessEvent):
         self.api_client = api_client.api_client_factory(config)
 
         self.mutagen2airtime = {\
-        "title": "track_title",\
-        "artist": "artist_name",\
-        "album": "album_title",\
-        "genre": "genre",\
-        "mood": "mood",\
-        "tracknumber": "track_number",\
-        "bpm": "bpm",\
-        "organization": "label",\
-        "composer": "composer",\
-        "encodedby": "encoded_by",\
-        "conductor": "conductor",\
-        "date": "year",\
-        "website": "info_url",\
-        "isrc": "isrc_number",\
-        "copyright": "copyright",\
+        "title": "MDATA_KEY_TITLE",\
+        "artist": "MDATA_KEY_CREATOR",\
+        "album": "MDATA_KEY_SOURCE",\
+        "genre": "MDATA_KEY_GENRE",\
+        "mood": "MDATA_KEY_MOOD",\
+        "tracknumber": "MDATA_KEY_TRACKNUMBER",\
+        "bpm": "MDATA_KEY_BPM",\
+        "organization": "MDATA_KEY_LABEL",\
+        "composer": "MDATA_KEY_COMPOSER",\
+        "encodedby": "MDATA_KEY_ENCODER",\
+        "conductor": "MDATA_KEY_CONDUCTOR",\
+        "date": "MDATA_KEY_YEAR",\
+        "website": "MDATA_KEY_URL",\
+        "isrc": "MDATA_KEY_ISRC",\
+        "copyright": "MDATA_KEY_COPYRIGHT",\
         }
 
         self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger('root')
         self.temp_files = {}
-        self.imported_renamed_files = {}
+        self.moved_files = {}
+        self.file_events = deque()
+
+        self.mask =  pyinotify.IN_CREATE | \
+                pyinotify.IN_MODIFY | \
+                pyinotify.IN_MOVED_FROM | \
+                pyinotify.IN_MOVED_TO | \
+                pyinotify.IN_DELETE | \
+                pyinotify.IN_DELETE_SELF
+
+        self.wm = WatchManager()
+
+        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
+        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
+        connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
+        channel = connection.channel()
+
+    def watch_directory(self, directory):
+        return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
+
+    def is_parent_directory(self, filepath, directory):
+        return (directory == filepath[0:len(directory)])
 
     def get_md5(self, filepath):
         f = open(filepath, 'rb')
@@ -142,20 +163,40 @@ class MediaMonitor(ProcessEvent):
 
         return md5
 
-    def ensure_dir(self, filepath):
+    ## mutagen_length is in seconds with the format (d+).dd
+    ## return format hh:mm:ss.uuu
+    def format_length(self, mutagen_length):
+        t = float(mutagen_length)
+        h = int(math.floor(t/3600))
+        t = t % 3600
+        m = int(math.floor(t/60))
 
+        s = t % 60
+        # will be ss.uuu
+        s = str(s)
+        s = s[:6]
+
+        length = "%s:%s:%s" % (h, m, s)
+
+        return length
+
+    def ensure_dir(self, filepath):
         directory = os.path.dirname(filepath)
 
-        if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
-            os.makedirs(directory, 02775)
+        try:
+            omask = os.umask(0)
+            if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
+                os.makedirs(directory, 02777)
+                self.watch_directory(directory)
+        finally:
+            os.umask(omask)
 
     def create_unique_filename(self, filepath):
 
-        file_dir = os.path.dirname(filepath)
-        filename = os.path.basename(filepath).split(".")[0]
-        file_ext = os.path.splitext(filepath)[1]
-
         if(os.path.exists(filepath)):
+            file_dir = os.path.dirname(filepath)
+            filename = os.path.basename(filepath).split(".")[0]
+            file_ext = os.path.splitext(filepath)[1]
             i = 1;
             while(True):
                 new_filepath = "%s/%s(%s).%s" % (file_dir, filename, i, file_ext)
@@ -165,79 +206,119 @@ class MediaMonitor(ProcessEvent):
                 else:
                     filepath = new_filepath
 
-        self.imported_renamed_files[filepath] = 0
-
         return filepath
 
     def create_file_path(self, imported_filepath):
 
         global storage_directory
 
-        original_name = os.path.basename(imported_filepath)
-        file_ext = os.path.splitext(imported_filepath)[1]
-        file_info = mutagen.File(imported_filepath, easy=True)
-
-        metadata = {'artist':None,
-                    'album':None,
-                    'title':None,
-                    'tracknumber':None}
-
-        for key in metadata.keys():
-            if key in file_info:
-                metadata[key] = file_info[key][0]
-
-        if metadata['artist'] is not None:
-            base = "%s/%s" % (storage_directory, metadata['artist'])
-            if metadata['album'] is not None:
-                base = "%s/%s" % (base, metadata['album'])
-            if metadata['title'] is not None:
-                if metadata['tracknumber'] is not None:
-                    metadata['tracknumber'] = "%02d" % (int(metadata['tracknumber']))
-                    base = "%s/%s - %s" % (base, metadata['tracknumber'], metadata['title'])
-                else:
-                    base = "%s/%s" % (base, metadata['title'])
-            else:
-                base = "%s/%s" % (base, original_name)
-        else:
-            base = "%s/%s" % (storage_directory, original_name)
-
-        base = "%s%s" % (base, file_ext)
-
-        filepath = self.create_unique_filename(base)
-        self.ensure_dir(filepath)
-        shutil.move(imported_filepath, filepath)
-
-    def update_airtime(self, event):
-        self.logger.info("Updating Change to Airtime")
         try:
-            md5 = self.get_md5(event.pathname)
-            md = {'filepath':event.pathname, 'md5':md5}
+            #get rid of file extention from original name, name might have more than 1 '.' in it.
+            original_name = os.path.basename(imported_filepath)
+            #self.logger.info('original name: %s', original_name)
+            original_name = original_name.split(".")[0:-1]
+            #self.logger.info('original name: %s', original_name)
+            original_name = ''.join(original_name)
+            #self.logger.info('original name: %s', original_name)
 
-            file_info = mutagen.File(event.pathname, easy=True)
-            attrs = self.mutagen2airtime
-            for key in file_info.keys() :
-                if key in attrs :
-                    md[attrs[key]] = file_info[key][0]
+            file_ext = os.path.splitext(imported_filepath)[1]
+            file_info = mutagen.File(imported_filepath, easy=True)
 
-            data = {'md': md}
-            response = self.api_client.update_media_metadata(data)
+            metadata = {'artist':None,
+                        'album':None,
+                        'title':None,
+                        'tracknumber':None}
+
+            for key in metadata.keys():
+                if key in file_info:
+                    metadata[key] = file_info[key][0]
+
+            if metadata['artist'] is not None:
+                base = "%s/%s" % (storage_directory, metadata['artist'])
+                if metadata['album'] is not None:
+                    base = "%s/%s" % (base, metadata['album'])
+                if metadata['title'] is not None:
+                    if metadata['tracknumber'] is not None:
+                        metadata['tracknumber'] = "%02d" % (int(metadata['tracknumber']))
+                        base = "%s/%s - %s" % (base, metadata['tracknumber'], metadata['title'])
+                    else:
+                        base = "%s/%s" % (base, metadata['title'])
+                else:
+                    base = "%s/%s" % (base, original_name)
+            else:
+                base = "%s/%s" % (storage_directory, original_name)
+
+            base = "%s%s" % (base, file_ext)
+
+            filepath = self.create_unique_filename(base)
+            self.ensure_dir(filepath)
 
         except Exception, e:
-            self.logger.info("%s", e)
+            self.logger.error('Exception: %s', e)
 
-    def is_renamed_file(self, filename):
-        if filename in self.imported_renamed_files:
-            del self.imported_renamed_files[filename]
-            return True
+        return filepath
 
-        return False
+    def get_mutagen_info(self, filepath):
+        md = {}
+        md5 = self.get_md5(filepath)
+        md['MDATA_KEY_MD5'] = md5
+
+        file_info = mutagen.File(filepath, easy=True)
+        attrs = self.mutagen2airtime
+        for key in file_info.keys() :
+            if key in attrs :
+                md[attrs[key]] = file_info[key][0]
+
+        md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
+        md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
+        md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
+        md['MDATA_KEY_MIME'] = file_info.mime[0]
+
+        if "mp3" in md['MDATA_KEY_MIME']:
+            md['MDATA_KEY_FTYPE'] = "audioclip"
+        elif "vorbis" in md['MDATA_KEY_MIME']:
+            md['MDATA_KEY_FTYPE'] = "audioclip"
+
+        return md
+
+
+    def update_airtime(self, d):
+
+        filepath = d['filepath']
+        mode = d['mode']
+
+        data = None
+        md = {}
+        md['MDATA_KEY_FILEPATH'] = filepath
+
+        if (os.path.exists(filepath) and (mode == MODE_CREATE)):
+            mutagen = self.get_mutagen_info(filepath)
+            md.update(mutagen)
+            data = {'md': md}
+        elif (os.path.exists(filepath) and (mode == MODE_MODIFY)):
+            mutagen = self.get_mutagen_info(filepath)
+            md.update(mutagen)
+            data = {'md': md}
+        elif (mode == MODE_MOVED):
+            mutagen = self.get_mutagen_info(filepath)
+            md.update(mutagen)
+            data = {'md': md}
+        elif (mode == MODE_DELETE):
+            data = {'md': md}
+
+        if data is not None:
+            self.logger.info("Updating Change to Airtime")
+            response = None
+            while response is None:
+                response = self.api_client.update_media_metadata(data, mode)
+                time.sleep(5)
 
     def is_temp_file(self, filename):
         info = filename.split(".")
 
         if(info[-2] in self.supported_file_formats):
             return True
-        else :
+        else:
             return False
 
     def is_audio_file(self, filename):
@@ -245,63 +326,124 @@ class MediaMonitor(ProcessEvent):
 
         if(info[-1] in self.supported_file_formats):
             return True
-        else :
+        else:
             return False
-
 
     def process_IN_CREATE(self, event):
         if not event.dir:
-
+            self.logger.info("%s: %s", event.maskname, event.pathname)
             #file created is a tmp file which will be modified and then moved back to the original filename.
             if self.is_temp_file(event.name) :
                 self.temp_files[event.pathname] = None
             #This is a newly imported file.
             else :
-                #if not is_renamed_file(event.pathname):
-                self.create_file_path(event.pathname)
+                global plupload_directory
+                #files that have been added through plupload have a placeholder already put in Airtime's database.
+                if not self.is_parent_directory(event.pathname, plupload_directory):
+                    md5 = self.get_md5(event.pathname)
+                    response = self.api_client.check_media_status(md5)
 
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+                    #this file is new, md5 does not exist in Airtime.
+                    if(response['airtime_status'] == 0):
+                        filepath = self.create_file_path(event.pathname)
+                        os.rename(event.pathname, filepath)
+                        self.file_events.append({'mode': MODE_CREATE, 'filepath': filepath})
 
     def process_IN_MODIFY(self, event):
-        if not event.dir :
-
-            if self.is_audio_file(event.name) :
-                self.update_airtime(event)
-
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        if not event.dir:
+            self.logger.info("%s: %s", event.maskname, event.pathname)
+            global plupload_directory
+            #files that have been added through plupload have a placeholder already put in Airtime's database.
+            if not self.is_parent_directory(event.pathname, plupload_directory):
+                if self.is_audio_file(event.name) :
+                    self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
 
     def process_IN_MOVED_FROM(self, event):
-        if event.pathname in self.temp_files :
+        self.logger.info("%s: %s", event.maskname, event.pathname)
+        if event.pathname in self.temp_files:
             del self.temp_files[event.pathname]
             self.temp_files[event.cookie] = event.pathname
-
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        else:
+            self.moved_files[event.cookie] = event.pathname
 
     def process_IN_MOVED_TO(self, event):
-        if event.cookie in self.temp_files :
-            del self.temp_files[event.cookie]
-            self.update_airtime(event)
-
         self.logger.info("%s: %s", event.maskname, event.pathname)
+        if event.cookie in self.temp_files:
+            del self.temp_files[event.cookie]
+            self.file_events.append({'filepath': event.pathname, 'mode': MODE_MODIFY})
+        elif event.cookie in self.moved_files:
+            old_filepath = self.moved_files[event.cookie]
+            del self.moved_files[event.cookie]
+
+            global plupload_directory
+            if self.is_parent_directory(old_filepath, plupload_directory):
+                #file renamed from /tmp/plupload does not have a path in our naming scheme yet.
+                md_filepath = self.create_file_path(event.pathname)
+                #move the file a second time to its correct Airtime naming schema.
+                os.rename(event.pathname, md_filepath)
+                self.file_events.append({'filepath': md_filepath, 'mode': MODE_MOVED})
+            else:
+                self.file_events.append({'filepath': event.pathname, 'mode': MODE_MOVED})
+
+        else:
+            #TODO need to pass in if md5 exists to this file creation function, identical files will just replace current files not have a (1) etc.
+            #file has been most likely dropped into stor folder from an unwatched location. (from gui, mv command not cp)
+            md_filepath = self.create_file_path(event.pathname)
+            os.rename(event.pathname, md_filepath)
+            self.file_events.append({'mode': MODE_CREATE, 'filepath': md_filepath})
+
+    def process_IN_DELETE(self, event):
+        if not event.dir:
+            self.logger.info("%s: %s", event.maskname, event.pathname)
+            self.file_events.append({'filepath': event.pathname, 'mode': MODE_DELETE})
 
     def process_default(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
 
+    def notifier_loop_callback(self, notifier):
+
+        while len(self.file_events) > 0:
+            file_info = self.file_events.popleft()
+            self.update_airtime(file_info)
+
+        try:
+            notifier.connection.drain_events(timeout=1)
+        except Exception, e:
+            self.logger.info("%s", e)
+
 if __name__ == '__main__':
 
     try:
-        # watched events
-        mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
-        #mask = pyinotify.ALL_EVENTS
-
-        wm = WatchManager()
-        wdd = wm.add_watch(storage_directory, mask, rec=True, auto_add=True)
-
         logger = logging.getLogger('root')
-        logger.info("Added watch to %s", storage_directory)
+        mm = MediaMonitor()
 
-        notifier = AirtimeNotifier(wm, MediaMonitor(), read_freq=int(config["check_filesystem_events"]), timeout=1)
+        response = None
+        while response is None:
+            response = mm.api_client.setup_media_monitor()
+            time.sleep(5)
+
+        storage_directory = response["stor"]
+        plupload_directory = response["plupload"]
+
+        wdd = mm.watch_directory(storage_directory)
+        logger.info("Added watch to %s", storage_directory)
+        logger.info("wdd result %s", wdd[storage_directory])
+        wdd = mm.watch_directory(plupload_directory)
+        logger.info("Added watch to %s", plupload_directory)
+        logger.info("wdd result %s", wdd[plupload_directory])
+
+        notifier = AirtimeNotifier(mm.wm, mm, read_freq=int(config["check_filesystem_events"]), timeout=1)
         notifier.coalesce_events()
-        notifier.loop(callback=checkRabbitMQ)
+
+        #notifier.loop(callback=mm.notifier_loop_callback)
+
+        while True:
+            if(notifier.check_events(1)):
+                notifier.read_events()
+                notifier.process_events()
+            mm.notifier_loop_callback(notifier)
+
     except KeyboardInterrupt:
         notifier.stop()
+    except Exception, e:
+        logger.error('Exception: %s', e)

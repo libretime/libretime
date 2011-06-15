@@ -117,6 +117,9 @@ class ApiClientInterface:
     def upload_recorded_show(self):
         pass
 
+    def check_media_status(self, md5):
+        pass
+
     def update_media_metadata(self, md):
         pass
 
@@ -356,13 +359,52 @@ class AirTimeApiClient(ApiClientInterface):
 
         return response
 
-    def update_media_metadata(self, md):
+    def setup_media_monitor(self):
+        logger = logging.getLogger()
+
+        response = None
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_setup_url"])
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            logger.debug(url)
+
+            response = urllib.urlopen(url)
+            response = json.loads(response.read())
+            logger.debug("Json Media Setup %s", response)
+
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+
+        return response
+
+    def check_media_status(self, md5):
+        logger = logging.getLogger()
+
+        response = None
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_status_url"])
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%md5%%", md5)
+            logger.debug(url)
+
+            response = urllib.urlopen(url)
+            response = json.loads(response.read())
+            logger.info("Json Media Status %s", response)
+
+        except Exception, e:
+            logger.error("Exception: %s", e)
+
+        return response
+
+    def update_media_metadata(self, md, mode):
         logger = logging.getLogger()
         response = None
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%mode%%", mode)
 
             data = recursive_urlencode(md)
             req = urllib2.Request(url, data)
@@ -372,6 +414,7 @@ class AirTimeApiClient(ApiClientInterface):
             response = json.loads(response)
 
         except Exception, e:
+            response = None
             logger.error("Exception: %s", e)
 
         return response

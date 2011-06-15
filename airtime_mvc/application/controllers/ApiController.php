@@ -10,6 +10,8 @@ class ApiController extends Zend_Controller_Action
         $context->addActionContext('version', 'json')
                 ->addActionContext('recorded-shows', 'json')
                 ->addActionContext('upload-recorded', 'json')
+                ->addActionContext('media-monitor-setup', 'json')
+                ->addActionContext('media-item-status', 'json')
                 ->addActionContext('reload-metadata', 'json')
                 ->initContext();
     }
@@ -77,7 +79,7 @@ class ApiController extends Zend_Controller_Action
         if (ctype_alnum($file_id) && strlen($file_id) == 32) {
           $media = StoredFile::RecallByGunid($file_id);
           if ($media != null && !PEAR::isError($media)) {
-            $filepath = $media->getRealFilePath();
+            $filepath = $media->getFilePath();
             if(!is_file($filepath))
             {
                 header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
@@ -293,17 +295,17 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
        	$showCanceled = false;
         $show_instance  = $this->_getParam('show_instance');
-        
+
         $upload_dir = ini_get("upload_tmp_dir");
         $file = StoredFile::uploadFile($upload_dir);
-        
+
         $show_name = "";
         try {
             $show_inst = new ShowInstance($show_instance);
-            
+
             $show_inst->setRecordedFile($file->getId());
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
@@ -317,12 +319,12 @@ class ApiController extends Zend_Controller_Action
             //the library), now lets just return.
             $showCanceled = true;
         }
-        
+
 		$tmpTitle = !(empty($show_name))?$show_name."-":"";
 		$tmpTitle .= $file->getName();
-		
+
 		$file->setMetadataValue(UI_MDATA_KEY_TITLE, $tmpTitle);
-        
+
         if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
         {
         	for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
@@ -353,8 +355,57 @@ class ApiController extends Zend_Controller_Action
         $this->view->id = $file->getId();
     }
 
-    public function reloadMetadataAction() {
+    public function mediaMonitorSetupAction() {
+        global $CC_CONFIG;
 
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $plupload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+
+        //need to make sure plupload dir exists so we can watch it.
+        if(!file_exists($plupload_dir)) {
+            @mkdir($plupload_dir, 0755);
+        }
+
+        $this->view->stor = $CC_CONFIG['storageDir'];
+        $this->view->plupload = $plupload_dir;
+    }
+
+    public function mediaItemStatusAction() {
+        global $CC_CONFIG;
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $md5 = $this->_getParam('md5');
+        $file = StoredFile::RecallByMd5($md5);
+
+        //New file added to Airtime
+        if (is_null($file)) {
+            $this->view->airtime_status = 0;
+        }
+        else {
+            $this->view->airtime_status = 1;
+        }
+
+    }
+
+    public function reloadMetadataAction() {
         global $CC_CONFIG;
 
         $api_key = $this->_getParam('api_key');
@@ -366,22 +417,62 @@ class ApiController extends Zend_Controller_Action
         }
 
         $md = $this->_getParam('md');
-        $filepath = $md['filepath'];
-        $filepath = str_replace("\\", "", $filepath);
-        $file = StoredFile::Recall(null, null, null, $filepath);
-        if (PEAR::isError($file) || is_null($file)) {
-            $this->view->response = "File not in Airtime's Database";
-            return;
+        $mode = $this->_getParam('mode');
+
+        if ($mode == "create") {
+            $md5 = $md['MDATA_KEY_MD5'];
+            $file = StoredFile::RecallByMd5($md5);
+
+            if (is_null($file)) {
+                $file = StoredFile::Insert($md);
+            }
+            else {
+                $this->view->error = "File already exists in Airtime.";
+                return;
+            }
+        }
+        else if ($mode == "modify") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+            $file = StoredFile::RecallByFilepath($filepath);
+
+            //File is not in database anymore.
+            if (is_null($file)) {
+                $this->view->error = "File does not exist in Airtime.";
+                return;
+            }
+            //Updating a metadata change.
+            else {
+                $file->setMetadata($md);
+            }
+        }
+        else if ($mode == "moved") {
+            $md5 = $md['MDATA_KEY_MD5'];
+            $file = StoredFile::RecallByMd5($md5);
+
+            if (is_null($file)) {
+                $this->view->error = "File doesn't exist in Airtime.";
+                return;
+            }
+            else {
+                $file->setMetadata($md);
+            }
+        }
+        else if ($mode == "delete") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+            $file = StoredFile::RecallByFilepath($filepath);
+
+            if (is_null($file)) {
+                $this->view->error = "File doesn't exist in Airtime.";
+                return;
+            }
+            else {
+                $file->delete();
+            }
         }
 
-        $res = $file->replaceDbMetadata($md);
-
-        if (PEAR::isError($res)) {
-            $this->view->response = "Metadata Change Failed";
-        }
-        else {
-            $this->view->response = "Success!";
-        }
+        $this->view->id = $file->getId();
     }
 }
 

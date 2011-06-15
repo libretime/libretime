@@ -40,9 +40,6 @@ class RabbitMq
         }
     }
 
-/*
-*   wait for 1.9.0 release
-
     public static function SendFileMetaData($md)
     {
         global $CC_CONFIG;
@@ -64,7 +61,5 @@ class RabbitMq
         $channel->close();
         $conn->close();
     }
-*/
-
 }
 
