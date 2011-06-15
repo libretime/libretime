@@ -104,6 +104,10 @@ class StoredFile {
         }
         else {
             foreach ($p_md as $dbColumn => $mdValue) {
+                //don't blank out name, defaults to original filename on first insertion to database.
+                if($p_category == "track_title" && (is_null($p_value) || $p_value == "")) {
+                    continue;
+                }
                 $propelColumn = $this->_dbMD[$dbColumn];
                 $method = "set$propelColumn";
                 $this->_file->$method($mdValue);
@@ -136,6 +140,10 @@ class StoredFile {
      */
     public function setDbColMetadataValue($p_category, $p_value)
     {
+        //don't blank out name, defaults to original filename on first insertion to database.
+        if($p_category == "track_title" && (is_null($p_value) || $p_value == "")) {
+            return;
+        }
         $propelColumn = $this->_dbMD[$p_category];
         $method = "set$propelColumn";
         $this->_file->$method($p_value);
@@ -736,6 +744,7 @@ class StoredFile {
             $md['MDATA_KEY_TITLE'] = $fileName;
 
 		    StoredFile::Insert($md);
+            $r = @chmod($audio_file, 0666);
             $r = @rename($audio_file, $audio_stor);
 		}
 

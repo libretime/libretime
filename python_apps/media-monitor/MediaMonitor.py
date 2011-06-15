@@ -186,7 +186,7 @@ class MediaMonitor(ProcessEvent):
         try:
             omask = os.umask(0)
             if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
-                os.makedirs(directory, 02775)
+                os.makedirs(directory, 02777)
                 self.watch_directory(directory)
         finally:
             os.umask(omask)
@@ -212,38 +212,49 @@ class MediaMonitor(ProcessEvent):
 
         global storage_directory
 
-        original_name = os.path.basename(imported_filepath)
-        file_ext = os.path.splitext(imported_filepath)[1]
-        file_info = mutagen.File(imported_filepath, easy=True)
+        try:
+            #get rid of file extention from original name, name might have more than 1 '.' in it.
+            original_name = os.path.basename(imported_filepath)
+            #self.logger.info('original name: %s', original_name)
+            original_name = original_name.split(".")[0:-1]
+            #self.logger.info('original name: %s', original_name)
+            original_name = ''.join(original_name)
+            #self.logger.info('original name: %s', original_name)
 
-        metadata = {'artist':None,
-                    'album':None,
-                    'title':None,
-                    'tracknumber':None}
+            file_ext = os.path.splitext(imported_filepath)[1]
+            file_info = mutagen.File(imported_filepath, easy=True)
 
-        for key in metadata.keys():
-            if key in file_info:
-                metadata[key] = file_info[key][0]
+            metadata = {'artist':None,
+                        'album':None,
+                        'title':None,
+                        'tracknumber':None}
 
-        if metadata['artist'] is not None:
-            base = "%s/%s" % (storage_directory, metadata['artist'])
-            if metadata['album'] is not None:
-                base = "%s/%s" % (base, metadata['album'])
-            if metadata['title'] is not None:
-                if metadata['tracknumber'] is not None:
-                    metadata['tracknumber'] = "%02d" % (int(metadata['tracknumber']))
-                    base = "%s/%s - %s" % (base, metadata['tracknumber'], metadata['title'])
+            for key in metadata.keys():
+                if key in file_info:
+                    metadata[key] = file_info[key][0]
+
+            if metadata['artist'] is not None:
+                base = "%s/%s" % (storage_directory, metadata['artist'])
+                if metadata['album'] is not None:
+                    base = "%s/%s" % (base, metadata['album'])
+                if metadata['title'] is not None:
+                    if metadata['tracknumber'] is not None:
+                        metadata['tracknumber'] = "%02d" % (int(metadata['tracknumber']))
+                        base = "%s/%s - %s" % (base, metadata['tracknumber'], metadata['title'])
+                    else:
+                        base = "%s/%s" % (base, metadata['title'])
                 else:
-                    base = "%s/%s" % (base, metadata['title'])
+                    base = "%s/%s" % (base, original_name)
             else:
-                base = "%s/%s" % (base, original_name)
-        else:
-            base = "%s/%s" % (storage_directory, original_name)
+                base = "%s/%s" % (storage_directory, original_name)
 
-        base = "%s%s" % (base, file_ext)
+            base = "%s%s" % (base, file_ext)
 
-        filepath = self.create_unique_filename(base)
-        self.ensure_dir(filepath)
+            filepath = self.create_unique_filename(base)
+            self.ensure_dir(filepath)
+
+        except Exception, e:
+            self.logger.error('Exception: %s', e)
 
         return filepath
 
@@ -335,7 +346,8 @@ class MediaMonitor(ProcessEvent):
                     #this file is new, md5 does not exist in Airtime.
                     if(response['airtime_status'] == 0):
                         filepath = self.create_file_path(event.pathname)
-                        self.file_events.append({'old_filepath': event.pathname, 'mode': MODE_CREATE, 'filepath': filepath})
+                        os.rename(event.pathname, filepath)
+                        self.file_events.append({'mode': MODE_CREATE, 'filepath': filepath})
 
     def process_IN_MODIFY(self, event):
         if not event.dir:
@@ -364,7 +376,6 @@ class MediaMonitor(ProcessEvent):
             del self.moved_files[event.cookie]
 
             global plupload_directory
-            #add a modify event to send md to Airtime for the plupload file.
             if self.is_parent_directory(old_filepath, plupload_directory):
                 #file renamed from /tmp/plupload does not have a path in our naming scheme yet.
                 md_filepath = self.create_file_path(event.pathname)
@@ -373,6 +384,13 @@ class MediaMonitor(ProcessEvent):
                 self.file_events.append({'filepath': md_filepath, 'mode': MODE_MOVED})
             else:
                 self.file_events.append({'filepath': event.pathname, 'mode': MODE_MOVED})
+
+        else:
+            #TODO need to pass in if md5 exists to this file creation function, identical files will just replace current files not have a (1) etc.
+            #file has been most likely dropped into stor folder from an unwatched location. (from gui, mv command not cp)
+            md_filepath = self.create_file_path(event.pathname)
+            os.rename(event.pathname, md_filepath)
+            self.file_events.append({'mode': MODE_CREATE, 'filepath': md_filepath})
 
     def process_IN_DELETE(self, event):
         if not event.dir:
@@ -386,10 +404,6 @@ class MediaMonitor(ProcessEvent):
 
         while len(self.file_events) > 0:
             file_info = self.file_events.popleft()
-
-            if(file_info['mode'] == MODE_CREATE):
-                os.rename(file_info['old_filepath'], file_info['filepath'])
-
             self.update_airtime(file_info)
 
         try:

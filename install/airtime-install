@@ -11,10 +11,10 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 echo -e "\n******************************** Install Begin *********************************"
 
-php ${SCRIPTPATH}/airtime-install.php $@
-
 echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
+
+php ${SCRIPTPATH}/airtime-install.php $@
 
 echo -e "\n*** Pypo Installation ***"
 python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-install.py
