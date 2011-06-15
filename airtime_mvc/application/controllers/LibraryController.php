@@ -164,8 +164,7 @@ class LibraryController extends Zend_Controller_Action
                 $formdata = $form->getValues();
                 $file->setDbColMetadata($formdata);
 
-                $data = $formdata;
-                $data['filepath'] = $file->getFilePath();
+                $data = $file->getMetadata();
 
                 RabbitMq::SendFileMetaData($data);
 

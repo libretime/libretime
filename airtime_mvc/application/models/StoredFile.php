@@ -191,6 +191,27 @@ class StoredFile {
     }
 
     /**
+     * Get metadata as array, indexed by the constant names.
+     *
+     * @return array
+     */
+    public function getMetadata()
+    {
+        $c = get_defined_constants(true);
+        $md = array();
+
+        foreach ($c['user'] as $constant => $value) {
+            if (preg_match('/^MDATA_KEY/', $constant)) {
+                if (isset($this->_dbMD[$value])) {
+                    $md[$constant] = $this->getDbColMetadataValue($value);
+                }
+            }
+        }
+
+        return $md;
+    }
+
+    /**
      * Delete and insert media file
      *
      * @param string $p_localFilePath

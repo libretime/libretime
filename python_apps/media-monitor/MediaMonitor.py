@@ -85,21 +85,31 @@ class AirtimeNotifier(Notifier):
         consumer.register_callback(self.handle_message)
         consumer.consume()
 
+        self.logger = logging.getLogger('root')
+
     def handle_message(self, body, message):
         # ACK the message to take it off the queue
         message.ack()
 
-        logger = logging.getLogger('root')
-        logger.info("Received md from RabbitMQ: " + body)
+        self.logger.info("Received md from RabbitMQ: " + body)
 
-        m =  json.loads(message.body)
-        airtime_file = mutagen.File(m['filepath'], easy=True)
-        del m['filepath']
-        for key in m.keys() :
-            if m[key] != "" :
-                airtime_file[self.airtime2mutagen[key]] = m[key]
+        try:
+            m =  json.loads(message.body)
+            airtime_file = mutagen.File(m['MDATA_KEY_FILEPATH'], easy=True)
 
-        airtime_file.save()
+            for key in m.keys() :
+                if key in self.airtime2mutagen:
+                    value = m[key]
+                    if ((value is not None) and (len(str(value)) > 0)):
+                        airtime_file[self.airtime2mutagen[key]] = str(value)
+                        self.logger.info('setting %s = %s ', key, str(value))
+
+
+            airtime_file.save()
+        except Exception, e:
+            self.logger.error('Trying to save md')
+            self.logger.error('Exception: %s', e.value)
+            self.logger.error('Filepath %s', m['MDATA_KEY_FILEPATH'])
 
 class MediaMonitor(ProcessEvent):
 
