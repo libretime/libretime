@@ -97,9 +97,11 @@ class PypoPush(Thread):
             str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
             
             for pkey in schedule:
-                plstart = pkey[0:19]
+                plstart = schedule[pkey]['start'][0:19]
+                #plstart = pkey[0:19]
          
-                playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
+                #playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
+                playedFlag = False
                 
                 if plstart == str_tcoming_s or (plstart < str_tcoming_s and plstart > str_tcoming2_s and not playedFlag):
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
