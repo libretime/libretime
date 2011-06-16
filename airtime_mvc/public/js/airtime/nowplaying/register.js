@@ -17,25 +17,13 @@ $(document).ready(function(){
                     $(this).dialog("close");
                 }, 
                 "Yes, help Airtime": function() {
-                    $("#register-form").submit();
-                    /*$.ajax({
-                        type: 'post',
-                        dataType: 'html',
-                        url: '/Preference/registersubmit',
-                        async: false,
-                        data: $("#register-form").serialize(),
-                        success: function (response, status, xml) {
-                            //Check for error here
-                            if (error) {
-                                $("#register-form").parent().html('').html(response);
-                            }
-                            else {
-                                $(this).dialog('close');
-                            }
+                    if($("#Publicise").is(':checked')){
+                        if(validateFields()){
+                            $("#register-form").submit();
                         }
-                    });*/
-
-                    $(this).dialog("close");  
+                    }else{
+                        $("#register-form").submit();
+                    }
                 } 
             }
         });
@@ -68,6 +56,40 @@ $(document).ready(function(){
         }
     });
 });
+
+function validateFields(){
+    var stnName = $("#stnName");
+    var phone = $("#Phone");
+    var email = $("#Email");
+    var city = $("#City");
+    var description = $("#Description");
+    
+    var errors = new Array();
+    
+    errors[0] = displayError(stnName);
+    errors[1] = displayError(phone);
+    errors[2] = displayError(email);
+    errors[3] = displayError(city);
+    errors[4] = displayError(description);
+  
+    for( e in errors ){
+        if(errors[e]){
+            return false;
+        }
+    }
+    return true;
+}
+
+function displayError(ele){
+    var errorMsg = "Value is required and can't be empty";
+    
+    ele.parent().find("ul").remove();
+    if($.trim(ele.val()) == ''){
+        ele.parent().append("<ul class='errors'><li>"+errorMsg+"</li></ul>");
+        return true;
+    }
+    return false;
+}
         
 function resizeImg(ele){
 

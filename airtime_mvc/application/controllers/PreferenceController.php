@@ -75,21 +75,49 @@ class PreferenceController extends Zend_Controller_Action
         
         $form = new Application_Form_RegisterAirtime();
         
-        $logo = Application_Model_Preference::GetStationLogo();
-		if($logo){
-			$this->view->logoImg = $logo;
-		}
-        
-        $this->view->dialog = $form->render($this->view);
+        if ($request->isPost()) {
+      
+            if ($form->isValid($request->getPost())) {
+
+                $values = $form->getValues();
+                var_dump($values);
+                Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
+                Application_Model_Preference::SetPhone($values["Phone"]);
+                Application_Model_Preference::SetEmail($values["Email"]);
+                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
+                Application_Model_Preference::SetPublicise($values["Publicise"]);
+                
+                $imagePath = $form->Logo->getFileName();
+                
+                Application_Model_Preference::SetStationCountry($values["Country"]);
+                Application_Model_Preference::SetStationCity($values["City"]);
+                Application_Model_Preference::SetStationDescription($values["Description"]);
+                Application_Model_Preference::SetStationLogo($imagePath);
+            }
+            Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+            // unset session
+            Zend_Session::namespaceUnset('referrer');
+            
+            $this->_redirect('Nowplaying');
+        }else{
+            $logo = Application_Model_Preference::GetStationLogo();
+    		if($logo){
+    			$this->view->logoImg = $logo;
+    		}
+            
+            $this->view->dialog = $form->render($this->view);
+        }
     }
     
     public function remindmeAction(){
+        // unset session
+        Zend_Session::namespaceUnset('referrer');
     	$now = date("Y-m-d H:i:s");
     	Application_Model_Preference::SetRemindMeDate($now);
     	die();
     }
     
-    public function registersubmitAction(){
+    /*public function registersubmitAction(){
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -97,9 +125,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->statusMsg = "";
         
         $form = new Application_Form_RegisterAirtime();
-        var_dump($request->getPost());
-        var_dump($form->isValid($request->getPost()));
-        var_dump($form->getMessages());
+        
         if ($request->isPost()) {
       
             if ($form->isValid($request->getPost())) {
@@ -119,10 +145,13 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetStationCity($values["City"]);
                 Application_Model_Preference::SetStationDescription($values["Description"]);
                 Application_Model_Preference::SetStationLogo($imagePath);
+                
+                // unset session
+                Zend_Session::namespaceUnset('referrer');
             }
         }
         $this->_redirect('Nowplaying');
-    }
+    }*/
 }
 
 

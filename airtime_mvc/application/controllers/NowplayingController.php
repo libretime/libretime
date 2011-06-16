@@ -23,8 +23,6 @@ class NowplayingController extends Zend_Controller_Action
         $refer_sses = new Zend_Session_Namespace('referrer');
         if($refer_sses->referrer == 'login' && Application_Model_Nowplaying::ShouldShowPopUp()
             && !Application_Model_Preference::GetSupportFeedback()){
-        	//unset session
-        	Zend_Session::namespaceUnset('referrer');
         	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js','text/javascript');
         }
     }

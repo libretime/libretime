@@ -5,7 +5,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 
     public function init()
     {
-        $this->setAction('/Preference/registersubmit');
+        $this->setAction('/Preference/register');
         $this->setMethod('post');
         
 		$country_list = Application_Model_Preference::GetCountryList();
@@ -27,7 +27,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         $this->addElement('text', 'Phone', array(
             'class'      => 'input_text',
             'label'      => 'Phone:',
-            'required'   => false,
+            'required'   => true,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetPhone(),
             'decorators' => array(
@@ -39,7 +39,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         $this->addElement('text', 'Email', array(
             'class'      => 'input_text',
             'label'      => 'Email:',
-            'required'   => false,
+            'required'   => true,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetEmail(),
             'decorators' => array(
@@ -61,7 +61,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 		// county list dropdown
 		$this->addElement('select', 'Country', array(
 			'label'		=> 'Country:',
-			'required'	=> false,
+			'required'	=> true,
 			'value'		=> Application_Model_Preference::GetStationCountry(),
 			'multiOptions'	=> $country_list,
 			'decorators' => array(
@@ -72,7 +72,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 		// Station city
         $this->addElement('text', 'City', array(
             'label'      => 'City:',
-            'required'   => false,
+            'required'   => true,
             'class'      => 'input_text',
             'value' => Application_Model_Preference::GetStationCity(),
             'decorators' => array(
@@ -84,7 +84,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 		$description = new Zend_Form_Element_Textarea('Description');
 		$description->class = 'input_text_area';
 		$description->setLabel('Station Description:')
-					->setRequired(false)
+					->setRequired(true)
 					->setValue(Application_Model_Preference::GetStationDescription())
 					->setDecorators(array('ViewHelper'))
 					->setAttrib('ROWS','2')
