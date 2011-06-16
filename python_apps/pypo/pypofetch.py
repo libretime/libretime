@@ -260,7 +260,7 @@ class PypoFetch(Thread):
                     
                     delta = dtnow - media_start #we get a TimeDelta object from this operation
                     logger.info("Starting media item  at %d second point", delta.seconds)
-                    media['cue_in'] = delta.seconds + 10 #TODO is cue_in in seconds?
+                    media['cue_in'] = delta.seconds + 10
                     td = timedelta(seconds=10)
                     playlist['start'] = (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S')
                     logger.info("Crash detected, setting playlist to restart at %s", (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S'))

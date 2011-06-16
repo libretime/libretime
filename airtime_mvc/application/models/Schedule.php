@@ -697,11 +697,6 @@ class Schedule {
                 $storedFile = StoredFile::Recall($item["file_id"]);
                 $uri = $storedFile->getFileUrl();
 
-                // For pypo, a cueout of zero means no cueout
-                $cueOut = "0";
-                if (Schedule::TimeDiff($item["cue_out"], $item["clip_length"]) > 0.001) {
-                    $cueOut = Schedule::WallTimeToMillisecs($item["cue_out"]);
-                }
                 $starts = Schedule::AirtimeTimeToPypoTime($item["starts"]);
                 $medias[$starts] = array(
                     'row_id' => $item["id"],
@@ -710,8 +705,8 @@ class Schedule {
                     'fade_in' => Schedule::WallTimeToMillisecs($item["fade_in"]),
                     'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
                     'fade_cross' => 0,
-                    'cue_in' => Schedule::WallTimeToMillisecs($item["cue_in"]),
-                    'cue_out' => $cueOut,
+                    'cue_in' => DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+                    'cue_out' => DateHelper::CalculateLengthInSeconds($item["cue_out"]),
                     'export_source' => 'scheduler',
                     'start' => $starts,
                     'end' => Schedule::AirtimeTimeToPypoTime($item["ends"])
