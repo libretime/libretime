@@ -54,10 +54,9 @@ list of supported easy tags in mutagen version 1.20
 ['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
 """
 
-class AirtimeNotifier(Notifier):
+class MetadataExtractor:
 
-    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None):
-        Notifier.__init__(self, watch_manager, default_proc_fun, read_freq, threshold, timeout)
+    def __init__(self):
 
         self.airtime2mutagen = {\
         "MDATA_KEY_TITLE": "title",\
@@ -77,50 +76,6 @@ class AirtimeNotifier(Notifier):
         "MDATA_KEY_COPYRIGHT": "copyright",\
         }
 
-        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
-        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
-        self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
-        channel = self.connection.channel()
-        consumer = Consumer(channel, schedule_queue)
-        consumer.register_callback(self.handle_message)
-        consumer.consume()
-
-        self.logger = logging.getLogger('root')
-
-    def handle_message(self, body, message):
-        # ACK the message to take it off the queue
-        message.ack()
-
-        self.logger.info("Received md from RabbitMQ: " + body)
-
-        try:
-            m =  json.loads(message.body)
-            airtime_file = mutagen.File(m['MDATA_KEY_FILEPATH'], easy=True)
-
-            for key in m.keys() :
-                if key in self.airtime2mutagen:
-                    value = m[key]
-                    if ((value is not None) and (len(str(value)) > 0)):
-                        airtime_file[self.airtime2mutagen[key]] = str(value)
-                        self.logger.info('setting %s = %s ', key, str(value))
-
-
-            airtime_file.save()
-        except Exception, e:
-            self.logger.error('Trying to save md')
-            self.logger.error('Exception: %s', e)
-            self.logger.error('Filepath %s', m['MDATA_KEY_FILEPATH'])
-
-class MediaMonitor(ProcessEvent):
-
-    def my_init(self):
-        """
-        Method automatically called from ProcessEvent.__init__(). Additional
-        keyworded arguments passed to ProcessEvent.__init__() are then
-        delegated to my_init().
-        """
-        self.api_client = api_client.api_client_factory(config)
-
         self.mutagen2airtime = {\
         "title": "MDATA_KEY_TITLE",\
         "artist": "MDATA_KEY_CREATOR",\
@@ -139,26 +94,7 @@ class MediaMonitor(ProcessEvent):
         "copyright": "MDATA_KEY_COPYRIGHT",\
         }
 
-        self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger('root')
-        self.temp_files = {}
-        self.moved_files = {}
-        self.file_events = deque()
-
-        self.mask = pyinotify.ALL_EVENTS
-
-        self.wm = WatchManager()
-
-        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
-        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
-        connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
-        channel = connection.channel()
-
-    def watch_directory(self, directory):
-        return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
-
-    def is_parent_directory(self, filepath, directory):
-        return (directory == filepath[0:len(directory)])
 
     def get_md5(self, filepath):
         f = open(filepath, 'rb')
@@ -184,6 +120,104 @@ class MediaMonitor(ProcessEvent):
         length = "%s:%s:%s" % (h, m, s)
 
         return length
+
+    def save_md_to_file(self, m):
+        try:
+            airtime_file = mutagen.File(m['MDATA_KEY_FILEPATH'], easy=True)
+
+            for key in m.keys() :
+                if key in self.airtime2mutagen:
+                    value = m[key]
+                    if ((value is not None) and (len(str(value)) > 0)):
+                        airtime_file[self.airtime2mutagen[key]] = str(value)
+                        self.logger.info('setting %s = %s ', key, str(value))
+
+
+            airtime_file.save()
+        except Exception, e:
+            self.logger.error('Trying to save md')
+            self.logger.error('Exception: %s', e)
+            self.logger.error('Filepath %s', m['MDATA_KEY_FILEPATH'])
+
+    def get_md_from_file(self, filepath):
+        md = {}
+        md5 = self.get_md5(filepath)
+        md['MDATA_KEY_MD5'] = md5
+
+        file_info = mutagen.File(filepath, easy=True)
+        attrs = self.mutagen2airtime
+        for key in file_info.keys() :
+            if key in attrs :
+                md[attrs[key]] = file_info[key][0]
+
+        #md['MDATA_KEY_TRACKNUMBER'] = "%02d" % (int(md['MDATA_KEY_TRACKNUMBER']))
+
+        md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
+        md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
+        md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
+        md['MDATA_KEY_MIME'] = file_info.mime[0]
+
+        if "mp3" in md['MDATA_KEY_MIME']:
+            md['MDATA_KEY_FTYPE'] = "audioclip"
+        elif "vorbis" in md['MDATA_KEY_MIME']:
+            md['MDATA_KEY_FTYPE'] = "audioclip"
+
+        return md
+
+
+class AirtimeNotifier(Notifier):
+
+    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None):
+        Notifier.__init__(self, watch_manager, default_proc_fun, read_freq, threshold, timeout)
+
+        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
+        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
+        self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
+        channel = self.connection.channel()
+        consumer = Consumer(channel, schedule_queue)
+        consumer.register_callback(self.handle_message)
+        consumer.consume()
+
+        self.logger = logging.getLogger('root')
+        self.md_manager = MetadataExtractor()
+
+    def handle_message(self, body, message):
+        # ACK the message to take it off the queue
+        message.ack()
+
+        self.logger.info("Received md from RabbitMQ: " + body)
+        m =  json.loads(message.body)
+        self.md_manager.save_md_to_file(m)
+
+
+class MediaMonitor(ProcessEvent):
+
+    def my_init(self):
+        """
+        Method automatically called from ProcessEvent.__init__(). Additional
+        keyworded arguments passed to ProcessEvent.__init__() are then
+        delegated to my_init().
+        """
+        self.api_client = api_client.api_client_factory(config)
+        self.supported_file_formats = ['mp3', 'ogg']
+        self.logger = logging.getLogger('root')
+        self.temp_files = {}
+        self.moved_files = {}
+        self.file_events = deque()
+        self.mask = pyinotify.ALL_EVENTS
+        self.wm = WatchManager()
+        self.md_manager = MetadataExtractor()
+
+        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
+        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
+        connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
+        channel = connection.channel()
+
+    def watch_directory(self, directory):
+        return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
+
+    def is_parent_directory(self, filepath, directory):
+        return (directory == filepath[0:len(directory)])
 
     def ensure_dir(self, filepath):
         directory = os.path.dirname(filepath)
@@ -226,7 +260,7 @@ class MediaMonitor(ProcessEvent):
 
             #will be in the format .ext
             file_ext = os.path.splitext(imported_filepath)[1]
-            md = self.get_mutagen_info(imported_filepath)
+            md = self.md_manager.get_md_from_file(imported_filepath)
 
             path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE', 'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
 
@@ -250,32 +284,6 @@ class MediaMonitor(ProcessEvent):
 
         return filepath
 
-    def get_mutagen_info(self, filepath):
-        md = {}
-        md5 = self.get_md5(filepath)
-        md['MDATA_KEY_MD5'] = md5
-
-        file_info = mutagen.File(filepath, easy=True)
-        attrs = self.mutagen2airtime
-        for key in file_info.keys() :
-            if key in attrs :
-                md[attrs[key]] = file_info[key][0]
-
-        #md['MDATA_KEY_TRACKNUMBER'] = "%02d" % (int(md['MDATA_KEY_TRACKNUMBER']))
-
-        md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
-        md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
-        md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
-        md['MDATA_KEY_MIME'] = file_info.mime[0]
-
-        if "mp3" in md['MDATA_KEY_MIME']:
-            md['MDATA_KEY_FTYPE'] = "audioclip"
-        elif "vorbis" in md['MDATA_KEY_MIME']:
-            md['MDATA_KEY_FTYPE'] = "audioclip"
-
-        return md
-
-
     def update_airtime(self, d):
 
         filepath = d['filepath']
@@ -286,15 +294,15 @@ class MediaMonitor(ProcessEvent):
         md['MDATA_KEY_FILEPATH'] = filepath
 
         if (os.path.exists(filepath) and (mode == MODE_CREATE)):
-            mutagen = self.get_mutagen_info(filepath)
+            mutagen = self.md_manager.get_md_from_file(filepath)
             md.update(mutagen)
             data = {'md': md}
         elif (os.path.exists(filepath) and (mode == MODE_MODIFY)):
-            mutagen = self.get_mutagen_info(filepath)
+            mutagen = self.md_manager.get_md_from_file(filepath)
             md.update(mutagen)
             data = {'md': md}
         elif (mode == MODE_MOVED):
-            mutagen = self.get_mutagen_info(filepath)
+            mutagen = self.md_manager.get_md_from_file(filepath)
             md.update(mutagen)
             data = {'md': md}
         elif (mode == MODE_DELETE):
@@ -334,7 +342,7 @@ class MediaMonitor(ProcessEvent):
                 global plupload_directory
                 #files that have been added through plupload have a placeholder already put in Airtime's database.
                 if not self.is_parent_directory(event.pathname, plupload_directory):
-                    md5 = self.get_md5(event.pathname)
+                    md5 = self.md_manager.get_md5(event.pathname)
                     response = self.api_client.check_media_status(md5)
 
                     #this file is new, md5 does not exist in Airtime.
