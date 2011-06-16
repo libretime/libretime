@@ -11,9 +11,9 @@
 
 USERID=pypo
 GROUPID=pypo
-NAME=Airtime
+NAME=Airtime\ Media\ Monitor
 
-DAEMON=/usr/bin/airtime-media-monitor
+DAEMON=/usr/lib/airtime/media-monitor/airtime-media-monitor
 PIDFILE=/var/run/airtime-media-monitor.pid
 
 start () {    

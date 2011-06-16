@@ -65,10 +65,6 @@ try:
   os.system("chmod -R 755 "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["bin_dir"])
 
-  print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-media-monitor")
-  os.system("ln -s "+config["bin_dir"]+"/airtime-media-monitor /usr/bin/")
-
   print "Installing media-monitor daemon"
   shutil.copy(config["bin_dir"]+"/airtime-media-monitor-init-d", "/etc/init.d/airtime-media-monitor")
 

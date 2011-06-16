@@ -11,9 +11,9 @@
 
 USERID=pypo
 GROUPID=pypo
-NAME=Airtime
+NAME=Airtime\ Show\ Recorder
 
-DAEMON=/usr/bin/airtime-show-recorder
+DAEMON=/usr/lib/airtime/show-recorder/airtime-show-recorder
 PIDFILE=/var/run/airtime-show-recorder.pid
 
 start () {    

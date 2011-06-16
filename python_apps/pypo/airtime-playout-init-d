@@ -11,12 +11,12 @@
 
 USERID=pypo
 GROUPID=pypo
-NAME=Airtime
+NAME=Airtime\ Playout
 
-DAEMON0=/usr/bin/airtime-playout
+DAEMON0=/usr/lib/airtime/pypo/bin/airtime-playout
 PIDFILE0=/var/run/airtime-playout.pid
 
-DAEMON1=/usr/bin/airtime-liquidsoap
+DAEMON1=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
 PIDFILE1=/var/run/airtime-liquidsoap.pid
 
 start () {    
@@ -27,8 +27,8 @@ start () {
 stop () {
         # Send TERM after 5 seconds, wait at most 30 seconds.
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE0
-        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
         rm -f $PIDFILE0
+        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
         rm -f $PIDFILE1
 }
 

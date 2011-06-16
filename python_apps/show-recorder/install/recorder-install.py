@@ -63,10 +63,6 @@ try:
   os.system("chmod -R 755 "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["bin_dir"])
 
-  print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-show-recorder")
-  os.system("ln -s "+config["bin_dir"]+"/airtime-show-recorder /usr/bin/")
-
   print "Installing show-recorder daemon"
   shutil.copy(config["bin_dir"]+"/airtime-show-recorder-init-d", "/etc/init.d/airtime-show-recorder")
 
