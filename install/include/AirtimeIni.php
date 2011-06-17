@@ -27,6 +27,7 @@ class AirtimeIni
     const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
     const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
+    const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
 
     public static function IniFilesExist()
     {
@@ -75,7 +76,14 @@ class AirtimeIni
             exit(1);
         }
         if (!copy(__DIR__."/../../python_apps/media-monitor/media-monitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
-            echo "Could not copy MediaMonitor.cfg to /etc/airtime/. Exiting.";
+            echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+    }
+    
+    public static function CreateMonitFile(){
+        if (!copy(__DIR__."/../../python_apps/monit/airtime-monit.cfg", AirtimeIni::CONF_FILE_MONIT)){
+            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
             exit(1);
         }
     }

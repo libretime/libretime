@@ -12,7 +12,7 @@ if os.geteuid() != 0:
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
 
 def remove_path(path):
-    os.system("rm -rf " + path)
+    os.system('rm -rf "%s"' % path)
 
 def get_current_script_dir():
   current_script_dir = os.path.realpath(__file__)

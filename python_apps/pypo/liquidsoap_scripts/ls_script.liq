@@ -7,6 +7,7 @@ set("server.telnet", true)
 set("server.telnet.port", 1234)
 
 queue = request.queue(id="queue", length=0.5)
+queue = cue_cut(queue)
 queue = audio_to_stereo(queue)
 
 pypo_data = ref '0'

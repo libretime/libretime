@@ -11,17 +11,20 @@
 
 USERID=pypo
 GROUPID=pypo
-NAME=Airtime
+NAME=Airtime\ Show\ Recorder
 
-DAEMON=/usr/bin/airtime-show-recorder
+DAEMON=/usr/lib/airtime/show-recorder/airtime-show-recorder
 PIDFILE=/var/run/airtime-show-recorder.pid
 
-start () {    
+start () {
+        monit monitor airtime-show-recorder
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
 }
 
 stop () {
         # Send TERM after 5 seconds, wait at most 30 seconds.
+        
+        monit unmonitor airtime-show-recorder
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE
         rm -f $PIDFILE
 }

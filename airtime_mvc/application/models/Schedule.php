@@ -184,7 +184,9 @@ class ScheduleGroup {
         ." st.cue_out,"
         ." st.clip_length,"
         ." st.fade_in,"
-        ." st.fade_out"
+        ." st.fade_out,"
+        ." st.starts,"
+        ." st.ends"
         ." FROM $CC_CONFIG[scheduleTable] as st"
         ." LEFT JOIN $CC_CONFIG[showInstances] as si"
         ." ON st.instance_id = si.id"
@@ -670,7 +672,7 @@ class Schedule {
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
                 $playlists[$pkey]['x_ident'] = $dx['group_id'];
-                $playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
+                //$playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
                 $playlists[$pkey]['timestamp'] = $timestamp;
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
                 $playlists[$pkey]['played'] = '0';
@@ -690,27 +692,24 @@ class Schedule {
             $scheduleGroup = new ScheduleGroup($playlist["schedule_id"]);
             $items = $scheduleGroup->getItems();
             $medias = array();
-            $playlist['subtype'] = '1';
             foreach ($items as $item)
             {
                 $storedFile = StoredFile::Recall($item["file_id"]);
                 $uri = $storedFile->getFileUrl();
 
-                // For pypo, a cueout of zero means no cueout
-                $cueOut = "0";
-                if (Schedule::TimeDiff($item["cue_out"], $item["clip_length"]) > 0.001) {
-                    $cueOut = Schedule::WallTimeToMillisecs($item["cue_out"]);
-                }
-                $medias[] = array(
+                $starts = Schedule::AirtimeTimeToPypoTime($item["starts"]);
+                $medias[$starts] = array(
                     'row_id' => $item["id"],
                     'id' => $storedFile->getGunid(),
                     'uri' => $uri,
                     'fade_in' => Schedule::WallTimeToMillisecs($item["fade_in"]),
                     'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
                     'fade_cross' => 0,
-                    'cue_in' => Schedule::WallTimeToMillisecs($item["cue_in"]),
-                    'cue_out' => $cueOut,
-                    'export_source' => 'scheduler'
+                    'cue_in' => DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+                    'cue_out' => DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+                    'export_source' => 'scheduler',
+                    'start' => $starts,
+                    'end' => Schedule::AirtimeTimeToPypoTime($item["ends"])
                 );
             }
             $playlist['medias'] = $medias;

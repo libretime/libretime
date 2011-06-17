@@ -103,12 +103,6 @@ try:
   os.system("chown -R pypo:pypo "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["cache_base_dir"])
 
-  print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-playout")
-  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-playout /usr/bin/")
-  os.system("rm -f /usr/bin/airtime-liquidsoap")
-  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-liquidsoap /usr/bin/")
-
   print "Installing pypo daemon"
   shutil.copy(config["bin_dir"]+"/bin/airtime-playout-init-d", "/etc/init.d/airtime-playout")
 

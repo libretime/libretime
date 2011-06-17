@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Cause bash script to exit if any of the installers
+#return with a non-zero return value.
+set -e
+
 # Absolute path to this script
 SCRIPT=`readlink -f $0`
 # Absolute directory this script is in

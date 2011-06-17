@@ -96,7 +96,7 @@ passthru("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
 echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
 passthru("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
 
-echo PHP_EOL."*** Starting Media Monitor ***".PHP_EOL;
+echo PHP_EOL."*** Updating Media Monitor ***".PHP_EOL;
 passthru("python ".__DIR__."/../python_apps/media-monitor/install/media-monitor-install.py");
 
 

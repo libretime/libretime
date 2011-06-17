@@ -619,7 +619,7 @@ class ObpApiClient():
     def get_liquidsoap_data(self, pkey, schedule):
         playlist = schedule[pkey]
         data = dict()
-        data["ptype"] = playlist['subtype']
+        #data["ptype"] = playlist['subtype']
         try:
             data["user_id"] = playlist['user_id']
             data["playlist_id"] = playlist['id']
