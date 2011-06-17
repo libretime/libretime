@@ -40,9 +40,11 @@ class RabbitMq
         }
     }
 
-    public static function SendFileMetaData($md)
+    public static function SendMessageToMediaMonitor($event_type, $md)
     {
         global $CC_CONFIG;
+
+        $md["event_type"] = $event_type;
 
         $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
                                          $CC_CONFIG["rabbitmq"]["port"],
