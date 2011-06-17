@@ -97,6 +97,8 @@ if ($overwrite) {
     echo "* Creating INI files".PHP_EOL;
     AirtimeIni::CreateIniFiles();
 }
+AirtimeIni::CreateMonitFile();
+
 
 AirtimeInstall::InstallPhpCode();
 AirtimeInstall::InstallBinaries();
