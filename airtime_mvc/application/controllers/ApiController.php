@@ -408,7 +408,8 @@ class ApiController extends Zend_Controller_Action
     public function reloadMetadataAction() {
         global $CC_CONFIG;
 
-        $api_key = $this->_getParam('api_key');
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
@@ -416,8 +417,16 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $md = $this->_getParam('md');
-        $mode = $this->_getParam('mode');
+        $mode = $request->getParam('mode');
+        $params = $request->getParams();
+
+        $md = array();
+        //extract all file metadata params from the request.
+        foreach ($params as $key => $value) {
+            if (preg_match('/^MDATA_KEY/', $key)) {
+                $md[$key] = $value;
+            }
+        }
 
         if ($mode == "create") {
             $md5 = $md['MDATA_KEY_MD5'];

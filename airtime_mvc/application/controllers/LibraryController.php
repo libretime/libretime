@@ -167,7 +167,7 @@ class LibraryController extends Zend_Controller_Action
 
                 $data = $file->getMetadata();
 
-                RabbitMq::SendFileMetaData($data);
+                RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
                 $this->_helper->redirector('index');
             }

@@ -10,9 +10,12 @@ import hashlib
 import json
 import shutil
 import math
+import socket
+import grp
+import pwd
 
 from collections import deque
-from pwd import getpwnam
+
 from subprocess import Popen, PIPE, STDOUT
 
 from configobj import ConfigObj
@@ -25,6 +28,8 @@ from pyinotify import WatchManager, Notifier, ProcessEvent
 from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
 from api_clients import api_client
+
+from multiprocessing import Process, Lock
 
 MODE_CREATE = "create"
 MODE_MODIFY = "modify"
@@ -130,7 +135,7 @@ class MetadataExtractor:
                     value = m[key]
                     if ((value is not None) and (len(str(value)) > 0)):
                         airtime_file[self.airtime2mutagen[key]] = str(value)
-                        self.logger.info('setting %s = %s ', key, str(value))
+                        #self.logger.info('setting %s = %s ', key, str(value))
 
 
             airtime_file.save()
@@ -150,7 +155,17 @@ class MetadataExtractor:
             if key in attrs :
                 md[attrs[key]] = file_info[key][0]
 
-        #md['MDATA_KEY_TRACKNUMBER'] = "%02d" % (int(md['MDATA_KEY_TRACKNUMBER']))
+        if 'MDATA_KEY_TITLE' not in md:
+            #get rid of file extention from original name, name might have more than 1 '.' in it.
+            original_name = os.path.basename(filepath)
+            original_name = original_name.split(".")[0:-1]
+            original_name = ''.join(original_name)
+            md['MDATA_KEY_TITLE'] = original_name
+
+        #incase track number is in format u'4/11'
+        if 'MDATA_KEY_TRACKNUMBER' in md:
+            if isinstance(md['MDATA_KEY_TRACKNUMBER'], basestring):
+                md['MDATA_KEY_TRACKNUMBER'] = md['MDATA_KEY_TRACKNUMBER'].split("/")[0]
 
         md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
         md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
@@ -161,6 +176,11 @@ class MetadataExtractor:
             md['MDATA_KEY_FTYPE'] = "audioclip"
         elif "vorbis" in md['MDATA_KEY_MIME']:
             md['MDATA_KEY_FTYPE'] = "audioclip"
+
+        #do this so object can be urlencoded properly.
+        for key in md.keys():
+            if(isinstance(md[key], basestring)):
+                md[key] = md[key].encode('utf-8')
 
         return md
 
@@ -179,7 +199,10 @@ class AirtimeNotifier(Notifier):
         consumer.consume()
 
         self.logger = logging.getLogger('root')
+        self.api_client = api_client.api_client_factory(config)
         self.md_manager = MetadataExtractor()
+        self.import_processes = {}
+        self.watched_folders = []
 
     def handle_message(self, body, message):
         # ACK the message to take it off the queue
@@ -187,7 +210,56 @@ class AirtimeNotifier(Notifier):
 
         self.logger.info("Received md from RabbitMQ: " + body)
         m =  json.loads(message.body)
-        self.md_manager.save_md_to_file(m)
+
+        if m['event_type'] == "md_update":
+            self.logger.info("AIRTIME NOTIFIER md update event")
+            self.md_manager.save_md_to_file(m)
+        elif m['event_type'] == "new_watch":
+            self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
+            #start a new process to walk through this folder and add the files to Airtime.
+            p = Process(target=self.walk_newly_watched_directory, args=(m['directory'],))
+            p.start()
+            self.import_processes[m['directory']] = p
+            #add this new folder to our list of watched folders
+            self.watched_folders.append(m['directory'])
+
+    def update_airtime(self, d):
+
+        filepath = d['filepath']
+        mode = d['mode']
+
+        data = None
+        md = {}
+        md['MDATA_KEY_FILEPATH'] = filepath
+
+        if (os.path.exists(filepath) and (mode == MODE_CREATE)):
+            mutagen = self.md_manager.get_md_from_file(filepath)
+            md.update(mutagen)
+            data = md
+        elif (os.path.exists(filepath) and (mode == MODE_MODIFY)):
+            mutagen = self.md_manager.get_md_from_file(filepath)
+            md.update(mutagen)
+            data = md
+        elif (mode == MODE_MOVED):
+            mutagen = self.md_manager.get_md_from_file(filepath)
+            md.update(mutagen)
+            data = md
+        elif (mode == MODE_DELETE):
+            data = md
+
+        if data is not None:
+            self.logger.info("Updating Change to Airtime " + filepath)
+            response = None
+            while response is None:
+                response = self.api_client.update_media_metadata(data, mode)
+                time.sleep(5)
+
+    def walk_newly_watched_directory(self, directory):
+
+        for (path, dirs, files) in os.walk(directory):
+            for filename in files:
+                full_filepath = path+"/"+filename
+                self.update_airtime({'filepath': full_filepath, 'mode': MODE_CREATE})
 
 
 class MediaMonitor(ProcessEvent):
@@ -219,6 +291,27 @@ class MediaMonitor(ProcessEvent):
     def is_parent_directory(self, filepath, directory):
         return (directory == filepath[0:len(directory)])
 
+    def set_needed_file_permissions(self, item, is_dir):
+
+        try:
+            omask = os.umask(0)
+
+            uid = pwd.getpwnam('pypo')[2]
+            gid = grp.getgrnam('www-data')[2]
+
+            os.chown(item, uid, gid)
+
+            if is_dir is True:
+                os.chmod(item, 02777)
+            else:
+                os.chmod(item, 0666)
+
+        except Exception, e:
+            self.logger.error("Failed to change file's owner/group/permissions.")
+            self.logger.error(item)
+        finally:
+            os.umask(omask)
+
     def ensure_dir(self, filepath):
         directory = os.path.dirname(filepath)
 
@@ -230,21 +323,38 @@ class MediaMonitor(ProcessEvent):
         finally:
             os.umask(omask)
 
+    def move_file(self, source, dest):
+
+        try:
+            omask = os.umask(0)
+            os.rename(source, dest)
+        except Exception, e:
+            self.logger.error("failed to move file.")
+        finally:
+            os.umask(omask)
+
     def create_unique_filename(self, filepath):
 
-        if(os.path.exists(filepath)):
-            file_dir = os.path.dirname(filepath)
-            filename = os.path.basename(filepath).split(".")[0]
-            #will be in the format .ext
-            file_ext = os.path.splitext(filepath)[1]
-            i = 1;
-            while(True):
-                new_filepath = "%s/%s(%s)%s" % (file_dir, filename, i, file_ext)
+        try:
+            if(os.path.exists(filepath)):
+                self.logger.info("Path %s exists", filepath)
+                file_dir = os.path.dirname(filepath)
+                filename = os.path.basename(filepath).split(".")[0]
+                #will be in the format .ext
+                file_ext = os.path.splitext(filepath)[1]
+                i = 1;
+                while(True):
+                    new_filepath = '%s/%s(%s)%s' % (file_dir, filename, i, file_ext)
+                    self.logger.error("Trying %s", new_filepath)
 
-                if(os.path.exists(new_filepath)):
-                    i = i+1;
-                else:
-                    filepath = new_filepath
+                    if(os.path.exists(new_filepath)):
+                        i = i+1;
+                    else:
+                        filepath = new_filepath
+                        break
+
+        except Exception, e:
+             self.logger.error("Exception %s", e)
 
         return filepath
 
@@ -260,60 +370,45 @@ class MediaMonitor(ProcessEvent):
 
             #will be in the format .ext
             file_ext = os.path.splitext(imported_filepath)[1]
+            file_ext = file_ext.encode('utf-8')
             md = self.md_manager.get_md_from_file(imported_filepath)
 
             path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE', 'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
 
+            self.logger.info('Getting md')
+
             for m in path_md:
                 if m not in md:
-                    md[m] = 'unknown'
+                    md[m] = u'unknown'.encode('utf-8')
+                else:
+                    #get rid of any "/" which will interfere with the filepath.
+                    if isinstance(md[m], basestring):
+                        md[m] = md[m].replace("/", "-")
+
+            self.logger.info(md)
+
+            self.logger.info('Starting filepath creation')
 
             filepath = None
-            if (md['MDATA_KEY_TITLE'] == 'unknown'):
-                filepath = "%s/%s/%s/%s-%s%s" % (storage_directory, md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], original_name, md['MDATA_KEY_BITRATE'], file_ext)
-            elif(md['MDATA_KEY_TRACKNUMBER'] == 'unknown'):
-                filepath = "%s/%s/%s/%s-%s%s" % (storage_directory, md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+            if (md['MDATA_KEY_TITLE'] == u'unknown'.encode('utf-8')):
+                self.logger.info('unknown title')
+                filepath = '%s/%s/%s/%s-%s%s' % (storage_directory.encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], original_name, md['MDATA_KEY_BITRATE'], file_ext)
+            elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
+                self.logger.info('unknown track number')
+                filepath = '%s/%s/%s/%s-%s%s' % (storage_directory.encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
-                filepath = "%s/%s/%s/%s-%s-%s%s" % (storage_directory, md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                self.logger.info('full metadata')
+                filepath = '%s/%s/%s/%s-%s-%s%s' % (storage_directory.encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
+            self.logger.info(u'Created filepath: %s', filepath)
             filepath = self.create_unique_filename(filepath)
+            self.logger.info(u'Unique filepath: %s', filepath)
             self.ensure_dir(filepath)
 
         except Exception, e:
             self.logger.error('Exception: %s', e)
 
         return filepath
-
-    def update_airtime(self, d):
-
-        filepath = d['filepath']
-        mode = d['mode']
-
-        data = None
-        md = {}
-        md['MDATA_KEY_FILEPATH'] = filepath
-
-        if (os.path.exists(filepath) and (mode == MODE_CREATE)):
-            mutagen = self.md_manager.get_md_from_file(filepath)
-            md.update(mutagen)
-            data = {'md': md}
-        elif (os.path.exists(filepath) and (mode == MODE_MODIFY)):
-            mutagen = self.md_manager.get_md_from_file(filepath)
-            md.update(mutagen)
-            data = {'md': md}
-        elif (mode == MODE_MOVED):
-            mutagen = self.md_manager.get_md_from_file(filepath)
-            md.update(mutagen)
-            data = {'md': md}
-        elif (mode == MODE_DELETE):
-            data = {'md': md}
-
-        if data is not None:
-            self.logger.info("Updating Change to Airtime")
-            response = None
-            while response is None:
-                response = self.api_client.update_media_metadata(data, mode)
-                time.sleep(5)
 
     def is_temp_file(self, filename):
         info = filename.split(".")
@@ -342,18 +437,20 @@ class MediaMonitor(ProcessEvent):
                 global plupload_directory
                 #files that have been added through plupload have a placeholder already put in Airtime's database.
                 if not self.is_parent_directory(event.pathname, plupload_directory):
-                    md5 = self.md_manager.get_md5(event.pathname)
-                    response = self.api_client.check_media_status(md5)
+                    if self.is_audio_file(event.pathname):
+                        self.set_needed_file_permissions(event.pathname, event.dir)
+                        md5 = self.md_manager.get_md5(event.pathname)
+                        response = self.api_client.check_media_status(md5)
 
-                    #this file is new, md5 does not exist in Airtime.
-                    if(response['airtime_status'] == 0):
-                        filepath = self.create_file_path(event.pathname)
-                        os.rename(event.pathname, filepath)
-                        self.file_events.append({'mode': MODE_CREATE, 'filepath': filepath})
+                        #this file is new, md5 does not exist in Airtime.
+                        if(response['airtime_status'] == 0):
+                            filepath = self.create_file_path(event.pathname)
+                            self.move_file(event.pathname, filepath)
+                            self.file_events.append({'mode': MODE_CREATE, 'filepath': filepath})
 
-        #immediately add a watch on the new directory.
         else:
-            self.watch_directory(event.pathname)
+            self.set_needed_file_permissions(event.pathname, event.dir)
+
 
     def process_IN_MODIFY(self, event):
         if not event.dir:
@@ -375,6 +472,8 @@ class MediaMonitor(ProcessEvent):
 
     def process_IN_MOVED_TO(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
+        #if stuff dropped in stor via a UI move must change file permissions.
+        self.set_needed_file_permissions(event.pathname, event.dir)
         if not event.dir:
             if event.cookie in self.temp_files:
                 del self.temp_files[event.cookie]
@@ -388,7 +487,7 @@ class MediaMonitor(ProcessEvent):
                     #file renamed from /tmp/plupload does not have a path in our naming scheme yet.
                     md_filepath = self.create_file_path(event.pathname)
                     #move the file a second time to its correct Airtime naming schema.
-                    os.rename(event.pathname, md_filepath)
+                    self.move_file(event.pathname, md_filepath)
                     self.file_events.append({'filepath': md_filepath, 'mode': MODE_MOVED})
                 else:
                     self.file_events.append({'filepath': event.pathname, 'mode': MODE_MOVED})
@@ -397,7 +496,7 @@ class MediaMonitor(ProcessEvent):
                 #TODO need to pass in if md5 exists to this file creation function, identical files will just replace current files not have a (1) etc.
                 #file has been most likely dropped into stor folder from an unwatched location. (from gui, mv command not cp)
                 md_filepath = self.create_file_path(event.pathname)
-                os.rename(event.pathname, md_filepath)
+                self.move_file(event.pathname, md_filepath)
                 self.file_events.append({'mode': MODE_CREATE, 'filepath': md_filepath})
 
     def process_IN_DELETE(self, event):
@@ -410,12 +509,22 @@ class MediaMonitor(ProcessEvent):
 
     def notifier_loop_callback(self, notifier):
 
+        for watched_directory in notifier.import_processes.keys():
+            process = notifier.import_processes[watched_directory]
+            if not process.is_alive():
+                self.watch_directory(watched_directory)
+                del notifier.import_processes[watched_directory]
+
         while len(self.file_events) > 0:
+            self.logger.info("Processing a file event update to Airtime.")
             file_info = self.file_events.popleft()
-            self.update_airtime(file_info)
+            notifier.update_airtime(file_info)
 
         try:
             notifier.connection.drain_events(timeout=1)
+        #avoid logging a bunch of timeout messages.
+        except socket.timeout:
+            pass
         except Exception, e:
             self.logger.info("%s", e)
 

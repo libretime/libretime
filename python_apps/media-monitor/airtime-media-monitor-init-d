@@ -9,14 +9,14 @@
 # Short-Description: Manage airtime-media-monitor daemon
 ### END INIT INFO
 
-USERID=pypo
-GROUPID=pypo
+USERID=root
+GROUPID=www-data
 NAME=Airtime
 
 DAEMON=/usr/bin/airtime-media-monitor
 PIDFILE=/var/run/airtime-media-monitor.pid
 
-start () {    
+start () {
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
 }
 
