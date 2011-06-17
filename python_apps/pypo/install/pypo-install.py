@@ -81,10 +81,10 @@ try:
     
   if architecture == '64bit' and natty:
       print "Installing 64-bit liquidsoap binary (Natty)"
-      shutil.copy("%s/../liquidsoap_bin/liquidsoap-amd64-natty"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
+      shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
   elif architecture == '32bit' and natty:
       print "Installing 32-bit liquidsoap binary (Natty)"
-      shutil.copy("%s/../liquidsoap_bin/liquidsoap-i386-natty"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
+      shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-i386"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
   elif architecture == '64bit' and not natty:
       print "Installing 64-bit liquidsoap binary"
       shutil.copy("%s/../liquidsoap_bin/liquidsoap-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
