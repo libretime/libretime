@@ -323,7 +323,7 @@ class AirtimeInstall
     public static function UninstallPhpCode()
     {
         echo "* Removing PHP code from ".AirtimeInstall::CONF_DIR_WWW.PHP_EOL;
-        exec("rm -rf \"{${AirtimeInstall::CONF_DIR_WWW}}\"");
+        exec('rm -rf "'.AirtimeInstall::CONF_DIR_WWW.'"');
     }
 
     public static function InstallBinaries()
@@ -336,7 +336,7 @@ class AirtimeInstall
     public static function UninstallBinaries()
     {
         echo "* Removing Airtime binaries from ".AirtimeInstall::CONF_DIR_BINARIES.PHP_EOL;
-        exec("rm -rf \"{${AirtimeInstall::CONF_DIR_BINARIES}}\"");
+        exec('rm -rf "'.AirtimeInstall::CONF_DIR_BINARIES.'"');
     }
 
     public static function DirCheck()
