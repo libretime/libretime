@@ -39,7 +39,7 @@ function InstallBinaries()
 function UninstallBinaries()
 {
     echo "* Removing Airtime binaries from ".CONF_DIR_BINARIES.PHP_EOL;
-    exec("rm -rf ".CONF_DIR_BINARIES);
+    exec("rm -rf \"{${CONF_DIR_BINARIES}}\"");
 }
 
 
@@ -74,7 +74,7 @@ $pathnames = array("/usr/bin/airtime-pypo-start",
 
 foreach ($pathnames as $pn){
     echo "Removing $pn\n";
-    exec("rm -rf ".$pn);
+    exec("rm -rf \"$pn\"");
 }
 
 
@@ -82,6 +82,7 @@ $values = parse_ini_file(CONF_FILE_AIRTIME, true);
 $phpDir = $values['general']['airtime_dir'];
 
 InstallPhpCode($phpDir);
+AirtimeIni::CreateMonitFile();
 
 //update utils (/usr/lib/airtime) folder
 UninstallBinaries();
