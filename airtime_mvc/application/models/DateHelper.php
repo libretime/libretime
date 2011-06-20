@@ -127,5 +127,35 @@ class DateHelper
         $explode = explode(" ", $p_timestamp);
         return $explode[1];
     }
+    
+    /* Given a track length in the format HH:MM:SS.mm, we want to 
+     * convert this to seconds. This is useful for Liquidsoap which
+     * likes input parameters give in seconds. 
+     * For example, 00:06:31.444, should be converted to 391.444 seconds 
+     * @param int $p_time
+     *      The time interval in format HH:MM:SS.mm we wish to
+     *      convert to seconds.
+     * @return int
+     *      The input parameter converted to seconds.
+     */
+    public static function calculateLengthInSeconds($p_time){
+        
+        if (2 !== substr_count($p_time, ":")){
+            return FALSE;
+        }
+               
+        if (1 === substr_count($p_time, ".")){
+            list($hhmmss, $ms) = explode(".", $p_time);
+        } else {
+            $hhmmss = $p_time;
+            $ms = 0;
+        }
+        
+        list($hours, $minutes, $seconds) = explode(":", $hhmmss);
+        
+        $totalSeconds = $hours*3600 + $minutes*60 + $seconds + $ms/1000;
+    
+        return $totalSeconds;
+    }
 }
 

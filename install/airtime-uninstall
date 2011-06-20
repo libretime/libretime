@@ -1,13 +1,15 @@
 #!/bin/bash
 
+#Cause bash script to exit if any of the installers
+#return with a non-zero return value.
+set -e
+
 # Absolute path to this script
 SCRIPT=`readlink -f $0`
 # Absolute directory this script is in
 SCRIPTPATH=`dirname $SCRIPT`
 
 echo -e "\n******************************* Uninstall Begin ********************************"
-
-php ${SCRIPTPATH}/airtime-uninstall.php
 
 echo -e "\n*** Uninstalling Pypo ***"
 python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-uninstall.py
@@ -20,6 +22,9 @@ python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-uninstal
 
 echo -e "\n*** Removing Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/remove-pypo-user.py
+
+php ${SCRIPTPATH}/include/airtime-uninstall.php
+
 
 echo -e "\n****************************** Uninstall Complete ******************************\n"
 echo "NOTE: To fully remove all Airtime files, you will also have to manually delete"

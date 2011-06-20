@@ -31,24 +31,6 @@ def api_client_factory(config):
         logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
         sys.exit()
 
-def recursive_urlencode(d):
-    def recursion(d, base=None):
-        pairs = []
-
-        for key, value in d.items():
-            if hasattr(value, 'values'):
-                pairs += recursion(value, key)
-            else:
-                new_pair = None
-                if base:
-                    new_pair = "%s[%s]=%s" % (base, urllib.quote(unicode(key)), urllib.quote(unicode(value)))
-                else:
-                    new_pair = "%s=%s" % (urllib.quote(unicode(key)), urllib.quote(unicode(value)))
-                pairs.append(new_pair)
-        return pairs
-
-    return '&'.join(recursion(d))
-
 class ApiClientInterface:
 
     # Implementation: optional
@@ -402,11 +384,12 @@ class AirTimeApiClient(ApiClientInterface):
         response = None
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
-            logger.debug(url)
+
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%mode%%", mode)
+            logger.debug(url)
 
-            data = recursive_urlencode(md)
+            data = urllib.urlencode(md)
             req = urllib2.Request(url, data)
 
             response = urllib2.urlopen(req).read()
@@ -636,7 +619,7 @@ class ObpApiClient():
     def get_liquidsoap_data(self, pkey, schedule):
         playlist = schedule[pkey]
         data = dict()
-        data["ptype"] = playlist['subtype']
+        #data["ptype"] = playlist['subtype']
         try:
             data["user_id"] = playlist['user_id']
             data["playlist_id"] = playlist['id']

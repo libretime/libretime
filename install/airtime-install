@@ -14,7 +14,7 @@ echo -e "\n******************************** Install Begin **********************
 echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
-php ${SCRIPTPATH}/airtime-install.php $@
+php ${SCRIPTPATH}/include/airtime-install.php $@
 
 echo -e "\n*** Pypo Installation ***"
 python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-install.py
@@ -26,6 +26,7 @@ echo -e "\n*** Media Monitor Installation ***"
 python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
 
 sleep 4
+echo -e "\n*** Verifying your system environment ***"
 airtime-check-system
 
 echo -e "\n******************************* Install Complete *******************************"

@@ -73,6 +73,19 @@
                 </ul>
             <?php endif; ?>
        </dd>
+       <dt id="watchedFolder-label" class="block-display">
+            <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
+        </dt>
+        <dd id="watchedFolder-element" class="block-display">
+            <?php echo $this->element->getElement('watchedFolder') ?>
+            <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
 
     </dl>
 </fieldset>

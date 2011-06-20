@@ -28,6 +28,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
 
@@ -166,7 +167,7 @@ class LibraryController extends Zend_Controller_Action
 
                 $data = $file->getMetadata();
 
-                RabbitMq::SendFileMetaData($data);
+                RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
                 $this->_helper->redirector('index');
             }

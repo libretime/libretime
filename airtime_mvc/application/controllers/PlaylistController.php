@@ -113,8 +113,8 @@ class PlaylistController extends Zend_Controller_Action
 			$this->changePlaylist($pl_id);
 
 			$pl = $this->getPlaylist();
-			$title = $pl->getPLMetaData(UI_MDATA_KEY_TITLE);
-			$desc = $pl->getPLMetaData(UI_MDATA_KEY_DESCRIPTION);
+			$title = $pl->getPLMetaData("dc:title");
+			$desc = $pl->getPLMetaData("dc:description");
 
 			$data = array( 'title' => $title, 'description' => $desc);
 			$form->populate($data);
@@ -130,7 +130,7 @@ class PlaylistController extends Zend_Controller_Action
 			    $pl->setName($title);
 
 			if(isset($description)) {
-				$pl->setPLMetaData(UI_MDATA_KEY_DESCRIPTION, $description);
+				$pl->setPLMetaData("dc:description", $description);
 			}
 
 			$this->view->pl = $pl;

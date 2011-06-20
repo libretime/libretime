@@ -393,7 +393,7 @@ class Playlist {
             ->orderByDbPosition()
             ->filterByDbPlaylistId($this->id)
             ->find();
-		
+
         $i = 0;
         $offset = 0;
         foreach ($rows as $row) {
@@ -502,7 +502,7 @@ class Playlist {
         }
 
         $metadata = $media->getMetadata();
-        $length = $metadata["dcterms:extent"];
+        $length = $metadata['MDATA_KEY_DURATION'];
 
         if (!is_null($p_clipLength)) {
         	$length = $p_clipLength;

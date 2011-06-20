@@ -4,7 +4,6 @@ import time
 import logging
 import logging.config
 import shutil
-import pickle
 import random
 import string
 import json
@@ -12,6 +11,8 @@ import telnetlib
 import math
 from threading import Thread
 from subprocess import Popen, PIPE
+from datetime import datetime
+from datetime import timedelta
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
@@ -98,18 +99,58 @@ class PypoFetch(Thread):
             logger.error("  * To fix this, you need to set the 'date.timezone' value in your php.ini file and restart apache.")
             logger.error("  * See this page for more info (v1.7): http://wiki.sourcefabric.org/x/BQBF")
             logger.error("  * and also the 'FAQ and Support' page underneath it.")  
+
+    """
+    def get_currently_scheduled(self, playlistsOrMedias, str_tnow_s):
+        for key in playlistsOrMedias:
+            start = playlistsOrMedias[key]['start']
+            end = playlistsOrMedias[key]['end']
+            
+            if start <= str_tnow_s and str_tnow_s < end:
+                return key
+                
+        return None  
+
+    def handle_shows_currently_scheduled(self, playlists):
+        logger = logging.getLogger('fetch')
     
+        dtnow = datetime.today()
+        tnow = dtnow.timetuple()
+        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
+        
+        current_pkey = self.get_currently_scheduled(playlists, str_tnow_s)
+        if current_pkey is not None:
+            logger.debug("FOUND CURRENT PLAYLIST %s", current_pkey)
+            # So we have found that a playlist if currently scheduled
+            # even though we just started pypo. Perhaps there was a
+            # system crash. Lets calculate what position in the playlist
+            # we are supposed to be in.
+            medias = playlists[current_pkey]["medias"]
+            current_mkey = self.get_currently_scheduled(medias, str_tnow_s)
+            if current_mkey is not None:
+                mkey_split = map(int, current_mkey.split('-'))
+                media_start = datetime(mkey_split[0], mkey_split[1], mkey_split[2], mkey_split[3], mkey_split[4], mkey_split[5])
+                logger.debug("Found media item that started at %s.", media_start)
+                
+                delta = dtnow - media_start #we get a TimeDelta object from this operation
+                logger.info("Starting media item  at %d second point", delta.seconds)
+    """
+
     """
     Process the schedule
      - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
      - Saves a serialized file of the schedule
      - playlists are prepared. (brought to liquidsoap format) and, if not mounted via nsf, files are copied
        to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
-     - runs the cleanup routine, to get rid of unused cashed files
+     - runs the cleanup routine, to get rid of unused cached files
     """
-    def process_schedule(self, schedule_data, export_source):
+    def process_schedule(self, schedule_data, export_source, bootstrapping):
         logger = logging.getLogger('fetch')
         playlists = schedule_data["playlists"]
+
+        #if bootstrapping:
+            #TODO: possible allow prepare_playlists to handle this.
+            #self.handle_shows_currently_scheduled(playlists)
 
         self.check_matching_timezones(schedule_data["server_timezone"])
             
@@ -127,9 +168,9 @@ class PypoFetch(Thread):
             logger.error("Exception %s", e)
             status = 0
 
-        # Download all the media and put playlists in liquidsoap format
+        # Download all the media and put playlists in liquidsoap "annotate" format
         try:
-             liquidsoap_playlists = self.prepare_playlists(playlists)
+             liquidsoap_playlists = self.prepare_playlists(playlists, bootstrapping)
         except Exception, e: logger.error("%s", e)
 
         # Send the data to pypo-push
@@ -149,7 +190,7 @@ class PypoFetch(Thread):
     and stored in a playlist folder.
     file is e.g. 2010-06-23-15-00-00/17_cue_10.132-123.321.mp3
     """
-    def prepare_playlists(self, playlists):
+    def prepare_playlists(self, playlists, bootstrapping):
         logger = logging.getLogger('fetch')
 
         liquidsoap_playlists = dict()
@@ -170,27 +211,18 @@ class PypoFetch(Thread):
                 try:
                     os.mkdir(self.cache_dir + str(pkey))
                 except Exception, e:
-                    pass
+                    logger.error(e)
 
-                #logger.debug('*****************************************')
-                #logger.debug('pkey:        ' + str(pkey))
-                #logger.debug('cached at :  ' + self.cache_dir + str(pkey))
-                #logger.debug('subtype:     ' + str(playlist['subtype']))
-                #logger.debug('played:      ' + str(playlist['played']))
-                #logger.debug('schedule id: ' + str(playlist['schedule_id']))
-                #logger.debug('duration:    ' + str(playlist['duration']))
-                #logger.debug('source id:   ' + str(playlist['x_ident']))
-                #logger.debug('*****************************************')
-
-                if int(playlist['played']) == 1:
-                    logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
-
-                elif int(playlist['subtype']) > 0 and int(playlist['subtype']) < 5:
-                    ls_playlist = self.handle_media_file(playlist, pkey)
+                #June 13, 2011: Commented this block out since we are not currently setting this to '1' 
+                #on the server side. Currently using a different method to detect if already played - Martin
+                #if int(playlist['played']) == 1:
+                #    logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
+                
+                ls_playlist = self.handle_media_file(playlist, pkey, bootstrapping)
 
                 liquidsoap_playlists[pkey] = ls_playlist
         except Exception, e:
-            logger.info("%s", e)
+            logger.error("%s", e)
         return liquidsoap_playlists
 
 
@@ -199,27 +231,47 @@ class PypoFetch(Thread):
     This handles both remote and local files.
     Returns an updated ls_playlist string.
     """
-    def handle_media_file(self, playlist, pkey):
-        ls_playlist = []
-
+    def handle_media_file(self, playlist, pkey, bootstrapping):
         logger = logging.getLogger('fetch')
-        for media in playlist['medias']:
+        
+        ls_playlist = []
+        
+        dtnow = datetime.today()
+        str_tnow_s = dtnow.strftime('%Y-%m-%d-%H-%M-%S')
+
+        sortedKeys = sorted(playlist['medias'].iterkeys())
+        
+        for key in sortedKeys:
+            media = playlist['medias'][key]
             logger.debug("Processing track %s", media['uri'])
+            
+            if bootstrapping:              
+                start = media['start']
+                end = media['end']
+                
+                if end <= str_tnow_s:
+                    continue
+                elif start <= str_tnow_s and str_tnow_s < end:
+                    #song is currently playing and we just started pypo. Maybe there
+                    #was a power outage? Let's restart playback of this song.
+                    start_split = map(int, start.split('-'))
+                    media_start = datetime(start_split[0], start_split[1], start_split[2], start_split[3], start_split[4], start_split[5])
+                    logger.debug("Found media item that started at %s.", media_start)
+                    
+                    delta = dtnow - media_start #we get a TimeDelta object from this operation
+                    logger.info("Starting media item  at %d second point", delta.seconds)
+                    media['cue_in'] = delta.seconds + 10
+                    td = timedelta(seconds=10)
+                    playlist['start'] = (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S')
+                    logger.info("Crash detected, setting playlist to restart at %s", (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S'))
+            
 
             fileExt = os.path.splitext(media['uri'])[1]
             try:
-                if str(media['cue_in']) == '0' and str(media['cue_out']) == '0':
-                    #logger.debug('No cue in/out detected for this file')
-                    dst = "%s%s/%s%s" % (self.cache_dir, str(pkey), str(media['id']), str(fileExt))
-                    do_cue = False
-                else:
-                    #logger.debug('Cue in/out detected')
-                    dst = "%s%s/%s_cue_%s-%s%s" % \
-                    (self.cache_dir, str(pkey), str(media['id']), str(float(media['cue_in']) / 1000), str(float(media['cue_out']) / 1000), str(fileExt))
-                    do_cue = True
+                dst = "%s%s/%s%s" % (self.cache_dir, str(pkey), str(media['id']), str(fileExt))
 
                 # download media file
-                self.handle_remote_file(media, dst, do_cue)
+                self.handle_remote_file(media, dst)
                 
                 if True == os.access(dst, os.R_OK):
                     # check filesize (avoid zero-byte files)
@@ -230,11 +282,13 @@ class PypoFetch(Thread):
 
                     if fsize > 0:
                         pl_entry = \
-                        'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",schedule_table_id="%s":%s'\
-                        % (str(media['export_source']), media['id'], 0, str(float(media['fade_in']) / 1000), \
-                            str(float(media['fade_out']) / 1000), media['row_id'],dst)
-
-                        #logger.debug(pl_entry)
+                        'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
+                        % (str(media['export_source']), media['id'], 0, \
+                            str(float(media['fade_in']) / 1000), \
+                            str(float(media['fade_out']) / 1000), \
+                            str(float(media['cue_in'])), \
+                            str(float(media['cue_out'])), \
+                            media['row_id'], dst)
 
                         """
                         Tracks are only added to the playlist if they are accessible
@@ -248,7 +302,6 @@ class PypoFetch(Thread):
                         entry['show_name'] = playlist['show_name']
                         ls_playlist.append(entry)
 
-                        #logger.debug("everything ok, adding %s to playlist", pl_entry)
                     else:
                         logger.warning("zero-size file - skipping %s. will not add it to playlist at %s", media['uri'], dst)
 
@@ -262,51 +315,14 @@ class PypoFetch(Thread):
     """
     Download a file from a remote server and store it in the cache.
     """
-    def handle_remote_file(self, media, dst, do_cue):
+    def handle_remote_file(self, media, dst):
         logger = logging.getLogger('fetch')
-        if do_cue == False:
-            if os.path.isfile(dst):
-                pass
-                #logger.debug("file already in cache: %s", dst)
-            else:
-                logger.debug("try to download %s", media['uri'])
-                self.api_client.get_media(media['uri'], dst)
-
+        if os.path.isfile(dst):
+            pass
+            #logger.debug("file already in cache: %s", dst)
         else:
-            if os.path.isfile(dst):
-                logger.debug("file already in cache: %s", dst)
-
-            else:
-                logger.debug("try to download and cue %s", media['uri'])
-
-                fileExt = os.path.splitext(media['uri'])[1]
-                dst_tmp = config["tmp_dir"] + "".join([random.choice(string.letters) for i in xrange(10)]) + fileExt
-                self.api_client.get_media(media['uri'], dst_tmp)
-
-                # cue
-                logger.debug("STARTING CUE")
-                debugDst = self.cue_file.cue(dst_tmp, dst, float(media['cue_in']) / 1000, float(media['cue_out']) / 1000)
-                logger.debug(debugDst)
-                logger.debug("END CUE")
-
-                if True == os.access(dst, os.R_OK):
-                    try: fsize = os.path.getsize(dst)
-                    except Exception, e:
-                        logger.error("%s", e)
-                        fsize = 0
-
-                if fsize > 0:
-                    logger.debug('try to remove temporary file: %s' + dst_tmp)
-                    try: os.remove(dst_tmp)
-                    except Exception, e:
-                        logger.error("%s", e)
-
-                else:
-                    logger.warning('something went wrong cueing: %s - using uncued file' + dst)
-                    try: os.rename(dst_tmp, dst)
-                    except Exception, e:
-                        logger.error("%s", e)
-
+            logger.debug("try to download %s", media['uri'])
+            self.api_client.get_media(media['uri'], dst)
     
     """
     Cleans up folders in cache_dir. Look for modification date older than "now - CACHE_FOR"
@@ -354,7 +370,7 @@ class PypoFetch(Thread):
         # most recent schedule.  After that we can just wait for updates. 
         status, schedule_data = self.api_client.get_schedule()
         if status == 1:
-            self.process_schedule(schedule_data, "scheduler")                
+            self.process_schedule(schedule_data, "scheduler", True)                
         logger.info("Bootstrap complete: got initial copy of the schedule")
 
         loops = 1        
@@ -373,6 +389,6 @@ class PypoFetch(Thread):
                 status, schedule_data = self.api_client.get_schedule()
             
             if status == 1:
-                self.process_schedule(schedule_data, "scheduler")                
+                self.process_schedule(schedule_data, "scheduler", False)                
             loops += 1
             

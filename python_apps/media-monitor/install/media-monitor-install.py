@@ -34,7 +34,7 @@ def copy_dir(src_dir, dest_dir):
   if not (os.path.exists(dest_dir)):
     print "Copying directory "+os.path.realpath(src_dir)+" to "+os.path.realpath(dest_dir)
     shutil.copytree(src_dir, dest_dir)
-                    
+
 def get_current_script_dir():
   current_script_dir = os.path.realpath(__file__)
   index = current_script_dir.rindex('/')
@@ -60,21 +60,18 @@ try:
   os.system("chown -R pypo:pypo "+config["log_dir"])
 
   copy_dir("%s/.."%current_script_dir, config["bin_dir"])
-  
+
   print "Setting permissions"
   os.system("chmod -R 755 "+config["bin_dir"])
+  #os.system("chmod -R 755 "+config["bin_dir"]+"/airtime-media-monitor)
   os.system("chown -R pypo:pypo "+config["bin_dir"])
-
-  print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-media-monitor")
-  os.system("ln -s "+config["bin_dir"]+"/airtime-media-monitor /usr/bin/")
 
   print "Installing media-monitor daemon"
   shutil.copy(config["bin_dir"]+"/airtime-media-monitor-init-d", "/etc/init.d/airtime-media-monitor")
 
-  p = Popen("update-rc.d airtime-media-monitor defaults", shell=True)
+  p = Popen("update-rc.d airtime-media-monitor defaults >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
-  
+
   print "Waiting for processes to start..."
   p = Popen("/etc/init.d/airtime-media-monitor start", shell=True)
   sts = os.waitpid(p.pid, 0)[1]

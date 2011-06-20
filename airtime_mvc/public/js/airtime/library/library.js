@@ -175,5 +175,5 @@ $(document).ready(function() {
         "oLanguage": {
             "sSearch": ""
         }
-	});
+	}).fnSetFilteringDelay(350);
 });

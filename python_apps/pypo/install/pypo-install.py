@@ -81,10 +81,10 @@ try:
     
   if architecture == '64bit' and natty:
       print "Installing 64-bit liquidsoap binary (Natty)"
-      shutil.copy("%s/../liquidsoap_bin/liquidsoap-amd64-natty"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
+      shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
   elif architecture == '32bit' and natty:
       print "Installing 32-bit liquidsoap binary (Natty)"
-      shutil.copy("%s/../liquidsoap_bin/liquidsoap-i386-natty"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
+      shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-i386"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
   elif architecture == '64bit' and not natty:
       print "Installing 64-bit liquidsoap binary"
       shutil.copy("%s/../liquidsoap_bin/liquidsoap-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
@@ -103,16 +103,10 @@ try:
   os.system("chown -R pypo:pypo "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["cache_base_dir"])
 
-  print "Creating symbolic links"
-  os.system("rm -f /usr/bin/airtime-playout")
-  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-playout /usr/bin/")
-  os.system("rm -f /usr/bin/airtime-liquidsoap")
-  os.system("ln -s "+config["bin_dir"]+"/bin/airtime-liquidsoap /usr/bin/")
-
   print "Installing pypo daemon"
   shutil.copy(config["bin_dir"]+"/bin/airtime-playout-init-d", "/etc/init.d/airtime-playout")
 
-  p = Popen("update-rc.d airtime-playout defaults", shell=True)
+  p = Popen("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
 
   print "Waiting for processes to start..."
