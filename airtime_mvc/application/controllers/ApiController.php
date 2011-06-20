@@ -54,7 +54,7 @@ class ApiController extends Zend_Controller_Action
      * Allows remote client to download requested media file.
      *
      * @return void
-     *      The given value increased by the increment amount.
+     * 
      */
     public function getMediaAction()
     {
@@ -65,7 +65,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        $downlaod = $this->_getParam('download');
+        $download = ("true" == $this->_getParam('download'));
 
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -87,7 +87,6 @@ class ApiController extends Zend_Controller_Action
                 exit;
             }
 
-
             // possibly use fileinfo module here in the future.
             // http://www.php.net/manual/en/book.fileinfo.php
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
@@ -96,7 +95,12 @@ class ApiController extends Zend_Controller_Action
             else if ($ext == "mp3")
                 header("Content-Type: audio/mpeg");
             if ($download){
-                header('Content-Disposition: attachment; filename="'.$media->getName().'"');
+                //path_info breaks up a file path into seperate pieces of informaiton.
+                //We just want the basename which is the file name with the path
+                //information stripped away. We are using Content-Disposition to specify
+                //to the browser what name the file should be saved as.
+                $path_parts = pathinfo($media->getPropelOrm()->getDbFilepath());
+                header('Content-Disposition: attachment; filename="'.$path_parts['basename'].'"');
             }
             header("Content-Length: " . filesize($filepath));
 

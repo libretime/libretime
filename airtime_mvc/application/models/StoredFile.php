@@ -63,6 +63,10 @@ class StoredFile {
         return $this->_file->getDbFtype();
     }
 
+    public function getPropelOrm(){
+        return $this->_file;
+    }
+
     public function setFormat($p_format)
     {
         $this->_file->setDbFtype($p_format);
