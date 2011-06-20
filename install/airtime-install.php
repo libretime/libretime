@@ -108,6 +108,9 @@ if ($overwrite) {
     AirtimeIni::UpdateIniFiles();
 }
 
+// Update the build.properties file to point to the correct directory.
+AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
+
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
 echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;

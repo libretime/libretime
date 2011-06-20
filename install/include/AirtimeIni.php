@@ -195,7 +195,6 @@ class AirtimeIni
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_PYPO, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_RECORDER, 'api_key', "'$api_key'");
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, 'api_key', "'$api_key'");
-        AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
     }
 
     public static function ReadPythonConfig($p_filename)
