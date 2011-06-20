@@ -53,8 +53,8 @@ if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !i
 if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
     echo "Airtime version $version found.".PHP_EOL;
 
-    echo "It appears you already have a version of Airtime installed.";
-    echo "Upgrading is currently disabled for Airtime 1.9.0-beta1";
+    echo "It appears you already have a version of Airtime installed.\n";
+    echo "Upgrading is currently disabled for Airtime 1.9.0-beta1.\n";
     exit(2);
     
     require_once("airtime-upgrade.php");
