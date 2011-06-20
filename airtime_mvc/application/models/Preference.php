@@ -188,7 +188,6 @@ class Application_Model_Preference
             return $val;
         }
     }
-<<<<<<< HEAD
     
     public static function SetPhone($phone){
     	Application_Model_Preference::SetValue("phone", $phone);
@@ -350,8 +349,6 @@ class Application_Model_Preference
     public static function GetRemindMeDate(){
         return Application_Model_Preference::GetValue("remindme");
     }
-    
-=======
 
     public static function SetWatchedDirectory($directory) {
         Application_Model_Preference::SetValue("watched_directory", $directory);
@@ -360,7 +357,5 @@ class Application_Model_Preference
     public static function GetWatchedDirectory() {
         return Application_Model_Preference::GetValue("watched_directory");
     }
-
->>>>>>> 898cdc64dc65c03d2ed6e3f3344b273df7c0d201
 }
 
