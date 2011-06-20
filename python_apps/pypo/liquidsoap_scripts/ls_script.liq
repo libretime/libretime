@@ -58,8 +58,10 @@ end
 
 if output_icecast_mp3 then
     out_mp3 = output.icecast(%mp3,
-            host = icecast_host, port = icecast_port,
-            password = icecast_pass, mount = mount_point_mp3,
+            host = icecast_host,
+            port = icecast_port,
+            password = icecast_pass,
+            mount = mount_point_mp3,
             fallible = true,
             restart = true,
             restart_delay = 5,
@@ -70,11 +72,12 @@ if output_icecast_mp3 then
 end
 
 if output_icecast_vorbis then
-    
     if output_icecast_vorbis_metadata then
         out_vorbis = output.icecast(%vorbis,
-                host = icecast_host, port = icecast_port,
-                password = icecast_pass, mount = mount_point_vorbis,
+                host = icecast_host,
+                port = icecast_port,
+                password = icecast_pass,
+                mount = mount_point_vorbis,
                 fallible = true,
                 restart = true,
                 restart_delay = 5,
@@ -87,16 +90,30 @@ if output_icecast_vorbis then
         #with vlc and mplayer disconnecting at the end of every track
         s = add(normalize=false, [amplify(0.00001, noise()),s])
         out_vorbis = output.icecast(%vorbis,
-                host = icecast_host, port = icecast_port,
-                password = icecast_pass, mount = mount_point_vorbis,
+                host = icecast_host,
+                port = icecast_port,
+                password = icecast_pass,
+                mount = mount_point_vorbis,
                 fallible = true,
                 restart = true,
                 restart_delay = 5,
                 url = icecast_url,
                 description = icecast_description,
                 genre = icecast_genre,
-                s)    
+                s)
     end
-    
-
 end
+
+if output_shoutcast then
+    out_shoutcast = output.shoutcast(%mp3,
+            host = shoutcast_host,
+            port = shoutcast_port,
+            password = shoutcast_pass,
+            fallible = true,
+            restart = true,
+            restart_delay = 5,
+            url = shoutcast_url,
+            genre = shoutcast_genre,
+            s)
+end
+
