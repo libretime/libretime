@@ -52,6 +52,11 @@ if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !i
 // A previous version exists - if so, upgrade.
 if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
     echo "Airtime version $version found.".PHP_EOL;
+
+    echo "It appears you already have a version of Airtime installed.\n";
+    echo "Upgrading is currently disabled for Airtime 1.9.0-beta1.\n";
+    exit(2);
+    
     require_once("airtime-upgrade.php");
 
     //Make sure to exit with non-zero error code so that airtime-install
