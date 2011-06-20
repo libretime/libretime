@@ -26,6 +26,7 @@ echo -e "\n*** Media Monitor Installation ***"
 python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
 
 sleep 4
+echo -e "\n*** Verifying your system environment ***"
 airtime-check-system
 
 echo -e "\n******************************* Install Complete *******************************"

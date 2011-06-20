@@ -89,7 +89,7 @@ class AirtimeIni
     }
 
     public static function RemoveMonitFile(){
-        unlink("/etc/monit/conf.d/airtime-monit.cfg");
+        @unlink("/etc/monit/conf.d/airtime-monit.cfg");
     }
 
     /**

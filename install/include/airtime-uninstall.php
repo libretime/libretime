@@ -69,7 +69,7 @@ if ($dbDeleteFailed) {
 // Delete the user
 //------------------------------------------------------------------------
 echo " * Deleting database user '{$CC_CONFIG['dsn']['username']}'...".PHP_EOL;
-$command = "echo \"DROP USER IF EXISTS {$CC_CONFIG['dsn']['username']}\" | su postgres -c psql";
+$command = "echo \"DROP USER IF EXISTS {$CC_CONFIG['dsn']['username']}\" | su postgres -c psql >/dev/null 2>&1";
 @exec($command, $output, $results);
 if ($results == 0) {
     echo "   * User '{$CC_CONFIG['dsn']['username']}' deleted.".PHP_EOL;

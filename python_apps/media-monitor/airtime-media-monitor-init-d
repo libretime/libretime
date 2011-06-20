@@ -17,13 +17,13 @@ DAEMON=/usr/lib/airtime/media-monitor/airtime-media-monitor
 PIDFILE=/var/run/airtime-media-monitor.pid
 
 start () {
-        monit monitor airtime-media-monitor
+        monit monitor airtime-media-monitor >/dev/null 2>&1
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
 }
 
 stop () {
         # Send TERM after 5 seconds, wait at most 30 seconds.
-        monit unmonitor airtime-media-monitor
+        monit unmonitor airtime-media-monitor >/dev/null 2>&1
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE
         rm -f $PIDFILE
 }
