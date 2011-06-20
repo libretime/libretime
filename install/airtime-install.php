@@ -127,5 +127,11 @@ AirtimeInstall::CreateZendPhpLogFile();
 
 AirtimeInstall::SetUniqueId();
 
+$h = rand(0,23);
+$m = rand(0,59);
+
+$fp = fopen('/etc/cron.d/airtime-crons','a');
+fwrite($fp, "$m $h * * * root /usr/lib/airtime/utils/phone_home_stat\n");
+fclose($fp);
 
 /* FINISHED AIRTIME PHP INSTALLER */

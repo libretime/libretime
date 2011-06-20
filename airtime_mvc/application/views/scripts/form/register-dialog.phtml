@@ -1,11 +1,12 @@
 <div class="dialogPopup register-dialog" title="Register Airtime">
 	<form id="register-form" method="<?php echo $this->element->getMethod() ?>" action="<?php echo $this->element->getAction() ?>" enctype="multipart/form-data">
+    		<fieldset>
 		    <dl class="zend_form">
-		    	<div class="info-text">
-            		<p>Help Airtime improve by letting us know you are using it. This info
-            			will be collected regularly in order to improve your user experience.</p>
-            	</div>
-		    	<dd id="SupportFeedback-element">
+		    	<dt class="block-display info-text">
+            		Help Airtime improve by letting us know you are using it. This info
+            			will be collected regularly in order to improve your user experience.
+                </dt>
+		    	<dd id="SupportFeedback-element" class="block-display">
 		            <label class="optional" for="SupportFeedback">
 		                <?php echo $this->element->getElement('SupportFeedback') ?>
 		                <strong><?php echo $this->element->getElement('SupportFeedback')->getLabel() ?></strong>
@@ -18,10 +19,10 @@
 		                </ul>
 		            <?php endif; ?> 
 		        </dd>
-		        <div class="info-text">
-            		<p>Click the box below to advertise your station on Sourcefabric.org.</p>
-            	</div>
-				<dd id="publicize-element">
+                <dt class="block-display info-text">
+            		Click the box below to advertise your station on Sourcefabric.org. In order to publicise your station, "Send support feedback" must be enabled
+                </dt>
+				<dd id="publicize-element" class="block-display">
 					<label class="optional" for="Publicise">
 		                <?php echo $this->element->getElement('Publicise') ?>
 		                <strong><?php echo $this->element->getElement('Publicise')->getLabel() ?></strong>
@@ -34,13 +35,12 @@
 		                </ul>
 		            <?php endif; ?> 
 				</dd>
-				<div class="info-text" style="clear: both;padding: 4px 0 4px 15px;"><p> Note: In order to publicise your station, "Send support feedback" must be enabled</p></div>
-				<div id="public-info" style="display:none;">
-				
-				<dt id="stnName-label" class="block-display">
+			</dl>
+			<dl id="public-info" style="display:none;">
+				<dt id="stnName-label">
 		            <label class="optional" for="stnName"><?php echo $this->element->getElement('stnName')->getLabel() ?></label>
 		        </dt>
-		        <dd id="stnName-element" class="block-display">
+		        <dd id="stnName-element">
 		            <?php echo $this->element->getElement('stnName') ?>
 		            <?php if($this->element->getElement('stnName')->hasErrors()) : ?>
 		                <ul class='errors'>
@@ -50,10 +50,10 @@
 		                </ul>
 		            <?php endif; ?> 
 		        </dd>
-		        <dt id="Phone-label" class="block-display">
+		        <dt id="Phone-label">
 		            <label class="optional" for="Phone"><?php echo $this->element->getElement('Phone')->getLabel() ?></label>
 		        </dt>
-		        <dd id="Phone-element" class="block-display">
+		        <dd id="Phone-element">
 		            <?php echo $this->element->getElement('Phone') ?>
 		            <?php if($this->element->getElement('Phone')->hasErrors()) : ?>
 		                <ul class='errors'>
@@ -63,10 +63,10 @@
 		                </ul>
 		            <?php endif; ?> 
 		        </dd>
-		        <dt id="Email-label" class="block-display">
+		        <dt id="Email-label">
 		            <label class="optional" for="Email"><?php echo $this->element->getElement('Email')->getLabel() ?></label>
 		        </dt>
-		        <dd id="Email-element" class="block-display">
+		        <dd id="Email-element">
 		            <?php echo $this->element->getElement('Email') ?>
 		            <?php if($this->element->getElement('Email')->hasErrors()) : ?>
 		                <ul class='errors'>
@@ -76,10 +76,10 @@
 		                </ul>
 		            <?php endif; ?> 
 		        </dd>
-		        <dt id="StationWebSite-label" class="block-display">
+		        <dt id="StationWebSite-label">
 		            <label class="optional" for="StationWebSite"><?php echo $this->element->getElement('StationWebSite')->getLabel() ?></label>
 		        </dt>
-		        <dd id="StationWebSite-element" class="block-display clearfix">
+		        <dd id="StationWebSite-element">
 		            <?php echo $this->element->getElement('StationWebSite') ?>
 		            <?php if($this->element->getElement('StationWebSite')->hasErrors()) : ?>
 		                <ul class='errors'>
@@ -89,10 +89,10 @@
 		                </ul>
 		            <?php endif; ?>
 		        </dd>
-		        <dt id="Country-label" class="block-display">
+		        <dt id="Country-label">
 		            <label class="optional" for="Country"><?php echo $this->element->getElement('Country')->getLabel() ?></label>
 		        </dt>
-		        <dd id="Country-element" class="block-display clearfix">
+		        <dd id="Country-element">
 		            <?php echo $this->element->getElement('Country') ?>
 		            <?php if($this->element->getElement('Country')->hasErrors()) : ?>
 		                <ul class='errors'>
@@ -102,10 +102,10 @@
 		                </ul>
 		            <?php endif; ?>
 		        </dd>
-		        <dt id="City-label" class="block-display">
+		        <dt id="City-label">
 		            <label class="optional" for="City"><?php echo $this->element->getElement('City')->getLabel() ?></label>
 		        </dt>
-		        <dd id="City-element" class="block-display clearfix">
+		        <dd id="City-element">
 		            <?php echo $this->element->getElement('City') ?>
 		            <?php if($this->element->getElement('City')->hasErrors()) : ?>
 		                <ul class='errors'>
@@ -115,10 +115,10 @@
 		                </ul>
 		            <?php endif; ?>
 		        </dd>
-		        <dt id="Description-label" class="block-display">
+		        <dt id="Description-label">
 		            <label class="optional" for="Description"><?php echo $this->element->getElement('Description')->getLabel() ?></label>
 		        </dt>
-		        <dd id="Description-element" class="block-display clearfix">
+		        <dd id="Description-element">
 		            <?php echo $this->element->getElement('Description') ?>
 		            <?php if($this->element->getElement('Description')->hasErrors()) : ?>
 		                <ul class='errors'>
@@ -131,12 +131,14 @@
 		        <dt id="Logo-label" class="block-display">
 		            <label class="optional" for="Description"><?php echo $this->element->getElement('Logo')->getLabel() ?></label>
 		        </dt>
-		        <?php if($this->element->getView()->logoImg){?>
-		        <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
-		        <?php }?>
-		        <dd id="Logo-element" class="block-display clearfix">
+
+		        <dd id="Logo-element">
+                	<?php if($this->element->getView()->logoImg){?>
+		        	<div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
+		        	<?php }?>
+                    
 		            <?php echo $this->element->getElement('Logo') ?>
-		            <div class="info-text"><p>Min. size: 180x180 Max. size: 600x600</p></div>
+		            <p class="info-text">Min. size: 180x180 Max. size: 600x600</p>
 		            <?php if($this->element->getElement('Logo')->hasErrors()) : ?>
 		                <ul class='errors'>
 		                    <?php foreach($this->element->getElement('Logo')->getMessages() as $error): ?>
@@ -145,8 +147,8 @@
 		                </ul>
 		            <?php endif; ?>
 		        </dd>
-		        </div>
 		    </dl>
+            </fieldset>
 		    <h3 class="collapsible-header">
 				<span class="arrow-icon"></span>Show me what I am sending
 			</h3>

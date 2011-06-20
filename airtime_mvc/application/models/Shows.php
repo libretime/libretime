@@ -1866,6 +1866,13 @@ class ShowInstance {
             return new ShowInstance($id);
         }
     }
+    
+    // returns number of show instances that ends later than $day
+    public static function GetShowInstanceCount($day){
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT count(*) as cnt FROM $CC_CONFIG[showInstances] WHERE ends < '$day'";
+        return $CC_DBC->GetOne($sql);
+    }
 }
 
 /* Show Data Access Layer */

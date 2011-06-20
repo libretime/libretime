@@ -116,42 +116,6 @@ class PreferenceController extends Zend_Controller_Action
     	Application_Model_Preference::SetRemindMeDate($now);
     	die();
     }
-    
-    /*public function registersubmitAction(){
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
-
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js','text/javascript');
-        $this->view->statusMsg = "";
-        
-        $form = new Application_Form_RegisterAirtime();
-        
-        if ($request->isPost()) {
-      
-            if ($form->isValid($request->getPost())) {
-
-                $values = $form->getValues();
-                var_dump($values);
-                Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
-                Application_Model_Preference::SetPhone($values["Phone"]);
-                Application_Model_Preference::SetEmail($values["Email"]);
-                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                Application_Model_Preference::SetPublicise($values["Publicise"]);
-                
-                $imagePath = $form->Logo->getFileName();
-                
-                Application_Model_Preference::SetStationCountry($values["Country"]);
-                Application_Model_Preference::SetStationCity($values["City"]);
-                Application_Model_Preference::SetStationDescription($values["Description"]);
-                Application_Model_Preference::SetStationLogo($imagePath);
-                
-                // unset session
-                Zend_Session::namespaceUnset('referrer');
-            }
-        }
-        $this->_redirect('Nowplaying');
-    }*/
 }
 
 

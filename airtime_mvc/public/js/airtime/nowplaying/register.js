@@ -4,10 +4,10 @@ $(document).ready(function(){
 
         dialog.dialog({
             autoOpen: false,
-            width: 450,
+            width: 500,
             resizable: false,
             modal: true,
-            position:'center',
+            position:['center',50],
             buttons: {
                 "Remind me in 1 week": function() {
                     var url = '/Preference/remindme';
@@ -55,22 +55,20 @@ $(document).ready(function(){
             $("#public-info").hide();
         }
     });
+    
+    $("#link_to_whos_using").live('click', function(){
+        window.open("http://sourcefabric.org/en/products/airtime_whosusing");
+    });
 });
 
 function validateFields(){
     var stnName = $("#stnName");
-    var phone = $("#Phone");
     var email = $("#Email");
-    var city = $("#City");
-    var description = $("#Description");
     
     var errors = new Array();
     
     errors[0] = displayError(stnName);
-    errors[1] = displayError(phone);
-    errors[2] = displayError(email);
-    errors[3] = displayError(city);
-    errors[4] = displayError(description);
+    errors[1] = displayError(email);
   
     for( e in errors ){
         if(errors[e]){

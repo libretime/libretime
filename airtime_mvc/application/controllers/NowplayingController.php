@@ -21,8 +21,11 @@ class NowplayingController extends Zend_Controller_Action
         
         //popup if previous page was login
         $refer_sses = new Zend_Session_Namespace('referrer');
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
+        
         if($refer_sses->referrer == 'login' && Application_Model_Nowplaying::ShouldShowPopUp()
-            && !Application_Model_Preference::GetSupportFeedback()){
+            && !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
         	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js','text/javascript');
         }
     }

@@ -16,7 +16,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
         $this->addElement('text', 'Phone', array(
             'class'      => 'input_text',
             'label'      => 'Phone:',
-            'required'   => true,
+            'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetPhone(),
             'decorators' => array(
@@ -50,7 +50,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		// county list dropdown
 		$this->addElement('select', 'Country', array(
 			'label'		=> 'Country:',
-			'required'	=> true,
+			'required'	=> false,
 			'value'		=> Application_Model_Preference::GetStationCountry(),
 			'multiOptions'	=> $country_list,
 			'decorators' => array(
@@ -61,7 +61,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		// Station city
         $this->addElement('text', 'City', array(
             'label'      => 'City:',
-            'required'   => true,
+            'required'   => false,
             'class'      => 'input_text',
             'value' => Application_Model_Preference::GetStationCity(),
             'decorators' => array(
@@ -72,7 +72,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		// Station Description
         $this->addElement('textarea', 'Description', array(
             'label'      => 'Station Description:',
-            'required'   => true,
+            'required'   => false,
             'class'      => 'input_text_area',
             'value' => Application_Model_Preference::GetStationDescription(),
             'decorators' => array(

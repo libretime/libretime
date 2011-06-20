@@ -288,7 +288,7 @@ class Application_Model_Preference
     	return $out;
     }
     
-    public static function GetSystemInfo(){
+    public static function GetSystemInfo($returnArray=false){
     	exec('/usr/bin/airtime-check-system', $output);
     	
     	$output = preg_replace('/\s+/', ' ', $output);
@@ -297,7 +297,7 @@ class Application_Model_Preference
     	foreach( $output as $key => &$out){
     		$info = explode('=', $out);
     		if(isset($info[1])){
-    			$key = str_replace(' ', '_', $info[0]);
+    			$key = str_replace(' ', '_', trim($info[0]));
     			$key = strtoupper($key);
     			$systemInfoArray[$key] = $info[1];	
     		}
@@ -306,17 +306,26 @@ class Application_Model_Preference
     	$outputArray = array();
     	
     	$outputArray['STATION_NAME'] = Application_Model_Preference::GetStationName();
+    	$outputArray['PHONE'] = Application_Model_Preference::GetPhone();
+    	$outputArray['EMAIL'] = Application_Model_Preference::GetEmail();
     	$outputArray['STATION_WEB_SITE'] = Application_Model_Preference::GetStationWebSite();
     	$outputArray['STATION_COUNTRY'] = Application_Model_Preference::GetStationCountry();
     	$outputArray['STATION_CITY'] = Application_Model_Preference::GetStationCity();
     	$outputArrat['STATION_DESCRIPTION'] = Application_Model_Preference::GetStationDescription();
-    	//$outputArray['Version'] = $systemInfoArray['AIRTIME_VERSION'];
-    	$outputArray['WEB_SERVER'] = php_sapi_name();
-    	//$outputArray['OS Info'] = $systemInfoArray['OS'];
+    	
+    	// get web server info
+    	$url = $systemInfoArray["AIRTIME_VERSION_URL"];
+    	$index = strpos($url,'/api/');
+    	$url = substr($url, 0, $index);
+    	
+    	$headerInfo = get_headers(trim($url),1);
+    	$outputArray['WEB_SERVER'] = $headerInfo['Server'][0];
+    	
     	$outputArray['NUM_OF_USERS'] = User::getUserCount();
     	$outputArray['NUM_OF_SONGS'] = StoredFile::getFileCount();
     	$outputArray['NUM_OF_PLAYLISTS'] = Playlist::getPlaylistCount();
-    	$outputArray['NUM_OF_SCHEDULED_PLAYLIST'] = Schedule::getSchduledPlaylistCount();
+    	$outputArray['NUM_OF_SCHEDULED_PLAYLISTS'] = Schedule::getSchduledPlaylistCount();
+    	$outputArray['NUM_OF_PAST_SHOWS'] = ShowInstance::GetShowInstanceCount(date("Y-m-d H:i:s"));
     	$outputArray['UNIQUE_ID'] = Application_Model_Preference::GetUniqueId();
     	
     	$outputArray = array_merge($outputArray, $systemInfoArray);
@@ -325,8 +334,11 @@ class Application_Model_Preference
     	foreach($outputArray as $key => $out){
     		$outputString .= $key.' : '.$out."\n";
     	}
-    	
-    	return $outputString;
+    	if($returnArray){
+    	    return $outputArray;
+    	}else{
+    	    return $outputString;
+    	}
     }
     
     public static function SetRemindMeDate($now){

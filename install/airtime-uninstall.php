@@ -89,4 +89,6 @@ AirtimeInstall::RemoveSymlinks();
 AirtimeInstall::UninstallBinaries();
 AirtimeInstall::RemoveLogDirectories();
 
+unlink('/etc/cron.d/airtime-crons');
+
 /* FINISHED AIRTIME PHP UNINSTALLER */

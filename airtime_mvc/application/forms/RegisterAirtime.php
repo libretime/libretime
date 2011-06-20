@@ -17,7 +17,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         
         // Station Name
         $stnName = new Zend_Form_Element_Text("stnName");
-        $stnName->setLabel("Station Name:")
+        $stnName->setLabel("Station Name:(*)")
                 ->setRequired(true)
                 ->setValue(Application_Model_Preference::GetStationName())
                 ->setDecorators(array('ViewHelper'));
@@ -27,7 +27,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         $this->addElement('text', 'Phone', array(
             'class'      => 'input_text',
             'label'      => 'Phone:',
-            'required'   => true,
+            'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetPhone(),
             'decorators' => array(
@@ -38,7 +38,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         //Email
         $this->addElement('text', 'Email', array(
             'class'      => 'input_text',
-            'label'      => 'Email:',
+            'label'      => 'Email:(*)',
             'required'   => true,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetEmail(),
@@ -61,7 +61,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 		// county list dropdown
 		$this->addElement('select', 'Country', array(
 			'label'		=> 'Country:',
-			'required'	=> true,
+			'required'	=> false,
 			'value'		=> Application_Model_Preference::GetStationCountry(),
 			'multiOptions'	=> $country_list,
 			'decorators' => array(
@@ -72,7 +72,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 		// Station city
         $this->addElement('text', 'City', array(
             'label'      => 'City:',
-            'required'   => true,
+            'required'   => false,
             'class'      => 'input_text',
             'value' => Application_Model_Preference::GetStationCity(),
             'decorators' => array(
@@ -84,7 +84,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 		$description = new Zend_Form_Element_Textarea('Description');
 		$description->class = 'input_text_area';
 		$description->setLabel('Station Description:')
-					->setRequired(true)
+					->setRequired(false)
 					->setValue(Application_Model_Preference::GetStationDescription())
 					->setDecorators(array('ViewHelper'))
 					->setAttrib('ROWS','2')
@@ -99,17 +99,17 @@ class Application_Form_RegisterAirtime extends Zend_Form
 				->addValidator('Count', false, 1)
 				->addValidator('Extension', false, 'jpg,png,gif')
 				->addValidator('ImageSize', false, array(
-					'minwidth'	=> 180,
-					'minheight'	=> 180,
-					'maxwidth'	=> 1000,
-					'maxheight'	=>	1000));
+					'minwidth'	=> 200,
+					'minheight'	=> 200,
+					'maxwidth'	=> 600,
+					'maxheight'	=>	600));
 		$this->addElement($upload);
 		
         //enable support feedback
         $this->addElement('checkbox', 'SupportFeedback', array(
             'label'      => 'Send support feedback',
             'required'   => false,
-            'value' => Application_Model_Preference::GetSupportFeedback(),
+            'value' => 1,
             'decorators' => array(
                 'ViewHelper'
             )
@@ -121,9 +121,6 @@ class Application_Form_RegisterAirtime extends Zend_Form
                           ->setRequired(false)
                           ->setDecorators(array('ViewHelper'))
                           ->setValue(Application_Model_Preference::GetPublicise());
-        if(!Application_Model_Preference::GetSupportFeedback()){
-            $checkboxPublicise->setAttrib("disabled", "disabled");
-        }
         $this->addElement($checkboxPublicise);
 		
 		// text area for sending detail
@@ -132,7 +129,8 @@ class Application_Form_RegisterAirtime extends Zend_Form
         	'required'   => false,
             'filters'    => array('StringTrim'),
         	'readonly'	=> true,
-			'rows'		=> 24,        
+			'rows'		=> 5,
+            'cols'     => 61,
             'value' => Application_Model_Preference::GetSystemInfo(),
             'decorators' => array(
                 'ViewHelper'
