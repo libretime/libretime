@@ -29,7 +29,7 @@ try:
         
     os.system("/etc/init.d/airtime-playout stop")
     os.system("rm -f /etc/init.d/airtime-playout")
-    os.system("update-rc.d -f airtime-playout remove")
+    os.system("update-rc.d -f airtime-playout remove >/dev/null 2>&1")
         
     print "Removing cache directories"
     remove_path(config["cache_base_dir"])

@@ -106,7 +106,7 @@ try:
   print "Installing pypo daemon"
   shutil.copy(config["bin_dir"]+"/bin/airtime-playout-init-d", "/etc/init.d/airtime-playout")
 
-  p = Popen("update-rc.d airtime-playout defaults", shell=True)
+  p = Popen("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
 
   print "Waiting for processes to start..."

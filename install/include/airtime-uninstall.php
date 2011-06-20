@@ -5,8 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 
-require_once(dirname(__FILE__).'/include/AirtimeIni.php');
-require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
+require_once(dirname(__FILE__).'/AirtimeIni.php');
+require_once(dirname(__FILE__).'/AirtimeInstall.php');
 // Need to check that we are superuser before running this.
 AirtimeInstall::ExitIfNotRoot();
 
@@ -88,5 +88,6 @@ if ($results == 0) {
 AirtimeInstall::RemoveSymlinks();
 AirtimeInstall::UninstallBinaries();
 AirtimeInstall::RemoveLogDirectories();
+AirtimeIni::RemoveMonitFile();
 
 /* FINISHED AIRTIME PHP UNINSTALLER */

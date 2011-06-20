@@ -14,7 +14,7 @@ echo -e "\n******************************** Install Begin **********************
 echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
-php ${SCRIPTPATH}/airtime-install.php $@
+php ${SCRIPTPATH}/include/airtime-install.php $@
 
 echo -e "\n*** Pypo Installation ***"
 python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-install.py

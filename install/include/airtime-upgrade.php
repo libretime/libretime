@@ -9,6 +9,7 @@
 //Pear classes.
 set_include_path(__DIR__.'/../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once('DB.php');
+require_once(dirname(__FILE__).'/include/AirtimeIni.php');
 
 if(exec("whoami") != "root"){
     echo "Must be root user.\n";
@@ -98,6 +99,8 @@ passthru("python ".__DIR__."/../python_apps/show-recorder/install/recorder-insta
 
 echo PHP_EOL."*** Updating Media Monitor ***".PHP_EOL;
 passthru("python ".__DIR__."/../python_apps/media-monitor/install/media-monitor-install.py");
+
+AirtimeIni::CreateMonitFile();
 
 
 echo "******************************* Update Complete *******************************".PHP_EOL;

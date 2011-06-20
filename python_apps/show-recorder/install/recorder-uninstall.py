@@ -29,7 +29,7 @@ try:
 
     os.system("/etc/init.d/airtime-show-recorder stop")
     os.system("rm -f /etc/init.d/airtime-show-recorder")
-    os.system("update-rc.d -f airtime-show-recorder remove")
+    os.system("update-rc.d -f airtime-show-recorder remove >/dev/null 2>&1")
     
     print "Removing log directories"
     remove_path(config["log_dir"])

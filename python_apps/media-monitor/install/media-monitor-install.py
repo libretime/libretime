@@ -69,7 +69,7 @@ try:
   print "Installing media-monitor daemon"
   shutil.copy(config["bin_dir"]+"/airtime-media-monitor-init-d", "/etc/init.d/airtime-media-monitor")
 
-  p = Popen("update-rc.d airtime-media-monitor defaults", shell=True)
+  p = Popen("update-rc.d airtime-media-monitor defaults >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
 
   print "Waiting for processes to start..."

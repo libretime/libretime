@@ -88,6 +88,10 @@ class AirtimeIni
         }
     }
 
+    public static function RemoveMonitFile(){
+        unlink("/etc/monit/conf.d/airtime-monit.cfg");
+    }
+
     /**
      * This function removes /etc/airtime and the configuration
      * files present within it.

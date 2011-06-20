@@ -8,10 +8,10 @@
  * Performs a new install (new configs, database install) if a version of Airtime is not found
  * If the current version is found to be installed the User is presented with the help menu and can choose -r to reinstall.
  */
-set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
+set_include_path(__DIR__.'/../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 
-require_once(dirname(__FILE__).'/include/AirtimeIni.php');
-require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
+require_once(dirname(__FILE__).'/AirtimeIni.php');
+require_once(dirname(__FILE__).'/AirtimeInstall.php');
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.php');
 
 AirtimeInstall::ExitIfNotRoot();

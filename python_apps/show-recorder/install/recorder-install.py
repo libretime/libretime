@@ -66,7 +66,7 @@ try:
   print "Installing show-recorder daemon"
   shutil.copy(config["bin_dir"]+"/airtime-show-recorder-init-d", "/etc/init.d/airtime-show-recorder")
 
-  p = Popen("update-rc.d airtime-show-recorder defaults", shell=True)
+  p = Popen("update-rc.d airtime-show-recorder defaults >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
 
   print "Waiting for processes to start..."
