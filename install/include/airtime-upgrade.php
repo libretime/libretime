@@ -7,9 +7,9 @@
  */
 
 //Pear classes.
-set_include_path(__DIR__.'/../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
+set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once('DB.php');
-require_once(dirname(__FILE__).'/include/AirtimeIni.php');
+require_once(dirname(__FILE__).'/AirtimeIni.php');
 
 if(exec("whoami") != "root"){
     echo "Must be root user.\n";
@@ -68,19 +68,19 @@ echo "******************************** Update Begin ****************************
 $version = substr($version, 0, 5);
 
 if (strcmp($version, "1.7.0") < 0){
-    system("php ".__DIR__."/upgrades/airtime-1.7/airtime-upgrade.php");
+    system("php ".__DIR__."/../upgrades/airtime-1.7/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.0") < 0){
-    system("php ".__DIR__."/upgrades/airtime-1.8/airtime-upgrade.php");
+    system("php ".__DIR__."/../upgrades/airtime-1.8/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.1") < 0){
-    system("php ".__DIR__."/upgrades/airtime-1.8.1/airtime-upgrade.php");
+    system("php ".__DIR__."/../upgrades/airtime-1.8.1/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.2") < 0){
-    system("php ".__DIR__."/upgrades/airtime-1.8.2/airtime-upgrade.php");
+    system("php ".__DIR__."/../upgrades/airtime-1.8.2/airtime-upgrade.php");
 }
 if (strcmp($version, "1.9.0") < 0){
-    system("php ".__DIR__."/upgrades/airtime-1.9/airtime-upgrade.php");
+    system("php ".__DIR__."/../upgrades/airtime-1.9/airtime-upgrade.php");
 }
 
 
@@ -92,13 +92,13 @@ $CC_DBC->query($sql);
 
 
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
-passthru("python ".__DIR__."/../python_apps/pypo/install/pypo-install.py");
+passthru("python ".__DIR__."/../../python_apps/pypo/install/pypo-install.py");
 
 echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
-passthru("python ".__DIR__."/../python_apps/show-recorder/install/recorder-install.py");
+passthru("python ".__DIR__."/../../python_apps/show-recorder/install/recorder-install.py");
 
 echo PHP_EOL."*** Updating Media Monitor ***".PHP_EOL;
-passthru("python ".__DIR__."/../python_apps/media-monitor/install/media-monitor-install.py");
+passthru("python ".__DIR__."/../../python_apps/media-monitor/install/media-monitor-install.py");
 
 AirtimeIni::CreateMonitFile();
 
