@@ -215,6 +215,7 @@ class AirtimeNotifier(Notifier):
         if m['event_type'] == "md_update":
             self.logger.info("AIRTIME NOTIFIER md update event")
             self.md_manager.save_md_to_file(m)
+
         elif m['event_type'] == "new_watch":
             self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
             #start a new process to walk through this folder and add the files to Airtime.
@@ -223,8 +224,23 @@ class AirtimeNotifier(Notifier):
             self.import_processes[m['directory']] = p
             #add this new folder to our list of watched folders
             self.watched_folders.append(m['directory'])
+
         elif m['event_type'] == "remove_watch":
-            self.watches_to_remove.append(m['directory'])
+            watched_directory = m['directory'].encode('utf-8')
+
+            mm = self.proc_fun()
+            wd = mm.wm.get_wd(watched_directory)
+            self.logger.info("Removing watch on: %s wd %s", watched_directory, wd)
+            mm.wm.rm_watch(wd, rec=True)
+
+        elif m['event_type'] == "change_stor":
+            global storage_directory
+            new_storage_directory = m['directory'].encode('utf-8')
+
+            mm = self.proc_fun()
+            mm.set_needed_file_permissions(new_storage_directory, True)
+            mm.move_file(storage_directory, new_storage_directory)
+            storage_directory = new_storage_directory
 
 
     def update_airtime(self, d):
@@ -521,15 +537,6 @@ class MediaMonitor(ProcessEvent):
 
     def notifier_loop_callback(self, notifier):
 
-        #recursively unwatch any directories.
-        for watched_directory in notifier.watches_to_remove:
-            wd = self.wm.get_wd(watched_directory)
-            self.logger.info("Removing watch on: %s wdd %s", watched_directory, wd)
-            self.wm.rm_watch(wd, rec=True)
-
-        notifier.watches_to_remove = []
-
-
         for watched_directory in notifier.import_processes.keys():
             process = notifier.import_processes[watched_directory]
             if not process.is_alive():
@@ -560,8 +567,8 @@ if __name__ == '__main__':
             response = mm.api_client.setup_media_monitor()
             time.sleep(5)
 
-        storage_directory = response["stor"]
-        plupload_directory = response["plupload"]
+        storage_directory = response["stor"].encode('utf-8')
+        plupload_directory = response["plupload"].encode('utf-8')
 
         wdd = mm.watch_directory(storage_directory)
         logger.info("Added watch to %s", storage_directory)

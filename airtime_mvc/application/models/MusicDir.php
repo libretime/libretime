@@ -35,6 +35,7 @@ class MusicDir {
     public function setDirectory($dir)
     {
         $this->_dir->setDirectory($dir);
+        $this->_dir->save();
     }
 
     public function remove()
@@ -110,6 +111,12 @@ class MusicDir {
         $mus_dir->_dir = $dir;
 
         return $mus_dir;
+    }
+
+    public static function setStorDir($p_dir)
+    {
+        $dir = self::getStorDir();
+        $dir->setDirectory($p_dir);
     }
 
     public static function getWatchedDirFromFilepath($p_filepath)

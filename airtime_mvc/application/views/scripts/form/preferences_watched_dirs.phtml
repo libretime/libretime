@@ -1,11 +1,29 @@
 <dl class="zend_form">
 
-   <dt id="watchedFolder-label" class="block-display">
+    <dt id="storageFolder-label" class="block-display">
+        <label class="required" for="storageFolder"><?php echo $this->element->getElement('storageFolder')->getLabel() ?></label>
+    </dt>
+    <dd id="storageFolder-element">
+        <?php echo $this->element->getElement('storageFolder') ?>
+        <input id="storageFolder-selection" type="button" value="choose folder"></input>
+        <input id="storageFolder-ok" type="button" value="OK"></input>
+        <?php if($this->element->getElement('storageFolder')->hasErrors()) : ?>
+            <ul class='errors'>
+                <?php foreach($this->element->getElement('storageFolder')->getMessages() as $error): ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+    <div>Current Storage Folder: <?php $stor = MusicDir::getStorDir(); echo $stor->getDirectory(); ?></div>
+
+    <dt id="watchedFolder-label" class="block-display">
         <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
     </dt>
     <dd id="watchedFolder-element">
         <?php echo $this->element->getElement('watchedFolder') ?>
         <input id="watchedFolder-selection" type="button" value="choose folder"></input>
+        <input id="watchedFolder-ok" type="button" value="OK"></input>
         <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
             <ul class='errors'>
                 <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
@@ -14,9 +32,7 @@
             </ul>
         <?php endif; ?>
     </dd>
-    <dd>
-        <input id="watchedFolder-ok" type="button" value="OK"></input>
-    </dd>
+
     <div id="watchedFolder-table">
         <?php $i = 1; ?>
         <?php $element = $this->element->getElement("watched_dir_$i"); ?>

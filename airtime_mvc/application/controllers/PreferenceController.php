@@ -10,6 +10,7 @@ class PreferenceController extends Zend_Controller_Action
         $ajaxContext->addActionContext('register', 'json')
         			->addActionContext('remindme', 'json')
                     ->addActionContext('server-browse', 'json')
+                    ->addActionContext('change-stor-directory', 'json')
                     ->addActionContext('reload-watch-directory', 'json')
                     ->addActionContext('remove-watch-directory', 'json')
                     ->initContext();
@@ -175,12 +176,33 @@ class PreferenceController extends Zend_Controller_Action
         die(json_encode($result));
     }
 
+    public function changeStorDirectoryAction()
+    {
+        $chosen = $this->getRequest()->getParam("dir");
+        $element = $this->getRequest()->getParam("element");
+        $watched_dirs_form = new Application_Form_WatchedDirPreferences();
+        $watched_dirs_form->populate(array('storageFolder' => $chosen));
+        $bool = $watched_dirs_form->verifyChosenFolder($element);
+
+        if ($bool === true) {
+            MusicDir::setStorDir($chosen);
+            $data = array();
+            $data["directory"] = $chosen;
+            RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
+        }
+
+        $watched_dirs_form->setWatchedDirs();
+
+        $this->view->subform = $watched_dirs_form->render();
+    }
+
     public function reloadWatchDirectoryAction()
     {
         $chosen = $this->getRequest()->getParam("dir");
+        $element = $this->getRequest()->getParam("element");
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
         $watched_dirs_form->populate(array('watchedFolder' => $chosen));
-        $bool = $watched_dirs_form->verifyChosenFolder();
+        $bool = $watched_dirs_form->verifyChosenFolder($element);
 
         if ($bool === true) {
             MusicDir::addWatchedDir($chosen);

@@ -9,6 +9,17 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/preferences_watched_dirs.phtml'))
         ));
 
+        $this->addElement('text', 'storageFolder', array(
+            'class'      => 'input_text',
+            'label'      => 'Airtime\'s Storage Folder:',
+            'required'   => false,
+            'filters'    => array('StringTrim'),
+            'value' => '',
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
+
         $this->addElement('text', 'watchedFolder', array(
             'class'      => 'input_text',
             'label'      => 'Choose a Folder to Watch:',
@@ -21,9 +32,9 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
         ));
     }
 
-    public function verifyChosenFolder() {
+    public function verifyChosenFolder($p_form_element_id) {
 
-        $element = $this->getElement('watchedFolder');
+        $element = $this->getElement($p_form_element_id);
 
         if (!is_dir($element->getValue())) {
             $element->setErrors(array('Not a valid Directory'));
