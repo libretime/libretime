@@ -145,15 +145,21 @@ class MetadataExtractor:
             self.logger.error('Filepath %s', m['MDATA_KEY_FILEPATH'])
 
     def get_md_from_file(self, filepath):
+
+        self.logger.info("getting info about file %s", filepath)
+
         md = {}
         md5 = self.get_md5(filepath)
         md['MDATA_KEY_MD5'] = md5
 
         file_info = mutagen.File(filepath, easy=True)
+
+        self.logger.info(file_info)
+
         #check if file has any metadata
-        if len(file_info) > 0:
+        if file_info is not None:
             for key in file_info.keys() :
-                if key in attrs :
+                if key in self.mutagen2airtime :
                     md[self.mutagen2airtime[key]] = file_info[key][0]
 
         if 'MDATA_KEY_TITLE' not in md:
@@ -284,10 +290,14 @@ class AirtimeNotifier(Notifier):
 
     def walk_newly_watched_directory(self, directory):
 
+        mm = self.proc_fun()
+
         for (path, dirs, files) in os.walk(directory):
             for filename in files:
                 full_filepath = path+"/"+filename
-                self.update_airtime({'filepath': full_filepath, 'mode': MODE_CREATE})
+
+                if mm.is_audio_file(full_filepath):
+                    self.update_airtime({'filepath': full_filepath, 'mode': MODE_CREATE})
 
 
 class MediaMonitor(ProcessEvent):
