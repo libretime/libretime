@@ -150,10 +150,11 @@ class MetadataExtractor:
         md['MDATA_KEY_MD5'] = md5
 
         file_info = mutagen.File(filepath, easy=True)
-        attrs = self.mutagen2airtime
-        for key in file_info.keys() :
-            if key in attrs :
-                md[attrs[key]] = file_info[key][0]
+        #check if file has any metadata
+        if len(file_info) > 0:
+            for key in file_info.keys() :
+                if key in attrs :
+                    md[self.mutagen2airtime[key]] = file_info[key][0]
 
         if 'MDATA_KEY_TITLE' not in md:
             #get rid of file extention from original name, name might have more than 1 '.' in it.
