@@ -238,9 +238,16 @@ class AirtimeNotifier(Notifier):
             new_storage_directory = m['directory'].encode('utf-8')
 
             mm = self.proc_fun()
+
+            wd = mm.wm.get_wd(storage_directory)
+            self.logger.info("Removing watch on: %s wd %s", storage_directory, wd)
+            mm.wm.rm_watch(wd, rec=True)
+
             mm.set_needed_file_permissions(new_storage_directory, True)
             mm.move_file(storage_directory, new_storage_directory)
             storage_directory = new_storage_directory
+
+            mm.watch_directory(new_storage_directory)
 
 
     def update_airtime(self, d):
