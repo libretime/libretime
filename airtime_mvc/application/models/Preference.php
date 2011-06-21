@@ -311,7 +311,7 @@ class Application_Model_Preference
     	$outputArray['STATION_WEB_SITE'] = Application_Model_Preference::GetStationWebSite();
     	$outputArray['STATION_COUNTRY'] = Application_Model_Preference::GetStationCountry();
     	$outputArray['STATION_CITY'] = Application_Model_Preference::GetStationCity();
-    	$outputArrat['STATION_DESCRIPTION'] = Application_Model_Preference::GetStationDescription();
+    	$outputArray['STATION_DESCRIPTION'] = Application_Model_Preference::GetStationDescription();
 
     	// get web server info
     	$url = $systemInfoArray["AIRTIME_VERSION_URL"];
@@ -328,11 +328,13 @@ class Application_Model_Preference
     	$outputArray['NUM_OF_PAST_SHOWS'] = ShowInstance::GetShowInstanceCount(date("Y-m-d H:i:s"));
     	$outputArray['UNIQUE_ID'] = Application_Model_Preference::GetUniqueId();
 
-    	$outputArray = array_merge($outputArray, $systemInfoArray);
+    	$outputArray = array_merge($systemInfoArray, $outputArray);
 
     	$outputString = "\n";
     	foreach($outputArray as $key => $out){
-    		$outputString .= $key.' : '.$out."\n";
+    	    if(!empty($out)){
+    		    $outputString .= $key.' : '.$out."\n";
+    	    }
     	}
     	if($returnArray){
     		$outputArray['LOGOIMG'] = Application_Model_Preference::GetStationLogo();
