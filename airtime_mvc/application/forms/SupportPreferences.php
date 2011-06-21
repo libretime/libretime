@@ -28,7 +28,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
         $this->addElement('text', 'Email', array(
             'class'      => 'input_text',
             'label'      => 'Email:',
-            'required'   => true,
+            'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetEmail(),
             'decorators' => array(

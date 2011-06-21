@@ -36,7 +36,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultFade($values["preferences_general"]["stationDefaultFade"]);
                 Application_Model_Preference::SetStreamLabelFormat($values["preferences_general"]["streamFormat"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
-                Application_Model_Preference::SetWatchedDirectory($values["preferences_general"]["watchedFolder"]);
 
                 Application_Model_Preference::SetDoSoundCloudUpload($values["preferences_soundcloud"]["UseSoundCloud"]);
                 Application_Model_Preference::SetSoundCloudUser($values["preferences_soundcloud"]["SoundCloudUser"]);
@@ -59,8 +58,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetStationCity($values["preferences_support"]["City"]);
                 Application_Model_Preference::SetStationDescription($values["preferences_support"]["Description"]);
                 Application_Model_Preference::SetStationLogo($imagePath);
-
-                Application_Model_Preference::SetSoundCloudLicense($values["preferences_soundcloud"]["SoundCloudLicense"]);
 
                 $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
 
