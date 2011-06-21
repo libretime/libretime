@@ -70,15 +70,15 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		));
 		
 		// Station Description
-        $this->addElement('textarea', 'Description', array(
-            'label'      => 'Station Description:',
-            'required'   => false,
-            'class'      => 'input_text_area',
-            'value' => Application_Model_Preference::GetStationDescription(),
-            'decorators' => array(
-                'ViewHelper'
-            )
-		));
+		$description = new Zend_Form_Element_Textarea('Description');
+		$description->class = 'input_text_area';
+		$description->setLabel('Station Description:')
+					->setRequired(false)
+					->setValue(Application_Model_Preference::GetStationDescription())
+					->setDecorators(array('ViewHelper'))
+					->setAttrib('ROWS','2')
+					->setAttrib('COLS','58');
+		$this->addElement($description);
 		
 		// Station Logo
 		$upload = new Zend_Form_Element_File('Logo');

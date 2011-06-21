@@ -283,7 +283,7 @@ class Application_Model_Preference
     	$res =  $CC_DBC->GetAll($sql);
     	$out = array();
     	foreach($res as $r){
-    		$out[$r["iso_code"]] = $r["name"];
+    		$out[$r["isocode"]] = $r["name"];
     	}
     	return $out;
     }
@@ -335,6 +335,7 @@ class Application_Model_Preference
     		$outputString .= $key.' : '.$out."\n";
     	}
     	if($returnArray){
+    		$outputArray['LOGOIMG'] = Application_Model_Preference::GetStationLogo();
     	    return $outputArray;
     	}else{
     	    return $outputString;
