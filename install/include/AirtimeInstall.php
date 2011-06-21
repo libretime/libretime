@@ -149,7 +149,6 @@ class AirtimeInstall
         $success = chmod($rp, 02777);
         $CC_CONFIG['storageDir'] = $rp;
 
-        AirtimeInstall::DbConnect(true);
         //add stor directory to MusiDirs
         $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$rp', 'stor')";
         $result = $CC_DBC->query($sql);
