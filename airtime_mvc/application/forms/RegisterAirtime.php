@@ -95,14 +95,14 @@ class Application_Form_RegisterAirtime extends Zend_Form
 		$upload = new Zend_Form_Element_File('Logo');
 		$upload->setLabel('Station Logo:')
 				->setRequired(false)
-				->setDecorators(array('File'))
-				->addValidator('Count', false, 1)
+				->setDecorators(array('File'));
+				/*->addValidator('Count', false, 1)
 				->addValidator('Extension', false, 'jpg,png,gif')
 				->addValidator('ImageSize', false, array(
 					'minwidth'	=> 200,
 					'minheight'	=> 200,
 					'maxwidth'	=> 600,
-					'maxheight'	=>	600));
+					'maxheight'	=>	600));*/
 		$this->addElement($upload);
 		
         //enable support feedback
