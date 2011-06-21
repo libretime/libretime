@@ -63,7 +63,7 @@ class MusicDir {
 
     public static function getDirByPK($pk)
     {
-        $dir = CcMusicDirQuery::create()->findPK($pk);
+        $dir = CcMusicDirsQuery::create()->findPK($pk);
 
         $mus_dir = new MusicDir();
         $mus_dir->_dir = $dir;
