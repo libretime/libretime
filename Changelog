@@ -1,4 +1,56 @@
-1.8.2 - May 25, 2011
+1.9.0 - ???, 2011
+
+The cool stuff:
+  * New file storage system.
+    * Human-readable file structure.  The directory structure and file names on disk are now
+      human-readable.  This means you can easily find files using your file browser on your
+      server.
+
+    * Magic file synchronization.  Edits to your files are automatically noticed by Airtime.  If
+      you edit any files on disk, such as trimming the length of a track, Airtime will
+      automatically notice this and adjust the playlist lengths and shows for that audio file.
+
+    * Auto-import and multiple-directory support.  You can set any number of directories to be
+      watched by Airtime.  Any new files you add to watched directories will be automatically
+      imported into Airtime, and any deleted files will be automatically removed.
+
+  * Graceful recovery from reboot.  If the playout engine starts up and detects that a show
+    should be playing at the current time, it will skip to the right point in the track and
+    start playing.  Previously, Airtime would not play anything until the next show started.
+    This also fixes a problem where the metadata on the stream was lost when a file had
+    cue-in/out values set.  Thanks to the Liquidsoap developers for implementing the ability
+    to do all of this!
+
+  * Output to Shoutcast.  Now both Shoutcast and Icecast are supported.
+
+  * No more rebooting after install!  Airtime now uses standard SystemV initd scripts instead of
+    non-standard daemontools. This also makes for a much faster install.
+
+  * Extensible daemon monitoring system. The tool "monit" is being used to monitor the
+    daemon processes(playout engine, media monitor, etc) and automatically restart them in the
+    unlikely event that a daemon crashes. It also allows you to easily add your own actions when
+    something happens with a daemon. For example, you could send yourself an email notification if
+    a daemon process dies.
+
+Improvements:
+  * Cumulative time shown on playlists.  The Playlist Builder now shows the total time since
+    the beginning of the playlist for each song.
+
+  * "End Time" instead of "Duration".  In the Add/Edit Show dialog, we replaced the "Duration"
+    field with "End Time".  Users reported that this was a much more intuitive way to schedule the
+    show. Duration is still shown as a read-only field.
+
+  * Feedback & promotion system.  Airtime now includes a way to send feedback and promote your
+    site on the Sourcefabric web page. This will greatly enhance our ability to understand who is
+    using the software, which in turn will allow us to make appropriate features and receive grant
+    funding.
+
+Bug fixes:
+  * Fixed bug where you couldnt import a file with a name longer than 255 characters.
+  * Fixed bug where searching an audio archive of 15K+ files was slow.
+
+
+1.8.2 - June 8, 2011
 Highlights:
   * Improvements:
     - You can now download audio files from the search screen and from the "Show Content" screen.
@@ -23,7 +75,8 @@ Highlights:
     - Fixed problem with Record Check box occasionally being greyed-out when creating new show
     - Fixed a problem with default genre not being applied to recorded shows
     - Fixed a problem where shows repeating bi-weekly or monthly did not update properly when edited.
-
+    - Fixed problem when a user changed the name of a recorded show right before it started playing would cause the recorded audio not to be linked to the show.
+    - and many more...
 
 1.8.1 - May 2, 2011
   * Fixed issue where an track's progress bar would keep updating, even if the track was no longer playing.
