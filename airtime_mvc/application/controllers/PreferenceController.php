@@ -60,8 +60,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetStationDescription($values["preferences_support"]["Description"]);
                 Application_Model_Preference::SetStationLogo($imagePath);
 
-                Application_Model_Preference::SetSoundCloudLicense($values["preferences_soundcloud"]["SoundCloudLicense"]);
-
                 $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
 
             }
