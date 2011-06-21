@@ -113,4 +113,11 @@ return array (
   'BaseCcSubjsPeer' => 'airtime/om/BaseCcSubjsPeer.php',
   'BaseCcSubjs' => 'airtime/om/BaseCcSubjs.php',
   'BaseCcSubjsQuery' => 'airtime/om/BaseCcSubjsQuery.php',
+  'CcCountryTableMap' => 'airtime/map/CcCountryTableMap.php',
+  'CcCountryPeer' => 'airtime/CcCountryPeer.php',
+  'CcCountry' => 'airtime/CcCountry.php',
+  'CcCountryQuery' => 'airtime/CcCountryQuery.php',
+  'BaseCcCountryPeer' => 'airtime/om/BaseCcCountryPeer.php',
+  'BaseCcCountry' => 'airtime/om/BaseCcCountry.php',
+  'BaseCcCountryQuery' => 'airtime/om/BaseCcCountryQuery.php',
 );

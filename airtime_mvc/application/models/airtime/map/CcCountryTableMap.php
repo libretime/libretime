@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_music_dirs' table.
+ * This class defines the structure of the 'cc_country' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcMusicDirsTableMap extends TableMap {
+class CcCountryTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'airtime.map.CcMusicDirsTableMap';
+	const CLASS_NAME = 'airtime.map.CcCountryTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,16 +31,14 @@ class CcMusicDirsTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('cc_music_dirs');
-		$this->setPhpName('CcMusicDirs');
-		$this->setClassname('CcMusicDirs');
+		$this->setName('cc_country');
+		$this->setPhpName('CcCountry');
+		$this->setClassname('CcCountry');
 		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_music_dirs_id_seq');
+		$this->setUseIdGenerator(false);
 		// columns
-		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('DIRECTORY', 'Directory', 'LONGVARCHAR', false, null, null);
-		$this->addColumn('TYPE', 'Type', 'VARCHAR', false, 255, null);
+		$this->addPrimaryKey('ISOCODE', 'DbIsoCode', 'CHAR', true, 3, null);
+		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, null);
 		// validators
 	} // initialize()
 
@@ -49,7 +47,6 @@ class CcMusicDirsTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcFiles', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'directory', ), 'CASCADE', null);
 	} // buildRelations()
 
-} // CcMusicDirsTableMap
+} // CcCountryTableMap
