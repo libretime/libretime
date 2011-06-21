@@ -1,0 +1,31 @@
+<dl class="zend_form">
+
+   <dt id="watchedFolder-label" class="block-display">
+        <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
+    </dt>
+    <dd id="watchedFolder-element">
+        <?php echo $this->element->getElement('watchedFolder') ?>
+        <input id="watchedFolder-selection" type="button" value="choose folder"></input>
+        <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
+            <ul class='errors'>
+                <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+    <dd>
+        <input id="watchedFolder-ok" type="button" value="OK"></input>
+    </dd>
+    <div id="watchedFolder-table">
+        <?php $i = 1; ?>
+        <?php $element = $this->element->getElement("watched_dir_$i"); ?>
+        <?php while(isset($element)): ?>
+             <div><span><?php echo $element->getValue(); ?></span><span class="ui-icon ui-icon-close"></span></div>
+             <?php $i = $i + 1; ?>
+             <?php $element = $this->element->getElement("watched_dir_$i"); ?>
+        <?php endwhile; ?>
+    </div>
+
+</dl>
+

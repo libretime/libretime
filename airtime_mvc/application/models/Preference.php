@@ -188,79 +188,79 @@ class Application_Model_Preference
             return $val;
         }
     }
-    
+
     public static function SetPhone($phone){
     	Application_Model_Preference::SetValue("phone", $phone);
     }
-    
+
     public static function GetPhone(){
     	return Application_Model_Preference::GetValue("phone");
     }
-    
+
 	public static function SetEmail($email){
     	Application_Model_Preference::SetValue("email", $email);
     }
-    
+
     public static function GetEmail(){
     	return Application_Model_Preference::GetValue("email");
     }
-    
+
 	public static function SetStationWebSite($site){
     	Application_Model_Preference::SetValue("station_website", $site);
     }
-    
+
     public static function GetStationWebSite(){
     	return Application_Model_Preference::GetValue("station_website");
     }
-    
+
 	public static function SetSupportFeedback($feedback){
     	Application_Model_Preference::SetValue("support_feedback", $feedback);
     }
-    
+
     public static function GetSupportFeedback(){
     	return Application_Model_Preference::GetValue("support_feedback");
     }
-    
+
 	public static function SetPublicise($publicise){
     	Application_Model_Preference::SetValue("publicise", $publicise);
     }
-    
+
     public static function GetPublicise(){
     	return Application_Model_Preference::GetValue("publicise");
     }
-    
+
 	public static function SetRegistered($registered){
     	Application_Model_Preference::SetValue("registered", $registered);
     }
-    
+
     public static function GetRegistered(){
     	return Application_Model_Preference::GetValue("registered");
     }
-    
+
 	public static function SetStationCountry($country){
     	Application_Model_Preference::SetValue("country", $country);
     }
-    
+
     public static function GetStationCountry(){
     	return Application_Model_Preference::GetValue("country");
     }
-    
+
 	public static function SetStationCity($city){
     	Application_Model_Preference::SetValue("city", $city);
     }
-    
+
 	public static function GetStationCity(){
     	return Application_Model_Preference::GetValue("city");
     }
-    
+
 	public static function SetStationDescription($description){
     	Application_Model_Preference::SetValue("description", $description);
     }
-    
+
 	public static function GetStationDescription(){
     	return Application_Model_Preference::GetValue("description");
     }
-    
+
     public static function SetStationLogo($imagePath){
     	if(!empty($imagePath)){
 	    	$image = file_get_contents($imagePath);
@@ -268,15 +268,15 @@ class Application_Model_Preference
 	    	Application_Model_Preference::SetValue("logoImage", $image);
     	}
     }
-    
+
 	public static function GetStationLogo(){
     	return Application_Model_Preference::GetValue("logoImage");
     }
-    
+
     public static function GetUniqueId(){
     	return Application_Model_Preference::GetValue("uniqueId");
     }
-    
+
     public static function GetCountryList(){
     	global $CC_DBC;
     	$sql = "SELECT * FROM cc_country";
@@ -287,24 +287,24 @@ class Application_Model_Preference
     	}
     	return $out;
     }
-    
+
     public static function GetSystemInfo($returnArray=false){
     	exec('/usr/bin/airtime-check-system', $output);
-    	
+
     	$output = preg_replace('/\s+/', ' ', $output);
-    	
+
     	$systemInfoArray = array();
     	foreach( $output as $key => &$out){
     		$info = explode('=', $out);
     		if(isset($info[1])){
     			$key = str_replace(' ', '_', trim($info[0]));
     			$key = strtoupper($key);
-    			$systemInfoArray[$key] = $info[1];	
+    			$systemInfoArray[$key] = $info[1];
     		}
     	}
-    	
+
     	$outputArray = array();
-    	
+
     	$outputArray['STATION_NAME'] = Application_Model_Preference::GetStationName();
     	$outputArray['PHONE'] = Application_Model_Preference::GetPhone();
     	$outputArray['EMAIL'] = Application_Model_Preference::GetEmail();
@@ -312,24 +312,24 @@ class Application_Model_Preference
     	$outputArray['STATION_COUNTRY'] = Application_Model_Preference::GetStationCountry();
     	$outputArray['STATION_CITY'] = Application_Model_Preference::GetStationCity();
     	$outputArrat['STATION_DESCRIPTION'] = Application_Model_Preference::GetStationDescription();
-    	
+
     	// get web server info
     	$url = $systemInfoArray["AIRTIME_VERSION_URL"];
     	$index = strpos($url,'/api/');
     	$url = substr($url, 0, $index);
-    	
+
     	$headerInfo = get_headers(trim($url),1);
     	$outputArray['WEB_SERVER'] = $headerInfo['Server'][0];
-    	
+
     	$outputArray['NUM_OF_USERS'] = User::getUserCount();
     	$outputArray['NUM_OF_SONGS'] = StoredFile::getFileCount();
     	$outputArray['NUM_OF_PLAYLISTS'] = Playlist::getPlaylistCount();
     	$outputArray['NUM_OF_SCHEDULED_PLAYLISTS'] = Schedule::getSchduledPlaylistCount();
     	$outputArray['NUM_OF_PAST_SHOWS'] = ShowInstance::GetShowInstanceCount(date("Y-m-d H:i:s"));
     	$outputArray['UNIQUE_ID'] = Application_Model_Preference::GetUniqueId();
-    	
+
     	$outputArray = array_merge($outputArray, $systemInfoArray);
-    	
+
     	$outputString = "\n";
     	foreach($outputArray as $key => $out){
     		$outputString .= $key.' : '.$out."\n";
@@ -341,22 +341,14 @@ class Application_Model_Preference
     	    return $outputString;
     	}
     }
-    
+
     public static function SetRemindMeDate($now){
     	$weekAfter = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
    		Application_Model_Preference::SetValue("remindme", $weekAfter);
     }
-    
+
     public static function GetRemindMeDate(){
         return Application_Model_Preference::GetValue("remindme");
-    }
-
-    public static function SetWatchedDirectory($directory) {
-        Application_Model_Preference::SetValue("watched_directory", $directory);
-    }
-
-    public static function GetWatchedDirectory() {
-        return Application_Model_Preference::GetValue("watched_directory");
     }
 }
 

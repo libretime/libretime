@@ -3,7 +3,7 @@
 
 
 /**
- * Skeleton subclass for representing a row from the 'cc_playlist' table.
+ * Skeleton subclass for performing query and update operations on the 'cc_music_dirs' table.
  *
  * 
  *
@@ -13,6 +13,6 @@
  *
  * @package    propel.generator.airtime
  */
-class CcPlaylist extends BaseCcPlaylist {
+class CcMusicDirsPeer extends BaseCcMusicDirsPeer {
 
-} // CcPlaylist
+} // CcMusicDirsPeer
