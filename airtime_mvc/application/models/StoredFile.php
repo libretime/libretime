@@ -39,7 +39,6 @@ class StoredFile {
         "bit_rate" => "DbBitRate",
         "sample_rate" => "DbSampleRate",
         "mime" => "DbMime",
-        "filepath" => "DbFilepath",
         "md5" => "DbMd5",
         "ftype" => "DbFtype"
     );
@@ -108,9 +107,11 @@ class StoredFile {
                 if($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
-                $propelColumn = $this->_dbMD[$dbColumn];
-                $method = "set$propelColumn";
-                $this->_file->$method($mdValue);
+                if (isset($this->_dbMD[$dbColumn])) {
+                    $propelColumn = $this->_dbMD[$dbColumn];
+                    $method = "set$propelColumn";
+                    $this->_file->$method($mdValue);
+                }
             }
         }
 
@@ -144,10 +145,12 @@ class StoredFile {
         if($p_category == "track_title" && (is_null($p_value) || $p_value == "")) {
             return;
         }
-        $propelColumn = $this->_dbMD[$p_category];
-        $method = "set$propelColumn";
-        $this->_file->$method($p_value);
-        $this->_file->save();
+        if (isset($this->_dbMD[$dbColumn])) {
+            $propelColumn = $this->_dbMD[$p_category];
+            $method = "set$propelColumn";
+            $this->_file->$method($p_value);
+            $this->_file->save();
+        }
     }
 
     /**
@@ -398,7 +401,28 @@ class StoredFile {
      */
     public function getFilePath()
     {
-        return $this->_file->getDbFilepath();
+        $music_dir = MusicDir::getDirByPK($this->_file->getDbDirectory());
+        $filepath = $this->_file->getDbFilepath();
+
+        return $music_dir->getDirectory()."/".$filepath;
+    }
+
+    /**
+     * Set real filename of raw media data
+     *
+     * @return string
+     */
+    public function setFilePath($p_filepath)
+    {
+        $path_info = MusicDir::splitFilePath($p_filepath);
+        if (is_null($path_info)) {
+            return -1;
+        }
+        $musicDir = MusicDir::getDirByPath($path_info[0]);
+
+        $this->_file->setDbDirectory($musicDir->getId());
+        $this->_file->setDbFilepath($path_info[1]);
+        $this->_file->save();
     }
 
     /**
@@ -414,10 +438,19 @@ class StoredFile {
     {
         $file = new CcFiles();
         $file->setDbGunid(md5(uniqid("", true)));
-        $file->save();
 
         $storedFile = new StoredFile();
         $storedFile->_file = $file;
+
+        if(isset($md['MDATA_KEY_FILEPATH'])) {
+            $res = $storedFile->setFilePath($md['MDATA_KEY_FILEPATH']);
+            if ($res === -1) {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
 
         if(isset($md)) {
             $storedFile->setMetadata($md);
@@ -456,8 +489,15 @@ class StoredFile {
                             ->findOne();
         }
         else if (isset($p_filepath)) {
+            $path_info = MusicDir::splitFilePath($p_filepath);
+            if (is_null($path_info)) {
+                return null;
+            }
+            $musicDir = MusicDir::getDirByPath($path_info[0]);
+
             $file = CcFilesQuery::create()
-                            ->filterByDbFilepath($p_filepath)
+                            ->filterByDbDirectory($music_dir->getId())
+                            ->filterByDbFilepath($path_info[1])
                             ->findOne();
         }
         else {
@@ -755,8 +795,9 @@ class StoredFile {
 		}
 		else {
 
-		    global $CC_CONFIG;
-		    $stor = $CC_CONFIG["storageDir"];
+            $storDir = MusicDir::getStorDir();
+            $stor = $storDir->getDirectory();
+
 		    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
             $md = array();
@@ -765,7 +806,6 @@ class StoredFile {
             $md['MDATA_KEY_TITLE'] = $fileName;
 
 		    StoredFile::Insert($md);
-            $r = @chmod($audio_file, 0666);
             $r = @rename($audio_file, $audio_stor);
 		}
 

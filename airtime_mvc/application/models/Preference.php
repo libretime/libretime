@@ -188,14 +188,5 @@ class Application_Model_Preference
             return $val;
         }
     }
-
-    public static function SetWatchedDirectory($directory) {
-        Application_Model_Preference::SetValue("watched_directory", $directory);
-    }
-
-    public static function GetWatchedDirectory() {
-        return Application_Model_Preference::GetValue("watched_directory");
-    }
-
 }
 

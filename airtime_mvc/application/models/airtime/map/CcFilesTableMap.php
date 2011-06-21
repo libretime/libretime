@@ -43,6 +43,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, '');
 		$this->addColumn('MIME', 'DbMime', 'VARCHAR', true, 255, '');
 		$this->addColumn('FTYPE', 'DbFtype', 'VARCHAR', true, 128, '');
+		$this->addForeignKey('DIRECTORY', 'DbDirectory', 'INTEGER', 'cc_music_dirs', 'ID', false, null, null);
 		$this->addColumn('FILEPATH', 'DbFilepath', 'LONGVARCHAR', false, null, '');
 		$this->addColumn('STATE', 'DbState', 'VARCHAR', true, 128, 'empty');
 		$this->addColumn('CURRENTLYACCESSING', 'DbCurrentlyaccessing', 'INTEGER', true, null, 0);
@@ -101,6 +102,7 @@ class CcFilesTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
+    $this->addRelation('CcMusicDirs', 'CcMusicDirs', RelationMap::MANY_TO_ONE, array('directory' => 'id', ), null, null);
     $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
 	} // buildRelations()

@@ -59,17 +59,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $third_party_api->setDecorators(array('ViewHelper'));
         $this->addElement($third_party_api);
 
-        //Default station fade
-        $this->addElement('text', 'watchedFolder', array(
-            'class'      => 'input_text',
-            'label'      => 'WatchedFolder:',
-            'required'   => false,
-            'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::GetWatchedDirectory(),
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
     }
 
 

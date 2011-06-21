@@ -203,6 +203,7 @@ class AirtimeNotifier(Notifier):
         self.md_manager = MetadataExtractor()
         self.import_processes = {}
         self.watched_folders = []
+        self.watches_to_remove = []
 
     def handle_message(self, body, message):
         # ACK the message to take it off the queue
@@ -222,6 +223,9 @@ class AirtimeNotifier(Notifier):
             self.import_processes[m['directory']] = p
             #add this new folder to our list of watched folders
             self.watched_folders.append(m['directory'])
+        elif m['event_type'] == "remove_watch":
+            self.watches_to_remove.append(m['directory'])
+
 
     def update_airtime(self, d):
 
@@ -444,9 +448,13 @@ class MediaMonitor(ProcessEvent):
 
                         #this file is new, md5 does not exist in Airtime.
                         if(response['airtime_status'] == 0):
-                            filepath = self.create_file_path(event.pathname)
-                            self.move_file(event.pathname, filepath)
-                            self.file_events.append({'mode': MODE_CREATE, 'filepath': filepath})
+                            global storage_directory
+                            if self.is_parent_directory(event.pathname, storage_directory):
+                                filepath = self.create_file_path(event.pathname)
+                                self.move_file(event.pathname, filepath)
+                                self.file_events.append({'mode': MODE_CREATE, 'filepath': filepath})
+                            else:
+                                self.file_events.append({'mode': MODE_CREATE, 'filepath': event.pathname})
 
         else:
             self.set_needed_file_permissions(event.pathname, event.dir)
@@ -495,9 +503,13 @@ class MediaMonitor(ProcessEvent):
             else:
                 #TODO need to pass in if md5 exists to this file creation function, identical files will just replace current files not have a (1) etc.
                 #file has been most likely dropped into stor folder from an unwatched location. (from gui, mv command not cp)
-                md_filepath = self.create_file_path(event.pathname)
-                self.move_file(event.pathname, md_filepath)
-                self.file_events.append({'mode': MODE_CREATE, 'filepath': md_filepath})
+                global storage_directory
+                if self.is_parent_directory(event.pathname, storage_directory):
+                    md_filepath = self.create_file_path(event.pathname)
+                    self.move_file(event.pathname, md_filepath)
+                    self.file_events.append({'mode': MODE_CREATE, 'filepath': md_filepath})
+                else:
+                    self.file_events.append({'mode': MODE_CREATE, 'filepath': event.pathname})
 
     def process_IN_DELETE(self, event):
         if not event.dir:
@@ -508,6 +520,15 @@ class MediaMonitor(ProcessEvent):
         self.logger.info("%s: %s", event.maskname, event.pathname)
 
     def notifier_loop_callback(self, notifier):
+
+        #recursively unwatch any directories.
+        for watched_directory in notifier.watches_to_remove:
+            wd = self.wm.get_wd(watched_directory)
+            self.logger.info("Removing watch on: %s wdd %s", watched_directory, wd)
+            self.wm.rm_watch(wd, rec=True)
+
+        notifier.watches_to_remove = []
+
 
         for watched_directory in notifier.import_processes.keys():
             process = notifier.import_processes[watched_directory]

@@ -149,6 +149,15 @@ class AirtimeInstall
         $success = chmod($rp, 02777);
         $CC_CONFIG['storageDir'] = $rp;
 
+        AirtimeInstall::DbConnect(true);
+        //add stor directory to MusiDirs
+        $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$rp', 'stor')";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+            echo "* Failed inserting {$rp} in cc_music_dirs".PHP_EOL;
+            echo "* Message {$result->getMessage()}".PHP_EOL;
+            exit(1);
+        }
     }
 
     public static function CreateDatabaseUser()
@@ -225,6 +234,7 @@ class AirtimeInstall
         echo "* Creating database tables".PHP_EOL;
 
         // Put Propel sql files in Database
+        //$command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql";
         $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
         @exec($command, $output, $results);
     }
