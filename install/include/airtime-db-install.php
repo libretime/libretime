@@ -2,8 +2,8 @@
 
 set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 
-require_once(dirname(__FILE__).'/include/AirtimeIni.php');
-require_once(dirname(__FILE__).'/include/AirtimeInstall.php');
+require_once(dirname(__FILE__).'/AirtimeIni.php');
+require_once(dirname(__FILE__).'/AirtimeInstall.php');
 
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.php');
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
@@ -18,10 +18,9 @@ AirtimeInstall::DbConnect(true);
 
 AirtimeInstall::InstallPostgresScriptingLanguage();
 
-if(isset($argv[1]) && $argv[1] == 'y') {
+if (isset($argv[1]) && $argv[1] == 'y') {
     AirtimeInstall::CreateDatabaseTables();
-}
-else if ($databaseExisted){
+} else if ($databaseExisted) {
     //Database already exists. Ask the user how they want to
     //proceed. Warn them that creating the database tables again
     //will cause them to lose their old ones.
@@ -34,8 +33,7 @@ else if ($databaseExisted){
     if (in_array($userAnswer, array("y", "Y"))) {
         AirtimeInstall::CreateDatabaseTables();
     }
-}
-else {
+} else {
     //Database was just created, meaning the tables do not
     //exist. Let's create them.
     AirtimeInstall::CreateDatabaseTables();

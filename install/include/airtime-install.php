@@ -122,9 +122,9 @@ echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
 if ($db_install) {
     if($newInstall) {
-        system('php airtime-db-install.php y');
-    }
-    else {
+        system('php '.__DIR__.'/airtime-db-install.php y');
+        AirtimeInstall::DbConnect(true);
+    } else {
         require_once('airtime-db-install.php');
     }
 }
