@@ -543,8 +543,14 @@ class ScheduleController extends Zend_Controller_Action
         if($when) {
             $when = $formWhen->checkReliantFields($data, $startDateModified);
         }
-        // format add_show_duration value to hh:mm so it can be compatible with
-        // existing code
+
+        
+        //The way the following code works is that is parses the hour and 
+        //minute from a string with the format "1h 20m" or "2h" or "36m".
+        //So we are detecting whether an hour or minute value exists via strpos
+        //and then parse appropriately. A better way to do this in the future is
+        //actually pass the format from javascript in the format hh:mm so we don't
+        //have to do this extra String parsing.
         $hPos = strpos($data["add_show_duration"], 'h');
         $mPos = strpos($data["add_show_duration"], 'm');
         
@@ -555,7 +561,8 @@ class ScheduleController extends Zend_Controller_Action
         	$hValue = trim(substr($data["add_show_duration"], 0, $hPos));
         }
         if($mPos !== false){
-        	$mValue = trim(substr($data["add_show_duration"], $hPos+1, -1 ));
+            $hPos = $hPos === FALSE ? 0 : $hPos+1;
+        	$mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
         }
         
         $data["add_show_duration"] = $hValue.":".$mValue;
