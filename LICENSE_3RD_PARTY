@@ -13,8 +13,8 @@ Linked code:
    - License: New BSD License
    - Compatible with GPLv3? Yes. 
 
- * GetID3 
-   - Web site: http://getid3.sourceforge.net/
+ * Mutagen 
+   - Web site: http://code.google.com/p/mutagen/
    - License: GPLv2
    - Compatible with GPLv3? Yes
 
@@ -28,7 +28,7 @@ Linked code:
    - Note: Only used for development, not needed to run Airtime.
    - License: LGPLv3
 
- * Soundcloud php api wrapper
+ * Soundcloud PHP API wrapper
    - Web site: https://github.com/mptre/php-soundcloud/blob/master/Services/Soundcloud.php
    - License: MIT   
    - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
@@ -37,6 +37,10 @@ Linked code:
    - Web site: http://pypi.python.org/pypi/kombu/
    - License: New BSD
    - Compatible with GPLv3? Yes. 
+
+ * pyinotify
+   - Web site: https://github.com/seb-m/pyinotify
+   - License: MIT
 
  * PHP-AMQPLIB
    - Web site: https://github.com/tnc/php-amqplib 
@@ -73,6 +77,10 @@ Non-linked code:
    - Web site: http://www.eca.cx/ecasound/
    - License: GPLv2
 
+ * monit
+   - Web site: http://mmonit.com/monit/
+   - License: GPLv3
+
  * jQuery 
    - Web site: http://jquery.com/
    - License: MIT and GPL.  See http://jquery.org/license
@@ -106,5 +114,11 @@ Non-linked code:
        - Web site: http://fgelinas.com/code/timepicker/
        - License: Dual licensed under the MIT or GPL Version 2 licenses.
 
+     * Data Tables
+       - Web site: http://www.datatables.net/
+       - License: GPLv2 or BSD 3-Clause
 
+     * Server Browse
+       - Web site: http://code.google.com/p/jq-serverbrowse/
+       - License: BSD 2-Clause 
 
