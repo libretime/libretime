@@ -4,9 +4,10 @@
  * @copyright 2011 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  *
- * Checks if a previous version of Airtime is currently installed, upgrades Airtime if so.
- * Performs a new install (new configs, database install) if a version of Airtime is not found
- * If the current version is found to be installed the User is presented with the help menu and can choose -r to reinstall.
+ * Checks if a previous version of Airtime is currently installed and upgrades Airtime if so.
+ * Performs a new install (new configs, database install) if a version of Airtime is not found.
+ * If the current version is found to be installed the user is presented with the help menu and can
+ * choose -r to reinstall.
  */
 set_include_path(__DIR__.'/../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 
@@ -22,31 +23,40 @@ $version = AirtimeInstall::GetVersionInstalled();
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
+function printUsage($opts)
+{
+    $msg = $opts->getUsageMessage();
+    echo PHP_EOL."Usage: airtime-install [options]";
+    echo substr($msg, strpos($msg, "\n")).PHP_EOL;
+}
+
 try {
     $opts = new Zend_Console_Getopt(
         array(
             'help|h' => 'Displays usage information.',
             'overwrite|o' => 'Overwrite any existing config files.',
             'preserve|p' => 'Keep any existing config files.',
-			'no-db|n' => 'Turn off database install.',
+            'no-db|n' => 'Turn off database install.',
             'reinstall|r' => 'Force a fresh install of this Airtime Version'
         )
     );
     $opts->parse();
 }
 catch (Zend_Console_Getopt_Exception $e) {
-    exit($e->getMessage() ."\n\n". $e->getUsageMessage());
+    print $e->getMessage() .PHP_EOL;
+    printUsage($opts);
+    exit(1);
 }
 
 if (isset($opts->h)) {
-    echo $opts->getUsageMessage();
+    printUsage($opts);
     exit(1);
 }
 
 // The current version is already installed.
 if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime $version is already installed.".PHP_EOL;
-    echo $opts->getUsageMessage();
+    printUsage($opts);
     exit(1);
 }
 // A previous version exists - if so, upgrade.
@@ -122,6 +132,8 @@ echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
 if ($db_install) {
     if($newInstall) {
+        // This is called with "system" so that we can pass in a parameter.  See the file itself
+        // for why we need to do this.
         system('php '.__DIR__.'/airtime-db-install.php y');
         AirtimeInstall::DbConnect(true);
     } else {
@@ -137,11 +149,12 @@ AirtimeInstall::CreateZendPhpLogFile();
 
 AirtimeInstall::SetUniqueId();
 
-$h = rand(0,23);
-$m = rand(0,59);
+// Create CRON task to run every day.  Time of day is initialized to a random time.
+$hour = rand(0,23);
+$minute = rand(0,59);
 
 $fp = fopen('/etc/cron.d/airtime-crons','a');
-fwrite($fp, "$m $h * * * root /usr/lib/airtime/utils/phone_home_stat\n");
+fwrite($fp, "$minute $hour * * * root /usr/lib/airtime/utils/phone_home_stat\n");
 fclose($fp);
 
 /* FINISHED AIRTIME PHP INSTALLER */
