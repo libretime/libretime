@@ -79,7 +79,7 @@ class LibraryController extends Zend_Controller_Action
 	    	$file_id = $this->_getParam('id', null);
 	        $file = StoredFile::Recall($file_id);
 
-	        $url = $file->getFileUrl().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
+	        $url = $file->getRelativeFileUrl().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
 
