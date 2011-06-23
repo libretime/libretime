@@ -800,12 +800,10 @@ class StoredFile {
 			if (PEAR::isError($duplicate)) {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
 			}
-			else {
-                if (file_exists($duplicate->getFilePath())) {
-				    $duplicateName = $duplicate->getMetadataValue(UI_MDATA_KEY_TITLE);
-				    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
-                }
-			}
+            if (file_exists($duplicate->getFilePath())) {
+			    $duplicateName = $duplicate->getMetadataValue(UI_MDATA_KEY_TITLE);
+			    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
+            }
 		}
 
         $storDir = MusicDir::getStorDir();

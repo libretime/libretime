@@ -66,7 +66,7 @@ if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
     echo "It appears you already have a version of Airtime installed.\n";
     echo "Upgrading is currently disabled for Airtime 1.9.0-beta1.\n";
     exit(2);
-    
+
     require_once("airtime-upgrade.php");
 
     //Make sure to exit with non-zero error code so that airtime-install
@@ -130,6 +130,8 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 
 echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
+AirtimeInstall::InstallStorageDirectory();
+
 if ($db_install) {
     if($newInstall) {
         // This is called with "system" so that we can pass in a parameter.  See the file itself
@@ -140,8 +142,6 @@ if ($db_install) {
         require_once('airtime-db-install.php');
     }
 }
-
-AirtimeInstall::InstallStorageDirectory();
 
 AirtimeInstall::CreateSymlinksToUtils();
 
