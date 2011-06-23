@@ -88,10 +88,10 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 				->addValidator('Count', false, 1)
 				->addValidator('Extension', false, 'jpg,png,gif')
 				->addValidator('ImageSize', false, array(
-					'minwidth'	=> 180,
-					'minheight'	=> 180,
-					'maxwidth'	=> 1000,
-					'maxheight'	=>	1000));
+					'minwidth'	=> 200,
+					'minheight'	=> 200,
+					'maxwidth'	=> 600,
+					'maxheight'	=>	600));
 		$this->addElement($upload);
 		
         //enable support feedback
@@ -121,6 +121,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
         	'required'   => false,
             'filters'    => array('StringTrim'),
         	'readonly'	=> true,
+        	'cols'     => 61,
             'value' => Application_Model_Preference::GetSystemInfo(),
             'decorators' => array(
                 'ViewHelper'
