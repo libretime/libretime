@@ -95,9 +95,9 @@ class StoredFile {
     {
 		global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"]." WHERE state='ready'";
-        return $CC_DBC->GetOne($sql);    	
+        return $CC_DBC->GetOne($sql);
     }
-    
+
     /**
      * Set multiple metadata values using database columns as indexes.
      *
@@ -717,7 +717,7 @@ class StoredFile {
 		$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
 
 		// Clean the fileName for security reasons
-		//$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
+		$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
 
 		// Create target dir
 		if (!file_exists($p_targetDir))
@@ -791,34 +791,19 @@ class StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
 			}
 			else {
-                if (file_exists($duplicate->getRealFilePath())) {
+                if (file_exists($duplicate->getFilePath())) {
 				    $duplicateName = $duplicate->getMetadataValue(UI_MDATA_KEY_TITLE);
 				    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
                 }
-                else {
-                    $res = $duplicate->replaceFile($audio_file);
-                    if (PEAR::isError($res)) {
-				        die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
-			        }
-                    return $duplicate;
-                }
 			}
 		}
-		else {
 
-            $storDir = MusicDir::getStorDir();
-            $stor = $storDir->getDirectory();
+        $storDir = MusicDir::getStorDir();
+        $stor = $storDir->getDirectory();
 
-		    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
+	    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
-            $md = array();
-            $md['MDATA_KEY_MD5'] = $md5;
-            $md['MDATA_KEY_FILEPATH'] = $audio_stor;
-            $md['MDATA_KEY_TITLE'] = $fileName;
-
-		    StoredFile::Insert($md);
-            $r = @rename($audio_file, $audio_stor);
-		}
+        $r = @copy($audio_file, $audio_stor);
 
     }
 

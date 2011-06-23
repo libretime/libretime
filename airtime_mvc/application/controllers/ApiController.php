@@ -54,7 +54,7 @@ class ApiController extends Zend_Controller_Action
      * Allows remote client to download requested media file.
      *
      * @return void
-     * 
+     *
      */
     public function getMediaAction()
     {
@@ -374,39 +374,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $plupload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-
-        //need to make sure plupload dir exists so we can watch it.
-        if(!file_exists($plupload_dir)) {
-            @mkdir($plupload_dir, 0755);
-        }
-
         $this->view->stor = $CC_CONFIG['storageDir'];
-        $this->view->plupload = $plupload_dir;
-    }
-
-    public function mediaItemStatusAction() {
-        global $CC_CONFIG;
-
-        $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
-
-        $md5 = $this->_getParam('md5');
-        $file = StoredFile::RecallByMd5($md5);
-
-        //New file added to Airtime
-        if (is_null($file)) {
-            $this->view->airtime_status = 0;
-        }
-        else {
-            $this->view->airtime_status = 1;
-        }
-
     }
 
     public function reloadMetadataAction() {
@@ -471,7 +439,7 @@ class ApiController extends Zend_Controller_Action
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 $filepath = str_replace("\\", "", $filepath);
                 $file->setFilePath($filepath);
-                $file->setMetadata($md);
+                //$file->setMetadata($md);
             }
         }
         else if ($mode == "delete") {
