@@ -54,6 +54,11 @@ class AirtimeCheck {
     const CHECK_OK = "OK";
     const CHECK_FAILED = "FAILED";
     
+    const KOMBU_MIN_VERSION = "1.1.2";
+    const POSTER_MIN_VERSION = "0.8.1";
+    const MUTAGEN_MIN_VERSION = "1.20";
+    const PYINOTIFY_MIN_VERSION = "0.9.2";
+
     public static $check_system_ok = true;
    
     private static function CheckAirtimeDaemonRunning($filename, $process_id_str, $process_running_str, $name, $logFile)
@@ -231,34 +236,52 @@ class AirtimeCheck {
         output_status("POSTGRESQL_DATABASE", $status);
     }
     
-    public static function PythonLibrariesInstalled()
-    {
-        $command = "pip freeze | grep kombu";
-        exec($command, $output, $result);
+    private static function isMinVersionSatisfied($minVersion, $version){
+        $minVersionArr = explode(".", $minVersion);
+        $versionArr = explode(".", $version);
         
-        $status = AirtimeCheck::CHECK_FAILED;
-        if (count($output[0]) > 0){
-            $key_value = explode("==", $output[0]);
-            $status = trim($key_value[1]);
-        } else {
-            self::$check_system_ok = false;
+        if (count($minVersionArr) != count($versionArr)){
+            return false;
         }
         
-        output_status("PYTHON_KOMBU_VERSION", $status);
+        //when comparing 1.20 and 1.19, first compare "1" and "1"
+        //and then the "20" to the "19"
+        for ($i=0, $n = count($minVersionArr); $i<$n; $i++){
+            if ($minVersionArr[$i] > $versionArr[$i]){
+                return false;
+            }
+        }
         
-        unset($output);
-        $command = "pip freeze | grep poster";
+        return true;
+    }
+    
+    private static function CheckPythonLibrary($lib, $minVersion){
+        $command = "pip freeze | grep $lib";
         exec($command, $output, $result);
             
         $status = AirtimeCheck::CHECK_FAILED;
         if (count($output[0]) > 0){
             $key_value = explode("==", $output[0]);
-            $status = trim($key_value[1]);
+            $version = trim($key_value[1]);
+            if (self::isMinVersionSatisfied($minVersion, $version)){
+                $status = $version;
+            } else {
+                output_msg("Minimum require version for \"$lib\" is $minVersion. Your version: $version");
+                self::$check_system_ok = false;
+            }
         } else {
             self::$check_system_ok = false;
         }
         
-        output_status("PYTHON_POSTER_VERSION", $status);
+        return $status;
+    }
+        
+    public static function PythonLibrariesInstalled()
+    {
+        output_status("PYTHON_KOMBU_VERSION", self::CheckPythonLibrary("kombu", self::KOMBU_MIN_VERSION));
+        output_status("PYTHON_POSTER_VERSION", self::CheckPythonLibrary("poster", self::POSTER_MIN_VERSION));
+        output_status("PYTHON_MUTAGEN_VERSION", self::CheckPythonLibrary("mutagen", self::MUTAGEN_MIN_VERSION));
+        output_status("PYTHON_PYINOTIFY_VERSION", self::CheckPythonLibrary("pyinotify", self::PYINOTIFY_MIN_VERSION));
     }
 
     public static function CheckDbTables()
