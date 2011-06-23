@@ -91,7 +91,7 @@ class Playlist {
     {
         $seconds = $p_seconds;
         $milliseconds = intval(($seconds - intval($seconds)) * 1000);
-        $milliStr = str_pad($milliseconds, 3, '0');
+        $milliStr = str_pad($milliseconds, 3, '0', STR_PAD_LEFT);
         $hours = floor($seconds / 3600);
         $seconds -= $hours * 3600;
         $minutes = floor($seconds / 60);
