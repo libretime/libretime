@@ -1,7 +1,6 @@
 <?php
 
-class Application_Form_PlaylistMetadata extends Zend_Form_SubForm
-{
+class Application_Form_PlaylistMetadata extends Zend_Form{
 
     public function init()
     {

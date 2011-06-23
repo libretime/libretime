@@ -1386,10 +1386,14 @@ div.success{
 #show_content_dialog .datatable {
 	margin-top:8px;
 }
-.simple-formblock.metadata {
+
+.simple-formblock.metadata, #side_playlist .simple-formblock.metadata {
 	border:none;
-	width:100%;
+	width:auto;
+	display:block;
+	padding: 2px;
 }
+
 #side_playlist .simple-formblock.metadata .input_text, #side_playlist .simple-formblock.metadata .input_text_area {
 	width:95%;
 }
