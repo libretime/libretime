@@ -86,6 +86,12 @@ class ShowRecorder(Thread):
         return code, filepath
 
     def cancel_recording(self):
+        #add 3 second delay before actually cancelling the show. The reason
+        #for this is because it appears that ecasound starts 1 second later than
+        #it should, and therefore this method is sometimes incorrectly called 1 
+        #second before the show ends.
+        time.sleep(3)
+    
         #send signal interrupt (2)
         self.logger.info("Show manually cancelled!")
         if (self.p is not None):
