@@ -265,17 +265,18 @@ class AirtimeInstall
         return true;
     }
     
-    public static function SetUniqueId(){
-    	global $CC_DBC;
-    	
-    	$uniqueId = md5(uniqid("", true));
-    	
-    	$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('uniqueId', '$uniqueId')";
+    public static function SetUniqueId()
+    {
+        global $CC_DBC;
+
+        $uniqueId = md5(uniqid("", true));
+
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('uniqueId', '$uniqueId')";
         $result = $CC_DBC->query($sql);
         if (PEAR::isError($result)) {
             return false;
         }
-        return true;	
+        return true;
     }
 
     public static function GetAirtimeVersion()

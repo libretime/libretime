@@ -47,6 +47,8 @@ if (isset($argv[1]) && $argv[1] == 'y') {
 echo "* Setting Airtime version".PHP_EOL;
 AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
+AirtimeInstall::SetUniqueId();
+
 if (AirtimeInstall::$databaseTablesCreated) {
   echo "* Inserting stor directory into music_dirs table".PHP_EOL;
   $stor_dir = realpath($CC_CONFIG['storageDir']);
