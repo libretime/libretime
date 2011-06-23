@@ -445,6 +445,16 @@ class StoredFile {
         return "http://$CC_CONFIG[baseUrl]:$CC_CONFIG[basePort]/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
+    /**
+     * Sometimes we want a relative URL and not a full URL. See bug
+     * http://dev.sourcefabric.org/browse/CC-2403
+     */
+    public function getRelativeFileUrl()
+    {
+        global $CC_CONFIG;
+        return "api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
+    }
+
     public static function Insert($md=null)
     {
         $file = new CcFiles();

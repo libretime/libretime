@@ -317,37 +317,41 @@ function setAddShowEvents() {
                 }
             });
 		});
-	
+
 	// when start date/time changes, set end date/time to start date/time+1 hr
 	$('#add_show_start_date, #add_show_start_time').change(function(){
 		var startDate = $('#add_show_start_date').val().split('-');
-		var startDateTime = new Date(startDate[1]+' '+startDate[2]+','+startDate[0]+' '+$('#add_show_start_time').val());
-		
+		var startTime = $('#add_show_start_time').val().split(':');
+        var startDateTime = new Date(startDate[0], parseInt(startDate[1])-1, startDate[2], startTime[0], startTime[1], 0, 0);
+
 		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
-		var endDateTime = new Date(endDate[1]+' '+endDate[2]+','+endDate[0]+' '+$('#add_show_end_time').val());
-		
+		var endTime = $('#add_show_end_time').val().split(':');
+        var endDateTime = new Date(endDate[0], parseInt(endDate[1])-1, endDate[2], endTime[0], endTime[1], 0, 0);
+
 		if(startDateTime.getTime() > endDateTime.getTime()){
 			endDateTime = new Date(startDateTime.getTime() + (1*60*60*1000));
 		}
-		
+
 		var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
 		var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
-		
+
 		$('#add_show_end_date_no_repeat').val(endDateFormat);
 		$('#add_show_end_time').val(endTimeFormat);
-		
+
 		// calculate duration
 		calculateDuration(endDateTime, startDateTime);
 	});
-	
+
 	// when end date/time changes, check if the changed date is in past of start date/time
 	$('#add_show_end_date_no_repeat, #add_show_end_time').change(function(){
 		var startDate = $('#add_show_start_date').val().split('-');
-		var startDateTime = new Date(startDate[1]+' '+startDate[2]+','+startDate[0]+' '+$('#add_show_start_time').val());
-		
+        var startTime = $('#add_show_start_time').val().split(':');
+		var startDateTime = new Date(startDate[0], parseInt(startDate[1])-1, startDate[2], startTime[0], startTime[1], 0, 0);
+
 		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
-		var endDateTime = new Date(endDate[1]+' '+endDate[2]+','+endDate[0]+' '+$('#add_show_end_time').val());
-		
+		var endTime = $('#add_show_end_time').val().split(':');
+        var endDateTime = new Date(endDate[0], parseInt(endDate[1])-1, endDate[2], endTime[0], endTime[1], 0, 0);
+
 		if(startDateTime.getTime() > endDateTime.getTime()){
 			$('#add_show_end_date_no_repeat').css('background-color', '#F49C9C');
 			$('#add_show_end_time').css('background-color', '#F49C9C');
@@ -355,11 +359,11 @@ function setAddShowEvents() {
 			$('#add_show_end_date_no_repeat').css('background-color', '');
 			$('#add_show_end_time').css('background-color', '');
 		}
-		
+
 		// calculate duration
 		calculateDuration(endDateTime, startDateTime);
 	});
-	
+
 	function calculateDuration(endDateTime, startDateTime){
 		var duration;
 		var durationSeconds = (endDateTime.getTime() - startDateTime.getTime())/1000;
@@ -372,13 +376,13 @@ function setAddShowEvents() {
 		}
 		$('#add_show_duration').val(duration);
 	}
-	
+
 	function pad(number, length) {
 	    var str = '' + number;
 	    while (str.length < length) {
 	        str = '0' + str;
 	    }
-	   
+
 	    return str;
 	}
 }

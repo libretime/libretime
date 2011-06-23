@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is separated out so that it can be run separately for DEB package installation.
+ * When installing a DEB package, Postgresql may not be installed yet and thus the database
+ * cannot be created.  So this script is run after all DEB packages have been installed.
+ */
 
 set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 
@@ -39,5 +44,18 @@ if (isset($argv[1]) && $argv[1] == 'y') {
     AirtimeInstall::CreateDatabaseTables();
 }
 
+echo "* Setting Airtime version".PHP_EOL;
 AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
+if (AirtimeInstall::$databaseTablesCreated) {
+  echo "* Inserting stor directory into music_dirs table".PHP_EOL;
+  $stor_dir = realpath($CC_CONFIG['storageDir']);
+
+  $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
+  $result = $CC_DBC->query($sql);
+  if (PEAR::isError($result)) {
+      echo "* Failed inserting {$stor_dir} in cc_music_dirs".PHP_EOL;
+      echo "* Message {$result->getMessage()}".PHP_EOL;
+      exit(1);
+  }
+}

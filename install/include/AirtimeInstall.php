@@ -10,6 +10,8 @@ class AirtimeInstall
     const CONF_DIR_WWW = "/var/www/airtime";
     const CONF_DIR_LOG = "/var/log/airtime";
 
+    public static $databaseTablesCreated = false;
+
     public static function GetAirtimeSrcDir()
     {
         return __DIR__."/../../airtime_mvc";
@@ -106,12 +108,11 @@ class AirtimeInstall
             echo $CC_DBC->getUserInfo().PHP_EOL;
             echo "Database connection problem.".PHP_EOL;
             echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
-	            " with corresponding permissions.".PHP_EOL;
+                 " with corresponding permissions.".PHP_EOL;
             if ($p_exitOnError) {
                 exit(1);
             }
         } else {
-            echo "* Connected to database".PHP_EOL;
             $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
         }
     }
@@ -148,15 +149,6 @@ class AirtimeInstall
         $success = chown($rp, "pypo");
         $success = chmod($rp, 02777);
         $CC_CONFIG['storageDir'] = $rp;
-
-        //add stor directory to MusiDirs
-        $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$rp', 'stor')";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
-            echo "* Failed inserting {$rp} in cc_music_dirs".PHP_EOL;
-            echo "* Message {$result->getMessage()}".PHP_EOL;
-            exit(1);
-        }
     }
 
     public static function CreateDatabaseUser()
@@ -236,6 +228,7 @@ class AirtimeInstall
         //$command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql";
         $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
         @exec($command, $output, $results);
+        AirtimeInstall::$databaseTablesCreated = true;
     }
 
     public static function BypassMigrations($dir, $version)

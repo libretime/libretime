@@ -21,11 +21,10 @@ AirtimeCheck::PythonLibrariesInstalled();
 
 AirtimeCheck::CheckRabbitMqConnection($airtimeIni);
 
-AirtimeCheck::CheckApacheVHostFiles();
+//AirtimeCheck::CheckApacheVHostFiles();
 
 AirtimeCheck::GetAirtimeServerVersion($pypoCfg);
-AirtimeCheck::CheckAirtimePlayoutRunning();
-AirtimeCheck::CheckLiquidsoapRunning();
+AirtimeCheck::CheckAirtimeDaemons();
 AirtimeCheck::CheckIcecastRunning();
 
 echo PHP_EOL;
@@ -56,18 +55,9 @@ class AirtimeCheck {
     const CHECK_FAILED = "FAILED";
     
     public static $check_system_ok = true;
-    
-    public static function CheckAirtimePlayoutRunning()
+   
+    private static function CheckAirtimeDaemonRunning($filename, $process_id_str, $process_running_str, $name, $logFile)
     {
-
-        //check if airtime-playout.pid exists
-
-        //if it exists we need to get the process id
-        //from the file as well as the time the process
-        //has been running. We can get the latter from
-        //the timestamp of the file
-        $filename = "/var/run/airtime-playout.pid";
-
         $pid = false;
         $numSecondsRunning = 0;
 
@@ -87,62 +77,51 @@ class AirtimeCheck {
             }
         }
 
-        output_status("PLAYOUT_ENGINE_PROCESS_ID", $pid);
+        output_status($process_id_str, $pid);
 
-        output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $numSecondsRunning);
+        output_status($process_running_str, $numSecondsRunning);
         if (is_numeric($numSecondsRunning) && (int)$numSecondsRunning < 3) {
             self::$check_system_ok = false;
-            output_msg("WARNING! It looks like the playout engine is continually restarting.");
-            $command = "tail -10 /var/log/airtime/pypo/pypo.log";
+            output_msg("WARNING! It looks like the $name engine is continually restarting.");
+            $command = "tail -10 $logFile";
             exec($command, $output, $result);
             foreach ($output as $line) {
                 output_msg($line);
             }
         } 
     }
-
-    public static function CheckLiquidsoapRunning()
+   
+    public static function CheckAirtimeDaemons()
     {
-        //check if airtime-playout.pid exists
+        self::CheckAirtimeDaemonRunning("/var/run/airtime-playout.pid",
+                                "PLAYOUT_ENGINE_PROCESS_ID",
+                                "PLAYOUT_ENGINE_RUNNING_SECONDS",
+                                "playout",
+                                "/var/log/airtime/pypo/pypo.log"
+                                );
 
-        //if it exists we need to get the process id
-        //from the file as well as the time the process
-        //has been running. We can get the latter from
-        //the timestamp of the file
-        $filename = "/var/run/airtime-liquidsoap.pid";
+        self::CheckAirtimeDaemonRunning("/var/run/airtime-liquidsoap.pid",
+                                "LIQUIDSOAP_PROCESS_ID",
+                                "LIQUIDSOAP_RUNNING_SECONDS",
+                                "Liquidsoap",
+                                "/var/log/airtime/pypo/ls_script.log"
+                                );
 
-        $pid = false;
-        $numSecondsRunning = 0;
+        self::CheckAirtimeDaemonRunning("/var/run/airtime-media-monitor.pid",
+                                "MEDIA_MONITOR_PROCESS_ID",
+                                "MEDIA_MONITOR_RUNNING_SECONDS",
+                                "Media Monitor",
+                                "/var/log/airtime/media-monitor/media-monitor.log"
+                                );
 
-        if (file_exists($filename)){
-            //first get pid
-            $potential_pid = trim(file_get_contents($filename));
-
-            //check if the pid is actually live
-            if (file_exists("/proc/$potential_pid")){
-                $pid = $potential_pid;
-
-                //now lets get the running time
-                $lastModified = filemtime($filename);
-                $currentTime = time();
-
-                $numSecondsRunning = $currentTime - $lastModified;
-            }         
-        }
-
-        output_status("LIQUIDSOAP_PROCESS_ID", $pid);
-
-        output_status("LIQUIDSOAP_RUNNING_SECONDS", $numSecondsRunning);
-        if (is_numeric($numSecondsRunning) && (int)$numSecondsRunning < 3) {
-            self::$check_system_ok = false;
-            output_msg("WARNING! It looks like the playout engine is continually restarting.");
-            $command = "tail -10 /var/log/airtime/pypo-liquidsoap/ls_script.log";
-            exec($command, $output, $result);
-            foreach ($output as $line) {
-                output_msg($line);
-            }
-        } 
+        self::CheckAirtimeDaemonRunning("/var/run/airtime-show-recorder.pid",
+                                "SHOW_RECORDER_PROCESS_ID",
+                                "SHOW_RECORDER_RUNNING_SECONDS",
+                                "Show Recorder",
+                                "/var/log/airtime/media-monitor/show-recorder.log"
+                                );                                
     }
+
     
     public static function CheckIcecastRunning()
     {
@@ -151,7 +130,7 @@ class AirtimeCheck {
         
         $status = AirtimeCheck::CHECK_FAILED;
         if (count($output) > 0){
-            $delimited = split("[ ]+", $output[0]);
+            $delimited = preg_split("/[\s]+/", $output[0]);
             $status = $delimited[1];
         } else {
             self::$check_system_ok = false;
@@ -164,7 +143,7 @@ class AirtimeCheck {
         $command = "cat /proc/cpuinfo |grep -m 1 'model name' ";
         exec($command, $output, $result);
         
-        $choppedStr = split(":", $output[0]);
+        $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
         output_status("CPU", $status);
     }
@@ -173,14 +152,14 @@ class AirtimeCheck {
     {
         $command = "cat /proc/meminfo |grep 'MemTotal' ";
         exec($command, $output, $result);
-        $choppedStr = split(":", $output[0]);
+        $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
         output_status("Total RAM", $status);	
 
 	$output = null;
         $command = "cat /proc/meminfo |grep 'MemFree' ";
         exec($command, $output, $result);
-        $choppedStr = split(":", $output[0]);
+        $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
         output_status("Free RAM", $status);	
     }
@@ -191,6 +170,7 @@ class AirtimeCheck {
         $confFiles = array("airtime.conf",
                             "liquidsoap.cfg",
                             "pypo.cfg",
+                            "media-monitor.cfg",
                             "recorder.cfg");
 
         $allFound = AirtimeCheck::CHECK_OK;
@@ -200,6 +180,7 @@ class AirtimeCheck {
             if (!file_exists($fullPath)){
                 $allFound = AirtimeCheck::CHECK_FAILED;
                 self::$check_system_ok = false;
+                break;
             }
         }
 
@@ -257,7 +238,7 @@ class AirtimeCheck {
         
         $status = AirtimeCheck::CHECK_FAILED;
         if (count($output[0]) > 0){
-            $key_value = split("==", $output[0]);
+            $key_value = explode("==", $output[0]);
             $status = trim($key_value[1]);
         } else {
             self::$check_system_ok = false;
@@ -271,7 +252,7 @@ class AirtimeCheck {
             
         $status = AirtimeCheck::CHECK_FAILED;
         if (count($output[0]) > 0){
-            $key_value = split("==", $output[0]);
+            $key_value = explode("==", $output[0]);
             $status = trim($key_value[1]);
         } else {
             self::$check_system_ok = false;
@@ -412,7 +393,7 @@ class AirtimeCheck {
 	// Figure out if 32 or 64 bit
   	$command = "file -b /sbin/init";
 	exec($command, $output, $result);
-	$splitStr = split(",", $output[0]);
+	$splitStr = explode(",", $output[0]);
 	$os_string .= $splitStr[1];
 
         output_status("OS", $os_string);
@@ -423,20 +404,6 @@ class AirtimeCheck {
 // error handler function
 function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
-    return true;
-
-    /*
-    if ($errno == E_WARNING){
-        if (strpos($errstr, "401") !== false){
-            echo "\t\tServer is running but could not find Airtime".PHP_EOL;
-        } else if (strpos($errstr, "Connection refused") !== false){
-            echo "\t\tServer does not appear to be running".PHP_EOL;
-        } else {
-            //echo $errstr;
-        } 
-    }
-
     //Don't execute PHP internal error handler
     return true;
-    */
 }
