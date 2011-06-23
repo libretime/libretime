@@ -24,7 +24,8 @@ start () {
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
         
         monit monitor airtime-liquidsoap >/dev/null 2>&1
-        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
+        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
+        --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
 }
 
 stop () {
