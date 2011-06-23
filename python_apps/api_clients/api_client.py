@@ -360,25 +360,6 @@ class AirTimeApiClient(ApiClientInterface):
 
         return response
 
-    def check_media_status(self, md5):
-        logger = logging.getLogger()
-
-        response = None
-        try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_status_url"])
-            url = url.replace("%%api_key%%", self.config["api_key"])
-            url = url.replace("%%md5%%", md5)
-            logger.debug(url)
-
-            response = urllib.urlopen(url)
-            response = json.loads(response.read())
-            logger.info("Json Media Status %s", response)
-
-        except Exception, e:
-            logger.error("Exception: %s", e)
-
-        return response
-
     def update_media_metadata(self, md, mode):
         logger = logging.getLogger()
         response = None
@@ -387,14 +368,13 @@ class AirTimeApiClient(ApiClientInterface):
 
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%mode%%", mode)
-            logger.debug(url)
 
             data = urllib.urlencode(md)
             req = urllib2.Request(url, data)
 
             response = urllib2.urlopen(req).read()
-            logger.info("update media %s", response)
             response = json.loads(response)
+            logger.info("update media %s", response)
 
         except Exception, e:
             response = None
