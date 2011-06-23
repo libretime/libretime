@@ -114,10 +114,14 @@ label.wrapp-label input[type="checkbox"] {
 
 #add_show_start_time	{
 	float: left;
-	width: 100px;
+	width: 70px;
 }
 
-#add_show_end_time, #add_show_end_date_no_repeat, #add_show_start_date  {
+#add_show_end_time	{
+	width: 70px;
+}
+
+#add_show_end_date_no_repeat, #add_show_start_date  {
 	width: 100px;
 }
 
