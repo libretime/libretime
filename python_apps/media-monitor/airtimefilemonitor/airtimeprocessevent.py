@@ -145,6 +145,8 @@ class AirtimeProcessEvent(ProcessEvent):
 
         storage_directory = self.config.storage_directory
 
+        is_recorded_show = False
+
         try:
             #will be in the format .ext
             file_ext = os.path.splitext(imported_filepath)[1]
@@ -165,10 +167,17 @@ class AirtimeProcessEvent(ProcessEvent):
                         md[m] = orig_md[m]
 
             filepath = None
-            if(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
-                filepath = '%s/%s/%s/%s-%s%s' % (storage_directory, md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+            #file is recorded by Airtime
+            #/srv/airtime/stor/recorded/year/month/year-month-day-time-showname-bitrate.ext
+            if(md['MDATA_KEY_CREATOR'] == "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')):
+                #yyyy-mm-dd-hh-MM-ss
+                y = orig_md['MDATA_KEY_YEAR'].split("-")
+                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "recorded".encode('utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                is_recorded_show = True
+            elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
+                filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
-                filepath = '%s/%s/%s/%s-%s-%s%s' % (storage_directory, md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
             self.logger.info('Created filepath: %s', filepath)
             filepath = self.create_unique_filename(filepath, imported_filepath)
@@ -178,7 +187,7 @@ class AirtimeProcessEvent(ProcessEvent):
         except Exception, e:
             self.logger.error('Exception: %s', e)
 
-        return filepath, orig_md
+        return filepath, orig_md, is_recorded_show
 
     def process_IN_CREATE(self, event):
 
@@ -194,11 +203,11 @@ class AirtimeProcessEvent(ProcessEvent):
                 if self.is_audio_file(event.pathname):
                     if self.is_parent_directory(event.pathname, storage_directory):
                         self.set_needed_file_permissions(event.pathname, event.dir)
-                        filepath, file_md = self.create_file_path(event.pathname)
+                        filepath, file_md, is_recorded_show = self.create_file_path(event.pathname)
                         self.move_file(event.pathname, filepath)
-                        self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md})
+                        self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
                     else:
-                        self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': event.pathname})
+                        self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
 
         else:
             if self.is_parent_directory(event.pathname, storage_directory):
@@ -233,13 +242,14 @@ class AirtimeProcessEvent(ProcessEvent):
                 del self.moved_files[event.cookie]
                 self.file_events.put({'filepath': event.pathname, 'mode': self.config.MODE_MOVED})
             else:
+                # show dragged from unwatched folder into a watched folder.
                 storage_directory = self.config.storage_directory
                 if self.is_parent_directory(event.pathname, storage_directory):
-                    filepath, file_md = self.create_file_path(event.pathname)
+                    filepath, file_md, is_recorded_show = self.create_file_path(event.pathname)
                     self.move_file(event.pathname, filepath)
-                    self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md})
+                    self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
                 else:
-                    self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': event.pathname})
+                    self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
 
     def process_IN_DELETE(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)

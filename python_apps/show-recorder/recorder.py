@@ -7,6 +7,7 @@ import time
 import datetime
 import os
 import sys
+import shutil
 
 from configobj import ConfigObj
 
@@ -16,6 +17,8 @@ import urllib2
 
 from subprocess import Popen
 from threading import Thread
+
+import mutagen
 
 # For RabbitMQ - to be implemented in the future
 #from kombu.connection import BrokerConnection
@@ -48,13 +51,14 @@ def getDateTimeObj(time):
 
 class ShowRecorder(Thread):
 
-    def __init__ (self, show_instance, filelength, start_time, filetype):
+    def __init__ (self, show_instance, show_name, filelength, start_time, filetype):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.filelength = filelength
         self.start_time = start_time
         self.filetype = filetype
         self.show_instance = show_instance
+        self.show_name = show_name
         self.logger = logging.getLogger('root')
         self.p = None
 
@@ -70,24 +74,24 @@ class ShowRecorder(Thread):
 
         self.logger.info("starting record")
         self.logger.info("command " + command)
-        
+
         self.p = Popen(args)
-        
+
         #blocks at the following line until the child process
         #quits
         code = self.p.wait()
         self.p = None
-        
+
         self.logger.info("finishing record, return code %s", code)
         return code, filepath
-        
+
     def cancel_recording(self):
         #send signal interrupt (2)
         self.logger.info("Show manually cancelled!")
         if (self.p is not None):
             self.p.terminate()
             self.p = None
-            
+
     #if self.p is defined, then the child process ecasound is recording
     def is_recording(self):
         return (self.p is not None)
@@ -110,6 +114,29 @@ class ShowRecorder(Thread):
 
         if code == 0:
             self.logger.info("Preparing to upload %s" % filepath)
+
+            try:
+                date = self.start_time
+                md = date.split(" ")
+                time = md[1].replace(":", "-")
+                self.logger.info("time: %s" % time)
+
+                name = time+"-"+self.show_name
+                name.encode('utf-8')
+                artist = "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
+
+                #set some metadata for our file daemon
+                recorded_file = mutagen.File(filepath, easy=True)
+                recorded_file['title'] = name
+                recorded_file['artist'] = artist
+                recorded_file['date'] = md[0]
+                recorded_file['tracknumber'] = self.show_instance
+                recorded_file.save()
+
+            except Exception, e:
+                self.logger.error("Exception: %s", e)
+
+
             self.upload_file(filepath)
         else:
             self.logger.info("problem recording show")
@@ -154,8 +181,9 @@ class Record():
 
             show_length = self.shows_to_record[start_time][0]
             show_instance = self.shows_to_record[start_time][1]
+            show_name = self.shows_to_record[start_time][2]
 
-            self.sr = ShowRecorder(show_instance, show_length.seconds, start_time, filetype="mp3")
+            self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time, filetype="mp3")
             self.sr.start()
 
             #remove show from shows to record.
@@ -170,9 +198,9 @@ class Record():
             if self.sr is not None:
                 if not response['is_recording'] and self.sr.is_recording():
                     self.sr.cancel_recording()
-        
+
             shows = response[u'shows']
-            
+
             if len(shows):
                 self.process_shows(shows)
                 self.check_record()

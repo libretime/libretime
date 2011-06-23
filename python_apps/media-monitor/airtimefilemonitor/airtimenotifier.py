@@ -100,19 +100,24 @@ class AirtimeNotifier(Notifier):
             if file_md is None:
                 mutagen = self.md_manager.get_md_from_file(filepath)
                 md.update(mutagen)
-            data = md
+
+            if d['is_recorded_show']:
+                self.api_client.update_media_metadata(md, mode, True)
+            else:
+                self.api_client.update_media_metadata(md, mode)
+
         elif (os.path.exists(filepath) and (mode == self.config.MODE_MODIFY)):
             mutagen = self.md_manager.get_md_from_file(filepath)
             md.update(mutagen)
-            data = md
+            self.api_client.update_media_metadata(md, mode)
+
         elif (mode == self.config.MODE_MOVED):
             md['MDATA_KEY_MD5'] = self.md_manager.get_md5(filepath)
-            data = md
-        elif (mode == self.config.MODE_DELETE):
-            data = md
+            self.api_client.update_media_metadata(md, mode)
 
-        if data is not None:
-            self.api_client.update_media_metadata(data, mode)
+        elif (mode == self.config.MODE_DELETE):
+            self.api_client.update_media_metadata(md, mode)
+
 
     def process_file_events(self, queue):
 

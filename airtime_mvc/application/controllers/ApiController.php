@@ -9,6 +9,7 @@ class ApiController extends Zend_Controller_Action
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
                 ->addActionContext('recorded-shows', 'json')
+                ->addActionContext('upload-file', 'json')
                 ->addActionContext('upload-recorded', 'json')
                 ->addActionContext('media-monitor-setup', 'json')
                 ->addActionContext('media-item-status', 'json')
@@ -288,6 +289,22 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
+    public function uploadFileAction()
+    {
+        global $CC_CONFIG;
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $upload_dir = ini_get("upload_tmp_dir");
+        StoredFile::uploadFile($upload_dir);
+    }
+
     public function uploadRecordedAction()
     {
         global $CC_CONFIG;
@@ -300,11 +317,16 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
+        //this file id is the recording for this show instance.
+        $show_instance_id = $this->_getParam('showinstanceid');
+        $file_id = $this->_getParam('fileid');
+
+        $this->view->fileid = $file_id;
+        $this->view->showinstanceid = $show_instance_id;
+
+        /*
        	$showCanceled = false;
         $show_instance  = $this->_getParam('show_instance');
-
-        $upload_dir = ini_get("upload_tmp_dir");
-        $file = StoredFile::uploadFile($upload_dir);
 
         $show_name = "";
         try {
@@ -357,6 +379,7 @@ class ApiController extends Zend_Controller_Action
         }
 
         $this->view->id = $file->getId();
+        */
     }
 
     public function mediaMonitorSetupAction() {
