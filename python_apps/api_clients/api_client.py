@@ -318,6 +318,7 @@ class AirTimeApiClient(ApiClientInterface):
 
         logger.debug(url)
         url = url.replace("%%api_key%%", self.config["api_key"])
+        logger.debug(url)
 
         for i in range(0, retries):
             logger.debug("Upload attempt: %s", i+1)
@@ -360,14 +361,15 @@ class AirTimeApiClient(ApiClientInterface):
 
         return response
 
-    def update_media_metadata(self, md, mode):
+    def update_media_metadata(self, md, mode, is_record=False):
         logger = logging.getLogger()
         response = None
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
 
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%mode%%", mode)
+            logger.debug(url)
 
             data = urllib.urlencode(md)
             req = urllib2.Request(url, data)
@@ -375,6 +377,22 @@ class AirTimeApiClient(ApiClientInterface):
             response = urllib2.urlopen(req).read()
             response = json.loads(response)
             logger.info("update media %s", response)
+
+            if(is_record):
+                url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
+                logger.debug(url)
+                url = url.replace("%%api_key%%", self.config["api_key"])
+                logger.debug(url)
+                url = url.replace("%%fileid%%", str(response[u'id']))
+                logger.debug(url)
+                url = url.replace("%%showinstanceid%%", str(md['MDATA_KEY_TRACKNUMBER']))
+                logger.debug(url)
+
+                req = urllib2.Request(url)
+                response = urllib2.urlopen(req).read()
+                response = json.loads(response)
+                logger.info("associate recorded %s", response)
+
 
         except Exception, e:
             response = None
