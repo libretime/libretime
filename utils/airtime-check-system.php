@@ -21,7 +21,7 @@ AirtimeCheck::PythonLibrariesInstalled();
 
 AirtimeCheck::CheckRabbitMqConnection($airtimeIni);
 
-AirtimeCheck::CheckApacheVHostFiles();
+//AirtimeCheck::CheckApacheVHostFiles();
 
 AirtimeCheck::GetAirtimeServerVersion($pypoCfg);
 AirtimeCheck::CheckAirtimePlayoutRunning();
@@ -151,7 +151,7 @@ class AirtimeCheck {
         
         $status = AirtimeCheck::CHECK_FAILED;
         if (count($output) > 0){
-            $delimited = split("[ ]+", $output[0]);
+            $delimited = preg_split("/[\s]+/", $output[0]);
             $status = $delimited[1];
         } else {
             self::$check_system_ok = false;
@@ -164,7 +164,7 @@ class AirtimeCheck {
         $command = "cat /proc/cpuinfo |grep -m 1 'model name' ";
         exec($command, $output, $result);
         
-        $choppedStr = split(":", $output[0]);
+        $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
         output_status("CPU", $status);
     }
@@ -173,14 +173,14 @@ class AirtimeCheck {
     {
         $command = "cat /proc/meminfo |grep 'MemTotal' ";
         exec($command, $output, $result);
-        $choppedStr = split(":", $output[0]);
+        $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
         output_status("Total RAM", $status);	
 
 	$output = null;
         $command = "cat /proc/meminfo |grep 'MemFree' ";
         exec($command, $output, $result);
-        $choppedStr = split(":", $output[0]);
+        $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
         output_status("Free RAM", $status);	
     }
@@ -191,6 +191,7 @@ class AirtimeCheck {
         $confFiles = array("airtime.conf",
                             "liquidsoap.cfg",
                             "pypo.cfg",
+                            "media-monitor.cfg",
                             "recorder.cfg");
 
         $allFound = AirtimeCheck::CHECK_OK;
@@ -200,6 +201,7 @@ class AirtimeCheck {
             if (!file_exists($fullPath)){
                 $allFound = AirtimeCheck::CHECK_FAILED;
                 self::$check_system_ok = false;
+                break;
             }
         }
 
@@ -257,7 +259,7 @@ class AirtimeCheck {
         
         $status = AirtimeCheck::CHECK_FAILED;
         if (count($output[0]) > 0){
-            $key_value = split("==", $output[0]);
+            $key_value = explode("==", $output[0]);
             $status = trim($key_value[1]);
         } else {
             self::$check_system_ok = false;
@@ -271,7 +273,7 @@ class AirtimeCheck {
             
         $status = AirtimeCheck::CHECK_FAILED;
         if (count($output[0]) > 0){
-            $key_value = split("==", $output[0]);
+            $key_value = explode("==", $output[0]);
             $status = trim($key_value[1]);
         } else {
             self::$check_system_ok = false;
@@ -412,7 +414,7 @@ class AirtimeCheck {
 	// Figure out if 32 or 64 bit
   	$command = "file -b /sbin/init";
 	exec($command, $output, $result);
-	$splitStr = split(",", $output[0]);
+	$splitStr = explode(",", $output[0]);
 	$os_string .= $splitStr[1];
 
         output_status("OS", $os_string);
@@ -423,20 +425,6 @@ class AirtimeCheck {
 // error handler function
 function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
-    return true;
-
-    /*
-    if ($errno == E_WARNING){
-        if (strpos($errstr, "401") !== false){
-            echo "\t\tServer is running but could not find Airtime".PHP_EOL;
-        } else if (strpos($errstr, "Connection refused") !== false){
-            echo "\t\tServer does not appear to be running".PHP_EOL;
-        } else {
-            //echo $errstr;
-        } 
-    }
-
     //Don't execute PHP internal error handler
     return true;
-    */
 }
