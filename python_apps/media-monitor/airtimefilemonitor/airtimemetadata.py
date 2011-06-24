@@ -102,6 +102,8 @@ class AirtimeMetadata:
 
     def get_md_from_file(self, filepath):
 
+        self.logger.info("getting info from filepath %s", filepath)
+
         md = {}
         md5 = self.get_md5(filepath)
         md['MDATA_KEY_MD5'] = md5

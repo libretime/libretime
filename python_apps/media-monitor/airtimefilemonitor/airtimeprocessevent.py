@@ -167,8 +167,9 @@ class AirtimeProcessEvent(ProcessEvent):
                     else:
                         md[m] = orig_md[m]
 
-            #make sure all track numbers are at least 2 digits long in the filepath.
-            md['MDATA_KEY_TRACKNUMBER'] = "%02d" % (int(md['MDATA_KEY_TRACKNUMBER']))
+            if 'MDATA_KEY_TRACKNUMBER' in orig_md:
+                #make sure all track numbers are at least 2 digits long in the filepath.
+                md['MDATA_KEY_TRACKNUMBER'] = "%02d" % (int(md['MDATA_KEY_TRACKNUMBER']))
 
             #format bitrate as 128kbps
             md['MDATA_KEY_BITRATE'] = str(md['MDATA_KEY_BITRATE']/1000)+"kbps"
