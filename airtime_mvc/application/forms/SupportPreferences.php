@@ -122,6 +122,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
             'filters'    => array('StringTrim'),
         	'readonly'	=> true,
         	'cols'     => 61,
+        	'rows'		=> 5,
             'value' => Application_Model_Preference::GetSystemInfo(),
             'decorators' => array(
                 'ViewHelper'
