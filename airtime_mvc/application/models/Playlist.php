@@ -91,8 +91,8 @@ class Playlist {
     {
         $seconds = $p_seconds;
         $rounded = round($seconds, 1);
-        list($dump, $milliStr) = explode('.', $rounded);
-        if($milliStr == NULL){
+        $info = explode('.', $rounded);
+        if(!isset($info[1])){
             $milliStr = 0;
         }
         $hours = floor($seconds / 3600);
