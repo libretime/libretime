@@ -1,7 +1,8 @@
-<?php if (count($this->pl->getContents())) : ?>
+<?php
+$items = $this->pl->getContents();
+if (count($items)) : ?>
 
-<?php $i = 0; ?>
-<?php foreach($this->pl->getContents() as $item) : ?>
+<?php foreach($items as $item) : ?>
     <li class="ui-state-default" id="spl_<?php echo $i ?>">
         <div class="list-item-container">
             <a href="javascript:void(0);" class="big_play" 
@@ -17,7 +18,7 @@
                 <span class="spl_artist"><?php echo $item["CcFiles"]['artist_name'] ?></span>
                 <span class="spl_offset"><?php echo $item["offset"]?></span>
             </div>
-            <?php if($i < count($this->pl->getContents()) -1): ?>
+            <?php if($i < count($items) -1): ?>
             <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div>
             <?php endif; ?>
             <span class="ui-icon ui-icon-closethick"></span>
@@ -25,7 +26,7 @@
 
         <div id="cues_<?php echo $i ?>" class="cue-edit clearfix" style="display: none"></div>
 
-        <?php if($i < count($this->pl->getContents()) -1): ?>
+        <?php if($i < count($items) -1): ?>
         <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none"></div>
         <?php endif; ?>
 
