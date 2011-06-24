@@ -185,7 +185,7 @@ class LibraryController extends Zend_Controller_Action
         if($type == "au") {
             $file = StoredFile::Recall($id);
             $this->view->type = $type;
-            $this->view->md = $file->md;
+            $this->view->md = $file->getMetadata();
         }
         else if($type == "pl") {
             $file = Playlist::Recall($id);

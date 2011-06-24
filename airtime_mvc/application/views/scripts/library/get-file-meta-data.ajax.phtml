@@ -1,32 +1,21 @@
 <?php if($this->type == "au") : ?>
-<div><span>Title:</span><span><?php echo ($this->md["dc:title"]);?></span></div>
-<div><span>Artist:</span><span><?php echo ($this->md["dc:creator"]);?></span></div>
-<div><span>Album:</span><span><?php echo ($this->md["dc:source"]);?></span></div>
-<div><span>Track:</span><span><?php echo ($this->md["ls:track_num"]);?></span></div>
-<div><span>Length:</span><span><?php echo ($this->md["dcterms:extent"]);?></span></div>
-<div><span>Genre:</span><span><?php echo ($this->md["dc:type"]);?></span></div>
-<div><span>Sample Rate:</span><span><?php echo ($this->md["ls:samplerate"]);?></span></div>
-<div><span>Bit Rate:</span><span><?php echo ($this->md["ls:bitrate"]);?></span></div>
-<div><span>Channels:</span><span><?php echo ($this->md["ls:channels"]);?></span></div>
+<div><span>Title:</span><span><?php echo ($this->md["MDATA_KEY_TITLE"]);?></span></div>
+<div><span>Artist:</span><span><?php echo ($this->md["MDATA_KEY_CREATOR"]);?></span></div>
+<div><span>Album:</span><span><?php echo ($this->md["MDATA_KEY_SOURCE"]);?></span></div>
+<div><span>Track:</span><span><?php echo ($this->md["MDATA_KEY_TRACKNUMBER"]);?></span></div>
+<div><span>Length:</span><span><?php echo ($this->md["MDATA_KEY_DURATION"]);?></span></div>
+<div><span>Sample Rate:</span><span><?php echo ($this->md["MDATA_KEY_SAMPLERATE"]);?></span></div>
+<div><span>Bit Rate:</span><span><?php echo ($this->md["MDATA_KEY_BITRATE"]);?></span></div>
+<div><span>Mood:</span><span><?php echo ($this->md["MDATA_KEY_MOOD"]);?></span></div>
+<div><span>Genre:</span><span><?php echo ($this->md["MDATA_KEY_GENRE"]);?></span></div>
+<div><span>Year:</span><span><?php echo ($this->md["MDATA_KEY_YEAR"]);?></span></div>
+<div><span>Label:</span><span><?php echo ($this->md["MDATA_KEY_LABEL"]);?></span></div>
+<div><span>BPM:</span><span><?php echo ($this->md["MDATA_KEY_BPM"]);?></span></div>
+<div><span>Conductor:</span><span><?php echo ($this->md["MDATA_KEY_CONDUCTOR"]);?></span></div>
+<div><span>Copyright:</span><span><?php echo ($this->md["MDATA_KEY_COPYRIGHT"]);?></span></div>
+<div><span>Isrc Number:</span><span><?php echo ($this->md["MDATA_KEY_ISRC"]);?></span></div>
+<div><span>Website:</span><span><?php echo ($this->md["MDATA_KEY_URL"]);?></span></div>
 
-<div><span>Year:</span><span><?php echo ($this->md["ls:year"]);?></span></div>
-<div><span>Label:</span><span><?php echo ($this->md["dc:publisher"]);?></span></div>
-<div><span>BPM:</span><span><?php echo ($this->md["ls:bpm"]);?></span></div>
-<div><span>Channels:</span><span><?php echo ($this->md["ls:channels"]);?></span></div>
-<div><span>Orchestra:</span><span><?php echo ($this->md["ls:orchestra"]);?></span></div>
-<div><span>Conductor:</span><span><?php echo ($this->md["ls:conductor"]);?></span></div>
-<div><span>Copyright:</span><span><?php echo ($this->md["dc:rights"]);?></span></div>
-<div><span>Catalog Number:</span><span><?php echo ($this->md["ls:catalognumber"]);?></span></div>
-<div><span>Isrc Number:</span><span><?php echo ($this->md["ls:isrcnumber"]);?></span></div>
-
-<div><span>Report Datetime:</span><span><?php echo ($this->md["dcterms:temporal"]);?></span></div>
-<div><span>Report Location:</span><span><?php echo ($this->md["dcterms:spatial"]);?></span></div>
-<div><span>Report Organization:</span><span><?php echo ($this->md["dcterms:entity"]);?></span></div>
-<div><span>Subject:</span><span><?php echo ($this->md["dc:subject"]);?></span></div>
-<div><span>Contributor:</span><span><?php echo ($this->md["dc:contributor"]);?></span></div>
-
-<div><span>Language:</span><span><?php echo ($this->md["dc:language"]);?></span></div>
-<div><span>Comments:</span><span><?php echo ($this->md["dc:description"]);?></span></div>
 <?php endif; ?>
 
 <?php if($this->type == "pl") : ?>
