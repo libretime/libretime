@@ -80,11 +80,8 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_RegisterAirtime();
 
         if ($request->isPost()) {
-
+        	$values = $form->getValues();
             if ($form->isValid($request->getPost())) {
-
-                $values = $form->getValues();
-                var_dump($values);
                 Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
                 Application_Model_Preference::SetPhone($values["Phone"]);
                 Application_Model_Preference::SetEmail($values["Email"]);
@@ -101,7 +98,6 @@ class PreferenceController extends Zend_Controller_Action
             Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
             // unset session
             Zend_Session::namespaceUnset('referrer');
-
             $this->_redirect('Nowplaying');
         }else{
             $logo = Application_Model_Preference::GetStationLogo();
