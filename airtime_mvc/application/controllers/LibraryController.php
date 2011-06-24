@@ -148,11 +148,11 @@ class LibraryController extends Zend_Controller_Action
         $post = $this->getRequest()->getPost();
         $datatables = StoredFile::searchFilesForPlaylistBuilder($post);
         
-        //format clip lengh to 2 decimal
-        /*foreach($datatables["aaData"] as &$data){
+        //format clip lengh to 1 decimal
+        foreach($datatables["aaData"] as &$data){
             $sec = Playlist::playlistTimeToSeconds($data[5]);
             $data[5] = Playlist::secondsToPlaylistTime($sec);
-        }*/
+        }
 
         die(json_encode($datatables));
     }
