@@ -2,6 +2,7 @@
 $items = $this->pl->getContents();
 if (count($items)) : ?>
 
+<?php $i = 0; ?>
 <?php foreach($items as $item) : ?>
     <li class="ui-state-default" id="spl_<?php echo $i ?>">
         <div class="list-item-container">
