@@ -106,7 +106,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 
 		// checkbox for publicise
         $checkboxPublicise = new Zend_Form_Element_Checkbox("Publicise");
-        $checkboxPublicise->setLabel('Publicise my station on Sourcefabric.org')
+        $checkboxPublicise->setLabel('Promote my station on Sourcefabric.org')
                           ->setRequired(false)
                           ->setDecorators(array('ViewHelper'))
                           ->setValue(Application_Model_Preference::GetPublicise());

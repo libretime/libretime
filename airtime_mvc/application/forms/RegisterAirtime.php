@@ -38,8 +38,8 @@ class Application_Form_RegisterAirtime extends Zend_Form
         //Email
         $this->addElement('text', 'Email', array(
             'class'      => 'input_text',
-            'label'      => 'Email:(*)',
-            'required'   => true,
+            'label'      => 'Email:',
+            'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetEmail(),
             'decorators' => array(
@@ -117,7 +117,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 
 		// checkbox for publicise
 		$checkboxPublicise = new Zend_Form_Element_Checkbox("Publicise");
-        $checkboxPublicise->setLabel('Publicise my station on Sourcefabric.org')
+        $checkboxPublicise->setLabel('Promote my station on Sourcefabric.org')
                           ->setRequired(false)
                           ->setDecorators(array('ViewHelper'))
                           ->setValue(Application_Model_Preference::GetPublicise());
