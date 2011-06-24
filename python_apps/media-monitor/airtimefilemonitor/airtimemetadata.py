@@ -70,9 +70,16 @@ class AirtimeMetadata:
         s = t % 60
         # will be ss.uuu
         s = str(s)
-        s = s[:6]
+        seconds = s.split(".")
+        s = seconds[0]
 
-        length = "%s:%s:%s" % (h, m, s)
+        # have a maximum of 6 subseconds.
+        if len(seconds[1]) >= 6:
+            ss = seconds[1][0:6]
+        else:
+            ss = seconds[1][0:]
+
+        length = "%s:%s:%s.%s" % (h, m, s, ss)
 
         return length
 
