@@ -90,8 +90,9 @@ class Playlist {
     public static function secondsToPlaylistTime($p_seconds)
     {
         $seconds = $p_seconds;
-        $milliseconds = intval(($seconds - intval($seconds)) * 1000);
-        $milliStr = str_pad($milliseconds, 3, '0', STR_PAD_LEFT);
+        $rounded = round($seconds, 2);
+        list($dump, $milliseconds) = explode('.', $rounded);
+        $milliStr = str_pad($milliseconds, 2, '0', STR_PAD_LEFT);
         $hours = floor($seconds / 3600);
         $seconds -= $hours * 3600;
         $minutes = floor($seconds / 60);
@@ -398,6 +399,10 @@ class Playlist {
         $offset = 0;
         foreach ($rows as $row) {
           $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
+          // display only upto 2 decimal place by calling secondsToPlaylistTime
+          $clipSec = Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
+          $files[$i]['cliplength'] = Playlist::secondsToPlaylistTime($clipSec);
+          // calling the function again to get rid of round off addition error
           $offset += Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
           $files[$i]['offset'] = Playlist::secondsToPlaylistTime($offset);
           $i++;
