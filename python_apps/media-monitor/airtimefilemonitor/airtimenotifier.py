@@ -27,13 +27,26 @@ class AirtimeNotifier(Notifier):
         self.import_processes = {}
         self.watched_folders = []
 
-        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
-        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
-        self.connection = BrokerConnection(self.config.cfg["rabbitmq_host"], self.config.cfg["rabbitmq_user"], self.config.cfg["rabbitmq_password"], "/")
-        channel = self.connection.channel()
-        consumer = Consumer(channel, schedule_queue)
-        consumer.register_callback(self.handle_message)
-        consumer.consume()
+        while not self.init_rabbit_mq():
+            logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
+            time.sleep(5)
+        
+    def init_rabbit_mq(self):
+        logger = logging.getLogger('fetch')
+        logger.info("Initializing RabbitMQ stuff")
+        try:
+            schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
+            schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
+            self.connection = BrokerConnection(self.config.cfg["rabbitmq_host"], self.config.cfg["rabbitmq_user"], self.config.cfg["rabbitmq_password"], "/")
+            channel = self.connection.channel()
+            consumer = Consumer(channel, schedule_queue)
+            consumer.register_callback(self.handle_message)
+            consumer.consume()
+        except Exception, e:
+            logger.error(e)
+            return False
+            
+        return True
 
     def handle_message(self, body, message):
         # ACK the message to take it off the queue

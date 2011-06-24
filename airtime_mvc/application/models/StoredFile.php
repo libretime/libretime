@@ -449,10 +449,9 @@ class StoredFile {
      * Sometimes we want a relative URL and not a full URL. See bug
      * http://dev.sourcefabric.org/browse/CC-2403
      */
-    public function getRelativeFileUrl()
+    public function getRelativeFileUrl($baseUrl)
     {
-        global $CC_CONFIG;
-        return "api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
+        return $baseUrl."/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
     public static function Insert($md=null)
