@@ -31,6 +31,7 @@ class AirtimeProcessEvent(ProcessEvent):
         self.supported_file_formats = ['mp3', 'ogg']
         self.temp_files = {}
         self.moved_files = {}
+        self.renamed_files = {}
         self.file_events = mpQueue()
         self.mask = pyinotify.ALL_EVENTS
         self.wm = WatchManager()
@@ -198,7 +199,7 @@ class AirtimeProcessEvent(ProcessEvent):
 
     def process_IN_CREATE(self, event):
 
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        #self.logger.info("%s: %s", event.maskname, event.pathname)
         storage_directory = self.config.storage_directory
 
         if not event.dir:
@@ -206,15 +207,15 @@ class AirtimeProcessEvent(ProcessEvent):
             if self.is_temp_file(event.name) :
                 self.temp_files[event.pathname] = None
             #This is a newly imported file.
-            else :
-                if self.is_audio_file(event.pathname):
-                    if self.is_parent_directory(event.pathname, storage_directory):
-                        self.set_needed_file_permissions(event.pathname, event.dir)
-                        filepath, file_md, is_recorded_show = self.create_file_path(event.pathname)
-                        self.move_file(event.pathname, filepath)
-                        self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
-                    else:
-                        self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
+            elif self.is_audio_file(event.pathname):
+                if self.is_parent_directory(event.pathname, storage_directory):
+                    self.set_needed_file_permissions(event.pathname, event.dir)
+                    filepath, file_md, is_recorded_show = self.create_file_path(event.pathname)
+                    self.move_file(event.pathname, filepath)
+                    self.renamed_files[event.pathname] = filepath
+                    self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+                else:
+                    self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
 
         else:
             if self.is_parent_directory(event.pathname, storage_directory):
@@ -223,21 +224,25 @@ class AirtimeProcessEvent(ProcessEvent):
 
     def process_IN_MODIFY(self, event):
         if not event.dir:
-            self.logger.info("%s: %s", event.maskname, event.pathname)
-            if self.is_audio_file(event.name) :
+            #self.logger.info("%s: %s", event.maskname, event.pathname)
+            if event.pathname in self.renamed_files:
+                pass
+            elif self.is_audio_file(event.name):
                 self.file_events.put({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
 
     def process_IN_MOVED_FROM(self, event):
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        #self.logger.info("%s: %s", event.maskname, event.pathname)
         if not event.dir:
             if event.pathname in self.temp_files:
                 del self.temp_files[event.pathname]
                 self.temp_files[event.cookie] = event.pathname
+            elif event.pathname in self.renamed_files:
+                pass
             else:
                 self.moved_files[event.cookie] = event.pathname
 
     def process_IN_MOVED_TO(self, event):
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        #self.logger.info("%s: %s", event.maskname, event.pathname)
         #if stuff dropped in stor via a UI move must change file permissions.
         self.set_needed_file_permissions(event.pathname, event.dir)
         if not event.dir:
@@ -248,12 +253,16 @@ class AirtimeProcessEvent(ProcessEvent):
                 old_filepath = self.moved_files[event.cookie]
                 del self.moved_files[event.cookie]
                 self.file_events.put({'filepath': event.pathname, 'mode': self.config.MODE_MOVED})
+            elif hasattr(event, 'src_pathname') and event.src_pathname in self.renamed_files:
+                del self.renamed_files[event.src_pathname]
+                #self.logger.info("removing renamed path %s", event.src_pathname)
             else:
                 # show dragged from unwatched folder into a watched folder.
                 storage_directory = self.config.storage_directory
                 if self.is_parent_directory(event.pathname, storage_directory):
                     filepath, file_md, is_recorded_show = self.create_file_path(event.pathname)
                     self.move_file(event.pathname, filepath)
+                    self.renamed_files[event.pathname] = filepath
                     self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
                 else:
                     self.file_events.put({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
