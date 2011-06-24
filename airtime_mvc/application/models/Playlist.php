@@ -94,6 +94,8 @@ class Playlist {
         $info = explode('.', $rounded);
         if(!isset($info[1])){
             $milliStr = 0;
+        }else{
+            $milliStr = $info[1];
         }
         $hours = floor($seconds / 3600);
         $seconds -= $hours * 3600;
