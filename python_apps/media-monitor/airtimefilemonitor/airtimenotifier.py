@@ -135,5 +135,5 @@ class AirtimeNotifier(Notifier):
                 full_filepath = path+"/"+filename
 
                 if mm.is_audio_file(full_filepath):
-                    self.update_airtime({'filepath': full_filepath, 'mode': self.config.MODE_CREATE})
+                    self.update_airtime({'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False})
 
