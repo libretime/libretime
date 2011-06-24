@@ -5,7 +5,7 @@
     <li class="ui-state-default" id="spl_<?php echo $i ?>">
         <div class="list-item-container">
             <a href="javascript:void(0);" class="big_play" 
-            onclick="audioPreview('<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["name"], PATHINFO_EXTENSION);?>', 
+            onclick="audioPreview('<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["filepath"], PATHINFO_EXTENSION);?>', 
             'spl_<?php echo $i ?>')"><span class="ui-icon ui-icon-play"></span></a>
 
             <div class="text-row top">
