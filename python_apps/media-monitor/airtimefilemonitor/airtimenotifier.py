@@ -74,7 +74,15 @@ class AirtimeNotifier(Notifier):
             mm.wm.rm_watch(wd, rec=True)
 
             mm.set_needed_file_permissions(new_storage_directory, True)
-            mm.move_file(storage_directory, new_storage_directory)
+
+            #move everything in old stor directory to the new stor directory.
+            old_storage_contents = os.listdir(storage_directory)
+            for item in old_storage_contents:
+                fp = "%s/%s" % (storage_directory, item)
+                nfp = "%s/%s" % (new_storage_directory, item)
+                self.logger.info("Moving %s to %s", fp, nfp)
+                mm.move_file(fp, nfp)
+
             self.config.storage_directory = new_storage_directory
 
             mm.watch_directory(new_storage_directory)
