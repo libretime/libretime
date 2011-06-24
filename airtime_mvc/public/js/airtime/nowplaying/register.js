@@ -59,6 +59,10 @@ $(document).ready(function(){
     $("#link_to_whos_using").live('click', function(){
         window.open("http://sourcefabric.org/en/products/airtime_whosusing");
     });
+    
+    $("#link_to_privacy").live('click', function(){
+        window.open("http://www.sourcefabric.org/en/about/policy/");
+    });
 });
 
 function validateFields(){
