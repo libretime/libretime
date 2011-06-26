@@ -337,6 +337,7 @@ class Application_Model_Preference
     	    }
     	}
     	if($returnArray){
+    	    $outputArray['PROMOTE'] = Application_Model_Preference::GetPublicise();
     		$outputArray['LOGOIMG'] = Application_Model_Preference::GetStationLogo();
     	    return $outputArray;
     	}else{
