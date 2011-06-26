@@ -332,7 +332,7 @@ class Application_Model_Preference
 
     	$outputString = "\n";
     	foreach($outputArray as $key => $out){
-    	    if(!empty($out)){
+    	    if($out != ''){
     		    $outputString .= $key.' : '.$out."\n";
     	    }
     	}

@@ -86,12 +86,10 @@ $(document).ready(function(){
 
 function validateFields(){
     var stnName = $("#stnName");
-    var email = $("#Email");
     
     var errors = new Array();
     
     errors[0] = displayError(stnName);
-    errors[1] = displayError(email);
   
     for( e in errors ){
         if(errors[e]){
