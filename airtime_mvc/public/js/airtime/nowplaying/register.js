@@ -1,31 +1,41 @@
 $(document).ready(function(){
+	var dialogGlob;
     $.get("/Preference/register", {format:"json"}, function(json){
         var dialog = $(json.dialog);
-
+        dialogGlob = dialog;
+        
         dialog.dialog({
             autoOpen: false,
             width: 500,
             resizable: false,
             modal: true,
             position:['center',50],
-            buttons: {
-                "Remind me in 1 week": function() {
-                    var url = '/Preference/remindme';
-                    $.ajax({
-                        url: url,
-                    });
-                    $(this).dialog("close");
-                }, 
-                "Yes, help Airtime": function() {
-                    if($("#Publicise").is(':checked')){
-                        if(validateFields()){
-                            $("#register-form").submit();
-                        }
-                    }else{
-                        $("#register-form").submit();
-                    }
-                } 
-            }
+            buttons: [
+                {
+                	id: "remind_me",
+                	text: "Remind me in 1 week",
+                	click: function() {
+	                    var url = '/Preference/remindme';
+	                    $.ajax({
+	                        url: url,
+	                    });
+	                    $(this).dialog("close");
+                	}
+                },
+                {
+                	id: "help_airtime",
+                	text: "Yes, help Airtime",
+                	click: function() {
+	                	if($("#Publicise").is(':checked')){
+	                        if(validateFields()){
+	                            $("#register-form").submit();
+	                        }
+	                    }else{
+	                        $("#register-form").submit();
+	                    }
+                	}
+                }
+             ]
         });
 
         dialog.dialog('open');
@@ -53,6 +63,15 @@ $(document).ready(function(){
             $("#public-info").show();
         }else{
             $("#public-info").hide();
+        }
+    });
+    
+    $("#Privacy").live('click', function(){
+    	var button = $("#help_airtime");
+        if($(this).is(':checked')){
+        	button.removeAttr('disabled').removeClass('ui-state-disabled');
+        }else{
+        	button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
         }
     });
     
