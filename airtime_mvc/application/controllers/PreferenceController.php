@@ -80,8 +80,8 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_RegisterAirtime();
 
         if ($request->isPost()) {
-        	$values = $form->getValues();
-            if ($form->isValid($request->getPost())) {
+            $values = $request->getPost();
+            if ($values["Publicise"] == '1' && $form->isValid($values)) {
                 Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
                 Application_Model_Preference::SetPhone($values["Phone"]);
                 Application_Model_Preference::SetEmail($values["Email"]);
