@@ -85,7 +85,7 @@ class Playlist {
 -     *
 -     * @param float $seconds
 -     * @return string
--     * 		time in playlist time format (HH:mm:ss.dddddd)
+-     * 		time in playlist time format (HH:mm:ss.d)
 -     */
     public static function secondsToPlaylistTime($p_seconds)
     {
@@ -422,6 +422,7 @@ class Playlist {
         if(is_null($res))
             return '00:00:00';
         
+        // calling two functions to format time to 1 decimal place
         $sec = Playlist::playlistTimeToSeconds($res);
         $res = Playlist::secondsToPlaylistTime($sec); 
         return $res;
