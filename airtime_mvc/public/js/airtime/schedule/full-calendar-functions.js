@@ -13,9 +13,7 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
-            var y = $("#schedule_calendar").width();
-            var z = $("#schedule-add-show").width();
-            $("#schedule_calendar").width(y-z-50);
+            $("#schedule_calendar").css("width", "70%");
             $("#schedule_calendar").fullCalendar('render');
         }
         $("#schedule-show-what").show(0, function(){

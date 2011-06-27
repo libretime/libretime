@@ -248,10 +248,7 @@ function setAddShowEvents() {
             event.stopPropagation();
             event.preventDefault();
 
-            var y = $("#schedule_calendar").width();
-            var z = $("#schedule-add-show").width();
-
-            $("#schedule_calendar").width(y+z+50)
+            $("#schedule_calendar").removeAttr("style")
                 .fullCalendar('render');
 
 			$("#add-show-form").hide();
