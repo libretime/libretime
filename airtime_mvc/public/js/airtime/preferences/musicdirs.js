@@ -16,7 +16,7 @@ function setWatchedDirEvents() {
         systemImageUrl: 'img/browser/',
         handlerUrl: '/Preference/server-browse/format/json',
         title: 'Choose Storage Folder',
-        basePath: '/home',
+        basePath: '',
         requestMethod: 'POST',
     });
 
@@ -36,7 +36,7 @@ function setWatchedDirEvents() {
         systemImageUrl: 'img/browser/',
         handlerUrl: '/Preference/server-browse/format/json',
         title: 'Choose Folder to Watch',
-        basePath: '/home',
+        basePath: '',
         requestMethod: 'POST',
     });
 
@@ -72,7 +72,7 @@ function setWatchedDirEvents() {
             });
     });
 
-    $('#watchedFolder-table').find('.ui-icon-close').click(function(){
+    $('.selected-item').find('.ui-icon-close').click(function(){
         var row = $(this).parent();
         var folder = $(this).prev().text();
 
