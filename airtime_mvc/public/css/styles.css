@@ -1771,13 +1771,12 @@ label span {
 	margin:0;
 	width:100%;
 	line-height:180%;
+	resize: none;
 }
 #show_what_sending textarea:focus {
 	border:none;
 }
 #show_what_sending dl {
-	height:180px;
-	overflow:scroll;
 	overflow-x: hidden;
 }
 
