@@ -34,15 +34,18 @@
             <?php endif; ?>
         </dd>
         <?php $watched_dirs = MusicDir::getWatchedDirs(); ?>
-        <dd id="watchedFolder-table" class="block-display selected-item">
+
         <?php if (count($watched_dirs) > 0): ?>
             <?php foreach($watched_dirs as $watched_dir): ?>
-                 <span><?php echo $watched_dir->getDirectory(); ?></span><span class="ui-icon ui-icon-close"></span>
+                <dd class="block-display selected-item">
+                    <span><?php echo $watched_dir->getDirectory(); ?></span><span class="ui-icon ui-icon-close"></span>
+                </dd>
             <?php endforeach; ?>
         <?php else: ?>
-            <span>You are not watching any music folders.</span>
+            <dd class="block-display selected-item">
+                <span>You are not watching any music folders.</span>
+            </dd>
         <?php endif; ?>
-        </dd>
 
     </dl>
 </fieldset>
