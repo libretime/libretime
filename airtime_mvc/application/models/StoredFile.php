@@ -534,6 +534,11 @@ class StoredFile {
             return null;
         }
     }
+    
+    public function getName(){
+        $info = pathinfo($this->getFilePath());
+        return $info['filename'];
+    }
 
     /**
      * Create instance of StoreFile object and recall existing file

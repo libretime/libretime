@@ -324,15 +324,16 @@ class ApiController extends Zend_Controller_Action
         $this->view->fileid = $file_id;
         $this->view->showinstanceid = $show_instance_id;
 
-        /*
+        
        	$showCanceled = false;
-        $show_instance  = $this->_getParam('show_instance');
+       	$file = StoredFile::Recall($file_id);
+        //$show_instance  = $this->_getParam('show_instance');
 
         $show_name = "";
         try {
-            $show_inst = new ShowInstance($show_instance);
+            $show_inst = new ShowInstance($show_instance_id);
 
-            $show_inst->setRecordedFile($file->getId());
+            $show_inst->setRecordedFile($file_id);
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
             $show_start_time = $show_inst->getShowStart();
@@ -378,8 +379,8 @@ class ApiController extends Zend_Controller_Action
         	}
         }
 
-        $this->view->id = $file->getId();
-        */
+        $this->view->id = $file_id;
+        
     }
 
     public function mediaMonitorSetupAction() {
