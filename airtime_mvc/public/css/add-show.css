@@ -112,13 +112,9 @@ label.wrapp-label input[type="checkbox"] {
     overflow: auto;
 }
 
-#add_show_start_time	{
-	float: left;
+#add_show_start_time, #add_show_end_time	{
 	width: 70px;
-}
-
-#add_show_end_time	{
-	width: 70px;
+	margin-left:10px;
 }
 
 #add_show_end_date_no_repeat, #add_show_start_date  {
