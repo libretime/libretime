@@ -113,16 +113,16 @@ label.wrapp-label input[type="checkbox"] {
 }
 
 #add_show_start_time, #add_show_end_time	{
-	width: 70px;
+	width: 60px;
 	margin-left:10px;
 }
 
 #add_show_end_date_no_repeat, #add_show_start_date  {
-	width: 100px;
+	width: 95px;
 }
 
 #add_show_duration	{
 	background: #AAAAAA;
   	cursor: default;
-  	width: 100px;
+  	width: 50px;
 }

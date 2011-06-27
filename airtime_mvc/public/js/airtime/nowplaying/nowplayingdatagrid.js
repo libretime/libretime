@@ -167,26 +167,17 @@ function createDataGrid(){
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);
                 } else if ( sType.indexOf("g") != -1 ){
-					//gap row found
-					
+                    //gap row found
                     var gapTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[4];
-                    
-                    var hours = parseInt( gapTime / 3600 ) % 24;
-                    var minutes = parseInt( gapTime / 60 ) % 60;
-                    var seconds = gapTime % 60;
-
-                    var gapTimeFormat = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds); 
-                    
                     var nGroup = document.createElement('tr');
                     var nCell = document.createElement('td');
                     nCell.colSpan = iColspan;
                     nCell.className = "gap";
-                    nCell.innerHTML = "Gap until show end: " + gapTimeFormat;
+                    nCell.innerHTML = "Gap until show end: " + gapTime;
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);                   
                 } else if ( sType.indexOf("r") != -1 ){
-					//gap row found
-					
+                    //gap row found
                     var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[4];
                     
                     var nGroup = document.createElement('tr');
