@@ -30,10 +30,9 @@ class AirtimeNotifier(Notifier):
         while not self.init_rabbit_mq():
             logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
             time.sleep(5)
-        
+
     def init_rabbit_mq(self):
-        logger = logging.getLogger('fetch')
-        logger.info("Initializing RabbitMQ stuff")
+        self.logger.info("Initializing RabbitMQ stuff")
         try:
             schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
@@ -43,9 +42,9 @@ class AirtimeNotifier(Notifier):
             consumer.register_callback(self.handle_message)
             consumer.consume()
         except Exception, e:
-            logger.error(e)
+            self.logger.error(e)
             return False
-            
+
         return True
 
     def handle_message(self, body, message):
