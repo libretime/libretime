@@ -357,6 +357,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
 	border: 1px solid #5b5b5b;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;
     font-size: 13px;
+    text-indent: 3px;
 	margin:0;
 }
 .input_select, select {
@@ -1386,14 +1387,12 @@ div.success{
 #show_content_dialog .datatable {
 	margin-top:8px;
 }
-
 .simple-formblock.metadata, #side_playlist .simple-formblock.metadata {
 	border:none;
 	width:auto;
 	display:block;
 	padding: 2px;
 }
-
 #side_playlist .simple-formblock.metadata .input_text, #side_playlist .simple-formblock.metadata .input_text_area {
 	width:95%;
 }
@@ -1594,7 +1593,7 @@ div.success{
 .medium-icon.finishedplaying {
 	background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
 }
-.preferences {
+.preferences, .manage-folders {
     width: 500px;
 }
 
@@ -1632,6 +1631,10 @@ dd.radio-inline-list, .preferences dd.radio-inline-list {
 	margin-right:12px;
 }
 .preferences.simple-formblock dd.block-display {
+    width: 100%;
+}
+
+.preferences.simple-formblock dd.block-display select {
     width: 100%;
 }
 .preferences dd.block-display .input_select {
@@ -1745,16 +1748,93 @@ label span {
 .dialogPopup .display_field dt, .dialogPopup .display_field dd {
     color: #353535;
     float: left;
-    font-size: 13px;
+    font-size: 12px;
     margin: 0;
-    min-width: 90px;
-    padding: 6px 0;
+    padding: 4px 0;
     text-align: left;
-	width:60%;
+	width:auto;
 }
 
 .dialogPopup .display_field dt {
     clear: left;
 	font-weight:bold;
-	width:40%;
+	width:auto;
+	min-width:auto;
+	padding-right:8px;
+}
+#show_what_sending textarea {
+    background-color:transparent;
+	border:none;
+    box-shadow: none;
+    font-size: 12px;
+    text-indent: 0;
+	margin:0;
+	width:100%;
+	line-height:180%;
+}
+#show_what_sending textarea:focus {
+	border:none;
+}
+#show_what_sending dl {
+	height:180px;
+	overflow:scroll;
+	overflow-x: hidden;
+}
+
+#watched-folder-section dd.block-display input[type="text"] {
+    width: 65%;
+}
+
+#watched-folder-section dd.block-display input[type="button"] {
+	border: 1px solid #5b5b5b;
+	background-color: #6e6e6e;
+    background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
+	color: #ffffff;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	height:25px;
+	margin:0;
+	display:block;
+	margin-left:5px;
+	line-height:12px;
+	padding:0 10px 1px 10px;
+}
+#watched-folder-section dd.block-display input[type="button"]:hover {
+	border: 1px solid #242424;
+	background-color: #292929;
+    background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
+	color: #ffffff;
+}
+
+#watched-folder-section dd.block-display {
+	clear:both;
+	min-height:25px;
+	
+}
+#watched-folder-section dd.block-display.selected-item {
+	clear:both;
+	background:#9a9a9a;
+	margin:2px 0 5px 0;
+	width:84%;
+	padding:4px 8px 0;
+	position:relative;
+	min-height:22px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	font-size:13px;
+}
+#watched-folder-section dd.block-display.selected-item .ui-icon {
+	position:absolute;
+	top:4px;
+	right:5px;
+	cursor:pointer;
+}
+#watched-folder-section dd.block-display.selected-item .ui-icon:hover {
+	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png)
+}
+#watched-folder-section dd.block-display input {
+	float:left;
 }

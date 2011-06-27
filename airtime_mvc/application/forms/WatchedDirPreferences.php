@@ -47,23 +47,5 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
 
     }
 
-    public function setWatchedDirs() {
-
-        $watched_dirs = MusicDir::getWatchedDirs();
-        $i = 1;
-        foreach($watched_dirs as $dir) {
-
-            $text = new Zend_Form_Element_Text("watched_dir_$i");
-            $text->setAttrib('class', 'input_text');
-            $text->addFilter('StringTrim');
-            $text->setValue($dir->getDirectory());
-            $text->setDecorators(array('ViewHelper'));
-            $this->addElement($text);
-
-            $i = $i + 1;
-        }
-    }
-
-
 }
 

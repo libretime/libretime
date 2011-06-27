@@ -82,7 +82,9 @@ function setWatchedDirEvents() {
             {format: "json", dir: folder},
 
             function(json) {
-	           row.remove();
+	            $("#watched-folder-section").empty();
+                $("#watched-folder-section").append(json.subform);
+                setWatchedDirEvents();
             });
     });
 }

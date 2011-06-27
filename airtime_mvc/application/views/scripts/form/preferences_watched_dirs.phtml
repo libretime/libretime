@@ -1,47 +1,49 @@
-<dl class="zend_form">
+<fieldset class="padded" id="watched-folder-section">
+    <dl class="zend_form">
 
-    <dt id="storageFolder-label" class="block-display">
-        <label class="required" for="storageFolder"><?php echo $this->element->getElement('storageFolder')->getLabel() ?></label>
-    </dt>
-    <dd id="storageFolder-element">
-        <?php echo $this->element->getElement('storageFolder') ?>
-        <input id="storageFolder-selection" type="button" value="choose folder"></input>
-        <input id="storageFolder-ok" type="button" value="OK"></input>
-        <?php if($this->element->getElement('storageFolder')->hasErrors()) : ?>
-            <ul class='errors'>
-                <?php foreach($this->element->getElement('storageFolder')->getMessages() as $error): ?>
-                    <li><?php echo $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
+        <dt id="storageFolder-label" class="block-display">
+            <label class="required" for="storageFolder"><?php echo $this->element->getElement('storageFolder')->getLabel() ?></label>
+        </dt>
+        <dd id="storageFolder-element" class="block-display">
+            <?php echo $this->element->getElement('storageFolder') ?>
+            <input id="storageFolder-selection" type="button" value="choose folder"></input>
+            <input id="storageFolder-ok" type="button" value="OK"></input>
+            <?php if($this->element->getElement('storageFolder')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('storageFolder')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <dd class="block-display selected-item"><strong>Current Storage Folder:</strong><?php $stor = MusicDir::getStorDir(); echo $stor->getDirectory(); ?></dd>
+
+        <dt id="watchedFolder-label" class="block-display">
+            <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
+        </dt>
+        <dd id="watchedFolder-element" class="block-display">
+            <?php echo $this->element->getElement('watchedFolder') ?>
+            <input id="watchedFolder-selection" type="button" value="choose folder"></input>
+            <input id="watchedFolder-ok" type="button" value="OK"></input>
+            <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <?php $watched_dirs = MusicDir::getWatchedDirs(); ?>
+        <dd id="watchedFolder-table" class="block-display selected-item">
+        <?php if (count($watched_dirs) > 0): ?>
+            <?php foreach($watched_dirs as $watched_dir): ?>
+                 <span><?php echo $watched_dir->getDirectory(); ?></span><span class="ui-icon ui-icon-close"></span>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <span>You are not watching any music folders.</span>
         <?php endif; ?>
-    </dd>
-    <div>Current Storage Folder: <?php $stor = MusicDir::getStorDir(); echo $stor->getDirectory(); ?></div>
+        </dd>
 
-    <dt id="watchedFolder-label" class="block-display">
-        <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
-    </dt>
-    <dd id="watchedFolder-element">
-        <?php echo $this->element->getElement('watchedFolder') ?>
-        <input id="watchedFolder-selection" type="button" value="choose folder"></input>
-        <input id="watchedFolder-ok" type="button" value="OK"></input>
-        <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
-            <ul class='errors'>
-                <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
-                    <li><?php echo $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    </dd>
-
-    <div id="watchedFolder-table">
-        <?php $i = 1; ?>
-        <?php $element = $this->element->getElement("watched_dir_$i"); ?>
-        <?php while(isset($element)): ?>
-             <div><span><?php echo $element->getValue(); ?></span><span class="ui-icon ui-icon-close"></span></div>
-             <?php $i = $i + 1; ?>
-             <?php $element = $this->element->getElement("watched_dir_$i"); ?>
-        <?php endwhile; ?>
-    </div>
-
-</dl>
+    </dl>
+</fieldset>
 

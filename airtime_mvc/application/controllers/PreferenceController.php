@@ -25,11 +25,11 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->statusMsg = "";
 
         $form = new Application_Form_Preferences();
-        
+
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
                 $values = $form->getValues();
-                
+
                 Application_Model_Preference::SetHeadTitle($values["preferences_general"]["stationName"], $this->view);
                 Application_Model_Preference::SetDefaultFade($values["preferences_general"]["stationDefaultFade"]);
                 Application_Model_Preference::SetStreamLabelFormat($values["preferences_general"]["streamFormat"]);
@@ -123,7 +123,6 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/musicdirs.js','text/javascript');
 
         $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
-        $watched_dirs_pref->setWatchedDirs();
 
         $this->view->form = $watched_dirs_pref;
     }
@@ -180,8 +179,6 @@ class PreferenceController extends Zend_Controller_Action
             RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
         }
 
-        $watched_dirs_form->setWatchedDirs();
-
         $this->view->subform = $watched_dirs_form->render();
     }
 
@@ -200,8 +197,6 @@ class PreferenceController extends Zend_Controller_Action
             RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
         }
 
-        $watched_dirs_form->setWatchedDirs();
-
         $this->view->subform = $watched_dirs_form->render();
     }
 
@@ -215,6 +210,9 @@ class PreferenceController extends Zend_Controller_Action
         $data = array();
         $data["directory"] = $chosen;
         RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
+
+        $watched_dirs_form = new Application_Form_WatchedDirPreferences();
+        $this->view->subform = $watched_dirs_form->render();
     }
 }
 
