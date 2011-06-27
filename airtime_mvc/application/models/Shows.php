@@ -1358,7 +1358,7 @@ class ShowInstance {
                 return null;
             }
 
-            if(file_exists($file->getRealFilePath())) {
+            if(file_exists($file->getFilePath())) {
                 return $file;
             }
         }
