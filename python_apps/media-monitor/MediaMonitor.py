@@ -5,6 +5,7 @@ import logging
 import logging.config
 import sys
 import os
+import signal
 
 from pyinotify import WatchManager, Notifier, ProcessEvent
 from multiprocessing import Process, Lock, Queue as mpQueue
@@ -12,6 +13,14 @@ from multiprocessing import Process, Lock, Queue as mpQueue
 from airtimefilemonitor.airtimenotifier import AirtimeNotifier
 from airtimefilemonitor.airtimeprocessevent import AirtimeProcessEvent
 from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
+
+def handleSigTERM(signum, frame):
+    logger.info("Main Process Shutdown, TERM signal caught. %d")
+    if p is not None:
+        p.terminate()
+
+    sys.exit(0)
+
 
 if __name__ == '__main__':
 
@@ -23,12 +32,11 @@ if __name__ == '__main__':
         sys.exit()
 
     logger = logging.getLogger()
+    p = None
 
     try:
         config = AirtimeMediaConfig()
-
         logger.info("Initializing event processor")
-
         pe = AirtimeProcessEvent(airtime_config=config)
 
         notifier = AirtimeNotifier(pe.wm, pe, read_freq=1, timeout=1, airtime_config=config)
@@ -37,6 +45,8 @@ if __name__ == '__main__':
         p = Process(target=notifier.process_file_events, args=(pe.file_events,))
         p.daemon = True
         p.start()
+        
+        signal.signal(signal.SIGTERM, handleSigTERM)
 
         logger.info("Setting up monitor")
         response = None
@@ -64,5 +74,4 @@ if __name__ == '__main__':
         notifier.stop()
     except Exception, e:
         logger.error('Exception: %s', e)
-    finally:
-        p.terminate()
+        
