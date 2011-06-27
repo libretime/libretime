@@ -128,6 +128,24 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
                 'ViewHelper'
             )
         ));
+        
+        // checkbox for privacy policy
+        $checkboxPrivacy = new Zend_Form_Element_Checkbox("Privacy");
+        $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"\">privacy policy</a>.")
+            ->setDecorators(array('ViewHelper'));
+        $this->addElement($checkboxPrivacy);
+    }
+    
+    // overwriting isValid function
+    public function isValid ($data)
+    {
+        parent::isValid($data);
+        $checkPrivacy = $this->getElement('Privacy');
+        if($data["SupportFeedback"] == "1" && $data["Privacy"] != "1"){
+            $checkPrivacy->addError("You have to agree to privacy policy.");
+            return false;
+        }
+        return true;
     }
 }
 

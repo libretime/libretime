@@ -140,8 +140,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         // checkbox for privacy policy
         $checkboxPrivacy = new Zend_Form_Element_Checkbox("Privacy");
         $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"\">privacy policy</a>.")
-            ->setDecorators(array('ViewHelper'))
-            ->setValue(1); 
+            ->setDecorators(array('ViewHelper'));
         $this->addElement($checkboxPrivacy);
     }
 }

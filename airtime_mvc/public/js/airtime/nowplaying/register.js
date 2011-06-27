@@ -37,7 +37,9 @@ $(document).ready(function(){
                 }
              ]
         });
-
+        
+        var button = $("#help_airtime");
+        button.attr('disabled', 'disabled').addClass('ui-state-disabled');
         dialog.dialog('open');
     })
 

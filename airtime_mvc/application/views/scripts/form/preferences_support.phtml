@@ -15,7 +15,6 @@
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?> 
-            <div class="info-text">By checking this box, I agree to Sourcefabric's <a id="link_to_privacy" href="">privacy policy</a>.</div>
         </dd>
 		<dd id="publicize-element">
 			<label class="optional" for="Publicise">
@@ -30,7 +29,9 @@
                 </ul>
             <?php endif; ?> 
 		</dd>
+	</dl>
 		<div class="info-text" style="clear: both;padding: 4px 0 4px 15px;"><p> Note: In order to publicise your station, "Send support feedback" must be enabled</p></div>
+	<dl id="public-info" style="display:none;">	
         <dt id="Phone-label" class="block-display">
             <label class="optional" for="Phone"><?php echo $this->element->getElement('Phone')->getLabel() ?></label>
         </dt>
@@ -112,10 +113,11 @@
         <dt id="Logo-label" class="block-display">
             <label class="optional" for="Description"><?php echo $this->element->getElement('Logo')->getLabel() ?></label>
         </dt>
-        <?php if($this->element->getView()->logoImg){?>
-        <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
-        <?php }?>
         <dd id="Logo-element" class="block-display clearfix">
+            <?php if($this->element->getView()->logoImg){?>
+            <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
+            <?php }?>
+            
             <?php echo $this->element->getElement('Logo') ?>
             <div class="info-text"><p>Min. size: 200x200 Max. size: 600x600</p></div>
             <?php if($this->element->getElement('Logo')->hasErrors()) : ?>
@@ -126,7 +128,6 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        
     </dl>
     <h3 class="collapsible-header">
 		<span class="arrow-icon"></span>Show me what I am sending
@@ -139,4 +140,18 @@
 			</dl>
 		</fieldset>
 	</div>
+	<div>
+        <br>
+    	<label class="optional" for="Privacy">
+            <?php echo $this->element->getElement('Privacy') ?>
+            <?php echo $this->element->getElement('Privacy')->getLabel() ?>
+        </label>
+        <?php if($this->element->getElement('Privacy')->hasErrors()) : ?>
+            <ul class='errors'>
+                <?php foreach($this->element->getElement('Privacy')->getMessages() as $error): ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
 </fieldset>

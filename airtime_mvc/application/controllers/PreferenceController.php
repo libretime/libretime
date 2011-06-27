@@ -25,13 +25,11 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->statusMsg = "";
 
         $form = new Application_Form_Preferences();
-
+        
         if ($request->isPost()) {
-
             if ($form->isValid($request->getPost())) {
-
                 $values = $form->getValues();
-
+                
                 Application_Model_Preference::SetHeadTitle($values["preferences_general"]["stationName"], $this->view);
                 Application_Model_Preference::SetDefaultFade($values["preferences_general"]["stationDefaultFade"]);
                 Application_Model_Preference::SetStreamLabelFormat($values["preferences_general"]["streamFormat"]);
@@ -60,10 +58,8 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetStationLogo($imagePath);
 
                 $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
-
             }
         }
-        $this->view->supportFeedback = Application_Model_Preference::GetSupportFeedback();
     	$logo = Application_Model_Preference::GetStationLogo();
 		if($logo){
 			$this->view->logoImg = $logo;

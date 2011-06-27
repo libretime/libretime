@@ -53,6 +53,14 @@ $(document).ready(function() {
     		pub.removeAttr("disabled");
     	}
 	});
+    
+    $("#Publicise").live('click', function(){
+        if($(this).is(':checked')){
+            $("#public-info").show();
+        }else{
+            $("#public-info").hide();
+        }
+    });
 
     showErrorSections();
     
