@@ -329,7 +329,17 @@ function setAddShowEvents() {
         var endDateTime = new Date(endDate[0], parseInt(endDate[1])-1, endDate[2], endTime[0], endTime[1], 0, 0);
 
 		if(startDateTime.getTime() > endDateTime.getTime()){
-			endDateTime = new Date(startDateTime.getTime() + (1*60*60*1000));
+		    var duration = $('#add_show_duration').val();
+	        // parse duration
+		    var time = 0;
+		    var info = duration.split(' ');
+		    var h = parseInt(info[0]);
+		    time += h * 60 * 60* 1000;
+		    if(info.length >1 && $.trim(info[1]) !== ''){
+		        var m = parseInt(info[1]);
+		        time += m * 60 * 1000;
+		    }
+			endDateTime = new Date(startDateTime.getTime() + time);
 		}
 
 		var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
