@@ -37,7 +37,7 @@ try:
     config = AirtimeMediaConfig(logger)
     
     bootstrap = AirtimeMediaMonitorBootstrap(logger)
-    bootstrap.scan()
+    bootstrap.scan() 
     
     logger.info("Initializing event processor")
     pe = AirtimeProcessEvent(multi_queue, airtime_config=config)
