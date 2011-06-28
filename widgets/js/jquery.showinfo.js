@@ -6,7 +6,7 @@
         sourceDomain: "http://localhost/", //where to get show status from
         text: {onAirToday:"On air today"}
     };
-    var options = $.extend(defaults, options);
+    var options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
 
     return this.each(function() {
@@ -84,7 +84,7 @@
         sourceDomain: "http://localhost/", //where to get show status from
         text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"}
     };
-    var options = $.extend(defaults, options);
+    options = $.extend(true, defaults, options);    
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
 
     return this.each(function() {
@@ -162,7 +162,7 @@
         dowText: {monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
         miscText: {time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"}
     };
-    var options = $.extend(defaults, options);
+    var options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
     
     return this.each(function() {

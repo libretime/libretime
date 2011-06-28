@@ -13,24 +13,22 @@
 $(document).ready(function() {
     $("#headerLiveHolder").airtimeLiveInfo({
         sourceDomain: "http://airtime-dev.sourcefabric.org",
-        text: {onAirToday:"On air today"},
+        text: {onAirNow:"On air today"},
         updatePeriod: 20 //seconds
     });
-});
-$(document).ready(function() {
     $("#onAirToday").airtimeShowSchedule({
         sourceDomain: "http://airtime-dev.sourcefabric.org",
         text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"},
         updatePeriod: 5 //seconds
     });
-});
-$(document).ready(function() {
     $("#scheduleTabs").airtimeWeekSchedule({
         sourceDomain:"http://airtime-dev.sourcefabric.org/",
         dowText:{monday:"Lundi", tuesday:"Mardi", wednesday:"Mercredi", thursday:"Jeudi", friday:"Vendredi", saturday:"Samedi", sunday:"Dimanche"},
         miscText:{time:"Temps", programName:"Nom du Programme", details:"Détails", readMore:"Lire La Suite"},
         updatePeriod: 600 //seconds
     });
+    $('#scheduleTabs').tabs();
+
 });
 </script>
 <div id="headerLiveHolder"></div>
