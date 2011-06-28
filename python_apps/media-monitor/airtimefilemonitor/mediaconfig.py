@@ -9,14 +9,14 @@ class AirtimeMediaConfig:
     MODE_MOVED = "moved"
     MODE_DELETE = "delete"
 
-    def __init__(self):
+    def __init__(self, logger):
 
         # loading config file
         try:
             config = ConfigObj('/etc/airtime/media-monitor.cfg')
             self.cfg = config
         except Exception, e:
-            print 'Error loading config: ', e
+            logger.info('Error loading config: ', e)
             sys.exit()
 
         self.storage_directory = None

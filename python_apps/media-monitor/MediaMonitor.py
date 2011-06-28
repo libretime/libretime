@@ -3,6 +3,7 @@ import time
 import logging
 import logging.config
 import sys
+import os
 import signal
 
 from multiprocessing import Process
@@ -10,13 +11,14 @@ from multiprocessing import Process
 from airtimefilemonitor.airtimenotifier import AirtimeNotifier
 from airtimefilemonitor.airtimeprocessevent import AirtimeProcessEvent
 from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
+from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorBootstrap
 
 def handleSigTERM(signum, frame):
     logger = logging.getLogger()
-    logger.info("Main Process Shutdown, TERM signal caught. %d")
+    logger.info("Main Process Shutdown, TERM signal caught.")
     for p in processes:
-        p.terminate()
         logger.info("Killed process. %d", p.pid)
+        p.terminate()
 
     sys.exit(0)
 
@@ -26,13 +28,17 @@ try:
     logging.config.fileConfig("logging.cfg")
 except Exception, e:
     print 'Error configuring logging: ', e
-    sys.exit()
+    sys.exit(1)
 
 logger = logging.getLogger()
 processes = []
 
 try:
-    config = AirtimeMediaConfig()
+    config = AirtimeMediaConfig(logger)
+    
+    bootstrap = AirtimeMediaMonitorBootstrap(logger)
+    bootstrap.scan()
+    
     logger.info("Initializing event processor")
     pe = AirtimeProcessEvent(airtime_config=config)
 
@@ -44,8 +50,6 @@ try:
         p = Process(target=notifier.process_file_events, args=(pe.multi_queue,))
         processes.append(p)
         p.start()
-
-    signal.signal(signal.SIGTERM, handleSigTERM)
 
     logger.info("Setting up monitor")
     response = None
@@ -61,14 +65,16 @@ try:
     logger.info("Added watch to %s", storage_directory)
     logger.info("wdd result %s", wdd[storage_directory])
 
+
+    #register signal before process forks and exits.
+    signal.signal(signal.SIGTERM, handleSigTERM)
     notifier.loop(callback=pe.notifier_loop_callback)
 
-    for p in processes:
-        p.join()
 
+        
 except KeyboardInterrupt:
     notifier.stop()
+    logger.info("Keyboard Interrupt")
 except Exception, e:
-    notifier.stop()
+    #notifier.stop()
     logger.error('Exception: %s', e)
-
