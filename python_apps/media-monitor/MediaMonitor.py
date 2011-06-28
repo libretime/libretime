@@ -1,14 +1,11 @@
 #!/usr/local/bin/python
-import json
 import time
 import logging
 import logging.config
 import sys
-import os
 import signal
 
-from pyinotify import WatchManager, Notifier, ProcessEvent
-from multiprocessing import Process, Lock, Queue as mpQueue
+from multiprocessing import Process
 
 from airtimefilemonitor.airtimenotifier import AirtimeNotifier
 from airtimefilemonitor.airtimeprocessevent import AirtimeProcessEvent

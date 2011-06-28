@@ -11,3 +11,4 @@ RewriteRule ^.*$ - [NC,L]
 RewriteRule ^.*$ index.php [NC,L]
 RewriteBase /
 
+SetEnv APPLICATION_ENV development
