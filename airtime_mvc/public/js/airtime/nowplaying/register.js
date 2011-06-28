@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	var dialogGlob;
+	
     $.get("/Preference/register", {format:"json"}, function(json){
         var dialog = $(json.dialog);
         dialogGlob = dialog;
@@ -51,12 +52,18 @@ $(document).ready(function(){
 
     $("#SupportFeedback").live('click', function(){
         var pub = $("#Publicise");
+        var privacy = $("#Privacy");
+        var button = $("#help_airtime");
         if( !$(this).is(':checked') ){
             pub.removeAttr("checked");
             pub.attr("disabled", true);
             $("#public-info").hide();
+            button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
         }else{
             pub.removeAttr("disabled");
+            if(privacy.is(':checked')){
+                button.removeAttr('disabled').removeClass('ui-state-disabled');
+            }
         }
     });
 
@@ -69,8 +76,9 @@ $(document).ready(function(){
     });
     
     $("#Privacy").live('click', function(){
+    	var support = $("#SupportFeedback");
     	var button = $("#help_airtime");
-        if($(this).is(':checked')){
+        if($(this).is(':checked') && support.is(':checked')){
         	button.removeAttr('disabled').removeClass('ui-state-disabled');
         }else{
         	button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
