@@ -36,11 +36,9 @@ processes = []
 try:
     config = AirtimeMediaConfig(logger)
     
-    multi_queue = mpQueue()
-    
-    bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue)
+    bootstrap = AirtimeMediaMonitorBootstrap(logger)
     bootstrap.scan()
-        
+    
     logger.info("Initializing event processor")
     pe = AirtimeProcessEvent(multi_queue, airtime_config=config)
 
