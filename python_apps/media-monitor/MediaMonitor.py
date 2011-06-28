@@ -65,12 +65,9 @@ try:
     logger.info("Added watch to %s", storage_directory)
     logger.info("wdd result %s", wdd[storage_directory])
 
-
     #register signal before process forks and exits.
     signal.signal(signal.SIGTERM, handleSigTERM)
     notifier.loop(callback=pe.notifier_loop_callback)
-
-
         
 except KeyboardInterrupt:
     notifier.stop()
