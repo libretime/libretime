@@ -37,11 +37,14 @@ try:
     logger.info("Initializing event processor")
     pe = AirtimeProcessEvent(airtime_config=config)
 
-    notifier = AirtimeNotifier(pe.wm, pe, read_freq=1, timeout=1, airtime_config=config)
+    notifier = AirtimeNotifier(pe.wm, pe, read_freq=0.1, timeout=0.1, airtime_config=config)
     notifier.coalesce_events()
 
-    p = Process(target=notifier.process_file_events, args=(pe.file_events,))
-    p.start()
+    #create 5 worker processes
+    for i in range(5):
+        p = Process(target=notifier.process_file_events, args=(pe.multi_queue,))
+        p.daemon = True
+        p.start()
 
     signal.signal(signal.SIGTERM, handleSigTERM)
 
