@@ -54,13 +54,13 @@ if (isset($opts->h)) {
 }
 
 // The current version is already installed.
-if(isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !isset($opts->r)) {
+if (isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime $version is already installed.".PHP_EOL;
     printUsage($opts);
     exit(1);
 }
 // A previous version exists - if so, upgrade.
-if(isset($version) && ($version != false) && ($version < AIRTIME_VERSION)) {
+if (isset($version) && ($version != false) && ($version < AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime version $version found.".PHP_EOL;
 
     echo "It appears you already have a version of Airtime installed.\n";
@@ -84,7 +84,7 @@ if(is_null($version)) {
 }
 
 $db_install = true;
-if (is_null($opts->r) && isset($opts->n)){
+if (is_null($opts->r) && isset($opts->n)) {
 	$db_install = false;
 }
 
