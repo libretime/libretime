@@ -66,12 +66,10 @@ class AirtimeNotifier(Notifier):
 
         elif m['event_type'] == "new_watch":
             self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
-            #start a new process to walk through this folder and add the files to Airtime.
-            p = Process(target=self.walk_newly_watched_directory, args=(m['directory'],))
-            p.start()
-            self.import_processes[m['directory']] = p
-            #add this new folder to our list of watched folders
-            self.watched_folders.append(m['directory'])
+            self.walk_newly_watched_directory(m['directory'])
+
+            mm = self.proc_fun()
+            mm.watch_directory(m['directory'])
 
         elif m['event_type'] == "remove_watch":
             watched_directory = m['directory'].encode('utf-8')
@@ -148,7 +146,7 @@ class AirtimeNotifier(Notifier):
     #this function is run in its own process, and continuously
     #checks the queue for any new file events.
     def process_file_events(self, queue):
-    
+
         while True:
             event = queue.get()
             self.logger.info("received event %s", event)
@@ -163,5 +161,7 @@ class AirtimeNotifier(Notifier):
                 full_filepath = path+"/"+filename
 
                 if mm.is_audio_file(full_filepath):
-                    self.update_airtime({'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False})
+                    self.logger.info("importing %s", full_filepath)
+                    event = {'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False}
+                    mm.file_events.put(event)
 

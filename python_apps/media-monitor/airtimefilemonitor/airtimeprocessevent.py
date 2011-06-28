@@ -37,11 +37,6 @@ class AirtimeProcessEvent(ProcessEvent):
         self.wm = WatchManager()
         self.md_manager = AirtimeMetadata()
 
-        schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
-        schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
-        connection = BrokerConnection(self.config.cfg["rabbitmq_host"], self.config.cfg["rabbitmq_user"], self.config.cfg["rabbitmq_password"], "/")
-        channel = connection.channel()
-
     def watch_directory(self, directory):
         return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
@@ -277,13 +272,6 @@ class AirtimeProcessEvent(ProcessEvent):
         pass
 
     def notifier_loop_callback(self, notifier):
-
-        #put a watch on any fully imported watched directories.
-        for watched_directory in notifier.import_processes.keys():
-            process = notifier.import_processes[watched_directory]
-            if not process.is_alive():
-                self.watch_directory(watched_directory)
-                del notifier.import_processes[watched_directory]
 
         #check for any events recieved from Airtime.
         try:
