@@ -513,7 +513,7 @@ class StoredFile {
             if (is_null($path_info)) {
                 return null;
             }
-            $musicDir = MusicDir::getDirByPath($path_info[0]);
+            $music_dir = MusicDir::getDirByPath($path_info[0]);
 
             $file = CcFilesQuery::create()
                             ->filterByDbDirectory($music_dir->getId())
@@ -534,7 +534,7 @@ class StoredFile {
             return null;
         }
     }
-    
+
     public function getName(){
         $info = pathinfo($this->getFilePath());
         return $info['filename'];
