@@ -138,7 +138,7 @@ class AirtimeProcessEvent(ProcessEvent):
 
         return filepath
 
-    def create_file_path(self, imported_filepath):
+    def create_file_path(self, imported_filepath, orig_md):
 
         storage_directory = self.config.storage_directory
 
@@ -149,7 +149,6 @@ class AirtimeProcessEvent(ProcessEvent):
             file_ext = os.path.splitext(imported_filepath)[1]
             file_ext = file_ext.encode('utf-8')
 
-            orig_md = self.md_manager.get_md_from_file(imported_filepath)
             path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE', 'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
 
             md = {}
@@ -191,7 +190,7 @@ class AirtimeProcessEvent(ProcessEvent):
         except Exception, e:
             self.logger.error('Exception: %s', e)
 
-        return filepath, orig_md, is_recorded_show
+        return filepath, is_recorded_show
 
     def process_IN_CREATE(self, event):
 
@@ -206,10 +205,13 @@ class AirtimeProcessEvent(ProcessEvent):
             elif self.is_audio_file(event.pathname):
                 if self.is_parent_directory(event.pathname, storage_directory):
                     self.set_needed_file_permissions(event.pathname, event.dir)
-                    filepath, file_md, is_recorded_show = self.create_file_path(event.pathname)
-                    self.move_file(event.pathname, filepath)
-                    self.renamed_files[event.pathname] = filepath
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+                    file_md = self.md_manager.get_md_from_file(event.pathname)
+
+                    if file_md is not None:
+                        filepath, is_recorded_show = self.create_file_path(event.pathname, file_md)
+                        self.move_file(event.pathname, filepath)
+                        self.renamed_files[event.pathname] = filepath
+                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
                 else:
                     self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
 
@@ -256,10 +258,12 @@ class AirtimeProcessEvent(ProcessEvent):
                 # show dragged from unwatched folder into a watched folder.
                 storage_directory = self.config.storage_directory
                 if self.is_parent_directory(event.pathname, storage_directory):
-                    filepath, file_md, is_recorded_show = self.create_file_path(event.pathname)
-                    self.move_file(event.pathname, filepath)
-                    self.renamed_files[event.pathname] = filepath
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
+                    file_md = self.md_manager.get_md_from_file(event.pathname)
+                    if file_md is not None:
+                        filepath, is_recorded_show = self.create_file_path(event.pathname)
+                        self.move_file(event.pathname, filepath)
+                        self.renamed_files[event.pathname] = filepath
+                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
                 else:
                     self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
 

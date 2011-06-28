@@ -104,11 +104,17 @@ class AirtimeMetadata:
 
         self.logger.info("getting info from filepath %s", filepath)
 
-        md = {}
-        md5 = self.get_md5(filepath)
-        md['MDATA_KEY_MD5'] = md5
+        try:
+            md = {}
+            md5 = self.get_md5(filepath)
+            md['MDATA_KEY_MD5'] = md5
 
-        file_info = mutagen.File(filepath, easy=True)
+            file_info = mutagen.File(filepath, easy=True)
+
+        except Exception, e:
+            self.logger.error("failed getting metadata from %s", filepath)
+            return None
+
 
         self.logger.info(file_info)
 

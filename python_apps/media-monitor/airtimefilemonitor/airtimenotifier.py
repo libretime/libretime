@@ -123,6 +123,8 @@ class AirtimeNotifier(Notifier):
         if (os.path.exists(filepath) and (mode == self.config.MODE_CREATE)):
             if file_md is None:
                 mutagen = self.md_manager.get_md_from_file(filepath)
+                if mutagen is None:
+                    return
                 md.update(mutagen)
 
             if d['is_recorded_show']:
@@ -132,6 +134,8 @@ class AirtimeNotifier(Notifier):
 
         elif (os.path.exists(filepath) and (mode == self.config.MODE_MODIFY)):
             mutagen = self.md_manager.get_md_from_file(filepath)
+            if mutagen is None:
+                return
             md.update(mutagen)
             self.api_client.update_media_metadata(md, mode)
 
@@ -163,5 +167,5 @@ class AirtimeNotifier(Notifier):
                 if mm.is_audio_file(full_filepath):
                     self.logger.info("importing %s", full_filepath)
                     event = {'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False}
-                    mm.file_events.put(event)
+                    mm.multi_queue.put(event)
 
