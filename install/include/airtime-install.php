@@ -151,7 +151,7 @@ AirtimeInstall::CreateZendPhpLogFile();
 $hour = rand(0,23);
 $minute = rand(0,59);
 
-$fp = fopen('/etc/cron.d/airtime-crons','a');
+$fp = fopen('/etc/cron.d/airtime-crons','w');
 fwrite($fp, "$minute $hour * * * root /usr/lib/airtime/utils/phone_home_stat\n");
 fclose($fp);
 
