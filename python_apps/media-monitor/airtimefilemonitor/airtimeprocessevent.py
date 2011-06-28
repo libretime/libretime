@@ -31,6 +31,7 @@ class AirtimeProcessEvent(ProcessEvent):
         self.supported_file_formats = ['mp3', 'ogg']
         self.temp_files = {}
         self.moved_files = {}
+        self.gui_replaced = {}
         self.renamed_files = {}
         self.file_events = []
         self.multi_queue = mpQueue()
@@ -222,16 +223,18 @@ class AirtimeProcessEvent(ProcessEvent):
 
     def process_IN_MODIFY(self, event):
         if not event.dir:
-            #self.logger.info("%s: %s", event.maskname, event.pathname)
+            self.logger.info("%s: %s", event.maskname, event.pathname)
             if event.pathname in self.renamed_files:
                 pass
             elif self.is_audio_file(event.name):
                 self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
 
     def process_IN_MOVED_FROM(self, event):
-        #self.logger.info("%s: %s", event.maskname, event.pathname)
+        self.logger.info("%s: %s", event.maskname, event.pathname)
         if not event.dir:
-            if event.pathname in self.temp_files:
+            if "goutputstream" in event.pathname:
+                self.gui_replaced[event.cookie] = None
+            elif event.pathname in self.temp_files:
                 del self.temp_files[event.pathname]
                 self.temp_files[event.cookie] = event.pathname
             elif event.pathname in self.renamed_files:
@@ -240,12 +243,15 @@ class AirtimeProcessEvent(ProcessEvent):
                 self.moved_files[event.cookie] = event.pathname
 
     def process_IN_MOVED_TO(self, event):
-        #self.logger.info("%s: %s", event.maskname, event.pathname)
+        self.logger.info("%s: %s", event.maskname, event.pathname)
         #if stuff dropped in stor via a UI move must change file permissions.
         self.set_needed_file_permissions(event.pathname, event.dir)
         if not event.dir:
             if event.cookie in self.temp_files:
                 del self.temp_files[event.cookie]
+                self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
+            elif event.cookie in self.gui_replaced:
+                del self.gui_replaced[event.cookie]
                 self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
             elif event.cookie in self.moved_files:
                 old_filepath = self.moved_files[event.cookie]

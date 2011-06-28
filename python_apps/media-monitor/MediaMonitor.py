@@ -12,9 +12,15 @@ from airtimefilemonitor.airtimeprocessevent import AirtimeProcessEvent
 from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 
 def handleSigTERM(signum, frame):
+    logger = logging.getLogger()
     logger.info("Main Process Shutdown, TERM signal caught. %d")
-    if p is not None:
+    for p in processes:
         p.terminate()
+        logger.info("Killed process. %d", p.pid)
+
+    notifier_daemon_pid = open('/var/run/airtime-notifier.pid', 'r').read()
+    os.kill(int(notifier_daemon_pid), 9)
+    logger.info("Killed process. %d", int(notifier_daemon_pid))
 
     sys.exit(0)
 
@@ -27,7 +33,7 @@ except Exception, e:
     sys.exit()
 
 logger = logging.getLogger()
-p = None
+processes = []
 
 try:
     config = AirtimeMediaConfig()
@@ -40,7 +46,7 @@ try:
     #create 5 worker processes
     for i in range(5):
         p = Process(target=notifier.process_file_events, args=(pe.multi_queue,))
-        p.daemon = True
+        processes.append(p)
         p.start()
 
     signal.signal(signal.SIGTERM, handleSigTERM)
