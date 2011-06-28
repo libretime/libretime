@@ -66,6 +66,9 @@ try:
     logger.info("wdd result %s", wdd[storage_directory])
 
     notifier.loop(daemonize=True, callback=pe.notifier_loop_callback, pid_file='/var/run/airtime-notifier.pid', stdout='/var/log/airtime/media-monitor/media-monitor.log')
+    
+    for p in processes:
+        p.join()
 
 except KeyboardInterrupt:
     notifier.stop()
