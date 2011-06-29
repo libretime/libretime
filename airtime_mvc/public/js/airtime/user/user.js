@@ -47,7 +47,7 @@ function rowCallback( nRow, aData, iDisplayIndex ){
 	    $('td:eq(3)', nRow).html( 'Admin' );
     } else if ( aData[4] == "H" )
     {
-	    $('td:eq(3)', nRow).html( 'Host' );
+	    $('td:eq(3)', nRow).html( 'DJ' );
     } else if ( aData[4] == "G" )
     {
 	    $('td:eq(3)', nRow).html( 'Guest' );
