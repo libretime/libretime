@@ -7,7 +7,7 @@
         <dd id="storageFolder-element" class="block-display">
             <?php echo $this->element->getElement('storageFolder') ?>
             <input id="storageFolder-selection" type="button" value="choose folder"></input>
-            <input id="storageFolder-ok" type="button" value="OK"></input>
+            <input id="storageFolder-ok" type="button" value="Set"></input>
             <?php if($this->element->getElement('storageFolder')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('storageFolder')->getMessages() as $error): ?>
@@ -24,7 +24,7 @@
         <dd id="watchedFolder-element" class="block-display">
             <?php echo $this->element->getElement('watchedFolder') ?>
             <input id="watchedFolder-selection" type="button" value="choose folder"></input>
-            <input id="watchedFolder-ok" type="button" value="OK"></input>
+            <input id="watchedFolder-ok" type="button" value="Add"></input>
             <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
