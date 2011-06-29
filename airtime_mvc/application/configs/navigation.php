@@ -54,7 +54,7 @@ $pages = array(
                 'resource'	=>	'user'
             ),
             array(
-                'label'      => 'Manage Music Folders',
+                'label'      => 'Manage Media Folders',
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'directory-config'
