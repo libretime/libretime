@@ -5,8 +5,9 @@ from subprocess import Popen, PIPE
 
 class AirtimeMediaMonitorBootstrap():
 
-    def __init__(self, logger):
+    def __init__(self, logger, multi_queue):
         self.logger = logger
+        self.multi_queue = multi_queue
         
     """
     on bootup we want to scan all directories and look for files that
@@ -21,21 +22,21 @@ class AirtimeMediaMonitorBootstrap():
             
     def check_for_diff(self, dir):
         airtime_tmp = '/var/tmp/airtime'
+
+        #find files that have been modified since the last time
+        #media-monitor process was running.
+        command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable -mmin -30" % dir
+        stdout = self.execCommandAndReturnStdOut(command)
+        self.logger.info("Files modified since last checkin: \n%s\n", stdout)
+
+        #TODO: notify about modified and newly created files (not including copied files)
     
         if os.path.exists(airtime_tmp + '/.airtime_media_index'):
             #a previous index exists, we can do a diff between this
             #file and the current state to see whether anything has
             #changed.
             self.logger.info("Previous index file found.")
-            
-                
-            #find files that have been modified since the last time
-            #media-monitor process was running.
-            command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable -mmin -30" % dir
-            stdout = self.execCommandAndReturnStdOut(command)
-            self.logger.info("Files modified since last checkin: \n%s\n", stdout)
-            
-            
+                        
             #find deleted files
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable > %s/.airtime_media_index.tmp" % (dir, airtime_tmp)
             self.execCommand(command)
@@ -43,6 +44,8 @@ class AirtimeMediaMonitorBootstrap():
             command = "diff %s/.airtime_media_index.tmp %s/.airtime_media_index" % (airtime_tmp, airtime_tmp)
             stdout = self.execCommandAndReturnStdOut(command)
             self.logger.info("Deleted files since last checkin:\n%s\n", stdout)
+
+            #TODO: notify about deleted files and files moved here
             
         else:
             #a previous index does not exist. Most likely means that 
@@ -53,6 +56,9 @@ class AirtimeMediaMonitorBootstrap():
             #create a new index file.
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable > %s/.airtime_media_index" % (dir, airtime_tmp)
             self.execCommand(command)
+
+            #TODO: notify about all files in this directory.
+            self.multi_queue.put(event)
                 
     def execCommand(self, command):
         p = Popen(command, shell=True)

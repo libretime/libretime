@@ -104,6 +104,13 @@ class AirtimeNotifier(Notifier):
             mm.watch_directory(new_storage_directory)
 
 
+    #update airtime with information about files discovered in our
+    #watched directories. Pass in a dict() object with the following 
+    #attributes:
+    # -filepath
+    # -mode
+    # -data
+    # -is_recorded_show
     def update_airtime(self, d):
 
         filepath = d['filepath']

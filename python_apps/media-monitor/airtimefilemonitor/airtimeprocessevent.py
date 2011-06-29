@@ -4,8 +4,6 @@ import grp
 import pwd
 import logging
 
-from multiprocessing import Process, Lock, Queue as mpQueue
-
 import pyinotify
 from pyinotify import WatchManager, Notifier, ProcessEvent
 
@@ -18,7 +16,7 @@ from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 
 class AirtimeProcessEvent(ProcessEvent):
 
-    def my_init(self, airtime_config=None):
+    def my_init(self, queue, airtime_config=None):
         """
         Method automatically called from ProcessEvent.__init__(). Additional
         keyworded arguments passed to ProcessEvent.__init__() are then
@@ -34,11 +32,12 @@ class AirtimeProcessEvent(ProcessEvent):
         self.gui_replaced = {}
         self.renamed_files = {}
         self.file_events = []
-        self.multi_queue = mpQueue()
+        self.multi_queue = queue
         self.mask = pyinotify.ALL_EVENTS
         self.wm = WatchManager()
         self.md_manager = AirtimeMetadata()
 
+    #define which directories the pyinotify WatchManager should watch.
     def watch_directory(self, directory):
         return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
@@ -206,13 +205,8 @@ class AirtimeProcessEvent(ProcessEvent):
             elif self.is_audio_file(event.pathname):
                 if self.is_parent_directory(event.pathname, storage_directory):
                     self.set_needed_file_permissions(event.pathname, event.dir)
-                    file_md = self.md_manager.get_md_from_file(event.pathname)
-
-                    if file_md is not None:
-                        filepath, is_recorded_show = self.create_file_path(event.pathname, file_md)
-                        self.move_file(event.pathname, filepath)
-                        self.renamed_files[event.pathname] = filepath
-                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+                    
+                    self.process_new_file(event.pathname)
                 else:
                     self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
 
@@ -220,7 +214,16 @@ class AirtimeProcessEvent(ProcessEvent):
             if self.is_parent_directory(event.pathname, storage_directory):
                 self.set_needed_file_permissions(event.pathname, event.dir)
 
+    def process_new_file(pathname):
+        file_md = self.md_manager.get_md_from_file(pathname)
 
+        if file_md is not None:
+            filepath, is_recorded_show = self.create_file_path(pathname, file_md)
+            self.move_file(pathname, filepath)
+            self.renamed_files[pathname] = filepath
+            self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+                
+                
     def process_IN_MODIFY(self, event):
         if not event.dir:
             self.logger.info("%s: %s", event.maskname, event.pathname)

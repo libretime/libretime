@@ -6,7 +6,7 @@ import sys
 import os
 import signal
 
-from multiprocessing import Process
+from multiprocessing import Process, Queue as mpQueue
 
 from airtimefilemonitor.airtimenotifier import AirtimeNotifier
 from airtimefilemonitor.airtimeprocessevent import AirtimeProcessEvent
@@ -36,18 +36,20 @@ processes = []
 try:
     config = AirtimeMediaConfig(logger)
     
-    bootstrap = AirtimeMediaMonitorBootstrap(logger)
-    bootstrap.scan()
+    multi_queue = mpQueue()
     
+    bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue)
+    bootstrap.scan()
+        
     logger.info("Initializing event processor")
-    pe = AirtimeProcessEvent(airtime_config=config)
+    pe = AirtimeProcessEvent(multi_queue, airtime_config=config)
 
     notifier = AirtimeNotifier(pe.wm, pe, read_freq=0.1, timeout=0.1, airtime_config=config)
     notifier.coalesce_events()
 
     #create 5 worker processes
     for i in range(5):
-        p = Process(target=notifier.process_file_events, args=(pe.multi_queue,))
+        p = Process(target=notifier.process_file_events, args=(multi_queue,))
         processes.append(p)
         p.start()
 
