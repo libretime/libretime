@@ -68,11 +68,14 @@ class ApiController extends Zend_Controller_Action
         $api_key = $this->_getParam('api_key');
         $download = ("true" == $this->_getParam('download'));
 
+        $logger = Logging::getLogger();
+
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
-            exit;
+            $logger->info("401 Unauthorized");
+            return;
         }
 
         $filename = $this->_getParam("file");
@@ -81,46 +84,49 @@ class ApiController extends Zend_Controller_Action
           $media = StoredFile::RecallByGunid($file_id);
           if ($media != null && !PEAR::isError($media)) {
             $filepath = $media->getFilePath();
-            if(!is_file($filepath))
-            {
-                header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-                //print 'Resource in database, but not in storage. Sorry.';
-                exit;
+            if(is_file($filepath)){
+                // possibly use fileinfo module here in the future.
+                // http://www.php.net/manual/en/book.fileinfo.php
+                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                if ($ext == "ogg")
+                    header("Content-Type: audio/ogg");
+                else if ($ext == "mp3")
+                    header("Content-Type: audio/mpeg");
+                if ($download){
+                    //path_info breaks up a file path into seperate pieces of informaiton.
+                    //We just want the basename which is the file name with the path
+                    //information stripped away. We are using Content-Disposition to specify
+                    //to the browser what name the file should be saved as.
+                    $path_parts = pathinfo($media->getPropelOrm()->getDbFilepath());
+                    header('Content-Disposition: attachment; filename="'.$path_parts['basename'].'"');
+                }
+                header("Content-Length: " . filesize($filepath));
+
+                // !! binary mode !!
+                $fp = fopen($filepath, 'rb');
+
+                //We can have multiple levels of output buffering. Need to
+                //keep looping until all have been disabled!!!
+                //http://www.php.net/manual/en/function.ob-end-flush.php
+                while (@ob_end_flush());
+
+                fpassthru($fp);
+                fclose($fp);
+
+                //make sure to exit here so that no other output is sent.
+                exit;                
+            } else {
+                $logger->err('Resource in database, but not in storage: '.$filepath.' '.is_file($filepath));
             }
-
-            // possibly use fileinfo module here in the future.
-            // http://www.php.net/manual/en/book.fileinfo.php
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
-            if ($ext == "ogg")
-                header("Content-Type: audio/ogg");
-            else if ($ext == "mp3")
-                header("Content-Type: audio/mpeg");
-            if ($download){
-                //path_info breaks up a file path into seperate pieces of informaiton.
-                //We just want the basename which is the file name with the path
-                //information stripped away. We are using Content-Disposition to specify
-                //to the browser what name the file should be saved as.
-                $path_parts = pathinfo($media->getPropelOrm()->getDbFilepath());
-                header('Content-Disposition: attachment; filename="'.$path_parts['basename'].'"');
-            }
-            header("Content-Length: " . filesize($filepath));
-
-            // !! binary mode !!
-            $fp = fopen($filepath, 'rb');
-
-            //We can have multiple levels of output buffering. Need to
-            //keep looping until all have been disabled!!!
-            //http://www.php.net/manual/en/function.ob-end-flush.php
-            while (@ob_end_flush());
-
-            fpassthru($fp);
-            fclose($fp);
-
-            return;
+          } else {
+            $logger->err('$media != null && !PEAR::isError($media)');
           }
+      } else {
+        $logger->err('ctype_alnum($file_id) && strlen($file_id) == 32');
       }
       header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-      exit;
+      $logger->info("404 Not Found");
+      return;
     }
 
     public function liveInfoAction()
