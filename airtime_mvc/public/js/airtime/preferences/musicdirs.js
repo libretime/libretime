@@ -42,18 +42,20 @@ function setWatchedDirEvents() {
 
     $('#storageFolder-ok').click(function(){
         var url, chosen;
+        
+        if(confirm("Are you sure you want to change the storage folder?")){
+            url = "/Preference/change-stor-directory";
+            chosen = $('#storageFolder').val();
 
-        url = "/Preference/change-stor-directory";
-        chosen = $('#storageFolder').val();
+            $.post(url,
+                {format: "json", dir: chosen, element: "storageFolder"},
 
-        $.post(url,
-            {format: "json", dir: chosen, element: "storageFolder"},
-
-            function(json) {
-                $("#watched-folder-section").empty();
-                $("#watched-folder-section").append(json.subform);
-                setWatchedDirEvents();
-            });
+                function(json) {
+                    $("#watched-folder-section").empty();
+                    $("#watched-folder-section").append(json.subform);
+                    setWatchedDirEvents();
+                });
+        }
     });
 
     $('#watchedFolder-ok').click(function(){
@@ -73,19 +75,21 @@ function setWatchedDirEvents() {
     });
 
     $('.selected-item').find('.ui-icon-close').click(function(){
-        var row = $(this).parent();
-        var folder = $(this).prev().text();
+        if(confirm("Are you sure you want to remove the watched folder?")){
+            var row = $(this).parent();
+            var folder = $(this).prev().text();
 
-        url = "/Preference/remove-watch-directory";
+            url = "/Preference/remove-watch-directory";
 
-        $.post(url,
-            {format: "json", dir: folder},
+            $.post(url,
+                {format: "json", dir: folder},
 
-            function(json) {
-	            $("#watched-folder-section").empty();
-                $("#watched-folder-section").append(json.subform);
-                setWatchedDirEvents();
-            });
+                function(json) {
+                    $("#watched-folder-section").empty();
+                    $("#watched-folder-section").append(json.subform);
+                    setWatchedDirEvents();
+                });
+        }
     });
 }
 
