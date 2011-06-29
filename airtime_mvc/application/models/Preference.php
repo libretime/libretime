@@ -282,6 +282,7 @@ class Application_Model_Preference
     	$sql = "SELECT * FROM cc_country";
     	$res =  $CC_DBC->GetAll($sql);
     	$out = array();
+    	$out[""] = "Select Country";
     	foreach($res as $r){
     		$out[$r["isocode"]] = $r["name"];
     	}
