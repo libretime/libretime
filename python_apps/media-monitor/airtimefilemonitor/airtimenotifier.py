@@ -28,7 +28,7 @@ class AirtimeNotifier(Notifier):
         self.watched_folders = []
 
         while not self.init_rabbit_mq():
-            logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
+            self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
             time.sleep(5)
 
     def init_rabbit_mq(self):
