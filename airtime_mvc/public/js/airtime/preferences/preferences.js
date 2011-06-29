@@ -67,4 +67,9 @@ $(document).ready(function() {
     $("#link_to_privacy").live('click', function(){
         window.open("http://www.sourcefabric.org/en/about/policy/");
     });
+    
+    $('.toggle legend').click(function() {
+        $('.toggle').toggleClass('closed');
+        return false;
+    }); 
 });

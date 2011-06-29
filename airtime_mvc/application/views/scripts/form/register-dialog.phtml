@@ -149,12 +149,10 @@
 		        </dd>
 		    </dl>
             </fieldset>
-		    <h3 class="collapsible-header">
-				<span class="arrow-icon"></span>Show me what I am sending
-			</h3>
 		
-			<div class="collapsible-content" id="show_what_sending" style="display: none;">
-				<fieldset class="display_field">
+			<div id="show_what_sending" style="display: block;">
+				<fieldset class="display_field toggle closed">
+				<legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>Show me what I am sending </legend>
 					<dl>
 						<?php echo $this->element->getElement('SendInfo') ?>
 					</dl>

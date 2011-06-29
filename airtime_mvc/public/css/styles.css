@@ -1736,8 +1736,8 @@ button.ui-button.md-cancel {
 }
 
 fieldset.display_field {
-	background-color:#d5d5d5;
-	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;
+	/*background-color:#d5d5d5;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;*/
 	padding:10px;
 	border: 1px solid #8F8F8F;
 }
@@ -1836,6 +1836,26 @@ label span {
 }
 #watched-folder-section dd.block-display input {
 	float:left;
+}
+
+fieldset > legend {
+    color: #4F4F4F;
+    font-size: 12px;
+    line-height: 140%;
+}
+fieldset.closed, fieldset.display_field.closed {
+    border-width: 1px 0 0;
+    margin-bottom: -6px;
+    margin-left: 1px;
+}
+
+fieldset.closed dl, fieldset.closed textarea, fieldset.closed div {
+    display:none;
+}
+
+fieldset legend .ui-icon, .ui-widget-content fieldset legend .ui-icon {
+    background-image: url(redmond/images/ui-icons_454545_256x240.png);
+    float: left;
 }
 
 input[type="checkbox"][disabled] {
