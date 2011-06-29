@@ -29,7 +29,6 @@ try:
 
     os.system("/etc/init.d/airtime-media-monitor stop")
     os.system("rm -f /etc/init.d/airtime-media-monitor")
-    os.system("rm -f /var/run/airtime-notifier.pid")
     os.system("update-rc.d -f airtime-media-monitor remove >/dev/null 2>&1")
 
     print "Removing log directories"

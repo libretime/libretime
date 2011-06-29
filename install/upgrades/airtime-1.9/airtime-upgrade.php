@@ -16,12 +16,34 @@ AirtimeInstall::CreateZendPhpLogFile();
 const CONF_DIR_BINARIES = "/usr/lib/airtime";
 const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
 
+function BypassMigrations($version)
+{
+    $appDir = __DIR__."/../../airtime_mvc";
+    $dir = __DIR__;
+    $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
+                "--no-interaction --add migrations:version $version";
+    system($command);
+}
+
+function MigrateTablesToVersion($version)
+{
+    $appDir = __DIR__."/../../airtime_mvc";
+    $dir = __DIR__;
+    $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
+                "--no-interaction migrations:migrate $version";
+    system($command);
+}
+
 function InstallPhpCode($phpDir)
 {
     global $CC_CONFIG;
-    
+
     $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
-    
+
     echo "* Installing PHP code to ".$phpDir.PHP_EOL;
     exec("mkdir -p ".$phpDir);
     exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
@@ -30,7 +52,7 @@ function InstallPhpCode($phpDir)
 function InstallBinaries()
 {
     $utilsSrc = __DIR__."/../../../utils";
-    
+
     echo "* Installing binaries to ".CONF_DIR_BINARIES.PHP_EOL;
     exec("mkdir -p ".CONF_DIR_BINARIES);
     exec("cp -R ".$utilsSrc." ".CONF_DIR_BINARIES);
