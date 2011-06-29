@@ -23,16 +23,32 @@ $(document).ready(function() {
     });
     $("#scheduleTabs").airtimeWeekSchedule({
         sourceDomain:"http://airtime-dev.sourcefabric.org/",
-        dowText:{monday:"Lundi", tuesday:"Mardi", wednesday:"Mercredi", thursday:"Jeudi", friday:"Vendredi", saturday:"Samedi", sunday:"Dimanche"},
-        miscText:{time:"Temps", programName:"Nom du Programme", details:"Détails", readMore:"Lire La Suite"},
+        dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
+        miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
         updatePeriod: 600 //seconds
     });
     $('#scheduleTabs').tabs();
 
 });
 </script>
-<div id="headerLiveHolder"></div>
+<h1>"Now Playing" Widget</h1>
+This widget displays what is currently playing:
+<br/>
+<br/>
+<div id="headerLiveHolder" style="border: 1px solid #999999; padding: 10px;"></div>
+<br/>
+<br/>
+<h1>"Today's Program" Widget</h1>
+This widget displays what is being played today:
+<br/>
+<br/>
 <div id="onAirToday"></div>
+<br/>
+<br/>
+<h1>"Weekly Program" Widget</h1>
+This widget displays all the shows for the entire week:
+<br/>
+<br/> 
 <div id="scheduleTabs"></div>
 
 </body>
