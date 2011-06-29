@@ -43,16 +43,16 @@ set_include_path($CC_CONFIG['phpDir'].'/library/pear' . PATH_SEPARATOR . get_inc
 require_once('DB.php');
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
 if (PEAR::isError($CC_DBC)) {
-    echo $CC_DBC->getMessage().PHP_EOL;
+    /*echo $CC_DBC->getMessage().PHP_EOL;
     echo $CC_DBC->getUserInfo().PHP_EOL;
     echo "Database connection problem.".PHP_EOL;
     echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
-        " with corresponding permissions.".PHP_EOL;
+        " with corresponding permissions.".PHP_EOL;*/
     if ($p_exitOnError) {
         exit(1);
     }
 } else {
-    echo "* Connected to database".PHP_EOL;
+    //echo "* Connected to database".PHP_EOL;
     $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 }
 if(Application_Model_Preference::GetSupportFeedback() == '1'){
