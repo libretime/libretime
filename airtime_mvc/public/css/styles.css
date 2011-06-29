@@ -1837,3 +1837,7 @@ label span {
 #watched-folder-section dd.block-display input {
 	float:left;
 }
+
+input[type="checkbox"][disabled] {
+    opacity: 0.6;
+}
