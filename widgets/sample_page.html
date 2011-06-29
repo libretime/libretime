@@ -12,22 +12,23 @@
 <script>    
 $(document).ready(function() {
     $("#headerLiveHolder").airtimeLiveInfo({
-        sourceDomain: "http://airtime-dev.sourcefabric.org",
+        sourceDomain: "http://localhost",
         text: {onAirNow:"On air today"},
         updatePeriod: 20 //seconds
     });
     $("#onAirToday").airtimeShowSchedule({
-        sourceDomain: "http://airtime-dev.sourcefabric.org",
+        sourceDomain: "http://localhost",
         text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"},
         updatePeriod: 5 //seconds
     });
     $("#scheduleTabs").airtimeWeekSchedule({
-        sourceDomain:"http://airtime-dev.sourcefabric.org/",
+        sourceDomain:"http://localhost",
         dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
         miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
         updatePeriod: 600 //seconds
     });
-    $('#scheduleTabs').tabs();
+    var d = new Date().getDay(); 
+    $('#scheduleTabs').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
 
 });
 </script>
