@@ -138,6 +138,7 @@ class AirtimeProcessEvent(ProcessEvent):
 
         return filepath
 
+    #create path in /srv/airtime/stor/imported/[song-metadata]
     def create_file_path(self, imported_filepath, orig_md):
 
         storage_directory = self.config.storage_directory
@@ -192,29 +193,39 @@ class AirtimeProcessEvent(ProcessEvent):
 
         return filepath, is_recorded_show
 
+    #event.dir: True if the event was raised against a directory.
+    #event.name
+    #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
     def process_IN_CREATE(self, event):
 
-        #self.logger.info("%s: %s", event.maskname, event.pathname)
-        storage_directory = self.config.storage_directory
+        self.logger.debug("PROCESS_IN_CREATE")
+        self.handle_created_file(event.dir, event.name, event.pathname)
 
-        if not event.dir:
+                
+    def handle_created_file(self, dir, name, pathname):
+    
+        self.logger.debug("dir: %s, name: %s, pathname: %s ", dir, name, pathname)
+        storage_directory = self.config.storage_directory
+        if not dir:
             #file created is a tmp file which will be modified and then moved back to the original filename.
-            if self.is_temp_file(event.name) :
-                self.temp_files[event.pathname] = None
+            if self.is_temp_file(name) :
+                self.temp_files[pathname] = None
             #This is a newly imported file.
-            elif self.is_audio_file(event.pathname):
-                if self.is_parent_directory(event.pathname, storage_directory):
-                    self.set_needed_file_permissions(event.pathname, event.dir)
+            elif self.is_audio_file(pathname):
+                if self.is_parent_directory(pathname, storage_directory):
+                    self.set_needed_file_permissions(pathname, dir)
                     
-                    self.process_new_file(event.pathname)
+                    self.process_new_file(pathname)
                 else:
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
+                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': False})
 
         else:
-            if self.is_parent_directory(event.pathname, storage_directory):
-                self.set_needed_file_permissions(event.pathname, event.dir)
-
-    def process_new_file(pathname):
+            if self.is_parent_directory(pathname, storage_directory):
+                self.set_needed_file_permissions(pathname, dir)
+                
+                
+    def process_new_file(self, pathname):
+        self.logger.info("Processing new file: %s", pathname)
         file_md = self.md_manager.get_md_from_file(pathname)
 
         if file_md is not None:

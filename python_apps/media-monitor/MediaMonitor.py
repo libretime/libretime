@@ -37,33 +37,31 @@ try:
     config = AirtimeMediaConfig(logger)
     
     multi_queue = mpQueue()
-
-    
-    bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue)
-    bootstrap.scan()
-        
     logger.info("Initializing event processor")
-    pe = AirtimeProcessEvent(multi_queue, airtime_config=config)
+    pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config)
 
     notifier = AirtimeNotifier(pe.wm, pe, read_freq=0.1, timeout=0.1, airtime_config=config)
     notifier.coalesce_events()
+    
+    logger.info("Setting up monitor")
+    response = None
+    while response is None:
+        response = notifier.api_client.setup_media_monitor()
+        time.sleep(5)
+        
+    storage_directory = response["stor"].encode('utf-8')
+    logger.info("Storage Directory is: %s", storage_directory)
+    config.storage_directory = storage_directory
+    
+    bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue, pe)
+    bootstrap.scan()
 
     #create 5 worker processes
     for i in range(5):
         p = Process(target=notifier.process_file_events, args=(multi_queue,))
         processes.append(p)
         p.start()
-
-    logger.info("Setting up monitor")
-    response = None
-    while response is None:
-        response = notifier.api_client.setup_media_monitor()
-        time.sleep(5)
-
-    storage_directory = response["stor"].encode('utf-8')
-    logger.info("Storage Directory is: %s", storage_directory)
-    config.storage_directory = storage_directory
-
+        
     wdd = pe.watch_directory(storage_directory)
     logger.info("Added watch to %s", storage_directory)
     logger.info("wdd result %s", wdd[storage_directory])
