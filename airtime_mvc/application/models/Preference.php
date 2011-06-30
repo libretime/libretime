@@ -263,7 +263,7 @@ class Application_Model_Preference
 
     public static function SetStationLogo($imagePath){
     	if(!empty($imagePath)){
-	    	$image = file_get_contents($imagePath);
+	    	$image = @file_get_contents($imagePath);
 	    	$image = base64_encode($image);
 	    	Application_Model_Preference::SetValue("logoImage", $image);
     	}
