@@ -38,11 +38,6 @@ class AirtimeProcessEvent(ProcessEvent):
         self.mask = pyinotify.ALL_EVENTS
         self.wm = WatchManager()
         self.md_manager = AirtimeMetadata()
-        
-        #Set to "True" everytime we get a file event so
-        #that we can track of when we need to rewrite the
-        #index file
-        self.dirty = False
 
     #define which directories the pyinotify WatchManager should watch.
     def watch_directory(self, directory):
@@ -338,14 +333,11 @@ class AirtimeProcessEvent(ProcessEvent):
             for event in self.file_events:
                 self.multi_queue.put(event)
 
-            self.dirty = True
+
             self.file_events = []
-        elif self.multi_queue.empty():
             #no file_events and queue is empty. This is a good time
             #to write an index file.
-            if self.dirty:
-                self.write_index_file()
-                self.dirty = False
+            self.write_index_file()
 
         #check for any events recieved from Airtime.
         try:

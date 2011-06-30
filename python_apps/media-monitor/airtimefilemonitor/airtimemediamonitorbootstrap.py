@@ -66,7 +66,7 @@ class AirtimeMediaMonitorBootstrap():
             self.logger.info("Changed files since last checkin:\n%s\n", "\n".join(stdoutSplit))
 
             for line in stdoutSplit:
-                if len(line.strip(' ')) > 0:
+                if len(line.strip(' ')) > 1:
                     if line[0] == '+':
                         added_files.add(line[1:])
                     elif line[0] == '-':
@@ -87,12 +87,12 @@ class AirtimeMediaMonitorBootstrap():
             for file_path in new_files:
                 added_files.add(file_path)
                 
+        for file_path in removed_files:
+            self.pe.handle_removed_file(file_path)
+                
         for file_path in added_files:
             if os.path.exists(file_path):
                 self.pe.handle_created_file(False, os.path.basename(file_path), file_path)
-                
-        for file_path in removed_files:
-            self.pe.handle_removed_file(file_path)
                             
     def execCommand(self, command):
         p = Popen(command, shell=True)
