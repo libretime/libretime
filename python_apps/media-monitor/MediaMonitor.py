@@ -40,7 +40,7 @@ try:
     logger.info("Initializing event processor")
     pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config)
 
-    notifier = AirtimeNotifier(pe.wm, pe, read_freq=0.1, timeout=0.1, airtime_config=config)
+    notifier = AirtimeNotifier(pe.wm, pe, read_freq=1, timeout=0, airtime_config=config)
     notifier.coalesce_events()
     
     logger.info("Setting up monitor")
@@ -52,6 +52,7 @@ try:
     storage_directory = response["stor"].encode('utf-8')
     logger.info("Storage Directory is: %s", storage_directory)
     config.storage_directory = storage_directory
+    config.imported_directory = storage_directory + '/imported'
     
     bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue, pe)
     bootstrap.scan()

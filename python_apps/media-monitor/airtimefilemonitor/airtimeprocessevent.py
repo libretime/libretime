@@ -4,6 +4,8 @@ import grp
 import pwd
 import logging
 
+from subprocess import Popen, PIPE
+
 import pyinotify
 from pyinotify import WatchManager, Notifier, ProcessEvent
 
@@ -36,6 +38,11 @@ class AirtimeProcessEvent(ProcessEvent):
         self.mask = pyinotify.ALL_EVENTS
         self.wm = WatchManager()
         self.md_manager = AirtimeMetadata()
+        
+        #Set to "True" everytime we get a file event so
+        #that we can track of when we need to rewrite the
+        #index file
+        self.dirty = False
 
     #define which directories the pyinotify WatchManager should watch.
     def watch_directory(self, directory):
@@ -177,7 +184,6 @@ class AirtimeProcessEvent(ProcessEvent):
                 #yyyy-mm-dd-hh-MM-ss
                 y = orig_md['MDATA_KEY_YEAR'].split("-")
                 filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "recorded".encode('utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
-                is_recorded_show = True
             elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
                 filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
@@ -191,7 +197,7 @@ class AirtimeProcessEvent(ProcessEvent):
         except Exception, e:
             self.logger.error('Exception: %s', e)
 
-        return filepath, is_recorded_show
+        return filepath
 
     #event.dir: True if the event was raised against a directory.
     #event.name
@@ -229,10 +235,15 @@ class AirtimeProcessEvent(ProcessEvent):
         file_md = self.md_manager.get_md_from_file(pathname)
 
         if file_md is not None:
-            filepath, is_recorded_show = self.create_file_path(pathname, file_md)
-            self.move_file(pathname, filepath)
-            self.renamed_files[pathname] = filepath
-            self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+            is_recorded_show = 'MDATA_KEY_CREATOR' in file_md and \
+                file_md['MDATA_KEY_CREATOR'] == "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
+            if not self.is_parent_directory(pathname, self.config.imported_directory):
+                filepath = self.create_file_path(pathname, file_md)
+                self.move_file(pathname, filepath)
+                self.renamed_files[pathname] = filepath
+                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+            else:
+                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'data': file_md, 'is_recorded_show': is_recorded_show})
                 
                 
     def process_IN_MODIFY(self, event):
@@ -290,18 +301,51 @@ class AirtimeProcessEvent(ProcessEvent):
     def process_IN_DELETE(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
         if not event.dir:
-            self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_DELETE})
+            self.handle_removed_file(event.pathname)
+            
+    def handle_removed_file(self, pathname):
+        self.logger.info("Deleting %s", pathname)
+        self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_DELETE})
+    
 
     def process_default(self, event):
         #self.logger.info("%s: %s", event.maskname, event.pathname)
         pass
+        
+    def execCommandAndReturnStdOut(self, command):
+        p = Popen(command, shell=True, stdout=PIPE)
+        stdout = p.communicate()[0]
+        if p.returncode != 0:
+            self.logger.warn("command \n%s\n return with a non-zero return value", command)
+        return stdout
+        
+    def write_index_file(self):
+        #create a new index file.
+        self.logger.debug("writing new index file")
+        command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % '/srv/airtime/stor'
+        stdout = self.execCommandAndReturnStdOut(command)
+        self.write_file('/var/tmp/airtime' + '/.airtime_media_index', stdout)
+        return stdout
+            
+    def write_file(self, file, string):
+        f = open(file, 'w')
+        f.write(string)
+        f.close()
 
     def notifier_loop_callback(self, notifier):
+    
+        if len(self.file_events) > 0:
+            for event in self.file_events:
+                self.multi_queue.put(event)
 
-        for event in self.file_events:
-            self.multi_queue.put(event)
-
-        self.file_events = []
+            self.dirty = True
+            self.file_events = []
+        elif self.multi_queue.empty():
+            #no file_events and queue is empty. This is a good time
+            #to write an index file.
+            if self.dirty:
+                self.write_index_file()
+                self.dirty = False
 
         #check for any events recieved from Airtime.
         try:
