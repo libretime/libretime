@@ -94,7 +94,7 @@ class StoredFile {
     public static function getFileCount()
     {
 		global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"]." WHERE state='ready'";
+        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"];
         return $CC_DBC->GetOne($sql);
     }
 
