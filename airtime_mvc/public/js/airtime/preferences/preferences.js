@@ -54,13 +54,17 @@ $(document).ready(function() {
     	}
 	});
     
-    $("#Publicise").live('click', function(){
+    var promote = $("#Publicise");
+    promote.live('click', function(){
         if($(this).is(':checked')){
             $("#public-info").show();
         }else{
             $("#public-info").hide();
         }
     });
+    if( promote.is(":checked")){
+    	$("#public-info").show();
+    }
 
     showErrorSections();
     
