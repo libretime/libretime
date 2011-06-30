@@ -13,7 +13,11 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
-            $("#schedule_calendar").css("width", "70%");
+            var windowWidth = $(window).width();
+            // margin on showform are 16 px on each side
+            var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 6))/windowWidth*100);
+            var widthPercent = parseInt(calendarWidth)+"%";
+            $("#schedule_calendar").css("width", widthPercent);
             $("#schedule_calendar").fullCalendar('render');
         }
         $("#schedule-show-what").show(0, function(){

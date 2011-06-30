@@ -5,8 +5,8 @@
 
 #schedule-add-show {
 	font-size: 12px;
-	width: 25%;
-	min-width:340px;
+	/*width: 25%;*/
+	width:310px;
 }
 
 #schedule-add-show textarea {

@@ -1522,10 +1522,10 @@ div.success{
 	margin-right:6px;
 }
 .formrow-repeat li .hasDatepicker, .formrow-repeat li .input_select {
-	width:160px;
+	width:95px;
 }
 .formrow-repeat li .hasTimepicker {
-	width:80px;
+	width:60px;
 }
 .recording-show {
 	float: right;
