@@ -4,7 +4,7 @@ import grp
 import pwd
 import logging
 
-from multiprocessing import Process, Lock, Queue as mpQueue
+from subprocess import Popen, PIPE
 
 import pyinotify
 from pyinotify import WatchManager, Notifier, ProcessEvent
@@ -18,7 +18,7 @@ from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 
 class AirtimeProcessEvent(ProcessEvent):
 
-    def my_init(self, airtime_config=None):
+    def my_init(self, queue, airtime_config=None):
         """
         Method automatically called from ProcessEvent.__init__(). Additional
         keyworded arguments passed to ProcessEvent.__init__() are then
@@ -34,11 +34,12 @@ class AirtimeProcessEvent(ProcessEvent):
         self.gui_replaced = {}
         self.renamed_files = {}
         self.file_events = []
-        self.multi_queue = mpQueue()
+        self.multi_queue = queue
         self.mask = pyinotify.ALL_EVENTS
         self.wm = WatchManager()
         self.md_manager = AirtimeMetadata()
 
+    #define which directories the pyinotify WatchManager should watch.
     def watch_directory(self, directory):
         return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
@@ -139,6 +140,7 @@ class AirtimeProcessEvent(ProcessEvent):
 
         return filepath
 
+    #create path in /srv/airtime/stor/imported/[song-metadata]
     def create_file_path(self, imported_filepath, orig_md):
 
         storage_directory = self.config.storage_directory
@@ -177,7 +179,6 @@ class AirtimeProcessEvent(ProcessEvent):
                 #yyyy-mm-dd-hh-MM-ss
                 y = orig_md['MDATA_KEY_YEAR'].split("-")
                 filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "recorded".encode('utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
-                is_recorded_show = True
             elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
                 filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
@@ -191,36 +192,55 @@ class AirtimeProcessEvent(ProcessEvent):
         except Exception, e:
             self.logger.error('Exception: %s', e)
 
-        return filepath, is_recorded_show
+        return filepath
 
+    #event.dir: True if the event was raised against a directory.
+    #event.name
+    #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
     def process_IN_CREATE(self, event):
 
-        #self.logger.info("%s: %s", event.maskname, event.pathname)
+        self.logger.debug("PROCESS_IN_CREATE")
+        self.handle_created_file(event.dir, event.name, event.pathname)
+
+                
+    def handle_created_file(self, dir, name, pathname):
+    
+        self.logger.debug("dir: %s, name: %s, pathname: %s ", dir, name, pathname)
         storage_directory = self.config.storage_directory
-
-        if not event.dir:
+        if not dir:
             #file created is a tmp file which will be modified and then moved back to the original filename.
-            if self.is_temp_file(event.name) :
-                self.temp_files[event.pathname] = None
+            if self.is_temp_file(name) :
+                self.temp_files[pathname] = None
             #This is a newly imported file.
-            elif self.is_audio_file(event.pathname):
-                if self.is_parent_directory(event.pathname, storage_directory):
-                    self.set_needed_file_permissions(event.pathname, event.dir)
-                    file_md = self.md_manager.get_md_from_file(event.pathname)
-
-                    if file_md is not None:
-                        filepath, is_recorded_show = self.create_file_path(event.pathname, file_md)
-                        self.move_file(event.pathname, filepath)
-                        self.renamed_files[event.pathname] = filepath
-                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+            elif self.is_audio_file(pathname):
+                if self.is_parent_directory(pathname, storage_directory):
+                    self.set_needed_file_permissions(pathname, dir)
+                    
+                    self.process_new_file(pathname)
                 else:
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
+                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': False})
 
         else:
-            if self.is_parent_directory(event.pathname, storage_directory):
-                self.set_needed_file_permissions(event.pathname, event.dir)
+            if self.is_parent_directory(pathname, storage_directory):
+                self.set_needed_file_permissions(pathname, dir)
+                
+                
+    def process_new_file(self, pathname):
+        self.logger.info("Processing new file: %s", pathname)
+        file_md = self.md_manager.get_md_from_file(pathname)
 
-
+        if file_md is not None:
+            is_recorded_show = 'MDATA_KEY_CREATOR' in file_md and \
+                file_md['MDATA_KEY_CREATOR'] == "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
+            if not self.is_parent_directory(pathname, self.config.imported_directory):
+                filepath = self.create_file_path(pathname, file_md)
+                self.move_file(pathname, filepath)
+                self.renamed_files[pathname] = filepath
+                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+            else:
+                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'data': file_md, 'is_recorded_show': is_recorded_show})
+                
+                
     def process_IN_MODIFY(self, event):
         if not event.dir:
             self.logger.info("%s: %s", event.maskname, event.pathname)
@@ -276,18 +296,48 @@ class AirtimeProcessEvent(ProcessEvent):
     def process_IN_DELETE(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)
         if not event.dir:
-            self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_DELETE})
+            self.handle_removed_file(event.pathname)
+            
+    def handle_removed_file(self, pathname):
+        self.logger.info("Deleting %s", pathname)
+        self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_DELETE})
+    
 
     def process_default(self, event):
         #self.logger.info("%s: %s", event.maskname, event.pathname)
         pass
+        
+    def execCommandAndReturnStdOut(self, command):
+        p = Popen(command, shell=True, stdout=PIPE)
+        stdout = p.communicate()[0]
+        if p.returncode != 0:
+            self.logger.warn("command \n%s\n return with a non-zero return value", command)
+        return stdout
+        
+    def write_index_file(self):
+        #create a new index file.
+        self.logger.debug("writing new index file")
+        command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % '/srv/airtime/stor'
+        stdout = self.execCommandAndReturnStdOut(command)
+        self.write_file('/var/tmp/airtime' + '/.airtime_media_index', stdout)
+        return stdout
+            
+    def write_file(self, file, string):
+        f = open(file, 'w')
+        f.write(string)
+        f.close()
 
     def notifier_loop_callback(self, notifier):
+    
+        if len(self.file_events) > 0:
+            for event in self.file_events:
+                self.multi_queue.put(event)
 
-        for event in self.file_events:
-            self.multi_queue.put(event)
 
-        self.file_events = []
+            self.file_events = []
+            #no file_events and queue is empty. This is a good time
+            #to write an index file.
+            self.write_index_file()
 
         #check for any events recieved from Airtime.
         try:

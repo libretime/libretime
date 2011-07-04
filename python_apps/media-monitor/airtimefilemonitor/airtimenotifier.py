@@ -3,8 +3,6 @@ import time
 import os
 import logging
 
-from multiprocessing import Process, Lock, Queue as mpQueue
-
 # For RabbitMQ
 from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
@@ -26,6 +24,7 @@ class AirtimeNotifier(Notifier):
         self.md_manager = AirtimeMetadata()
         self.import_processes = {}
         self.watched_folders = []
+       
 
         while not self.init_rabbit_mq():
             self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
@@ -104,8 +103,14 @@ class AirtimeNotifier(Notifier):
             mm.watch_directory(new_storage_directory)
 
 
+    #update airtime with information about files discovered in our
+    #watched directories. Pass in a dict() object with the following 
+    #attributes:
+    # -filepath
+    # -mode
+    # -data
+    # -is_recorded_show
     def update_airtime(self, d):
-
         filepath = d['filepath']
         mode = d['mode']
 
