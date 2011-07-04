@@ -141,19 +141,14 @@ function getFileExt(filename){
     return filename.split('.').pop();
 }
 
-var currentAudioPreviewID = "";
-
 function audioPreview(filename, elemID){
 
     var elems = $('.ui-icon.ui-icon-pause');
     elems.attr("class", "ui-icon ui-icon-play");
 
-    if (currentAudioPreviewID == elemID){
+    if ($("#jquery_jplayer_1").data("jPlayer") && $("#jquery_jplayer_1").data("jPlayer").status.paused != true){
          $('#jquery_jplayer_1').jPlayer('stop');
-        currentAudioPreviewID = "";
         return;
-    } else {
-        currentAudioPreviewID = elemID;
     }
 
     var ext = getFileExt(filename);
