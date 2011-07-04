@@ -64,11 +64,14 @@ class AirtimeNotifier(Notifier):
             self.md_manager.save_md_to_file(m)
 
         elif m['event_type'] == "new_watch":
-            self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
-            self.walk_newly_watched_directory(m['directory'])
-
             mm = self.proc_fun()
-            mm.watch_directory(m['directory'])
+            if mm.has_correct_permissions(m['directory']):
+                self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
+                self.walk_newly_watched_directory(m['directory'])
+
+                mm.watch_directory(m['directory'])
+            else:
+                self.logger.warn("filepath '%s' has does not have sufficient read permissions. Ignoring.", full_filepath)
 
         elif m['event_type'] == "remove_watch":
             watched_directory = m['directory'].encode('utf-8')
@@ -170,7 +173,10 @@ class AirtimeNotifier(Notifier):
                 full_filepath = path+"/"+filename
 
                 if mm.is_audio_file(full_filepath):
-                    self.logger.info("importing %s", full_filepath)
-                    event = {'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False}
-                    mm.multi_queue.put(event)
+                    if mm.has_correct_permissions(full_filepath):
+                        self.logger.info("importing %s", full_filepath)
+                        event = {'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False}
+                        mm.multi_queue.put(event)
+                    else:
+                        self.logger.warn("file '%s' has does not have sufficient read permissions. Ignoring.", full_filepath)
 

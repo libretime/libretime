@@ -22,15 +22,21 @@ class AirtimeMediaMonitorBootstrap():
     went offline. We can do this by doing a hash of the directory metadata.
     """
     def scan(self):
-        directories = ['/srv/airtime/stor']
+        directories = self.get_list_of_watched_dirs();
         
-        for dir in directories:
-            self.check_for_diff(dir)
+        self.logger.info("watched directories found: %s", directories)
+        
+        for id, dir in directories:
+            self.check_for_diff(id, dir)
             
-    def list_db_files(self):
-        return self.api_client.list_all_db_files()        
+    def list_db_files(self, dir_id):
+        return self.api_client.list_all_db_files(dir_id)
+        
+    def get_list_of_watched_dirs(self):
+        json = self.api_client.list_all_watched_dirs()
+        return json["dirs"]
             
-    def check_for_diff(self, dir):        
+    def check_for_diff(self, dir_id, dir):        
         #set to hold new and/or modified files. We use a set to make it ok if files are added
         #twice. This is become some of the tests for new files return result sets that are not
         #mutually exclusive from each other.
@@ -39,7 +45,7 @@ class AirtimeMediaMonitorBootstrap():
         
         
         db_known_files_set = set()
-        files = self.list_db_files()
+        files = self.list_db_files(dir_id)
         for file in files['files']:
             db_known_files_set.add(file)
             
@@ -53,10 +59,10 @@ class AirtimeMediaMonitorBootstrap():
                 all_files_set.add(file_path)           
         
         
-        if os.path.exists("/var/tmp/airtime/media_monitor_boot"):
+        if os.path.exists("/var/tmp/airtime/.media_monitor_boot"):
             #find files that have been modified since the last time
             #media-monitor process started.
-            time_diff_sec = time.time() - os.path.getmtime("/var/tmp/airtime/media_monitor_boot")
+            time_diff_sec = time.time() - os.path.getmtime("/var/tmp/airtime/.media_monitor_boot")
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable -mmin -%d" % (dir, time_diff_sec/60+1)
         else:
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
@@ -85,9 +91,7 @@ class AirtimeMediaMonitorBootstrap():
         self.logger.info("Modified files: \n%s\n\n"%modified_files_set)   
                 
         #"touch" file timestamp
-        open("/var/tmp/airtime/media_monitor_boot","w")
-        #return
-        
+        open("/var/tmp/airtime/.media_monitor_boot","w")       
                 
         for file_path in deleted_files_set:
             self.pe.handle_removed_file(file_path)

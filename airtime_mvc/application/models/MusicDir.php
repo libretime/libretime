@@ -7,9 +7,9 @@ class MusicDir {
      */
     private $_dir;
 
-    public function __construct()
+    public function __construct($dir)
     {
-
+        $this->_dir = $dir;
     }
 
     public function getId()
@@ -50,8 +50,7 @@ class MusicDir {
         $dir->setDirectory($p_path);
         $dir->save();
 
-        $mus_dir = new MusicDir();
-        $mus_dir->_dir = $dir;
+        $mus_dir = new MusicDir($dir);
 
         return $mus_dir;
     }
@@ -65,8 +64,7 @@ class MusicDir {
     {
         $dir = CcMusicDirsQuery::create()->findPK($pk);
 
-        $mus_dir = new MusicDir();
-        $mus_dir->_dir = $dir;
+        $mus_dir = new MusicDir($dir);
 
         return $mus_dir;
     }
@@ -77,9 +75,7 @@ class MusicDir {
                     ->filterByDirectory($p_path)
                     ->findOne();
 
-        $mus_dir = new MusicDir();
-        $mus_dir->_dir = $dir;
-
+        $mus_dir = new MusicDir($dir);
         return $mus_dir;
     }
 
@@ -92,9 +88,7 @@ class MusicDir {
                     ->find();
 
         foreach($dirs as $dir) {
-            $tmp = new MusicDir();
-            $tmp->_dir = $dir;
-
+            $tmp = new MusicDir($dir);
             $result[] = $tmp;
         }
 
@@ -107,7 +101,7 @@ class MusicDir {
                     ->filterByType("stor")
                     ->findOne();
 
-        $mus_dir = new MusicDir();
+        $mus_dir = new MusicDir($dir);
         $mus_dir->_dir = $dir;
 
         return $mus_dir;
@@ -127,8 +121,7 @@ class MusicDir {
         foreach($dirs as $dir) {
             $directory = $dir->getDirectory();
             if (substr($p_filepath, 0, strlen($directory)) === $directory) {
-                $mus_dir = new MusicDir();
-                $mus_dir->_dir = $dir;
+                $mus_dir = new MusicDir($dir);
                 return $mus_dir;
             }
         }

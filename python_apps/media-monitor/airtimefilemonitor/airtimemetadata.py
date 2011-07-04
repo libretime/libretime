@@ -113,6 +113,7 @@ class AirtimeMetadata:
 
         except Exception, e:
             self.logger.error("failed getting metadata from %s", filepath)
+            self.logger.error("Exception %s", e)
             return None
 
 

@@ -15,6 +15,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('media-item-status', 'json')
                 ->addActionContext('reload-metadata', 'json')
                 ->addActionContext('list-all-files', 'json')
+                ->addActionContext('list-all-watched-dirs', 'json')
                 ->initContext();
     }
 
@@ -24,7 +25,7 @@ class ApiController extends Zend_Controller_Action
     }
 
     /**
-     * Returns Airtime version. i.e "1.7.0 alpha"
+     * Returns Airtime version. i.e "1.7.0-beta"
      *
      * First checks to ensure the correct API key was
      * supplied, then returns AIRTIME_VERSION as defined
@@ -520,8 +521,35 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
+        $dir_id = $request->getParam('dir_id');
         
-        $this->view->files = StoredFile::listAllFiles();
+        $this->view->files = StoredFile::listAllFiles($dir_id);
+    }
+    
+    public function listAllWatchedDirsAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        $result = array();
+        
+        $arrWatchedDirs = MusicDir::getWatchedDirs();
+        $storDir = MusicDir::getStorDir();
+        
+        $result[$storDir->getId()] = $storDir->getDirectory();
+        
+        foreach ($arrWatchedDirs as $watchedDir){
+            $result[$watchedDir->getId()] = $watchedDir->getDirectory();
+        }
+        
+        $this->view->dirs = $result;
     }
 }
 

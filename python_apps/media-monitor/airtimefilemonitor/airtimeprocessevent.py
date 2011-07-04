@@ -61,6 +61,13 @@ class AirtimeProcessEvent(ProcessEvent):
             return True
         else:
             return False
+        
+    #file needs to be readable by all users, and directories
+    #up to this file needs to be readable AND executable by all
+    #users.
+    def has_correct_permissions(self, filepath):
+        st = os.stat(filepath)
+        return bool(st.st_mode & stat.S_IROTH)
 
     def set_needed_file_permissions(self, item, is_dir):
 
@@ -100,7 +107,7 @@ class AirtimeProcessEvent(ProcessEvent):
             omask = os.umask(0)
             os.rename(source, dest)
         except Exception, e:
-            self.logger.error("failed to move file.")
+            self.logger.error("failed to move file. %s", e)
         finally:
             os.umask(omask)
 
@@ -289,7 +296,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 if self.is_parent_directory(event.pathname, storage_directory):
                     file_md = self.md_manager.get_md_from_file(event.pathname)
                     if file_md is not None:
-                        filepath, is_recorded_show = self.create_file_path(event.pathname)
+                        filepath, is_recorded_show = self.create_file_path(event.pathname, file_md)
                         self.move_file(event.pathname, filepath)
                         self.renamed_files[event.pathname] = filepath
                         self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
