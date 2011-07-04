@@ -26,7 +26,8 @@ class AirtimeMediaMonitorBootstrap():
         
         self.logger.info("watched directories found: %s", directories)
         
-        for id, dir in directories:
+        for id, dir in directories.iteritems():
+            self.logger.debug("%s, %s", id, dir)
             self.check_for_diff(id, dir)
             
     def list_db_files(self, dir_id):

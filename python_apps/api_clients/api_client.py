@@ -431,9 +431,7 @@ class AirTimeApiClient(ApiClientInterface):
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_watched_dirs"])
             
-            
             url = url.replace("%%api_key%%", self.config["api_key"])
-            logger.debug(url)
             
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()

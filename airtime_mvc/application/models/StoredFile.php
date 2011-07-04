@@ -820,14 +820,14 @@ class StoredFile {
     }
 
     public static function listAllFiles($dir_id){
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_DBC;
 
         $sql = "SELECT m.directory || '/' || f.filepath as fp"
                 ." FROM CC_MUSIC_DIRS m"
                 ." LEFT JOIN CC_FILES f"
                 ." ON m.id = f.directory"
                 ." WHERE m.id = f.directory"
-                ." AND directory = $dir_id";
+                ." AND m.id = $dir_id";
         $rows = $CC_DBC->getAll($sql);
 
         $results = array();
