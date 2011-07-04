@@ -106,6 +106,9 @@ class ApiClientInterface:
         pass    
         
     def list_all_db_files(self):
+        pass    
+        
+    def list_all_watched_dirs(self):
         pass
 
     # Put here whatever tests you want to run to make sure your API is working
@@ -421,7 +424,24 @@ class AirTimeApiClient(ApiClientInterface):
             logger.error("Exception: %s", e)
             
         return response
-
+        
+    def list_all_watched_dirs(self):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_watched_dirs"])
+            
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            logger.debug(url)
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+            
+        return response
 
 
 ################################################################################

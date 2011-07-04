@@ -22,13 +22,19 @@ class AirtimeMediaMonitorBootstrap():
     went offline. We can do this by doing a hash of the directory metadata.
     """
     def scan(self):
-        directories = ['/srv/airtime/stor']
+        directories = self.get_list_of_watched_dirs();
+        
+        self.logger.info("watched directories found: %s", directories)
         
         for dir in directories:
             self.check_for_diff(dir)
             
     def list_db_files(self):
-        return self.api_client.list_all_db_files()        
+        return self.api_client.list_all_db_files()
+        
+    def get_list_of_watched_dirs(self):
+        json = self.api_client.list_all_watched_dirs()
+        return json["dirs"]
             
     def check_for_diff(self, dir):        
         #set to hold new and/or modified files. We use a set to make it ok if files are added
@@ -85,9 +91,7 @@ class AirtimeMediaMonitorBootstrap():
         self.logger.info("Modified files: \n%s\n\n"%modified_files_set)   
                 
         #"touch" file timestamp
-        open("/var/tmp/airtime/media_monitor_boot","w")
-        #return
-        
+        open("/var/tmp/airtime/media_monitor_boot","w")       
                 
         for file_path in deleted_files_set:
             self.pe.handle_removed_file(file_path)

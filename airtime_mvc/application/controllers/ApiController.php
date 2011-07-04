@@ -15,6 +15,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('media-item-status', 'json')
                 ->addActionContext('reload-metadata', 'json')
                 ->addActionContext('list-all-files', 'json')
+                ->addActionContext('list-all-watched-dirs', 'json')
                 ->initContext();
     }
 
@@ -522,6 +523,32 @@ class ApiController extends Zend_Controller_Action
         }
         
         $this->view->files = StoredFile::listAllFiles();
+    }
+    
+    public function listAllWatchedDirsAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        $result = array();
+        
+        $arrWatchedDirs = MusicDir::getWatchedDirs();
+        $storDir = MusicDir::getStorDir();
+        
+        $result[] = $storDir->getDirectory();
+        
+        foreach ($arrWatchedDirs as $watchedDir){
+            $result[] = $watchedDir->getDirectory();
+        }
+        
+        $this->view->dirs = $result;
     }
 }
 
