@@ -26,17 +26,17 @@ class AirtimeMediaMonitorBootstrap():
         
         self.logger.info("watched directories found: %s", directories)
         
-        for dir in directories:
-            self.check_for_diff(dir)
+        for id, dir in directories:
+            self.check_for_diff(id, dir)
             
-    def list_db_files(self):
-        return self.api_client.list_all_db_files()
+    def list_db_files(self, dir_id):
+        return self.api_client.list_all_db_files(dir_id)
         
     def get_list_of_watched_dirs(self):
         json = self.api_client.list_all_watched_dirs()
         return json["dirs"]
             
-    def check_for_diff(self, dir):        
+    def check_for_diff(self, dir_id, dir):        
         #set to hold new and/or modified files. We use a set to make it ok if files are added
         #twice. This is become some of the tests for new files return result sets that are not
         #mutually exclusive from each other.
@@ -45,7 +45,7 @@ class AirtimeMediaMonitorBootstrap():
         
         
         db_known_files_set = set()
-        files = self.list_db_files()
+        files = self.list_db_files(dir_id)
         for file in files['files']:
             db_known_files_set.add(file)
             

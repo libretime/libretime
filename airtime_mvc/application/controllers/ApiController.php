@@ -521,8 +521,9 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
+        $dir_id = $request->getParam('dir_id');
         
-        $this->view->files = StoredFile::listAllFiles();
+        $this->view->files = StoredFile::listAllFiles($dir_id);
     }
     
     public function listAllWatchedDirsAction() {
@@ -542,10 +543,10 @@ class ApiController extends Zend_Controller_Action
         $arrWatchedDirs = MusicDir::getWatchedDirs();
         $storDir = MusicDir::getStorDir();
         
-        $result[] = $storDir->getDirectory();
+        $result[$storDir->getId()] = $storDir->getDirectory();
         
         foreach ($arrWatchedDirs as $watchedDir){
-            $result[] = $watchedDir->getDirectory();
+            $result[$watchedDir->getId()] = $watchedDir->getDirectory();
         }
         
         $this->view->dirs = $result;

@@ -61,6 +61,13 @@ class AirtimeProcessEvent(ProcessEvent):
             return True
         else:
             return False
+        
+    #file needs to be readable by all users, and directories
+    #up to this file needs to be readable AND executable by all
+    #users.
+    def has_correct_permissions(self, filepath):
+        st = os.stat(filepath)
+        return bool(st.st_mode & stat.S_IROTH)
 
     def set_needed_file_permissions(self, item, is_dir):
 
@@ -100,7 +107,7 @@ class AirtimeProcessEvent(ProcessEvent):
             omask = os.umask(0)
             os.rename(source, dest)
         except Exception, e:
-            self.logger.error("failed to move file.")
+            self.logger.error("failed to move file. %s", e)
         finally:
             os.umask(omask)
 
