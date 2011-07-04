@@ -1,9 +1,8 @@
 <fieldset class="padded">
     <dl class="zend_form">
-    	<?php if($this->element->getView()->supportFeedback === '0'){?>
-    	<div class="info-text"><p>Be more awesome by selecting "Support feedback" below. You will be helping Airtim improve!</p></div>
-    	<?php }?>
-    	<dd id="SupportFeedback-element">
+        <dd id="SupportFeedback-element" style="width:90%;">
+            <div class="info-text">Help Airtime improve by letting us know you are using it. This info
+            will be collected regularly in order to improve your user experience.</div>
             <label class="optional" for="SupportFeedback">
                 <?php echo $this->element->getElement('SupportFeedback') ?>
                 <strong><?php echo $this->element->getElement('SupportFeedback')->getLabel() ?></strong>
@@ -16,8 +15,10 @@
                 </ul>
             <?php endif; ?> 
         </dd>
-		<dd id="publicize-element">
-			<label class="optional" for="Publicise">
+        <dd id="publicize-element" style="width:90%;">
+            <div class="info-text">Click the box below to advertise your station on <a id="link_to_whos_using" href="">Sourcefabric.org</a>.
+             In order to promote your station, "Send support feedback" must be enabled. This data will be collected in addition to the support feedback.</div>
+            <label class="optional" for="Publicise">
                 <?php echo $this->element->getElement('Publicise') ?>
                 <strong><?php echo $this->element->getElement('Publicise')->getLabel() ?></strong>
             </label>
