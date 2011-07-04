@@ -92,6 +92,7 @@ class Playlist {
         $seconds = $p_seconds;
         $rounded = round($seconds, 1);
         $info = explode('.', $rounded);
+        $seconds = $info[0];
         if(!isset($info[1])){
             $milliStr = 0;
         }else{
