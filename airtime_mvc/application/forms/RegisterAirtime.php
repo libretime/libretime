@@ -17,7 +17,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         
         // Station Name
         $stnName = new Zend_Form_Element_Text("stnName");
-        $stnName->setLabel("Station Name:(*)")
+        $stnName->setLabel("Station Name")
                 ->setRequired(true)
                 ->setValue(Application_Model_Preference::GetStationName())
                 ->setDecorators(array('ViewHelper'));
