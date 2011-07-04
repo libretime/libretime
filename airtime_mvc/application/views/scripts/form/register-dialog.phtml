@@ -20,7 +20,7 @@
 		            <?php endif; ?>
 		        </dd>
                 <dt class="block-display info-text">
-            		Click the box below to advertise your station on <a id="link_to_whos_using" href="">Sourcefabric.org</a>. In order to promote your station, "Send support feedback" must be enabled
+            		Click the box below to advertise your station on <a id="link_to_whos_using" href="">Sourcefabric.org</a>. In order to promote your station, "Send support feedback" must be enabled. This data will be collected in addition to the support feedback.
                 </dt>
 				<dd id="publicize-element" class="block-display">
 					<label class="optional" for="Publicise">
@@ -38,7 +38,9 @@
 			</dl>
 			<dl id="public-info" style="display:none;">
 				<dt id="stnName-label">
-		            <label class="optional" for="stnName"><?php echo $this->element->getElement('stnName')->getLabel() ?></label>
+		            <label class="optional" for="stnName"><?php echo $this->element->getElement('stnName')->getLabel() ?>
+		            	<span class="info-text-small">(Required)</span> :
+		            </label>
 		        </dt>
 		        <dd id="stnName-element">
 		            <?php echo $this->element->getElement('stnName') ?>
@@ -55,6 +57,7 @@
 		        </dt>
 		        <dd id="Phone-element">
 		            <?php echo $this->element->getElement('Phone') ?>
+		            <span class="info-text-small">(for verification purposes only, will not be published)</span>
 		            <?php if($this->element->getElement('Phone')->hasErrors()) : ?>
 		                <ul class='errors'>
 		                    <?php foreach($this->element->getElement('Phone')->getMessages() as $error): ?>
@@ -68,6 +71,7 @@
 		        </dt>
 		        <dd id="Email-element">
 		            <?php echo $this->element->getElement('Email') ?>
+		            <span class="info-text-small">(for verification purposes only, will not be published)</span>
 		            <?php if($this->element->getElement('Email')->hasErrors()) : ?>
 		                <ul class='errors'>
 		                    <?php foreach($this->element->getElement('Email')->getMessages() as $error): ?>

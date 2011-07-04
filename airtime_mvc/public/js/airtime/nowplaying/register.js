@@ -1,8 +1,8 @@
 $(document).ready(function(){
 	var dialogGlob;
 	
-	function deleteSessionVar(){
-		$.get("/Preference/deletesessionvar");
+	function doNotShowPopup(){
+		$.get("/Preference/donotshowpopup");
 	}
 	
     $.get("/Preference/register", {format:"json"}, function(json){
@@ -15,7 +15,7 @@ $(document).ready(function(){
             resizable: false,
             modal: true,
             position:['center',50],
-            close: deleteSessionVar,
+            close: doNotShowPopup,
             buttons: [
                 {
                 	id: "remind_me",

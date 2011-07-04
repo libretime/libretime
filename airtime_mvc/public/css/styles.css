@@ -1861,7 +1861,7 @@ fieldset.closed, fieldset.display_field.closed {
 }
 
 fieldset.closed dl, fieldset.closed textarea, fieldset.closed div {
-    display:none;
+	display:none;
 }
 
 fieldset legend .ui-icon, .ui-widget-content fieldset legend .ui-icon {
@@ -1870,7 +1870,7 @@ fieldset legend .ui-icon, .ui-widget-content fieldset legend .ui-icon {
 }
 
 input[type="checkbox"][disabled] {
-    opacity: 0.6;
+	opacity: 0.6;
 }
 
 .play_small {
@@ -1895,4 +1895,18 @@ input[type="checkbox"][disabled] {
 }
 .play_small.playing:hover {
 	background-position: -20px -11px;
+}
+
+.info-text-small {
+    color: #5B5B5B;
+    font-size: 11px;
+    line-height: 150%;
+    margin: 0;
+    padding: 0 0 6px;
+	font-style:italic;
+	font-weight:normal;
+}
+dd .info-text-small {
+    padding: 1px 0 2px;
+	display:inline-block;
 }
