@@ -113,6 +113,13 @@ class PreferenceController extends Zend_Controller_Action
     	Application_Model_Preference::SetRemindMeDate($now);
     	die();
     }
+    
+    public function deletesessionvarAction()
+    {
+    	// unset session
+    	Zend_Session::namespaceUnset('referrer');
+    	die();
+    }
 
     public function directoryConfigAction()
     {
