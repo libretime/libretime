@@ -819,5 +819,23 @@ class StoredFile {
 
     }
 
+    public static function listAllFiles(){
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT m.directory || '/' || f.filepath as fp"
+                ." FROM CC_MUSIC_DIRS m"
+                ." LEFT JOIN CC_FILES f"
+                ." ON m.id = f.directory"
+                ." WHERE m.id = f.directory";
+        $rows = $CC_DBC->getAll($sql);
+
+        $results = array();
+        foreach ($rows as $row){
+            $results[] = $row["fp"];
+        }
+
+        return $results;
+    }
+
 }
 

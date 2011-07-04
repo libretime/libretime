@@ -2,15 +2,19 @@ import os
 import time
 
 from subprocess import Popen, PIPE
+from api_clients import api_client
+
 
 
 class AirtimeMediaMonitorBootstrap():
 
-    def __init__(self, logger, multi_queue, pe):
+    def __init__(self, logger, multi_queue, pe, config):
         self.logger = logger
         self.multi_queue = multi_queue
         self.pe = pe
         self.airtime_tmp = '/var/tmp/airtime'
+        self.config = config
+        self.api_client = api_client.api_client_factory(self.config.cfg)
         
     """
     on bootup we want to scan all directories and look for files that
@@ -23,76 +27,78 @@ class AirtimeMediaMonitorBootstrap():
         for dir in directories:
             self.check_for_diff(dir)
             
+    def list_db_files(self):
+        return self.api_client.list_all_db_files()        
+            
     def check_for_diff(self, dir):        
         #set to hold new and/or modified files. We use a set to make it ok if files are added
         #twice. This is become some of the tests for new files return result sets that are not
         #mutually exclusive from each other.
-        added_files = set()
+        new_and_modified_files = set()
         removed_files = set()
-    
-        if os.path.exists(self.airtime_tmp + '/.airtime_media_index'):
-
+        
+        
+        db_known_files_set = set()
+        files = self.list_db_files()
+        for file in files['files']:
+            db_known_files_set.add(file)
+            
+            
+        command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
+        stdout = self.execCommandAndReturnStdOut(command)
+        new_files = stdout.split('\n')
+        all_files_set = set()
+        for file_path in new_files:
+            if len(file_path.strip(" \n")) > 0:
+                all_files_set.add(file_path)           
+        
+        
+        if os.path.exists("/var/tmp/airtime/media_monitor_boot"):
             #find files that have been modified since the last time
-            #media-monitor process was running.
-            time_diff_sec = time.time() - os.path.getmtime(self.airtime_tmp + '/.airtime_media_index')
+            #media-monitor process started.
+            time_diff_sec = time.time() - os.path.getmtime("/var/tmp/airtime/media_monitor_boot")
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable -mmin -%d" % (dir, time_diff_sec/60+1)
-            self.logger.debug(command)
-            stdout = self.execCommandAndReturnStdOut(command)
-            self.logger.info("Files modified since last checkin: \n%s\n", stdout)
-            
-            new_files = stdout.split('\n')
-            
-            for file_path in new_files:
-                added_files.add(file_path)
-
-
-
-
-            #a previous index exists, we can do a diff between this
-            #file and the current state to see whether anything has
-            #changed.
-            self.logger.info("Previous index file found.")
-                        
-            #find deleted files
-            command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable > %s/.airtime_media_index.tmp" % (dir, self.airtime_tmp)
-            self.execCommand(command)
-            
-            command = "diff -u %s/.airtime_media_index %s/.airtime_media_index.tmp" % (self.airtime_tmp, self.airtime_tmp)
-            stdout = self.execCommandAndReturnStdOut(command)
-            
-            #remove first 3 lines from the diff output.
-            stdoutSplit = (stdout.split('\n'))[3:]
-            
-            self.logger.info("Changed files since last checkin:\n%s\n", "\n".join(stdoutSplit))
-
-            for line in stdoutSplit:
-                if len(line.strip(' ')) > 1:
-                    if line[0] == '+':
-                        added_files.add(line[1:])
-                    elif line[0] == '-':
-                        removed_files.add(line[1:])
-
-            self.pe.write_index_file()
         else:
-            #a previous index does not exist. Most likely means that 
-            #media monitor has never seen this directory before. Let's
-            #notify airtime server about each of these files
-            self.logger.info("Previous index file does not exist. Creating a new one")
+            command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
             
-            #create a new index file.
-            stdout = self.pe.write_index_file()
+        stdout = self.execCommandAndReturnStdOut(command)
+        
+        new_files = stdout.split('\n')
+        
+        for file_path in new_files:
+            if len(file_path.strip(" \n")) > 0:
+                new_and_modified_files.add(file_path)
             
-            new_files = stdout.split('\n')
-            
-            for file_path in new_files:
-                added_files.add(file_path)
+        #new_and_modified_files gives us a set of files that were either copied or modified
+        #since the last time media-monitor was running. These files were collected based on
+        #their modified timestamp. But this is not all that has changed in the directory. Files
+        #could have been removed, or files could have been moved into this directory (moving does
+        #not affect last modified timestamp). Lets get a list of files that are on the file-system
+        #that the db has no record of, and vice-versa.
+        
+        deleted_files_set = db_known_files_set - all_files_set
+        new_files_set = all_files_set - db_known_files_set
+        modified_files_set = new_and_modified_files - new_files_set
+        
+        self.logger.info("Deleted files: \n%s\n\n"%deleted_files_set)
+        self.logger.info("New files: \n%s\n\n"%new_files_set)
+        self.logger.info("Modified files: \n%s\n\n"%modified_files_set)   
                 
-        for file_path in removed_files:
+        #"touch" file timestamp
+        open("/var/tmp/airtime/media_monitor_boot","w")
+        #return
+        
+                
+        for file_path in deleted_files_set:
             self.pe.handle_removed_file(file_path)
                 
-        for file_path in added_files:
+        for file_path in new_files_set:
             if os.path.exists(file_path):
                 self.pe.handle_created_file(False, os.path.basename(file_path), file_path)
+                
+        for file_path in modified_files_set:
+            if os.path.exists(file_path):
+                self.pe.handle_modified_file(False, os.path.basename(file_path), file_path)
                             
     def execCommand(self, command):
         p = Popen(command, shell=True)
