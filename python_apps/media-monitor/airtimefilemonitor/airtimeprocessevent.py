@@ -242,12 +242,15 @@ class AirtimeProcessEvent(ProcessEvent):
                 
                 
     def process_IN_MODIFY(self, event):
-        if not event.dir:
-            self.logger.info("%s: %s", event.maskname, event.pathname)
-            if event.pathname in self.renamed_files:
+        self.handle_modified_file(event.dir, event.pathname, event.name)
+                
+    def handle_modified_file(self, dir, pathname, name):
+        if not dir:
+            self.logger.info("Modified: %s", pathname)
+            if pathname in self.renamed_files:
                 pass
-            elif self.is_audio_file(event.name):
-                self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
+            elif self.is_audio_file(name):
+                self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY})
 
     def process_IN_MOVED_FROM(self, event):
         self.logger.info("%s: %s", event.maskname, event.pathname)

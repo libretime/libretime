@@ -54,7 +54,7 @@ try:
     config.storage_directory = storage_directory
     config.imported_directory = storage_directory + '/imported'
     
-    bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue, pe)
+    bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue, pe, config)
     bootstrap.scan()
 
     #create 5 worker processes

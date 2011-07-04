@@ -14,6 +14,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('media-monitor-setup', 'json')
                 ->addActionContext('media-item-status', 'json')
                 ->addActionContext('reload-metadata', 'json')
+                ->addActionContext('list-all-files', 'json')
                 ->initContext();
     }
 
@@ -431,9 +432,27 @@ class ApiController extends Zend_Controller_Action
         }
 
         if ($mode == "create") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $file = StoredFile::RecallByFilepath($filepath);
+            
+            if (is_null($file)) {
+                $file = StoredFile::Insert($md);
+            } else {
+                $this->view->error = "File already exists in Airtime.";
+                return;
+            }
+
+            
+            //Martin Konecny July 14th, 2011: The following commented out code is the way
+            //we used to check for duplicates (by md5). Why are we checking by md5 and
+            //not by filepath? I had to change this behaviour to check by filepath for the 
+            //following reason:
+            //File A is renamed, which creates a delete and create event. Because the create
+            //event can be executed in parallel before the delete event completes, the create
+            //event will fail because the md5 is still in the database. 
+            /*
             $md5 = $md['MDATA_KEY_MD5'];
             $file = StoredFile::RecallByMd5($md5);
-
             if (is_null($file)) {
                 $file = StoredFile::Insert($md);
             }
@@ -441,6 +460,7 @@ class ApiController extends Zend_Controller_Action
                 $this->view->error = "File already exists in Airtime.";
                 return;
             }
+            */
         }
         else if ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
@@ -487,6 +507,21 @@ class ApiController extends Zend_Controller_Action
         }
 
         $this->view->id = $file->getId();
+    }
+    
+    public function listAllFilesAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        $this->view->files = StoredFile::listAllFiles();
     }
 }
 
