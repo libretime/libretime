@@ -205,13 +205,11 @@ class AirtimeProcessEvent(ProcessEvent):
     #event.name
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
     def process_IN_CREATE(self, event):
-
-        self.logger.debug("PROCESS_IN_CREATE")
         self.handle_created_file(event.dir, event.name, event.pathname)
 
                 
     def handle_created_file(self, dir, name, pathname):
-    
+        self.logger.debug("PROCESS_IN_CREATE")
         self.logger.debug("dir: %s, name: %s, pathname: %s ", dir, name, pathname)
         storage_directory = self.config.storage_directory
         if not dir:
@@ -329,11 +327,9 @@ class AirtimeProcessEvent(ProcessEvent):
         f.close()
 
     def notifier_loop_callback(self, notifier):
-    
         if len(self.file_events) > 0:
             for event in self.file_events:
                 self.multi_queue.put(event)
-
 
             self.file_events = []
 
