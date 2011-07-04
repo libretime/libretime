@@ -4,9 +4,6 @@ define('AIRTIME_VERSION', '1.9.0-beta2');
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
 
-// this constant is still used in somewhere
-define('UI_MDATA_KEY_TITLE', 'track_title');
-
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH', 'filepath');
 define('MDATA_KEY_MD5', 'md5');

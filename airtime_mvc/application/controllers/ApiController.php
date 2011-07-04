@@ -356,7 +356,7 @@ class ApiController extends Zend_Controller_Action
 		$tmpTitle = !(empty($show_name))?$show_name."-":"";
 		$tmpTitle .= $file->getName();
 
-		$file->setMetadataValue(UI_MDATA_KEY_TITLE, $tmpTitle);
+		$file->setMetadataValue(MDATA_KEY_TITLE, $tmpTitle);
 
         if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
         {

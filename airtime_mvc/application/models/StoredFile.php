@@ -805,7 +805,7 @@ class StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
 			}
             if (file_exists($duplicate->getFilePath())) {
-			    $duplicateName = $duplicate->getMetadataValue(UI_MDATA_KEY_TITLE);
+			    $duplicateName = $duplicate->getMetadataValue(MDATA_KEY_TITLE);
 			    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
             }
 		}
