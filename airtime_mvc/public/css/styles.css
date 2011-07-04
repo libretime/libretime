@@ -1095,11 +1095,11 @@ button, input {
 }
 
 .user-management {
-	width:810px;
+	width:910px;
 	/*width:380px;*/
 }
 .user-management-expanded {
-	width:810px;
+	width:910px;
 }
 .user-data {
 	float:left;
@@ -1109,7 +1109,7 @@ button, input {
 }
 .user-list-wrapper {
 	float:left;
-	width:380px;
+	width:480px;
 	/*margin-right:10px;*/
 }
 
@@ -1127,7 +1127,7 @@ button, input {
     padding-bottom: 12px;
 }
 .user-management .dataTables_filter input {
-    width: 378px;
+    width: 99.6%;
 	margin-bottom:8px;
 }
 .user-data.simple-formblock dd {
@@ -1548,6 +1548,7 @@ div.success{
 	height:10px;
 	float:right;
 	margin-left:3px;
+	margin-top:2px;
 }
 .small-icon.recording {
 	background:url(images/icon_record.png) no-repeat 0 0;
@@ -1563,6 +1564,16 @@ div.success{
 	background:url(images/upload-icon.gif) no-repeat;
     background-color:black;
     background-position:center;
+	border-radius:2px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+}
+.small-icon.alert {
+	background:url(images/icon_alert.png) no-repeat;
+	float:left;
+	width:13px;
+	margin-right:3px;
+	margin-left:1px;
 }
 .medium-icon {
 	display:block;
@@ -1860,4 +1871,28 @@ fieldset legend .ui-icon, .ui-widget-content fieldset legend .ui-icon {
 
 input[type="checkbox"][disabled] {
     opacity: 0.6;
+}
+
+.play_small {
+	height:11px;
+	width: 15px;
+	display:inline-block;
+	background:url(images/play_pause_small.png) no-repeat 0 0;
+	margin:0 7px 0 0;
+	text-indent:-9999px;
+	overflow:hidden;
+	line-height:10px;
+}
+.play_small:hover, .play_small.paused  {
+	background-position: 0 -11px;
+}
+.play_small.paused:hover {
+	background-position: 0 -22px;
+}
+
+.play_small.playing {
+	background-position: -20px 0;
+}
+.play_small.playing:hover {
+	background-position: -20px -11px;
 }
