@@ -75,5 +75,4 @@ except KeyboardInterrupt:
     notifier.stop()
     logger.info("Keyboard Interrupt")
 except Exception, e:
-    #notifier.stop()
     logger.error('Exception: %s', e)

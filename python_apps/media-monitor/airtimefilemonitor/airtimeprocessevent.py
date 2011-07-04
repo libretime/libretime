@@ -289,14 +289,13 @@ class AirtimeProcessEvent(ProcessEvent):
                 self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MOVED})
             elif hasattr(event, 'src_pathname') and event.src_pathname in self.renamed_files:
                 del self.renamed_files[event.src_pathname]
-                #self.logger.info("removing renamed path %s", event.src_pathname)
             else:
                 # show dragged from unwatched folder into a watched folder.
                 storage_directory = self.config.storage_directory
                 if self.is_parent_directory(event.pathname, storage_directory):
                     file_md = self.md_manager.get_md_from_file(event.pathname)
                     if file_md is not None:
-                        filepath, is_recorded_show = self.create_file_path(event.pathname, file_md)
+                        filepath = self.create_file_path(event.pathname, file_md)
                         self.move_file(event.pathname, filepath)
                         self.renamed_files[event.pathname] = filepath
                         self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
@@ -323,14 +322,6 @@ class AirtimeProcessEvent(ProcessEvent):
         if p.returncode != 0:
             self.logger.warn("command \n%s\n return with a non-zero return value", command)
         return stdout
-        
-    def write_index_file(self):
-        #create a new index file.
-        self.logger.debug("writing new index file")
-        command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % '/srv/airtime/stor'
-        stdout = self.execCommandAndReturnStdOut(command)
-        self.write_file('/var/tmp/airtime' + '/.airtime_media_index', stdout)
-        return stdout
             
     def write_file(self, file, string):
         f = open(file, 'w')
@@ -345,9 +336,6 @@ class AirtimeProcessEvent(ProcessEvent):
 
 
             self.file_events = []
-            #no file_events and queue is empty. This is a good time
-            #to write an index file.
-            self.write_index_file()
 
         #check for any events recieved from Airtime.
         try:
