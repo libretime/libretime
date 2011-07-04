@@ -25,7 +25,7 @@ class ApiController extends Zend_Controller_Action
     }
 
     /**
-     * Returns Airtime version. i.e "1.7.0 alpha"
+     * Returns Airtime version. i.e "1.7.0-beta"
      *
      * First checks to ensure the correct API key was
      * supplied, then returns AIRTIME_VERSION as defined

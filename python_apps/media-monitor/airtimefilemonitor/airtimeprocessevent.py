@@ -289,7 +289,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 if self.is_parent_directory(event.pathname, storage_directory):
                     file_md = self.md_manager.get_md_from_file(event.pathname)
                     if file_md is not None:
-                        filepath, is_recorded_show = self.create_file_path(event.pathname)
+                        filepath, is_recorded_show = self.create_file_path(event.pathname, file_md)
                         self.move_file(event.pathname, filepath)
                         self.renamed_files[event.pathname] = filepath
                         self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
