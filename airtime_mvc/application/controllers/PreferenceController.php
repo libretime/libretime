@@ -114,7 +114,7 @@ class PreferenceController extends Zend_Controller_Action
     	die();
     }
     
-    public function deletesessionvarAction()
+    public function donotshowpopupAction()
     {
     	// unset session
     	Zend_Session::namespaceUnset('referrer');
