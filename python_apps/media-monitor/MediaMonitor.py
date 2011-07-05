@@ -52,6 +52,7 @@ try:
     logger.info("Storage Directory is: %s", storage_directory)
     config.storage_directory = storage_directory
     config.imported_directory = storage_directory + '/imported'
+    config.organize_directory = storage_directory + '/organize'
     
     multi_queue = mpQueue()
     logger.info("Initializing event processor")

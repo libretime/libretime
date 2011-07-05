@@ -121,34 +121,38 @@ class AirtimeInstall
     {
         global $CC_CONFIG, $CC_DBC;
         echo "* Storage directory setup".PHP_EOL;
-
-        $stor_dir = $CC_CONFIG['storageDir'];
-
-        if (!file_exists($stor_dir)) {
-            @mkdir($stor_dir, 02777, true);
-            if (file_exists($stor_dir)) {
-                $rp = realpath($stor_dir);
-                echo "* Directory $rp created".PHP_EOL;
-            } else {
-                echo "* Failed creating {$stor_dir}".PHP_EOL;
+        
+        $dirs = array($CC_CONFIG['storageDir'], $CC_CONFIG['storageDir']."/organize");
+        
+        foreach ($dirs as $dir){
+            if (!file_exists($dir)) {
+                @mkdir($dir, 02777, true);
+                if (file_exists($dir)) {
+                    $rp = realpath($dir);
+                    echo "* Directory $rp created".PHP_EOL;
+                } else {
+                    echo "* Failed creating {$dir}".PHP_EOL;
+                    exit(1);
+                }
+            }
+            else if (is_writable($dir)) {
+                $rp = realpath($dir);
+                echo "* Skipping directory already exists: $rp".PHP_EOL;
+            }
+            else {
+                $rp = realpath($dir);
+                echo "* Error: Directory already exists, but is not writable: $rp".PHP_EOL;
                 exit(1);
             }
-        }
-        else if (is_writable($stor_dir)) {
-            $rp = realpath($stor_dir);
-            echo "* Skipping directory already exists: $rp".PHP_EOL;
-        }
-        else {
-            $rp = realpath($stor_dir);
-            echo "* WARNING: Directory already exists, but is not writable: $rp".PHP_EOL;
-            return;
-        }
 
-        echo "* Giving Apache permission to access $rp".PHP_EOL;
-        $success = chgrp($rp, $CC_CONFIG["webServerUser"]);
-        $success = chown($rp, "pypo");
-        $success = chmod($rp, 02777);
-        $CC_CONFIG['storageDir'] = $rp;
+            echo "* Giving Apache permission to access $rp".PHP_EOL;
+            $success = chgrp($rp, $CC_CONFIG["webServerUser"]);
+            $success = chown($rp, "pypo");
+            $success = chmod($rp, 02777);
+        }
+        
+        //July 5th, 2011: Why is this here - MK?????
+        //$CC_CONFIG['storageDir'] = $rp;
     }
 
     public static function CreateDatabaseUser()

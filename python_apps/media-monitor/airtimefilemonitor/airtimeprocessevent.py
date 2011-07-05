@@ -220,18 +220,20 @@ class AirtimeProcessEvent(ProcessEvent):
     def handle_created_file(self, dir, name, pathname):
         self.logger.debug("dir: %s, name: %s, pathname: %s ", dir, name, pathname)
         storage_directory = self.config.storage_directory
+        organize_directory = self.config.organize_directory
         if not dir:
             #event is because of a created file
             if self.is_temp_file(name) :
                 #file created is a tmp file which will be modified and then moved back to the original filename.
                 self.temp_files[pathname] = None
             elif self.is_audio_file(pathname):
-                if self.is_parent_directory(pathname, storage_directory):
-                    #file was created in /srv/airtime/stor. Need to process and copy
+                if self.is_parent_directory(pathname, organize_directory):
+                    #file was created in /srv/airtime/stor/organize. Need to process and copy
                     #to /srv/airtime/stor/imported
                     self.set_needed_file_permissions(pathname, dir)
-                    self.process_new_file(pathname)
+                    self.organize_new_file(pathname)
                 else:
+                    self.set_needed_file_permissions(pathname, dir)
                     self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': False})
 
         else:
@@ -240,7 +242,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 self.set_needed_file_permissions(pathname, dir)
                 
                 
-    def process_new_file(self, pathname):
+    def organize_new_file(self, pathname):
         self.logger.info("Processing new file: %s", pathname)
         file_md = self.md_manager.get_md_from_file(pathname)
 
@@ -377,6 +379,8 @@ class AirtimeProcessEvent(ProcessEvent):
 
             self.file_events = []
             
+        #use items() because we are going to be modifying this
+        #dictionary while iterating over it.
         for k, pair in self.cookies_IN_MOVED_FROM.items():
             event = pair[0]
             timestamp = pair[1]
