@@ -8,19 +8,19 @@ from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
 
 import pyinotify
-from pyinotify import WatchManager, Notifier, ProcessEvent
+from pyinotify import Notifier
 
-from api_clients import api_client
+#from api_clients import api_client
 from airtimemetadata import AirtimeMetadata
 
 class AirtimeNotifier(Notifier):
 
-    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None, airtime_config=None):
+    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None, airtime_config=None, api_client=None):
         Notifier.__init__(self, watch_manager, default_proc_fun, read_freq, threshold, timeout)
 
         self.logger = logging.getLogger()
         self.config = airtime_config
-        self.api_client = api_client.api_client_factory(self.config.cfg)
+        self.api_client = api_client
         self.md_manager = AirtimeMetadata()
         self.import_processes = {}
         self.watched_folders = []
@@ -154,15 +154,6 @@ class AirtimeNotifier(Notifier):
         elif (mode == self.config.MODE_DELETE):
             self.api_client.update_media_metadata(md, mode)
 
-
-    #this function is run in its own process, and continuously
-    #checks the queue for any new file events.
-    def process_file_events(self, queue):
-
-        while True:
-            event = queue.get()
-            self.logger.info("received event %s", event)
-            self.update_airtime(event)
 
     def walk_newly_watched_directory(self, directory):
 

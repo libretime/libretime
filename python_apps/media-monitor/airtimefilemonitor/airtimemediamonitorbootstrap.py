@@ -19,7 +19,7 @@ class AirtimeMediaMonitorBootstrap():
     """
     on bootup we want to scan all directories and look for files that
     weren't there or files that changed before media-monitor process
-    went offline. We can do this by doing a hash of the directory metadata.
+    went offline.
     """
     def scan(self):
         directories = self.get_list_of_watched_dirs();
@@ -39,7 +39,7 @@ class AirtimeMediaMonitorBootstrap():
             
     def check_for_diff(self, dir_id, dir):        
         #set to hold new and/or modified files. We use a set to make it ok if files are added
-        #twice. This is become some of the tests for new files return result sets that are not
+        #twice. This is because some of the tests for new files return result sets that are not
         #mutually exclusive from each other.
         new_and_modified_files = set()
         removed_files = set()
