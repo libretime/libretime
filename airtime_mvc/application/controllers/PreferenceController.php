@@ -50,6 +50,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSupportFeedback($values["preferences_support"]["SupportFeedback"]);
                 Application_Model_Preference::SetPublicise($values["preferences_support"]["Publicise"]);
 
+                $form->getSubForm('preferences_support')->Logo->receive();
                 $imagePath = $form->getSubForm('preferences_support')->Logo->getFileName();
 
                 Application_Model_Preference::SetStationCountry($values["preferences_support"]["Country"]);
@@ -83,7 +84,8 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetEmail($values["Email"]);
                 Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
                 Application_Model_Preference::SetPublicise($values["Publicise"]);
-
+                
+                $form->Logo->receive();
                 $imagePath = $form->Logo->getFileName();
 
                 Application_Model_Preference::SetStationCountry($values["Country"]);
