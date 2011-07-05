@@ -311,15 +311,13 @@ class AirtimeProcessEvent(ProcessEvent):
 
     def process_IN_DELETE(self, event):
         self.logger.info("process_IN_DELETE: %s", event)
-        if self.is_parent_directory(event.pathname, self.config.organize_directory):
-            #we don't care if a file was deleted from the organize directory.
-            pass
-        elif not event.dir:
-            self.handle_removed_file(event.pathname)
+        self.handle_removed_file(event.pathname)
             
     def handle_removed_file(self, pathname):
         self.logger.info("Deleting %s", pathname)
-        self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_DELETE})
+        if not self.is_parent_directory(event.pathname, self.config.organize_directory):
+            #we don't care if a file was deleted from the organize directory.
+            self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_DELETE})
     
 
     def process_default(self, event):
