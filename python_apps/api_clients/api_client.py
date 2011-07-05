@@ -388,8 +388,6 @@ class AirTimeApiClient(ApiClientInterface):
             elapsed = (time.time() - start)
             logger.info("time taken to get response %s", elapsed)
 
-            logger.info("update media %s", response)
-
             if(is_record):
                 url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
                 url = url.replace("%%fileid%%", str(response[u'id']))
