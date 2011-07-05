@@ -3,11 +3,12 @@ import socket
 import grp
 import pwd
 import logging
+import time
 
 from subprocess import Popen, PIPE
 
 import pyinotify
-from pyinotify import WatchManager, Notifier, ProcessEvent
+from pyinotify import ProcessEvent
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
@@ -18,7 +19,7 @@ from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 
 class AirtimeProcessEvent(ProcessEvent):
 
-    def my_init(self, queue, airtime_config=None):
+    def my_init(self, queue, airtime_config=None, wm=None):
         """
         Method automatically called from ProcessEvent.__init__(). Additional
         keyworded arguments passed to ProcessEvent.__init__() are then
@@ -30,13 +31,16 @@ class AirtimeProcessEvent(ProcessEvent):
 
         self.supported_file_formats = ['mp3', 'ogg']
         self.temp_files = {}
+        self.renamed_files = {}
+        """
         self.moved_files = {}
         self.gui_replaced = {}
-        self.renamed_files = {}
+        """
+        self.cookies_IN_MOVED_FROM = {}
         self.file_events = []
         self.multi_queue = queue
         self.mask = pyinotify.ALL_EVENTS
-        self.wm = WatchManager()
+        self.wm = wm
         self.md_manager = AirtimeMetadata()
 
     #define which directories the pyinotify WatchManager should watch.
@@ -95,9 +99,12 @@ class AirtimeProcessEvent(ProcessEvent):
 
         try:
             omask = os.umask(0)
-            if ((not os.path.exists(directory)) or ((os.path.exists(directory) and not os.path.isdir(directory)))):
+            if not os.path.exists(directory):
                 os.makedirs(directory, 02777)
-                self.watch_directory(directory)
+                #self.watch_directory(directory)
+            elif not os.path.isdir(directory):
+                #path exists but it is a file not a directory!
+                self.logger.error("path %s exists, but it is not a directory!!!")
         finally:
             os.umask(omask)
 
@@ -111,7 +118,8 @@ class AirtimeProcessEvent(ProcessEvent):
         finally:
             os.umask(omask)
 
-    #checks if path exists already in stor. If the path exists and the md5s are the same just moves file to same path anyway to avoid duplicates in the system.
+    #checks if path exists already in stor. If the path exists and the md5s are the 
+    #same just overwrite.
     def create_unique_filename(self, filepath, old_filepath):
 
         try:
@@ -148,7 +156,7 @@ class AirtimeProcessEvent(ProcessEvent):
         return filepath
 
     #create path in /srv/airtime/stor/imported/[song-metadata]
-    def create_file_path(self, imported_filepath, orig_md):
+    def create_file_path(self, original_path, orig_md):
 
         storage_directory = self.config.storage_directory
 
@@ -156,7 +164,7 @@ class AirtimeProcessEvent(ProcessEvent):
 
         try:
             #will be in the format .ext
-            file_ext = os.path.splitext(imported_filepath)[1]
+            file_ext = os.path.splitext(original_path)[1]
             file_ext = file_ext.encode('utf-8')
 
             path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE', 'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
@@ -189,10 +197,10 @@ class AirtimeProcessEvent(ProcessEvent):
             elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
                 filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
-                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)         
 
             self.logger.info('Created filepath: %s', filepath)
-            filepath = self.create_unique_filename(filepath, imported_filepath)
+            filepath = self.create_unique_filename(filepath, original_path)
             self.logger.info('Unique filepath: %s', filepath)
             self.ensure_dir(filepath)
 
@@ -202,30 +210,32 @@ class AirtimeProcessEvent(ProcessEvent):
         return filepath
 
     #event.dir: True if the event was raised against a directory.
-    #event.name
+    #event.name: filename
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
     def process_IN_CREATE(self, event):
+        self.logger.debug("PROCESS_IN_CREATE: %s", event)
         self.handle_created_file(event.dir, event.name, event.pathname)
 
                 
     def handle_created_file(self, dir, name, pathname):
-        self.logger.debug("PROCESS_IN_CREATE")
         self.logger.debug("dir: %s, name: %s, pathname: %s ", dir, name, pathname)
         storage_directory = self.config.storage_directory
         if not dir:
-            #file created is a tmp file which will be modified and then moved back to the original filename.
+            #event is because of a created file
             if self.is_temp_file(name) :
+                #file created is a tmp file which will be modified and then moved back to the original filename.
                 self.temp_files[pathname] = None
-            #This is a newly imported file.
             elif self.is_audio_file(pathname):
                 if self.is_parent_directory(pathname, storage_directory):
+                    #file was created in /srv/airtime/stor. Need to process and copy
+                    #to /srv/airtime/stor/imported
                     self.set_needed_file_permissions(pathname, dir)
-                    
                     self.process_new_file(pathname)
                 else:
                     self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': False})
 
         else:
+            #event is because of a created directory
             if self.is_parent_directory(pathname, storage_directory):
                 self.set_needed_file_permissions(pathname, dir)
                 
@@ -237,16 +247,20 @@ class AirtimeProcessEvent(ProcessEvent):
         if file_md is not None:
             is_recorded_show = 'MDATA_KEY_CREATOR' in file_md and \
                 file_md['MDATA_KEY_CREATOR'] == "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
-            if not self.is_parent_directory(pathname, self.config.imported_directory):
-                filepath = self.create_file_path(pathname, file_md)
-                self.move_file(pathname, filepath)
-                self.renamed_files[pathname] = filepath
-                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
-            else:
-                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'data': file_md, 'is_recorded_show': is_recorded_show})
-                
+            #if not self.is_parent_directory(pathname, self.config.imported_directory):
+                #file has not been "imported" yet. Need to move this file to /srv/airtime/stor/imported
+            filepath = self.create_file_path(pathname, file_md)
+            self.move_file(pathname, filepath)
+            self.renamed_files[pathname] = filepath
+            self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': is_recorded_show})
+            #else:
+            #    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'data': file_md, 'is_recorded_show': is_recorded_show})
+        else:
+            self.logger.warn("File %s, has invalid metadata", pathname)
+            
                 
     def process_IN_MODIFY(self, event):
+        self.logger.info("process_IN_MODIFY: %s", event)
         self.handle_modified_file(event.dir, event.pathname, event.name)
                 
     def handle_modified_file(self, dir, pathname, name):
@@ -257,9 +271,16 @@ class AirtimeProcessEvent(ProcessEvent):
             elif self.is_audio_file(name):
                 self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY})
 
+    #if a file is moved somewhere, this callback is run. With details about
+    #where the file is being moved from. The corresponding process_IN_MOVED_TO
+    #callback is only called if the destination of the file is also in a watched
+    #directory.
     def process_IN_MOVED_FROM(self, event):
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        self.logger.info("process_IN_MOVED_FROM: %s", event)
         if not event.dir:
+            self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
+            
+            """
             if "goutputstream" in event.pathname:
                 self.gui_replaced[event.cookie] = None
             elif event.pathname in self.temp_files:
@@ -269,12 +290,34 @@ class AirtimeProcessEvent(ProcessEvent):
                 pass
             else:
                 self.moved_files[event.cookie] = event.pathname
+            """
 
     def process_IN_MOVED_TO(self, event):
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        self.logger.info("process_IN_MOVED_TO: %s", event)
         #if stuff dropped in stor via a UI move must change file permissions.
         self.set_needed_file_permissions(event.pathname, event.dir)
         if not event.dir:
+            if event.cookie in self.cookies_IN_MOVED_FROM:
+                #files original location was also in a watched directory, in this case
+                #we won't try to create a new file name, and move the file to the appropriate
+                #location. We'll just assume the user knows what he is doing.
+                del self.cookies_IN_MOVED_FROM[event.cookie]
+                self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MOVED})
+            else:
+                storage_directory = self.config.storage_directory
+                if self.is_parent_directory(event.pathname, storage_directory):
+                    #show dragged from unwatched directory into the storage directory
+                    file_md = self.md_manager.get_md_from_file(event.pathname)
+                    if file_md is not None:
+                        filepath = self.create_file_path(event.pathname, file_md)
+                        self.move_file(event.pathname, filepath)
+                        #self.renamed_files[event.pathname] = filepath
+                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
+                else:
+                    #show dragged from unwatched folder into a watched folder.
+                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
+                
+            """
             if event.cookie in self.temp_files:
                 del self.temp_files[event.cookie]
                 self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
@@ -299,9 +342,10 @@ class AirtimeProcessEvent(ProcessEvent):
                         self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': filepath, 'data': file_md, 'is_recorded_show': False})
                 else:
                     self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
+            """
 
     def process_IN_DELETE(self, event):
-        self.logger.info("%s: %s", event.maskname, event.pathname)
+        self.logger.info("process_IN_DELETE: %s", event)
         if not event.dir:
             self.handle_removed_file(event.pathname)
             
@@ -311,7 +355,7 @@ class AirtimeProcessEvent(ProcessEvent):
     
 
     def process_default(self, event):
-        #self.logger.info("%s: %s", event.maskname, event.pathname)
+        #self.logger.info("PROCESS_DEFAULT: %s", event)
         pass
         
     def execCommandAndReturnStdOut(self, command):
@@ -332,6 +376,22 @@ class AirtimeProcessEvent(ProcessEvent):
                 self.multi_queue.put(event)
 
             self.file_events = []
+            
+        for k, pair in self.cookies_IN_MOVED_FROM.items():
+            event = pair[0]
+            timestamp = pair[1]
+            
+            timestamp_now = time.time()
+            
+            if timestamp_now - timestamp > 5:
+                #in_moved_from event didn't have a corresponding
+                #in_moved_to event in the last 5 seconds. 
+                #This means the file was moved to outside of the 
+                #watched directories. Let's handle this by deleting 
+                #it from the Airtime directory.
+                del self.cookies_IN_MOVED_FROM[k]
+                self.handle_removed_file(event.pathname)
+        
 
         #check for any events recieved from Airtime.
         try:

@@ -6,11 +6,16 @@ import sys
 import os
 import signal
 
+from api_clients import api_client
+
 from multiprocessing import Process, Queue as mpQueue
+
+from pyinotify import WatchManager
 
 from airtimefilemonitor.airtimenotifier import AirtimeNotifier
 from airtimefilemonitor.airtimeprocessevent import AirtimeProcessEvent
 from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
+from airtimefilemonitor.workerprocess import MediaMonitorWorkerProcess
 from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorBootstrap
 
 def handleSigTERM(signum, frame):
@@ -35,18 +40,12 @@ processes = []
 
 try:
     config = AirtimeMediaConfig(logger)
-    
-    multi_queue = mpQueue()
-    logger.info("Initializing event processor")
-    pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config)
-
-    notifier = AirtimeNotifier(pe.wm, pe, read_freq=1, timeout=0, airtime_config=config)
-    notifier.coalesce_events()
+    api_client = api_client.api_client_factory(config.cfg)
     
     logger.info("Setting up monitor")
     response = None
     while response is None:
-        response = notifier.api_client.setup_media_monitor()
+        response = api_client.setup_media_monitor()
         time.sleep(5)
         
     storage_directory = response["stor"].encode('utf-8')
@@ -54,12 +53,25 @@ try:
     config.storage_directory = storage_directory
     config.imported_directory = storage_directory + '/imported'
     
+    multi_queue = mpQueue()
+    logger.info("Initializing event processor")
+except Exception, e:
+    logger.error('Exception: %s', e)    
+    
+try:
+    wm = WatchManager()
+    pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm)
+
+    notifier = AirtimeNotifier(wm, pe, read_freq=1, timeout=0, airtime_config=config, api_client=api_client)
+    notifier.coalesce_events()
+        
     bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue, pe, config)
     bootstrap.scan()
 
     #create 5 worker processes
+    wp = MediaMonitorWorkerProcess()
     for i in range(5):
-        p = Process(target=notifier.process_file_events, args=(multi_queue,))
+        p = Process(target=wp.process_file_events, args=(multi_queue, notifier))
         processes.append(p)
         p.start()
         
