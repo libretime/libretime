@@ -276,7 +276,8 @@ class AirtimeProcessEvent(ProcessEvent):
     def process_IN_MOVED_FROM(self, event):
         self.logger.info("process_IN_MOVED_FROM: %s", event)
         if not event.dir:
-            self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
+            if self.is_audio_file(event.name):
+                self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
             
             """
             if "goutputstream" in event.pathname:
@@ -295,19 +296,20 @@ class AirtimeProcessEvent(ProcessEvent):
         #if stuff dropped in stor via a UI move must change file permissions.
         self.set_needed_file_permissions(event.pathname, event.dir)
         if not event.dir:
-            if event.cookie in self.cookies_IN_MOVED_FROM:
-                #files original location was also in a watched directory
-                del self.cookies_IN_MOVED_FROM[event.cookie]
-                if self.is_parent_directory(event.pathname, self.config.organize_directory):
-                    self.organize_new_file(event.pathname)
+            if self.is_audio_file(event.name):
+                if event.cookie in self.cookies_IN_MOVED_FROM:
+                    #files original location was also in a watched directory
+                    del self.cookies_IN_MOVED_FROM[event.cookie]
+                    if self.is_parent_directory(event.pathname, self.config.organize_directory):
+                        self.organize_new_file(event.pathname)
+                    else:
+                        self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MOVED})
                 else:
-                    self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MOVED})
-            else:
-                if self.is_parent_directory(event.pathname, self.config.organize_directory):
-                    self.organize_new_file(event.pathname)
-                else:
-                    #show dragged from unwatched folder into a watched folder. Do not "organize". 
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
+                    if self.is_parent_directory(event.pathname, self.config.organize_directory):
+                        self.organize_new_file(event.pathname)
+                    else:
+                        #show dragged from unwatched folder into a watched folder. Do not "organize". 
+                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
 
     def process_IN_DELETE(self, event):
         self.logger.info("process_IN_DELETE: %s", event)
@@ -315,7 +317,7 @@ class AirtimeProcessEvent(ProcessEvent):
             
     def handle_removed_file(self, pathname):
         self.logger.info("Deleting %s", pathname)
-        if not self.is_parent_directory(event.pathname, self.config.organize_directory):
+        if not self.is_parent_directory(pathname, self.config.organize_directory):
             #we don't care if a file was deleted from the organize directory.
             self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_DELETE})
     
