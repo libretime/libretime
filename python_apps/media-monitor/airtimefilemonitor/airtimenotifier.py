@@ -100,6 +100,10 @@ class AirtimeNotifier(Notifier):
             self.config.storage_directory = new_storage_directory
             self.config.imported_directory = new_storage_directory + '/imported'
             self.config.organize_directory = new_storage_directory + '/organize'
+            
+            mm.ensure_is_dir(self.config.storage_directory)
+            mm.ensure_is_dir(self.config.imported_directory)
+            mm.ensure_is_dir(self.config.organize_directory)
 
             mm.watch_directory(new_storage_directory)
             
