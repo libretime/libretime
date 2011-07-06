@@ -55,6 +55,10 @@ $(document).ready(function() {
 	});
     
     var promote = $("#Publicise");
+    if(!$("#SupportFeedback").is(':checked')){
+        promote.removeAttr("checked");
+        promote.attr("disabled", true);
+    }
     promote.live('click', function(){
         if($(this).is(':checked')){
             $("#public-info").show();
