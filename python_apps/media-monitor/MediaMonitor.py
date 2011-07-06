@@ -63,12 +63,12 @@ try:
     wm = WatchManager()
     pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm)
 
-    notifier = AirtimeNotifier(wm, pe, read_freq=1, timeout=0, airtime_config=config, api_client=api_client)
+    bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue, pe, api_client)
+    bootstrap.scan()
+    
+    notifier = AirtimeNotifier(wm, pe, read_freq=1, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap)
     notifier.coalesce_events()
         
-    bootstrap = AirtimeMediaMonitorBootstrap(logger, multi_queue, pe, config)
-    bootstrap.scan()
-
     #create 5 worker processes
     wp = MediaMonitorWorkerProcess()
     for i in range(5):

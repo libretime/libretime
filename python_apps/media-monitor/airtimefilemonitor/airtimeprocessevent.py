@@ -284,6 +284,11 @@ class AirtimeProcessEvent(ProcessEvent):
                 if self.is_audio_file(event.name):
                     self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
 
+                    
+    #Some weird thing to note about this event: it seems that if a file is moved to a newly
+    #created directory, then the IN_MOVED_FROM event will be called, but instead of a corresponding
+    #IN_MOVED_TO event, a IN_CREATED event will happen instead. However if the directory existed before
+    #then the IN_MOVED_TO event will be called.
     def process_IN_MOVED_TO(self, event):
         self.logger.info("process_IN_MOVED_TO: %s", event)
         #if stuff dropped in stor via a UI move must change file permissions.

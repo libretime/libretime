@@ -2,19 +2,15 @@ import os
 import time
 
 from subprocess import Popen, PIPE
-from api_clients import api_client
-
-
 
 class AirtimeMediaMonitorBootstrap():
 
-    def __init__(self, logger, multi_queue, pe, config):
+    def __init__(self, logger, multi_queue, pe, api_client):
         self.logger = logger
         self.multi_queue = multi_queue
         self.pe = pe
         self.airtime_tmp = '/var/tmp/airtime'
-        self.config = config
-        self.api_client = api_client.api_client_factory(self.config.cfg)
+        self.api_client = api_client
         
     """
     on bootup we want to scan all directories and look for files that

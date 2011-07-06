@@ -15,12 +15,13 @@ from airtimemetadata import AirtimeMetadata
 
 class AirtimeNotifier(Notifier):
 
-    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None, airtime_config=None, api_client=None):
+    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None, airtime_config=None, api_client=None, bootstrap=None):
         Notifier.__init__(self, watch_manager, default_proc_fun, read_freq, threshold, timeout)
 
         self.logger = logging.getLogger()
         self.config = airtime_config
         self.api_client = api_client
+        self.bootstrap = bootstrap
         self.md_manager = AirtimeMetadata()
         self.import_processes = {}
         self.watched_folders = []
@@ -84,6 +85,7 @@ class AirtimeNotifier(Notifier):
         elif m['event_type'] == "change_stor":
             storage_directory = self.config.storage_directory
             new_storage_directory = m['directory'].encode('utf-8')
+            new_storage_directory_id = str(m['dir_id']).encode('utf-8')
 
             mm = self.proc_fun()
 
@@ -93,17 +95,25 @@ class AirtimeNotifier(Notifier):
 
             mm.set_needed_file_permissions(new_storage_directory, True)
 
-            #move everything in old stor directory to the new stor directory.
+            self.bootstrap.check_for_diff(new_storage_directory_id, new_storage_directory)
+            
+            self.config.storage_directory = new_storage_directory
+            self.config.imported_directory = new_storage_directory + '/imported'
+            self.config.organize_directory = new_storage_directory + '/organize'
+
+            mm.watch_directory(new_storage_directory)
+            
+            """
             old_storage_contents = os.listdir(storage_directory)
             for item in old_storage_contents:
                 fp = "%s/%s" % (storage_directory, item)
                 nfp = "%s/%s" % (new_storage_directory, item)
                 self.logger.info("Moving %s to %s", fp, nfp)
                 mm.move_file(fp, nfp)
-
-            self.config.storage_directory = new_storage_directory
-
-            mm.watch_directory(new_storage_directory)
+            
+            """
+            
+            
             
         elif m['event_type'] == "file_delete":
             self.logger.info("Deleting file: %s ", m['filepath'])

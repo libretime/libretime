@@ -128,8 +128,10 @@ class PreferenceController extends Zend_Controller_Action
 
         if ($bool === true) {
             MusicDir::setStorDir($chosen);
+            $dirId = MusicDir::getStorDir()->getId();
             $data = array();
             $data["directory"] = $chosen;
+            $data["dir_id"] = $dirId;
             RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
         }
 
