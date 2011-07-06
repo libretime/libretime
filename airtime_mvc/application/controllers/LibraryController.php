@@ -133,6 +133,10 @@ class LibraryController extends Zend_Controller_Action
                 $this->view->message = "file doesn't exist";
                 return;
             }
+            
+            
+            $data = array("filepath"=>$file->getFilePath());
+            RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
 
             $res = $file->delete();
 

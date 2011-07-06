@@ -104,6 +104,12 @@ class AirtimeNotifier(Notifier):
             self.config.storage_directory = new_storage_directory
 
             mm.watch_directory(new_storage_directory)
+            
+        elif m['event_type'] == "file_delete":
+            self.logger.info("Deleting file: %s ", m['filepath'])
+            mm = self.proc_fun()
+            mm.add_filepath_to_ignore(m['filepath'])
+            os.unlink(m['filepath'])
 
 
     #update airtime with information about files discovered in our

@@ -813,6 +813,8 @@ class StoredFile {
         $storDir = MusicDir::getStorDir();
         $stor = $storDir->getDirectory();
 
+        $stor .= "/organize";
+        
 	    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
         $r = @copy($audio_file, $audio_stor);
