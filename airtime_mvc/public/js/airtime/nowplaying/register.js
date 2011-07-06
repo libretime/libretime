@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
     function doNotShowPopup(){
-        $.get("/Nowplaying/donotshowpopup");
+        $.get("/Nowplaying/donotshowregistrationpopup");
     }
 
     var dialog = $("#register_popup");

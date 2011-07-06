@@ -101,7 +101,7 @@ class NowplayingController extends Zend_Controller_Action
     	die();
     }
     
-    public function donotshowpopupAction()
+    public function donotshowregistrationpopupAction()
     {
     	// unset session
     	Zend_Session::namespaceUnset('referrer');
