@@ -53,11 +53,11 @@ s = map_metadata(append_title, s)
 
 
 if output_sound_device then
-    out_device = out(s)
+    ignore(out(s))
 end
 
 if output_icecast_mp3 then
-    out_mp3 = output.icecast(%mp3,
+    ignore(output.icecast(%mp3,
             host = icecast_host,
             port = icecast_port,
             password = icecast_pass,
@@ -69,11 +69,12 @@ if output_icecast_mp3 then
             description = icecast_description,
             genre = icecast_genre,
             s)
+        )
 end
 
 if output_icecast_vorbis then
     if output_icecast_vorbis_metadata then
-        out_vorbis = output.icecast(%vorbis,
+        ignore(output.icecast(%vorbis,
                 host = icecast_host,
                 port = icecast_port,
                 password = icecast_pass,
@@ -85,11 +86,12 @@ if output_icecast_vorbis then
                 description = icecast_description,
                 genre = icecast_genre,
                 s)
+            )
     else
         #remove metadata from ogg source and merge tracks to fix bug
         #with vlc and mplayer disconnecting at the end of every track
         s = add(normalize=false, [amplify(0.00001, noise()),s])
-        out_vorbis = output.icecast(%vorbis,
+        ignore(output.icecast(%vorbis,
                 host = icecast_host,
                 port = icecast_port,
                 password = icecast_pass,
@@ -101,11 +103,12 @@ if output_icecast_vorbis then
                 description = icecast_description,
                 genre = icecast_genre,
                 s)
+            )
     end
 end
 
 if output_shoutcast then
-    out_shoutcast = output.shoutcast(%mp3,
+    ignore(output.shoutcast(%mp3,
             host = shoutcast_host,
             port = shoutcast_port,
             password = shoutcast_pass,
@@ -115,5 +118,6 @@ if output_shoutcast then
             url = shoutcast_url,
             genre = shoutcast_genre,
             s)
+        )
 end
 

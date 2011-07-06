@@ -97,41 +97,63 @@ def merge_tracks(s)
   sequence(merge=true,[s])
 end
 
+# Default inputs and outpus
+#
+# They are called "prefered" but it's not a user preference,
+# just a view of what's generally preferable among the available
+# modules.
+# It is important that input and output preferences are in the
+# same order: the chosen I/O should work in the same clock, we don't
+# want an ALSA input and OSS output. The only exception is AO:
+# it is the default output after dummy, so the input will be a dummy
+# when AO is used for output.
+
 output.prefered=output.dummy
-%ifdef output.oss
-  output.prefered=output.oss
+%ifdef output.ao
+  output.prefered=output.ao
 %endif
 %ifdef output.alsa
   output.prefered=output.alsa
 %endif
+%ifdef output.oss
+  output.prefered=output.oss
+%endif
+%ifdef output.portaudio
+  output.prefered = output.portaudio
+%endif
 %ifdef output.pulseaudio
   output.prefered=output.pulseaudio
 %endif
-%ifdef output.ao
-  output.prefered=output.ao
-%endif
-# Output to local audio card using the first available driver in this list:
-#   ao, pulseaudio, alsa, oss, dummy
+# Output to local audio card using the first available driver in
+# pulseaudio, portaudio, oss, alsa, ao, dummy.
 # @category Source / Output
-def output.prefered(~id="",s)
-  output.prefered(id=id,s)
+def output.prefered(~id="",~fallible=false,
+                    ~on_start={()},~on_stop={()},~start=true,s)
+  output.prefered(id=id,fallible=fallible,
+                  start=start,on_start=on_start,on_stop=on_stop,
+                  s)
 end
 
-in = fun () -> blank()
-%ifdef input.oss
-  in = fun () -> input.oss(id="oss_mic")
-%endif
+def in(~id="",~start=true,~on_start={()},~on_stop={()},~fallible=false)
+  blank(id=id)
+end
 %ifdef input.alsa
-  in = fun () -> input.alsa(id="alsa_mic")
+  in = input.alsa
+%endif
+%ifdef input.oss
+  in = input.oss
 %endif
 %ifdef input.portaudio
-  in = fun () -> input.portaudio(id="pa_mic")
+  in = input.portaudio
 %endif
-# Create a source from the first available input driver in this list:
-#   portaudio, alsa, oss, blank.
+%ifdef input.pulseaudio
+  in = input.pulseaudio
+%endif
+# Create a source from the first available input driver in
+# pulseaudio, portaudio, oss, alsa, blank.
 # @category Source / Input
-def in()
-  in()
+def in(~id="",~start=true,~on_start={()},~on_stop={()},~fallible=false)
+  in(id=id,start=start,on_start=on_start,on_stop=on_stop,fallible=fallible)
 end
 
 # Output a stream using the 'output.prefered' operator. The input source does
@@ -362,6 +384,11 @@ def read(~hide=false)
   s
 end
 
+file.mime_default = fun (_) -> ""
+%ifdef file.mime
+file.mime_default = file.mime
+%endif
+
 # Generic mime test. First try to use file.mime if it exist.
 # Otherwise try to get the value using the file binary.
 # Returns "" (empty string) if no value can be find.
@@ -376,15 +403,8 @@ def get_mime(file) =
       ""
     end
   end
-  def mime_method(file) =
-    ret = ""
-    %ifdef file.mime
-      ret = file.mime(file)
-    %endif
-    ret
-  end
   # First try mime method
-  ret = mime_method(file)
+  ret = file.mime_default(file)
   if ret != "" then
     ret 
   else
@@ -403,8 +423,8 @@ end
 
 # Creates a source that fails to produce anything.
 # @category Source / Input
-def fail()
-  fallback([])
+def fail(~id="")
+  fallback(id=id,[])
 end
 
 # Creates a source that plays only one track of the input source.
@@ -675,6 +695,17 @@ def enable_replaygain_metadata(
     end
   end
   add_metadata_resolver("replay_gain", replaygain_metadata)
+end
+
+# Assign a new clock to the given source (and to other time-dependent
+# sources) and return the source. It is a conveniency wrapper around
+# clock.assign_new(), allowing more concise scripts in some cases.
+# @category Liquidsoap
+# @param ~sync Do not synchronize the clock on regular wallclock time, \
+#              but try to run as fast as possible (CPU burning mode).
+def clock(~sync=true,~id="",s)
+  clock.assign_new(sync=sync,id=id,[s])
+  s
 end
 
 # Create a log of clock times for all the clocks initially present.
