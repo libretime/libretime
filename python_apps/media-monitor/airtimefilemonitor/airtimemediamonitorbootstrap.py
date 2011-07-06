@@ -95,7 +95,7 @@ class AirtimeMediaMonitorBootstrap():
         open("/var/tmp/airtime/.media_monitor_boot","w")       
                 
         for file_path in deleted_files_set:
-            self.pe.handle_removed_file(file_path)
+            self.pe.handle_removed_file(False, file_path)
                 
         for file_path in new_files_set:
             if os.path.exists(file_path):

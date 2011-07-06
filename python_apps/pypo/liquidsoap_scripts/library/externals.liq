@@ -28,8 +28,6 @@ def enable_external_flac_decoder() =
         # If the value is not an int, this returns 0 and we are ok :)
         int_of_string(channels)
       else
-        # Try to detect using mime test..
-        mime = get_mime(file)
         if string.match(pattern="flac",file) then
           # We do not know the number of audio channels
           # so setting to -1
@@ -76,7 +74,7 @@ end
 
 %ifdef add_oblivious_decoder
 # Enable or disable external FAAD (AAC/AAC+/M4A) decoders. 
-# Requires faad binary in the path for audio decoding and 
+# Requires faad binary in the path for audio decoding and 
 # metaflac binary for metadata. Does not work on Win32.
 # Please note that built-in support for faad is available
 # in liquidsoap if compiled and should be preferred over
