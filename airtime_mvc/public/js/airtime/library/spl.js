@@ -405,8 +405,8 @@ function deleteSPL() {
 	
 	url = '/Playlist/delete-active/format/json';
 
-	$.post(url, function(){
-		noOpenPL;
+	$.post(url, function(json){
+		noOpenPL(json);
 		//redraw the library list
 		redrawDataTablePage();
 	});
