@@ -102,11 +102,10 @@ class MusicDir {
                     ->findOne();
 
         $mus_dir = new MusicDir($dir);
-        $mus_dir->_dir = $dir;
 
         return $mus_dir;
-    }
-
+    }    
+    
     public static function setStorDir($p_dir)
     {
         $dir = self::getStorDir();
