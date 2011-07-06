@@ -106,9 +106,7 @@ class AirtimeProcessEvent(ProcessEvent):
             
     #checks if path is a directory, and if it doesnt exist, then creates it.
     #Otherwise prints error to log file.
-    def ensure_is_dir(self, filepath):
-        directory = os.path.dirname(filepath)
-
+    def ensure_is_dir(self, directory):
         try:
             omask = os.umask(0)
             if not os.path.exists(directory):
@@ -213,7 +211,7 @@ class AirtimeProcessEvent(ProcessEvent):
 
             filepath = self.create_unique_filename(filepath, original_path)
             self.logger.info('Unique filepath: %s', filepath)
-            self.ensure_is_dir(filepath)
+            self.ensure_is_dir(os.path.dirname(filepath))
 
         except Exception, e:
             self.logger.error('Exception: %s', e)
