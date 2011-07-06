@@ -426,10 +426,12 @@ $(document).ready(function() {
 $(window).resize(function(){
 	var windowWidth = $(this).width();
     // margin on showform are 16 px on each side
-    var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 6))/windowWidth*100);
-    var widthPercent = parseInt(calendarWidth)+"%";
-    $("#schedule_calendar").css("width", widthPercent);
-    $("#schedule_calendar").fullCalendar('render');
+	if(!$("#schedule-add-show").is(':hidden')){	 
+        var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
+        var widthPercent = parseInt(calendarWidth)+"%";
+        $("#schedule_calendar").css("width", widthPercent);
+        $("#schedule_calendar").fullCalendar('render');
+	}
 });
 
 $(window).load(function() {
