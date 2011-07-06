@@ -131,7 +131,7 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
         
         // checkbox for privacy policy
         $checkboxPrivacy = new Zend_Form_Element_Checkbox("Privacy");
-        $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"\">privacy policy</a>.")
+        $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"http://www.sourcefabric.org/en/about/policy/\" onclick=\"window.open(this.href); return false;\">privacy policy</a>.")
             ->setDecorators(array('ViewHelper'));
         $this->addElement($checkboxPrivacy);
     }
