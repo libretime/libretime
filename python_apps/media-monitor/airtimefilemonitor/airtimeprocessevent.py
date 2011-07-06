@@ -94,7 +94,10 @@ class AirtimeProcessEvent(ProcessEvent):
         finally:
             os.umask(omask)
 
-    def ensure_dir(self, filepath):
+            
+    #checks if path is a directory, and if it doesnt exist, then creates it.
+    #Otherwise prints error to log file.
+    def ensure_is_dir(self, filepath):
         directory = os.path.dirname(filepath)
 
         try:
@@ -202,7 +205,7 @@ class AirtimeProcessEvent(ProcessEvent):
             self.logger.info('Created filepath: %s', filepath)
             filepath = self.create_unique_filename(filepath, original_path)
             self.logger.info('Unique filepath: %s', filepath)
-            self.ensure_dir(filepath)
+            self.ensure_is_dir(filepath)
 
         except Exception, e:
             self.logger.error('Exception: %s', e)
@@ -259,14 +262,9 @@ class AirtimeProcessEvent(ProcessEvent):
         self.handle_modified_file(event.dir, event.pathname, event.name)
                 
     def handle_modified_file(self, dir, pathname, name):
-        if self.is_parent_directory(pathname, self.config.organize_directory):
-            #we don't care if a file was modified in the organize directory.
-            pass
-        elif not dir:
+        if not dir and self.is_parent_directory(pathname, self.config.organize_directory):
             self.logger.info("Modified: %s", pathname)
-            if pathname in self.renamed_files:
-                pass
-            elif self.is_audio_file(name):
+            if self.is_audio_file(name):
                 self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY})
 
     #if a file is moved somewhere, this callback is run. With details about
@@ -278,18 +276,6 @@ class AirtimeProcessEvent(ProcessEvent):
         if not event.dir:
             if self.is_audio_file(event.name):
                 self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
-            
-            """
-            if "goutputstream" in event.pathname:
-                self.gui_replaced[event.cookie] = None
-            elif event.pathname in self.temp_files:
-                del self.temp_files[event.pathname]
-                self.temp_files[event.cookie] = event.pathname
-            elif event.pathname in self.renamed_files:
-                pass
-            else:
-                self.moved_files[event.cookie] = event.pathname
-            """
 
     def process_IN_MOVED_TO(self, event):
         self.logger.info("process_IN_MOVED_TO: %s", event)
@@ -313,13 +299,15 @@ class AirtimeProcessEvent(ProcessEvent):
 
     def process_IN_DELETE(self, event):
         self.logger.info("process_IN_DELETE: %s", event)
-        self.handle_removed_file(event.pathname)
+        self.handle_removed_file(event.dir, event.pathname)
             
-    def handle_removed_file(self, pathname):
+    def handle_removed_file(self, dir, pathname):
         self.logger.info("Deleting %s", pathname)
-        if not self.is_parent_directory(pathname, self.config.organize_directory):
-            #we don't care if a file was deleted from the organize directory.
-            self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_DELETE})
+        if not dir:
+            if self.is_audio_file(event.name):
+                if not self.is_parent_directory(pathname, self.config.organize_directory):
+                    #we don't care if a file was deleted from the organize directory.
+                    self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_DELETE})
     
 
     def process_default(self, event):
@@ -360,7 +348,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 #watched directories. Let's handle this by deleting 
                 #it from the Airtime directory.
                 del self.cookies_IN_MOVED_FROM[k]
-                self.handle_removed_file(event.pathname)
+                self.handle_removed_file(False, event.pathname)
         
 
         #check for any events recieved from Airtime.
