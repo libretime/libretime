@@ -49,7 +49,9 @@ class AirtimeMediaMonitorBootstrap():
             
         command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
         stdout = self.execCommandAndReturnStdOut(command)
-        new_files = stdout.split('\n')
+        stdout = unicode(stdout, "utf_8")
+
+        new_files = stdout.splitlines()
         all_files_set = set()
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
@@ -65,9 +67,10 @@ class AirtimeMediaMonitorBootstrap():
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
             
         stdout = self.execCommandAndReturnStdOut(command)
-        
-        new_files = stdout.split('\n')
-        
+        stdout = unicode(stdout, "utf_8")
+
+        new_files = stdout.splitlines()
+                
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
                 new_and_modified_files.add(file_path)

@@ -839,6 +839,5 @@ class StoredFile {
 
         return $results;
     }
-
 }
 
