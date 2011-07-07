@@ -29,7 +29,12 @@ class NowplayingController extends Zend_Controller_Action
             
         if ($request->isPost()) {
             $values = $request->getPost();
-            if ($values["Publicise"] == '1' && $form->isValid($values)) {
+            if ($values["Publicise"] != 1){
+                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                // unset session
+                Zend_Session::namespaceUnset('referrer');
+            }
+            else if ($values["Publicise"] == '1' && $form->isValid($values)) {
                 Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
                 Application_Model_Preference::SetPhone($values["Phone"]);
                 Application_Model_Preference::SetEmail($values["Email"]);
@@ -47,6 +52,7 @@ class NowplayingController extends Zend_Controller_Action
                 // unset session
                 Zend_Session::namespaceUnset('referrer');
             }else{
+                var_dump($form->getMessages());
                 $logo = Application_Model_Preference::GetStationLogo();
                 if($logo){
                     $this->view->logoImg = $logo;
