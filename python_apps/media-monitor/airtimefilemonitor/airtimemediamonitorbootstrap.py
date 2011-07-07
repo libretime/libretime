@@ -55,7 +55,7 @@ class AirtimeMediaMonitorBootstrap():
         all_files_set = set()
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
-                all_files_set.add(file_path)           
+                all_files_set.add(file_path[len(dir)+1:])           
         
         
         if os.path.exists("/var/tmp/airtime/.media_monitor_boot"):
@@ -73,7 +73,7 @@ class AirtimeMediaMonitorBootstrap():
                 
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
-                new_and_modified_files.add(file_path)
+                new_and_modified_files.add(file_path[len(dir)+1:])
             
         #new_and_modified_files gives us a set of files that were either copied or modified
         #since the last time media-monitor was running. These files were collected based on
@@ -94,14 +94,16 @@ class AirtimeMediaMonitorBootstrap():
         open("/var/tmp/airtime/.media_monitor_boot","w")       
                 
         for file_path in deleted_files_set:
-            self.pe.handle_removed_file(False, file_path)
+            self.pe.handle_removed_file(False, "%s/%s" % (dir, file_path))
                 
         for file_path in new_files_set:
             if os.path.exists(file_path):
+                file_path = "%s/%s" % (dir, file_path)
                 self.pe.handle_created_file(False, os.path.basename(file_path), file_path)
                 
         for file_path in modified_files_set:
             if os.path.exists(file_path):
+                file_path = "%s/%s" % (dir, file_path)
                 self.pe.handle_modified_file(False, os.path.basename(file_path), file_path)
                             
     def execCommand(self, command):
