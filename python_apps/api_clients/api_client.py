@@ -417,6 +417,10 @@ class AirTimeApiClient(ApiClientInterface):
 
         return response
         
+    #returns a list of all db files for a given directory in JSON format:
+    #{"files":["path/to/file1", "path/to/file2"]}
+    #Note that these are relative paths to the given directory. The full 
+    #path is not returned.
     def list_all_db_files(self, dir_id):
         logger = logging.getLogger()
         try:

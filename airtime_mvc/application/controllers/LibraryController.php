@@ -207,25 +207,4 @@ class LibraryController extends Zend_Controller_Action
         }
 
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -121,7 +121,7 @@ class ApiController extends Zend_Controller_Action
                 //make sure to exit here so that no other output is sent.
                 exit;                
             } else {
-                $logger->err('Resource in database, but not in storage: '.$filepath.' '.is_file($filepath));
+                $logger->err('Resource in database, but not in storage: "'.$filepath.'"');
             }
           } else {
             $logger->err('$media != null && !PEAR::isError($media)');
