@@ -832,7 +832,7 @@ class StoredFile {
                 // ." AND m.id = $dir_id";
         $sql = "SELECT filepath as fp"
                 ." FROM CC_FILES"
-                ." WHERE f.directory = $dir_id";                
+                ." WHERE directory = $dir_id";                
              
         $rows = $CC_DBC->getAll($sql);
 

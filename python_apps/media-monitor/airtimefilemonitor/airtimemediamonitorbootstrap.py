@@ -97,13 +97,13 @@ class AirtimeMediaMonitorBootstrap():
             self.pe.handle_removed_file(False, "%s/%s" % (dir, file_path))
                 
         for file_path in new_files_set:
+            file_path = "%s/%s" % (dir, file_path)
             if os.path.exists(file_path):
-                file_path = "%s/%s" % (dir, file_path)
                 self.pe.handle_created_file(False, os.path.basename(file_path), file_path)
                 
         for file_path in modified_files_set:
+            file_path = "%s/%s" % (dir, file_path)
             if os.path.exists(file_path):
-                file_path = "%s/%s" % (dir, file_path)
                 self.pe.handle_modified_file(False, os.path.basename(file_path), file_path)
                             
     def execCommand(self, command):
