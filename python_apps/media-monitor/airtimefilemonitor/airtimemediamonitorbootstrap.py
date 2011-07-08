@@ -31,7 +31,7 @@ class AirtimeMediaMonitorBootstrap():
         
     def get_list_of_watched_dirs(self):
         json = self.api_client.list_all_watched_dirs()
-        return json["dirs"]
+        return json["dirs"]       
             
     def check_for_diff(self, dir_id, dir):        
         #set to hold new and/or modified files. We use a set to make it ok if files are added
@@ -46,12 +46,7 @@ class AirtimeMediaMonitorBootstrap():
         for file in files['files']:
             db_known_files_set.add(file)
             
-            
-        command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
-        stdout = self.execCommandAndReturnStdOut(command)
-        stdout = unicode(stdout, "utf_8")
-
-        new_files = stdout.splitlines()
+        new_files = self.pe.scan_dir_for_new_files(dir)
         all_files_set = set()
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:

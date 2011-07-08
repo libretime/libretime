@@ -98,8 +98,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 os.chmod(item, 0666)
 
         except Exception, e:
-            self.logger.error("Failed to change file's owner/group/permissions.")
-            self.logger.error(item)
+            self.logger.error("Failed to change file's owner/group/permissions. %s", e)
         finally:
             os.umask(omask)
 
@@ -247,7 +246,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 
                 
     def organize_new_file(self, pathname):
-        self.logger.info("Processing new file: %s", pathname)
+        self.logger.info(u"Organizing new file: %s", pathname)
         file_md = self.md_manager.get_md_from_file(pathname)
 
         if file_md is not None:
@@ -255,7 +254,7 @@ class AirtimeProcessEvent(ProcessEvent):
             #    file_md['MDATA_KEY_CREATOR'] == "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
             filepath = self.create_file_path(pathname, file_md)
             
-            self.logger.debug("Moving from %s to %s", pathname, filepath)
+            self.logger.debug(u"Moving from %s to %s", pathname, filepath)
             self.move_file(pathname, filepath)
         else:
             self.logger.warn("File %s, has invalid metadata", pathname)           
@@ -306,6 +305,20 @@ class AirtimeProcessEvent(ProcessEvent):
                     else:
                         #show dragged from unwatched folder into a watched folder. Do not "organize". 
                         self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
+        else:
+            #When we move a directory into a watched_dir, we only get a notification that the dir was created,
+            #and no additional information about files that came along with that directory.
+            #need to scan the entire directory for files.
+            files = self.scan_dir_for_new_files(event.pathname)
+            if self.is_parent_directory(event.pathname, self.config.organize_directory):
+                for file in files:
+                    self.organize_new_file(file)
+            else:
+                for file in files:
+                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': file, 'is_recorded_show': False})
+
+            
+                
 
     def process_IN_DELETE(self, event):
         self.logger.info("process_IN_DELETE: %s", event)
@@ -337,6 +350,14 @@ class AirtimeProcessEvent(ProcessEvent):
         f = open(file, 'w')
         f.write(string)
         f.close()
+        
+    def scan_dir_for_new_files(self, dir):
+        command = 'find "%s" -type f -iname "*.ogg" -o -iname "*.mp3" -readable' % dir.replace('"', '\\"')
+        self.logger.debug(command)
+        stdout = self.execCommandAndReturnStdOut(command)
+        stdout = unicode(stdout, "utf_8")
+
+        return stdout.splitlines() 
 
     def notifier_loop_callback(self, notifier):
         if len(self.file_events) > 0:
