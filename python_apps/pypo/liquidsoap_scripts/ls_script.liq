@@ -53,7 +53,7 @@ s = map_metadata(append_title, s)
 
 
 if output_sound_device then
-    ignore(out(s))
+    ignore(output.alsa(s))
 end
 
 if output_icecast_mp3 then
