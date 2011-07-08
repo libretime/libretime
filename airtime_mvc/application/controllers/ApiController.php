@@ -16,6 +16,9 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('reload-metadata', 'json')
                 ->addActionContext('list-all-files', 'json')
                 ->addActionContext('list-all-watched-dirs', 'json')
+                ->addActionContext('add-watched-dir', 'json')
+                ->addActionContext('remove-watched-dir', 'json')
+                ->addActionContext('set-storage-dir', 'json')
                 ->initContext();
     }
 
@@ -550,6 +553,58 @@ class ApiController extends Zend_Controller_Action
         }
         
         $this->view->dirs = $result;
+    }
+    
+    public function addWatchedDirAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        $path = base64_decode($request->getParam('path'));
+        
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        $this->view = MusicDir::addWatchedDir($path);
+    }
+    
+    public function removeWatchedDirAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        $path = base64_decode($request->getParam('path'));
+        
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        $dir = MusicDir::getDirByPath($path);
+        $this->view = $dir->remove();
+    }
+    
+    public function setStorageDirAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        $path = base64_decode($request->getParam('path'));
+        
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        MusicDir::setStorDir($path);
+        $this->view = MusicDir::getStorDir()->getDirectory();
     }
 }
 
