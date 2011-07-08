@@ -18,6 +18,7 @@ import logging
 import json
 import os
 from urlparse import urlparse
+import base64
 
 AIRTIME_VERSION = "1.9.0-devel"
 
@@ -109,6 +110,15 @@ class ApiClientInterface:
         pass    
         
     def list_all_watched_dirs(self):
+        pass
+    
+    def add_watched_dir(self):
+        pass
+    
+    def remove_watched_dir(self):
+        pass
+    
+    def set_storage_dir(self):
         pass
 
     # Put here whatever tests you want to run to make sure your API is working
@@ -434,6 +444,56 @@ class AirTimeApiClient(ApiClientInterface):
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
             response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+            
+        return response
+    
+    def add_watched_dir(self, path):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["add_watched_dir"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%path%%", base64.b64encode(path))
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+            
+        return response
+    
+    def remove_watched_dir(self, path):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["remove_watched_dir"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%path%%", base64.b64encode(path))
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            #response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+            
+        return response
+    
+    def set_storage_dir(self, path):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["set_storage_dir"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%path%%", base64.b64encode(path))
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            #response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
