@@ -35,11 +35,11 @@ except Exception, e:
 api_client = api_client.api_client_factory(config)
 
 def import_copy(args):
-    dest = get_stor_dir()+"/organize/"
+    dest = helper_get_stor_dir()+"/organize/"
     copy_or_move_files_to(args.path, dest, 'copy')
 
 def import_move(args):
-    dest = get_stor_dir()+"/organize/"
+    dest = helper_get_stor_dir()+"/organize/"
     copy_or_move_files_to(args.path, dest, 'move')
 
 def watch_add(args):
@@ -79,7 +79,6 @@ def watch_remove(args):
 def set_stor_dir(args):
     if(os.path.isdir(args.path)):
         res = api_client.set_storage_dir(args.path)
-        print res
         # sucess
         if(res == '[]'):
             print "Successfully set storage folder to %s" % args.path
@@ -88,6 +87,8 @@ def set_stor_dir(args):
     else:
         print "Given path is not a directory: %s" % args.path
     
+def get_stor_dir(args):
+    print helper_get_stor_dir()
 #helper functions
 
 # copy or move files
@@ -116,7 +117,7 @@ def copy_or_move_files_to(paths, dest, flag):
         else:
             print "Cannot find file or path: %s" % path
             
-def get_stor_dir():
+def helper_get_stor_dir():
     res = api_client.list_all_watched_dirs()
     return res['dirs']['1']
     
@@ -146,10 +147,14 @@ parser_add.set_defaults(func=watch_add)
 parser_list.set_defaults(func=watch_list)
 
 # for subcommand set-storage-dir
-parser_set_stor_dir = subparsers.add_parser('set-storage-dir', help='operations on watch directory')
-parser_set_stor_dir.add_argument('-f', '--force', action='store_true', help='bypass confirmation')
-parser_set_stor_dir.add_argument('path', help='path to the directory')
-parser_set_stor_dir.set_defaults(func=set_stor_dir)
+parser_stor_dir = subparsers.add_parser('storage-dir', help='operations on storage directory')
+storage_subparsers = parser_stor_dir.add_subparsers()
+parser_set = storage_subparsers.add_parser('set', help='set a storage directory')
+parser_get = storage_subparsers.add_parser('get', help='get the current storage directory')
+parser_set.add_argument('-f', '--force', action='store_true', help='bypass confirmation')
+parser_set.add_argument('path', help='path to the directory')
+parser_set.set_defaults(func=set_stor_dir)
+parser_get.set_defaults(func=get_stor_dir)
 
 args = parser.parse_args()
 #format args.path
