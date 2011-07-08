@@ -75,12 +75,25 @@ class AirtimeProcessEvent(ProcessEvent):
         else:
             return False
         
-    #file needs to be readable by all users, and directories
-    #up to this file needs to be readable AND executable by all
-    #users.
+    #check if file is readable by "nobody"
     def has_correct_permissions(self, filepath):
-        st = os.stat(filepath)
-        return bool(st.st_mode & stat.S_IROTH)
+        #drop root permissions and become "nobody"
+        os.seteuid(65534)
+        
+        try:
+            open(filepath)
+            readable = True
+        except IOError:
+            self.logger.warn("File does not have correct permissions: '%s'", filepath)
+            readable = False
+        except Exception, e:
+            self.logger.error("Unexpected exception thrown: %s", e)
+            readable = False
+        finally:
+            #reset effective user to root
+            os.seteuid(0)
+        
+        return readable
 
     def set_needed_file_permissions(self, item, is_dir):
 

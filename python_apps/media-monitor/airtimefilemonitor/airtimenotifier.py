@@ -66,13 +66,10 @@ class AirtimeNotifier(Notifier):
 
         elif m['event_type'] == "new_watch":
             mm = self.proc_fun()
-            if mm.has_correct_permissions(m['directory']):
-                self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
-                self.walk_newly_watched_directory(m['directory'])
+            self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
+            self.walk_newly_watched_directory(m['directory'])
 
-                mm.watch_directory(m['directory'])
-            else:
-                self.logger.warn("filepath '%s' has does not have sufficient read permissions. Ignoring.", full_filepath)
+            mm.watch_directory(m['directory'])
 
         elif m['event_type'] == "remove_watch":
             watched_directory = m['directory'].encode('utf-8')
