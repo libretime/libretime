@@ -365,12 +365,15 @@ class AirTimeApiClient(ApiClientInterface):
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_setup_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
-            logger.debug(url)
 
             response = urllib.urlopen(url)
             response = json.loads(response.read())
-            logger.debug("Json Media Setup %s", response)
-
+            logger.info("Connected to Airtime Server. Json Media Storage Dir: %s", response)
+        except IOError:
+            #this should be a common exception when media-monitor daemon
+            #has started before apache on bootup and apache isn't accepting
+            #connections yet.
+            response = None
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)

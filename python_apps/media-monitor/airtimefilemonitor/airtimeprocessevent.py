@@ -25,23 +25,24 @@ class AirtimeProcessEvent(ProcessEvent):
         keyworded arguments passed to ProcessEvent.__init__() are then
         delegated to my_init().
         """
-
         self.logger = logging.getLogger()
         self.config = airtime_config
 
         #put the file path into this dict if we want to ignore certain 
         #events. For example, when deleting a file from the web ui, we
-        #are going to delete it on the server side, so media-monitor doesn't
-        #need to contact the server and tell it to delete again.
+        #are going to delete it from the db on the server side, so media-monitor 
+        #doesn't need to contact the server and tell it to delete again.
         self.ignore_event = set()
         
         self.supported_file_formats = ['mp3', 'ogg']
+        
+        """
         self.temp_files = {}
         self.renamed_files = {}
-        """
         self.moved_files = {}
         self.gui_replaced = {}
         """
+        
         self.cookies_IN_MOVED_FROM = {}
         self.file_events = []
         self.multi_queue = queue
@@ -61,6 +62,7 @@ class AirtimeProcessEvent(ProcessEvent):
         directory = os.path.normpath(directory)
         return (directory == filepath[0:len(directory)])
 
+    """
     def is_temp_file(self, filename):
         info = filename.split(".")
 
@@ -68,6 +70,7 @@ class AirtimeProcessEvent(ProcessEvent):
             return True
         else:
             return False
+    """
 
     def is_audio_file(self, filename):
         info = filename.split(".")
@@ -98,7 +101,6 @@ class AirtimeProcessEvent(ProcessEvent):
         return readable
 
     def set_needed_file_permissions(self, item, is_dir):
-
         try:
             omask = os.umask(0)
 
@@ -259,10 +261,10 @@ class AirtimeProcessEvent(ProcessEvent):
         if not dir:
             self.logger.debug("PROCESS_IN_CREATE: %s, name: %s, pathname: %s ", dir, name, pathname)
             #event is because of a created file
-            if self.is_temp_file(name) :
+            #if self.is_temp_file(name) :
                 #file created is a tmp file which will be modified and then moved back to the original filename.
-                self.temp_files[pathname] = None
-            elif self.is_audio_file(pathname):
+                #self.temp_files[pathname] = None
+            if self.is_audio_file(pathname):
                 if self.is_parent_directory(pathname, self.config.organize_directory):
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
