@@ -121,8 +121,11 @@ def helper_get_stor_dir():
     res = api_client.list_all_watched_dirs()
     return res['dirs']['1']
     
-parser = argparse.ArgumentParser(description="This script let you do following operations- imports files\n- add/remove/list watch folders\n- set default storage folder", formatter_class=RawTextHelpFormatter)
-subparsers = parser.add_subparsers()
+parser = argparse.ArgumentParser(description="This script let you do following operations\n- import files\n- add/remove/list watch folders\n- set default storage folder", formatter_class=RawTextHelpFormatter)
+# for subcommand move
+parser.add_argument('-c','--copy', action='store_true', help='copy file(deprecated. Use "copy" sub-command)')
+parser.add_argument('-l','--link', action='store_true', help='link file(deprecated. Use "watch" sub-command)')
+subparsers = parser.add_subparsers(help='sub-command help')
 
 # for subcommand copy
 parser_copy = subparsers.add_parser('copy', help='copy file')
@@ -133,6 +136,8 @@ parser_copy.set_defaults(func=import_copy)
 parser_move = subparsers.add_parser('move', help='move file')
 parser_move.add_argument('path', nargs='+', help='path to the file or directory')
 parser_move.set_defaults(func=import_move)
+
+#parser_deprecated1 = subparsers.add_parser('-c', help='copy file')
 
 # for subcommand watch
 parser_watch = subparsers.add_parser('watch', help='operations on watch directory')
@@ -156,7 +161,12 @@ parser_set.add_argument('path', help='path to the directory')
 parser_set.set_defaults(func=set_stor_dir)
 parser_get.set_defaults(func=get_stor_dir)
 
-args = parser.parse_args()
+
+if ("-c" in sys.argv or "-copy" in sys.argv or "-l" in sys.argv or "-link" in sys.argv):
+    args = parser.parse_args(['-h'])
+else:
+    args = parser.parse_args()
+print args
 #format args.path
 if(hasattr(args,'path')):
     if(args.path[-1] != '/'):
