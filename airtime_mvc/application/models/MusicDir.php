@@ -47,12 +47,16 @@ class MusicDir {
     {
         $dir = new CcMusicDirs();
         $dir->setType($p_type);
-        $dir->setDirectory($p_path);
-        $dir->save();
-
-        $mus_dir = new MusicDir($dir);
-
-        return $mus_dir;
+        $temp = $dir->setDirectory($p_path);
+        try{
+            $dir->save();
+            return array("code"=>0);
+        }
+        catch(Exception $e){
+            //echo $e->getMessage();
+            return array("code"=>1, "error"=>"$p_path is already set as the current storage dir or the watched folders");
+        }
+        
     }
 
     public static function addWatchedDir($p_path)
@@ -75,8 +79,13 @@ class MusicDir {
                     ->filterByDirectory($p_path)
                     ->findOne();
 
-        $mus_dir = new MusicDir($dir);
-        return $mus_dir;
+        if($dir == NULL){
+            return null;
+        }
+        else{
+            $mus_dir = new MusicDir($dir);
+            return $mus_dir;
+        }
     }
 
     public static function getWatchedDirs()
@@ -109,8 +118,14 @@ class MusicDir {
     public static function setStorDir($p_dir)
     {
         $dir = self::getStorDir();
-        // we need to check if p_dir is in watched list
-        $dir->setDirectory($p_dir);
+        // if $p_dir doesn't exist in DB
+        $exist = $dir->getDirByPath($p_dir);
+        if($exist == NULL){
+            $dir->setDirectory($p_dir);
+            return array("code"=>0);
+        }else{
+            return array("code"=>1, "error"=>"$p_dir is already set as the current storage dir or the watched folders");
+        }
     }
 
     public static function getWatchedDirFromFilepath($p_filepath)
@@ -127,6 +142,16 @@ class MusicDir {
         }
 
         return null;
+    }
+    
+    public static function removeWatchedDir($p_dir){
+        $dir = MusicDir::getDirByPath($p_dir);
+        if($dir == NULL){
+            return array("code"=>1,"error"=>"$p_dir doesn't exist in the watched list");
+        }else{
+            $dir->remove();
+            return array("code"=>0);
+        }
     }
 
     public static function splitFilePath($p_filepath)

@@ -569,7 +569,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
         
-        $this->view = MusicDir::addWatchedDir($path);
+        $this->view->msg = MusicDir::addWatchedDir($path);
     }
     
     public function removeWatchedDirAction() {
@@ -586,8 +586,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
         
-        $dir = MusicDir::getDirByPath($path);
-        $this->view = $dir->remove();
+        $this->view->msg = MusicDir::removeWatchedDir($path);
     }
     
     public function setStorageDirAction() {
@@ -603,8 +602,8 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        MusicDir::setStorDir($path);
-        $this->view = MusicDir::getStorDir()->getDirectory();
+        
+        $this->view->msg = MusicDir::setStorDir($path);
     }
 }
 

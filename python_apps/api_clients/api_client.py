@@ -464,6 +464,7 @@ class AirTimeApiClient(ApiClientInterface):
             
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
+            response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
@@ -480,7 +481,7 @@ class AirTimeApiClient(ApiClientInterface):
             
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
-            #response = json.loads(response)
+            response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
@@ -497,7 +498,7 @@ class AirTimeApiClient(ApiClientInterface):
             
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
-            #response = json.loads(response)
+            response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
