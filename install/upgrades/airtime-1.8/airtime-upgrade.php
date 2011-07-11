@@ -66,5 +66,5 @@ $CC_CONFIG = Config::loadConfig($CC_CONFIG);
 
 echo "* Creating default storage directory".PHP_EOL;
 AirtimeInstall::InstallStorageDirectory();
-AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG["storageDir"]);
+AirtimeInstall::ChangeDirOwnerToWebserver($CC_CONFIG['baseFilesDir']."/stor");
 AirtimeInstall::CreateSymlinksToUtils();

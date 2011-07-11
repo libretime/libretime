@@ -67,9 +67,7 @@ class Config {
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
 
         $CC_CONFIG['baseFilesDir'] = $values['general']['base_files_dir'];
-        // main directory for storing binary media files
-        $CC_CONFIG['storageDir'] =  $values['general']['base_files_dir']."/stor";
-
+        
 	    // Database config
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
         $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];

@@ -50,8 +50,11 @@ AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 AirtimeInstall::SetUniqueId();
 
 if (AirtimeInstall::$databaseTablesCreated) {
-  echo "* Inserting stor directory into music_dirs table".PHP_EOL;
-  $stor_dir = realpath($CC_CONFIG['storageDir']);
+
+  $ini = parse_ini_file(__DIR__."/airtime-install.ini");
+  
+  $stor_dir = $ini["storage_dir"];
+  echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
 
   $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
   $result = $CC_DBC->query($sql);

@@ -408,8 +408,8 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-
-        $this->view->stor = $CC_CONFIG['storageDir'];
+        
+        $this->view->stor = MusicDir::getStorDir()->getDirectory();
     }
 
     public function reloadMetadataAction() {

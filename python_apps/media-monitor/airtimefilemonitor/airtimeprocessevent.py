@@ -104,7 +104,7 @@ class AirtimeProcessEvent(ProcessEvent):
         try:
             omask = os.umask(0)
 
-            uid = pwd.getpwnam('pypo')[2]
+            uid = pwd.getpwnam('www-data')[2]
             gid = grp.getgrnam('www-data')[2]
 
             os.chown(item, uid, gid)

@@ -20,6 +20,8 @@ if (!function_exists('pg_connect')) {
     exit(2);
 }
 
+
+/* This class deals with the config files stored in /etc/airtime */
 class AirtimeIni
 {
     const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";

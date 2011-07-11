@@ -117,12 +117,18 @@ class AirtimeInstall
         }
     }
 
+    
+    /* TODO: This function should be moved to the media-monitor
+     * install script. */
     public static function InstallStorageDirectory()
     {
         global $CC_CONFIG, $CC_DBC;
         echo "* Storage directory setup".PHP_EOL;
         
-        $dirs = array($CC_CONFIG['storageDir'], $CC_CONFIG['storageDir']."/organize");
+        $ini = parse_ini_file(__DIR__."/airtime-install.ini");
+        $stor_dir = $ini["storage_dir"];
+        
+        $dirs = array($stor_dir, $stor_dir."/organize");
         
         foreach ($dirs as $dir){
             if (!file_exists($dir)) {
@@ -150,9 +156,6 @@ class AirtimeInstall
             $success = chown($rp, "pypo");
             $success = chmod($rp, 02777);
         }
-        
-        //July 5th, 2011: Why is this here - MK?????
-        //$CC_CONFIG['storageDir'] = $rp;
     }
 
     public static function CreateDatabaseUser()
@@ -310,10 +313,6 @@ class AirtimeInstall
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-import";
         exec("ln -s $dir /usr/bin/airtime-import");
 
-        echo "* Installing airtime-clean-storage".PHP_EOL;
-        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-clean-storage";
-        exec("ln -s $dir /usr/bin/airtime-clean-storage");
-
         echo "* Installing airtime-update-db-settings".PHP_EOL;
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
         exec("ln -s $dir /usr/bin/airtime-update-db-settings");
@@ -326,7 +325,6 @@ class AirtimeInstall
     public static function RemoveSymlinks()
     {
         exec("rm -f /usr/bin/airtime-import");
-        exec("rm -f /usr/bin/airtime-clean-storage");
         exec("rm -f /usr/bin/airtime-update-db-settings");
         exec("rm -f /usr/bin/airtime-check-system");
     }

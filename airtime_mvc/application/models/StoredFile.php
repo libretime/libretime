@@ -336,9 +336,11 @@ class StoredFile {
         if (Schedule::IsFileScheduledInTheFuture($this->getId())) {
             return PEAR::raiseError('Cannot delete a file that is scheduled in the future.');
         }
+        
+        $storageDir = MusicDir::getStorDir()->getDirectory();
 
         // Only delete the file from filesystem if it has been copied to the storage directory
-        if (substr($this->getFilePath(), 0, strlen($CC_CONFIG["storageDir"])) == $CC_CONFIG["storageDir"]) {
+        if (substr($this->getFilePath(), 0, strlen($storageDir) == $storageDir)) {
             // Delete the file
             $res = unlink($this->getFilePath());
             if (!$res) {
