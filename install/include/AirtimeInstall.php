@@ -6,7 +6,6 @@ require_once('DB.php');
 class AirtimeInstall
 {
     const CONF_DIR_BINARIES = "/usr/lib/airtime";
-    const CONF_DIR_STORAGE = "/srv/airtime";
     const CONF_DIR_WWW = "/var/www/airtime";
     const CONF_DIR_LOG = "/var/log/airtime";
 
@@ -361,7 +360,6 @@ class AirtimeInstall
     {
         echo "Legend: \"+\" means the dir/file exists, \"-\" means that it does not.".PHP_EOL;
         $dirs = array(AirtimeInstall::CONF_DIR_BINARIES,
-                      AirtimeInstall::CONF_DIR_STORAGE,
                       AirtimeInstall::CONF_DIR_WWW,
                       AirtimeIni::CONF_FILE_AIRTIME,
                       AirtimeIni::CONF_FILE_LIQUIDSOAP,

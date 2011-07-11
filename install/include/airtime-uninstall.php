@@ -77,14 +77,6 @@ if ($results == 0) {
     echo "   * Nothing to delete.".PHP_EOL;
 }
 
-# Disabled as this should be a manual process
-#AirtimeInstall::DeleteFilesRecursive(AirtimeInstall::CONF_DIR_STORAGE);
-
-
-
-#Disabled as this should be a manual process
-#AirtimeIni::RemoveIniFiles();
-
 AirtimeInstall::RemoveSymlinks();
 AirtimeInstall::UninstallBinaries();
 AirtimeInstall::RemoveLogDirectories();
