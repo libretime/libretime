@@ -122,7 +122,7 @@ class AirtimeNotifier(Notifier):
         mode = d['mode']
 
         md = {}
-        md['MDATA_KEY_FILEPATH'] = filepath
+        md['MDATA_KEY_FILEPATH'] = filepath.encode("utf_8")
 
         if 'data' in d:
             file_md = d['data']
