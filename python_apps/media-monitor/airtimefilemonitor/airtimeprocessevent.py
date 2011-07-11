@@ -57,6 +57,8 @@ class AirtimeProcessEvent(ProcessEvent):
         return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
     def is_parent_directory(self, filepath, directory):
+        filepath = os.path.normpath(filepath)
+        directory = os.path.normpath(directory)
         return (directory == filepath[0:len(directory)])
 
     def is_temp_file(self, filename):
@@ -130,6 +132,8 @@ class AirtimeProcessEvent(ProcessEvent):
         finally:
             os.umask(omask)
 
+    #moves file from source to dest but also recursively removes the 
+    #the source file's parent directories if they are now empty.
     def move_file(self, source, dest):
 
         try:
@@ -139,6 +143,21 @@ class AirtimeProcessEvent(ProcessEvent):
             self.logger.error("failed to move file. %s", e)
         finally:
             os.umask(omask)
+         
+        dir = os.path.dirname(source)
+        self.cleanup_empty_dirs(dir)
+            
+    #keep moving up the file hierarchy and deleting parent
+    #directories until we hit a non-empty directory, or we
+    #hit the organize dir.
+    def cleanup_empty_dirs(self, dir):
+        if os.path.normpath(dir) != self.config.organize_directory:
+            if len(os.listdir(dir)) == 0:
+                os.rmdir(dir)
+                
+                pdir = os.path.dirname(dir)
+                self.cleanup_empty_dirs(pdir)
+        
 
     #checks if path exists already in stor. If the path exists and the md5s are the 
     #same just overwrite.
@@ -371,11 +390,15 @@ class AirtimeProcessEvent(ProcessEvent):
         stdout = unicode(stdout, "utf_8")
 
         return stdout.splitlines() 
+        
+    def touch_index_file(self):
+        open("/var/tmp/airtime/.last_index", "w")
 
     def notifier_loop_callback(self, notifier):
         if len(self.file_events) > 0:
             for event in self.file_events:
                 self.multi_queue.put(event)
+            self.touch_index_file()
 
             self.file_events = []
             

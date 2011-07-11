@@ -94,28 +94,15 @@ class AirtimeNotifier(Notifier):
 
             self.bootstrap.check_for_diff(new_storage_directory_id, new_storage_directory)
             
-            self.config.storage_directory = new_storage_directory
-            self.config.imported_directory = new_storage_directory + '/imported'
-            self.config.organize_directory = new_storage_directory + '/organize'
+            self.config.storage_directory = os.path.normpath(new_storage_directory)
+            self.config.imported_directory = os.path.normpath(new_storage_directory + '/imported')
+            self.config.organize_directory = os.path.normpath(new_storage_directory + '/organize')
             
             mm.ensure_is_dir(self.config.storage_directory)
             mm.ensure_is_dir(self.config.imported_directory)
             mm.ensure_is_dir(self.config.organize_directory)
 
             mm.watch_directory(new_storage_directory)
-            
-            """
-            old_storage_contents = os.listdir(storage_directory)
-            for item in old_storage_contents:
-                fp = "%s/%s" % (storage_directory, item)
-                nfp = "%s/%s" % (new_storage_directory, item)
-                self.logger.info("Moving %s to %s", fp, nfp)
-                mm.move_file(fp, nfp)
-            
-            """
-            
-            
-            
         elif m['event_type'] == "file_delete":
             self.logger.info("Deleting file: %s ", m['filepath'])
             mm = self.proc_fun()
