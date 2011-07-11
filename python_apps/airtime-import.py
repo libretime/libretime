@@ -46,10 +46,10 @@ def watch_add(args):
     if(os.path.isdir(args.path)):
         res = api_client.add_watched_dir(args.path)
         # sucess
-        if(res == '[]'):
+        if(res['msg']['code'] == 0):
             print "%s added to watched folder list successfully" % args.path
         else:
-            print "Adding %s to watched folder list failed.( path already exist in the list )" % args.path
+            print "Adding a watched folder failed. : %s" % res['msg']['error']
     else:
         print "Given path is not a directory: %s" % args.path
 
@@ -69,10 +69,10 @@ def watch_remove(args):
     if(os.path.isdir(args.path)):
         res = api_client.remove_watched_dir(args.path)
         # sucess
-        if(res == '[]'):
+        if(res['msg']['code'] == 0):
             print "%s removed from watched folder list successfully" % args.path
         else:
-            print "Removing %s from watched folder list failed.( path doesn't exist in the list )" % args.path
+            print "Removing a watched folder failed. : %s" % res['msg']['error']
     else:
         print "Given path is not a directory: %s" % args.path
 
@@ -80,10 +80,10 @@ def set_stor_dir(args):
     if(os.path.isdir(args.path)):
         res = api_client.set_storage_dir(args.path)
         # sucess
-        if(res == '[]'):
+        if(res['msg']['code'] == 0):
             print "Successfully set storage folder to %s" % args.path
         else:
-            print "Setting storage folder to  %s failed." % args.path
+            print "Setting storage folder to failed.: %s" % res['msg']['error']
     else:
         print "Given path is not a directory: %s" % args.path
     
