@@ -52,11 +52,10 @@ class AirtimeMediaMonitorBootstrap():
             if len(file_path.strip(" \n")) > 0:
                 all_files_set.add(file_path[len(dir)+1:])           
         
-        
-        if os.path.exists("/var/tmp/airtime/.media_monitor_boot"):
+        if os.path.exists("/var/tmp/airtime/.last_index"):
             #find files that have been modified since the last time
             #media-monitor process started.
-            time_diff_sec = time.time() - os.path.getmtime("/var/tmp/airtime/.media_monitor_boot")
+            time_diff_sec = time.time() - os.path.getmtime("/var/tmp/airtime/.last_index")
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable -mmin -%d" % (dir, time_diff_sec/60+1)
         else:
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
@@ -86,7 +85,7 @@ class AirtimeMediaMonitorBootstrap():
         self.logger.info("Modified files: \n%s\n\n"%modified_files_set)   
                 
         #"touch" file timestamp
-        open("/var/tmp/airtime/.media_monitor_boot","w")       
+        self.pe.touch_index_file()
                 
         for file_path in deleted_files_set:
             self.pe.handle_removed_file(False, "%s/%s" % (dir, file_path))

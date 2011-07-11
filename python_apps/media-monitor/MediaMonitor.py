@@ -50,9 +50,9 @@ try:
         
     storage_directory = response["stor"].encode('utf-8')
     logger.info("Storage Directory is: %s", storage_directory)
-    config.storage_directory = storage_directory
-    config.imported_directory = storage_directory + '/imported'
-    config.organize_directory = storage_directory + '/organize'
+    config.storage_directory = os.path.normpath(storage_directory)
+    config.imported_directory = os.path.normpath(storage_directory + '/imported')
+    config.organize_directory = os.path.normpath(storage_directory + '/organize')
     
     multi_queue = mpQueue()
     logger.info("Initializing event processor")
