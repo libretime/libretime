@@ -109,6 +109,7 @@ class MusicDir {
     public static function setStorDir($p_dir)
     {
         $dir = self::getStorDir();
+        // we need to check if p_dir is in watched list
         $dir->setDirectory($p_dir);
     }
 
