@@ -163,8 +163,8 @@ class PypoPush(Thread):
             #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
             epoch_now = time.time()
 
-            logger.debug("Epoch start: " + str(epoch_start))
-            logger.debug("Epoch now: " + str(epoch_now))
+            logger.debug("Epoch start: %s" % epoch_start)
+            logger.debug("Epoch now: %s" % epoch_now)
 
             sleep_time = epoch_start - epoch_now;
 
@@ -184,8 +184,8 @@ class PypoPush(Thread):
             liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)
 
             #Sending schedule table row id string.
-            logger.debug("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
-            tn.write(("vars.pypo_data %s\n"%str(liquidsoap_data["schedule_id"])).encode('latin-1'))
+            logger.debug("vars.pypo_data %s\n"%(liquidsoap_data["schedule_id"]))
+            tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('latin-1'))
 
             logger.debug('Preparing to push playlist %s' % pkey)
             for item in playlist:
