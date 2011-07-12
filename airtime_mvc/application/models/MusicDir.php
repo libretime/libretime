@@ -157,15 +157,13 @@ class MusicDir {
     public static function splitFilePath($p_filepath)
     {
         $mus_dir = self::getWatchedDirFromFilepath($p_filepath);
+        
         if(is_null($mus_dir)) {
             return null;
         }
 
         $length_dir = strlen($mus_dir->getDirectory());
-        $length_filepath = strlen($p_filepath);
-        $length = $length_filepath - $length_dir;
-
-        $fp = substr($p_filepath, $length_dir+1, $length);
+        $fp = substr($p_filepath, $length_dir);
 
         return array($mus_dir->getDirectory(), $fp);
     }

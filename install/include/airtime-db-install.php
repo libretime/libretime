@@ -53,7 +53,7 @@ if (AirtimeInstall::$databaseTablesCreated) {
 
   $ini = parse_ini_file(__DIR__."/airtime-install.ini");
   
-  $stor_dir = $ini["storage_dir"];
+  $stor_dir = realpath($ini["storage_dir"])."/";
   echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
 
   $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";

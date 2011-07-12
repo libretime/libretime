@@ -417,7 +417,7 @@ class StoredFile {
         $music_dir = MusicDir::getDirByPK($this->_file->getDbDirectory());
         $filepath = $this->_file->getDbFilepath();
 
-        return $music_dir->getDirectory()."/".$filepath;
+        return $music_dir->getDirectory().$filepath;
     }
 
     /**
