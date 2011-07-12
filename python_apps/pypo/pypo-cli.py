@@ -115,12 +115,6 @@ if __name__ == '__main__':
 
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
-    #import daemonize
-    #daemonize.createDaemon()
-    #open("airtime.pid", "w").write(str(os.getpid()) + "\n")
-    #daemonize.drop_privileges("pypo", "pypo")
-    
- 
     # initialize
     g = Global()
 

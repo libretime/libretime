@@ -83,8 +83,10 @@ class PypoFetch(Thread):
         
 
     def set_export_source(self, export_source):
+        logger = logging.getLogger('fetch')
         self.export_source = export_source
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
+        logger.info("Creating cache directory at %s", self.cache_dir)
 
     def check_matching_timezones(self, server_timezone):
         logger = logging.getLogger('fetch')
@@ -268,7 +270,7 @@ class PypoFetch(Thread):
 
             fileExt = os.path.splitext(media['uri'])[1]
             try:
-                dst = "%s%s/%s%s" % (self.cache_dir, str(pkey), str(media['id']), str(fileExt))
+                dst = "%s%s/%s%s" % (self.cache_dir, pkey, media['id'], fileExt)
 
                 # download media file
                 self.handle_remote_file(media, dst)
@@ -283,11 +285,11 @@ class PypoFetch(Thread):
                     if fsize > 0:
                         pl_entry = \
                         'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
-                        % (str(media['export_source']), media['id'], 0, \
-                            str(float(media['fade_in']) / 1000), \
-                            str(float(media['fade_out']) / 1000), \
-                            str(float(media['cue_in'])), \
-                            str(float(media['cue_out'])), \
+                        % (media['export_source'], media['id'], 0, \
+                            float(media['fade_in']) / 1000, \
+                            float(media['fade_out']) / 1000, \
+                            float(media['cue_in']), \
+                            float(media['cue_out']), \
                             media['row_id'], dst)
 
                         """
@@ -375,7 +377,7 @@ class PypoFetch(Thread):
 
         loops = 1        
         while True:
-            logger.info("Loop #"+str(loops))
+            logger.info("Loop #%s", loops)
             try:
                 # Wait for messages from RabbitMQ.  Timeout if we
                 # dont get any after POLL_INTERVAL.
