@@ -121,9 +121,22 @@ InstallAirtimePhpServerCode($phpDir);
 UninstallBinaries();
 CopyUtils();
 
+//James's made a new airtime-import script, lets remove the old airtime-import php script,
+//install the new airtime-import.py script and update the /usr/bin/symlink.
 removeOldAirtimeImport();
 updateAirtimeImportSymLink();
 
 
-//need to change database because old format had full path while new database has partial paths
-//also need to add new column
+if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
+    $migrations = array('20110312121200', '20110331111708', '20110402164819', '20110406182005');
+    foreach($migrations as $migration) {
+        AirtimeInstall::BypassMigrations(__DIR__, $migration);
+    }
+}
+//alter cc_files, add a new column named "directory" of type "int".
+AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110629143017');
+
+
+
+//old database had a "fullpath" column that stored the absolute path of each track. We have to
+//change it so that the "fullpath" column has 
