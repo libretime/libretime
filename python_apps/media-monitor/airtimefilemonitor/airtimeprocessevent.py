@@ -19,6 +19,8 @@ from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 
 class AirtimeProcessEvent(ProcessEvent):
 
+    timestamp_file = "/var/tmp/airtime/last_index"
+
     def my_init(self, queue, airtime_config=None, wm=None):
         """
         Method automatically called from ProcessEvent.__init__(). Additional
@@ -394,7 +396,7 @@ class AirtimeProcessEvent(ProcessEvent):
         return stdout.splitlines() 
         
     def touch_index_file(self):
-        open("/var/tmp/airtime/.last_index", "w")
+        open(self.timestamp_file, "w")
 
     def notifier_loop_callback(self, notifier):
         if len(self.file_events) > 0:

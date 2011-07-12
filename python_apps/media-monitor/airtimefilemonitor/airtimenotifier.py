@@ -92,7 +92,7 @@ class AirtimeNotifier(Notifier):
 
             mm.set_needed_file_permissions(new_storage_directory, True)
 
-            self.bootstrap.check_for_diff(new_storage_directory_id, new_storage_directory)
+            self.bootstrap.sync_database_to_filesystem(new_storage_directory_id, new_storage_directory)
             
             self.config.storage_directory = os.path.normpath(new_storage_directory)
             self.config.imported_directory = os.path.normpath(new_storage_directory + '/imported')
