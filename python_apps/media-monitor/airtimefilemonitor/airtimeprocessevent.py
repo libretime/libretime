@@ -293,7 +293,10 @@ class AirtimeProcessEvent(ProcessEvent):
             self.logger.debug(u"Moving from %s to %s", pathname, filepath)
             self.move_file(pathname, filepath)
         else:
-            self.logger.warn("File %s, has invalid metadata", pathname)           
+            filepath = None
+            self.logger.warn("File %s, has invalid metadata", pathname)
+            
+        return filepath
                 
     def process_IN_MODIFY(self, event):
         self.logger.info("process_IN_MODIFY: %s", event)
@@ -332,9 +335,12 @@ class AirtimeProcessEvent(ProcessEvent):
                     #files original location was also in a watched directory
                     del self.cookies_IN_MOVED_FROM[event.cookie]
                     if self.is_parent_directory(event.pathname, self.config.organize_directory):
-                        self.organize_new_file(event.pathname)
+                        filepath = self.organize_new_file(event.pathname)
                     else:
-                        self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MOVED})
+                        filepath = event.pathname
+                        
+                    if (filepath is not None):
+                        self.file_events.append({'filepath': filepath, 'mode': self.config.MODE_MOVED})
                 else:
                     if self.is_parent_directory(event.pathname, self.config.organize_directory):
                         self.organize_new_file(event.pathname)
