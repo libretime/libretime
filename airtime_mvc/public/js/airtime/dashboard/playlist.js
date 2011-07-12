@@ -23,8 +23,6 @@ var APPLICATION_ENV = "";
 var nextSongPrepare = true;
 var nextShowPrepare = true;
 
-var apiKey = "";
-
 function secondsTimer(){
     if (localRemoteTimeOffset !== null){
 		var date = new Date();
@@ -190,7 +188,6 @@ function calcAdditionalShowData(show){
 
 function parseItems(obj){
     APPLICATION_ENV = obj.env;
-    apiKey = obj.apiKey;
         
     $('#time-zone').text(obj.timezone);
 

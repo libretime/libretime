@@ -74,8 +74,9 @@ class ApiController extends Zend_Controller_Action
         $download = ("true" == $this->_getParam('download'));
 
         $logger = Logging::getLogger();
-
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]))
+        
+        if(!in_array($api_key, $CC_CONFIG["apiKey"]) && 
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';

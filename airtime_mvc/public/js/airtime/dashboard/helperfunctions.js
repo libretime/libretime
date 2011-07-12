@@ -152,7 +152,7 @@ function audioPreview(filename, elemID){
     }
 
     var ext = getFileExt(filename);
-    var uri = "/api/get-media/api_key/" + apiKey + "/file/" + filename;
+    var uri = "/api/get-media/file/" + filename;
     
     var media;
     var supplied;

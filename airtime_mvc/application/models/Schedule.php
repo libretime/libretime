@@ -376,8 +376,7 @@ class Schedule {
             "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
             "nextShow"=>Show_DAL::GetNextShows($timeNow, 1),
             "timezone"=> date("T"),
-            "timezoneOffset"=> date("Z"),
-            "apiKey"=>$CC_CONFIG['apiKey'][0]);
+            "timezoneOffset"=> date("Z"));
     }
 
     public static function GetLastScheduleItem($p_timeNow){
