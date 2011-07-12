@@ -309,7 +309,7 @@ class AirtimeInstall
         AirtimeInstall::RemoveSymlinks();
 
         echo "* Installing airtime-import".PHP_EOL;
-        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-import";
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-import/airtime-import";
         exec("ln -s $dir /usr/bin/airtime-import");
 
         echo "* Installing airtime-update-db-settings".PHP_EOL;

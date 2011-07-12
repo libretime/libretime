@@ -166,7 +166,6 @@ if ("-c" in sys.argv or "-copy" in sys.argv or "-l" in sys.argv or "-link" in sy
     args = parser.parse_args(['-h'])
 else:
     args = parser.parse_args()
-print args
 #format args.path
 if(hasattr(args,'path')):
     if(args.path[-1] != '/'):

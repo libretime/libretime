@@ -38,7 +38,7 @@ function MigrateTablesToVersion($version)
     system($command);
 }
 
-function InstallPhpCode($phpDir)
+function InstallAirtimePhpServerCode($phpDir)
 {
     global $CC_CONFIG;
 
@@ -49,7 +49,7 @@ function InstallPhpCode($phpDir)
     exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
 }
 
-function InstallBinaries()
+function CopyUtils()
 {
     $utilsSrc = __DIR__."/../../../utils";
 
@@ -58,12 +58,24 @@ function InstallBinaries()
     exec("cp -R ".$utilsSrc." ".CONF_DIR_BINARIES);
 }
 
+/* Removes pypo, media-monitor, show-recorder and utils from system. These will
+   be reinstalled by the main airtime-upgrade script. */
 function UninstallBinaries()
 {
     echo "* Removing Airtime binaries from ".CONF_DIR_BINARIES.PHP_EOL;
     exec('rm -rf "'.CONF_DIR_BINARIES.'"');
 }
 
+
+function removeOldAirtimeImport(){
+    exec('rm -f "/usr/lib/airtime/utils/airtime-import"');
+    exec('rm -f "/usr/lib/airtime/utils/airtime-import.php"');
+}
+
+function updateAirtimeImportSymLink(){
+    $dir = "/usr/lib/airtime/utils/airtime-import/airtime-import";
+    exec("ln -s $dir /usr/bin/airtime-import");
+}
 
 /* In version 1.9.0 we have have switched from daemontools to more traditional
  * init.d daemon system. Let's remove all the daemontools files
@@ -103,8 +115,15 @@ foreach ($pathnames as $pn){
 $values = parse_ini_file(CONF_FILE_AIRTIME, true);
 $phpDir = $values['general']['airtime_dir'];
 
-InstallPhpCode($phpDir);
+InstallAirtimePhpServerCode($phpDir);
 
 //update utils (/usr/lib/airtime) folder
 UninstallBinaries();
-InstallBinaries();
+CopyUtils();
+
+removeOldAirtimeImport();
+updateAirtimeImportSymLink();
+
+
+//need to change database because old format had full path while new database has partial paths
+//also need to add new column
