@@ -152,6 +152,8 @@ if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
 //alter cc_files, add a new column named "directory" of type "int".
 AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110629143017');
 
+//create cron file for phone home stat
+AirtimeInstall::CreateCronFile();
 
 
 //old database had a "fullpath" column that stored the absolute path of each track. We have to
