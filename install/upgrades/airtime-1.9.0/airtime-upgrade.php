@@ -391,6 +391,7 @@ $sql = "INSERT INTO cc_country (isocode, name) VALUES ('AFG', 'Afghanistan ');
         INSERT INTO cc_country (isocode, name) VALUES ('ZMB', 'Zambia ');
         INSERT INTO cc_country (isocode, name) VALUES ('ZWE', 'Zimbabwe ');";
 
+echo "* Inserting data into country table".PHP_EOL;
 $result = $CC_DBC->query($sql);
 if (PEAR::isError($result)) {
     echo "* Failed inserting data into cc_country".PHP_EOL;
@@ -398,7 +399,7 @@ if (PEAR::isError($result)) {
     exit(1);
 }
 
-$ini = parse_ini_file(__DIR__."../../include/airtime-install.ini");
+$ini = parse_ini_file(__DIR__."/../../include/airtime-install.ini");
 
 $stor_dir = realpath($ini["storage_dir"])."/";
 echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
