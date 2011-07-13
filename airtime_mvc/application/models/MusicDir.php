@@ -54,7 +54,7 @@ class MusicDir {
         }
         catch(Exception $e){
             //echo $e->getMessage();
-            return array("code"=>1, "error"=>"$p_path is already set as the current storage dir or the watched folders");
+            return array("code"=>1, "error"=>"$p_path is already set as the current storage dir or in the watched folders list");
         }
         
     }
@@ -124,7 +124,7 @@ class MusicDir {
             $dir->setDirectory($p_dir);
             return array("code"=>0);
         }else{
-            return array("code"=>1, "error"=>"$p_dir is already set as the current storage dir or the watched folders");
+            return array("code"=>1, "error"=>"$p_dir is already set as the current storage dir or in the watched folders list");
         }
     }
 
