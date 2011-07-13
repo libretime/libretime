@@ -561,7 +561,7 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        $path = realpath(base64_decode($request->getParam('path')))."/";
+        $path = base64_decode($request->getParam('path'));
         
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -578,7 +578,7 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        $path = realpath(base64_decode($request->getParam('path')))."/";
+        $path = base64_decode($request->getParam('path'));
         
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -595,7 +595,7 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        $path = realpath(base64_decode($request->getParam('path')))."/";
+        $path = base64_decode($request->getParam('path'));
         
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {

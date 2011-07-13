@@ -47,6 +47,7 @@ class MusicDir {
     {
         $dir = new CcMusicDirs();
         $dir->setType($p_type);
+        $p_path = realpath($p_path)."/";
         $temp = $dir->setDirectory($p_path);
         try{
             $dir->save();
@@ -119,6 +120,7 @@ class MusicDir {
     {
         $dir = self::getStorDir();
         // if $p_dir doesn't exist in DB
+        $p_dir = realpath($p_dir)."/";
         $exist = $dir->getDirByPath($p_dir);
         if($exist == NULL){
             $dir->setDirectory($p_dir);
@@ -145,6 +147,7 @@ class MusicDir {
     }
     
     public static function removeWatchedDir($p_dir){
+        $p_dir = realpath($p_dir)."/";
         $dir = MusicDir::getDirByPath($p_dir);
         if($dir == NULL){
             return array("code"=>1,"error"=>"$p_dir doesn't exist in the watched list");
