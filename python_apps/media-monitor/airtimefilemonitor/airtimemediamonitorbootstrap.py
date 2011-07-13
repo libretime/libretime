@@ -74,7 +74,7 @@ class AirtimeMediaMonitorBootstrap():
         all_files_set = set()
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
-                all_files_set.add(file_path[len(dir)+1:])           
+                all_files_set.add(file_path[len(dir):])           
         
         if os.path.exists(self.pe.timestamp_file):
             """find files that have been modified since the last time media-monitor process started."""
