@@ -416,4 +416,4 @@ AirtimeInstall::CreateCronFile();
 
 
 //old database had a "fullpath" column that stored the absolute path of each track. We have to
-//change it so that the "fullpath" column has 
+//change it so that the "fullpath" column has path relative to the "directory" column.
