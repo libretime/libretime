@@ -398,7 +398,7 @@ if (PEAR::isError($result)) {
     exit(1);
 }
 
-$ini = parse_ini_file(__DIR__."/airtime-install.ini");
+$ini = parse_ini_file(__DIR__."../../include/airtime-install.ini");
 
 $stor_dir = realpath($ini["storage_dir"])."/";
 echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
