@@ -68,10 +68,10 @@ echo "******************************** Update Begin ****************************
 $version = substr($version, 0, 5);
 
 if (strcmp($version, "1.7.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.7/airtime-upgrade.php");
+    system("php ".__DIR__."/../upgrades/airtime-1.7.0/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.8/airtime-upgrade.php");
+    system("php ".__DIR__."/../upgrades/airtime-1.8.0/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.1") < 0){
     system("php ".__DIR__."/../upgrades/airtime-1.8.1/airtime-upgrade.php");
@@ -80,7 +80,7 @@ if (strcmp($version, "1.8.2") < 0){
     system("php ".__DIR__."/../upgrades/airtime-1.8.2/airtime-upgrade.php");
 }
 if (strcmp($version, "1.9.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.9/airtime-upgrade.php");
+    system("php ".__DIR__."/../upgrades/airtime-1.9.0/airtime-upgrade.php");
 }
 
 
