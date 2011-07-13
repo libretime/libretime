@@ -124,6 +124,9 @@ CopyUtils();
 removeOldAirtimeImport();
 updateAirtimeImportSymLink();
 
+//create cron file for phone home stat
+AirtimeInstall::CreateCronFile();
+
 
 //need to change database because old format had full path while new database has partial paths
 //also need to add new column

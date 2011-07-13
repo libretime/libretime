@@ -404,4 +404,14 @@ class AirtimeInstall
 
         exec("rm -rf \"$path\"");
     }
+    
+    public static function CreateCronFile(){
+        // Create CRON task to run every day.  Time of day is initialized to a random time.
+        $hour = rand(0,23);
+        $minute = rand(0,59);
+        
+        $fp = fopen('/etc/cron.d/airtime-crons','w');
+        fwrite($fp, "$minute $hour * * * root /usr/lib/airtime/utils/phone_home_stat\n");
+        fclose($fp);
+    }
 }
