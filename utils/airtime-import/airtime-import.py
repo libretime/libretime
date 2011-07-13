@@ -34,7 +34,7 @@ class CopyAction(argparse.Action):
         stor = helper_get_stor_dir()
         if(stor is None):
             exit("Unable to connect to the server.")
-        dest = helper_get_stor_dir()+"organize/"
+        dest = stor+"organize/"
         copy_or_move_files_to(values, dest, 'copy')
 
 class MoveAction(argparse.Action):
@@ -42,7 +42,7 @@ class MoveAction(argparse.Action):
         stor = helper_get_stor_dir()
         if(stor is None):
             exit("Unable to connect to the server.")
-        dest = helper_get_stor_dir()+"organize/"
+        dest = stor+"organize/"
         copy_or_move_files_to(args.path, dest, 'move')
 
 class WatchAddAction(argparse.Action):
@@ -136,7 +136,11 @@ def helper_get_stor_dir():
     if(res is None):
         return res
     else:
-        return res['dirs']['1']
+        if(res['dirs']['1'][-1] != '/'):
+            out = res['dirs']['1']+'/'
+            return out
+        else:
+            return res['dirs']['1']
 
 storage_dir = helper_get_stor_dir()
 if(storage_dir is None):
