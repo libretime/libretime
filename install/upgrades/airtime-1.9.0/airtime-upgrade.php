@@ -149,8 +149,8 @@ if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
         AirtimeInstall::BypassMigrations(__DIR__, $migration);
     }
 }
-// adding music_dir and country table. 2011062914301 and 2011071316104 respetivly
-AirtimeInstall::MigrateTablesToVersion(__DIR__, '2011071316104');
+// adding music_dir and country table. 20110629143017 and 20110713161043 respetivly
+AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110713161043');
 
 $sql = "INSERT INTO cc_country (isocode, name) VALUES ('AFG', 'Afghanistan ');
         INSERT INTO cc_country (isocode, name) VALUES ('ALA', 'Åland Islands');
