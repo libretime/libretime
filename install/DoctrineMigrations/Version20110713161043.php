@@ -15,7 +15,7 @@ class Version20110713161043 extends AbstractMigration
         $cc_country->addColumn('isocode', 'string', array('length' => 3));
         $cc_country->addColumn('name', 'string', array('length' => 255));
         
-        $cc_country->setPrimaryKey(array('isocod'));
+        $cc_country->setPrimaryKey(array('isocode'));
         //end create cc_country table
     }
 
