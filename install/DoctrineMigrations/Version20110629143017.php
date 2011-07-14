@@ -19,14 +19,15 @@ class Version20110629143017 extends AbstractMigration
         $cc_music_dirs->addColumn('directory', 'text',  array('unique' => true));
 
         $cc_music_dirs->setPrimaryKey(array('id'));
+
         //end create cc_music_dirs table
 
 
         //start cc_files modifications
         $cc_files = $schema->getTable('cc_files');
-        $cc_files->addColumn('directory', 'integer');
+        $cc_files->addColumn('directory', 'integer', array('default'=> -1));
 
-        $cc_files->addNamedForeignKeyConstraint('cc_music_dirs_folder_fkey', $cc_music_dirs, array('directory'), array('id'), array('onDelete' => 'CASCADE'));
+        //$cc_files->addNamedForeignKeyConstraint('cc_music_dirs_folder_fkey', $cc_music_dirs, array('directory'), array('id'), array('onDelete' => 'CASCADE'));
         //end cc_files modifications
     }
 

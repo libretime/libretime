@@ -21,7 +21,7 @@ mmconfig = AirtimeMediaConfig(logger)
 #get stor folder location from /etc/airtime/airtime.conf
 config = ConfigParser.RawConfigParser()
 config.read('/etc/airtime/airtime.conf')
-stor_dir = config.get('general', 'base_dir')
+stor_dir = config.get('general', 'base_files_dir')
 
 mmconfig.storage_directory = os.path.normpath(stor_dir)
 mmconfig.imported_directory = os.path.normpath(stor_dir + '/imported')
