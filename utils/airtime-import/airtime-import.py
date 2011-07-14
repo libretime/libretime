@@ -76,9 +76,12 @@ def checkOtherOption(args):
         if('-' in i):
             return True
     
-def errorIfMultipleOption(args):
+def errorIfMultipleOption(args, msg=''):
     if(checkOtherOption(args)):
-        raise OptionValueError("This option cannot be combined with other options")
+        if(msg != ''):
+            raise OptionValueError(msg)
+        else:
+            raise OptionValueError("This option cannot be combined with other options")
     
 def printHelp():
     storage_dir = helper_get_stor_dir()
@@ -130,6 +133,8 @@ def WatchAddAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 1):
         raise OptionValueError("Too many arguments. This option need exactly one argument.")
+    elif(len(parser.rargs) == 0 ):
+        raise OptionValueError("No argument found. This option need exactly one argument.")
     path = parser.rargs[0]
     if(os.path.isdir(path)):
         res = api_client.add_watched_dir(path)
@@ -163,6 +168,8 @@ def WatchRemoveAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 1):
         raise OptionValueError("Too many arguments. This option need exactly one argument.")
+    elif(len(parser.rargs) == 0 ):
+        raise OptionValueError("No argument found. This option need exactly one argument.")
     path = parser.rargs[0]
     if(os.path.isdir(path)):
         res = api_client.remove_watched_dir(path)
@@ -177,20 +184,40 @@ def WatchRemoveAction(option, opt, value, parser):
         print "Given path is not a directory: %s" % path
         
 def StorageSetAction(option, opt, value, parser):
-    errorIfMultipleOption(parser.rargs)
+    bypass = False
+    isF = '-f' in parser.rargs
+    isForce = '--force' in parser.rargs
+    if(isF or isForce ):
+        bypass = True
+        if(isF):
+            parser.rargs.remove('-f')
+        if(isForce):
+            parser.rargs.remove('--force')
+    if(not bypass):
+        errorIfMultipleOption(parser.rargs, "Only [-f] and [--force] option is allowed with this option.")
+        confirm = raw_input("Are you sure you want to change the storage direcory? (Y/n)")
+        confirm = confirm or 'Y'
+        if(confirm != 'Y'):
+            sys.exit(1)
+    
     if(len(parser.rargs) > 1):
         raise OptionValueError("Too many arguments. This option need exactly one argument.")
-    if(os.path.isdir(values)):
-        res = api_client.set_storage_dir(values)
+    elif(len(parser.rargs) == 0 ):
+        raise OptionValueError("No argument found. This option need exactly one argument.")
+    
+    path = parser.rargs[0]
+    if(os.path.isdir(path)):
+        res = api_client.set_storage_dir(path)
         if(res is None):
             exit("Unable to connect to the server.")
         # sucess
         if(res['msg']['code'] == 0):
-            print "Successfully set storage folder to %s" % values
+            print "Successfully set storage folder to %s" % path
         else:
             print "Setting storage folder to failed.: %s" % res['msg']['error']
     else:
-        print "Given path is not a directory: %s" % values
+        print "Given path is not a directory: %s" % path
+        
 def StorageGetAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 0):
