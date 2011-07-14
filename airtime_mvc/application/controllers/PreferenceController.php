@@ -124,22 +124,9 @@ class PreferenceController extends Zend_Controller_Action
         $element = $this->getRequest()->getParam("element");
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
         $watched_dirs_form->populate(array('storageFolder' => $chosen));
-        $bool = $watched_dirs_form->verifyChosenFolder($element);
-
-        // it has error checking in two part. It checks is_dir above, and
-        // check uniqueness in DB below. We should put is_dir checking into
-        // MusicDir class.
-        if ($bool === true) {
-            $res = MusicDir::setStorDir($chosen);
-            if($res['code'] == 0){
-                $dirId = MusicDir::getStorDir()->getId();
-                $data = array();
-                $data["directory"] = $chosen;
-                $data["dir_id"] = $dirId;
-                RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
-            }else{
-                $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
-            }
+        $res = MusicDir::setStorDir($chosen);
+        if($res['code'] != 0){
+            $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
         }
 
         $this->view->subform = $watched_dirs_form->render();
@@ -151,20 +138,9 @@ class PreferenceController extends Zend_Controller_Action
         $element = $this->getRequest()->getParam("element");
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
         $watched_dirs_form->populate(array('watchedFolder' => $chosen));
-        $bool = $watched_dirs_form->verifyChosenFolder($element);
-
-        // it has error checking in two part. It checks is_dir above, and
-        // check uniqueness in DB below. We should put is_dir checking into
-        // MusicDir class.
-        if ($bool === true) {
-            $res = MusicDir::addWatchedDir($chosen);
-            if($res['code'] == 0){
-                $data = array();
-                $data["directory"] = $chosen;
-                RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
-            }else{
-                $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
-            }
+        $res = MusicDir::addWatchedDir($chosen);
+        if($res['code'] != 0){
+            $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
         }
 
         $this->view->subform = $watched_dirs_form->render();
@@ -174,12 +150,7 @@ class PreferenceController extends Zend_Controller_Action
     {
         $chosen = $this->getRequest()->getParam("dir");
 
-        $dir = MusicDir::getDirByPath($chosen);
-        $dir->remove();
-
-        $data = array();
-        $data["directory"] = $chosen;
-        RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
+        $dir = MusicDir::removeWatchedDir($chosen);
 
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
         $this->view->subform = $watched_dirs_form->render();

@@ -45,6 +45,9 @@ class MusicDir {
 
     public static function addDir($p_path, $p_type)
     {
+        if(!is_dir($p_path)){
+            return array("code"=>2, "error"=>"'$p_path' is not a valid directory.");
+        }
         $dir = new CcMusicDirs();
         $dir->setType($p_type);
         $p_path = realpath($p_path)."/";
@@ -55,14 +58,20 @@ class MusicDir {
         }
         catch(Exception $e){
             //echo $e->getMessage();
-            return array("code"=>1, "error"=>"$p_path is already set as the current storage dir or in the watched folders list");
+            return array("code"=>1, "error"=>"'$p_path' is already set as the current storage dir or in the watched folders list");
         }
         
     }
 
     public static function addWatchedDir($p_path)
     {
-        return self::addDir($p_path, "watched");
+        $res = self::addDir($p_path, "watched");
+        if($res['code'] == 0){
+            $data = array();
+            $data["directory"] = $p_path;
+            RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
+        }
+        return $res;
     }
 
     public static function getDirByPK($pk)
@@ -118,15 +127,23 @@ class MusicDir {
     
     public static function setStorDir($p_dir)
     {
+        if(!is_dir($p_dir)){
+            return array("code"=>2, "error"=>"'$p_dir' is not a valid directory.");
+        }
         $dir = self::getStorDir();
         // if $p_dir doesn't exist in DB
         $p_dir = realpath($p_dir)."/";
         $exist = $dir->getDirByPath($p_dir);
         if($exist == NULL){
             $dir->setDirectory($p_dir);
+            $dirId = $dir->getId();
+            $data = array();
+            $data["directory"] = $p_dir;
+            $data["dir_id"] = $dirId;
+            RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
             return array("code"=>0);
         }else{
-            return array("code"=>1, "error"=>"$p_dir is already set as the current storage dir or in the watched folders list");
+            return array("code"=>1, "error"=>"'$p_dir' is already set as the current storage dir or in the watched folders list.");
         }
     }
 
@@ -150,9 +167,12 @@ class MusicDir {
         $p_dir = realpath($p_dir)."/";
         $dir = MusicDir::getDirByPath($p_dir);
         if($dir == NULL){
-            return array("code"=>1,"error"=>"$p_dir doesn't exist in the watched list");
+            return array("code"=>1,"error"=>"'$p_dir' doesn't exist in the watched list.");
         }else{
             $dir->remove();
+            $data = array();
+            $data["directory"] = $p_dir;
+            RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
             return array("code"=>0);
         }
     }
