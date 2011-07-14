@@ -78,6 +78,8 @@ function updateAirtimeImportSymLink(){
 }
 
 function execSqlQuery($sqlString){
+    global $CC_DBC;
+
     $result = $CC_DBC->query($sql);
     echo $sql.PHP_EOL;
     if (PEAR::isError($result)) {
