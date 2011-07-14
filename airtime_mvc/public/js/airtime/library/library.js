@@ -62,11 +62,7 @@ function deletePlaylist(json) {
 	}
 
 	deleteItem("pl", json.id);
-
-	// display noOpenPL on the left window
-	if( currentlyOpenedSplId == json.id){
-		noOpenPL(json);
-	}
+	window.location.reload();
 }
 //end callbacks called by jjmenu
 
