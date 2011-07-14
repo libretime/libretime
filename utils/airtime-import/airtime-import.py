@@ -90,26 +90,26 @@ def printHelp():
     else:
         storage_dir += "imported/"
     print """
-    ========================
-     Airtime Import Script
-    ========================
-    There are two ways to import audio files into Airtime:
+========================
+ Airtime Import Script
+========================
+There are two ways to import audio files into Airtime:
 
-    1) Copy or move files into the storage folder
+1) Copy or move files into the storage folder
 
-       Copied or moved files will be placed into the folder:
-       %s
+   Copied or moved files will be placed into the folder:
+   %s
         
-       Files will be automatically organized into the structure
-       "Artist/Album/TrackNumber-TrackName-Bitrate.file_extension".
+   Files will be automatically organized into the structure
+   "Artist/Album/TrackNumber-TrackName-Bitrate.file_extension".
 
-    2) Add a folder to the Airtime library("watch" a folder)
+2) Add a folder to the Airtime library("watch" a folder)
     
-       All the files in the watched folder will be imported to Airtime and the
-       folder will be monitored to automatically detect any changes. Hence any
-       changes done in the folder(add, delete, edit a file) will trigger 
-       updates in Airtime libarary.
-       """ % storage_dir
+   All the files in the watched folder will be imported to Airtime and the
+   folder will be monitored to automatically detect any changes. Hence any
+   changes done in the folder(add, delete, edit a file) will trigger 
+   updates in Airtime libarary.
+""" % storage_dir
     parser.print_help()
     print ""
 
@@ -223,8 +223,12 @@ def StorageGetAction(option, opt, value, parser):
     if(len(parser.rargs) > 0):
         raise OptionValueError("This option doesn't take any argument.")
     print helper_get_stor_dir()
+    
+usage = """[-c|--copy FILE/DIR [FILE/DIR...]] [-m|--move FILE/DIR [FILE/DIR...]]
+       [--watch-add DIR] [--watch-list] [--watch-remve DIR]
+       [--storage-dir-set DIR] [--storage-dir-get]"""
 
-parser = OptionParser(add_help_option=False)
+parser = OptionParser(usage=usage, add_help_option=False)
 parser.add_option('-c','--copy', action='callback', callback=CopyAction, metavar='FILE', help='Copy FILE(s) into the storage directory.\nYou can specify multiple files or directories.')
 parser.add_option('-m','--move', action='callback', callback=MoveAction, metavar='FILE', help='Move FILE(s) into the storage directory.\nYou can specify multiple files or directories.')
 parser.add_option('--watch-add', action='callback', callback=WatchAddAction, help='Add DIR to the watched folders list.')
