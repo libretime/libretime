@@ -77,7 +77,7 @@ function updateAirtimeImportSymLink(){
     exec("ln -s $dir /usr/bin/airtime-import");
 }
 
-function execSqlQuery($sqlString){
+function execSqlQuery($sql){
     global $CC_DBC;
 
     $result = $CC_DBC->query($sql);
