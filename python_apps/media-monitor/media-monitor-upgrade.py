@@ -8,9 +8,11 @@ import os
 import json
 import ConfigParser
 
+import os.path
+
 # configure logging
 try:
-    logging.config.fileConfig("logging.cfg")
+    logging.config.fileConfig("%s/logging.cfg"%os.path.dirname(__file__))
 except Exception, e:
     print 'Error configuring logging: ', e
     sys.exit(1)
@@ -32,7 +34,6 @@ mmc = MediaMonitorCommon(mmconfig)
 #read list of all files in stor location.....and one-by-one pass this through to
 #mmc.organize_files. print out json encoding of before and after
 pairs = []
-print "walking through %s" % stor_dir
 for root, dirs, files in os.walk(stor_dir):
     for f in files:
         #print os.path.join(root, f)

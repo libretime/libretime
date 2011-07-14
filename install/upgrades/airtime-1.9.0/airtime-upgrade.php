@@ -417,12 +417,15 @@ execSqlQuery($sql);
 //old database had a "fullpath" column that stored the absolute path of each track. We have to
 //change it so that the "fullpath" column has path relative to the "directory" column.
 
+mkdir("/var/log/airtime/media-monitor/", 755, true);
+touch("/var/log/airtime/media-monitor/media-monitor.log");
+
 $mediaMonitorUpgradePath = realpath(__DIR__."/../../../python_apps/media-monitor/media-monitor-upgrade.py");
-exec("python $mediaMonitorUpgradePath", $output);
+exec("sudo python $mediaMonitorUpgradePath", $output);
 
 print_r($output);
 
-$oldAndNewFileNames = json_decode($output);
+$oldAndNewFileNames = json_decode($output[0]);
 
 print_r($oldAndNewFileNames);
 
