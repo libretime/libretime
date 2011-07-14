@@ -26,6 +26,8 @@ class AirtimeNotifier(Notifier):
         self.import_processes = {}
         self.watched_folders = []
         self.mmc = mmc
+        self.wm = watch_manager
+        self.mask = pyinotify.ALL_EVENTS
        
 
         while not self.init_rabbit_mq():
@@ -69,7 +71,7 @@ class AirtimeNotifier(Notifier):
             self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
             self.walk_newly_watched_directory(m['directory'])
 
-            self.mmc.watch_directory(m['directory'])
+            self.watch_directory(m['directory'])
 
         elif m['event_type'] == "remove_watch":
             watched_directory = m['directory'].encode('utf-8')
@@ -102,7 +104,7 @@ class AirtimeNotifier(Notifier):
             self.mmc.ensure_is_dir(self.config.imported_directory)
             self.mmc.ensure_is_dir(self.config.organize_directory)
 
-            self.mmc.watch_directory(new_storage_directory)
+            self.watch_directory(new_storage_directory)
         elif m['event_type'] == "file_delete":
             self.logger.info("Deleting file: %s ", m['filepath'])
             mm = self.proc_fun()
@@ -158,6 +160,9 @@ class AirtimeNotifier(Notifier):
         elif (mode == self.config.MODE_DELETE):
             self.api_client.update_media_metadata(md, mode)
 
+    #define which directories the pyinotify WatchManager should watch.
+    def watch_directory(self, directory):
+        return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
     def walk_newly_watched_directory(self, directory):
 

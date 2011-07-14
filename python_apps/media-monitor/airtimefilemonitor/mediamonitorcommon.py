@@ -3,8 +3,6 @@ import grp
 import pwd
 import logging
 
-import pyinotify
-
 from subprocess import Popen, PIPE
 from airtimemetadata import AirtimeMetadata
 
@@ -12,18 +10,11 @@ class MediaMonitorCommon:
 
     timestamp_file = "/var/tmp/airtime/last_index"
     
-    def __init__(self, airtime_config, watch_manager):
+    def __init__(self, airtime_config):
         self.supported_file_formats = ['mp3', 'ogg']
-        self.mask = pyinotify.ALL_EVENTS
         self.logger = logging.getLogger()
         self.config = airtime_config
         self.md_manager = AirtimeMetadata()
-        self.wm = watch_manager
-    
-
-    #define which directories the pyinotify WatchManager should watch.
-    def watch_directory(self, directory):
-        return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
     def is_parent_directory(self, filepath, directory):
         filepath = os.path.normpath(filepath)
@@ -95,7 +86,6 @@ class MediaMonitorCommon:
             omask = os.umask(0)
             if not os.path.exists(directory):
                 os.makedirs(directory, 02777)
-                #self.watch_directory(directory)
             elif not os.path.isdir(directory):
                 #path exists but it is a file not a directory!
                 self.logger.error("path %s exists, but it is not a directory!!!")

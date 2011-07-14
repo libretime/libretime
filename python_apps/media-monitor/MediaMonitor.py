@@ -64,7 +64,7 @@ try:
 
 
     wm = WatchManager()
-    mmc = MediaMonitorCommon(config, wm)
+    mmc = MediaMonitorCommon(config)
     pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm, mmc=mmc)
 
     bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client, mmc)
@@ -80,7 +80,7 @@ try:
         processes.append(p)
         p.start()
         
-    wdd = mmc.watch_directory(storage_directory)
+    wdd = notifier.watch_directory(storage_directory)
     logger.info("Added watch to %s", storage_directory)
     logger.info("wdd result %s", wdd[storage_directory])
 
