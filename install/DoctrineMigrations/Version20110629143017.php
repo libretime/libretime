@@ -32,6 +32,6 @@ class Version20110629143017 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-
+        $schema->dropTable('cc_music_dirs');
     }
 }
