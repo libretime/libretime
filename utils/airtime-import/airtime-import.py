@@ -35,6 +35,7 @@ def copy_or_move_files_to(paths, dest, flag):
     for path in paths:
         if(os.path.exists(path)):
             if(os.path.isdir(path)):
+                path = format_dir_string(path)
                 #construct full path
                 sub_path = []
                 for temp in os.listdir(path):
@@ -53,6 +54,11 @@ def copy_or_move_files_to(paths, dest, flag):
                         shutil.move(path, destfile)
         else:
             print "Cannot find file or path: %s" % path
+            
+def format_dir_string(path):
+    if(path[-1] != '/'):
+        path = path+'/'
+    return path
             
 def helper_get_stor_dir():
     res = api_client.list_all_watched_dirs()
