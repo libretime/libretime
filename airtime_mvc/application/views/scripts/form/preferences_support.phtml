@@ -36,6 +36,7 @@
 	<dl id="public-info" style="display:none;">	
         <dt id="Phone-label" class="block-display">
             <label class="optional" for="Phone"><?php echo $this->element->getElement('Phone')->getLabel() ?></label>
+            <span class="info-text-small">(for verification purposes only, will not be published)</span>
         </dt>
         <dd id="Phone-element" class="block-display">
             <?php echo $this->element->getElement('Phone') ?>
@@ -49,6 +50,7 @@
         </dd>
         <dt id="Email-label" class="block-display">
             <label class="optional" for="Email"><?php echo $this->element->getElement('Email')->getLabel() ?></label>
+            <span class="info-text-small">(for verification purposes only, will not be published)</span>
         </dt>
         <dd id="Email-element" class="block-display">
             <?php echo $this->element->getElement('Email') ?>
