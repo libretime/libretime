@@ -12,10 +12,11 @@ class AirtimeMediaMonitorBootstrap():
     pe          -- reference to an instance of ProcessEvent
     api_clients -- reference of api_clients to communicate with airtime-server
     """
-    def __init__(self, logger, pe, api_client):
+    def __init__(self, logger, pe, api_client, mmc):
         self.logger = logger
         self.pe = pe
         self.api_client = api_client
+        self.mmc = mmc
         
     """On bootup we want to scan all directories and look for files that
     weren't there or files that changed before media-monitor process
@@ -70,20 +71,20 @@ class AirtimeMediaMonitorBootstrap():
         for file in files['files']:
             db_known_files_set.add(file)
             
-        new_files = self.pe.scan_dir_for_new_files(dir)
+        new_files = self.mmc.scan_dir_for_new_files(dir)
         all_files_set = set()
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
                 all_files_set.add(file_path[len(dir):])           
         
-        if os.path.exists(self.pe.timestamp_file):
+        if os.path.exists(self.mmc.timestamp_file):
             """find files that have been modified since the last time media-monitor process started."""
-            time_diff_sec = time.time() - os.path.getmtime(self.pe.timestamp_file)
+            time_diff_sec = time.time() - os.path.getmtime(self.mmc.timestamp_file)
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable -mmin -%d" % (dir, time_diff_sec/60+1)
         else:
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
             
-        stdout = self.pe.execCommandAndReturnStdOut(command)
+        stdout = self.mmc.execCommandAndReturnStdOut(command)
         stdout = unicode(stdout, "utf_8")
 
         new_files = stdout.splitlines()
@@ -110,7 +111,7 @@ class AirtimeMediaMonitorBootstrap():
         self.logger.info("Modified files: \n%s\n\n"%modified_files_set)   
                 
         #"touch" file timestamp
-        self.pe.touch_index_file()
+        self.mmc.touch_index_file()
                 
         for file_path in deleted_files_set:
             self.pe.handle_removed_file(False, "%s/%s" % (dir, file_path))

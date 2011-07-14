@@ -13,6 +13,7 @@ from multiprocessing import Process, Queue as mpQueue
 from pyinotify import WatchManager
 
 from airtimefilemonitor.airtimenotifier import AirtimeNotifier
+from airtimefilemonitor.mediamonitorcommon import MediaMonitorCommon
 from airtimefilemonitor.airtimeprocessevent import AirtimeProcessEvent
 from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 from airtimefilemonitor.workerprocess import MediaMonitorWorkerProcess
@@ -60,13 +61,16 @@ except Exception, e:
     logger.error('Exception: %s', e)    
     
 try:
-    wm = WatchManager()
-    pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm)
 
-    bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client)
+
+    wm = WatchManager()
+    mmc = MediaMonitorCommon(config)
+    pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm, mmc=mmc)
+
+    bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client, mmc)
     bootstrap.scan()
     
-    notifier = AirtimeNotifier(wm, pe, read_freq=1, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap)
+    notifier = AirtimeNotifier(wm, pe, read_freq=1, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap, mmc=mmc)
     notifier.coalesce_events()
         
     #create 5 worker processes
@@ -76,7 +80,7 @@ try:
         processes.append(p)
         p.start()
         
-    wdd = pe.watch_directory(storage_directory)
+    wdd = notifier.watch_directory(storage_directory)
     logger.info("Added watch to %s", storage_directory)
     logger.info("wdd result %s", wdd[storage_directory])
 

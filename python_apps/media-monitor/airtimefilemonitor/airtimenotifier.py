@@ -15,7 +15,7 @@ from airtimemetadata import AirtimeMetadata
 
 class AirtimeNotifier(Notifier):
 
-    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None, airtime_config=None, api_client=None, bootstrap=None):
+    def __init__(self, watch_manager, default_proc_fun=None, read_freq=0, threshold=0, timeout=None, airtime_config=None, api_client=None, bootstrap=None, mmc=None):
         Notifier.__init__(self, watch_manager, default_proc_fun, read_freq, threshold, timeout)
 
         self.logger = logging.getLogger()
@@ -25,6 +25,9 @@ class AirtimeNotifier(Notifier):
         self.md_manager = AirtimeMetadata()
         self.import_processes = {}
         self.watched_folders = []
+        self.mmc = mmc
+        self.wm = watch_manager
+        self.mask = pyinotify.ALL_EVENTS
        
 
         while not self.init_rabbit_mq():
@@ -65,11 +68,10 @@ class AirtimeNotifier(Notifier):
             self.md_manager.save_md_to_file(m)
 
         elif m['event_type'] == "new_watch":
-            mm = self.proc_fun()
             self.logger.info("AIRTIME NOTIFIER add watched folder event " + m['directory'])
             self.walk_newly_watched_directory(m['directory'])
 
-            mm.watch_directory(m['directory'])
+            self.watch_directory(m['directory'])
 
         elif m['event_type'] == "remove_watch":
             watched_directory = m['directory'].encode('utf-8')
@@ -90,7 +92,7 @@ class AirtimeNotifier(Notifier):
             self.logger.info("Removing watch on: %s wd %s", storage_directory, wd)
             mm.wm.rm_watch(wd, rec=True)
 
-            mm.set_needed_file_permissions(new_storage_directory, True)
+            self.mmc.set_needed_file_permissions(new_storage_directory, True)
 
             self.bootstrap.sync_database_to_filesystem(new_storage_directory_id, new_storage_directory)
             
@@ -98,11 +100,11 @@ class AirtimeNotifier(Notifier):
             self.config.imported_directory = os.path.normpath(new_storage_directory + '/imported')
             self.config.organize_directory = os.path.normpath(new_storage_directory + '/organize')
             
-            mm.ensure_is_dir(self.config.storage_directory)
-            mm.ensure_is_dir(self.config.imported_directory)
-            mm.ensure_is_dir(self.config.organize_directory)
+            self.mmc.ensure_is_dir(self.config.storage_directory)
+            self.mmc.ensure_is_dir(self.config.imported_directory)
+            self.mmc.ensure_is_dir(self.config.organize_directory)
 
-            mm.watch_directory(new_storage_directory)
+            self.watch_directory(new_storage_directory)
         elif m['event_type'] == "file_delete":
             self.logger.info("Deleting file: %s ", m['filepath'])
             mm = self.proc_fun()
@@ -158,6 +160,9 @@ class AirtimeNotifier(Notifier):
         elif (mode == self.config.MODE_DELETE):
             self.api_client.update_media_metadata(md, mode)
 
+    #define which directories the pyinotify WatchManager should watch.
+    def watch_directory(self, directory):
+        return self.wm.add_watch(directory, self.mask, rec=True, auto_add=True)
 
     def walk_newly_watched_directory(self, directory):
 
@@ -167,8 +172,8 @@ class AirtimeNotifier(Notifier):
             for filename in files:
                 full_filepath = path+"/"+filename
 
-                if mm.is_audio_file(full_filepath):
-                    if mm.has_correct_permissions(full_filepath):
+                if self.mmc.is_audio_file(full_filepath):
+                    if self.mmc.has_correct_permissions(full_filepath):
                         self.logger.info("importing %s", full_filepath)
                         event = {'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False}
                         mm.multi_queue.put(event)
