@@ -12,6 +12,6 @@ exec 2>&1
 export PYTHONPATH=${api_client_path}
 
 # Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
-exec python -u ${airtime_import_path}${airtime_import_script} $@
+exec python -u ${airtime_import_path}${airtime_import_script} "$@"
 
 # EOF
