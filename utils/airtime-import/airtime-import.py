@@ -3,8 +3,7 @@ import sys
 import os
 import logging
 from configobj import ConfigObj
-import argparse
-from argparse import RawTextHelpFormatter
+from optparse import OptionParser, OptionValueError
 from api_clients import api_client
 import json
 import shutil
@@ -13,7 +12,8 @@ import shutil
 logger = logging.getLogger()
 
 # no logging
-ch = logging.NullHandler()
+ch = logging.StreamHandler()
+logging.disable(50)
 
 # add ch to logger
 logger.addHandler(ch)
@@ -27,83 +27,6 @@ except Exception, e:
     sys.exit()
 
 api_client = api_client.api_client_factory(config)
-
-# action call back classes
-class CopyAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        stor = helper_get_stor_dir()
-        if(stor is None):
-            exit("Unable to connect to the server.")
-        dest = stor+"organize/"
-        copy_or_move_files_to(values, dest, 'copy')
-
-class MoveAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        stor = helper_get_stor_dir()
-        if(stor is None):
-            exit("Unable to connect to the server.")
-        dest = stor+"organize/"
-        copy_or_move_files_to(args.path, dest, 'move')
-
-class WatchAddAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        if(os.path.isdir(values)):
-            res = api_client.add_watched_dir(values)
-            if(res is None):
-                exit("Unable to connect to the server.")
-            # sucess
-            if(res['msg']['code'] == 0):
-                print "%s added to watched folder list successfully" % values
-            else:
-                print "Adding a watched folder failed. : %s" % res['msg']['error']
-        else:
-            print "Given path is not a directory: %s" % values
-        
-class WatchListAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        res = api_client.list_all_watched_dirs()
-        if(res is None):
-            exit("Unable to connect to the server.")
-        dirs = res["dirs"].items()
-        # there will be always 1 which is storage folder
-        if(len(dirs) == 1):
-                print "No watch folders found"
-        else:
-            for key, value in dirs:
-                if(key != '1'):
-                    print value
-
-class WatchRemoveAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        if(os.path.isdir(values)):
-            res = api_client.remove_watched_dir(values)
-            if(res is None):
-                exit("Unable to connect to the server.")
-            # sucess
-            if(res['msg']['code'] == 0):
-                print "%s removed from watched folder list successfully" % values
-            else:
-                print "Removing a watched folder failed. : %s" % res['msg']['error']
-        else:
-            print "Given path is not a directory: %s" % values
-            
-class StorageSetAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        if(os.path.isdir(values)):
-            res = api_client.set_storage_dir(values)
-            if(res is None):
-                exit("Unable to connect to the server.")
-            # sucess
-            if(res['msg']['code'] == 0):
-                print "Successfully set storage folder to %s" % values
-            else:
-                print "Setting storage folder to failed.: %s" % res['msg']['error']
-        else:
-            print "Given path is not a directory: %s" % values
-
-class StorageGetAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        print helper_get_stor_dir()
 
 #helper functions
 # copy or move files
@@ -142,14 +65,24 @@ def helper_get_stor_dir():
         else:
             return res['dirs']['1']
 
-storage_dir = helper_get_stor_dir()
-if(storage_dir is None):
-    storage_dir = "Unknown" 
-else:
-    storage_dir += "imported/"
-help_text = """
+def checkOtherOption(args):
+    for i in args:
+        if('-' in i):
+            return True
+    
+def errorIfMultipleOption(args):
+    if(checkOtherOption(args)):
+        raise OptionValueError("This option cannot be combined with other options")
+    
+def printHelp():
+    storage_dir = helper_get_stor_dir()
+    if(storage_dir is None):
+        storage_dir = "Unknown" 
+    else:
+        storage_dir += "imported/"
+    print """
     ========================
-    Airtime Import Script
+     Airtime Import Script
     ========================
     There are two ways to import audio files into Airtime:
 
@@ -167,21 +100,121 @@ help_text = """
        folder will be monitored to automatically detect any changes. Hence any
        changes done in the folder(add, delete, edit a file) will trigger 
        updates in Airtime libarary.
-""" % storage_dir
-parser = argparse.ArgumentParser(description=help_text, formatter_class=RawTextHelpFormatter, epilog="  ")#"This script let you do following operations\n- import files\n- add/remove/list watch folders\n- set default storage folder", formatter_class=RawTextHelpFormatter)
-# for subcommand move
-parser.add_argument('-c','--copy', nargs='+', metavar='FILE', action=CopyAction, help='Copy FILE(s) into the storage directory.\nYou can specify multiple files or directories.')
-parser.add_argument('-m','--move', nargs='+', metavar='FILE', action=MoveAction, help='Move FILE(s) into the storage directory.\nYou can specify multiple files or directories.')
-parser.add_argument('--watch-add', metavar='DIR', action=WatchAddAction, help='Add DIR to the watched folders list.')
-parser.add_argument('--watch-list', nargs=0, action=WatchListAction, help='Show the list of folders that are watched.')
-parser.add_argument('--watch-remove', metavar='DIR', action=WatchRemoveAction, help='Remove DIR from the watched folders list.')
-parser.add_argument('--storage-dir-set', metavar='DIR', action=StorageSetAction, help='Set storage dir to DIR.')
-parser.add_argument('--storage-dir-get', nargs=0, metavar='DIR', action=StorageGetAction, help='Show the current storage dir.')
+       """ % storage_dir
+    parser.print_help()
+    print ""
+
+def CopyAction(option, opt, value, parser):
+    errorIfMultipleOption(parser.rargs)
+    stor = helper_get_stor_dir()
+    if(stor is None):
+        exit("Unable to connect to the server.")
+    dest = stor+"organize/"
+    copy_or_move_files_to(parser.rargs, dest, 'copy')
+
+def MoveAction(option, opt, value, parser):
+    errorIfMultipleOption(parser.rargs)
+    stor = helper_get_stor_dir()
+    if(stor is None):
+        exit("Unable to connect to the server.")
+    dest = stor+"organize/"
+    copy_or_move_files_to(parser.rargs, dest, 'move')
+
+def WatchAddAction(option, opt, value, parser):
+    errorIfMultipleOption(parser.rargs)
+    if(len(parser.rargs) > 1):
+        raise OptionValueError("Too many arguments. This option need exactly one argument.")
+    path = parser.rargs[0]
+    if(os.path.isdir(path)):
+        res = api_client.add_watched_dir(path)
+        if(res is None):
+            exit("Unable to connect to the server.")
+        # sucess
+        if(res['msg']['code'] == 0):
+            print "%s added to watched folder list successfully" % path
+        else:
+            print "Adding a watched folder failed. : %s" % res['msg']['error']
+    else:
+        print "Given path is not a directory: %s" % path
+
+def WatchListAction(option, opt, value, parser):
+    errorIfMultipleOption(parser.rargs)
+    if(len(parser.rargs) > 0):
+        raise OptionValueError("This option doesn't take any argument.")
+    res = api_client.list_all_watched_dirs()
+    if(res is None):
+        exit("Unable to connect to the server.")
+    dirs = res["dirs"].items()
+    # there will be always 1 which is storage folder
+    if(len(dirs) == 1):
+            print "No watch folders found"
+    else:
+        for key, v in dirs:
+            if(key != '1'):
+                print v
+
+def WatchRemoveAction(option, opt, value, parser):
+    errorIfMultipleOption(parser.rargs)
+    if(len(parser.rargs) > 1):
+        raise OptionValueError("Too many arguments. This option need exactly one argument.")
+    path = parser.rargs[0]
+    if(os.path.isdir(path)):
+        res = api_client.remove_watched_dir(path)
+        if(res is None):
+            exit("Unable to connect to the server.")
+        # sucess
+        if(res['msg']['code'] == 0):
+            print "%s removed from watched folder list successfully" % path
+        else:
+            print "Removing a watched folder failed. : %s" % res['msg']['error']
+    else:
+        print "Given path is not a directory: %s" % path
+        
+def StorageSetAction(option, opt, value, parser):
+    errorIfMultipleOption(parser.rargs)
+    if(len(parser.rargs) > 1):
+        raise OptionValueError("Too many arguments. This option need exactly one argument.")
+    if(os.path.isdir(values)):
+        res = api_client.set_storage_dir(values)
+        if(res is None):
+            exit("Unable to connect to the server.")
+        # sucess
+        if(res['msg']['code'] == 0):
+            print "Successfully set storage folder to %s" % values
+        else:
+            print "Setting storage folder to failed.: %s" % res['msg']['error']
+    else:
+        print "Given path is not a directory: %s" % values
+def StorageGetAction(option, opt, value, parser):
+    errorIfMultipleOption(parser.rargs)
+    if(len(parser.rargs) > 0):
+        raise OptionValueError("This option doesn't take any argument.")
+    print helper_get_stor_dir()
+
+parser = OptionParser(add_help_option=False)
+parser.add_option('-c','--copy', action='callback', callback=CopyAction, metavar='FILE', help='Copy FILE(s) into the storage directory.\nYou can specify multiple files or directories.')
+parser.add_option('-m','--move', action='callback', callback=MoveAction, metavar='FILE', help='Move FILE(s) into the storage directory.\nYou can specify multiple files or directories.')
+parser.add_option('--watch-add', action='callback', callback=WatchAddAction, help='Add DIR to the watched folders list.')
+parser.add_option('--watch-list', action='callback', callback=WatchListAction, help='Show the list of folders that are watched.')
+parser.add_option('--watch-remove', action='callback', callback=WatchRemoveAction, help='Remove DIR from the watched folders list.')
+parser.add_option('--storage-dir-set', action='callback', callback=StorageSetAction, help='Set storage dir to DIR.')
+parser.add_option('--storage-dir-get', action='callback', callback=StorageGetAction, help='Show the current storage dir.')
+parser.add_option('-h', '--help', dest='help', action='store_true', help='show this help message and exit')
 
 if('-l' in sys.argv or '--link' in sys.argv):
     print "\nThe [-l][--link] option is deprecated. Please use the --watch-add option.\nTry 'airtime-import -h' for more detail.\n"
-else:
-    args = parser.parse_args()
+    sys.exit()
+if('-h' in sys.argv):
+    printHelp()
+    sys.exit()
+if(len(sys.argv) == 1):
+    printHelp()
+    sys.exit()
+    
+(option, args) = parser.parse_args()
+if option.help:
+    printHelp()
+    sys.exit()
 
 
 
