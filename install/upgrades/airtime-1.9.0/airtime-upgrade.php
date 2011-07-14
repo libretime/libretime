@@ -77,6 +77,16 @@ function updateAirtimeImportSymLink(){
     exec("ln -s $dir /usr/bin/airtime-import");
 }
 
+function execSqlQuery($sqlString){
+    $result = $CC_DBC->query($sql);
+    echo $sql.PHP_EOL;
+    if (PEAR::isError($result)) {
+        echo "* Failed sql query: $sql".PHP_EOL;
+        echo "* Message {$result->getMessage()}".PHP_EOL;
+        exit(1);
+    }
+}
+
 function connectToDatabase(){
     global $CC_DBC, $CC_CONFIG;
 
@@ -392,28 +402,34 @@ $sql = "INSERT INTO cc_country (isocode, name) VALUES ('AFG', 'Afghanistan ');
         INSERT INTO cc_country (isocode, name) VALUES ('ZWE', 'Zimbabwe ');";
 
 echo "* Inserting data into country table".PHP_EOL;
-$result = $CC_DBC->query($sql);
-if (PEAR::isError($result)) {
-    echo "* Failed inserting data into cc_country".PHP_EOL;
-    echo "* Message {$result->getMessage()}".PHP_EOL;
-    exit(1);
-}
-
-$ini = parse_ini_file(__DIR__."/../../include/airtime-install.ini");
-
-$stor_dir = realpath($ini["storage_dir"])."/";
-echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
-$sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
-$result = $CC_DBC->query($sql);
-if (PEAR::isError($result)) {
-    echo "* Failed inserting {$stor_dir} in cc_music_dirs".PHP_EOL;
-    echo "* Message {$result->getMessage()}".PHP_EOL;
-    exit(1);
-}
+execSqlQuery($sql);
 
 //create cron file for phone home stat
 AirtimeInstall::CreateCronFile();
 
+$stor_dir = realpath($values['general']['base_dir']."/stor")."/";
+echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
+$sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
+execSqlQuery($sql);
 
 //old database had a "fullpath" column that stored the absolute path of each track. We have to
 //change it so that the "fullpath" column has path relative to the "directory" column.
+
+$mediaMonitorUpgradePath = realpath(__DIR__."/../../../python_apps/media-monitor/media-monitor-upgrade.py");
+exec("python $mediaMonitorUpgradePath", $output);
+
+print_r($output);
+
+$oldAndNewFileNames = json_decode($output);
+
+print_r($oldAndNewFileNames);
+
+foreach ($oldAndNewFileNames as $pair){
+    $relPathNew = substr($pair[1], 0, strlen($stor_dir));
+    $absPathOld = $pair[0];
+    $sql = "UPDATE cc_music_dirs SET filepath = \"$relPathNew\", directory=1 WHERE filepath = \"$absPathOld\"";
+    execSqlQuery($sql);
+}
+
+
+
