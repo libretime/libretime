@@ -21,6 +21,6 @@ class Version20110713161043 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-        
+        $schema->dropTable('cc_country');
     }
 }

@@ -76,9 +76,12 @@ def checkOtherOption(args):
         if('-' in i):
             return True
     
-def errorIfMultipleOption(args):
+def errorIfMultipleOption(args, msg=''):
     if(checkOtherOption(args)):
-        raise OptionValueError("This option cannot be combined with other options")
+        if(msg != ''):
+            raise OptionValueError(msg)
+        else:
+            raise OptionValueError("This option cannot be combined with other options")
     
 def printHelp():
     storage_dir = helper_get_stor_dir()
@@ -87,26 +90,26 @@ def printHelp():
     else:
         storage_dir += "imported/"
     print """
-    ========================
-     Airtime Import Script
-    ========================
-    There are two ways to import audio files into Airtime:
+========================
+ Airtime Import Script
+========================
+There are two ways to import audio files into Airtime:
 
-    1) Copy or move files into the storage folder
+1) Copy or move files into the storage folder
 
-       Copied or moved files will be placed into the folder:
-       %s
+   Copied or moved files will be placed into the folder:
+   %s
         
-       Files will be automatically organized into the structure
-       "Artist/Album/TrackNumber-TrackName-Bitrate.file_extension".
+   Files will be automatically organized into the structure
+   "Artist/Album/TrackNumber-TrackName-Bitrate.file_extension".
 
-    2) Add a folder to the Airtime library("watch" a folder)
+2) Add a folder to the Airtime library("watch" a folder)
     
-       All the files in the watched folder will be imported to Airtime and the
-       folder will be monitored to automatically detect any changes. Hence any
-       changes done in the folder(add, delete, edit a file) will trigger 
-       updates in Airtime libarary.
-       """ % storage_dir
+   All the files in the watched folder will be imported to Airtime and the
+   folder will be monitored to automatically detect any changes. Hence any
+   changes done in the folder(add, delete, edit a file) will trigger 
+   updates in Airtime libarary.
+""" % storage_dir
     parser.print_help()
     print ""
 
@@ -130,6 +133,8 @@ def WatchAddAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 1):
         raise OptionValueError("Too many arguments. This option need exactly one argument.")
+    elif(len(parser.rargs) == 0 ):
+        raise OptionValueError("No argument found. This option need exactly one argument.")
     path = parser.rargs[0]
     if(os.path.isdir(path)):
         res = api_client.add_watched_dir(path)
@@ -163,6 +168,8 @@ def WatchRemoveAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 1):
         raise OptionValueError("Too many arguments. This option need exactly one argument.")
+    elif(len(parser.rargs) == 0 ):
+        raise OptionValueError("No argument found. This option need exactly one argument.")
     path = parser.rargs[0]
     if(os.path.isdir(path)):
         res = api_client.remove_watched_dir(path)
@@ -177,27 +184,51 @@ def WatchRemoveAction(option, opt, value, parser):
         print "Given path is not a directory: %s" % path
         
 def StorageSetAction(option, opt, value, parser):
-    errorIfMultipleOption(parser.rargs)
+    bypass = False
+    isF = '-f' in parser.rargs
+    isForce = '--force' in parser.rargs
+    if(isF or isForce ):
+        bypass = True
+        if(isF):
+            parser.rargs.remove('-f')
+        if(isForce):
+            parser.rargs.remove('--force')
+    if(not bypass):
+        errorIfMultipleOption(parser.rargs, "Only [-f] and [--force] option is allowed with this option.")
+        confirm = raw_input("Are you sure you want to change the storage direcory? (Y/n)")
+        confirm = confirm or 'Y'
+        if(confirm != 'Y'):
+            sys.exit(1)
+    
     if(len(parser.rargs) > 1):
         raise OptionValueError("Too many arguments. This option need exactly one argument.")
-    if(os.path.isdir(values)):
-        res = api_client.set_storage_dir(values)
+    elif(len(parser.rargs) == 0 ):
+        raise OptionValueError("No argument found. This option need exactly one argument.")
+    
+    path = parser.rargs[0]
+    if(os.path.isdir(path)):
+        res = api_client.set_storage_dir(path)
         if(res is None):
             exit("Unable to connect to the server.")
         # sucess
         if(res['msg']['code'] == 0):
-            print "Successfully set storage folder to %s" % values
+            print "Successfully set storage folder to %s" % path
         else:
             print "Setting storage folder to failed.: %s" % res['msg']['error']
     else:
-        print "Given path is not a directory: %s" % values
+        print "Given path is not a directory: %s" % path
+        
 def StorageGetAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 0):
         raise OptionValueError("This option doesn't take any argument.")
     print helper_get_stor_dir()
+    
+usage = """[-c|--copy FILE/DIR [FILE/DIR...]] [-m|--move FILE/DIR [FILE/DIR...]]
+       [--watch-add DIR] [--watch-list] [--watch-remve DIR]
+       [--storage-dir-set DIR] [--storage-dir-get]"""
 
-parser = OptionParser(add_help_option=False)
+parser = OptionParser(usage=usage, add_help_option=False)
 parser.add_option('-c','--copy', action='callback', callback=CopyAction, metavar='FILE', help='Copy FILE(s) into the storage directory.\nYou can specify multiple files or directories.')
 parser.add_option('-m','--move', action='callback', callback=MoveAction, metavar='FILE', help='Move FILE(s) into the storage directory.\nYou can specify multiple files or directories.')
 parser.add_option('--watch-add', action='callback', callback=WatchAddAction, help='Add DIR to the watched folders list.')
