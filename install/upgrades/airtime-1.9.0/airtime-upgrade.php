@@ -69,8 +69,9 @@ function UninstallBinaries()
 
 
 function removeOldAirtimeImport(){
+    exec('rm -f "/usr/bin/airtime-import"');
+    exec('rm -f "/usr/lib/airtime/utils/airtime-import.php"');
     exec('rm -rf "/usr/lib/airtime/utils/airtime-import"');
-    exec('rm -rf "/usr/lib/airtime/utils/airtime-import.php"');
 }
 
 function updateAirtimeImportSymLink(){
@@ -418,11 +419,11 @@ $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')
 echo $sql.PHP_EOL;
 execSqlQuery($sql);
 
-$sql = "SELECT id FROM cc_music_dirs WHERE type='stor'"
+$sql = "SELECT id FROM cc_music_dirs WHERE type='stor'";
 echo $sql.PHP_EOL;
 $rows = execSqlQuery($sql);
 
-echo "STORAGE ROW ID: $rows[0]";
+//echo "STORAGE ROW ID: $rows[0]";
 
 //old database had a "fullpath" column that stored the absolute path of each track. We have to
 //change it so that the "fullpath" column has path relative to the "directory" column.
@@ -431,7 +432,7 @@ mkdir("/var/log/airtime/media-monitor/", 755, true);
 touch("/var/log/airtime/media-monitor/media-monitor.log");
 
 //create media monitor config:
-if (!copy(__DIR__."/../../python_apps/media-monitor/media-monitor.cfg", CONF_FILE_MEDIAMONITOR)){
+if (!copy(__DIR__."/../../../python_apps/media-monitor/media-monitor.cfg", CONF_FILE_MEDIAMONITOR)){
     echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
     exit(1);
 }
