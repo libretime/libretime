@@ -54,6 +54,7 @@ try:
     config.storage_directory = os.path.normpath(storage_directory)
     config.imported_directory = os.path.normpath(storage_directory + '/imported')
     config.organize_directory = os.path.normpath(storage_directory + '/organize')
+    config.recorded_directory = os.path.normpath(storage_directory + '/recorded')
     
     multi_queue = mpQueue()
     logger.info("Initializing event processor")
