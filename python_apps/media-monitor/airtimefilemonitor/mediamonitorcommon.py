@@ -237,7 +237,7 @@ class MediaMonitorCommon:
             filepath = self.create_file_path(pathname, file_md)
             
             self.logger.debug(u"Moving from %s to %s", pathname, filepath)
-            #self.move_file(pathname, filepath)
+            self.move_file(pathname, filepath)
         else:
             filepath = None
             self.logger.warn("File %s, has invalid metadata", pathname)

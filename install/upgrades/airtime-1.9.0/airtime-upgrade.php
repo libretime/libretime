@@ -430,9 +430,9 @@ $oldAndNewFileNames = json_decode($output[0]);
 print_r($oldAndNewFileNames);
 
 foreach ($oldAndNewFileNames as $pair){
-    $relPathNew = substr($pair[1], strlen($stor_dir));
-    $absPathOld = $pair[0];
-    $sql = "UPDATE cc_files SET filepath = \"$relPathNew\", directory=1 WHERE filepath = \"$absPathOld\"";
+    $relPathNew = pg_escape_string(substr($pair[1], strlen($stor_dir)));
+    $absPathOld = pg_escape_string($pair[0]);
+    $sql = "UPDATE cc_files SET filepath = '$relPathNew', directory=1 WHERE filepath = '$absPathOld'";
     echo $sql.PHP_EOL;
     execSqlQuery($sql);
 }
