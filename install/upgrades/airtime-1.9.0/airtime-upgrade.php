@@ -15,6 +15,7 @@ AirtimeInstall::CreateZendPhpLogFile();
 
 const CONF_DIR_BINARIES = "/usr/lib/airtime";
 const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
+const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
 
 function BypassMigrations($version)
 {
@@ -68,8 +69,8 @@ function UninstallBinaries()
 
 
 function removeOldAirtimeImport(){
-    exec('rm -f "/usr/lib/airtime/utils/airtime-import"');
-    exec('rm -f "/usr/lib/airtime/utils/airtime-import.php"');
+    exec('rm -rf "/usr/lib/airtime/utils/airtime-import"');
+    exec('rm -rf "/usr/lib/airtime/utils/airtime-import.php"');
 }
 
 function updateAirtimeImportSymLink(){
@@ -85,6 +86,8 @@ function execSqlQuery($sql){
         echo "* Failed sql query: $sql".PHP_EOL;
         echo "* Message {$result->getMessage()}".PHP_EOL;
     }
+    
+    return $result;
 }
 
 function connectToDatabase(){
@@ -105,7 +108,6 @@ function connectToDatabase(){
 /* In version 1.9.0 we have have switched from daemontools to more traditional
  * init.d daemon system. Let's remove all the daemontools files
  */
-
 exec("/usr/bin/airtime-pypo-stop");
 exec("/usr/bin/airtime-show-recorder-stop");
 
@@ -137,9 +139,9 @@ foreach ($pathnames as $pn){
 }
 
 
+//update Airtime Server PHP files
 $values = parse_ini_file(CONF_FILE_AIRTIME, true);
 $phpDir = $values['general']['airtime_dir'];
-
 InstallAirtimePhpServerCode($phpDir);
 
 //update utils (/usr/lib/airtime) folder
@@ -407,11 +409,20 @@ execSqlQuery($sql);
 //create cron file for phone home stat
 AirtimeInstall::CreateCronFile();
 
+
+
+//Handle Database Changes.
 $stor_dir = realpath($values['general']['base_files_dir']."/stor")."/";
 echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
 $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
 echo $sql.PHP_EOL;
 execSqlQuery($sql);
+
+$sql = "SELECT id FROM cc_music_dirs WHERE type='stor'"
+echo $sql.PHP_EOL;
+$rows = execSqlQuery($sql);
+
+echo "STORAGE ROW ID: $rows[0]";
 
 //old database had a "fullpath" column that stored the absolute path of each track. We have to
 //change it so that the "fullpath" column has path relative to the "directory" column.
@@ -419,14 +430,18 @@ execSqlQuery($sql);
 mkdir("/var/log/airtime/media-monitor/", 755, true);
 touch("/var/log/airtime/media-monitor/media-monitor.log");
 
+//create media monitor config:
+if (!copy(__DIR__."/../../python_apps/media-monitor/media-monitor.cfg", CONF_FILE_MEDIAMONITOR)){
+    echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
+    exit(1);
+}
+
 $mediaMonitorUpgradePath = realpath(__DIR__."/../../../python_apps/media-monitor/media-monitor-upgrade.py");
 exec("su -c \"python $mediaMonitorUpgradePath\"", $output);
 
-print_r($output);
+echo $output[0];
 
 $oldAndNewFileNames = json_decode($output[0]);
-
-print_r($oldAndNewFileNames);
 
 foreach ($oldAndNewFileNames as $pair){
     $relPathNew = pg_escape_string(substr($pair[1], strlen($stor_dir)));
