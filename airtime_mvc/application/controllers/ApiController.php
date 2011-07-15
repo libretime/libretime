@@ -450,11 +450,7 @@ class ApiController extends Zend_Controller_Action
             
             //Martin Konecny July 14th, 2011: The following commented out code is the way
             //we used to check for duplicates (by md5). Why are we checking by md5 and
-            //not by filepath? I had to change this behaviour to check by filepath for the 
-            //following reason:
-            //File A is renamed, which creates a delete and create event. Because the create
-            //event can be executed in parallel before the delete event completes, the create
-            //event will fail because the md5 is still in the database. 
+            //not by filepath?
             /*
             $md5 = $md['MDATA_KEY_MD5'];
             $file = StoredFile::RecallByMd5($md5);
