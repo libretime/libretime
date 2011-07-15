@@ -421,7 +421,7 @@ mkdir("/var/log/airtime/media-monitor/", 755, true);
 touch("/var/log/airtime/media-monitor/media-monitor.log");
 
 $mediaMonitorUpgradePath = realpath(__DIR__."/../../../python_apps/media-monitor/media-monitor-upgrade.py");
-exec("sudo python $mediaMonitorUpgradePath", $output);
+exec("su -c \"python $mediaMonitorUpgradePath\"", $output);
 
 print_r($output);
 
@@ -430,9 +430,9 @@ $oldAndNewFileNames = json_decode($output[0]);
 print_r($oldAndNewFileNames);
 
 foreach ($oldAndNewFileNames as $pair){
-    $relPathNew = substr($pair[1], 0, strlen($stor_dir));
+    $relPathNew = substr($pair[1], strlen($stor_dir));
     $absPathOld = $pair[0];
-    $sql = "UPDATE cc_music_dirs SET filepath = \"$relPathNew\", directory=1 WHERE filepath = \"$absPathOld\"";
+    $sql = "UPDATE cc_files SET filepath = \"$relPathNew\", directory=1 WHERE filepath = \"$absPathOld\"";
     echo $sql.PHP_EOL;
     execSqlQuery($sql);
 }

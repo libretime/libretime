@@ -23,7 +23,7 @@ mmconfig = AirtimeMediaConfig(logger)
 #get stor folder location from /etc/airtime/airtime.conf
 config = ConfigParser.RawConfigParser()
 config.read('/etc/airtime/airtime.conf')
-stor_dir = config.get('general', 'base_files_dir')
+stor_dir = config.get('general', 'base_files_dir') + "/stor"
 
 mmconfig.storage_directory = os.path.normpath(stor_dir)
 mmconfig.imported_directory = os.path.normpath(stor_dir + '/imported')
@@ -34,7 +34,7 @@ mmc = MediaMonitorCommon(mmconfig)
 #read list of all files in stor location.....and one-by-one pass this through to
 #mmc.organize_files. print out json encoding of before and after
 pairs = []
-for root, dirs, files in os.walk(stor_dir):
+for root, dirs, files in os.walk(mmconfig.storage_directory):
     for f in files:
         #print os.path.join(root, f)
         #print mmc.organize_new_file(os.path.join(root, f))
