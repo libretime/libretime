@@ -139,6 +139,8 @@ class StoredFile {
      */
     public function setMetadataValue($p_category, $p_value)
     {
+        // constant() was used because it gets quoted constant name value from
+        // api_client.py. This is the wrapper funtion
         $this->setDbColMetadataValue(constant($p_category), $p_value);
     }
 
@@ -156,7 +158,7 @@ class StoredFile {
         if($p_category == "track_title" && (is_null($p_value) || $p_value == "")) {
             return;
         }
-        if (isset($this->_dbMD[$dbColumn])) {
+        if (isset($this->_dbMD[$p_category])) {
             $propelColumn = $this->_dbMD[$p_category];
             $method = "set$propelColumn";
             $this->_file->$method($p_value);
@@ -172,7 +174,9 @@ class StoredFile {
      */
     public function getMetadataValue($p_category)
     {
-        return $this->getDbColMetadataValue($p_category);
+        // constant() was used because it gets quoted constant name value from
+        // api_client.py. This is the wrapper funtion
+        return $this->getDbColMetadataValue(constant($p_category));
     }
 
      /**
@@ -807,7 +811,7 @@ class StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
 			}
             if (file_exists($duplicate->getFilePath())) {
-			    $duplicateName = $duplicate->getMetadataValue(MDATA_KEY_TITLE);
+			    $duplicateName = $duplicate->getMetadataValue('MDATA_KEY_TITLE');
 			    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
             }
 		}
