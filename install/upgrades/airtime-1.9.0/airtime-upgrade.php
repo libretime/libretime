@@ -415,7 +415,7 @@ AirtimeInstall::CreateCronFile();
 //Handle Database Changes.
 $stor_dir = realpath($values['general']['base_files_dir']."/stor")."/";
 echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
-$sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
+$sql = "UPDATE cc_music_dirs SET directory='$stor_dir' WHERE type='stor'";
 echo $sql.PHP_EOL;
 execSqlQuery($sql);
 
@@ -428,19 +428,20 @@ $rows = execSqlQuery($sql);
 //old database had a "fullpath" column that stored the absolute path of each track. We have to
 //change it so that the "fullpath" column has path relative to the "directory" column.
 
+echo "Creating media-monitor log file";
 mkdir("/var/log/airtime/media-monitor/", 755, true);
 touch("/var/log/airtime/media-monitor/media-monitor.log");
 
 //create media monitor config:
 if (!copy(__DIR__."/../../../python_apps/media-monitor/media-monitor.cfg", CONF_FILE_MEDIAMONITOR)){
     echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
-    exit(1);
 }
 
+echo "Reorganizing files in stor directory";
 $mediaMonitorUpgradePath = realpath(__DIR__."/../../../python_apps/media-monitor/media-monitor-upgrade.py");
 exec("su -c \"python $mediaMonitorUpgradePath\"", $output);
 
-echo $output[0];
+print_r($output);
 
 $oldAndNewFileNames = json_decode($output[0]);
 
