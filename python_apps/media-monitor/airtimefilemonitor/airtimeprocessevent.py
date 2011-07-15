@@ -61,7 +61,11 @@ class AirtimeProcessEvent(ProcessEvent):
                     self.mmc.organize_new_file(pathname)
                 else:
                     self.mmc.set_needed_file_permissions(pathname, dir)
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': False})
+                    if self.mmc.is_parent_directory(pathname, self.config.recorded_directory):
+                        is_recorded = True
+                    else :
+                        is_recorded = False
+                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})
 
         else:
             #event is because of a created directory
@@ -115,8 +119,12 @@ class AirtimeProcessEvent(ProcessEvent):
                     if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
                         self.mmc.organize_new_file(event.pathname)
                     else:
-                        #show dragged from unwatched folder into a watched folder. Do not "organize". 
-                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': False})
+                        #show dragged from unwatched folder into a watched folder. Do not "organize".:q! 
+                        if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
+                            is_recorded = True
+                        else :
+                            is_recorded = False
+                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': is_recorded})
         else:
             #When we move a directory into a watched_dir, we only get a notification that the dir was created,
             #and no additional information about files that came along with that directory.
@@ -127,10 +135,11 @@ class AirtimeProcessEvent(ProcessEvent):
                     self.mmc.organize_new_file(file)
             else:
                 for file in files:
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': file, 'is_recorded_show': False})
-
-            
-                
+                    if self.mmc.is_parent_directory(pathname, self.config.recorded_directory):
+                        is_recorded = True
+                    else :
+                        is_recorded = False
+                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': file, 'is_recorded_show': is_recorded})
 
     def process_IN_DELETE(self, event):
         self.logger.info("process_IN_DELETE: %s", event)
