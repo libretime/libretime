@@ -10,6 +10,8 @@ from api_clients import api_client
 
 from multiprocessing import Process, Queue as mpQueue
 
+from threading import Thread
+
 from pyinotify import WatchManager
 
 from airtimefilemonitor.airtimenotifier import AirtimeNotifier
@@ -20,14 +22,14 @@ from airtimefilemonitor.workerprocess import MediaMonitorWorkerProcess
 from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorBootstrap
 
 def handleSigTERM(signum, frame):
+    """
     logger = logging.getLogger()
     logger.info("Main Process Shutdown, TERM signal caught.")
     for p in processes:
         logger.info("Killed process. %d", p.pid)
         p.terminate()
-
+    """
     sys.exit(0)
-
 
 # configure logging
 try:
@@ -37,7 +39,7 @@ except Exception, e:
     sys.exit(1)
 
 logger = logging.getLogger()
-processes = []
+#processes = []
 
 try:
     config = AirtimeMediaConfig(logger)
@@ -77,9 +79,9 @@ try:
     #create 5 worker processes
     wp = MediaMonitorWorkerProcess()
     for i in range(5):
-        p = Process(target=wp.process_file_events, args=(multi_queue, notifier))
-        processes.append(p)
-        p.start()
+        t = Thread(target=wp.process_file_events, args=(multi_queue, notifier))
+        #processes.append(p)
+        t.start()
         
     wdd = notifier.watch_directory(storage_directory)
     logger.info("Added watch to %s", storage_directory)
