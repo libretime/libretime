@@ -84,7 +84,6 @@ function execSqlQuery($sql){
     if (PEAR::isError($result)) {
         echo "* Failed sql query: $sql".PHP_EOL;
         echo "* Message {$result->getMessage()}".PHP_EOL;
-        exit(1);
     }
 }
 
