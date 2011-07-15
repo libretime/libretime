@@ -19,9 +19,7 @@ class Version20110711161043 extends AbstractMigration
         $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('stor', '/srv/airtime/stor');");
         
         $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('upgrade', '');");
-    }
-    
-    public function postUp(Schema $schema){
+
         $cc_music_dirs = $schema->getTable('cc_music_dirs');
     
         //start cc_files modifications
@@ -30,8 +28,9 @@ class Version20110711161043 extends AbstractMigration
 
         $cc_files->addNamedForeignKeyConstraint('cc_music_dirs_folder_fkey', $cc_music_dirs, array('directory'), array('id'), array('onDelete' => 'CASCADE'));
         //end cc_files modifications
-    }
 
+    }
+    
     public function down(Schema $schema)
     {
 
