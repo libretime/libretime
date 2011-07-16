@@ -21,16 +21,6 @@ from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 from airtimefilemonitor.workerprocess import MediaMonitorWorkerProcess
 from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorBootstrap
 
-def handleSigTERM(signum, frame):
-    """
-    logger = logging.getLogger()
-    logger.info("Main Process Shutdown, TERM signal caught.")
-    for p in processes:
-        logger.info("Killed process. %d", p.pid)
-        p.terminate()
-    """
-    sys.exit(0)
-
 # configure logging
 try:
     logging.config.fileConfig("logging.cfg")
@@ -39,7 +29,6 @@ except Exception, e:
     sys.exit(1)
 
 logger = logging.getLogger()
-#processes = []
 
 try:
     config = AirtimeMediaConfig(logger)
@@ -76,18 +65,16 @@ try:
     notifier = AirtimeNotifier(wm, pe, read_freq=1, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap, mmc=mmc)
     notifier.coalesce_events()
         
-    #create 5 worker processes
+    #create 5 worker threads
     wp = MediaMonitorWorkerProcess()
     for i in range(5):
         t = Thread(target=wp.process_file_events, args=(multi_queue, notifier))
-        #processes.append(p)
         t.start()
         
     wdd = notifier.watch_directory(storage_directory)
     logger.info("Added watch to %s", storage_directory)
     logger.info("wdd result %s", wdd[storage_directory])
 
-    signal.signal(signal.SIGTERM, handleSigTERM)
     notifier.loop(callback=pe.notifier_loop_callback)
         
 except KeyboardInterrupt:
