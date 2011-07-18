@@ -326,7 +326,7 @@ class StoredFile {
      * You cant delete a file if it is scheduled to be played in the future.
      * The file will be removed from all playlists it is a part of.
      *
-     * @return void|PEAR_Error
+     * @return boolean|PEAR_Error
      */
     public function deleteFile()
     {
@@ -340,16 +340,18 @@ class StoredFile {
         if (Schedule::IsFileScheduledInTheFuture($this->getId())) {
             return PEAR::raiseError('Cannot delete a file that is scheduled in the future.');
         }
-        
+
         $storageDir = MusicDir::getStorDir()->getDirectory();
+        $dirCompare = substr($this->getFilePath(), 0, strlen($storageDir));
+
+        //return PEAR::raiseError("({$storageDir} , {$dirCompare})");
 
         // Only delete the file from filesystem if it has been copied to the storage directory
-        if (substr($this->getFilePath(), 0, strlen($storageDir) == $storageDir)) {
-            // Delete the file
-            $res = unlink($this->getFilePath());
-            if (!$res) {
-                return PEAR::raiseError("StoredFile::deleteFile: unlink failed ({$this->getFilePath()})");
-            }
+        if ($dirCompare === $storageDir) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -373,7 +375,7 @@ class StoredFile {
      */
     public function existsFile() {
 
-        $filepath = $this->_file->getDbFilepath();
+        $filepath = $this->getFilePath();
 
         if (!isset($filepath) || !file_exists($filepath) || !is_readable($filepath)) {
             return false;
@@ -820,7 +822,7 @@ class StoredFile {
         $stor = $storDir->getDirectory();
 
         $stor .= "/organize";
-        
+
 	    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
         $r = @copy($audio_file, $audio_stor);
@@ -838,8 +840,8 @@ class StoredFile {
                 // ." AND m.id = $dir_id";
         $sql = "SELECT filepath as fp"
                 ." FROM CC_FILES"
-                ." WHERE directory = $dir_id";                
-             
+                ." WHERE directory = $dir_id";
+
         $rows = $CC_DBC->getAll($sql);
 
         $results = array();

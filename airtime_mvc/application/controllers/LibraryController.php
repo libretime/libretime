@@ -133,16 +133,16 @@ class LibraryController extends Zend_Controller_Action
                 $this->view->message = "file doesn't exist";
                 return;
             }
-            
-            
-            $data = array("filepath"=>$file->getFilePath());
-            RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
 
             $res = $file->delete();
 
             if (PEAR::isError($res)) {
                 $this->view->message = $res->getMessage();
                 return;
+            }
+            else {
+                $data = array("filepath" => $file->getFilePath(), "delete" => $res);
+                RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
             }
         }
 
@@ -153,7 +153,7 @@ class LibraryController extends Zend_Controller_Action
     {
         $post = $this->getRequest()->getPost();
         $datatables = StoredFile::searchFilesForPlaylistBuilder($post);
-        
+
         //format clip lengh to 1 decimal
         foreach($datatables["aaData"] as &$data){
             $sec = Playlist::playlistTimeToSeconds($data[5]);
