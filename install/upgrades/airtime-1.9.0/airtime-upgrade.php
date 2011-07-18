@@ -7,165 +7,81 @@
  */
 
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
-require_once __DIR__.'/../../../airtime_mvc/application/configs/conf.php';
-require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
-require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
-
-AirtimeInstall::CreateZendPhpLogFile();
+set_include_path(__DIR__.'/../../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
+require_once 'conf.php';
+require_once 'DB.php';
 
 const CONF_DIR_BINARIES = "/usr/lib/airtime";
-const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
-const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
 
-function BypassMigrations($version)
-{
-    $appDir = __DIR__."/../../airtime_mvc";
-    $dir = __DIR__;
-    $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
-                "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
-                "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
-                "--no-interaction --add migrations:version $version";
-    system($command);
-}
+class AirtimeInstall{
 
-function MigrateTablesToVersion($version)
-{
-    $appDir = __DIR__."/../../airtime_mvc";
-    $dir = __DIR__;
-    $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
-                "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
-                "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
-                "--no-interaction migrations:migrate $version";
-    system($command);
-}
+    const CONF_DIR_LOG = "/var/log/airtime";
 
-function InstallAirtimePhpServerCode($phpDir)
-{
-    global $CC_CONFIG;
+    public static function CreateZendPhpLogFile(){
+        global $CC_CONFIG;
 
-    $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
+        echo "* Creating logs directory ".AirtimeInstall::CONF_DIR_LOG.PHP_EOL;
 
-    echo "* Installing PHP code to ".$phpDir.PHP_EOL;
-    exec("mkdir -p ".$phpDir);
-    exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
-}
+        $path = AirtimeInstall::CONF_DIR_LOG;
+        $file = $path.'/zendphp.log';
+        if (!file_exists($path)){
+            mkdir($path, 0755, true);
+        }
 
-function CopyUtils()
-{
-    $utilsSrc = __DIR__."/../../../utils";
-
-    echo "* Installing binaries to ".CONF_DIR_BINARIES.PHP_EOL;
-    exec("mkdir -p ".CONF_DIR_BINARIES);
-    exec("cp -R ".$utilsSrc." ".CONF_DIR_BINARIES);
-}
-
-/* Removes pypo, media-monitor, show-recorder and utils from system. These will
-   be reinstalled by the main airtime-upgrade script. */
-function UninstallBinaries()
-{
-    echo "* Removing Airtime binaries from ".CONF_DIR_BINARIES.PHP_EOL;
-    exec('rm -rf "'.CONF_DIR_BINARIES.'"');
-}
-
-
-function removeOldAirtimeImport(){
-    exec('rm -f "/usr/bin/airtime-import"');
-    exec('rm -f "/usr/lib/airtime/utils/airtime-import.php"');
-    exec('rm -rf "/usr/lib/airtime/utils/airtime-import"');
-}
-
-function updateAirtimeImportSymLink(){
-    $dir = "/usr/lib/airtime/utils/airtime-import/airtime-import";
-    exec("ln -s $dir /usr/bin/airtime-import");
-}
-
-function execSqlQuery($sql){
-    global $CC_DBC;
-
-    $result = $CC_DBC->query($sql);
-    if (PEAR::isError($result)) {
-        echo "* Failed sql query: $sql".PHP_EOL;
-        echo "* Message {$result->getMessage()}".PHP_EOL;
+        touch($file);
+        chmod($file, 0755);
+        chown($file, $CC_CONFIG['webServerUser']);
+        chgrp($file, $CC_CONFIG['webServerUser']);
     }
     
-    return $result;
-}
-
-function connectToDatabase(){
-    global $CC_DBC, $CC_CONFIG;
-
-    $values = parse_ini_file('/etc/airtime/airtime.conf', true);
-
-    // Database config
-    $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
-    $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
-    $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
-    $CC_CONFIG['dsn']['phptype'] = 'pgsql';
-    $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
-
-    $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
-}
-
-/* In version 1.9.0 we have have switched from daemontools to more traditional
- * init.d daemon system. Let's remove all the daemontools files
- */
-exec("/usr/bin/airtime-pypo-stop");
-exec("/usr/bin/airtime-show-recorder-stop");
-
-exec("svc -d /etc/service/pypo");
-exec("svc -d /etc/service/pypo/log");
-exec("svc -d /etc/service/pypo-liquidsoap");
-exec("svc -d /etc/service/pypo-liquidsoap/log");
-exec("svc -d /etc/service/recorder");
-exec("svc -d /etc/service/recorder/log");
-
-$pathnames = array("/usr/bin/airtime-pypo-start",
-                "/usr/bin/airtime-pypo-stop",
-                "/usr/bin/airtime-show-recorder-start",
-                "/usr/bin/airtime-show-recorder-stop",
-                "/usr/bin/airtime-media-monitor-start",
-                "/usr/bin/airtime-media-monitor-stop",
-                "/etc/service/pypo",
-                "/etc/service/pypo-liquidsoap",
-                "/etc/service/media-monitor",
-                "/etc/service/recorder",
-                "/var/log/airtime/pypo/main",
-                "/var/log/airtime/pypo-liquidsoap/main",
-                "/var/log/airtime/show-recorder/main"
-                );
-
-foreach ($pathnames as $pn){
-    echo "Removing $pn\n";
-    exec("rm -rf \"$pn\"");
-}
-
-
-//update Airtime Server PHP files
-$values = parse_ini_file(CONF_FILE_AIRTIME, true);
-$phpDir = $values['general']['airtime_dir'];
-InstallAirtimePhpServerCode($phpDir);
-
-//update utils (/usr/lib/airtime) folder
-UninstallBinaries();
-CopyUtils();
-
-//James's made a new airtime-import script, lets remove the old airtime-import php script,
-//install the new airtime-import.py script and update the /usr/bin/symlink.
-removeOldAirtimeImport();
-updateAirtimeImportSymLink();
-
-connectToDatabase();
-
-if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
-    $migrations = array('20110312121200', '20110331111708', '20110402164819', '20110406182005');
-    foreach($migrations as $migration) {
-        AirtimeInstall::BypassMigrations(__DIR__, $migration);
+    public static function DbTableExists($p_name)
+    {
+        global $CC_DBC;
+        $sql = "SELECT * FROM ".$p_name;
+        $result = $CC_DBC->GetOne($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
     }
-}
-// adding music_dir and country table. 20110629143017 and 20110713161043 respetivly
-AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110713161043');
+    
+    public static function BypassMigrations($dir, $version)
+    {
+        $appDir = AirtimeInstall::GetAirtimeSrcDir();
+        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
+                    "--no-interaction --add migrations:version $version";
+        system($command);
+    }
 
-$sql = "INSERT INTO cc_country (isocode, name) VALUES ('AFG', 'Afghanistan ');
+    public static function MigrateTablesToVersion($dir, $version)
+    {
+        $appDir = AirtimeInstall::GetAirtimeSrcDir();
+        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
+                    "--no-interaction migrations:migrate $version";
+        system($command);
+    }
+    
+    public static function CreateCronFile(){
+        // Create CRON task to run every day.  Time of day is initialized to a random time.
+        $hour = rand(0,23);
+        $minute = rand(0,59);
+        
+        $fp = fopen('/etc/cron.d/airtime-crons','w');
+        fwrite($fp, "$minute $hour * * * root /usr/lib/airtime/utils/phone_home_stat\n");
+        fclose($fp);
+    }
+    
+    public static function GetAirtimeSrcDir()
+    {
+        return __DIR__."/../../../airtime_mvc";
+    }
+    
+    public static function InsertCountryDataIntoDatabase(){
+        $sql = "INSERT INTO cc_country (isocode, name) VALUES ('AFG', 'Afghanistan ');
         INSERT INTO cc_country (isocode, name) VALUES ('ALA', 'Åland Islands');
         INSERT INTO cc_country (isocode, name) VALUES ('ALB', 'Albania ');
         INSERT INTO cc_country (isocode, name) VALUES ('DZA', 'Algeria ');
@@ -404,54 +320,342 @@ $sql = "INSERT INTO cc_country (isocode, name) VALUES ('AFG', 'Afghanistan ');
         INSERT INTO cc_country (isocode, name) VALUES ('ZMB', 'Zambia ');
         INSERT INTO cc_country (isocode, name) VALUES ('ZWE', 'Zimbabwe ');";
 
-echo "* Inserting data into country table".PHP_EOL;
-execSqlQuery($sql);
-
-//create cron file for phone home stat
-AirtimeInstall::CreateCronFile();
-
-
-
-//Handle Database Changes.
-$stor_dir = realpath($values['general']['base_files_dir']."/stor")."/";
-echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
-$sql = "UPDATE cc_music_dirs SET directory='$stor_dir' WHERE type='stor'";
-echo $sql.PHP_EOL;
-execSqlQuery($sql);
-
-$sql = "SELECT id FROM cc_music_dirs WHERE type='stor'";
-echo $sql.PHP_EOL;
-$rows = execSqlQuery($sql);
-
-//echo "STORAGE ROW ID: $rows[0]";
-
-//old database had a "fullpath" column that stored the absolute path of each track. We have to
-//change it so that the "fullpath" column has path relative to the "directory" column.
-
-echo "Creating media-monitor log file";
-mkdir("/var/log/airtime/media-monitor/", 755, true);
-touch("/var/log/airtime/media-monitor/media-monitor.log");
-
-//create media monitor config:
-if (!copy(__DIR__."/../../../python_apps/media-monitor/media-monitor.cfg", CONF_FILE_MEDIAMONITOR)){
-    echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
+        echo "* Inserting data into country table".PHP_EOL;
+        execSqlQuery($sql);   
+    }
 }
 
-echo "Reorganizing files in stor directory";
-$mediaMonitorUpgradePath = realpath(__DIR__."/../../../python_apps/media-monitor/media-monitor-upgrade.py");
-exec("su -c \"python $mediaMonitorUpgradePath\"", $output);
+class AirtimeIni{
 
-print_r($output);
+    const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
+    const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
+    const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
+    const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
+    const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
 
-$oldAndNewFileNames = json_decode($output[0]);
+    /**
+     * This function updates an INI style config file.
+     *
+     * A property and the value the property should be changed to are
+     * supplied. If the property is not found, then no changes are made.
+     *
+     * @param string $p_filename
+     *      The path the to the file.
+     * @param string $p_property
+     *      The property to look for in order to change its value.
+     * @param string $p_value
+     *      The value the property should be changed to.
+     *
+     */
+    public static function UpdateIniValue($p_filename, $p_property, $p_value)
+    {
+        $lines = file($p_filename);
+        $n=count($lines);
+        foreach ($lines as &$line) {
+            if ($line[0] != "#"){
+                $key_value = explode("=", $line);
+                $key = trim($key_value[0]);
 
-foreach ($oldAndNewFileNames as $pair){
-    $relPathNew = pg_escape_string(substr($pair[1], strlen($stor_dir)));
-    $absPathOld = pg_escape_string($pair[0]);
-    $sql = "UPDATE cc_files SET filepath = '$relPathNew', directory=1 WHERE filepath = '$absPathOld'";
+                if ($key == $p_property){
+                    $line = "$p_property = $p_value".PHP_EOL;
+                }
+            }
+        }
+
+        $fp=fopen($p_filename, 'w');
+        for($i=0; $i<$n; $i++){
+            fwrite($fp, $lines[$i]);
+        }
+        fclose($fp);
+    }
+
+    public static function ReadPythonConfig($p_filename)
+    {
+        $values = array();
+
+        $lines = file($p_filename);
+        $n=count($lines);
+        for ($i=0; $i<$n; $i++) {
+            if (strlen($lines[$i]) && !in_array(substr($lines[$i], 0, 1), array('#', PHP_EOL))){
+                 $info = explode("=", $lines[$i]);
+                 $values[trim($info[0])] = trim($info[1]);
+             }
+        }
+
+        return $values;
+    }
+
+    public static function MergeConfigFiles($configFiles, $suffix) {
+        foreach ($configFiles as $conf) {
+            if (file_exists("$conf$suffix.bak")) {
+
+                if($conf === AirtimeIni::CONF_FILE_AIRTIME) {
+                    // Parse with sections
+                    $newSettings = parse_ini_file($conf, true);
+                    $oldSettings = parse_ini_file("$conf$suffix.bak", true);
+                }
+                else {
+                    $newSettings = AirtimeIni::ReadPythonConfig($conf);
+                    $oldSettings = AirtimeIni::ReadPythonConfig("$conf$suffix.bak");
+                }
+
+                $settings = array_keys($newSettings);
+
+                foreach($settings as $section) {
+                    if(isset($oldSettings[$section])) {
+                        if(is_array($oldSettings[$section])) {
+                            $sectionKeys = array_keys($newSettings[$section]);
+                            foreach($sectionKeys as $sectionKey) {
+                                if(isset($oldSettings[$section][$sectionKey])) {
+                                    AirtimeIni::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                }
+                            }
+                        }
+                        else {
+                            AirtimeIni::UpdateIniValue($conf, $section, $oldSettings[$section]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    function upgradeConfigFiles(){
+
+        $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
+                             AirtimeIni::CONF_FILE_PYPO,
+                             AirtimeIni::CONF_FILE_RECORDER,
+                             AirtimeIni::CONF_FILE_LIQUIDSOAP);
+
+        // Backup the config files
+        $suffix = date("Ymdhis")."-1.8.1";
+        foreach ($configFiles as $conf) {
+            if (file_exists($conf)) {
+                echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
+                copy($conf, $conf.$suffix.".bak");
+            }
+        }
+        AirtimeIni::CreateIniFiles();
+        AirtimeIni::MergeConfigFiles($configFiles, $suffix);
+    }
+
+    /**
+     * This function creates the /etc/airtime configuration folder
+     * and copies the default config files to it.
+     */
+    function CreateIniFiles()
+    {
+        if (!file_exists("/etc/airtime/")){
+            if (!mkdir("/etc/airtime/", 0755, true)){
+                echo "Could not create /etc/airtime/ directory. Exiting.";
+                exit(1);
+            }
+        }
+        
+        $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
+        $AIRTIME_PYTHON_APPS = realpath(__DIR__.'/../../../python_apps');
+
+        if (!copy($AIRTIME_SRC."/build/airtime.conf", AirtimeIni::CONF_FILE_AIRTIME)){
+            echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy($AIRTIME_PYTHON_APPS."/pypo/pypo.cfg", AirtimeIni::CONF_FILE_PYPO)){
+            echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy($AIRTIME_PYTHON_APPS."/show-recorder/recorder.cfg", AirtimeIni::CONF_FILE_RECORDER)){
+            echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy($AIRTIME_PYTHON_APPS."/pypo/liquidsoap_scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
+            echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+    }
+}
+
+function InstallAirtimePhpServerCode($phpDir)
+{
+
+    $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
+
+    echo "* Installing PHP code to ".$phpDir.PHP_EOL;
+    exec("mkdir -p ".$phpDir);
+    exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
+}
+
+function CopyUtils()
+{
+    $utilsSrc = __DIR__."/../../../utils";
+
+    echo "* Installing binaries to ".CONF_DIR_BINARIES.PHP_EOL;
+    exec("mkdir -p ".CONF_DIR_BINARIES);
+    exec("cp -R ".$utilsSrc." ".CONF_DIR_BINARIES);
+}
+
+/* Removes pypo, media-monitor, show-recorder and utils from system. These will
+ * be reinstalled by the main airtime-upgrade script. 
+ */
+function UninstallBinaries()
+{
+    echo "* Removing Airtime binaries from ".CONF_DIR_BINARIES.PHP_EOL;
+    exec('rm -rf "'.CONF_DIR_BINARIES.'"');
+}
+
+
+function removeOldAirtimeImport(){
+    exec('rm -f "/usr/bin/airtime-import"');
+    exec('rm -f "/usr/lib/airtime/utils/airtime-import.php"');
+    exec('rm -rf "/usr/lib/airtime/utils/airtime-import"');
+}
+
+function updateAirtimeImportSymLink(){
+    $dir = "/usr/lib/airtime/utils/airtime-import/airtime-import";
+    exec("ln -s $dir /usr/bin/airtime-import");
+}
+
+function execSqlQuery($sql){
+    global $CC_DBC;
+
+    $result = $CC_DBC->query($sql);
+    if (PEAR::isError($result)) {
+        echo "* Failed sql query: $sql".PHP_EOL;
+        echo "* Message {$result->getMessage()}".PHP_EOL;
+    }
+    
+    return $result;
+}
+
+function connectToDatabase(){
+    global $CC_DBC, $CC_CONFIG;
+
+    $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+
+    // Database config
+    $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
+    $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
+    $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+    $CC_CONFIG['dsn']['phptype'] = 'pgsql';
+    $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+
+    $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
+}
+
+/* Old database had a "fullpath" column that stored the absolute path of each track. We have to
+ * change it so that the "fullpath" column has path relative to the "directory" column.
+ */
+function installMediaMonitor($values){
+
+    /* Handle Database Changes. */
+    $stor_dir = realpath($values['general']['base_files_dir']."/stor")."/";
+    echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
+    $sql = "UPDATE cc_music_dirs SET directory='$stor_dir' WHERE type='stor'";
     echo $sql.PHP_EOL;
     execSqlQuery($sql);
+
+    $sql = "SELECT id FROM cc_music_dirs WHERE type='stor'";
+    echo $sql.PHP_EOL;
+    $rows = execSqlQuery($sql);
+
+    echo "Creating media-monitor log file";
+    mkdir("/var/log/airtime/media-monitor/", 755, true);
+    touch("/var/log/airtime/media-monitor/media-monitor.log");
+
+    /* create media monitor config: */
+    if (!copy(__DIR__."/../../../python_apps/media-monitor/media-monitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
+        echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
+    }
+
+    echo "Reorganizing files in stor directory";
+    $mediaMonitorUpgradePath = realpath(__DIR__."/../../../python_apps/media-monitor/media-monitor-upgrade.py");
+    exec("su -c \"python $mediaMonitorUpgradePath\"", $output);
+    print_r($output);
+
+    $oldAndNewFileNames = json_decode($output[0]);
+
+    foreach ($oldAndNewFileNames as $pair){
+        $relPathNew = pg_escape_string(substr($pair[1], strlen($stor_dir)));
+        $absPathOld = pg_escape_string($pair[0]);
+        $sql = "UPDATE cc_files SET filepath = '$relPathNew', directory=1 WHERE filepath = '$absPathOld'";
+        echo $sql.PHP_EOL;
+        execSqlQuery($sql);
+    }
 }
+
+
+AirtimeInstall::CreateZendPhpLogFile();
+
+/* In version 1.9.0 we have have switched from daemontools to more traditional
+ * init.d daemon system. Let's remove all the daemontools files
+ */
+exec("/usr/bin/airtime-pypo-stop");
+exec("/usr/bin/airtime-show-recorder-stop");
+
+exec("svc -d /etc/service/pypo");
+exec("svc -d /etc/service/pypo/log");
+exec("svc -d /etc/service/pypo-liquidsoap");
+exec("svc -d /etc/service/pypo-liquidsoap/log");
+exec("svc -d /etc/service/recorder");
+exec("svc -d /etc/service/recorder/log");
+
+$pathnames = array("/usr/bin/airtime-pypo-start",
+                "/usr/bin/airtime-pypo-stop",
+                "/usr/bin/airtime-show-recorder-start",
+                "/usr/bin/airtime-show-recorder-stop",
+                "/usr/bin/airtime-media-monitor-start",
+                "/usr/bin/airtime-media-monitor-stop",
+                "/etc/service/pypo",
+                "/etc/service/pypo-liquidsoap",
+                "/etc/service/media-monitor",
+                "/etc/service/recorder",
+                "/var/log/airtime/pypo/main",
+                "/var/log/airtime/pypo-liquidsoap/main",
+                "/var/log/airtime/show-recorder/main"
+                );
+
+foreach ($pathnames as $pn){
+    echo "Removing $pn\n";
+    exec("rm -rf \"$pn\"");
+}
+
+
+/* update Airtime Server PHP files */
+$values = parse_ini_file(AirtimeIni::CONF_FILE_AIRTIME, true);
+$phpDir = $values['general']['airtime_dir'];
+InstallAirtimePhpServerCode($phpDir);
+
+/* update utils (/usr/lib/airtime) folder */
+UninstallBinaries();
+CopyUtils();
+
+/* James made a new airtime-import script, lets remove the old airtime-import php script,
+ *install the new airtime-import.py script and update the /usr/bin/symlink.
+ */
+removeOldAirtimeImport();
+updateAirtimeImportSymLink();
+
+connectToDatabase();
+
+if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
+    $migrations = array('20110312121200', '20110331111708', '20110402164819', '20110406182005');
+    foreach($migrations as $migration) {
+        AirtimeInstall::BypassMigrations(__DIR__, $migration);
+    }
+}
+/* adding music_dir and country table. 20110629143017 and 20110713161043 respetivly */
+AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110713161043');
+
+AirtimeInstall::InsertCountryDataIntoDatabase();
+
+
+
+/* create cron file for phone home stat */
+AirtimeInstall::CreateCronFile();
+
+installMediaMonitor($values);
+
+AirtimeIni::upgradeConfigFiles();
+
 
 
 
