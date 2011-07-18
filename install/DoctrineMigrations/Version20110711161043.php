@@ -3,8 +3,9 @@
 namespace DoctrineMigrations;
 
 /*
-update cc_files table to include to "directory" column as well as add foreign key relation to
-cc_music_dirs table.
+1) update cc_files table to include to "directory" column
+2) create a foreign key relationship from cc_files to cc_music_dirs
+3) create a foreign key relationship from cc_schedule to cc_files
 */
 
 use Doctrine\DBAL\Migrations\AbstractMigration,
@@ -14,21 +15,22 @@ class Version20110711161043 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-    
-        //CREATE the default value of "/srv/airtime/stor", this can be updated later in the upgrade script.
+        /* 1) update cc_files table to include to "directory" column */
         $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('stor', '/srv/airtime/stor');");
         
         $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('upgrade', '');");
 
         $cc_music_dirs = $schema->getTable('cc_music_dirs');
     
-        //start cc_files modifications
+        /* 2) create a foreign key relationship from cc_files to cc_music_dirs */
         $cc_files = $schema->getTable('cc_files');
         $cc_files->addColumn('directory', 'integer', array('default'=> 2));
 
         $cc_files->addNamedForeignKeyConstraint('cc_music_dirs_folder_fkey', $cc_music_dirs, array('directory'), array('id'), array('onDelete' => 'CASCADE'));
-        //end cc_files modifications
-
+        
+        /* 3) create a foreign key relationship from cc_schedule to cc_files */
+        $cc_schedule = $schema->getTable('cc_schedule');
+        $cc_schedule->addNamedForeignKeyConstraint('cc_files_folder_fkey', $cc_files, array('file_id'), array('id'), array('onDelete' => 'CASCADE'));
     }
     
     public function down(Schema $schema)
