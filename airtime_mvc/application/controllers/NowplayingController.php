@@ -24,10 +24,10 @@ class NowplayingController extends Zend_Controller_Action
         $refer_sses = new Zend_Session_Namespace('referrer');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-
-        $form = new Application_Form_RegisterAirtime();
-            
+        
         if ($request->isPost()) {
+            $form = new Application_Form_RegisterAirtime();
+        
             $values = $request->getPost();
             if ($values["Publicise"] != 1){
                 Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
@@ -64,6 +64,10 @@ class NowplayingController extends Zend_Controller_Action
             //popup if previous page was login
             if($refer_sses->referrer == 'login' && Application_Model_Nowplaying::ShouldShowPopUp()
                 && !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
+                
+                $form = new Application_Form_RegisterAirtime();
+                
+                
                 $logo = Application_Model_Preference::GetStationLogo();
                 if($logo){
                     $this->view->logoImg = $logo;
