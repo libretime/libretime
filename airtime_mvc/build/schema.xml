@@ -263,6 +263,9 @@
     <foreign-key foreignTable="cc_show_instances" name="cc_show_inst_fkey" onDelete="CASCADE">
       <reference local="instance_id" foreign="id"/>
     </foreign-key>
+    <foreign-key foreignTable="cc_files" name="cc_show_file_fkey" onDelete="CASCADE">
+      <reference local="file_id" foreign="id"/>
+    </foreign-key>
   </table>
   <table name="cc_sess" phpName="CcSess">
     <column name="sessid" phpName="Sessid" type="CHAR" size="32" primaryKey="true" required="true"/>
@@ -310,6 +313,6 @@
   </table>
   <table name="cc_country" phpName="CcCountry">
     <column name="isocode" phpName="DbIsoCode" primaryKey="true" type="CHAR" size="3" required="true"/>
-    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true"/> 
+    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true"/>
   </table>
 </database>

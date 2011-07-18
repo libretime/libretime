@@ -43,7 +43,7 @@ class CcScheduleTableMap extends TableMap {
 		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
 		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
 		$this->addColumn('GROUP_ID', 'DbGroupId', 'INTEGER', false, null, null);
-		$this->addColumn('FILE_ID', 'DbFileId', 'INTEGER', false, null, null);
+		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
 		$this->addColumn('CLIP_LENGTH', 'DbClipLength', 'TIME', false, null, '00:00:00');
 		$this->addColumn('FADE_IN', 'DbFadeIn', 'TIME', false, null, '00:00:00');
 		$this->addColumn('FADE_OUT', 'DbFadeOut', 'TIME', false, null, '00:00:00');
@@ -61,6 +61,7 @@ class CcScheduleTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
 	/**

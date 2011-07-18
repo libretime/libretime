@@ -121,6 +121,11 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	protected $aCcShowInstances;
 
 	/**
+	 * @var        CcFiles
+	 */
+	protected $aCcFiles;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -640,6 +645,10 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcSchedulePeer::FILE_ID;
 		}
 
+		if ($this->aCcFiles !== null && $this->aCcFiles->getDbId() !== $v) {
+			$this->aCcFiles = null;
+		}
+
 		return $this;
 	} // setDbFileId()
 
@@ -1062,6 +1071,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	public function ensureConsistency()
 	{
 
+		if ($this->aCcFiles !== null && $this->file_id !== $this->aCcFiles->getDbId()) {
+			$this->aCcFiles = null;
+		}
 		if ($this->aCcShowInstances !== null && $this->instance_id !== $this->aCcShowInstances->getDbId()) {
 			$this->aCcShowInstances = null;
 		}
@@ -1105,6 +1117,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aCcShowInstances = null;
+			$this->aCcFiles = null;
 		} // if (deep)
 	}
 
@@ -1229,6 +1242,13 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->setCcShowInstances($this->aCcShowInstances);
 			}
 
+			if ($this->aCcFiles !== null) {
+				if ($this->aCcFiles->isModified() || $this->aCcFiles->isNew()) {
+					$affectedRows += $this->aCcFiles->save($con);
+				}
+				$this->setCcFiles($this->aCcFiles);
+			}
+
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = CcSchedulePeer::ID;
 			}
@@ -1326,6 +1346,12 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			if ($this->aCcShowInstances !== null) {
 				if (!$this->aCcShowInstances->validate($columns)) {
 					$failureMap = array_merge($failureMap, $this->aCcShowInstances->getValidationFailures());
+				}
+			}
+
+			if ($this->aCcFiles !== null) {
+				if (!$this->aCcFiles->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcFiles->getValidationFailures());
 				}
 			}
 
@@ -1452,6 +1478,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShowInstances) {
 				$result['CcShowInstances'] = $this->aCcShowInstances->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+			if (null !== $this->aCcFiles) {
+				$result['CcFiles'] = $this->aCcFiles->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 		}
 		return $result;
@@ -1760,6 +1789,55 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Declares an association between this object and a CcFiles object.
+	 *
+	 * @param      CcFiles $v
+	 * @return     CcSchedule The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setCcFiles(CcFiles $v = null)
+	{
+		if ($v === null) {
+			$this->setDbFileId(NULL);
+		} else {
+			$this->setDbFileId($v->getDbId());
+		}
+
+		$this->aCcFiles = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the CcFiles object, it will not be re-added.
+		if ($v !== null) {
+			$v->addCcSchedule($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated CcFiles object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     CcFiles The associated CcFiles object.
+	 * @throws     PropelException
+	 */
+	public function getCcFiles(PropelPDO $con = null)
+	{
+		if ($this->aCcFiles === null && ($this->file_id !== null)) {
+			$this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
+			/* The following can be used additionally to
+			   guarantee the related object contains a reference
+			   to this object.  This level of coupling may, however, be
+			   undesirable since it could result in an only partially populated collection
+			   in the referenced object.
+			   $this->aCcFiles->addCcSchedules($this);
+			 */
+		}
+		return $this->aCcFiles;
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1802,6 +1880,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} // if ($deep)
 
 		$this->aCcShowInstances = null;
+		$this->aCcFiles = null;
 	}
 
 	// aggregate_column_relation behavior
