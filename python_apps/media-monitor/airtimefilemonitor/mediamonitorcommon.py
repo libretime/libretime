@@ -21,7 +21,6 @@ class MediaMonitorCommon:
         directory = os.path.normpath(directory)
         return (directory == filepath[0:len(directory)])
 
-    """
     def is_temp_file(self, filename):
         info = filename.split(".")
 
@@ -29,7 +28,6 @@ class MediaMonitorCommon:
             return True
         else:
             return False
-    """
 
     def is_audio_file(self, filename):
         info = filename.split(".")
