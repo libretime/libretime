@@ -30,6 +30,8 @@ except Exception, e:
 
 logger = logging.getLogger()
 
+logger.info("\n\n*** Media Monitor bootup ***\n\n")
+
 try:
     config = AirtimeMediaConfig(logger)
     api_client = api_client.api_client_factory(config.cfg)
