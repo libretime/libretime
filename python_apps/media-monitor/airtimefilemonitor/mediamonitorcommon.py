@@ -9,7 +9,7 @@ from airtimemetadata import AirtimeMetadata
 class MediaMonitorCommon:
 
     timestamp_file = "/var/tmp/airtime/last_index"
-    
+
     def __init__(self, airtime_config):
         self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger()
@@ -38,12 +38,12 @@ class MediaMonitorCommon:
             return True
         else:
             return False
-        
+
     #check if file is readable by "nobody"
     def has_correct_permissions(self, filepath):
         #drop root permissions and become "nobody"
         os.seteuid(65534)
-        
+
         try:
             open(filepath)
             readable = True
@@ -56,7 +56,7 @@ class MediaMonitorCommon:
         finally:
             #reset effective user to root
             os.seteuid(0)
-        
+
         return readable
 
     def set_needed_file_permissions(self, item, is_dir):
@@ -78,7 +78,7 @@ class MediaMonitorCommon:
         finally:
             os.umask(omask)
 
-            
+
     #checks if path is a directory, and if it doesnt exist, then creates it.
     #Otherwise prints error to log file.
     def ensure_is_dir(self, directory):
@@ -92,7 +92,7 @@ class MediaMonitorCommon:
         finally:
             os.umask(omask)
 
-    #moves file from source to dest but also recursively removes the 
+    #moves file from source to dest but also recursively removes the
     #the source file's parent directories if they are now empty.
     def move_file(self, source, dest):
 
@@ -103,10 +103,10 @@ class MediaMonitorCommon:
             self.logger.error("failed to move file. %s", e)
         finally:
             os.umask(omask)
-         
+
         dir = os.path.dirname(source)
         self.cleanup_empty_dirs(dir)
-            
+
     #keep moving up the file hierarchy and deleting parent
     #directories until we hit a non-empty directory, or we
     #hit the organize dir.
@@ -114,12 +114,12 @@ class MediaMonitorCommon:
         if os.path.normpath(dir) != self.config.organize_directory:
             if len(os.listdir(dir)) == 0:
                 os.rmdir(dir)
-                
+
                 pdir = os.path.dirname(dir)
                 self.cleanup_empty_dirs(pdir)
-        
 
-    #checks if path exists already in stor. If the path exists and the md5s are the 
+
+    #checks if path exists already in stor. If the path exists and the md5s are the
     #same just overwrite.
     def create_unique_filename(self, filepath, old_filepath):
 
@@ -198,7 +198,7 @@ class MediaMonitorCommon:
             elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
                 filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
-                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)         
+                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
             filepath = self.create_unique_filename(filepath, original_path)
             self.logger.info('Unique filepath: %s', filepath)
@@ -208,38 +208,38 @@ class MediaMonitorCommon:
             self.logger.error('Exception: %s', e)
 
         return filepath
-        
+
     def execCommandAndReturnStdOut(self, command):
         p = Popen(command, shell=True, stdout=PIPE)
         stdout = p.communicate()[0]
         if p.returncode != 0:
             self.logger.warn("command \n%s\n return with a non-zero return value", command)
         return stdout
-                    
+
     def scan_dir_for_new_files(self, dir):
         command = 'find "%s" -type f -iname "*.ogg" -o -iname "*.mp3" -readable' % dir.replace('"', '\\"')
         self.logger.debug(command)
         stdout = self.execCommandAndReturnStdOut(command)
         stdout = unicode(stdout, "utf_8")
 
-        return stdout.splitlines() 
-        
+        return stdout.splitlines()
+
     def touch_index_file(self):
         open(self.timestamp_file, "w")
-        
+
     def organize_new_file(self, pathname):
-        self.logger.info(u"Organizing new file: %s", pathname)
+        self.logger.info("Organizing new file: %s", pathname)
         file_md = self.md_manager.get_md_from_file(pathname)
 
         if file_md is not None:
             #is_recorded_show = 'MDATA_KEY_CREATOR' in file_md and \
             #    file_md['MDATA_KEY_CREATOR'] == "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
             filepath = self.create_file_path(pathname, file_md)
-            
-            self.logger.debug(u"Moving from %s to %s", pathname, filepath)
+
+            self.logger.debug("Moving from %s to %s", pathname, filepath)
             self.move_file(pathname, filepath)
         else:
             filepath = None
             self.logger.warn("File %s, has invalid metadata", pathname)
-            
+
         return filepath

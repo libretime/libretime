@@ -28,7 +28,7 @@ class AirtimeNotifier(Notifier):
         self.mmc = mmc
         self.wm = watch_manager
         self.mask = pyinotify.ALL_EVENTS
-       
+
 
         while not self.init_rabbit_mq():
             self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
@@ -95,11 +95,11 @@ class AirtimeNotifier(Notifier):
             self.mmc.set_needed_file_permissions(new_storage_directory, True)
 
             self.bootstrap.sync_database_to_filesystem(new_storage_directory_id, new_storage_directory)
-            
+
             self.config.storage_directory = os.path.normpath(new_storage_directory)
             self.config.imported_directory = os.path.normpath(new_storage_directory + '/imported')
             self.config.organize_directory = os.path.normpath(new_storage_directory + '/organize')
-            
+
             self.mmc.ensure_is_dir(self.config.storage_directory)
             self.mmc.ensure_is_dir(self.config.imported_directory)
             self.mmc.ensure_is_dir(self.config.organize_directory)
@@ -113,52 +113,59 @@ class AirtimeNotifier(Notifier):
 
 
     #update airtime with information about files discovered in our
-    #watched directories. Pass in a dict() object with the following 
+    #watched directories. Pass in a dict() object with the following
     #attributes:
     # -filepath
     # -mode
     # -data
     # -is_recorded_show
     def update_airtime(self, d):
-        filepath = d['filepath']
-        mode = d['mode']
 
-        md = {}
-        md['MDATA_KEY_FILEPATH'] = filepath.encode("utf_8")
+        try:
+            self.logger.info("updating filepath: %s ", d['filepath'])
+            filepath = d['filepath']
+            mode = d['mode']
 
-        if 'data' in d:
-            file_md = d['data']
-            md.update(file_md)
-        else:
-            file_md = None
-            data = None
+            md = {}
+            md['MDATA_KEY_FILEPATH'] = filepath
+
+            if 'data' in d:
+                file_md = d['data']
+                md.update(file_md)
+            else:
+                file_md = None
+                data = None
 
 
-        if (os.path.exists(filepath) and (mode == self.config.MODE_CREATE)):
-            if file_md is None:
+            if (os.path.exists(filepath) and (mode == self.config.MODE_CREATE)):
+                if file_md is None:
+                    mutagen = self.md_manager.get_md_from_file(filepath)
+                    if mutagen is None:
+                        return
+                    md.update(mutagen)
+
+                if d['is_recorded_show']:
+                    self.api_client.update_media_metadata(md, mode, True)
+                else:
+                    self.api_client.update_media_metadata(md, mode)
+
+            elif (os.path.exists(filepath) and (mode == self.config.MODE_MODIFY)):
                 mutagen = self.md_manager.get_md_from_file(filepath)
                 if mutagen is None:
                     return
                 md.update(mutagen)
-
-            if d['is_recorded_show']:
-                self.api_client.update_media_metadata(md, mode, True)
-            else:
                 self.api_client.update_media_metadata(md, mode)
 
-        elif (os.path.exists(filepath) and (mode == self.config.MODE_MODIFY)):
-            mutagen = self.md_manager.get_md_from_file(filepath)
-            if mutagen is None:
-                return
-            md.update(mutagen)
-            self.api_client.update_media_metadata(md, mode)
+            elif (mode == self.config.MODE_MOVED):
+                md['MDATA_KEY_MD5'] = self.md_manager.get_md5(filepath)
+                self.api_client.update_media_metadata(md, mode)
 
-        elif (mode == self.config.MODE_MOVED):
-            md['MDATA_KEY_MD5'] = self.md_manager.get_md5(filepath)
-            self.api_client.update_media_metadata(md, mode)
+            elif (mode == self.config.MODE_DELETE):
+                self.api_client.update_media_metadata(md, mode)
 
-        elif (mode == self.config.MODE_DELETE):
-            self.api_client.update_media_metadata(md, mode)
+        except Exception, e:
+            self.logger.error("failed updating filepath: %s ", d['filepath'])
+            self.logger.error('Exception: %s', e)
 
     #define which directories the pyinotify WatchManager should watch.
     def watch_directory(self, directory):
