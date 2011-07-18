@@ -1,5 +1,8 @@
 #!/bin/bash
 
+virtualenv_bin="/home/james/temp/bin/"
+. ${virtualenv_bin}activate
+
 #Cause bash script to exit if any of the installers
 #return with a non-zero return value.
 set -e

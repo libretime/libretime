@@ -1,4 +1,8 @@
 #!/bin/sh
+
+virtualenv_bin="/home/james/temp/bin/"
+. ${virtualenv_bin}activate
+
 ls_user="pypo"
 export HOME="/var/tmp/airtime/pypo/"
 api_client_path="/usr/lib/airtime/pypo/"

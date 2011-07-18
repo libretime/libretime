@@ -1,5 +1,8 @@
 #!/bin/sh
 
+virtualenv_bin="/home/james/temp/bin/"
+. ${virtualenv_bin}activate
+
 recorder_user="pypo"
 
 

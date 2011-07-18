@@ -1,6 +1,8 @@
 #!/bin/sh
 
-# Location of pypo_cli.py Python script
+virtualenv_bin="/home/james/temp/bin/"
+. ${virtualenv_bin}activate
+
 airtime_import_path="/usr/lib/airtime/utils/airtime-import/"
 airtime_import_script="airtime-import.py"
 

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+virtualenv_bin="/home/james/temp/bin/"
+. ${virtualenv_bin}activate
+
 pypo_user="pypo"
 
 # Location of pypo_cli.py Python script
