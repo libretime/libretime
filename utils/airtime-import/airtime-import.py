@@ -195,9 +195,14 @@ def StorageSetAction(option, opt, value, parser):
             parser.rargs.remove('--force')
     if(not bypass):
         errorIfMultipleOption(parser.rargs, "Only [-f] and [--force] option is allowed with this option.")
-        confirm = raw_input("Are you sure you want to change the storage direcory? (Y/n)")
-        confirm = confirm or 'Y'
-        if(confirm != 'Y'):
+        possibleInput = {'y','Y','n','N'}
+        confirm = raw_input("Are you sure you want to change the storage direcory? (y/N)")
+        confirm = confirm or 'N'
+        while(confirm  not in possibleInput):
+            print "Not an acceptable input: %s" % confirm
+            confirm = raw_input("Are you sure you want to change the storage direcory? (y/N)")
+            confirm = confirm or 'N'
+        if(confirm == 'n' or confirm =='N'):
             sys.exit(1)
     
     if(len(parser.rargs) > 1):
