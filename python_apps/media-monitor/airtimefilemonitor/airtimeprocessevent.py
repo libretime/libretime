@@ -57,6 +57,9 @@ class AirtimeProcessEvent(ProcessEvent):
                 #file created is a tmp file which will be modified and then moved back to the original filename.
                 #Easy Tag creates this when changing metadata of ogg files.
                 self.temp_files[pathname] = None
+            #file is being overwritten/replaced in GUI.
+            elif "goutputstream" in pathname:
+                self.temp_files[pathname] = None
             elif self.mmc.is_audio_file(pathname):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
                     #file was created in /srv/airtime/stor/organize. Need to process and move

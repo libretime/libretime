@@ -40,7 +40,23 @@ class MusicDir {
 
     public function remove()
     {
+        global $CC_DBC;
+
+        $music_dir_id = $this->getId();
+
+        $sql = "SELECT DISTINCT s.instance_id from cc_music_dirs as md LEFT JOIN cc_files as f on f.directory = md.id
+        RIGHT JOIN cc_schedule as s on s.file_id = f.id WHERE md.id = $music_dir_id";
+
+        $show_instances = $CC_DBC->GetAll($sql);
+
         $this->_dir->delete();
+
+        foreach ($show_instances as $show_instance_row) {
+            $temp_show = new ShowInstance($show_instance_row["instance_id"]);
+            $temp_show->updateScheduledTime();
+        }
+
+        RabbitMq::PushSchedule();
     }
 
     public static function addDir($p_path, $p_type)
@@ -60,7 +76,7 @@ class MusicDir {
             //echo $e->getMessage();
             return array("code"=>1, "error"=>"'$p_path' is already set as the current storage dir or in the watched folders list");
         }
-        
+
     }
 
     public static function addWatchedDir($p_path)
@@ -123,8 +139,8 @@ class MusicDir {
         $mus_dir = new MusicDir($dir);
 
         return $mus_dir;
-    }    
-    
+    }
+
     public static function setStorDir($p_dir)
     {
         if(!is_dir($p_dir)){
@@ -162,7 +178,7 @@ class MusicDir {
 
         return null;
     }
-    
+
     public static function removeWatchedDir($p_dir){
         $p_dir = realpath($p_dir)."/";
         $dir = MusicDir::getDirByPath($p_dir);
@@ -180,7 +196,7 @@ class MusicDir {
     public static function splitFilePath($p_filepath)
     {
         $mus_dir = self::getWatchedDirFromFilepath($p_filepath);
-        
+
         if(is_null($mus_dir)) {
             return null;
         }

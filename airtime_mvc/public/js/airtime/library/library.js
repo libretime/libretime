@@ -1,12 +1,12 @@
 //used by jjmenu
-function getId() { 
+function getId() {
 	var tr_id =  $(this.triggerElement).attr("id");
 	tr_id = tr_id.split("_");
 
 	return tr_id[1];
 }
 
-function getType() { 
+function getType() {
 	var tr_id =  $(this.triggerElement).attr("id");
 	tr_id = tr_id.split("_");
 
@@ -25,8 +25,8 @@ function deleteItem(type, id) {
 }
 
 function deleteAudioClip(json) {
-	if(json.message) {  
-		alert(json.message);	
+	if(json.message) {
+		alert(json.message);
 		return;
 	}
 
@@ -35,13 +35,13 @@ function deleteAudioClip(json) {
 
 //callbacks called by jjmenu
 function confirmDeleteAudioClip(params){
-    if(confirm('Are you sure you want to delete?')){
+    if(confirm('The file will be deleted from disk, are you sure you want to delete?')){
         var url = '/Library/delete' + params;
         $.ajax({
           url: url,
           success: deleteAudioClip
         });
-    }	
+    }
 }
 
 //callbacks called by jjmenu
@@ -52,12 +52,12 @@ function confirmDeletePlaylist(params){
           url: url,
           success: deletePlaylist
         });
-    }	
+    }
 }
 
 function deletePlaylist(json) {
-	if(json.message) {  
-		alert(json.message);	
+	if(json.message) {
+		alert(json.message);
 		return;
 	}
 
@@ -69,15 +69,15 @@ function deletePlaylist(json) {
 function addLibraryItemEvents() {
 
 	$('#library_display tr[id ^= "au"]')
-		.draggable({ 
+		.draggable({
 			helper: 'clone',
 			cursor: 'pointer'
 		});
 
 	$('#library_display tbody tr')
-		.jjmenu("click", 
-			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],  
-			{id: getId, type: getType}, 
+		.jjmenu("click",
+			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
+			{id: getId, type: getType},
 			{xposition: "mouse", yposition: "mouse"});
 
 }
@@ -96,7 +96,7 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
     }
 
 	$(nRow).attr("id", type+'_'+id);
-	
+
 	// insert id on lenth field
 	$('td:eq(4)', nRow).attr("id", "length");
 
@@ -111,14 +111,14 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                button: 'Close' // Show a close link in the title
             }
          },
-        
+
          position: {
-        
+
             adjust: {
                screen: true // Keep the tooltip on-screen at all times
             }
          },
-        
+
          style: {
             border: {
                width: 0,
@@ -146,16 +146,16 @@ $(document).ready(function() {
 		"sAjaxSource": "/Library/contents/format/json",
 		"fnServerData": function ( sSource, aoData, fnCallback ) {
 			$.ajax( {
-				"dataType": 'json', 
-				"type": "POST", 
-				"url": sSource, 
-				"data": aoData, 
+				"dataType": 'json',
+				"type": "POST",
+				"url": sSource,
+				"data": aoData,
 				"success": fnCallback
 			} );
 		},
 		"fnRowCallback": dtRowCallback,
 		"fnDrawCallback": dtDrawCallback,
-		"aoColumns": [ 
+		"aoColumns": [
 			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false },
 			/* Title */		{ "sName": "track_title" },
 			/* Creator */	{ "sName": "artist_name" },
