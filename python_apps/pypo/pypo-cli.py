@@ -56,7 +56,6 @@ except Exception, e:
 class Global:
     def __init__(self):
         self.api_client = api_client.api_client_factory(config)
-        self.cue_file = CueFile()
         self.set_export_source('scheduler')
         
     def selfcheck(self):

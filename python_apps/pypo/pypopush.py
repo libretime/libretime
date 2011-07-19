@@ -35,7 +35,6 @@ class PypoPush(Thread):
     def __init__(self, q):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
-        self.cue_file = CueFile()
         self.set_export_source('scheduler')
         self.queue = q
 
