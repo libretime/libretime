@@ -94,6 +94,8 @@ $newVersion = AIRTIME_VERSION;
 $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$newVersion')";
 $CC_DBC->query($sql);
 
+echo PHP_EOL."*** Updating Api Client ***".PHP_EOL;
+passthru("python ".__DIR__."/../../python_apps/api_clients/install/api_client_install.py");
 
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
 passthru("python ".__DIR__."/../../python_apps/pypo/install/pypo-install.py");

@@ -1,5 +1,7 @@
 import os
 import shutil
+import sys
+from configobj import ConfigObj
 
 def get_current_script_dir():
     return os.path.dirname(os.path.realpath(__file__))
@@ -15,9 +17,9 @@ current_script_dir = get_current_script_dir()
     
 """load config file"""
 try:
-    config = ConfigObj("current_script_dir/../config.cfg")
+    config = ConfigObj("%s/../api_client.cfg" % current_script_dir)
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit(1)
 
-copy_dir("%s/../../api_clients"%current_script_dir, config["bin_dir"]+"/api_clients/")
+copy_dir("%s/../../api_clients"%current_script_dir, config["bin_dir"])

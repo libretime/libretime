@@ -96,7 +96,6 @@ try:
       sys.exit(1)
   
   copy_dir("%s/.."%current_script_dir, config["bin_dir"]+"/bin/")
-  copy_dir("%s/../../api_clients"%current_script_dir, config["bin_dir"]+"/api_clients/")
   
   print "Setting permissions"
   os.system("chmod -R 755 "+config["bin_dir"])

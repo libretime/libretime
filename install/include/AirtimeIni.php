@@ -27,6 +27,7 @@ class AirtimeIni
     const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
     const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
     const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
+    const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
     const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
     const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
@@ -65,6 +66,10 @@ class AirtimeIni
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
         }
+        if (!copy(__DIR__."/../../python_apps/api_clients/api_client.cfg", AirtimeIni::CONF_FILE_API_CLIENT)){
+            echo "Could not copy api_client.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }        
         if (!copy(__DIR__."/../../python_apps/pypo/pypo.cfg", AirtimeIni::CONF_FILE_PYPO)){
             echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
             exit(1);

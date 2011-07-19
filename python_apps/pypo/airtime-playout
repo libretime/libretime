@@ -4,7 +4,7 @@ pypo_user="pypo"
 
 # Location of pypo_cli.py Python script
 pypo_path="/usr/lib/airtime/pypo/bin/"
-api_client_path="/usr/lib/airtime/pypo/"
+api_client_path="/usr/lib/airtime/"
 pypo_script="pypo-cli.py"
 cd ${pypo_path}
 exec 2>&1
