@@ -361,7 +361,6 @@ class ApiController extends Zend_Controller_Action
 
         if (isset($show_name)) {
             $tmpTitle = "$show_name-$show_start_time";
-            $tmpTitle = str_replace(":", "-", $tmpTitle);
             $tmpTitle = str_replace(" ", "-", $tmpTitle);
         }
         else {
@@ -370,6 +369,7 @@ class ApiController extends Zend_Controller_Action
 
 		$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
+        $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', null);
 
         if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
         {
