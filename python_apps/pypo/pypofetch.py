@@ -59,7 +59,6 @@ class PypoFetch(Thread):
         Thread.__init__(self)
         logger = logging.getLogger('fetch')
         self.api_client = api_client.api_client_factory(config)
-        self.cue_file = CueFile()
         self.set_export_source('scheduler')
         self.queue = q
         logger.info("PypoFetch: init complete")

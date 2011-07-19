@@ -1,5 +1,8 @@
 #!/bin/sh
 
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
 pypo_user="pypo"
 
 # Location of pypo_cli.py Python script
