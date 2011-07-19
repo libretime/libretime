@@ -10,7 +10,7 @@ recorder_user="pypo"
 recorder_path="/usr/lib/airtime/show-recorder/"
 recorder_script="recorder.py"
 
-api_client_path="/usr/lib/airtime/pypo/"
+api_client_path="/usr/lib/airtime/"
 cd ${recorder_path}
 
 exec 2>&1

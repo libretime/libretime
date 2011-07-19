@@ -47,10 +47,10 @@ def copy_or_move_files_to(paths, dest, flag):
                 if( 'mp3' in ext or 'ogg' in ext ):
                     destfile = dest+os.path.basename(path)
                     if(flag == 'copy'):
-                        print "Copying %(src)s to %(dest)s....." % {'src':path, 'dest':destfile}
+                        print "Copying %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
                         shutil.copy2(path, destfile)
                     elif(flag == 'move'):
-                        print "Moving %(src)s to %(dest)s....." % {'src':path, 'dest':destfile}
+                        print "Moving %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
                         shutil.move(path, destfile)
         else:
             print "Cannot find file or path: %s" % path
@@ -95,7 +95,7 @@ def printHelp():
 ========================
 There are two ways to import audio files into Airtime:
 
-1) Copy or move files into the storage folder
+1) Use airtime-import to copy or move files into the storage folder.
 
    Copied or moved files will be placed into the folder:
    %s
@@ -103,12 +103,12 @@ There are two ways to import audio files into Airtime:
    Files will be automatically organized into the structure
    "Artist/Album/TrackNumber-TrackName-Bitrate.file_extension".
 
-2) Add a folder to the Airtime library("watch" a folder)
+2) Use airtime-import to add a folder to the Airtime library ("watch" a folder).
     
    All the files in the watched folder will be imported to Airtime and the
    folder will be monitored to automatically detect any changes. Hence any
    changes done in the folder(add, delete, edit a file) will trigger 
-   updates in Airtime libarary.
+   updates in Airtime library.
 """ % storage_dir
     parser.print_help()
     print ""
@@ -117,7 +117,7 @@ def CopyAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     stor = helper_get_stor_dir()
     if(stor is None):
-        exit("Unable to connect to the server.")
+        exit("Unable to connect to the Airtime server.")
     dest = stor+"organize/"
     copy_or_move_files_to(parser.rargs, dest, 'copy')
 
@@ -125,16 +125,16 @@ def MoveAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     stor = helper_get_stor_dir()
     if(stor is None):
-        exit("Unable to connect to the server.")
+        exit("Unable to connect to the Airtime server.")
     dest = stor+"organize/"
     copy_or_move_files_to(parser.rargs, dest, 'move')
 
 def WatchAddAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 1):
-        raise OptionValueError("Too many arguments. This option need exactly one argument.")
+        raise OptionValueError("Too many arguments. This option requires exactly one argument.")
     elif(len(parser.rargs) == 0 ):
-        raise OptionValueError("No argument found. This option need exactly one argument.")
+        raise OptionValueError("No argument found. This option requires exactly one argument.")
     path = parser.rargs[0]
     if(os.path.isdir(path)):
         res = api_client.add_watched_dir(path)
@@ -144,17 +144,17 @@ def WatchAddAction(option, opt, value, parser):
         if(res['msg']['code'] == 0):
             print "%s added to watched folder list successfully" % path
         else:
-            print "Adding a watched folder failed. : %s" % res['msg']['error']
+            print "Adding a watched folder failed: %s" % res['msg']['error']
     else:
         print "Given path is not a directory: %s" % path
 
 def WatchListAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 0):
-        raise OptionValueError("This option doesn't take any argument.")
+        raise OptionValueError("This option doesn't take any arguments.")
     res = api_client.list_all_watched_dirs()
     if(res is None):
-        exit("Unable to connect to the server.")
+        exit("Unable to connect to the Airtime server.")
     dirs = res["dirs"].items()
     # there will be always 1 which is storage folder
     if(len(dirs) == 1):
@@ -167,21 +167,21 @@ def WatchListAction(option, opt, value, parser):
 def WatchRemoveAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 1):
-        raise OptionValueError("Too many arguments. This option need exactly one argument.")
+        raise OptionValueError("Too many arguments. This option requires exactly one argument.")
     elif(len(parser.rargs) == 0 ):
-        raise OptionValueError("No argument found. This option need exactly one argument.")
+        raise OptionValueError("No argument found. This option requires exactly one argument.")
     path = parser.rargs[0]
     if(os.path.isdir(path)):
         res = api_client.remove_watched_dir(path)
         if(res is None):
-            exit("Unable to connect to the server.")
+            exit("Unable to connect to the Airtime server.")
         # sucess
         if(res['msg']['code'] == 0):
-            print "%s removed from watched folder list successfully" % path
+            print "%s removed from watch folder list successfully." % path
         else:
-            print "Removing a watched folder failed. : %s" % res['msg']['error']
+            print "Removing the watch folder failed: %s" % res['msg']['error']
     else:
-        print "Given path is not a directory: %s" % path
+        print "The given path is not a directory: %s" % path
         
 def StorageSetAction(option, opt, value, parser):
     bypass = False
@@ -199,38 +199,38 @@ def StorageSetAction(option, opt, value, parser):
         confirm = raw_input("Are you sure you want to change the storage direcory? (y/N)")
         confirm = confirm or 'N'
         while(confirm  not in possibleInput):
-            print "Not an acceptable input: %s" % confirm
-            confirm = raw_input("Are you sure you want to change the storage direcory? (y/N)")
+            print "Not an acceptable input: %s\n" % confirm
+            confirm = raw_input("Are you sure you want to change the storage direcory? (y/N) ")
             confirm = confirm or 'N'
         if(confirm == 'n' or confirm =='N'):
             sys.exit(1)
     
     if(len(parser.rargs) > 1):
-        raise OptionValueError("Too many arguments. This option need exactly one argument.")
+        raise OptionValueError("Too many arguments. This option requires exactly one argument.")
     elif(len(parser.rargs) == 0 ):
-        raise OptionValueError("No argument found. This option need exactly one argument.")
+        raise OptionValueError("No argument found. This option requires exactly one argument.")
     
     path = parser.rargs[0]
     if(os.path.isdir(path)):
         res = api_client.set_storage_dir(path)
         if(res is None):
-            exit("Unable to connect to the server.")
+            exit("Unable to connect to the Airtime server.")
         # sucess
         if(res['msg']['code'] == 0):
             print "Successfully set storage folder to %s" % path
         else:
-            print "Setting storage folder to failed.: %s" % res['msg']['error']
+            print "Setting storage folder failed: %s" % res['msg']['error']
     else:
-        print "Given path is not a directory: %s" % path
+        print "The given path is not a directory: %s" % path
         
 def StorageGetAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 0):
-        raise OptionValueError("This option doesn't take any argument.")
+        raise OptionValueError("This option does not take any arguments.")
     print helper_get_stor_dir()
     
 usage = """[-c|--copy FILE/DIR [FILE/DIR...]] [-m|--move FILE/DIR [FILE/DIR...]]
-       [--watch-add DIR] [--watch-list] [--watch-remve DIR]
+       [--watch-add DIR] [--watch-list] [--watch-remove DIR]
        [--storage-dir-set DIR] [--storage-dir-get]"""
 
 parser = OptionParser(usage=usage, add_help_option=False)

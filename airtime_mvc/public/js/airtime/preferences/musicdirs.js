@@ -33,7 +33,7 @@ function setWatchedDirEvents() {
         //knownPaths: [{text:'Desktop', image:'desktop.png', path:'/home'}],
         knownPaths: [],
         imageUrl: 'img/icons/',
-        systemImageUrl: 'img/browser/',
+        systemImageUrl: '/css/img/',
         handlerUrl: '/Preference/server-browse/format/json',
         title: 'Choose Folder to Watch',
         basePath: '',

@@ -63,12 +63,15 @@ class LibraryController extends Zend_Controller_Action
         $paramsPop = str_replace('#id#', $id, $params);
         $paramsPop = str_replace('#type#', $type, $paramsPop);
 
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
+
         $pl_sess = $this->pl_sess;
 
         if($type === "au") {
 
             if(isset($pl_sess->id)) {
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/add-item'.$params, 'callback' =>                      'window["setSPLContent"]'),
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/add-item'.$params, 'callback' => 'window["setSPLContent"]'),
                     'title' => 'Add to Playlist');
             }
 
@@ -85,9 +88,12 @@ class LibraryController extends Zend_Controller_Action
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
 
-            $menu[] = array('action' => array('type' => 'fn',
-                    'callback' => "window['confirmDeleteAudioClip']('$paramsPop')"),
-                    'title' => 'Delete');
+
+            if ($user->isAdmin()) {
+                $menu[] = array('action' => array('type' => 'fn',
+                        'callback' => "window['confirmDeleteAudioClip']('$paramsPop')"),
+                        'title' => 'Delete');
+            }
         }
         else if($type === "pl") {
 
@@ -121,32 +127,38 @@ class LibraryController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = $this->_getParam('id');
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
 
-        if (!is_null($id)) {
-            $file = StoredFile::Recall($id);
+        if ($user->isAdmin()) {
 
-            if (PEAR::isError($file)) {
-                $this->view->message = $file->getMessage();
-                return;
-            }
-            else if(is_null($file)) {
-                $this->view->message = "file doesn't exist";
-                return;
+            if (!is_null($id)) {
+                $file = StoredFile::Recall($id);
+
+                if (PEAR::isError($file)) {
+                    $this->view->message = $file->getMessage();
+                    return;
+                }
+                else if(is_null($file)) {
+                    $this->view->message = "file doesn't exist";
+                    return;
+                }
+
+                $res = $file->delete();
+
+                if (PEAR::isError($res)) {
+                    $this->view->message = $res->getMessage();
+                    return;
+                }
+                else {
+                    $res = settype($res, "integer");
+                    $data = array("filepath" => $file->getFilePath(), "delete" => $res);
+                    RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+                }
             }
 
-            $res = $file->delete();
-
-            if (PEAR::isError($res)) {
-                $this->view->message = $res->getMessage();
-                return;
-            }
-            else {
-                $data = array("filepath" => $file->getFilePath(), "delete" => $res);
-                RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
-            }
+            $this->view->id = $id;
         }
-
-        $this->view->id = $id;
     }
 
     public function contentsAction()

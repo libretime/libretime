@@ -5,7 +5,7 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 
 ls_user="pypo"
 export HOME="/var/tmp/airtime/pypo/"
-api_client_path="/usr/lib/airtime/pypo/"
+api_client_path="/usr/lib/airtime/"
 ls_path="/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap"
 ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 

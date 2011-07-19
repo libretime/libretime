@@ -8,7 +8,9 @@
 
 //Pear classes.
 set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
+
 require_once('DB.php');
+require_once(__DIR__.'/../../airtime_mvc/application/configs/constants.php');
 require_once(dirname(__FILE__).'/AirtimeIni.php');
 
 if(exec("whoami") != "root"){
@@ -87,9 +89,13 @@ if (strcmp($version, "1.9.0") < 0){
 //set the new version in the database.
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
 $CC_DBC->query($sql);
-$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '1.9.0-devel')";
+
+$newVersion = AIRTIME_VERSION;
+$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$newVersion')";
 $CC_DBC->query($sql);
 
+echo PHP_EOL."*** Updating Api Client ***".PHP_EOL;
+passthru("python ".__DIR__."/../../python_apps/api_clients/install/api_client_install.py");
 
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
 passthru("python ".__DIR__."/../../python_apps/pypo/install/pypo-install.py");

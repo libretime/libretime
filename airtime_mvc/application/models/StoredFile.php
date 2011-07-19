@@ -318,6 +318,13 @@ class StoredFile {
 
         Playlist::DeleteFileFromAllPlaylists($this->getId());
         $this->_file->delete();
+
+        if (isset($res)) {
+            return $res;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -341,18 +348,7 @@ class StoredFile {
             return PEAR::raiseError('Cannot delete a file that is scheduled in the future.');
         }
 
-        $storageDir = MusicDir::getStorDir()->getDirectory();
-        $dirCompare = substr($this->getFilePath(), 0, strlen($storageDir));
-
-        //return PEAR::raiseError("({$storageDir} , {$dirCompare})");
-
-        // Only delete the file from filesystem if it has been copied to the storage directory
-        if ($dirCompare === $storageDir) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return true;
     }
 
     /**

@@ -19,6 +19,9 @@ python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
 php ${SCRIPTPATH}/include/airtime-install.php $@
 
+echo -e "\n*** API Client Installation ***"
+python ${SCRIPTPATH}/../python_apps/api_clients/install/api_client_install.py
+
 echo -e "\n*** Pypo Installation ***"
 python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-install.py
 

@@ -112,7 +112,7 @@ class AirtimeNotifier(Notifier):
             self.logger.info("Adding file to ignore: %s ", filepath)
             mm.add_filepath_to_ignore(filepath)
 
-            if m['delete'] == "true":
+            if m['delete']:
                 self.logger.info("Deleting file: %s ", filepath)
                 os.unlink(filepath)
 

@@ -123,9 +123,10 @@ class PreferenceController extends Zend_Controller_Action
         $chosen = $this->getRequest()->getParam("dir");
         $element = $this->getRequest()->getParam("element");
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
-        $watched_dirs_form->populate(array('storageFolder' => $chosen));
+
         $res = MusicDir::setStorDir($chosen);
         if($res['code'] != 0){
+            $watched_dirs_form->populate(array('storageFolder' => $chosen));
             $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
         }
 
@@ -137,9 +138,10 @@ class PreferenceController extends Zend_Controller_Action
         $chosen = $this->getRequest()->getParam("dir");
         $element = $this->getRequest()->getParam("element");
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
-        $watched_dirs_form->populate(array('watchedFolder' => $chosen));
+
         $res = MusicDir::addWatchedDir($chosen);
         if($res['code'] != 0){
+            $watched_dirs_form->populate(array('watchedFolder' => $chosen));
             $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
         }
 
