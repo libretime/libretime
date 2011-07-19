@@ -1,6 +1,6 @@
 #!/bin/bash
 
-virtualenv_bin="/home/james/temp/bin/"
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
 #Cause bash script to exit if any of the installers
@@ -27,7 +27,6 @@ echo -e "\n*** Removing Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/remove-pypo-user.py
 
 php ${SCRIPTPATH}/include/airtime-uninstall.php
-
 
 echo -e "\n****************************** Uninstall Complete ******************************\n"
 echo "NOTE: To fully remove all Airtime files, you will also have to manually delete"

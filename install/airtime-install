@@ -1,6 +1,6 @@
 #!/bin/bash
 
-virtualenv_bin="/home/james/temp/bin/"
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
 #Cause bash script to exit if any of the installers

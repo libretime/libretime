@@ -1,6 +1,6 @@
 #!/bin/sh
 
-virtualenv_bin="/home/james/temp/bin/"
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
 airtime_import_path="/usr/lib/airtime/utils/airtime-import/"
