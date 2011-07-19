@@ -56,7 +56,7 @@ class ScheduleGroup {
 
             // Check if there are any conflicts with existing entries
             $metadata = $track->getMetadata();
-            $length = trim($metadata["length"]);
+            $length = $metadata['MDATA_KEY_DURATION'];
             if (empty($length)) {
                 return new PEAR_Error("Length is empty.");
             }
@@ -540,7 +540,7 @@ class Schedule {
         $retVal = $CC_DBC->query($sql);
         return $retVal;
     }
-    
+
     public static function getSchduledPlaylistCount(){
     	global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['scheduleTable'];
@@ -750,7 +750,7 @@ class Schedule {
         global $CC_CONFIG, $CC_DBC;
         $CC_DBC->query("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
     }
-    
+
     public static function createNewFormSections($p_view){
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
@@ -769,7 +769,7 @@ class Schedule {
         $formRecord->removeDecorator('DtDdWrapper');
         $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
         $formRebroadcast->removeDecorator('DtDdWrapper');
-    
+
         $p_view->what = $formWhat;
         $p_view->when = $formWhen;
         $p_view->repeats = $formRepeats;
@@ -779,7 +779,7 @@ class Schedule {
         $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
         $p_view->rebroadcast = $formRebroadcast;
         $p_view->addNewShow = true;
-        
+
         $formWhat->populate(array('add_show_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
                                       'add_show_start_time' => '00:00',

@@ -151,6 +151,7 @@ class LibraryController extends Zend_Controller_Action
                     return;
                 }
                 else {
+                    $res = settype($res, "integer");
                     $data = array("filepath" => $file->getFilePath(), "delete" => $res);
                     RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
                 }
