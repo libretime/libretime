@@ -247,9 +247,12 @@ class AirtimeCheck {
         //when comparing 1.20 and 1.19, first compare "1" and "1"
         //and then the "20" to the "19"
         for ($i=0, $n = count($minVersionArr); $i<$n; $i++){
-            if ($minVersionArr[$i] > $versionArr[$i]){
+            if ($minVersionArr[$i] < $versionArr[$i]){
+                return true;
+            } else if ($minVersionArr[$i] > $versionArr[$i]){
                 return false;
             }
+            //else continue if equal
         }
         
         return true;
