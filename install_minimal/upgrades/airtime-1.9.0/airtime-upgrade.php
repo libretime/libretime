@@ -559,7 +559,7 @@ class Airtime190Upgrade{
         echo $sql.PHP_EOL;
         $rows = Airtime190Upgrade::execSqlQuery($sql);
 
-        echo "Creating media-monitor log file";
+        echo "Creating media-monitor log file".PHP_EOL;
         mkdir("/var/log/airtime/media-monitor/", 755, true);
         touch("/var/log/airtime/media-monitor/media-monitor.log");
 
@@ -570,9 +570,12 @@ class Airtime190Upgrade{
         
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, "api_key", $values["general"]["api_key"]);
 
-        echo "Reorganizing files in stor directory";
-        $mediaMonitorUpgradePath = realpath(__DIR__."/../../../python_apps/media-monitor/media-monitor-upgrade.py");
-        exec("su -c \"python $mediaMonitorUpgradePath\"", $output);
+        echo "Reorganizing files in stor directory".PHP_EOL;
+        
+        $cwd = __DIR__;
+        $mediaMonitorUpgradePath = __DIR__."/media-monitor-upgrade.py";
+        $command = "cd $cwd && su -c \"python $mediaMonitorUpgradePath\"";
+        exec($command, $output);
         print_r($output);
 
         $oldAndNewFileNames = json_decode($output[0]);
