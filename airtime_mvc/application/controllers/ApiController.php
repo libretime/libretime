@@ -74,8 +74,8 @@ class ApiController extends Zend_Controller_Action
         $download = ("true" == $this->_getParam('download'));
 
         $logger = Logging::getLogger();
-        
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]) && 
+
+        if(!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
@@ -120,7 +120,7 @@ class ApiController extends Zend_Controller_Action
                 fclose($fp);
 
                 //make sure to exit here so that no other output is sent.
-                exit;                
+                exit;
             } else {
                 $logger->err('Resource in database, but not in storage: "'.$filepath.'"');
             }
@@ -336,12 +336,12 @@ class ApiController extends Zend_Controller_Action
         $this->view->fileid = $file_id;
         $this->view->showinstanceid = $show_instance_id;
 
-        
+
        	$showCanceled = false;
        	$file = StoredFile::Recall($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
-        $show_name = "";
+        $show_name = null;
         try {
             $show_inst = new ShowInstance($show_instance_id);
 
@@ -359,10 +359,17 @@ class ApiController extends Zend_Controller_Action
             $showCanceled = true;
         }
 
-		$tmpTitle = !(empty($show_name))?$show_name."-":"";
-		$tmpTitle .= $file->getName();
+        if (isset($show_name)) {
+            $tmpTitle = "$show_name-$show_start_time";
+            $tmpTitle = str_replace(":", "-", $tmpTitle);
+            $tmpTitle = str_replace(" ", "-", $tmpTitle);
+        }
+        else {
+            $tmpTitle = $file->getName();
+        }
 
 		$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
+        $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
 
         if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
         {
@@ -392,7 +399,7 @@ class ApiController extends Zend_Controller_Action
         }
 
         $this->view->id = $file_id;
-        
+
     }
 
     public function mediaMonitorSetupAction() {
@@ -409,7 +416,7 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
         $this->view->stor = MusicDir::getStorDir()->getDirectory();
     }
 
@@ -439,7 +446,7 @@ class ApiController extends Zend_Controller_Action
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $file = StoredFile::RecallByFilepath($filepath);
-            
+
             if (is_null($file)) {
                 $file = StoredFile::Insert($md);
             } else {
@@ -447,7 +454,7 @@ class ApiController extends Zend_Controller_Action
                 return;
             }
 
-            
+
             //Martin Konecny July 14th, 2011: The following commented out code is the way
             //we used to check for duplicates (by md5). Why are we checking by md5 and
             //not by filepath?
@@ -509,7 +516,7 @@ class ApiController extends Zend_Controller_Action
 
         $this->view->id = $file->getId();
     }
-    
+
     public function listAllFilesAction() {
         global $CC_CONFIG;
 
@@ -522,10 +529,10 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
         $dir_id = $request->getParam('dir_id');
-        
+
         $this->view->files = StoredFile::listAllFiles($dir_id);
     }
-    
+
     public function listAllWatchedDirsAction() {
         global $CC_CONFIG;
 
@@ -537,69 +544,69 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
         $result = array();
-        
+
         $arrWatchedDirs = MusicDir::getWatchedDirs();
         $storDir = MusicDir::getStorDir();
-        
+
         $result[$storDir->getId()] = $storDir->getDirectory();
-        
+
         foreach ($arrWatchedDirs as $watchedDir){
             $result[$watchedDir->getId()] = $watchedDir->getDirectory();
         }
-        
+
         $this->view->dirs = $result;
     }
-    
+
     public function addWatchedDirAction() {
         global $CC_CONFIG;
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
-        
+
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
         $this->view->msg = MusicDir::addWatchedDir($path);
     }
-    
+
     public function removeWatchedDirAction() {
         global $CC_CONFIG;
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
-        
+
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
         $this->view->msg = MusicDir::removeWatchedDir($path);
     }
-    
+
     public function setStorageDirAction() {
         global $CC_CONFIG;
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
-        
+
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
         $this->view->msg = MusicDir::setStorDir($path);
     }
 }
