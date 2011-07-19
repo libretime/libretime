@@ -105,6 +105,8 @@ class AirtimeMediaMonitorBootstrap():
         new_files_set = all_files_set - db_known_files_set
         modified_files_set = new_and_modified_files - new_files_set
 
+        #NAOMI: Please comment out the "Known files" line, if you find the bug.
+        #it is for debugging purposes only (Too much data will be written to log). -mk
         self.logger.info("Known files: \n%s\n\n"%db_known_files_set)
         self.logger.info("Deleted files: \n%s\n\n"%deleted_files_set)
         self.logger.info("New files: \n%s\n\n"%new_files_set)

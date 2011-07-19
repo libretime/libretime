@@ -568,8 +568,6 @@ class Airtime190Upgrade{
             echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
         }
         
-        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, "api_key", $values["general"]["api_key"]);
-
         echo "Reorganizing files in stor directory".PHP_EOL;
         
         $cwd = __DIR__;

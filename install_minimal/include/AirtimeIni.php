@@ -202,9 +202,7 @@ class AirtimeIni
         $api_key = AirtimeIni::GenerateRandomString();
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'api_key', $api_key);
         AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'airtime_dir', AirtimeInstall::CONF_DIR_WWW);
-        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_PYPO, 'api_key', "'$api_key'");
-        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_RECORDER, 'api_key', "'$api_key'");
-        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_MEDIAMONITOR, 'api_key', "'$api_key'");
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_API_CLIENT, 'api_key', "'$api_key'");
     }
 
     public static function ReadPythonConfig($p_filename)

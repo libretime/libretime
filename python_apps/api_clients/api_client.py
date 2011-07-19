@@ -19,15 +19,16 @@ import json
 import os
 from urlparse import urlparse
 import base64
+from configobj import ConfigObj
 
 AIRTIME_VERSION = "1.9.0-devel"
 
 def api_client_factory(config):
     logger = logging.getLogger()
     if config["api_client"] == "airtime":
-        return AirTimeApiClient(config)
+        return AirTimeApiClient()
     elif config["api_client"] == "obp":
-        return ObpApiClient(config)
+        return ObpApiClient()
     else:
         logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
         sys.exit()
@@ -135,8 +136,14 @@ class ApiClientInterface:
 
 class AirTimeApiClient(ApiClientInterface):
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
+        # loading config file
+        try:
+            self.config = ConfigObj('/etc/airtime/api_client.cfg')
+        except Exception, e:
+            logger = logging.getLogger()
+            logger.error('Error loading config file: %s', e)
+            sys.exit(1)
 
     def __get_airtime_version(self, verbose = True):
         logger = logging.getLogger()

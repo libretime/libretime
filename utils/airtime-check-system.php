@@ -14,7 +14,7 @@ AirtimeCheck::CheckOsTypeVersion();
 AirtimeCheck::CheckConfigFilesExist();
 
 
-$pypoCfg = AirtimeCheck::GetPypoCfg();
+$apiClientCfg = AirtimeCheck::GetApiClientCfg();
 
 AirtimeCheck::GetDbConnection($airtimeIni);
 AirtimeCheck::PythonLibrariesInstalled();
@@ -23,7 +23,7 @@ AirtimeCheck::CheckRabbitMqConnection($airtimeIni);
 
 //AirtimeCheck::CheckApacheVHostFiles();
 
-AirtimeCheck::GetAirtimeServerVersion($pypoCfg);
+AirtimeCheck::GetAirtimeServerVersion($apiClientCfg);
 AirtimeCheck::CheckAirtimeDaemons();
 AirtimeCheck::CheckIcecastRunning();
 
@@ -205,12 +205,12 @@ class AirtimeCheck {
         return $ini;
     }
 
-    public static function GetPypoCfg()
+    public static function GetApiClientCfg()
     {
-        $ini = parse_ini_file("/etc/airtime/pypo.cfg", false);
+        $ini = parse_ini_file("/etc/airtime/api_client.cfg", false);
 
         if ($ini === false){
-            echo "Error reading /etc/airtime/pypo.cfg.".PHP_EOL;
+            echo "Error reading /etc/airtime/api_client.cfg.".PHP_EOL;
             exit;
         }
 
@@ -335,17 +335,17 @@ class AirtimeCheck {
         output_status("RABBITMQ_SERVER", $status);
     }
 
-    public static function GetAirtimeServerVersion($pypoCfg)
+    public static function GetAirtimeServerVersion($apiClientCfg)
     {
 
-        $baseUrl = $pypoCfg["base_url"];
-        $basePort = $pypoCfg["base_port"];
+        $baseUrl = $apiClientCfg["base_url"];
+        $basePort = $apiClientCfg["base_port"];
         $apiKey = "%%api_key%%";
 
         $url = "http://$baseUrl:$basePort/api/version/api_key/$apiKey";
         output_status("AIRTIME_VERSION_URL", $url);
 
-        $apiKey = $pypoCfg["api_key"];
+        $apiKey = $apiClientCfg["api_key"];
         $url = "http://$baseUrl:$basePort/api/version/api_key/$apiKey";
        
         $rh = fopen($url, "r");
