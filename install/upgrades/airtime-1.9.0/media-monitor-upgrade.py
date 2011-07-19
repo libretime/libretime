@@ -12,7 +12,7 @@ import os.path
 
 # configure logging
 try:
-    logging.config.fileConfig("%s/logging.cfg"%os.path.dirname(__file__))
+    logging.config.fileConfig("logging.cfg")
 except Exception, e:
     print 'Error configuring logging: ', e
     sys.exit(1)
