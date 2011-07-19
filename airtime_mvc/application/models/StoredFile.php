@@ -319,7 +319,12 @@ class StoredFile {
         Playlist::DeleteFileFromAllPlaylists($this->getId());
         $this->_file->delete();
 
-        return $res;
+        if (isset($res)) {
+            return $res;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
