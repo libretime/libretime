@@ -12,7 +12,6 @@ import math
 from threading import Thread
 
 from api_clients import api_client
-from util import CueFile
 
 from configobj import ConfigObj
 

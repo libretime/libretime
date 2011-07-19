@@ -19,7 +19,6 @@ from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
 
 from api_clients import api_client
-from util import CueFile
 
 from configobj import ConfigObj
 

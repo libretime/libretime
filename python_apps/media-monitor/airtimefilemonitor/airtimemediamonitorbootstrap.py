@@ -101,32 +101,30 @@ class AirtimeMediaMonitorBootstrap():
         not affect last modified timestamp). Lets get a list of files that are on the file-system
         that the db has no record of, and vice-versa.
         """
-
         deleted_files_set = db_known_files_set - all_files_set
         new_files_set = all_files_set - db_known_files_set
         modified_files_set = new_and_modified_files - new_files_set
 
+        self.logger.info("Known files: \n%s\n\n"%db_known_files_set)
         self.logger.info("Deleted files: \n%s\n\n"%deleted_files_set)
         self.logger.info("New files: \n%s\n\n"%new_files_set)
         self.logger.info("Modified files: \n%s\n\n"%modified_files_set)
 
         #"touch" file timestamp
-        self.mmc.touch_index_file()
+        try:
+            self.mmc.touch_index_file()
+        except Exception, e:
+            self.logger.warn(e)
 
         for file_path in deleted_files_set:
             self.pe.handle_removed_file(False, "%s%s" % (dir, file_path))
-        deleted_files_set.clear()
 
         for file_path in new_files_set:
             file_path = "%s%s" % (dir, file_path)
             if os.path.exists(file_path):
                 self.pe.handle_created_file(False, os.path.basename(file_path), file_path)
 
-        new_files_set.clear()
-
         for file_path in modified_files_set:
             file_path = "%s%s" % (dir, file_path)
             if os.path.exists(file_path):
                 self.pe.handle_modified_file(False, os.path.basename(file_path), file_path)
-        modified_files_set.clear()
-

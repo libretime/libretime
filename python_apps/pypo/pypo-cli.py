@@ -20,7 +20,6 @@ from pypofetch import PypoFetch
 from configobj import ConfigObj
 
 # custom imports
-from util import CueFile
 from api_clients import api_client
 
 PYPO_VERSION = '1.1'
