@@ -27,6 +27,13 @@ libvorbis-ocaml-dev libmp3lame-dev libtaglib-ocaml libao-ocaml libmad-ocaml \
 libesd0 icecast2 sudo libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
 ecasound php5-curl mpg123 rabbitmq-server monit python-virtualenv
 
+if [ "$?" -ne "0" ]; then
+   echo ""
+   echo "There was a problem with apt-get. Please check the above error and try again."
+   echo ""
+   exit 1
+fi
+
 # Install phing
 sudo pear channel-discover pear.phing.info
 sudo pear install phing/phing-2.4.2
