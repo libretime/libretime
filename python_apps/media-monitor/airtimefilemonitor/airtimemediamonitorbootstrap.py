@@ -125,11 +125,11 @@ class AirtimeMediaMonitorBootstrap():
         for file_path in new_files_set:
             file_path = "%s%s" % (dir, file_path)
             if os.path.exists(file_path):
-                organized_filepath = self.pe.handle_created_file(False, os.path.basename(file_path), file_path)
+                organized_filepath = self.pe.handle_created_file(False, file_path, os.path.basename(file_path))
                 if organized_filepath is not None:
-                    self.pe.handle_created_file(False, os.path.basename(organized_filepath), organized_filepath)
+                    self.pe.handle_created_file(False, organized_filepath, os.path.basename(organized_filepath))
 
         for file_path in modified_files_set:
             file_path = "%s%s" % (dir, file_path)
             if os.path.exists(file_path):
-                self.pe.handle_modified_file(False, os.path.basename(file_path), file_path)
+                self.pe.handle_modified_file(False, file_path, os.path.basename(file_path))

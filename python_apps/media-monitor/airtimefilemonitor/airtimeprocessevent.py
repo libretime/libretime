@@ -46,9 +46,9 @@ class AirtimeProcessEvent(ProcessEvent):
     #event.name: filename
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
     def process_IN_CREATE(self, event):
-        self.handle_created_file(event.dir, event.name, event.pathname)
+        self.handle_created_file(event.dir, event.pathname, event.name)
 
-    def handle_created_file(self, dir, name, pathname):
+    def handle_created_file(self, dir, pathname, name):
         if not dir:
             self.logger.debug("PROCESS_IN_CREATE: %s, name: %s, pathname: %s ", dir, name, pathname)
             #event is because of a created file
@@ -84,7 +84,7 @@ class AirtimeProcessEvent(ProcessEvent):
         self.handle_modified_file(event.dir, event.pathname, event.name)
 
     def handle_modified_file(self, dir, pathname, name):
-        if not dir and self.mmc.is_parent_directory(pathname, self.config.organize_directory):
+        if not dir and not self.mmc.is_parent_directory(pathname, self.config.organize_directory):
             self.logger.info("Modified: %s", pathname)
             if self.mmc.is_audio_file(name):
                 self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY})
