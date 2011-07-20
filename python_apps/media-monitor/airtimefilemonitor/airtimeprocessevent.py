@@ -64,7 +64,8 @@ class AirtimeProcessEvent(ProcessEvent):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
-                    self.mmc.organize_new_file(pathname)
+                    new_filepath = self.mmc.organize_new_file(pathname)
+                    return new_filepath
                 else:
                     self.mmc.set_needed_file_permissions(pathname, dir)
                     if self.mmc.is_parent_directory(pathname, self.config.recorded_directory):

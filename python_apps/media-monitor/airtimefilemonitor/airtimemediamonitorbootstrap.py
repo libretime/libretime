@@ -72,6 +72,7 @@ class AirtimeMediaMonitorBootstrap():
             db_known_files_set.add(file)
 
         new_files = self.mmc.scan_dir_for_new_files(dir)
+
         all_files_set = set()
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
@@ -107,7 +108,7 @@ class AirtimeMediaMonitorBootstrap():
 
         #NAOMI: Please comment out the "Known files" line, if you find the bug.
         #it is for debugging purposes only (Too much data will be written to log). -mk
-        self.logger.info("Known files: \n%s\n\n"%db_known_files_set)
+        #self.logger.info("Known files: \n%s\n\n"%db_known_files_set)
         self.logger.info("Deleted files: \n%s\n\n"%deleted_files_set)
         self.logger.info("New files: \n%s\n\n"%new_files_set)
         self.logger.info("Modified files: \n%s\n\n"%modified_files_set)
@@ -124,7 +125,9 @@ class AirtimeMediaMonitorBootstrap():
         for file_path in new_files_set:
             file_path = "%s%s" % (dir, file_path)
             if os.path.exists(file_path):
-                self.pe.handle_created_file(False, os.path.basename(file_path), file_path)
+                organized_filepath = self.pe.handle_created_file(False, os.path.basename(file_path), file_path)
+                if organized_filepath is not None:
+                    self.pe.handle_created_file(False, os.path.basename(organized_filepath), organized_filepath)
 
         for file_path in modified_files_set:
             file_path = "%s%s" % (dir, file_path)
