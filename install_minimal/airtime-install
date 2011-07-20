@@ -2,8 +2,13 @@
 
 echo -e "\n******************************** Install Begin *********************************"
 
-echo -e "\n*** Creating Vitualenv for Airtime ***"
-sudo virtualenv --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
+VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
+if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
+    echo -e "\n*** Creating Vitualenv for Airtime ***"
+    sudo virtualenv --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
+else
+    echo -e "\n*** Existing Airtime Virturalenv Found ***"
+fi
 
 echo -e "\n*** Installing Python Libraries ***"
 sudo /usr/lib/airtime/airtime_virtualenv/bin/pip install kombu poster pyinotify==0.9.2 mutagen==1.20 configobj -E /usr/lib/airtime/airtime_virtualenv

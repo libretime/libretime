@@ -1,0 +1,86 @@
+#!/bin/sh
+#
+# Auto install script for airtime on Ubuntu
+#
+
+if [ "$(id -u)" != "0" ]; then
+	echo "You need admin previlege to run this script"
+	echo "Syntaxe: sudo $0"
+	exit 1
+fi
+
+#Current dir
+# Absolute path to this script, e.g. /home/user/bin/foo.sh
+SCRIPT=`readlink -f $0`
+# Absolute path this script is in, thus /home/user/bin
+SCRIPTPATH=`dirname $SCRIPT`
+
+#Prerequisite
+echo "----------------------------------------------------"
+echo " 1. Install Packages"
+echo "----------------------------------------------------"
+
+# Updated package list
+sudo apt-get install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
+php-pear php5-gd postgresql odbc-postgresql python2.6 lame libsoundtouch-ocaml \
+libvorbis-ocaml-dev libmp3lame-dev libtaglib-ocaml libao-ocaml libmad-ocaml \
+libesd0 icecast2 sudo libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
+ecasound php5-curl mpg123 rabbitmq-server monit python-virtualenv
+
+# Install phing
+sudo pear channel-discover pear.phing.info
+sudo pear install phing/phing-2.4.2
+
+# Apache Config File
+echo "----------------------------------------------------"
+echo "2. Apache Config File"
+echo "----------------------------------------------------"
+if [ ! -f /etc/apache2/sites-available/airtime ]; then
+	cd /etc/apache2/sites-available/
+	sudo touch airtime
+	echo "<VirtualHost *:80> 
+	ServerAdmin foo@bar.org 
+	DocumentRoot /var/www/airtime/public 
+
+	<Directory /var/www/airtime/public> 
+	DirectoryIndex index.php 
+	AllowOverride all
+	Order allow,deny 
+	Allow from all 
+	</Directory> 
+	</VirtualHost> " | sudo tee -a airtime
+
+	sudo rm /etc/apache2/sites-enabled/000-default
+	sudo ln -s /etc/apache2/sites-available/airtime /etc/apache2/sites-enabled/airtime
+	sudo a2enmod rewrite php5
+	sudo service apache2 restart
+else
+	echo "Apache config for Airtime already exists..."
+fi
+
+# Enable Icecast
+echo "----------------------------------------------------"
+echo "3. Enable Icecast"
+echo "----------------------------------------------------"
+cd /etc/default/
+sudo sed -i 's/ENABLE=false/ENABLE=true/g' icecast2
+sudo service icecast2 start
+echo ""
+
+# Enable Monit
+echo "----------------------------------------------------"
+echo "4. Enable Monit"
+echo "----------------------------------------------------"
+cd /etc/default/
+sudo sed -i 's/startup=0/startup=1/g' monit
+sudo cp $SCRIPTPATH/../../python_apps/monit/airtime-monit.cfg /etc/monit/conf.d
+sudo service monit start
+
+# Run Airtime Install
+echo "----------------------------------------------------"
+echo "5. Run Airtime Install"
+echo "----------------------------------------------------"
+cd $SCRIPTPATH/../../install_minimal
+sudo ./airtime-install
+
+
