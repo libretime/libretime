@@ -21,7 +21,7 @@ echo " 1. Install Packages"
 echo "----------------------------------------------------"
 
 # Updated package list
-sudo apt-get install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
+sudo apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
 php-pear php5-gd postgresql odbc-postgresql python2.6 lame libsoundtouch-ocaml \
 libvorbis-ocaml-dev libmp3lame-dev libtaglib-ocaml libao-ocaml libmad-ocaml \
 libesd0 icecast2 sudo libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
@@ -36,20 +36,7 @@ echo "----------------------------------------------------"
 echo "2. Apache Config File"
 echo "----------------------------------------------------"
 if [ ! -f /etc/apache2/sites-available/airtime ]; then
-	cd /etc/apache2/sites-available/
-	sudo touch airtime
-	echo "<VirtualHost *:80> 
-	ServerAdmin foo@bar.org 
-	DocumentRoot /var/www/airtime/public 
-
-	<Directory /var/www/airtime/public> 
-	DirectoryIndex index.php 
-	AllowOverride all
-	Order allow,deny 
-	Allow from all 
-	</Directory> 
-	</VirtualHost> " | sudo tee -a airtime
-
+	sudo cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime 
 	sudo rm /etc/apache2/sites-enabled/000-default
 	sudo ln -s /etc/apache2/sites-available/airtime /etc/apache2/sites-enabled/airtime
 	sudo a2enmod rewrite php5
