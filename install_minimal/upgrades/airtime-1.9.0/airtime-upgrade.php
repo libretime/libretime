@@ -332,6 +332,7 @@ class AirtimeIni{
     const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
     const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
+    const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
     
     /**
      * This function updates an INI style config file.
@@ -567,6 +568,11 @@ class Airtime190Upgrade{
         if (!copy(__DIR__."/../../../python_apps/media-monitor/media-monitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
             echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
         }
+        if (!copy(__DIR__."/../../../python_apps/api_clients/api_client.cfg", AirtimeIni::CONF_FILE_API_CLIENT)){
+            echo "Could not copy api_client.cfg to /etc/airtime/. Exiting.";
+        }
+        
+        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_API_CLIENT, "api_key", $values["general"]["api_key"]);
         
         echo "Reorganizing files in stor directory".PHP_EOL;
         
