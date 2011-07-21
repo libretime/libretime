@@ -105,20 +105,20 @@ class ApiClientInterface:
         pass
 
     def update_media_metadata(self, md):
-        pass    
-        
+        pass
+
     def list_all_db_files(self, dir_id):
-        pass    
-        
+        pass
+
     def list_all_watched_dirs(self):
         pass
-    
+
     def add_watched_dir(self):
         pass
-    
+
     def remove_watched_dir(self):
         pass
-    
+
     def set_storage_dir(self):
         pass
 
@@ -423,96 +423,96 @@ class AirTimeApiClient(ApiClientInterface):
 
         except Exception, e:
             response = None
-            logger.error("Exception: %s", e)
+            logger.error("Exception with filepath %s: %s", md['MDATA_KEY_FILEPATH'], e)
 
         return response
-        
+
     #returns a list of all db files for a given directory in JSON format:
     #{"files":["path/to/file1", "path/to/file2"]}
-    #Note that these are relative paths to the given directory. The full 
+    #Note that these are relative paths to the given directory. The full
     #path is not returned.
     def list_all_db_files(self, dir_id):
         logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_db_files"])
-            
+
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%dir_id%%", dir_id)
-            
+
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
             response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
-            
+
         return response
-        
+
     def list_all_watched_dirs(self):
         logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_watched_dirs"])
-            
+
             url = url.replace("%%api_key%%", self.config["api_key"])
-            
+
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
             response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
-            
+
         return response
-    
+
     def add_watched_dir(self, path):
         logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["add_watched_dir"])
-            
+
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%path%%", base64.b64encode(path))
-            
+
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
             response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
-            
+
         return response
-    
+
     def remove_watched_dir(self, path):
         logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["remove_watched_dir"])
-            
+
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%path%%", base64.b64encode(path))
-            
+
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
             response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
-            
+
         return response
-    
+
     def set_storage_dir(self, path):
         logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["set_storage_dir"])
-            
+
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%path%%", base64.b64encode(path))
-            
+
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
             response = json.loads(response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
-            
+
         return response
 
 

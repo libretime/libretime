@@ -29,7 +29,7 @@ class AirtimeMediaMonitorBootstrap():
 
         for id, dir in directories.iteritems():
             self.logger.debug("%s, %s", id, dir)
-            self.sync_database_to_filesystem(id, dir)
+            self.sync_database_to_filesystem(id, dir.encode("utf-8"))
 
     """Gets a list of files that the Airtime database knows for a specific directory.
     You need to provide the directory's row ID, which is obtained when calling
@@ -69,7 +69,7 @@ class AirtimeMediaMonitorBootstrap():
         db_known_files_set = set()
         files = self.list_db_files(dir_id)
         for file in files['files']:
-            db_known_files_set.add(file)
+            db_known_files_set.add(file.encode('utf-8'))
 
         new_files = self.mmc.scan_dir_for_new_files(dir)
 
@@ -85,8 +85,8 @@ class AirtimeMediaMonitorBootstrap():
         else:
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
 
-        stdout = self.mmc.execCommandAndReturnStdOut(command)
-        stdout = unicode(stdout, "utf_8")
+        stdout = self.mmc.exec_command(command)
+        self.logger.info(stdout)
 
         new_files = stdout.splitlines()
 
@@ -120,16 +120,23 @@ class AirtimeMediaMonitorBootstrap():
             self.logger.warn(e)
 
         for file_path in deleted_files_set:
-            self.pe.handle_removed_file(False, "%s%s" % (dir, file_path))
+            self.logger.debug("deleted file")
+            full_file_path = "%s%s" % (dir, file_path)
+            self.logger.debug(full_file_path)
+            self.pe.handle_removed_file(False, full_file_path)
 
         for file_path in new_files_set:
-            file_path = "%s%s" % (dir, file_path)
-            if os.path.exists(file_path):
-                organized_filepath = self.pe.handle_created_file(False, file_path, os.path.basename(file_path))
+            self.logger.debug("new file")
+            full_file_path = "%s%s" % (dir, file_path)
+            self.logger.debug(full_file_path)
+            if os.path.exists(full_file_path):
+                organized_filepath = self.pe.handle_created_file(False, full_file_path, os.path.basename(full_file_path))
                 if organized_filepath is not None:
                     self.pe.handle_created_file(False, organized_filepath, os.path.basename(organized_filepath))
 
         for file_path in modified_files_set:
-            file_path = "%s%s" % (dir, file_path)
-            if os.path.exists(file_path):
-                self.pe.handle_modified_file(False, file_path, os.path.basename(file_path))
+            self.logger.debug("modified file")
+            full_file_path = "%s%s" % (dir, file_path)
+            self.logger.debug(full_file_path)
+            if os.path.exists(full_file_path):
+                self.pe.handle_modified_file(False, full_file_path, os.path.basename(full_file_path))

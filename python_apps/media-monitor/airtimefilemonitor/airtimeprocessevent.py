@@ -67,11 +67,14 @@ class AirtimeProcessEvent(ProcessEvent):
                     new_filepath = self.mmc.organize_new_file(pathname)
                     return new_filepath
                 else:
+                    self.logger.debug("setting file permissions")
                     self.mmc.set_needed_file_permissions(pathname, dir)
+                    self.logger.debug("checking if recorded")
                     if self.mmc.is_parent_directory(pathname, self.config.recorded_directory):
                         is_recorded = True
                     else :
                         is_recorded = False
+                    self.logger.debug("appending event")
                     self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})
 
         else:

@@ -735,7 +735,8 @@ class StoredFile {
 		$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
 
 		// Clean the fileName for security reasons
-		$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
+        //this needs fixing for songs not in ascii.
+		//$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
 
 		// Create target dir
 		if (!file_exists($p_targetDir))
