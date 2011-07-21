@@ -1,6 +1,7 @@
 <VirtualHost *:80>
    ServerAdmin foo@bar.org
    DocumentRoot /var/www/airtime/public
+   php_admin_value upload_tmp_dir /tmp
 
   <Directory /var/www/airtime/public>
       DirectoryIndex index.php
