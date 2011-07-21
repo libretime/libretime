@@ -372,7 +372,7 @@ class AirtimeIni{
     }
     
     public static function CreateMonitFile(){
-        if (!copy(__DIR__."/../../python_apps/monit/airtime-monit.cfg", AirtimeIni::CONF_FILE_MONIT)){
+        if (!copy(__DIR__."/../../../python_apps/monit/airtime-monit.cfg", AirtimeIni::CONF_FILE_MONIT)){
             echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
             exit(1);
         }
