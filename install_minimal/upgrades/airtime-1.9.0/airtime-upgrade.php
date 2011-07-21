@@ -34,6 +34,31 @@ class AirtimeInstall{
         chgrp($file, $CC_CONFIG['webServerUser']);
     }
     
+    public static function CreateSymlinksToUtils()
+    {
+        echo "* Creating /usr/bin symlinks".PHP_EOL;
+        AirtimeInstall::RemoveSymlinks();
+
+        echo "* Installing airtime-import".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-import/airtime-import";
+        exec("ln -s $dir /usr/bin/airtime-import");
+
+        echo "* Installing airtime-update-db-settings".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
+        exec("ln -s $dir /usr/bin/airtime-update-db-settings");
+
+        echo "* Installing airtime-check-system".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-check-system";
+        exec("ln -s $dir /usr/bin/airtime-check-system");
+    }
+    
+    public static function RemoveSymlinks()
+    {
+        exec("rm -f /usr/bin/airtime-import");
+        exec("rm -f /usr/bin/airtime-update-db-settings");
+        exec("rm -f /usr/bin/airtime-check-system");
+    }
+    
     public static function DbTableExists($p_name)
     {
         global $CC_DBC;
