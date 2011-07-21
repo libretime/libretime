@@ -2,6 +2,11 @@
 
 echo -e "\n******************************** Install Begin *********************************"
 
+# Absolute path to this script
+SCRIPT=`readlink -f $0`
+# Absolute directory this script is in
+SCRIPTPATH=`dirname $SCRIPT`
+
 VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
 if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
     echo -e "\n*** Creating Vitualenv for Airtime ***"
@@ -13,17 +18,23 @@ fi
 echo -e "\n*** Installing Python Libraries ***"
 sudo /usr/lib/airtime/airtime_virtualenv/bin/pip install airtime_virtual_env.pybundle -E /usr/lib/airtime/airtime_virtualenv
 
+echo -e "\n*** Patching Python Libraries ***"
+PACHES=${SCRIPTPATH}/patches/*
+for file in $(find $PACHES -print); do
+    if [ -d $file ]; then
+        DIRNAME=$(basename $file)
+        echo -e "\n   ---Applying Patches for $DIRNAME---"
+    else
+        sudo patch -N -p0 -i $file
+    fi
+done 
+cd
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
 #Cause bash script to exit if any of the installers
 #return with a non-zero return value.
 set -e
-
-# Absolute path to this script
-SCRIPT=`readlink -f $0`
-# Absolute directory this script is in
-SCRIPTPATH=`dirname $SCRIPT`
 
 echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
