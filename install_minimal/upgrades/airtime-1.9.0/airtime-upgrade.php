@@ -333,6 +333,7 @@ class AirtimeIni{
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
     const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
     const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
+    const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
     
     /**
      * This function updates an INI style config file.
