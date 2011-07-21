@@ -6,7 +6,7 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 airtime_import_path="/usr/lib/airtime/utils/airtime-import/"
 airtime_import_script="airtime-import.py"
 
-api_client_path="/usr/lib/airtime/pypo/"
+api_client_path="/usr/lib/airtime/"
 cd ${airtime_import_path}
 
 exec 2>&1
