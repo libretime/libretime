@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#   Copyright (c) 2010 Sourcefabric O.P.S.
+#   Copyright (c) 2011 Sourcefabric O.P.S.
 #
 #   This file is part of the Airtime project.
 #   http://airtime.sourcefabric.org/
@@ -21,7 +21,7 @@
 #
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-#  This script cleans audio files in Airtime.
+#  This script send data to data collection server
 #
 # Absolute path to this script
 SCRIPT=`readlink -f $0`
