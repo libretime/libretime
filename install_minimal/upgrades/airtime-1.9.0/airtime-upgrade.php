@@ -40,15 +40,15 @@ class AirtimeInstall{
         AirtimeInstall::RemoveSymlinks();
 
         echo "* Installing airtime-import".PHP_EOL;
-        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-import/airtime-import";
+        $dir = CONF_DIR_BINARIES."/utils/airtime-import/airtime-import";
         exec("ln -s $dir /usr/bin/airtime-import");
 
         echo "* Installing airtime-update-db-settings".PHP_EOL;
-        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
+        $dir = CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
         exec("ln -s $dir /usr/bin/airtime-update-db-settings");
 
         echo "* Installing airtime-check-system".PHP_EOL;
-        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-check-system";
+        $dir = CONF_DIR_BINARIES."/utils/airtime-check-system";
         exec("ln -s $dir /usr/bin/airtime-check-system");
     }
     
