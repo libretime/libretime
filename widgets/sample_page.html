@@ -7,18 +7,16 @@
 <script src="js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
 <script src="js/jquery.showinfo.js" type="text/javascript"></script>
 <link href="css/airtime-widgets.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
-<script>    
+<script>
 $(document).ready(function() {
     $("#headerLiveHolder").airtimeLiveInfo({
         sourceDomain: "http://localhost",
-        text: {onAirNow:"On air today"},
+        text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"},
         updatePeriod: 20 //seconds
     });
     $("#onAirToday").airtimeShowSchedule({
         sourceDomain: "http://localhost",
-        text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"},
+        text: {onAirToday:"On air today"},
         updatePeriod: 5 //seconds
     });
     $("#scheduleTabs").airtimeWeekSchedule({
@@ -27,11 +25,13 @@ $(document).ready(function() {
         miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
         updatePeriod: 600 //seconds
     });
-    var d = new Date().getDay(); 
+    var d = new Date().getDay();
     $('#scheduleTabs').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
 
 });
 </script>
+</head>
+<body>
 <h1>"Now Playing" Widget</h1>
 This widget displays what is currently playing:
 <br/>
@@ -49,7 +49,7 @@ This widget displays what is being played today:
 <h1>"Weekly Program" Widget</h1>
 This widget displays all the shows for the entire week:
 <br/>
-<br/> 
+<br/>
 <div id="scheduleTabs"></div>
 
 </body>
