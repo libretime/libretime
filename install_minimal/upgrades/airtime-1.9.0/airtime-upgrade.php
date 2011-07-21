@@ -661,7 +661,9 @@ AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110713161043');
 
 AirtimeInstall::InsertCountryDataIntoDatabase();
 
+AirtimeIni::CreateMonitFile();
 
+AirtimeInstall::CreateSymlinksToUtils();
 
 /* create cron file for phone home stat */
 AirtimeInstall::CreateCronFile();

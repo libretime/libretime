@@ -106,8 +106,6 @@ passthru("python ".__DIR__."/../../python_apps/show-recorder/install/recorder-in
 echo PHP_EOL."*** Updating Media Monitor ***".PHP_EOL;
 passthru("python ".__DIR__."/../../python_apps/media-monitor/install/media-monitor-install.py");
 
-AirtimeIni::CreateMonitFile();
-
 sleep(4);
 passthru("airtime-check-system");
 
