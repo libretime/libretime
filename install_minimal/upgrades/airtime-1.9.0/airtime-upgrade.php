@@ -596,6 +596,8 @@ class Airtime190Upgrade{
         $sql = "SELECT id FROM cc_music_dirs WHERE type='stor'";
         echo $sql.PHP_EOL;
         $rows = Airtime190Upgrade::execSqlQuery($sql);
+        echo var_dump($rows);
+        echo PHP_EOL;
 
         echo "Creating media-monitor log file".PHP_EOL;
         mkdir("/var/log/airtime/media-monitor/", 755, true);
@@ -639,9 +641,16 @@ class Airtime190Upgrade{
            ->find();
 
         //Check to see if the file still exists. (Could have still some entries under the stor dir or linked files that don't exist)
-         foreach($db_files as $db_file) {
-            echo $db_file->getDbTrackTitle();
-         }
+        foreach($db_files as $db_file) {
+            $filepath = $db_file->getDbFilepath();
+
+            if (!file_exists($filepath)) {
+                $db_file->delete();
+            }
+            else {
+                $db_file->setDbDirectory();
+            }
+        }
     }
 }
 
