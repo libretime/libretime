@@ -636,6 +636,12 @@ class Airtime190Upgrade{
 
         //HANDLE LINKED FILES HERE.
 
+        $sql = "SELECT id FROM cc_music_dirs WHERE type='link'";
+        echo $sql.PHP_EOL;
+        $rows = Airtime190Upgrade::execSqlQuery($sql);
+        echo var_dump($rows);
+        echo PHP_EOL;
+
         $db_files = CcFilesQuery::create()
            ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
            ->filterByDbDirectory(NULL)
