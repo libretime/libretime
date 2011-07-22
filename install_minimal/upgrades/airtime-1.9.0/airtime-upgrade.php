@@ -539,7 +539,8 @@ class Airtime190Upgrade{
     public static function UninstallBinaries()
     {
         echo "* Removing Airtime binaries from ".CONF_DIR_BINARIES.PHP_EOL;
-        exec('rm -rf "'.CONF_DIR_BINARIES.'"');
+        $command = "rm -rf $(ls -d /usr/lib/airtime/* | grep -v airtime_virtualenv)";
+        exec($command);
     }
 
 

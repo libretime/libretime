@@ -53,8 +53,42 @@ foreach ($configFiles as $conf) {
     }
 }
 
+/**
+* This function creates the /etc/airtime configuration folder
+* and copies the default config files to it.
+*/
+function CreateIniFiles()
+{
+    global $AIRTIME_SRC;
+    global $AIRTIME_PYTHON_APPS;
+
+    if (!file_exists("/etc/airtime/")){
+        if (!mkdir("/etc/airtime/", 0755, true)){
+            echo "Could not create /etc/airtime/ directory. Exiting.";
+            exit(1);
+        }
+    }
+
+    if (!copy($AIRTIME_SRC."/build/airtime.conf.180", CONF_FILE_AIRTIME)){
+        echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
+        exit(1);
+    }
+    if (!copy($AIRTIME_PYTHON_APPS."/pypo/pypo.cfg", CONF_FILE_PYPO)){
+        echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
+        exit(1);
+    }
+    if (!copy($AIRTIME_PYTHON_APPS."/show-recorder/recorder.cfg", CONF_FILE_RECORDER)){
+        echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
+        exit(1);
+    }
+    if (!copy($AIRTIME_PYTHON_APPS."/pypo/liquidsoap_scripts/liquidsoap.cfg", CONF_FILE_LIQUIDSOAP)){
+        echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
+        exit(1);
+    }
+}
+
 echo "* Creating INI files".PHP_EOL;
-AirtimeIni::CreateIniFiles();
+CreateIniFiles();
 
 AirtimeInstall::InstallPhpCode();
 AirtimeInstall::InstallBinaries();

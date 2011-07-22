@@ -9,7 +9,42 @@
 require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 
-AirtimeIni::CreateIniFiles();
+
+/**
+* This function creates the /etc/airtime configuration folder
+* and copies the default config files to it.
+*/
+function CreateIniFiles()
+{
+    global $AIRTIME_SRC;
+    global $AIRTIME_PYTHON_APPS;
+
+    if (!file_exists("/etc/airtime/")){
+        if (!mkdir("/etc/airtime/", 0755, true)){
+            echo "Could not create /etc/airtime/ directory. Exiting.";
+            exit(1);
+        }
+    }
+
+    if (!copy($AIRTIME_SRC."/build/airtime.conf.170", CONF_FILE_AIRTIME)){
+        echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
+        exit(1);
+    }
+    if (!copy($AIRTIME_PYTHON_APPS."/pypo/pypo.cfg", CONF_FILE_PYPO)){
+        echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
+        exit(1);
+    }
+    if (!copy($AIRTIME_PYTHON_APPS."/show-recorder/recorder.cfg", CONF_FILE_RECORDER)){
+        echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
+        exit(1);
+    }
+    if (!copy($AIRTIME_PYTHON_APPS."/pypo/liquidsoap_scripts/liquidsoap.cfg", CONF_FILE_LIQUIDSOAP)){
+        echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
+        exit(1);
+    }
+}
+
+CreateIniFiles();
 AirtimeIni::UpdateIniFiles();
 
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
