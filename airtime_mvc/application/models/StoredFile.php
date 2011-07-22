@@ -91,13 +91,6 @@ class StoredFile {
         }
     }
 
-    public static function getFileCount()
-    {
-		global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"];
-        return $CC_DBC->GetOne($sql);
-    }
-
     /**
      * Set multiple metadata values using database columns as indexes.
      *
@@ -824,6 +817,13 @@ class StoredFile {
 
         $r = @copy($audio_file, $audio_stor);
 
+    }
+
+    public static function getFileCount()
+    {
+		global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"];
+        return $CC_DBC->GetOne($sql);
     }
 
     public static function listAllFiles($dir_id){

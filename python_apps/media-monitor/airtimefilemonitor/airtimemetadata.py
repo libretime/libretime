@@ -139,15 +139,18 @@ class AirtimeMetadata:
             if isinstance(md['MDATA_KEY_TRACKNUMBER'], basestring):
                 match = re.search('^(\d*/\d*)?', md['MDATA_KEY_TRACKNUMBER'])
 
-                self.logger.debug('match is')
-                self.logger.debug(match.group(0))
-
                 if match.group(0) is not u'':
                     md['MDATA_KEY_TRACKNUMBER'] = md['MDATA_KEY_TRACKNUMBER'].split("/")[0]
-                    self.logger.debug(md['MDATA_KEY_TRACKNUMBER'])
                 else:
                     del md['MDATA_KEY_TRACKNUMBER']
-                    self.logger.debug("deleting tracknumber")
+
+        #make sure bpm is valid, need to check more types of formats for this tag to assure correct parsing.
+        if 'MDATA_KEY_BPM' in md:
+            if isinstance(md['MDATA_KEY_BPM'], basestring):
+                try:
+                    md['MDATA_KEY_BPM'] = int(md['MDATA_KEY_BPM'])
+                except Exception, e:
+                    del md['MDATA_KEY_BPM']
 
         md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
         md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate

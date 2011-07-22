@@ -454,21 +454,6 @@ class ApiController extends Zend_Controller_Action
                 return;
             }
 
-
-            //Martin Konecny July 14th, 2011: The following commented out code is the way
-            //we used to check for duplicates (by md5). Why are we checking by md5 and
-            //not by filepath?
-            /*
-            $md5 = $md['MDATA_KEY_MD5'];
-            $file = StoredFile::RecallByMd5($md5);
-            if (is_null($file)) {
-                $file = StoredFile::Insert($md);
-            }
-            else {
-                $this->view->error = "File already exists in Airtime.";
-                return;
-            }
-            */
         }
         else if ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
