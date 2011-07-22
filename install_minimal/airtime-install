@@ -16,7 +16,7 @@ else
 fi
 
 echo -e "\n*** Installing Python Libraries ***"
-sudo /usr/lib/airtime/airtime_virtualenv/bin/pip install airtime_virtual_env.pybundle -E /usr/lib/airtime/airtime_virtualenv
+sudo /usr/lib/airtime/airtime_virtualenv/bin/pip install ${SCRIPTPATH}/airtime_virtual_env.pybundle -E /usr/lib/airtime/airtime_virtualenv
 
 echo -e "\n*** Patching Python Libraries ***"
 PACHES=${SCRIPTPATH}/patches/*
