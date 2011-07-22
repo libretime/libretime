@@ -462,7 +462,7 @@ class AirtimeIni{
                              AirtimeIni::CONF_FILE_LIQUIDSOAP);
 
         // Backup the config files
-        $suffix = date("Ymdhis")."-1.8.1";
+        $suffix = date("Ymdhis")."-1.9.0";
         foreach ($configFiles as $conf) {
             if (file_exists($conf)) {
                 echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;

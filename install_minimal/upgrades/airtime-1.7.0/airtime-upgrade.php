@@ -9,14 +9,12 @@
 require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 
-
 /**
 * This function creates the /etc/airtime configuration folder
 * and copies the default config files to it.
 */
 function CreateIniFiles()
 {
-    global $AIRTIME_SRC;
     global $AIRTIME_PYTHON_APPS;
 
     if (!file_exists("/etc/airtime/")){
@@ -26,7 +24,7 @@ function CreateIniFiles()
         }
     }
 
-    if (!copy($AIRTIME_SRC."/build/airtime.conf.170", CONF_FILE_AIRTIME)){
+    if (!copy("airtime.conf.170", CONF_FILE_AIRTIME)){
         echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
         exit(1);
     }
