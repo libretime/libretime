@@ -16,7 +16,7 @@ class Version20110711161043 extends AbstractMigration
     public function up(Schema $schema)
     {
         /* 1) update cc_files table to include to "directory" column */
-        $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('stor', '/srv/airtime/stor');");
+        $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('stor', '/srv/airtime/stor/');");
 
         $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('link', '');");
 
@@ -24,7 +24,7 @@ class Version20110711161043 extends AbstractMigration
 
         /* 2) create a foreign key relationship from cc_files to cc_music_dirs */
         $cc_files = $schema->getTable('cc_files');
-        $cc_files->addColumn('directory', 'integer', array('default'=> 2));
+        $cc_files->addColumn('directory', 'integer', array('default'=> NULL));
 
         $cc_files->addNamedForeignKeyConstraint('cc_music_dirs_folder_fkey', $cc_music_dirs, array('directory'), array('id'), array('onDelete' => 'CASCADE'));
 

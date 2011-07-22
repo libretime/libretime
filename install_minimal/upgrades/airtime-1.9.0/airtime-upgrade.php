@@ -638,7 +638,7 @@ class Airtime190Upgrade{
            ->filterByDbDirectory(NULL)
            ->find();
 
-        // You won't get a Fatal error for not enough memory with the following code
+        //Check to see if the file still exists. (Could have still some entries
          foreach($db_files as $db_file) {
             echo $db_file->DbTrackTitle();
          }
