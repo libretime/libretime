@@ -34,6 +34,31 @@ class AirtimeInstall{
         chgrp($file, $CC_CONFIG['webServerUser']);
     }
     
+    public static function CreateSymlinksToUtils()
+    {
+        echo "* Creating /usr/bin symlinks".PHP_EOL;
+        AirtimeInstall::RemoveSymlinks();
+
+        echo "* Installing airtime-import".PHP_EOL;
+        $dir = CONF_DIR_BINARIES."/utils/airtime-import/airtime-import";
+        exec("ln -s $dir /usr/bin/airtime-import");
+
+        echo "* Installing airtime-update-db-settings".PHP_EOL;
+        $dir = CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
+        exec("ln -s $dir /usr/bin/airtime-update-db-settings");
+
+        echo "* Installing airtime-check-system".PHP_EOL;
+        $dir = CONF_DIR_BINARIES."/utils/airtime-check-system";
+        exec("ln -s $dir /usr/bin/airtime-check-system");
+    }
+    
+    public static function RemoveSymlinks()
+    {
+        exec("rm -f /usr/bin/airtime-import");
+        exec("rm -f /usr/bin/airtime-update-db-settings");
+        exec("rm -f /usr/bin/airtime-check-system");
+    }
+    
     public static function DbTableExists($p_name)
     {
         global $CC_DBC;
@@ -333,6 +358,7 @@ class AirtimeIni{
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
     const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
     const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
+    const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
     
     /**
      * This function updates an INI style config file.
@@ -368,6 +394,13 @@ class AirtimeIni{
             fwrite($fp, $lines[$i]);
         }
         fclose($fp);
+    }
+    
+    public static function CreateMonitFile(){
+        if (!copy(__DIR__."/../../../python_apps/monit/airtime-monit.cfg", AirtimeIni::CONF_FILE_MONIT)){
+            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
+            exit(1);
+        }
     }
 
     public static function ReadPythonConfig($p_filename)
@@ -661,7 +694,9 @@ AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110713161043');
 
 AirtimeInstall::InsertCountryDataIntoDatabase();
 
+AirtimeIni::CreateMonitFile();
 
+AirtimeInstall::CreateSymlinksToUtils();
 
 /* create cron file for phone home stat */
 AirtimeInstall::CreateCronFile();
