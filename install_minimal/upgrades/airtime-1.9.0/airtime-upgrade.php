@@ -638,9 +638,9 @@ class Airtime190Upgrade{
            ->filterByDbDirectory(NULL)
            ->find();
 
-        //Check to see if the file still exists. (Could have still some entries
+        //Check to see if the file still exists. (Could have still some entries under the stor dir or linked files that don't exist)
          foreach($db_files as $db_file) {
-            echo $db_file->DbTrackTitle();
+            echo $db_file->getDbTrackTitle();
          }
     }
 }
