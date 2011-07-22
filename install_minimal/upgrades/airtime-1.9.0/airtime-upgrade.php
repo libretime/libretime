@@ -587,18 +587,19 @@ class Airtime190Upgrade{
      */
     public static function installMediaMonitor($values){
 
+        $propel_stor_dir = CcMusicDirsQuery::create()
+           ->filterByType('stor')
+           ->findOne();
+
+        $propel_link_dir = CcMusicDirsQuery::create()
+           ->filterByType('link')
+           ->findOne();
+
         /* Handle Database Changes. */
         $stor_dir = realpath($values['general']['base_files_dir']."/stor")."/";
         echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
-        $sql = "UPDATE cc_music_dirs SET directory='$stor_dir' WHERE type='stor'";
-        echo $sql.PHP_EOL;
-        Airtime190Upgrade::execSqlQuery($sql);
-
-        $sql = "SELECT id FROM cc_music_dirs WHERE type='stor'";
-        echo $sql.PHP_EOL;
-        $rows = Airtime190Upgrade::execSqlQuery($sql);
-        echo var_dump($rows);
-        echo PHP_EOL;
+        $propel_stor_dir->setDirectory($stor_dir);
+        $propel_stor_dir->save();
 
         echo "Creating media-monitor log file".PHP_EOL;
         mkdir("/var/log/airtime/media-monitor/", 755, true);
@@ -624,10 +625,11 @@ class Airtime190Upgrade{
 
         $oldAndNewFileNames = json_decode($output[0]);
 
+        $stor_dir_id = $propel_stor_dir->getId();
         foreach ($oldAndNewFileNames as $pair){
             $relPathNew = pg_escape_string(substr($pair[1], strlen($stor_dir)));
             $absPathOld = pg_escape_string($pair[0]);
-            $sql = "UPDATE cc_files SET filepath = '$relPathNew', directory=1 WHERE filepath = '$absPathOld'";
+            $sql = "UPDATE cc_files SET filepath = '$relPathNew', directory=$stor_dir_id WHERE filepath = '$absPathOld'";
             echo $sql.PHP_EOL;
             Airtime190Upgrade::execSqlQuery($sql);
         }
@@ -636,26 +638,23 @@ class Airtime190Upgrade{
 
         //HANDLE LINKED FILES HERE.
 
-        $sql = "SELECT id FROM cc_music_dirs WHERE type='link'";
-        echo $sql.PHP_EOL;
-        $rows = Airtime190Upgrade::execSqlQuery($sql);
-        echo var_dump($rows);
-        echo PHP_EOL;
-
         $db_files = CcFilesQuery::create()
            ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
            ->filterByDbDirectory(NULL)
            ->find();
 
         //Check to see if the file still exists. (Could have still some entries under the stor dir or linked files that don't exist)
+        $link_dir_id = $propel_link_dir->getId();
         foreach($db_files as $db_file) {
             $filepath = $db_file->getDbFilepath();
+            echo $filepath.PHP_EOL;
 
             if (!file_exists($filepath)) {
                 $db_file->delete();
+                echo "Removed Missing File: ".$filepath.PHP_EOL;
             }
             else {
-                $db_file->setDbDirectory();
+                $db_file->setDbDirectory($link_dir_id);
             }
         }
     }
