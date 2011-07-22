@@ -122,7 +122,7 @@ function CreateIniFiles()
         }
     }
 
-    if (!copy($AIRTIME_SRC."/build/airtime.conf", CONF_FILE_AIRTIME)){
+    if (!copy($AIRTIME_SRC."/build/airtime.conf.182", CONF_FILE_AIRTIME)){
         echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
         exit(1);
     }
