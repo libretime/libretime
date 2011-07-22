@@ -3,6 +3,7 @@ import hashlib
 import mutagen
 import logging
 import math
+import re
 
 """
 list of supported easy tags in mutagen version 1.20
@@ -133,9 +134,20 @@ class AirtimeMetadata:
             md['MDATA_KEY_TITLE'] = original_name
 
         #incase track number is in format u'4/11'
+        #need to also check that the tracknumber is even a tracknumber (cc-2582)
         if 'MDATA_KEY_TRACKNUMBER' in md:
             if isinstance(md['MDATA_KEY_TRACKNUMBER'], basestring):
-                md['MDATA_KEY_TRACKNUMBER'] = md['MDATA_KEY_TRACKNUMBER'].split("/")[0]
+                match = re.search('^(\d*/\d*)?', md['MDATA_KEY_TRACKNUMBER'])
+
+                self.logger.debug('match is')
+                self.logger.debug(match.group(0))
+
+                if match.group(0) is not u'':
+                    md['MDATA_KEY_TRACKNUMBER'] = md['MDATA_KEY_TRACKNUMBER'].split("/")[0]
+                    self.logger.debug(md['MDATA_KEY_TRACKNUMBER'])
+                else:
+                    del md['MDATA_KEY_TRACKNUMBER']
+                    self.logger.debug("deleting tracknumber")
 
         md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
         md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
@@ -151,5 +163,8 @@ class AirtimeMetadata:
         for key in md.keys():
             if(isinstance(md[key], basestring)):
                 md[key] = md[key].encode('utf-8')
+
+        self.logger.info("MD after parsing.")
+        self.logger.debug(md)
 
         return md
