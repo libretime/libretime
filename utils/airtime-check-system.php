@@ -259,7 +259,7 @@ class AirtimeCheck {
     }
     
     private static function CheckPythonLibrary($lib, $minVersion){
-        $command = "pip freeze | grep $lib";
+        $command = "/usr/lib/airtime/airtime_virtualenv/bin/pip freeze | grep $lib";
         exec($command, $output, $result);
             
         $status = AirtimeCheck::CHECK_FAILED;
