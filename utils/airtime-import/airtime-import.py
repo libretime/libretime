@@ -33,6 +33,10 @@ api_client = api_client.api_client_factory(config)
 # flag should be 'copy' or 'move'
 def copy_or_move_files_to(paths, dest, flag):
     for path in paths:
+        if (path[0] == "/" or path[0] == "~"):
+            path = os.path.realpath(path)
+        else:
+            path = currentDir+path
         if(os.path.exists(path)):
             if(os.path.isdir(path)):
                 path = format_dir_string(path)
@@ -73,7 +77,7 @@ def helper_get_stor_dir():
 
 def checkOtherOption(args):
     for i in args:
-        if('-' in i):
+        if(i[0] == '-'):
             return True
     
 def errorIfMultipleOption(args, msg=''):
@@ -242,6 +246,11 @@ parser.add_option('--watch-remove', action='callback', callback=WatchRemoveActio
 parser.add_option('--storage-dir-set', action='callback', callback=StorageSetAction, help='Set storage dir to DIR.')
 parser.add_option('--storage-dir-get', action='callback', callback=StorageGetAction, help='Show the current storage dir.')
 parser.add_option('-h', '--help', dest='help', action='store_true', help='show this help message and exit')
+
+# pop "--dir"
+sys.argv.pop(1)
+# pop "invoked pwd"
+currentDir = sys.argv.pop(1)+'/'
 
 if('-l' in sys.argv or '--link' in sys.argv):
     print "\nThe [-l][--link] option is deprecated. Please use the --watch-add option.\nTry 'airtime-import -h' for more detail.\n"
