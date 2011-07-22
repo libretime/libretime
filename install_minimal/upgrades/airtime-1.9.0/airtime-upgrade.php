@@ -12,7 +12,7 @@ require_once 'conf.php';
 require_once 'DB.php';
 
 require_once 'propel/runtime/lib/Propel.php';
-Propel::init(__DIR__."../../../airtime_mvc/application/configs/airtime-conf.php");
+Propel::init(__DIR__."/../../../airtime_mvc/application/configs/airtime-conf.php");
 
 const CONF_DIR_BINARIES = "/usr/lib/airtime";
 
