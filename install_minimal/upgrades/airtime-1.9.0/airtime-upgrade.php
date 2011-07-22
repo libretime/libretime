@@ -633,7 +633,7 @@ class Airtime190Upgrade{
 
         //HANDLE LINKED FILES HERE.
 
-        $files = CcFilesQuery::create()
+        $db_files = CcFilesQuery::create()
            ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
            ->filterByDbDirectory(NULL)
            ->find();
