@@ -8,6 +8,9 @@ import datetime
 import os
 import sys
 import shutil
+from  Queue import Queue
+
+from commandlistener import CommandListener
 
 from configobj import ConfigObj
 
@@ -19,10 +22,6 @@ from subprocess import Popen
 from threading import Thread
 
 import mutagen
-
-# For RabbitMQ - to be implemented in the future
-#from kombu.connection import BrokerConnection
-#from kombu.messaging import Exchange, Queue, Consumer, Producer
 
 from api_clients import api_client
 
@@ -61,7 +60,7 @@ class ShowRecorder(Thread):
         self.show_name = show_name
         self.logger = logging.getLogger('root')
         self.p = None
-
+        
     def record_show(self):
         length = str(self.filelength)+".0"
         filename = self.start_time
@@ -114,109 +113,119 @@ class ShowRecorder(Thread):
         datagen, headers = multipart_encode({"file": open(filepath, "rb"), 'name': filename, 'show_instance': self.show_instance})
 
         self.api_client.upload_recorded_show(datagen, headers)
+    
+    def set_metadata_and_save(self, filepath):
+        try:
+            date = self.start_time
+            md = date.split(" ")
+            time = md[1].replace(":", "-")
+            self.logger.info("time: %s" % time)
+
+            name = time+"-"+self.show_name
+            name.encode('utf-8')
+            artist = "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
+
+            #set some metadata for our file daemon
+            recorded_file = mutagen.File(filepath, easy=True)
+            recorded_file['title'] = name
+            recorded_file['artist'] = artist
+            recorded_file['date'] = md[0]
+            recorded_file['tracknumber'] = self.show_instance
+            recorded_file.save()
+
+        except Exception, e:
+            self.logger.error("Exception: %s", e)
 
     def run(self):
         code, filepath = self.record_show()
 
         if code == 0:
-            self.logger.info("Preparing to upload %s" % filepath)
-
             try:
-                date = self.start_time
-                md = date.split(" ")
-                time = md[1].replace(":", "-")
-                self.logger.info("time: %s" % time)
-
-                name = time+"-"+self.show_name
-                name.encode('utf-8')
-                artist = "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
-
-                #set some metadata for our file daemon
-                recorded_file = mutagen.File(filepath, easy=True)
-                recorded_file['title'] = name
-                recorded_file['artist'] = artist
-                recorded_file['date'] = md[0]
-                recorded_file['tracknumber'] = self.show_instance
-                recorded_file.save()
-
-            except Exception, e:
-                self.logger.error("Exception: %s", e)
-
-
-            self.upload_file(filepath)
+                self.logger.info("Preparing to upload %s" % filepath)
+    
+                self.set_metadata_and_save(filepath)
+    
+                self.upload_file(filepath)
+            except Exceptio, e:
+                self.logger.error(e)
         else:
             self.logger.info("problem recording show")
-
-
-class Record():
-
-    def __init__(self):
-        self.api_client = api_client.api_client_factory(config)
+            
+class RecordScheduler(Thread):
+    def __init__(self, q):
+        Thread.__init__(self)
+        self.queue = q
         self.shows_to_record = {}
         self.logger = logging.getLogger('root')
-        self.sr = None
-
+    
     def process_shows(self, shows):
-
+        self.logger.info("Processing show schedules...")
         self.shows_to_record = {}
-
-        for show in shows:
+        temp = shows[u'shows']
+        for show in temp:
             show_starts = getDateTimeObj(show[u'starts'])
             show_end = getDateTimeObj(show[u'ends'])
             time_delta = show_end - show_starts
 
             self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name']]
-
+        self.logger.info(self.shows_to_record)
+        
     def check_record(self):
-
-        tnow = datetime.datetime.now()
-        sorted_show_keys = sorted(self.shows_to_record.keys())
-
-        start_time = sorted_show_keys[0]
-        next_show = getDateTimeObj(start_time)
-
-        self.logger.debug("Next show %s", next_show)
-        self.logger.debug("Now %s", tnow)
-
-        delta = next_show - tnow
-        min_delta = datetime.timedelta(seconds=60)
-
-        if delta <= min_delta:
-            self.logger.debug("sleeping %s seconds until show", delta.seconds)
-            time.sleep(delta.seconds)
-
-            show_length = self.shows_to_record[start_time][0]
-            show_instance = self.shows_to_record[start_time][1]
-            show_name = self.shows_to_record[start_time][2]
-
-            self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time, filetype="mp3")
-            self.sr.start()
-
-            #remove show from shows to record.
-            del self.shows_to_record[start_time]
-
-
-    def get_shows(self):
-
-        response = self.api_client.get_shows_to_record()
-
-        if response is not None and 'is_recording' in response:
-            if self.sr is not None:
-                if not response['is_recording'] and self.sr.is_recording():
-                    self.sr.cancel_recording()
-
-            shows = response[u'shows']
-
-            if len(shows):
-                self.process_shows(shows)
-                self.check_record()
+        if len(self.shows_to_record) != 0:
+            try:
+               tnow = datetime.datetime.now()
+               sorted_show_keys = sorted(self.shows_to_record.keys())
+            
+               start_time = sorted_show_keys[0]
+               next_show = getDateTimeObj(start_time)
+            
+               self.logger.debug("Next show %s", next_show)
+               self.logger.debug("Now %s", tnow)
+            
+               delta = next_show - tnow
+               min_delta = datetime.timedelta(seconds=5)
+            
+               if delta <= min_delta:
+                   self.logger.debug("sleeping %s seconds until show", delta.seconds)
+                   time.sleep(delta.seconds)
+            
+                   show_length = self.shows_to_record[start_time][0]
+                   show_instance = self.shows_to_record[start_time][1]
+                   show_name = self.shows_to_record[start_time][2]
+            
+                   self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time, filetype="mp3")
+                   self.sr.start()
+            
+                   #remove show from shows to record.
+                   del self.shows_to_record[start_time]
+            except Exception,e :
+                self.logger.error(e)
+        else:
+            self.logger.info("No recording schedule...")
+        
+        
+    def run(self):
+        self.logger.info("RecordScheduler started...")
+        while True:
+            if not self.queue.empty():
+                try:
+                    self.logger.debug("Received data from command handler")
+                    shows = self.queue.get()
+                    self.logger.debug('shows %s' % shows)
+                    self.process_shows(shows)
+                except Exception, e:
+                    self.logger.error(e)
+            self.check_record()
+            time.sleep(1)
 
 
 if __name__ == '__main__':
-
-    recorder = Record()
-
-    while True:
-        recorder.get_shows()
-        time.sleep(5)
+    q = Queue()
+    
+    cl = CommandListener(q)
+    cl.start()
+    
+    rs = RecordScheduler(q) 
+    rs.start()
+    
 

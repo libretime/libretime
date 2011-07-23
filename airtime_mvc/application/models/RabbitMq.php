@@ -37,6 +37,8 @@ class RabbitMq
             $channel->basic_publish($msg, $EXCHANGE);
             $channel->close();
             $conn->close();
+            
+            self::SendMessageToShowRecorder("update_schedule");
         }
     }
 
@@ -59,6 +61,27 @@ class RabbitMq
         $data = json_encode($md);
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
 
+        $channel->basic_publish($msg, $EXCHANGE);
+        $channel->close();
+        $conn->close();
+    }
+    
+    public static function SendMessageToShowRecorder($event_type)
+    {
+        global $CC_CONFIG;
+
+        $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
+                                        $CC_CONFIG["rabbitmq"]["port"],
+                                        $CC_CONFIG["rabbitmq"]["user"],
+                                        $CC_CONFIG["rabbitmq"]["password"]);
+        $channel = $conn->channel();
+        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false, true, true);
+    
+        $EXCHANGE = 'airtime-show-recorder';
+        $channel->exchange_declare($EXCHANGE, 'direct', false, true);
+    
+        $msg = new AMQPMessage($event_type, array('content_type' => 'text/plain'));
+    
         $channel->basic_publish($msg, $EXCHANGE);
         $channel->close();
         $conn->close();
