@@ -59,7 +59,6 @@ foreach ($configFiles as $conf) {
 */
 function CreateIniFiles()
 {
-    global $AIRTIME_SRC;
     global $AIRTIME_PYTHON_APPS;
 
     if (!file_exists("/etc/airtime/")){
@@ -69,7 +68,7 @@ function CreateIniFiles()
         }
     }
 
-    if (!copy($AIRTIME_SRC."/build/airtime.conf.180", CONF_FILE_AIRTIME)){
+    if (!copy("airtime.conf.180", CONF_FILE_AIRTIME)){
         echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
         exit(1);
     }

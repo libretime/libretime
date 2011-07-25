@@ -3,6 +3,8 @@
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
+invokePwd=$PWD
+
 airtime_import_path="/usr/lib/airtime/utils/airtime-import/"
 airtime_import_script="airtime-import.py"
 
@@ -14,6 +16,6 @@ exec 2>&1
 export PYTHONPATH=${api_client_path}
 
 # Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
-exec python -u ${airtime_import_path}${airtime_import_script} "$@"
+exec python -u ${airtime_import_path}${airtime_import_script} --dir "$invokePwd" "$@"
 
 # EOF
