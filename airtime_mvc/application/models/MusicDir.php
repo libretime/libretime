@@ -60,7 +60,7 @@ class MusicDir {
 
         RabbitMq::PushSchedule();
     }
-    
+
     /**
      * Checks if p_dir1 is the ancestor of p_dir2. Returns
      * true if it is the ancestor, false otherwise. Note that
@@ -77,7 +77,7 @@ class MusicDir {
         if (strlen($p_dir1) > strlen($p_dir2)){
             return false;
         }
-    
+
         return substr($p_dir2, 0, strlen($p_dir1)) == $p_dir1;
     }
 
@@ -85,15 +85,15 @@ class MusicDir {
      * Checks whether the path provided is a valid path. A valid path
      * is defined as not being nested within an existing watched directory,
      * or vice-versa. Throws a NestedDirectoryException if invalid.
-     * 
+     *
      * @param string $p_path
      *      The path we want to validate
      * @return void
-     */    
+     */
     public static function isPathValid($p_path){
         $dirs = self::getWatchedDirs();
         $dirs[] = self::getStorDir();
-        
+
         foreach ($dirs as $dirObj){
             $dir = $dirObj->getDirectory();
             $diff = strlen($dir) - strlen($p_path);
@@ -108,7 +108,7 @@ class MusicDir {
             } else { /* diff < 0*/
                 if (self::isAncestorDir($dir, $p_path)){
                     throw new NestedDirectoryException("'$p_path' is nested within existing watched directory: '$dir'");
-                }                
+                }
             }
         }
     }
@@ -121,10 +121,10 @@ class MusicDir {
         $dir = new CcMusicDirs();
         $dir->setType($p_type);
         $p_path = realpath($p_path)."/";
-        
+
 
         try {
-            /* isPathValid() checks if path is a substring or a superstring of an 
+            /* isPathValid() checks if path is a substring or a superstring of an
              * existing dir and if not, throws NestedDirectoryException */
             self::isPathValid($p_path);
             $dir->setDirectory($p_path);
@@ -143,7 +143,41 @@ class MusicDir {
     public static function addWatchedDir($p_path)
     {
         $res = self::addDir($p_path, "watched");
-        if($res['code'] == 0){
+        if ($res['code'] == 0){
+
+            //convert "linked" files (Airtime <= 1.8.2) to watched files.
+            $propel_link_dir = CcMusicDirsQuery::create()
+               ->filterByType('link')
+               ->findOne();
+
+            //newly added watched directory object
+            $propel_new_watch = CcMusicDirsQuery::create()
+               ->filterByDirectory(realpath($p_path)."/")
+               ->findOne();
+
+            //any files of the deprecated "link" type.
+            $link_files = CcFilesQuery::create()
+               ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+               ->filterByDbDirectory($propel_link_dir->getId())
+               ->find();
+
+            $newly_watched_dir = $propel_new_watch->getDirectory();
+
+            foreach ($link_files as $link_file) {
+                $link_filepath = $link_file->getDbFilepath();
+
+                //convert "link" file into a watched file.
+                if ((strlen($newly_watched_dir) < strlen($link_filepath)) && (substr($link_filepath, 0, strlen($newly_watched_dir)) === $newly_watched_dir)) {
+
+                    //get the filepath path not including the watched directory.
+                    $sub_link_filepath = substr($link_filepath, strlen($newly_watched_dir));
+
+                    $link_file->setDbDirectory($propel_new_watch->getId());
+                    $link_file->setDbFilepath($sub_link_filepath);
+                    $link_file->save();
+                }
+            }
+
             $data = array();
             $data["directory"] = $p_path;
             RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
@@ -227,6 +261,7 @@ class MusicDir {
     public static function getWatchedDirFromFilepath($p_filepath)
     {
         $dirs = CcMusicDirsQuery::create()
+                    ->filterByType(array("watched", "stor"))
                     ->find();
 
         foreach($dirs as $dir) {

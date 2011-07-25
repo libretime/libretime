@@ -449,11 +449,11 @@ class ApiController extends Zend_Controller_Action
 
             if (is_null($file)) {
                 $file = StoredFile::Insert($md);
-            } else {
+            }
+            else {
                 $this->view->error = "File already exists in Airtime.";
                 return;
             }
-
         }
         else if ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
