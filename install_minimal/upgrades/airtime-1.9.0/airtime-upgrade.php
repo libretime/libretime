@@ -655,6 +655,7 @@ class Airtime190Upgrade{
             }
             else {
                 $db_file->setDbDirectory($link_dir_id);
+                $db_file->save();
             }
         }
     }
