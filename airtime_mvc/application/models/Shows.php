@@ -1611,10 +1611,17 @@ class ShowInstance {
 
     public function deleteShow()
     {
+        // see if it was recording show
+        $recording = CcShowInstancesQuery::create()
+            ->findPK($this->_instanceId)
+            ->getDbRecord();
         CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
             ->delete();
         RabbitMq::PushSchedule();
+        if($recording){
+            RabbitMq::SendMessageToShowRecorder("cancel_recording");
+        }
     }
 
     public function setRecordedFile($file_id)
