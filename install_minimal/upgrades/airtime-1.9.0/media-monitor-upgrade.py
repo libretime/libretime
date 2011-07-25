@@ -25,6 +25,9 @@ config = ConfigParser.RawConfigParser()
 config.read('/etc/airtime/airtime.conf')
 stor_dir = config.get('general', 'base_files_dir') + "/stor"
 
+if not os.path.exists(stor_dir + '/organize'):
+    os.makedirs(stor_dir + '/organize')
+
 mmconfig.storage_directory = os.path.normpath(stor_dir)
 mmconfig.imported_directory = os.path.normpath(stor_dir + '/imported')
 mmconfig.organize_directory = os.path.normpath(stor_dir + '/organize')
