@@ -25,8 +25,15 @@ config = ConfigParser.RawConfigParser()
 config.read('/etc/airtime/airtime.conf')
 stor_dir = config.get('general', 'base_files_dir') + "/stor"
 
-if not os.path.exists(stor_dir + '/organize'):
+try:
     os.makedirs(stor_dir + '/organize')
+    omask = os.umask(0)
+    os.chmod(stor_dir + '/organize', 02777)
+
+except Exception, e:
+    print e
+finally:
+    os.umask(omask)
 
 mmconfig.storage_directory = os.path.normpath(stor_dir)
 mmconfig.imported_directory = os.path.normpath(stor_dir + '/imported')
