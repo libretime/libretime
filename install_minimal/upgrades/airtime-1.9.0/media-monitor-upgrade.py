@@ -7,6 +7,7 @@ import sys
 import os
 import json
 import ConfigParser
+import pwd
 
 import os.path
 
@@ -24,11 +25,16 @@ mmconfig = AirtimeMediaConfig(logger)
 config = ConfigParser.RawConfigParser()
 config.read('/etc/airtime/airtime.conf')
 stor_dir = config.get('general', 'base_files_dir') + "/stor"
+organize_dir = stor_dir + '/organize'
 
 try:
-    os.makedirs(stor_dir + '/organize')
+    os.makedirs(organize_dir)
     omask = os.umask(0)
-    os.chmod(stor_dir + '/organize', 02777)
+
+    uid = pwd.getpwnam('pypo')[2]
+
+    os.chown(organize_dir, uid)
+    os.chmod(organize_dir, 02777)
 
 except Exception, e:
     print e
@@ -37,7 +43,7 @@ finally:
 
 mmconfig.storage_directory = os.path.normpath(stor_dir)
 mmconfig.imported_directory = os.path.normpath(stor_dir + '/imported')
-mmconfig.organize_directory = os.path.normpath(stor_dir + '/organize')
+mmconfig.organize_directory = os.path.normpath(organize_dir)
 
 mmc = MediaMonitorCommon(mmconfig)
 
