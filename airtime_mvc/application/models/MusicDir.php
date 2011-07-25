@@ -150,21 +150,29 @@ class MusicDir {
                ->filterByType('link')
                ->findOne();
 
+            //newly added watched directory object
+            $propel_new_watch = CcMusicDirsQuery::create()
+               ->filterByDirectory(realpath($p_path)."/")
+               ->findOne();
+
+            //any files of the deprecated "link" type.
             $link_files = CcFilesQuery::create()
                ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
                ->filterByDbDirectory($propel_link_dir->getId())
                ->find();
 
+            $newly_watched_dir = $propel_new_watch->getDirectory();
+
             foreach ($link_files as $link_file) {
                 $link_filepath = $link_file->getDbFilepath();
 
                 //convert "link" file into a watched file.
-                if ((strlen($propel_link_dir->getDirectory()) < $link_filepath) && (substr($link_filepath, 0, strlen($propel_link_dir->getDirectory())) === $propel_link_dir->getDirectory())) {
+                if ((strlen($newly_watched_dir) < strlen($link_filepath)) && (substr($link_filepath, 0, strlen($newly_watched_dir)) === $newly_watched_dir)) {
 
                     //get the filepath path not including the watched directory.
-                    $sub_link_filepath = substr($link_filepath, strlen($propel_link_dir->getDirectory()));
+                    $sub_link_filepath = substr($link_filepath, strlen($newly_watched_dir));
 
-                    $link_file->setDbDirectory($propel_link_dir->getId());
+                    $link_file->setDbDirectory($propel_new_watch->getId());
                     $link_file->setDbFilepath($sub_link_filepath);
                     $link_file->save();
                 }
@@ -253,6 +261,7 @@ class MusicDir {
     public static function getWatchedDirFromFilepath($p_filepath)
     {
         $dirs = CcMusicDirsQuery::create()
+                    ->filterByType(array("watched", "stor"))
                     ->find();
 
         foreach($dirs as $dir) {

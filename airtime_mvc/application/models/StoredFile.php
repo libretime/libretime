@@ -507,6 +507,7 @@ class StoredFile {
         }
         else if (isset($p_filepath)) {
             $path_info = MusicDir::splitFilePath($p_filepath);
+
             if (is_null($path_info)) {
                 return null;
             }
