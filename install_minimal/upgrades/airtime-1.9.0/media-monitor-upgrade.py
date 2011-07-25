@@ -8,6 +8,7 @@ import os
 import json
 import ConfigParser
 import pwd
+import grp
 
 import os.path
 
@@ -32,8 +33,9 @@ try:
     omask = os.umask(0)
 
     uid = pwd.getpwnam('pypo')[2]
+    gid = grp.getgrnam('www-data')[2]
 
-    os.chown(organize_dir, uid)
+    os.chown(organize_dir, uid, gid)
     os.chmod(organize_dir, 02777)
 
 except Exception, e:
