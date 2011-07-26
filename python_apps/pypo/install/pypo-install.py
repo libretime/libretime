@@ -97,6 +97,10 @@ try:
   
   copy_dir("%s/.."%current_script_dir, config["bin_dir"]+"/bin/")
   
+  # delete /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap.cfg 
+  # as we don't use it anymore.(CC-2552)
+  os.remove(config["bin_dir"]+"/bin/liquidsoap_scripts/liquidsoap.cfg")
+  
   print "Setting permissions"
   os.system("chmod -R 755 "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["bin_dir"])
