@@ -92,8 +92,6 @@ class AirtimeNotifier(Notifier):
             self.logger.info("Removing watch on: %s wd %s", storage_directory, wd)
             mm.wm.rm_watch(wd, rec=True)
 
-            self.mmc.set_needed_file_permissions(new_storage_directory, True)
-
             self.bootstrap.sync_database_to_filesystem(new_storage_directory_id, new_storage_directory)
 
             self.config.storage_directory = os.path.normpath(new_storage_directory)
@@ -103,6 +101,10 @@ class AirtimeNotifier(Notifier):
             self.mmc.ensure_is_dir(self.config.storage_directory)
             self.mmc.ensure_is_dir(self.config.imported_directory)
             self.mmc.ensure_is_dir(self.config.organize_directory)
+
+            self.mmc.set_needed_file_permissions(self.config.storage_directory, True)
+            self.mmc.set_needed_file_permissions(self.config.imported_directory, True)
+            self.mmc.set_needed_file_permissions(self.config.organize_directory, True)
 
             self.watch_directory(new_storage_directory)
         elif m['event_type'] == "file_delete":
