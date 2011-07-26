@@ -61,15 +61,21 @@ class ShowRecorder(Thread):
         self.show_name = show_name
         self.logger = logging.getLogger('root')
         self.p = None
-        
+
     def record_show(self):
         length = str(self.filelength)+".0"
         filename = self.start_time
         filename = filename.replace(" ", "-")
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
 
-        command = "ecasound -i alsa -o %s -t:%s" % (filepath, length)
-        #-ge:0.1,0.1,0,-1
+        br = config["record_bitrate"]
+        sr = config["record_samplerate"]
+        c = config["record_channels"]
+        ss = config["record_sample_size"]
+
+        #-f:16,2,44100
+        #-b:256
+        command = "ecasound -f:%s,%s,%s -b:%s -i alsa -o %s -t:%s" % (ss, c, sr, br, filepath, length)
         args = command.split(" ")
 
         self.logger.info("starting record")
@@ -80,26 +86,26 @@ class ShowRecorder(Thread):
         #blocks at the following line until the child process
         #quits
         code = self.p.wait()
-        
+
         self.logger.info("finishing record, return code %s", self.p.returncode)
         code = self.p.returncode
-        
+
         self.p = None
-        
+
         return code, filepath
 
     def cancel_recording(self):
         #add 3 second delay before actually cancelling the show. The reason
         #for this is because it appears that ecasound starts 1 second later than
-        #it should, and therefore this method is sometimes incorrectly called 1 
+        #it should, and therefore this method is sometimes incorrectly called 1
         #second before the show ends.
         #time.sleep(3)
-    
+
         #send signal interrupt (2)
         self.logger.info("Show manually cancelled!")
         if (self.p is not None):
             self.p.kill()
-            
+
     #if self.p is defined, then the child process ecasound is recording
     def is_recording(self):
         return (self.p is not None)
@@ -116,7 +122,7 @@ class ShowRecorder(Thread):
         datagen, headers = multipart_encode({"file": open(filepath, "rb"), 'name': filename, 'show_instance': self.show_instance})
 
         self.api_client.upload_recorded_show(datagen, headers)
-    
+
     def set_metadata_and_save(self, filepath):
         try:
             date = self.start_time
@@ -145,9 +151,9 @@ class ShowRecorder(Thread):
         if code == 0:
             try:
                 self.logger.info("Preparing to upload %s" % filepath)
-    
+
                 self.set_metadata_and_save(filepath)
-    
+
                 self.upload_file(filepath)
                 os.remove(filepath)
             except Exceptio, e:
@@ -173,16 +179,16 @@ class CommandListener(Thread):
             schedule_exchange = Exchange("airtime-show-recorder", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("recorder-fetch", exchange=schedule_exchange, key="foo")
             self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
-            channel = self.connection.channel() 
+            channel = self.connection.channel()
             consumer = Consumer(channel, schedule_queue)
             consumer.register_callback(self.handle_message)
             consumer.consume()
         except Exception, e:
             self.logger.error(e)
             return False
-            
+
         return True
-    
+
     def handle_message(self, body, message):
         # ACK the message to take it off the queue
         message.ack()
@@ -190,7 +196,7 @@ class CommandListener(Thread):
         m =  json.loads(message.body)
         command = m['event_type']
         self.logger.info("Handling command: " + command)
-        
+
         if(command == 'update_schedule'):
             temp = m['shows']
             if temp is not None:
@@ -198,7 +204,7 @@ class CommandListener(Thread):
         elif(command == 'cancel_recording'):
             if self.sr.is_recording():
                 self.sr.cancel_recording()
-        
+
     def parse_shows(self, shows):
         self.logger.info("Parsing show schedules...")
         self.shows_to_record = {}
@@ -208,30 +214,30 @@ class CommandListener(Thread):
             time_delta = show_end - show_starts
 
             self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name']]
-            
+
             delta = self.get_time_till_next_show()
             # awake at least 5 seconds prior to the show start
             self.time_till_next_show = delta - 5
-    
+
         self.logger.info(self.shows_to_record)
 
     def get_time_till_next_show(self):
         if len(self.shows_to_record) != 0:
             tnow = datetime.datetime.now()
             sorted_show_keys = sorted(self.shows_to_record.keys())
-            
+
             start_time = sorted_show_keys[0]
             next_show = getDateTimeObj(start_time)
-            
+
             delta = next_show - tnow
             out = delta.seconds
-            
+
             self.logger.debug("Next show %s", next_show)
-            self.logger.debug("Now %s", tnow) 
+            self.logger.debug("Now %s", tnow)
         else:
             out = 3600
         return out
-        
+
     def start_record(self):
         if len(self.shows_to_record) != 0:
             try:
@@ -239,16 +245,16 @@ class CommandListener(Thread):
 
                 self.logger.debug("sleeping %s seconds until show", delta)
                 time.sleep(delta)
-                
+
                 sorted_show_keys = sorted(self.shows_to_record.keys())
                 start_time = sorted_show_keys[0]
                 show_length = self.shows_to_record[start_time][0]
                 show_instance = self.shows_to_record[start_time][1]
                 show_name = self.shows_to_record[start_time][2]
-                
+
                 self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time, filetype="mp3")
                 self.sr.start()
-                
+
                 #remove show from shows to record.
                 del self.shows_to_record[start_time]
                 self.time_till_next_show = 3600
@@ -256,7 +262,7 @@ class CommandListener(Thread):
                 self.logger.error(e)
         else:
             self.logger.debug("No recording scheduled...")
-    
+
     """
     Main loop of the thread:
     Wait for schedule updates from RabbitMQ, but in case there arent any,
@@ -269,7 +275,7 @@ class CommandListener(Thread):
             time.sleep(5)
 
         # Bootstrap: since we are just starting up, we need to grab the
-        # most recent schedule.  After that we can just wait for updates. 
+        # most recent schedule.  After that we can just wait for updates.
         try:
             temp = self.api_client.get_shows_to_record()
             if temp is not None:
@@ -278,8 +284,8 @@ class CommandListener(Thread):
             self.logger.info("Bootstrap complete: got initial copy of the schedule")
         except Exception, e:
             self.logger.error(e)
-                
-        loops = 1        
+
+        loops = 1
         while True:
             self.logger.info("Loop #%s", loops)
             try:
@@ -289,11 +295,11 @@ class CommandListener(Thread):
                 self.logger.info(e)
                 # start recording
                 self.start_record()
-                
+
             loops += 1
 
 if __name__ == '__main__':
     cl = CommandListener()
     cl.start()
-    
+
 
