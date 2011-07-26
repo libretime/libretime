@@ -37,6 +37,10 @@ def copy_or_move_files_to(paths, dest, flag):
             path = os.path.realpath(path)
         else:
             path = currentDir+path
+        path = path.decode('utf-8')
+        path = path.encode('utf-8')
+        dest = dest.decode('utf-8')
+        dest = dest.encode('utf-8')
         if(os.path.exists(path)):
             if(os.path.isdir(path)):
                 path = format_dir_string(path)
@@ -140,6 +144,8 @@ def WatchAddAction(option, opt, value, parser):
     elif(len(parser.rargs) == 0 ):
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     path = parser.rargs[0]
+    path = path.decode('utf-8')
+    path = path.encode('utf-8')
     if(os.path.isdir(path)):
         res = api_client.add_watched_dir(path)
         if(res is None):
@@ -175,6 +181,8 @@ def WatchRemoveAction(option, opt, value, parser):
     elif(len(parser.rargs) == 0 ):
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     path = parser.rargs[0]
+    path = path.decode('utf-8')
+    path = path.encode('utf-8')
     if(os.path.isdir(path)):
         res = api_client.remove_watched_dir(path)
         if(res is None):
@@ -215,6 +223,8 @@ def StorageSetAction(option, opt, value, parser):
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     
     path = parser.rargs[0]
+    path = path.decode('utf-8')
+    path = path.encode('utf-8')
     if(os.path.isdir(path)):
         res = api_client.set_storage_dir(path)
         if(res is None):

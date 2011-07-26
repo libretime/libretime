@@ -116,19 +116,19 @@ class AirtimeInstall
         }
     }
 
-    
+
     /* TODO: This function should be moved to the media-monitor
      * install script. */
     public static function InstallStorageDirectory()
     {
         global $CC_CONFIG, $CC_DBC;
         echo "* Storage directory setup".PHP_EOL;
-        
+
         $ini = parse_ini_file(__DIR__."/airtime-install.ini");
         $stor_dir = $ini["storage_dir"];
-        
+
         $dirs = array($stor_dir, $stor_dir."/organize");
-        
+
         foreach ($dirs as $dir){
             if (!file_exists($dir)) {
                 @mkdir($dir, 02777, true);
@@ -152,7 +152,7 @@ class AirtimeInstall
 
             echo "* Giving Apache permission to access $rp".PHP_EOL;
             $success = chgrp($rp, $CC_CONFIG["webServerUser"]);
-            $success = chown($rp, "pypo");
+            $success = chown($rp, "www-data");
             $success = chmod($rp, 02777);
         }
     }
@@ -270,7 +270,7 @@ class AirtimeInstall
         }
         return true;
     }
-    
+
     public static function SetUniqueId()
     {
         global $CC_DBC;
@@ -404,12 +404,12 @@ class AirtimeInstall
 
         exec("rm -rf \"$path\"");
     }
-    
+
     public static function CreateCronFile(){
         // Create CRON task to run every day.  Time of day is initialized to a random time.
         $hour = rand(0,23);
         $minute = rand(0,59);
-        
+
         $fp = fopen('/etc/cron.d/airtime-crons','w');
         fwrite($fp, "$minute $hour * * * root /usr/lib/airtime/utils/phone_home_stat\n");
         fclose($fp);
