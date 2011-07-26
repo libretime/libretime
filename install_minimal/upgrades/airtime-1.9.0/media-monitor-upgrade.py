@@ -28,26 +28,18 @@ config.read('/etc/airtime/airtime.conf')
 stor_dir = config.get('general', 'base_files_dir') + "/stor"
 organize_dir = stor_dir + '/organize'
 
-try:
-    os.makedirs(organize_dir)
-    omask = os.umask(0)
-
-    uid = pwd.getpwnam('pypo')[2]
-    gid = grp.getgrnam('www-data')[2]
-
-    os.chown(organize_dir, uid, gid)
-    os.chmod(organize_dir, 02777)
-
-except Exception, e:
-    print e
-finally:
-    os.umask(omask)
-
 mmconfig.storage_directory = os.path.normpath(stor_dir)
 mmconfig.imported_directory = os.path.normpath(stor_dir + '/imported')
 mmconfig.organize_directory = os.path.normpath(organize_dir)
 
 mmc = MediaMonitorCommon(mmconfig)
+
+try:
+    os.makedirs(organize_dir)
+except Exception, e:
+    print e
+
+mmc.set_needed_file_permissions(organize_dir, True)
 
 #read list of all files in stor location.....and one-by-one pass this through to
 #mmc.organize_files. print out json encoding of before and after
