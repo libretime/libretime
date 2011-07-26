@@ -57,6 +57,8 @@ if output_sound_device then
 end
 
 if output_icecast_mp3 then
+
+    #format = %mp3(bitrate=192, samplerate=44100, stereo=false)
     ignore(output.icecast(%mp3,
             host = icecast_host,
             port = icecast_port,
