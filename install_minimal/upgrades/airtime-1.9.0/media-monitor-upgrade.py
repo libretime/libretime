@@ -9,6 +9,7 @@ import json
 import ConfigParser
 import pwd
 import grp
+import subprocess
 
 import os.path
 
@@ -48,9 +49,14 @@ mmc.set_needed_file_permissions(organize_dir, True)
 pairs = []
 for root, dirs, files in os.walk(mmconfig.storage_directory):
     for f in files:
-        #print os.path.join(root, f)
-        #print mmc.organize_new_file(os.path.join(root, f))
-        pair = os.path.join(root, f), mmc.organize_new_file(os.path.join(root, f))
+        old_filepath = os.path.join(root, f)
+        new_filepath = mmc.organize_new_file(os.path.join(root, f))
+        pair = old_filepath, new_filepath
         pairs.append(pair)
+        mmc.set_needed_file_permissions(new_filepath, False)
+
+#need to set all the dirs in imported to be owned by www-data.
+command = "chown -R www-data " + stor_dir
+subprocess.call(command.split(" "))
 
 print json.dumps(pairs)
