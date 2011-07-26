@@ -44,7 +44,7 @@ echo "2. Apache Config File"
 echo "----------------------------------------------------"
 if [ ! -f /etc/apache2/sites-available/airtime ]; then
 	sudo cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime 
-	sudo rm /etc/apache2/sites-enabled/000-default
+	sudo rm -rf /etc/apache2/sites-enabled/000-default
 	sudo ln -s /etc/apache2/sites-available/airtime /etc/apache2/sites-enabled/airtime
 	sudo a2enmod rewrite php5
 	sudo service apache2 restart
@@ -68,6 +68,13 @@ echo "----------------------------------------------------"
 cd /etc/default/
 sudo sed -i 's/startup=0/startup=1/g' monit
 sudo cp $SCRIPTPATH/../../python_apps/monit/airtime-monit.cfg /etc/monit/conf.d
+
+grep -q "include /etc/monit/conf.d" /etc/monit/monitrc
+RETVAL=$?
+if [ $RETVAL -ne 0 ] ; then
+    sudo echo "include /etc/monit/conf.d/*" >> /etc/monit/monitrc 
+fi
+
 sudo service monit start
 
 # Run Airtime Install
