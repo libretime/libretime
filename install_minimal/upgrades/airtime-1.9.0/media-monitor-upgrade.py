@@ -39,6 +39,8 @@ try:
 except Exception, e:
     print e
 
+#older versions of Airtime installed from repository at least had owner of stor dir as "root"
+mmc.set_needed_file_permissions(stor_dir, True)
 mmc.set_needed_file_permissions(organize_dir, True)
 
 #read list of all files in stor location.....and one-by-one pass this through to
