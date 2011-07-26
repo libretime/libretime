@@ -136,11 +136,16 @@ class AirtimeMetadata:
         #incase track number is in format u'4/11'
         #need to also check that the tracknumber is even a tracknumber (cc-2582)
         if 'MDATA_KEY_TRACKNUMBER' in md:
+            try:
+                md['MDATA_KEY_TRACKNUMBER'] = int(md['MDATA_KEY_TRACKNUMBER'])
+            except Exception, e:
+                pass
+
             if isinstance(md['MDATA_KEY_TRACKNUMBER'], basestring):
                 match = re.search('^(\d*/\d*)?', md['MDATA_KEY_TRACKNUMBER'])
 
                 if match.group(0) is not u'':
-                    md['MDATA_KEY_TRACKNUMBER'] = md['MDATA_KEY_TRACKNUMBER'].split("/")[0]
+                    md['MDATA_KEY_TRACKNUMBER'] = int(md['MDATA_KEY_TRACKNUMBER'].split("/")[0])
                 else:
                     del md['MDATA_KEY_TRACKNUMBER']
 
