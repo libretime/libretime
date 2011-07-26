@@ -58,8 +58,8 @@ end
 
 if output_icecast_mp3 then
 
-    #%mp3(bitrate=32, samplerate=22050, stereo=false)
-    ignore(output.icecast(%mp3(bitrate=output_bitrate, samplerate=output_samplerate, stereo=output_stereo),
+    #format = %mp3(bitrate=192, samplerate=44100, stereo=false)
+    ignore(output.icecast(%mp3,
             host = icecast_host,
             port = icecast_port,
             password = icecast_pass,
@@ -76,7 +76,7 @@ end
 
 if output_icecast_vorbis then
     if output_icecast_vorbis_metadata then
-        ignore(output.icecast(%vorbis(bitrate=output_bitrate, samplerate=output_samplerate, stereo=output_stereo),
+        ignore(output.icecast(%vorbis,
                 host = icecast_host,
                 port = icecast_port,
                 password = icecast_pass,
@@ -93,7 +93,7 @@ if output_icecast_vorbis then
         #remove metadata from ogg source and merge tracks to fix bug
         #with vlc and mplayer disconnecting at the end of every track
         s = add(normalize=false, [amplify(0.00001, noise()),s])
-        ignore(output.icecast(%vorbis(bitrate=output_bitrate, samplerate=output_samplerate, stereo=output_stereo),
+        ignore(output.icecast(%vorbis,
                 host = icecast_host,
                 port = icecast_port,
                 password = icecast_pass,
@@ -110,7 +110,7 @@ if output_icecast_vorbis then
 end
 
 if output_shoutcast then
-    ignore(output.shoutcast(%mp3(bitrate=output_bitrate, samplerate=output_samplerate, stereo=output_stereo),
+    ignore(output.shoutcast(%mp3,
             host = shoutcast_host,
             port = shoutcast_port,
             password = shoutcast_pass,

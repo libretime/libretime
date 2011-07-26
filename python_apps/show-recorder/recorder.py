@@ -75,7 +75,7 @@ class ShowRecorder(Thread):
 
         #-f:16,2,44100
         #-b:256
-        command = "ecasound -f:%s,%s,%s -b:%s -i alsa -o %s -t:%s" % (ss, c, sr, br, filepath, length)
+        command = "ecasound -f:%s,%s,%s -i alsa -o %s,%s000 -t:%s" % (ss, c, sr, filepath, br, length)
         args = command.split(" ")
 
         self.logger.info("starting record")
