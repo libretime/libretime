@@ -11,24 +11,24 @@ VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
 if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
     echo -e "\n*** Creating Vitualenv for Airtime ***"
     sudo virtualenv --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
+    
+    echo -e "\n*** Installing Python Libraries ***"
+    sudo /usr/lib/airtime/airtime_virtualenv/bin/pip install ${SCRIPTPATH}/airtime_virtual_env.pybundle -E /usr/lib/airtime/airtime_virtualenv
+    
+    echo -e "\n*** Patching Python Libraries ***"
+    PACHES=${SCRIPTPATH}/patches/*
+    for file in $(find $PACHES -print); do
+        if [ -d $file ]; then
+            DIRNAME=$(basename $file)
+            echo -e "\n   ---Applying Patches for $DIRNAME---"
+        else
+            sudo patch -N -p0 -i $file
+        fi
+    done
 else
     echo -e "\n*** Existing Airtime Virturalenv Found ***"
-fi
+fi 
 
-echo -e "\n*** Installing Python Libraries ***"
-sudo /usr/lib/airtime/airtime_virtualenv/bin/pip install ${SCRIPTPATH}/airtime_virtual_env.pybundle -E /usr/lib/airtime/airtime_virtualenv
-
-echo -e "\n*** Patching Python Libraries ***"
-PACHES=${SCRIPTPATH}/patches/*
-for file in $(find $PACHES -print); do
-    if [ -d $file ]; then
-        DIRNAME=$(basename $file)
-        echo -e "\n   ---Applying Patches for $DIRNAME---"
-    else
-        sudo patch -N -p0 -i $file
-    fi
-done 
-cd
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
