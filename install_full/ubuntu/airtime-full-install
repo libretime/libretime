@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Auto install script for airtime on Ubuntu
 #
+
+exec > >(tee install_log.txt)
+exec 2>&1
 
 if [ "$(id -u)" != "0" ]; then
 	echo "You need admin previlege to run this script"
