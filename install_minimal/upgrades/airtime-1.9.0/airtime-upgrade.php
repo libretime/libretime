@@ -546,8 +546,6 @@ class Airtime190Upgrade{
 
     public static function removeOldAirtimeImport(){
         exec('rm -f "/usr/bin/airtime-import"');
-        exec('rm -f "/usr/lib/airtime/utils/airtime-import.php"');
-        exec('rm -rf "/usr/lib/airtime/utils/airtime-import"');
     }
 
     public static function updateAirtimeImportSymLink(){
