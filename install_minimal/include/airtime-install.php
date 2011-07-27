@@ -71,6 +71,11 @@ if (isset($version) && ($version != false) && ($version < AIRTIME_VERSION) && !i
     exit(2);
 }
 
+if($version == false){
+    echo "A version of Airtime older than 1.8.0 detected, please upgrade to 1.8.0 first.\n";
+    echo "You will then be able to upgrade to 1.9.0 using this installer.\n";
+    exit(3);
+}
 // -------------------------------------------------------------------------
 // The only way we get here is if we are doing a new install or a reinstall.
 // -------------------------------------------------------------------------

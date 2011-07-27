@@ -68,6 +68,8 @@ class AirtimeInstall
             if (PEAR::isError($version)) {
                 return null;
             }
+            // no version string detected
+            $version = false;
             return $version;
         }
     }
