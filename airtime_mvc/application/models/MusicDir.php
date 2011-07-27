@@ -150,31 +150,35 @@ class MusicDir {
                ->filterByType('link')
                ->findOne();
 
-            //newly added watched directory object
-            $propel_new_watch = CcMusicDirsQuery::create()
-               ->filterByDirectory(realpath($p_path)."/")
-               ->findOne();
+            //see if any linked files exist.
+            if (isset($propel_link_dir)) {
 
-            //any files of the deprecated "link" type.
-            $link_files = CcFilesQuery::create()
-               ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-               ->filterByDbDirectory($propel_link_dir->getId())
-               ->find();
+                //newly added watched directory object
+                $propel_new_watch = CcMusicDirsQuery::create()
+                   ->filterByDirectory(realpath($p_path)."/")
+                   ->findOne();
 
-            $newly_watched_dir = $propel_new_watch->getDirectory();
+                //any files of the deprecated "link" type.
+                $link_files = CcFilesQuery::create()
+                   ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+                   ->filterByDbDirectory($propel_link_dir->getId())
+                   ->find();
 
-            foreach ($link_files as $link_file) {
-                $link_filepath = $link_file->getDbFilepath();
+                $newly_watched_dir = $propel_new_watch->getDirectory();
 
-                //convert "link" file into a watched file.
-                if ((strlen($newly_watched_dir) < strlen($link_filepath)) && (substr($link_filepath, 0, strlen($newly_watched_dir)) === $newly_watched_dir)) {
+                foreach ($link_files as $link_file) {
+                    $link_filepath = $link_file->getDbFilepath();
 
-                    //get the filepath path not including the watched directory.
-                    $sub_link_filepath = substr($link_filepath, strlen($newly_watched_dir));
+                    //convert "link" file into a watched file.
+                    if ((strlen($newly_watched_dir) < strlen($link_filepath)) && (substr($link_filepath, 0, strlen($newly_watched_dir)) === $newly_watched_dir)) {
 
-                    $link_file->setDbDirectory($propel_new_watch->getId());
-                    $link_file->setDbFilepath($sub_link_filepath);
-                    $link_file->save();
+                        //get the filepath path not including the watched directory.
+                        $sub_link_filepath = substr($link_filepath, strlen($newly_watched_dir));
+
+                        $link_file->setDbDirectory($propel_new_watch->getId());
+                        $link_file->setDbFilepath($sub_link_filepath);
+                        $link_file->save();
+                    }
                 }
             }
 
