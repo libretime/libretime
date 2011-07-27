@@ -69,7 +69,9 @@ class AirtimeInstall
                 return null;
             }
             // no version string detected
-            $version = false;
+            if($version == ''){
+                $version = false;
+            }
             return $version;
         }
     }
