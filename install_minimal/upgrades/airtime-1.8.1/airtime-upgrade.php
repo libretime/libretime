@@ -121,7 +121,7 @@ function CreateIniFiles()
         }
     }
 
-    if (!copy("airtime.conf.181", CONF_FILE_AIRTIME)){
+    if (!copy(__DIR__."/airtime.conf.181", CONF_FILE_AIRTIME)){
         echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
         exit(1);
     }
@@ -162,8 +162,8 @@ function UpdateIniValue($p_filename, $p_property, $p_value)
     foreach ($lines as &$line) {
         if ($line[0] != "#"){
             $key_value = split("=", $line);
-            $key = trim($key_value[0]);         
-            
+            $key = trim($key_value[0]);
+
             if ($key == $p_property){
                 $line = "$p_property = $p_value".PHP_EOL;
             }
