@@ -38,7 +38,8 @@ mmc = MediaMonitorCommon(mmconfig)
 try:
     os.makedirs(organize_dir)
 except Exception, e:
-    print e
+    #organize dir already exists. ( really shouldn't though )
+    pass
 
 #older versions of Airtime installed from repository at least had owner of stor dir as "root"
 mmc.set_needed_file_permissions(stor_dir, True)

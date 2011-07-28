@@ -213,24 +213,6 @@ function MergeConfigFiles($configFiles, $suffix)
     }
 }
 
-function InstallPhpCode()
-{
-    global $CC_CONFIG;
-    global $AIRTIME_SRC;
-    echo "* Installing PHP code to ".$CC_CONFIG['phpDir'].PHP_EOL;
-    exec("mkdir -p ".$CC_CONFIG['phpDir']);
-    exec("cp -R ".$AIRTIME_SRC."/* ".$CC_CONFIG['phpDir']);
-
-}
-
-function InstallBinaries()
-{
-    global $AIRTIME_UTILS;
-    echo "* Installing binaries to ".CONF_DIR_BINARIES.PHP_EOL;
-    exec("mkdir -p ".CONF_DIR_BINARIES);
-    exec("cp -R ".$AIRTIME_UTILS." ".CONF_DIR_BINARIES);
-}
-
 // Backup the config files
 $suffix = date("Ymdhis")."-1.8.1";
 foreach ($configFiles as $conf) {
@@ -245,6 +227,3 @@ echo "* Initializing INI files".PHP_EOL;
 MergeConfigFiles($configFiles, $suffix);
 
 $CC_CONFIG = LoadConfig($CC_CONFIG);
-
-InstallPhpCode();
-InstallBinaries();
