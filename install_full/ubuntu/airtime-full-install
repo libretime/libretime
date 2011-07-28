@@ -28,7 +28,7 @@ sudo apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
 php-pear php5-gd postgresql odbc-postgresql python2.6 lame libsoundtouch-ocaml \
 libvorbis-ocaml-dev libmp3lame-dev libtaglib-ocaml libao-ocaml libmad-ocaml \
 libesd0 icecast2 sudo libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
-ecasound php5-curl mpg123 rabbitmq-server monit python-virtualenv
+ecasound php5-curl mpg123 rabbitmq-server monit
 
 if [ "$?" -ne "0" ]; then
    echo ""
@@ -36,6 +36,9 @@ if [ "$?" -ne "0" ]; then
    echo ""
    exit 1
 fi
+
+#install virtualenv 1.6.3
+easy_install virtualenv==1.6.3
 
 # Install phing
 sudo pear channel-discover pear.phing.info
