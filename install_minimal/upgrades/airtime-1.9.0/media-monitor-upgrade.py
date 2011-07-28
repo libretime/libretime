@@ -52,9 +52,16 @@ for root, dirs, files in os.walk(mmconfig.storage_directory):
     for f in files:
         old_filepath = os.path.join(root, f)
         new_filepath = mmc.organize_new_file(old_filepath)
-        pair = old_filepath, new_filepath
-        pairs.append(pair)
-        mmc.set_needed_file_permissions(new_filepath, False)
+
+        if new_filepath is not None:
+            pair = old_filepath, new_filepath
+            pairs.append(pair)
+            mmc.set_needed_file_permissions(new_filepath, False)
+        #incase file has a metadata problem.
+        else:
+            pair = old_filepath, old_filepath
+            pairs.append(pair)
+            mmc.set_needed_file_permissions(old_filepath, False)
 
 #need to set all the dirs in imported to be owned by www-data.
 command = "chown -R www-data " + stor_dir
