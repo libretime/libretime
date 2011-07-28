@@ -621,15 +621,18 @@ class Airtime190Upgrade{
         exec($command, $output);
         print_r($output);
 
-        $oldAndNewFileNames = json_decode($output[0]);
+        if (isset($output[0])) {
 
-        $stor_dir_id = $propel_stor_dir->getId();
-        foreach ($oldAndNewFileNames as $pair){
-            $relPathNew = pg_escape_string(substr($pair[1], strlen($stor_dir)));
-            $absPathOld = pg_escape_string($pair[0]);
-            $sql = "UPDATE cc_files SET filepath = '$relPathNew', directory=$stor_dir_id WHERE filepath = '$absPathOld'";
-            echo $sql.PHP_EOL;
-            Airtime190Upgrade::execSqlQuery($sql);
+            $oldAndNewFileNames = json_decode($output[0]);
+
+            $stor_dir_id = $propel_stor_dir->getId();
+            foreach ($oldAndNewFileNames as $pair){
+                $relPathNew = pg_escape_string(substr($pair[1], strlen($stor_dir)));
+                $absPathOld = pg_escape_string($pair[0]);
+                $sql = "UPDATE cc_files SET filepath = '$relPathNew', directory=$stor_dir_id WHERE filepath = '$absPathOld'";
+                echo $sql.PHP_EOL;
+                Airtime190Upgrade::execSqlQuery($sql);
+            }
         }
 
         echo "Upgrading Linked Files".PHP_EOL;
