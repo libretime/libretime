@@ -207,18 +207,18 @@ class MediaMonitorCommon:
 
         return filepath
 
-    def execCommandAndReturnStdOut(self, command):
-        p = Popen(command, shell=True, stdout=PIPE)
-        stdout = p.communicate()[0]
+    def exec_command(self, command):
+        p = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = p.communicate()
         if p.returncode != 0:
             self.logger.warn("command \n%s\n return with a non-zero return value", command)
+            self.logger.error(stderr)
         return stdout
 
     def scan_dir_for_new_files(self, dir):
         command = 'find "%s" -type f -iname "*.ogg" -o -iname "*.mp3" -readable' % dir.replace('"', '\\"')
         self.logger.debug(command)
-        stdout = self.execCommandAndReturnStdOut(command)
-        stdout = unicode(stdout, "utf_8")
+        stdout = self.exec_command(command)
 
         return stdout.splitlines()
 
@@ -230,8 +230,6 @@ class MediaMonitorCommon:
         file_md = self.md_manager.get_md_from_file(pathname)
 
         if file_md is not None:
-            #is_recorded_show = 'MDATA_KEY_CREATOR' in file_md and \
-            #    file_md['MDATA_KEY_CREATOR'] == "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')
             filepath = self.create_file_path(pathname, file_md)
 
             self.logger.debug("Moving from %s to %s", pathname, filepath)
