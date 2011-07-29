@@ -144,6 +144,10 @@ def WatchAddAction(option, opt, value, parser):
     elif(len(parser.rargs) == 0 ):
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     path = parser.rargs[0]
+    if (path[0] == "/" or path[0] == "~"):
+        path = os.path.realpath(path)
+    else:
+        path = currentDir+path
     path = path.decode('utf-8')
     path = path.encode('utf-8')
     if(os.path.isdir(path)):
@@ -181,6 +185,10 @@ def WatchRemoveAction(option, opt, value, parser):
     elif(len(parser.rargs) == 0 ):
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     path = parser.rargs[0]
+    if (path[0] == "/" or path[0] == "~"):
+        path = os.path.realpath(path)
+    else:
+        path = currentDir+path
     path = path.decode('utf-8')
     path = path.encode('utf-8')
     if(os.path.isdir(path)):
@@ -223,6 +231,10 @@ def StorageSetAction(option, opt, value, parser):
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     
     path = parser.rargs[0]
+    if (path[0] == "/" or path[0] == "~"):
+        path = os.path.realpath(path)
+    else:
+        path = currentDir+path
     path = path.decode('utf-8')
     path = path.encode('utf-8')
     if(os.path.isdir(path)):

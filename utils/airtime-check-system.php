@@ -88,10 +88,12 @@ class AirtimeCheck {
         if (is_numeric($numSecondsRunning) && (int)$numSecondsRunning < 3) {
             self::$check_system_ok = false;
             output_msg("WARNING! It looks like the $name engine is continually restarting.");
-            $command = "tail -10 $logFile";
-            exec($command, $output, $result);
-            foreach ($output as $line) {
-                output_msg($line);
+            if(file_exists($logFile)){
+                $command = "tail -10 $logFile";
+                exec($command, $output, $result);
+                foreach ($output as $line) {
+                    output_msg($line);
+                }
             }
         } 
     }
