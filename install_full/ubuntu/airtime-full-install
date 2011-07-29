@@ -37,9 +37,6 @@ if [ "$?" -ne "0" ]; then
    exit 1
 fi
 
-#install virtualenv 1.6.3
-easy_install virtualenv==1.6.3
-
 # Install phing
 sudo pear channel-discover pear.phing.info
 sudo pear install phing/phing-2.4.2
