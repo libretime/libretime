@@ -795,7 +795,7 @@ class StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
 		}
 
-		$audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
+		/*$audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
 
 		$md5 = md5_file($audio_file);
 		$duplicate = StoredFile::RecallByMd5($md5);
@@ -816,8 +816,33 @@ class StoredFile {
 
 	    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
-        $r = @copy($audio_file, $audio_stor);
+        $r = @copy($audio_file, $audio_stor);*/
 
+    }
+    
+    public static function copyFileToStor($p_targetDir, $fileName){
+        $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
+
+        $md5 = md5_file($audio_file);
+        $duplicate = StoredFile::RecallByMd5($md5);
+        if ($duplicate) {
+            if (PEAR::isError($duplicate)) {
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
+            }
+            if (file_exists($duplicate->getFilePath())) {
+                $duplicateName = $duplicate->getMetadataValue('MDATA_KEY_TITLE');
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
+            }
+        }
+        
+        $storDir = MusicDir::getStorDir();
+        $stor = $storDir->getDirectory();
+
+        $stor .= "/organize";
+
+        $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
+
+        $r = @copy($audio_file, $audio_stor);
     }
 
     public static function getFileCount()
