@@ -580,6 +580,57 @@ class Airtime190Upgrade{
         $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
     }
 
+    public static function backupFileInfoInStorToFile($values) {
+
+        $stor_dir = realpath($values['general']['base_files_dir']."/stor");
+
+        $files = CcFilesQuery::create()
+           ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+           ->find();
+
+        $dumpFile = "storDump.txt";
+        $fh = fopen($dumpFile, 'w') or die("can't open file to backup stor.");
+
+        $s = "SF_BACKUP";
+
+        foreach ($files as $file) {
+
+            if (substr($file->getDbFilepath, 0, strlen($stor_dir)) == $stor_dir) {
+
+                $recorded_show = CcShowInstancesQuery::create()
+                    ->filterByDbRecordedFile($file->getDbId())
+                    ->findOne();
+
+                if (isset($recorded_show)) {
+
+                    $start_time = $recorded_show->getDbStarts();
+                    $title = $file->getDbTrackTitle();
+
+                    $start_time = str_replace(" ", "-", $start_time);
+                    $start_time = str_replace(":", "-", $start_time);
+
+                    //$start_time like yyyy-mm-dd-hh-MM-ss
+                    list($yyyy, $mm, $dd, $hh, $MM, $ss) = explode("-", $start_time);
+
+                    $data = "1$s$title$s$yyyy$s$mm$s$dd$s$hh$s$MM\n";
+                }
+                else {
+
+                    $artist = $file->getDbArtistName();
+                    $album = $file->getDbAlbumTitle();
+                    $track = $file->getDbTrackNumber();
+                    $title = $file->getDbTrackTitle();
+
+                    $data = "0$s$title$s$artist$s$album$s$track\n";
+                }
+
+                fwrite($fh, $data);
+            }
+        }
+
+        fclose($fh);
+    }
+
     /* Old database had a "fullpath" column that stored the absolute path of each track. We have to
      * change it so that the "fullpath" column has path relative to the "directory" column.
      */
@@ -736,6 +787,7 @@ AirtimeInstall::CreateSymlinksToUtils();
 /* create cron file for phone home stat */
 AirtimeInstall::CreateCronFile();
 
+Airtime190Upgrade::backupFileInfoInStorToFile($values);
 Airtime190Upgrade::installMediaMonitor($values);
 
 AirtimeIni::upgradeConfigFiles();
