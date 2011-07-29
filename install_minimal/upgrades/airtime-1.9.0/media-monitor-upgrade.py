@@ -78,7 +78,7 @@ for line in f.readlines():
         file_md["MDATA_KEY_SOURCE"] = db_md[4]
         file_md["MDATA_KEY_TRACKNUMBER"] = db_md[5]
 
-    mmc.md_manager.save_md_to_file()
+    mmc.md_manager.save_md_to_file(file_md)
 
 f.close()
 
