@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var uploader;
 
-	uploader = $("#plupload_files").pluploadQueue({
+	$("#plupload_files").pluploadQueue({
 		// General settings
 		runtimes : 'html5,html4',
 		url : '/Plupload/upload/format/json',
