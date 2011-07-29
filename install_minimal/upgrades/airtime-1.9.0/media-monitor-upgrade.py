@@ -10,6 +10,7 @@ import ConfigParser
 import pwd
 import grp
 import subprocess
+import re
 
 import os.path
 
