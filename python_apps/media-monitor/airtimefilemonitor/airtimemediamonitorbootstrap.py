@@ -86,7 +86,7 @@ class AirtimeMediaMonitorBootstrap():
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
 
         stdout = self.mmc.exec_command(command)
-        self.logger.info(stdout)
+        #self.logger.info(stdout)
 
         new_files = stdout.splitlines()
 
