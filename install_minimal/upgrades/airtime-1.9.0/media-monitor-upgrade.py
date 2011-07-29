@@ -48,6 +48,7 @@ mmc.set_needed_file_permissions(organize_dir, True)
 f = open('storDump.txt','r')
 for line in f.readlines():
     db_md = line.split("SF_BACKUP_1.9.0")
+    logger.debug(db_md)
     file_md = {}
     file_md['MDATA_KEY_FILEPATH'] = db_md[1]
 
@@ -55,11 +56,23 @@ for line in f.readlines():
     #format 1 title year month day hour min
     if db_md[0]:
         file_md["MDATA_KEY_TITLE"] = db_md[2]
+        match = re.search('^.*(?=\-\d{4}\-\d{2}\-\d{2}\-\d{2}:\d{2}:\d{2}\.(mp3|ogg))', file_md["MDATA_KEY_TITLE"])
+
+        #"Show-Title-2011-03-28-17:15:00.mp3"
+        if match:
+            file_md["MDATA_KEY_TITLE"] = match.group(0)
+
         file_md["MDATA_KEY_YEAR"] = db_md[3]+"-"+db_md[4]+"-"+db_md[5]
     #file is regular audio file
     #format 0 title artist album track
     else:
         file_md["MDATA_KEY_TITLE"] = db_md[2]
+        match = re.search('^.*(?=\.mp3|\.ogg)', file_md["MDATA_KEY_TITLE"])
+
+        #"test.mp3" -> "test"
+        if match:
+            file_md["MDATA_KEY_TITLE"] = match.group(0)
+
         file_md["MDATA_KEY_CREATOR"] = db_md[3]
         file_md["MDATA_KEY_SOURCE"] = db_md[4]
         file_md["MDATA_KEY_TRACKNUMBER"] = db_md[5]
