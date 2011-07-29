@@ -45,6 +45,29 @@ except Exception, e:
 mmc.set_needed_file_permissions(stor_dir, True)
 mmc.set_needed_file_permissions(organize_dir, True)
 
+f = open('storDump.txt','r')
+for line in f.readlines():
+    db_md = line.split("SF_BACKUP_1.9.0")
+    file_md = {}
+    file_md['MDATA_KEY_FILEPATH'] = db_md[1]
+
+    #file is recorded
+    #format 1 title year month day hour min
+    if db_md[0]:
+        file_md["MDATA_KEY_TITLE"] = db_md[2]
+        file_md["MDATA_KEY_YEAR"] = db_md[3]+"-"+db_md[4]+"-"+db_md[5]
+    #file is regular audio file
+    #format 0 title artist album track
+    else:
+        file_md["MDATA_KEY_TITLE"] = db_md[2]
+        file_md["MDATA_KEY_CREATOR"] = db_md[3]
+        file_md["MDATA_KEY_SOURCE"] = db_md[4]
+        file_md["MDATA_KEY_TRACKNUMBER"] = db_md[5]
+
+    mmc.md_manager.save_md_to_file()
+
+f.close()
+
 #read list of all files in stor location.....and one-by-one pass this through to
 #mmc.organize_files. print out json encoding of before and after
 pairs = []

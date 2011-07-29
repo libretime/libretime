@@ -593,7 +593,7 @@ class Airtime190Upgrade{
         $dumpFile = __DIR__."/storDump.txt";
         $fh = fopen($dumpFile, 'w') or die("can't open file to backup stor.");
 
-        $s = "SF_BACKUP";
+        $s = "SF_BACKUP_1.9.0";
 
         foreach ($files as $file) {
 
