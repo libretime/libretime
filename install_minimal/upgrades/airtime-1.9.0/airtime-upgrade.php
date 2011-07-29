@@ -590,7 +590,7 @@ class Airtime190Upgrade{
            ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
            ->find();
 
-        $dumpFile = __DIR__"/storDump.txt";
+        $dumpFile = __DIR__."/storDump.txt";
         $fh = fopen($dumpFile, 'w') or die("can't open file to backup stor.");
 
         $s = "SF_BACKUP";
