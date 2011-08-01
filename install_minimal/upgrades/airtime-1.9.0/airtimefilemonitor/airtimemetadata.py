@@ -144,6 +144,9 @@ class AirtimeMetadata:
 
             if isinstance(md['MDATA_KEY_TRACKNUMBER'], basestring):
                 match = re.search('^(\d*/\d*)?', md['MDATA_KEY_TRACKNUMBER'])
+                self.logger.debug("parsing track number")
+                self.logger.debug(md['MDATA_KEY_TRACKNUMBER'])
+                self.logger.debug(match.group(0))
 
                 if match.group(0) is not u'':
                     md['MDATA_KEY_TRACKNUMBER'] = int(md['MDATA_KEY_TRACKNUMBER'].split("/")[0])
