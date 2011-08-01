@@ -55,8 +55,8 @@ for line in f.readlines():
     db_md = line.split("SF_BACKUP_1.9.0")
 
     #remove newlines.
-    for item in db_md:
-        item = item.strip()
+    for i in range(0, len(db_md)):
+        db_md[i] = db_md[i].strip()
 
     logger.debug(db_md)
     file_md = {}
@@ -78,8 +78,6 @@ for line in f.readlines():
 
         file_md["MDATA_KEY_CREATOR"] = "Airtime Show Recorder".encode('utf-8')
 
-        #mmc.md_manager.save_md_to_file(file_md)
-
     #file is regular audio file
     #format 0 title artist album track
     else:
@@ -90,9 +88,14 @@ for line in f.readlines():
         if match:
             file_md["MDATA_KEY_TITLE"] = match.group(0)
 
-        file_md["MDATA_KEY_CREATOR"] = db_md[3]
-        file_md["MDATA_KEY_SOURCE"] = db_md[4]
-        file_md["MDATA_KEY_TRACKNUMBER"] = db_md[5]
+        if len(db_md[3]) > 0:
+            file_md["MDATA_KEY_CREATOR"] = db_md[3]
+
+        if len(db_md[4]) > 0:
+            file_md["MDATA_KEY_SOURCE"] = db_md[4]
+
+        if len(db_md[5]) > 0:
+            file_md["MDATA_KEY_TRACKNUMBER"] = int(db_md[5])
 
     mmc.md_manager.save_md_to_file(file_md)
 
