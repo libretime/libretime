@@ -203,7 +203,7 @@ class MediaMonitorCommon:
 
                 new_md = {}
                 new_md["MDATA_KEY_FILEPATH"] = original_path
-                new_md['MDATA_KEY_TITLE'] = '%s-%s-%s-%s-%s' % (show_name, orig_md['MDATA_KEY_YEAR'], show_hour, show_min, show_sec)
+                new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % (show_name, orig_md['MDATA_KEY_YEAR'], show_hour, show_min, show_sec)
                 self.md_manager.save_md_to_file(new_md)
 
             elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):

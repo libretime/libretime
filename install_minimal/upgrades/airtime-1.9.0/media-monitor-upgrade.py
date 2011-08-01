@@ -60,7 +60,7 @@ for line in f.readlines():
 
     #file is recorded
     #format 1 title year month day hour min
-    if db_md[0]:
+    if int(db_md[0]):
         file_md["MDATA_KEY_TITLE"] = db_md[2]
         match = re.search('^.*(?=\-\d{4}\-\d{2}\-\d{2}\-\d{2}:\d{2}:\d{2}\.(mp3|ogg))', file_md["MDATA_KEY_TITLE"])
 
