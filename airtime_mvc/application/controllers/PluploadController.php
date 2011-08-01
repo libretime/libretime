@@ -7,6 +7,7 @@ class PluploadController extends Zend_Controller_Action
     {
 		$ajaxContext = $this->_helper->getHelper('AjaxContext');
 		$ajaxContext->addActionContext('upload', 'json')
+		            ->addActionContext('copyfile', 'json')
 				    ->initContext();
     }
 
@@ -28,6 +29,14 @@ class PluploadController extends Zend_Controller_Action
         StoredFile::uploadFile($upload_dir);
 
 		die('{"jsonrpc" : "2.0"}');
+    }
+    
+    public function copyfileAction(){
+        $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+        $filename = $this->_getParam('name');
+        StoredFile::copyFileToStor($upload_dir, $filename);
+
+        die('{"jsonrpc" : "2.0"}');
     }
 }
 

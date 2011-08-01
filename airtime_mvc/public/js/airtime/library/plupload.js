@@ -5,6 +5,7 @@ $(document).ready(function() {
 		// General settings
 		runtimes : 'html5,html4',
 		url : '/Plupload/upload/format/json',
+		chunk_size: '5mb',
 		multiple_queues : 'true',
 		filters : [
 			{title: "Audio Files", extensions: "ogg,mp3"}
@@ -24,6 +25,7 @@ $(document).ready(function() {
 				
 			$("#plupload_error").find("table").append(row);
 		}
+		$.get('/Plupload/copyfile/format/json/name/'+file.name);
 	});
 	
 	var uploadProgress = false;
