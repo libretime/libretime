@@ -199,7 +199,7 @@ class MediaMonitorCommon:
                 show_hour = title[0]
                 show_min = title[1]
                 show_sec = title[2]
-                show_name = title[3:]
+                show_name = '-'.join(title[3:])
 
                 new_md = {}
                 new_md["MDATA_KEY_FILEPATH"] = original_path
