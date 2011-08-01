@@ -73,6 +73,7 @@ for line in f.readlines():
         if match:
             file_md["MDATA_KEY_TITLE"] = match.group(0)
 
+        file_md["MDATA_KEY_TITLE"] = file_md["MDATA_KEY_TITLE"].replace(" ", "-")
         file_md["MDATA_KEY_TITLE"] = db_md[6]+"-"+db_md[7]+"-00-"+file_md["MDATA_KEY_TITLE"]
         file_md["MDATA_KEY_YEAR"] = db_md[3]+"-"+db_md[4]+"-"+db_md[5]
 
