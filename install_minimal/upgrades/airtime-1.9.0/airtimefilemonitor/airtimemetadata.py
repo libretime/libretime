@@ -91,8 +91,13 @@ class AirtimeMetadata:
             for key in m.keys() :
                 if key in self.airtime2mutagen:
                     value = m[key]
-                    if ((value is not None) and (len(str(value)) > 0)):
-                        airtime_file[self.airtime2mutagen[key]] = str(value)
+                    if (value is not None):
+                        self.logger.debug("Saving %s to file", key)
+                        self.logger.debug(value)
+                        if isinstance(value, basestring) and (len(value) > 0):
+                            airtime_file[self.airtime2mutagen[key]] = unicode(value, "utf-8")
+                        elif isinstance(value, int):
+                            airtime_file[self.airtime2mutagen[key]] = str(value)
 
 
             airtime_file.save()
@@ -144,9 +149,6 @@ class AirtimeMetadata:
 
             if isinstance(md['MDATA_KEY_TRACKNUMBER'], basestring):
                 match = re.search('^(\d*/\d*)?', md['MDATA_KEY_TRACKNUMBER'])
-                self.logger.debug("parsing track number")
-                self.logger.debug(md['MDATA_KEY_TRACKNUMBER'])
-                self.logger.debug(match.group(0))
 
                 if match.group(0) is not u'':
                     md['MDATA_KEY_TRACKNUMBER'] = int(md['MDATA_KEY_TRACKNUMBER'].split("/")[0])
