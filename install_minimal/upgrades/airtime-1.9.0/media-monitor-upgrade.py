@@ -53,6 +53,11 @@ pairs = []
 f = open('storDump.txt','r')
 for line in f.readlines():
     db_md = line.split("SF_BACKUP_1.9.0")
+
+    #remove newlines.
+    for item in db_md:
+        item = item.strip()
+
     logger.debug(db_md)
     file_md = {}
     old_filepath = db_md[1]
