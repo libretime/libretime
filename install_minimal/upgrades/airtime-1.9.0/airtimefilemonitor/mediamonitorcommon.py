@@ -189,10 +189,23 @@ class MediaMonitorCommon:
             filepath = None
             #file is recorded by Airtime
             #/srv/airtime/stor/recorded/year/month/year-month-day-time-showname-bitrate.ext
-            if(md['MDATA_KEY_CREATOR'] == "AIRTIMERECORDERSOURCEFABRIC".encode('utf-8')):
+            if(md['MDATA_KEY_CREATOR'] == "Airtime Show Recorder".encode('utf-8')):
                 #yyyy-mm-dd-hh-MM-ss
                 y = orig_md['MDATA_KEY_YEAR'].split("-")
                 filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "recorded".encode('utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+
+                #"Show-Title-2011-03-28-17:15:00"
+                title = md['MDATA_KEY_TITLE'].split("-")
+                show_hour = title[0]
+                show_min = title[1]
+                show_sec = title[2]
+                show_name = title[3:]
+
+                new_md = {}
+                new_md["MDATA_KEY_FILEPATH"] = original_path
+                new_md['MDATA_KEY_TITLE'] = '%s-%s-%s-%s-%s' % (show_name, orig_md['MDATA_KEY_YEAR'], show_hour, show_min, show_sec)
+                self.md_manager.save_md_to_file(new_md)
+
             elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
                 filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
