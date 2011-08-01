@@ -672,7 +672,7 @@ class Airtime190Upgrade{
 
         $cwd = __DIR__;
         $mediaMonitorUpgradePath = __DIR__."/media-monitor-upgrade.py";
-        $command = "cd $cwd && su -c \"python $mediaMonitorUpgradePath\"";
+        $command = "cd $cwd && \"python $mediaMonitorUpgradePath\"";
         exec($command, $output);
         print_r($output);
 
