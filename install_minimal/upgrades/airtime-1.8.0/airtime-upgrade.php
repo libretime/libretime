@@ -11,6 +11,17 @@ require_once __DIR__.'/../../../airtime_mvc/application/configs/conf.php';
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
 require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
 
+//global $AIRTIME_SRC;
+//global $AIRTIME_UTILS;
+global $AIRTIME_PYTHON_APPS;
+
+global $CC_CONFIG;
+
+//$AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
+//$AIRTIME_UTILS = __DIR__.'/../../../utils';
+$AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
+
+
 AirtimeInstall::DbConnect(true);
 
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
