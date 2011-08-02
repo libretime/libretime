@@ -162,6 +162,10 @@ function LoadConfig($CC_CONFIG) {
     $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
     $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
 
+    $CC_CONFIG['baseFilesDir'] = $values['general']['base_files_dir'],
+    // main directory for storing binary media files
+    $CC_CONFIG['storageDir'] = $values['general']['base_files_dir']."/stor",
+
     // Database config
     $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
     $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
@@ -191,23 +195,3 @@ echo "* Initializing INI files".PHP_EOL;
 MergeConfigFiles($configFiles, $suffix);
 
 $CC_CONFIG = LoadConfig($CC_CONFIG);
-
-//echo "* Creating INI files".PHP_EOL;
-//CreateIniFiles();
-
-//AirtimeInstall::InstallPhpCode();
-//AirtimeInstall::InstallBinaries();
-
-//echo "* Initializing INI files".PHP_EOL;
-//AirtimeIni::UpdateIniFiles();
-//global $CC_CONFIG;
-//$CC_CONFIG = Config::loadConfig($CC_CONFIG);
-
-//echo "* Creating default storage directory".PHP_EOL;
-//AirtimeInstall::InstallStorageDirectory();
-
-//$ini = parse_ini_file(__DIR__."/../../include/airtime-install.ini");
-//$stor_dir = $ini["storage_dir"];
-
-//AirtimeInstall::ChangeDirOwnerToWebserver($stor_dir);
-//AirtimeInstall::CreateSymlinksToUtils();

@@ -88,6 +88,10 @@ function LoadConfig($CC_CONFIG) {
     $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
     $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
 
+    $CC_CONFIG['baseFilesDir'] = $values['general']['base_files_dir'],
+    // main directory for storing binary media files
+    $CC_CONFIG['storageDir'] = $values['general']['base_files_dir']."/stor",
+
     //$CC_CONFIG['baseUrl'] = $values['general']['base_url'];
     //$CC_CONFIG['basePort'] = $values['general']['base_port'];
 
