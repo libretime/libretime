@@ -9,7 +9,7 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
 if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
-    echo -e "\n*** Creating Vitualenv for Airtime ***"
+    echo -e "\n*** Creating Virtualenv for Airtime ***"
     EXTRAOPTION=$(virtualenv --help | grep extra-search-dir)
 
     if [ "$?" -eq "0" ]; then
@@ -35,7 +35,7 @@ if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
         fi
     done
 else
-    echo -e "\n*** Existing Airtime Virturalenv Found ***"
+    echo -e "\n*** Existing Airtime Virtualenv Found ***"
 fi 
 
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
