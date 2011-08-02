@@ -1,0 +1,55 @@
+###########################################
+# Liquidsoap config file                  #
+###########################################
+
+###########################################
+# Output settings                         #
+###########################################
+output_sound_device = false
+output_icecast_vorbis = true
+output_icecast_mp3 = false
+output_shoutcast = false
+
+#output_bitrate = 128
+#output_samplerate = 44100
+#output_stereo = true
+
+###########################################
+# Logging settings                        #
+###########################################
+log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"
+#log_level = 3
+
+###########################################
+# Icecast Stream settings                 #
+###########################################
+icecast_host = "127.0.0.1"
+icecast_port = 8000
+icecast_pass = "hackme"
+
+# Icecast mountpoint names
+mount_point_mp3 = "airtime.mp3"
+mount_point_vorbis = "airtime.ogg"
+
+# Webstream metadata settings
+icecast_url = "http://airtime.sourcefabric.org"
+icecast_description = "Airtime Radio!"
+icecast_genre = "genre"
+
+# Audio stream metadata for vorbis/ogg is disabled by default
+# due to a number of client media players that disconnect
+# when the metadata changes to a new track. Some versions of
+# mplayer and VLC have this problem. Enable this option at your
+# own risk!
+output_icecast_vorbis_metadata = false
+
+###########################################
+# Shoutcast Stream settings               #
+###########################################
+shoutcast_host = "127.0.0.1"
+shoutcast_port = 9000
+shoutcast_pass = "testing"
+
+# Webstream metadata settings
+shoutcast_url = "http://airtime.sourcefabric.org"
+shoutcast_genre = "genre"
