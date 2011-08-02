@@ -114,10 +114,8 @@ function LoadConfig($CC_CONFIG) {
  * This function creates the /etc/airtime configuration folder
  * and copies the default config files to it.
  */
-function CreateIniFiles()
+function CreateIniFiles($suffix)
 {
-    global $AIRTIME_PYTHON_APPS;
-
     if (!file_exists("/etc/airtime/")){
         if (!mkdir("/etc/airtime/", 0755, true)){
             echo "Could not create /etc/airtime/ directory. Exiting.";
@@ -125,20 +123,20 @@ function CreateIniFiles()
         }
     }
 
-    if (!copy(__DIR__."/airtime.conf.182", CONF_FILE_AIRTIME)){
-        echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
+    if (!copy(__DIR__."/airtime.conf.$suffix", CONF_FILE_AIRTIME)){
+        echo "Could not copy airtime.conf.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy($AIRTIME_PYTHON_APPS."/pypo/pypo.cfg", CONF_FILE_PYPO)){
-        echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
+    if (!copy__DIR__."/pypo.cfg.$suffix", CONF_FILE_PYPO)){
+        echo "Could not copy pypo.cfg.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy($AIRTIME_PYTHON_APPS."/show-recorder/recorder.cfg", CONF_FILE_RECORDER)){
-        echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
+    if (!copy(__DIR__."/recorder.cfg.$suffix", CONF_FILE_RECORDER)){
+        echo "Could not copy recorder.cfg.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy($AIRTIME_PYTHON_APPS."/pypo/liquidsoap_scripts/liquidsoap.cfg", CONF_FILE_LIQUIDSOAP)){
-        echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
+    if (!copy(__DIR__."/liquidsoap.cfg.$suffix", CONF_FILE_LIQUIDSOAP)){
+        echo "Could not copy liquidsoap.cfg.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
 }
@@ -225,7 +223,8 @@ foreach ($configFiles as $conf) {
     }
 }
 
-CreateIniFiles();
+$suffix = "182";
+CreateIniFiles($suffix);
 echo "* Initializing INI files".PHP_EOL;
 MergeConfigFiles($configFiles, $suffix);
 
