@@ -3,7 +3,7 @@ $(document).ready(function() {
 
 	$("#plupload_files").pluploadQueue({
 		// General settings
-		runtimes : 'html5,html4',
+		runtimes : 'gears, html5, html4',
 		url : '/Plupload/upload/format/json',
 		chunk_size: '5mb',
 		multiple_queues : 'true',
