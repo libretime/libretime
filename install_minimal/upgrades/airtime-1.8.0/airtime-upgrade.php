@@ -46,12 +46,6 @@ $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
                      AirtimeIni::CONF_FILE_RECORDER,
                      AirtimeIni::CONF_FILE_LIQUIDSOAP);
 
-foreach ($configFiles as $conf) {
-    if (file_exists($conf)) {
-        echo "Backing up $conf to $conf.bak".PHP_EOL;
-        exec("cp $conf $conf.bak");
-    }
-}
 
 /**
 * This function creates the /etc/airtime configuration folder
@@ -86,22 +80,134 @@ function CreateIniFiles()
     }
 }
 
-echo "* Creating INI files".PHP_EOL;
+function ReadPythonConfig($p_filename)
+{
+    $values = array();
+
+    $lines = file($p_filename);
+    $n=count($lines);
+    for ($i=0; $i<$n; $i++) {
+        if (strlen($lines[$i]) && !in_array(substr($lines[$i], 0, 1), array('#', PHP_EOL))){
+             $info = explode("=", $lines[$i]);
+             $values[trim($info[0])] = trim($info[1]);
+         }
+    }
+
+    return $values;
+}
+
+function UpdateIniValue($p_filename, $p_property, $p_value)
+{
+    $lines = file($p_filename);
+    $n=count($lines);
+    foreach ($lines as &$line) {
+        if ($line[0] != "#"){
+            $key_value = split("=", $line);
+            $key = trim($key_value[0]);
+
+            if ($key == $p_property){
+                $line = "$p_property = $p_value".PHP_EOL;
+            }
+        }
+    }
+
+    $fp=fopen($p_filename, 'w');
+    for($i=0; $i<$n; $i++){
+        fwrite($fp, $lines[$i]);
+    }
+    fclose($fp);
+}
+
+function MergeConfigFiles($configFiles, $suffix)
+{
+    foreach ($configFiles as $conf) {
+        if (file_exists("$conf$suffix.bak")) {
+
+            if($conf === CONF_FILE_AIRTIME) {
+                // Parse with sections
+                $newSettings = parse_ini_file($conf, true);
+                $oldSettings = parse_ini_file("$conf$suffix.bak", true);
+            }
+            else {
+                $newSettings = ReadPythonConfig($conf);
+                $oldSettings = ReadPythonConfig("$conf$suffix.bak");
+            }
+
+            $settings = array_keys($newSettings);
+
+            foreach($settings as $section) {
+                if(isset($oldSettings[$section])) {
+                    if(is_array($oldSettings[$section])) {
+                        $sectionKeys = array_keys($newSettings[$section]);
+                        foreach($sectionKeys as $sectionKey) {
+                            if(isset($oldSettings[$section][$sectionKey])) {
+                                UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                            }
+                        }
+                    }
+                    else {
+                        UpdateIniValue($conf, $section, $oldSettings[$section]);
+                    }
+                }
+            }
+        }
+    }
+}
+
+function LoadConfig($CC_CONFIG) {
+    $values = parse_ini_file(CONF_FILE_AIRTIME, true);
+
+    // Name of the web server user
+    $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
+    $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
+    $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
+
+    // Database config
+    $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
+    $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
+    $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+    $CC_CONFIG['dsn']['phptype'] = 'pgsql';
+    $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+
+    $CC_CONFIG['apiKey'] = array($values['general']['api_key']);
+
+    $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
+    $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
+
+    return $CC_CONFIG;
+}
+
+// Backup the config files
+$suffix = date("Ymdhis")."-1.8.0";
+foreach ($configFiles as $conf) {
+    if (file_exists($conf)) {
+        echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
+        exec("cp $conf $conf$suffix.bak");
+    }
+}
+
 CreateIniFiles();
-
-AirtimeInstall::InstallPhpCode();
-AirtimeInstall::InstallBinaries();
-
 echo "* Initializing INI files".PHP_EOL;
-AirtimeIni::UpdateIniFiles();
-global $CC_CONFIG;
-$CC_CONFIG = Config::loadConfig($CC_CONFIG);
+MergeConfigFiles($configFiles, $suffix);
 
-echo "* Creating default storage directory".PHP_EOL;
-AirtimeInstall::InstallStorageDirectory();
+$CC_CONFIG = LoadConfig($CC_CONFIG);
 
-$ini = parse_ini_file(__DIR__."/../../include/airtime-install.ini");
-$stor_dir = $ini["storage_dir"];
+//echo "* Creating INI files".PHP_EOL;
+//CreateIniFiles();
 
-AirtimeInstall::ChangeDirOwnerToWebserver($stor_dir);
-AirtimeInstall::CreateSymlinksToUtils();
+//AirtimeInstall::InstallPhpCode();
+//AirtimeInstall::InstallBinaries();
+
+//echo "* Initializing INI files".PHP_EOL;
+//AirtimeIni::UpdateIniFiles();
+//global $CC_CONFIG;
+//$CC_CONFIG = Config::loadConfig($CC_CONFIG);
+
+//echo "* Creating default storage directory".PHP_EOL;
+//AirtimeInstall::InstallStorageDirectory();
+
+//$ini = parse_ini_file(__DIR__."/../../include/airtime-install.ini");
+//$stor_dir = $ini["storage_dir"];
+
+//AirtimeInstall::ChangeDirOwnerToWebserver($stor_dir);
+//AirtimeInstall::CreateSymlinksToUtils();
