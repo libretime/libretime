@@ -62,7 +62,7 @@ function CreateIniFiles()
         }
     }
 
-    if (!copy("airtime.conf.180", CONF_FILE_AIRTIME)){
+    if (!copy(__DIR__."/airtime.conf.180", CONF_FILE_AIRTIME)){
         echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
         exit(1);
     }
