@@ -1,0 +1,26 @@
+api_client = "airtime"
+
+# where the binary files live
+bin_dir = '/usr/lib/airtime/show-recorder'
+
+# base path to store recordered shows at
+base_recorded_files = '/var/tmp/airtime/show-recorder/'
+
+# where the logging files live
+log_dir = '/var/log/airtime/show-recorder'
+
+############################################
+# RabbitMQ settings                        #
+############################################
+rabbitmq_host = 'localhost'
+rabbitmq_user = 'guest'
+rabbitmq_password = 'guest'
+
+############################################
+# Recorded Audio settings                  #
+############################################
+record_bitrate = 256
+record_samplerate = 44100
+record_channels = 2
+record_sample_size = 16
+

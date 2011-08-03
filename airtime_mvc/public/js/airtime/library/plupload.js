@@ -24,8 +24,18 @@ $(document).ready(function() {
 				.append('<td>' + j.error.message + '</td>');
 				
 			$("#plupload_error").find("table").append(row);
+		}else{
+		    $.get('/Plupload/copyfile/format/json/name/'+file.name, function(json){
+		        var jr = jQuery.parseJSON(json);
+		        if(jr.error !== undefined) {
+		            var row = $("<tr/>")
+		                .append('<td>' + file.name +'</td>')
+		                .append('<td>' + jr.error.message + '</td>');
+		                
+		            $("#plupload_error").find("table").append(row);
+		        }
+		    });
 		}
-		$.get('/Plupload/copyfile/format/json/name/'+file.name);
 	});
 	
 	var uploadProgress = false;

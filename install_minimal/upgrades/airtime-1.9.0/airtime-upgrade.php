@@ -401,7 +401,7 @@ class AirtimeIni{
     }
 
     public static function CreateMonitFile(){
-        if (!copy(__DIR__."/../../../python_apps/monit/airtime-monit.cfg", AirtimeIni::CONF_FILE_MONIT)){
+        if (!copy(__DIR__."/airtime-monit.cfg.190", AirtimeIni::CONF_FILE_MONIT)){
             echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
             exit(1);
         }
@@ -473,7 +473,9 @@ class AirtimeIni{
                 copy($conf, $conf.$suffix.".bak");
             }
         }
-        AirtimeIni::CreateIniFiles();
+
+        $default_suffix = "190";
+        AirtimeIni::CreateIniFiles($default_suffix);
         AirtimeIni::MergeConfigFiles($configFiles, $suffix);
     }
 
@@ -481,7 +483,7 @@ class AirtimeIni{
      * This function creates the /etc/airtime configuration folder
      * and copies the default config files to it.
      */
-    public static function CreateIniFiles()
+    public static function CreateIniFiles($suffix)
     {
         if (!file_exists("/etc/airtime/")){
             if (!mkdir("/etc/airtime/", 0755, true)){
@@ -490,22 +492,19 @@ class AirtimeIni{
             }
         }
 
-        $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
-        $AIRTIME_PYTHON_APPS = realpath(__DIR__.'/../../../python_apps');
-
-        if (!copy($AIRTIME_SRC."/build/airtime.conf", AirtimeIni::CONF_FILE_AIRTIME)){
+        if (!copy(__DIR__."/airtime.conf.$suffix", AirtimeIni::CONF_FILE_AIRTIME)){
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy($AIRTIME_PYTHON_APPS."/pypo/pypo.cfg", AirtimeIni::CONF_FILE_PYPO)){
+        if (!copy(__DIR__."/pypo.cfg.$suffix", AirtimeIni::CONF_FILE_PYPO)){
             echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy($AIRTIME_PYTHON_APPS."/show-recorder/recorder.cfg", AirtimeIni::CONF_FILE_RECORDER)){
+        if (!copy(__DIR__."/recorder.cfg.$suffix", AirtimeIni::CONF_FILE_RECORDER)){
             echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy($AIRTIME_PYTHON_APPS."/pypo/liquidsoap_scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
+        if (!copy(__DIR__."/liquidsoap.cfg.$suffix", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
@@ -659,10 +658,10 @@ class Airtime190Upgrade{
         touch("/var/log/airtime/media-monitor/media-monitor.log");
 
         /* create media monitor config: */
-        if (!copy(__DIR__."/../../../python_apps/media-monitor/media-monitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
+        if (!copy(__DIR__."/media-monitor.cfg.190", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
             echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
         }
-        if (!copy(__DIR__."/../../../python_apps/api_clients/api_client.cfg", AirtimeIni::CONF_FILE_API_CLIENT)){
+        if (!copy(__DIR__."/api_client.cfg.190", AirtimeIni::CONF_FILE_API_CLIENT)){
             echo "Could not copy api_client.cfg to /etc/airtime/. Exiting.";
         }
 

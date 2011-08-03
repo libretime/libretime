@@ -75,6 +75,10 @@ Non-linked code:
    - Web site: http://savonet.sourceforge.net/
    - License: GPLv2 
 
+ * RabbitMQ (works with version 1.7.2 and above)
+   - Web site: http://www.rabbitmq.com/
+   - License: Mozilla Public License (http://www.rabbitmq.com/mpl.html)
+
  * mp3cut from the package poc-streamer
    - Web site: https://bl0rg.net/software/poc/
    - License: BSD 3-Clause
