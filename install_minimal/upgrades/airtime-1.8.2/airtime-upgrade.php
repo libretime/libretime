@@ -18,15 +18,8 @@ const CONF_DIR_STORAGE = "/srv/airtime";
 const CONF_DIR_WWW = "/var/www/airtime";
 const CONF_DIR_LOG = "/var/log/airtime";
 
-global $AIRTIME_SRC;
-global $AIRTIME_UTILS;
-global $AIRTIME_PYTHON_APPS;
 
 global $CC_CONFIG;
-
-$AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
-$AIRTIME_UTILS = __DIR__.'/../../../utils';
-$AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
 
 $configFiles = array(CONF_FILE_AIRTIME,
                      CONF_FILE_PYPO,
@@ -48,7 +41,7 @@ $CC_CONFIG = array(
     'phingPath'      =>  dirname(__FILE__).'/../../library/phing'
 );
 
-//$CC_CONFIG = Config::loadConfig($CC_CONFIG);
+$CC_CONFIG = LoadConfig($CC_CONFIG);
 
 // Add database table names
 $CC_CONFIG['playListTable'] = $CC_CONFIG['tblNamePrefix'].'playlist';
