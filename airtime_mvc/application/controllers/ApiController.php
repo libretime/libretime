@@ -103,8 +103,14 @@ class ApiController extends Zend_Controller_Action
                     //We just want the basename which is the file name with the path
                     //information stripped away. We are using Content-Disposition to specify
                     //to the browser what name the file should be saved as.
-                    $path_parts = pathinfo($media->getPropelOrm()->getDbFilepath());
-                    header('Content-Disposition: attachment; filename="'.$path_parts['basename'].'"');
+                    //
+                    // By james.moon:
+                    // I'm removing pathinfo() since it strips away UTF-8 characters.
+                    // Using manualy parsing
+                    $full_path = $media->getPropelOrm()->getDbFilepath();
+                    $file_base_name = strrchr($full_path, '/');
+                    $file_base_name = substr($file_base_name, 1);
+                    header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
                 }
                 header("Content-Length: " . filesize($filepath));
 
