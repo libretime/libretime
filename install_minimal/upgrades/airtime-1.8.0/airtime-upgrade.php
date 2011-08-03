@@ -9,7 +9,7 @@
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 //require_once __DIR__.'/../../../airtime_mvc/application/configs/conf.php';
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
-require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
+//require_once(dirname(__FILE__).'/../../include/AirtimeIni.php');
 
 global $CC_CONFIG;
 
@@ -90,10 +90,10 @@ const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
 const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
 const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
 
-$configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
-                     AirtimeIni::CONF_FILE_PYPO,
-                     AirtimeIni::CONF_FILE_RECORDER,
-                     AirtimeIni::CONF_FILE_LIQUIDSOAP);
+$configFiles = array(CONF_FILE_AIRTIME,
+                     CONF_FILE_PYPO,
+                     CONF_FILE_RECORDER,
+                     CONF_FILE_LIQUIDSOAP);
 
 
 /**
@@ -178,6 +178,14 @@ function MergeConfigFiles($configFiles, $suffix)
             else {
                 $newSettings = ReadPythonConfig($conf);
                 $oldSettings = ReadPythonConfig("$conf$suffix.bak");
+            }
+
+            //override some values needed for 1.8.0.
+            if($conf === CONF_FILE_PYPO) {
+
+                $oldSettings['cache_dir'] = '/var/tmp/airtime/pypo/cache/'
+                $oldSettings['file_dir'] = '/var/tmp/airtime/pypo/files/'
+                $oldSettings['tmp_dir'] = '/var/tmp/airtime/pypo/tmp/'
             }
 
             $settings = array_keys($newSettings);
