@@ -1,60 +1,61 @@
 This application uses the following 3rd Party software:
 
-------------
+----------------------
+Common Non-linked Code
+----------------------
+ * Linux (Ubuntu & Debian)
+
+ * RabbitMQ (works with version 1.7.2 and above)
+   - What is it: Interprocess Message Passing with Queuing
+   - Web site: http://www.rabbitmq.com/
+   - License: Mozilla Public License (http://www.rabbitmq.com/mpl.html)
+
+ * monit
+   - What is it: Monitors processes and restarts them if they die
+   - Web site: http://mmonit.com/monit/
+   - License: GPLv3
+
+-----------
+Airtime Web
+-----------
 Linked code:
-------------
  * Zend Framework 1.10.3 
+   - What is it: Framework for PHP web apps
    - Web site: http://framework.zend.com/
    - License: New BSD license
    - Compatible with GPLv3: Yes
 
  * PEAR
+   - What is it: PHP library
    - Notes: We only use the PEAR base class PEAR_Error, in the "PEAR" PEAR library.
    - License: New BSD License
    - Compatible with GPLv3? Yes. 
 
- * Mutagen 
-   - Web site: http://code.google.com/p/mutagen/
-   - License: GPLv2
-   - Compatible with GPLv3? Yes
-
  * Propel ORM
+   - What is it: Maps DB data into PHP objects
    - Web site: http://www.propelorm.org/
    - License: MIT/Expat License
    - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
 
  * Phing 
+   - What is it: PHP project build system
    - Web site: http://phing.info/trac/
    - Note: Only used for development, not needed to run Airtime.
    - License: LGPLv3
 
- * Soundcloud PHP API wrapper
-   - Web site: https://github.com/mptre/php-soundcloud/blob/master/Services/Soundcloud.php
-   - License: MIT   
-   - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
-
- * Kombu
-   - Web site: http://pypi.python.org/pypi/kombu/
-   - License: New BSD
-   - Compatible with GPLv3? Yes 
-
- * pyinotify
-   - Web site: https://github.com/seb-m/pyinotify
-   - License: MIT
-   - Compatible with GPLv3? Yes
-
  * PHP-AMQPLIB
+   - What is it: PHP library to interact with RabbitMQ
    - Web site: https://github.com/tnc/php-amqplib 
    - License: LGPLv2.1
    - Compatible with GPLv3? Yes
 
-----------------
-Non-linked code:
-----------------
- * Linux 2.6
-   - Web site: http://www.kernel.org/
-   - License: GPLv2. See http://www.kernel.org/pub/linux/kernel/COPYING
+ * Soundcloud PHP API wrapper
+   - What is it: PHP library to upload to SoundCloud
+   - Web site: https://github.com/mptre/php-soundcloud/blob/master/Services/Soundcloud.php
+   - License: MIT   
+   - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
 
+Non-linked code:
  * Apache Web Server 2.2 
    - Web site: http://httpd.apache.org/
    - License: Apache 2.0. See http://httpd.apache.org/docs/2.2/license.html
@@ -66,30 +67,6 @@ Non-linked code:
  * PHP 5.3 
    - Web site: http://www.php.net/
    - License: The PHP License. See http://www.php.net/license/3_01.txt
-
- * Python 2.6
-   - Web site: http://www.python.org/
-   - License: PSF License. See http://docs.python.org/license.html
-
- * Liquidsoap (pre-release of 1.0) 
-   - Web site: http://savonet.sourceforge.net/
-   - License: GPLv2 
-
- * RabbitMQ (works with version 1.7.2 and above)
-   - Web site: http://www.rabbitmq.com/
-   - License: Mozilla Public License (http://www.rabbitmq.com/mpl.html)
-
- * mp3cut from the package poc-streamer
-   - Web site: https://bl0rg.net/software/poc/
-   - License: BSD 3-Clause
-
- * ecasound 2.7.2
-   - Web site: http://www.eca.cx/ecasound/
-   - License: GPLv2
-
- * monit
-   - Web site: http://mmonit.com/monit/
-   - License: GPLv3
 
  * jQuery 
    - Web site: http://jquery.com/
@@ -131,4 +108,68 @@ Non-linked code:
      * Server Browse
        - Web site: http://code.google.com/p/jq-serverbrowse/
        - License: BSD 2-Clause
+
+-------------
+Media-Monitor
+-------------
+Linked code:
+ * Mutagen 
+   - What is it: Parser of audio file metadata
+   - Web site: http://code.google.com/p/mutagen/
+   - License: GPLv2-only
+
+ * Kombu
+   - What is it: Python interface to RabbitMQ
+   - Web site: http://pypi.python.org/pypi/kombu/
+   - License: New BSD
+   - Compatible with GPLv3? Yes. 
+
+ * pyinotify
+   - Python interface to inotify
+   - Web site: https://github.com/seb-m/pyinotify
+   - License: MIT
+
+Non-linked code:
+ * Python 2.6
+   - Web site: http://www.python.org/
+   - License: PSF License. See http://docs.python.org/license.html
+
+-------------
+Show Recorder
+-------------
+Linked code:
+ * Kombu
+   - What is it: Python interface to RabbitMQ
+   - Web site: http://pypi.python.org/pypi/kombu/
+   - License: New BSD
+   - Compatible with GPLv3? Yes. 
+
+Non-linked code:
+ * Python 2.6
+   - Web site: http://www.python.org/
+   - License: PSF License. See http://docs.python.org/license.html
+
+ * ecasound 2.7.2
+   - What is it: Records audio from line-in
+   - Web site: http://www.eca.cx/ecasound/
+   - License: GPLv2
+
+----
+Pypo
+----
+Linked code:
+ * Kombu
+   - Web site: http://pypi.python.org/pypi/kombu/
+   - License: New BSD
+   - Compatible with GPLv3? Yes. 
+
+Non-linked code:
+ * Python 2.6
+   - Web site: http://www.python.org/
+   - License: PSF License. See http://docs.python.org/license.html
+
+ * Liquidsoap (pre-release of 1.0) 
+   - Web site: http://savonet.sourceforge.net/
+   - License: GPLv2
+
 
