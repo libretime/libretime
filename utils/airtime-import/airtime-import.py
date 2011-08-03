@@ -56,7 +56,7 @@ def copy_or_move_files_to(paths, dest, flag):
                     destfile = dest+os.path.basename(path)
                     if(flag == 'copy'):
                         print "Copying %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
-                        shutil.copy(path, destfile)
+                        shutil.copyfile(path, destfile)
                     elif(flag == 'move'):
                         print "Moving %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
                         shutil.move(path, destfile)
