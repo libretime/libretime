@@ -40,7 +40,8 @@ class StoredFile {
         "sample_rate" => "DbSampleRate",
         "mime" => "DbMime",
         "md5" => "DbMd5",
-        "ftype" => "DbFtype"
+        "ftype" => "DbFtype",
+        "language" => "DbLanguage"
     );
 
     public function __construct()
@@ -819,7 +820,7 @@ class StoredFile {
         $r = @copy($audio_file, $audio_stor);*/
 
     }
-    
+
     public static function copyFileToStor($p_targetDir, $fileName){
         $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
 
@@ -834,7 +835,7 @@ class StoredFile {
                 die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
             }
         }
-        
+
         $storDir = MusicDir::getStorDir();
         $stor = $storDir->getDirectory();
 

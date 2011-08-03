@@ -28,6 +28,7 @@ define('MDATA_KEY_YEAR', 'year');
 define('MDATA_KEY_BPM', 'bpm');
 define('MDATA_KEY_TRACKNUMBER', 'track_number');
 define('MDATA_KEY_CONDUCTOR', 'conductor');
+define('MDATA_KEY_LANGUAGE', 'language');
 
 define('UI_MDATA_VALUE_FORMAT_FILE', 'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM', 'live stream');

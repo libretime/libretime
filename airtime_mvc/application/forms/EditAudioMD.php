@@ -101,30 +101,37 @@ class Application_Form_EditAudioMD extends Zend_Form
             'filters'    => array('StringTrim')
         ));
 
-        // Add mood field
+        // Add bmp field
         $this->addElement('text', 'bpm', array(
             'label'      => 'BPM:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
-        // Add mood field
+        // Add copyright field
         $this->addElement('text', 'copyright', array(
             'label'      => 'Copyright:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
-        // Add mood field
+        // Add isrc number field
         $this->addElement('text', 'isrc_number', array(
             'label'      => 'ISRC Number:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
-        // Add mood field
+        // Add website field
         $this->addElement('text', 'info_url', array(
             'label'      => 'Website:',
+            'class'      => 'input_text',
+            'filters'    => array('StringTrim')
+        ));
+
+        // Add language field
+        $this->addElement('text', 'language', array(
+            'label'      => 'Language:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
