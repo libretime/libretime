@@ -85,8 +85,9 @@ function LoadConfig($CC_CONFIG) {
     // main directory for storing binary media files
     $CC_CONFIG['storageDir'] = $values['general']['base_files_dir']."/stor";
 
-    $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
-    $CC_CONFIG['basePort'] = $values['general']['base_port'];
+    //these next two entries are new for this release, will be undefined on first load.
+    $CC_CONFIG['baseUrl'] = isset($values['general']['base_url'])?$values['general']['base_url']:null;
+    $CC_CONFIG['basePort'] = isset($values['general']['base_port'])?$values['general']['base_port']:null;
 
     // Database config
     $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
