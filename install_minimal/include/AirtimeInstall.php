@@ -65,7 +65,7 @@ class AirtimeInstall
             $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
             $version = $CC_DBC->GetOne($sql);
 
-            if (PEAR::isError($version)) {
+            if ($version == '') {
                 $sql = "SELECT * FROM cc_show_rebroadcast LIMIT 1";
                 $result = $CC_DBC->GetOne($sql);
                 if (!PEAR::isError($result)) {
