@@ -315,13 +315,15 @@ class Application_Model_Preference
     	$outputArray['STATION_DESCRIPTION'] = Application_Model_Preference::GetStationDescription();
 
     	// get web server info
-    	$url = $systemInfoArray["AIRTIME_VERSION_URL"];
-    	$index = strpos($url,'/api/');
-    	$url = substr($url, 0, $index);
-
-    	$headerInfo = get_headers(trim($url),1);
-    	$outputArray['WEB_SERVER'] = $headerInfo['Server'][0];
-
+    	if(isset($systemInfoArray["AIRTIME_VERSION_URL"])){
+    	   $url = $systemInfoArray["AIRTIME_VERSION_URL"];
+           $index = strpos($url,'/api/');
+           $url = substr($url, 0, $index);
+    
+           $headerInfo = get_headers(trim($url),1);
+           $outputArray['WEB_SERVER'] = $headerInfo['Server'][0];
+    	}
+    	
     	$outputArray['NUM_OF_USERS'] = User::getUserCount();
     	$outputArray['NUM_OF_SONGS'] = StoredFile::getFileCount();
     	$outputArray['NUM_OF_PLAYLISTS'] = Playlist::getPlaylistCount();
