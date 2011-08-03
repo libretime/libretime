@@ -56,7 +56,7 @@ if output_sound_device then
     ignore(output.alsa(s))
 end
 
-if output_icecast_mp3 then
+if output_icecast_s1 then
 
     #format = %mp3(bitrate=192, samplerate=44100, stereo=false)
     ignore(output.icecast(%mp3,
