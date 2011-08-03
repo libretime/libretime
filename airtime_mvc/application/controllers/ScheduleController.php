@@ -285,6 +285,11 @@ class ScheduleController extends Zend_Controller_Action
 
 		$show = new ShowInstance($this->sched_sess->showInstanceId);
 		$playlists = $show->searchPlaylistsForShow($post);
+		foreach( $playlists['aaData'] as &$data){
+		    // calling two functions to format time to 1 decimal place
+            $sec = Playlist::playlistTimeToSeconds($data[4]);
+            $data[4] = Playlist::secondsToPlaylistTime($sec); 
+		}
 
 		//for datatables
 		die(json_encode($playlists));

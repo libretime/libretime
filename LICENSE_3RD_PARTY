@@ -58,10 +58,11 @@ Linked code:
 Non-linked code:
  * Apache Web Server 2.2 
    - Web site: http://httpd.apache.org/
+   - License: Apache 2.0. See http://httpd.apache.org/docs/2.2/license.html
 
  * PostgreSQL 8.4 
    - Web site: http://www.postgresql.org/
-   - License: The PostgreSQL License.  See http://www.opensource.org/licenses/postgresql
+   - License: The PostgreSQL License. See http://www.postgresql.org/about/licence
 
  * PHP 5.3 
    - Web site: http://www.php.net/
@@ -106,7 +107,7 @@ Non-linked code:
 
      * Server Browse
        - Web site: http://code.google.com/p/jq-serverbrowse/
-       - License: BSD 2-Clause 
+       - License: BSD 2-Clause
 
 -------------
 Media-Monitor

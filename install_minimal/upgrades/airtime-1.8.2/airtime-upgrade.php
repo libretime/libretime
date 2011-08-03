@@ -18,15 +18,8 @@ const CONF_DIR_STORAGE = "/srv/airtime";
 const CONF_DIR_WWW = "/var/www/airtime";
 const CONF_DIR_LOG = "/var/log/airtime";
 
-global $AIRTIME_SRC;
-global $AIRTIME_UTILS;
-global $AIRTIME_PYTHON_APPS;
 
 global $CC_CONFIG;
-
-$AIRTIME_SRC = __DIR__.'/../../../airtime_mvc';
-$AIRTIME_UTILS = __DIR__.'/../../../utils';
-$AIRTIME_PYTHON_APPS = __DIR__.'/../../../python_apps';
 
 $configFiles = array(CONF_FILE_AIRTIME,
                      CONF_FILE_PYPO,
@@ -48,7 +41,7 @@ $CC_CONFIG = array(
     'phingPath'      =>  dirname(__FILE__).'/../../library/phing'
 );
 
-//$CC_CONFIG = Config::loadConfig($CC_CONFIG);
+$CC_CONFIG = LoadConfig($CC_CONFIG);
 
 // Add database table names
 $CC_CONFIG['playListTable'] = $CC_CONFIG['tblNamePrefix'].'playlist';
@@ -88,8 +81,13 @@ function LoadConfig($CC_CONFIG) {
     $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
     $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
 
-    $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
-    $CC_CONFIG['basePort'] = $values['general']['base_port'];
+    $CC_CONFIG['baseFilesDir'] = $values['general']['base_files_dir'];
+    // main directory for storing binary media files
+    $CC_CONFIG['storageDir'] = $values['general']['base_files_dir']."/stor";
+
+    //these next two entries are new for this release, will be undefined on first load.
+    $CC_CONFIG['baseUrl'] = isset($values['general']['base_url'])?$values['general']['base_url']:null;
+    $CC_CONFIG['basePort'] = isset($values['general']['base_port'])?$values['general']['base_port']:null;
 
     // Database config
     $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
@@ -110,10 +108,8 @@ function LoadConfig($CC_CONFIG) {
  * This function creates the /etc/airtime configuration folder
  * and copies the default config files to it.
  */
-function CreateIniFiles()
+function CreateIniFiles($suffix)
 {
-    global $AIRTIME_PYTHON_APPS;
-
     if (!file_exists("/etc/airtime/")){
         if (!mkdir("/etc/airtime/", 0755, true)){
             echo "Could not create /etc/airtime/ directory. Exiting.";
@@ -121,20 +117,20 @@ function CreateIniFiles()
         }
     }
 
-    if (!copy(__DIR__."/airtime.conf.182", CONF_FILE_AIRTIME)){
-        echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
+    if (!copy(__DIR__."/airtime.conf.$suffix", CONF_FILE_AIRTIME)){
+        echo "Could not copy airtime.conf.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy($AIRTIME_PYTHON_APPS."/pypo/pypo.cfg", CONF_FILE_PYPO)){
-        echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
+    if (!copy(__DIR__."/pypo.cfg.$suffix", CONF_FILE_PYPO)){
+        echo "Could not copy pypo.cfg.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy($AIRTIME_PYTHON_APPS."/show-recorder/recorder.cfg", CONF_FILE_RECORDER)){
-        echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
+    if (!copy(__DIR__."/recorder.cfg.$suffix", CONF_FILE_RECORDER)){
+        echo "Could not copy recorder.cfg.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy($AIRTIME_PYTHON_APPS."/pypo/liquidsoap_scripts/liquidsoap.cfg", CONF_FILE_LIQUIDSOAP)){
-        echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
+    if (!copy(__DIR__."/liquidsoap.cfg.$suffix", CONF_FILE_LIQUIDSOAP)){
+        echo "Could not copy liquidsoap.cfg.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
 }
@@ -221,7 +217,8 @@ foreach ($configFiles as $conf) {
     }
 }
 
-CreateIniFiles();
+$default_suffix = "182";
+CreateIniFiles($default_suffix);
 echo "* Initializing INI files".PHP_EOL;
 MergeConfigFiles($configFiles, $suffix);
 
