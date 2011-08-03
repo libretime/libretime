@@ -223,8 +223,8 @@ foreach ($configFiles as $conf) {
     }
 }
 
-$suffix = "182";
-CreateIniFiles($suffix);
+$default_suffix = "182";
+CreateIniFiles($default_suffix);
 echo "* Initializing INI files".PHP_EOL;
 MergeConfigFiles($configFiles, $suffix);
 
