@@ -1,0 +1,139 @@
+############################################
+# pypo - configuration                     #
+############################################
+
+# Set the type of client you are using.
+# Currently supported types:
+# 1) "obp" = Open Broadcast Platform
+# 2) "airtime"
+#
+api_client = "airtime"
+
+############################################
+# Cache Directories                        #
+# *include* trailing slash !!              #
+############################################
+cache_dir = '/var/tmp/airtime/pypo/cache/'
+file_dir = '/var/tmp/airtime/pypo/files/' 
+tmp_dir = '/var/tmp/airtime/pypo/tmp/'
+
+############################################
+# Setup Directories                        #
+# Do *not* include trailing slash !!         #
+############################################
+cache_base_dir = '/var/tmp/airtime/pypo'
+bin_dir = '/usr/lib/airtime/pypo'
+log_base_dir = '/var/log/airtime'
+pypo_log_dir = '/var/log/airtime/pypo'
+liquidsoap_log_dir = '/var/log/airtime/pypo-liquidsoap'
+
+# Hostname
+base_url = 'localhost'
+base_port = 80
+
+############################################
+# Liquidsoap settings                      #
+############################################
+ls_host = '127.0.0.1'
+ls_port = '1234'
+
+############################################
+# RabbitMQ settings                        #
+############################################
+rabbitmq_host = 'localhost'
+rabbitmq_user = 'guest'
+rabbitmq_password = 'guest'
+
+############################################
+# pypo preferences                         #
+############################################
+prepare_ahead = 24 #in hours
+cache_for = 24 #how long to hold the cache, in hours
+
+# Poll interval in seconds.
+#
+# This will rarely need to be changed because any schedule changes are 
+# automatically sent to pypo immediately. 
+#
+# This is how often the poll script downloads new schedules and files from the
+# server in the event that no changes are made to the schedule.
+#
+poll_interval = 3600 # in seconds.
+
+
+# Push interval in seconds.
+#
+# This is how often the push script checks whether it has something new to
+# push to liquidsoap.
+#
+# It's hard to imagine a situation where this should be more than 1 second.
+#
+push_interval = 1 # in seconds
+
+# 'pre' or 'otf'. 'pre' cues while playlist preparation
+# while 'otf' (on the fly) cues while loading into ls  
+# (needs the post_processor patch)
+cue_style = 'pre'
+
+
+################################################################################
+# Uncomment *one of the sets* of values from the API clients below, and comment
+# out all the others.
+################################################################################
+
+#####################
+# Airtime Config #
+#####################
+# Value needed to access the API
+api_key = 'AAA'
+
+# Path to the base of the API
+api_base = 'api'
+
+# URL to get the version number of the server API
+version_url = 'version/api_key/%%api_key%%'
+
+# Schedule export path.
+# %%from%% - starting date/time in the form YYYY-MM-DD-hh-mm
+# %%to%% - starting date/time in the form YYYY-MM-DD-hh-mm
+export_url = 'schedule/api_key/%%api_key%%'
+
+get_media_url = 'get-media/file/%%file%%/api_key/%%api_key%%'
+
+# Update whether a schedule group has begun playing.
+update_item_url = 'notify-schedule-group-play/api_key/%%api_key%%/schedule_id/%%schedule_id%%'
+
+# Update whether an audio clip is currently playing.
+update_start_playing_url = 'notify-media-item-start-play/api_key/%%api_key%%/media_id/%%media_id%%/schedule_id/%%schedule_id%%'
+
+# ???
+generate_range_url = 'generate_range_dp.php'
+
+
+##############
+# OBP config #
+##############
+# Value needed to access the API
+#api_key = 'AAA'
+
+#base_url = 'http://localhost/'
+
+# Path to the base of the API
+#api_base = ''
+
+# URL to get the version number of the server API
+#version_url = 'api/pypo/status/json'
+
+# Schedule export path.
+# %%from%% - starting date/time in the form YYYY-MM-DD-hh-mm
+# %%to%% - starting date/time in the form YYYY-MM-DD-hh-mm
+
+# Update whether an item has been played.
+#update_item_url = 'api/pypo/update_shedueled_item/$$item_id%%?played=%%played%%' 
+
+# Update whether an item is currently playing.
+#update_start_playing_url = 'api/pypo/mod/medialibrary/?playlist_type=%%playlist_type%%&export_source=%%export_source%%&media_id=%%media_id%%&playlist_id=%%playlist_id%%&transmission_id=%%transmission_id%%'
+
+# ???
+#generate_range_url = 'api/pypo/generate_range_dp/'
+

@@ -36,11 +36,12 @@ Linked code:
  * Kombu
    - Web site: http://pypi.python.org/pypi/kombu/
    - License: New BSD
-   - Compatible with GPLv3? Yes. 
+   - Compatible with GPLv3? Yes 
 
  * pyinotify
    - Web site: https://github.com/seb-m/pyinotify
    - License: MIT
+   - Compatible with GPLv3? Yes
 
  * PHP-AMQPLIB
    - Web site: https://github.com/tnc/php-amqplib 
@@ -50,14 +51,17 @@ Linked code:
 ----------------
 Non-linked code:
 ----------------
- * Linux
+ * Linux 2.6
+   - Web site: http://www.kernel.org/
+   - License: GPLv2. See http://www.kernel.org/pub/linux/kernel/COPYING
 
  * Apache Web Server 2.2 
    - Web site: http://httpd.apache.org/
+   - License: Apache 2.0. See http://httpd.apache.org/docs/2.2/license.html
 
  * PostgreSQL 8.4 
    - Web site: http://www.postgresql.org/
-   - License: The PostgreSQL License.  See http://www.opensource.org/licenses/postgresql
+   - License: The PostgreSQL License. See http://www.postgresql.org/about/licence
 
  * PHP 5.3 
    - Web site: http://www.php.net/
@@ -69,9 +73,15 @@ Non-linked code:
 
  * Liquidsoap (pre-release of 1.0) 
    - Web site: http://savonet.sourceforge.net/
-   - License: GPLv2
+   - License: GPLv2 
+
+ * RabbitMQ (works with version 1.7.2 and above)
+   - Web site: http://www.rabbitmq.com/
+   - License: Mozilla Public License (http://www.rabbitmq.com/mpl.html)
 
  * mp3cut from the package poc-streamer
+   - Web site: https://bl0rg.net/software/poc/
+   - License: BSD 3-Clause
 
  * ecasound 2.7.2
    - Web site: http://www.eca.cx/ecasound/
@@ -120,5 +130,5 @@ Non-linked code:
 
      * Server Browse
        - Web site: http://code.google.com/p/jq-serverbrowse/
-       - License: BSD 2-Clause 
+       - License: BSD 2-Clause
 
