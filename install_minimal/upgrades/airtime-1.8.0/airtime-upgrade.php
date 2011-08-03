@@ -183,9 +183,9 @@ function MergeConfigFiles($configFiles, $suffix)
             //override some values needed for 1.8.0.
             if($conf === CONF_FILE_PYPO) {
 
-                $oldSettings['cache_dir'] = '/var/tmp/airtime/pypo/cache/'
-                $oldSettings['file_dir'] = '/var/tmp/airtime/pypo/files/'
-                $oldSettings['tmp_dir'] = '/var/tmp/airtime/pypo/tmp/'
+                $oldSettings['cache_dir'] = '/var/tmp/airtime/pypo/cache/';
+                $oldSettings['file_dir'] = '/var/tmp/airtime/pypo/files/';
+                $oldSettings['tmp_dir'] = '/var/tmp/airtime/pypo/tmp/';
             }
 
             $settings = array_keys($newSettings);
