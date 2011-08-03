@@ -75,7 +75,7 @@ function CreateIniFiles($suffix)
         echo "Could not copy airtime.conf.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
-    if (!copy__DIR__."/pypo.cfg.$suffix", CONF_FILE_PYPO)){
+    if (!copy(__DIR__."/pypo.cfg.$suffix", CONF_FILE_PYPO)){
         echo "Could not copy pypo.cfg.$suffix to /etc/airtime/. Exiting.";
         exit(1);
     }
