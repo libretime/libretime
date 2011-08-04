@@ -5,11 +5,16 @@ import logging
 import math
 import re
 
+def to_unicode(obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, unicode):
+            obj = unicode(obj, encoding)
+    return obj
+
 """
 list of supported easy tags in mutagen version 1.20
 ['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
 """
-
 class AirtimeMetadata:
 
     def __init__(self):
@@ -108,7 +113,6 @@ class AirtimeMetadata:
 
     def get_md_from_file(self, filepath):
 
-        self.logger.debug("testing upgrade")
         self.logger.info("getting info from filepath %s", filepath)
 
         try:
@@ -125,7 +129,8 @@ class AirtimeMetadata:
 
 
         self.logger.info(file_info)
-
+        if file_info is None:
+            return None
         #check if file has any metadata
         if file_info is not None:
             for key in file_info.keys() :
@@ -134,11 +139,13 @@ class AirtimeMetadata:
 
         if 'MDATA_KEY_TITLE' not in md:
             #get rid of file extention from original name, name might have more than 1 '.' in it.
+            filepath = to_unicode(filepath)
+            filepath = filepath.encode('utf-8')
             original_name = os.path.basename(filepath)
             original_name = original_name.split(".")[0:-1]
             original_name = ''.join(original_name)
             md['MDATA_KEY_TITLE'] = original_name
-
+            
         #incase track number is in format u'4/11'
         #need to also check that the tracknumber is even a tracknumber (cc-2582)
         if 'MDATA_KEY_TRACKNUMBER' in md:
@@ -175,10 +182,11 @@ class AirtimeMetadata:
 
         #do this so object can be urlencoded properly.
         for key in md.keys():
-            if(isinstance(md[key], basestring)):
+            
+            if (isinstance(md[key], basestring)):
+                #self.logger.info("Converting md[%s] = '%s' ", key, md[key])
+                md[key] = to_unicode(md[key])
                 md[key] = md[key].encode('utf-8')
-
-        self.logger.info("MD after parsing.")
-        self.logger.debug(md)
+                #self.logger.info("Converting complete: md[%s] = '%s' ", key, md[key])
 
         return md

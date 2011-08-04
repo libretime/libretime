@@ -70,7 +70,8 @@ try:
     #create 5 worker threads
     wp = MediaMonitorWorkerProcess()
     for i in range(5):
-        t = Thread(target=wp.process_file_events, args=(multi_queue, notifier))
+        threadName = "Thread #%d" % i
+        t = Thread(target=wp.process_file_events, name=threadName, args=(multi_queue, notifier))
         t.start()
         
     wdd = notifier.watch_directory(storage_directory)
