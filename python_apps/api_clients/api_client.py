@@ -402,7 +402,7 @@ class AirTimeApiClient(ApiClientInterface):
             req = urllib2.Request(url, data)
 
             response = urllib2.urlopen(req).read()
-            logger.info("update media %s", response)
+            logger.info("update media %s, filepath: %s, mode: %s", response, md['MDATA_KEY_FILEPATH'], mode)
             response = json.loads(response)
 
             elapsed = (time.time() - start)

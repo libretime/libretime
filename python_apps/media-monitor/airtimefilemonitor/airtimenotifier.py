@@ -119,25 +119,27 @@ class AirtimeNotifier(Notifier):
                 os.unlink(filepath)
 
 
-    #update airtime with information about files discovered in our
-    #watched directories. Pass in a dict() object with the following
-    #attributes:
-    # -filepath
-    # -mode
-    # -data
-    # -is_recorded_show
-    def update_airtime(self, d):
+    """
+    Update airtime with information about files discovered in our
+    watched directories. 
+    event: a dict() object with the following attributes:
+     -filepath
+     -mode
+     -data
+     -is_recorded_show 
+    """
+    def update_airtime(self, event):
 
         try:
-            self.logger.info("updating filepath: %s ", d['filepath'])
-            filepath = d['filepath']
-            mode = d['mode']
+            self.logger.info("updating filepath: %s ", event['filepath'])
+            filepath = event['filepath']
+            mode = event['mode']
 
             md = {}
             md['MDATA_KEY_FILEPATH'] = filepath
 
-            if 'data' in d:
-                file_md = d['data']
+            if 'data' in event:
+                file_md = event['data']
                 md.update(file_md)
             else:
                 file_md = None
@@ -151,7 +153,7 @@ class AirtimeNotifier(Notifier):
                         return
                     md.update(mutagen)
 
-                if d['is_recorded_show']:
+                if event['is_recorded_show']:
                     self.api_client.update_media_metadata(md, mode, True)
                 else:
                     self.api_client.update_media_metadata(md, mode)
@@ -171,7 +173,7 @@ class AirtimeNotifier(Notifier):
                 self.api_client.update_media_metadata(md, mode)
 
         except Exception, e:
-            self.logger.error("failed updating filepath: %s ", d['filepath'])
+            self.logger.error("failed updating filepath: %s ", event['filepath'])
             self.logger.error('Exception: %s', e)
 
     #define which directories the pyinotify WatchManager should watch.
