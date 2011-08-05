@@ -4,12 +4,7 @@ import mutagen
 import logging
 import math
 import re
-
-def to_unicode(obj, encoding='utf-8'):
-    if isinstance(obj, basestring):
-        if not isinstance(obj, unicode):
-            obj = unicode(obj, encoding)
-    return obj
+from api_clients import api_client
 
 """
 list of supported easy tags in mutagen version 1.20
@@ -139,8 +134,8 @@ class AirtimeMetadata:
 
         if 'MDATA_KEY_TITLE' not in md:
             #get rid of file extention from original name, name might have more than 1 '.' in it.
-            filepath = to_unicode(filepath)
-            filepath = filepath.encode('utf-8')
+            #filepath = to_unicode(filepath)
+            #filepath = filepath.encode('utf-8')
             original_name = os.path.basename(filepath)
             original_name = original_name.split(".")[0:-1]
             original_name = ''.join(original_name)
@@ -185,7 +180,7 @@ class AirtimeMetadata:
             
             if (isinstance(md[key], basestring)):
                 #self.logger.info("Converting md[%s] = '%s' ", key, md[key])
-                md[key] = to_unicode(md[key])
+                md[key] = api_client.to_unicode(md[key])
                 md[key] = md[key].encode('utf-8')
                 #self.logger.info("Converting complete: md[%s] = '%s' ", key, md[key])
 

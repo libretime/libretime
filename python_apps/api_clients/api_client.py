@@ -32,7 +32,13 @@ def api_client_factory(config):
     else:
         logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
         sys.exit()
-
+        
+def to_unicode(obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, unicode):
+            obj = unicode(obj, encoding)
+    return obj
+        
 class ApiClientInterface:
 
     # Implementation: optional
@@ -514,7 +520,6 @@ class AirTimeApiClient(ApiClientInterface):
             logger.error("Exception: %s", e)
 
         return response
-
 
 ################################################################################
 # OpenBroadcast API Client
