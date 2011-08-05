@@ -6,7 +6,7 @@ import sys
 import os
 import signal
 
-from api_clients import api_client
+from api_clients import api_client as apc
 
 from multiprocessing import Process, Queue as mpQueue
 
@@ -34,7 +34,7 @@ logger.info("\n\n*** Media Monitor bootup ***\n\n")
 
 try:
     config = AirtimeMediaConfig(logger)
-    api_client = api_client.api_client_factory(config.cfg)
+    api_client = apc.api_client_factory(config.cfg)
     
     logger.info("Setting up monitor")
     response = None
@@ -42,7 +42,7 @@ try:
         response = api_client.setup_media_monitor()
         time.sleep(5)
         
-    storage_directory = response["stor"].encode('utf-8')
+    storage_directory = apc.encode_to(response["stor"], 'utf-8')
     logger.info("Storage Directory is: %s", storage_directory)
     config.storage_directory = os.path.normpath(storage_directory)
     config.imported_directory = os.path.normpath(storage_directory + '/imported')

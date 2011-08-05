@@ -2,6 +2,7 @@ import os
 import time
 
 from subprocess import Popen, PIPE
+from api_clients import api_client
 
 class AirtimeMediaMonitorBootstrap():
 
@@ -29,7 +30,7 @@ class AirtimeMediaMonitorBootstrap():
 
         for id, dir in directories.iteritems():
             self.logger.debug("%s, %s", id, dir)
-            self.sync_database_to_filesystem(id, dir.encode("utf-8"))
+            self.sync_database_to_filesystem(id, api_client.encode_to(dir, "utf-8"))
 
     """Gets a list of files that the Airtime database knows for a specific directory.
     You need to provide the directory's row ID, which is obtained when calling
@@ -69,7 +70,7 @@ class AirtimeMediaMonitorBootstrap():
         db_known_files_set = set()
         files = self.list_db_files(dir_id)
         for file in files['files']:
-            db_known_files_set.add(file.encode('utf-8'))
+            db_known_files_set.add(api_client.encode_to(file, 'utf-8'))
 
         new_files = self.mmc.scan_dir_for_new_files(dir)
 

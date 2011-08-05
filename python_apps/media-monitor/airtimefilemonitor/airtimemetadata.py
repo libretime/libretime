@@ -232,7 +232,7 @@ class AirtimeMetadata:
             if (isinstance(md[key], basestring)):
                 #self.logger.info("Converting md[%s] = '%s' ", key, md[key])
                 md[key] = api_client.to_unicode(md[key])
-                md[key] = md[key].encode('utf-8')
+                md[key] = api_client.encode_to(md[key], 'utf-8')
                 #self.logger.info("Converting complete: md[%s] = '%s' ", key, md[key])
 
         return md

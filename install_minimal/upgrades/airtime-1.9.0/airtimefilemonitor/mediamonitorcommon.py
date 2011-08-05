@@ -6,6 +6,12 @@ import logging
 from subprocess import Popen, PIPE
 from airtimemetadata import AirtimeMetadata
 
+def encode_to(obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, string):
+            obj = obj.encode(encoding)
+    return obj
+
 class MediaMonitorCommon:
 
     timestamp_file = "/var/tmp/airtime/last_index"
@@ -164,14 +170,14 @@ class MediaMonitorCommon:
         try:
             #will be in the format .ext
             file_ext = os.path.splitext(original_path)[1]
-            file_ext = file_ext.encode('utf-8')
+            file_ext = encode_to(file_ext, 'utf-8')
 
             path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE', 'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
 
             md = {}
             for m in path_md:
                 if m not in orig_md:
-                    md[m] = u'unknown'.encode('utf-8')
+                    md[m] = encode_to(u'unknown', 'utf-8')
                 else:
                     #get rid of any "/" which will interfere with the filepath.
                     if isinstance(orig_md[m], basestring):
@@ -189,10 +195,10 @@ class MediaMonitorCommon:
             filepath = None
             #file is recorded by Airtime
             #/srv/airtime/stor/recorded/year/month/year-month-day-time-showname-bitrate.ext
-            if(md['MDATA_KEY_CREATOR'] == "Airtime Show Recorder".encode('utf-8')):
+            if(md['MDATA_KEY_CREATOR'] == encode_to("Airtime Show Recorder", 'utf-8')):
                 #yyyy-mm-dd-hh-MM-ss
                 y = orig_md['MDATA_KEY_YEAR'].split("-")
-                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "recorded".encode('utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, encode_to("recorded", 'utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
                 #"Show-Title-2011-03-28-17:15:00"
                 title = md['MDATA_KEY_TITLE'].split("-")
@@ -206,10 +212,10 @@ class MediaMonitorCommon:
                 new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % (show_name, orig_md['MDATA_KEY_YEAR'], show_hour, show_min, show_sec)
                 self.md_manager.save_md_to_file(new_md)
 
-            elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'.encode('utf-8')):
-                filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+            elif(md['MDATA_KEY_TRACKNUMBER'] == encode_to(u'unknown', 'utf-8')):
+                filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, encode_to("imported", 'utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
-                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "imported".encode('utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, encode_to("imported", 'utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
             filepath = self.create_unique_filename(filepath, original_path)
             self.logger.info('Unique filepath: %s', filepath)
