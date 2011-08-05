@@ -11,6 +11,12 @@ def to_unicode(obj, encoding='utf-8'):
             obj = unicode(obj, encoding)
     return obj
 
+def encode_to(obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, str):
+            obj = obj.encode(encoding)
+    return obj
+
 """
 list of supported easy tags in mutagen version 1.20
 ['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
@@ -186,7 +192,7 @@ class AirtimeMetadata:
             if (isinstance(md[key], basestring)):
                 #self.logger.info("Converting md[%s] = '%s' ", key, md[key])
                 md[key] = to_unicode(md[key])
-                md[key] = md[key].encode('utf-8')
+                md[key] = encode_to(md[key], 'utf-8')
                 #self.logger.info("Converting complete: md[%s] = '%s' ", key, md[key])
 
         return md

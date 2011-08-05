@@ -131,7 +131,7 @@ class ShowRecorder(Thread):
             self.logger.info("time: %s" % time)
 
             name = time+"-"+self.show_name
-            artist = "Airtime Show Recorder".encode('utf-8')
+            artist = api_client.encode_to("Airtime Show Recorder",'utf-8')
 
             #set some metadata for our file daemon
             recorded_file = mutagen.File(filepath, easy=True)

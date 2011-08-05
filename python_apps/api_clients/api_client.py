@@ -38,7 +38,13 @@ def to_unicode(obj, encoding='utf-8'):
         if not isinstance(obj, unicode):
             obj = unicode(obj, encoding)
     return obj
-        
+
+def encode_to(obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, str):
+            obj = obj.encode(encoding)
+    return obj
+
 class ApiClientInterface:
 
     # Implementation: optional
