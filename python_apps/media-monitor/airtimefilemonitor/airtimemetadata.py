@@ -106,6 +106,15 @@ class AirtimeMetadata:
             self.logger.error('Exception: %s', e)
             self.logger.error('Filepath %s', m['MDATA_KEY_FILEPATH'])
 
+    def truncate_to_length(self, item, length):
+        if isinstance(item, int):
+            item = str(item)
+        if isinstance(item, basestring):
+            if len(item) > length:
+                return item[0:length]
+            else:
+                return item
+
     def get_md_from_file(self, filepath):
 
         self.logger.info("getting info from filepath %s", filepath)
@@ -140,7 +149,7 @@ class AirtimeMetadata:
             original_name = original_name.split(".")[0:-1]
             original_name = ''.join(original_name)
             md['MDATA_KEY_TITLE'] = original_name
-            
+
         #incase track number is in format u'4/11'
         #need to also check that the tracknumber is even a tracknumber (cc-2582)
         if 'MDATA_KEY_TRACKNUMBER' in md:
@@ -165,6 +174,48 @@ class AirtimeMetadata:
                 except Exception, e:
                     del md['MDATA_KEY_BPM']
 
+        #following metadata is truncated if needed to fit db requirements.
+        if 'MDATA_KEY_GENRE' in md:
+            md['MDATA_KEY_GENRE'] = self.truncate_to_length(md['MDATA_KEY_GENRE'], 64)
+
+        if 'MDATA_KEY_TITLE' in md:
+            md['MDATA_KEY_TITLE'] = self.truncate_to_length(md['MDATA_KEY_TITLE'], 512)
+
+        if 'MDATA_KEY_CREATOR' in md:
+            md['MDATA_KEY_CREATOR'] = self.truncate_to_length(md['MDATA_KEY_CREATOR'], 512)
+
+        if 'MDATA_KEY_SOURCE' in md:
+            md['MDATA_KEY_SOURCE'] = self.truncate_to_length(md['MDATA_KEY_SOURCE'], 512)
+
+        if 'MDATA_KEY_MOOD' in md:
+            md['MDATA_KEY_MOOD'] = self.truncate_to_length(md['MDATA_KEY_MOOD'], 64)
+
+        if 'MDATA_KEY_LABEL' in md:
+            md['MDATA_KEY_LABEL'] = self.truncate_to_length(md['MDATA_KEY_LABEL'], 512)
+
+        if 'MDATA_KEY_COMPOSER' in md:
+            md['MDATA_KEY_COMPOSER'] = self.truncate_to_length(md['MDATA_KEY_COMPOSER'], 512)
+
+        if 'MDATA_KEY_ENCODER' in md:
+            md['MDATA_KEY_ENCODER'] = self.truncate_to_length(md['MDATA_KEY_ENCODER'], 255)
+
+        if 'MDATA_KEY_CONDUCTOR' in md:
+            md['MDATA_KEY_CONDUCTOR'] = self.truncate_to_length(md['MDATA_KEY_CONDUCTOR'], 512)
+
+        if 'MDATA_KEY_YEAR' in md:
+            md['MDATA_KEY_YEAR'] = self.truncate_to_length(md['MDATA_KEY_YEAR'], 16)
+
+        if 'MDATA_KEY_URL' in md:
+            md['MDATA_KEY_URL'] = self.truncate_to_length(md['MDATA_KEY_URL'], 512)
+
+        if 'MDATA_KEY_ISRC' in md:
+            md['MDATA_KEY_ISRC'] = self.truncate_to_length(md['MDATA_KEY_ISRC'], 512)
+
+        if 'MDATA_KEY_COPYRIGHT' in md:
+            md['MDATA_KEY_COPYRIGHT'] = self.truncate_to_length(md['MDATA_KEY_COPYRIGHT'], 512)
+        #end of db truncation checks.
+
+
         md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
         md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
         md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
@@ -177,7 +228,7 @@ class AirtimeMetadata:
 
         #do this so object can be urlencoded properly.
         for key in md.keys():
-            
+
             if (isinstance(md[key], basestring)):
                 #self.logger.info("Converting md[%s] = '%s' ", key, md[key])
                 md[key] = api_client.to_unicode(md[key])
