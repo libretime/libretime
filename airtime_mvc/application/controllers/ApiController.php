@@ -453,6 +453,8 @@ class ApiController extends Zend_Controller_Action
 
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+
             $file = StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
