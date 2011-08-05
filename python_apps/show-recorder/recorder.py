@@ -131,7 +131,6 @@ class ShowRecorder(Thread):
             self.logger.info("time: %s" % time)
 
             name = time+"-"+self.show_name
-            name.encode('utf-8')
             artist = "Airtime Show Recorder".encode('utf-8')
 
             #set some metadata for our file daemon
