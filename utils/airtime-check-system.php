@@ -111,7 +111,7 @@ class AirtimeCheck {
                                 "LIQUIDSOAP_PROCESS_ID",
                                 "LIQUIDSOAP_RUNNING_SECONDS",
                                 "Liquidsoap",
-                                "/var/log/airtime/pypo/ls_script.log"
+                                "/var/log/airtime/pypo-liquidsoap/ls_script.log"
                                 );
 
         self::CheckAirtimeDaemonRunning("/var/run/airtime-media-monitor.pid",
