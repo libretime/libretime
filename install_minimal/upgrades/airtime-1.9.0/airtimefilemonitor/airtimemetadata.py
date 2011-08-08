@@ -191,7 +191,6 @@ class AirtimeMetadata:
             
             if (isinstance(md[key], basestring)):
                 #self.logger.info("Converting md[%s] = '%s' ", key, md[key])
-                md[key] = to_unicode(md[key])
                 md[key] = encode_to(md[key], 'utf-8')
                 #self.logger.info("Converting complete: md[%s] = '%s' ", key, md[key])
 

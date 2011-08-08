@@ -37,9 +37,7 @@ def copy_or_move_files_to(paths, dest, flag):
             path = os.path.realpath(path)
         else:
             path = currentDir+path
-        path = apc.to_unicode(path)
         path = apc.encode_to(path, 'utf-8')
-        dest = apc.to_unicode(dest)
         dest = apc.encode_to(dest, 'utf-8')
         if(os.path.exists(path)):
             if(os.path.isdir(path)):
@@ -148,7 +146,6 @@ def WatchAddAction(option, opt, value, parser):
         path = os.path.realpath(path)
     else:
         path = currentDir+path
-    path = apc.to_unicode(path)
     path = apc.encode_to(path, 'utf-8')
     if(os.path.isdir(path)):
         res = api_client.add_watched_dir(path)
@@ -189,7 +186,6 @@ def WatchRemoveAction(option, opt, value, parser):
         path = os.path.realpath(path)
     else:
         path = currentDir+path
-    path = apc.to_unicode(path)
     path = apc.encode_to(path, 'utf-8')
     if(os.path.isdir(path)):
         res = api_client.remove_watched_dir(path)
@@ -235,7 +231,6 @@ def StorageSetAction(option, opt, value, parser):
         path = os.path.realpath(path)
     else:
         path = currentDir+path
-    path = apc.to_unicode(path)
     path = apc.encode_to(path, 'utf-8')
     if(os.path.isdir(path)):
         res = api_client.set_storage_dir(path)
