@@ -352,6 +352,34 @@ class AirtimeInstall{
         echo "* Inserting data into country table".PHP_EOL;
         Airtime190Upgrade::execSqlQuery($sql);
     }
+    
+    public static function SetUniqueId()
+    {
+        global $CC_DBC;
+
+        $uniqueId = md5(uniqid("", true));
+
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('uniqueId', '$uniqueId')";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
+    
+    public static function SetImportTimestamp()
+    {
+        global $CC_DBC;
+
+        $now = time();
+        
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '$now')";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
 }
 
 class AirtimeIni{
@@ -782,6 +810,10 @@ if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
 AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110713161043');
 
 AirtimeInstall::InsertCountryDataIntoDatabase();
+
+// set up some keys in DB
+AirtimeInstall::SetUniqueId();
+AirtimeInstall::SetImportTimestamp();
 
 AirtimeIni::CreateMonitFile();
 

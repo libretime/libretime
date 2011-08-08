@@ -8,7 +8,7 @@ from airtimemetadata import AirtimeMetadata
 
 def encode_to(obj, encoding='utf-8'):
     if isinstance(obj, basestring):
-        if not isinstance(obj, string):
+        if not isinstance(obj, str):
             obj = obj.encode(encoding)
     return obj
 
