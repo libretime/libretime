@@ -47,7 +47,9 @@ if (isset($argv[1]) && $argv[1] == 'y') {
 echo "* Setting Airtime version".PHP_EOL;
 AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
+// set up some keys in DB
 AirtimeInstall::SetUniqueId();
+AirtimeInstall::SetImportTimestamp();
 
 if (AirtimeInstall::$databaseTablesCreated) {
 

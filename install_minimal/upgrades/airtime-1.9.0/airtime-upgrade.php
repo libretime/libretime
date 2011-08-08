@@ -783,6 +783,10 @@ AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110713161043');
 
 AirtimeInstall::InsertCountryDataIntoDatabase();
 
+// set up some keys in DB
+AirtimeInstall::SetUniqueId();
+AirtimeInstall::SetImportTimestamp();
+
 AirtimeIni::CreateMonitFile();
 
 AirtimeInstall::CreateSymlinksToUtils();

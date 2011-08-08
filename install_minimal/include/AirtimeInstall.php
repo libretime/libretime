@@ -293,6 +293,21 @@ class AirtimeInstall
         }
         return true;
     }
+    
+    public static function SetImportTimestamp()
+    {
+        global $CC_DBC;
+
+        $now = time();
+        
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '$now')";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
+    
 
     public static function GetAirtimeVersion()
     {
