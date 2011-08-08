@@ -9,7 +9,6 @@ import shutil
 import platform
 from configobj import ConfigObj
 from subprocess import Popen
-import string
 
 if os.geteuid() != 0:
     print "Please run this as root."
@@ -101,19 +100,6 @@ try:
   # delete /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap.cfg 
   # as we don't use it anymore.(CC-2552)
   os.remove(config["bin_dir"]+"/bin/liquidsoap_scripts/liquidsoap.cfg")
-  
-  # replace some variables in liquidsoap.cfg
-  input = open("/etc/airtime/liquidsoap.cfg")
-  content = input.read()
-  text = string.replace(content,"%%s1_stream%%", "true")
-  text = string.replace(text, "%%s2_stream%%", "false")
-  text = string.replace(text,"%%s3_stream%%", "false")
-  text = string.replace(text,"%%s1_bitrate%%", "128")
-  text = string.replace(text,"%%s1_mount_point%%", "airtime.mp3")
-  text = string.replace(text,"%%s1_description%%", "Airtime Radio!")
-  text = string.replace(text,"%%s1_genre%%", "genre")
-  out = open("/etc/airtime/liquidsoap.cfg", 'w')
-  out.write(text)
   
   print "Setting permissions"
   os.system("chmod -R 755 "+config["bin_dir"])
