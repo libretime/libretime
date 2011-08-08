@@ -59,7 +59,7 @@ function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#library_display_processing');
         if(data == true){
-            div.html("Import is being processed");
+            div.html("File import in progress...");
             div.css('visibility', 'visible');
         }else{
             div.css('visibility', 'hidden');
@@ -187,5 +187,5 @@ $(document).ready(function() {
 	}).fnSetFilteringDelay(350);
 	
 	checkImportStatus()
-	setInterval( "checkImportStatus()", 2000 );
+	setInterval( "checkImportStatus()", 5000 );
 });

@@ -244,6 +244,8 @@ class MusicDir {
     {
         if(!is_dir($p_dir)){
             return array("code"=>2, "error"=>"'$p_dir' is not a valid directory.");
+        }else if(Application_Model_Preference::GetImportTimestamp()+10 > $now){
+            return array("code"=>3, "error"=>"Airtime is currently importing files. Please wait until this is complete before changing the storage directory.");
         }
         $dir = self::getStorDir();
         // if $p_dir doesn't exist in DB

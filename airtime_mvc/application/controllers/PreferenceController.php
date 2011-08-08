@@ -162,7 +162,7 @@ class PreferenceController extends Zend_Controller_Action
     public function isImportInProgressAction(){
         $now = time();
         $res = false;
-        if(Application_Model_Preference::GetImportTimestamp()+5 > $now){
+        if(Application_Model_Preference::GetImportTimestamp()+10 > $now){
             $res = true;
         }
         die(json_encode($res));
