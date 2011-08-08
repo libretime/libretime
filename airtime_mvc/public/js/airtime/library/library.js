@@ -55,6 +55,19 @@ function confirmDeletePlaylist(params){
     }
 }
 
+function checkImportStatus(){
+    $.getJSON('/Preference/is-import-in-progress', function(data){
+        var div = $('#library_display_processing');
+        if(data == true){
+            div.html("Import is being processed");
+            div.css('visibility', 'visible');
+        }else{
+            div.css('visibility', 'hidden');
+            div.html("Processing...");
+        }
+    })
+}
+
 function deletePlaylist(json) {
 	if(json.message) {
 		alert(json.message);
@@ -172,4 +185,7 @@ $(document).ready(function() {
             "sSearch": ""
         }
 	}).fnSetFilteringDelay(350);
+	
+	checkImportStatus()
+	setInterval( "checkImportStatus()", 2000 );
 });

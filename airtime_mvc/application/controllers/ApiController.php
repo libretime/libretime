@@ -451,6 +451,9 @@ class ApiController extends Zend_Controller_Action
             }
         }
 
+        // update import timestamp
+        Application_Model_Preference::SetImportTimestamp();
+        
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
@@ -508,7 +511,6 @@ class ApiController extends Zend_Controller_Action
                 $file->delete();
             }
         }
-
         $this->view->id = $file->getId();
     }
 

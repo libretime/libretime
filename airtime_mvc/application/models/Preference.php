@@ -356,5 +356,14 @@ class Application_Model_Preference
     public static function GetRemindMeDate(){
         return Application_Model_Preference::GetValue("remindme");
     }
+    
+    public static function SetImportTimestamp(){
+        $now = time();
+        Application_Model_Preference::SetValue("import_timestamp", $now);
+    }
+    
+    public static function GetImportTimestamp(){
+        return Application_Model_Preference::GetValue("import_timestamp");
+    }
 }
 

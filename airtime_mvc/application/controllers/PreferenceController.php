@@ -13,6 +13,7 @@ class PreferenceController extends Zend_Controller_Action
                     ->addActionContext('change-stor-directory', 'json')
                     ->addActionContext('reload-watch-directory', 'json')
                     ->addActionContext('remove-watch-directory', 'json')
+                    ->addActionContext('is-import-in-progress', 'json')
                     ->initContext();
     }
 
@@ -156,6 +157,15 @@ class PreferenceController extends Zend_Controller_Action
 
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
         $this->view->subform = $watched_dirs_form->render();
+    }
+    
+    public function isImportInProgressAction(){
+        $now = time();
+        $res = false;
+        if(Application_Model_Preference::GetImportTimestamp()+5 > $now){
+            $res = true;
+        }
+        die(json_encode($res));
     }
 }
 
