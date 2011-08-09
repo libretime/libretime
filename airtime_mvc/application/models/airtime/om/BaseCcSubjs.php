@@ -1669,6 +1669,31 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		}
 	}
 
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcSubjs is new, it will return
+	 * an empty collection; or if this CcSubjs has previously
+	 * been saved, it will retrieve related CcFiless from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcSubjs.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcFiles[] List of CcFiles objects
+	 */
+	public function getCcFilessJoinCcMusicDirs($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcFilesQuery::create(null, $criteria);
+		$query->joinWith('CcMusicDirs', $join_behavior);
+
+		return $this->getCcFiless($query, $con);
+	}
+
 	/**
 	 * Clears out the collCcPermss collection
 	 *

@@ -1,5 +1,10 @@
 <?php
 
+define('UTYPE_HOST', 'H');
+define('UTYPE_ADMIN', 'A');
+define('UTYPE_GUEST', 'G');
+define('UTYPE_PROGRAM_MANAGER', 'P');
+
 class User {
 
     private $_userInstance;
@@ -18,12 +23,44 @@ class User {
     }
 
     public function isHost($showId) {
-        $userId = $this->_userInstance->getDbId();
-        return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
+    	return $this->isUserType(UTYPE_HOST, $showId);
     }
 
     public function isAdmin() {
-        return $this->_userInstance->getDbType() === 'A';
+        return $this->isUserType(UTYPE_ADMIN);
+    }
+    
+    public function isUserType($type, $showId=''){
+    	if(is_array($type)){
+    		$result = false;
+    		foreach($type as $t){
+	    		switch($t){
+		    		case UTYPE_ADMIN:
+		    			$result = $this->_userInstance->getDbType() === 'A';
+		    			break;
+		    		case UTYPE_HOST:
+		    			$userId = $this->_userInstance->getDbId();
+		        		$result = CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
+		        		break;
+		    		case UTYPE_PROGRAM_MANAGER:
+		    			$result = $this->_userInstance->getDbType() === 'P';
+		    			break;
+		    	}
+		    	if($result){
+		    		return $result;
+		    	}
+    		}
+    	}else{
+	    	switch($type){
+	    		case UTYPE_ADMIN:
+	    			return $this->_userInstance->getDbType() === 'A';
+	    		case UTYPE_HOST:
+	    			$userId = $this->_userInstance->getDbId();
+	        		return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
+	    		case UTYPE_PROGRAM_MANAGER:
+	    			return $this->_userInstance->getDbType() === 'P';
+	    	}
+    	}
     }
     
     public function setLogin($login){
@@ -150,6 +187,33 @@ class User {
         $sql = $sql ." ORDER BY login";
     
         return  $CC_DBC->GetAll($sql);  
+    }
+    
+    public static function getUserCount($type=NULL){
+    	global $CC_DBC;
+
+        $sql;
+
+        $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs ";
+        
+        if(!isset($type)){
+        	$sql = $sql_gen;
+        }
+        else{
+	        if(is_array($type)) {
+	            for($i=0; $i<count($type); $i++) {
+	                $type[$i] = "type = '{$type[$i]}'";
+	            }
+	            $sql_type = join(" OR ", $type);
+	        }
+	        else {
+	            $sql_type = "type = {$type}";
+	        }
+	        
+	        $sql = $sql_gen ." WHERE (". $sql_type.") ";
+        }
+        
+        return  $CC_DBC->GetOne($sql);
     }
 
     public static function getHosts($search=NULL) {

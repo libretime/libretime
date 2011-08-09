@@ -9,8 +9,16 @@ class ApiController extends Zend_Controller_Action
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
                 ->addActionContext('recorded-shows', 'json')
+                ->addActionContext('upload-file', 'json')
                 ->addActionContext('upload-recorded', 'json')
+                ->addActionContext('media-monitor-setup', 'json')
+                ->addActionContext('media-item-status', 'json')
                 ->addActionContext('reload-metadata', 'json')
+                ->addActionContext('list-all-files', 'json')
+                ->addActionContext('list-all-watched-dirs', 'json')
+                ->addActionContext('add-watched-dir', 'json')
+                ->addActionContext('remove-watched-dir', 'json')
+                ->addActionContext('set-storage-dir', 'json')
                 ->initContext();
     }
 
@@ -20,7 +28,7 @@ class ApiController extends Zend_Controller_Action
     }
 
     /**
-     * Returns Airtime version. i.e "1.7.0 alpha"
+     * Returns Airtime version. i.e "1.7.0-beta"
      *
      * First checks to ensure the correct API key was
      * supplied, then returns AIRTIME_VERSION as defined
@@ -52,7 +60,7 @@ class ApiController extends Zend_Controller_Action
      * Allows remote client to download requested media file.
      *
      * @return void
-     *      The given value increased by the increment amount.
+     *
      */
     public function getMediaAction()
     {
@@ -63,13 +71,17 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        $download = $this->_getParam('download');
+        $download = ("true" == $this->_getParam('download'));
 
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]))
+        $logger = Logging::getLogger();
+
+        if(!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
-            exit;
+            $logger->info("401 Unauthorized");
+            return;
         }
 
         $filename = $this->_getParam("file");
@@ -77,43 +89,56 @@ class ApiController extends Zend_Controller_Action
         if (ctype_alnum($file_id) && strlen($file_id) == 32) {
           $media = StoredFile::RecallByGunid($file_id);
           if ($media != null && !PEAR::isError($media)) {
-            $filepath = $media->getRealFilePath();
-            if(!is_file($filepath))
-            {
-                header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-                //print 'Resource in database, but not in storage. Sorry.';
+            $filepath = $media->getFilePath();
+            if(is_file($filepath)){
+                // possibly use fileinfo module here in the future.
+                // http://www.php.net/manual/en/book.fileinfo.php
+                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                if ($ext == "ogg")
+                    header("Content-Type: audio/ogg");
+                else if ($ext == "mp3")
+                    header("Content-Type: audio/mpeg");
+                if ($download){
+                    //path_info breaks up a file path into seperate pieces of informaiton.
+                    //We just want the basename which is the file name with the path
+                    //information stripped away. We are using Content-Disposition to specify
+                    //to the browser what name the file should be saved as.
+                    //
+                    // By james.moon:
+                    // I'm removing pathinfo() since it strips away UTF-8 characters.
+                    // Using manualy parsing
+                    $full_path = $media->getPropelOrm()->getDbFilepath();
+                    $file_base_name = strrchr($full_path, '/');
+                    $file_base_name = substr($file_base_name, 1);
+                    header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
+                }
+                header("Content-Length: " . filesize($filepath));
+
+                // !! binary mode !!
+                $fp = fopen($filepath, 'rb');
+
+                //We can have multiple levels of output buffering. Need to
+                //keep looping until all have been disabled!!!
+                //http://www.php.net/manual/en/function.ob-end-flush.php
+                while (@ob_end_flush());
+
+                fpassthru($fp);
+                fclose($fp);
+
+                //make sure to exit here so that no other output is sent.
                 exit;
+            } else {
+                $logger->err('Resource in database, but not in storage: "'.$filepath.'"');
             }
-
-
-            // possibly use fileinfo module here in the future.
-            // http://www.php.net/manual/en/book.fileinfo.php
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
-            if ($ext == "ogg")
-                header("Content-Type: audio/ogg");
-            else if ($ext == "mp3")
-                header("Content-Type: audio/mpeg");
-            if ($download){
-                header('Content-Disposition: attachment; filename="'.$media->getName().'"');
-            }
-            header("Content-Length: " . filesize($filepath));
-
-            // !! binary mode !!
-            $fp = fopen($filepath, 'rb');
-            
-            //We can have multiple levels of output buffering. Need to
-            //keep looping until all have been disabled!!!
-            //http://www.php.net/manual/en/function.ob-end-flush.php
-            while (@ob_end_flush());
-            
-            fpassthru($fp);
-            fclose($fp);
-            
-            return;
+          } else {
+            $logger->err('$media != null && !PEAR::isError($media)');
           }
+      } else {
+        $logger->err('ctype_alnum($file_id) && strlen($file_id) == 32');
       }
       header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-      exit;
+      $logger->info("404 Not Found");
+      return;
     }
 
     public function liveInfoAction()
@@ -282,6 +307,24 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
+    public function uploadFileAction()
+    {
+        global $CC_CONFIG;
+
+        $api_key = $this->_getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $upload_dir = ini_get("upload_tmp_dir");
+        StoredFile::uploadFile($upload_dir);
+        $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
+        StoredFile::copyFileToStor($upload_dir, $fileName);
+    }
+
     public function uploadRecordedAction()
     {
         global $CC_CONFIG;
@@ -293,18 +336,24 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
+        //this file id is the recording for this show instance.
+        $show_instance_id = $this->_getParam('showinstanceid');
+        $file_id = $this->_getParam('fileid');
+
+        $this->view->fileid = $file_id;
+        $this->view->showinstanceid = $show_instance_id;
+
+
        	$showCanceled = false;
-        $show_instance  = $this->_getParam('show_instance');
-        
-        $upload_dir = ini_get("upload_tmp_dir");
-        $file = StoredFile::uploadFile($upload_dir);
-        
-        $show_name = "";
+       	$file = StoredFile::Recall($file_id);
+        //$show_instance  = $this->_getParam('show_instance');
+
+        $show_name = null;
         try {
-            $show_inst = new ShowInstance($show_instance);
-            
-            $show_inst->setRecordedFile($file->getId());
+            $show_inst = new ShowInstance($show_instance_id);
+
+            $show_inst->setRecordedFile($file_id);
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
             $show_start_time = $show_inst->getShowStart();
@@ -317,12 +366,19 @@ class ApiController extends Zend_Controller_Action
             //the library), now lets just return.
             $showCanceled = true;
         }
-        
-		$tmpTitle = !(empty($show_name))?$show_name."-":"";
-		$tmpTitle .= $file->getName();
-		
-		$file->setMetadataValue(UI_MDATA_KEY_TITLE, $tmpTitle);
-        
+
+        if (isset($show_name)) {
+            $tmpTitle = "$show_name-$show_start_time";
+            $tmpTitle = str_replace(" ", "-", $tmpTitle);
+        }
+        else {
+            $tmpTitle = $file->getName();
+        }
+
+		$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
+        $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
+        $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', null);
+
         if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
         {
         	for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
@@ -335,7 +391,7 @@ class ApiController extends Zend_Controller_Action
 
         		try {
         			$soundcloud = new ATSoundcloud();
-        			$soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $tmpTitle, $description, $tags, $show_start_time, $show_genre);
+        			$soundcloud_id = $soundcloud->uploadTrack($file->getFilePath(), $tmpTitle, $description, $tags, $show_start_time, $show_genre);
         			$show_inst->setSoundCloudFileId($soundcloud_id);
         			break;
         		}
@@ -350,12 +406,16 @@ class ApiController extends Zend_Controller_Action
         	}
         }
 
-        $this->view->id = $file->getId();
+        $this->view->id = $file_id;
+
     }
 
-    public function reloadMetadataAction() {
-
+    public function mediaMonitorSetupAction() {
         global $CC_CONFIG;
+
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
@@ -365,22 +425,186 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $md = $this->_getParam('md');
+        $this->view->stor = MusicDir::getStorDir()->getDirectory();
+    }
 
-        $file = StoredFile::Recall(null, $md['gunid']);
-        if (PEAR::isError($file) || is_null($file)) {
-            $this->view->response = "File not in Airtime's Database";
-            return;
+    public function reloadMetadataAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
         }
 
-        $res = $file->replaceDbMetadata($md);
+        $mode = $request->getParam('mode');
+        $params = $request->getParams();
 
-        if (PEAR::isError($res)) {
-            $this->view->response = "Metadata Change Failed";
+        $md = array();
+        //extract all file metadata params from the request.
+        foreach ($params as $key => $value) {
+            if (preg_match('/^MDATA_KEY/', $key)) {
+                $md[$key] = $value;
+            }
         }
-        else {
-            $this->view->response = "Success!";
+
+        // update import timestamp
+        Application_Model_Preference::SetImportTimestamp();
+        
+        if ($mode == "create") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+
+            $file = StoredFile::RecallByFilepath($filepath);
+
+            if (is_null($file)) {
+                $file = StoredFile::Insert($md);
+            }
+            else {
+                $this->view->error = "File already exists in Airtime.";
+                return;
+            }
         }
+        else if ($mode == "modify") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+            $file = StoredFile::RecallByFilepath($filepath);
+
+            //File is not in database anymore.
+            if (is_null($file)) {
+                $this->view->error = "File does not exist in Airtime.";
+                return;
+            }
+            //Updating a metadata change.
+            else {
+                $file->setMetadata($md);
+            }
+        }
+        else if ($mode == "moved") {
+            $md5 = $md['MDATA_KEY_MD5'];
+            $file = StoredFile::RecallByMd5($md5);
+
+            if (is_null($file)) {
+                $this->view->error = "File doesn't exist in Airtime.";
+                return;
+            }
+            else {
+                $filepath = $md['MDATA_KEY_FILEPATH'];
+                $filepath = str_replace("\\", "", $filepath);
+                $file->setFilePath($filepath);
+                //$file->setMetadata($md);
+            }
+        }
+        else if ($mode == "delete") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+            $file = StoredFile::RecallByFilepath($filepath);
+
+            if (is_null($file)) {
+                $this->view->error = "File doesn't exist in Airtime.";
+                return;
+            }
+            else {
+                $file->delete();
+            }
+        }
+        $this->view->id = $file->getId();
+    }
+
+    public function listAllFilesAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        $dir_id = $request->getParam('dir_id');
+
+        $this->view->files = StoredFile::listAllFiles($dir_id);
+    }
+
+    public function listAllWatchedDirsAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $result = array();
+
+        $arrWatchedDirs = MusicDir::getWatchedDirs();
+        $storDir = MusicDir::getStorDir();
+
+        $result[$storDir->getId()] = $storDir->getDirectory();
+
+        foreach ($arrWatchedDirs as $watchedDir){
+            $result[$watchedDir->getId()] = $watchedDir->getDirectory();
+        }
+
+        $this->view->dirs = $result;
+    }
+
+    public function addWatchedDirAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        $path = base64_decode($request->getParam('path'));
+
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $this->view->msg = MusicDir::addWatchedDir($path);
+    }
+
+    public function removeWatchedDirAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        $path = base64_decode($request->getParam('path'));
+
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $this->view->msg = MusicDir::removeWatchedDir($path);
+    }
+
+    public function setStorageDirAction() {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        $path = base64_decode($request->getParam('path'));
+
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $this->view->msg = MusicDir::setStorDir($path);
     }
 }
 

@@ -1136,9 +1136,10 @@ button.ui-button.::-moz-focus-inner {
  */
 .ui-dialog {
 	position: absolute;
-	padding: .2em;
+	padding: .4em;
 	width: 300px;
 	overflow: hidden;
+	border-width: 3px;
 }
 .ui-dialog .ui-dialog-titlebar {
 	padding: 6px 8px 6px 8px;
@@ -1171,13 +1172,16 @@ button.ui-button.::-moz-focus-inner {
 	background: none;
 	overflow: auto;
 	zoom: 1;
+	
 }
 .ui-dialog .ui-dialog-buttonpane {
 	text-align: left;
 	border-width: 1px 0 0 0;
-	background-image: none;
+	background: none;
 	margin: .5em 0 0 0;
-	padding: .3em 1em .5em .4em;
+    margin: 0.3em -0.4em 0;
+    padding: 0.3em 1em 0 0.4em;
+    border-color: #9f9f9f;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
 	float: right;

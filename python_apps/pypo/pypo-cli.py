@@ -11,6 +11,7 @@ import os
 import signal
 import logging
 import logging.config
+import logging.handlers
 from Queue import Queue
 
 from pypopush import PypoPush
@@ -19,7 +20,6 @@ from pypofetch import PypoFetch
 from configobj import ConfigObj
 
 # custom imports
-from util import CueFile
 from api_clients import api_client
 
 PYPO_VERSION = '1.1'
@@ -48,13 +48,13 @@ logging.config.fileConfig("logging.cfg")
 try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
 except Exception, e:
-    print 'Error loading config file: ', e
+    logger = logging.getLogger()
+    logger.error('Error loading config file: %s', e)
     sys.exit()
 
 class Global:
     def __init__(self):
         self.api_client = api_client.api_client_factory(config)
-        self.cue_file = CueFile()
         self.set_export_source('scheduler')
         
     def selfcheck(self):
@@ -70,6 +70,7 @@ class Global:
     def test_api(self):
         self.api_client.test()
 
+"""
     def check_schedule(self, export_source):
         logger = logging.getLogger()
 
@@ -87,7 +88,6 @@ class Global:
             print '*****************************************'
             print '\033[0;32m%s %s\033[m' % ('scheduled at:', str(pkey))
             print 'cached at :   ' + self.cache_dir + str(pkey)
-            print 'subtype:      ' + str(playlist['subtype'])
             print 'played:       ' + str(playlist['played'])
             print 'schedule id:  ' + str(playlist['schedule_id'])
             print 'duration:     ' + str(playlist['duration'])
@@ -96,27 +96,27 @@ class Global:
 
             for media in playlist['medias']:
                 print media
+"""
 
 def keyboardInterruptHandler(signum, frame):
-    print "\nKeyboard Interrupt\n"
-    sys.exit();
+    logger = logging.getLogger()
+    logger.info('\nKeyboard Interrupt\n')
+    sys.exit(0)
 
 
 if __name__ == '__main__':
-    print '###########################################'
-    print '#             *** pypo  ***               #'
-    print '#   Liquidsoap Scheduled Playout System   #'
-    print '###########################################'
+    logger = logging.getLogger()
+    logger.info('###########################################')
+    logger.info('#             *** pypo  ***               #')
+    logger.info('#   Liquidsoap Scheduled Playout System   #')
+    logger.info('###########################################')
 
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
- 
+
     # initialize
     g = Global()
 
-    #NOTE: MUST EXIT HERE!! while not g.selfcheck(): time.sleep() 
-    #Causes pypo to hang on system boot!!!
-    if not g.selfcheck():
-        sys.exit()
+    while not g.selfcheck(): time.sleep(5)
     
     logger = logging.getLogger()
 
@@ -127,11 +127,9 @@ if __name__ == '__main__':
     q = Queue()
 
     pp = PypoPush(q)
-    pp.daemon = True
     pp.start()
 
     pf = PypoFetch(q)
-    pf.daemon = True
     pf.start()
 
     while True: time.sleep(3600)

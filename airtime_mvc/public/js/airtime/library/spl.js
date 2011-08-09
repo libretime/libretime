@@ -337,6 +337,9 @@ function noOpenPL(json) {
 
 function closeSPL() {
 	var url;
+	
+	// stop playing any preview
+	$('#jquery_jplayer_1').jPlayer('stop');
 
 	url = '/Playlist/close/format/json';
 
@@ -386,6 +389,9 @@ function createPlaylistMetaForm(json) {
 function newSPL() {
 	var url;
 
+	// stop any preview playing
+	$('#jquery_jplayer_1').jPlayer('stop');
+	
 	url = '/Playlist/new/format/json';
 
 	$.post(url, createPlaylistMetaForm);
@@ -394,10 +400,13 @@ function newSPL() {
 function deleteSPL() {
 	var url;
 
+	// stop any preview playing
+	$('#jquery_jplayer_1').jPlayer('stop');
+	
 	url = '/Playlist/delete-active/format/json';
 
-	$.post(url, function(){
-		noOpenPL;
+	$.post(url, function(json){
+		noOpenPL(json);
 		//redraw the library list
 		redrawDataTablePage();
 	});

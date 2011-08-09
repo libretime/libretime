@@ -1,10 +1,17 @@
-<form method="<?php echo $this->element->getMethod() ?>" action="<?php echo $this->element->getAction() ?>" enctype="application/x-www-form-urlencoded">
+<form method="<?php echo $this->element->getMethod() ?>" action="<?php echo $this->element->getAction() ?>" enctype="multipart/form-data">
 
     <?php echo $this->element->getSubform('preferences_general') ?>
 
-    <h3 class="collapsible-header"><span class="arrow-icon"></span>SoundCloud Settings</h3>
+
+    <h3 class="collapsible-header" id="soundcloud-heading"><span class="arrow-icon"></span>SoundCloud Settings</h3>
+
     <div class="collapsible-content" id="soundcloud-settings" style="display: none;">
         <?php echo $this->element->getSubform('preferences_soundcloud') ?>
+    </div>
+
+    <h3 class="collapsible-header" id="support-heading"><span class="arrow-icon"></span>Support Settings</h3>
+    <div class="collapsible-content" id="support-settings" style="display: none;">
+        <?php echo $this->element->getSubform('preferences_support') ?>
     </div>
 
     <div class="button-bar bottom" id="submit-element">

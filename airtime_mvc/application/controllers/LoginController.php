@@ -49,7 +49,10 @@ class LoginController extends Zend_Controller_Action
                     //the default storage is a session with namespace Zend_Auth
                     $authStorage = $auth->getStorage();
                     $authStorage->write($userInfo);
-
+                    
+                    $tempSess = new Zend_Session_Namespace("referrer");
+                    $tempSess->referrer = 'login';
+                    
                     $this->_redirect('Nowplaying');
                 }
                 else

@@ -26,7 +26,7 @@ abstract class BaseCcFilesPeer {
 	const TM_CLASS = 'CcFilesTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 54;
+	const NUM_COLUMNS = 55;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -45,6 +45,9 @@ abstract class BaseCcFilesPeer {
 
 	/** the column name for the FTYPE field */
 	const FTYPE = 'cc_files.FTYPE';
+
+	/** the column name for the DIRECTORY field */
+	const DIRECTORY = 'cc_files.DIRECTORY';
 
 	/** the column name for the FILEPATH field */
 	const FILEPATH = 'cc_files.FILEPATH';
@@ -209,12 +212,12 @@ abstract class BaseCcFilesPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbGunid', 'DbName', 'DbMime', 'DbFtype', 'DbFilepath', 'DbState', 'DbCurrentlyaccessing', 'DbEditedby', 'DbMtime', 'DbMd5', 'DbTrackTitle', 'DbArtistName', 'DbBitRate', 'DbSampleRate', 'DbFormat', 'DbLength', 'DbAlbumTitle', 'DbGenre', 'DbComments', 'DbYear', 'DbTrackNumber', 'DbChannels', 'DbUrl', 'DbBpm', 'DbRating', 'DbEncodedBy', 'DbDiscNumber', 'DbMood', 'DbLabel', 'DbComposer', 'DbEncoder', 'DbChecksum', 'DbLyrics', 'DbOrchestra', 'DbConductor', 'DbLyricist', 'DbOriginalLyricist', 'DbRadioStationName', 'DbInfoUrl', 'DbArtistUrl', 'DbAudioSourceUrl', 'DbRadioStationUrl', 'DbBuyThisUrl', 'DbIsrcNumber', 'DbCatalogNumber', 'DbOriginalArtist', 'DbCopyright', 'DbReportDatetime', 'DbReportLocation', 'DbReportOrganization', 'DbSubject', 'DbContributor', 'DbLanguage', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbGunid', 'dbName', 'dbMime', 'dbFtype', 'dbFilepath', 'dbState', 'dbCurrentlyaccessing', 'dbEditedby', 'dbMtime', 'dbMd5', 'dbTrackTitle', 'dbArtistName', 'dbBitRate', 'dbSampleRate', 'dbFormat', 'dbLength', 'dbAlbumTitle', 'dbGenre', 'dbComments', 'dbYear', 'dbTrackNumber', 'dbChannels', 'dbUrl', 'dbBpm', 'dbRating', 'dbEncodedBy', 'dbDiscNumber', 'dbMood', 'dbLabel', 'dbComposer', 'dbEncoder', 'dbChecksum', 'dbLyrics', 'dbOrchestra', 'dbConductor', 'dbLyricist', 'dbOriginalLyricist', 'dbRadioStationName', 'dbInfoUrl', 'dbArtistUrl', 'dbAudioSourceUrl', 'dbRadioStationUrl', 'dbBuyThisUrl', 'dbIsrcNumber', 'dbCatalogNumber', 'dbOriginalArtist', 'dbCopyright', 'dbReportDatetime', 'dbReportLocation', 'dbReportOrganization', 'dbSubject', 'dbContributor', 'dbLanguage', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::GUNID, self::NAME, self::MIME, self::FTYPE, self::FILEPATH, self::STATE, self::CURRENTLYACCESSING, self::EDITEDBY, self::MTIME, self::MD5, self::TRACK_TITLE, self::ARTIST_NAME, self::BIT_RATE, self::SAMPLE_RATE, self::FORMAT, self::LENGTH, self::ALBUM_TITLE, self::GENRE, self::COMMENTS, self::YEAR, self::TRACK_NUMBER, self::CHANNELS, self::URL, self::BPM, self::RATING, self::ENCODED_BY, self::DISC_NUMBER, self::MOOD, self::LABEL, self::COMPOSER, self::ENCODER, self::CHECKSUM, self::LYRICS, self::ORCHESTRA, self::CONDUCTOR, self::LYRICIST, self::ORIGINAL_LYRICIST, self::RADIO_STATION_NAME, self::INFO_URL, self::ARTIST_URL, self::AUDIO_SOURCE_URL, self::RADIO_STATION_URL, self::BUY_THIS_URL, self::ISRC_NUMBER, self::CATALOG_NUMBER, self::ORIGINAL_ARTIST, self::COPYRIGHT, self::REPORT_DATETIME, self::REPORT_LOCATION, self::REPORT_ORGANIZATION, self::SUBJECT, self::CONTRIBUTOR, self::LANGUAGE, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'GUNID', 'NAME', 'MIME', 'FTYPE', 'FILEPATH', 'STATE', 'CURRENTLYACCESSING', 'EDITEDBY', 'MTIME', 'MD5', 'TRACK_TITLE', 'ARTIST_NAME', 'BIT_RATE', 'SAMPLE_RATE', 'FORMAT', 'LENGTH', 'ALBUM_TITLE', 'GENRE', 'COMMENTS', 'YEAR', 'TRACK_NUMBER', 'CHANNELS', 'URL', 'BPM', 'RATING', 'ENCODED_BY', 'DISC_NUMBER', 'MOOD', 'LABEL', 'COMPOSER', 'ENCODER', 'CHECKSUM', 'LYRICS', 'ORCHESTRA', 'CONDUCTOR', 'LYRICIST', 'ORIGINAL_LYRICIST', 'RADIO_STATION_NAME', 'INFO_URL', 'ARTIST_URL', 'AUDIO_SOURCE_URL', 'RADIO_STATION_URL', 'BUY_THIS_URL', 'ISRC_NUMBER', 'CATALOG_NUMBER', 'ORIGINAL_ARTIST', 'COPYRIGHT', 'REPORT_DATETIME', 'REPORT_LOCATION', 'REPORT_ORGANIZATION', 'SUBJECT', 'CONTRIBUTOR', 'LANGUAGE', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'gunid', 'name', 'mime', 'ftype', 'filepath', 'state', 'currentlyaccessing', 'editedby', 'mtime', 'md5', 'track_title', 'artist_name', 'bit_rate', 'sample_rate', 'format', 'length', 'album_title', 'genre', 'comments', 'year', 'track_number', 'channels', 'url', 'bpm', 'rating', 'encoded_by', 'disc_number', 'mood', 'label', 'composer', 'encoder', 'checksum', 'lyrics', 'orchestra', 'conductor', 'lyricist', 'original_lyricist', 'radio_station_name', 'info_url', 'artist_url', 'audio_source_url', 'radio_station_url', 'buy_this_url', 'isrc_number', 'catalog_number', 'original_artist', 'copyright', 'report_datetime', 'report_location', 'report_organization', 'subject', 'contributor', 'language', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbGunid', 'DbName', 'DbMime', 'DbFtype', 'DbDirectory', 'DbFilepath', 'DbState', 'DbCurrentlyaccessing', 'DbEditedby', 'DbMtime', 'DbMd5', 'DbTrackTitle', 'DbArtistName', 'DbBitRate', 'DbSampleRate', 'DbFormat', 'DbLength', 'DbAlbumTitle', 'DbGenre', 'DbComments', 'DbYear', 'DbTrackNumber', 'DbChannels', 'DbUrl', 'DbBpm', 'DbRating', 'DbEncodedBy', 'DbDiscNumber', 'DbMood', 'DbLabel', 'DbComposer', 'DbEncoder', 'DbChecksum', 'DbLyrics', 'DbOrchestra', 'DbConductor', 'DbLyricist', 'DbOriginalLyricist', 'DbRadioStationName', 'DbInfoUrl', 'DbArtistUrl', 'DbAudioSourceUrl', 'DbRadioStationUrl', 'DbBuyThisUrl', 'DbIsrcNumber', 'DbCatalogNumber', 'DbOriginalArtist', 'DbCopyright', 'DbReportDatetime', 'DbReportLocation', 'DbReportOrganization', 'DbSubject', 'DbContributor', 'DbLanguage', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbGunid', 'dbName', 'dbMime', 'dbFtype', 'dbDirectory', 'dbFilepath', 'dbState', 'dbCurrentlyaccessing', 'dbEditedby', 'dbMtime', 'dbMd5', 'dbTrackTitle', 'dbArtistName', 'dbBitRate', 'dbSampleRate', 'dbFormat', 'dbLength', 'dbAlbumTitle', 'dbGenre', 'dbComments', 'dbYear', 'dbTrackNumber', 'dbChannels', 'dbUrl', 'dbBpm', 'dbRating', 'dbEncodedBy', 'dbDiscNumber', 'dbMood', 'dbLabel', 'dbComposer', 'dbEncoder', 'dbChecksum', 'dbLyrics', 'dbOrchestra', 'dbConductor', 'dbLyricist', 'dbOriginalLyricist', 'dbRadioStationName', 'dbInfoUrl', 'dbArtistUrl', 'dbAudioSourceUrl', 'dbRadioStationUrl', 'dbBuyThisUrl', 'dbIsrcNumber', 'dbCatalogNumber', 'dbOriginalArtist', 'dbCopyright', 'dbReportDatetime', 'dbReportLocation', 'dbReportOrganization', 'dbSubject', 'dbContributor', 'dbLanguage', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::GUNID, self::NAME, self::MIME, self::FTYPE, self::DIRECTORY, self::FILEPATH, self::STATE, self::CURRENTLYACCESSING, self::EDITEDBY, self::MTIME, self::MD5, self::TRACK_TITLE, self::ARTIST_NAME, self::BIT_RATE, self::SAMPLE_RATE, self::FORMAT, self::LENGTH, self::ALBUM_TITLE, self::GENRE, self::COMMENTS, self::YEAR, self::TRACK_NUMBER, self::CHANNELS, self::URL, self::BPM, self::RATING, self::ENCODED_BY, self::DISC_NUMBER, self::MOOD, self::LABEL, self::COMPOSER, self::ENCODER, self::CHECKSUM, self::LYRICS, self::ORCHESTRA, self::CONDUCTOR, self::LYRICIST, self::ORIGINAL_LYRICIST, self::RADIO_STATION_NAME, self::INFO_URL, self::ARTIST_URL, self::AUDIO_SOURCE_URL, self::RADIO_STATION_URL, self::BUY_THIS_URL, self::ISRC_NUMBER, self::CATALOG_NUMBER, self::ORIGINAL_ARTIST, self::COPYRIGHT, self::REPORT_DATETIME, self::REPORT_LOCATION, self::REPORT_ORGANIZATION, self::SUBJECT, self::CONTRIBUTOR, self::LANGUAGE, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'GUNID', 'NAME', 'MIME', 'FTYPE', 'DIRECTORY', 'FILEPATH', 'STATE', 'CURRENTLYACCESSING', 'EDITEDBY', 'MTIME', 'MD5', 'TRACK_TITLE', 'ARTIST_NAME', 'BIT_RATE', 'SAMPLE_RATE', 'FORMAT', 'LENGTH', 'ALBUM_TITLE', 'GENRE', 'COMMENTS', 'YEAR', 'TRACK_NUMBER', 'CHANNELS', 'URL', 'BPM', 'RATING', 'ENCODED_BY', 'DISC_NUMBER', 'MOOD', 'LABEL', 'COMPOSER', 'ENCODER', 'CHECKSUM', 'LYRICS', 'ORCHESTRA', 'CONDUCTOR', 'LYRICIST', 'ORIGINAL_LYRICIST', 'RADIO_STATION_NAME', 'INFO_URL', 'ARTIST_URL', 'AUDIO_SOURCE_URL', 'RADIO_STATION_URL', 'BUY_THIS_URL', 'ISRC_NUMBER', 'CATALOG_NUMBER', 'ORIGINAL_ARTIST', 'COPYRIGHT', 'REPORT_DATETIME', 'REPORT_LOCATION', 'REPORT_ORGANIZATION', 'SUBJECT', 'CONTRIBUTOR', 'LANGUAGE', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'gunid', 'name', 'mime', 'ftype', 'directory', 'filepath', 'state', 'currentlyaccessing', 'editedby', 'mtime', 'md5', 'track_title', 'artist_name', 'bit_rate', 'sample_rate', 'format', 'length', 'album_title', 'genre', 'comments', 'year', 'track_number', 'channels', 'url', 'bpm', 'rating', 'encoded_by', 'disc_number', 'mood', 'label', 'composer', 'encoder', 'checksum', 'lyrics', 'orchestra', 'conductor', 'lyricist', 'original_lyricist', 'radio_station_name', 'info_url', 'artist_url', 'audio_source_url', 'radio_station_url', 'buy_this_url', 'isrc_number', 'catalog_number', 'original_artist', 'copyright', 'report_datetime', 'report_location', 'report_organization', 'subject', 'contributor', 'language', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, )
 	);
 
 	/**
@@ -224,12 +227,12 @@ abstract class BaseCcFilesPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbGunid' => 1, 'DbName' => 2, 'DbMime' => 3, 'DbFtype' => 4, 'DbFilepath' => 5, 'DbState' => 6, 'DbCurrentlyaccessing' => 7, 'DbEditedby' => 8, 'DbMtime' => 9, 'DbMd5' => 10, 'DbTrackTitle' => 11, 'DbArtistName' => 12, 'DbBitRate' => 13, 'DbSampleRate' => 14, 'DbFormat' => 15, 'DbLength' => 16, 'DbAlbumTitle' => 17, 'DbGenre' => 18, 'DbComments' => 19, 'DbYear' => 20, 'DbTrackNumber' => 21, 'DbChannels' => 22, 'DbUrl' => 23, 'DbBpm' => 24, 'DbRating' => 25, 'DbEncodedBy' => 26, 'DbDiscNumber' => 27, 'DbMood' => 28, 'DbLabel' => 29, 'DbComposer' => 30, 'DbEncoder' => 31, 'DbChecksum' => 32, 'DbLyrics' => 33, 'DbOrchestra' => 34, 'DbConductor' => 35, 'DbLyricist' => 36, 'DbOriginalLyricist' => 37, 'DbRadioStationName' => 38, 'DbInfoUrl' => 39, 'DbArtistUrl' => 40, 'DbAudioSourceUrl' => 41, 'DbRadioStationUrl' => 42, 'DbBuyThisUrl' => 43, 'DbIsrcNumber' => 44, 'DbCatalogNumber' => 45, 'DbOriginalArtist' => 46, 'DbCopyright' => 47, 'DbReportDatetime' => 48, 'DbReportLocation' => 49, 'DbReportOrganization' => 50, 'DbSubject' => 51, 'DbContributor' => 52, 'DbLanguage' => 53, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbGunid' => 1, 'dbName' => 2, 'dbMime' => 3, 'dbFtype' => 4, 'dbFilepath' => 5, 'dbState' => 6, 'dbCurrentlyaccessing' => 7, 'dbEditedby' => 8, 'dbMtime' => 9, 'dbMd5' => 10, 'dbTrackTitle' => 11, 'dbArtistName' => 12, 'dbBitRate' => 13, 'dbSampleRate' => 14, 'dbFormat' => 15, 'dbLength' => 16, 'dbAlbumTitle' => 17, 'dbGenre' => 18, 'dbComments' => 19, 'dbYear' => 20, 'dbTrackNumber' => 21, 'dbChannels' => 22, 'dbUrl' => 23, 'dbBpm' => 24, 'dbRating' => 25, 'dbEncodedBy' => 26, 'dbDiscNumber' => 27, 'dbMood' => 28, 'dbLabel' => 29, 'dbComposer' => 30, 'dbEncoder' => 31, 'dbChecksum' => 32, 'dbLyrics' => 33, 'dbOrchestra' => 34, 'dbConductor' => 35, 'dbLyricist' => 36, 'dbOriginalLyricist' => 37, 'dbRadioStationName' => 38, 'dbInfoUrl' => 39, 'dbArtistUrl' => 40, 'dbAudioSourceUrl' => 41, 'dbRadioStationUrl' => 42, 'dbBuyThisUrl' => 43, 'dbIsrcNumber' => 44, 'dbCatalogNumber' => 45, 'dbOriginalArtist' => 46, 'dbCopyright' => 47, 'dbReportDatetime' => 48, 'dbReportLocation' => 49, 'dbReportOrganization' => 50, 'dbSubject' => 51, 'dbContributor' => 52, 'dbLanguage' => 53, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::GUNID => 1, self::NAME => 2, self::MIME => 3, self::FTYPE => 4, self::FILEPATH => 5, self::STATE => 6, self::CURRENTLYACCESSING => 7, self::EDITEDBY => 8, self::MTIME => 9, self::MD5 => 10, self::TRACK_TITLE => 11, self::ARTIST_NAME => 12, self::BIT_RATE => 13, self::SAMPLE_RATE => 14, self::FORMAT => 15, self::LENGTH => 16, self::ALBUM_TITLE => 17, self::GENRE => 18, self::COMMENTS => 19, self::YEAR => 20, self::TRACK_NUMBER => 21, self::CHANNELS => 22, self::URL => 23, self::BPM => 24, self::RATING => 25, self::ENCODED_BY => 26, self::DISC_NUMBER => 27, self::MOOD => 28, self::LABEL => 29, self::COMPOSER => 30, self::ENCODER => 31, self::CHECKSUM => 32, self::LYRICS => 33, self::ORCHESTRA => 34, self::CONDUCTOR => 35, self::LYRICIST => 36, self::ORIGINAL_LYRICIST => 37, self::RADIO_STATION_NAME => 38, self::INFO_URL => 39, self::ARTIST_URL => 40, self::AUDIO_SOURCE_URL => 41, self::RADIO_STATION_URL => 42, self::BUY_THIS_URL => 43, self::ISRC_NUMBER => 44, self::CATALOG_NUMBER => 45, self::ORIGINAL_ARTIST => 46, self::COPYRIGHT => 47, self::REPORT_DATETIME => 48, self::REPORT_LOCATION => 49, self::REPORT_ORGANIZATION => 50, self::SUBJECT => 51, self::CONTRIBUTOR => 52, self::LANGUAGE => 53, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'GUNID' => 1, 'NAME' => 2, 'MIME' => 3, 'FTYPE' => 4, 'FILEPATH' => 5, 'STATE' => 6, 'CURRENTLYACCESSING' => 7, 'EDITEDBY' => 8, 'MTIME' => 9, 'MD5' => 10, 'TRACK_TITLE' => 11, 'ARTIST_NAME' => 12, 'BIT_RATE' => 13, 'SAMPLE_RATE' => 14, 'FORMAT' => 15, 'LENGTH' => 16, 'ALBUM_TITLE' => 17, 'GENRE' => 18, 'COMMENTS' => 19, 'YEAR' => 20, 'TRACK_NUMBER' => 21, 'CHANNELS' => 22, 'URL' => 23, 'BPM' => 24, 'RATING' => 25, 'ENCODED_BY' => 26, 'DISC_NUMBER' => 27, 'MOOD' => 28, 'LABEL' => 29, 'COMPOSER' => 30, 'ENCODER' => 31, 'CHECKSUM' => 32, 'LYRICS' => 33, 'ORCHESTRA' => 34, 'CONDUCTOR' => 35, 'LYRICIST' => 36, 'ORIGINAL_LYRICIST' => 37, 'RADIO_STATION_NAME' => 38, 'INFO_URL' => 39, 'ARTIST_URL' => 40, 'AUDIO_SOURCE_URL' => 41, 'RADIO_STATION_URL' => 42, 'BUY_THIS_URL' => 43, 'ISRC_NUMBER' => 44, 'CATALOG_NUMBER' => 45, 'ORIGINAL_ARTIST' => 46, 'COPYRIGHT' => 47, 'REPORT_DATETIME' => 48, 'REPORT_LOCATION' => 49, 'REPORT_ORGANIZATION' => 50, 'SUBJECT' => 51, 'CONTRIBUTOR' => 52, 'LANGUAGE' => 53, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'gunid' => 1, 'name' => 2, 'mime' => 3, 'ftype' => 4, 'filepath' => 5, 'state' => 6, 'currentlyaccessing' => 7, 'editedby' => 8, 'mtime' => 9, 'md5' => 10, 'track_title' => 11, 'artist_name' => 12, 'bit_rate' => 13, 'sample_rate' => 14, 'format' => 15, 'length' => 16, 'album_title' => 17, 'genre' => 18, 'comments' => 19, 'year' => 20, 'track_number' => 21, 'channels' => 22, 'url' => 23, 'bpm' => 24, 'rating' => 25, 'encoded_by' => 26, 'disc_number' => 27, 'mood' => 28, 'label' => 29, 'composer' => 30, 'encoder' => 31, 'checksum' => 32, 'lyrics' => 33, 'orchestra' => 34, 'conductor' => 35, 'lyricist' => 36, 'original_lyricist' => 37, 'radio_station_name' => 38, 'info_url' => 39, 'artist_url' => 40, 'audio_source_url' => 41, 'radio_station_url' => 42, 'buy_this_url' => 43, 'isrc_number' => 44, 'catalog_number' => 45, 'original_artist' => 46, 'copyright' => 47, 'report_datetime' => 48, 'report_location' => 49, 'report_organization' => 50, 'subject' => 51, 'contributor' => 52, 'language' => 53, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbGunid' => 1, 'DbName' => 2, 'DbMime' => 3, 'DbFtype' => 4, 'DbDirectory' => 5, 'DbFilepath' => 6, 'DbState' => 7, 'DbCurrentlyaccessing' => 8, 'DbEditedby' => 9, 'DbMtime' => 10, 'DbMd5' => 11, 'DbTrackTitle' => 12, 'DbArtistName' => 13, 'DbBitRate' => 14, 'DbSampleRate' => 15, 'DbFormat' => 16, 'DbLength' => 17, 'DbAlbumTitle' => 18, 'DbGenre' => 19, 'DbComments' => 20, 'DbYear' => 21, 'DbTrackNumber' => 22, 'DbChannels' => 23, 'DbUrl' => 24, 'DbBpm' => 25, 'DbRating' => 26, 'DbEncodedBy' => 27, 'DbDiscNumber' => 28, 'DbMood' => 29, 'DbLabel' => 30, 'DbComposer' => 31, 'DbEncoder' => 32, 'DbChecksum' => 33, 'DbLyrics' => 34, 'DbOrchestra' => 35, 'DbConductor' => 36, 'DbLyricist' => 37, 'DbOriginalLyricist' => 38, 'DbRadioStationName' => 39, 'DbInfoUrl' => 40, 'DbArtistUrl' => 41, 'DbAudioSourceUrl' => 42, 'DbRadioStationUrl' => 43, 'DbBuyThisUrl' => 44, 'DbIsrcNumber' => 45, 'DbCatalogNumber' => 46, 'DbOriginalArtist' => 47, 'DbCopyright' => 48, 'DbReportDatetime' => 49, 'DbReportLocation' => 50, 'DbReportOrganization' => 51, 'DbSubject' => 52, 'DbContributor' => 53, 'DbLanguage' => 54, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbGunid' => 1, 'dbName' => 2, 'dbMime' => 3, 'dbFtype' => 4, 'dbDirectory' => 5, 'dbFilepath' => 6, 'dbState' => 7, 'dbCurrentlyaccessing' => 8, 'dbEditedby' => 9, 'dbMtime' => 10, 'dbMd5' => 11, 'dbTrackTitle' => 12, 'dbArtistName' => 13, 'dbBitRate' => 14, 'dbSampleRate' => 15, 'dbFormat' => 16, 'dbLength' => 17, 'dbAlbumTitle' => 18, 'dbGenre' => 19, 'dbComments' => 20, 'dbYear' => 21, 'dbTrackNumber' => 22, 'dbChannels' => 23, 'dbUrl' => 24, 'dbBpm' => 25, 'dbRating' => 26, 'dbEncodedBy' => 27, 'dbDiscNumber' => 28, 'dbMood' => 29, 'dbLabel' => 30, 'dbComposer' => 31, 'dbEncoder' => 32, 'dbChecksum' => 33, 'dbLyrics' => 34, 'dbOrchestra' => 35, 'dbConductor' => 36, 'dbLyricist' => 37, 'dbOriginalLyricist' => 38, 'dbRadioStationName' => 39, 'dbInfoUrl' => 40, 'dbArtistUrl' => 41, 'dbAudioSourceUrl' => 42, 'dbRadioStationUrl' => 43, 'dbBuyThisUrl' => 44, 'dbIsrcNumber' => 45, 'dbCatalogNumber' => 46, 'dbOriginalArtist' => 47, 'dbCopyright' => 48, 'dbReportDatetime' => 49, 'dbReportLocation' => 50, 'dbReportOrganization' => 51, 'dbSubject' => 52, 'dbContributor' => 53, 'dbLanguage' => 54, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::GUNID => 1, self::NAME => 2, self::MIME => 3, self::FTYPE => 4, self::DIRECTORY => 5, self::FILEPATH => 6, self::STATE => 7, self::CURRENTLYACCESSING => 8, self::EDITEDBY => 9, self::MTIME => 10, self::MD5 => 11, self::TRACK_TITLE => 12, self::ARTIST_NAME => 13, self::BIT_RATE => 14, self::SAMPLE_RATE => 15, self::FORMAT => 16, self::LENGTH => 17, self::ALBUM_TITLE => 18, self::GENRE => 19, self::COMMENTS => 20, self::YEAR => 21, self::TRACK_NUMBER => 22, self::CHANNELS => 23, self::URL => 24, self::BPM => 25, self::RATING => 26, self::ENCODED_BY => 27, self::DISC_NUMBER => 28, self::MOOD => 29, self::LABEL => 30, self::COMPOSER => 31, self::ENCODER => 32, self::CHECKSUM => 33, self::LYRICS => 34, self::ORCHESTRA => 35, self::CONDUCTOR => 36, self::LYRICIST => 37, self::ORIGINAL_LYRICIST => 38, self::RADIO_STATION_NAME => 39, self::INFO_URL => 40, self::ARTIST_URL => 41, self::AUDIO_SOURCE_URL => 42, self::RADIO_STATION_URL => 43, self::BUY_THIS_URL => 44, self::ISRC_NUMBER => 45, self::CATALOG_NUMBER => 46, self::ORIGINAL_ARTIST => 47, self::COPYRIGHT => 48, self::REPORT_DATETIME => 49, self::REPORT_LOCATION => 50, self::REPORT_ORGANIZATION => 51, self::SUBJECT => 52, self::CONTRIBUTOR => 53, self::LANGUAGE => 54, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'GUNID' => 1, 'NAME' => 2, 'MIME' => 3, 'FTYPE' => 4, 'DIRECTORY' => 5, 'FILEPATH' => 6, 'STATE' => 7, 'CURRENTLYACCESSING' => 8, 'EDITEDBY' => 9, 'MTIME' => 10, 'MD5' => 11, 'TRACK_TITLE' => 12, 'ARTIST_NAME' => 13, 'BIT_RATE' => 14, 'SAMPLE_RATE' => 15, 'FORMAT' => 16, 'LENGTH' => 17, 'ALBUM_TITLE' => 18, 'GENRE' => 19, 'COMMENTS' => 20, 'YEAR' => 21, 'TRACK_NUMBER' => 22, 'CHANNELS' => 23, 'URL' => 24, 'BPM' => 25, 'RATING' => 26, 'ENCODED_BY' => 27, 'DISC_NUMBER' => 28, 'MOOD' => 29, 'LABEL' => 30, 'COMPOSER' => 31, 'ENCODER' => 32, 'CHECKSUM' => 33, 'LYRICS' => 34, 'ORCHESTRA' => 35, 'CONDUCTOR' => 36, 'LYRICIST' => 37, 'ORIGINAL_LYRICIST' => 38, 'RADIO_STATION_NAME' => 39, 'INFO_URL' => 40, 'ARTIST_URL' => 41, 'AUDIO_SOURCE_URL' => 42, 'RADIO_STATION_URL' => 43, 'BUY_THIS_URL' => 44, 'ISRC_NUMBER' => 45, 'CATALOG_NUMBER' => 46, 'ORIGINAL_ARTIST' => 47, 'COPYRIGHT' => 48, 'REPORT_DATETIME' => 49, 'REPORT_LOCATION' => 50, 'REPORT_ORGANIZATION' => 51, 'SUBJECT' => 52, 'CONTRIBUTOR' => 53, 'LANGUAGE' => 54, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'gunid' => 1, 'name' => 2, 'mime' => 3, 'ftype' => 4, 'directory' => 5, 'filepath' => 6, 'state' => 7, 'currentlyaccessing' => 8, 'editedby' => 9, 'mtime' => 10, 'md5' => 11, 'track_title' => 12, 'artist_name' => 13, 'bit_rate' => 14, 'sample_rate' => 15, 'format' => 16, 'length' => 17, 'album_title' => 18, 'genre' => 19, 'comments' => 20, 'year' => 21, 'track_number' => 22, 'channels' => 23, 'url' => 24, 'bpm' => 25, 'rating' => 26, 'encoded_by' => 27, 'disc_number' => 28, 'mood' => 29, 'label' => 30, 'composer' => 31, 'encoder' => 32, 'checksum' => 33, 'lyrics' => 34, 'orchestra' => 35, 'conductor' => 36, 'lyricist' => 37, 'original_lyricist' => 38, 'radio_station_name' => 39, 'info_url' => 40, 'artist_url' => 41, 'audio_source_url' => 42, 'radio_station_url' => 43, 'buy_this_url' => 44, 'isrc_number' => 45, 'catalog_number' => 46, 'original_artist' => 47, 'copyright' => 48, 'report_datetime' => 49, 'report_location' => 50, 'report_organization' => 51, 'subject' => 52, 'contributor' => 53, 'language' => 54, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, )
 	);
 
 	/**
@@ -306,6 +309,7 @@ abstract class BaseCcFilesPeer {
 			$criteria->addSelectColumn(CcFilesPeer::NAME);
 			$criteria->addSelectColumn(CcFilesPeer::MIME);
 			$criteria->addSelectColumn(CcFilesPeer::FTYPE);
+			$criteria->addSelectColumn(CcFilesPeer::DIRECTORY);
 			$criteria->addSelectColumn(CcFilesPeer::FILEPATH);
 			$criteria->addSelectColumn(CcFilesPeer::STATE);
 			$criteria->addSelectColumn(CcFilesPeer::CURRENTLYACCESSING);
@@ -361,6 +365,7 @@ abstract class BaseCcFilesPeer {
 			$criteria->addSelectColumn($alias . '.NAME');
 			$criteria->addSelectColumn($alias . '.MIME');
 			$criteria->addSelectColumn($alias . '.FTYPE');
+			$criteria->addSelectColumn($alias . '.DIRECTORY');
 			$criteria->addSelectColumn($alias . '.FILEPATH');
 			$criteria->addSelectColumn($alias . '.STATE');
 			$criteria->addSelectColumn($alias . '.CURRENTLYACCESSING');
@@ -609,6 +614,9 @@ abstract class BaseCcFilesPeer {
 		// Invalidate objects in CcPlaylistcontentsPeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcPlaylistcontentsPeer::clearInstancePool();
+		// Invalidate objects in CcSchedulePeer instance pool, 
+		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+		CcSchedulePeer::clearInstancePool();
 	}
 
 	/**
@@ -752,6 +760,56 @@ abstract class BaseCcFilesPeer {
 
 
 	/**
+	 * Returns the number of rows matching criteria, joining the related CcMusicDirs table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinCcMusicDirs(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcFilesPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcFilesPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcFilesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcFilesPeer::DIRECTORY, CcMusicDirsPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
 	 * Selects a collection of CcFiles objects pre-filled with their CcSubjs objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
@@ -818,6 +876,72 @@ abstract class BaseCcFilesPeer {
 
 
 	/**
+	 * Selects a collection of CcFiles objects pre-filled with their CcMusicDirs objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcFiles objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinCcMusicDirs(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcFilesPeer::addSelectColumns($criteria);
+		$startcol = (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcMusicDirsPeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(CcFilesPeer::DIRECTORY, CcMusicDirsPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcFilesPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcFilesPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = CcFilesPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcFilesPeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = CcMusicDirsPeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = CcMusicDirsPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcMusicDirsPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					CcMusicDirsPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (CcFiles) to $obj2 (CcMusicDirs)
+				$obj2->addCcFiles($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
 	 * Returns the number of rows matching criteria, joining all related tables
 	 *
 	 * @param      Criteria $criteria
@@ -855,6 +979,8 @@ abstract class BaseCcFilesPeer {
 
 		$criteria->addJoin(CcFilesPeer::EDITEDBY, CcSubjsPeer::ID, $join_behavior);
 
+		$criteria->addJoin(CcFilesPeer::DIRECTORY, CcMusicDirsPeer::ID, $join_behavior);
+
 		$stmt = BasePeer::doCount($criteria, $con);
 
 		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -891,7 +1017,12 @@ abstract class BaseCcFilesPeer {
 		CcSubjsPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcSubjsPeer::NUM_COLUMNS - CcSubjsPeer::NUM_LAZY_LOAD_COLUMNS);
 
+		CcMusicDirsPeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + (CcMusicDirsPeer::NUM_COLUMNS - CcMusicDirsPeer::NUM_LAZY_LOAD_COLUMNS);
+
 		$criteria->addJoin(CcFilesPeer::EDITEDBY, CcSubjsPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcFilesPeer::DIRECTORY, CcMusicDirsPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -927,6 +1058,270 @@ abstract class BaseCcFilesPeer {
 				// Add the $obj1 (CcFiles) to the collection in $obj2 (CcSubjs)
 				$obj2->addCcFiles($obj1);
 			} // if joined row not null
+
+			// Add objects for joined CcMusicDirs rows
+
+			$key3 = CcMusicDirsPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+			if ($key3 !== null) {
+				$obj3 = CcMusicDirsPeer::getInstanceFromPool($key3);
+				if (!$obj3) {
+
+					$cls = CcMusicDirsPeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CcMusicDirsPeer::addInstanceToPool($obj3, $key3);
+				} // if obj3 loaded
+
+				// Add the $obj1 (CcFiles) to the collection in $obj3 (CcMusicDirs)
+				$obj3->addCcFiles($obj1);
+			} // if joined row not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcSubjs table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCcSubjs(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcFilesPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcFilesPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcFilesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$criteria->addJoin(CcFilesPeer::DIRECTORY, CcMusicDirsPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcMusicDirs table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCcMusicDirs(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcFilesPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcFilesPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcFilesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$criteria->addJoin(CcFilesPeer::EDITEDBY, CcSubjsPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Selects a collection of CcFiles objects pre-filled with all related objects except CcSubjs.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcFiles objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAllExceptCcSubjs(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcFilesPeer::addSelectColumns($criteria);
+		$startcol2 = (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcMusicDirsPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcMusicDirsPeer::NUM_COLUMNS - CcMusicDirsPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcFilesPeer::DIRECTORY, CcMusicDirsPeer::ID, $join_behavior);
+
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcFilesPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcFilesPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcFilesPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcFilesPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+				// Add objects for joined CcMusicDirs rows
+
+				$key2 = CcMusicDirsPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+				if ($key2 !== null) {
+					$obj2 = CcMusicDirsPeer::getInstanceFromPool($key2);
+					if (!$obj2) {
+	
+						$cls = CcMusicDirsPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcMusicDirsPeer::addInstanceToPool($obj2, $key2);
+				} // if $obj2 already loaded
+
+				// Add the $obj1 (CcFiles) to the collection in $obj2 (CcMusicDirs)
+				$obj2->addCcFiles($obj1);
+
+			} // if joined row is not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Selects a collection of CcFiles objects pre-filled with all related objects except CcMusicDirs.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcFiles objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAllExceptCcMusicDirs(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcFilesPeer::addSelectColumns($criteria);
+		$startcol2 = (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcSubjsPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcSubjsPeer::NUM_COLUMNS - CcSubjsPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcFilesPeer::EDITEDBY, CcSubjsPeer::ID, $join_behavior);
+
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcFilesPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcFilesPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcFilesPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcFilesPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+				// Add objects for joined CcSubjs rows
+
+				$key2 = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+				if ($key2 !== null) {
+					$obj2 = CcSubjsPeer::getInstanceFromPool($key2);
+					if (!$obj2) {
+	
+						$cls = CcSubjsPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcSubjsPeer::addInstanceToPool($obj2, $key2);
+				} // if $obj2 already loaded
+
+				// Add the $obj1 (CcFiles) to the collection in $obj2 (CcSubjs)
+				$obj2->addCcFiles($obj1);
+
+			} // if joined row is not null
 
 			$results[] = $obj1;
 		}

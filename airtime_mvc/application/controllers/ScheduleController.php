@@ -59,6 +59,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
         $this->view->isAdmin = $user->isAdmin();
+        $this->view->isProgramManager = $user->isUserType('P');
     }
 
     public function eventFeedAction()
@@ -68,7 +69,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-        if($user->isAdmin())
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)))
             $editable = true;
         else
             $editable = false;
@@ -85,7 +86,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
 
-        if($user->isAdmin()) {
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $show = new ShowInstance($showInstanceId);
 		    $error = $show->moveShow($deltaDay, $deltaMin);
         }
@@ -104,7 +105,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
 
-        if($user->isAdmin()) {
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $show = new ShowInstance($showInstanceId);
 		    $error = $show->resizeShow($deltaDay, $deltaMin);
         }
@@ -120,7 +121,7 @@ class ScheduleController extends Zend_Controller_Action
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 		$user = new User($userInfo->id);
 
-        if($user->isAdmin()) {
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $show = new ShowInstance($showInstanceId);
 		    $show->deleteShow();
         }
@@ -155,7 +156,7 @@ class ScheduleController extends Zend_Controller_Action
 
                 try {
                     $soundcloud = new ATSoundcloud();
-                    $soundcloud_id = $soundcloud->uploadTrack($file->getRealFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
+                    $soundcloud_id = $soundcloud->uploadTrack($file->getFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
                     $show_inst->setSoundCloudFileId($soundcloud_id);
                     $this->view->soundcloud_id = $soundcloud_id;
                     break;
@@ -182,10 +183,10 @@ class ScheduleController extends Zend_Controller_Action
         $show = new ShowInstance($id);
 
 		$params = '/format/json/id/#id#';
-
+		
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
 
-            if (($user->isHost($show->getShowId()) || $user->isAdmin()) && !$show->isRecorded() && !$show->isRebroadcast()) {
+            if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()) && !$show->isRecorded() && !$show->isRebroadcast()) {
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params,
                     'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add / Remove Content');
@@ -213,7 +214,7 @@ class ScheduleController extends Zend_Controller_Action
 
         if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
                 strtotime($today_timestamp) < strtotime($show->getShowEnd()) &&
-                $user->isAdmin()) {
+                $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
                 $menu[] = array('action' => array('type' => 'fn',
                     'callback' => "window['confirmCancelShow']($id)"),
                     'title' => 'Cancel Current Show');
@@ -221,7 +222,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
 
-            if ($user->isAdmin()) {
+            if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/edit-show/format/json/id/'.$id,
                         'callback' => 'window["beginEditShow"]'), 'title' => 'Edit Show');
@@ -231,7 +232,7 @@ class ScheduleController extends Zend_Controller_Action
                         'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
             }
 		}
-
+		
 		//returns format jjmenu is looking for.
 		die(json_encode($menu));
     }
@@ -250,7 +251,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
 		$show = new ShowInstance($showInstanceId);
 
-        if($user->isHost($show->getShowId()) || $user->isAdmin()) {
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId())) {
 		    $show->scheduleShow(array($plId));
         }
 
@@ -269,7 +270,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
         $show = new ShowInstance($showInstanceId);
 
-        if($user->isHost($show->getShowId()) || $user->isAdmin())
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()))
             $show->clearShow();
     }
 
@@ -284,6 +285,11 @@ class ScheduleController extends Zend_Controller_Action
 
 		$show = new ShowInstance($this->sched_sess->showInstanceId);
 		$playlists = $show->searchPlaylistsForShow($post);
+		foreach( $playlists['aaData'] as &$data){
+		    // calling two functions to format time to 1 decimal place
+            $sec = Playlist::playlistTimeToSeconds($data[4]);
+            $data[4] = Playlist::secondsToPlaylistTime($sec); 
+		}
 
 		//for datatables
 		die(json_encode($playlists));
@@ -299,7 +305,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
         $show = new ShowInstance($showInstanceId);
 
-        if($user->isHost($show->getShowId()) || $user->isAdmin()) {
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId())) {
 		    $show->removeGroupFromShow($group_id);
         }
 
@@ -377,7 +383,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-        if(!$user->isAdmin()) {
+        if(!$user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             return;
         }
 
@@ -422,7 +428,9 @@ class ScheduleController extends Zend_Controller_Action
 
         $formWhen->populate(array('add_show_start_date' => $show->getStartDate(),
                                   'add_show_start_time' => DateHelper::removeSecondsFromTime($show->getStartTime()),
-                                  'add_show_duration' => $show->getDuration(),
+        						  'add_show_end_date_no_repeat' => $show->getEndDate(),
+        						  'add_show_end_time'	=> DateHelper::removeSecondsFromTime($show->getEndTime()),
+                                  'add_show_duration' => $show->getDuration(true),
                                   'add_show_repeats' => $show->isRepeating() ? 1 : 0));
 
         if ($show->isStartDateTimeInPast()){
@@ -541,6 +549,29 @@ class ScheduleController extends Zend_Controller_Action
             $when = $formWhen->checkReliantFields($data, $startDateModified);
         }
 
+        
+        //The way the following code works is that is parses the hour and 
+        //minute from a string with the format "1h 20m" or "2h" or "36m".
+        //So we are detecting whether an hour or minute value exists via strpos
+        //and then parse appropriately. A better way to do this in the future is
+        //actually pass the format from javascript in the format hh:mm so we don't
+        //have to do this extra String parsing.
+        $hPos = strpos($data["add_show_duration"], 'h');
+        $mPos = strpos($data["add_show_duration"], 'm');
+        
+        $hValue = 0;
+        $mValue = 0;
+        
+        if($hPos !== false){
+        	$hValue = trim(substr($data["add_show_duration"], 0, $hPos));
+        }
+        if($mPos !== false){
+            $hPos = $hPos === FALSE ? 0 : $hPos+1;
+        	$mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
+        }
+        
+        $data["add_show_duration"] = $hValue.":".$mValue;
+        
         if($data["add_show_repeats"]) {
 		    $repeats = $formRepeats->isValid($data);
             if($repeats) {
@@ -597,7 +628,7 @@ class ScheduleController extends Zend_Controller_Action
         if ($what && $when && $repeats && $who && $style && $record && $rebroadAb && $rebroad) {
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $user = new User($userInfo->id);
-			if ($user->isAdmin()) {
+			if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
                 Show::create($data);
             }
             
@@ -635,7 +666,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
 
-        if($user->isAdmin()) {
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $showInstanceId = $this->_getParam('id');
 
             $showInstance = new ShowInstance($showInstanceId);
@@ -650,7 +681,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
 
-        if($user->isAdmin()) {
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $showInstanceId = $this->_getParam('id');
             $show = new ShowInstance($showInstanceId);
             $show->clearShow();

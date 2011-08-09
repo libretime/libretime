@@ -433,6 +433,45 @@ class Show {
             return $startTime;
         }
     }
+    
+	/**
+     * Get the end date of the current show.
+     * Note that this is not the end date of repeated show
+     * 
+     * @return string
+     *      The end date in the format YYYY-MM-DD
+     */
+    public function getEndDate(){
+        $startDate = $this->getStartDate();
+        $startTime = $this->getStartTime();
+        $duration = $this->getDuration();
+        
+        $startDateTime = new DateTime($startDate.' '.$startTime);
+        $duration = explode(":", $duration);
+        
+        $endDate = $startDateTime->add(new DateInterval('PT'.$duration[0].'H'.$duration[1].'M'));
+        
+        return $endDate->format('Y-m-d');
+    }
+
+    /**
+     * Get the end time of the current show.
+     *
+     * @return string
+     *      The start time in the format HH:MM:SS
+     */
+    public function getEndTime(){
+        $startDate = $this->getStartDate();
+        $startTime = $this->getStartTime();
+        $duration = $this->getDuration();
+        
+        $startDateTime = new DateTime($startDate.' '.$startTime);
+        $duration = explode(":", $duration);
+        
+        $endDate = $startDateTime->add(new DateInterval('PT'.$duration[0].'H'.$duration[1].'M'));
+        
+        return $endDate->format('H:i:s');
+    }
 
     /**
      * Indicate whether the starting point of the show is in the
@@ -535,9 +574,14 @@ class Show {
         }
     }
 
-    public function getDuration(){
+    public function getDuration($format=false){
         $showDay = CcShowDaysQuery::create()->filterByDbShowId($this->getId())->findOne();
-        return $showDay->getDbDuration();
+        if(!$format){
+        	return $showDay->getDbDuration();
+        }else{
+        	$info = explode(':',$showDay->getDbDuration());
+        	return ($info[0] != 0 ? intval($info[0]).'h'.' ' : '').($info[1] != 0 ? intval($info[1]).'m' : '');
+        }
     }
 
     public function getShowDays(){
@@ -1314,7 +1358,7 @@ class ShowInstance {
                 return null;
             }
 
-            if(file_exists($file->getRealFilePath())) {
+            if(file_exists($file->getFilePath())) {
                 return $file;
             }
         }
@@ -1567,10 +1611,17 @@ class ShowInstance {
 
     public function deleteShow()
     {
+        // see if it was recording show
+        $recording = CcShowInstancesQuery::create()
+            ->findPK($this->_instanceId)
+            ->getDbRecord();
         CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
             ->delete();
         RabbitMq::PushSchedule();
+        if($recording){
+            RabbitMq::SendMessageToShowRecorder("cancel_recording");
+        }
     }
 
     public function setRecordedFile($file_id)
@@ -1821,6 +1872,13 @@ class ShowInstance {
         } else {
             return new ShowInstance($id);
         }
+    }
+    
+    // returns number of show instances that ends later than $day
+    public static function GetShowInstanceCount($day){
+        global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT count(*) as cnt FROM $CC_CONFIG[showInstances] WHERE ends < '$day'";
+        return $CC_DBC->GetOne($sql);
     }
 }
 

@@ -2,7 +2,9 @@
     <dl class="zend_form">
 
         <dt id="stationName-label" class="block-display">
-            <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?></label>
+            <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?>
+                <span class="info-text-small">(Required)</span> :
+            </label>
         </dt>
         <dd id="stationName-element" class="block-display">
             <?php echo $this->element->getElement('stationName') ?>
@@ -73,6 +75,5 @@
                 </ul>
             <?php endif; ?>
        </dd>
-
     </dl>
 </fieldset>

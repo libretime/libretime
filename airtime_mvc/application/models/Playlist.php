@@ -85,13 +85,19 @@ class Playlist {
 -     *
 -     * @param float $seconds
 -     * @return string
--     * 		time in playlist time format (HH:mm:ss.dddddd)
+-     * 		time in playlist time format (HH:mm:ss.d)
 -     */
     public static function secondsToPlaylistTime($p_seconds)
     {
         $seconds = $p_seconds;
-        $milliseconds = intval(($seconds - intval($seconds)) * 1000);
-        $milliStr = str_pad($milliseconds, 6, '0');
+        $rounded = round($seconds, 1);
+        $info = explode('.', $rounded);
+        $seconds = $info[0];
+        if(!isset($info[1])){
+            $milliStr = 0;
+        }else{
+            $milliStr = $info[1];
+        }
         $hours = floor($seconds / 3600);
         $seconds -= $hours * 3600;
         $minutes = floor($seconds / 60);
@@ -118,6 +124,12 @@ class Playlist {
         global $CC_CONFIG, $CC_DBC;
         $sql = 'DELETE FROM '.$CC_CONFIG["playListTable"];
 		$CC_DBC->query($sql);
+    }
+    
+    public static function getPlaylistCount(){
+    	global $CC_CONFIG, $CC_DBC;
+        $sql = 'SELECT count(*) as cnt FROM '.$CC_CONFIG["playListTable"];
+		return $CC_DBC->GetOne($sql);
     }
 
     /**
@@ -388,8 +400,16 @@ class Playlist {
             ->filterByDbPlaylistId($this->id)
             ->find();
 
+        $i = 0;
+        $offset = 0;
         foreach ($rows as $row) {
-          $files[] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
+          $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
+          // display only upto 1 decimal place by calling secondsToPlaylistTime
+          $clipSec = Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
+          $files[$i]['cliplength'] = Playlist::secondsToPlaylistTime($clipSec);
+          $offset += $clipSec;
+          $files[$i]['offset'] = Playlist::secondsToPlaylistTime($offset);
+          $i++;
         }
 
         return $files;
@@ -402,7 +422,10 @@ class Playlist {
 
         if(is_null($res))
             return '00:00:00';
-
+        
+        // calling two functions to format time to 1 decimal place
+        $sec = Playlist::playlistTimeToSeconds($res);
+        $res = Playlist::secondsToPlaylistTime($sec); 
         return $res;
     }
 
@@ -491,7 +514,7 @@ class Playlist {
         }
 
         $metadata = $media->getMetadata();
-        $length = $metadata["dcterms:extent"];
+        $length = $metadata['MDATA_KEY_DURATION'];
 
         if (!is_null($p_clipLength)) {
         	$length = $p_clipLength;

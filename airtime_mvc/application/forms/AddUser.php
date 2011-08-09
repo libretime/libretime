@@ -73,7 +73,8 @@ class Application_Form_AddUser extends Zend_Form
         $select->setAttrib('style', 'width: 40%');
         $select->setMultiOptions(array(
                 "G" => "Guest",
-                "H" => "Host",
+                "H" => "DJ",
+        		"P" => "Program Manager",
                 "A" => "Admin"
             ));
         $select->setRequired(true);

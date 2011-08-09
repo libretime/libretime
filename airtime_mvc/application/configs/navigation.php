@@ -52,6 +52,12 @@ $pages = array(
                 'controller' => 'user',
                 'action'     => 'add-user',
                 'resource'	=>	'user'
+            ),
+            array(
+                'label'      => 'Manage Media Folders',
+                'module'     => 'default',
+                'controller' => 'Preference',
+                'action'     => 'directory-config'
             )
         )
     ),

@@ -18,36 +18,32 @@ import logging
 import json
 import os
 from urlparse import urlparse
+import base64
+from configobj import ConfigObj
 
-AIRTIME_VERSION = "1.8.2"
+AIRTIME_VERSION = "1.9.0-devel"
 
 def api_client_factory(config):
+    logger = logging.getLogger()
     if config["api_client"] == "airtime":
-        return AirTimeApiClient(config)
+        return AirTimeApiClient()
     elif config["api_client"] == "obp":
-        return ObpApiClient(config)
+        return ObpApiClient()
     else:
-        print 'API Client "'+config["api_client"]+'" not supported.  Please check your config file.'
-        print
+        logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
         sys.exit()
+        
+def to_unicode(obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, unicode):
+            obj = unicode(obj, encoding)
+    return obj
 
-def recursive_urlencode(d):
-    def recursion(d, base=None):
-        pairs = []
-
-        for key, value in d.items():
-            if hasattr(value, 'values'):
-                pairs += recursion(value, key)
-            else:
-                new_pair = None
-                if base:
-                    new_pair = "%s[%s]=%s" % (base, urllib.quote(unicode(key)), urllib.quote(unicode(value)))
-                else:
-                    new_pair = "%s=%s" % (urllib.quote(unicode(key)), urllib.quote(unicode(value)))
-                pairs.append(new_pair)
-        return pairs
-
-    return '&'.join(recursion(d))
+def encode_to(obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, str):
+            obj = obj.encode(encoding)
+    return obj
 
 class ApiClientInterface:
 
@@ -117,7 +113,25 @@ class ApiClientInterface:
     def upload_recorded_show(self):
         pass
 
+    def check_media_status(self, md5):
+        pass
+
     def update_media_metadata(self, md):
+        pass
+
+    def list_all_db_files(self, dir_id):
+        pass
+
+    def list_all_watched_dirs(self):
+        pass
+
+    def add_watched_dir(self):
+        pass
+
+    def remove_watched_dir(self):
+        pass
+
+    def set_storage_dir(self):
         pass
 
     # Put here whatever tests you want to run to make sure your API is working
@@ -134,8 +148,14 @@ class ApiClientInterface:
 
 class AirTimeApiClient(ApiClientInterface):
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
+        # loading config file
+        try:
+            self.config = ConfigObj('/etc/airtime/api_client.cfg')
+        except Exception, e:
+            logger = logging.getLogger()
+            logger.error('Error loading config file: %s', e)
+            sys.exit(1)
 
     def __get_airtime_version(self, verbose = True):
         logger = logging.getLogger()
@@ -152,24 +172,25 @@ class AirTimeApiClient(ApiClientInterface):
             response_json = json.loads(data)
             version = response_json['version']
             logger.debug("Airtime Version %s detected", version)
-        except Exception, e:
+        except IOError, e:
+            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
             if e[1] == 401:
                 if (verbose):
-                    print '#####################################'
-                    print '# YOUR API KEY SEEMS TO BE INVALID:'
-                    print '# ' + self.config["api_key"]
-                    print '#####################################'
-                return -1
+                    logger.info('#####################################')
+                    logger.info('# YOUR API KEY SEEMS TO BE INVALID:')
+                    logger.info('# ' + self.config["api_key"])
+                    logger.info('#####################################')
 
             if e[1] == 404:
                 if (verbose):
-                    print '#####################################'
-                    print '# Unable to contact the Airtime-API'
-                    print '# ' + url
-                    print '#####################################'
-                return -1
-
-            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, response)
+                    logger.info('#####################################')
+                    logger.info('# Unable to contact the Airtime-API')
+                    logger.info('# ' + url)
+                    logger.info('#####################################')
+            return -1
+        except Exception, e:
+            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
+            return -1
 
         return version
 
@@ -190,23 +211,21 @@ class AirTimeApiClient(ApiClientInterface):
 
 
     def is_server_compatible(self, verbose = True):
+        logger = logging.getLogger()
         version = self.__get_airtime_version(verbose)
         if (version == -1):
             if (verbose):
-                print 'Unable to get Airtime version number.'
-                print
+                logger.info('Unable to get Airtime version number.\n')
             return False
         elif (version[0:3] != AIRTIME_VERSION[0:3]):
             if (verbose):
-                print 'Airtime version found: ' + str(version)
-                print 'pypo is at version ' +AIRTIME_VERSION+' and is not compatible with this version of Airtime.'
-                print
+                logger.info('Airtime version found: ' + str(version))
+                logger.info('pypo is at version ' +AIRTIME_VERSION+' and is not compatible with this version of Airtime.\n')
             return False
         else:
             if (verbose):
-                print 'Airtime version: ' + str(version)
-                print 'pypo is at version ' +AIRTIME_VERSION+' and is compatible with this version of Airtime.'
-                print
+                logger.info('Airtime version: ' + str(version))
+                logger.info('pypo is at version ' +AIRTIME_VERSION+' and is compatible with this version of Airtime.')
             return True
 
 
@@ -226,7 +245,7 @@ class AirTimeApiClient(ApiClientInterface):
             response = json.loads(response_json)
             status = response['check']
         except Exception, e:
-            print e
+            logger.error(e)
 
         return status, response
 
@@ -319,6 +338,7 @@ class AirTimeApiClient(ApiClientInterface):
 
         except Exception, e:
             logger.error("Exception: %s", e)
+            response = None
 
         return response
 
@@ -333,6 +353,7 @@ class AirTimeApiClient(ApiClientInterface):
 
         logger.debug(url)
         url = url.replace("%%api_key%%", self.config["api_key"])
+        logger.debug(url)
 
         for i in range(0, retries):
             logger.debug("Upload attempt: %s", i+1)
@@ -356,27 +377,155 @@ class AirTimeApiClient(ApiClientInterface):
 
         return response
 
-    def update_media_metadata(self, md):
+    def setup_media_monitor(self):
         logger = logging.getLogger()
+
         response = None
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
-            logger.debug(url)
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_setup_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
 
-            data = recursive_urlencode(md)
-            req = urllib2.Request(url, data)
-
-            response = urllib2.urlopen(req).read()
-            logger.info("update media %s", response)
-            response = json.loads(response)
-
+            response = urllib.urlopen(url)
+            response = json.loads(response.read())
+            logger.info("Connected to Airtime Server. Json Media Storage Dir: %s", response)
+        except IOError:
+            #this should be a common exception when media-monitor daemon
+            #has started before apache on bootup and apache isn't accepting
+            #connections yet.
+            response = None
         except Exception, e:
+            response = None
             logger.error("Exception: %s", e)
 
         return response
 
+    def update_media_metadata(self, md, mode, is_record=False):
+        logger = logging.getLogger()
+        response = None
+        try:
 
+            start = time.time()
+
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%mode%%", mode)
+
+            data = urllib.urlencode(md)
+            req = urllib2.Request(url, data)
+
+            response = urllib2.urlopen(req).read()
+            logger.info("update media %s, filepath: %s, mode: %s", response, md['MDATA_KEY_FILEPATH'], mode)
+            response = json.loads(response)
+
+            elapsed = (time.time() - start)
+            logger.info("time taken to get response %s", elapsed)
+
+            if(is_record):
+                url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
+                url = url.replace("%%fileid%%", str(response[u'id']))
+                url = url.replace("%%showinstanceid%%", str(md['MDATA_KEY_TRACKNUMBER']))
+                logger.debug(url)
+                url = url.replace("%%api_key%%", self.config["api_key"])
+
+                req = urllib2.Request(url)
+                response = urllib2.urlopen(req).read()
+                response = json.loads(response)
+                logger.info("associate recorded %s", response)
+
+
+        except Exception, e:
+            response = None
+            logger.error("Exception with filepath %s: %s", md['MDATA_KEY_FILEPATH'], e)
+
+        return response
+
+    #returns a list of all db files for a given directory in JSON format:
+    #{"files":["path/to/file1", "path/to/file2"]}
+    #Note that these are relative paths to the given directory. The full
+    #path is not returned.
+    def list_all_db_files(self, dir_id):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_db_files"])
+
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%dir_id%%", dir_id)
+
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+
+        return response
+
+    def list_all_watched_dirs(self):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_watched_dirs"])
+
+            url = url.replace("%%api_key%%", self.config["api_key"])
+
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+
+        return response
+
+    def add_watched_dir(self, path):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["add_watched_dir"])
+
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%path%%", base64.b64encode(path))
+
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+
+        return response
+
+    def remove_watched_dir(self, path):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["remove_watched_dir"])
+
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%path%%", base64.b64encode(path))
+
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+
+        return response
+
+    def set_storage_dir(self, path):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["set_storage_dir"])
+
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%path%%", base64.b64encode(path))
+
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
+
+        return response
 
 ################################################################################
 # OpenBroadcast API Client
@@ -393,29 +542,25 @@ class ObpApiClient():
         self.api_auth = urllib.urlencode({'api_key': self.config["api_key"]})
 
     def is_server_compatible(self, verbose = True):
+        logger = logging.getLogger()
         obp_version = self.get_obp_version()
 
         if obp_version == 0:
             if (verbose):
-                print '#################################################'
-                print 'Unable to get OBP version. Is OBP up and running?'
-                print '#################################################'
-                print
+                logger.error('Unable to get OBP version. Is OBP up and running?\n')
             return False
         elif obp_version < OBP_MIN_VERSION:
             if (verbose):
-                print 'OBP version: ' + str(obp_version)
-                print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-                print 'pypo not compatible with this version of OBP'
-                print
+                logger.warn('OBP version: ' + str(obp_version))
+                logger.warn('OBP min-version: ' + str(OBP_MIN_VERSION))
+                logger.warn('pypo not compatible with this version of OBP\n')
             return False
         else:
             if (verbose):
-                print 'OBP API: ' + str(API_BASE)
-                print 'OBP version: ' + str(obp_version)
-                print 'OBP min-version: ' + str(OBP_MIN_VERSION)
-                print 'pypo is compatible with this version of OBP'
-                print
+                logger.warn('OBP API: ' + str(API_BASE))
+                logger.warn('OBP version: ' + str(obp_version))
+                logger.warn('OBP min-version: ' + str(OBP_MIN_VERSION))
+                logger.warn('pypo is compatible with this version of OBP\n')
             return True
 
 
@@ -437,10 +582,10 @@ class ObpApiClient():
         except Exception, e:
             try:
                 if e[1] == 401:
-                    print '#####################################'
-                    print '# YOUR API KEY SEEMS TO BE INVALID'
-                    print '# ' + self.config["api_auth"]
-                    print '#####################################'
+                    logger.error('#####################################')
+                    logger.error('# YOUR API KEY SEEMS TO BE INVALID')
+                    logger.error('# ' + self.config["api_auth"])
+                    logger.error('#####################################')
                     sys.exit()
 
             except Exception, e:
@@ -448,10 +593,10 @@ class ObpApiClient():
 
             try:
                 if e[1] == 404:
-                    print '#####################################'
-                    print '# Unable to contact the OBP-API'
-                    print '# ' + url
-                    print '#####################################'
+                    logger.error('#####################################')
+                    logger.error('# Unable to contact the OBP-API')
+                    logger.error('# ' + url)
+                    logger.error('#####################################')
                     sys.exit()
 
             except Exception, e:
@@ -502,15 +647,14 @@ class ObpApiClient():
             logger.info("export status %s", response['check'])
             status = response['check']
         except Exception, e:
-            print e
+            logger.error(e)
 
         return status, response
 
 
     def get_media(self, src, dest):
         try:
-            print '** urllib auth with: ',
-            print self.api_auth
+            logger.info('** urllib auth with: ' + self.api_auth)
             urllib.urlretrieve(src, dst, False, self.api_auth)
             logger.info("downloaded %s to %s", src, dst)
         except Exception, e:
@@ -535,7 +679,6 @@ class ObpApiClient():
             logger.info("API-Message %s", response['message'])
 
         except Exception, e:
-            print e
             api_status = False
             logger.error("Unable to connect to the OBP API - %s", e)
 
@@ -561,7 +704,7 @@ class ObpApiClient():
         url = url.replace("%%media_id%%", str(media_id))
         url = url.replace("%%playlist_id%%", str(playlist_id))
         url = url.replace("%%transmission_id%%", str(transmission_id))
-        print url
+        logger.info(url)
 
         try:
             response = urllib.urlopen(url, self.api_auth)
@@ -571,7 +714,6 @@ class ObpApiClient():
             logger.info("TXT %s", response['str_dls'])
 
         except Exception, e:
-            print e
             api_status = False
             logger.error("Unable to connect to the OBP API - %s", e)
 
@@ -592,7 +734,6 @@ class ObpApiClient():
             logger.info("API-Message %s", response['message'])
 
         except Exception, e:
-            print e
             api_status = False
             logger.error("Unable to handle the OBP API request - %s", e)
 
@@ -601,7 +742,7 @@ class ObpApiClient():
     def get_liquidsoap_data(self, pkey, schedule):
         playlist = schedule[pkey]
         data = dict()
-        data["ptype"] = playlist['subtype']
+        #data["ptype"] = playlist['subtype']
         try:
             data["user_id"] = playlist['user_id']
             data["playlist_id"] = playlist['id']

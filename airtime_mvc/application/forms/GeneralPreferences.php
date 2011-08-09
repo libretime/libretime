@@ -12,7 +12,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         //Station name
         $this->addElement('text', 'stationName', array(
             'class'      => 'input_text',
-            'label'      => 'Station Name:',
+            'label'      => 'Station Name',
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validators' => array('NotEmpty'),
@@ -33,15 +33,15 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'label'      => 'Default Fade:',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'validators' => array(array('regex', false, 
-                array('/^[0-2][0-3]:[0-5][0-9]:[0-5][0-9](\.\d{1,6})?$/', 
+            'validators' => array(array('regex', false,
+                array('/^[0-2][0-3]:[0-5][0-9]:[0-5][0-9](\.\d{1,6})?$/',
                 'messages' => 'enter a time 00:00:00{.000000}'))),
             'value' => $defaultFade,
             'decorators' => array(
                 'ViewHelper'
             )
         ));
-            
+
         $stream_format = new Zend_Form_Element_Radio('streamFormat');
         $stream_format->setLabel('Stream Label:');
         $stream_format->setMultiOptions(array("Artist - Title",
@@ -58,6 +58,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
         $third_party_api->setDecorators(array('ViewHelper'));
         $this->addElement($third_party_api);
+
     }
 
 

@@ -28,6 +28,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
 
@@ -54,18 +55,23 @@ class LibraryController extends Zend_Controller_Action
 
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
 
         $params = '/format/json/id/#id#/type/#type#';
 
         $paramsPop = str_replace('#id#', $id, $params);
         $paramsPop = str_replace('#type#', $type, $paramsPop);
 
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
+
         $pl_sess = $this->pl_sess;
 
         if($type === "au") {
 
             if(isset($pl_sess->id)) {
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/add-item'.$params, 'callback' =>                      'window["setSPLContent"]'),
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/add-item'.$params, 'callback' => 'window["setSPLContent"]'),
                     'title' => 'Add to Playlist');
             }
 
@@ -78,13 +84,16 @@ class LibraryController extends Zend_Controller_Action
 	    	$file_id = $this->_getParam('id', null);
 	        $file = StoredFile::Recall($file_id);
 
-	        $url = $file->getFileURL().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
+	        $url = $file->getRelativeFileUrl($baseUrl).'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
 
-            $menu[] = array('action' => array('type' => 'fn',
-                    'callback' => "window['confirmDeleteAudioClip']('$paramsPop')"),
-                    'title' => 'Delete');
+
+            if ($user->isAdmin()) {
+                $menu[] = array('action' => array('type' => 'fn',
+                        'callback' => "window['confirmDeleteAudioClip']('$paramsPop')"),
+                        'title' => 'Delete');
+            }
         }
         else if($type === "pl") {
 
@@ -118,34 +127,50 @@ class LibraryController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = $this->_getParam('id');
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new User($userInfo->id);
 
-        if (!is_null($id)) {
-            $file = StoredFile::Recall($id);
+        if ($user->isAdmin()) {
 
-            if (PEAR::isError($file)) {
-                $this->view->message = $file->getMessage();
-                return;
+            if (!is_null($id)) {
+                $file = StoredFile::Recall($id);
+
+                if (PEAR::isError($file)) {
+                    $this->view->message = $file->getMessage();
+                    return;
+                }
+                else if(is_null($file)) {
+                    $this->view->message = "file doesn't exist";
+                    return;
+                }
+
+                $res = $file->delete();
+
+                if (PEAR::isError($res)) {
+                    $this->view->message = $res->getMessage();
+                    return;
+                }
+                else {
+                    $res = settype($res, "integer");
+                    $data = array("filepath" => $file->getFilePath(), "delete" => $res);
+                    RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+                }
             }
-            else if(is_null($file)) {
-                $this->view->message = "file doesn't exist";
-                return;
-            }
 
-            $res = $file->delete();
-
-            if (PEAR::isError($res)) {
-                $this->view->message = $res->getMessage();
-                return;
-            }
+            $this->view->id = $id;
         }
-
-        $this->view->id = $id;
     }
 
     public function contentsAction()
     {
         $post = $this->getRequest()->getPost();
         $datatables = StoredFile::searchFilesForPlaylistBuilder($post);
+
+        //format clip lengh to 1 decimal
+        foreach($datatables["aaData"] as &$data){
+            $sec = Playlist::playlistTimeToSeconds($data[5]);
+            $data[5] = Playlist::secondsToPlaylistTime($sec);
+        }
 
         die(json_encode($datatables));
     }
@@ -162,18 +187,17 @@ class LibraryController extends Zend_Controller_Action
             if ($form->isValid($request->getPost())) {
 
                 $formdata = $form->getValues();
-                $file->replaceDbMetadata($formdata);
+                $file->setDbColMetadata($formdata);
 
-                $data = $formdata;
-                $data['filepath'] = $file->getRealFilePath();
-                //wait for 1.9.0 release
-                //RabbitMq::SendFileMetaData($data);
+                $data = $file->getMetadata();
+
+                RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
                 $this->_helper->redirector('index');
             }
         }
 
-        $form->populate($file->md);
+        $form->populate($file->getDbColMetadata());
         $this->view->form = $form;
     }
 
@@ -185,7 +209,7 @@ class LibraryController extends Zend_Controller_Action
         if($type == "au") {
             $file = StoredFile::Recall($id);
             $this->view->type = $type;
-            $this->view->md = $file->md;
+            $this->view->md = $file->getMetadata();
         }
         else if($type == "pl") {
             $file = Playlist::Recall($id);
@@ -195,25 +219,4 @@ class LibraryController extends Zend_Controller_Action
         }
 
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

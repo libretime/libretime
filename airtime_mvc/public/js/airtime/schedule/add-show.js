@@ -13,6 +13,8 @@ function startDpSelect(dateText, inst) {
 
 	$("#add_show_end_date").datepicker("option", "minDate", date);
     $('input[name^="add_show_rebroadcast_absolute_date"]').datepicker("option", "minDate", date);
+    if (inst.input)
+        inst.input.trigger('change');
 }
 
 function endDpSelect(dateText, inst) {
@@ -21,7 +23,9 @@ function endDpSelect(dateText, inst) {
 	time = dateText.split("-");
 	date = new Date(time[0], time[1] - 1, time[2]);
 
-	$("#add_show_start_date").datepicker( "option", "maxDate", date);
+	//$("#add_show_start_date").datepicker( "option", "maxDate", date);
+	if (inst.input)
+        inst.input.trigger('change');
 }
 
 function createDateInput(el, onSelect) {
@@ -158,14 +162,15 @@ function setAddShowEvents() {
     form.find("#add_show_no_end").click(endDateVisibility);
 
 	createDateInput(form.find("#add_show_start_date"), startDpSelect);
+	createDateInput(form.find("#add_show_end_date_no_repeat"), endDpSelect);
 	createDateInput(form.find("#add_show_end_date"), endDpSelect);
 
     form.find("#add_show_start_time").timepicker({
-        amPmText: ['', '']
-    });
-    form.find("#add_show_duration").timepicker({
         amPmText: ['', ''],
-        defaultTime: '01:00'
+        defaultTime: '00:00'
+    });
+    form.find("#add_show_end_time").timepicker({
+        amPmText: ['', '']
     });
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
@@ -243,10 +248,7 @@ function setAddShowEvents() {
             event.stopPropagation();
             event.preventDefault();
 
-            var y = $("#schedule_calendar").width();
-            var z = $("#schedule-add-show").width();
-
-            $("#schedule_calendar").width(y+z+50)
+            $("#schedule_calendar").removeAttr("style")
                 .fullCalendar('render');
 
 			$("#add-show-form").hide();
@@ -312,6 +314,84 @@ function setAddShowEvents() {
                 }
             });
 		});
+
+	// when start date/time changes, set end date/time to start date/time+1 hr
+	$('#add_show_start_date, #add_show_start_time').change(function(){
+		var startDate = $('#add_show_start_date').val().split('-');
+		var startTime = $('#add_show_start_time').val().split(':');
+        var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
+
+		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
+		var endTime = $('#add_show_end_time').val().split(':');
+        var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
+
+		if(startDateTime.getTime() > endDateTime.getTime()){
+		    var duration = $('#add_show_duration').val();
+	        // parse duration
+		    var time = 0;
+		    var info = duration.split(' ');
+		    var h = parseInt(info[0], 10);
+		    time += h * 60 * 60* 1000;
+		    if(info.length >1 && $.trim(info[1]) !== ''){
+		        var m = parseInt(info[1], 10);
+		        time += m * 60 * 1000;
+		    }
+			endDateTime = new Date(startDateTime.getTime() + time);
+		}
+
+		var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
+		var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
+
+		$('#add_show_end_date_no_repeat').val(endDateFormat);
+		$('#add_show_end_time').val(endTimeFormat);
+
+		// calculate duration
+		calculateDuration(endDateTime, startDateTime);
+	});
+
+	// when end date/time changes, check if the changed date is in past of start date/time
+	$('#add_show_end_date_no_repeat, #add_show_end_time').change(function(){
+		var startDate = $('#add_show_start_date').val().split('-');
+        var startTime = $('#add_show_start_time').val().split(':');
+		var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
+
+		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
+		var endTime = $('#add_show_end_time').val().split(':');
+        var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
+
+		if(startDateTime.getTime() > endDateTime.getTime()){
+			$('#add_show_end_date_no_repeat').css('background-color', '#F49C9C');
+			$('#add_show_end_time').css('background-color', '#F49C9C');
+		}else{
+			$('#add_show_end_date_no_repeat').css('background-color', '');
+			$('#add_show_end_time').css('background-color', '');
+		}
+
+		// calculate duration
+		calculateDuration(endDateTime, startDateTime);
+	});
+
+	function calculateDuration(endDateTime, startDateTime){
+		var duration;
+		var durationSeconds = (endDateTime.getTime() - startDateTime.getTime())/1000;
+		if(durationSeconds != 0){
+			var durationHour = parseInt(durationSeconds/3600, 10);
+			var durationMin = parseInt((durationSeconds%3600)/60, 10);
+			duration = (durationHour == 0 ? '' : durationHour+'h'+' ')+(durationMin == 0 ? '' : durationMin+'m');
+		}else{
+			duration = '0m';
+		}
+		$('#add_show_duration').val(duration);
+	}
+
+	function pad(number, length) {
+	    var str = '' + number;
+	    while (str.length < length) {
+	        str = '0' + str;
+	    }
+
+	    return str;
+	}
 }
 
 function showErrorSections() {
@@ -341,6 +421,17 @@ function showErrorSections() {
 $(document).ready(function() {
 
 	//setAddShowEvents();
+});
+
+$(window).resize(function(){
+	var windowWidth = $(this).width();
+    // margin on showform are 16 px on each side
+	if(!$("#schedule-add-show").is(':hidden')){	 
+        var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
+        var widthPercent = parseInt(calendarWidth)+"%";
+        $("#schedule_calendar").css("width", widthPercent);
+        $("#schedule_calendar").fullCalendar('render');
+	}
 });
 
 $(window).load(function() {

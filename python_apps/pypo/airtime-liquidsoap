@@ -1,0 +1,19 @@
+#!/bin/sh
+
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
+ls_user="pypo"
+export HOME="/var/tmp/airtime/pypo/"
+api_client_path="/usr/lib/airtime/"
+ls_path="/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap"
+ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
+
+exec 2>&1
+
+cd /usr/lib/airtime/pypo/bin/liquidsoap_scripts
+
+export PYTHONPATH=${api_client_path}
+exec ${ls_path} ${ls_param}
+
+# EOF

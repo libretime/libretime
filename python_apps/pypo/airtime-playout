@@ -1,0 +1,21 @@
+#!/bin/sh
+
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
+pypo_user="pypo"
+
+# Location of pypo_cli.py Python script
+pypo_path="/usr/lib/airtime/pypo/bin/"
+api_client_path="/usr/lib/airtime/"
+pypo_script="pypo-cli.py"
+cd ${pypo_path}
+exec 2>&1
+
+export HOME="/var/tmp/airtime/pypo/"
+export PYTHONPATH=${api_client_path}:$PYTHONPATH
+
+# Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
+exec python -u ${pypo_path}${pypo_script} > /var/log/airtime/pypo/py-interpreter.log 2>&1
+
+# EOF

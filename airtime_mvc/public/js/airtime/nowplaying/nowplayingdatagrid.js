@@ -64,8 +64,8 @@ var columns = [{"sTitle": "type", "bVisible":false},
     {"sTitle":"Start"},
     {"sTitle":"End"},
     {"sTitle":"Duration"},
-    {"sTitle":"Song"},
-    {"sTitle":"Artist"},
+    {"sTitle":"Title"},
+    {"sTitle":"Creator"},
     {"sTitle":"Album"},
     {"sTitle":"Playlist"},
     {"sTitle":"Show"},
@@ -167,20 +167,17 @@ function createDataGrid(){
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);
                 } else if ( sType.indexOf("g") != -1 ){
-					//gap row found
-					
+                    //gap row found
                     var gapTime = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[4];
-                    
                     var nGroup = document.createElement('tr');
                     var nCell = document.createElement('td');
                     nCell.colSpan = iColspan;
                     nCell.className = "gap";
-                    nCell.innerHTML = "Gap until show end: " + gapTime + " seconds";
+                    nCell.innerHTML = "Gap until show end: " + gapTime;
                     nGroup.appendChild(nCell);
                     nTrs[i].parentNode.replaceChild(nGroup, nTrs[i]);                   
                 } else if ( sType.indexOf("r") != -1 ){
-					//gap row found
-					
+                    //gap row found
                     var showName = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex]]._aData[4];
                     
                     var nGroup = document.createElement('tr');

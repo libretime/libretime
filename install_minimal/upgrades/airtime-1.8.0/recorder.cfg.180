@@ -1,0 +1,35 @@
+api_client = "airtime"
+
+# Hostname
+base_url = 'localhost'
+base_port = 80
+
+# where the binary files live
+bin_dir = '/usr/lib/airtime/show-recorder'
+
+# base path to store recordered shows at
+base_recorded_files = '/var/tmp/airtime/show-recorder/'
+
+# where the logging files live
+log_dir = '/var/log/airtime/show-recorder'
+
+# Value needed to access the API
+api_key = 'AAA'
+
+# Path to the base of the API
+api_base = 'api'
+
+# URL to get the version number of the server API
+version_url = 'version/api_key/%%api_key%%'
+
+# URL to get the schedule of shows set to record
+show_schedule_url = 'recorded-shows/format/json/api_key/%%api_key%%'
+
+# URL to upload the recorded show's file to Airtime
+upload_file_url = 'upload-recorded/format/json/api_key/%%api_key%%'
+
+#number of retries to upload file if connection problem
+upload_retries = 3
+
+#time to wait between attempts to upload file if connection problem (in seconds)
+upload_wait = 60

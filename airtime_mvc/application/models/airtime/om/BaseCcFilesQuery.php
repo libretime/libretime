@@ -11,6 +11,7 @@
  * @method     CcFilesQuery orderByDbName($order = Criteria::ASC) Order by the name column
  * @method     CcFilesQuery orderByDbMime($order = Criteria::ASC) Order by the mime column
  * @method     CcFilesQuery orderByDbFtype($order = Criteria::ASC) Order by the ftype column
+ * @method     CcFilesQuery orderByDbDirectory($order = Criteria::ASC) Order by the directory column
  * @method     CcFilesQuery orderByDbFilepath($order = Criteria::ASC) Order by the filepath column
  * @method     CcFilesQuery orderByDbState($order = Criteria::ASC) Order by the state column
  * @method     CcFilesQuery orderByDbCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
@@ -66,6 +67,7 @@
  * @method     CcFilesQuery groupByDbName() Group by the name column
  * @method     CcFilesQuery groupByDbMime() Group by the mime column
  * @method     CcFilesQuery groupByDbFtype() Group by the ftype column
+ * @method     CcFilesQuery groupByDbDirectory() Group by the directory column
  * @method     CcFilesQuery groupByDbFilepath() Group by the filepath column
  * @method     CcFilesQuery groupByDbState() Group by the state column
  * @method     CcFilesQuery groupByDbCurrentlyaccessing() Group by the currentlyaccessing column
@@ -124,6 +126,10 @@
  * @method     CcFilesQuery rightJoinCcSubjs($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method     CcFilesQuery innerJoinCcSubjs($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSubjs relation
  *
+ * @method     CcFilesQuery leftJoinCcMusicDirs($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcMusicDirs relation
+ * @method     CcFilesQuery rightJoinCcMusicDirs($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcMusicDirs relation
+ * @method     CcFilesQuery innerJoinCcMusicDirs($relationAlias = '') Adds a INNER JOIN clause to the query using the CcMusicDirs relation
+ *
  * @method     CcFilesQuery leftJoinCcShowInstances($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstances relation
  * @method     CcFilesQuery rightJoinCcShowInstances($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
  * @method     CcFilesQuery innerJoinCcShowInstances($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstances relation
@@ -131,6 +137,10 @@
  * @method     CcFilesQuery leftJoinCcPlaylistcontents($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPlaylistcontents relation
  * @method     CcFilesQuery rightJoinCcPlaylistcontents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylistcontents relation
  * @method     CcFilesQuery innerJoinCcPlaylistcontents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylistcontents relation
+ *
+ * @method     CcFilesQuery leftJoinCcSchedule($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcSchedule relation
+ * @method     CcFilesQuery rightJoinCcSchedule($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSchedule relation
+ * @method     CcFilesQuery innerJoinCcSchedule($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSchedule relation
  *
  * @method     CcFiles findOne(PropelPDO $con = null) Return the first CcFiles matching the query
  * @method     CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
@@ -140,6 +150,7 @@
  * @method     CcFiles findOneByDbName(string $name) Return the first CcFiles filtered by the name column
  * @method     CcFiles findOneByDbMime(string $mime) Return the first CcFiles filtered by the mime column
  * @method     CcFiles findOneByDbFtype(string $ftype) Return the first CcFiles filtered by the ftype column
+ * @method     CcFiles findOneByDbDirectory(int $directory) Return the first CcFiles filtered by the directory column
  * @method     CcFiles findOneByDbFilepath(string $filepath) Return the first CcFiles filtered by the filepath column
  * @method     CcFiles findOneByDbState(string $state) Return the first CcFiles filtered by the state column
  * @method     CcFiles findOneByDbCurrentlyaccessing(int $currentlyaccessing) Return the first CcFiles filtered by the currentlyaccessing column
@@ -195,6 +206,7 @@
  * @method     array findByDbName(string $name) Return CcFiles objects filtered by the name column
  * @method     array findByDbMime(string $mime) Return CcFiles objects filtered by the mime column
  * @method     array findByDbFtype(string $ftype) Return CcFiles objects filtered by the ftype column
+ * @method     array findByDbDirectory(int $directory) Return CcFiles objects filtered by the directory column
  * @method     array findByDbFilepath(string $filepath) Return CcFiles objects filtered by the filepath column
  * @method     array findByDbState(string $state) Return CcFiles objects filtered by the state column
  * @method     array findByDbCurrentlyaccessing(int $currentlyaccessing) Return CcFiles objects filtered by the currentlyaccessing column
@@ -456,6 +468,37 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::FTYPE, $dbFtype, $comparison);
+	}
+
+	/**
+	 * Filter the query on the directory column
+	 * 
+	 * @param     int|array $dbDirectory The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbDirectory($dbDirectory = null, $comparison = null)
+	{
+		if (is_array($dbDirectory)) {
+			$useMinMax = false;
+			if (isset($dbDirectory['min'])) {
+				$this->addUsingAlias(CcFilesPeer::DIRECTORY, $dbDirectory['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbDirectory['max'])) {
+				$this->addUsingAlias(CcFilesPeer::DIRECTORY, $dbDirectory['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::DIRECTORY, $dbDirectory, $comparison);
 	}
 
 	/**
@@ -1655,6 +1698,70 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	}
 
 	/**
+	 * Filter the query by a related CcMusicDirs object
+	 *
+	 * @param     CcMusicDirs $ccMusicDirs  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByCcMusicDirs($ccMusicDirs, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcFilesPeer::DIRECTORY, $ccMusicDirs->getId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcMusicDirs relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function joinCcMusicDirs($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcMusicDirs');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcMusicDirs');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcMusicDirs relation CcMusicDirs object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcMusicDirsQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcMusicDirsQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcMusicDirs($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcMusicDirs', 'CcMusicDirsQuery');
+	}
+
+	/**
 	 * Filter the query by a related CcShowInstances object
 	 *
 	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
@@ -1780,6 +1887,70 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 		return $this
 			->joinCcPlaylistcontents($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcPlaylistcontents', 'CcPlaylistcontentsQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcSchedule object
+	 *
+	 * @param     CcSchedule $ccSchedule  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByCcSchedule($ccSchedule, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcFilesPeer::ID, $ccSchedule->getDbFileId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcSchedule relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function joinCcSchedule($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcSchedule');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcSchedule');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcSchedule relation CcSchedule object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcScheduleQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcScheduleQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcSchedule($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcSchedule', 'CcScheduleQuery');
 	}
 
 	/**

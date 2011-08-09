@@ -16,6 +16,7 @@ require_once __DIR__."/configs/conf.php";
 require_once 'DB.php';
 
 require_once 'Soundcloud.php';
+require_once 'MusicDir.php';
 require_once 'Playlist.php';
 require_once 'StoredFile.php';
 require_once 'Schedule.php';

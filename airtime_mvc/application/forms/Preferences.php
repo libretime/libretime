@@ -11,12 +11,15 @@ class Application_Form_Preferences extends Zend_Form
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences.phtml'))
         ));
-        
+
         $general_pref = new Application_Form_GeneralPreferences();
         $this->addSubForm($general_pref, 'preferences_general');
 
         $soundcloud_pref = new Application_Form_SoundcloudPreferences();
         $this->addSubForm($soundcloud_pref, 'preferences_soundcloud');
+        
+        $support_pref = new Application_Form_SupportPreferences();
+        $this->addSubForm($support_pref, 'preferences_support');
 
         $this->addElement('submit', 'submit', array(
             'class'    => 'ui-button ui-state-default right-floated',
@@ -25,6 +28,6 @@ class Application_Form_Preferences extends Zend_Form
             'decorators' => array(
                 'ViewHelper'
             )
-        ));            
+        ));
     }
 }

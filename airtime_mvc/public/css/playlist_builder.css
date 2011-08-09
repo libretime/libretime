@@ -81,6 +81,13 @@
 	color:#d5d5d5;
 }
 
+.spl_offset	{
+	float: right;
+	text-align: right;
+	padding: 0 5px 0 0;
+	color: #D5D5D5;
+}
+
 /*#spl_editor {
 	height: 50px;
 }*/
@@ -402,7 +409,6 @@
     font-size: 12px;
     margin: 0;
     padding: 2px 0 0 0;
-    text-indent: 3px;
     -moz-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
     box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);

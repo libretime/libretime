@@ -8,8 +8,8 @@ require_once __DIR__.'/../Schedule.php';
 require_once __DIR__.'/../Preference.php';
 require_once __DIR__.'/../RabbitMq.php';
 require_once __DIR__.'/../../configs/conf.php';
-require_once __DIR__.'/../../../install/include/AirtimeIni.php';
-require_once __DIR__.'/../../../install/include/AirtimeInstall.php';
+require_once __DIR__.'/../../../install_minimal/include/AirtimeIni.php';
+require_once __DIR__.'/../../../install_minimal/include/AirtimeInstall.php';
 require_once __DIR__.'/../../../library/propel/runtime/lib/Propel.php';
 
 Propel::init(__DIR__.'/../../configs/airtime-conf.php');

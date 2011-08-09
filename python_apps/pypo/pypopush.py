@@ -3,6 +3,7 @@ import sys
 import time
 import logging
 import logging.config
+import logging.handlers
 import pickle
 import telnetlib
 import calendar
@@ -11,9 +12,9 @@ import math
 from threading import Thread
 
 from api_clients import api_client
-from util import CueFile
 
 from configobj import ConfigObj
+
 
 # configure logging
 logging.config.fileConfig("logging.cfg")
@@ -25,6 +26,7 @@ try:
     LS_PORT = config['ls_port']
     PUSH_INTERVAL = 2
 except Exception, e:
+    logger = logging.getLogger()
     logger.error('Error loading config file %s', e)
     sys.exit()
 
@@ -32,7 +34,6 @@ class PypoPush(Thread):
     def __init__(self, q):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
-        self.cue_file = CueFile()
         self.set_export_source('scheduler')
         self.queue = q
 
@@ -94,9 +95,11 @@ class PypoPush(Thread):
             str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
             
             for pkey in schedule:
-                plstart = pkey[0:19]
+                plstart = schedule[pkey]['start'][0:19]
+                #plstart = pkey[0:19]
          
-                playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
+                #playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
+                playedFlag = False
                 
                 if plstart == str_tcoming_s or (plstart < str_tcoming_s and plstart > str_tcoming2_s and not playedFlag):
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
@@ -116,7 +119,6 @@ class PypoPush(Thread):
                         schedule_tracker = open(self.schedule_tracker_file, "w")
                         pickle.dump(playedItems, schedule_tracker)
                         schedule_tracker.close()
-                        #logger.debug("Wrote schedule to disk: "+str(json.dumps(playedItems)))
 
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
@@ -129,7 +131,6 @@ class PypoPush(Thread):
                     currently_on_air = True
         else:
             pass
-            #logger.debug('Empty schedule')
 
         if not currently_on_air and self.liquidsoap_state_play:
             logger.debug('Notifying Liquidsoap to stop playback.')
@@ -140,7 +141,10 @@ class PypoPush(Thread):
                 tn.read_all()
             except Exception, e:
                 logger.debug(e)
+
             self.liquidsoap_state_play = False
+            logger.debug('Could not connect to liquidsoap')
+            
 
     def push_liquidsoap(self, pkey, schedule, playlists):
         logger = logging.getLogger('push')
@@ -157,8 +161,8 @@ class PypoPush(Thread):
             #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
             epoch_now = time.time()
 
-            logger.debug("Epoch start: " + str(epoch_start))
-            logger.debug("Epoch now: " + str(epoch_now))
+            logger.debug("Epoch start: %s" % epoch_start)
+            logger.debug("Epoch now: %s" % epoch_now)
 
             sleep_time = epoch_start - epoch_now;
 
@@ -178,13 +182,12 @@ class PypoPush(Thread):
             liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)
 
             #Sending schedule table row id string.
-            logger.debug("vars.pypo_data %s\n"%(str(liquidsoap_data["schedule_id"])))
-            tn.write(("vars.pypo_data %s\n"%str(liquidsoap_data["schedule_id"])).encode('latin-1'))
+            logger.debug("vars.pypo_data %s\n"%(liquidsoap_data["schedule_id"]))
+            tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('latin-1'))
 
             logger.debug('Preparing to push playlist %s' % pkey)
             for item in playlist:
                 annotate = str(item['annotate'])
-                #logger.debug(annotate)
                 tn.write(('queue.push %s\n' % annotate).encode('latin-1'))
                 tn.write(('vars.show_name %s\n' % item['show_name']).encode('latin-1'))
 
@@ -201,7 +204,6 @@ class PypoPush(Thread):
 
     def load_schedule_tracker(self):
         logger = logging.getLogger('push')
-        #logger.debug('load_schedule_tracker')
         playedItems = dict()
 
         # create the file if it doesnt exist
@@ -214,7 +216,6 @@ class PypoPush(Thread):
             except Exception, e:
                 logger.error('Error creating schedule tracker file: %s', e)
         else:
-            #logger.debug('schedule tracker file exists, opening: ' + self.schedule_tracker_file)
             try:
                 schedule_tracker = open(self.schedule_tracker_file, "r")
                 playedItems = pickle.load(schedule_tracker)
@@ -235,6 +236,6 @@ class PypoPush(Thread):
                 loops = 0
             try: self.push('scheduler')
             except Exception, e:
-                logger.error('Pypo Push Error, exiting: %s', e)
+                logger.error('Pypo Push Exception: %s', e)
             time.sleep(PUSH_INTERVAL)
             loops += 1

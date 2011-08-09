@@ -1,0 +1,44 @@
+#!/bin/bash
+
+VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
+if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
+    echo -e "\nAirtime 1.9.0 is not installed, cannot uninstall.\n"
+    exit 1
+fi
+
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
+#Cause bash script to exit if any of the installers
+#return with a non-zero return value.
+set -e
+
+# Absolute path to this script
+SCRIPT=`readlink -f $0`
+# Absolute directory this script is in
+SCRIPTPATH=`dirname $SCRIPT`
+
+echo -e "\n******************************* Uninstall Begin ********************************"
+
+echo -e "\n*** Uninstalling Pypo ***"
+python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-uninstall.py
+
+echo -e "\n*** Uninstalling Show Recorder ***"
+python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-uninstall.py
+
+echo -e "\n*** Uninstalling Media Monitor ***"
+python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-uninstall.py
+
+echo -e "\n*** Uninstalling API Client ***"
+python ${SCRIPTPATH}/../python_apps/api_clients/install/api_client_uninstall.py
+
+
+echo -e "\n*** Removing Pypo User ***"
+python ${SCRIPTPATH}/../python_apps/remove-pypo-user.py
+
+php ${SCRIPTPATH}/include/airtime-uninstall.php
+
+echo -e "\n****************************** Uninstall Complete ******************************\n"
+echo "NOTE: To fully remove all Airtime files, you will also have to manually delete"
+echo "      the directories '/srv/airtime'(default storage location of media files)"
+echo -e "      and '/etc/airtime'(where the config files are stored).\n"

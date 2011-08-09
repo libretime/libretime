@@ -31,6 +31,26 @@ CREATE INDEX "cc_access_parent_idx" ON "cc_access" ("parent");
 CREATE INDEX "cc_access_token_idx" ON "cc_access" ("token");
 
 -----------------------------------------------------------------------------
+-- cc_music_dirs
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_music_dirs" CASCADE;
+
+
+CREATE TABLE "cc_music_dirs"
+(
+	"id" serial  NOT NULL,
+	"directory" TEXT,
+	"type" VARCHAR(255),
+	PRIMARY KEY ("id"),
+	CONSTRAINT "cc_music_dir_unique" UNIQUE ("directory")
+);
+
+COMMENT ON TABLE "cc_music_dirs" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
 -- cc_files
 -----------------------------------------------------------------------------
 
@@ -44,6 +64,7 @@ CREATE TABLE "cc_files"
 	"name" VARCHAR(255) default '' NOT NULL,
 	"mime" VARCHAR(255) default '' NOT NULL,
 	"ftype" VARCHAR(128) default '' NOT NULL,
+	"directory" INTEGER,
 	"filepath" TEXT default '',
 	"state" VARCHAR(128) default 'empty' NOT NULL,
 	"currentlyaccessing" INTEGER default 0 NOT NULL,
@@ -422,9 +443,29 @@ COMMENT ON TABLE "cc_subjs" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_country
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_country" CASCADE;
+
+
+CREATE TABLE "cc_country"
+(
+	"isocode" CHAR(3)  NOT NULL,
+	"name" VARCHAR(255)  NOT NULL,
+	PRIMARY KEY ("isocode")
+);
+
+COMMENT ON TABLE "cc_country" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
+
+ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey" FOREIGN KEY ("directory") REFERENCES "cc_music_dirs" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey" FOREIGN KEY ("subj") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
@@ -451,5 +492,7 @@ ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_playlist_i
 ALTER TABLE "cc_pref" ADD CONSTRAINT "cc_pref_subjid_fkey" FOREIGN KEY ("subjid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_file_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;

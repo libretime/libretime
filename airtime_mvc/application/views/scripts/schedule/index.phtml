@@ -1,4 +1,4 @@
-<?php if($this->isAdmin) : ?>
+<?php if($this->isAdmin || $this->isProgramManager) : ?>
     <form id="add-show-form" method="post" action="" style="display:none;">
     <?php echo $this->render('schedule/add-show-form.phtml') ?>
     </form>

@@ -127,6 +127,7 @@
         <formFile formName="AddShowAbsoluteRebroadcastDates"/>
         <formFile formName="SoundcloudPreferences"/>
         <formFile formName="GeneralPreferences"/>
+        <formFile formName="WatchedDirPreferences"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory>
@@ -378,18 +379,18 @@
       <testApplicationDirectory>
         <testApplicationBootstrapFile filesystemName="bootstrap.php"/>
         <testApplicationControllerDirectory>
-          <testApplicationControllerFile filesystemName="PlaylistControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="LibraryControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="PluploadControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="SearchControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="LoginControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="ScheduleControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="ApiControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="UserControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="NowplayingControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="PreferenceControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="DashboardControllerTest.php"/>
-          <testApplicationControllerFile filesystemName="RecorderControllerTest.php"/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
+          <testApplicationControllerFile/>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>
       <testLibraryDirectory>

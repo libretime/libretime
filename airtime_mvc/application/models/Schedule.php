@@ -56,7 +56,7 @@ class ScheduleGroup {
 
             // Check if there are any conflicts with existing entries
             $metadata = $track->getMetadata();
-            $length = trim($metadata["length"]);
+            $length = $metadata['MDATA_KEY_DURATION'];
             if (empty($length)) {
                 return new PEAR_Error("Length is empty.");
             }
@@ -184,7 +184,9 @@ class ScheduleGroup {
         ." st.cue_out,"
         ." st.clip_length,"
         ." st.fade_in,"
-        ." st.fade_out"
+        ." st.fade_out,"
+        ." st.starts,"
+        ." st.ends"
         ." FROM $CC_CONFIG[scheduleTable] as st"
         ." LEFT JOIN $CC_CONFIG[showInstances] as si"
         ." ON st.instance_id = si.id"
@@ -374,18 +376,23 @@ class Schedule {
             "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
             "nextShow"=>Show_DAL::GetNextShows($timeNow, 1),
             "timezone"=> date("T"),
-            "timezoneOffset"=> date("Z"),
-            "apiKey"=>$CC_CONFIG['apiKey'][0]);
+            "timezoneOffset"=> date("Z"));
     }
 
     public static function GetLastScheduleItem($p_timeNow){
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT *"
+        $sql = "SELECT"
+        ." ft.artist_name, ft.track_title,"
+        ." st.starts as starts, st.ends as ends"
         ." FROM $CC_CONFIG[scheduleTable] st"
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
         ." ON st.file_id = ft.id"
+        ." LEFT JOIN $CC_CONFIG[showInstances] sit"
+        ." ON st.instance_id = sit.id"
         ." WHERE st.ends < TIMESTAMP '$p_timeNow'"
+        ." AND st.starts >= sit.starts" //this and the next line are necessary since we can overbook shows.
+        ." AND st.starts < sit.ends"
         ." ORDER BY st.ends DESC"
         ." LIMIT 1";
 
@@ -397,6 +404,13 @@ class Schedule {
     public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId){
         global $CC_CONFIG, $CC_DBC;
 
+        /* Note that usually there will be one result returned. In some
+         * rare cases two songs are returned. This happens when a track
+         * that was overbooked from a previous show appears as if it
+         * hasnt ended yet (track end time hasn't been reached yet). For
+         * this reason,  we need to get the track that starts later, as
+         * this is the *real* track that is currently playing. So this
+         * is why we are ordering by track start time. */
         $sql = "SELECT *"
         ." FROM $CC_CONFIG[scheduleTable] st"
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
@@ -404,6 +418,7 @@ class Schedule {
         ." WHERE st.starts <= TIMESTAMP '$p_timeNow'"
         ." AND st.instance_id = $p_instanceId"
         ." AND st.ends > TIMESTAMP '$p_timeNow'"
+        ." ORDER BY st.starts DESC"
         ." LIMIT 1";
 
         $row = $CC_DBC->GetAll($sql);
@@ -413,11 +428,17 @@ class Schedule {
     public static function GetNextScheduleItem($p_timeNow){
         global $CC_CONFIG, $CC_DBC;
 
-        $sql = "SELECT *"
+        $sql = "SELECT"
+        ." ft.artist_name, ft.track_title,"
+        ." st.starts as starts, st.ends as ends"
         ." FROM $CC_CONFIG[scheduleTable] st"
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
         ." ON st.file_id = ft.id"
+        ." LEFT JOIN $CC_CONFIG[showInstances] sit"
+        ." ON st.instance_id = sit.id"
         ." WHERE st.starts > TIMESTAMP '$p_timeNow'"
+        ." AND st.starts >= sit.starts" //this and the next line are necessary since we can overbook shows.
+        ." AND st.starts < sit.ends"
         ." ORDER BY st.starts"
         ." LIMIT 1";
 
@@ -518,6 +539,12 @@ class Schedule {
                 ." WHERE id=$p_id";
         $retVal = $CC_DBC->query($sql);
         return $retVal;
+    }
+
+    public static function getSchduledPlaylistCount(){
+    	global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['scheduleTable'];
+        return $CC_DBC->GetOne($sql);
     }
 
 
@@ -662,7 +689,7 @@ class Schedule {
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
                 $playlists[$pkey]['x_ident'] = $dx['group_id'];
-                $playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
+                //$playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
                 $playlists[$pkey]['timestamp'] = $timestamp;
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
                 $playlists[$pkey]['played'] = '0';
@@ -682,27 +709,24 @@ class Schedule {
             $scheduleGroup = new ScheduleGroup($playlist["schedule_id"]);
             $items = $scheduleGroup->getItems();
             $medias = array();
-            $playlist['subtype'] = '1';
             foreach ($items as $item)
             {
                 $storedFile = StoredFile::Recall($item["file_id"]);
                 $uri = $storedFile->getFileUrl();
 
-                // For pypo, a cueout of zero means no cueout
-                $cueOut = "0";
-                if (Schedule::TimeDiff($item["cue_out"], $item["clip_length"]) > 0.001) {
-                    $cueOut = Schedule::WallTimeToMillisecs($item["cue_out"]);
-                }
-                $medias[] = array(
+                $starts = Schedule::AirtimeTimeToPypoTime($item["starts"]);
+                $medias[$starts] = array(
                     'row_id' => $item["id"],
                     'id' => $storedFile->getGunid(),
                     'uri' => $uri,
                     'fade_in' => Schedule::WallTimeToMillisecs($item["fade_in"]),
                     'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
                     'fade_cross' => 0,
-                    'cue_in' => Schedule::WallTimeToMillisecs($item["cue_in"]),
-                    'cue_out' => $cueOut,
-                    'export_source' => 'scheduler'
+                    'cue_in' => DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+                    'cue_out' => DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+                    'export_source' => 'scheduler',
+                    'start' => $starts,
+                    'end' => Schedule::AirtimeTimeToPypoTime($item["ends"])
                 );
             }
             $playlist['medias'] = $medias;
@@ -726,7 +750,7 @@ class Schedule {
         global $CC_CONFIG, $CC_DBC;
         $CC_DBC->query("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
     }
-    
+
     public static function createNewFormSections($p_view){
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
@@ -745,7 +769,7 @@ class Schedule {
         $formRecord->removeDecorator('DtDdWrapper');
         $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
         $formRebroadcast->removeDecorator('DtDdWrapper');
-    
+
         $p_view->what = $formWhat;
         $p_view->when = $formWhen;
         $p_view->repeats = $formRepeats;
@@ -755,8 +779,15 @@ class Schedule {
         $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
         $p_view->rebroadcast = $formRebroadcast;
         $p_view->addNewShow = true;
-        
+
         $formWhat->populate(array('add_show_id' => '-1'));
+        $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
+                                      'add_show_start_time' => '00:00',
+        							  'add_show_end_date_no_repeate' => date("Y-m-d"),
+        							  'add_show_end_time' => '01:00',
+                                      'add_show_duration' => '1h'));
+
+		$formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
     }
 }
 

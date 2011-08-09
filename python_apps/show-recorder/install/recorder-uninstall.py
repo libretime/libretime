@@ -3,7 +3,6 @@
 
 import os
 import sys
-import time
 from configobj import ConfigObj
 
 if os.geteuid() != 0:
@@ -13,16 +12,7 @@ if os.geteuid() != 0:
 PATH_INI_FILE = '/etc/airtime/recorder.cfg'
 
 def remove_path(path):
-    os.system("rm -rf " + path)
-
-def remove_user(username):
-    os.system("killall -u %s 1>/dev/null 2>&1" % username)
-    
-    #allow all process to be completely closed before we attempt to delete user
-    print "Waiting for processes to close..."
-    time.sleep(5)
-    
-    os.system("deluser --remove-home " + username + " 1>/dev/null 2>&1")
+    os.system('rm -rf "%s"' % path)
 
 def get_current_script_dir():
   current_script_dir = os.path.realpath(__file__)
@@ -35,16 +25,17 @@ try:
         config = ConfigObj(PATH_INI_FILE)
     except Exception, e:
         print 'Error loading config file: ', e
-        sys.exit()
+        sys.exit(1)
 
-    os.system("python /usr/bin/airtime-show-recorder-stop")
+    os.system("/etc/init.d/airtime-show-recorder stop")
+    os.system("rm -f /etc/init.d/airtime-show-recorder")
+    os.system("update-rc.d -f airtime-show-recorder remove >/dev/null 2>&1")
     
     print "Removing log directories"
     remove_path(config["log_dir"])
     
     print "Removing symlinks"
-    os.system("rm -f /usr/bin/airtime-show-recorder-start")
-    os.system("rm -f /usr/bin/airtime-show-recorder-stop")
+    os.system("rm -f /usr/bin/airtime-show-recorder")
     
     print "Removing application files"
     remove_path(config["bin_dir"])
@@ -52,10 +43,6 @@ try:
     print "Removing media files"
     remove_path(config["base_recorded_files"])
     
-    print "Removing daemontool script recorder"
-    remove_path("rm -rf /etc/service/recorder")
-
-    remove_user("pypo")
     print "Uninstall complete."
 except Exception, e:
     print "exception:" + str(e)

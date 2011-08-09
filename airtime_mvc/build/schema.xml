@@ -24,12 +24,21 @@
       <index-column name="token"/>
     </index>
   </table>
+  <table name="cc_music_dirs" phpName="CcMusicDirs">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="directory" phpName="Directory" type="LONGVARCHAR" required="false"/>
+    <column name="type" phpName="Type" type="VARCHAR" size="255" required="false"/>
+    <unique name="cc_music_dir_unique">
+      <unique-column name="directory"/>
+    </unique>
+  </table>
   <table name="cc_files" phpName="CcFiles">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="gunid" phpName="DbGunid" type="char" size="32" required="true"/>
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="mime" phpName="DbMime" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="ftype" phpName="DbFtype" type="VARCHAR" size="128" required="true" defaultValue=""/>
+    <column name="directory" phpName="DbDirectory" type="INTEGER" required="false"/>
     <column name="filepath" phpName="DbFilepath" type="LONGVARCHAR" required="false" defaultValue=""/>
     <column name="state" phpName="DbState" type="VARCHAR" size="128" required="true" defaultValue="empty"/>
     <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
@@ -81,6 +90,9 @@
     <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="cc_music_dirs" name="cc_music_dirs_folder_fkey" onDelete="CASCADE">
+      <reference local="directory" foreign="id"/>
     </foreign-key>
     <unique name="cc_files_gunid_idx">
       <unique-column name="gunid"/>
@@ -251,6 +263,9 @@
     <foreign-key foreignTable="cc_show_instances" name="cc_show_inst_fkey" onDelete="CASCADE">
       <reference local="instance_id" foreign="id"/>
     </foreign-key>
+    <foreign-key foreignTable="cc_files" name="cc_show_file_fkey" onDelete="CASCADE">
+      <reference local="file_id" foreign="id"/>
+    </foreign-key>
   </table>
   <table name="cc_sess" phpName="CcSess">
     <column name="sessid" phpName="Sessid" type="CHAR" size="32" primaryKey="true" required="true"/>
@@ -295,5 +310,9 @@
     <unique name="cc_subjs_login_idx">
       <unique-column name="login"/>
     </unique>
+  </table>
+  <table name="cc_country" phpName="CcCountry">
+    <column name="isocode" phpName="DbIsoCode" primaryKey="true" type="CHAR" size="3" required="true"/>
+    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true"/>
   </table>
 </database>

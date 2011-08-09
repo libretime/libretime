@@ -13,9 +13,11 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
-            var y = $("#schedule_calendar").width();
-            var z = $("#schedule-add-show").width();
-            $("#schedule_calendar").width(y-z-50);
+            var windowWidth = $(window).width();
+            // margin on showform are 16 px on each side
+            var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
+            var widthPercent = parseInt(calendarWidth)+"%";
+            $("#schedule_calendar").css("width", widthPercent);
             $("#schedule_calendar").fullCalendar('render');
         }
         $("#schedule-show-what").show(0, function(){
@@ -109,11 +111,32 @@ function dayClick(date, allDay, jsEvent, view) {
         else {
             chosenTime = hours+":"+min;
         }
+        
+        if(hours < 10){
+        	chosenTime = "0"+chosenTime;
+        }
+        
+        var endHour = hours + 1;
+        var chosenEndTime;
+        
+        if(min < 10){
+        	chosenEndTime = endHour+":0"+min;
+        }
+        else {
+        	chosenEndTime = endHour+":"+min;
+        }
+        
+        if(endHour < 10){
+        	chosenEndTime = "0"+chosenEndTime;
+        }
 
         $("#add_show_start_date").val(chosenDate);
+        $("#add_show_end_date_no_repeat").val(chosenDate);
         $("#add_show_end_date").datepicker("option", "minDate", chosenDate);
         $("#add_show_end_date").val(chosenDate);
         $("#add_show_start_time").val(chosenTime);
+        $("#add_show_end_time").val(chosenEndTime);
+        $("#add_show_duration").val('1h');
         $("#schedule-show-when").show();
 
 	    openAddShowForm();
