@@ -319,21 +319,21 @@ function setAddShowEvents() {
 	$('#add_show_start_date, #add_show_start_time').change(function(){
 		var startDate = $('#add_show_start_date').val().split('-');
 		var startTime = $('#add_show_start_time').val().split(':');
-        var startDateTime = new Date(startDate[0], parseInt(startDate[1])-1, startDate[2], startTime[0], startTime[1], 0, 0);
+        var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
 
 		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
 		var endTime = $('#add_show_end_time').val().split(':');
-        var endDateTime = new Date(endDate[0], parseInt(endDate[1])-1, endDate[2], endTime[0], endTime[1], 0, 0);
+        var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
 
 		if(startDateTime.getTime() > endDateTime.getTime()){
 		    var duration = $('#add_show_duration').val();
 	        // parse duration
 		    var time = 0;
 		    var info = duration.split(' ');
-		    var h = parseInt(info[0]);
+		    var h = parseInt(info[0], 10);
 		    time += h * 60 * 60* 1000;
 		    if(info.length >1 && $.trim(info[1]) !== ''){
-		        var m = parseInt(info[1]);
+		        var m = parseInt(info[1], 10);
 		        time += m * 60 * 1000;
 		    }
 			endDateTime = new Date(startDateTime.getTime() + time);
@@ -353,11 +353,11 @@ function setAddShowEvents() {
 	$('#add_show_end_date_no_repeat, #add_show_end_time').change(function(){
 		var startDate = $('#add_show_start_date').val().split('-');
         var startTime = $('#add_show_start_time').val().split(':');
-		var startDateTime = new Date(startDate[0], parseInt(startDate[1])-1, startDate[2], startTime[0], startTime[1], 0, 0);
+		var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
 
 		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
 		var endTime = $('#add_show_end_time').val().split(':');
-        var endDateTime = new Date(endDate[0], parseInt(endDate[1])-1, endDate[2], endTime[0], endTime[1], 0, 0);
+        var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
 
 		if(startDateTime.getTime() > endDateTime.getTime()){
 			$('#add_show_end_date_no_repeat').css('background-color', '#F49C9C');
@@ -375,8 +375,8 @@ function setAddShowEvents() {
 		var duration;
 		var durationSeconds = (endDateTime.getTime() - startDateTime.getTime())/1000;
 		if(durationSeconds != 0){
-			var durationHour = parseInt(durationSeconds/3600);
-			var durationMin = parseInt((durationSeconds%3600)/60);
+			var durationHour = parseInt(durationSeconds/3600, 10);
+			var durationMin = parseInt((durationSeconds%3600)/60, 10);
 			duration = (durationHour == 0 ? '' : durationHour+'h'+' ')+(durationMin == 0 ? '' : durationMin+'m');
 		}else{
 			duration = '0m';
