@@ -64,7 +64,7 @@ try:
     bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client, mmc)
     bootstrap.scan()
     
-    notifier = AirtimeNotifier(wm, pe, read_freq=1, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap, mmc=mmc)
+    notifier = AirtimeNotifier(wm, pe, read_freq=0.1, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap, mmc=mmc)
     notifier.coalesce_events()
         
     #create 5 worker threads

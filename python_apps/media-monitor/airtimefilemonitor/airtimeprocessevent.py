@@ -176,9 +176,10 @@ class AirtimeProcessEvent(ProcessEvent):
             for event in self.file_events:
                 self.multi_queue.put(event)
             self.mmc.touch_index_file()
-
+            
             self.file_events = []
-
+        #yeild to workder thread
+        time.sleep(0)
         #use items() because we are going to be modifying this
         #dictionary while iterating over it.
         for k, pair in self.cookies_IN_MOVED_FROM.items():

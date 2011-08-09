@@ -359,7 +359,9 @@ class Application_Model_Preference
     
     public static function SetImportTimestamp(){
         $now = time();
-        Application_Model_Preference::SetValue("import_timestamp", $now);
+        if(Application_Model_Preference::GetImportTimestamp()+5 < $now){
+            Application_Model_Preference::SetValue("import_timestamp", $now);
+        }
     }
     
     public static function GetImportTimestamp(){

@@ -57,13 +57,11 @@ function confirmDeletePlaylist(params){
 
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
-        var div = $('#library_display_processing');
+        var div = $('#import_status');
         if(data == true){
-            div.html("File import in progress...");
             div.css('visibility', 'visible');
         }else{
             div.css('visibility', 'hidden');
-            div.html("Processing...");
         }
     })
 }
