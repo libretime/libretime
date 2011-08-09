@@ -370,10 +370,8 @@ class AirtimeInstall{
     public static function SetImportTimestamp()
     {
         global $CC_DBC;
-
-        $now = time();
         
-        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '$now')";
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '0')";
         $result = $CC_DBC->query($sql);
         if (PEAR::isError($result)) {
             return false;
