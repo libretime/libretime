@@ -1,4 +1,4 @@
-1.9.0 - ???, 2011
+1.9.0 - August 9, 2011
 
 The cool stuff:
   * New file storage system.
@@ -54,6 +54,8 @@ The cool stuff:
       Python or PHP configurations. The python libraries needed for Airtime are
       now contained in a local Python virtualenv, and the PHP config variables
       are set in the Apache virtualhost and .htaccess files.
+    - Message indicating import status is now displayed on Playlist Builder
+      page( above the search box).
 
   * Bug fixes:
     - Fixed bug where you couldn't import a file with a name longer than 255 
