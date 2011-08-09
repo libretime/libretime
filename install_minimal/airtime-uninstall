@@ -1,5 +1,11 @@
 #!/bin/bash
 
+VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
+if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
+    echo -e "\nAirtime 1.9.0 is not installed, cannot uninstall.\n"
+    exit 1
+fi
+
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
