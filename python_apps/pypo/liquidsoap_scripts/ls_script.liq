@@ -56,70 +56,18 @@ if output_sound_device then
     ignore(output.alsa(s))
 end
 
-if output_icecast_mp3 then
-
-    #format = %mp3(bitrate=192, samplerate=44100, stereo=false)
-    ignore(output.icecast(%mp3,
-            host = icecast_host,
-            port = icecast_port,
-            password = icecast_pass,
-            mount = mount_point_mp3,
-            fallible = true,
-            restart = true,
-            restart_delay = 5,
-            url = icecast_url,
-            description = icecast_description,
-            genre = icecast_genre,
-            s)
-        )
+if output_s1 != "" then
+    #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
+    output_to(output_s1, s1_type, s1_bitrate, s1_host, s1_port, s1_pass, s1_mount, s1_url, s1_description, s1_genre, s)
 end
 
-if output_icecast_vorbis then
-    if output_icecast_vorbis_metadata then
-        ignore(output.icecast(%vorbis,
-                host = icecast_host,
-                port = icecast_port,
-                password = icecast_pass,
-                mount = mount_point_vorbis,
-                fallible = true,
-                restart = true,
-                restart_delay = 5,
-                url = icecast_url,
-                description = icecast_description,
-                genre = icecast_genre,
-                s)
-            )
-    else
-        #remove metadata from ogg source and merge tracks to fix bug
-        #with vlc and mplayer disconnecting at the end of every track
-        s = add(normalize=false, [amplify(0.00001, noise()),s])
-        ignore(output.icecast(%vorbis,
-                host = icecast_host,
-                port = icecast_port,
-                password = icecast_pass,
-                mount = mount_point_vorbis,
-                fallible = true,
-                restart = true,
-                restart_delay = 5,
-                url = icecast_url,
-                description = icecast_description,
-                genre = icecast_genre,
-                s)
-            )
-    end
+if output_s2 != "" then
+    #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
+    output_to(output_s2, s2_type, s2_bitrate, s2_host, s2_port, s2_pass, s2_mount, s2_url, s2_description, s2_genre, s)
 end
 
-if output_shoutcast then
-    ignore(output.shoutcast(%mp3,
-            host = shoutcast_host,
-            port = shoutcast_port,
-            password = shoutcast_pass,
-            fallible = true,
-            restart = true,
-            restart_delay = 5,
-            url = shoutcast_url,
-            genre = shoutcast_genre,
-            s)
-        )
+if output_s3 != "" then
+    #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
+    output_to(output_s3, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s)
 end
 

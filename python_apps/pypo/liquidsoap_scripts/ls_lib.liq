@@ -36,6 +36,133 @@ def to_live(old,new) =
   sequence([old,new])
 end
 
+
+def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s) =
+    if output_type == "icecast" then 
+        if type == "mp3" then
+            if bitrate == 64 then 
+                ignore(output.icecast(%mp3(bitrate = 64),
+                    host = host,
+                    port = port,
+                    password = pass,
+                    mount = mount_point,
+                    fallible = true,
+                    restart = true,
+                    restart_delay = 5,
+                    url = url,
+                    description = description,
+                    genre = genre,
+                    s)
+                )
+            elsif bitrate == 128 then
+                ignore(output.icecast(%mp3(bitrate = 128),
+                    host = host,
+                    port = port,
+                    password = pass,
+                    mount = mount_point,
+                    fallible = true,
+                    restart = true,
+                    restart_delay = 5,
+                    url = url,
+                    description = description,
+                    genre = genre,
+                    s)
+                )
+            end
+        else
+            if bitrate == 64 then 
+                if output_icecast_vorbis_metadata then
+                    ignore(output.icecast(%vorbis,
+                        host = host,
+                        port = port,
+                        password = pass,
+                        mount = mount_point,
+                        fallible = true,
+                        restart = true,
+                        restart_delay = 5,
+                        url = url,
+                        description = description,
+                        genre = genre,
+                        s)
+                    )
+                else
+                    s = add(normalize=false, [amplify(0.00001, noise()),s])
+                    ignore(output.icecast(%vorbis,
+                        host = host,
+                        port = port,
+                        password = pass,
+                        mount = mount_point,
+                        fallible = true,
+                        restart = true,
+                        restart_delay = 5,
+                        url = url,
+                        description = description,
+                        genre = genre,
+                        s)
+                    )
+                end
+            elsif bitrate == 128 then
+                if output_icecast_vorbis_metadata then
+                    ignore(output.icecast(%vorbis,
+                        host = host,
+                        port = port,
+                        password = pass,
+                        mount = mount_point,
+                        fallible = true,
+                        restart = true,
+                        restart_delay = 5,
+                        url = url,
+                        description = description,
+                        genre = genre,
+                        s)
+                    )
+                else
+                    s = add(normalize=false, [amplify(0.00001, noise()),s])
+                    ignore(output.icecast(%vorbis,
+                        host = host,
+                        port = port,
+                        password = pass,
+                        mount = mount_point,
+                        fallible = true,
+                        restart = true,
+                        restart_delay = 5,
+                        url = url,
+                        description = description,
+                        genre = genre,
+                        s)
+                    )
+                end
+            end
+        end
+    else
+        if bitrate == 64 then 
+            ignore(output.shoutcast(%mp3(bitrate = 64),
+                host = host,
+                port = port,
+                password = pass,
+                fallible = true,
+                restart = true,
+                restart_delay = 5,
+                url = url,
+                genre = genre,
+                s)
+            )
+        elsif bitrate == 128 then
+            ignore(output.shoutcast(%mp3(bitrate = 128),
+                host = host,
+                port = port,
+                password = pass,
+                fallible = true,
+                restart = true,
+                restart_delay = 5,
+                url = url,
+                genre = genre,
+                s)
+            )
+        end
+    end
+end
+
 # Add a skip function to a source
 # when it does not have one
 # by default
