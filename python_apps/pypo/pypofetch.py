@@ -48,7 +48,13 @@ def handle_message(body, message):
     logger = logging.getLogger('fetch')
     global SCHEDULE_PUSH_MSG
     logger.info("Received schedule from RabbitMQ: " + message.body)
-    SCHEDULE_PUSH_MSG = json.loads(message.body)
+    
+    m =  json.loads(message.body)
+    command = m['event_type']
+    logger.info("Handling command: " + command)
+
+    if(command == 'update_schedule'):
+        SCHEDULE_PUSH_MSG  = m['schedule']
     # ACK the message to take it off the queue
     message.ack()
 

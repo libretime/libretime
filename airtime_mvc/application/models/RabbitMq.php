@@ -31,7 +31,9 @@ class RabbitMq
             $EXCHANGE = 'airtime-schedule';
             $channel->exchange_declare($EXCHANGE, 'direct', false, true);
 
-            $data = json_encode(Schedule::GetScheduledPlaylists());
+            $temp['event_type'] = "update_schedule";
+            $temp['schedule'] = Schedule::GetScheduledPlaylists();
+            $data = json_encode($temp);
             $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
 
             $channel->basic_publish($msg, $EXCHANGE);
