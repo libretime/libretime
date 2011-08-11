@@ -38,127 +38,65 @@ end
 
 
 def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s) =
-    if output_type == "icecast" then 
+    if output_type == "icecast" then
+        output.icecast = output.icecast(host = host,
+                    port = port,
+                    password = pass,
+                    mount = mount_point,
+                    fallible = true,
+                    restart = true,
+                    restart_delay = 5,
+                    url = url,
+                    description = description,
+                    genre = genre) 
         if type == "mp3" then
-            if bitrate == 64 then 
-                ignore(output.icecast(%mp3(bitrate = 64),
-                    host = host,
-                    port = port,
-                    password = pass,
-                    mount = mount_point,
-                    fallible = true,
-                    restart = true,
-                    restart_delay = 5,
-                    url = url,
-                    description = description,
-                    genre = genre,
-                    s)
-                )
+            if bitrate == 32 then 
+                ignore(output.icecast(%mp3(bitrate = 32),s))
+            elsif bitrate == 64 then
+                ignore(output.icecast(%mp3(bitrate = 64),s))
+            elsif bitrate == 96 then
+                ignore(output.icecast(%mp3(bitrate = 96),s))
             elsif bitrate == 128 then
-                ignore(output.icecast(%mp3(bitrate = 128),
-                    host = host,
-                    port = port,
-                    password = pass,
-                    mount = mount_point,
-                    fallible = true,
-                    restart = true,
-                    restart_delay = 5,
-                    url = url,
-                    description = description,
-                    genre = genre,
-                    s)
-                )
+                ignore(output.icecast(%mp3(bitrate = 128),s))
+            elsif bitrate == 160 then
+                ignore(output.icecast(%mp3(bitrate = 160),s))
             end
         else
-            if bitrate == 64 then 
-                if output_icecast_vorbis_metadata then
-                    ignore(output.icecast(%vorbis,
-                        host = host,
-                        port = port,
-                        password = pass,
-                        mount = mount_point,
-                        fallible = true,
-                        restart = true,
-                        restart_delay = 5,
-                        url = url,
-                        description = description,
-                        genre = genre,
-                        s)
-                    )
-                else
-                    s = add(normalize=false, [amplify(0.00001, noise()),s])
-                    ignore(output.icecast(%vorbis,
-                        host = host,
-                        port = port,
-                        password = pass,
-                        mount = mount_point,
-                        fallible = true,
-                        restart = true,
-                        restart_delay = 5,
-                        url = url,
-                        description = description,
-                        genre = genre,
-                        s)
-                    )
-                end
+            source = ref s
+            if not output_icecast_vorbis_metadata then
+                source := add(normalize=false, [amplify(0.00001, noise()),s])
+            end
+            if bitrate == 32 then 
+                ignore(output.icecast(%vorbis.cbr(bitrate = 32),!source))
+            elsif bitrate == 64 then
+                ignore(output.icecast(%vorbis.cbr(bitrate = 64),!source))
+            elsif bitrate == 96 then
+                ignore(output.icecast(%vorbis.cbr(bitrate = 96),!source))
             elsif bitrate == 128 then
-                if output_icecast_vorbis_metadata then
-                    ignore(output.icecast(%vorbis,
-                        host = host,
-                        port = port,
-                        password = pass,
-                        mount = mount_point,
-                        fallible = true,
-                        restart = true,
-                        restart_delay = 5,
-                        url = url,
-                        description = description,
-                        genre = genre,
-                        s)
-                    )
-                else
-                    s = add(normalize=false, [amplify(0.00001, noise()),s])
-                    ignore(output.icecast(%vorbis,
-                        host = host,
-                        port = port,
-                        password = pass,
-                        mount = mount_point,
-                        fallible = true,
-                        restart = true,
-                        restart_delay = 5,
-                        url = url,
-                        description = description,
-                        genre = genre,
-                        s)
-                    )
-                end
+                ignore(output.icecast(%vorbis.cbr(bitrate = 128),!source))
+            elsif bitrate == 160 then
+                ignore(output.icecast(%vorbis.cbr(bitrate = 160),!source))
             end
         end
     else
-        if bitrate == 64 then 
-            ignore(output.shoutcast(%mp3(bitrate = 64),
-                host = host,
-                port = port,
-                password = pass,
-                fallible = true,
-                restart = true,
-                restart_delay = 5,
-                url = url,
-                genre = genre,
-                s)
-            )
+        output.shoutcast = output.shoutcast(host = host,
+                    port = port,
+                    password = pass,
+                    fallible = true,
+                    restart = true,
+                    restart_delay = 5,
+                    url = url,
+                    genre = genre)
+        if bitrate == 32 then 
+            ignore(output.shoutcast(%mp3(bitrate = 32),s))
+        elsif bitrate == 64 then
+            ignore(output.shoutcast(%mp3(bitrate = 64),s))
+        elsif bitrate == 96 then
+            ignore(output.shoutcast(%mp3(bitrate = 96),s))
         elsif bitrate == 128 then
-            ignore(output.shoutcast(%mp3(bitrate = 128),
-                host = host,
-                port = port,
-                password = pass,
-                fallible = true,
-                restart = true,
-                restart_delay = 5,
-                url = url,
-                genre = genre,
-                s)
-            )
+            ignore(output.shoutcast(%mp3(bitrate = 128),s))
+        elsif bitrate == 160 then
+            ignore(output.shoutcast(%mp3(bitrate = 160),s))
         end
     end
 end

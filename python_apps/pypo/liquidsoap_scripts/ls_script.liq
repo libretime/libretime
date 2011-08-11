@@ -56,17 +56,17 @@ if output_sound_device then
     ignore(output.alsa(s))
 end
 
-if output_s1 != "" then
+if output_s1 != "disabled" then
     #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
     output_to(output_s1, s1_type, s1_bitrate, s1_host, s1_port, s1_pass, s1_mount, s1_url, s1_description, s1_genre, s)
 end
 
-if output_s2 != "" then
+if output_s2 != "disabled" then
     #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
     output_to(output_s2, s2_type, s2_bitrate, s2_host, s2_port, s2_pass, s2_mount, s2_url, s2_description, s2_genre, s)
 end
 
-if output_s3 != "" then
+if output_s3 != "disabled" then
     #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
     output_to(output_s3, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s)
 end
