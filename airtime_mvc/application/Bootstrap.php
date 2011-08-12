@@ -6,10 +6,6 @@ require_once __DIR__."/configs/ACL.php";
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/configs/airtime-conf.php");
 
-//DateTime in PHP 5.3.0+ need a default timezone set.
-$tz = ini_get('date.timezone') ? ini_get('date.timezone') : 'UTC';
-date_default_timezone_set($tz);
-
 require_once __DIR__."/logging/Logging.php";
 require_once __DIR__."/configs/constants.php";
 require_once __DIR__."/configs/conf.php";
@@ -25,22 +21,6 @@ require_once 'Users.php';
 require_once 'RabbitMq.php';
 require_once 'DateHelper.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
-
-global $CC_CONFIG, $CC_DBC;
-$dsn = $CC_CONFIG['dsn'];
-
-$CC_DBC = DB::connect($dsn, FALSE);
-if (PEAR::isError($CC_DBC)) {
-	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-	exit(1);
-}
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-Logging::setLogPath('/var/log/airtime/zendphp.log');
-
-Zend_Validate::setDefaultNamespaces("Zend");
-
-$front = Zend_Controller_Front::getInstance();
-$front->registerPlugin(new RabbitMqPlugin());
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
@@ -89,6 +69,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->headTitle(Application_Model_Preference::GetHeadTitle());
     }
+    
+    protected function _initDbConnection(){
+        global $CC_CONFIG, $CC_DBC;
+        $dsn = $CC_CONFIG['dsn'];
 
+        $CC_DBC = DB::connect($dsn, FALSE);
+        if (PEAR::isError($CC_DBC)) {
+            echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
+            exit(1);
+        }
+        $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+        
+        //DateTime in PHP 5.3.0+ need a default timezone set.
+        date_default_timezone_set(Application_Model_Preference::GetTimezone());
+    }
+
+    protected function _initMisc(){
+        Logging::setLogPath('/var/log/airtime/zendphp.log');
+
+        Zend_Validate::setDefaultNamespaces("Zend");
+
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin(new RabbitMqPlugin());    
+    }
 }
 

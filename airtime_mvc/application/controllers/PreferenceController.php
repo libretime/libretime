@@ -35,6 +35,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultFade($values["preferences_general"]["stationDefaultFade"]);
                 Application_Model_Preference::SetStreamLabelFormat($values["preferences_general"]["streamFormat"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
+                Application_Model_Preference::SetTimezone($values["preferences_general"]["timezone"]);
 
                 Application_Model_Preference::SetDoSoundCloudUpload($values["preferences_soundcloud"]["UseSoundCloud"]);
                 Application_Model_Preference::SetSoundCloudUser($values["preferences_soundcloud"]["SoundCloudUser"]);

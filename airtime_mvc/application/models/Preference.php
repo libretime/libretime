@@ -260,6 +260,14 @@ class Application_Model_Preference
 	public static function GetStationDescription(){
     	return Application_Model_Preference::GetValue("description");
     }
+    
+    public static function SetTimezone($timezone){
+        Application_Model_Preference::SetValue("timezone", $timezone);
+    }
+    
+    public static function GetTimezone(){
+        return Application_Model_Preference::GetValue("timezone");
+    }
 
     public static function SetStationLogo($imagePath){
     	if(!empty($imagePath)){
