@@ -96,7 +96,11 @@ while ($showTime < $endDate) {
     }
     $showNumber = $showNumber + 1;
 }
-RabbitMq::PushScheduleFinal();
+
+if (RabbitMq::$doPush) {
+    $md = array('schedule' => Schedule::GetScheduledPlaylists());
+    RabbitMq::SendMessageToPypo("update_schedule", $md);
+}
 
 
 

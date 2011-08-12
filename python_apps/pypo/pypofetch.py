@@ -55,6 +55,11 @@ def handle_message(body, message):
 
     if(command == 'update_schedule'):
         SCHEDULE_PUSH_MSG  = m['schedule']
+    elif (command == 'update_timezone'):
+        logger.info("Setting timezone to %s", m['timezone'])
+        os.environ['TZ'] = m['timezone']
+        time.tzset()
+        
     # ACK the message to take it off the queue
     message.ack()
 

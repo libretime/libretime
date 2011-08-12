@@ -3,7 +3,7 @@ require_once 'php-amqplib/amqp.inc';
 
 class RabbitMq
 {
-    static private $doPush = FALSE;
+    static public $doPush = FALSE;
 
     /**
      * Sets a flag to push the schedule at the end of the request.
@@ -17,7 +17,7 @@ class RabbitMq
      * Will push the schedule in the range from 24 hours ago to 24 hours
      * in the future.
      */
-    public static function PushScheduleFinal()
+/*     public static function PushScheduleFinal()
     {
         global $CC_CONFIG;
         if (RabbitMq::$doPush) {
@@ -42,6 +42,32 @@ class RabbitMq
             
             self::SendMessageToShowRecorder("update_schedule");
         }
+    } */
+    
+    public static function SendMessageToPypo($event_type, $md)
+    {
+        global $CC_CONFIG;
+
+        $md["event_type"] = $event_type;
+
+        $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
+                                         $CC_CONFIG["rabbitmq"]["port"],
+                                         $CC_CONFIG["rabbitmq"]["user"],
+                                         $CC_CONFIG["rabbitmq"]["password"]);
+        $channel = $conn->channel();
+        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false, true, true);
+
+        $EXCHANGE = 'airtime-schedule';
+        $channel->exchange_declare($EXCHANGE, 'direct', false, true);
+
+        $data = json_encode($md);
+        $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
+
+        $channel->basic_publish($msg, $EXCHANGE);
+        $channel->close();
+        $conn->close();
+        
+        self::SendMessageToShowRecorder("update_schedule");
     }
 
     public static function SendMessageToMediaMonitor($event_type, $md)
