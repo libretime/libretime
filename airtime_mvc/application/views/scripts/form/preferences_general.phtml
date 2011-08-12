@@ -75,5 +75,20 @@
                 </ul>
             <?php endif; ?>
        </dd>
+        <dt id="timezone-label" class="block-display">
+            <label class="required" for="timezone"><?php echo $this->element->getElement('timezone')->getLabel() ?>
+                <span class="info-text-small">(Required)</span> :
+            </label>
+        </dt>
+        <dd id="timezone-element" class="block-display">
+            <?php echo $this->element->getElement('timezone') ?>
+            <?php if($this->element->getElement('timezone')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('timezone')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
     </dl>
 </fieldset>
