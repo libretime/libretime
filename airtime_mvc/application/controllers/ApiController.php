@@ -19,6 +19,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('add-watched-dir', 'json')
                 ->addActionContext('remove-watched-dir', 'json')
                 ->addActionContext('set-storage-dir', 'json')
+                ->addActionContext('get-stream-setting', 'json')
                 ->initContext();
     }
 
@@ -605,6 +606,25 @@ class ApiController extends Zend_Controller_Action
         }
 
         $this->view->msg = MusicDir::setStorDir($path);
+    }
+    
+    public function getStreamSettingAction() {
+        global $CC_CONFIG, $CC_DBC;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        $sql = "SELECT *"
+                ." FROM cc_stream_setting";
+
+        $rows = $CC_DBC->getAll($sql);
+
+        $this->view->msg = $rows;
     }
 }
 

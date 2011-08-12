@@ -461,6 +461,25 @@ COMMENT ON TABLE "cc_country" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_stream_setting
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_stream_setting" CASCADE;
+
+
+CREATE TABLE "cc_stream_setting"
+(
+	"keyname" VARCHAR(64)  NOT NULL,
+	"value" VARCHAR(255),
+	"type" VARCHAR(16)  NOT NULL,
+	PRIMARY KEY ("keyname")
+);
+
+COMMENT ON TABLE "cc_stream_setting" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");

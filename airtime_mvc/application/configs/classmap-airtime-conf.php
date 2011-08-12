@@ -120,4 +120,11 @@ return array (
   'BaseCcCountryPeer' => 'airtime/om/BaseCcCountryPeer.php',
   'BaseCcCountry' => 'airtime/om/BaseCcCountry.php',
   'BaseCcCountryQuery' => 'airtime/om/BaseCcCountryQuery.php',
+  'CcStreamSettingTableMap' => 'airtime/map/CcStreamSettingTableMap.php',
+  'CcStreamSettingPeer' => 'airtime/CcStreamSettingPeer.php',
+  'CcStreamSetting' => 'airtime/CcStreamSetting.php',
+  'CcStreamSettingQuery' => 'airtime/CcStreamSettingQuery.php',
+  'BaseCcStreamSettingPeer' => 'airtime/om/BaseCcStreamSettingPeer.php',
+  'BaseCcStreamSetting' => 'airtime/om/BaseCcStreamSetting.php',
+  'BaseCcStreamSettingQuery' => 'airtime/om/BaseCcStreamSettingQuery.php',
 );

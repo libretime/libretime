@@ -315,4 +315,9 @@
     <column name="isocode" phpName="DbIsoCode" primaryKey="true" type="CHAR" size="3" required="true"/>
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true"/>
   </table>
+  <table name="cc_stream_setting" phpName="CcStreamSetting">
+    <column name="keyname" phpName="DbKeyName" primaryKey="true" type="VARCHAR" size="64" required="true"/>
+    <column name="value" phpName="DbValue" type="VARCHAR" size="255" required="false"/>
+    <column name="type" phpName="DbType" type="VARCHAR" size="16" required="true"/>
+  </table>
 </database>

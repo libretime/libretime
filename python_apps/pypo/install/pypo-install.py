@@ -9,6 +9,8 @@ import shutil
 import platform
 from configobj import ConfigObj
 from subprocess import Popen
+sys.path.append('/usr/lib/airtime/api_clients/')
+import api_client
 
 if os.geteuid() != 0:
     print "Please run this as root."
@@ -111,6 +113,27 @@ try:
 
   p = Popen("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
+  
+  #we should access the DB and generate liquidsoap.cfg under etc/airtime/
+  api_client = api_client.api_client_factory(config)
+  ss = api_client.get_stream_setting()
+  data = ss['msg']
+  fh = open('/etc/airtime/liquidsoap.cfg', 'w')
+  for d in data:
+      buffer = d[u'keyname'] + " = "
+      if(d[u'type'] == 'string'):
+          temp = d[u'value']
+          if(temp == ""):
+              temp = "dummy_string"
+          buffer += "\"" + temp + "\""
+      else:
+          temp = d[u'value']
+          if(temp == ""):
+              temp = "0"
+          buffer += temp
+      buffer += "\n"
+      fh.write(buffer)
+  fh.close()
 
   print "Waiting for processes to start..."
   p = Popen("/etc/init.d/airtime-playout start", shell=True)
