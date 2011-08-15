@@ -58,7 +58,38 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
         $third_party_api->setDecorators(array('ViewHelper'));
         $this->addElement($third_party_api);
+        
+        /* Form Element for setting the Timezone */
+        $timezone = new Zend_Form_Element_Select("timezone");
+        $timezone->setLabel("Timezone");
+        $timezone->setMultiOptions($this->getTimezones());
+        $timezone->setValue(Application_Model_Preference::GetTimezone());
+        $timezone->setDecorators(array('ViewHelper'));
+        $this->addElement($timezone);
+    }
+    
+    private function getTimezones(){
+        $regions = array(
+            'Africa' => DateTimeZone::AFRICA,
+            'America' => DateTimeZone::AMERICA,
+            'Antarctica' => DateTimeZone::ANTARCTICA,
+            'Aisa' => DateTimeZone::ASIA,
+            'Atlantic' => DateTimeZone::ATLANTIC,
+            'Europe' => DateTimeZone::EUROPE,
+            'Indian' => DateTimeZone::INDIAN,
+            'Pacific' => DateTimeZone::PACIFIC
+        );
+        
+        $tzlist = array();
+        
+        foreach ($regions as $name => $mask){
+            $ids = DateTimeZone::listIdentifiers($mask);
+            foreach ($ids as $id){
+                $tzlist[$id] = str_replace("_", " ", $id);
+            }
+        }
 
+        return $tzlist;
     }
 
 

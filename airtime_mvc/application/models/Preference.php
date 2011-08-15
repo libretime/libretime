@@ -59,7 +59,6 @@ class Application_Model_Preference
             $result = $CC_DBC->GetOne($sql);
             return $result;
         }
-
     }
 
     public static function GetHeadTitle(){
@@ -259,6 +258,17 @@ class Application_Model_Preference
 
 	public static function GetStationDescription(){
     	return Application_Model_Preference::GetValue("description");
+    }
+    
+    public static function SetTimezone($timezone){
+        Application_Model_Preference::SetValue("timezone", $timezone);
+        date_default_timezone_set($timezone);
+        $md = array("timezone" => $timezone);
+        RabbitMq::SendMessageToPypo("update_timezone", $md);
+    }
+    
+    public static function GetTimezone(){
+        return Application_Model_Preference::GetValue("timezone");
     }
 
     public static function SetStationLogo($imagePath){

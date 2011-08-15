@@ -50,6 +50,7 @@ AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 // set up some keys in DB
 AirtimeInstall::SetUniqueId();
 AirtimeInstall::SetImportTimestamp();
+AirtimeInstall::SetDefaultTimezone();
 
 if (AirtimeInstall::$databaseTablesCreated) {
 

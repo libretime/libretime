@@ -294,6 +294,18 @@ class AirtimeInstall
         return true;
     }
     
+    public static function SetDefaultTimezone()
+    {
+        global $CC_DBC;
+
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', 'America/Toronto')";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
+    
     public static function SetImportTimestamp()
     {
         global $CC_DBC;

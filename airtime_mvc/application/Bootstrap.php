@@ -6,10 +6,6 @@ require_once __DIR__."/configs/ACL.php";
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/configs/airtime-conf.php");
 
-//DateTime in PHP 5.3.0+ need a default timezone set.
-$tz = ini_get('date.timezone') ? ini_get('date.timezone') : 'UTC';
-date_default_timezone_set($tz);
-
 require_once __DIR__."/logging/Logging.php";
 require_once __DIR__."/configs/constants.php";
 require_once __DIR__."/configs/conf.php";
@@ -20,6 +16,7 @@ require_once 'MusicDir.php';
 require_once 'Playlist.php';
 require_once 'StoredFile.php';
 require_once 'Schedule.php';
+require_once 'Preference.php';
 require_once 'Shows.php';
 require_once 'Users.php';
 require_once 'RabbitMq.php';
@@ -31,17 +28,24 @@ $dsn = $CC_CONFIG['dsn'];
 
 $CC_DBC = DB::connect($dsn, FALSE);
 if (PEAR::isError($CC_DBC)) {
-	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-	exit(1);
+    echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
+    exit(1);
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+//DateTime in PHP 5.3.0+ need a default timezone set.
+date_default_timezone_set(Application_Model_Preference::GetTimezone());
+
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 Zend_Validate::setDefaultNamespaces("Zend");
 
 $front = Zend_Controller_Front::getInstance();
-$front->registerPlugin(new RabbitMqPlugin());
+$front->registerPlugin(new RabbitMqPlugin()); 
 
+
+/* The bootstrap class should only be used to initialize actions that return a view. 
+   Actions that return JSON will not use the bootstrap class! */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
 	protected function _initDoctype()
@@ -89,6 +93,5 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->headTitle(Application_Model_Preference::GetHeadTitle());
     }
-
 }
 
