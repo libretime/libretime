@@ -528,7 +528,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
     
     def get_stream_setting(self):
-        #logger = logging.getLogger()
+        logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_stream_setting"])
             
@@ -538,7 +538,7 @@ class AirTimeApiClient(ApiClientInterface):
             response = json.loads(response)
         except Exception, e:
             response = None
-            #logger.error("Exception: %s", e)
+            logger.error("Exception: %s", e)
 
         return response
 

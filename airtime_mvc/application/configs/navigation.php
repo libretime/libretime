@@ -58,6 +58,12 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'directory-config'
+            ),
+            array(
+                'label'      => 'Stream Setting',
+                'module'     => 'default',
+                'controller' => 'Preference',
+                'action'     => 'stream-setting'
             )
         )
     ),

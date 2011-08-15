@@ -57,7 +57,7 @@ class RabbitMq
         $channel = $conn->channel();
         $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false, true, true);
 
-        $EXCHANGE = 'airtime-schedule';
+        $EXCHANGE = 'airtime-pypo';
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
 
         $data = json_encode($md);

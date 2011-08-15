@@ -609,7 +609,7 @@ class ApiController extends Zend_Controller_Action
     }
     
     public function getStreamSettingAction() {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
         
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
@@ -619,12 +619,8 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        $sql = "SELECT *"
-                ." FROM cc_stream_setting";
 
-        $rows = $CC_DBC->getAll($sql);
-
-        $this->view->msg = $rows;
+        $this->view->msg = Application_Model_StreamSetting::getStreamSetting();
     }
 }
 

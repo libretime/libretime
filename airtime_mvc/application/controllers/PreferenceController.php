@@ -14,6 +14,7 @@ class PreferenceController extends Zend_Controller_Action
                     ->addActionContext('reload-watch-directory', 'json')
                     ->addActionContext('remove-watch-directory', 'json')
                     ->addActionContext('is-import-in-progress', 'json')
+                    ->addActionContext('change-stream-setting', 'json')
                     ->initContext();
     }
 
@@ -82,6 +83,16 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->view->form = $watched_dirs_pref;
     }
+    
+    public function streamSettingAction()
+    {
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+        
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js','text/javascript');
+        
+        $this->view->form = new Application_Form_StreamSetting();
+    }
 
     public function serverBrowseAction()
     {
@@ -133,6 +144,16 @@ class PreferenceController extends Zend_Controller_Action
         }
 
         $this->view->subform = $watched_dirs_form->render();
+    }
+    
+    public function changeStreamSettingAction()
+    {
+        $data = array();
+        $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
+        RabbitMq::SendMessageToPypo("update_stream_setting", $data);
+        
+        $form = new Application_Form_StreamSetting();
+        $this->view->subform = $form->render();
     }
 
     public function reloadWatchDirectoryAction()

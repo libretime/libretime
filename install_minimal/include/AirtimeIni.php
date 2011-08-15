@@ -81,6 +81,11 @@ class AirtimeIni
         if (!copy(__DIR__."/../../python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
+        }else{
+            if (!chown(AirtimeIni::CONF_FILE_LIQUIDSOAP, "pypo") || !chgrp(AirtimeIni::CONF_FILE_LIQUIDSOAP, "pypo") ){
+                echo "Could not set ownership of liquidsoap.cfg to 'pypo'. Exiting.";
+                exit(1);
+            }
         }
         if (!copy(__DIR__."/../../python_apps/media-monitor/media-monitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
             echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
