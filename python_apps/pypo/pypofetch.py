@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import calendar
 import logging
 import logging.config
 import shutil
@@ -53,12 +54,9 @@ Hopefully there is a better way to do this.
 
     if(command == 'update_schedule'):
         SCHEDULE_PUSH_MSG  = m['schedule']
-    elif (command == 'update_timezone'):
-        logger.info("Setting timezone to %s", m['timezone'])
-        os.environ['TZ'] = m['timezone']
-        time.tzset()
     elif (command == 'update_stream_setting'):
         logger.info("Updating stream setting: %s", m['setting'])
+
     # ACK the message to take it off the queue
     message.ack()"""
 
@@ -423,7 +421,7 @@ class PypoFetch(Thread):
         for r, d, f in os.walk(self.cache_dir):
             for dir in d:
                 try:
-                    timestamp = time.mktime(time.strptime(dir, "%Y-%m-%d-%H-%M-%S"))
+                    timestamp = calendar.timegm(time.strptime(dir, "%Y-%m-%d-%H-%M-%S"))
                     if (now - timestamp) > offset:
                         try:
                             logger.debug('trying to remove  %s - timestamp: %s', os.path.join(r, dir), timestamp)

@@ -1225,11 +1225,17 @@ class Show {
         if($show["rebroadcast"]) {
             $event["disableResizing"] = true;
         }
+        
+        $startDateTime = new DateTime($show["starts"], new DateTimeZone("UTC"));
+        $startDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        
+        $endDateTime = new DateTime($show["ends"], new DateTimeZone("UTC"));
+        $endDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         $event["id"] = $show["instance_id"];
         $event["title"] = $show["name"];
-        $event["start"] = $show["starts"];
-        $event["end"] = $show["ends"];
+        $event["start"] = $startDateTime->format("Y-m-d H:i:s");
+        $event["end"] = $endDateTime->format("Y-m-d H:i:s");
         $event["allDay"] = false;
         $event["description"] = $show["description"];
         $event["showId"] = $show["show_id"];
