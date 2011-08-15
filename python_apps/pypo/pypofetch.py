@@ -102,10 +102,6 @@ class PypoFetch(Thread):
         if(command == 'update_schedule'):
             self.schedule_data  = m['schedule']
             self.process_schedule(self.schedule_data, "scheduler", False)
-        elif (command == 'update_timezone'):
-            logger.info("Setting timezone to %s", m['timezone'])
-            os.environ['TZ'] = m['timezone']
-            time.tzset()
         elif (command == 'update_stream_setting'):
             logger.info("Updating stream setting: %s", m['setting'])
             self.regenerateLiquidsoapConf(m['setting'])
