@@ -17,26 +17,26 @@ class Application_Model_Dashboard
                 return null;
             } else {
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
-                    "starts"=>$row[0]["starts"],
-                    "ends"=>$row[0]["ends"]);
+                    "starts"=>DateHelper::ConvertToLocalDateTimeString($row[0]["starts"]),
+                    "ends"=>DateHelper::ConvertToLocalDateTimeString($row[0]["ends"]));
 
             }
         } else {
             if (count($row) == 0){
                 //last item is a show instance
                 return array("name"=>$showInstance->getName(),
-                            "starts"=>$showInstance->getShowStart(),
-                            "ends"=>$showInstance->getShowEnd());
+                            "starts"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowStart()),
+                            "ends"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowEnd()));
             } else {
                 //return the one that started later.
                 if ($row[0]["starts"] >= $showInstance->getShowStart()){
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
-                            "starts"=>$row[0]["starts"],
-                            "ends"=>$row[0]["ends"]);
+                            "starts"=>DateHelper::ConvertToLocalDateTimeString($row[0]["starts"]),
+                            "ends"=>DateHelper::ConvertToLocalDateTimeString($row[0]["ends"]));
                 } else {
                     return array("name"=>$showInstance->getName(),
-                                "starts"=>$showInstance->getShowStart(),
-                                "ends"=>$showInstance->getShowEnd());
+                                "starts"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowStart()),
+                                "ends"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowEnd()));
                 }
             }
         }
@@ -49,7 +49,7 @@ class Application_Model_Dashboard
         //name. Else return the last item from the schedule.
 
         $row = array();
-        $showInstance = ShowInstance::GetCurrentShowInstance($p_timeNow);
+        $showInstance = ShowInstance::GetCurrentShowInstance($p_timeNow);        
         if (!is_null($showInstance)){
             $instanceId = $showInstance->getShowInstanceId();
             $row = Schedule::GetCurrentScheduleItem($p_timeNow, $instanceId);
@@ -63,21 +63,21 @@ class Application_Model_Dashboard
                  * in the future.
                  */
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
-                            "starts"=>$row[0]["starts"],
-                            "ends"=>$row[0]["ends"]);
+                            "starts"=>DateHelper::ConvertToLocalDateTimeString($row[0]["starts"]),
+                            "ends"=>DateHelper::ConvertToLocalDateTimeString($row[0]["ends"]));
             }
         } else {
             if (count($row) == 0){
                 //last item is a show instance
                 return array("name"=>$showInstance->getName(),
-                            "starts"=>$showInstance->getShowStart(),
-                            "ends"=>$showInstance->getShowEnd(),
+                            "starts"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowStart()),
+                            "ends"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowEnd()),
                             "media_item_played"=>false,
                             "record"=>$showInstance->isRecorded());
             } else {
                  return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
-                        "starts"=>$row[0]["starts"],
-                        "ends"=>$row[0]["ends"],
+                        "starts"=>DateHelper::ConvertToLocalDateTimeString($row[0]["starts"]),
+                        "ends"=>DateHelper::ConvertToLocalDateTimeString($row[0]["ends"]),
                         "media_item_played"=>$row[0]["media_item_played"],
                         "record"=>0);
             }
@@ -98,26 +98,26 @@ class Application_Model_Dashboard
                 return null;
             } else {
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
-                            "starts"=>$row[0]["starts"],
-                            "ends"=>$row[0]["ends"]);
+                            "starts"=>DateHelper::ConvertToLocalDateTimeString($row[0]["starts"]),
+                            "ends"=>DateHelper::ConvertToLocalDateTimeString($row[0]["ends"]));
             }
         } else {
             if (count($row) == 0){
                 //last item is a show instance
                 return array("name"=>$showInstance->getName(),
-                            "starts"=>$showInstance->getShowStart(),
-                            "ends"=>$showInstance->getShowEnd());
+                            "starts"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowStart()),
+                            "ends"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowEnd()));
             } else {
                 //return the one that starts sooner.
                 
                 if ($row[0]["starts"] <= $showInstance->getShowStart()){
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
-                            "starts"=>$row[0]["starts"],
-                            "ends"=>$row[0]["ends"]);
+                            "starts"=>DateHelper::ConvertToLocalDateTimeString($row[0]["starts"]),
+                            "ends"=>DateHelper::ConvertToLocalDateTimeString($row[0]["ends"]));
                 } else {
                     return array("name"=>$showInstance->getName(),
-                                "starts"=>$showInstance->getShowStart(),
-                                "ends"=>$showInstance->getShowEnd());
+                                "starts"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowStart()),
+                                "ends"=>DateHelper::ConvertToLocalDateTimeString($showInstance->getShowEnd()));
                 }
             }
         }

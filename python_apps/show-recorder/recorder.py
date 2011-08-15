@@ -47,7 +47,7 @@ def getDateTimeObj(time):
     date = timeinfo[0].split("-")
     time = timeinfo[1].split(":")
 
-    return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(time[2]))
+    return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(time[2]), None)
 
 class ShowRecorder(Thread):
 
@@ -208,6 +208,8 @@ class CommandListener(Thread):
         self.logger.info("Parsing show schedules...")
         self.shows_to_record = {}
         for show in shows:
+            print show
+		
             show_starts = getDateTimeObj(show[u'starts'])
             show_end = getDateTimeObj(show[u'ends'])
             time_delta = show_end - show_starts
@@ -222,7 +224,7 @@ class CommandListener(Thread):
 
     def get_time_till_next_show(self):
         if len(self.shows_to_record) != 0:
-            tnow = datetime.datetime.now()
+            tnow = datetime.datetime.utcnow()
             sorted_show_keys = sorted(self.shows_to_record.keys())
 
             start_time = sorted_show_keys[0]

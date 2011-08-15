@@ -176,15 +176,18 @@ class ScheduleController extends Zend_Controller_Action
     public function makeContextMenuAction()
     {
         $id = $this->_getParam('id');
-        $today_timestamp = date("Y-m-d H:i:s");
+        $epochNow = time();
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
         $show = new ShowInstance($id);
 
 		$params = '/format/json/id/#id#';
-		
-		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
+        
+        $showStartDateHelper = DateHelper::ConvertToLocalDateTime($show->getShowStart());
+        $showEndDateHelper = DateHelper::ConvertToLocalDateTime($show->getShowEnd());
+        		
+		if ($epochNow < $showStartDateHelper->getTimestamp()) {
 
             if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()) && !$show->isRecorded() && !$show->isRebroadcast()) {
 
@@ -202,7 +205,7 @@ class ScheduleController extends Zend_Controller_Action
                     'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
         }
 
-        if (strtotime($show->getShowEnd()) <= strtotime($today_timestamp)
+        if ($showEndDateHelper->getTimestamp() <= $epochNow
             && is_null($show->getSoundCloudFileId())
             && $show->isRecorded()
             && Application_Model_Preference::GetDoSoundCloudUpload()) {
@@ -212,15 +215,15 @@ class ScheduleController extends Zend_Controller_Action
         }
 
 
-        if (strtotime($show->getShowStart()) <= strtotime($today_timestamp) &&
-                strtotime($today_timestamp) < strtotime($show->getShowEnd()) &&
+        if ($showStartDateHelper->getTimestamp() <= $epochNow &&
+                $epochNow < $showEndDateHelper->getTimestamp() &&
                 $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
                 $menu[] = array('action' => array('type' => 'fn',
                     'callback' => "window['confirmCancelShow']($id)"),
                     'title' => 'Cancel Current Show');
         }
 
-		if (strtotime($today_timestamp) < strtotime($show->getShowStart())) {
+		if ($epochNow < $showStartDateHelper->getTimestamp()) {
 
             if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 
@@ -425,11 +428,17 @@ class ScheduleController extends Zend_Controller_Action
                     'add_show_url' => $show->getUrl(),
                     'add_show_genre' => $show->getGenre(),
                     'add_show_description' => $show->getDescription()));
+                    
+        $startsDateTime = new DateTime($showInstance->getShowStart(), new DateTimeZone("UTC"));
+        $endsDateTime = new DateTime($showInstance->getShowEnd(), new DateTimeZone("UTC"));
+        
+        $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-        $formWhen->populate(array('add_show_start_date' => $show->getStartDate(),
-                                  'add_show_start_time' => DateHelper::removeSecondsFromTime($show->getStartTime()),
-        						  'add_show_end_date_no_repeat' => $show->getEndDate(),
-        						  'add_show_end_time'	=> DateHelper::removeSecondsFromTime($show->getEndTime()),
+        $formWhen->populate(array('add_show_start_date' => $startsDateTime->format("Y-m-d"),
+                                  'add_show_start_time' => $startsDateTime->format("H:i"),
+        						  'add_show_end_date_no_repeat' => $endsDateTime->format("Y-m-d"),
+        						  'add_show_end_time'	=> $endsDateTime->format("H:i"),
                                   'add_show_duration' => $show->getDuration(true),
                                   'add_show_repeats' => $show->isRepeating() ? 1 : 0));
 

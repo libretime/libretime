@@ -17,6 +17,18 @@ class DateHelper
     {
         return date("Y-m-d H:i:s", $this->_timestamp);
     }
+    
+    /**
+     * Get time of object construction in the format
+     * YYYY-MM-DD HH:mm:ss
+     */
+    function getUtcTimestamp()
+    {
+        $dateTime = new DateTime("@".$this->_timestamp);
+        $dateTime->setTimezone(new DateTimeZone("UTC"));
+
+        return $dateTime->format("Y-m-d H:i:s");
+    }
 
     /**
      * Get date of object construction in the format
@@ -156,6 +168,20 @@ class DateHelper
         $totalSeconds = $hours*3600 + $minutes*60 + $seconds + $ms/1000;
     
         return $totalSeconds;
+    }
+    
+    public static function ConvertToLocalDateTime($p_dateString){
+        $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
+        $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+        return $dateTime;
+    }
+    
+    public static function ConvertToLocalDateTimeString($p_dateString, $format="Y-m-d H:i:s"){
+        $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
+        $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+        return $dateTime->format($format);
     }
 }
 
