@@ -13,6 +13,8 @@ var currentElem;
 var serverUpdateInterval = 5000;
 var uiUpdateInterval = 200;
 
+var timezoneOffset = 0;
+
 //set to "development" if we are developing :). Useful to disable alerts
 //when entering production mode. 
 var APPLICATION_ENV = "";
@@ -169,7 +171,7 @@ function updatePlaybar(){
     }
 
     /* Column 2 update */
-    $('#time').text(convertDateToHHMMSS(estimatedSchedulePosixTime));
+    $('#time').text(convertDateToHHMMSS(estimatedSchedulePosixTime + timezoneOffset));
 }
 
 function calcAdditionalData(currentItem){
@@ -209,7 +211,7 @@ function parseItems(obj){
     calcAdditionalShowData(obj.nextShow);
 
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
-    schedulePosixTime += parseInt(obj.timezoneOffset)*1000;
+    timezoneOffset = parseInt(obj.timezoneOffset)*1000;
     var date = new Date();
     localRemoteTimeOffset = date.getTime() - schedulePosixTime;
 }

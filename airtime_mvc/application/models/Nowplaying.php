@@ -55,16 +55,16 @@ class Application_Model_Nowplaying
 	public static function GetDataGridData($viewType, $dateString){
 
         if ($viewType == "now"){
-            $date = new DateHelper;
-            $timeNow = $date->getTimestamp();
-
+            $dateTime = new DateTime("now", new DateTimeZone("UTC"));
+            $timeNow = $dateTime->format("Y-m-d H:i:s");
+            
             $startCutoff = 60;
             $endCutoff = 86400; //60*60*24 - seconds in a day
         } else {
             $date = new DateHelper;
             $time = $date->getTime();
             $date->setDate($dateString." ".$time);
-            $timeNow = $date->getTimestamp();
+            $timeNow = $date->getUtcTimestamp();
 
             $startCutoff = $date->getNowDayStartDiff();
             $endCutoff = $date->getNowDayEndDiff();
