@@ -452,13 +452,13 @@ class ScheduleController extends Zend_Controller_Action
             array_push($days, $showDay->getDbDay());
         }
 
-        $displayedEndDate = new DateTime($show->getRepeatingEndDate());
+        $displayedEndDate = new DateTime($show->getRepeatingEndDate(), new DateTimeZone("UTC"));
         $displayedEndDate->sub(new DateInterval("P1D"));//end dates are stored non-inclusively.
-        $displayedEndDate = $displayedEndDate->format("Y-m-d");
+        $displayedEndDate->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         $formRepeats->populate(array('add_show_repeat_type' => $show->getRepeatType(),
                                     'add_show_day_check' => $days,
-                                    'add_show_end_date' => $displayedEndDate,
+                                    'add_show_end_date' => $displayedEndDate->format("Y-m-d"),
                                     'add_show_no_end' => ($show->getRepeatingEndDate() == '')));
 
         $formRecord->populate(array('add_show_record' => $show->isRecorded(),
