@@ -168,7 +168,7 @@ class CommandListener(Thread):
         self.logger = logging.getLogger('root')
         self.sr = None
         self.current_schedule = {}
-        self.shows_to_record = []
+        self.shows_to_record = {}
         self.time_till_next_show = 3600
         self.logger.info("RecorderFetch: init complete")
 
@@ -208,8 +208,6 @@ class CommandListener(Thread):
         self.logger.info("Parsing show schedules...")
         self.shows_to_record = {}
         for show in shows:
-            print show
-		
             show_starts = getDateTimeObj(show[u'starts'])
             show_end = getDateTimeObj(show[u'ends'])
             time_delta = show_end - show_starts

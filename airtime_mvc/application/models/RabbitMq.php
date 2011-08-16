@@ -108,13 +108,12 @@ class RabbitMq
         $EXCHANGE = 'airtime-show-recorder';
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
     
-        $today_timestamp = date("Y-m-d H:i:s");
-        $now = new DateTime($today_timestamp);
-        $end_timestamp = $now->add(new DateInterval("PT2H"));
-        $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
+        $now = new DateTime("@".time());
+        $end_timestamp = new DateTime("@".time() + 3600*2);
+
         $temp['event_type'] = $event_type;
         if($event_type = "update_schedule"){
-            $temp['shows'] = Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
+            $temp['shows'] = Show::getShows($now->format("Y-m-d H:i:s"), $end_timestamp->format("Y-m-d H:i:s"), $excludeInstance=NULL, $onlyRecord=TRUE);
         }
         $data = json_encode($temp);
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
