@@ -42,12 +42,14 @@ except Exception, e:
     sys.exit()
 
 def getDateTimeObj(time):
-
     timeinfo = time.split(" ")
     date = timeinfo[0].split("-")
     time = timeinfo[1].split(":")
+    
+    date = map(int, date)
+    time = map(int, time)
 
-    return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(time[2]), None)
+    return datetime.datetime(date[0], date[1], date[2], time[0], time[1], time[2], 0, None)
 
 class ShowRecorder(Thread):
 
@@ -211,9 +213,8 @@ class CommandListener(Thread):
             show_starts = getDateTimeObj(show[u'starts'])
             show_end = getDateTimeObj(show[u'ends'])
             time_delta = show_end - show_starts
-
+            
             self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name']]
-
             delta = self.get_time_till_next_show()
             # awake at least 5 seconds prior to the show start
             self.time_till_next_show = delta - 5
