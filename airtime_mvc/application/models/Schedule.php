@@ -657,13 +657,13 @@ class Schedule {
         global $CC_CONFIG, $CC_DBC;
 
         if (is_null($p_fromDateTime)) {
-            $t1 = new DateTime();
+            $t1 = new DateTime("now", new DateTimeZone("UTC"));
             $range_start = $t1->format("Y-m-d H:i:s");
         } else {
             $range_start = Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
         }
         if (is_null($p_fromDateTime)) {
-            $t2 = new DateTime();
+            $t2 = new DateTime("now", new DateTimeZone("UTC"));
             $t2->add(new DateInterval("PT24H"));
             $range_end = $t2->format("Y-m-d H:i:s");
         } else {
@@ -737,7 +737,6 @@ class Schedule {
         $result['stream_metadata'] = array();
         $result['stream_metadata']['format'] = Application_Model_Preference::GetStreamLabelFormat();
         $result['stream_metadata']['station_name'] = Application_Model_Preference::GetStationName();
-        $result['server_timezone'] = date('O');
 
         return $result;
     }
