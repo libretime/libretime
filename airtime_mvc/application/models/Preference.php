@@ -376,5 +376,15 @@ class Application_Model_Preference
     public static function GetImportTimestamp(){
         return Application_Model_Preference::GetValue("import_timestamp");
     }
+    
+    public static function GetStreamType(){
+        $st = Application_Model_Preference::GetValue("stream_type");
+        return explode(',', $st);
+    }
+    
+    public static function GetStreamBitrate(){
+        $sb = Application_Model_Preference::GetValue("stream_bitrate");
+        return explode(',', $sb);
+    }
 }
 

@@ -103,7 +103,7 @@ class PypoFetch(Thread):
             self.schedule_data  = m['schedule']
             self.process_schedule(self.schedule_data, "scheduler", False)
         elif (command == 'update_stream_setting'):
-            logger.info("Updating stream setting: %s", m['setting'])
+            logger.info("Updating stream setting...")
             self.regenerateLiquidsoapConf(m['setting'])
         # ACK the message to take it off the queue
         message.ack()
@@ -122,20 +122,58 @@ class PypoFetch(Thread):
             key = key.strip()
             value = value.strip()
             value = value.replace('"', '')
-            if value == "dummy_string" or value == "0":
+            if value == "" or value == "0":
                 value = ''
             existing[key] =  value
         fh.close()
-        # flag for any change in cofig
-        change = False
+        
+        # dict flag for any change in cofig
+        change = {}
+        # this flag is to detect diable -> disable change
+        # in that case, we don't want to restart even if there are chnges.
+        state_change_restart = {}
+        #restart flag
+        restart = False
         
         # look for changes
         for s in setting:
-            if not s[u'value'] == existing[s[u'keyname']]:
-                logger.info("Keyname: %s, Curent value: %s, New Value: %s", s[u'keyname'], s[u'value'], existing[s[u'keyname']])
-                change = True
+            if "output_" in s[u'keyname'] and s[u'keyname'] != "output_icecast_vorbis_metadata" and s[u'keyname'] != "output_sound_device":
+                dump, stream = s[u'keyname'].split('_', 1)
+                state_change_restart[stream] = False
+                # This is the case where restart is required no matter what
+                if (existing[s[u'keyname']] != s[u'value']):
+                    logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                    restart = True;
+                # This is the case where we need further checking
+                if s[u'value'] != 'disabled':
+                    state_change_restart[stream] = True
+            else:
+                if s[u'keyname'] == "output_sound_device":
+                    dump, stream = s[u'keyname'].split('_',1)
+                    state_change_restart[stream] = False
+                    if not (s[u'value'] == existing[s[u'keyname']]):
+                        logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                        state_change_restart[stream] = True
+                elif s[u'keyname'] != "output_icecast_vorbis_metadata" and s[u'keyname'] != "log_file":
+                    stream, dump = s[u'keyname'].split('_',1)
+                    # setting inital value
+                    if stream not in change:
+                        change[stream] = False
+                    if not (s[u'value'] == existing[s[u'keyname']]):
+                        logger.info("Keyname: %s, Curent value: %s, New Value: %s", s[u'keyname'], existing[s[u'keyname']], s[u'value'])
+                        change[stream] = True
+                        
+        # set flag change for sound_device alway True
+        logger.info("Change:%s, State_Change:%s...", change, state_change_restart)
+        
+        for k, v in state_change_restart.items():
+            if k == "sound_device" and v:
+                restart = True
+            elif v and change[k]:
+                logger.info("'Need-to-restart' state detected for %s...", k)
+                restart = True
         # rewrite
-        if change:
+        if restart:
             fh = open('/etc/airtime/liquidsoap.cfg', 'w')
             logger.info("Rewriting liquidsoap.cfg...")
             for d in setting:
@@ -143,7 +181,7 @@ class PypoFetch(Thread):
                 if(d[u'type'] == 'string'):
                     temp = d[u'value']
                     if(temp == ""):
-                        temp = "dummy_string"
+                        temp = ""
                     buffer += "\"" + temp + "\""
                 else:
                     temp = d[u'value']
@@ -153,10 +191,12 @@ class PypoFetch(Thread):
                 buffer += "\n"
                 fh.write(buffer)
             fh.close()
-            # restart playout
-            logger.info("Restarting airtime-playout...")
+            # restarting pypo.
+            # we could just restart liquidsoap but it take more time somehow.
+            logger.info("Restarting pypo...")
             p = Popen("/etc/init.d/airtime-playout restart >/dev/null 2>&1", shell=True)
             sts = os.waitpid(p.pid, 0)[1]
+            self.process_schedule(self.schedule_data, "scheduler", False)
         else:
             logger.info("No change detected in setting...")
         
@@ -218,6 +258,8 @@ class PypoFetch(Thread):
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         stream_metadata = schedule_data['stream_metadata']
         try:
+            logger.info(LS_HOST)
+            logger.info(LS_PORT)
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             #encode in latin-1 due to telnet protocol not supporting utf-8
             tn.write(('vars.stream_metadata_type %s\n' % stream_metadata['format']).encode('latin-1'))
@@ -430,7 +472,7 @@ class PypoFetch(Thread):
         # most recent schedule.  After that we can just wait for updates. 
         status, self.schedule_data = self.api_client.get_schedule()
         if status == 1:
-            self.process_schedule(self.schedule_data , "scheduler", True)                
+            self.process_schedule(self.schedule_data , "scheduler", True)
         logger.info("Bootstrap complete: got initial copy of the schedule")
 
         loops = 1        

@@ -52,7 +52,6 @@ class NowplayingController extends Zend_Controller_Action
                 // unset session
                 Zend_Session::namespaceUnset('referrer');
             }else{
-                var_dump($form->getMessages());
                 $logo = Application_Model_Preference::GetStationLogo();
                 if($logo){
                     $this->view->logoImg = $logo;
