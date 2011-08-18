@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEB=$(dpkg -s lame 2> /dev/null | grep Status)
+DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 if [[ "$DEB" = "Status: install ok installed" ]]; then
     echo -e "\nDebian package of Airtime detected. Please use the debian package to upgrade.\n"
     exit 1
