@@ -29,7 +29,7 @@ class Version20110711161043 extends AbstractMigration
         $cc_files->addNamedForeignKeyConstraint('cc_music_dirs_folder_fkey', $cc_music_dirs, array('directory'), array('id'), array('onDelete' => 'CASCADE'));
 
         // before 3) we have to delete all entries in cc_schedule with file_id that are not in cc_file table
-        $this->_addSql("DELETE FROM cc_schedule WHERE cc_schedule.id NOT IN(
+        $this->_addSql("DELETE FROM cc_schedule WHERE cc_schedule.id IN(
                         SELECT cc_schedule.id
                         FROM cc_schedule
                         LEFT JOIN cc_files
