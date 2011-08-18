@@ -64,6 +64,12 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'stream-setting'
+            ),
+            array(
+                'label'      => 'Support Settings',
+                'module'     => 'default',
+                'controller' => 'Preference',
+                'action'     => 'support-setting'
             )
         )
     ),

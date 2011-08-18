@@ -1,0 +1,12 @@
+<div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong preferences">
+<h2>Support Setting</h2>
+    <form method="post" action="/Preference/support-setting" enctype="multipart/form-data">
+        <div id="support-settings">
+            <?php echo $this->statusMsg ?>
+            <?php echo $this->form ?>
+        </div>
+        <div class="button-bar bottom" id="submit-element">
+            <?php echo $this->form->getElement('submit') ?>
+        </div>
+    </form>
+</div>

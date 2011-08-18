@@ -45,30 +45,50 @@ class PreferenceController extends Zend_Controller_Action
 
                 Application_Model_Preference::SetSoundCloudLicense($values["preferences_soundcloud"]["SoundCloudLicense"]);
 
-                Application_Model_Preference::SetPhone($values["preferences_support"]["Phone"]);
-                Application_Model_Preference::SetEmail($values["preferences_support"]["Email"]);
-                Application_Model_Preference::SetStationWebSite($values["preferences_support"]["StationWebSite"]);
-                Application_Model_Preference::SetSupportFeedback($values["preferences_support"]["SupportFeedback"]);
-                Application_Model_Preference::SetPublicise($values["preferences_support"]["Publicise"]);
-
-                $form->getSubForm('preferences_support')->Logo->receive();
-                $imagePath = $form->getSubForm('preferences_support')->Logo->getFileName();
-
-                Application_Model_Preference::SetStationCountry($values["preferences_support"]["Country"]);
-                Application_Model_Preference::SetStationCity($values["preferences_support"]["City"]);
-                Application_Model_Preference::SetStationDescription($values["preferences_support"]["Description"]);
-                Application_Model_Preference::SetStationLogo($imagePath);
-
                 $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
             }
         }
-    	$logo = Application_Model_Preference::GetStationLogo();
-		if($logo){
-			$this->view->logoImg = $logo;
-		}
         $this->view->form = $form;
     }
 
+    public function supportSettingAction()
+    {
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js','text/javascript');
+        $this->view->statusMsg = "";
+
+        $form = new Application_Form_SupportSettings();
+
+        if ($request->isPost()) {
+            if ($form->isValid($request->getPost())) {
+                $values = $form->getValues();
+
+                Application_Model_Preference::SetPhone($values["Phone"]);
+                Application_Model_Preference::SetEmail($values["Email"]);
+                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
+                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                Application_Model_Preference::SetPublicise($values["Publicise"]);
+
+                $form->Logo->receive();
+                $imagePath = $form->Logo->getFileName();
+
+                Application_Model_Preference::SetStationCountry($values["Country"]);
+                Application_Model_Preference::SetStationCity($values["City"]);
+                Application_Model_Preference::SetStationDescription($values["Description"]);
+                Application_Model_Preference::SetStationLogo($imagePath);
+
+                $this->view->statusMsg = "<div class='success'>Support setting updated.</div>";
+            }
+        }
+        $logo = Application_Model_Preference::GetStationLogo();
+        if($logo){
+            $this->view->logoImg = $logo;
+        }
+        $this->view->form = $form;
+    }
+    
     public function directoryConfigAction()
     {
         $request = $this->getRequest();
