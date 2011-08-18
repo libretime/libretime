@@ -14,6 +14,7 @@ SCRIPT=`readlink -f $0`
 SCRIPTPATH=`dirname $SCRIPT`
 
 VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
+VIRTUAL_ENV_SHARE="/usr/share/python-virtualenv/"
 if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
     echo -e "\n*** Creating Virtualenv for Airtime ***"
     EXTRAOPTION=$(virtualenv --help | grep extra-search-dir)
@@ -21,9 +22,11 @@ if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
     if [ "$?" -eq "0" ]; then
         sudo virtualenv --extra-search-dir=${SCRIPTPATH}/3rd_party --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
     else
-        # copy distibute-0.6.10.tar.gz to /usr/share/python-virtualenv/
+        # copy distribute-0.6.10.tar.gz to /usr/share/python-virtualenv/
         # this is due to the bug in virtualenv 1.4.9
-        cp ${SCRIPTPATH}/3rd_party/distribute-0.6.10.tar.gz /usr/share/python-virtualenv/ 
+        if [ -d "$VIRTUAL_ENV_SHARE" ]; then
+            cp ${SCRIPTPATH}/3rd_party/distribute-0.6.10.tar.gz /usr/share/python-virtualenv/
+        fi
         sudo virtualenv --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
     fi
     
