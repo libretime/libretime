@@ -9,6 +9,7 @@ class ApiController extends Zend_Controller_Action
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
                 ->addActionContext('recorded-shows', 'json')
+                ->addActionContext('server-timestamp', 'json')
                 ->addActionContext('upload-file', 'json')
                 ->addActionContext('upload-recorded', 'json')
                 ->addActionContext('media-monitor-setup', 'json')
@@ -55,6 +56,12 @@ class ApiController extends Zend_Controller_Action
         }
         $jsonStr = json_encode(array("version"=>AIRTIME_VERSION));
         echo $jsonStr;
+    }
+    
+    public function serverTimestampAction(){
+    
+        $this->view->serverTimestamp = array("timestamp"=>time(), "timezoneOffset"=> date("Z"));
+    
     }
 
     /**
