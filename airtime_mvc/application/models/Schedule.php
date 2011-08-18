@@ -657,13 +657,13 @@ class Schedule {
         global $CC_CONFIG, $CC_DBC;
 
         if (is_null($p_fromDateTime)) {
-            $t1 = new DateTime("now", new DateTimeZone("UTC"));
+            $t1 = new DateTime("@".time());
             $range_start = $t1->format("Y-m-d H:i:s");
         } else {
             $range_start = Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
         }
         if (is_null($p_fromDateTime)) {
-            $t2 = new DateTime("now", new DateTimeZone("UTC"));
+            $t2 = new DateTime("@".time());
             $t2->add(new DateInterval("PT24H"));
             $range_end = $t2->format("Y-m-d H:i:s");
         } else {
@@ -686,7 +686,6 @@ class Schedule {
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
                 $playlists[$pkey]['x_ident'] = $dx['group_id'];
-                //$playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
                 $playlists[$pkey]['timestamp'] = $timestamp;
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
                 $playlists[$pkey]['played'] = '0';

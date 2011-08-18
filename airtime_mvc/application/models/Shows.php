@@ -724,26 +724,28 @@ class Show {
      */
     public static function create($data)
     {
-	
-		$utcStartDateTime = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time']);
-		$utcStartDateTime->setTimezone(new DateTimeZone('UTC'));
-	
+
+        $utcStartDateTime = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time']);
+        $utcStartDateTime->setTimezone(new DateTimeZone('UTC'));
+
         if ($data['add_show_no_end']) {
-            $endDateTime = NULL;
+            $endDate = NULL;
         }
         else if ($data['add_show_repeats']) {
             $endDateTime = new DateTime($data['add_show_end_date']);
-			$endDateTime->setTimezone(new DateTimeZone('UTC'));
+            $endDateTime->setTimezone(new DateTimeZone('UTC'));
             $endDateTime->add(new DateInterval("P1D"));
+            $endDate = $endDateTime->format("Y-m-d");
         }
         else {
             $endDateTime = new DateTime($data['add_show_start_date']);
-			$endDateTime->setTimezone(new DateTimeZone('UTC'));
+            $endDateTime->setTimezone(new DateTimeZone('UTC'));
             $endDateTime->add(new DateInterval("P1D"));
+            $endDate = $endDateTime->format("Y-m-d");
         }
 
         //only want the day of the week from the start date.
-		$startDow = date("w", $utcStartDateTime->getTimestamp());
+        $startDow = date("w", $utcStartDateTime->getTimestamp());
         if (!$data['add_show_repeats']) {
             $data['add_show_day_check'] = array($startDow);
         } else if ($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
@@ -771,8 +773,8 @@ class Show {
         $isRecorded = ($data['add_show_record']) ? 1 : 0;
 
         if ($data['add_show_id'] != -1){
-			$show = new Show($showId);
-            $show->deletePossiblyInvalidInstances($data, $endDateTime->format("Y-m-d"), $isRecorded, $repeatType);
+            $show = new Show($showId);
+            $show->deletePossiblyInvalidInstances($data, $endDate, $isRecorded, $repeatType);
         }
 
         //check if we are adding or updating a show, and if updating
@@ -785,7 +787,7 @@ class Show {
         if ($data['add_show_repeats'] && $data['add_show_repeat_type'] == 2){
             $showDay = new CcShowDays();
             $showDay->setDbFirstShow($utcStartDateTime->format("Y-m-d"));
-            $showDay->setDbLastShow($endDateTime->format("Y-m-d"));
+            $showDay->setDbLastShow($endDate);
             $showDay->setDbStartTime($utcStartDateTime->format("H:i:s"));
             $showDay->setDbDuration($data['add_show_duration']);
             $showDay->setDbRepeatType($repeatType);
@@ -800,14 +802,14 @@ class Show {
                     else
                         $daysAdd = $day - $startDow;
                         
-                    $utcStartDateTime->add("P".$daysAdd."d");
+                    $utcStartDateTime->add(new DateInterval("P".$daysAdd."D"));
                 }
 
-                if (is_null($endDateTime) || strtotime($utcStartDateTime->format("Y-m-d")) <= $endDateTime->getTimestamp()) {
+                if (is_null($endDateTime) || $utcStartDateTime->getTimestamp <= $endDateTime->getTimestamp()) {
                     $showDay = new CcShowDays();
                     $showDay->setDbFirstShow($utcStartDateTime->format("Y-m-d"));
-                    $showDay->setDbLastShow($endDateTime->format("Y-m-d"));
-                    $showDay->setDbStartTime($utcStartDateTime->format("H:i:s"));
+                    $showDay->setDbLastShow($endDate);
+                    $showDay->setDbStartTime($utcStartDateTime->format("H:i"));
                     $showDay->setDbDuration($data['add_show_duration']);
                     $showDay->setDbDay($day);
                     $showDay->setDbRepeatType($repeatType);
@@ -1283,6 +1285,10 @@ class ShowInstance {
     {
         return $this->_instanceId;
     }
+    
+    public function getShow(){
+        return new Show($this->getShowId());
+    }
 
     public function isRebroadcast()
     {
@@ -1413,6 +1419,10 @@ class ShowInstance {
     public function moveShow($deltaDay, $deltaMin)
     {
         global $CC_DBC;
+        
+        if ($this->getShow()->isRepeating()){
+            return "Can't drag and drop repeating shows";
+        }
 
         $hours = $deltaMin/60;
         if($hours > 0)
@@ -1422,12 +1432,14 @@ class ShowInstance {
 
         $mins = abs($deltaMin%60);
 
-        $today_timestamp = date("Y-m-d H:i:s");
+        $today_timestamp = time();
         $starts = $this->getShowStart();
         $ends = $this->getShowEnd();
+        
+        $startsDateTime = new DateTime($starts, new DateTimeZone("UTC"));
 
-        if(strtotime($today_timestamp) > strtotime($starts)) {
-            return "can't move a past show";
+        if($today_timestamp > $startsDateTime->getTimestamp()) {
+            return "Can't move a past show";
         }
 
         $sql = "SELECT timestamp '{$starts}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
@@ -1436,12 +1448,13 @@ class ShowInstance {
         $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_ends = $CC_DBC->GetOne($sql);
 
-        if(strtotime($today_timestamp) > strtotime($new_starts)) {
-            return "can't move show into past";
+        $newStartsDateTime = new DateTime($new_starts, new DateTimeZone("UTC"));
+        if($today_timestamp > $newStartsDateTime->getTimestamp()) {
+            return "Can't move show into past";
         }
 
         $overlap = Show::getShows($new_starts, $new_ends, array($this->_instanceId));
-
+        
         if(count($overlap) > 0) {
             return "Should not overlap shows";
         }
