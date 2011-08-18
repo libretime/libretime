@@ -80,19 +80,19 @@ class ScheduleController extends Zend_Controller_Action
     public function moveShowAction()
     {
         $deltaDay = $this->_getParam('day');
-		$deltaMin = $this->_getParam('min');
-		$showInstanceId = $this->_getParam('showInstanceId');
+        $deltaMin = $this->_getParam('min');
+        $showInstanceId = $this->_getParam('showInstanceId');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-		    $show = new ShowInstance($showInstanceId);
-		    $error = $show->moveShow($deltaDay, $deltaMin);
+            $show = new ShowInstance($showInstanceId);
+            $error = $show->moveShow($deltaDay, $deltaMin);
         }
 
-		if(isset($error))
-			$this->view->error = $error;
+        if(isset($error))
+            $this->view->error = $error;
 
     }
 
