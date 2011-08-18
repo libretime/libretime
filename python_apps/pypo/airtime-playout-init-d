@@ -19,13 +19,24 @@ PIDFILE0=/var/run/airtime-playout.pid
 DAEMON1=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
 PIDFILE1=/var/run/airtime-liquidsoap.pid
 
+liquidsoap_start () {
+        monit monitor airtime-liquidsoap >/dev/null 2>&1
+        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
+        --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
+}
+
+liquidsoap_stop () {
+        # Send TERM after 5 seconds, wait at most 30 seconds.
+        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
+        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
+        rm -f $PIDFILE1
+}
+
 start () {
         monit monitor airtime-playout >/dev/null 2>&1
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
         
-        monit monitor airtime-liquidsoap >/dev/null 2>&1
-        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
-        --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
+        liquidsoap_start
 }
 
 stop () {
@@ -35,11 +46,8 @@ stop () {
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE0
         rm -f $PIDFILE0
         
-        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
-        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
-        rm -f $PIDFILE1
+        liquidsoap_stop
 }
-
 
 case "${1:-''}" in
   'start')
@@ -64,6 +72,13 @@ case "${1:-''}" in
   'status')
            # status commands here
            /usr/bin/airtime-check-system
+        ;;
+  'restart-liquidsoap')
+           # restart commands here
+           echo -n "Restarting Liquidsoap: "
+           liquidsoap_stop
+           liquidsoap_start
+           echo "Done."
         ;;
   *)      # no parameter specified
         echo "Usage: $SELF start|stop|restart|status"

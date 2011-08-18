@@ -7,9 +7,7 @@ class PreferenceController extends Zend_Controller_Action
     {
         /* Initialize action controller here */
     	$ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext/*->addActionContext('register', 'json')
-        			->addActionContext('remindme', 'json')*/
-                    ->addActionContext('server-browse', 'json')
+        $ajaxContext->addActionContext('server-browse', 'json')
                     ->addActionContext('change-stor-directory', 'json')
                     ->addActionContext('reload-watch-directory', 'json')
                     ->addActionContext('remove-watch-directory', 'json')
@@ -91,7 +89,66 @@ class PreferenceController extends Zend_Controller_Action
         
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js','text/javascript');
         
-        $this->view->form = new Application_Form_StreamSetting();
+        // get current settings
+        $temp = Application_Model_StreamSetting::getStreamSetting();
+        $setting = array();
+        foreach ($temp as $t){
+            $setting[$t['keyname']] = $t['value'];
+        }
+        
+        // get predefined type and bitrate from pref table
+        $temp_types = Application_Model_Preference::GetStreamType();
+        $stream_types = array();
+        foreach ($temp_types as $type){
+            $stream_types[trim($type)] = strtoupper(trim($type));
+        }
+        
+        $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
+        $stream_bitrates = array();
+        foreach ($temp_bitrate as $type){
+            $stream_bitrates[trim($type)] = strtoupper(trim($type))." Kbit/s";
+        }
+        
+        $num_of_stream = 3;
+        $form = new Application_Form_StreamSetting();
+        $form->setSetting($setting);
+        $form->startFrom();
+        for($i=1; $i<=$num_of_stream; $i++){
+            $subform = new Application_Form_StreamSettingSubForm();
+            $subform->setPrefix($i);
+            $subform->setSetting($setting);
+            $subform->setStreamTypes($stream_types);
+            $subform->setStreamBitrates($stream_bitrates);
+            $subform->startForm();
+            $form->addSubForm($subform, "s".$i."_subform");
+        }
+        if ($request->isPost()) {
+            $post_data = $request->getPost();
+            $error = false;
+            $values = array();
+            for($i=1; $i<=$num_of_stream; $i++){
+                if(!$form->getSubForm("s".$i."_subform")->isValid($post_data["s".$i."_data"])){
+                    $error = true;
+                }else{
+                    // getValues returne array of size 1, so reorganized it
+                    foreach($form->getSubForm("s".$i."_subform")->getValues() as $key => $d){
+                        $values[$key] = $d;
+                    }
+                }
+            }
+            if($form->isValid($post_data['output_sound_device'])){
+                $values['output_sound_device'] = $form->getValue('output_sound_device');
+            }
+            if(!$error){
+                Application_Model_StreamSetting::setStreamSetting($values);
+                $data = array();
+                $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
+                RabbitMq::SendMessageToPypo("update_stream_setting", $data);
+                $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
+            }
+        }
+        $this->view->num_stream = $num_of_stream;
+        $this->view->form = $form;
     }
 
     public function serverBrowseAction()
@@ -144,16 +201,6 @@ class PreferenceController extends Zend_Controller_Action
         }
 
         $this->view->subform = $watched_dirs_form->render();
-    }
-    
-    public function changeStreamSettingAction()
-    {
-        $data = array();
-        $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
-        RabbitMq::SendMessageToPypo("update_stream_setting", $data);
-        
-        $form = new Application_Form_StreamSetting();
-        $this->view->subform = $form->render();
     }
 
     public function reloadWatchDirectoryAction()

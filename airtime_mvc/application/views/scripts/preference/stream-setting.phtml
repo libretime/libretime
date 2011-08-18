@@ -1,4 +1,25 @@
-<div id="stream-setting-section" class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong manage-folders">
-<h2>Stream Setting</h2>
-<?php echo $this->form; ?>
+<div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong stream-config">
+    <h2>Stream configuration</h2>
+<?php echo $this->statusMsg;?>
+    <form method="post" action="/Preference/stream-setting" enctype="application/x-www-form-urlencoded">
+    <fieldset class="padded">
+        <legend>Hardware Audio Out</legend>
+        <dl class="zend_form">
+            <dt id="hardwareOut-label" class="block-display" style="display:none;"></dt>
+            <dd id="hardwareOut-element" class="block-display">
+                <label class="required" for="EnableHardwareOut">
+                <?php echo $this->form->getElement('output_sound_device')->getLabel() ?></label>
+                <?php echo $this->form->getElement('output_sound_device') ?>
+            </dd>
+        </dl>
+    </fieldset>
+    <?php
+        for($i=1;$i<=$this->num_stream;$i++){ 
+            echo $this->form->getSubform("s".$i."_subform");
+        }
+    ?>
+    <div class="button-bar bottom" id="submit-element">
+        <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
+    </div>
+</form>
 </div>

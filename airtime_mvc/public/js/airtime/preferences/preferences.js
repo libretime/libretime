@@ -1,6 +1,6 @@
 function showErrorSections() {
 
-    if($("soundcloud-settings .errors").length > 0) {
+    if($("#soundcloud-settings .errors").length > 0) {
         $("#soundcloud-settings").show();
         $(window).scrollTop($("soundcloud-settings .errors").position().top);
     }

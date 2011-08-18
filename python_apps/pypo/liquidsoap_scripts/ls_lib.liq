@@ -50,8 +50,12 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     description = description,
                     genre = genre) 
         if type == "mp3" then
-            if bitrate == 32 then 
+            if bitrate == 24 then 
+                ignore(output.icecast(%mp3(bitrate = 24),s))
+            elsif bitrate == 32 then
                 ignore(output.icecast(%mp3(bitrate = 32),s))
+            elsif bitrate == 48 then
+                ignore(output.icecast(%mp3(bitrate = 48),s))
             elsif bitrate == 64 then
                 ignore(output.icecast(%mp3(bitrate = 64),s))
             elsif bitrate == 96 then
@@ -60,14 +64,26 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                 ignore(output.icecast(%mp3(bitrate = 128),s))
             elsif bitrate == 160 then
                 ignore(output.icecast(%mp3(bitrate = 160),s))
+            elsif bitrate == 192 then
+                ignore(output.icecast(%mp3(bitrate = 192),s))
+            elsif bitrate == 224 then
+                ignore(output.icecast(%mp3(bitrate = 224),s))
+            elsif bitrate == 256 then
+                ignore(output.icecast(%mp3(bitrate = 256),s))
+            elsif bitrate == 320 then
+                ignore(output.icecast(%mp3(bitrate = 320),s))
             end
         else
             source = ref s
             if not output_icecast_vorbis_metadata then
                 source := add(normalize=false, [amplify(0.00001, noise()),s])
             end
-            if bitrate == 32 then 
+            if bitrate == 24 then 
+                ignore(output.icecast(%vorbis.cbr(bitrate = 24),!source))
+            elsif bitrate == 32 then
                 ignore(output.icecast(%vorbis.cbr(bitrate = 32),!source))
+            elsif bitrate == 48 then
+                ignore(output.icecast(%vorbis.cbr(bitrate = 48),!source))
             elsif bitrate == 64 then
                 ignore(output.icecast(%vorbis.cbr(bitrate = 64),!source))
             elsif bitrate == 96 then
@@ -76,6 +92,14 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                 ignore(output.icecast(%vorbis.cbr(bitrate = 128),!source))
             elsif bitrate == 160 then
                 ignore(output.icecast(%vorbis.cbr(bitrate = 160),!source))
+            elsif bitrate == 192 then
+                ignore(output.icecast(%vorbis.cbr(bitrate = 192),!source))
+            elsif bitrate == 224 then
+                ignore(output.icecast(%vorbis.cbr(bitrate = 224),!source))
+            elsif bitrate == 256 then
+                ignore(output.icecast(%vorbis.cbr(bitrate = 256),!source))
+            elsif bitrate == 320 then
+                ignore(output.icecast(%vorbis.cbr(bitrate = 320),!source))
             end
         end
     else
@@ -87,17 +111,29 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     restart_delay = 5,
                     url = url,
                     genre = genre)
-        if bitrate == 32 then 
-            ignore(output.shoutcast(%mp3(bitrate = 32),s))
-        elsif bitrate == 64 then
-            ignore(output.shoutcast(%mp3(bitrate = 64),s))
-        elsif bitrate == 96 then
-            ignore(output.shoutcast(%mp3(bitrate = 96),s))
-        elsif bitrate == 128 then
-            ignore(output.shoutcast(%mp3(bitrate = 128),s))
-        elsif bitrate == 160 then
-            ignore(output.shoutcast(%mp3(bitrate = 160),s))
-        end
+         if bitrate == 24 then 
+                ignore(output.shoutcast(%mp3(bitrate = 24),s))
+            elsif bitrate == 32 then
+                ignore(output.shoutcast(%mp3(bitrate = 32),s))
+            elsif bitrate == 48 then
+                ignore(output.shoutcast(%mp3(bitrate = 48),s))
+            elsif bitrate == 64 then
+                ignore(output.shoutcast(%mp3(bitrate = 64),s))
+            elsif bitrate == 96 then
+                ignore(output.shoutcast(%mp3(bitrate = 96),s))
+            elsif bitrate == 128 then
+                ignore(output.shoutcast(%mp3(bitrate = 128),s))
+            elsif bitrate == 160 then
+                ignore(output.shoutcast(%mp3(bitrate = 160),s))
+            elsif bitrate == 192 then
+                ignore(output.shoutcast(%mp3(bitrate = 192),s))
+            elsif bitrate == 224 then
+                ignore(output.shoutcast(%mp3(bitrate = 224),s))
+            elsif bitrate == 256 then
+                ignore(output.shoutcast(%mp3(bitrate = 256),s))
+            elsif bitrate == 320 then
+                ignore(output.shoutcast(%mp3(bitrate = 320),s))
+            end
     end
 end
 

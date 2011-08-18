@@ -1247,7 +1247,7 @@ div.success{
 	border:1px solid #488214;
 }
 
-.collapsible-header {
+.collapsible-header, .collapsible-header-disabled {
 	border: 1px solid #8f8f8f;
 	background-color: #cccccc;
     background: -moz-linear-gradient(top, #cccccc 0, #b9b9b9 100%);
@@ -1264,7 +1264,7 @@ div.success{
 	margin-top:-1px;
 	display:none;
 }
-.collapsible-header .arrow-icon {
+.collapsible-header .arrow-icon, .collapsible-header-disabled  .arrow-icon {
 	display:block;
 	background:url(images/arrows_collapse.png) no-repeat 0 0;
 	height:11px;
@@ -1274,7 +1274,7 @@ div.success{
 	top:8px;
     
 }
-.collapsible-header.close .arrow-icon {
+.collapsible-header.close .arrow-icon, collapsible-header-disabled.close  .arrow-icon {
 	background-position: 0 -11px;
     
 }
@@ -1604,7 +1604,7 @@ div.success{
 .medium-icon.finishedplaying {
 	background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
 }
-.preferences, .manage-folders {
+.preferences, .manage-folders, .stream-config {
     width: 500px;
 }
 
@@ -1614,46 +1614,55 @@ dt.block-display, dd.block-display {
     margin-left: 0;
     padding-left: 0;
 }
-.preferences dt.block-display, .preferences dd.block-display {
+.preferences dt.block-display, .preferences dd.block-display,
+.stream-config dt.block-display, .stream-config dd.block-display {
     padding: 0 0 5px 0;
 }
-.preferences dd.block-display {
+.preferences dd.block-display, .stream-config dd.block-display {
 	margin-bottom:4px;
 }
-.preferences dd.block-display:last-child {
+.preferences dd.block-display:last-child, .stream-config dd.block-display:last-child {
 	margin-bottom:0;
+	padding-bottom:0;
 }
 .simple-formblock dd.block-display {
     width: 100%;
 }
-.preferences input[type="radio"] {
+.preferences input[type="radio"], .stream-config input[type="radio"] {
 	margin:0;
 }
-.preferences label input[type="radio"] {
+.preferences label input[type="radio"], .stream-config label input[type="radio"] {
 	margin:0 1px 0 0;
 }
-.preferences label input[type="checkbox"] {
+.preferences label input[type="checkbox"], .stream-config label input[type="checkbox"] {
 	margin:0 5px 0 0;
 }
-dd.radio-inline-list, .preferences dd.radio-inline-list {
+dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio-inline-list {
 	margin-bottom:6px;
 }
 .radio-inline-list label {
 	margin-right:12px;
 }
-.preferences.simple-formblock dd.block-display {
+.preferences.simple-formblock dd.block-display, .stream-config.simple-formblock dd.block-display {
     width: 100%;
 }
 
-.preferences.simple-formblock dd.block-display select {
+.preferences.simple-formblock dd.block-display select, .stream-config.simple-formblock dd.block-display select {
     width: 100%;
 }
-.preferences dd.block-display .input_select {
+.preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
     width: 100%;
 }
-.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text {
+.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text,
+.stream-config dd.block-display .input_text_area, .stream-config dd.block-display .input_text,
+.stream-config dd.block-display input[type="text"], .stream-config dd.block-display input[type="password"] {
     width: 99.5%;
 }
+
+
+
+
+
 .preferences dd#SoundCloudTags-element.block-display .input_text_area {
     height: 120px;
 }
@@ -1909,4 +1918,54 @@ input[type="checkbox"][disabled] {
 dd .info-text-small {
     padding: 1px 0 2px;
 	display:inline-block;
+}
+
+.stream-config dt  {
+	width:120px;
+	padding: 4px 0;
+}
+.stream-config dt.block-display  {
+	width:auto;
+}
+.stream-config dd  {
+	margin-bottom:0px;
+}
+.stream-config dd select {
+	width:160px;
+	line-height:140%;
+}
+
+dt.block-display.info-block {
+    width: auto;
+	font-size:12px;
+	padding:10px 0;
+}
+.top-margin {
+	margin-top:10px;
+}
+.left-margin {
+	margin-left:20px;
+}
+.stream-config dd.block-display textarea {
+    width: 99.5%;
+	height: 110px;
+}
+	
+.input-info {
+	font-size:12px;
+	padding:0 0 0 5px;
+}
+
+.stream-config dd.block-display input[type="text"].with-info, .stream-config dd.block-display input[type="password"].with-info {
+    width: 85%;
+}
+.stream-config dd.block-display p {
+    font-size:13px;
+	margin:4px 0 4px 2px;
+}
+
+.collapsible-header-disabled {
+	cursor:default;
+	opacity:0.6;
+
 }

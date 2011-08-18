@@ -141,9 +141,9 @@ class PypoPush(Thread):
                 tn.read_all()
             except Exception, e:
                 logger.debug(e)
+                logger.debug('Could not connect to liquidsoap')
 
             self.liquidsoap_state_play = False
-            logger.debug('Could not connect to liquidsoap')
             
 
     def push_liquidsoap(self, pkey, schedule, playlists):
