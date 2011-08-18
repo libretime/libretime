@@ -4,6 +4,8 @@
 *
 */
 
+var serverTimezoneOffset = 0;
+
 function closeDialog(event, ui) {
 	$("#schedule_calendar").fullCalendar( 'refetchEvents' );
 	$(this).remove();
@@ -292,18 +294,21 @@ function buildEditDialog(json){
 
 }
 
-$(window).load(function() {
+function createFullCalendar(data){
+
+    serverTimezoneOffset = data.serverTimestamp.timezoneOffset;
+
     var mainHeight = document.documentElement.clientHeight - 200 - 50;
 
     $('#schedule_calendar').fullCalendar({
         header: {
-			left: 'prev, next, today',
-			center: 'title',
-			right: 'agendaDay, agendaWeek, month'
-		}, 
-		defaultView: 'month',
-		editable: false,
-		allDaySlot: false,
+            left: 'prev, next, today',
+            center: 'title',
+            right: 'agendaDay, agendaWeek, month'
+        }, 
+        defaultView: 'month',
+        editable: false,
+        allDaySlot: false,
         axisFormat: 'H:mm',
         timeFormat: {
             agenda: 'H:mm{ - H:mm}',
@@ -312,17 +317,25 @@ $(window).load(function() {
         contentHeight: mainHeight,
         theme: true,
         lazyFetching: false,
+        serverTimestamp: parseInt(data.serverTimestamp.timestamp, 10),
+        serverTimezoneOffset: parseInt(data.serverTimestamp.timezoneOffset, 10),
        
-		events: getFullCalendarEvents,
+        events: getFullCalendarEvents,
 
-		//callbacks (in full-calendar-functions.js)
+        //callbacks (in full-calendar-functions.js)
         viewDisplay: viewDisplay,
-		dayClick: dayClick,
-		eventRender: eventRender,
-		eventAfterRender: eventAfterRender,
-		eventDrop: eventDrop,
-		eventResize: eventResize 
+        dayClick: dayClick,
+        eventRender: eventRender,
+        eventAfterRender: eventAfterRender,
+        eventDrop: eventDrop,
+        eventResize: eventResize 
     });
-    
+
+}
+
+$(window).load(function() {
+
+    $.ajax({ url: "/Api/server-timestamp/format/json", dataType:"json", success:createFullCalendar
+            , error:function(jqXHR, textStatus, errorThrown){}});    
 });
 
