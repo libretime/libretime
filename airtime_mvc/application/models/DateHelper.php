@@ -2,11 +2,11 @@
 
 class DateHelper
 {
-    private $_timestamp;
+    private $_dateTime;
 
     function __construct()
     {
-        $this->_timestamp = date("U");
+        $this->_dateTime = date("U");
     }
 
     /**
@@ -15,7 +15,19 @@ class DateHelper
      */
     function getTimestamp()
     {
-        return date("Y-m-d H:i:s", $this->_timestamp);
+        return date("Y-m-d H:i:s", $this->_dateTime);
+    }
+    
+    /**
+     * Get time of object construction in the format
+     * YYYY-MM-DD HH:mm:ss
+     */
+    function getUtcTimestamp()
+    {
+        $dateTime = new DateTime("@".$this->_dateTime);
+        $dateTime->setTimezone(new DateTimeZone("UTC"));
+
+        return $dateTime->format("Y-m-d H:i:s");
     }
 
     /**
@@ -24,7 +36,7 @@ class DateHelper
      */
     function getDate()
     {
-        return date("Y-m-d", $this->_timestamp);
+        return date("Y-m-d", $this->_dateTime);
     }
 
     /**
@@ -33,7 +45,7 @@ class DateHelper
      */
     function getTime()
     {
-        return date("H:i:s", $this->_timestamp);
+        return date("H:i:s", $this->_dateTime);
     }
 
     /**
@@ -41,28 +53,30 @@ class DateHelper
      */
     function setDate($dateString)
     {
-        $this->_timestamp = strtotime($dateString);
+        $this->_dateTime = strtotime($dateString);
     }
 
     /**
-     *
-     * Enter description here ...
+     * Find the epoch timestamp difference from "now" to the beginning of today.
      */
     function getNowDayStartDiff()
     {
-        $dayStartTS = strtotime(date("Y-m-d", $this->_timestamp));
-        return $this->_timestamp - $dayStartTS;
+        $dayStartTs = ((int)($this->_dateTime/86400))*86400;
+        return $this->_dateTime - $dayStartTs;
     }
 
+    /**
+     * Find the epoch timestamp difference from "now" to the end of today.
+     */
     function getNowDayEndDiff()
     {
-        $dayEndTS = strtotime(date("Y-m-d", $this->_timestamp+(86400)));
-        return $dayEndTS - $this->_timestamp;
+        $dayEndTs = ((int)(($this->_dateTime+86400)/86400))*86400;
+        return $dayEndTs - $this->_dateTime;
     }
 
     function getEpochTime()
     {
-        return $this->_timestamp;
+        return $this->_dateTime;
     }
 
     public static function TimeDiff($time1, $time2)
@@ -100,31 +114,31 @@ class DateHelper
      * format "hh:mm:ss". But when dealing with show times, we
      * do not care about the seconds.
      *
-     * @param int $p_timestamp
+     * @param int $p_dateTime
      *      The value which to format.
      * @return int
      *      The timestamp with the new format "hh:mm", or
      *      the original input parameter, if it does not have
      *      the correct format.
      */
-    public static function removeSecondsFromTime($p_timestamp)
+    public static function removeSecondsFromTime($p_dateTime)
     {
         //Format is in hh:mm:ss. We want hh:mm
-        $timeExplode = explode(":", $p_timestamp);
+        $timeExplode = explode(":", $p_dateTime);
 
         if (count($timeExplode) == 3)
             return $timeExplode[0].":".$timeExplode[1];
         else
-            return $p_timestamp;
+            return $p_dateTime;
     }
 
-    public static function getDateFromTimestamp($p_timestamp){
-        $explode = explode(" ", $p_timestamp);
+    public static function getDateFromTimestamp($p_dateTime){
+        $explode = explode(" ", $p_dateTime);
         return $explode[0];
     }
 
-    public static function getTimeFromTimestamp($p_timestamp){
-        $explode = explode(" ", $p_timestamp);
+    public static function getTimeFromTimestamp($p_dateTime){
+        $explode = explode(" ", $p_dateTime);
         return $explode[1];
     }
     
@@ -156,6 +170,20 @@ class DateHelper
         $totalSeconds = $hours*3600 + $minutes*60 + $seconds + $ms/1000;
     
         return $totalSeconds;
+    }
+    
+    public static function ConvertToLocalDateTime($p_dateString){
+        $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
+        $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+        return $dateTime;
+    }
+    
+    public static function ConvertToLocalDateTimeString($p_dateString, $format="Y-m-d H:i:s"){
+        $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
+        $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+        return $dateTime->format($format);
     }
 }
 

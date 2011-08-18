@@ -13,9 +13,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $this->addElement('text', 'stationName', array(
             'class'      => 'input_text',
             'label'      => 'Station Name',
-            'required'   => true,
             'filters'    => array('StringTrim'),
-            'validators' => array('NotEmpty'),
             'value' => Application_Model_Preference::GetValue("station_name"),
             'decorators' => array(
                 'ViewHelper'

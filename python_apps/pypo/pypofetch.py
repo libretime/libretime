@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import calendar
 import logging
 import logging.config
 import shutil
@@ -53,12 +54,9 @@ Hopefully there is a better way to do this.
 
     if(command == 'update_schedule'):
         SCHEDULE_PUSH_MSG  = m['schedule']
-    elif (command == 'update_timezone'):
-        logger.info("Setting timezone to %s", m['timezone'])
-        os.environ['TZ'] = m['timezone']
-        time.tzset()
     elif (command == 'update_stream_setting'):
         logger.info("Updating stream setting: %s", m['setting'])
+
     # ACK the message to take it off the queue
     message.ack()"""
 
@@ -104,10 +102,6 @@ class PypoFetch(Thread):
         if(command == 'update_schedule'):
             self.schedule_data  = m['schedule']
             self.process_schedule(self.schedule_data, "scheduler", False)
-        elif (command == 'update_timezone'):
-            logger.info("Setting timezone to %s", m['timezone'])
-            os.environ['TZ'] = m['timezone']
-            time.tzset()
         elif (command == 'update_stream_setting'):
             logger.info("Updating stream setting...")
             self.regenerateLiquidsoapConf(m['setting'])
@@ -212,20 +206,6 @@ class PypoFetch(Thread):
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
         logger.info("Creating cache directory at %s", self.cache_dir)
 
-    def check_matching_timezones(self, server_timezone):
-        logger = logging.getLogger('fetch')
-
-        process = Popen(["date", "+%z"], stdout=PIPE)
-        pypo_timezone = (process.communicate()[0]).strip(' \r\n\t')
-
-        if server_timezone != pypo_timezone:
-            logger.error("ERROR: Airtime server and pypo timezone offsets do not match. Audio playback will not start when expected!!!")
-            logger.error("  * Server timezone offset: %s", server_timezone)
-            logger.error("  * Pypo timezone offset: %s", pypo_timezone)
-            logger.error("  * To fix this, you need to set the 'date.timezone' value in your php.ini file and restart apache.")
-            logger.error("  * See this page for more info (v1.7): http://wiki.sourcefabric.org/x/BQBF")
-            logger.error("  * and also the 'FAQ and Support' page underneath it.")  
-
     """
     def get_currently_scheduled(self, playlistsOrMedias, str_tnow_s):
         for key in playlistsOrMedias:
@@ -274,12 +254,6 @@ class PypoFetch(Thread):
         logger = logging.getLogger('fetch')
         playlists = schedule_data["playlists"]
 
-        #if bootstrapping:
-            #TODO: possible allow prepare_playlists to handle this.
-            #self.handle_shows_currently_scheduled(playlists)
-
-        self.check_matching_timezones(schedule_data["server_timezone"])
-            
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         stream_metadata = schedule_data['stream_metadata']
@@ -465,7 +439,7 @@ class PypoFetch(Thread):
         for r, d, f in os.walk(self.cache_dir):
             for dir in d:
                 try:
-                    timestamp = time.mktime(time.strptime(dir, "%Y-%m-%d-%H-%M-%S"))
+                    timestamp = calendar.timegm(time.strptime(dir, "%Y-%m-%d-%H-%M-%S"))
                     if (now - timestamp) > offset:
                         try:
                             logger.debug('trying to remove  %s - timestamp: %s', os.path.join(r, dir), timestamp)

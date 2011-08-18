@@ -12,7 +12,9 @@
 <?php $i=0; ?>
 <?php foreach($this->showContent as $row): ?>
     <tr id="au_<?php echo $row["file_id"] ?>" class="<?php if($i&1){echo "even";}else{echo "odd";}?>">
-        <td><?php echo $row["starts"] ?></td>
+        <td><?php $dt = new DateTime($row["starts"], new DateTimeZone("UTC")); 
+                  $dt->setTimezone(new DateTimeZone(date_default_timezone_get())); 
+                  echo $dt->format("Y-m-d H:i:s") ?></td>
         <td><?php echo $row["track_title"] ?></td>
         <td><?php echo $row["artist_name"] ?></td>
         <td><?php echo $row["album_title"] ?></td>

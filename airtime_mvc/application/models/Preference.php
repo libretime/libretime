@@ -264,7 +264,6 @@ class Application_Model_Preference
         Application_Model_Preference::SetValue("timezone", $timezone);
         date_default_timezone_set($timezone);
         $md = array("timezone" => $timezone);
-        RabbitMq::SendMessageToPypo("update_timezone", $md);
     }
     
     public static function GetTimezone(){

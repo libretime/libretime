@@ -622,7 +622,9 @@ class ObpApiClient():
 
         return obp_version
 
-
+	"""
+	NOTE: The server currently ignores start and end parameters we send to it.
+	"""
     def get_schedule(self, start=None, end=None):
         logger = logging.getLogger()
 
@@ -630,13 +632,12 @@ class ObpApiClient():
         calculate start/end time range (format: YYYY-DD-MM-hh-mm-ss,YYYY-DD-MM-hh-mm-ss)
         (seconds are ignored, just here for consistency)
         """
-        tnow = time.localtime(time.time())
         if (not start):
-            tstart = time.localtime(time.time() - 3600 * int(self.config["cache_for"]))
+            tstart = time.gmtime(time.time() - 3600 * int(self.config["cache_for"]))
             start = "%04d-%02d-%02d-%02d-%02d" % (tstart[0], tstart[1], tstart[2], tstart[3], tstart[4])
 
         if (not end):
-            tend = time.localtime(time.time() + 3600 * int(self.config["prepare_ahead"]))
+            tend = time.gmtime(time.time() + 3600 * int(self.config["prepare_ahead"]))
             end = "%04d-%02d-%02d-%02d-%02d" % (tend[0], tend[1], tend[2], tend[3], tend[4])
 
         range = {}

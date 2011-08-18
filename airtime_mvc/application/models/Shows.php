@@ -724,27 +724,26 @@ class Show {
      */
     public static function create($data)
     {
-        $con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
-
-        $sql = "SELECT EXTRACT(DOW FROM TIMESTAMP '{$data['add_show_start_date']} {$data['add_show_start_time']}')";
-        $r = $con->query($sql);
-        $startDow = $r->fetchColumn(0);
-
+	
+		$utcStartDateTime = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time']);
+		$utcStartDateTime->setTimezone(new DateTimeZone('UTC'));
+	
         if ($data['add_show_no_end']) {
-            $endDate = NULL;
+            $endDateTime = NULL;
         }
         else if ($data['add_show_repeats']) {
-            $sql = "SELECT date '{$data['add_show_end_date']}' + INTERVAL '1 day' ";
-            $r = $con->query($sql);
-            $endDate = $r->fetchColumn(0);
+            $endDateTime = new DateTime($data['add_show_end_date']);
+			$endDateTime->setTimezone(new DateTimeZone('UTC'));
+            $endDateTime->add(new DateInterval("P1D"));
         }
         else {
-            $sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '1 day' ";
-            $r = $con->query($sql);
-            $endDate = $r->fetchColumn(0);
+            $endDateTime = new DateTime($data['add_show_start_date']);
+			$endDateTime->setTimezone(new DateTimeZone('UTC'));
+            $endDateTime->add(new DateInterval("P1D"));
         }
 
         //only want the day of the week from the start date.
+		$startDow = date("w", $utcStartDateTime->getTimestamp());
         if (!$data['add_show_repeats']) {
             $data['add_show_day_check'] = array($startDow);
         } else if ($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
@@ -768,12 +767,12 @@ class Show {
         $ccShow->save();
 
         $showId = $ccShow->getDbId();
-        $show = new Show($showId);
 
         $isRecorded = ($data['add_show_record']) ? 1 : 0;
 
         if ($data['add_show_id'] != -1){
-            $show->deletePossiblyInvalidInstances($data, $endDate, $isRecorded, $repeatType);
+			$show = new Show($showId);
+            $show->deletePossiblyInvalidInstances($data, $endDateTime->format("Y-m-d"), $isRecorded, $repeatType);
         }
 
         //check if we are adding or updating a show, and if updating
@@ -785,37 +784,30 @@ class Show {
         //don't set day for monthly repeat type, it's invalid.
         if ($data['add_show_repeats'] && $data['add_show_repeat_type'] == 2){
             $showDay = new CcShowDays();
-            $showDay->setDbFirstShow($data['add_show_start_date']);
-            $showDay->setDbLastShow($endDate);
-            $showDay->setDbStartTime($data['add_show_start_time']);
+            $showDay->setDbFirstShow($utcStartDateTime->format("Y-m-d"));
+            $showDay->setDbLastShow($endDateTime->format("Y-m-d"));
+            $showDay->setDbStartTime($utcStartDateTime->format("H:i:s"));
             $showDay->setDbDuration($data['add_show_duration']);
             $showDay->setDbRepeatType($repeatType);
             $showDay->setDbShowId($showId);
             $showDay->setDbRecord($isRecorded);
             $showDay->save();
-        }
-        else {
+        } else {
             foreach ($data['add_show_day_check'] as $day) {
                 if ($startDow !== $day){
-
                     if ($startDow > $day)
                         $daysAdd = 6 - $startDow + 1 + $day;
                     else
                         $daysAdd = $day - $startDow;
-
-                    $sql = "SELECT date '{$data['add_show_start_date']}' + INTERVAL '{$daysAdd} day' ";
-                    $r = $con->query($sql);
-                    $start = $r->fetchColumn(0);
-                }
-                else {
-                    $start = $data['add_show_start_date'];
+                        
+                    $utcStartDateTime->add("P".$daysAdd."d");
                 }
 
-                if (strtotime($start) <= strtotime($endDate) || is_null($endDate)) {
+                if (is_null($endDateTime) || strtotime($utcStartDateTime->format("Y-m-d")) <= $endDateTime->getTimestamp()) {
                     $showDay = new CcShowDays();
-                    $showDay->setDbFirstShow($start);
-                    $showDay->setDbLastShow($endDate);
-                    $showDay->setDbStartTime($data['add_show_start_time']);
+                    $showDay->setDbFirstShow($utcStartDateTime->format("Y-m-d"));
+                    $showDay->setDbLastShow($endDateTime->format("Y-m-d"));
+                    $showDay->setDbStartTime($utcStartDateTime->format("H:i:s"));
                     $showDay->setDbDuration($data['add_show_duration']);
                     $showDay->setDbDay($day);
                     $showDay->setDbRepeatType($repeatType);
@@ -826,15 +818,11 @@ class Show {
             }
         }
 
-        $date = new DateHelper();
- 	 	$currentTimestamp = $date->getTimestamp();
-
         //check if we are adding or updating a show, and if updating
         //erase all the show's future show_rebroadcast information first.
         if (($data['add_show_id'] != -1) && $data['add_show_rebroadcast']){
             CcShowRebroadcastQuery::create()
                 ->filterByDbShowId($data['add_show_id'])
-                //->filterByDbStartTime($currentTimestamp, Criteria::GREATER_EQUAL)
                 ->delete();
         }
         //adding rows to cc_show_rebroadcast
@@ -852,6 +840,7 @@ class Show {
         else if ($isRecorded && $data['add_show_rebroadcast'] && ($repeatType == -1)){
             for ($i=1; $i<=10; $i++) {
                 if ($data['add_show_rebroadcast_date_absolute_'.$i]) {
+                    $con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
                     $sql = "SELECT date '{$data['add_show_rebroadcast_date_absolute_'.$i]}' - date '{$data['add_show_start_date']}' ";
                     $r = $con->query($sql);
                     $offset_days = $r->fetchColumn(0);
@@ -1236,11 +1225,17 @@ class Show {
         if($show["rebroadcast"]) {
             $event["disableResizing"] = true;
         }
+        
+        $startDateTime = new DateTime($show["starts"], new DateTimeZone("UTC"));
+        $startDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        
+        $endDateTime = new DateTime($show["ends"], new DateTimeZone("UTC"));
+        $endDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         $event["id"] = $show["instance_id"];
         $event["title"] = $show["name"];
-        $event["start"] = $show["starts"];
-        $event["end"] = $show["ends"];
+        $event["start"] = $startDateTime->format("Y-m-d H:i:s");
+        $event["end"] = $endDateTime->format("Y-m-d H:i:s");
         $event["allDay"] = false;
         $event["description"] = $show["description"];
         $event["showId"] = $show["show_id"];
