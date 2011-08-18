@@ -20,8 +20,10 @@ class AirtimeInstall{
     public static function SetDefaultTimezone()
     {
         global $CC_DBC;
+        
+        $defaultTimezone = date_default_timezone_get();
 
-        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', 'America/Toronto')";
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', '$defaultTimezone')";
         $result = $CC_DBC->query($sql);
         if (PEAR::isError($result)) {
             return false;
