@@ -16,8 +16,9 @@ class Application_Form_SupportSettings extends Zend_Form
         $this->addElement('text', 'stationName', array(
             'class'      => 'input_text',
             'label'      => 'Station Name',
-            'required'   => false,
+            'required'   => true,
             'filters'    => array('StringTrim'),
+            'validator'  => array('NotEmpty'),
             'value' => Application_Model_Preference::GetValue("station_name"),
             'decorators' => array(
                 'ViewHelper'
