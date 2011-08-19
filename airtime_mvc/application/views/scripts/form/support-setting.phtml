@@ -1,5 +1,19 @@
 <fieldset class="padded">
     <dl class="zend_form">
+        <dt id="stationName-label" class="block-display">
+            <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?> :
+            </label>
+        </dt>
+        <dd id="stationName-element" class="block-display">
+            <?php echo $this->element->getElement('stationName') ?>
+            <?php if($this->element->getElement('stationName')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('stationName')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
         <dd id="SupportFeedback-element" style="width:90%;">
             <div class="info-text">Help Airtime improve by letting us know you are using it. This info
             will be collected regularly in order to improve your user experience.</div>

@@ -9,17 +9,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/preferences_general.phtml'))
         ));
 
-        //Station name
-        $this->addElement('text', 'stationName', array(
-            'class'      => 'input_text',
-            'label'      => 'Station Name',
-            'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::GetValue("station_name"),
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
-
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if($defaultFade == ""){
             $defaultFade = '00:00:00.000000';
