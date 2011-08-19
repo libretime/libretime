@@ -1,12 +1,14 @@
-#!/usr/bin/php
 <?php
 
-set_include_path('../airtime_mvc/application/models' . PATH_SEPARATOR . get_include_path());
-require_once(__DIR__.'/../airtime_mvc/library/propel/runtime/lib/Propel.php');
-Propel::init(__DIR__.'/../airtime_mvc/application/configs/airtime-conf.php');
+$airtimeIni = GetAirtimeConf();
+$airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
-require_once(dirname(__FILE__).'/../airtime_mvc/application/configs/conf.php');
-require_once(dirname(__FILE__).'/../airtime_mvc/application/models/Users.php');
+set_include_path("$airtime_base_dir/application/models" . PATH_SEPARATOR . get_include_path());
+require_once("$airtime_base_dir/library/propel/runtime/lib/Propel.php");
+Propel::init("$airtime_base_dir/application/configs/airtime-conf.php");
+
+require_once("$airtime_base_dir/application/configs/conf.php");
+require_once("$airtime_base_dir/application/models/Users.php");
 require_once('DB.php');
 require_once('Console/Getopt.php');
 
@@ -116,4 +118,16 @@ if ($action == "addupdate") {
 		$user = new User($id);
 		$user->delete();
 	}
+}
+
+function GetAirtimeConf()
+{
+    $ini = parse_ini_file("/etc/airtime/airtime.conf", true);
+
+    if ($ini === false){
+        echo "Error reading /etc/airtime/airtime.conf.".PHP_EOL;
+        exit;
+    }
+
+    return $ini;
 }

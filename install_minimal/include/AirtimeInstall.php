@@ -341,6 +341,10 @@ class AirtimeInstall
         echo "* Installing airtime-check-system".PHP_EOL;
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-check-system";
         exec("ln -s $dir /usr/bin/airtime-check-system");
+
+        echo "* Installing airtime-user".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-user";
+        exec("ln -s $dir /usr/bin/airtime-user");
     }
 
     public static function RemoveSymlinks()
