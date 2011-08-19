@@ -20,6 +20,14 @@ const CONF_DIR_BINARIES = "/usr/lib/airtime";
 class AirtimeInstall{
 
     const CONF_DIR_LOG = "/var/log/airtime";
+    const CONF_DIR_BINARIES = "/usr/lib/airtime";
+
+    public static function CreateSymlinksToUtils()
+    {
+        echo "* Installing airtime-user".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-user";
+        exec("ln -s $dir /usr/bin/airtime-user");
+    }
 
     public static function CreateZendPhpLogFile(){
         global $CC_CONFIG;

@@ -21,7 +21,7 @@
 #
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-#  This script for a correct system environment for Airtime.
+#  This script creates users in Airtime.
 #
 # Absolute path to this script
 SCRIPT=`readlink -f $0`
@@ -31,4 +31,4 @@ SCRIPTPATH=`dirname $SCRIPT`
 invokePwd=$PWD
 cd $SCRIPTPATH
 
-php -q airtime-check-system.php "$@" || exit 1
+php -q airtime-user.php "$@" || exit 1
