@@ -99,10 +99,12 @@ if ($action == "addupdate") {
 	$user->setLastName($line);
 	
 	do{
-		echo "Enter user type [(A)dmin|(H)ost|(G)uest]: ";
+		echo "Enter user type [(A)dmin|(P)rogram Manager|(D)J|(G)uest]: ";
 		$line = trim(fgets(fopen("php://stdin","r")));
-	} while($line != "A" && $line != "H" && $line != "G");
-	$user->setType($line);
+	} while($line != "A" && $line != "P" && $line != "D" && $line != "G");
+    
+    $types = array("A"=>"A", "P"=>"P", "D"=>"H", "G"=>"G",);
+	$user->setType($types[$line]);
 	$user->save();
 	
 } elseif ($action == "delete") {
