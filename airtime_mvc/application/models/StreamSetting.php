@@ -31,9 +31,6 @@ class Application_Model_StreamSetting {
                             $v = 'disabled';
                         }
                     }
-                    if( $k == 'mount'){
-                        $v = $d['mount'].".".$d['type'];
-                    }
                     $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
                     $CC_DBC->query($sql);
                 }
