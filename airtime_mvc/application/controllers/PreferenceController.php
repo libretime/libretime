@@ -28,8 +28,7 @@ class PreferenceController extends Zend_Controller_Action
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
                 $values = $form->getValues();
-
-                Application_Model_Preference::SetHeadTitle($values["preferences_general"]["stationName"], $this->view);
+                                
                 Application_Model_Preference::SetDefaultFade($values["preferences_general"]["stationDefaultFade"]);
                 Application_Model_Preference::SetStreamLabelFormat($values["preferences_general"]["streamFormat"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
@@ -63,6 +62,7 @@ class PreferenceController extends Zend_Controller_Action
             if ($form->isValid($request->getPost())) {
                 $values = $form->getValues();
 
+                Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetPhone($values["Phone"]);
                 Application_Model_Preference::SetEmail($values["Email"]);
                 Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);

@@ -11,6 +11,18 @@ class Application_Form_SupportSettings extends Zend_Form
             array('ViewScript', array('viewScript' => 'form/support-setting.phtml')),
             array('File', array('viewScript' => 'form/support-setting.phtml', 'placement' => false)))
         );
+        
+        //Station name
+        $this->addElement('text', 'stationName', array(
+            'class'      => 'input_text',
+            'label'      => 'Station Name',
+            'required'   => false,
+            'filters'    => array('StringTrim'),
+            'value' => Application_Model_Preference::GetValue("station_name"),
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
 
         // Phone number
         $this->addElement('text', 'Phone', array(
@@ -147,13 +159,13 @@ class Application_Form_SupportSettings extends Zend_Form
     // overwriting isValid function
     public function isValid ($data)
     {
-        parent::isValid($data);
+        $isValid = parent::isValid($data);
         $checkPrivacy = $this->getElement('Privacy');
         if($data["SupportFeedback"] == "1" && $data["Privacy"] != "1"){
             $checkPrivacy->addError("You have to agree to privacy policy.");
-            return false;
+            $isValid = false;
         }
-        return true;
+        return $isValid;
     }
 }
 
