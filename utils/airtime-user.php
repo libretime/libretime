@@ -1,12 +1,12 @@
 #!/usr/bin/php
 <?php
 
-set_include_path('../application/models' . PATH_SEPARATOR . get_include_path());
-require_once(__DIR__.'/../library/propel/runtime/lib/Propel.php');
-Propel::init(__DIR__.'/../application/configs/airtime-conf.php');
+set_include_path('../airtime_mvc/application/models' . PATH_SEPARATOR . get_include_path());
+require_once(__DIR__.'/../airtime_mvc/library/propel/runtime/lib/Propel.php');
+Propel::init(__DIR__.'/../airtime_mvc/application/configs/airtime-conf.php');
 
-require_once(dirname(__FILE__).'/../application/configs/conf.php');
-require_once(dirname(__FILE__).'/../application/models/Users.php');
+require_once(dirname(__FILE__).'/../airtime_mvc/application/configs/conf.php');
+require_once(dirname(__FILE__).'/../airtime_mvc/application/models/Users.php');
 require_once('DB.php');
 require_once('Console/Getopt.php');
 
