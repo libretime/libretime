@@ -23,10 +23,14 @@ class Application_Model_Dashboard
             }
         } else {
             if (count($row) == 0){
-                //last item is a show instance
-                return array("name"=>$showInstance->getName(),
-                            "starts"=>$showInstance->getShowStart(),
-                            "ends"=>$showInstance->getShowEnd());
+                if ($showInstance->isRecorded()){
+                    //last item is a show instance
+                    return array("name"=>$showInstance->getName(),
+                                "starts"=>$showInstance->getShowStart(),
+                                "ends"=>$showInstance->getShowEnd());
+                } else {
+                    return null;
+                }
             } else {
                 //return the one that started later.
                 if ($row[0]["starts"] >= $showInstance->getShowStart()){
@@ -107,10 +111,14 @@ class Application_Model_Dashboard
             }
         } else {
             if (count($row) == 0){
-                //last item is a show instance
-                return array("name"=>$showInstance->getName(),
-                            "starts"=>$showInstance->getShowStart(),
-                            "ends"=>$showInstance->getShowEnd());
+                if ($showInstance->isRecorded()){
+                    //last item is a show instance
+                    return array("name"=>$showInstance->getName(),
+                                "starts"=>$showInstance->getShowStart(),
+                                "ends"=>$showInstance->getShowEnd());
+                } else {
+                    return null;
+                }
             } else {
                 //return the one that starts sooner.
                 
