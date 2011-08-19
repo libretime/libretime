@@ -69,11 +69,15 @@ class Application_Model_Dashboard
         } else {
             if (count($row) == 0){
                 //last item is a show instance
-                return array("name"=>$showInstance->getName(),
-                            "starts"=>$showInstance->getShowStart(),
-                            "ends"=>$showInstance->getShowEnd(),
-                            "media_item_played"=>false,
-                            "record"=>$showInstance->isRecorded());
+                if ($showInstance->isRecorded()){
+                    return array("name"=>$showInstance->getName(),
+                                "starts"=>$showInstance->getShowStart(),
+                                "ends"=>$showInstance->getShowEnd(),
+                                "media_item_played"=>false,
+                                "record"=>true);
+                } else {
+                    return null;
+                }
             } else {
                  return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                         "starts"=>$row[0]["starts"],
