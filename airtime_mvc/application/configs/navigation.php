@@ -58,6 +58,12 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'directory-config'
+            ),
+            array(
+                'label'      => 'Support Settings',
+                'module'     => 'default',
+                'controller' => 'Preference',
+                'action'     => 'support-setting'
             )
         )
     ),
