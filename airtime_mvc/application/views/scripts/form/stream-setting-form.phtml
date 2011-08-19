@@ -76,39 +76,9 @@
                         </ul>
                     <?php endif; ?>
                 </dd>
-                
                 <dt class="block-display info-block">
                     The following info will be displayed to listeners in their media player:
                 </dt>
-                
-                <dt id="outputGenre-label" class="block-display">
-                    <label for="outputGenre"><?php echo $this->element->getElement('genre')->getLabel()?></label>
-                </dt>
-                <dd id="outputGenre-element" class="block-display">
-                    <?php echo $this->element->getElement('genre')?>
-                    <?php if($this->element->getElement('genre')->hasErrors()) : ?>
-                        <ul class='errors'>
-                            <?php foreach($this->element->getElement('genre')->getMessages() as $error): ?>
-                                <li><?php echo $error; ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                </dd>
-                
-                <dt id="stationURL-label" class="block-display">
-                    <label for="stationURL"><?php echo $this->element->getElement('url')->getLabel()?><span class="info-text-small">(Your radio station website)</span> :</label>
-                </dt>
-                <dd id="stationURL-element" class="block-display clearfix">
-                    <?php echo $this->element->getElement('url')?>
-                    <?php if($this->element->getElement('url')->hasErrors()) : ?>
-                        <ul class='errors'>
-                            <?php foreach($this->element->getElement('url')->getMessages() as $error): ?>
-                                <li><?php echo $error; ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                </dd>
-                
                 <dt id="stationDescription-label" class="block-display">
                     <label for="stationDescription"><?php echo $this->element->getElement('description')->getLabel()?></label>
                 </dt>
@@ -122,12 +92,37 @@
                         </ul>
                     <?php endif; ?>
                 </dd>
-                
+                <dt id="stationURL-label" class="block-display">
+                    <label for="stationURL"><?php echo $this->element->getElement('url')->getLabel()?><span class="info-text-small">(Your radio station website)</span> :</label>
+                </dt>
+                <dd id="stationURL-element" class="block-display clearfix">
+                    <?php echo $this->element->getElement('url')?>
+                    <?php if($this->element->getElement('url')->hasErrors()) : ?>
+                        <ul class='errors'>
+                            <?php foreach($this->element->getElement('url')->getMessages() as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </dd>
+                <dt id="outputGenre-label" class="block-display">
+                    <label for="outputGenre"><?php echo $this->element->getElement('genre')->getLabel()?></label>
+                </dt>
+                <dd id="outputGenre-element" class="block-display">
+                    <?php echo $this->element->getElement('genre')?>
+                    <?php if($this->element->getElement('genre')->hasErrors()) : ?>
+                        <ul class='errors'>
+                            <?php foreach($this->element->getElement('genre')->getMessages() as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </dd>
                 <dt id="outputMountpoint-label" class="block-display">
                     <label for="outputMountpoint"><?php echo $this->element->getElement('mount')->getLabel()?><span class="info-text-small">(Your radio station website)</span> :</label>
                 </dt>
                 <dd id="outputMountpoint-element" class="block-display">
-                    <?php echo $this->element->getElement('mount')?><span id="mount_ext" class="input-info">.<?php echo $this->element->getElement('type')->getValue()?></span>
+                    <?php echo $this->element->getElement('mount')?>
                     <?php if($this->element->getElement('mount')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('mount')->getMessages() as $error): ?>
@@ -140,7 +135,7 @@
                     <label for="outputStreamURL">Stream URL: </label>
                 </dt>
                 <dd id="outputStreamURL-element" class="block-display">
-                    <p id="stream_url"><?php echo $this->stream_url?></p>
+                    <p id="stream_url"></p>
                 </dd>
                 </dl>
             </fieldset>

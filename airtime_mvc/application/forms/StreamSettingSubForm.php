@@ -94,23 +94,20 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $this->addElement($url);
         
         $description = new Zend_Form_Element_Text('description');
-        $description->setLabel("Description")
+        $description->setLabel("Name/Description")
                 ->setValue($setting[$prefix.'_description'])
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($description);
         
         $mount_info = explode('.',$setting[$prefix.'_mount']);
         $mount = new Zend_Form_Element_Text('mount');
-        $mount->class = "with-info";
         $mount->setLabel("Mount Point")
                 ->setValue($mount_info[0])
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($mount);
         
-        $stream_url_value = "http://".$setting[$prefix.'_host'].":".$setting[$prefix.'_port']."/".$mount_info[0].".".$setting[$prefix.'_type'];
-        
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml', "stream_number"=>$stream_number, "stream_url"=>$stream_url_value))
+            array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml', "stream_number"=>$stream_number))
         ));
     }
     
