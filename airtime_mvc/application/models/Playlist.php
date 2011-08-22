@@ -187,7 +187,7 @@ class Playlist {
     	    return FALSE;
 
     	$pl->setDbName($p_newname);
-    	$pl->setDbMtime(new DateTime("now"));
+    	$pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
     	$pl->save();
 
         $this->name = $p_newname;
@@ -221,7 +221,7 @@ class Playlist {
     	    return FALSE;
 
     	$pl->setDbDescription($p_description);
-    	$pl->setDbMtime(new DateTime("now"));
+    	$pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
     	$pl->save();
 
         //$this->name = $p_newname;
@@ -254,7 +254,7 @@ class Playlist {
     	    return FALSE;
 
     	$pl->setDbState($p_state);
-    	$pl->setDbMtime(new DateTime("now"));
+    	$pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
 
     	$eb = (!is_null($p_editedby) ? $p_editedby : NULL);
     	$pl->setDbEditedby($eb);
@@ -439,12 +439,11 @@ class Playlist {
     public function create($p_fname=NULL)
     {
         $this->name = !empty($p_fname) ? $p_fname : date("H:i:s");
-    	$this->mtime = new DateTime("now");
 
     	$pl = new CcPlaylist();
     	$pl->setDbName($this->name);
     	$pl->setDbState("incomplete");
-    	$pl->setDbMtime($this->mtime);
+    	$pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
     	$pl->save();
 
     	$this->id = $pl->getDbId();
