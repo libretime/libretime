@@ -9,6 +9,7 @@
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/application/models' . PATH_SEPARATOR . get_include_path());
+set_include_path(__DIR__.'/../../../airtime_mvc/application/configs' . PATH_SEPARATOR . get_include_path());
 require_once 'conf.php';
 require_once 'DB.php';
 
@@ -48,8 +49,85 @@ class Airtime200Upgrade{
 
         $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
     }
+}
 
+class ConvertToUtc{
+
+    public static function convert_cc_playlist(){
+        /* cc_playlist has a field that keeps track of when the playlist was last modified. */
+        $playlists = CcPlaylistQuery::create()->find();
+        
+        foreach ($playlists as $pl){
+            $dt = new DateTime($pl->getDbMtime(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $pl->setDbMtime($dt);
+            
+            $pl->save();
+        }
+    }
+
+    public static function convert_cc_schedule(){
+        /* cc_schedule has start and end fields that need to be changed to UTC. */
+        $schedules = CcScheduleQuery::create()->find();
+        
+        foreach ($schedules as $s){
+            $dt = new DateTime($s->getDbStarts(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $s->setDbStarts($dt);
+            
+            $dt = new DateTime($s->getDbEnds(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $s->setDbEnds($dt);
+            
+            $s->save();
+        }
+    }
+    
+    public static function convert_cc_show_days(){
+        /* cc_show_days has first_show, last_show and start_time fields that need to be changed to UTC. */
+        $showDays = CcShowDaysQuery::create()->find();
+        
+        foreach ($showDays as $sd){
+            $dt = new DateTime($sd->getDbFirstShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $sd->setDbFirstShow($dt->format("Y-m-d"));
+            $sd->setDbStartTime($dt->format("H-i-s"));
+            
+            $dt = new DateTime($sd->getDbLastShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $sd->setDbLastShow($dt->format("Y-m-d"));
+            
+            $sd->save();
+        }
+    }
+    
+    public static function convert_cc_show_instances(){
+        /* convert_cc_show_instances has starts and ends fields that need to be changed to UTC. */
+        $showInstances = CcShowInstancesQuery::create()->find();
+        
+        foreach ($showInstances as $si){
+            $dt = new DateTime($si->getDbStarts(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $si->setDbStarts($dt);
+            
+            $dt = new DateTime($si->getDbEnds(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $si->setDbEnds($dt);
+            
+            $si->save();
+        }
+    }
 }
 
 Airtime200Upgrade::connectToDatabase();
 AirtimeInstall::SetDefaultTimezone();
+
+
+/* Airtime 2.0.0 starts interpreting all database times in UTC format. Prior to this, all the times
+ * were stored using the local time zone. Let's convert to UTC time. */
+ConvertToUtc::convert_cc_playlist();
+ConvertToUtc::convert_cc_schedule();
+ConvertToUtc::convert_cc_show_days();
+ConvertToUtc::convert_cc_show_instances();
+
+ 

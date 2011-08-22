@@ -89,6 +89,9 @@ if (strcmp($version, "1.8.2") < 0){
 if (strcmp($version, "1.9.0") < 0){
     system("php ".__DIR__."/../upgrades/airtime-1.9.0/airtime-upgrade.php");
 }
+if (strcmp($version, "2.0.0") < 0){
+    system("php ".__DIR__."/../upgrades/airtime-2.0.0/airtime-upgrade.php");
+}
 
 
 //set the new version in the database.
