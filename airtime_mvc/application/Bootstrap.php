@@ -93,5 +93,27 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->headTitle(Application_Model_Preference::GetHeadTitle());
     }
+
+    protected function _initZFDebug()
+    {
+        if (APPLICATION_ENV == "development"){
+            global $CC_DBC;
+            
+            $autoloader = Zend_Loader_Autoloader::getInstance();
+            $autoloader->registerNamespace('ZFDebug');
+
+            $options = array(
+                'plugins' => array('Variables', 
+                                   'Exception',
+                                   'Memory',
+                                   'Time')
+            );
+            $debug = new ZFDebug_Controller_Plugin_Debug($options);
+
+            $this->bootstrap('frontController');
+            $frontController = $this->getResource('frontController');
+            $frontController->registerPlugin($debug);
+        }
+    }
 }
 
