@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_SupportPreferences extends Zend_Form_SubForm
+class Application_Form_SupportSettings extends Zend_Form
 {
 
     public function init()
@@ -8,9 +8,22 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
 		$country_list = Application_Model_Preference::GetCountryList();
 		
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/preferences_support.phtml')),
-            array('File', array('viewScript' => 'form/preferences_support.phtml', 'placement' => false)))
+            array('ViewScript', array('viewScript' => 'form/support-setting.phtml')),
+            array('File', array('viewScript' => 'form/support-setting.phtml', 'placement' => false)))
         );
+        
+        //Station name
+        $this->addElement('text', 'stationName', array(
+            'class'      => 'input_text',
+            'label'      => 'Station Name',
+            'required'   => true,
+            'filters'    => array('StringTrim'),
+            'validator'  => array('NotEmpty'),
+            'value' => Application_Model_Preference::GetValue("station_name"),
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
 
         // Phone number
         $this->addElement('text', 'Phone', array(
@@ -134,18 +147,26 @@ class Application_Form_SupportPreferences extends Zend_Form_SubForm
         $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"http://www.sourcefabric.org/en/about/policy/\" onclick=\"window.open(this.href); return false;\">privacy policy</a>.")
             ->setDecorators(array('ViewHelper'));
         $this->addElement($checkboxPrivacy);
+        
+        // submit button
+        $submit = new Zend_Form_Element_Submit("submit");
+        $submit->class = 'ui-button ui-state-default right-floated';
+        $submit->setIgnore(true)
+                ->setLabel("Submit")
+                ->setDecorators(array('ViewHelper'));
+        $this->addElement($submit);
     }
     
     // overwriting isValid function
     public function isValid ($data)
     {
-        parent::isValid($data);
+        $isValid = parent::isValid($data);
         $checkPrivacy = $this->getElement('Privacy');
         if($data["SupportFeedback"] == "1" && $data["Privacy"] != "1"){
             $checkPrivacy->addError("You have to agree to privacy policy.");
-            return false;
+            $isValid = false;
         }
-        return true;
+        return $isValid;
     }
 }
 

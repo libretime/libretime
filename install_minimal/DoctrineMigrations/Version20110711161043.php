@@ -28,6 +28,13 @@ class Version20110711161043 extends AbstractMigration
 
         $cc_files->addNamedForeignKeyConstraint('cc_music_dirs_folder_fkey', $cc_music_dirs, array('directory'), array('id'), array('onDelete' => 'CASCADE'));
 
+        // before 3) we have to delete all entries in cc_schedule with file_id that are not in cc_file table
+        $this->_addSql("DELETE FROM cc_schedule WHERE cc_schedule.id IN(
+                        SELECT cc_schedule.id
+                        FROM cc_schedule
+                        LEFT JOIN cc_files
+                        ON cc_schedule.file_id = cc_files.id
+                        WHERE cc_files.id IS NULL)");
         /* 3) create a foreign key relationship from cc_schedule to cc_files */
         $cc_schedule = $schema->getTable('cc_schedule');
         $cc_schedule->addNamedForeignKeyConstraint('cc_files_folder_fkey', $cc_files, array('file_id'), array('id'), array('onDelete' => 'CASCADE'));

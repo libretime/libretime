@@ -30,10 +30,25 @@
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?> 
-		</dd>
-	</dl>
-		<div class="info-text" style="clear: both;padding: 4px 0 4px 15px;"><p> Note: In order to promote your station, "Send support feedback" must be enabled</p></div>
-	<dl id="public-info" style="display:none;">	
+        </dd>
+    </dl>
+        <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;"><p> Note: In order to promote your station, "Send support feedback" must be enabled</p></div>
+    <dl id="public-info" style="display:none;">
+        <dt id="stationName-label" class="block-display">
+            <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?>
+                <span class="info-text-small">(Required)</span>:
+            </label>
+        </dt>
+        <dd id="stationName-element" class="block-display">
+            <?php echo $this->element->getElement('stationName') ?>
+            <?php if($this->element->getElement('stationName')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('stationName')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
         <dt id="Phone-label" class="block-display">
             <label class="optional" for="Phone"><?php echo $this->element->getElement('Phone')->getLabel() ?></label>
             <span class="info-text-small">(for verification purposes only, will not be published)</span>
@@ -144,7 +159,7 @@
     </div>
     <div>
         <br>
-    	<label class="optional" for="Privacy">
+        <label class="optional" for="Privacy">
             <?php echo $this->element->getElement('Privacy') ?>
             <?php echo $this->element->getElement('Privacy')->getLabel() ?>
         </label>

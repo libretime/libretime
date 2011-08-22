@@ -1,3 +1,14 @@
+1.9.1 - August 17th, 2011
+  *Fixes
+    -airtime-user shell script failing to start
+    -Progress bar for tracks appearing when no content scheduled
+    -Fix upgrades from Airtime 1.8.2 failing
+    -Fix various install issues with virtualenv
+    -Prevent users from doing a manual install of Airtime if they already have the
+     Debian package version installed
+  *Changes
+    -Support Settings moved to a seperate page accessible by Admin user only. 
+
 1.9.0 - August 9, 2011
 
 The cool stuff:
