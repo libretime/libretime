@@ -102,6 +102,8 @@ class AirtimeProcessEvent(ProcessEvent):
                 #we don't care about moved_from events from the organize dir.
                 if self.mmc.is_audio_file(event.name):
                     self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
+        else:
+            self.cookies_IN_MOVED_FROM[event.cookie] = event.pathname
 
 
     #Some weird thing to note about this event: it seems that if a file is moved to a newly
@@ -141,17 +143,23 @@ class AirtimeProcessEvent(ProcessEvent):
             #When we move a directory into a watched_dir, we only get a notification that the dir was created,
             #and no additional information about files that came along with that directory.
             #need to scan the entire directory for files.
+                        
+            if event.cookie in self.cookies_IN_MOVED_FROM:
+                del self.cookies_IN_MOVED_FROM[event.cookie]
+                mode = self.config.MODE_MOVED
+            else:
+                mode = self.config.MODE_CREATE
+                        
             files = self.mmc.scan_dir_for_new_files(event.pathname)
             if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
                 for file in files:
-                    self.mmc.organize_new_file(file)
+                    filepath = self.mmc.organize_new_file(file)
+                    if (filepath is not None):
+                        self.file_events.append({'mode': mode, 'filepath': filepath})
             else:
                 for file in files:
-                    if self.mmc.is_parent_directory(pathname, self.config.recorded_directory):
-                        is_recorded = True
-                    else :
-                        is_recorded = False
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': file, 'is_recorded_show': is_recorded})
+                    self.file_events.append({'mode': mode, 'filepath': file})
+
 
     def process_IN_DELETE(self, event):
         self.logger.info("process_IN_DELETE: %s", event)

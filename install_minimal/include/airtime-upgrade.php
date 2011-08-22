@@ -44,29 +44,6 @@ if (PEAR::isError($CC_DBC)) {
     $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 }
 
-/*
-$sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
-$version = $CC_DBC->GetOne($sql);
-
-if (PEAR::isError($version)) {
-    $version = false;
-}
-
-if (!$version){
-
-    $sql = "SELECT * FROM cc_show_rebroadcast LIMIT 1";
-    $result = $CC_DBC->GetOne($sql);
-    if (!PEAR::isError($result)) {
-        $version = "1.7.0";
-        echo "Airtime Version: ".$version." ".PHP_EOL;
-    }
-    else {
-        $version = "1.6";
-        echo "Airtime Version: ".$version." ".PHP_EOL;
-    }
-}
-*/
-
 $version = AirtimeInstall::GetVersionInstalled();
 
 echo "******************************** Update Begin *********************************".PHP_EOL;
