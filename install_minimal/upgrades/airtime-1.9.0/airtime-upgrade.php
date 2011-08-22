@@ -577,14 +577,15 @@ class Airtime190Upgrade{
     }
 
 
-    public static function removeOldAirtimeImport(){
+    // we don't need thses functions anymore as it's done in CreateSymlinksToUtils()
+    /*public static function removeOldAirtimeImport(){
         exec('rm -f "/usr/bin/airtime-import"');
     }
 
     public static function updateAirtimeImportSymLink(){
         $dir = "/usr/lib/airtime/utils/airtime-import/airtime-import";
         exec("ln -s $dir /usr/bin/airtime-import");
-    }
+    }*/
 
     public static function execSqlQuery($sql){
         global $CC_DBC;
@@ -801,8 +802,9 @@ Airtime190Upgrade::CopyUtils();
 /* James made a new airtime-import script, lets remove the old airtime-import php script,
  *install the new airtime-import.py script and update the /usr/bin/symlink.
  */
-Airtime190Upgrade::removeOldAirtimeImport();
-Airtime190Upgrade::updateAirtimeImportSymLink();
+// we don't need thses functions anymore as it's done in CreateSymlinksToUtils()
+/*Airtime190Upgrade::removeOldAirtimeImport();
+Airtime190Upgrade::updateAirtimeImportSymLink();*/
 
 Airtime190Upgrade::connectToDatabase();
 
