@@ -156,12 +156,16 @@
                 echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
                 exit(1);
             }
-            if (!copy(__DIR__."/liquidsoap.cfg.$suffix", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
+            if (!copy(__DIR__."/liquidsoagit pusp.cfg.$suffix", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
                 echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
                 exit(1);
             }
         }
     }
+    
+    //change site-available/airtime and restart apache
+    exec("find /etc/apache2/sites-available/ -name '*' -type f -exec sed -i 's/\/var\/www\/airtime\/public/\/usr\/share\/airtime\/public/g' '{}' \;");
+    exec("service apache2 restart");
     
     AirtimeIni::upgradeConfigFiles();
     
