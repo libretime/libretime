@@ -157,12 +157,12 @@ class Application_Form_SupportSettings extends Zend_Form
         $this->addElement($submit);
     }
     
-    // overwriting isValid function
+    // overriding isValid function
     public function isValid ($data)
     {
-        $isValid = true;
-        if($data['Publicise'] == 1){
-            $isValid = parent::isValid($data);
+        $isValid = parent::isValid($data);
+        if($data['Publicise'] != 1){
+            $isValid = true;
         }
         if(isset($data["Privacy"])){
             $checkPrivacy = $this->getElement('Privacy');
