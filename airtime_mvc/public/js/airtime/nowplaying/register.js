@@ -36,7 +36,12 @@ $(document).ready(function(){
     });
     
     var button = $("#help_airtime");
-    button.attr('disabled', 'disabled').addClass('ui-state-disabled');
+    
+    if($("#link_to_terms_and_condition").length > 0 ){
+        button.removeAttr('disabled').removeClass('ui-state-disabled');
+    }else{
+        button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
+    }
     dialog.dialog('open');
     
 
@@ -57,7 +62,7 @@ $(document).ready(function(){
             button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
         }else{
             pub.removeAttr("disabled");
-            if(privacy.is(':checked')){
+            if(privacy.length == 0 || privacy.is(':checked')){
                 button.removeAttr('disabled').removeClass('ui-state-disabled');
             }
         }
@@ -85,7 +90,7 @@ $(document).ready(function(){
         }
     });
     
-    if($("#SupportFeedback").is(':checked') && $("#Privacy").is(':checked')){
+    if($("#SupportFeedback").is(':checked') && ($("#Privacy").length == 0 || $("#Privacy").is(':checked'))){
         button.removeAttr('disabled').removeClass('ui-state-disabled');
     }else{
         button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
