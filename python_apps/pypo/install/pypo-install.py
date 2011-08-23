@@ -117,10 +117,14 @@ try:
   # we should access the DB and generate liquidsoap.cfg under etc/airtime/
   api_client = api_client.api_client_factory(config)
   ss = api_client.get_stream_setting()
+  
   # if api_client is somehow not working, just use original cfg file
   if(ss is not None):
       data = ss['msg']
       fh = open('/etc/airtime/liquidsoap.cfg', 'w')
+      fh.write("################################################\n")
+      fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
+      fh.write("################################################\n")
       for d in data:
           buffer = d[u'keyname'] + " = "
           if(d[u'type'] == 'string'):

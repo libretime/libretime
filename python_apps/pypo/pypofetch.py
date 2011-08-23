@@ -117,7 +117,9 @@ class PypoFetch(Thread):
         while 1:
             line = fh.readline()
             if not line:
-                break;
+                break
+            if line.find('#') == 0:
+                continue
             key, value = line.split('=')
             key = key.strip()
             value = value.strip()
@@ -176,6 +178,9 @@ class PypoFetch(Thread):
         if restart:
             fh = open('/etc/airtime/liquidsoap.cfg', 'w')
             logger.info("Rewriting liquidsoap.cfg...")
+            fh.write("################################################\n")
+            fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
+            fh.write("################################################\n")
             for d in setting:
                 buffer = d[u'keyname'] + " = "
                 if(d[u'type'] == 'string'):
