@@ -13,7 +13,7 @@
         
     }
     
-    class AirtimeIni{
+    class AirtimeIni192{
 
         const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
         const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
@@ -79,30 +79,33 @@
             foreach ($configFiles as $conf) {
                 if (file_exists("$conf$suffix.bak")) {
     
-                    if($conf === AirtimeIni::CONF_FILE_AIRTIME) {
+                    if($conf === AirtimeIni192::CONF_FILE_AIRTIME) {
                         // Parse with sections
                         $newSettings = parse_ini_file($conf, true);
                         $oldSettings = parse_ini_file("$conf$suffix.bak", true);
                     }
                     else {
-                        $newSettings = AirtimeIni::ReadPythonConfig($conf);
-                        $oldSettings = AirtimeIni::ReadPythonConfig("$conf$suffix.bak");
+                        $newSettings = AirtimeIni192::ReadPythonConfig($conf);
+                        $oldSettings = AirtimeIni192::ReadPythonConfig("$conf$suffix.bak");
                     }
     
                     $settings = array_keys($newSettings);
     
                     foreach($settings as $section) {
+                        // skip airtim_dir as we want to use new value
                         if(isset($oldSettings[$section])) {
                             if(is_array($oldSettings[$section])) {
                                 $sectionKeys = array_keys($newSettings[$section]);
                                 foreach($sectionKeys as $sectionKey) {
-                                    if(isset($oldSettings[$section][$sectionKey])) {
-                                        AirtimeIni::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                    if($sectionKey != "airtime_dir"){
+                                        if(isset($oldSettings[$section][$sectionKey])) {
+                                            AirtimeIni192::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                        }
                                     }
                                 }
                             }
                             else {
-                                AirtimeIni::UpdateIniValue($conf, $section, $oldSettings[$section]);
+                                AirtimeIni192::UpdateIniValue($conf, $section, $oldSettings[$section]);
                             }
                         }
                     }
@@ -112,10 +115,10 @@
     
         public static function upgradeConfigFiles(){
     
-            $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
-                                 AirtimeIni::CONF_FILE_PYPO,
-                                 AirtimeIni::CONF_FILE_RECORDER,
-                                 AirtimeIni::CONF_FILE_LIQUIDSOAP);
+            $configFiles = array(AirtimeIni192::CONF_FILE_AIRTIME,
+                                 AirtimeIni192::CONF_FILE_PYPO,
+                                 AirtimeIni192::CONF_FILE_RECORDER,
+                                 AirtimeIni192::CONF_FILE_LIQUIDSOAP);
     
             // Backup the config files
             $suffix = date("Ymdhis")."-1.9.0";
@@ -127,8 +130,8 @@
             }
     
             $default_suffix = "192";
-            AirtimeIni::CreateIniFiles($default_suffix);
-            AirtimeIni::MergeConfigFiles($configFiles, $suffix);
+            AirtimeIni192::CreateIniFiles($default_suffix);
+            AirtimeIni192::MergeConfigFiles($configFiles, $suffix);
         }
     
         /**
@@ -144,28 +147,38 @@
                 }
             }
     
-            if (!copy(__DIR__."/airtime.conf.$suffix", AirtimeIni::CONF_FILE_AIRTIME)){
+            if (!copy(__DIR__."/airtime.conf.$suffix", AirtimeIni192::CONF_FILE_AIRTIME)){
                 echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
                 exit(1);
             }
-            if (!copy(__DIR__."/pypo.cfg.$suffix", AirtimeIni::CONF_FILE_PYPO)){
+            if (!copy(__DIR__."/pypo.cfg.$suffix", AirtimeIni192::CONF_FILE_PYPO)){
                 echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
                 exit(1);
             }
-            if (!copy(__DIR__."/recorder.cfg.$suffix", AirtimeIni::CONF_FILE_RECORDER)){
+            if (!copy(__DIR__."/recorder.cfg.$suffix", AirtimeIni192::CONF_FILE_RECORDER)){
                 echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
                 exit(1);
             }
-            if (!copy(__DIR__."/liquidsoap.cfg.$suffix", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
+            if (!copy(__DIR__."/liquidsoap.cfg.$suffix", AirtimeIni192::CONF_FILE_LIQUIDSOAP)){
                 echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
                 exit(1);
             }
         }
     }
     
-    AirtimeIni::upgradeConfigFiles();
+    // change site-available/airtime and restart apache
+    echo "* Reconfiguring Apache\n";
+    exec("find /etc/apache2/sites-available/ -name '*' -type f -exec sed -i 's/\/var\/www\/airtime\/public/\/usr\/share\/airtime\/public/g' '{}' \;");
+    exec("service apache2 restart");
     
-    $values = parse_ini_file(AirtimeIni::CONF_FILE_AIRTIME, true);
+    echo "* Updating configFiles\n";
+    AirtimeIni192::upgradeConfigFiles();
+    
+    // delete files in /var/www/airtime
+    echo "* Deleting old PHP codes\n";
+    exec("rm -rf /var/www/airtime");
+   
+    $values = parse_ini_file(AirtimeIni192::CONF_FILE_AIRTIME, true);
     $phpDir = $values['general']['airtime_dir'];
     Airtime192Upgrade::InstallAirtimePhpServerCode($phpDir);
 ?>
