@@ -127,15 +127,19 @@ if __name__ == '__main__':
     q = Queue()
 
     pp = PypoPush(q)
+    pp.daemon = True
     pp.start()
 
     pf = PypoFetch(q)
+    pf.daemon = True
     pf.start()
 
-    while True: time.sleep(3600)
+    #while True: time.sleep(3600)
 
     #pp.join()
-    #pf.join()
+    pf.join()
+    logger.info("pypo fetch exit")
+    sys.exit()
 """
     if options.check:
         try: g.check_schedule()
