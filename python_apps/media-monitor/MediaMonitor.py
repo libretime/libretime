@@ -43,6 +43,7 @@ try:
         time.sleep(5)
         
     storage_directory = apc.encode_to(response["stor"], 'utf-8')
+    watched_dirs = apc.encode_to(response["watched_dirs"], 'utf-8')
     logger.info("Storage Directory is: %s", storage_directory)
     config.storage_directory = os.path.normpath(storage_directory)
     config.imported_directory = os.path.normpath(storage_directory + '/imported')
@@ -77,6 +78,11 @@ try:
     wdd = notifier.watch_directory(storage_directory)
     logger.info("Added watch to %s", storage_directory)
     logger.info("wdd result %s", wdd[storage_directory])
+    
+    for dir in watched_dirs:
+        wdd = notifier.watch_directory(dir)
+        logger.info("Added watch to %s", dir)
+        logger.info("wdd result %s", wdd[dir])
 
     notifier.loop(callback=pe.notifier_loop_callback)
         
