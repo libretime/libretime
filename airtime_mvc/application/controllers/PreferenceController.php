@@ -60,24 +60,29 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_SupportSettings();
 
         if ($request->isPost()) {
-            if ($form->isValid($request->getPost())) {
-                $values = $form->getValues();
-
-                Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
-                Application_Model_Preference::SetPhone($values["Phone"]);
-                Application_Model_Preference::SetEmail($values["Email"]);
-                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                Application_Model_Preference::SetPublicise($values["Publicise"]);
-
-                $form->Logo->receive();
-                $imagePath = $form->Logo->getFileName();
-
-                Application_Model_Preference::SetStationCountry($values["Country"]);
-                Application_Model_Preference::SetStationCity($values["City"]);
-                Application_Model_Preference::SetStationDescription($values["Description"]);
-                Application_Model_Preference::SetStationLogo($imagePath);
-
+            $values = $request->getPost();
+            if ($form->isValid($values)) {
+                if ($values["Publicise"] != 1){
+                    Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                    if(isset($values["Privacy"])){
+                        Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
+                    }
+                }else{
+                    Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
+                    Application_Model_Preference::SetPhone($values["Phone"]);
+                    Application_Model_Preference::SetEmail($values["Email"]);
+                    Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
+                    Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                    Application_Model_Preference::SetPublicise($values["Publicise"]);
+    
+                    $form->Logo->receive();
+                    $imagePath = $form->Logo->getFileName();
+    
+                    Application_Model_Preference::SetStationCountry($values["Country"]);
+                    Application_Model_Preference::SetStationCity($values["City"]);
+                    Application_Model_Preference::SetStationDescription($values["Description"]);
+                    Application_Model_Preference::SetStationLogo($imagePath);
+                }
                 $this->view->statusMsg = "<div class='success'>Support setting updated.</div>";
             }
         }
@@ -85,7 +90,13 @@ class PreferenceController extends Zend_Controller_Action
         if($logo){
             $this->view->logoImg = $logo;
         }
+        $privacyChecked = false;
+        if(Application_Model_Preference::GetPrivacyPolicyCheck() == 1){
+            $privacyChecked = true;
+        }
+        $this->view->privacyChecked = $privacyChecked;
         $this->view->form = $form;
+        //$form->render($this->view);
     }
     
     public function directoryConfigAction()

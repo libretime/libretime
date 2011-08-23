@@ -8,10 +8,15 @@ class Application_Form_RegisterAirtime extends Zend_Form
         $this->setAction('/Nowplaying');
         $this->setMethod('post');
         
-		$country_list = Application_Model_Preference::GetCountryList();
-		
+        $country_list = Application_Model_Preference::GetCountryList();
+        
+        $privacyChecked = false;
+        if(Application_Model_Preference::GetPrivacyPolicyCheck() == 1){
+            $privacyChecked = true;
+        }
+        
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/register-dialog.phtml')),
+            array('ViewScript', array('viewScript' => 'form/register-dialog.phtml', 'privacyChecked'=>$privacyChecked)),
             array('File', array('viewScript' => 'form/register-dialog.phtml', 'placement' => false)))
         );
         

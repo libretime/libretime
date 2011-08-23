@@ -367,5 +367,13 @@ class Application_Model_Preference
     public static function GetImportTimestamp(){
         return Application_Model_Preference::GetValue("import_timestamp");
     }
+    
+    public static function SetPrivacyPolicyCheck($flag){
+        Application_Model_Preference::SetValue("privacy_policy", $flag);
+    }
+    
+    public static function GetPrivacyPolicyCheck(){
+        return Application_Model_Preference::GetValue("privacy_policy");
+    }
 }
 

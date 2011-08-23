@@ -166,10 +166,14 @@
 			</div>
 			<div>
 			    <br>
-				<label class="optional" for="Privacy">
-	                <?php echo $this->element->getElement('Privacy') ?>
-	                <?php echo $this->element->getElement('Privacy')->getLabel() ?>
-	            </label>
+				<?php if(!$this->privacyChecked){?>
+                    <label class="optional" for="Privacy">
+                        <?php echo $this->element->getElement('Privacy') ?>
+                        <?php echo $this->element->getElement('Privacy')->getLabel() ?>
+                    </label>
+                <?php }else{?>
+                    <a id="link_to_privacy" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;">Terms and Conditions</a>
+                <?php }?>
 			</div>
 	</form>
 </div>
