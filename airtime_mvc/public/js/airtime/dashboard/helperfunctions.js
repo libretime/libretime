@@ -141,6 +141,36 @@ function getFileExt(filename){
     return filename.split('.').pop();
 }
 
+function audioStream(){
+
+    if ($("#jquery_jplayer_1").data("jPlayer") && $("#jquery_jplayer_1").data("jPlayer").status.paused != true){
+        $('#jquery_jplayer_1').jPlayer('clearMedia');
+        $('#jquery_jplayer_1').jPlayer('destroy');
+        return;
+    }
+    
+    var uri = "http://localhost:8000/airtime_128.ogg";
+    var ext = getFileExt(uri);
+    
+    var media;
+    var supplied;
+    if (ext == "ogg"){
+        media = {oga:uri};
+        supplied = "oga";
+    } else {
+        media = {mp3:uri};
+        supplied = "mp3";
+    }
+
+    $("#jquery_jplayer_1").jPlayer({
+        ready: function () {
+            $(this).jPlayer("setMedia", media).jPlayer("play");
+        },
+        swfPath: "/js/jplayer",
+        supplied: supplied
+    });
+}
+
 function audioPreview(filename, elemID){
 
     var elems = $('.ui-icon.ui-icon-pause');
@@ -164,17 +194,14 @@ function audioPreview(filename, elemID){
         supplied = "mp3";
     }
 
-      //$('#jquery_jplayer_1').jPlayer('stop');
-      $("#jquery_jplayer_1").jPlayer("destroy");
-      $("#jquery_jplayer_1").jPlayer({
-		ready: function () {
-            //alert(media);
-			$(this).jPlayer("setMedia", media).jPlayer("play");
-		},
+    $("#jquery_jplayer_1").jPlayer("destroy");
+    $("#jquery_jplayer_1").jPlayer({
+        ready: function () {
+            $(this).jPlayer("setMedia", media).jPlayer("play");
+        },
         swfPath: "/js/jplayer",
-		supplied: supplied
-      });
+        supplied: supplied
+    });
 
-    //$('#jquery_jplayer_1').jPlayer('setMedia', media).jPlayer('play');
     $('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
 }

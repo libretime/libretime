@@ -48,36 +48,38 @@ $front->registerPlugin(new RabbitMqPlugin());
    Actions that return JSON will not use the bootstrap class! */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
-	protected function _initDoctype()
+    protected function _initDoctype()
     {
         $this->bootstrap('view');
         $view = $this->getResource('view');
         $view->doctype('XHTML1_STRICT');
     }
 
-	protected function _initHeadLink()
-	{
-		$view = $this->getResource('view');
+    protected function _initHeadLink()
+    {
+        $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
 
-		$view->headLink()->appendStylesheet($baseUrl.'/css/redmond/jquery-ui-1.8.8.custom.css');
+        $view->headLink()->appendStylesheet($baseUrl.'/css/redmond/jquery-ui-1.8.8.custom.css');
         $view->headLink()->appendStylesheet($baseUrl.'/css/pro_dropdown_3.css');
-		$view->headLink()->appendStylesheet($baseUrl.'/css/styles.css');
-	}
+        $view->headLink()->appendStylesheet($baseUrl.'/css/styles.css');
+    }
 
-	protected function _initHeadScript()
-	{
-		$view = $this->getResource('view');
+    protected function _initHeadScript()
+    {
+        $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
 
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.5.2.min.js','text/javascript');
-		$view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.11.custom.min.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.11.custom.min.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
+
 
         //scripts for now playing bar
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js','text/javascript');
-		$view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js','text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js','text/javascript');
     }

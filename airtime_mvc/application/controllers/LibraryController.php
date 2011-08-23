@@ -25,7 +25,6 @@ class LibraryController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js','text/javascript');

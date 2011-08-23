@@ -257,6 +257,10 @@ function init() {
     secondsTimer();
 
     setupQtip();
+    
+    $('#on-air-info').click(function() {
+        audioStream()
+    });
 }
 
 $(document).ready(function() {
