@@ -22,13 +22,6 @@ class AirtimeInstall{
     const CONF_DIR_LOG = "/var/log/airtime";
     const CONF_DIR_BINARIES = "/usr/lib/airtime";
 
-    public static function CreateSymlinksToUtils()
-    {
-        echo "* Installing airtime-user".PHP_EOL;
-        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-user";
-        exec("ln -s $dir /usr/bin/airtime-user");
-    }
-
     public static function CreateZendPhpLogFile(){
         global $CC_CONFIG;
 
@@ -62,6 +55,10 @@ class AirtimeInstall{
         echo "* Installing airtime-check-system".PHP_EOL;
         $dir = CONF_DIR_BINARIES."/utils/airtime-check-system";
         exec("ln -s $dir /usr/bin/airtime-check-system");
+
+        echo "* Installing airtime-user".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-user";
+        exec("ln -s $dir /usr/bin/airtime-user");
     }
 
     public static function RemoveSymlinks()
@@ -577,14 +574,15 @@ class Airtime190Upgrade{
     }
 
 
-    public static function removeOldAirtimeImport(){
+    // we don't need thses functions anymore as it's done in CreateSymlinksToUtils()
+    /*public static function removeOldAirtimeImport(){
         exec('rm -f "/usr/bin/airtime-import"');
     }
 
     public static function updateAirtimeImportSymLink(){
         $dir = "/usr/lib/airtime/utils/airtime-import/airtime-import";
         exec("ln -s $dir /usr/bin/airtime-import");
-    }
+    }*/
 
     public static function execSqlQuery($sql){
         global $CC_DBC;
@@ -801,8 +799,9 @@ Airtime190Upgrade::CopyUtils();
 /* James made a new airtime-import script, lets remove the old airtime-import php script,
  *install the new airtime-import.py script and update the /usr/bin/symlink.
  */
-Airtime190Upgrade::removeOldAirtimeImport();
-Airtime190Upgrade::updateAirtimeImportSymLink();
+// we don't need thses functions anymore as it's done in CreateSymlinksToUtils()
+/*Airtime190Upgrade::removeOldAirtimeImport();
+Airtime190Upgrade::updateAirtimeImportSymLink();*/
 
 Airtime190Upgrade::connectToDatabase();
 

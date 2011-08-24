@@ -5,8 +5,8 @@ class Application_Form_SupportSettings extends Zend_Form
 
     public function init()
     {
-		$country_list = Application_Model_Preference::GetCountryList();
-		
+        $country_list = Application_Model_Preference::GetCountryList();
+        
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/support-setting.phtml')),
             array('File', array('viewScript' => 'form/support-setting.phtml', 'placement' => false)))
@@ -157,14 +157,19 @@ class Application_Form_SupportSettings extends Zend_Form
         $this->addElement($submit);
     }
     
-    // overwriting isValid function
+    // overriding isValid function
     public function isValid ($data)
     {
         $isValid = parent::isValid($data);
-        $checkPrivacy = $this->getElement('Privacy');
-        if($data["SupportFeedback"] == "1" && $data["Privacy"] != "1"){
-            $checkPrivacy->addError("You have to agree to privacy policy.");
-            $isValid = false;
+        if($data['Publicise'] != 1){
+            $isValid = true;
+        }
+        if(isset($data["Privacy"])){
+            $checkPrivacy = $this->getElement('Privacy');
+            if($data["SupportFeedback"] == "1" && $data["Privacy"] != "1"){
+                $checkPrivacy->addError("You have to agree to privacy policy.");
+                $isValid = false;
+            }
         }
         return $isValid;
     }

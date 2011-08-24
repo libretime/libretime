@@ -386,5 +386,13 @@ class Application_Model_Preference
         $sb = Application_Model_Preference::GetValue("stream_bitrate");
         return explode(',', $sb);
     }
+    
+    public static function SetPrivacyPolicyCheck($flag){
+        Application_Model_Preference::SetValue("privacy_policy", $flag);
+    }
+    
+    public static function GetPrivacyPolicyCheck(){
+        return Application_Model_Preference::GetValue("privacy_policy");
+    }
 }
 

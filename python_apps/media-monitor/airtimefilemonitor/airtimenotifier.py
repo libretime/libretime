@@ -30,7 +30,6 @@ class AirtimeNotifier(Notifier):
         self.wm = watch_manager
         self.mask = pyinotify.ALL_EVENTS
 
-
         while not self.init_rabbit_mq():
             self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
             time.sleep(5)

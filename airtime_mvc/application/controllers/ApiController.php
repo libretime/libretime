@@ -434,6 +434,13 @@ class ApiController extends Zend_Controller_Action
         }
 
         $this->view->stor = MusicDir::getStorDir()->getDirectory();
+        
+        $watchedDirs = MusicDir::getWatchedDirs();
+        $watchedDirsPath = array();
+        foreach($watchedDirs as $wd){
+            $watchedDirsPath[] = $wd->getDirectory();
+        }
+        $this->view->watched_dirs = $watchedDirsPath;
     }
 
     public function reloadMetadataAction() {

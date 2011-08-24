@@ -52,7 +52,10 @@ $(document).ready(function() {
     if(!$("#SupportFeedback").is(':checked')){
         promote.removeAttr("checked");
         promote.attr("disabled", true);
+    }else{
+        promote.removeAttr("disabled");
     }
+    
     promote.live('click', function(){
         if($(this).is(':checked')){
             $("#public-info").show();
