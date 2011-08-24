@@ -63,8 +63,21 @@
                         </ul>
                     <?php endif; ?>
                 </dd>
+                <dt id="outputUser-label" class="block-display">
+                    <label for="outputUser"><?php echo $this->element->getElement('user')->getLabel()?> :</label>
+                </dt>
+                <dd id="outputUser-element" class="block-display">
+                    <?php echo $this->element->getElement('user')?>
+                    <?php if($this->element->getElement('user')->hasErrors()) : ?>
+                        <ul class='errors'>
+                            <?php foreach($this->element->getElement('user')->getMessages() as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </dd>
                 <dt id="outputPassword-label" class="block-display">
-                    <label class="optional" for="outputPassword"><?php echo $this->element->getElement('pass')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
+                    <label class="optional" for="outputPassword"><?php echo $this->element->getElement('pass')->getLabel()?> :</label>
                 </dt>
                 <dd id="outputPassword-element" class="block-display clearfix">
                     <?php echo $this->element->getElement('pass')?>
@@ -80,7 +93,7 @@
                     The following info will be displayed to listeners in their media player:
                 </dt>
                 <dt id="stationDescription-label" class="block-display">
-                    <label for="stationDescription"><?php echo $this->element->getElement('description')->getLabel()?></label>
+                    <label for="stationDescription"><?php echo $this->element->getElement('description')->getLabel()?> :</label>
                 </dt>
                 <dd id="stationDescription-element" class="block-display clearfix">
                     <?php echo $this->element->getElement('description')?>
@@ -106,7 +119,7 @@
                     <?php endif; ?>
                 </dd>
                 <dt id="outputGenre-label" class="block-display">
-                    <label for="outputGenre"><?php echo $this->element->getElement('genre')->getLabel()?></label>
+                    <label for="outputGenre"><?php echo $this->element->getElement('genre')->getLabel()?> :</label>
                 </dt>
                 <dd id="outputGenre-element" class="block-display">
                     <?php echo $this->element->getElement('genre')?>

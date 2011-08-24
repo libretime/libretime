@@ -139,25 +139,22 @@ class PypoFetch(Thread):
         
         # look for changes
         for s in setting:
-            if "output_" in s[u'keyname'] and s[u'keyname'] != "output_icecast_vorbis_metadata" and s[u'keyname'] != "output_sound_device":
+            if "output_sound_device" in s[u'keyname']:
                 dump, stream = s[u'keyname'].split('_', 1)
                 state_change_restart[stream] = False
                 # This is the case where restart is required no matter what
                 if (existing[s[u'keyname']] != s[u'value']):
                     logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;
-                # This is the case where we need further checking
-                if s[u'value'] != 'disabled':
-                    state_change_restart[stream] = True
             else:
-                if s[u'keyname'] == "output_sound_device":
-                    dump, stream = s[u'keyname'].split('_',1)
-                    state_change_restart[stream] = False
-                    if not (s[u'value'] == existing[s[u'keyname']]):
+                stream, dump = s[u'keyname'].split('_',1)
+                if "_output" in s[u'keyname']:
+                    if (existing[s[u'keyname']] != s[u'value']):
                         logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                        restart = True;
+                    elif ( s[u'value'] != 'disabled'):
                         state_change_restart[stream] = True
-                elif s[u'keyname'] != "output_icecast_vorbis_metadata" and s[u'keyname'] != "log_file":
-                    stream, dump = s[u'keyname'].split('_',1)
+                else:
                     # setting inital value
                     if stream not in change:
                         change[stream] = False
@@ -195,6 +192,8 @@ class PypoFetch(Thread):
                     buffer += temp
                 buffer += "\n"
                 fh.write(buffer)
+            fh.write("output_icecast_vorbis_metadata = false\n");
+            fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
             fh.close()
             # restarting pypo.
             # we could just restart liquidsoap but it take more time somehow.

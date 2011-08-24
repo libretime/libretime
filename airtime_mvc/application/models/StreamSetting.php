@@ -26,7 +26,6 @@ class Application_Model_StreamSetting {
                 foreach($d as $k=>$v){
                     $keyname = $prefix."_".$k;
                     if( $k == 'output'){
-                        $keyname = $k."_".$prefix;
                         if( $d["enable"] == 0){
                             $v = 'disabled';
                         }

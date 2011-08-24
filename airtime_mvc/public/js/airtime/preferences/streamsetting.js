@@ -28,6 +28,20 @@ function rebuildStreamURL(ele){
     div.find("#stream_url").html(streamurl)
 }
 
+function hideForShoutcast(ele){
+    ele.closest("div").find("#outputMountpoint-label").hide()
+    ele.closest("div").find("#outputMountpoint-element").hide()
+    ele.closest("div").find("#outputUser-label").hide()
+    ele.closest("div").find("#outputUser-element").hide()
+}
+
+function showForIcecast(ele){
+    ele.closest("div").find("#outputMountpoint-label").show()
+    ele.closest("div").find("#outputMountpoint-element").show()
+    ele.closest("div").find("#outputUser-label").show()
+    ele.closest("div").find("#outputUser-element").show()
+}
+
 $(document).ready(function() {
     // initial stream url
     $("dd[id=outputStreamURL-element]").each(function(){
@@ -50,11 +64,15 @@ $(document).ready(function() {
     
     $("select[id$=-output]").change(function(){
         if($(this).val() == 'shoutcast'){
-            $(this).closest("div").find("#outputMountpoint-label").hide()
-            $(this).closest("div").find("#outputMountpoint-element").hide()
+            hideForShoutcast($(this))
         }else{
-            $(this).closest("div").find("#outputMountpoint-label").show()
-            $(this).closest("div").find("#outputMountpoint-element").show()
+            showForIcecast($(this))
+        }
+    })
+    
+    $("select[id$=-output]").each(function(){
+        if($(this).val() == 'shoutcast'){
+            hideForShoutcast($(this))
         }
     })
     
