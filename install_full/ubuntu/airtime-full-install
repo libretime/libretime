@@ -78,7 +78,7 @@ if [ $RETVAL -ne 0 ] ; then
     sudo echo "include /etc/monit/conf.d/*" >> /etc/monit/monitrc 
 fi
 
-sudo service monit start
+sudo service monit restart
 
 # Run Airtime Install
 echo "----------------------------------------------------"

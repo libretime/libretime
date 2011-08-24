@@ -21,20 +21,22 @@ PIDFILE1=/var/run/airtime-liquidsoap.pid
 
 liquidsoap_start () {
         monit monitor airtime-liquidsoap >/dev/null 2>&1
+        
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
         --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
 }
 
 liquidsoap_stop () {
         # Send TERM after 5 seconds, wait at most 30 seconds.
-        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
         rm -f $PIDFILE1
+        
+        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
 }
 
 start () {
-        monit monitor airtime-playout >/dev/null 2>&1
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
+        monit monitor airtime-playout >/dev/null 2>&1
         
         liquidsoap_start
 }
@@ -47,6 +49,21 @@ stop () {
         rm -f $PIDFILE0
         
         liquidsoap_stop
+}
+
+monit_restart() {
+        
+        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE0
+        rm -f $PIDFILE0
+        
+        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
+        rm -f $PIDFILE1
+        
+        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
+        
+        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
+        --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
+        
 }
 
 case "${1:-''}" in
@@ -67,6 +84,12 @@ case "${1:-''}" in
            echo -n "Restarting $NAME: "
            stop
            start
+           echo "Done."
+        ;;
+  'monit-restart')
+           # restart commands here
+           echo -n "Monit Restarting $NAME: "
+           monit_restart
            echo "Done."
         ;;
   'status')

@@ -139,6 +139,8 @@ try:
               buffer += temp
           buffer += "\n"
           fh.write(buffer)
+      fh.write("output_icecast_vorbis_metadata = false\n");
+      fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
       fh.close()
 
   print "Waiting for processes to start..."
