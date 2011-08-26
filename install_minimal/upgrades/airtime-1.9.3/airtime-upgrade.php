@@ -129,7 +129,7 @@
                 }
             }
     
-            $default_suffix = "192";
+            $default_suffix = "193";
             AirtimeIni193::CreateIniFiles($default_suffix);
             AirtimeIni193::MergeConfigFiles($configFiles, $suffix);
         }
