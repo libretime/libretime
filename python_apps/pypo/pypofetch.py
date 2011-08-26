@@ -116,6 +116,7 @@ class PypoFetch(Thread):
         # read existing conf file and build dict
         while 1:
             line = fh.readline()
+            line = line.strip()
             if not line:
                 break
             if line.find('#') == 0:
@@ -152,8 +153,11 @@ class PypoFetch(Thread):
                     if (existing[s[u'keyname']] != s[u'value']):
                         logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                         restart = True;
+                        state_change_restart[stream] = True
                     elif ( s[u'value'] != 'disabled'):
                         state_change_restart[stream] = True
+                    else:
+                        state_change_restart[stream] = False
                 else:
                     # setting inital value
                     if stream not in change:
@@ -477,8 +481,8 @@ class PypoFetch(Thread):
         # most recent schedule.  After that we can just wait for updates. 
         status, self.schedule_data = self.api_client.get_schedule()
         if status == 1:
-            logger.info("Bootstrap schedule received: %s", schedule_data)
-            self.process_schedule(schedule_data, "scheduler", True)
+            logger.info("Bootstrap schedule received: %s", self.schedule_data)
+            self.process_schedule(self.schedule_data, "scheduler", True)
         logger.info("Bootstrap complete: got initial copy of the schedule")
 
         loops = 1        

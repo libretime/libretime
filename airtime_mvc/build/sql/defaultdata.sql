@@ -12,7 +12,7 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_host', '1
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_port', '8000', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_pass', 'hackme', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128.ogg', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'http://airtime.sourcefabric.org', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'Airtime Radio! Stream #1', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_genre', 'genre', 'string');
