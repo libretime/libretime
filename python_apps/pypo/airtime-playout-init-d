@@ -20,18 +20,18 @@ DAEMON1=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
 PIDFILE1=/var/run/airtime-liquidsoap.pid
 
 liquidsoap_start () {
-        monit monitor airtime-liquidsoap >/dev/null 2>&1
-        
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
         --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
+        
+        monit monitor airtime-liquidsoap >/dev/null 2>&1
 }
 
 liquidsoap_stop () {
+        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
+        
         # Send TERM after 5 seconds, wait at most 30 seconds.
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
         rm -f $PIDFILE1
-        
-        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
 }
 
 start () {
