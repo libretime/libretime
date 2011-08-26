@@ -7,7 +7,7 @@ class Application_Model_Preference
         global $CC_CONFIG, $CC_DBC;
 
         //called from a daemon process
-        if(!Zend_Auth::getInstance()->hasIdentity()) {
+        if(!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
             $id = NULL;
         }
         else {
@@ -393,6 +393,22 @@ class Application_Model_Preference
     
     public static function GetPrivacyPolicyCheck(){
         return Application_Model_Preference::GetValue("privacy_policy");
+    }
+    
+    public static function SetNumOfStream($num){
+        Application_Model_Preference::SetValue("num_of_streams", intval($num));
+    }
+    
+    public static function GetNumOfStream(){
+        return Application_Model_Preference::GetValue("num_of_streams");
+    }
+    
+    public static function SetMaxBitrate($bitrate){
+        Application_Model_Preference::SetValue("max_bitrate", intval($bitrate));
+    }
+    
+    public static function GetMaxBitrate(){
+        return Application_Model_Preference::GetValue("max_bitrate");
     }
 }
 

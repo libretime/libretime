@@ -139,12 +139,15 @@ class PreferenceController extends Zend_Controller_Action
         }
         
         $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
+        $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
         $stream_bitrates = array();
         foreach ($temp_bitrate as $type){
-            $stream_bitrates[trim($type)] = strtoupper(trim($type))." Kbit/s";
+            if(intval($type) <= $max_bitrate){
+                $stream_bitrates[trim($type)] = strtoupper(trim($type))." Kbit/s";
+            }
         }
         
-        $num_of_stream = 3;
+        $num_of_stream = intval(Application_Model_Preference::GetNumOfStream());
         $form = new Application_Form_StreamSetting();
         $form->setSetting($setting);
         $form->startFrom();
