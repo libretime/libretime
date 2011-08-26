@@ -326,6 +326,7 @@ class Schedule {
             ." ON st.instance_id = si.id"
             ." LEFT JOIN $CC_CONFIG[showTable] as sh"
             ." ON si.show_id = sh.id"
+            //The next line ensures we only get songs that haven't ended yet
             ." WHERE (st.ends >= TIMESTAMP '$p_currentDateTime')"
             ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
             //next line makes sure that we aren't returning items that
@@ -699,6 +700,7 @@ class Schedule {
                 $playlists[$pkey]['end'] = Schedule::AirtimeTimeToPypoTime($dx["end"]);
             }
         }
+        ksort($playlists);
 
         foreach ($playlists as &$playlist)
         {
@@ -725,6 +727,7 @@ class Schedule {
                     'end' => Schedule::AirtimeTimeToPypoTime($item["ends"])
                 );
             }
+            ksort($medias);
             $playlist['medias'] = $medias;
         }
 

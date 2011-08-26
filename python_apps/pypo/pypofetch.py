@@ -477,7 +477,8 @@ class PypoFetch(Thread):
         # most recent schedule.  After that we can just wait for updates. 
         status, self.schedule_data = self.api_client.get_schedule()
         if status == 1:
-            self.process_schedule(self.schedule_data , "scheduler", True)
+            logger.info("Bootstrap schedule received: %s", schedule_data)
+            self.process_schedule(schedule_data, "scheduler", True)
         logger.info("Bootstrap complete: got initial copy of the schedule")
 
         loops = 1        

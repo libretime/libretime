@@ -395,10 +395,10 @@ class StoredFile {
     {
         $mime = $this->_file->getDbMime();
 
-        if ($mime == "audio/vorbis") {
+        if ($mime == "audio/vorbis" || $mime == "application/ogg") {
             return "ogg";
         }
-        else if ($mime == "audio/mp3") {
+        else if ($mime == "audio/mp3" || $mime == "audio/mpeg") {
             return "mp3";
         }
     }

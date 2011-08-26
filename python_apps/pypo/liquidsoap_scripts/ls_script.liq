@@ -6,9 +6,8 @@ set("log.stdout", true)
 set("server.telnet", true)
 set("server.telnet.port", 1234)
 
-queue = request.queue(id="queue", length=0.5)
+queue = audio_to_stereo(request.queue(id="queue", length=0.5))
 queue = cue_cut(queue)
-queue = audio_to_stereo(queue)
 
 pypo_data = ref '0'
 web_stream_enabled = ref false
@@ -50,7 +49,6 @@ s = crossfade(s)
 
 add_skip_command(s)
 s = map_metadata(append_title, s)
-
 
 if output_sound_device then
     ignore(output.alsa(s))

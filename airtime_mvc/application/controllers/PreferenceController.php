@@ -84,6 +84,9 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetStationCity($values["City"]);
                     Application_Model_Preference::SetStationDescription($values["Description"]);
                     Application_Model_Preference::SetStationLogo($imagePath);
+                    if(isset($values["Privacy"])){
+                        Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
+                    }
                 }
                 $this->view->statusMsg = "<div class='success'>Support setting updated.</div>";
             }

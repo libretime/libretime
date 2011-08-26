@@ -1,3 +1,20 @@
+1.9.3 - August 26th, 2011
+  *Improvements
+    -It is now possible to upgrade your system while a show is playing.
+     Playout will be temporarily interrupted for about 5-10 seconds and then 
+     playout will resume.  Previously playout would not resume until the next
+     scheduled show.
+  *fixes
+    -Fixed bug where playout system did not work with mono files.
+    -Fixed bug where sometimes audio files could be played out of order.
+
+
+1.9.2 - August 23rd, 2011
+  *Fixes
+    -Fixed restarting sometimes caused media-monitor to forget all of its watched directories
+    -Fixed Media-monitor crashes when moving sub-directories within its watched directory
+    -upgrade script would crash on upgrade from 1.8.2
+
 1.9.1 - August 17th, 2011
   *Fixes
     -airtime-user shell script failing to start
