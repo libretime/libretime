@@ -695,6 +695,8 @@ class ScheduleController extends Zend_Controller_Action
             $show = new ShowInstance($showInstanceId);
             $show->clearShow();
             $show->deleteShow();
+            // send 'cancel-current-show' command to pypo
+            RabbitMq::SendMessageToPypo("cancel_current_show", array());
         }
     }
 

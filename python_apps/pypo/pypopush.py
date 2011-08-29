@@ -51,7 +51,7 @@ class PypoPush(Thread):
 
         #toggle between "stop" and "play". Keeps track of the state of
         #liquidsoap
-        self.liquidsoap_state_play = True
+        #self.liquidsoap_state_play = True
 
     def set_export_source(self, export_source):
         self.export_source = export_source
@@ -80,7 +80,7 @@ class PypoPush(Thread):
         schedule = self.schedule
         playlists = self.playlists
         
-        currently_on_air = False
+        #currently_on_air = False
         if schedule:
             playedItems = self.load_schedule_tracker()
 
@@ -101,7 +101,7 @@ class PypoPush(Thread):
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = schedule[pkey]
 
-                    currently_on_air = True
+                    #currently_on_air = True
 
                     # We have a match, replace the current playlist and
                     # force liquidsoap to refresh.
@@ -123,12 +123,12 @@ class PypoPush(Thread):
                 show_start = schedule[pkey]['show_start']
                 show_end = schedule[pkey]['show_end']
                         
-                if show_start <= str_tnow_s and str_tnow_s < show_end:
-                    currently_on_air = True
+                """if show_start <= str_tnow_s and str_tnow_s < show_end:
+                    currently_on_air = True"""
         else:
             pass
 
-        if not currently_on_air and self.liquidsoap_state_play:
+        """if not currently_on_air and self.liquidsoap_state_play:
             logger.debug('Notifying Liquidsoap to stop playback.')
             try:
                 tn = telnetlib.Telnet(LS_HOST, LS_PORT)
@@ -139,7 +139,7 @@ class PypoPush(Thread):
                 logger.debug(e)
                 logger.debug('Could not connect to liquidsoap')
 
-            self.liquidsoap_state_play = False
+            self.liquidsoap_state_play = False"""
             
 
     def push_liquidsoap(self, pkey, schedule, playlists):
@@ -190,7 +190,7 @@ class PypoPush(Thread):
             tn.write("exit\n")
             logger.debug(tn.read_all())
 
-            self.liquidsoap_state_play = True
+            #self.liquidsoap_state_play = True
 
             status = 1
         except Exception, e:

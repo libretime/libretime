@@ -105,9 +105,24 @@ class PypoFetch(Thread):
         elif (command == 'update_stream_setting'):
             logger.info("Updating stream setting...")
             self.regenerateLiquidsoapConf(m['setting'])
+        elif (command == 'cancel_current_show'):
+            logger.info("Cancel current show command received...")
+            self.stop_current_show()
         # ACK the message to take it off the queue
         message.ack()
         
+    def stop_current_show(self):
+        logger = logging.getLogger('fetch')
+        logger.debug('Notifying Liquidsoap to stop playback.')
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn.write('source.skip\n')
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            logger.debug(e)
+            logger.debug('Could not connect to liquidsoap')
+    
     def regenerateLiquidsoapConf(self, setting):
         logger = logging.getLogger('fetch')
         existing = {}
