@@ -259,7 +259,9 @@ function init() {
     setupQtip();
     
     $('#on-air-info').click(function() {
-        audioStream()
+        newwindow=window.open("Dashboard/stream-player", 'name', 'height=200,width=450');
+        if (window.focus) {newwindow.focus()}
+        return false;
     });
 }
 

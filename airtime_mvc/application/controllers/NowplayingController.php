@@ -90,12 +90,13 @@ class NowplayingController extends Zend_Controller_Action
         $this->view->entries = Application_Model_Nowplaying::GetDataGridData($viewType, $dateString);
         
     }
-
+/*
     public function livestreamAction()
     {
         //use bare bones layout (no header bar or menu)
         $this->_helper->layout->setLayout('bare');
     }
+*/
 
     public function dayViewAction()
     {
