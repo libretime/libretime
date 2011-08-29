@@ -128,13 +128,18 @@ class PypoFetch(Thread):
         existing = {}
         # create a temp file
         fh = open('/etc/airtime/liquidsoap.cfg', 'r')
+        logger.info("Reading existing config...")
         # read existing conf file and build dict
         while 1:
             line = fh.readline()
-            line = line.strip()
             if not line:
                 break
+            
+            line = line.strip()
             if line.find('#') == 0:
+                continue
+            # if empty line
+            if not line:
                 continue
             key, value = line.split('=')
             key = key.strip()
@@ -153,6 +158,7 @@ class PypoFetch(Thread):
         #restart flag
         restart = False
         
+        logger.info("Looking for changes...")
         # look for changes
         for s in setting:
             if "output_sound_device" in s[u'keyname']:

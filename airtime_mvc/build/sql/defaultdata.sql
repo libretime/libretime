@@ -1,5 +1,6 @@
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 
+-- added in 2.0.0
 INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_type', 'ogg, mp3');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('num_of_streams', '3');
@@ -42,6 +43,8 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_mount', '
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_url', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_description', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_genre', '', 'string');
+-- end of added in 2.0.0
+
 
 INSERT INTO cc_country (isocode, name) VALUES ('AFG', 'Afghanistan ');
 INSERT INTO cc_country (isocode, name) VALUES ('ALA', 'Åland Islands');
