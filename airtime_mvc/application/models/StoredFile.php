@@ -728,7 +728,7 @@ class StoredFile {
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
 		$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-
+        Logging::log(__FILE__.':uploadFile(): filename='.$fileName);
 		// Clean the fileName for security reasons
         //this needs fixing for songs not in ascii.
 		//$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
@@ -823,7 +823,7 @@ class StoredFile {
 
     public static function copyFileToStor($p_targetDir, $fileName){
         $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
-
+        Logging::log('copyFileToStor: moving file '.$audio_file);
         $md5 = md5_file($audio_file);
         $duplicate = StoredFile::RecallByMd5($md5);
         if ($duplicate) {
@@ -844,6 +844,7 @@ class StoredFile {
         $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
         $r = @copy($audio_file, $audio_stor);
+        //$r = @unlink($audio_file);
     }
 
     public static function getFileCount()
