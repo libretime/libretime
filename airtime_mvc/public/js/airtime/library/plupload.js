@@ -25,7 +25,7 @@ $(document).ready(function() {
 				
 			$("#plupload_error").find("table").append(row);
 		}else{
-		    $.get('/Plupload/copyfile/format/json/name/'+file.name, function(json){
+		    $.get('/Plupload/copyfile/format/json/name/'+encodeURIComponent(file.name), function(json){
 		        var jr = jQuery.parseJSON(json);
 		        if(jr.error !== undefined) {
 		            var row = $("<tr/>")
