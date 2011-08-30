@@ -9,6 +9,8 @@ $log_files = array("media-monitor" => "/var/log/airtime/media-monitor/media-moni
                     "playout" => "/var/log/airtime/pypo/pypo.log",
                     "web" => "/var/log/airtime/zendphp.log");
 
+array_filter($log_files, "file_exists");
+
 function printUsage($userMsg = "")
 {
     global $opts;
@@ -74,14 +76,15 @@ function tailSpecificLog($key){
 }
 
 try {
+    $keys = implode("|", array_keys($log_files));
     $opts = new Zend_Console_Getopt(
         array(
             'view|v=s' => "Display log file\n"
-                            ."\t\tmedia-monitor|playout|recorder|web (ALL by default)",
+                            ."\t\t$keys (ALL by default)",
             'dump|d-s' => "Collect all log files and compress into a tarball\n"
-                            ."\t\tmedia-monitor|playout|recorder|web (ALL by default)",
+                            ."\t\t$keys (ALL by default)",
             'tail|t-s' => "View any new entries appended to log files in real-time\n"
-                            ."\t\tmedia-monitor|playout|recorder|web (ALL by default)"
+                            ."\t\t$keys (ALL by default)"
         )
     );
     $opts->parse();
