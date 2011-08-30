@@ -179,9 +179,10 @@ class LibraryController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $form = new Application_Form_EditAudioMD();
-
+        
         $file_id = $this->_getParam('id', null);
         $file = StoredFile::Recall($file_id);
+        $form->populate($file->getDbColMetadata());
 
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
@@ -197,7 +198,6 @@ class LibraryController extends Zend_Controller_Action
             }
         }
 
-        $form->populate($file->getDbColMetadata());
         $this->view->form = $form;
     }
 
