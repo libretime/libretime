@@ -31,6 +31,95 @@ class AirtimeInstall{
         }
         return true;
     }
+
+    public static function SetDefaultStreamSetting()
+    {
+        global $CC_DBC;
+
+        $sql = "INSERT INTO cc_pref(keystr, valstr) VALUES('stream_type', 'ogg, mp3');
+                INSERT INTO cc_pref(keystr, valstr) VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
+                INSERT INTO cc_pref(keystr, valstr) VALUES('num_of_streams', '3');
+                INSERT INTO cc_pref(keystr, valstr) VALUES('max_bitrate', '128');
+                
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('output_sound_device', 'false', 'boolean');
+                
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_output', 'icecast', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_type', 'ogg', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_bitrate', '128', 'integer');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_host', '127.0.0.1', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_port', '8000', 'integer');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_user', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_pass', 'hackme', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_mount', 'airtime_128', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_url', 'http://airtime.sourcefabric.org', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_description', 'Airtime Radio! Stream #1', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_genre', 'genre', 'string');
+                
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_output', 'disabled', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_type', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_bitrate', '', 'integer');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_host', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_port', '', 'integer');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_user', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_pass', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_mount', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_url', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_description', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_genre', '', 'string');
+                
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_output', 'disabled', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_type', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_bitrate', '', 'integer');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_host', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_port', '', 'integer');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_user', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_pass', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_mount', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_url', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_description', '', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_genre', '', 'string');";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
+    
+    public static function BypassMigrations($dir, $version)
+    {
+        $appDir = AirtimeInstall::GetAirtimeSrcDir();
+        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
+                    "--no-interaction --add migrations:version $version";
+        system($command);
+    }
+
+    public static function MigrateTablesToVersion($dir, $version)
+    {
+        $appDir = AirtimeInstall::GetAirtimeSrcDir();
+        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
+                    "--no-interaction migrations:migrate $version";
+        system($command);
+    }
+    
+    public static function GetAirtimeSrcDir()
+    {
+        return __DIR__."/../../../airtime_mvc";
+    }
+    
+    public static function DbTableExists($p_name)
+    {
+        global $CC_DBC;
+        $sql = "SELECT * FROM ".$p_name;
+        $result = $CC_DBC->GetOne($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
 }
 
 class Airtime200Upgrade{
@@ -49,6 +138,16 @@ class Airtime200Upgrade{
 
         $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
     }
+    
+    public static function InstallAirtimePhpServerCode($phpDir)
+        {
+    
+            $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
+    
+            echo "* Installing PHP code to ".$phpDir.PHP_EOL;
+            exec("mkdir -p ".$phpDir);
+            exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
+        }
 }
 
 class ConvertToUtc{
@@ -119,9 +218,172 @@ class ConvertToUtc{
     }
 }
 
+class AirtimeIni200{
+
+    const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
+    const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
+    const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
+    const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
+    const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
+    const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
+    const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
+
+    /**
+     * This function updates an INI style config file.
+     *
+     * A property and the value the property should be changed to are
+     * supplied. If the property is not found, then no changes are made.
+     *
+     * @param string $p_filename
+     *      The path the to the file.
+     * @param string $p_property
+     *      The property to look for in order to change its value.
+     * @param string $p_value
+     *      The value the property should be changed to.
+     *
+     */
+    public static function UpdateIniValue($p_filename, $p_property, $p_value)
+    {
+        $lines = file($p_filename);
+        $n=count($lines);
+        foreach ($lines as &$line) {
+            if ($line[0] != "#"){
+                $key_value = explode("=", $line);
+                $key = trim($key_value[0]);
+
+                if ($key == $p_property){
+                    $line = "$p_property = $p_value".PHP_EOL;
+                }
+            }
+        }
+
+        $fp=fopen($p_filename, 'w');
+        for($i=0; $i<$n; $i++){
+            fwrite($fp, $lines[$i]);
+        }
+        fclose($fp);
+    }
+
+    public static function ReadPythonConfig($p_filename)
+    {
+        $values = array();
+
+        $lines = file($p_filename);
+        $n=count($lines);
+        for ($i=0; $i<$n; $i++) {
+            if (strlen($lines[$i]) && !in_array(substr($lines[$i], 0, 1), array('#', PHP_EOL))){
+                 $info = explode("=", $lines[$i]);
+                 $values[trim($info[0])] = trim($info[1]);
+             }
+        }
+
+        return $values;
+    }
+
+    public static function MergeConfigFiles($configFiles, $suffix) {
+        foreach ($configFiles as $conf) {
+            // we want to use new liquidsoap.cfg so don't merge
+            // also for monit
+            if( $conf == AirtimeIni200::CONF_FILE_LIQUIDSOAP || $conf == AirtimeIni200::CONF_FILE_MONIT){
+                continue;
+            }
+            if (file_exists("$conf$suffix.bak")) {
+
+                if($conf === AirtimeIni200::CONF_FILE_AIRTIME) {
+                    // Parse with sections
+                    $newSettings = parse_ini_file($conf, true);
+                    $oldSettings = parse_ini_file("$conf$suffix.bak", true);
+                }
+                else {
+                    $newSettings = AirtimeIni200::ReadPythonConfig($conf);
+                    $oldSettings = AirtimeIni200::ReadPythonConfig("$conf$suffix.bak");
+                }
+
+                $settings = array_keys($newSettings);
+
+                foreach($settings as $section) {
+                    if(isset($oldSettings[$section])) {
+                        if(is_array($oldSettings[$section])) {
+                            $sectionKeys = array_keys($newSettings[$section]);
+                            foreach($sectionKeys as $sectionKey) {
+                                // skip airtim_dir as we want to use new value
+                                if($sectionKey != "airtime_dir"){
+                                    if(isset($oldSettings[$section][$sectionKey])) {
+                                        AirtimeIni200::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            AirtimeIni200::UpdateIniValue($conf, $section, $oldSettings[$section]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static function upgradeConfigFiles(){
+
+        $configFiles = array(AirtimeIni200::CONF_FILE_AIRTIME,
+                             AirtimeIni200::CONF_FILE_PYPO,
+                             AirtimeIni200::CONF_FILE_RECORDER,
+                             AirtimeIni200::CONF_FILE_LIQUIDSOAP,
+                             AirtimeIni200::CONF_FILE_MONIT);
+
+        // Backup the config files
+        $suffix = date("Ymdhis")."-1.9.3";
+        foreach ($configFiles as $conf) {
+            // do not back up monit cfg
+            if (file_exists($conf) && $conf != AirtimeIni200::CONF_FILE_MONIT) {
+                echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
+                copy($conf, $conf.$suffix.".bak");
+            }
+        }
+
+        $default_suffix = "200";
+        AirtimeIni200::CreateIniFiles($default_suffix);
+        AirtimeIni200::MergeConfigFiles($configFiles, $suffix);
+    }
+
+    /**
+     * This function creates the /etc/airtime configuration folder
+     * and copies the default config files to it.
+     */
+    public static function CreateIniFiles($suffix)
+    {
+        if (!file_exists("/etc/airtime/")){
+            if (!mkdir("/etc/airtime/", 0755, true)){
+                echo "Could not create /etc/airtime/ directory. Exiting.";
+                exit(1);
+            }
+        }
+
+        if (!copy(__DIR__."/airtime.conf.$suffix", AirtimeIni200::CONF_FILE_AIRTIME)){
+            echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy(__DIR__."/pypo.cfg.$suffix", AirtimeIni200::CONF_FILE_PYPO)){
+            echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy(__DIR__."/recorder.cfg.$suffix", AirtimeIni200::CONF_FILE_RECORDER)){
+            echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy(__DIR__."/liquidsoap.cfg.$suffix", AirtimeIni200::CONF_FILE_LIQUIDSOAP)){
+            echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy(__DIR__."/airtime-monit.cfg.$suffix", AirtimeIni200::CONF_FILE_MONIT)){
+            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
+            exit(1);
+        }
+    }
+}
+
 Airtime200Upgrade::connectToDatabase();
 AirtimeInstall::SetDefaultTimezone();
-
 
 /* Airtime 2.0.0 starts interpreting all database times in UTC format. Prior to this, all the times
  * were stored using the local time zone. Let's convert to UTC time. */
@@ -129,5 +391,29 @@ ConvertToUtc::convert_cc_playlist();
 ConvertToUtc::convert_cc_schedule();
 ConvertToUtc::convert_cc_show_days();
 ConvertToUtc::convert_cc_show_instances();
+
+// merging/updating config files
+echo "* Updating configFiles\n";
+AirtimeIni200::upgradeConfigFiles();
+
+$values = parse_ini_file(AirtimeIni200::CONF_FILE_AIRTIME, true);
+$phpDir = $values['general']['airtime_dir'];
+Airtime200Upgrade::InstallAirtimePhpServerCode($phpDir);
+
+if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
+    $migrations = array('20110312121200', '20110331111708', '20110402164819', '20110406182005', '20110629143017', '20110711161043', '20110713161043');
+    foreach($migrations as $migration) {
+        AirtimeInstall::BypassMigrations(__DIR__, $migration);
+    }
+}
+
+AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110829143306');
+
+AirtimeInstall::SetDefaultStreamSetting();
+
+// restart monit
+exec("service monit restart");
+
+
 
  
