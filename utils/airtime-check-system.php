@@ -1,52 +1,59 @@
 <?php
 
-$airtimeIni = AirtimeCheck::GetAirtimeConf();
-$airtime_base_dir = $airtimeIni['general']['airtime_dir'];
+$sapi_type = php_sapi_name();
 
-require_once "$airtime_base_dir/library/php-amqplib/amqp.inc";
+//detect if we are running via the command line
+if (substr($sapi_type, 0, 3) == 'cli') {
+    //we are running from the command-line
+    
+    set_error_handler("myErrorHandler");
+    
+    $airtimeIni = AirtimeCheck::GetAirtimeConf();
+    $airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
-set_error_handler("myErrorHandler");
+    require_once "$airtime_base_dir/library/php-amqplib/amqp.inc";
 
-AirtimeCheck::GetCpuInfo();
-AirtimeCheck::GetRamInfo();
-AirtimeCheck::CheckOsTypeVersion();
+    output_status(AirtimeCheck::GetCpuInfo());
+    output_status(AirtimeCheck::GetRamInfo());
+    output_status(AirtimeCheck::CheckOsTypeVersion());
 
-AirtimeCheck::CheckConfigFilesExist();
+    output_status(AirtimeCheck::CheckConfigFilesExist());
 
+    $apiClientCfg = AirtimeCheck::GetApiClientCfg();
 
-$apiClientCfg = AirtimeCheck::GetApiClientCfg();
+    output_status(AirtimeCheck::CheckDbConnection($airtimeIni));
+    output_status(AirtimeCheck::PythonLibrariesInstalled());
 
-AirtimeCheck::GetDbConnection($airtimeIni);
-AirtimeCheck::PythonLibrariesInstalled();
+    output_status(AirtimeCheck::CheckRabbitMqConnection($airtimeIni));
 
-AirtimeCheck::CheckRabbitMqConnection($airtimeIni);
+    output_status(AirtimeCheck::GetAirtimeServerVersion($apiClientCfg));
+    output_status(AirtimeCheck::CheckAirtimeDaemons());
+    output_status(AirtimeCheck::CheckIcecastRunning());
+    echo PHP_EOL;
+    
+    if (AirtimeCheck::$check_system_ok){
+        output_msg("System setup looks OK!");
+    } else {
+        output_msg("There appears to be problems with your setup. Please visit");
+        output_msg("http://wiki.sourcefabric.org/x/HABQ for troubleshooting info.");
+    }
 
-//AirtimeCheck::CheckApacheVHostFiles();
-
-AirtimeCheck::GetAirtimeServerVersion($apiClientCfg);
-AirtimeCheck::CheckAirtimeDaemons();
-AirtimeCheck::CheckIcecastRunning();
-
-echo PHP_EOL;
-if (AirtimeCheck::$check_system_ok){
-    output_msg("System setup looks OK!");
-} else {
-    output_msg("There appears to be problems with your setup. Please visit");
-    output_msg("http://wiki.sourcefabric.org/x/HABQ for troubleshooting info.");
+    echo PHP_EOL;
 }
 
-echo PHP_EOL;
-
-function output_status($key, $value) 
+function output_status($statuses)
 {
-    echo sprintf("%-31s= %s", $key, $value).PHP_EOL;
+    foreach($statuses as $status){
+        list ($key, $value) = $status;
+        echo sprintf("%-31s= %s", $key, $value).PHP_EOL;
+    }
 }
 
 function output_msg($msg)
 {
-    //echo "  -- ".PHP_EOL;
-    echo "  -- $msg".PHP_EOL;
-    //echo "  -- ".PHP_EOL;
+    global $sapi_type;
+    if (substr($sapi_type, 0, 3) == 'cli')
+        echo "  -- $msg".PHP_EOL;
 }
 
 class AirtimeCheck {
@@ -82,9 +89,11 @@ class AirtimeCheck {
             }
         }
 
-        output_status($process_id_str, $pid);
+        $statuses[] = array($process_id_str, $pid);
+        $statuses[] = array($process_running_str, $numSecondsRunning);
+        //output_status($process_id_str, $pid);
 
-        output_status($process_running_str, $numSecondsRunning);
+        //output_status($process_running_str, $numSecondsRunning);
         if (is_numeric($numSecondsRunning) && (int)$numSecondsRunning < 3) {
             self::$check_system_ok = false;
             output_msg("WARNING! It looks like the $name engine is continually restarting.");
@@ -95,38 +104,42 @@ class AirtimeCheck {
                     output_msg($line);
                 }
             }
-        } 
+        }
+        return $statuses;
     }
    
     public static function CheckAirtimeDaemons()
     {
-        self::CheckAirtimeDaemonRunning("/var/run/airtime-playout.pid",
+        $statuses = array();
+        $statuses = array_merge($statuses, self::CheckAirtimeDaemonRunning("/var/run/airtime-playout.pid",
                                 "PLAYOUT_ENGINE_PROCESS_ID",
                                 "PLAYOUT_ENGINE_RUNNING_SECONDS",
                                 "playout",
                                 "/var/log/airtime/pypo/pypo.log"
-                                );
+                                ));
 
-        self::CheckAirtimeDaemonRunning("/var/run/airtime-liquidsoap.pid",
+        $statuses = array_merge($statuses, self::CheckAirtimeDaemonRunning("/var/run/airtime-liquidsoap.pid",
                                 "LIQUIDSOAP_PROCESS_ID",
                                 "LIQUIDSOAP_RUNNING_SECONDS",
                                 "Liquidsoap",
                                 "/var/log/airtime/pypo-liquidsoap/ls_script.log"
-                                );
+                                ));
 
-        self::CheckAirtimeDaemonRunning("/var/run/airtime-media-monitor.pid",
+        $statuses = array_merge($statuses, self::CheckAirtimeDaemonRunning("/var/run/airtime-media-monitor.pid",
                                 "MEDIA_MONITOR_PROCESS_ID",
                                 "MEDIA_MONITOR_RUNNING_SECONDS",
                                 "Media Monitor",
                                 "/var/log/airtime/media-monitor/media-monitor.log"
-                                );
+                                ));
 
-        self::CheckAirtimeDaemonRunning("/var/run/airtime-show-recorder.pid",
+        $statuses = array_merge($statuses, self::CheckAirtimeDaemonRunning("/var/run/airtime-show-recorder.pid",
                                 "SHOW_RECORDER_PROCESS_ID",
                                 "SHOW_RECORDER_RUNNING_SECONDS",
                                 "Show Recorder",
                                 "/var/log/airtime/media-monitor/show-recorder.log"
-                                );                                
+                                ));
+                                
+        return $statuses;
     }
 
     
@@ -142,7 +155,9 @@ class AirtimeCheck {
         } else {
             self::$check_system_ok = false;
         }
-        output_status("ICECAST_PROCESS_ID", $status);
+        
+        //output_status("ICECAST_PROCESS_ID", $status);
+        return array(array("ICECAST_PROCESS_ID", $status));
     }
 
     public static function GetCpuInfo()
@@ -152,7 +167,8 @@ class AirtimeCheck {
         
         $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
-        output_status("CPU", $status);
+        //output_status("CPU", $status);
+        return array(array("CPU", $status));
     }
 
     public static function GetRamInfo()
@@ -161,14 +177,16 @@ class AirtimeCheck {
         exec($command, $output, $result);
         $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
-        output_status("Total RAM", $status);	
+        //output_status("Total RAM", $status);
+        return array(array("Total RAM", $status));
 
-	$output = null;
+        $output = null;
         $command = "cat /proc/meminfo |grep 'MemFree' ";
         exec($command, $output, $result);
         $choppedStr = explode(":", $output[0]);
         $status = trim($choppedStr[1]);
-        output_status("Free RAM", $status);	
+        //output_status("Free RAM", $status);
+        return array(array("Free RAM", $status));
     }
 
     public static function CheckConfigFilesExist()
@@ -191,7 +209,8 @@ class AirtimeCheck {
             }
         }
 
-        output_status("AIRTIME_CONFIG_FILES", $allFound);
+        //output_status("AIRTIME_CONFIG_FILES", $allFound);
+        return array(array("AIRTIME_CONFIG_FILES", $allFound));
         
     }
 
@@ -219,7 +238,7 @@ class AirtimeCheck {
         return $ini;
     }
 
-    public static function GetDbConnection($airtimeIni)
+    public static function CheckDbConnection($airtimeIni)
     {
         $host = $airtimeIni["database"]["host"];
         $dbname = $airtimeIni["database"]["dbname"];
@@ -235,7 +254,8 @@ class AirtimeCheck {
             $status = AirtimeCheck::CHECK_OK;
         }
 
-        output_status("POSTGRESQL_DATABASE", $status);
+        //output_status("POSTGRESQL_DATABASE", $status);
+        return array(array("POSTGRESQL_DATABASE", $status));
     }
     
     private static function isMinVersionSatisfied($minVersion, $version){
@@ -283,10 +303,17 @@ class AirtimeCheck {
         
     public static function PythonLibrariesInstalled()
     {
-        output_status("PYTHON_KOMBU_VERSION", self::CheckPythonLibrary("kombu", self::KOMBU_MIN_VERSION));
-        output_status("PYTHON_POSTER_VERSION", self::CheckPythonLibrary("poster", self::POSTER_MIN_VERSION));
-        output_status("PYTHON_MUTAGEN_VERSION", self::CheckPythonLibrary("mutagen", self::MUTAGEN_MIN_VERSION));
-        output_status("PYTHON_PYINOTIFY_VERSION", self::CheckPythonLibrary("pyinotify", self::PYINOTIFY_MIN_VERSION));
+        
+        //output_status("PYTHON_KOMBU_VERSION", self::CheckPythonLibrary("kombu", self::KOMBU_MIN_VERSION));
+        //output_status("PYTHON_POSTER_VERSION", self::CheckPythonLibrary("poster", self::POSTER_MIN_VERSION));
+        //output_status("PYTHON_MUTAGEN_VERSION", self::CheckPythonLibrary("mutagen", self::MUTAGEN_MIN_VERSION));
+        //output_status("PYTHON_PYINOTIFY_VERSION", self::CheckPythonLibrary("pyinotify", self::PYINOTIFY_MIN_VERSION));
+        $statuses[] = array("PYTHON_KOMBU_VERSION", self::CheckPythonLibrary("kombu", self::KOMBU_MIN_VERSION));
+        $statuses[] = array("PYTHON_POSTER_VERSION", self::CheckPythonLibrary("poster", self::POSTER_MIN_VERSION));
+        $statuses[] = array("PYTHON_MUTAGEN_VERSION", self::CheckPythonLibrary("mutagen", self::MUTAGEN_MIN_VERSION));
+        $statuses[] = array("PYTHON_PYINOTIFY_VERSION", self::CheckPythonLibrary("pyinotify", self::PYINOTIFY_MIN_VERSION));
+        
+        return $statuses;
     }
 
     public static function CheckDbTables()
@@ -334,18 +361,19 @@ class AirtimeCheck {
             self::$check_system_ok = false;
         }
         
-        output_status("RABBITMQ_SERVER", $status);
+        //output_status("RABBITMQ_SERVER", $status);
+        return array(array("RABBITMQ_SERVER", $status));
     }
 
     public static function GetAirtimeServerVersion($apiClientCfg)
     {
-
         $baseUrl = $apiClientCfg["base_url"];
         $basePort = $apiClientCfg["base_port"];
         $apiKey = "%%api_key%%";
 
         $url = "http://$baseUrl:$basePort/api/version/api_key/$apiKey";
-        output_status("AIRTIME_VERSION_URL", $url);
+        //output_status("AIRTIME_VERSION_URL", $url);
+        $statuses[] = array("AIRTIME_VERSION_URL", $url);
 
         $apiKey = $apiClientCfg["api_key"];
         $url = "http://$baseUrl:$basePort/api/version/api_key/$apiKey";
@@ -354,7 +382,8 @@ class AirtimeCheck {
 
         $version = "Could not contact server";
         if ($rh !== false) {
-            output_status("APACHE_CONFIGURED", "YES");
+            //output_status("APACHE_CONFIGURED", "YES");
+            $statuses[] = array("APACHE_CONFIGURED", "YES");
             while (($buffer = fgets($rh)) !== false) {
                 $json = json_decode(trim($buffer), true);
                 if (!is_null($json)){
@@ -362,9 +391,12 @@ class AirtimeCheck {
                 }
             }
         } else {
-            output_status("APACHE_CONFIGURED", "NO");
+            //output_status("APACHE_CONFIGURED", "NO");
+            $statuses[] = array("APACHE_CONFIGURED", "NO");
         }
-        output_status("AIRTIME_VERSION", $version);
+        //output_status("AIRTIME_VERSION", $version);
+        $statuses[] = array("AIRTIME_VERSION", $version);
+        return $statuses;
     }
 
     public static function CheckApacheVHostFiles(){
@@ -418,13 +450,23 @@ class AirtimeCheck {
             $os_string = "Unknown";
         }
 
-	// Figure out if 32 or 64 bit
-  	$command = "file -b /sbin/init";
-	exec($command, $output, $result);
-	$splitStr = explode(",", $output[0]);
-	$os_string .= $splitStr[1];
+        // Figure out if 32 or 64 bit
+        $command = "file -b /sbin/init";
+        exec($command, $output, $result);
+        $splitStr = explode(",", $output[0]);
+        $os_string .= $splitStr[1];
 
-        output_status("OS", $os_string);
+        //output_status("OS", $os_string);
+        return array(array("OS", $os_string));
+    }
+
+    public static function CheckFreeDiskSpace(){
+        exec("df -h", $output);
+        $split_rows = array();
+        foreach ($output as $row){
+            $split_rows[] = preg_split("/[\s]+/", $row);
+        }
+        return $split_rows;
     }
 }
 
