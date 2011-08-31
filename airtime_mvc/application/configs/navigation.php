@@ -75,10 +75,24 @@ $pages = array(
     ),
 	array(
 		'label'      => 'Help',
-		'module'     => 'default',
-		'controller' => 'dashboard',
-		'action'     => 'help',
-		'resource'	=>	'dashboard'
+		'uri'     => '#',
+		'resource'	=>	'dashboard',
+        'pages'      => array(
+            array(
+                'label'      => 'About',
+                'module'     => 'default',
+                'controller' => 'dashboard',
+                'action'     => 'help',
+                'resource'	=>	'dashboard'
+            ),
+            array(
+                'label'      => 'System Status',
+                'module'     => 'default',
+                'controller' => 'systemstatus',
+                'action'     => 'index',
+                'resource'	=>	'systemstatus'
+            )
+        )
 	)
 );
 

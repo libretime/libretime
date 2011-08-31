@@ -1,12 +1,16 @@
 <?php
 
-set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
+$airtimeIni = getAirtimeConf();
+$airtime_base_dir = $airtimeIni['general']['airtime_dir'];
+
+set_include_path("$airtime_base_dir/library" . PATH_SEPARATOR . get_include_path());
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 $log_files = array("media-monitor" => "/var/log/airtime/media-monitor/media-monitor.log",
                     "recorder" => "/var/log/airtime/show-recorder/show-recorder.log",
                     "playout" => "/var/log/airtime/pypo/pypo.log",
+                    "liquidsoap" => "/var/log/airtime/pypo-liquidsoap/ls_script.log",
                     "web" => "/var/log/airtime/zendphp.log");
 
 array_filter($log_files, "file_exists");
@@ -39,7 +43,7 @@ function viewSpecificLog($key){
 
 function dumpAllLogs(){
     $dateStr = gmdate("Y-m-d-H-i-s");
-    $filename = __DIR__."/airtime-log-all-$dateStr.tgz";
+    $filename = "/tmp/airtime-log-all-$dateStr.tgz";
     echo "Creating Airtime logs tgz file at $filename";
     $command = "tar cfz $filename /var/log/airtime 2>/dev/null";
     exec($command);
@@ -50,7 +54,7 @@ function dumpSpecificLog($key){
 
     if (isKeyValid($key)){
         $dateStr = gmdate("Y-m-d-H-i-s");
-        $filename = __DIR__."/airtime-log-$key-$dateStr.tgz";
+        $filename = "/tmp/airtime-log-$key-$dateStr.tgz";
         echo "Creating Airtime logs tgz file at $filename";
         $dir = dirname($log_files[$key]);
         $command = "tar cfz $filename $dir 2>/dev/null";
@@ -73,6 +77,18 @@ function tailSpecificLog($key){
         pcntl_exec(exec("which tail"), array("-F", $log_files[$key]));
         pcntl_wait($status);        
     } else printUsage();
+}
+
+function getAirtimeConf()
+{
+    $ini = parse_ini_file("/etc/airtime/airtime.conf", true);
+
+    if ($ini === false){
+        echo "Error reading /etc/airtime/airtime.conf.".PHP_EOL;
+        exit;
+    }
+
+    return $ini;
 }
 
 try {
@@ -113,6 +129,9 @@ if (isset($opts->v)){
     } else {
         tailSpecificLog($opts->t);
     }
+} else {
+    printUsage();
+    exit;
 }
 
 echo PHP_EOL;

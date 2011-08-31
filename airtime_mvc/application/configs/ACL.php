@@ -19,6 +19,7 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('schedule'))
 	  ->add(new Zend_Acl_Resource('api'))
 	  ->add(new Zend_Acl_Resource('nowplaying'))
+	  ->add(new Zend_Acl_Resource('systemstatus'))
 	  ->add(new Zend_Acl_Resource('search'))
       ->add(new Zend_Acl_Resource('dashboard'))
       ->add(new Zend_Acl_Resource('preference'))
@@ -40,6 +41,7 @@ $ccAcl->allow('G', 'index')
       ->allow('H', 'search')
 	  ->allow('H', 'playlist')
 	  ->allow('A', 'user')
+	  ->allow('A', 'systemstatus')
       ->allow('A', 'preference');
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);

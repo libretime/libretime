@@ -17,7 +17,8 @@ require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/../../../airtime_mvc/application/configs/airtime-conf.php");
 
 class AirtimeInstall{
-
+    const CONF_DIR_BINARIES = "/usr/lib/airtime";
+    
     public static function SetDefaultTimezone()
     {
         global $CC_DBC;
@@ -30,6 +31,20 @@ class AirtimeInstall{
             return false;
         }
         return true;
+    }
+
+    public static function GetUtilsSrcDir()
+    {
+        return __DIR__."/../../../utils";
+    }
+
+    public static function CreateSymlinksToUtils()
+    {
+        echo "* Installing airtime-log".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-log";
+        copy(AirtimeInstall::GetUtilsSrcDir()."/airtime-log.php", AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-log.php");
+        
+        exec("ln -s $dir /usr/bin/airtime-log");
     }
 
     public static function SetDefaultStreamSetting()
@@ -386,6 +401,7 @@ class AirtimeIni200{
 
 Airtime200Upgrade::connectToDatabase();
 AirtimeInstall::SetDefaultTimezone();
+AirtimeInstall::CreateSymlinksToUtils();
 
 /* Airtime 2.0.0 starts interpreting all database times in UTC format. Prior to this, all the times
  * were stored using the local time zone. Let's convert to UTC time. */
