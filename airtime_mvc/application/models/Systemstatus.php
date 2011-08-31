@@ -4,19 +4,23 @@ class Application_Model_Systemstatus
 {
 
     private function getCheckSystemResults(){
-        exec("airtime-check-system", $output);
+        //exec("airtime-check-system", $output);
 
-        //require_once "/usr/lib/airtime/utils/airtime-check-system.php";
+        require_once "/usr/lib/airtime/utils/airtime-check-system.php";
+        $arrs = AirtimeCheck::CheckAirtimeDaemons();
 
-        $status = array();
-        foreach($output as $row){
-            $row = trim($row);
-            if (substr_count($row, "=") == 1 && "--" != substr($row, 0, 2)){
-                list($key, $value) = array_map("trim", explode("=", $row));
-                $status[$key] = $value;
-            }
+        $status = array("AIRTIME_VERSION" => AIRTIME_VERSION);
+        foreach($arrs as $arr){
+            $status[$arr[0]] = $arr[1]; 
         }
 
+        $storDir = MusicDir::getStorDir()->getDirectory();
+
+        $freeSpace = disk_free_space($storDir);
+        $totalSpace = disk_total_space($storDir);
+
+        $status["DISK_SPACE"] = sprintf("%01.3f%%", $freeSpace/$totalSpace*100);
+        
         return $status;
     }
 
@@ -36,6 +40,9 @@ class Application_Model_Systemstatus
             list($key, $desc, $downloadLog) = $triple;
             $results[$key] = array($desc, $this->convertRunTimeToPassFail($keyValues[$key]), $downloadLog); 
         }
+
+        $key = "DISK_SPACE";
+        $results[$key] = array("Disk Space Free: ", $keyValues[$key], false);
 
         return $results;
     }
