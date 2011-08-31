@@ -39,27 +39,6 @@ except Exception, e:
     logger.error('Error loading config file: %s', e)
     sys.exit()
 
-"""
-Handle a message from RabbitMQ, put it into our yucky global var.
-Hopefully there is a better way to do this.
-"""
-"""def handle_message(body, message):
-    logger = logging.getLogger('fetch')
-    global SCHEDULE_PUSH_MSG
-    logger.info("Received event from RabbitMQ: " + message.body)
-    
-    m =  json.loads(message.body)
-    command = m['event_type']
-    logger.info("Handling command: " + command)
-
-    if(command == 'update_schedule'):
-        SCHEDULE_PUSH_MSG  = m['schedule']
-    elif (command == 'update_stream_setting'):
-        logger.info("Updating stream setting: %s", m['setting'])
-
-    # ACK the message to take it off the queue
-    message.ack()"""
-
 class PypoFetch(Thread):
     def __init__(self, q):
         Thread.__init__(self)
@@ -235,42 +214,6 @@ class PypoFetch(Thread):
         self.export_source = export_source
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
         logger.info("Creating cache directory at %s", self.cache_dir)
-
-    """
-    def get_currently_scheduled(self, playlistsOrMedias, str_tnow_s):
-        for key in playlistsOrMedias:
-            start = playlistsOrMedias[key]['start']
-            end = playlistsOrMedias[key]['end']
-            
-            if start <= str_tnow_s and str_tnow_s < end:
-                return key
-                
-        return None  
-
-    def handle_shows_currently_scheduled(self, playlists):
-        logger = logging.getLogger('fetch')
-    
-        dtnow = datetime.today()
-        tnow = dtnow.timetuple()
-        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-        
-        current_pkey = self.get_currently_scheduled(playlists, str_tnow_s)
-        if current_pkey is not None:
-            logger.debug("FOUND CURRENT PLAYLIST %s", current_pkey)
-            # So we have found that a playlist if currently scheduled
-            # even though we just started pypo. Perhaps there was a
-            # system crash. Lets calculate what position in the playlist
-            # we are supposed to be in.
-            medias = playlists[current_pkey]["medias"]
-            current_mkey = self.get_currently_scheduled(medias, str_tnow_s)
-            if current_mkey is not None:
-                mkey_split = map(int, current_mkey.split('-'))
-                media_start = datetime(mkey_split[0], mkey_split[1], mkey_split[2], mkey_split[3], mkey_split[4], mkey_split[5])
-                logger.debug("Found media item that started at %s.", media_start)
-                
-                delta = dtnow - media_start #we get a TimeDelta object from this operation
-                logger.info("Starting media item  at %d second point", delta.seconds)
-    """
 
     """
     Process the schedule
