@@ -157,7 +157,7 @@ class ShowRecorder(Thread):
 
                 self.upload_file(filepath)
                 os.remove(filepath)
-            except Exceptio, e:
+            except Exception, e:
                 self.logger.error(e)
         else:
             self.logger.info("problem recording show")

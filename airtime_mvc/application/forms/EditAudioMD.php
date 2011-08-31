@@ -29,21 +29,15 @@ class Application_Form_EditAudioMD extends Zend_Form
 		// Add title field
         $this->addElement('text', 'track_title', array(
             'label'      => 'Title:',
-            'required'   => true,
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
-            'validators' => array(
-                'NotEmpty',
-            )
         ));
 
 		// Add artist field
         $this->addElement('text', 'artist_name', array(
             'label'      => 'Artist:',
-            'required'   => true,
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
-            'validators' => array('NotEmpty')
         ));
 
 		// Add album field
