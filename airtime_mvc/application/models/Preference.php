@@ -395,11 +395,11 @@ class Application_Model_Preference
         return Application_Model_Preference::GetValue("privacy_policy");
     }
     
-    public static function SetNumOfStream($num){
+    public static function SetNumOfStreams($num){
         Application_Model_Preference::SetValue("num_of_streams", intval($num));
     }
     
-    public static function GetNumOfStream(){
+    public static function GetNumOfStreams(){
         return Application_Model_Preference::GetValue("num_of_streams");
     }
     
