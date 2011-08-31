@@ -159,6 +159,8 @@ class Airtime200Upgrade{
     
             $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
     
+            // delete old files
+            exec("rm -rf ".$phpDir);
             echo "* Installing PHP code to ".$phpDir.PHP_EOL;
             exec("mkdir -p ".$phpDir);
             exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);

@@ -547,7 +547,8 @@ class Airtime190Upgrade{
 
     public static function InstallAirtimePhpServerCode($phpDir)
     {
-
+        // delete old files
+        exec("rm -rf ".$phpDir);
         $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
 
         echo "* Installing PHP code to ".$phpDir.PHP_EOL;
