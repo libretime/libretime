@@ -99,13 +99,9 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($description);
         
-        $mount_info = array();
-        if(isset($setting[$prefix.'_mount'])){
-            $mount_info = explode('.',$setting[$prefix.'_mount']);
-        }
         $mount = new Zend_Form_Element_Text('mount');
         $mount->setLabel("Mount Point")
-                ->setValue(isset($mount_info[0])?$mount_info[0]:"")
+                ->setValue(isset($setting[$prefix.'_mount'])?$setting[$prefix.'_mount']:"")
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($mount);
         

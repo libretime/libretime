@@ -140,7 +140,7 @@ class PypoFetch(Thread):
         logger.info("Looking for changes...")
         # look for changes
         for s in setting:
-            if "output_sound_device" in s[u'keyname']:
+            if "output_sound_device" in s[u'keyname'] or "icecast_vorbis_metadata" in s[u'keyname']:
                 dump, stream = s[u'keyname'].split('_', 1)
                 state_change_restart[stream] = False
                 # This is the case where restart is required no matter what
@@ -196,7 +196,6 @@ class PypoFetch(Thread):
                     buffer += temp
                 buffer += "\n"
                 fh.write(buffer)
-            fh.write("output_icecast_vorbis_metadata = false\n");
             fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
             fh.close()
             # restarting pypo.

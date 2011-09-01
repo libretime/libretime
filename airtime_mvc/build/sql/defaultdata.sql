@@ -7,6 +7,7 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('num_of_streams', '3');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('max_bitrate', '320');
 
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('output_sound_device', 'false', 'boolean');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
 
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_output', 'icecast', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_type', 'ogg', 'string');

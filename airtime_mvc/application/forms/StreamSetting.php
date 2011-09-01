@@ -18,7 +18,7 @@ class Application_Form_StreamSetting extends Zend_Form
         $output_sound_device = new Zend_Form_Element_Checkbox('output_sound_device');
         $output_sound_device->setLabel('Enabled')
                             ->setRequired(false)
-                            ->setValue($setting['output_sound_device'])
+                            ->setValue(($setting['output_sound_device'] == "true")?1:0)
                             ->setDecorators(array('ViewHelper'));
         $this->addElement($output_sound_device);
     }
