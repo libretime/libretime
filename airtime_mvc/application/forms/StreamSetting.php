@@ -20,6 +20,9 @@ class Application_Form_StreamSetting extends Zend_Form
                             ->setRequired(false)
                             ->setValue(($setting['output_sound_device'] == "true")?1:0)
                             ->setDecorators(array('ViewHelper'));
+        if(Application_Model_Preference::GetDisableStreamConf() == "true"){
+            $output_sound_device->setAttrib("readonly", true);
+        }
         $this->addElement($output_sound_device);
     }
     

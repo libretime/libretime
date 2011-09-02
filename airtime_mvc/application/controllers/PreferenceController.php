@@ -188,6 +188,7 @@ class PreferenceController extends Zend_Controller_Action
             }
         }
         $this->view->num_stream = $num_of_stream;
+        $this->view->disable_stream_conf = Application_Model_Preference::GetDisableStreamConf();
         $this->view->form = $form;
     }
 
