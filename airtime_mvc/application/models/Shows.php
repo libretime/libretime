@@ -770,7 +770,7 @@ class Show {
 
         $showId = $ccShow->getDbId();
 
-        $isRecorded = ($data['add_show_record']) ? 1 : 0;
+        $isRecorded = (isset($data['add_show_record']) && $data['add_show_record']) ? 1 : 0;
 
         if ($data['add_show_id'] != -1){
             $show = new Show($showId);
@@ -804,8 +804,7 @@ class Show {
                         
                     $utcStartDateTime->add(new DateInterval("P".$daysAdd."D"));
                 }
-
-                if (is_null($endDateTime) || $utcStartDateTime->getTimestamp <= $endDateTime->getTimestamp()) {
+                if (is_null($endDateTime) || $utcStartDateTime->getTimestamp() <= $endDateTime->getTimestamp()) {
                     $showDay = new CcShowDays();
                     $showDay->setDbFirstShow($utcStartDateTime->format("Y-m-d"));
                     $showDay->setDbLastShow($endDate);

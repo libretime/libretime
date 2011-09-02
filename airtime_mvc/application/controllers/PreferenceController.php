@@ -106,15 +106,17 @@ class PreferenceController extends Zend_Controller_Action
     
     public function directoryConfigAction()
     {
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
-
-        $this->view->headScript()->appendFile($baseUrl.'/js/serverbrowse/serverbrowser.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/musicdirs.js','text/javascript');
-
-        $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
-
-        $this->view->form = $watched_dirs_pref;
+        if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
+            $request = $this->getRequest();
+            $baseUrl = $request->getBaseUrl();
+    
+            $this->view->headScript()->appendFile($baseUrl.'/js/serverbrowse/serverbrowser.js','text/javascript');
+            $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/musicdirs.js','text/javascript');
+    
+            $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
+    
+            $this->view->form = $watched_dirs_pref;
+        }
     }
     
     public function streamSettingAction()
