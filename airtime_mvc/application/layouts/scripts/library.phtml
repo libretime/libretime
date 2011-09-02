@@ -10,7 +10,7 @@
 
 <div id="Panel">
     <div class="logo"></div>
-    <?php echo $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs(), "trial_remain"=> $this->trialRemaining())) ?>
+    <?php echo $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs(), "is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining())) ?>
 
 <?php 	$partial = array('menu.phtml', 'default');
 		$this->navigation()->menu()->setPartial($partial); ?>
