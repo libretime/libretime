@@ -26,13 +26,15 @@ function printUsage()
     echo "\n";
     echo "airtime-stream\n";
     echo "===============\n";
-    echo "    This program allows you to manage Airtime stream.\n";
+    echo "    This program allows you to manage Airtime system.\n";
     echo "\n";
     echo "OPTIONS:\n";
     echo "    --maxbitrate <bitrate>\n";
     echo "        Set the max bitrate allowed by Airtime.\n";
     echo "    --numofstream <numofstream>\n";
     echo "        Set the number of stream allowed by Airtime.\n";
+    echo "    --planlevel <planname>\n";
+    echo "        Set the plan type for Airtime system.(trial, regular).\n";
     echo "\n";
 }
 
@@ -50,6 +52,9 @@ switch ($argv[1]) {
         break;
     case '--numofstream':
         $action = "numofstream";
+        break;
+    case '--planlevel':
+        $action = "planlevel";
         break;
 }
 
@@ -70,6 +75,15 @@ if ($action == "maxbitrate") {
     Application_Model_Preference::SetMaxBitrate($optionArg);
 } elseif ($action == "numofstream") {
     Application_Model_Preference::SetNumOfStreams($optionArg);
+} elseif ($action == "planlevel"){
+    $plans = array("trial", "regular");
+    if(in_array($optionArg, $plans)){
+        Application_Model_Preference::SetPlanLevel($optionArg);
+        echo "Setting the plan level to '$optionArg'.".PHP_EOL;
+    }else{
+        echo "Error: Unknown plan level '$optionArg'.".PHP_EOL;
+        exit;
+    }
 }
 
 function GetAirtimeConf()

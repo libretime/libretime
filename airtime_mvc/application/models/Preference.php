@@ -410,5 +410,13 @@ class Application_Model_Preference
     public static function GetMaxBitrate(){
         return Application_Model_Preference::GetValue("max_bitrate");
     }
+    
+    public static function SetPlanLevel($plan){
+        Application_Model_Preference::SetValue("plan_level", $plan);
+    }
+    
+    public static function GetPlanLevel(){
+        return Application_Model_Preference::GetValue("plan_level");
+    }
 }
 

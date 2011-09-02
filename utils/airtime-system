@@ -31,4 +31,4 @@ SCRIPTPATH=`dirname $SCRIPT`
 invokePwd=$PWD
 cd $SCRIPTPATH
 
-php -q airtime-stream.php "$@" || exit 1
+php -q airtime-system.php "$@" || exit 1
