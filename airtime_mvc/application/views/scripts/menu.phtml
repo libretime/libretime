@@ -18,7 +18,7 @@
 			                 continue;
 			             } ?>
 			    <li>
-				    <a href="<?php echo $sub->getHref(); ?>"><?php echo $sub->getLabel(); ?></a>
+				    <a href="<?php echo $sub->getHref(); ?>" <?php echo ($sub->getTarget() != "")?"target=\"".$sub->getTarget()."\"":""; ?>><?php echo $sub->getLabel(); ?></a>
 			    </li>
 			    <?php endforeach; ?>
 		    </ul>
