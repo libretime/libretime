@@ -37,7 +37,7 @@ $pages = array(
         'resource'	=>	'schedule'
 	),
     array(
-        'label'      => 'Configure',
+        'label'      => 'System',
         'uri' => '#',
         'resource' => 'preference',
         'pages'      => array(
@@ -70,6 +70,13 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'support-setting'
+            ),
+            array(
+                'label'      => 'Status',
+                'module'     => 'default',
+                'controller' => 'systemstatus',
+                'action'     => 'index',
+                'resource'	=>	'systemstatus'
             )
         )
     ),
@@ -79,18 +86,16 @@ $pages = array(
 		'resource'	=>	'dashboard',
         'pages'      => array(
             array(
-                'label'      => 'About',
+                'label'      => 'Getting Started',
                 'module'     => 'default',
                 'controller' => 'dashboard',
                 'action'     => 'help',
-                'resource'	=>	'dashboard'
+                'resource'   =>	'dashboard'
             ),
             array(
-                'label'      => 'System Status',
-                'module'     => 'default',
-                'controller' => 'systemstatus',
-                'action'     => 'index',
-                'resource'	=>	'systemstatus'
+                'label'      => 'User Manual',
+                'uri'        => "http://en.flossmanuals.net/airtime/",
+                'target'     => "_blank"
             )
         )
 	)
