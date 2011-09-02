@@ -418,5 +418,13 @@ class Application_Model_Preference
     public static function GetPlanLevel(){
         return Application_Model_Preference::GetValue("plan_level");
     }
+    
+    public static function SetTrialEndingDate($date){
+        Application_Model_Preference::SetValue("trial_end_date", $date);
+    }
+    
+    public static function GetTrialEndingDate(){
+        return Application_Model_Preference::GetValue("trial_end_date");
+    }
 }
 
