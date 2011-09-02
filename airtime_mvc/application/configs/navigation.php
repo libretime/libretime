@@ -96,6 +96,13 @@ $pages = array(
                 'label'      => 'User Manual',
                 'uri'        => "http://en.flossmanuals.net/airtime/",
                 'target'     => "_blank"
+            ),
+            array(
+                'label'      => 'About',
+                'module'     => 'default',
+                'controller' => 'dashboard',
+                'action'     => 'about',
+                'resource'   =>	'dashboard'
             )
         )
 	)

@@ -40,17 +40,8 @@
   <?php }?>
   <div class="personal-block">
     <ul>
-      <li><a id="about-link" href="#">About</a></li> 
-      <li>&nbsp;</li> 
-      <li>Signed in:</li>
-      <li class="name"><?php echo $this->user ?></li>
-      <li><a href="/Login/logout">Logout</a></li>
+      <li><span class="name"><?php echo $this->user ?></span> | <a href="/Login/logout">Logout</a></li>
     </ul>
   </div>
 </div>
 <div id="jquery_jplayer_1" class="jp-jplayer" style="width:0px; height:0px;"></div>
-
-<div id="about-txt" style="display: none;">
-<a href="http://airtime.sourcefabric.org">Airtime</a> <?php echo AIRTIME_VERSION ?>, the open radio software for scheduling and remote station management.<br>
-© 2011 <a href="http://www.sourcefabric.org">Sourcefabric</a> o.p.s 2011. Airtime is distributed under the <a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">GNU GPL v.3</a>
-</div>
