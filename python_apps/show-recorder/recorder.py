@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 import urllib
 import logging
 import logging.config

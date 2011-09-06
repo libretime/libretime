@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 import sys
 import os
 import logging
