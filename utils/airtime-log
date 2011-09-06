@@ -28,7 +28,4 @@ SCRIPT=`readlink -f $0`
 # Absolute directory this script is in
 SCRIPTPATH=`dirname $SCRIPT`
 
-invokePwd=$PWD
-cd $SCRIPTPATH
-
-php -q airtime-log.php "$@" || exit 1
+php -q $SCRIPTPATH/airtime-log.php "$@" || exit 1

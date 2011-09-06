@@ -16,12 +16,14 @@
         <?php echo $this->when; ?>
         <?php echo $this->repeats; ?>
     </div>
+    <?php if(!$this->isSaas()){?>
     <h3 class="collapsible-header"><span class="arrow-icon"></span>Record & Rebroadcast</h3>  
     <div id="schedule-record-rebroadcast" class="collapsible-content">
         <?php echo $this->rr; ?>
         <?php echo $this->absoluteRebroadcast; ?>
         <?php echo $this->rebroadcast; ?>
     </div>
+    <?php }?>
     <h3 class="collapsible-header"><span class="arrow-icon"></span>Who</h3>
     <div id="schedule-show-who" class="collapsible-content">
         <?php echo $this->who; ?>

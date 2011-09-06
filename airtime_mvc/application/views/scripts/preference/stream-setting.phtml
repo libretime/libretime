@@ -18,8 +18,10 @@
             echo $this->form->getSubform("s".$i."_subform");
         }
     ?>
+    <?php if($this->disable_stream_conf != "true"){?>
     <div class="button-bar bottom" id="submit-element">
         <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
     </div>
+    <?php }?>
 </form>
 </div>

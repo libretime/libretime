@@ -426,5 +426,13 @@ class Application_Model_Preference
     public static function GetTrialEndingDate(){
         return Application_Model_Preference::GetValue("trial_end_date");
     }
+    
+    public static function SetDisableStreamConf($bool){
+        Application_Model_Preference::SetValue("disable_stream_conf", $bool);
+    }
+    
+    public static function GetDisableStreamConf(){
+        return Application_Model_Preference::GetValue("disable_stream_conf");
+    }
 }
 

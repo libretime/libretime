@@ -56,6 +56,7 @@ class AirtimeInstall{
                 INSERT INTO cc_pref(keystr, valstr) VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('num_of_streams', '3');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('max_bitrate', '128');
+                INSERT INTO cc_pref(keystr, valstr) VALUES('plan_level', 'disabled');
                 
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('output_sound_device', 'false', 'boolean');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
@@ -243,6 +244,17 @@ class Airtime200Upgrade{
 }
 
 class ConvertToUtc{
+
+    public static function setPhpDefaultTimeZoneToSystemTimezone(){
+        //we can get the default system timezone on debian/ubuntu by reading "/etc/timezone"
+        $filename = "/etc/timezone";
+        $handle = fopen($filename, "r");
+        $contents = trim(fread($handle, filesize($filename)));
+        echo "System timezone detected as: $contents".PHP_EOL;
+        fclose($handle);
+
+        date_default_timezone_set($contents);
+    }
 
     public static function convert_cc_playlist(){
         /* cc_playlist has a field that keeps track of when the playlist was last modified. */
@@ -488,6 +500,7 @@ AirtimeInstall::CreateSymlinksToUtils();
 
 /* Airtime 2.0.0 starts interpreting all database times in UTC format. Prior to this, all the times
  * were stored using the local time zone. Let's convert to UTC time. */
+ConvertToUtc::setPhpDefaultTimeZoneToSystemTimezone();
 ConvertToUtc::convert_cc_playlist();
 ConvertToUtc::convert_cc_schedule();
 ConvertToUtc::convert_cc_show_days();
