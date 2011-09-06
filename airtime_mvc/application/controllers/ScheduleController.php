@@ -389,6 +389,8 @@ class ScheduleController extends Zend_Controller_Action
         if(!$user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             return;
         }
+        
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $showInstanceId = $this->_getParam('id');
 
@@ -397,27 +399,18 @@ class ScheduleController extends Zend_Controller_Action
 		$formWhen = new Application_Form_AddShowWhen();
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
-        $formRecord = new Application_Form_AddShowRR();
-        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
 		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
-        $formRecord->removeDecorator('DtDdWrapper');
-        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-        $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $this->view->what = $formWhat;
 	    $this->view->when = $formWhen;
 	    $this->view->repeats = $formRepeats;
 	    $this->view->who = $formWho;
 	    $this->view->style = $formStyle;
-        $this->view->rr = $formRecord;
-        $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-        $this->view->rebroadcast = $formRebroadcast;
         $this->view->addNewShow = false;
 
         $showInstance = new ShowInstance($showInstanceId);
@@ -461,42 +454,55 @@ class ScheduleController extends Zend_Controller_Action
                                     'add_show_end_date' => $displayedEndDate->format("Y-m-d"),
                                     'add_show_no_end' => ($show->getRepeatingEndDate() == '')));
 
-        $formRecord->populate(array('add_show_record' => $show->isRecorded(),
-                                'add_show_rebroadcast' => $show->isRebroadcast()));
-        $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
-
-
-
-        $rebroadcastsRelative = $show->getRebroadcastsRelative();
-        $rebroadcastFormValues = array();
-        $i = 1;
-        foreach ($rebroadcastsRelative as $rebroadcast){
-            $rebroadcastFormValues["add_show_rebroadcast_date_$i"] = $rebroadcast['day_offset'];
-            $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
-            $i++;
-        }
-        $formRebroadcast->populate($rebroadcastFormValues);
-
-        $rebroadcastsAbsolute = $show->getRebroadcastsAbsolute();
-        $rebroadcastAbsoluteFormValues = array();
-        $i = 1;
-        foreach ($rebroadcastsAbsolute as $rebroadcast){
-            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_date_absolute_$i"] = $rebroadcast['start_date'];
-            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_time_absolute_$i"] = DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
-            $i++;
-        }
-        $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
-
         $hosts = array();
         $showHosts = CcShowHostsQuery::create()->filterByDbShow($showInstance->getShowId())->find();
         foreach($showHosts as $showHost){
             array_push($hosts, $showHost->getDbHost());
         }
         $formWho->populate(array('add_show_hosts' => $hosts));
-
-
         $formStyle->populate(array('add_show_background_color' => $show->getBackgroundColor(),
                                     'add_show_color' => $show->getColor()));
+        
+        if(!$isSaas){
+            $formRecord = new Application_Form_AddShowRR();
+            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+            
+            $formRecord->removeDecorator('DtDdWrapper');
+            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+            $formRebroadcast->removeDecorator('DtDdWrapper');
+            
+            $this->view->rr = $formRecord;
+            $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+            $this->view->rebroadcast = $formRebroadcast;
+            
+            $formRecord->populate(array('add_show_record' => $show->isRecorded(),
+                                'add_show_rebroadcast' => $show->isRebroadcast()));
+            
+            $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
+    
+    
+    
+            $rebroadcastsRelative = $show->getRebroadcastsRelative();
+            $rebroadcastFormValues = array();
+            $i = 1;
+            foreach ($rebroadcastsRelative as $rebroadcast){
+                $rebroadcastFormValues["add_show_rebroadcast_date_$i"] = $rebroadcast['day_offset'];
+                $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
+                $i++;
+            }
+            $formRebroadcast->populate($rebroadcastFormValues);
+    
+            $rebroadcastsAbsolute = $show->getRebroadcastsAbsolute();
+            $rebroadcastAbsoluteFormValues = array();
+            $i = 1;
+            foreach ($rebroadcastsAbsolute as $rebroadcast){
+                $rebroadcastAbsoluteFormValues["add_show_rebroadcast_date_absolute_$i"] = $rebroadcast['start_date'];
+                $rebroadcastAbsoluteFormValues["add_show_rebroadcast_time_absolute_$i"] = DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
+                $i++;
+            }
+            $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
+        }
 
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         $this->view->entries = 5;
@@ -533,24 +539,21 @@ class ScheduleController extends Zend_Controller_Action
         if($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
-
+        
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        $record = false;
+        
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
 		$formWhen = new Application_Form_AddShowWhen();
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
-        $formRecord = new Application_Form_AddShowRR();
-        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
 		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
-        $formRecord->removeDecorator('DtDdWrapper');
-        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-        $formRebroadcast->removeDecorator('DtDdWrapper');
 
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
@@ -581,70 +584,96 @@ class ScheduleController extends Zend_Controller_Action
         
         $data["add_show_duration"] = $hValue.":".$mValue;
         
+        if(!$isSaas){
+            $formRecord = new Application_Form_AddShowRR();
+            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+            
+            $formRecord->removeDecorator('DtDdWrapper');
+            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+            $formRebroadcast->removeDecorator('DtDdWrapper');
+            
+            //If show is a new show (not updated), then get
+            //isRecorded from POST data. Otherwise get it from
+            //the database since the user is not allowed to
+            //update this option.
+            if ($data['add_show_id'] != -1){
+                $data['add_show_record'] = $show->isRecorded();
+                $record = $formRecord->isValid($data);
+                $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
+            } else {
+                $record = $formRecord->isValid($data);
+            }
+        }
+        
         if($data["add_show_repeats"]) {
 		    $repeats = $formRepeats->isValid($data);
             if($repeats) {
                 $repeats = $formRepeats->checkReliantFields($data);
             }
-
-            $formAbsoluteRebroadcast->reset();
-            //make it valid, results don't matter anyways.
-            $rebroadAb = 1;
-
-            if ($data["add_show_rebroadcast"]) {
-                $rebroad = $formRebroadcast->isValid($data);
-                if($rebroad) {
-                    $rebroad = $formRebroadcast->checkReliantFields($data);
+            if(!$isSaas){
+                $formAbsoluteRebroadcast->reset();
+                //make it valid, results don't matter anyways.
+                $rebroadAb = 1;
+    
+                if ($data["add_show_rebroadcast"]) {
+                    $rebroad = $formRebroadcast->isValid($data);
+                    if($rebroad) {
+                        $rebroad = $formRebroadcast->checkReliantFields($data);
+                    }
                 }
-            }
-            else {
-                $rebroad = 1;
+                else {
+                    $rebroad = 1;
+                }
             }
         }
         else {
-            $formRebroadcast->reset();
-             //make it valid, results don't matter anyways.
             $repeats = 1;
-            $rebroad = 1;
-
-            if ($data["add_show_rebroadcast"]) {
-                $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
-                if($rebroadAb) {
-                    $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
+            if(!$isSaas){
+                $formRebroadcast->reset();
+                 //make it valid, results don't matter anyways.
+                $rebroad = 1;
+    
+                if ($data["add_show_rebroadcast"]) {
+                    $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
+                    if($rebroadAb) {
+                        $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
+                    }
                 }
-            }
-            else {
-                $rebroadAb = 1;
+                else {
+                    $rebroadAb = 1;
+                }
             }
         }
 
 		$who = $formWho->isValid($data);
 		$style = $formStyle->isValid($data);
-
-        //If show is a new show (not updated), then get
-        //isRecorded from POST data. Otherwise get it from
-        //the database since the user is not allowed to
-        //update this option.
-        $record = false;
-        if ($data['add_show_id'] != -1){
-            $data['add_show_record'] = $show->isRecorded();
-            $record = $formRecord->isValid($data);
-            $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
-        } else {
-            $record = $formRecord->isValid($data);
-        }
-
-        if ($what && $when && $repeats && $who && $style && $record && $rebroadAb && $rebroad) {
-            $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-            $user = new User($userInfo->id);
-			if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-                Show::create($data);
+        if ($what && $when && $repeats && $who && $style) {
+            if(!$isSaas){
+                if($record && $rebroadAb && $rebroad){
+                    $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+                    $user = new User($userInfo->id);
+                    if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+                        Show::create($data);
+                    }
+                    
+                    //send back a new form for the user.
+                    Schedule::createNewFormSections($this->view);
+        
+                    $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+                }
+            }else{
+                $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+                $user = new User($userInfo->id);
+                if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+                    Show::create($data);
+                }
+                
+                //send back a new form for the user.
+                Schedule::createNewFormSections($this->view);
+    
+                $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
             }
-            
-            //send back a new form for the user.
-            Schedule::createNewFormSections($this->view);
-
-            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 		}
         else {        
             $this->view->what = $formWhat;
@@ -652,9 +681,11 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->repeats = $formRepeats;
             $this->view->who = $formWho;
             $this->view->style = $formStyle;
-            $this->view->rr = $formRecord;
-            $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-            $this->view->rebroadcast = $formRebroadcast;
+            if(!$isSaas){
+                $this->view->rr = $formRecord;
+                $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+                $this->view->rebroadcast = $formRebroadcast;
+            }
             $this->view->addNewShow = true;
         
             //the form still needs to be "update" since

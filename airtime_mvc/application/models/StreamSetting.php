@@ -30,6 +30,7 @@ class Application_Model_StreamSetting {
                             $v = 'disabled';
                         }
                     }
+                    $v = trim($v);
                     $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
                     $CC_DBC->query($sql);
                 }

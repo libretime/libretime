@@ -1,3 +1,9 @@
+<?php
+    $isSaas = true;
+    if(Application_Model_Preference::GetPlanLevel() == "disabled"){
+        $isSaas = false;
+    } 
+?>
 <ul id="nav">
 <?php foreach ($this->container as $page) : ?>
     <?php if($this->navigation()->accept($page)) : ?>
@@ -7,9 +13,12 @@
         		<span class="down"><?php echo $page->getLabel(); ?></span>
 		    </a>
 		    <ul class="sub">
-			    <?php foreach ($page->getPages() as $sub) : ?>
+			    <?php foreach ($page->getPages() as $sub) :
+			             if($isSaas && $sub->getLabel() == "Manage Media Folders"){
+			                 continue;
+			             } ?>
 			    <li>
-				    <a href="<?php echo $sub->getHref(); ?>"><?php echo $sub->getLabel(); ?></a>
+				    <a href="<?php echo $sub->getHref(); ?>" <?php echo ($sub->getTarget() != "")?"target=\"".$sub->getTarget()."\"":""; ?>><?php echo $sub->getLabel(); ?></a>
 			    </li>
 			    <?php endforeach; ?>
 		    </ul>

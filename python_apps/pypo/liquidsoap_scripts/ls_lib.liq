@@ -80,7 +80,7 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             end
         else
             source = ref s
-            if not output_icecast_vorbis_metadata then
+            if not icecast_vorbis_metadata then
                 source := add(normalize=false, [amplify(0.00001, noise()),s])
             end
             if bitrate == 24 then 
@@ -112,15 +112,30 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         if user == "" then
             user_ref := "source"
         end
+        
+        description_ref = ref description
+        if description == "" then
+            description_ref := "N/A"
+        end
+        
+        genre_ref = ref genre
+        if genre == "" then
+            genre_ref := "N/A"
+        end
+        
+        url_ref = ref url
+        if url == "" then
+            url_ref := "N/A"
+        end
         output.shoutcast = output.shoutcast(host = host,
                     port = port,
                     password = pass,
                     fallible = true,
                     restart = true,
                     restart_delay = 5,
-                    url = url,
-                    genre = genre,
-                    name = description,
+                    url = !url_ref,
+                    genre = !genre_ref,
+                    name = !description_ref,
                     user = !user_ref)
          if bitrate == 24 then 
                 ignore(output.shoutcast(%mp3(bitrate = 24),s))

@@ -45,6 +45,8 @@ remove_watched_dir = 'remove-watched-dir/format/json/api_key/%%api_key%%/path/%%
 # URL to tell Airtime we want to add watched directory
 set_storage_dir = 'set-storage-dir/format/json/api_key/%%api_key%%/path/%%path%%'
 
+# URL to tell Airtime we want to get stream setting
+get_stream_setting = 'get-stream-setting/format/json/api_key/%%api_key%%/'
 
 #############################
 ## Config for Recorder

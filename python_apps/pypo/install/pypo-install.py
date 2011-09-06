@@ -139,10 +139,10 @@ try:
               buffer += temp
           buffer += "\n"
           fh.write(buffer)
-      fh.write("output_icecast_vorbis_metadata = false\n");
       fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
       fh.close()
-
+  else:
+      print "Unable to connect to the Airtime server."
   print "Waiting for processes to start..."
   p = Popen("/etc/init.d/airtime-playout start", shell=True)
   sts = os.waitpid(p.pid, 0)[1]

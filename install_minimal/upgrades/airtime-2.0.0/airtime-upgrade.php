@@ -51,12 +51,15 @@ class AirtimeInstall{
     {
         global $CC_DBC;
 
+        echo "* Setting up default stream setting".PHP_EOL;
         $sql = "INSERT INTO cc_pref(keystr, valstr) VALUES('stream_type', 'ogg, mp3');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('num_of_streams', '3');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('max_bitrate', '128');
+                INSERT INTO cc_pref(keystr, valstr) VALUES('plan_level', 'disabled');
                 
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('output_sound_device', 'false', 'boolean');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
                 
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_output', 'icecast', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_type', 'ogg', 'string');
@@ -130,6 +133,79 @@ class AirtimeInstall{
         global $CC_DBC;
         $sql = "SELECT * FROM ".$p_name;
         $result = $CC_DBC->GetOne($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
+    public static function GetOldLiquidsoapCfgAndUpdate(){
+        global $CC_DBC;
+        echo "* Retrieving old liquidsoap configuration".PHP_EOL;
+        $map = array();
+        $fh = fopen("/etc/airtime/liquidsoap.cfg", 'r');
+        $newConfigMap = array();
+        
+        while(!feof($fh)){
+            $line = fgets($fh);
+            if(substr(trim($line), 0, 1) == '#' || trim($line) == ""){
+                continue;
+            }else{
+                $info = explode('=', $line, 2);
+                $map[trim($info[0])] = trim($info[1]);
+            }
+        }
+        $newConfigMap['output_sound_device'] = $map['output_sound_device'];
+        $newConfigMap['icecast_vorbis_metadata'] = $map['output_icecast_vorbis_metadata'];
+        $newConfigMap['log_file'] = $map['log_file'];
+        
+        $count = 1;
+        if( $map['output_icecast_vorbis'] == 'true'){
+            $newConfigMap['s'.$count.'_output'] = 'icecast';
+            $newConfigMap['s'.$count.'_host'] = $map['icecast_host'];
+            $newConfigMap['s'.$count.'_port'] = $map['icecast_port'];
+            $newConfigMap['s'.$count.'_pass'] = $map['icecast_pass'];
+            $newConfigMap['s'.$count.'_mount'] = $map['mount_point_vorbis'];
+            $newConfigMap['s'.$count.'_url'] = $map['icecast_url'];
+            $newConfigMap['s'.$count.'_description'] = $map['icecast_description'];
+            $newConfigMap['s'.$count.'_genre'] = $map['icecast_genre'];
+            $newConfigMap['s'.$count.'_type'] = "ogg";
+            $newConfigMap['s'.$count.'_bitrate'] = "128";
+            $count++;
+        }
+        if($map['output_icecast_mp3'] == 'true'){
+            $newConfigMap['s'.$count.'_output'] = 'icecast';
+            $newConfigMap['s'.$count.'_host'] = $map['icecast_host'];
+            $newConfigMap['s'.$count.'_port'] = $map['icecast_port'];
+            $newConfigMap['s'.$count.'_pass'] = $map['icecast_pass'];
+            $newConfigMap['s'.$count.'_mount'] = $map['mount_point_mp3'];
+            $newConfigMap['s'.$count.'_url'] = $map['icecast_url'];
+            $newConfigMap['s'.$count.'_description'] = $map['icecast_description'];
+            $newConfigMap['s'.$count.'_genre'] = $map['icecast_genre'];
+            $newConfigMap['s'.$count.'_type'] = "mp3";
+            $newConfigMap['s'.$count.'_bitrate'] = "128";
+            $count++;
+        }
+        if($map['output_shoutcast'] == 'true'){
+            $newConfigMap['s'.$count.'_output'] = 'shoutcast';
+            $newConfigMap['s'.$count.'_host'] = $map['shoutcast_host'];
+            $newConfigMap['s'.$count.'_port'] = $map['shoutcast_port'];
+            $newConfigMap['s'.$count.'_pass'] = $map['shoutcast_pass'];
+            $newConfigMap['s'.$count.'_url'] = $map['shoutcast_url'];
+            $newConfigMap['s'.$count.'_genre'] = $map['shoutcast_genre'];
+            $newConfigMap['s'.$count.'_type'] = "mp3";
+            $newConfigMap['s'.$count.'_bitrate'] = "128";
+            $count++;
+        }
+
+        $sql = "";
+        foreach( $newConfigMap as $key=>$val){
+            if(substr($val, 0, 1) == '"' && substr($val, strlen($val)-1,1)){
+                $val = ltrim($val, '"');
+                $val = rtrim($val, '"');
+            }
+            $sql .= "UPDATE cc_stream_setting SET value='$val' WHERE keyname='$key';";
+        }
+        $result = $CC_DBC->query($sql);
         if (PEAR::isError($result)) {
             return false;
         }
@@ -284,14 +360,17 @@ class AirtimeIni200{
     public static function ReadPythonConfig($p_filename)
     {
         $values = array();
-
-        $lines = file($p_filename);
-        $n=count($lines);
-        for ($i=0; $i<$n; $i++) {
-            if (strlen($lines[$i]) && !in_array(substr($lines[$i], 0, 1), array('#', PHP_EOL))){
-                 $info = explode("=", $lines[$i]);
-                 $values[trim($info[0])] = trim($info[1]);
-             }
+        
+        $fh = fopen($p_filename, 'r');
+        
+        while(!feof($fh)){
+            $line = fgets($fh);
+            if(substr(trim($line), 0, 1) == '#' || trim($line) == ""){
+                continue;
+            }else{
+                $info = explode('=', $line, 2);
+                $values[trim($info[0])] = trim($info[1]);
+            }
         }
 
         return $values;
@@ -346,7 +425,8 @@ class AirtimeIni200{
                              AirtimeIni200::CONF_FILE_PYPO,
                              AirtimeIni200::CONF_FILE_RECORDER,
                              AirtimeIni200::CONF_FILE_LIQUIDSOAP,
-                             AirtimeIni200::CONF_FILE_MONIT);
+                             AirtimeIni200::CONF_FILE_MONIT,
+                             AirtimeIni200::CONF_FILE_API_CLIENT);
 
         // Backup the config files
         $suffix = date("Ymdhis")."-1.9.3";
@@ -388,8 +468,12 @@ class AirtimeIni200{
             echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."/liquidsoap.cfg.$suffix", AirtimeIni200::CONF_FILE_LIQUIDSOAP)){
+        /*if (!copy(__DIR__."/liquidsoap.cfg.$suffix", AirtimeIni200::CONF_FILE_LIQUIDSOAP)){
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }*/
+        if (!copy(__DIR__."/api_client.cfg.$suffix", AirtimeIni200::CONF_FILE_API_CLIENT)){
+            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
             exit(1);
         }
         if (!copy(__DIR__."/airtime-monit.cfg.$suffix", AirtimeIni200::CONF_FILE_MONIT)){
@@ -428,6 +512,8 @@ if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
 AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110829143306');
 
 AirtimeInstall::SetDefaultStreamSetting();
+
+AirtimeInstall::GetOldLiquidsoapCfgAndUpdate();
 
 // restart monit
 exec("service monit restart");

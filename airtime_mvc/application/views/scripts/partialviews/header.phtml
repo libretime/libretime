@@ -30,6 +30,14 @@
       <li class="time-zone"><span id="time-zone"></span></li>
     </ul>
   </div>
+  <?php if($this->is_trial){?>
+  <div class="trial-info-block">
+    <ul>
+      <li>Trial remaining</li>
+      <li><?php echo $this->trial_remain?></li>
+    </ul>
+  </div>
+  <?php }?>
   <div class="personal-block">
     <ul>
       <li><a id="about-link" href="#">About</a></li> 

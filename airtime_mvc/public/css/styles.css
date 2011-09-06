@@ -82,7 +82,7 @@ select {
 	position:relative;
 }
 
-.now-playing-block, .show-block, .on-air-block, .time-info-block, .personal-block, .listen-control-block  {
+.now-playing-block, .show-block, .on-air-block, .time-info-block, .personal-block, .listen-control-block, .trial-info-block {
 	height:100px;
 	float:left;
 	margin-right:10px;

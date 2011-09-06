@@ -750,33 +750,25 @@ class Schedule {
     }
 
     public static function createNewFormSections($p_view){
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
 		$formWhen = new Application_Form_AddShowWhen();
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
-        $formRecord = new Application_Form_AddShowRR();
-        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
 		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
-        $formRecord->removeDecorator('DtDdWrapper');
-        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-        $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $p_view->what = $formWhat;
         $p_view->when = $formWhen;
         $p_view->repeats = $formRepeats;
         $p_view->who = $formWho;
         $p_view->style = $formStyle;
-        $p_view->rr = $formRecord;
-        $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-        $p_view->rebroadcast = $formRebroadcast;
-        $p_view->addNewShow = true;
 
         $formWhat->populate(array('add_show_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
@@ -786,6 +778,21 @@ class Schedule {
                                       'add_show_duration' => '1h'));
 
 		$formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
+		
+        if(!$isSaas){
+            $formRecord = new Application_Form_AddShowRR();
+            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+            
+            $formRecord->removeDecorator('DtDdWrapper');
+            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+            $formRebroadcast->removeDecorator('DtDdWrapper');
+            
+            $p_view->rr = $formRecord;
+            $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+            $p_view->rebroadcast = $formRebroadcast;
+        }
+        $p_view->addNewShow = true;
     }
 }
 

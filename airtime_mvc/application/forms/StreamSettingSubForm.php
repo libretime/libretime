@@ -36,10 +36,18 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $this->setIsArray(true);
         $this->setElementsBelongTo($prefix."_data");
         
+        $disable_all = false;
+        if(Application_Model_Preference::GetDisableStreamConf() == "true"){
+            $disable_all = true;
+        }
+        
         $enable = new Zend_Form_Element_Checkbox('enable');
         $enable->setLabel('Enabled:')
                             ->setValue($setting[$prefix.'_output'] != 'disabled'?1:0)
                             ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $enable->setAttrib("disabled", "disabled");
+        }
         $this->addElement($enable);
         
         $type = new Zend_Form_Element_Select('type');
@@ -47,6 +55,9 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
                 ->setMultiOptions($stream_types)
                 ->setValue(isset($setting[$prefix.'_type'])?$setting[$prefix.'_type']:0)
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $type->setAttrib("disabled", "disabled");
+        }
         $this->addElement($type);
         
         $bitrate = new Zend_Form_Element_Select('bitrate');
@@ -54,6 +65,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
                 ->setMultiOptions($stream_bitrates)
                 ->setValue(isset($setting[$prefix.'_bitrate'])?$setting[$prefix.'_bitrate']:0)
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $bitrate->setAttrib("disabled", "disabled");
+        }
+        $this->addElement($type);
         $this->addElement($bitrate);
         
         $output = new Zend_Form_Element_Select('output');
@@ -61,58 +76,81 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
                 ->setMultiOptions(array("icecast"=>"Icecast", "shoutcast"=>"Shoutcast"))
                 ->setValue(isset($setting[$prefix.'_output'])?$setting[$prefix.'_output']:"icecast")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $output->setAttrib("disabled", "disabled");
+        }
         $this->addElement($output);
         
         $host = new Zend_Form_Element_Text('host');
         $host->setLabel("Server")
                 ->setValue(isset($setting[$prefix.'_host'])?$setting[$prefix.'_host']:"")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $host->setAttrib("disabled", "disabled");
+        }
         $this->addElement($host);
         
         $port = new Zend_Form_Element_Text('port');
         $port->setLabel("Port")
                 ->setValue(isset($setting[$prefix.'_port'])?$setting[$prefix.'_port']:"")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $port->setAttrib("disabled", "disabled");
+        }
         $this->addElement($port);
         
         $pass = new Zend_Form_Element_Text('pass');
         $pass->setLabel("Password")
                 ->setValue(isset($setting[$prefix.'_pass'])?$setting[$prefix.'_pass']:"")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $pass->setAttrib("disabled", "disabled");
+        }
         $this->addElement($pass);
         
         $genre = new Zend_Form_Element_Text('genre');
         $genre->setLabel("Genre")
                 ->setValue(isset($setting[$prefix.'_genre'])?$setting[$prefix.'_genre']:"")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $genre->setAttrib("disabled", "disabled");
+        }
         $this->addElement($genre);
         
         $url = new Zend_Form_Element_Text('url');
         $url->setLabel("URL")
                 ->setValue(isset($setting[$prefix.'_url'])?$setting[$prefix.'_url']:"")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $url->setAttrib("disabled", "disabled");
+        }
         $this->addElement($url);
         
         $description = new Zend_Form_Element_Text('description');
         $description->setLabel("Name/Description")
                 ->setValue(isset($setting[$prefix.'_description'])?$setting[$prefix.'_description']:"")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $description->setAttrib("disabled", "disabled");
+        }
         $this->addElement($description);
         
-        $mount_info = array();
-        if(isset($setting[$prefix.'_mount'])){
-            $mount_info = explode('.',$setting[$prefix.'_mount']);
-        }
         $mount = new Zend_Form_Element_Text('mount');
         $mount->setLabel("Mount Point")
-                ->setValue(isset($mount_info[0])?$mount_info[0]:"")
+                ->setValue(isset($setting[$prefix.'_mount'])?$setting[$prefix.'_mount']:"")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $mount->setAttrib("disabled", "disabled");
+        }
         $this->addElement($mount);
         
         $user = new Zend_Form_Element_Text('user');
         $user->setLabel("Username")
                 ->setValue(isset($setting[$prefix.'_user'])?$setting[$prefix.'_user']:"")
                 ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $user->setAttrib("disabled", "disabled");
+        }
         $this->addElement($user);
         
         $this->setDecorators(array(
