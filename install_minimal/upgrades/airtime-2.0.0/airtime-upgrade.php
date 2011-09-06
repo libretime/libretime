@@ -245,6 +245,17 @@ class Airtime200Upgrade{
 
 class ConvertToUtc{
 
+    public static function setPhpDefaultTimeZoneToSystemTimezone(){
+        //we can get the default system timezone on debian/ubuntu by reading "/etc/timezone"
+        $filename = "/etc/timezone";
+        $handle = fopen($filename, "r");
+        $contents = trim(fread($handle, filesize($filename)));
+        echo "System timezone detected as: $contents".PHP_EOL;
+        fclose($handle);
+
+        date_default_timezone_set($contents);
+    }
+
     public static function convert_cc_playlist(){
         /* cc_playlist has a field that keeps track of when the playlist was last modified. */
         $playlists = CcPlaylistQuery::create()->find();
@@ -489,6 +500,7 @@ AirtimeInstall::CreateSymlinksToUtils();
 
 /* Airtime 2.0.0 starts interpreting all database times in UTC format. Prior to this, all the times
  * were stored using the local time zone. Let's convert to UTC time. */
+ConvertToUtc::setPhpDefaultTimeZoneToSystemTimezone();
 ConvertToUtc::convert_cc_playlist();
 ConvertToUtc::convert_cc_schedule();
 ConvertToUtc::convert_cc_show_days();
