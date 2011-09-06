@@ -41,9 +41,12 @@ function viewSpecificLog($key){
     } else printUsage();
 }
 
-function dumpAllLogs(){
+function dumpAllLogs(){   
     $dateStr = gmdate("Y-m-d-H-i-s");
-    $filename = "/tmp/airtime-log-all-$dateStr.tgz";
+
+    $dir = getcwd();
+    
+    $filename = "$dir/airtime-log-all-$dateStr.tgz";
     echo "Creating Airtime logs tgz file at $filename";
     $command = "tar cfz $filename /var/log/airtime 2>/dev/null";
     exec($command);
@@ -54,7 +57,10 @@ function dumpSpecificLog($key){
 
     if (isKeyValid($key)){
         $dateStr = gmdate("Y-m-d-H-i-s");
-        $filename = "/tmp/airtime-log-$key-$dateStr.tgz";
+
+        $dir = getcwd();
+        
+        $filename = "$dir/airtime-log-$key-$dateStr.tgz";
         echo "Creating Airtime logs tgz file at $filename";
         $dir = dirname($log_files[$key]);
         $command = "tar cfz $filename $dir 2>/dev/null";
