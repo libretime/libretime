@@ -58,7 +58,7 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'directory-config',
-                'id'		 => 'managa_folder'
+                'id'		 => 'manage_folder'
             ),
             array(
                 'label'      => 'Stream Settings',
