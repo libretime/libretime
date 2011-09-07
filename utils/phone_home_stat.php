@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 $values = parse_ini_file('/etc/airtime/airtime.conf', true);
 
