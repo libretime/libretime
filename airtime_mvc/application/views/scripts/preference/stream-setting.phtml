@@ -5,10 +5,12 @@
     <fieldset class="padded">
         <legend>Hardware Audio Out</legend>
         <dl class="zend_form">
-            <dt id="hardwareOut-label" class="block-display" style="display:none;"></dt>
-            <dd id="hardwareOut-element" class="block-display">
+            <dt id="hardwareOut-label">
                 <label class="required" for="EnableHardwareOut">
-                <?php echo $this->form->getElement('output_sound_device')->getLabel() ?></label>
+                <?php echo $this->form->getElement('output_sound_device')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="hardwareOut-element">
                 <?php echo $this->form->getElement('output_sound_device') ?>
             </dd>
         </dl>
