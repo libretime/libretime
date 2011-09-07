@@ -73,12 +73,6 @@ $(document).ready(function() {
         rebuildStreamURL($(this))
     })
     
-    $('.collapsible-header').click(function() {
-        $(this).next().toggle('fast');
-        $(this).toggleClass("close");
-        return false;
-    }).next().hide();
-    
     $("select[id$=data-type]").change(function(){
         if($(this).val() == 'ogg'){
             restrictOggBitrate($(this), true)
@@ -106,6 +100,11 @@ $(document).ready(function() {
             hideForShoutcast($(this))
         }
     })
+    
+    $('.toggle legend').live('click',function() {
+        $('.toggle').toggleClass('closed');
+        return false;
+    });
     
     showErrorSections()
     

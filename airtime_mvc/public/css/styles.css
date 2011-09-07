@@ -1614,8 +1614,7 @@ dt.block-display, dd.block-display {
     margin-left: 0;
     padding-left: 0;
 }
-.preferences dt.block-display, .preferences dd.block-display,
-.stream-config dt.block-display, .stream-config dd.block-display {
+.preferences dt.block-display, .preferences dd.block-display {
     padding: 0 0 5px 0;
 }
 .preferences dd.block-display, .stream-config dd.block-display {
@@ -1624,9 +1623,6 @@ dt.block-display, dd.block-display {
 .preferences dd.block-display:last-child, .stream-config dd.block-display:last-child {
 	margin-bottom:0;
 	padding-bottom:0;
-}
-.simple-formblock dd.block-display {
-    width: 100%;
 }
 .preferences input[type="radio"], .stream-config input[type="radio"] {
 	margin:0;
@@ -1643,7 +1639,7 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 .radio-inline-list label {
 	margin-right:12px;
 }
-.preferences.simple-formblock dd.block-display, .stream-config.simple-formblock dd.block-display {
+.preferences.simple-formblock dd.block-display {
     width: 100%;
 }
 
@@ -1653,15 +1649,9 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 .preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
     width: 100%;
 }
-.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text,
-.stream-config dd.block-display .input_text_area, .stream-config dd.block-display .input_text,
-.stream-config dd.block-display input[type="text"], .stream-config dd.block-display input[type="password"] {
+.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text {
     width: 99.5%;
 }
-
-
-
-
 
 .preferences dd#SoundCloudTags-element.block-display .input_text_area {
     height: 120px;
@@ -1925,7 +1915,7 @@ dd .info-text-small {
 	padding: 4px 0;
 }
 .stream-config dt.block-display  {
-	width:auto;
+	width: 130px;
 }
 .stream-config dd  {
 	margin-bottom:0px;
@@ -1935,6 +1925,14 @@ dd .info-text-small {
 	line-height:140%;
 }
 
+.stream-config dd input {
+    width:300px;
+}
+
+.stream-config dd input[id$=port] {
+    width:160px;
+}
+
 dt.block-display.info-block {
     width: auto;
 	font-size:12px;
@@ -1942,9 +1940,11 @@ dt.block-display.info-block {
 }
 .top-margin {
 	margin-top:10px;
+	float: left;
 }
 .left-margin {
 	margin-left:20px;
+	float: left;
 }
 .stream-config dd.block-display textarea {
     width: 99.5%;
@@ -1964,8 +1964,18 @@ dt.block-display.info-block {
 	margin:4px 0 4px 2px;
 }
 
+.stream-config #output_setting {
+	width: 96%;
+}
+
+.stream-config dt.block-display, .stream-config dd.block-display {
+	float: left;
+}
 .collapsible-header-disabled {
 	cursor:default;
 	opacity:0.6;
+}
 
+.stream-setting-content {
+	margin-top:-1px;
 }

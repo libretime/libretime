@@ -2,7 +2,7 @@
         $s_name = "s".$this->stream_number;
         ?>
         <h3 class="collapsible-header"><span class="arrow-icon"></span>Stream <?php echo $this->stream_number?></h3>
-        <div class="collapsible-content" id="<?=$s_name?>-config" style="display: none;">
+        <div class="stream-setting-content" id="<?=$s_name?>-config">
         <fieldset class="padded">
             <dl class="zend_form clearfix">
             <dt id="<?=$s_name?>Enabled-label">
@@ -25,44 +25,45 @@
             <dd id="<?=$s_name?>Bitrate-element">
                 <?php echo $this->element->getElement('bitrate')?>
             </dd>
-            
+            <dt id="outputServer-label">
+                <label for="outputServer"><?php echo $this->element->getElement('host')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
+            </dt>
+            <dd id="outputServer-element">
+                <?php echo $this->element->getElement('host')?>
+                <?php if($this->element->getElement('host')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->element->getElement('host')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+            <dt id="outputPort-label">
+                <label for="outputPort"><?php echo $this->element->getElement('port')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
+            </dt>
+            <dd id="outputPort-element">
+                <?php echo $this->element->getElement('port')?>
+                <?php if($this->element->getElement('port')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->element->getElement('port')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
             <dt id="<?=$s_name?>Output-label">
                 <label for="<?=$s_name?>Output"><?php echo $this->element->getElement('output')->getLabel()?></label>
             </dt>
             <dd id="<?=$s_name?>Output-element">
                 <?php echo $this->element->getElement('output')?>
             </dd>
-            </dl>
             
-            
-            <fieldset class="padded top-margin left-margin" id="output_setting">
+            <fieldset class="padded top-margin display_field toggle closed" id="output_setting">
+                <legend style="cursor: pointer;">
+                    <span class="ui-icon ui-icon-triangle-2-n-s"></span>
+                    Additional Options
+                </legend>
                 <dl class="zend_form">
-                <dt id="outputServer-label" class="block-display">
-                    <label for="outputServer"><?php echo $this->element->getElement('host')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
-                </dt>
-                <dd id="outputServer-element" class="block-display">
-                    <?php echo $this->element->getElement('host')?>
-                    <?php if($this->element->getElement('host')->hasErrors()) : ?>
-                        <ul class='errors'>
-                            <?php foreach($this->element->getElement('host')->getMessages() as $error): ?>
-                                <li><?php echo $error; ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                </dd>
-                <dt id="outputPort-label" class="block-display">
-                    <label for="outputPort"><?php echo $this->element->getElement('port')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
-                </dt>
-                <dd id="outputPort-element" class="block-display">
-                    <?php echo $this->element->getElement('port')?>
-                    <?php if($this->element->getElement('port')->hasErrors()) : ?>
-                        <ul class='errors'>
-                            <?php foreach($this->element->getElement('port')->getMessages() as $error): ?>
-                                <li><?php echo $error; ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                </dd>
                 <dt id="outputUser-label" class="block-display">
                     <label for="outputUser"><?php echo $this->element->getElement('user')->getLabel()?> :</label>
                 </dt>
@@ -106,10 +107,11 @@
                     <?php endif; ?>
                 </dd>
                 <dt id="stationURL-label" class="block-display">
-                    <label for="stationURL"><?php echo $this->element->getElement('url')->getLabel()?><span class="info-text-small">(Your radio station website)</span> :</label>
+                    <label for="stationURL"><?php echo $this->element->getElement('url')->getLabel()?> :</label>
                 </dt>
                 <dd id="stationURL-element" class="block-display clearfix">
                     <?php echo $this->element->getElement('url')?>
+                    <span class="info-text-small">(Your radio station website)</span>
                     <?php if($this->element->getElement('url')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('url')->getMessages() as $error): ?>
@@ -132,10 +134,11 @@
                     <?php endif; ?>
                 </dd>
                 <dt id="outputMountpoint-label" class="block-display">
-                    <label for="outputMountpoint"><?php echo $this->element->getElement('mount')->getLabel()?><span class="info-text-small">(Your radio station website)</span> :</label>
+                    <label for="outputMountpoint"><?php echo $this->element->getElement('mount')->getLabel()?> :</label>
                 </dt>
                 <dd id="outputMountpoint-element" class="block-display">
                     <?php echo $this->element->getElement('mount')?>
+                    <span class="info-text-small">(Your radio station website)</span>
                     <?php if($this->element->getElement('mount')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('mount')->getMessages() as $error): ?>
@@ -144,13 +147,14 @@
                         </ul>
                     <?php endif; ?>
                 </dd>
-                <dt id="outputStreamURL-label" class="block-display">
-                    <label for="outputStreamURL">Stream URL: </label>
-                </dt>
-                <dd id="outputStreamURL-element" class="block-display">
-                    <p id="stream_url"></p>
-                </dd>
                 </dl>
             </fieldset>
+            <dt id="outputStreamURL-label" class="block-display">
+                <label for="outputStreamURL">Stream URL: </label>
+            </dt>
+            <dd id="outputStreamURL-element" class="block-display">
+                <p id="stream_url"></p>
+            </dd>
+            </dl>
         </fieldset>
         </div>
