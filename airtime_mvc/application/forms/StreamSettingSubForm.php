@@ -51,7 +51,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $this->addElement($enable);
         
         $type = new Zend_Form_Element_Select('type');
-        $type->setLabel("Type:")
+        $type->setLabel("Stream Type:")
                 ->setMultiOptions($stream_types)
                 ->setValue(isset($setting[$prefix.'_type'])?$setting[$prefix.'_type']:0)
                 ->setDecorators(array('ViewHelper'));
@@ -61,7 +61,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $this->addElement($type);
         
         $bitrate = new Zend_Form_Element_Select('bitrate');
-        $bitrate->setLabel("Bitrate:")
+        $bitrate->setLabel("Bit Rate:")
                 ->setMultiOptions($stream_bitrates)
                 ->setValue(isset($setting[$prefix.'_bitrate'])?$setting[$prefix.'_bitrate']:0)
                 ->setDecorators(array('ViewHelper'));
@@ -72,7 +72,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $this->addElement($bitrate);
         
         $output = new Zend_Form_Element_Select('output');
-        $output->setLabel("Output to:")
+        $output->setLabel("Service Type:")
                 ->setMultiOptions(array("icecast"=>"Icecast", "shoutcast"=>"Shoutcast"))
                 ->setValue(isset($setting[$prefix.'_output'])?$setting[$prefix.'_output']:"icecast")
                 ->setDecorators(array('ViewHelper'));
