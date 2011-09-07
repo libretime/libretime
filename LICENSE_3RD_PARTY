@@ -3,7 +3,10 @@ This application uses the following 3rd Party software:
 ----------------------
 Common Non-linked Code
 ----------------------
- * Linux (Ubuntu & Debian)
+ * Linux
+   - What is it: Kernel
+   - Web site: https://github.com/torvalds/linux
+   - License: GPLv2
 
  * RabbitMQ (works with version 1.7.2 and above)
    - What is it: Interprocess Message Passing with Queuing
@@ -40,7 +43,7 @@ Linked code:
  * Phing 
    - What is it: PHP project build system
    - Web site: http://phing.info/trac/
-   - Note: Only used for development, not needed to run Airtime.
+   - Note: Only used for database installation and development, not needed to run Airtime.
    - License: LGPLv3
 
  * PHP-AMQPLIB
