@@ -14,7 +14,7 @@
 		    </a>
 		    <ul class="sub">
 			    <?php foreach ($page->getPages() as $sub) :
-			             if($isSaas && $sub->getLabel() == "Manage Media Folders"){
+			             if($isSaas && $sub->getId() == "managa_folder"){
 			                 continue;
 			             } ?>
 			    <li>

@@ -57,7 +57,8 @@ $pages = array(
                 'label'      => 'Manage Media Folders',
                 'module'     => 'default',
                 'controller' => 'Preference',
-                'action'     => 'directory-config'
+                'action'     => 'directory-config',
+                'id'		 => 'managa_folder'
             ),
             array(
                 'label'      => 'Stream Settings',
