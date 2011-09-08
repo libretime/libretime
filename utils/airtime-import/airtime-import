@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
