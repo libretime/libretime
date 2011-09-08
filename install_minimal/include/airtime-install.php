@@ -65,9 +65,6 @@ if (isset($version) && ($version != false) && ($version < AIRTIME_VERSION) && !i
 
     require_once("airtime-upgrade.php");
 
-    //Make sure to exit with non-zero error code so that airtime-install
-    //shell script does not continue with installing pypo, show-recorder,
-    //media-monitor etc.
     exit(2);
 }
 

@@ -59,7 +59,16 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
+set +e
 php ${SCRIPTPATH}/include/airtime-install.php $@
+if [ "$?" -eq "2" ]; then
+    #We've just finished an upgrade, so let's exit
+    exit 0
+elif [ "$?" != "0" ]; then
+    #There was an error, exit with error code.
+    exit 1
+fi
+set -e
 
 echo -e "\n*** API Client Installation ***"
 python ${SCRIPTPATH}/../python_apps/api_clients/install/api_client_install.py
