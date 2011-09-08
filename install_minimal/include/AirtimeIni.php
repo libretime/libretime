@@ -32,6 +32,8 @@ class AirtimeIni
     const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
     const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
 
+    const CONF_PYPO_GRP = "pypo";
+
     public static function IniFilesExist()
     {
         $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
@@ -66,22 +68,29 @@ class AirtimeIni
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
         }
+        
         if (!copy(__DIR__."/../../python_apps/api_clients/api_client.cfg", AirtimeIni::CONF_FILE_API_CLIENT)){
             echo "Could not copy api_client.cfg to /etc/airtime/. Exiting.";
             exit(1);
-        }        
+        }
+                
         if (!copy(__DIR__."/../../python_apps/pypo/pypo.cfg", AirtimeIni::CONF_FILE_PYPO)){
             echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
+        
         if (!copy(__DIR__."/../../python_apps/show-recorder/recorder.cfg", AirtimeIni::CONF_FILE_RECORDER)){
             echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
+        
         if (!copy(__DIR__."/../../python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
+        chmod(AirtimeIni::CONF_FILE_LIQUIDSOAP, 0640);
+        chgrp(AirtimeIni::CONF_FILE_LIQUIDSOAP, AirtimeIni::CONF_PYPO_GRP);
+                
         if (!copy(__DIR__."/../../python_apps/media-monitor/media-monitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
             echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
             exit(1);
