@@ -120,6 +120,8 @@ There are two ways to import audio files into Airtime:
 
 def CopyAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
+    if(len(parser.rargs) == 0 ):
+        raise OptionValueError("No argument found. This option requires at least one argument.")
     stor = helper_get_stor_dir()
     if(stor is None):
         exit("Unable to connect to the Airtime server.")
@@ -128,6 +130,8 @@ def CopyAction(option, opt, value, parser):
 
 def MoveAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
+    if(len(parser.rargs) == 0 ):
+        raise OptionValueError("No argument found. This option requires at least one argument.")
     stor = helper_get_stor_dir()
     if(stor is None):
         exit("Unable to connect to the Airtime server.")
@@ -274,7 +278,7 @@ if('-l' in sys.argv or '--link' in sys.argv):
 if('-h' in sys.argv):
     printHelp()
     sys.exit()
-if(len(sys.argv) == 1):
+if(len(sys.argv) == 1 or '-' not in sys.argv[1]):
     printHelp()
     sys.exit()
     
