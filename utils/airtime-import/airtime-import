@@ -5,7 +5,8 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 
 invokePwd=$PWD
 
-airtime_import_path="/usr/lib/airtime/utils/airtime-import/"
+#airtime_import_path="/usr/lib/airtime/utils/airtime-import/"
+airtime_import_path="/home/james/src/airtime/utils/airtime-import/"
 airtime_import_script="airtime-import.py"
 
 api_client_path="/usr/lib/airtime/"
