@@ -2,13 +2,8 @@ import socket
 import logging
 import time
 
-
 import pyinotify
 from pyinotify import ProcessEvent
-
-# For RabbitMQ
-from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
 
 from airtimemetadata import AirtimeMetadata
 from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
@@ -186,8 +181,10 @@ class AirtimeProcessEvent(ProcessEvent):
             self.mmc.touch_index_file()
             
             self.file_events = []
-        #yeild to workder thread
+
+        #yield to worker thread
         time.sleep(0)
+        
         #use items() because we are going to be modifying this
         #dictionary while iterating over it.
         for k, pair in self.cookies_IN_MOVED_FROM.items():
@@ -206,7 +203,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 self.handle_removed_file(False, event.pathname)
 
 
-        #check for any events recieved from Airtime.
+        #check for any events received from Airtime.
         try:
             notifier.connection.drain_events(timeout=0.1)
         #avoid logging a bunch of timeout messages.
@@ -214,4 +211,5 @@ class AirtimeProcessEvent(ProcessEvent):
             pass
         except Exception, e:
             self.logger.info("%s", e)
+            time.sleep(3)
 

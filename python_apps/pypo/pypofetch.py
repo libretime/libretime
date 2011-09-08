@@ -9,6 +9,7 @@ import string
 import json
 import telnetlib
 import math
+import socket
 from threading import Thread
 from subprocess import Popen, PIPE
 from datetime import datetime
@@ -351,12 +352,7 @@ class PypoFetch(Thread):
                     logger.error(e)
 
 
-    """
-    Main loop of the thread:
-    Wait for schedule updates from RabbitMQ, but in case there arent any,
-    poll the server to get the upcoming schedule.
-    """
-    def run(self):
+    def main(self):
         logger = logging.getLogger('fetch')
 
         while not self.init_rabbit_mq():
@@ -384,12 +380,31 @@ class PypoFetch(Thread):
                 # Hooray for globals!
                 schedule_data = SCHEDULE_PUSH_MSG
                 status = 1
-            except:    
+            except socket.timeout, se:
                 # We didnt get a message for a while, so poll the server
                 # to get an updated schedule. 
                 status, schedule_data = self.api_client.get_schedule()
+            except Exception, e:
+                """
+                This Generic exception is thrown whenever the RabbitMQ
+                Service is stopped. In this case let's check every few
+                seconds to see if it has come back up
+                """
+                logger.info("Unknown exception")
+                return
+
+            #return based on the exception
             
             if status == 1:
                 self.process_schedule(schedule_data, "scheduler", False)                
-            loops += 1
+            loops += 1        
+
+    """
+    Main loop of the thread:
+    Wait for schedule updates from RabbitMQ, but in case there arent any,
+    poll the server to get the upcoming schedule.
+    """
+    def run(self):
+        while True:
+            self.main()
             

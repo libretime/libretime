@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ############################################
 # just a wrapper to call the notifyer      #
 # needed here to keep dirs/configs clean   #
