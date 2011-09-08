@@ -1,6 +1,10 @@
-#!/bin/bash
+#!/bin/bash -e
+#-e Causes bash script to exit if any of the installers
+#return with a non-zero return value.
 
+set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
+set -e
 if [[ "$DEB" = "Status: install ok installed" ]]; then
     echo -e "\nDebian package of Airtime detected. Please use the debian package to upgrade.\n"
     exit 1
@@ -17,7 +21,9 @@ VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
 VIRTUAL_ENV_SHARE="/usr/share/python-virtualenv/"
 if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
     echo -e "\n*** Creating Virtualenv for Airtime ***"
+    set +e
     EXTRAOPTION=$(virtualenv --help | grep extra-search-dir)
+    set -e
 
     if [ "$?" -eq "0" ]; then
         sudo virtualenv --extra-search-dir=${SCRIPTPATH}/3rd_party --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
@@ -49,10 +55,6 @@ fi
 
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
-
-#Cause bash script to exit if any of the installers
-#return with a non-zero return value.
-set -e
 
 echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
