@@ -72,7 +72,9 @@ if (strcmp($version, "1.9.2") < 0){
 if (strcmp($version, "1.9.3") < 0){
     system("php ".__DIR__."/../upgrades/airtime-1.9.3/airtime-upgrade.php");
 }
-
+if (strcmp($version, "1.9.4") < 0){
+    system("php ".__DIR__."/../upgrades/airtime-1.9.4/airtime-upgrade.php");
+}
 
 //set the new version in the database.
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
