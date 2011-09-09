@@ -124,7 +124,8 @@ def CopyAction(option, opt, value, parser):
         raise OptionValueError("No argument found. This option requires at least one argument.")
     stor = helper_get_stor_dir()
     if(stor is None):
-        exit("Unable to connect to the Airtime server.")
+        print "Unable to connect to the Airtime server."
+        return
     dest = stor+"organize/"
     copy_or_move_files_to(parser.rargs, dest, 'copy')
 
