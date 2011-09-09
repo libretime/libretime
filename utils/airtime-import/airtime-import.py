@@ -84,8 +84,10 @@ def checkOtherOption(args):
 def errorIfMultipleOption(args, msg=''):
     if(checkOtherOption(args)):
         if(msg != ''):
+            printHelp()
             raise OptionValueError(msg)
         else:
+            printHelp()
             raise OptionValueError("This option cannot be combined with other options")
     
 def printHelp():
@@ -121,6 +123,7 @@ There are two ways to import audio files into Airtime:
 def CopyAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) == 0 ):
+        printHelp()
         raise OptionValueError("No argument found. This option requires at least one argument.")
     stor = helper_get_stor_dir()
     if(stor is None):
@@ -131,6 +134,7 @@ def CopyAction(option, opt, value, parser):
 def MoveAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) == 0 ):
+        printHelp()
         raise OptionValueError("No argument found. This option requires at least one argument.")
     stor = helper_get_stor_dir()
     if(stor is None):
@@ -141,8 +145,10 @@ def MoveAction(option, opt, value, parser):
 def WatchAddAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 1):
+        printHelp()
         raise OptionValueError("Too many arguments. This option requires exactly one argument.")
     elif(len(parser.rargs) == 0 ):
+        printHelp()
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     path = parser.rargs[0]
     if (path[0] == "/" or path[0] == "~"):
@@ -165,6 +171,7 @@ def WatchAddAction(option, opt, value, parser):
 def WatchListAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 0):
+        printHelp()
         raise OptionValueError("This option doesn't take any arguments.")
     res = api_client.list_all_watched_dirs()
     if(res is None):
@@ -181,8 +188,10 @@ def WatchListAction(option, opt, value, parser):
 def WatchRemoveAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 1):
+        printHelp()
         raise OptionValueError("Too many arguments. This option requires exactly one argument.")
     elif(len(parser.rargs) == 0 ):
+        printHelp()
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     path = parser.rargs[0]
     if (path[0] == "/" or path[0] == "~"):
@@ -225,8 +234,10 @@ def StorageSetAction(option, opt, value, parser):
             sys.exit(1)
     
     if(len(parser.rargs) > 1):
+        printHelp()
         raise OptionValueError("Too many arguments. This option requires exactly one argument.")
     elif(len(parser.rargs) == 0 ):
+        printHelp()
         raise OptionValueError("No argument found. This option requires exactly one argument.")
     
     path = parser.rargs[0]
@@ -250,6 +261,7 @@ def StorageSetAction(option, opt, value, parser):
 def StorageGetAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 0):
+        printHelp()
         raise OptionValueError("This option does not take any arguments.")
     print helper_get_stor_dir()
     
