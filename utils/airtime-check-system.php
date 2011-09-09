@@ -1,5 +1,7 @@
 <?php
 
+AirtimeCheck::ExitIfNotRoot();
+
 $sapi_type = php_sapi_name();
 
 //detect if we are running via the command line
@@ -67,6 +69,20 @@ class AirtimeCheck {
     const PYINOTIFY_MIN_VERSION = "0.9.2";
 
     public static $check_system_ok = true;
+
+    /**
+     * Ensures that the user is running this PHP script with root
+     * permissions. If not running with root permissions, causes the
+     * script to exit.
+     */
+    public static function ExitIfNotRoot()
+    {
+        // Need to check that we are superuser before running this.
+        if(exec("whoami") != "root"){
+            echo "Must be root user.\n";
+            exit(1);
+        }
+    }
    
     private static function CheckAirtimeDaemonRunning($filename, $process_id_str, $process_running_str, $name, $logFile)
     {

@@ -1,5 +1,7 @@
 <?php
 
+exitIfNotRoot();
+
 $airtimeIni = getAirtimeConf();
 $airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
@@ -14,6 +16,20 @@ $log_files = array("media-monitor" => "/var/log/airtime/media-monitor/media-moni
                     "web" => "/var/log/airtime/zendphp.log");
 
 array_filter($log_files, "file_exists");
+
+/**
+ * Ensures that the user is running this PHP script with root
+ * permissions. If not running with root permissions, causes the
+ * script to exit.
+ */
+function exitIfNotRoot()
+{
+    // Need to check that we are superuser before running this.
+    if(exec("whoami") != "root"){
+        echo "Must be root user.\n";
+        exit(1);
+    }
+}
 
 function printUsage($userMsg = "")
 {

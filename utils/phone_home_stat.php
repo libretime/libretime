@@ -1,4 +1,7 @@
 <?php
+
+exitIfNotRoot();
+
 $values = parse_ini_file('/etc/airtime/airtime.conf', true);
 
 // Name of the web server user
@@ -65,4 +68,17 @@ if(Application_Model_Preference::GetSupportFeedback() == '1'){
     curl_setopt($ch, CURLOPT_POSTFIELDS, $dataArray);
     $result = curl_exec($ch);
 }
-?>
+
+/**
+ * Ensures that the user is running this PHP script with root
+ * permissions. If not running with root permissions, causes the
+ * script to exit.
+ */
+function exitIfNotRoot()
+{
+    // Need to check that we are superuser before running this.
+    if(exec("whoami") != "root"){
+        echo "Must be root user.\n";
+        exit(1);
+    }
+}

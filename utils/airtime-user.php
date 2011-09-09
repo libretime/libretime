@@ -1,5 +1,7 @@
 <?php
 
+exitIfNotRoot();
+
 $airtimeIni = GetAirtimeConf();
 $airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
@@ -36,6 +38,19 @@ function printUsage()
     echo "\n";
 }
 
+/**
+ * Ensures that the user is running this PHP script with root
+ * permissions. If not running with root permissions, causes the
+ * script to exit.
+ */
+function exitIfNotRoot()
+{
+    // Need to check that we are superuser before running this.
+    if(exec("whoami") != "root"){
+        echo "Must be root user.\n";
+        exit(1);
+    }
+}
 
 if (count($argv) != 3) {
     printUsage();

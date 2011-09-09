@@ -33,6 +33,7 @@ class AirtimeIni
     const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
 
     const CONF_PYPO_GRP = "pypo";
+    const CONF_WWW_DATA_GRP = "www-data";
 
     public static function IniFilesExist()
     {
@@ -67,39 +68,56 @@ class AirtimeIni
         if (!copy(AirtimeInstall::GetAirtimeSrcDir()."/build/airtime.conf", AirtimeIni::CONF_FILE_AIRTIME)){
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
+        } else if (!self::ChangeFileOwnerGroupModToPypo(AirtimeIni::CONF_FILE_AIRTIME, self::CONF_WWW_DATA_GRP)){
+            echo "Could not set ownership of api_client.cfg to 'pypo'. Exiting.";
+            exit(1);
         }
         
         if (!copy(__DIR__."/../../python_apps/api_clients/api_client.cfg", AirtimeIni::CONF_FILE_API_CLIENT)){
             echo "Could not copy api_client.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        } else if (!self::ChangeFileOwnerGroupModToPypo(AirtimeIni::CONF_FILE_API_CLIENT, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of api_client.cfg to 'pypo'. Exiting.";
             exit(1);
         }
                 
         if (!copy(__DIR__."/../../python_apps/pypo/pypo.cfg", AirtimeIni::CONF_FILE_PYPO)){
             echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
             exit(1);
+        } else if (!self::ChangeFileOwnerGroupModToPypo(AirtimeIni::CONF_FILE_PYPO, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of pypo.cfg to 'pypo'. Exiting.";
+            exit(1);
         }
         
         if (!copy(__DIR__."/../../python_apps/show-recorder/recorder.cfg", AirtimeIni::CONF_FILE_RECORDER)){
             echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        } else if (!self::ChangeFileOwnerGroupModToPypo(AirtimeIni::CONF_FILE_RECORDER, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of recorder.cfg to 'pypo'. Exiting.";
             exit(1);
         }
         
         if (!copy(__DIR__."/../../python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
             echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
             exit(1);
-        }else{
-            if (!chown(AirtimeIni::CONF_FILE_LIQUIDSOAP, "pypo") || !chgrp(AirtimeIni::CONF_FILE_LIQUIDSOAP, "pypo") ){
-                echo "Could not set ownership of liquidsoap.cfg to 'pypo'. Exiting.";
-                exit(1);
-            }
+        } else if (!self::ChangeFileOwnerGroupModToPypo(AirtimeIni::CONF_FILE_LIQUIDSOAP, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of liquidsoap.cfg to 'pypo'. Exiting.";
+            exit(1);
         }
-        chmod(AirtimeIni::CONF_FILE_LIQUIDSOAP, 0640);
-        chgrp(AirtimeIni::CONF_FILE_LIQUIDSOAP, AirtimeIni::CONF_PYPO_GRP);
-                
+                        
         if (!copy(__DIR__."/../../python_apps/media-monitor/media-monitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
             echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
             exit(1);
+        } else if (!self::ChangeFileOwnerGroupModToPypo(AirtimeIni::CONF_FILE_MEDIAMONITOR, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of media-monitor.cfg to 'pypo'. Exiting.";
+            exit(1);
         }
+    }
+    
+    public static function ChangeFileOwnerGroupModToPypo($filename, $user){
+        return (chown($filename, $user) &&
+                chgrp($filename, $user) &&
+                chmod($filename, 0640));
     }
     
     public static function CreateMonitFile(){
