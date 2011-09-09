@@ -352,6 +352,7 @@ class AirtimeInstall
         exec("rm -f /usr/bin/airtime-import");
         exec("rm -f /usr/bin/airtime-update-db-settings");
         exec("rm -f /usr/bin/airtime-check-system");
+        exec("rm -f /usr/bin/airtime-user");
     }
 
     public static function InstallPhpCode()
@@ -432,6 +433,7 @@ class AirtimeInstall
     }
 
     public static function CreateCronFile(){
+        echo "* Creating Cron File".PHP_EOL;
         // Create CRON task to run every day.  Time of day is initialized to a random time.
         $hour = rand(0,23);
         $minute = rand(0,59);
