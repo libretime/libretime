@@ -31,6 +31,7 @@ function deleteAudioClip(json) {
 	}
 
 	deleteItem("au", json.id);
+	location.reload(true);
 }
 
 //callbacks called by jjmenu

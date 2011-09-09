@@ -452,6 +452,7 @@ class AirtimeInstall
     }
 
     public static function CreateCronFile(){
+        echo "* Creating Cron File".PHP_EOL;
         // Create CRON task to run every day.  Time of day is initialized to a random time.
         $hour = rand(0,23);
         $minute = rand(0,59);

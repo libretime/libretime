@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Location of pypo_cli.py Python script
 

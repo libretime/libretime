@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 import time
 import logging
 import logging.config

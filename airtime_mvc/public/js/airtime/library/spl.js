@@ -303,6 +303,9 @@ function addSPLItem(event, ui){
 
 function deleteSPLItem(event){
     event.stopPropagation();
+    
+    // stop any preview playing
+    $('#jquery_jplayer_1').jPlayer('stop');
 
 	var url, pos;
 
@@ -399,7 +402,7 @@ function newSPL() {
 
 function deleteSPL() {
 	var url;
-
+	
 	// stop any preview playing
 	$('#jquery_jplayer_1').jPlayer('stop');
 	

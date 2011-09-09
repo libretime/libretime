@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 import urllib
 import logging
 import logging.config
@@ -8,6 +7,7 @@ import datetime
 import os
 import sys
 import shutil
+import socket
 
 from configobj import ConfigObj
 
@@ -291,10 +291,12 @@ class CommandListener(Thread):
             try:
                 # block until 5 seconds before the next show start
                 self.connection.drain_events(timeout=self.time_till_next_show)
-            except Exception, e:
-                self.logger.info(e)
+            except socket.timeout, s:
+                self.logger.info(s)
                 # start recording
                 self.start_record()
+            except Exception, e:
+                time.sleep(3)
 
             loops += 1
 

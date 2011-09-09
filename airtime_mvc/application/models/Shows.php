@@ -1258,6 +1258,24 @@ class Show {
 
         return $event;
     }
+    
+    public function setShowFirstShow($s_date){
+        $showDay = CcShowDaysQuery::create()
+        ->filterByDbShowId($this->_showId)
+        ->findOne();
+        
+        $showDay->setDbFirstShow($s_date)
+        ->save();
+    }
+    
+    public function setShowLastShow($e_date){
+        $showDay = CcShowDaysQuery::create()
+        ->filterByDbShowId($this->_showId)
+        ->findOne();
+        
+        $showDay->setDbLastShow($e_date)
+        ->save();
+    }
 }
 
 class ShowInstance {
@@ -1471,6 +1489,13 @@ class ShowInstance {
         $this->setShowStart($new_starts);
         $this->setShowEnd($new_ends);
         $this->correctScheduleStartTimes();
+        
+        $show = new Show($this->getShowId());
+        if(!$show->isRepeating()){
+            $show->setShowFirstShow($new_starts);
+            $show->setShowLastShow($new_ends);
+        }
+        
         RabbitMq::PushSchedule();
     }
 

@@ -41,13 +41,7 @@ class PypoPush(Thread):
         self.playlists = dict()
         self.stream_metadata = dict()
 
-        """
-        push_ahead2 MUST be < push_ahead. The difference in these two values
-        gives the number of seconds of the window of opportunity for the scheduler
-        to catch when a playlist is to be played.
-        """
         self.push_ahead = 10
-        self.push_ahead2 = self.push_ahead -5
 
     def set_export_source(self, export_source):
         self.export_source = export_source
@@ -77,22 +71,16 @@ class PypoPush(Thread):
         playlists = self.playlists
         
         if schedule:
-            playedItems = self.load_schedule_tracker()
-
             timenow = time.time()
-            tcoming = time.gmtime(timenow + self.push_ahead)
-            str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
-
-            tcoming2 = time.gmtime(timenow + self.push_ahead2)
-            str_tcoming2_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming2[0], tcoming2[1], tcoming2[2], tcoming2[3], tcoming2[4], tcoming2[5])
-
             tnow = time.gmtime(timenow)
+            tcoming = time.gmtime(timenow + self.push_ahead)
             str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-            
+            str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
+                        
             for pkey in schedule:
                 plstart = schedule[pkey]['start'][0:19]
          
-                if plstart == str_tcoming_s or (plstart < str_tcoming_s and plstart > str_tcoming2_s):
+                if str_tnow_s <= plstart and plstart < str_tcoming_s:
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = schedule[pkey]
 
@@ -100,14 +88,6 @@ class PypoPush(Thread):
                     # force liquidsoap to refresh.
                     if (self.push_liquidsoap(pkey, schedule, playlists) == 1):
                         logger.debug("Pushed to liquidsoap, updating 'played' status.")
-                        # Marked the current playlist as 'played' in the schedule tracker
-                        # so it is not called again in the next push loop.
-                        # Write changes back to tracker file.
-                        playedItems[pkey] = playlist
-                        playedItems[pkey]['played'] = 1
-                        schedule_tracker = open(self.schedule_tracker_file, "w")
-                        pickle.dump(playedItems, schedule_tracker)
-                        schedule_tracker.close()
 
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
@@ -115,8 +95,6 @@ class PypoPush(Thread):
 
                 show_start = schedule[pkey]['show_start']
                 show_end = schedule[pkey]['show_end']
-        else:
-            pass
 
     def push_liquidsoap(self, pkey, schedule, playlists):
         logger = logging.getLogger('push')
@@ -171,29 +149,6 @@ class PypoPush(Thread):
             logger.error('%s', e)
             status = 0
         return status
-
-    def load_schedule_tracker(self):
-        logger = logging.getLogger('push')
-        playedItems = dict()
-
-        # create the file if it doesnt exist
-        if (not os.path.exists(self.schedule_tracker_file)):
-            try:
-                logger.debug('creating file ' + self.schedule_tracker_file)
-                schedule_tracker = open(self.schedule_tracker_file, 'w')
-                pickle.dump(playedItems, schedule_tracker)
-                schedule_tracker.close()
-            except Exception, e:
-                logger.error('Error creating schedule tracker file: %s', e)
-        else:
-            try:
-                schedule_tracker = open(self.schedule_tracker_file, "r")
-                playedItems = pickle.load(schedule_tracker)
-                schedule_tracker.close()
-            except Exception, e:
-                logger.error('Unable to load schedule tracker file: %s', e)
-
-        return playedItems
 
     def run(self):
         loops = 0

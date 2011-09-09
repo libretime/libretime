@@ -87,8 +87,8 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            $show = new ShowInstance($showInstanceId);
-            $error = $show->moveShow($deltaDay, $deltaMin);
+            $showInstance = new ShowInstance($showInstanceId);
+            $error = $showInstance->moveShow($deltaDay, $deltaMin);
         }
 
         if(isset($error))
