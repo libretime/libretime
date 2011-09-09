@@ -178,7 +178,7 @@ class PypoFetch(Thread):
         scheduled_data = dict()
         scheduled_data['liquidsoap_playlists'] = liquidsoap_playlists
         scheduled_data['schedule'] = playlists
-        scheduled_data['stream_metadata'] = schedule_data["stream_metadata"]        
+        scheduled_data['stream_metadata'] = schedule_data["stream_metadata"]
         self.queue.put(scheduled_data)
 
         # cleanup

@@ -82,8 +82,6 @@ class PypoPush(Thread):
         
         currently_on_air = False
         if schedule:
-            playedItems = self.load_schedule_tracker()
-
             timenow = time.time()
             tcoming = time.localtime(timenow + self.push_ahead)
             str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
@@ -96,12 +94,8 @@ class PypoPush(Thread):
             
             for pkey in schedule:
                 plstart = schedule[pkey]['start'][0:19]
-                #plstart = pkey[0:19]
          
-                #playedFlag = (pkey in playedItems) and playedItems[pkey].get("played", 0)
-                playedFlag = False
-                
-                if plstart == str_tcoming_s or (plstart < str_tcoming_s and plstart > str_tcoming2_s and not playedFlag):
+                if plstart == str_tcoming_s or (plstart < str_tcoming_s and plstart > str_tcoming2_s):
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = schedule[pkey]
 
@@ -111,14 +105,6 @@ class PypoPush(Thread):
                     # force liquidsoap to refresh.
                     if (self.push_liquidsoap(pkey, schedule, playlists) == 1):
                         logger.debug("Pushed to liquidsoap, updating 'played' status.")
-                        # Marked the current playlist as 'played' in the schedule tracker
-                        # so it is not called again in the next push loop.
-                        # Write changes back to tracker file.
-                        playedItems[pkey] = playlist
-                        playedItems[pkey]['played'] = 1
-                        schedule_tracker = open(self.schedule_tracker_file, "w")
-                        pickle.dump(playedItems, schedule_tracker)
-                        schedule_tracker.close()
 
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
@@ -129,8 +115,6 @@ class PypoPush(Thread):
                         
                 if show_start <= str_tnow_s and str_tnow_s < show_end:
                     currently_on_air = True
-        else:
-            pass
 
         if not currently_on_air and self.liquidsoap_state_play:
             logger.debug('Notifying Liquidsoap to stop playback.')
@@ -201,29 +185,6 @@ class PypoPush(Thread):
             logger.error('%s', e)
             status = 0
         return status
-
-    def load_schedule_tracker(self):
-        logger = logging.getLogger('push')
-        playedItems = dict()
-
-        # create the file if it doesnt exist
-        if (not os.path.exists(self.schedule_tracker_file)):
-            try:
-                logger.debug('creating file ' + self.schedule_tracker_file)
-                schedule_tracker = open(self.schedule_tracker_file, 'w')
-                pickle.dump(playedItems, schedule_tracker)
-                schedule_tracker.close()
-            except Exception, e:
-                logger.error('Error creating schedule tracker file: %s', e)
-        else:
-            try:
-                schedule_tracker = open(self.schedule_tracker_file, "r")
-                playedItems = pickle.load(schedule_tracker)
-                schedule_tracker.close()
-            except Exception, e:
-                logger.error('Unable to load schedule tracker file: %s', e)
-
-        return playedItems
 
     def run(self):
         loops = 0
