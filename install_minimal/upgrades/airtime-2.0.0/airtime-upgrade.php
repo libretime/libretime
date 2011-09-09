@@ -332,6 +332,9 @@ class AirtimeIni200{
     const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
     const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
 
+    const CONF_PYPO_GRP = "pypo";
+    const CONF_WWW_DATA_GRP = "www-data";
+
     /**
      * This function updates an INI style config file.
      *
@@ -430,13 +433,49 @@ class AirtimeIni200{
         }
     }
 
+    /* Re: http://dev.sourcefabric.org/browse/CC-2797
+     * We don't want config files to be world-readable so we
+     * set the strictest permissions possible. */
+    public static function changeConfigFilePermissions(){
+        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_AIRTIME, self::CONF_WWW_DATA_GRP)){
+            echo "Could not set ownership of api_client.cfg to 'pypo'. Exiting.";
+            exit(1);
+        }
+        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_API_CLIENT, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of api_client.cfg to 'pypo'. Exiting.";
+            exit(1);
+        }
+        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_PYPO, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of pypo.cfg to 'pypo'. Exiting.";
+            exit(1);
+        }
+        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_RECORDER, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of recorder.cfg to 'pypo'. Exiting.";
+            exit(1);
+        }
+        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_LIQUIDSOAP, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of liquidsoap.cfg to 'pypo'. Exiting.";
+            exit(1);
+        }
+        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_MEDIAMONITOR, self::CONF_PYPO_GRP)){
+            echo "Could not set ownership of media-monitor.cfg to 'pypo'. Exiting.";
+            exit(1);
+        }
+    }
+
+    public static function ChangeFileOwnerGroupMod($filename, $user){
+        return (chown($filename, $user) &&
+                chgrp($filename, $user) &&
+                chmod($filename, 0640));
+    }
+
     public static function upgradeConfigFiles(){
 
         $configFiles = array(AirtimeIni200::CONF_FILE_AIRTIME,
                              AirtimeIni200::CONF_FILE_PYPO,
                              AirtimeIni200::CONF_FILE_RECORDER,
                              AirtimeIni200::CONF_FILE_LIQUIDSOAP,
-                             AirtimeIni200::CONF_FILE_MONIT,
+                             AirtimeIni200::CONF_FILE_MEDIAMONITOR,
                              AirtimeIni200::CONF_FILE_API_CLIENT);
 
         // Backup the config files
@@ -445,7 +484,8 @@ class AirtimeIni200{
             // do not back up monit cfg
             if (file_exists($conf) && $conf != AirtimeIni200::CONF_FILE_MONIT) {
                 echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
-                copy($conf, $conf.$suffix.".bak");
+                //copy($conf, $conf.$suffix.".bak");
+                exec("cp -p $conf $conf$suffix.bak"); //use cli version to preserve file attributes
             }
         }
 
@@ -508,6 +548,7 @@ ConvertToUtc::convert_cc_show_instances();
 
 // merging/updating config files
 echo "* Updating configFiles\n";
+AirtimeIni200::changeConfigFilePermissions();
 AirtimeIni200::upgradeConfigFiles();
 
 $values = parse_ini_file(AirtimeIni200::CONF_FILE_AIRTIME, true);
