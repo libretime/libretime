@@ -22,10 +22,11 @@ VIRTUAL_ENV_SHARE="/usr/share/python-virtualenv/"
 if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
     echo -e "\n*** Creating Virtualenv for Airtime ***"
     set +e
-    EXTRAOPTION=$(virtualenv --help | grep extra-search-dir)
+    virtualenv --help | grep extra-search-dir
+    EXTRAOPTION=$?
     set -e
 
-    if [ "$?" -eq "0" ]; then
+    if [ $EXTRAOPTION -eq "0" ]; then
         sudo virtualenv --extra-search-dir=${SCRIPTPATH}/3rd_party --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
     else
         # copy distribute-0.6.10.tar.gz to /usr/share/python-virtualenv/
