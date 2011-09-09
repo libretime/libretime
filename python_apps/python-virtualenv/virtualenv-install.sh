@@ -36,6 +36,3 @@ if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
 else
     echo -e "\n*** Existing Airtime Virtualenv Found ***"
 fi 
-
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
