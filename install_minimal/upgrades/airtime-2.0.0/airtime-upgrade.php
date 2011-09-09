@@ -38,6 +38,13 @@ class AirtimeInstall{
         return __DIR__."/../../../utils";
     }
 
+    public static function InstallBinaries()
+    {
+        echo "* Installing binaries to ".AirtimeInstall::CONF_DIR_BINARIES.PHP_EOL;
+        exec("mkdir -p ".AirtimeInstall::CONF_DIR_BINARIES);
+        exec("cp -R ".AirtimeInstall::GetUtilsSrcDir()." ".AirtimeInstall::CONF_DIR_BINARIES);
+    }
+
     public static function CreateSymlinksToUtils()
     {
         echo "* Installing airtime-log".PHP_EOL;
@@ -536,6 +543,8 @@ class AirtimeIni200{
 
 Airtime200Upgrade::connectToDatabase();
 AirtimeInstall::SetDefaultTimezone();
+
+AirtimeInstall::InstallBinaries();
 AirtimeInstall::CreateSymlinksToUtils();
 
 /* Airtime 2.0.0 starts interpreting all database times in UTC format. Prior to this, all the times
