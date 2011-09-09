@@ -41,13 +41,7 @@ class PypoPush(Thread):
         self.playlists = dict()
         self.stream_metadata = dict()
 
-        """
-        push_ahead2 MUST be < push_ahead. The difference in these two values
-        gives the number of seconds of the window of opportunity for the scheduler
-        to catch when a playlist is to be played.
-        """
         self.push_ahead = 10
-        self.push_ahead2 = self.push_ahead -5
 
         #toggle between "stop" and "play". Keeps track of the state of
         #liquidsoap
@@ -86,16 +80,13 @@ class PypoPush(Thread):
             tcoming = time.localtime(timenow + self.push_ahead)
             str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
 
-            tcoming2 = time.localtime(timenow + self.push_ahead2)
-            str_tcoming2_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming2[0], tcoming2[1], tcoming2[2], tcoming2[3], tcoming2[4], tcoming2[5])
-
             tnow = time.localtime(timenow)
             str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
             
             for pkey in schedule:
                 plstart = schedule[pkey]['start'][0:19]
          
-                if plstart == str_tcoming_s or (plstart < str_tcoming_s and plstart > str_tcoming2_s):
+                if str_tnow_s <= plstart and plstart < str_tcoming_s:
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = schedule[pkey]
 
