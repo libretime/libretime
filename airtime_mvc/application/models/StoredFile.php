@@ -438,9 +438,11 @@ class StoredFile {
      * Get the URL to access this file.
      */
     public function getFileUrl()
-    {
-        global $CC_CONFIG;
-        return "http://$CC_CONFIG[baseUrl]:$CC_CONFIG[basePort]/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
+    {       
+        $serverName = $_SERVER['SERVER_NAME'];
+        $serverPort = $_SERVER['SERVER_PORT'];
+        
+        return "http://$serverName:$serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
     /**

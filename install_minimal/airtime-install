@@ -62,7 +62,7 @@ python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
 set +e
 php ${SCRIPTPATH}/include/airtime-install.php $@
-$result=$?
+result=$?
 if [ "$result" -eq "2" ]; then
     #We've just finished an upgrade, so let's exit
     exit 0
