@@ -13,7 +13,8 @@ $PORT = 5672;
 $USER = 'guest';
 $PASS = 'guest';
 $VHOST = '/';
-$EXCHANGE = 'airtime-pypo';
+$EXCHANGE = 'airtime-schedule';
+
 $QUEUE = 'msgs';
 
 $conn = new AMQPConnection($HOST, $PORT, $USER, $PASS);
@@ -30,4 +31,5 @@ $ch->basic_publish($msg, $EXCHANGE);
 echo "Sent message '".$msg_body."'\n";
 $ch->close();
 $conn->close();
+
 ?>
