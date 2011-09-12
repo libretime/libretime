@@ -291,7 +291,10 @@ try:
     (option, args) = parser.parse_args()
 except Exception, e:
     printHelp()
-    print "Error: "+e.msg
+    if hasattr(e, 'msg'):
+        print "Error: "+e.msg
+    else:
+        print "Error: "+e
     sys.exit()
 except SystemExit:
     printHelp()
