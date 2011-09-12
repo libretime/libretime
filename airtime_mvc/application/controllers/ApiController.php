@@ -21,6 +21,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('remove-watched-dir', 'json')
                 ->addActionContext('set-storage-dir', 'json')
                 ->addActionContext('get-stream-setting', 'json')
+                ->addActionContext('status', 'json')
                 ->initContext();
     }
 
@@ -635,6 +636,33 @@ class ApiController extends Zend_Controller_Action
         }
 
         $this->view->msg = Application_Model_StreamSetting::getStreamSetting();
+    }
+    
+    public function statusAction() {
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        /*
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        */
+        
+        $status = array(
+            "airtime_version"=>Application_Model_Systemstatus::GetAirtimeVersion(),
+            "icecast"=>Application_Model_Systemstatus::GetIcecastStatus(),
+            "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
+            "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
+            "show-recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
+            "media-monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
+        );
+        
+        $this->view->status = $status;
+
     }
 }
 

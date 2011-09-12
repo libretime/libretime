@@ -79,17 +79,23 @@ class PypoFetch(Thread):
         command = m['event_type']
         logger.info("Handling command: " + command)
     
-        if(command == 'update_schedule'):
+        if command == 'update_schedule':
             self.schedule_data  = m['schedule']
             self.process_schedule(self.schedule_data, "scheduler", False)
-        elif (command == 'update_stream_setting'):
+        elif command == 'update_stream_setting':
             logger.info("Updating stream setting...")
             self.regenerateLiquidsoapConf(m['setting'])
-        elif (command == 'cancel_current_show'):
+        elif command == 'cancel_current_show':
             logger.info("Cancel current show command received...")
             self.stop_current_show()
+        elif command == 'get_status':
+            self.get_status()
         # ACK the message to take it off the queue
         message.ack()
+
+    def get_status(self):
+        logger = logging.getLogger('fetch')
+        logger.debug("get_status")        
         
     def stop_current_show(self):
         logger = logging.getLogger('fetch')
@@ -451,26 +457,24 @@ class PypoFetch(Thread):
                 # Wait for messages from RabbitMQ.  Timeout if we
                 # dont get any after POLL_INTERVAL.
                 self.connection.drain_events(timeout=POLL_INTERVAL)
-                # Hooray for globals!
-                schedule_data = SCHEDULE_PUSH_MSG
                 status = 1
             except socket.timeout, se:
                 # We didnt get a message for a while, so poll the server
                 # to get an updated schedule. 
-                status, schedule_data = self.api_client.get_schedule()
+                status, self.schedule_data = self.api_client.get_schedule()
             except Exception, e:
                 """
                 This Generic exception is thrown whenever the RabbitMQ
                 Service is stopped. In this case let's check every few
                 seconds to see if it has come back up
                 """
-                logger.info("Unknown exception")
+                logger.info("Exception, %s", e)
                 return
 
             #return based on the exception
             
             if status == 1:
-                self.process_schedule(schedule_data, "scheduler", False)                
+                self.process_schedule(self.schedule_data, "scheduler", False)                
             loops += 1        
 
     """

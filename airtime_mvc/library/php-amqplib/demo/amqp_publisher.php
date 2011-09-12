@@ -13,15 +13,16 @@ $PORT = 5672;
 $USER = 'guest';
 $PASS = 'guest';
 $VHOST = '/';
-$EXCHANGE = 'router';
+$EXCHANGE = 'airtime-pypo';
 $QUEUE = 'msgs';
 
 $conn = new AMQPConnection($HOST, $PORT, $USER, $PASS);
 $ch = $conn->channel();
 $ch->access_request($VHOST, false, false, true, true);
-$ch->exchange_declare($EXCHANGE, 'direct', false, false, false);
+$ch->exchange_declare($EXCHANGE, 'direct', false, true);
 
-$msg_body = implode(' ', array_slice($argv, 1));
+$msg_body = json_encode(array("event_type"=>"get_status", "id"=>time()));
+//$msg_body = '{"schedule":{"status":{"range":{"start":"2011-09-12 20:45:22","end":"2011-09-13 20:45:22"},"version":"1.1"},"playlists":[],"check":1,"stream_metadata":{"format":"","station_name":""}},"event_type":"update_schedule"}';
 $msg = new AMQPMessage($msg_body, array('content_type' => 'text/plain'));
 
 $ch->basic_publish($msg, $EXCHANGE);
