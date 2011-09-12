@@ -137,7 +137,12 @@ class PreferenceController extends Zend_Controller_Action
         $temp_types = Application_Model_Preference::GetStreamType();
         $stream_types = array();
         foreach ($temp_types as $type){
-            $stream_types[trim($type)] = strtoupper(trim($type));
+            if(trim($type) == "ogg"){
+                $temp = "OGG/VORBIS";
+            }else{
+                $temp = strtoupper(trim($type));
+            }
+            $stream_types[trim($type)] = $temp;
         }
         
         $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
