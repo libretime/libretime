@@ -1,10 +1,24 @@
+1.9.4 - Sept 13, 2011
+  *Improvements
+    -"airtime-import" command-line utility now offers better help when invalid parameters have
+     been passed.
+  *Fixes
+    -Fixed "Show Contents" displaying full-length of tracks, even if cue-points had been set.
+    -Fixed start date of show not updating after dragging and dropping.
+    -Fixed audio preview still playing after deleting a file in the Playlist Builder.
+    -Fixed uploads via the web-interface while using Internet Explorer failing when tracks contained "+" or
+     whitespace characters.
+    -Fixed issue where deleting a file from the Playlist Builder wouldn't always refresh the list to
+     remove the file.
+    -Fixed issue where upgrading from any previous Airtime would set "Toronto/America" as the default timezone
+    
 1.9.3 - August 26th, 2011
   *Improvements
     -It is now possible to upgrade your system while a show is playing.
      Playout will be temporarily interrupted for about 5-10 seconds and then 
      playout will resume.  Previously playout would not resume until the next
      scheduled show.
-  *fixes
+  *Fixes
     -Fixed bug where playout system did not work with mono files.
     -Fixed bug where sometimes audio files could be played out of order.
 
