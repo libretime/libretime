@@ -132,7 +132,7 @@ class Prefs {
     function loadGroupPref($group, $key, $returnErrorIfKeyNotExists = true)
     {
         // if sessid is would be used here fix Transport::cronCallMethod !
-        $subjid = Subjects::GetSubjId($group);
+        $subjid = Application_Model_Subjects::GetSubjId($group);
         if (PEAR::isError($subjid)) {
             return $subjid;
         }
@@ -179,7 +179,7 @@ class Prefs {
             return PEAR::raiseError(
                 "Prefs::saveGroupPref: invalid session id", GBERR_SESS);
         }
-        $gid = Subjects::GetSubjId($group);
+        $gid = Application_Model_Subjects::GetSubjId($group);
         if (PEAR::isError($gid)) {
             return $gid;
         }
@@ -187,7 +187,7 @@ class Prefs {
             return PEAR::raiseError(
                 "Prefs::saveGroupPref: invalid group name", GBERR_SESS);
         }
-        $memb = Subjects::IsMemberOf($uid, $gid);
+        $memb = Application_Model_Subjects::IsMemberOf($uid, $gid);
         if (PEAR::isError($memb)) {
             return $memb;
         }
@@ -229,7 +229,7 @@ class Prefs {
             return PEAR::raiseError(
                 "Prefs::delGroupPref: invalid session id", GBERR_SESS);
         }
-        $gid = Subjects::GetSubjId($group);
+        $gid = Application_Model_Subjects::GetSubjId($group);
         if (PEAR::isError($gid)) {
             return $gid;
         }
@@ -237,7 +237,7 @@ class Prefs {
             return PEAR::raiseError(
                 "Prefs::delGroupPref: invalid group name", GBERR_SESS);
         }
-        $memb = Subjects::IsMemberOf($uid, $gid);
+        $memb = Application_Model_Subjects::IsMemberOf($uid, $gid);
         if (PEAR::isError($memb)) {
             return $memb;
         }

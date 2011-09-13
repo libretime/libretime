@@ -2,76 +2,46 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'cc_subjs' table.
+ * Base static class for performing query and update operations on the 'cc_login_attempts' table.
  *
  * 
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcSubjsPeer {
+abstract class BaseCcLoginAttemptsPeer {
 
 	/** the default database name for this class */
 	const DATABASE_NAME = 'airtime';
 
 	/** the table name for this class */
-	const TABLE_NAME = 'cc_subjs';
+	const TABLE_NAME = 'cc_login_attempts';
 
 	/** the related Propel class for this table */
-	const OM_CLASS = 'CcSubjs';
+	const OM_CLASS = 'CcLoginAttempts';
 
 	/** A class that can be returned by this peer. */
-	const CLASS_DEFAULT = 'airtime.CcSubjs';
+	const CLASS_DEFAULT = 'airtime.CcLoginAttempts';
 
 	/** the related TableMap class for this table */
-	const TM_CLASS = 'CcSubjsTableMap';
+	const TM_CLASS = 'CcLoginAttemptsTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 12;
+	const NUM_COLUMNS = 2;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
-	/** the column name for the ID field */
-	const ID = 'cc_subjs.ID';
+	/** the column name for the IP field */
+	const IP = 'cc_login_attempts.IP';
 
-	/** the column name for the LOGIN field */
-	const LOGIN = 'cc_subjs.LOGIN';
-
-	/** the column name for the PASS field */
-	const PASS = 'cc_subjs.PASS';
-
-	/** the column name for the TYPE field */
-	const TYPE = 'cc_subjs.TYPE';
-
-	/** the column name for the FIRST_NAME field */
-	const FIRST_NAME = 'cc_subjs.FIRST_NAME';
-
-	/** the column name for the LAST_NAME field */
-	const LAST_NAME = 'cc_subjs.LAST_NAME';
-
-	/** the column name for the LASTLOGIN field */
-	const LASTLOGIN = 'cc_subjs.LASTLOGIN';
-
-	/** the column name for the LASTFAIL field */
-	const LASTFAIL = 'cc_subjs.LASTFAIL';
-
-	/** the column name for the SKYPE_CONTACT field */
-	const SKYPE_CONTACT = 'cc_subjs.SKYPE_CONTACT';
-
-	/** the column name for the JABBER_CONTACT field */
-	const JABBER_CONTACT = 'cc_subjs.JABBER_CONTACT';
-
-	/** the column name for the EMAIL field */
-	const EMAIL = 'cc_subjs.EMAIL';
-
-	/** the column name for the LOGIN_ATTEMPTS field */
-	const LOGIN_ATTEMPTS = 'cc_subjs.LOGIN_ATTEMPTS';
+	/** the column name for the ATTEMPTS field */
+	const ATTEMPTS = 'cc_login_attempts.ATTEMPTS';
 
 	/**
-	 * An identiy map to hold any loaded instances of CcSubjs objects.
+	 * An identiy map to hold any loaded instances of CcLoginAttempts objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
 	 * queries.
-	 * @var        array CcSubjs[]
+	 * @var        array CcLoginAttempts[]
 	 */
 	public static $instances = array();
 
@@ -83,12 +53,12 @@ abstract class BaseCcSubjsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbLogin', 'DbPass', 'DbType', 'DbFirstName', 'DbLastName', 'DbLastlogin', 'DbLastfail', 'DbSkypeContact', 'DbJabberContact', 'DbEmail', 'DbLoginAttempts', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbLogin', 'dbPass', 'dbType', 'dbFirstName', 'dbLastName', 'dbLastlogin', 'dbLastfail', 'dbSkypeContact', 'dbJabberContact', 'dbEmail', 'dbLoginAttempts', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::LOGIN, self::PASS, self::TYPE, self::FIRST_NAME, self::LAST_NAME, self::LASTLOGIN, self::LASTFAIL, self::SKYPE_CONTACT, self::JABBER_CONTACT, self::EMAIL, self::LOGIN_ATTEMPTS, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'FIRST_NAME', 'LAST_NAME', 'LASTLOGIN', 'LASTFAIL', 'SKYPE_CONTACT', 'JABBER_CONTACT', 'EMAIL', 'LOGIN_ATTEMPTS', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'first_name', 'last_name', 'lastlogin', 'lastfail', 'skype_contact', 'jabber_contact', 'email', 'login_attempts', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+		BasePeer::TYPE_PHPNAME => array ('DbIP', 'DbAttempts', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbIP', 'dbAttempts', ),
+		BasePeer::TYPE_COLNAME => array (self::IP, self::ATTEMPTS, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('IP', 'ATTEMPTS', ),
+		BasePeer::TYPE_FIELDNAME => array ('ip', 'attempts', ),
+		BasePeer::TYPE_NUM => array (0, 1, )
 	);
 
 	/**
@@ -98,12 +68,12 @@ abstract class BaseCcSubjsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbLogin' => 1, 'DbPass' => 2, 'DbType' => 3, 'DbFirstName' => 4, 'DbLastName' => 5, 'DbLastlogin' => 6, 'DbLastfail' => 7, 'DbSkypeContact' => 8, 'DbJabberContact' => 9, 'DbEmail' => 10, 'DbLoginAttempts' => 11, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbLogin' => 1, 'dbPass' => 2, 'dbType' => 3, 'dbFirstName' => 4, 'dbLastName' => 5, 'dbLastlogin' => 6, 'dbLastfail' => 7, 'dbSkypeContact' => 8, 'dbJabberContact' => 9, 'dbEmail' => 10, 'dbLoginAttempts' => 11, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::LOGIN => 1, self::PASS => 2, self::TYPE => 3, self::FIRST_NAME => 4, self::LAST_NAME => 5, self::LASTLOGIN => 6, self::LASTFAIL => 7, self::SKYPE_CONTACT => 8, self::JABBER_CONTACT => 9, self::EMAIL => 10, self::LOGIN_ATTEMPTS => 11, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'FIRST_NAME' => 4, 'LAST_NAME' => 5, 'LASTLOGIN' => 6, 'LASTFAIL' => 7, 'SKYPE_CONTACT' => 8, 'JABBER_CONTACT' => 9, 'EMAIL' => 10, 'LOGIN_ATTEMPTS' => 11, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'first_name' => 4, 'last_name' => 5, 'lastlogin' => 6, 'lastfail' => 7, 'skype_contact' => 8, 'jabber_contact' => 9, 'email' => 10, 'login_attempts' => 11, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+		BasePeer::TYPE_PHPNAME => array ('DbIP' => 0, 'DbAttempts' => 1, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbIP' => 0, 'dbAttempts' => 1, ),
+		BasePeer::TYPE_COLNAME => array (self::IP => 0, self::ATTEMPTS => 1, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('IP' => 0, 'ATTEMPTS' => 1, ),
+		BasePeer::TYPE_FIELDNAME => array ('ip' => 0, 'attempts' => 1, ),
+		BasePeer::TYPE_NUM => array (0, 1, )
 	);
 
 	/**
@@ -152,12 +122,12 @@ abstract class BaseCcSubjsPeer {
 	 *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
 	 * </code>
 	 * @param      string $alias The alias for the current table.
-	 * @param      string $column The column name for current table. (i.e. CcSubjsPeer::COLUMN_NAME).
+	 * @param      string $column The column name for current table. (i.e. CcLoginAttemptsPeer::COLUMN_NAME).
 	 * @return     string
 	 */
 	public static function alias($alias, $column)
 	{
-		return str_replace(CcSubjsPeer::TABLE_NAME.'.', $alias.'.', $column);
+		return str_replace(CcLoginAttemptsPeer::TABLE_NAME.'.', $alias.'.', $column);
 	}
 
 	/**
@@ -175,31 +145,11 @@ abstract class BaseCcSubjsPeer {
 	public static function addSelectColumns(Criteria $criteria, $alias = null)
 	{
 		if (null === $alias) {
-			$criteria->addSelectColumn(CcSubjsPeer::ID);
-			$criteria->addSelectColumn(CcSubjsPeer::LOGIN);
-			$criteria->addSelectColumn(CcSubjsPeer::PASS);
-			$criteria->addSelectColumn(CcSubjsPeer::TYPE);
-			$criteria->addSelectColumn(CcSubjsPeer::FIRST_NAME);
-			$criteria->addSelectColumn(CcSubjsPeer::LAST_NAME);
-			$criteria->addSelectColumn(CcSubjsPeer::LASTLOGIN);
-			$criteria->addSelectColumn(CcSubjsPeer::LASTFAIL);
-			$criteria->addSelectColumn(CcSubjsPeer::SKYPE_CONTACT);
-			$criteria->addSelectColumn(CcSubjsPeer::JABBER_CONTACT);
-			$criteria->addSelectColumn(CcSubjsPeer::EMAIL);
-			$criteria->addSelectColumn(CcSubjsPeer::LOGIN_ATTEMPTS);
+			$criteria->addSelectColumn(CcLoginAttemptsPeer::IP);
+			$criteria->addSelectColumn(CcLoginAttemptsPeer::ATTEMPTS);
 		} else {
-			$criteria->addSelectColumn($alias . '.ID');
-			$criteria->addSelectColumn($alias . '.LOGIN');
-			$criteria->addSelectColumn($alias . '.PASS');
-			$criteria->addSelectColumn($alias . '.TYPE');
-			$criteria->addSelectColumn($alias . '.FIRST_NAME');
-			$criteria->addSelectColumn($alias . '.LAST_NAME');
-			$criteria->addSelectColumn($alias . '.LASTLOGIN');
-			$criteria->addSelectColumn($alias . '.LASTFAIL');
-			$criteria->addSelectColumn($alias . '.SKYPE_CONTACT');
-			$criteria->addSelectColumn($alias . '.JABBER_CONTACT');
-			$criteria->addSelectColumn($alias . '.EMAIL');
-			$criteria->addSelectColumn($alias . '.LOGIN_ATTEMPTS');
+			$criteria->addSelectColumn($alias . '.IP');
+			$criteria->addSelectColumn($alias . '.ATTEMPTS');
 		}
 	}
 
@@ -219,21 +169,21 @@ abstract class BaseCcSubjsPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcSubjsPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcLoginAttemptsPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcSubjsPeer::addSelectColumns($criteria);
+			CcLoginAttemptsPeer::addSelectColumns($criteria);
 		}
 
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 		$criteria->setDbName(self::DATABASE_NAME); // Set the correct dbName
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcLoginAttemptsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 		// BasePeer returns a PDOStatement
 		$stmt = BasePeer::doCount($criteria, $con);
@@ -251,7 +201,7 @@ abstract class BaseCcSubjsPeer {
 	 *
 	 * @param      Criteria $criteria object used to create the SELECT statement.
 	 * @param      PropelPDO $con
-	 * @return     CcSubjs
+	 * @return     CcLoginAttempts
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -259,7 +209,7 @@ abstract class BaseCcSubjsPeer {
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
-		$objects = CcSubjsPeer::doSelect($critcopy, $con);
+		$objects = CcLoginAttemptsPeer::doSelect($critcopy, $con);
 		if ($objects) {
 			return $objects[0];
 		}
@@ -276,7 +226,7 @@ abstract class BaseCcSubjsPeer {
 	 */
 	public static function doSelect(Criteria $criteria, PropelPDO $con = null)
 	{
-		return CcSubjsPeer::populateObjects(CcSubjsPeer::doSelectStmt($criteria, $con));
+		return CcLoginAttemptsPeer::populateObjects(CcLoginAttemptsPeer::doSelectStmt($criteria, $con));
 	}
 	/**
 	 * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -294,12 +244,12 @@ abstract class BaseCcSubjsPeer {
 	public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcLoginAttemptsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		if (!$criteria->hasSelectClause()) {
 			$criteria = clone $criteria;
-			CcSubjsPeer::addSelectColumns($criteria);
+			CcLoginAttemptsPeer::addSelectColumns($criteria);
 		}
 
 		// Set the correct dbName
@@ -317,14 +267,14 @@ abstract class BaseCcSubjsPeer {
 	 * to the cache in order to ensure that the same objects are always returned by doSelect*()
 	 * and retrieveByPK*() calls.
 	 *
-	 * @param      CcSubjs $value A CcSubjs object.
+	 * @param      CcLoginAttempts $value A CcLoginAttempts object.
 	 * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
 	 */
-	public static function addInstanceToPool(CcSubjs $obj, $key = null)
+	public static function addInstanceToPool(CcLoginAttempts $obj, $key = null)
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
-				$key = (string) $obj->getDbId();
+				$key = (string) $obj->getDbIP();
 			} // if key === null
 			self::$instances[$key] = $obj;
 		}
@@ -338,18 +288,18 @@ abstract class BaseCcSubjsPeer {
 	 * methods in your stub classes -- you may need to explicitly remove objects
 	 * from the cache in order to prevent returning objects that no longer exist.
 	 *
-	 * @param      mixed $value A CcSubjs object or a primary key value.
+	 * @param      mixed $value A CcLoginAttempts object or a primary key value.
 	 */
 	public static function removeInstanceFromPool($value)
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
-			if (is_object($value) && $value instanceof CcSubjs) {
-				$key = (string) $value->getDbId();
+			if (is_object($value) && $value instanceof CcLoginAttempts) {
+				$key = (string) $value->getDbIP();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;
 			} else {
-				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcSubjs object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcLoginAttempts object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
 				throw $e;
 			}
 
@@ -364,7 +314,7 @@ abstract class BaseCcSubjsPeer {
 	 * a multi-column primary key, a serialize()d version of the primary key will be returned.
 	 *
 	 * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-	 * @return     CcSubjs Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+	 * @return     CcLoginAttempts Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
 	 * @see        getPrimaryKeyHash()
 	 */
 	public static function getInstanceFromPool($key)
@@ -388,23 +338,11 @@ abstract class BaseCcSubjsPeer {
 	}
 	
 	/**
-	 * Method to invalidate the instance pool of all tables related to cc_subjs
+	 * Method to invalidate the instance pool of all tables related to cc_login_attempts
 	 * by a foreign key with ON DELETE CASCADE
 	 */
 	public static function clearRelatedInstancePool()
 	{
-		// Invalidate objects in CcPermsPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcPermsPeer::clearInstancePool();
-		// Invalidate objects in CcShowHostsPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcShowHostsPeer::clearInstancePool();
-		// Invalidate objects in CcPrefPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcPrefPeer::clearInstancePool();
-		// Invalidate objects in CcSessPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcSessPeer::clearInstancePool();
 	}
 
 	/**
@@ -437,7 +375,7 @@ abstract class BaseCcSubjsPeer {
 	 */
 	public static function getPrimaryKeyFromRow($row, $startcol = 0)
 	{
-		return (int) $row[$startcol];
+		return (string) $row[$startcol];
 	}
 	
 	/**
@@ -452,11 +390,11 @@ abstract class BaseCcSubjsPeer {
 		$results = array();
 	
 		// set the class once to avoid overhead in the loop
-		$cls = CcSubjsPeer::getOMClass(false);
+		$cls = CcLoginAttemptsPeer::getOMClass(false);
 		// populate the object(s)
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key = CcSubjsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj = CcSubjsPeer::getInstanceFromPool($key))) {
+			$key = CcLoginAttemptsPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj = CcLoginAttemptsPeer::getInstanceFromPool($key))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj->hydrate($row, 0, true); // rehydrate
@@ -465,7 +403,7 @@ abstract class BaseCcSubjsPeer {
 				$obj = new $cls();
 				$obj->hydrate($row);
 				$results[] = $obj;
-				CcSubjsPeer::addInstanceToPool($obj, $key);
+				CcLoginAttemptsPeer::addInstanceToPool($obj, $key);
 			} // if key exists
 		}
 		$stmt->closeCursor();
@@ -478,21 +416,21 @@ abstract class BaseCcSubjsPeer {
 	 * @param      int $startcol The 0-based offset for reading from the resultset row.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
-	 * @return     array (CcSubjs object, last column rank)
+	 * @return     array (CcLoginAttempts object, last column rank)
 	 */
 	public static function populateObject($row, $startcol = 0)
 	{
-		$key = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol);
-		if (null !== ($obj = CcSubjsPeer::getInstanceFromPool($key))) {
+		$key = CcLoginAttemptsPeer::getPrimaryKeyHashFromRow($row, $startcol);
+		if (null !== ($obj = CcLoginAttemptsPeer::getInstanceFromPool($key))) {
 			// We no longer rehydrate the object, since this can cause data loss.
 			// See http://www.propelorm.org/ticket/509
 			// $obj->hydrate($row, $startcol, true); // rehydrate
-			$col = $startcol + CcSubjsPeer::NUM_COLUMNS;
+			$col = $startcol + CcLoginAttemptsPeer::NUM_COLUMNS;
 		} else {
-			$cls = CcSubjsPeer::OM_CLASS;
+			$cls = CcLoginAttemptsPeer::OM_CLASS;
 			$obj = new $cls();
 			$col = $obj->hydrate($row, $startcol);
-			CcSubjsPeer::addInstanceToPool($obj, $key);
+			CcLoginAttemptsPeer::addInstanceToPool($obj, $key);
 		}
 		return array($obj, $col);
 	}
@@ -513,10 +451,10 @@ abstract class BaseCcSubjsPeer {
 	 */
 	public static function buildTableMap()
 	{
-	  $dbMap = Propel::getDatabaseMap(BaseCcSubjsPeer::DATABASE_NAME);
-	  if (!$dbMap->hasTable(BaseCcSubjsPeer::TABLE_NAME))
+	  $dbMap = Propel::getDatabaseMap(BaseCcLoginAttemptsPeer::DATABASE_NAME);
+	  if (!$dbMap->hasTable(BaseCcLoginAttemptsPeer::TABLE_NAME))
 	  {
-	    $dbMap->addTableObject(new CcSubjsTableMap());
+	    $dbMap->addTableObject(new CcLoginAttemptsTableMap());
 	  }
 	}
 
@@ -533,13 +471,13 @@ abstract class BaseCcSubjsPeer {
 	 */
 	public static function getOMClass($withPrefix = true)
 	{
-		return $withPrefix ? CcSubjsPeer::CLASS_DEFAULT : CcSubjsPeer::OM_CLASS;
+		return $withPrefix ? CcLoginAttemptsPeer::CLASS_DEFAULT : CcLoginAttemptsPeer::OM_CLASS;
 	}
 
 	/**
-	 * Method perform an INSERT on the database, given a CcSubjs or Criteria object.
+	 * Method perform an INSERT on the database, given a CcLoginAttempts or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcSubjs object containing data that is used to create the INSERT statement.
+	 * @param      mixed $values Criteria or CcLoginAttempts object containing data that is used to create the INSERT statement.
 	 * @param      PropelPDO $con the PropelPDO connection to use
 	 * @return     mixed The new primary key.
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -548,17 +486,13 @@ abstract class BaseCcSubjsPeer {
 	public static function doInsert($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcLoginAttemptsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 		} else {
-			$criteria = $values->buildCriteria(); // build Criteria from CcSubjs object
-		}
-
-		if ($criteria->containsKey(CcSubjsPeer::ID) && $criteria->keyContainsValue(CcSubjsPeer::ID) ) {
-			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcSubjsPeer::ID.')');
+			$criteria = $values->buildCriteria(); // build Criteria from CcLoginAttempts object
 		}
 
 
@@ -580,9 +514,9 @@ abstract class BaseCcSubjsPeer {
 	}
 
 	/**
-	 * Method perform an UPDATE on the database, given a CcSubjs or Criteria object.
+	 * Method perform an UPDATE on the database, given a CcLoginAttempts or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcSubjs object containing data that is used to create the UPDATE statement.
+	 * @param      mixed $values Criteria or CcLoginAttempts object containing data that is used to create the UPDATE statement.
 	 * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -591,7 +525,7 @@ abstract class BaseCcSubjsPeer {
 	public static function doUpdate($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcLoginAttemptsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$selectCriteria = new Criteria(self::DATABASE_NAME);
@@ -599,15 +533,15 @@ abstract class BaseCcSubjsPeer {
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 
-			$comparison = $criteria->getComparison(CcSubjsPeer::ID);
-			$value = $criteria->remove(CcSubjsPeer::ID);
+			$comparison = $criteria->getComparison(CcLoginAttemptsPeer::IP);
+			$value = $criteria->remove(CcLoginAttemptsPeer::IP);
 			if ($value) {
-				$selectCriteria->add(CcSubjsPeer::ID, $value, $comparison);
+				$selectCriteria->add(CcLoginAttemptsPeer::IP, $value, $comparison);
 			} else {
-				$selectCriteria->setPrimaryTableName(CcSubjsPeer::TABLE_NAME);
+				$selectCriteria->setPrimaryTableName(CcLoginAttemptsPeer::TABLE_NAME);
 			}
 
-		} else { // $values is CcSubjs object
+		} else { // $values is CcLoginAttempts object
 			$criteria = $values->buildCriteria(); // gets full criteria
 			$selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
 		}
@@ -619,26 +553,26 @@ abstract class BaseCcSubjsPeer {
 	}
 
 	/**
-	 * Method to DELETE all rows from the cc_subjs table.
+	 * Method to DELETE all rows from the cc_login_attempts table.
 	 *
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	public static function doDeleteAll($con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcLoginAttemptsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		$affectedRows = 0; // initialize var to track total num of affected rows
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			$affectedRows += BasePeer::doDeleteAll(CcSubjsPeer::TABLE_NAME, $con, CcSubjsPeer::DATABASE_NAME);
+			$affectedRows += BasePeer::doDeleteAll(CcLoginAttemptsPeer::TABLE_NAME, $con, CcLoginAttemptsPeer::DATABASE_NAME);
 			// Because this db requires some delete cascade/set null emulation, we have to
 			// clear the cached instance *after* the emulation has happened (since
 			// instances get re-added by the select statement contained therein).
-			CcSubjsPeer::clearInstancePool();
-			CcSubjsPeer::clearRelatedInstancePool();
+			CcLoginAttemptsPeer::clearInstancePool();
+			CcLoginAttemptsPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -648,9 +582,9 @@ abstract class BaseCcSubjsPeer {
 	}
 
 	/**
-	 * Method perform a DELETE on the database, given a CcSubjs or Criteria object OR a primary key value.
+	 * Method perform a DELETE on the database, given a CcLoginAttempts or Criteria object OR a primary key value.
 	 *
-	 * @param      mixed $values Criteria or CcSubjs object or primary key or array of primary keys
+	 * @param      mixed $values Criteria or CcLoginAttempts object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
 	 * @param      PropelPDO $con the connection to use
 	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -661,27 +595,27 @@ abstract class BaseCcSubjsPeer {
 	 public static function doDelete($values, PropelPDO $con = null)
 	 {
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcLoginAttemptsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			// invalidate the cache for all objects of this type, since we have no
 			// way of knowing (without running a query) what objects should be invalidated
 			// from the cache based on this Criteria.
-			CcSubjsPeer::clearInstancePool();
+			CcLoginAttemptsPeer::clearInstancePool();
 			// rename for clarity
 			$criteria = clone $values;
-		} elseif ($values instanceof CcSubjs) { // it's a model object
+		} elseif ($values instanceof CcLoginAttempts) { // it's a model object
 			// invalidate the cache for this single object
-			CcSubjsPeer::removeInstanceFromPool($values);
+			CcLoginAttemptsPeer::removeInstanceFromPool($values);
 			// create criteria based on pk values
 			$criteria = $values->buildPkeyCriteria();
 		} else { // it's a primary key, or an array of pks
 			$criteria = new Criteria(self::DATABASE_NAME);
-			$criteria->add(CcSubjsPeer::ID, (array) $values, Criteria::IN);
+			$criteria->add(CcLoginAttemptsPeer::IP, (array) $values, Criteria::IN);
 			// invalidate the cache for this object(s)
 			foreach ((array) $values as $singleval) {
-				CcSubjsPeer::removeInstanceFromPool($singleval);
+				CcLoginAttemptsPeer::removeInstanceFromPool($singleval);
 			}
 		}
 
@@ -696,7 +630,7 @@ abstract class BaseCcSubjsPeer {
 			$con->beginTransaction();
 			
 			$affectedRows += BasePeer::doDelete($criteria, $con);
-			CcSubjsPeer::clearRelatedInstancePool();
+			CcLoginAttemptsPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -706,24 +640,24 @@ abstract class BaseCcSubjsPeer {
 	}
 
 	/**
-	 * Validates all modified columns of given CcSubjs object.
+	 * Validates all modified columns of given CcLoginAttempts object.
 	 * If parameter $columns is either a single column name or an array of column names
 	 * than only those columns are validated.
 	 *
 	 * NOTICE: This does not apply to primary or foreign keys for now.
 	 *
-	 * @param      CcSubjs $obj The object to validate.
+	 * @param      CcLoginAttempts $obj The object to validate.
 	 * @param      mixed $cols Column name or array of column names.
 	 *
 	 * @return     mixed TRUE if all columns are valid or the error message of the first invalid column.
 	 */
-	public static function doValidate(CcSubjs $obj, $cols = null)
+	public static function doValidate(CcLoginAttempts $obj, $cols = null)
 	{
 		$columns = array();
 
 		if ($cols) {
-			$dbMap = Propel::getDatabaseMap(CcSubjsPeer::DATABASE_NAME);
-			$tableMap = $dbMap->getTable(CcSubjsPeer::TABLE_NAME);
+			$dbMap = Propel::getDatabaseMap(CcLoginAttemptsPeer::DATABASE_NAME);
+			$tableMap = $dbMap->getTable(CcLoginAttemptsPeer::TABLE_NAME);
 
 			if (! is_array($cols)) {
 				$cols = array($cols);
@@ -739,31 +673,31 @@ abstract class BaseCcSubjsPeer {
 
 		}
 
-		return BasePeer::doValidate(CcSubjsPeer::DATABASE_NAME, CcSubjsPeer::TABLE_NAME, $columns);
+		return BasePeer::doValidate(CcLoginAttemptsPeer::DATABASE_NAME, CcLoginAttemptsPeer::TABLE_NAME, $columns);
 	}
 
 	/**
 	 * Retrieve a single object by pkey.
 	 *
-	 * @param      int $pk the primary key.
+	 * @param      string $pk the primary key.
 	 * @param      PropelPDO $con the connection to use
-	 * @return     CcSubjs
+	 * @return     CcLoginAttempts
 	 */
 	public static function retrieveByPK($pk, PropelPDO $con = null)
 	{
 
-		if (null !== ($obj = CcSubjsPeer::getInstanceFromPool((string) $pk))) {
+		if (null !== ($obj = CcLoginAttemptsPeer::getInstanceFromPool((string) $pk))) {
 			return $obj;
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcLoginAttemptsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria = new Criteria(CcSubjsPeer::DATABASE_NAME);
-		$criteria->add(CcSubjsPeer::ID, $pk);
+		$criteria = new Criteria(CcLoginAttemptsPeer::DATABASE_NAME);
+		$criteria->add(CcLoginAttemptsPeer::IP, $pk);
 
-		$v = CcSubjsPeer::doSelect($criteria, $con);
+		$v = CcLoginAttemptsPeer::doSelect($criteria, $con);
 
 		return !empty($v) > 0 ? $v[0] : null;
 	}
@@ -779,23 +713,23 @@ abstract class BaseCcSubjsPeer {
 	public static function retrieveByPKs($pks, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcLoginAttemptsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		$objs = null;
 		if (empty($pks)) {
 			$objs = array();
 		} else {
-			$criteria = new Criteria(CcSubjsPeer::DATABASE_NAME);
-			$criteria->add(CcSubjsPeer::ID, $pks, Criteria::IN);
-			$objs = CcSubjsPeer::doSelect($criteria, $con);
+			$criteria = new Criteria(CcLoginAttemptsPeer::DATABASE_NAME);
+			$criteria->add(CcLoginAttemptsPeer::IP, $pks, Criteria::IN);
+			$objs = CcLoginAttemptsPeer::doSelect($criteria, $con);
 		}
 		return $objs;
 	}
 
-} // BaseCcSubjsPeer
+} // BaseCcLoginAttemptsPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseCcSubjsPeer::buildTableMap();
+BaseCcLoginAttemptsPeer::buildTableMap();
 

@@ -127,4 +127,11 @@ return array (
   'BaseCcStreamSettingPeer' => 'airtime/om/BaseCcStreamSettingPeer.php',
   'BaseCcStreamSetting' => 'airtime/om/BaseCcStreamSetting.php',
   'BaseCcStreamSettingQuery' => 'airtime/om/BaseCcStreamSettingQuery.php',
+  'CcLoginAttemptsTableMap' => 'airtime/map/CcLoginAttemptsTableMap.php',
+  'CcLoginAttemptsPeer' => 'airtime/CcLoginAttemptsPeer.php',
+  'CcLoginAttempts' => 'airtime/CcLoginAttempts.php',
+  'CcLoginAttemptsQuery' => 'airtime/CcLoginAttemptsQuery.php',
+  'BaseCcLoginAttemptsPeer' => 'airtime/om/BaseCcLoginAttemptsPeer.php',
+  'BaseCcLoginAttempts' => 'airtime/om/BaseCcLoginAttempts.php',
+  'BaseCcLoginAttemptsQuery' => 'airtime/om/BaseCcLoginAttemptsQuery.php',
 );

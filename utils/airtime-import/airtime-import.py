@@ -6,6 +6,7 @@ from optparse import OptionParser, OptionValueError
 from api_clients import api_client as apc
 import json
 import shutil
+import commands
 
 # create logger
 logger = logging.getLogger()
@@ -17,7 +18,10 @@ logging.disable(50)
 # add ch to logger
 logger.addHandler(ch)
 
-
+if (commands.getoutput("whoami") != 'root'):
+    print 'Must be a root user.'
+    sys.exit()
+    
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/media-monitor.cfg')
@@ -31,34 +35,37 @@ api_client = apc.api_client_factory(config)
 # copy or move files
 # flag should be 'copy' or 'move'
 def copy_or_move_files_to(paths, dest, flag):
-    for path in paths:
-        if (path[0] == "/" or path[0] == "~"):
-            path = os.path.realpath(path)
-        else:
-            path = currentDir+path
-        path = apc.encode_to(path, 'utf-8')
-        dest = apc.encode_to(dest, 'utf-8')
-        if(os.path.exists(path)):
-            if(os.path.isdir(path)):
-                path = format_dir_string(path)
-                #construct full path
-                sub_path = []
-                for temp in os.listdir(path):
-                    sub_path.append(path+temp)
-                copy_or_move_files_to(sub_path, dest, flag)
-            elif(os.path.isfile(path)):
-                #copy file to dest
-                ext = os.path.splitext(path)[1]
-                if( 'mp3' in ext or 'ogg' in ext ):
-                    destfile = dest+os.path.basename(path)
-                    if(flag == 'copy'):
-                        print "Copying %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
-                        shutil.copyfile(path, destfile)
-                    elif(flag == 'move'):
-                        print "Moving %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
-                        shutil.move(path, destfile)
-        else:
-            print "Cannot find file or path: %s" % path
+    try:
+        for path in paths:
+            if (path[0] == "/" or path[0] == "~"):
+                path = os.path.realpath(path)
+            else:
+                path = currentDir+path
+            path = apc.encode_to(path, 'utf-8')
+            dest = apc.encode_to(dest, 'utf-8')
+            if(os.path.exists(path)):
+                if(os.path.isdir(path)):
+                    path = format_dir_string(path)
+                    #construct full path
+                    sub_path = []
+                    for temp in os.listdir(path):
+                        sub_path.append(path+temp)
+                    copy_or_move_files_to(sub_path, dest, flag)
+                elif(os.path.isfile(path)):
+                    #copy file to dest
+                    ext = os.path.splitext(path)[1]
+                    if( 'mp3' in ext or 'ogg' in ext ):
+                        destfile = dest+os.path.basename(path)
+                        if(flag == 'copy'):
+                            print "Copying %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
+                            shutil.copyfile(path, destfile)
+                        elif(flag == 'move'):
+                            print "Moving %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
+                            shutil.move(path, destfile)
+            else:
+                print "Cannot find file or path: %s" % path
+    except Exception as e:
+            print "Error: ", e
             
 def format_dir_string(path):
     if(path[-1] != '/'):
@@ -294,7 +301,7 @@ except Exception, e:
     if hasattr(e, 'msg'):
         print "Error: "+e.msg
     else:
-        print "Error: "+e
+        print "Error: ",e
     sys.exit()
 except SystemExit:
     printHelp()

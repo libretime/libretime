@@ -434,6 +434,7 @@ CREATE TABLE "cc_subjs"
 	"skype_contact" VARCHAR(255),
 	"jabber_contact" VARCHAR(255),
 	"email" VARCHAR(255),
+	"login_attempts" INTEGER default 0,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_subjs_id_idx" UNIQUE ("id"),
 	CONSTRAINT "cc_subjs_login_idx" UNIQUE ("login")
@@ -477,6 +478,24 @@ CREATE TABLE "cc_stream_setting"
 );
 
 COMMENT ON TABLE "cc_stream_setting" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_login_attempts
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_login_attempts" CASCADE;
+
+
+CREATE TABLE "cc_login_attempts"
+(
+	"ip" VARCHAR(32)  NOT NULL,
+	"attempts" INTEGER default 0,
+	PRIMARY KEY ("ip")
+);
+
+COMMENT ON TABLE "cc_login_attempts" IS '';
 
 
 SET search_path TO public;
