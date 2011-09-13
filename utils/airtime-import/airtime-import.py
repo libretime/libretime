@@ -6,6 +6,7 @@ from optparse import OptionParser, OptionValueError
 from api_clients import api_client as apc
 import json
 import shutil
+import commands
 
 # create logger
 logger = logging.getLogger()
@@ -17,7 +18,10 @@ logging.disable(50)
 # add ch to logger
 logger.addHandler(ch)
 
-
+if (commands.getoutput("whoami") != 'root'):
+    print 'Must be a root user.'
+    sys.exit()
+    
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/media-monitor.cfg')
