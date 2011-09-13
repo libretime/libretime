@@ -1,9 +1,10 @@
 <?php foreach($this->status as $key=>$value): ?>
-    <?php list($desc, $status, $downloadLog) = $value;?>
     <div>
-        <?php echo $desc; ?>
-        <?php echo $status; ?>
-        <?php if ($downloadLog): ?>
+        <?php echo $key; ?>
+        <?php echo "PID: ".$value["process_id"]; ?>
+        <?php echo "UPTIME: ".$value["uptime_seconds"]; ?>
+        
+        <?php if (true): ?>
             <a href="systemstatus/get-log-file/id/<?php echo $key ?>">Log file</a>
         <?php endif; ?>
     </div>

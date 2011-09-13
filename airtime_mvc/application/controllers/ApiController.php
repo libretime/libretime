@@ -653,8 +653,8 @@ class ApiController extends Zend_Controller_Action
         */
         
         $status = array(
-            "airtime_version"=>Application_Model_Systemstatus::GetAirtimeVersion(),
-            "icecast"=>Application_Model_Systemstatus::GetIcecastStatus(),
+            //"airtime_version"=>Application_Model_Systemstatus::GetAirtimeVersion(),
+            "icecast2"=>Application_Model_Systemstatus::GetIcecastStatus(),
             "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
             "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
             "show-recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
