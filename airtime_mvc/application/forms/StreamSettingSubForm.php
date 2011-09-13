@@ -93,6 +93,8 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $port = new Zend_Form_Element_Text('port');
         $port->setLabel("Port")
                 ->setValue(isset($setting[$prefix.'_port'])?$setting[$prefix.'_port']:"")
+                ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
+                ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
             $port->setAttrib("disabled", "disabled");
