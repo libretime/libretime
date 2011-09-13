@@ -50,6 +50,16 @@ function hideForShoutcast(ele){
     restrictOggBitrate(ele, false)
 }
 
+function validate(ele,evt) {
+    var theEvent = evt || window.event;
+    var key = theEvent.keyCode || theEvent.which;
+    if ((ele.val().length >= 5 || (key < 48 || key > 57)) && !(key == 8 || key == 9 || key == 13 || key == 37 || key == 39 || key == 46)) {
+      theEvent.returnValue = false;
+      if(theEvent.preventDefault) theEvent.preventDefault();
+    }
+  }
+
+
 function showForIcecast(ele){
     var div = ele.closest("div")
     div.find("#outputMountpoint-label").show()
@@ -67,6 +77,10 @@ $(document).ready(function() {
     
     $("input:[id$=-host], input:[id$=-port], input:[id$=-mount]").keyup(function(){
         rebuildStreamURL($(this))
+    })
+    
+    $("input:[id$=-port]").keypress(function(e){
+        validate($(this),e)
     })
     
     $("select:[id$=-output]").change(function(){
