@@ -4,6 +4,9 @@ class Application_Model_Systemstatus
 {
 
     public static function GetPypoStatus(){
+
+        RabbitMq::SendMessageToPypo("get_status", array());
+        
         return array(
             "process_id"=>500,
             "uptime_seconds"=>3600

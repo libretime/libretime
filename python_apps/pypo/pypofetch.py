@@ -20,6 +20,7 @@ import filecmp
 # For RabbitMQ
 from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
+from kombu.exceptions import MessageStateError
 
 from api_clients import api_client
 
@@ -72,26 +73,33 @@ class PypoFetch(Thread):
     Hopefully there is a better way to do this.
     """
     def handle_message(self, body, message):
-        logger = logging.getLogger('fetch')
-        logger.info("Received event from RabbitMQ: " + message.body)
+        try:
+            logger = logging.getLogger('fetch')
+            logger.info("Received event from RabbitMQ: " + message.body)
+            
+            m =  json.loads(message.body)
+            command = m['event_type']
+            logger.info("Handling command: " + command)
         
-        m =  json.loads(message.body)
-        command = m['event_type']
-        logger.info("Handling command: " + command)
-    
-        if command == 'update_schedule':
-            self.schedule_data  = m['schedule']
-            self.process_schedule(self.schedule_data, "scheduler", False)
-        elif command == 'update_stream_setting':
-            logger.info("Updating stream setting...")
-            self.regenerateLiquidsoapConf(m['setting'])
-        elif command == 'cancel_current_show':
-            logger.info("Cancel current show command received...")
-            self.stop_current_show()
-        elif command == 'get_status':
-            self.get_status()
-        # ACK the message to take it off the queue
-        message.ack()
+            if command == 'update_schedule':
+                self.schedule_data  = m['schedule']
+                self.process_schedule(self.schedule_data, "scheduler", False)
+            elif command == 'update_stream_setting':
+                logger.info("Updating stream setting...")
+                self.regenerateLiquidsoapConf(m['setting'])
+            elif command == 'cancel_current_show':
+                logger.info("Cancel current show command received...")
+                self.stop_current_show()
+            elif command == 'get_status':
+                self.get_status()
+        except Exception, e:
+            logger.error("Exception in handling RabbitMQ message: %s", e)
+        finally:
+            # ACK the message to take it off the queue
+            try:
+                message.ack()
+            except MessageStateError, m:
+                logger.error("Message ACK error: %s", m);
 
     def get_status(self):
         logger = logging.getLogger('fetch')
