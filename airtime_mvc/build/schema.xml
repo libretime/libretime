@@ -304,6 +304,7 @@
     <column name="skype_contact" phpName="DbSkypeContact" type="VARCHAR" required="false"/>
     <column name="jabber_contact" phpName="DbJabberContact" type="VARCHAR" required="false"/>
     <column name="email" phpName="DbEmail" type="VARCHAR" required="false"/>
+    <column name="login_attempts" phpName="DbLoginAttempts" type="INTEGER" required="false" defaultValue="0"/>
     <unique name="cc_subjs_id_idx">
       <unique-column name="id"/>
     </unique>
@@ -319,5 +320,9 @@
     <column name="keyname" phpName="DbKeyName" primaryKey="true" type="VARCHAR" size="64" required="true"/>
     <column name="value" phpName="DbValue" type="VARCHAR" size="255" required="false"/>
     <column name="type" phpName="DbType" type="VARCHAR" size="16" required="true"/>
+  </table>
+  <table name="cc_login_attempts" phpName="CcLoginAttempts">
+    <column name="ip" phpName="DbIP" primaryKey="true" type="VARCHAR" size="32" required="true"/>
+    <column name="attempts" phpName="DbAttempts" type="INTEGER" required="false" defaultValue="0"/>
   </table>
 </database>
