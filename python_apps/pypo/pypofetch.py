@@ -90,8 +90,6 @@ class PypoFetch(Thread):
             elif command == 'cancel_current_show':
                 logger.info("Cancel current show command received...")
                 self.stop_current_show()
-            elif command == 'get_status':
-                self.get_status()
         except Exception, e:
             logger.error("Exception in handling RabbitMQ message: %s", e)
         finally:
@@ -99,11 +97,7 @@ class PypoFetch(Thread):
             try:
                 message.ack()
             except MessageStateError, m:
-                logger.error("Message ACK error: %s", m);
-
-    def get_status(self):
-        logger = logging.getLogger('fetch')
-        logger.debug("get_status")        
+                logger.error("Message ACK error: %s", m)
         
     def stop_current_show(self):
         logger = logging.getLogger('fetch')
