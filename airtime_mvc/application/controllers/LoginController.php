@@ -10,20 +10,23 @@ class LoginController extends Zend_Controller_Action
 
     public function indexAction()
     {
-		if(Zend_Auth::getInstance()->hasIdentity())
-		{
-			$this->_redirect('Nowplaying');
-		}
+        if(Zend_Auth::getInstance()->hasIdentity())
+        {
+        	$this->_redirect('Nowplaying');
+        }
         
-		//uses separate layout without a navigation.
-		$this->_helper->layout->setLayout('login');
-
-		$request = $this->getRequest();
-		
+        //uses separate layout without a navigation.
+        $this->_helper->layout->setLayout('login');
+        
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+        
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/login.js','text/javascript');
+        
         $form = new Application_Form_Login();
+        
+        $message = "Please enter your user name and password";
 
-		$message = "Please enter your user name and password";
-		
         if($request->isPost())
         {
             // if the post contains recaptcha field, which means form had recaptcha field.
