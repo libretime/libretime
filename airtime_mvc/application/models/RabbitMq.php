@@ -34,8 +34,6 @@ class RabbitMq
         $channel->basic_publish($msg, $EXCHANGE);
         $channel->close();
         $conn->close();
-        
-        self::SendMessageToShowRecorder("update_schedule");
     }
 
     public static function SendMessageToMediaMonitor($event_type, $md)

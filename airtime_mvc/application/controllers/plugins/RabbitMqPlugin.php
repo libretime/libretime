@@ -7,6 +7,7 @@ class RabbitMqPlugin extends Zend_Controller_Plugin_Abstract
         if (RabbitMq::$doPush) {
             $md = array('schedule' => Schedule::GetScheduledPlaylists());
             RabbitMq::SendMessageToPypo("update_schedule", $md);
+            RabbitMq::SendMessageToShowRecorder("update_schedule");
         }
     }
 }

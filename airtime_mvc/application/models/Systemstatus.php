@@ -3,6 +3,50 @@
 class Application_Model_Systemstatus
 {
 
+    public static function GetPypoStatus(){
+
+        RabbitMq::SendMessageToPypo("get_status", array());
+        
+        return array(
+            "process_id"=>500,
+            "uptime_seconds"=>3600
+        );
+    }
+    
+    public static function GetLiquidsoapStatus(){
+        return array(
+            "process_id"=>500,
+            "uptime_seconds"=>3600
+        );
+    }
+    
+    public static function GetShowRecorderStatus(){
+        return array(
+            "process_id"=>500,
+            "uptime_seconds"=>3600
+        );
+    }
+    
+    public static function GetMediaMonitorStatus(){
+        return array(
+            "process_id"=>500,
+            "uptime_seconds"=>3600
+        );
+    }
+    
+    public static function GetIcecastStatus(){
+        return array(
+            "process_id"=>500,
+            "uptime_seconds"=>3600
+        );
+    }
+    
+    public static function GetAirtimeVersion(){
+        return AIRTIME_VERSION;
+    }
+
+
+
     private function getCheckSystemResults(){
         //exec("airtime-check-system", $output);
 
