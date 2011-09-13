@@ -7,8 +7,7 @@ exec > >(tee install_log.txt)
 exec 2>&1
 
 if [ "$(id -u)" != "0" ]; then
-	echo "You need admin previlege to run this script"
-	echo "Syntaxe: sudo $0"
+	echo "You need root privileges to run this script"
 	exit 1
 fi
 
@@ -24,10 +23,10 @@ echo " 1. Install Packages"
 echo "----------------------------------------------------"
 
 # Updated package list
-sudo apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
+apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
 php-pear php5-gd postgresql odbc-postgresql python2.6 lame libsoundtouch-ocaml \
 libvorbis-ocaml-dev libmp3lame-dev libtaglib-ocaml libao-ocaml libmad-ocaml \
-libesd0 icecast2 sudo libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
+libesd0 icecast2 libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
 ecasound php5-curl mpg123 rabbitmq-server monit python-virtualenv
 
 if [ "$?" -ne "0" ]; then
@@ -38,19 +37,19 @@ if [ "$?" -ne "0" ]; then
 fi
 
 # Install phing
-sudo pear channel-discover pear.phing.info
-sudo pear install phing/phing-2.4.2
+pear channel-discover pear.phing.info
+pear install phing/phing-2.4.2
 
 # Apache Config File
 echo "----------------------------------------------------"
 echo "2. Apache Config File"
 echo "----------------------------------------------------"
 if [ ! -f /etc/apache2/sites-available/airtime ]; then
-	sudo cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime 
-	sudo rm -rf /etc/apache2/sites-enabled/000-default
-	sudo ln -s /etc/apache2/sites-available/airtime /etc/apache2/sites-enabled/airtime
-	sudo a2enmod rewrite php5
-	sudo service apache2 restart
+	cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime 
+	rm -rf /etc/apache2/sites-enabled/000-default
+	ln -s /etc/apache2/sites-available/airtime /etc/apache2/sites-enabled/airtime
+	a2enmod rewrite php5
+	service apache2 restart
 else
 	echo "Apache config for Airtime already exists..."
 fi
@@ -60,8 +59,8 @@ echo "----------------------------------------------------"
 echo "3. Enable Icecast"
 echo "----------------------------------------------------"
 cd /etc/default/
-sudo sed -i 's/ENABLE=false/ENABLE=true/g' icecast2
-sudo service icecast2 start
+sed -i 's/ENABLE=false/ENABLE=true/g' icecast2
+service icecast2 start
 echo ""
 
 # Enable Monit
@@ -69,22 +68,22 @@ echo "----------------------------------------------------"
 echo "4. Enable Monit"
 echo "----------------------------------------------------"
 cd /etc/default/
-sudo sed -i 's/startup=0/startup=1/g' monit
-sudo cp $SCRIPTPATH/../../python_apps/monit/airtime-monit.cfg /etc/monit/conf.d
+sed -i 's/startup=0/startup=1/g' monit
+cp $SCRIPTPATH/../../python_apps/monit/airtime-monit.cfg /etc/monit/conf.d
 
 grep -q "include /etc/monit/conf.d" /etc/monit/monitrc
 RETVAL=$?
 if [ $RETVAL -ne 0 ] ; then
-    sudo echo "include /etc/monit/conf.d/*" >> /etc/monit/monitrc 
+    echo "include /etc/monit/conf.d/*" >> /etc/monit/monitrc 
 fi
 
-sudo service monit start
+service monit start
 
 # Run Airtime Install
 echo "----------------------------------------------------"
 echo "5. Run Airtime Install"
 echo "----------------------------------------------------"
 cd $SCRIPTPATH/../../install_minimal
-sudo ./airtime-install
+./airtime-install
 
 
