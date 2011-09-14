@@ -486,7 +486,7 @@ class AirtimeIni200{
                              AirtimeIni200::CONF_FILE_API_CLIENT);
 
         // Backup the config files
-        $suffix = date("Ymdhis")."-1.9.3";
+        $suffix = date("Ymdhis")."-2.0.0";
         foreach ($configFiles as $conf) {
             // do not back up monit cfg
             if (file_exists($conf) && $conf != AirtimeIni200::CONF_FILE_MONIT) {
