@@ -14,7 +14,7 @@ $PORT = 5672;
 $USER = 'guest';
 $PASS = 'guest';
 $VHOST = '/';
-$EXCHANGE = 'router';
+$EXCHANGE = 'airtime-schedule';
 $QUEUE = 'msgs';
 $CONSUMER_TAG = 'consumer';
 
@@ -23,7 +23,7 @@ $ch = $conn->channel();
 $ch->access_request($VHOST, false, false, true, true);
 
 $ch->queue_declare($QUEUE);
-$ch->exchange_declare($EXCHANGE, 'direct', false, false, false);
+$ch->exchange_declare($EXCHANGE, 'direct', false, true);
 $ch->queue_bind($QUEUE, $EXCHANGE);
 
 function process_message($msg) {

@@ -353,6 +353,7 @@ class AirtimeInstall
         exec("rm -f /usr/bin/airtime-update-db-settings");
         exec("rm -f /usr/bin/airtime-check-system");
         exec("rm -f /usr/bin/airtime-user");
+        exec("rm -f /usr/bin/airtime-clean-storage ");
     }
 
     public static function InstallPhpCode()

@@ -1,4 +1,5 @@
 <?php
+    require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
     class Airtime192Upgrade{
 
         public static function InstallAirtimePhpServerCode($phpDir)
@@ -121,7 +122,7 @@
                                  AirtimeIni192::CONF_FILE_LIQUIDSOAP);
     
             // Backup the config files
-            $suffix = date("Ymdhis")."-1.9.0";
+            $suffix = date("Ymdhis")."-1.9.2";
             foreach ($configFiles as $conf) {
                 if (file_exists($conf)) {
                     echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
@@ -181,4 +182,5 @@
     $values = parse_ini_file(AirtimeIni192::CONF_FILE_AIRTIME, true);
     $phpDir = $values['general']['airtime_dir'];
     Airtime192Upgrade::InstallAirtimePhpServerCode($phpDir);
+    AirtimeInstall::CreateSymlinksToUtils();
 ?>
