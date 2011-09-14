@@ -1,7 +1,8 @@
 1.9.4 - Sept 13, 2011
   *Improvements
-    -"airtime-import" command-line utility now offers better help when invalid parameters have
-     been passed.
+    -DEB packages now available for Ubuntu & Debian
+    -"airtime-easy-install" DEB package now available which will install everything with a single click
+    -"airtime-import" command-line utility now offers better help when invalid parameters have been passed.
   *Fixes
     -Fixed "Show Contents" displaying full-length of tracks, even if cue-points had been set.
     -Fixed start date of show not updating after dragging and dropping.
@@ -11,6 +12,8 @@
     -Fixed issue where deleting a file from the Playlist Builder wouldn't always refresh the list to
      remove the file.
     -Fixed issue where upgrading from any previous Airtime would set "Toronto/America" as the default timezone
+    -Fixed playout engine (Pypo) using a large amount of CPU when there was a long history of played shows
+    -Fixed playout engine (Pypo) using 100% CPU when it could not connect to RabbitMQ
     
 1.9.3 - August 26th, 2011
   *Improvements
