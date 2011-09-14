@@ -1,4 +1,5 @@
 <?php
+    require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
     class Airtime192Upgrade{
 
         public static function InstallAirtimePhpServerCode($phpDir)

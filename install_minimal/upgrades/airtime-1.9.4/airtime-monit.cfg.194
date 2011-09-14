@@ -1,0 +1,23 @@
+ set daemon 10 # Poll at 10 second intervals
+ set logfile syslog facility log_daemon
+
+ set httpd port 2812 and use address 127.0.0.1
+    allow localhost
+    allow admin:monit
+
+ check process airtime-playout
+    with pidfile "/var/run/airtime-playout.pid"
+    start program = "/etc/init.d/airtime-playout start" with timeout 10 seconds
+    stop program = "/etc/init.d/airtime-playout stop"
+ check process airtime-liquidsoap
+    with pidfile "/var/run/airtime-liquidsoap.pid"
+    start program = "/etc/init.d/airtime-playout start" with timeout 10 seconds
+    stop program = "/etc/init.d/airtime-playout stop"
+ check process airtime-media-monitor
+    with pidfile "/var/run/airtime-media-monitor.pid"
+    start program = "/etc/init.d/airtime-media-monitor start" with timeout 10 seconds
+    stop program = "/etc/init.d/airtime-media-monitor stop"
+ check process airtime-show-recorder
+    with pidfile "/var/run/airtime-show-recorder.pid"
+    start program = "/etc/init.d/airtime-show-recorder start" with timeout 10 seconds
+    stop program = "/etc/init.d/airtime-show-recorder stop"
