@@ -1054,6 +1054,14 @@ h2#scheduled_playlist_name span {
 	width:60%;
 }
 
+.simple-formblock dd.block-display {
+    width: 100%;
+}
+
+.stream-setting-content dd.block-display {
+	width: 60%;
+}
+
 .simple-formblock.padded-strong {
 	padding:12px;
 }
