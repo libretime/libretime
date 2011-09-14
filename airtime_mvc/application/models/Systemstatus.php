@@ -3,48 +3,93 @@
 class Application_Model_Systemstatus
 {
 
-    public static function GetPypoStatus(){
+    public static function GetMonitStatus(){
 
-        RabbitMq::SendMessageToPypo("get_status", array());
+        $url = "http://localhost:2812/_status?format=xml";
+        $ch = curl_init(); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+        curl_setopt($ch, CURLOPT_URL, $url);  
+        curl_setopt($ch, CURLOPT_USERPWD, "admin:monit");
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $xmlDoc = new DOMDocument();
+        $xmlDoc->loadXML($result);
+
+        return $xmlDoc->documentElement;
+    }
+    
+    public static function ExtractServiceInformation($p_docRoot, $p_serviceName){
+    
+        $data = array("pid"=>"UNKNOWN",
+                      "uptime"=>"UNKNOWN");
+
+        foreach ($p_docRoot->getElementsByTagName("service") AS $item)
+        {
+            if ($item->getElementsByTagName("name")->item(0)->nodeValue == $p_serviceName){
+                $data["pid"] = $item->getElementsByTagName("pid")->item(0)->nodeValue;
+                $data["uptime"] = $item->getElementsByTagName("uptime")->item(0)->nodeValue."s";
+                break;
+            }
+        }
         
+        return $data;
+    }
+
+    public static function GetPypoStatus(){
+        $docRoot = self::GetMonitStatus();
+        $data = self::ExtractServiceInformation($docRoot, "airtime-playout");
+
         return array(
-            "process_id"=>500,
-            "uptime_seconds"=>3600
+            "process_id"=>$data["pid"],
+            "uptime_seconds"=>$data["uptime"]
         );
     }
     
     public static function GetLiquidsoapStatus(){
+        $docRoot = self::GetMonitStatus();
+        $data = self::ExtractServiceInformation($docRoot, "airtime-liquidsoap");
+
         return array(
-            "process_id"=>500,
-            "uptime_seconds"=>3600
+            "process_id"=>$data["pid"],
+            "uptime_seconds"=>$data["uptime"]
         );
     }
     
     public static function GetShowRecorderStatus(){
+        $docRoot = self::GetMonitStatus();
+        $data = self::ExtractServiceInformation($docRoot, "airtime-show-recorder");
+
         return array(
-            "process_id"=>500,
-            "uptime_seconds"=>3600
+            "process_id"=>$data["pid"],
+            "uptime_seconds"=>$data["uptime"]
         );
     }
     
-    public static function GetMediaMonitorStatus(){
+    public static function GetMediaMonitorStatus(){        
+        $docRoot = self::GetMonitStatus();
+        $data = self::ExtractServiceInformation($docRoot, "airtime-media-monitor");
+
         return array(
-            "process_id"=>500,
-            "uptime_seconds"=>3600
+            "process_id"=>$data["pid"],
+            "uptime_seconds"=>$data["uptime"]
         );
     }
     
-    public static function GetIcecastStatus(){
+    public static function GetIcecastStatus(){     
+        $docRoot = self::GetMonitStatus();
+        $data = self::ExtractServiceInformation($docRoot, "icecast2");
+
         return array(
-            "process_id"=>500,
-            "uptime_seconds"=>3600
+            "process_id"=>$data["pid"],
+            "uptime_seconds"=>$data["uptime"]
         );
     }
     
     public static function GetAirtimeVersion(){
         return AIRTIME_VERSION;
     }
-
+/*
 
 
     private function getCheckSystemResults(){
@@ -94,4 +139,6 @@ class Application_Model_Systemstatus
     private function convertRunTimeToPassFail($runTime){
         return $runTime > 3 ? "Pass" : "Fail";
     }
+    
+    */
 }

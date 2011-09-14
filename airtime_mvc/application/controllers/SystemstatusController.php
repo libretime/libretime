@@ -9,19 +9,24 @@ class SystemstatusController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $ss = new Application_Model_Systemstatus();
-
-        $stats = array("Total R");
+        $status = array(
+            "icecast2"=>Application_Model_Systemstatus::GetIcecastStatus(),
+            "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
+            "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
+            "show-recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
+            "media-monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
+        );
         
-        $this->view->status = $ss->getResults();
+        $this->view->status = $status;
     }
 
     public function getLogFileAction()
     {
-        $log_files = array("PLAYOUT_ENGINE_RUNNING_SECONDS"=>"/var/log/airtime/pypo/pypo.log",
-                "LIQUIDSOAP_RUNNING_SECONDS"=>"/var/log/airtime/pypo-liquidsoap/ls_script.log",
-                "MEDIA_MONITOR_RUNNING_SECONDS"=>"/var/log/airtime/media-monitor/media-monitor.log",
-                "SHOW_RECORDER_RUNNING_SECONDS"=>"/var/log/airtime/show-recorder/show-recorder.log");
+        $log_files = array("pypo"=>"/var/log/airtime/pypo/pypo.log",
+                "liquidsoap"=>"/var/log/airtime/pypo-liquidsoap/ls_script.log",
+                "media-monitor"=>"/var/log/airtime/media-monitor/media-monitor.log",
+                "show-recorder"=>"/var/log/airtime/show-recorder/show-recorder.log",
+                "icecast2"=>"/var/log/icecast2/error.log");
 
         $id = $this->_getParam('id');
         Logging::log($id);
