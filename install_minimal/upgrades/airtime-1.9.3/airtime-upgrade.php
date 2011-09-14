@@ -172,4 +172,5 @@
     $values = parse_ini_file(AirtimeIni193::CONF_FILE_AIRTIME, true);
     $phpDir = $values['general']['airtime_dir'];
     Airtime193Upgrade::InstallAirtimePhpServerCode($phpDir);
+    AirtimeInstall::CreateSymlinksToUtils();
 ?>

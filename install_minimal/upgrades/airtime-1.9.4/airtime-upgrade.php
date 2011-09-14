@@ -74,3 +74,5 @@ Airtime194Upgrade::InstallAirtimePhpServerCode($phpDir);
 Airtime194Upgrade::ModifyHtAccessTimezone($phpDir);
 Airtime194Upgrade::upgradeLiquidsoapCfgPerms();
 
+AirtimeInstall::CreateSymlinksToUtils();
+
