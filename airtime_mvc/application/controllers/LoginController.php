@@ -18,6 +18,7 @@ class LoginController extends Zend_Controller_Action
         //uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
         
+        $error = false;
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
         
@@ -73,12 +74,14 @@ class LoginController extends Zend_Controller_Action
                         Application_Model_Subjects::increaseLoginAttempts($username);
                         Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
                         $form = new Application_Form_Login();
+                        $error = true;
                     }
                 }
             }
         }
         
 		$this->view->message = $message;
+		$this->view->error = $error;
 		$this->view->form = $form;
 		$this->view->airtimeVersion = AIRTIME_VERSION;
 		$this->view->airtimeCopyright = AIRTIME_COPYRIGHT_DATE;

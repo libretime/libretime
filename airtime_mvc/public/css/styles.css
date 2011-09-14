@@ -1987,3 +1987,8 @@ dt.block-display.info-block {
 .stream-setting-content {
 	margin-top:-1px;
 }
+
+.login-content dd .center {
+	margin-left: 42%;
+}
+

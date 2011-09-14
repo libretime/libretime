@@ -1,9 +1,8 @@
 <div class="login_box">
     <div class="logobox">&nbsp;</div>
         <h2>Login</h2>
-    
     <div id="login" class="login-content clearfix">
-        <p class="light"><?php echo $this->message; ?></p>
+        <p class="light" style='<?php echo $this->error?"color:#902d2d;font-size:11px;padding:2px 4px;background:#c6b4b4;margin-bottom:2px;border:1px solid #c83f3f;":""?>'><?php echo $this->message; ?></p>
         <?php echo $this->form; ?>
     </div>
 </div>

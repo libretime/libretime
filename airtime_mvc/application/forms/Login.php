@@ -43,7 +43,7 @@ class Application_Form_Login extends Zend_Form
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
             'label'    => 'Login',
-            'class'      => 'ui-button ui-widget ui-state-default ui-button-text-only'
+            'class'      => 'ui-button ui-widget ui-state-default ui-button-text-only center'
         ));
 
     }
