@@ -84,21 +84,25 @@ class AirtimeInstall{
     public static function BypassMigrations($dir, $version)
     {
         $appDir = AirtimeInstall::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $SCRIPTPATH = __DIR__;
+        $command = "php --php-ini $SCRIPTPATH/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction --add migrations:version $version";
-        system($command);
+        passthru($command);
     }
 
     public static function MigrateTablesToVersion($dir, $version)
     {
         $appDir = AirtimeInstall::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $SCRIPTPATH = __DIR__;
+        $command = "php --php-ini $SCRIPTPATH/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction migrations:migrate $version";
-        system($command);
+        passthru($command);
     }
 
     public static function CreateCronFile(){

@@ -61,7 +61,7 @@ echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
 set +e
-php ${SCRIPTPATH}/include/airtime-install.php $@
+php --php-ini ${SCRIPTPATH}/airtime-php.ini --file ${SCRIPTPATH}/include/airtime-install.php $@
 result=$?
 if [ "$result" -eq "2" ]; then
     #We've just finished an upgrade, so let's exit
