@@ -172,6 +172,9 @@ function MergeConfigFiles($configFiles, $suffix)
                 // Parse with sections
                 $newSettings = parse_ini_file($conf, true);
                 $oldSettings = parse_ini_file("$conf$suffix.bak", true);
+
+                $oldSettings['general']['airtime_dir'] = '/var/www/airtime';
+                $oldSettings['general']['base_files_dir'] = '/srv/airtime';
             }
             else {
                 $newSettings = ReadPythonConfig($conf);
@@ -239,9 +242,10 @@ function LoadConfig($CC_CONFIG) {
 }
 
 function movePhpFiles($CC_CONFIG){
-    $baseDir = $CC_CONFIG['baseFilesDir'];
-    echo "Copying Server files from $baseDir/airtime_mvc to /var/www";
-    exec("cp -R $baseDir/airtime_mvc/* /var/www");
+    $phpDir = $CC_CONFIG['phpDir'];
+    echo "Copying Server files from $phpDir/airtime_mvc to /var/www/airtime";
+    exec("mkdir -p /var/www/airtime");
+    exec("cp -R $phpDir/airtime_mvc/* /var/www/airtime");
 }
 
 // Backup the config files
@@ -253,12 +257,16 @@ foreach ($configFiles as $conf) {
     }
 }
 
+
+$CC_CONFIG = LoadConfig($CC_CONFIG);
+movePhpFiles($CC_CONFIG);
+
 $default_suffix = "180";
 CreateIniFiles($default_suffix);
 echo "* Initializing INI files".PHP_EOL;
+
+
 MergeConfigFiles($configFiles, $suffix);
 
 
-$CC_CONFIG = LoadConfig($CC_CONFIG);
 
-movePhpFiles($CC_CONFIG);
