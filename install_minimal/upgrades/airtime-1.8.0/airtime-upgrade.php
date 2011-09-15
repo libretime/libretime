@@ -238,6 +238,12 @@ function LoadConfig($CC_CONFIG) {
     return $CC_CONFIG;
 }
 
+function movePhpFiles($CC_CONFIG){
+    $baseDir = $CC_CONFIG['baseFilesDir'];
+    echo "Copying Server files from $baseDir/airtime_mvc to /var/www";
+    exec("copy -R $baseDir/airtime_mvc/* /var/www");
+}
+
 // Backup the config files
 $suffix = date("Ymdhis")."-1.8.0";
 foreach ($configFiles as $conf) {
@@ -252,4 +258,7 @@ CreateIniFiles($default_suffix);
 echo "* Initializing INI files".PHP_EOL;
 MergeConfigFiles($configFiles, $suffix);
 
+
 $CC_CONFIG = LoadConfig($CC_CONFIG);
+
+movePhpFiles($CC_CONFIG);

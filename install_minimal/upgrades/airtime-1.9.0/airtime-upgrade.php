@@ -581,16 +581,6 @@ class Airtime190Upgrade{
     }
 
 
-    // we don't need thses functions anymore as it's done in CreateSymlinksToUtils()
-    /*public static function removeOldAirtimeImport(){
-        exec('rm -f "/usr/bin/airtime-import"');
-    }
-
-    public static function updateAirtimeImportSymLink(){
-        $dir = "/usr/lib/airtime/utils/airtime-import/airtime-import";
-        exec("ln -s $dir /usr/bin/airtime-import");
-    }*/
-
     public static function execSqlQuery($sql){
         global $CC_DBC;
 

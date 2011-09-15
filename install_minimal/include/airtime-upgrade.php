@@ -55,27 +55,35 @@ $SCRIPTPATH = __DIR__;
 
 if (strcmp($version, "1.7.0") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.7.0/airtime-upgrade.php");
+    readline("Press any key");
 }
 if (strcmp($version, "1.8.0") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.8.0/airtime-upgrade.php");
+    readline("Press any key");
 }
 if (strcmp($version, "1.8.1") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.8.1/airtime-upgrade.php");
+    readline("Press any key");
 }
 if (strcmp($version, "1.8.2") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.8.2/airtime-upgrade.php");
+    readline("Press any key");
 }
 if (strcmp($version, "1.9.0") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.9.0/airtime-upgrade.php");
+    readline("Press any key");
 }
 if (strcmp($version, "1.9.2") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.9.2/airtime-upgrade.php");
+    readline("Press any key");
 }
 if (strcmp($version, "1.9.3") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.9.3/airtime-upgrade.php");
+    readline("Press any key");
 }
 if (strcmp($version, "1.9.4") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.9.4/airtime-upgrade.php");
+    readline("Press any key");
 }
 
 //set the new version in the database.
