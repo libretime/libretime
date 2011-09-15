@@ -241,7 +241,7 @@ function LoadConfig($CC_CONFIG) {
 function movePhpFiles($CC_CONFIG){
     $baseDir = $CC_CONFIG['baseFilesDir'];
     echo "Copying Server files from $baseDir/airtime_mvc to /var/www";
-    exec("copy -R $baseDir/airtime_mvc/* /var/www");
+    exec("cp -R $baseDir/airtime_mvc/* /var/www");
 }
 
 // Backup the config files
