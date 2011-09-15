@@ -6,7 +6,7 @@ require_once('DB.php');
 class AirtimeInstall
 {
     const CONF_DIR_BINARIES = "/usr/lib/airtime";
-    const CONF_DIR_WWW = "/usr/share/airtime/";
+    const CONF_DIR_WWW = "/usr/share/airtime";
     const CONF_DIR_LOG = "/var/log/airtime";
 
     public static $databaseTablesCreated = false;
