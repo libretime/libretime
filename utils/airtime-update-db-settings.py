@@ -10,9 +10,9 @@ import ConfigParser
 import xml.dom.minidom
 from xml.dom.minidom import Node
 
-if not os.geteuid() == 0:
-    sys.exit('Must be root user.')
-
+if os.geteuid() != 0:
+    print "Please run this as root."
+    sys.exit(1)
 
 #Read the universal values
 parser = ConfigParser.SafeConfigParser()

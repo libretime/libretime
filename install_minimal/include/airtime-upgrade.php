@@ -51,29 +51,31 @@ echo "******************************** Update Begin ****************************
 //convert strings like 1.9.0-devel to 1.9.0
 $version = substr($version, 0, 5);
 
+$SCRIPTPATH = __DIR__;
+
 if (strcmp($version, "1.7.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.7.0/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.7.0/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.8.0/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.8.0/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.1") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.8.1/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.8.1/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.2") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.8.2/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.8.2/airtime-upgrade.php");
 }
 if (strcmp($version, "1.9.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.9.0/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.9.0/airtime-upgrade.php");
 }
 if (strcmp($version, "1.9.2") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.9.2/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.9.2/airtime-upgrade.php");
 }
 if (strcmp($version, "1.9.3") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.9.3/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.9.3/airtime-upgrade.php");
 }
 if (strcmp($version, "1.9.4") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.9.4/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini --file $SCRIPTPATH/../upgrades/airtime-1.9.4/airtime-upgrade.php");
 }
 if (strcmp($version, "2.0.0") < 0){
     system("php ".__DIR__."/../upgrades/airtime-2.0.0/airtime-upgrade.php");
@@ -89,16 +91,16 @@ $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$newVers
 $CC_DBC->query($sql);
 
 echo PHP_EOL."*** Updating Api Client ***".PHP_EOL;
-passthru("python ".__DIR__."/../../python_apps/api_clients/install/api_client_install.py");
+passthru("python $SCRIPTPATH/../../python_apps/api_clients/install/api_client_install.py");
 
 echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
-passthru("python ".__DIR__."/../../python_apps/pypo/install/pypo-install.py");
+passthru("python $SCRIPTPATH/../../python_apps/pypo/install/pypo-install.py");
 
 echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
-passthru("python ".__DIR__."/../../python_apps/show-recorder/install/recorder-install.py");
+passthru("python $SCRIPTPATH/../../python_apps/show-recorder/install/recorder-install.py");
 
 echo PHP_EOL."*** Updating Media Monitor ***".PHP_EOL;
-passthru("python ".__DIR__."/../../python_apps/media-monitor/install/media-monitor-install.py");
+passthru("python $SCRIPTPATH/../../python_apps/media-monitor/install/media-monitor-install.py");
 
 sleep(4);
 passthru("airtime-check-system");
