@@ -27,7 +27,7 @@ apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
 php-pear php5-gd postgresql odbc-postgresql python2.6 lame libsoundtouch-ocaml \
 libvorbis-ocaml-dev libmp3lame-dev libtaglib-ocaml libao-ocaml libmad-ocaml \
 libesd0 icecast2 libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
-ecasound php5-curl mpg123 rabbitmq-server monit python-virtualenv
+ecasound php5-curl mpg123 rabbitmq-server monit python-virtualenv patch
 
 if [ "$?" -ne "0" ]; then
    echo ""
