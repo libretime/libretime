@@ -335,10 +335,10 @@ fieldset.plain {
 	font-family:Arial, Helvetica, sans-serif;
 	border: 1px solid #5b5b5b;
     font-size: 12px;
-    height: 23px;
+    /*height: 23px;*/
     margin: 0;
-    padding: 0;
-    text-indent: 3px;
+    padding: 4px 3px;
+    /*text-indent: 3px;*/
 	width:auto;
     background-color: #dddddd;
 	border: 1px solid #5b5b5b;
@@ -456,7 +456,7 @@ dl.inline-list dd {
     background-color: #95d5f7 !important;
 }
 
-.datatable tr td:first-child, .datatable tr th:first-child, .datatable tr th.ui-state-default:first-child {
+.datatable tr td:first-child, .datatable tr th:first-child, .datatable tr th.ui-state-default:first-child, tr td:first-child, tr th:first-child {
 	border-left-width:0 !important;
 }
 .ui-widget-header + .datatable {
@@ -530,12 +530,10 @@ dl.inline-list dd {
 }
 .dataTables_filter input {
     background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;
-    text-indent: 25px;
 	width: 60%;
 	border: 1px solid #5B5B5B;
-    height: 23px;
     margin: 0;
-    padding: 0;	
+    padding: 4px 3px 4px 25px;	
 }
 .dataTables_length select {
     background-color: #DDDDDD;
@@ -1067,7 +1065,7 @@ h2#scheduled_playlist_name span {
 }
 
 .simple-formblock dd .input_text {
-    width: 100%;
+    width: 97.8%;
 }
 
 .simple-formblock h2 {
@@ -1135,7 +1133,7 @@ button, input {
     padding-bottom: 12px;
 }
 .user-management .dataTables_filter input {
-    width: 99.6%;
+    width: 93.8%;
 	margin-bottom:8px;
 }
 .user-data.simple-formblock dd {
@@ -1426,7 +1424,7 @@ div.success{
 .text-content {
 	padding:20px 10px 40px 58px;
 	background: url(images/sf_arror.png) no-repeat 60% 0; 
-	height:100%;
+	min-height: 300px;
 }
 .text-content h2 {
 	font-size:2.4em;
@@ -1748,6 +1746,7 @@ button.ui-button.md-cancel {
 .dialogPopup fieldset dd input[type="text"], .dialogPopup fieldset dd textarea {
 	width:99.5%;
 	padding:0;
+	height:23px;
 }
 .dialogPopup fieldset dd select {
 	width:100%;
@@ -1799,7 +1798,7 @@ label span {
 }
 
 #watched-folder-section dd.block-display input[type="text"] {
-    width: 65%;
+    width: 63.6%;
 }
 
 #watched-folder-section dd.block-display input[type="button"] {
@@ -1923,7 +1922,7 @@ dd .info-text-small {
 	padding: 4px 0;
 }
 .stream-config dt.block-display  {
-	width: 130px;
+	width:auto;
 }
 .stream-config dd  {
 	margin-bottom:0px;
@@ -1965,7 +1964,7 @@ dt.block-display.info-block {
 }
 
 .stream-config dd.block-display input[type="text"].with-info, .stream-config dd.block-display input[type="password"].with-info {
-    width: 85%;
+    width: 83.6%;
 }
 .stream-config dd.block-display p {
     font-size:13px;
@@ -1984,11 +1983,212 @@ dt.block-display.info-block {
 	opacity:0.6;
 }
 
-.stream-setting-content {
-	margin-top:-1px;
+/*---////////////////////    ERROR PAGE    ////////////////////---*/
+
+.error-content	{
+	background:url(images/404.png) no-repeat 0 0;
+	width:300px;
+	margin: 24px 15px;
+	padding: 0px 10px 0 420px;
+}
+.error-content h2 {
+    margin:0;
+    padding:0 0 10px 0;
+    font-size:36px;
+    font-weight:bold;
+    color:#3e3e3e;
+    text-align:left;
+	letter-spacing:-.3px;
+	text-shadow: rgba(248,248,248,.3) 0 1px 0, rgba(0,0,0,.8) 0 -1px 0;
+	rgba(51,51,51,.9)
+}
+.error-content p {
+    color: #272727;
+    font-size: 16px;
+    margin: 0;
+    padding:8px 2px;
+}
+.error-content .button-bar	{
+	margin-top:47px;
+	padding-left:2px;
+}
+.error-content .toggle-button	{
+	border: 1px solid #434343;
+	border-width:1px 1px 0px 1px;
+	background-color: #636363;
+    background: -moz-linear-gradient(top, #737373 0, #545454 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #737373), color-stop(100%, #545454));
+	color: #1b1b1b;
+	font-size:15px;
+	font-weight:bold;
+	padding:5px 14px 6px 15px;
+	text-shadow: rgba(248,248,248,.24) 0 1px 0;
+	box-shadow: rgba(248,248,248,.3) 0px 1px 0px, rgba(0, 0, 0, 0.2) 0 2px 2px inset;
+	-moz-box-shadow: rgba(248,248,248,.3) 0px 1px 0px, rgba(0, 0, 0, 0.2) 0 2px 2px inset;
+	-webkit-box-shadow: rgba(248,248,248,.3) 0px 1px 0px, rgba(0, 0, 0, 0.2) 0 2px 2px inset;
+	margin: 0 5px 0 0;
+}
+.error-content .toggle-button:hover	{
+	border: 1px solid #000;
+	border-width:1px 1px 0px 1px;
+	background-color: #353535;
+    background: -moz-linear-gradient(top, #393939 0, #000000 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #393939), color-stop(100%, #000000));
+	color: #ff5d1a;
+	text-shadow:none;
+	box-shadow: rgba(248,248,248,.3) 0px 1px 0px, rgba(0, 0, 0, 0.6) 0 2px 2px inset;
+	-moz-box-shadow: rgba(248,248,248,.3) 0px 1px 0px, rgba(0, 0, 0, 0.6) 0 2px 2px inset;
+	-webkit-box-shadow: rgba(248,248,248,.3) 0px 1px 0px, rgba(0, 0, 0, 0.6) 0 2px 2px inset;
 }
 
-.login-content dd .center {
-	margin-left: 42%;
+/*---////////////////////    DEFAULT TABLE    ////////////////////---*/
+
+table {
+    border-color: #5b5b5b;
+    border-style: solid;
+    border-width: 2px 1px 1px 1px;
+	background-color: #D8D8D8;
+}
+tbody tr th	{
+	color: #000000;
+	background-color: #b1b1b1;
+    background: -moz-linear-gradient(top, #bebebe 0, #a2a2a2 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #bebebe), color-stop(100%, #a2a2a2));
+	font-size: 13px;
+    padding: 5px 5px;
+    border-color: #b1b1b1;
+    border-style: solid;
+    border-width: 1px 0 0 1px;
+	border-top-color: #5b5b5b;
+	text-align:left;
+}
+thead tr th	{
+	color: #FFFFFF;
+    font-size: 13px;
+    padding: 5px 5px;
+	border-color:#CCCCCC;
+	background-color: #6e6e6e;
+    background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
+    border-style: solid;
+    border-width: 0 0 0 1px;
+}
+tr td	{
+    border-color: #b1b1b1;
+    border-style: solid;
+    border-width: 1px 0 0 1px;
+    font-size: 13px;
+    padding: 5px 5px;
+}
+tfoot tr td, tfoot tr th	{
+	color:#FFFFFF;
+	background-color: #6e6e6e;
+    background: -moz-linear-gradient(top, #6e6e6e 0, #868686 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #6e6e6e), color-stop(100%, #868686));
+    font-size: 13px;
+    padding: 5px 5px;
+    border-color: #b1b1b1;
+    border-style: solid;
+    border-width: 1px 0 0 1px;
+}
+tfoot tr th	{
+	font-weight:bold;
+	text-align:left;
+}
+	
+	
+/*---////////////////////    STATUS TABLE    ////////////////////---*/
+
+.statustable tr td	{
+	text-align:center;
+	vertical-align:text-top;
+}
+.statustable tr td:first-child, .statustable tr th:first-child {
+	text-align:left;
+}
+.checked-icon	{
+	width:100%;
+	margin:0;
+	background: url("images/accept.png") no-repeat center center;
+	height:16px;
+	margin:0;
+	display:block;
+}
+.not-available-icon	{
+	width:100%;
+	margin:0;
+	background: url("images/delete.png") no-repeat center center;
+	height:16px;
+	margin:0;
+	display:block;
+}
+.statustable ul	{
+	margin:4px 0;
+	padding:0;
+}
+.statustable ul li	{
+	background:#bbb;
+	margin:2px 0 6px 0;
+	padding:4px 8px 0;
+	position:relative;
+	min-height:22px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	font-size:13px;
+}
+.big	{
+	width:120px;
+	height:10px;
+	background:#444444;
+    background: -moz-linear-gradient(top, #464646 0, #3e3e3e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3e3e3e), color-stop(100%, #464646));
+	border-bottom:1px solid #fff;
+	margin: 0 auto;
+	padding: 1px;
+	display:inline-block;
+}
+.diskspace	{
+	background-color:#e76400;
+    background: -moz-linear-gradient(top, #ff6f01 0, #bc5200 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff6f01), color-stop(100%, #bc5200));
+	height:10px;
+}
+.statustable a			{
+	color: #222;
+	text-decoration: underline;
 }
 
+.statustable a:visited	{
+	color: #666;
+	text-decoration: underline;
+}
+.statustable a:hover		{
+		color: #e76400;
+		text-decoration: underline;
+}
+.strong	{
+	font-weight:bold;
+}
+
+
+/*---////////////////////    PLUPLOAD ERROR    ////////////////////---*/
+
+#plupload_error{
+	margin-top:10px;
+}
+
+#plupload_error table	{
+	color:red;
+	border:1px solid #c83f3f;
+	background:#c6b4b4;
+}
+#plupload_error table td {
+	color:#902d2d;
+	font-size:12px;
+	font-weight:bold;
+	padding:2px 4px;
+	margin-bottom:2px;
+	border:none;
+	margin:0;
+}
