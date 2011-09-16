@@ -134,4 +134,11 @@ return array (
   'BaseCcLoginAttemptsPeer' => 'airtime/om/BaseCcLoginAttemptsPeer.php',
   'BaseCcLoginAttempts' => 'airtime/om/BaseCcLoginAttempts.php',
   'BaseCcLoginAttemptsQuery' => 'airtime/om/BaseCcLoginAttemptsQuery.php',
+  'CcComponentTableMap' => 'airtime/map/CcComponentTableMap.php',
+  'CcComponentPeer' => 'airtime/CcComponentPeer.php',
+  'CcComponent' => 'airtime/CcComponent.php',
+  'CcComponentQuery' => 'airtime/CcComponentQuery.php',
+  'BaseCcComponentPeer' => 'airtime/om/BaseCcComponentPeer.php',
+  'BaseCcComponent' => 'airtime/om/BaseCcComponent.php',
+  'BaseCcComponentQuery' => 'airtime/om/BaseCcComponentQuery.php',
 );

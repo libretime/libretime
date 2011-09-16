@@ -499,6 +499,24 @@ COMMENT ON TABLE "cc_login_attempts" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_component
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_component" CASCADE;
+
+
+CREATE TABLE "cc_component"
+(
+	"name" VARCHAR(32)  NOT NULL,
+	"ip" VARCHAR(32)  NOT NULL,
+	PRIMARY KEY ("name")
+);
+
+COMMENT ON TABLE "cc_component" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");

@@ -167,6 +167,7 @@ class CommandListener(Thread):
     def __init__(self):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
+        self.api_client.register_component("show-recorder")
         self.logger = logging.getLogger('root')
         self.sr = None
         self.current_schedule = {}
