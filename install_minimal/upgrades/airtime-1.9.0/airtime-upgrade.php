@@ -84,21 +84,25 @@ class AirtimeInstall{
     public static function BypassMigrations($dir, $version)
     {
         $appDir = AirtimeInstall::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $SCRIPTPATH = __DIR__;
+        $command = "php --php-ini $SCRIPTPATH/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction --add migrations:version $version";
-        system($command);
+        passthru($command);
     }
 
     public static function MigrateTablesToVersion($dir, $version)
     {
         $appDir = AirtimeInstall::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $SCRIPTPATH = __DIR__;
+        $command = "php --php-ini $SCRIPTPATH/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction migrations:migrate $version";
-        system($command);
+        passthru($command);
     }
 
     public static function CreateCronFile(){
@@ -576,16 +580,6 @@ class Airtime190Upgrade{
         exec($command);
     }
 
-
-    // we don't need thses functions anymore as it's done in CreateSymlinksToUtils()
-    /*public static function removeOldAirtimeImport(){
-        exec('rm -f "/usr/bin/airtime-import"');
-    }
-
-    public static function updateAirtimeImportSymLink(){
-        $dir = "/usr/lib/airtime/utils/airtime-import/airtime-import";
-        exec("ln -s $dir /usr/bin/airtime-import");
-    }*/
 
     public static function execSqlQuery($sql){
         global $CC_DBC;
