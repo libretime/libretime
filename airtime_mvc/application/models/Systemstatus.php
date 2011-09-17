@@ -21,28 +21,56 @@ class Application_Model_Systemstatus
     }
     
     public static function ExtractServiceInformation($p_docRoot, $p_serviceName){
-    
-        $data = array("process_id"=>"UNKNOWN",
-                      "uptime_seconds"=>"UNKNOWN",
+
+        $data = array();
+        $starting = array("process_id"=>"STARTING...",
+                      "uptime_seconds"=>"STARTING...",
+                      "memory_perc"=>"UNKNOWN",
+                      "memory_kb"=>"UNKNOWN",
+                      "cpu_perc"=>"UNKNOWN");
+                      
+        $notRunning = array("process_id"=>"FAILED",
+                      "uptime_seconds"=>"FAILED",
                       "memory_perc"=>"UNKNOWN",
                       "memory_kb"=>"UNKNOWN",
                       "cpu_perc"=>"UNKNOWN"
                       );
 
+        
+
         foreach ($p_docRoot->getElementsByTagName("service") AS $item)
         {
             if ($item->getElementsByTagName("name")->item(0)->nodeValue == $p_serviceName){
-                $data["process_id"] = $item->getElementsByTagName("pid")->item(0)->nodeValue;
-                $data["uptime_seconds"] = $item->getElementsByTagName("uptime")->item(0)->nodeValue;
+
+                $monitor = $item->getElementsByTagName("monitor");
+                if ($monitor->length > 0){
+                    $status = $monitor->item(0)->nodeValue;
+                    if ($status == "2"){
+                        $data = $starting;
+                    } else if ($status == 0){
+                        $data = $notRunning;
+                    }
+                }
+                
+                $process_id = $item->getElementsByTagName("pid");
+                if ($process_id->length > 0){
+                    $data["process_id"] = $process_id->item(0)->nodeValue;
+                }
+
+                $uptime = $item->getElementsByTagName("uptime");
+                if ($uptime->length > 0){
+                    $data["uptime_seconds"] = $uptime->item(0)->nodeValue;
+                }
+                
                 $memory = $item->getElementsByTagName("memory");
                 if ($memory->length > 0){
-                    $data["memory_perc"] = $memory->item(0)->getElementsByTagName("percenttotal")->item(0)->nodeValue;
+                    $data["memory_perc"] = $memory->item(0)->getElementsByTagName("percenttotal")->item(0)->nodeValue."%";
                     $data["memory_kb"] = $memory->item(0)->getElementsByTagName("kilobytetotal")->item(0)->nodeValue;
                 }
                 
                 $cpu = $item->getElementsByTagName("cpu");
                 if ($cpu->length > 0){
-                    $data["cpu_perc"] = $cpu->item(0)->getElementsByTagName("percent")->item(0)->nodeValue;
+                    $data["cpu_perc"] = $cpu->item(0)->getElementsByTagName("percent")->item(0)->nodeValue."%";
                 }
                 break;
             }

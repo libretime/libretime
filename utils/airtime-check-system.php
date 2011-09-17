@@ -12,8 +12,7 @@ if (substr($sapi_type, 0, 3) == 'cli') {
     $apiKey = $airtimeIni['general']['api_key'];
 
     $status = AirtimeCheck::GetStatus($apiKey);
-    AirtimeCheck::PrintStatus($status->status);   
-
+    AirtimeCheck::PrintStatus($status->status);
 }
 
 class AirtimeCheck {
