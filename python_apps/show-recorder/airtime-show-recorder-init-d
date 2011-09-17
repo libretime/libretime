@@ -17,8 +17,8 @@ DAEMON=/usr/lib/airtime/show-recorder/airtime-show-recorder
 PIDFILE=/var/run/airtime-show-recorder.pid
 
 start () {
-        monit monitor airtime-show-recorder >/dev/null 2>&1
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
+        monit monitor airtime-show-recorder >/dev/null 2>&1
 }
 
 stop () {

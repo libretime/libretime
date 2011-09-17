@@ -17,8 +17,8 @@ DAEMON=/usr/lib/airtime/media-monitor/airtime-media-monitor
 PIDFILE=/var/run/airtime-media-monitor.pid
 
 start () {
-        monit monitor airtime-media-monitor >/dev/null 2>&1
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
+        monit monitor airtime-media-monitor >/dev/null 2>&1
 }
 
 stop () {

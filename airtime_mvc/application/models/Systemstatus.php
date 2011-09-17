@@ -34,9 +34,16 @@ class Application_Model_Systemstatus
             if ($item->getElementsByTagName("name")->item(0)->nodeValue == $p_serviceName){
                 $data["process_id"] = $item->getElementsByTagName("pid")->item(0)->nodeValue;
                 $data["uptime_seconds"] = $item->getElementsByTagName("uptime")->item(0)->nodeValue;
-                $data["memory_perc"] = $item->getElementsByTagName("memory")->item(0)->getElementsByTagName("percenttotal")->item(0)->nodeValue;
-                $data["memory_kb"] = $item->getElementsByTagName("memory")->item(0)->getElementsByTagName("kilobytetotal")->item(0)->nodeValue;
-                $data["cpu_perc"] = $item->getElementsByTagName("cpu")->item(0)->getElementsByTagName("percent")->item(0)->nodeValue;
+                $memory = $item->getElementsByTagName("memory");
+                if ($memory->length > 0){
+                    $data["memory_perc"] = $memory->item(0)->getElementsByTagName("percenttotal")->item(0)->nodeValue;
+                    $data["memory_kb"] = $memory->item(0)->getElementsByTagName("kilobytetotal")->item(0)->nodeValue;
+                }
+                
+                $cpu = $item->getElementsByTagName("cpu");
+                if ($cpu->length > 0){
+                    $data["cpu_perc"] = $cpu->item(0)->getElementsByTagName("percent")->item(0)->nodeValue;
+                }
                 break;
             }
         }

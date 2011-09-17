@@ -20,6 +20,9 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 echo -e "\n******************************* Uninstall Begin ********************************"
 
+monit unmonitor icecast2 >/dev/null 2>&1
+monit unmonitor rabbitmq-server >/dev/null 2>&1
+
 echo -e "\n*** Uninstalling Pypo ***"
 python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-uninstall.py
 
