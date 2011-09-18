@@ -58,6 +58,7 @@ if output_icecast_mp3 then
 
     #format = %mp3(bitrate=192, samplerate=44100, stereo=false)
     ignore(output.icecast(%mp3,
+            encoding = "UTF-8",
             host = icecast_host,
             port = icecast_port,
             password = icecast_pass,
@@ -75,6 +76,7 @@ end
 if output_icecast_vorbis then
     if output_icecast_vorbis_metadata then
         ignore(output.icecast(%vorbis,
+                encoding = "UTF-8",
                 host = icecast_host,
                 port = icecast_port,
                 password = icecast_pass,
