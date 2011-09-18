@@ -45,6 +45,7 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         end
         output = output.icecast(host = host,
                     port = port,
+                    encoding = "UTF-8",
                     password = pass,
                     mount = mount_point,
                     fallible = true,
