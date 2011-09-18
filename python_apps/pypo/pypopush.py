@@ -137,9 +137,11 @@ class PypoPush(Thread):
 
             logger.debug('Preparing to push playlist %s' % pkey)
             for item in playlist:
-                annotate = str(item['annotate'])
-                tn.write(('queue.push %s\n' % annotate).encode('latin-1'))
-                tn.write(('vars.show_name %s\n' % item['show_name']).encode('latin-1'))
+                annotate = item['annotate']
+                tn.write(str('queue.push %s\n' % annotate.encode('utf-8')))
+
+                show_name = item['show_name']
+                tn.write(str('vars.show_name %s\n' % show_name.encode('utf-8')))
 
             tn.write("exit\n")
             logger.debug(tn.read_all())
