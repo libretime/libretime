@@ -12,40 +12,30 @@
 <?php endforeach; ?>
 -->
 
-
-
 <table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
     	<thead>
-        	<tr>
-            	<th class="ui-state-default" colspan="3">Airtime Status</th>
+        	<tr class="ui-state-default strong">
+            	<td>Service</td>
+            	<td>Status</td>
+            	<td>Uptime</td>
             </tr>
         </thead>
         <tbody>
+            <!--
         	<tr class="odd">
             	<td>Airtime Version</td>
             	<td>1.9.3</td>
             	<td>&nbsp;</td>
             </tr>
-        	<tr class="even">
-            	<td>Playout Engine Service</td>
-            	<td><span class="checked-icon">&nbsp;</span></td>
-            	<td><a href="#1">Log file</a></td>
-            </tr>
-        	<tr class="odd">
-            	<td>Liquidsoap Service</td>
-            	<td><span class="checked-icon">&nbsp;</span></td>
-            	<td><a href="#2">Log file</a></td>
-            </tr>
-        	<tr class="even">
-            	<td>Audio Library Service</td>
-            	<td><span class="checked-icon">&nbsp;</span></td>
-            	<td><a href="#3">Log file</a></td>
-            </tr>
-        	<tr class="odd">
-            	<td>Recording Service</td>
-            	<td><span class="not-available-icon">&nbsp;</span></td>
-            	<td><a href="#4">Log file</a></td>
-            </tr>
+            -->
+            <?php $i=0; ?>
+            <?php foreach($this->status as $key=>$value): ?>
+                <tr class="<?php echo ($i&1) == 0 ? "even":"odd"; $i++; ?>" id="<?php echo $value["name"]; ?>">
+                    <td><?php echo $value["name"]; ?></td>
+                    <td><span class="<?php echo $value["status"] ? "checked-icon" : "not-available-icon" ?>">&nbsp;</span></td>
+                    <td><?php echo $value["uptime_seconds"]; ?></td>
+                </tr>
+            <?php endforeach; ?>
         	<tr class="even">
             	<th colspan="3">Disk Space</th>
             </tr>

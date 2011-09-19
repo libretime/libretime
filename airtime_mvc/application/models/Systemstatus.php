@@ -22,17 +22,23 @@ class Application_Model_Systemstatus
     
     public static function ExtractServiceInformation($p_docRoot, $p_serviceName){
 
-        $starting = array("process_id"=>"STARTING...",
-                      "uptime_seconds"=>"STARTING...",
-                      "memory_perc"=>"UNKNOWN",
-                      "memory_kb"=>"UNKNOWN",
-                      "cpu_perc"=>"UNKNOWN");
+        $starting = array(
+                        "name"=>"",
+                        "process_id"=>"STARTING...",
+                        "uptime_seconds"=>"STARTING...",
+                        "status"=>true,
+                        "memory_perc"=>"UNKNOWN",
+                        "memory_kb"=>"UNKNOWN",
+                        "cpu_perc"=>"UNKNOWN");
                       
-        $notRunning = array("process_id"=>"FAILED",
-                      "uptime_seconds"=>"FAILED",
-                      "memory_perc"=>"UNKNOWN",
-                      "memory_kb"=>"UNKNOWN",
-                      "cpu_perc"=>"UNKNOWN"
+        $notRunning = array(
+                        "name"=>"",
+                        "process_id"=>"FAILED",
+                        "uptime_seconds"=>"FAILED",
+                        "status"=>false,
+                        "memory_perc"=>"UNKNOWN",
+                        "memory_kb"=>"UNKNOWN",
+                        "cpu_perc"=>"UNKNOWN"
                       );
         $data = $notRunning;
 
@@ -51,10 +57,16 @@ class Application_Model_Systemstatus
                             $data = $notRunning;
                         }
                     }
+
+                    $process_id = $item->getElementsByTagName("name");
+                    if ($process_id->length > 0){
+                        $data["name"] = $process_id->item(0)->nodeValue;
+                    }
                     
                     $process_id = $item->getElementsByTagName("pid");
                     if ($process_id->length > 0){
                         $data["process_id"] = $process_id->item(0)->nodeValue;
+                        $data["status"] = true;
                     }
 
                     $uptime = $item->getElementsByTagName("uptime");
