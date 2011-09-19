@@ -1,3 +1,4 @@
+<!--
 <?php foreach($this->status as $key=>$value): ?>
     <div>
         <?php echo $key; ?>
@@ -9,3 +10,75 @@
         <?php endif; ?>
     </div>
 <?php endforeach; ?>
+-->
+
+
+
+<table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
+    	<thead>
+        	<tr>
+            	<th class="ui-state-default" colspan="3">Airtime Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        	<tr class="odd">
+            	<td>Airtime Version</td>
+            	<td>1.9.3</td>
+            	<td>&nbsp;</td>
+            </tr>
+        	<tr class="even">
+            	<td>Playout Engine Service</td>
+            	<td><span class="checked-icon">&nbsp;</span></td>
+            	<td><a href="#1">Log file</a></td>
+            </tr>
+        	<tr class="odd">
+            	<td>Liquidsoap Service</td>
+            	<td><span class="checked-icon">&nbsp;</span></td>
+            	<td><a href="#2">Log file</a></td>
+            </tr>
+        	<tr class="even">
+            	<td>Audio Library Service</td>
+            	<td><span class="checked-icon">&nbsp;</span></td>
+            	<td><a href="#3">Log file</a></td>
+            </tr>
+        	<tr class="odd">
+            	<td>Recording Service</td>
+            	<td><span class="not-available-icon">&nbsp;</span></td>
+            	<td><a href="#4">Log file</a></td>
+            </tr>
+        	<tr class="even">
+            	<th colspan="3">Disk Space</th>
+            </tr>
+            <tr>
+            	<td><span class="strong">Disk #1</span> (/dev/sda)
+                	<ul>
+                    	<li>/home/bob</li>
+                        <li>/srv/airtime/stor</li>
+                    </ul>
+                </td>
+                <td>12GB of 128GB</td>
+                <td>
+                	<div class="big">
+                    	<div class="diskspace" style="width:10%;">
+                        </div>
+                    </div>
+                    <div>10% in use</div>
+                </td>
+            </tr>
+            <tr>
+            	<td><span class="strong">Disk #2</span> (/dev/sdb)
+                	<ul>
+                    	<li>/home/external/audio</li>
+                    </ul>
+                </td>
+                <td>90GB of 450GB</td>
+                <td>
+                	<div class="big">
+                    	<div class="diskspace" style="width:20%;">
+                        </div>
+                    </div>
+                    <div>20% in use</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
