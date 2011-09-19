@@ -37,6 +37,15 @@ elif [ "$result" -ne "0" ]; then
 fi
 set -e
 
+# Need to ensure monit is running before Airtime daemons are run. This is
+# so we can ensure they can register with monit to monitor them when they start.
+/etc/init.d/monit start
+
+# We may have updated the monit config files, and monit was already running.
+# In this case the previous "start" command didn't do anything, and we need
+# to reload the config files instead.
+/etc/init.d/monit force-reload
+
 echo -e "\n*** API Client Installation ***"
 python ${SCRIPTPATH}/../python_apps/api_clients/install/api_client_install.py
 
@@ -49,11 +58,11 @@ python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
 echo -e "\n*** Media Monitor Installation ***"
 python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
 
-monit monitor icecast2 >/dev/null 2>&1
-monit monitor rabbitmq-server >/dev/null 2>&1
+monit monitor icecast2
+monit monitor rabbitmq-server
 
 echo -e "\n*** Verifying your system environment ***"
-sleep 5
+sleep 10
 airtime-check-system
 
 echo -e "\n******************************* Install Complete *******************************"
