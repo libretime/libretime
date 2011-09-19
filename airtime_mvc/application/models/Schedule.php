@@ -307,9 +307,8 @@ class Schedule {
                 $row["id"] = $row["group_id"];
             }
         } else {
-            $sql = "SELECT MIN(st.name) AS name,"
-            ." MIN(pt.creator) AS creator,"
-            ." st.group_id, "
+            $sql = "SELECT MIN(pt.creator) AS creator,"
+            ." st.group_id,"
             ." SUM(st.clip_length) AS clip_length,"
             ." MIN(st.file_id) AS file_id,"
             ." COUNT(*) as count,"

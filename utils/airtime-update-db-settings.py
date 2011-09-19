@@ -5,9 +5,14 @@ we need to update database host, dbname, username and password.
 This script reads from airtime.conf.
 """
 import os
+import sys
 import ConfigParser
 import xml.dom.minidom
 from xml.dom.minidom import Node
+
+if os.geteuid() != 0:
+    print "Please run this as root."
+    sys.exit(1)
 
 #Read the universal values
 parser = ConfigParser.SafeConfigParser()
