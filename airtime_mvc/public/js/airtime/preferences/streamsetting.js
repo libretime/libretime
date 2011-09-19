@@ -116,7 +116,7 @@ $(document).ready(function() {
     })
     
     $('.toggle legend').live('click',function() {
-        $('.toggle').toggleClass('closed');
+        $(this).parent().toggleClass('closed');
         return false;
     });
     
