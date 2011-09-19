@@ -22,6 +22,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('set-storage-dir', 'json')
                 ->addActionContext('get-stream-setting', 'json')
                 ->addActionContext('status', 'json')
+                ->addActionContext('register-component', 'json')
                 ->initContext();
     }
 
@@ -653,16 +654,27 @@ class ApiController extends Zend_Controller_Action
         */
         
         $status = array(
-            //"airtime_version"=>Application_Model_Systemstatus::GetAirtimeVersion(),
+            "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
+            "airtime_version"=>Application_Model_Systemstatus::GetAirtimeVersion(),
             "icecast2"=>Application_Model_Systemstatus::GetIcecastStatus(),
+            "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
             "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
             "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
-            "show-recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
-            "media-monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
+            "show_recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
+            "media_monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
         );
         
         $this->view->status = $status;
+    }
 
+    public function registerComponentAction(){
+        $request = $this->getRequest();
+
+        $component = $request->getParam('component');
+        $remoteAddr = $_SERVER['REMOTE_ADDR'];
+        Logging::log("Registered Component: ".$component."@".$remoteAddr);
+
+        Application_Model_Component::Register($component, $remoteAddr);
     }
 }
 

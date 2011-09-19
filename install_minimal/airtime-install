@@ -49,8 +49,11 @@ python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
 echo -e "\n*** Media Monitor Installation ***"
 python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
 
-sleep 4
+monit monitor icecast2 >/dev/null 2>&1
+monit monitor rabbitmq-server >/dev/null 2>&1
+
 echo -e "\n*** Verifying your system environment ***"
+sleep 5
 airtime-check-system
 
 echo -e "\n******************************* Install Complete *******************************"

@@ -3,9 +3,10 @@
 class Application_Model_Systemstatus
 {
 
-    public static function GetMonitStatus(){
+    public static function GetMonitStatus($p_ip){
 
-        $url = "http://localhost:2812/_status?format=xml";
+        $url = "http://$p_ip:2812/_status?format=xml";
+        
         $ch = curl_init(); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
         curl_setopt($ch, CURLOPT_URL, $url);  
@@ -20,15 +21,57 @@ class Application_Model_Systemstatus
     }
     
     public static function ExtractServiceInformation($p_docRoot, $p_serviceName){
-    
-        $data = array("pid"=>"UNKNOWN",
-                      "uptime"=>"UNKNOWN");
+
+        $data = array();
+        $starting = array("process_id"=>"STARTING...",
+                      "uptime_seconds"=>"STARTING...",
+                      "memory_perc"=>"UNKNOWN",
+                      "memory_kb"=>"UNKNOWN",
+                      "cpu_perc"=>"UNKNOWN");
+                      
+        $notRunning = array("process_id"=>"FAILED",
+                      "uptime_seconds"=>"FAILED",
+                      "memory_perc"=>"UNKNOWN",
+                      "memory_kb"=>"UNKNOWN",
+                      "cpu_perc"=>"UNKNOWN"
+                      );
+
+        
 
         foreach ($p_docRoot->getElementsByTagName("service") AS $item)
         {
             if ($item->getElementsByTagName("name")->item(0)->nodeValue == $p_serviceName){
-                $data["pid"] = $item->getElementsByTagName("pid")->item(0)->nodeValue;
-                $data["uptime"] = $item->getElementsByTagName("uptime")->item(0)->nodeValue."s";
+
+                $monitor = $item->getElementsByTagName("monitor");
+                if ($monitor->length > 0){
+                    $status = $monitor->item(0)->nodeValue;
+                    if ($status == "2"){
+                        $data = $starting;
+                    } else if ($status == 0){
+                        $data = $notRunning;
+                    }
+                }
+                
+                $process_id = $item->getElementsByTagName("pid");
+                if ($process_id->length > 0){
+                    $data["process_id"] = $process_id->item(0)->nodeValue;
+                }
+
+                $uptime = $item->getElementsByTagName("uptime");
+                if ($uptime->length > 0){
+                    $data["uptime_seconds"] = $uptime->item(0)->nodeValue;
+                }
+                
+                $memory = $item->getElementsByTagName("memory");
+                if ($memory->length > 0){
+                    $data["memory_perc"] = $memory->item(0)->getElementsByTagName("percenttotal")->item(0)->nodeValue."%";
+                    $data["memory_kb"] = $memory->item(0)->getElementsByTagName("kilobytetotal")->item(0)->nodeValue;
+                }
+                
+                $cpu = $item->getElementsByTagName("cpu");
+                if ($cpu->length > 0){
+                    $data["cpu_perc"] = $cpu->item(0)->getElementsByTagName("percent")->item(0)->nodeValue."%";
+                }
                 break;
             }
         }
@@ -36,55 +79,84 @@ class Application_Model_Systemstatus
         return $data;
     }
 
+    public static function GetPlatformInfo(){
+        $docRoot = self::GetMonitStatus("localhost");
+
+        $data = array("release"=>"UNKNOWN",
+                      "machine"=>"UNKNOWN",
+                      "memory"=>"UNKNOWN",
+                      "swap"=>"UNKNOWN");
+
+        foreach ($docRoot->getElementsByTagName("platform") AS $item)
+        {
+            $data["release"] = $item->getElementsByTagName("release")->item(0)->nodeValue;
+            $data["machine"] = $item->getElementsByTagName("machine")->item(0)->nodeValue;
+            $data["memory"] = $item->getElementsByTagName("memory")->item(0)->nodeValue;
+            $data["swap"] = $item->getElementsByTagName("swap")->item(0)->nodeValue;         
+        }
+        
+        return $data;
+
+    }
+
     public static function GetPypoStatus(){
-        $docRoot = self::GetMonitStatus();
+
+        $component = CcComponentQuery::create()->findOneByDbName("pypo");
+        $ip = $component->getDbIp();
+        
+        $docRoot = self::GetMonitStatus($ip);
         $data = self::ExtractServiceInformation($docRoot, "airtime-playout");
 
-        return array(
-            "process_id"=>$data["pid"],
-            "uptime_seconds"=>$data["uptime"]
-        );
+        return $data;
     }
     
     public static function GetLiquidsoapStatus(){
-        $docRoot = self::GetMonitStatus();
+
+        $component = CcComponentQuery::create()->findOneByDbName("pypo");
+        $ip = $component->getDbIp();
+        
+        $docRoot = self::GetMonitStatus($ip);
         $data = self::ExtractServiceInformation($docRoot, "airtime-liquidsoap");
 
-        return array(
-            "process_id"=>$data["pid"],
-            "uptime_seconds"=>$data["uptime"]
-        );
+        return $data;
     }
     
     public static function GetShowRecorderStatus(){
-        $docRoot = self::GetMonitStatus();
+
+        $component = CcComponentQuery::create()->findOneByDbName("show-recorder");
+        $ip = $component->getDbIp();
+        
+        $docRoot = self::GetMonitStatus($ip);
         $data = self::ExtractServiceInformation($docRoot, "airtime-show-recorder");
 
-        return array(
-            "process_id"=>$data["pid"],
-            "uptime_seconds"=>$data["uptime"]
-        );
+        return $data;
     }
     
-    public static function GetMediaMonitorStatus(){        
-        $docRoot = self::GetMonitStatus();
+    public static function GetMediaMonitorStatus(){
+
+        $component = CcComponentQuery::create()->findOneByDbName("media-monitor");
+        $ip = $component->getDbIp();
+        
+        $docRoot = self::GetMonitStatus($ip);
         $data = self::ExtractServiceInformation($docRoot, "airtime-media-monitor");
 
-        return array(
-            "process_id"=>$data["pid"],
-            "uptime_seconds"=>$data["uptime"]
-        );
+        return $data;
     }
     
     public static function GetIcecastStatus(){     
-        $docRoot = self::GetMonitStatus();
+        $docRoot = self::GetMonitStatus("localhost");
         $data = self::ExtractServiceInformation($docRoot, "icecast2");
 
-        return array(
-            "process_id"=>$data["pid"],
-            "uptime_seconds"=>$data["uptime"]
-        );
+        return $data;
     }
+
+    public static function GetRabbitMqStatus(){     
+        $docRoot = self::GetMonitStatus("localhost");
+        $data = self::ExtractServiceInformation($docRoot, "rabbitmq-server");
+
+        return $data;
+    }
+    
     
     public static function GetAirtimeVersion(){
         return AIRTIME_VERSION;

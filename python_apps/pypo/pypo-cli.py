@@ -123,6 +123,9 @@ if __name__ == '__main__':
         g.test_api()
         sys.exit()
 
+    api_client = api_client.api_client_factory(config)
+    api_client.register_component("pypo")
+
     q = Queue()
 
     pp = PypoPush(q)
@@ -132,8 +135,6 @@ if __name__ == '__main__':
     pf = PypoFetch(q)
     pf.daemon = True
     pf.start()
-
-    #while True: time.sleep(3600)
 
     #pp.join()
     pf.join()

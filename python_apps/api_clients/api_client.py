@@ -134,6 +134,9 @@ class ApiClientInterface:
     def set_storage_dir(self):
         pass
 
+    def register_component(self):
+        pass
+
     # Put here whatever tests you want to run to make sure your API is working
     def test(self):
         pass
@@ -541,6 +544,25 @@ class AirTimeApiClient(ApiClientInterface):
             logger.error("Exception: %s", e)
 
         return response
+
+    """
+    Purpose of this method is to contact the server with a "Hey its me!" message.
+    This will allow the server to register the component's (component = media-monitor, pypo etc.)
+    ip address, and later use it to query monit via monit's http service, or download log files
+    via a http server.
+    """
+    def register_component(self, component):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["register_component"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%component%%", component)
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            logger.error("Exception: %s", e)
+            logger.error("Response: %s", response)
 
 ################################################################################
 # OpenBroadcast API Client

@@ -34,6 +34,7 @@ logger.info("\n\n*** Media Monitor bootup ***\n\n")
 try:
     config = AirtimeMediaConfig(logger)
     api_client = apc.api_client_factory(config.cfg)
+    api_client.register_component("media-monitor")
     
     logger.info("Setting up monitor")
     response = None
