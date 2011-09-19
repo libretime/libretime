@@ -159,6 +159,26 @@ class AirTimeApiClient(ApiClientInterface):
             logger = logging.getLogger()
             logger.error('Error loading config file: %s', e)
             sys.exit(1)
+            
+    def get_response_from_server(self, url):
+        logger = logging.getLogger()
+        successful_response = False
+        
+        while not successful_response:
+            try:
+                response = urllib.urlopen(url)
+                data = response.read()
+                successful_response = True
+            except IOError, e:
+                logger.error('Error Authenticating with remote server: %s', e)
+            except Exception, e:
+                logger.error('Couldn\'t connect to remote server. Is it running?')
+                logger.error("%s" % e)
+            if not successful_response:
+                time.sleep(5)
+            
+        return data
+        
 
     def __get_airtime_version(self, verbose = True):
         logger = logging.getLogger()
@@ -169,30 +189,13 @@ class AirTimeApiClient(ApiClientInterface):
         version = -1
         response = None
         try:
-            response = urllib.urlopen(url)
-            data = response.read()
+            data = self.get_response_from_server(url)
             logger.debug("Data: %s", data)
             response_json = json.loads(data)
             version = response_json['version']
             logger.debug("Airtime Version %s detected", version)
-        except IOError, e:
-            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
-            if e[1] == 401:
-                if (verbose):
-                    logger.info('#####################################')
-                    logger.info('# YOUR API KEY SEEMS TO BE INVALID:')
-                    logger.info('# ' + self.config["api_key"])
-                    logger.info('#####################################')
-
-            if e[1] == 404:
-                if (verbose):
-                    logger.info('#####################################')
-                    logger.info('# Unable to contact the Airtime-API')
-                    logger.info('# ' + url)
-                    logger.info('#####################################')
-            return -1
         except Exception, e:
-            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
+            logger.error("Unable to detect Airtime Version - %s", e)
             return -1
 
         return version
@@ -244,7 +247,7 @@ class AirTimeApiClient(ApiClientInterface):
         response = ""
         status = 0
         try:
-            response_json = urllib.urlopen(export_url).read()
+            response_json = self.get_response_from_server(export_url)
             response = json.loads(response_json)
             status = response['check']
         except Exception, e:
@@ -334,9 +337,10 @@ class AirTimeApiClient(ApiClientInterface):
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["show_schedule_url"])
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
+            
+            response = self.get_response_from_server(url)
 
-            response = urllib.urlopen(url)
-            response = json.loads(response.read())
+            response = json.loads(response)
             logger.info("shows %s", response)
 
         except Exception, e:
@@ -388,14 +392,9 @@ class AirTimeApiClient(ApiClientInterface):
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_setup_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
 
-            response = urllib.urlopen(url)
-            response = json.loads(response.read())
+            response = self.get_response_from_server(url)
+            response = json.loads(response)
             logger.info("Connected to Airtime Server. Json Media Storage Dir: %s", response)
-        except IOError:
-            #this should be a common exception when media-monitor daemon
-            #has started before apache on bootup and apache isn't accepting
-            #connections yet.
-            response = None
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
