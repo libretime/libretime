@@ -355,10 +355,6 @@ class PypoFetch(Thread):
     def main(self):
         logger = logging.getLogger('fetch')
 
-        while not self.init_rabbit_mq():
-            logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
-            time.sleep(5)
-
         try: os.mkdir(self.cache_dir)
         except Exception, e: pass
 
@@ -369,6 +365,11 @@ class PypoFetch(Thread):
             logger.info("Bootstrap schedule received: %s", schedule_data)
             self.process_schedule(schedule_data, "scheduler", True)                
         logger.info("Bootstrap complete: got initial copy of the schedule")
+
+
+        while not self.init_rabbit_mq():
+            logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
+            time.sleep(5)
 
         loops = 1        
         while True:
