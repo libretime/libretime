@@ -17,6 +17,7 @@
     -Fixed issue where incorrect Start Date and Time entered for a new show was not handled gracefully
     -Fixed issue where using Cyrillic characters in a show name would sometimes cause it to not play
     -Fixed pypo hanging if web server is unavailable
+    -Fixed items that were being dragged and dropped in the Playlist Builder being obscured by other UI elements.
     
 1.9.3 - August 26th, 2011
   *Improvements

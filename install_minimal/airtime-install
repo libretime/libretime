@@ -2,6 +2,11 @@
 #-e Causes bash script to exit if any of the installers
 #return with a non-zero return value.
 
+if [ `whoami` != 'root' ]; then
+    echo "Please run as root user."
+    exit 1
+fi
+
 set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 set -e
@@ -26,7 +31,7 @@ echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
 set +e
-php --php-ini ${SCRIPTPATH}/airtime-php.ini --file ${SCRIPTPATH}/include/airtime-install.php $@
+php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-install.php $@
 result=$?
 if [ "$result" -eq "2" ]; then
     #We've just finished an upgrade, so let's exit
