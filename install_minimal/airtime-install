@@ -2,6 +2,11 @@
 #-e Causes bash script to exit if any of the installers
 #return with a non-zero return value.
 
+if [ `whoami` != 'root' ]; then
+    echo "Please run as root user."
+    exit 1
+fi
+
 set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 set -e

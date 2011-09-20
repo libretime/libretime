@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ `whoami` != 'root' ]; then
+    echo "Please run as root user."
+    exit 1
+fi
+
 VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
 if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
     echo -e "\nAirtime is not installed, cannot uninstall.\n"

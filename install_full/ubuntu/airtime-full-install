@@ -7,7 +7,7 @@ exec > >(tee install_log.txt)
 exec 2>&1
 
 if [ "$(id -u)" != "0" ]; then
-	echo "You need root privileges to run this script"
+    echo "Please run as root user."
 	exit 1
 fi
 
