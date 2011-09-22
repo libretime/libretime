@@ -13,9 +13,12 @@ rm -rf "/var/tmp/airtime"
 rm -rf "/var/www/airtime"
 rm -rf "/usr/bin/airtime-*"
 rm -rf "/usr/lib/airtime"
+rm -rf "/var/lib/airtime"
 rm -rf "/var/tmp/airtime"
 rm -rf "/opt/pypo"
 rm -rf "/opt/recorder"
 rm -rf "/srv/airtime"
 
 echo "DROP DATABASE AIRTIME;" | su postgres -c psql
+echo "DROP LANGUAGE plpgsql;" | su postgres -c psql
+echo "DROP USER AIRTIME;" | su postgres -c psql
