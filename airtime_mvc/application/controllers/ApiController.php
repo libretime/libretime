@@ -407,6 +407,13 @@ class ApiController extends Zend_Controller_Action
         		}
         		catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
         			$code = $e->getHttpCode();
+                    $msg = $e->getHttpBody();
+                    $temp = explode('"error":',$msg);
+                    $msg = trim($temp[1], '"}');
+                    $this->setSoundCloudErrorCode($code);
+                    $this->setSoundCloudErrorMsg($msg);
+                    // setting sc id to -3 which indicates error
+                    $this->setSoundCloudFileId(-3);
         			if(!in_array($code, array(0, 100))) {
         				break;
         			}
