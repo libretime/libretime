@@ -256,7 +256,8 @@ class CommandListener(Thread):
 
                 #remove show from shows to record.
                 del self.shows_to_record[start_time]
-                self.time_till_next_show = 3600
+                time_till_next_show = self.get_time_till_next_show()
+                self.time_till_next_show = time_till_next_show
             except Exception,e :
                 self.logger.error(e)
         else:
@@ -295,6 +296,7 @@ class CommandListener(Thread):
                 # start recording
                 self.start_record()
             except Exception, e:
+                self.logger.info(e)
                 time.sleep(3)
 
             loops += 1
