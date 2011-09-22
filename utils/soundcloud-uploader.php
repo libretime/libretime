@@ -59,7 +59,7 @@ if(count($argv) != 2){
 }
 
 $id = $argv[1];
-$file = StoredFile::Recall($id);
+$file = Application_Model_StoredFile::Recall($id);
 // set id with -2 which is indicator for processing
 $file->setSoundCloudFileId(-2);
 $file->uploadToSoundCloud();
