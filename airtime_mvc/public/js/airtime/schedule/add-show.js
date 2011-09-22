@@ -374,15 +374,15 @@ function setAddShowEvents() {
 	function calculateDuration(endDateTime, startDateTime){
 		var duration;
 		var durationSeconds = (endDateTime.getTime() - startDateTime.getTime())/1000;
-		if(durationSeconds != 0){
+		if(isNaN(durationSeconds)){
+		    duration = '1h';
+		}
+		else if(durationSeconds != 0){
 			var durationHour = parseInt(durationSeconds/3600, 10);
 			var durationMin = parseInt((durationSeconds%3600)/60, 10);
 			duration = (durationHour == 0 ? '' : durationHour+'h'+' ')+(durationMin == 0 ? '' : durationMin+'m');
 		}else{
 			duration = '0m';
-		}
-		if(isNaN(duration)){
-		    duration = '1h';
 		}
 		$('#add_show_duration').val(duration);
 	}
