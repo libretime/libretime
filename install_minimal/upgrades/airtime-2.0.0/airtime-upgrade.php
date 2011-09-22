@@ -301,7 +301,7 @@ class ConvertToUtc{
             $dt = new DateTime($sd->getDbFirstShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
             $sd->setDbFirstShow($dt->format("Y-m-d"));
-            $sd->setDbStartTime($dt->format("H-i-s"));
+            $sd->setDbStartTime($dt->format("H:i:s"));
             
             $dt = new DateTime($sd->getDbLastShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
@@ -571,7 +571,7 @@ if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
     }
 }
 
-AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110829143306');
+AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110922153933');
 
 AirtimeInstall::SetDefaultStreamSetting();
 
