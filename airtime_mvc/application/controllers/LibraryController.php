@@ -97,7 +97,7 @@ class LibraryController extends Zend_Controller_Action
                     $text = "Re-upload to Soundcloud";
                 }
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
-                                'callback'=>'window["redrawDataTable"]'),'title' => $text);
+                                'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
             }
 
             if ($user->isAdmin()) {

@@ -348,7 +348,7 @@ function addQtipToSCIcons(ele){
     if($(ele).hasClass("progress")){
         $(ele).qtip({
             content: {
-                text: "Uploading in the progress..."
+                text: "Uploading in progress..."
             },
             position:{
                 adjust: {

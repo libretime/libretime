@@ -153,11 +153,9 @@ function dtDrawCallback() {
 	addLibraryItemEvents();
 }
 
-function redrawDataTable() {
-    var dt;
-    
-    dt = $('#library_display').dataTable();
-    dt.fnDraw(false);
+function addProgressIcon(id) {
+    $("#au_"+id).find("td:eq(0)").append('<span id="'+id+'" class="small-icon progress"></span>')
+    $("span[id="+id+"]").addClass("progress");
 }
 
 function checkSCUploadStatus(){
@@ -180,7 +178,7 @@ function addQtipToSCIcons(){
         if($(this).hasClass("progress")){
             $(this).qtip({
                 content: {
-                    text: "Uploading in the progress..."
+                    text: "Uploading in progress..."
                 },
                 position:{
                     adjust: {
