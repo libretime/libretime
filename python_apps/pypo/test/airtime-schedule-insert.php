@@ -68,11 +68,11 @@ $pl = new Playlist();
 $pl->create($playlistName);
 
 
-$mediaFile = StoredFile::findByOriginalName("Peter_Rudenko_-_Opening.mp3");
+$mediaFile = Application_Model_StoredFile::findByOriginalName("Peter_Rudenko_-_Opening.mp3");
 if (is_null($mediaFile)) {
     echo "Adding test audio clip to the database.\n";
     $v = array("filepath" => __DIR__."/../../../audio_samples/vorbis.com/Hydrate-Kenny_Beltrey.ogg");
-    $mediaFile = StoredFile::Insert($v);
+    $mediaFile = Application_Model_StoredFile::Insert($v);
     if (PEAR::isError($mediaFile)) {
     	var_dump($mediaFile);
     	exit();
