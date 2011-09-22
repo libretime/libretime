@@ -657,13 +657,14 @@ class ApiController extends Zend_Controller_Action
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
             "airtime_version"=>Application_Model_Systemstatus::GetAirtimeVersion(),
             "services"=>array(
-                Application_Model_Systemstatus::GetIcecastStatus(),
-                Application_Model_Systemstatus::GetRabbitMqStatus(),
-                Application_Model_Systemstatus::GetPypoStatus(),
-                Application_Model_Systemstatus::GetLiquidsoapStatus(),
-                Application_Model_Systemstatus::GetShowRecorderStatus(),
-                Application_Model_Systemstatus::GetMediaMonitorStatus()
-            )
+                "icecast2"=>Application_Model_Systemstatus::GetIcecastStatus(),
+                "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
+                "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
+                "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
+                "show_recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
+                "media_monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
+            ),
+            "partitions"=>Application_Model_Systemstatus::GetDiskInfo()
         );
         
         $this->view->status = $status;

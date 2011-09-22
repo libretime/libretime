@@ -1,23 +1,11 @@
-<!--
-<?php foreach($this->status as $key=>$value): ?>
-    <div>
-        <?php echo $key; ?>
-        <?php echo "PID: ".$value["process_id"]; ?>
-        <?php echo "UPTIME: ".$value["uptime_seconds"]; ?>
-        
-        <?php if (true): ?>
-            <a href="systemstatus/get-log-file/id/<?php echo $key ?>">Log file</a>
-        <?php endif; ?>
-    </div>
-<?php endforeach; ?>
--->
-
 <table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
     	<thead>
         	<tr class="ui-state-default strong">
             	<td>Service</td>
             	<td>Status</td>
             	<td>Uptime</td>
+            	<td>CPU</td>
+            	<td>Memory</td>
             </tr>
         </thead>
         <tbody>
@@ -29,46 +17,17 @@
             </tr>
             -->
             <?php $i=0; ?>
-            <?php foreach($this->status as $key=>$value): ?>
+            <?php foreach($this->status->services as $key=>$value): ?>
                 <tr class="<?php echo ($i&1) == 0 ? "even":"odd"; $i++; ?>" id="<?php echo $value["name"]; ?>">
                     <td><?php echo $value["name"]; ?></td>
-                    <td><span class="<?php echo $value["status"] ? "checked-icon" : "not-available-icon" ?>">&nbsp;</span></td>
-                    <td><?php echo $value["uptime_seconds"]; ?></td>
+                    <td><span></span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             <?php endforeach; ?>
-        	<tr class="even">
-            	<th colspan="3">Disk Space</th>
-            </tr>
-            <tr>
-            	<td><span class="strong">Disk #1</span> (/dev/sda)
-                	<ul>
-                    	<li>/home/bob</li>
-                        <li>/srv/airtime/stor</li>
-                    </ul>
-                </td>
-                <td>12GB of 128GB</td>
-                <td>
-                	<div class="big">
-                    	<div class="diskspace" style="width:10%;">
-                        </div>
-                    </div>
-                    <div>10% in use</div>
-                </td>
-            </tr>
-            <tr>
-            	<td><span class="strong">Disk #2</span> (/dev/sdb)
-                	<ul>
-                    	<li>/home/external/audio</li>
-                    </ul>
-                </td>
-                <td>90GB of 450GB</td>
-                <td>
-                	<div class="big">
-                    	<div class="diskspace" style="width:20%;">
-                        </div>
-                    </div>
-                    <div>20% in use</div>
-                </td>
+        	<tr id="partitions" class="even">
+            	<th colspan="5">Disk Space</th>
             </tr>
         </tbody>
     </table>

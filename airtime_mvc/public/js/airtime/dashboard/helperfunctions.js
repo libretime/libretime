@@ -11,6 +11,23 @@ function popup(mylink){
     return false;
 }
 
+function convertSecondsToDaysHoursMinutesSeconds(seconds){
+    if (seconds < 0)
+        seconds = 0;
+    
+    seconds = parseInt(seconds, 10);
+
+    var days = parseInt(seconds / 86400);
+    seconds -= days*86400;
+
+    var hours = parseInt(seconds / 3600);
+    seconds -= hours*3600;
+
+    var minutes = parseInt(seconds / 60);
+    seconds -= minutes*60;
+
+    return {days:days, hours:hours, minutes:minutes, seconds:seconds}; 
+}
 
 /* Takes an input parameter of milliseconds and converts these into
  * the format HH:MM:SS */

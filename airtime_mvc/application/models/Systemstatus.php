@@ -14,10 +14,14 @@ class Application_Model_Systemstatus
         $result = curl_exec($ch);
         curl_close($ch);
 
-        $xmlDoc = new DOMDocument();
-        $xmlDoc->loadXML($result);
+        $docRoot = null;
+        if ($result != ""){
+            $xmlDoc = new DOMDocument();
+            $xmlDoc->loadXML($result);
+            $docRoot = $xmlDoc->documentElement;
+        }
 
-        return $xmlDoc->documentElement;
+        return $docRoot;
     }
     
     public static function ExtractServiceInformation($p_docRoot, $p_serviceName){
@@ -25,20 +29,20 @@ class Application_Model_Systemstatus
         $starting = array(
                         "name"=>"",
                         "process_id"=>"STARTING...",
-                        "uptime_seconds"=>"STARTING...",
+                        "uptime_seconds"=>"-1",
                         "status"=>true,
-                        "memory_perc"=>"UNKNOWN",
-                        "memory_kb"=>"UNKNOWN",
-                        "cpu_perc"=>"UNKNOWN");
+                        "memory_perc"=>"0%",
+                        "memory_kb"=>"0",
+                        "cpu_perc"=>"0%");
                       
         $notRunning = array(
-                        "name"=>"",
+                        "name"=>$p_serviceName,
                         "process_id"=>"FAILED",
-                        "uptime_seconds"=>"FAILED",
+                        "uptime_seconds"=>"-1",
                         "status"=>false,
-                        "memory_perc"=>"UNKNOWN",
-                        "memory_kb"=>"UNKNOWN",
-                        "cpu_perc"=>"UNKNOWN"
+                        "memory_perc"=>"0%",
+                        "memory_kb"=>"0",
+                        "cpu_perc"=>"0%"
                       );
         $data = $notRunning;
 
@@ -174,6 +178,32 @@ class Application_Model_Systemstatus
     public static function GetAirtimeVersion(){
         return AIRTIME_VERSION;
     }
+
+    public static function GetDiskInfo(){
+        /* First lets get all the watched directories. Then we can group them
+         * into the same paritions by comparing the partition sizes. */
+        $musicDirs = MusicDir::getWatchedDirs();
+        $musicDirs[] = MusicDir::getStorDir();
+
+
+        $partions = array();
+
+        foreach($musicDirs as $md){
+            $totalSpace = disk_total_space($md->getDirectory());
+
+            if (!isset($partitions[$totalSpace])){
+                $partitions[$totalSpace] = new StdClass;
+                $partitions[$totalSpace]->totalSpace = $totalSpace;
+                $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
+            }
+            
+            $partitions[$totalSpace]->dirs[] = $md->getDirectory();
+        }
+
+        return array_values($partitions);
+    }
+
+    
 /*
 
 

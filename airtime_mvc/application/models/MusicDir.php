@@ -222,8 +222,7 @@ class MusicDir {
                     ->find();
 
         foreach($dirs as $dir) {
-            $tmp = new MusicDir($dir);
-            $result[] = $tmp;
+            $result[] = new MusicDir($dir);
         }
 
         return $result;
