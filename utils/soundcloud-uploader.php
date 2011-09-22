@@ -22,8 +22,7 @@ $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_r
 require_once($CC_CONFIG['phpDir'].'/application/configs/constants.php');
 require_once($CC_CONFIG['phpDir'].'/application/configs/conf.php');
 
-//$CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
-$CC_CONFIG['phpDir'] = "/home/james/src/airtime/airtime_mvc";
+$CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
 
 require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
