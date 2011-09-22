@@ -763,6 +763,7 @@ exec("svc -dx /etc/service/pypo-liquidsoap/log");
 exec("svc -dx /etc/service/recorder");
 exec("svc -dx /etc/service/recorder/log");
 exec("killall supervise");
+exec("killall liquidsoap");
 
 $pathnames = array("/usr/bin/airtime-pypo-start",
                 "/usr/bin/airtime-pypo-stop",
@@ -819,6 +820,7 @@ AirtimeInstall::SetUniqueId();
 AirtimeInstall::SetImportTimestamp();
 
 AirtimeIni::CreateMonitFile();
+exec("/etc/init.d/monit start");
 
 AirtimeInstall::CreateSymlinksToUtils();
 
