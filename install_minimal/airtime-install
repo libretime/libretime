@@ -2,6 +2,11 @@
 #-e Causes bash script to exit if any of the installers
 #return with a non-zero return value.
 
+if [ `whoami` != 'root' ]; then
+    echo "Please run as root user."
+    exit 1
+fi
+
 set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 set -e
@@ -26,7 +31,7 @@ echo -e "\n*** Creating Pypo User ***"
 python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
 set +e
-php --php-ini ${SCRIPTPATH}/airtime-php.ini --file ${SCRIPTPATH}/include/airtime-install.php $@
+php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-install.php $@
 result=$?
 if [ "$result" -eq "2" ]; then
     #We've just finished an upgrade, so let's exit
@@ -36,6 +41,15 @@ elif [ "$result" -ne "0" ]; then
     exit 1
 fi
 set -e
+
+# Need to ensure monit is running before Airtime daemons are run. This is
+# so we can ensure they can register with monit to monitor them when they start.
+/etc/init.d/monit start
+
+# We may have updated the monit config files, and monit was already running.
+# In this case the previous "start" command didn't do anything, and we need
+# to reload the config files instead.
+/etc/init.d/monit force-reload
 
 echo -e "\n*** API Client Installation ***"
 python ${SCRIPTPATH}/../python_apps/api_clients/install/api_client_install.py
@@ -49,11 +63,11 @@ python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
 echo -e "\n*** Media Monitor Installation ***"
 python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
 
-monit monitor icecast2 >/dev/null 2>&1
-monit monitor rabbitmq-server >/dev/null 2>&1
+monit monitor icecast2
+monit monitor rabbitmq-server
 
 echo -e "\n*** Verifying your system environment ***"
-sleep 5
+sleep 10
 airtime-check-system
 
 echo -e "\n******************************* Install Complete *******************************"

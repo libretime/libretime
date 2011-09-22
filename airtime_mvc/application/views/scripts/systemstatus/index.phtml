@@ -1,11 +1,33 @@
-<?php foreach($this->status as $key=>$value): ?>
-    <div>
-        <?php echo $key; ?>
-        <?php echo "PID: ".$value["process_id"]; ?>
-        <?php echo "UPTIME: ".$value["uptime_seconds"]; ?>
-        
-        <?php if (true): ?>
-            <a href="systemstatus/get-log-file/id/<?php echo $key ?>">Log file</a>
-        <?php endif; ?>
-    </div>
-<?php endforeach; ?>
+<table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
+    	<thead>
+        	<tr class="ui-state-default strong">
+            	<td>Service</td>
+            	<td>Status</td>
+            	<td>Uptime</td>
+            	<td>CPU</td>
+            	<td>Memory</td>
+            </tr>
+        </thead>
+        <tbody>
+            <!--
+        	<tr class="odd">
+            	<td>Airtime Version</td>
+            	<td>1.9.3</td>
+            	<td>&nbsp;</td>
+            </tr>
+            -->
+            <?php $i=0; ?>
+            <?php foreach($this->status->services as $key=>$value): ?>
+                <tr class="<?php echo ($i&1) == 0 ? "even":"odd"; $i++; ?>" id="<?php echo $value["name"]; ?>">
+                    <td><?php echo $value["name"]; ?></td>
+                    <td><span></span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            <?php endforeach; ?>
+        	<tr id="partitions" class="even">
+            	<th colspan="5">Disk Space</th>
+            </tr>
+        </tbody>
+    </table>

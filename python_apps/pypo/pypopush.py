@@ -101,13 +101,15 @@ class PypoPush(Thread):
 
         try:
             playlist = playlists[pkey]
+            plstart = schedule[pkey]['start'][0:19]
 
             #strptime returns struct_time in local time
             #mktime takes a time_struct and returns a floating point
             #gmtime Convert a time expressed in seconds since the epoch to a struct_time in UTC
             #mktime: expresses the time in local time, not UTC. It returns a floating point number, for compatibility with time().
-            epoch_start = calendar.timegm(time.strptime(pkey, '%Y-%m-%d-%H-%M-%S'))
 
+            epoch_start = calendar.timegm(time.strptime(plstart, '%Y-%m-%d-%H-%M-%S'))
+            
             #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
             epoch_now = time.time()
 

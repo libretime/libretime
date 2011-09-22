@@ -381,6 +381,9 @@ function setAddShowEvents() {
 		}else{
 			duration = '0m';
 		}
+		if(isNaN(duration)){
+		    duration = '1h';
+		}
 		$('#add_show_duration').val(duration);
 	}
 
