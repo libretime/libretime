@@ -730,7 +730,7 @@ class StoredFile {
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
 		$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        Logging::log(__FILE__.':uploadFile(): filename='.$fileName);
+        Logging::log(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
 		// Clean the fileName for security reasons
         //this needs fixing for songs not in ascii.
 		//$fileName = preg_replace('/[^\w\._]+/', '', $fileName);

@@ -677,7 +677,10 @@ class Airtime190Upgrade{
            ->findOne();
 
         /* Handle Database Changes. */
-        $stor_dir = realpath($values['general']['base_files_dir']."/stor")."/";
+
+        $pi = pathinfo($values['general']['base_files_dir']);
+        $stor_dir = $pi["dirname"].DIRECTORY_SEPARATOR.$pi["basename"].DIRECTORY_SEPARATOR."stor".DIRECTORY_SEPARATOR;
+        
         echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
         $propel_stor_dir->setDirectory($stor_dir);
         $propel_stor_dir->save();
