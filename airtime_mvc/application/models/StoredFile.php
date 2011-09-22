@@ -438,10 +438,10 @@ class Application_Model_StoredFile {
      * Get the URL to access this file.
      */
     public function getFileUrl()
-    {       
+    {
         $serverName = $_SERVER['SERVER_NAME'];
         $serverPort = $_SERVER['SERVER_PORT'];
-        
+
         return "http://$serverName:$serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
@@ -834,7 +834,7 @@ class Application_Model_StoredFile {
             }
             if (file_exists($duplicate->getFilePath())) {
                 $duplicateName = $duplicate->getMetadataValue('MDATA_KEY_TITLE');
-                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named \"' . $duplicateName . '\" already exists on the server."}}');
             }
         }
 
@@ -878,39 +878,39 @@ class Application_Model_StoredFile {
 
         return $results;
     }
-    
+
     public function setSoundCloudFileId($p_soundcloud_id)
     {
         $this->_file->setDbSoundCloudId($p_soundcloud_id)
             ->save();
     }
-    
+
     public function getSoundCloudId(){
         return $this->_file->getDbSoundCloudId();
     }
-    
+
     public function setSoundCloudErrorCode($code){
         $this->_file->setDbSoundCloudErrorCode($code)
             ->save();
     }
-    
+
     public function getSoundCloudErrorCode(){
         return $this->_file->getDbSoundCloudErrorCode();
     }
-    
+
     public function setSoundCloudErrorMsg($msg){
         $this->_file->setDbSoundCloudErrorMsg($msg)
             ->save();
     }
-    
+
     public function getSoundCloudErrorMsg(){
         return $this->_file->getDbSoundCloudErrorMsg();
     }
-    
+
     public function uploadToSoundCloud()
     {
         global $CC_CONFIG;
-        
+
         $file = $this->_file;
         if(is_null($file)) {
             return "File does not exist";

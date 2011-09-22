@@ -330,7 +330,7 @@ function getFullCalendarEvents(start, end, callback) {
 }
 
 function checkSCUploadStatus(){
-    var url = '/Library/get-upload-to-sc-status/format/json';
+    var url = '/Library/get-upload-to-soundcloud-status/format/json';
     $("span[class*=progress]").each(function(){
         var id = $(this).attr("id");
         $.post(url, {format: "json", id: id, type:"show"}, function(json){
@@ -368,7 +368,7 @@ function addQtipToSCIcons(ele){
             content: {
                 text: "Retreiving data from the server...",
                 ajax: {
-                    url: "/Library/get-upload-to-sc-status",
+                    url: "/Library/get-upload-to-soundcloud-status",
                     type: "post",
                     data: ({format: "json", id : id, type: "file"}),
                     success: function(json, status){
@@ -394,7 +394,7 @@ function addQtipToSCIcons(ele){
             content: {
                 text: "Retreiving data from the server...",
                 ajax: {
-                    url: "/Library/get-upload-to-sc-status",
+                    url: "/Library/get-upload-to-soundcloud-status",
                     type: "post",
                     data: ({format: "json", id : id, type: "show"}),
                     success: function(json, status){

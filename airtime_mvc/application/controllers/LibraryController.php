@@ -14,7 +14,7 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('context-menu', 'json')
                     ->addActionContext('get-file-meta-data', 'html')
                     ->addActionContext('upload-file-soundcloud', 'json')
-                    ->addActionContext('get-upload-to-sc-status', 'json')
+                    ->addActionContext('get-upload-to-soundcloud-status', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -180,7 +180,7 @@ class LibraryController extends Zend_Controller_Action
         //format clip lengh to 1 decimal
         foreach($datatables["aaData"] as &$data){
             if($data[6] == 'audioclip'){
-                $file = StoredFile::Recall($data[0]);
+                $file = Application_Model_StoredFile::Recall($data[0]);
                 $scid = $file->getSoundCloudId();
                 if($scid == "-2"){
                     $data[1] .= '<span id="'.$data[0].'" class="small-icon progress"></span>';
@@ -249,7 +249,7 @@ class LibraryController extends Zend_Controller_Action
         die();
     }
     
-    public function getUploadToScStatusAction(){
+    public function getUploadToSoundcloudStatusAction(){
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
         if($type == "show"){
@@ -259,7 +259,7 @@ class LibraryController extends Zend_Controller_Action
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
         }else{
-            $file = StoredFile::Recall($id);
+            $file = Application_Model_StoredFile::Recall($id);
             $this->view->sc_id = $file->getSoundCloudId();
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();

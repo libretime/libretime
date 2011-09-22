@@ -6,24 +6,12 @@
   <title>Zend Framework Default Application</title>
 </head>
 <body>
-  <h1>An error occurred</h1>
-  <h2><?php echo $this->message ?></h2>
- 
-  <?php if ('development' == APPLICATION_ENV): ?>
- 
-  <h3>Exception information:</h3>
-  <p>
-      <b>Message:</b> <?php echo $this->exception->getMessage() ?>
-  </p>
- 
-  <h3>Stack trace:</h3>
-  <pre><?php echo $this->exception->getTraceAsString() ?>
-  </pre>
- 
-  <h3>Request Parameters:</h3>
-  <pre><?php echo var_export($this->request->getParams(), 1) ?>
-  </pre>
-  <?php endif ?>
- 
+    <div class="error-content">
+        <h2>Page not found!</h2>
+        <p>Looks like the page you were looking for doesn't exist!</p>
+        <div class="button-bar">
+            <a class="toggle-button" href="dashboard/help">Help</a>
+        </div>
+    </div>
 </body>
 </html>

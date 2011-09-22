@@ -22,8 +22,7 @@ $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_r
 require_once($CC_CONFIG['phpDir'].'/application/configs/constants.php');
 require_once($CC_CONFIG['phpDir'].'/application/configs/conf.php');
 
-//$CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
-$CC_CONFIG['phpDir'] = "/home/james/src/airtime/airtime_mvc";
+$CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
 
 require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
@@ -59,7 +58,7 @@ if(count($argv) != 2){
 }
 
 $id = $argv[1];
-$file = StoredFile::Recall($id);
+$file = Application_Model_StoredFile::Recall($id);
 // set id with -2 which is indicator for processing
 $file->setSoundCloudFileId(-2);
 $file->uploadToSoundCloud();

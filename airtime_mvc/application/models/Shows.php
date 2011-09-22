@@ -1245,7 +1245,7 @@ class Show {
         
         // get soundcloud_id
         if(!is_null($show["file_id"])){
-            $file = StoredFile::Recall($show["file_id"]);
+            $file = Application_Model_StoredFile::Recall($show["file_id"]);
             $soundcloud_id = $file->getSoundCloudId();
         }else{
             $soundcloud_id = null;
@@ -1364,13 +1364,13 @@ class ShowInstance {
 
     public function setSoundCloudFileId($p_soundcloud_id)
     {
-        $file = StoredFile::Recall($this->_showInstance->getDbRecordedFile());
+        $file = Application_Model_StoredFile::Recall($this->_showInstance->getDbRecordedFile());
         $file->setSoundCloudFileId($p_soundcloud_id);
     }
 
     public function getSoundCloudFileId()
     {
-        $file = StoredFile::Recall($this->_showInstance->getDbRecordedFile());
+        $file = Application_Model_StoredFile::Recall($this->_showInstance->getDbRecordedFile());
         return $file->getSoundCloudId();
     }
 
