@@ -97,7 +97,7 @@ class ApiController extends Zend_Controller_Action
         $filename = $this->_getParam("file");
         $file_id = substr($filename, 0, strpos($filename, "."));
         if (ctype_alnum($file_id) && strlen($file_id) == 32) {
-          $media = StoredFile::RecallByGunid($file_id);
+          $media = Application_Model_StoredFile::RecallByGunid($file_id);
           if ($media != null && !PEAR::isError($media)) {
             $filepath = $media->getFilePath();
             if(is_file($filepath)){
@@ -330,9 +330,9 @@ class ApiController extends Zend_Controller_Action
         }
 
         $upload_dir = ini_get("upload_tmp_dir");
-        StoredFile::uploadFile($upload_dir);
+        Application_Model_StoredFile::uploadFile($upload_dir);
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        StoredFile::copyFileToStor($upload_dir, $fileName);
+        Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName);
     }
 
     public function uploadRecordedAction()
@@ -356,7 +356,7 @@ class ApiController extends Zend_Controller_Action
 
 
        	$showCanceled = false;
-       	$file = StoredFile::Recall($file_id);
+       	$file = Application_Model_StoredFile::Recall($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
         $show_name = null;
@@ -435,9 +435,9 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $this->view->stor = MusicDir::getStorDir()->getDirectory();
+        $this->view->stor = Application_Model_MusicDir::getStorDir()->getDirectory();
         
-        $watchedDirs = MusicDir::getWatchedDirs();
+        $watchedDirs = Application_Model_MusicDir::getWatchedDirs();
         $watchedDirsPath = array();
         foreach($watchedDirs as $wd){
             $watchedDirsPath[] = $wd->getDirectory();
@@ -475,10 +475,10 @@ class ApiController extends Zend_Controller_Action
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
 
-            $file = StoredFile::RecallByFilepath($filepath);
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
-                $file = StoredFile::Insert($md);
+                $file = Application_Model_StoredFile::Insert($md);
             }
             else {
                 $this->view->error = "File already exists in Airtime.";
@@ -488,7 +488,7 @@ class ApiController extends Zend_Controller_Action
         else if ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
-            $file = StoredFile::RecallByFilepath($filepath);
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             //File is not in database anymore.
             if (is_null($file)) {
@@ -502,7 +502,7 @@ class ApiController extends Zend_Controller_Action
         }
         else if ($mode == "moved") {
             $md5 = $md['MDATA_KEY_MD5'];
-            $file = StoredFile::RecallByMd5($md5);
+            $file = Application_Model_StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
@@ -518,7 +518,7 @@ class ApiController extends Zend_Controller_Action
         else if ($mode == "delete") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
-            $file = StoredFile::RecallByFilepath($filepath);
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
@@ -544,7 +544,7 @@ class ApiController extends Zend_Controller_Action
         }
         $dir_id = $request->getParam('dir_id');
 
-        $this->view->files = StoredFile::listAllFiles($dir_id);
+        $this->view->files = Application_Model_StoredFile::listAllFiles($dir_id);
     }
 
     public function listAllWatchedDirsAction() {
@@ -561,8 +561,8 @@ class ApiController extends Zend_Controller_Action
 
         $result = array();
 
-        $arrWatchedDirs = MusicDir::getWatchedDirs();
-        $storDir = MusicDir::getStorDir();
+        $arrWatchedDirs = Application_Model_MusicDir::getWatchedDirs();
+        $storDir = Application_Model_MusicDir::getStorDir();
 
         $result[$storDir->getId()] = $storDir->getDirectory();
 
@@ -587,7 +587,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $this->view->msg = MusicDir::addWatchedDir($path);
+        $this->view->msg = Application_Model_MusicDir::addWatchedDir($path);
     }
 
     public function removeWatchedDirAction() {
@@ -604,7 +604,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $this->view->msg = MusicDir::removeWatchedDir($path);
+        $this->view->msg = Application_Model_MusicDir::removeWatchedDir($path);
     }
 
     public function setStorageDirAction() {
@@ -621,7 +621,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $this->view->msg = MusicDir::setStorDir($path);
+        $this->view->msg = Application_Model_MusicDir::setStorDir($path);
     }
     
     public function getStreamSettingAction() {

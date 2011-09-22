@@ -24,17 +24,17 @@ $CC_DBC->query($sql);
 
 /*
 // Create a playlist
-$playlist = new Playlist();
+$playlist = new Application_Model_Playlist();
 $playlist->create("Calendar Load test playlist ".uniqid());
 
 // Add a file
 $values = array("filepath" => __DIR__."/test10001.mp3");
-$storedFile = StoredFile::Insert($values, false);
+$storedFile = Application_Model_StoredFile::Insert($values, false);
 $result = $playlist->addAudioClip($storedFile->getId());
 
 // Add a file
 $values = array("filepath" => __DIR__."/test10002.mp3");
-$storedFile2 = StoredFile::Insert($values, false);
+$storedFile2 = Application_Model_StoredFile::Insert($values, false);
 
 $result = $playlist->addAudioClip($storedFile2->getId());
 $result = $playlist->addAudioClip($storedFile2->getId());

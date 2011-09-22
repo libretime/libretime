@@ -1,5 +1,4 @@
 <?php
-require_once("StoredFile.php");
 
 class ScheduleGroup {
 
@@ -49,7 +48,7 @@ class ScheduleGroup {
             // Schedule a single audio track
 
             // Load existing track
-            $track = StoredFile::Recall($p_audioFileId);
+            $track = Application_Model_StoredFile::Recall($p_audioFileId);
             if (is_null($track)) {
                 return new PEAR_Error("Could not find audio track.");
             }
@@ -80,7 +79,7 @@ class ScheduleGroup {
             // Schedule a whole playlist
 
             // Load existing playlist
-            $playlist = Playlist::Recall($p_playlistId);
+            $playlist = Application_Model_Playlist::Recall($p_playlistId);
             if (is_null($playlist)) {
                 return new PEAR_Error("Could not find playlist.");
             }
@@ -708,7 +707,7 @@ class Schedule {
             $medias = array();
             foreach ($items as $item)
             {
-                $storedFile = StoredFile::Recall($item["file_id"]);
+                $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
                 $uri = $storedFile->getFileUrl();
 
                 $starts = Schedule::AirtimeTimeToPypoTime($item["starts"]);

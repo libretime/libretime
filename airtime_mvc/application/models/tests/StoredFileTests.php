@@ -43,7 +43,7 @@ class StoredFileTest extends PHPUnit_TestCase {
 
         // Delete any old data from previous tests
         $md5 = md5_file($filePath);
-        $duplicate = StoredFile::RecallByMd5($md5);
+        $duplicate = Application_Model_StoredFile::RecallByMd5($md5);
         if ($duplicate) {
           $duplicate->delete();
         }
@@ -51,7 +51,7 @@ class StoredFileTest extends PHPUnit_TestCase {
         // Test inserting a file by linking
         $values = array("filepath" => $filePath,
                         "dc:description" => "Unit test ".time());
-        $storedFile = StoredFile::Insert($values, false);
+        $storedFile = Application_Model_StoredFile::Insert($values, false);
         if (PEAR::isError($storedFile)) {
           $this->fail("Failed to create StoredFile: ".$storedFile->getMessage());
           return;
@@ -64,7 +64,7 @@ class StoredFileTest extends PHPUnit_TestCase {
         }
 
         // Test loading metadata
-        $f = new StoredFile();
+        $f = new Application_Model_StoredFile();
         $f->__setGunid($storedFile->getGunid());
         $f->loadMetadata();
         if (!is_array($md = $f->getMetadata())) {
@@ -74,7 +74,7 @@ class StoredFileTest extends PHPUnit_TestCase {
         //var_dump($md);
 
         // Check if the length field has been set.
-        $f2 = StoredFile::RecallByGunid($storedFile->getGunid());
+        $f2 = Application_Model_StoredFile::RecallByGunid($storedFile->getGunid());
         $m2 = $f2->getMetadata();
         if (!isset($m2["length"]) || $m2["length"] == "00:00:00.000000") {
           $this->fail("Length not reporting correctly in metadata.");

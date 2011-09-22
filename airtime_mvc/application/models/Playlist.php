@@ -9,7 +9,7 @@ define('INDCH', ' ');
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-class Playlist {
+class Application_Model_Playlist {
 
  // *** Variable stored in the database ***
 
@@ -162,7 +162,7 @@ class Playlist {
     	if($pl === NULL)
     	    return FALSE;
 
-        $storedPlaylist = new Playlist();
+        $storedPlaylist = new Application_Model_Playlist();
         $storedPlaylist->id = $id;
         $storedPlaylist->name = $pl->getDbName();
         $storedPlaylist->state = $pl->getDbState();
@@ -405,10 +405,10 @@ class Playlist {
         foreach ($rows as $row) {
           $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
           // display only upto 1 decimal place by calling secondsToPlaylistTime
-          $clipSec = Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
-          $files[$i]['cliplength'] = Playlist::secondsToPlaylistTime($clipSec);
+          $clipSec = Application_Model_Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
+          $files[$i]['cliplength'] = Application_Model_Playlist::secondsToPlaylistTime($clipSec);
           $offset += $clipSec;
-          $files[$i]['offset'] = Playlist::secondsToPlaylistTime($offset);
+          $files[$i]['offset'] = Application_Model_Playlist::secondsToPlaylistTime($offset);
           $i++;
         }
 
@@ -424,8 +424,8 @@ class Playlist {
             return '00:00:00';
         
         // calling two functions to format time to 1 decimal place
-        $sec = Playlist::playlistTimeToSeconds($res);
-        $res = Playlist::secondsToPlaylistTime($sec); 
+        $sec = Application_Model_Playlist::playlistTimeToSeconds($res);
+        $res = Application_Model_Playlist::secondsToPlaylistTime($sec); 
         return $res;
     }
 
@@ -466,7 +466,7 @@ class Playlist {
     {
         if ($val && $this->isEdited() !== FALSE) {
             return PEAR::raiseError(
-                'Playlist::lock: playlist already locked'
+                'Application_Model_Playlist::lock: playlist already locked'
             );
         }
         $r = $this->setEditFlag($subjid, $val);
@@ -507,7 +507,7 @@ class Playlist {
     public function addAudioClip($p_mediaId, $p_position=NULL, $p_fadeIn=NULL, $p_fadeOut=NULL, $p_clipLength=NULL, $p_cuein=NULL, $p_cueout=NULL)
     {
         //get audio clip.
-        $media = StoredFile::Recall($p_mediaId);
+        $media = Application_Model_StoredFile::Recall($p_mediaId);
         if (is_null($media) || PEAR::isError($media)) {
         	return $media;
         }
@@ -999,430 +999,3 @@ class Playlist {
     }
 
 } // class Playlist
-
-/**
- * @package Airtime
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @todo Rename this class PlaylistTag
- */
-class PlaylistTagExport
-{
-    public static function OutputToSmil(&$pl, $plt, $ind='')
-    {
-        $ind2 = $ind.INDCH;
-        $ind3 = $ind2.INDCH;
-        $ind4 = $ind3.INDCH;
-        $res = "";
-        foreach ($plt['children'] as $ple) {
-            switch ($ple['elementname']) {
-                case "playlistElement":
-                    $r = PlaylistElementExport::OutputToSmil($pl, $ple, $ind4);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$res .= $r;
-                    }
-                    break;
-                case "metadata":
-                    $r = PlaylistMetadataExport::OutputToSmil($pl, $ple, $ind4);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$res .= $r;
-                    }
-                    break;
-                default:
-            }
-        }
-        $res = "$ind<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
-            "$ind<smil xmlns=\"http://www.w3.org/2001/SMIL20/Language\">\n".
-            "$ind2<body>\n".
-            "$ind3<par>\n".
-            "$res".
-            "$ind3</par>\n".
-            "$ind2</body>\n".
-            "$ind</smil>\n";
-        return $res;
-    }
-
-
-    public static function OutputToM3u(&$pl, $plt, $ind='')
-    {
-        $res = "";
-        foreach ($plt['children'] as $ple) {
-            switch ($ple['elementname']) {
-                case"playlistElement":
-                    $r = PlaylistElementExport::OutputToM3u($pl, $ple);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$res .= $r;
-                    }
-                break;
-            }
-        }
-        $res = "#EXTM3U\n$res";
-        return $res;
-    }
-
-
-    public static function OutputToRss(&$pl, $plt, $ind='')
-    {
-        $ind2 = $ind.INDCH;
-        $ind3 = $ind2.INDCH;
-        $res = "";
-        foreach ($plt['children'] as $ple) {
-            switch ($ple['elementname']) {
-                case "playlistElement":
-                    $r = PlaylistElementExport::OutputToRss($pl, $ple, $ind3);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$res .= $r;
-                    }
-                break;
-                case "metadata":
-                    $r = PlaylistMetadataExport::OutputToRss($pl, $ple, $ind3);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$res .= $r;
-                    }
-                break;
-                default:
-            }
-        }
-        $res = "$ind<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".
-            "$ind<rss version=\"2.0\">\n".
-            "$ind2<channel>\n".
-            "$res".
-            "$ind2</channel>\n".
-            "$ind</rss>\n";
-        return $res;
-    }
-}
-
-
-/**
- * @package Airtime
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @todo Rename this class "PlaylistElement"
- */
-class PlaylistElementExport {
-
-    public static function OutputToSmil(&$pl, $ple, $ind='')
-    {
-        $acOrPl = NULL;
-        $finfo = array('fi'=>0, 'fo'=>0);
-        $ind2 = $ind.INDCH;
-        $ind3 = $ind2.INDCH;
-        $anim = '';
-        foreach ($ple['children'] as $ac) {
-            switch ($ac['elementname']) {
-                case "audioClip":
-                    $r = PlaylistAudioClipExport::OutputToSmil($pl, $ac, $ind2);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                    break;
-                case "playlist":
-                    $gunid = $ac['attrs']['id'];
-                    $pl2 = StoredFile::RecallByGunid($gunid);
-                    if (is_null($pl2) || PEAR::isError($pl2)) {
-                    	return $pl2;
-                    }
-                    $r = $pl2->outputToSmil(FALSE);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                    break;
-                case "fadeInfo":
-                    $r = PlaylistFadeInfoExport::OutputToSmil($pl, $ac, $ind2);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$finfo = $r;
-                    }
-                    break;
-                default:
-                    return PEAR::raiseError(
-                        "PlaylistElementExport::OutputToSmil:".
-                        " unknown tag {$ac['elementname']}"
-                    );
-            }
-        }
-        $beginS = Playlist::playlistTimeToSeconds($ple['attrs']['relativeOffset']);
-        $playlengthS = Playlist::playlistTimeToSeconds($acOrPl['playlength']);
-        $fadeOutS = Playlist::playlistTimeToSeconds($finfo['fo']);
-        $fiBeginS = 0;
-        $fiEndS = Playlist::playlistTimeToSeconds($finfo['fi']);
-        $foBeginS = ($playlengthS - $fadeOutS);
-        $foEndS = Playlist::playlistTimeToSeconds($acOrPl['playlength']);
-        foreach (array('fi','fo') as $ff) {
-            if (${$ff."EndS"} - ${$ff."BeginS"} > 0) {
-                $anim .= "{$ind2}<animate attributeName = \"soundLevel\"\n".
-                    "{$ind3}from = \"".($ff == 'fi' ? 0 : 100)."%\"\n".
-                    "{$ind3}to = \"".($ff == 'fi' ? 100 : 0)."%\"\n".
-                    "{$ind3}calcMode = \"linear\"\n".
-                    "{$ind3}begin = \"{${$ff."BeginS"}}s\"\n".
-                    "{$ind3}end = \"{${$ff."EndS"}}s\"\n".
-                    "{$ind3}fill = \"freeze\"\n".
-                    "{$ind2}/>\n"
-                ;
-            }
-        }
-        $src = $acOrPl['src'];
-        $str = "$ind<audio src=\"$src\" begin=\"{$beginS}s\"".
-            ($anim ? ">\n$anim$ind</audio>" : " />").
-            " <!-- {$acOrPl['type']}, {$acOrPl['gunid']}, {$acOrPl['playlength']}  -->".
-            "\n";
-        return $str;
-    }
-
-
-    public static function OutputToM3u(&$pl, $ple, $ind='')
-    {
-        $acOrPl = NULL;
-        foreach ($ple['children'] as $ac) {
-            switch ($ac['elementname']) {
-                case "audioClip":
-                    $r = PlaylistAudioClipExport::OutputToM3u($pl, $ac);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                	break;
-                case "playlist":
-                    $gunid = $ac['attrs']['id'];
-                    $pl2 = StoredFile::RecallByGunid($gunid);
-                    if (is_null($pl2) || PEAR::isError($pl2)) {
-                    	return $pl2;
-                    }
-                    $r = $pl2->outputToM3u(FALSE);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                	break;
-            }
-        }
-        if (is_null($acOrPl)) {
-        	return '';
-        }
-        $playlength = ceil(Playlist::playlistTimeToSeconds($acOrPl['playlength']));
-        $title = $acOrPl['title'];
-        $uri = (isset($acOrPl['uri']) ? $acOrPl['uri'] : '???' );
-        $res  = "#EXTINF: $playlength, $title\n";
-        $res .= "$uri\n";
-        return $res;
-    }
-
-
-    public static function OutputToRss(&$pl, $ple, $ind='')
-    {
-        $acOrPl = NULL;
-        $ind2 = $ind.INDCH;
-        $anim = '';
-        foreach ($ple['children'] as $ac) {
-            switch ($ac['elementname']) {
-                case "audioClip":
-                    $r = PlaylistAudioClipExport::OutputToRss($pl, $ac, $ind2);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                	break;
-                case "playlist":
-                    $gunid = $ac['attrs']['id'];
-                    $pl2 = StoredFile::RecallByGunid($gunid);
-                    if (is_null($pl2) || PEAR::isError($pl2)) {
-                    	return $pl2;
-                    }
-                    $r = $pl2->outputToRss(FALSE);
-                    if (PEAR::isError($r)) {
-                    	return $r;
-                    }
-                    if (!is_null($r)) {
-                    	$acOrPl = $r;
-                    }
-                	break;
-                case "fadeInfo":
-                	break;
-                default:
-                    return PEAR::raiseError(
-                        "PlaylistElementExport::OutputToRss:".
-                        " unknown tag {$ac['elementname']}"
-                    );
-            }
-        }
-        $title = (isset($acOrPl['title']) ? htmlspecialchars($acOrPl['title']) : '' );
-        $desc = (isset($acOrPl['desc']) ? htmlspecialchars($acOrPl['desc']) : '' );
-        $link = htmlspecialchars($acOrPl['src']);
-        $desc = '';
-        $str = "$ind<item>\n".
-            "$ind2<title>$title</title>\n".
-            "$ind2<description>$desc</description>\n".
-            "$ind2<link>$link</link>\n".
-            "$ind</item>\n";
-        return $str;
-    }
-}
-
-
-/**
- * @package Airtime
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @todo Rename this class to PlaylistAudioClip (notice the caps)
- */
-class PlaylistAudioClipExport
-{
-
-    public static function OutputToSmil(&$pl, $plac, $ind='')
-    {
-        $gunid = $plac['attrs']['id'];
-        $ac = StoredFile::RecallByGunid($gunid);
-        if (is_null($ac) || PEAR::isError($ac)) {
-        	return $ac;
-        }
-        $RADext = $ac->getFileExtension();
-        if (PEAR::isError($RADext)) {
-        	return $RADext;
-        }
-        return array(
-            'type'       => 'audioclip',
-            'gunid'      => $gunid,
-            'src'        => AC_URL_RELPATH."$gunid.$RADext",
-            'playlength' => $plac['attrs']['playlength'],
-        );
-    }
-
-
-    public static function OutputToM3u(&$pl, $plac, $ind='')
-    {
-        $gunid = $plac['attrs']['id'];
-        $ac = StoredFile::RecallByGunid($gunid);
-        if (is_null($ac) || PEAR::isError($ac)) {
-        	return $ac;
-        }
-        $RADext = $ac->getFileExtension();
-        if (PEAR::isError($RADext)) {
-        	return $RADext;
-        }
-        return array(
-            'playlength' => $plac['attrs']['playlength'],
-            'title'      => $plac['attrs']['title'],
-            'uri'        => AC_URL_RELPATH."$gunid.$RADext",
-        );
-    }
-
-
-    public static function OutputToRss(&$pl, $plac, $ind='')
-    {
-        $id = $plac['attrs']['id'];
-        $playlist = Playlist::Recall($id);
-        if (is_null($playlist) || PEAR::isError($playlist)) {
-        	return $playlist;
-        }
-        $RADext = $playlist->getFileExtension();
-        if (PEAR::isError($RADext)) {
-        	return $RADext;
-        }
-        $title = $playlist->getName();
-        $desc = $playlist->getPLMetaData("dc:description");
-        return array(
-            'type'       => 'audioclip',
-            'gunid'      => $id,
-            'src'        => "http://XXX/YY/$id.$RADext",
-            'playlength' => $plac['attrs']['playlength'],
-            'title'      => $title,
-            'desc'      => $desc,
-        );
-    }
-}
-
-
-/**
- * @package Airtime
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @todo Rename this class "PlaylistFadeInfo" (notive the caps)
- */
-class PlaylistFadeInfoExport
-{
-
-    public static function OutputToSmil(&$pl, $plfi, $ind='')
-    {
-        $r = array(
-            'fi'=>$plfi['attrs']['fadeIn'],
-            'fo'=>$plfi['attrs']['fadeOut'],
-        );
-        return $r;
-    }
-
-
-    public static function OutputToM3u(&$pl, $plfa, $ind='')
-    {
-    	return '';
-    }
-
-
-    public static function OutputToRss(&$pl, $plfa, $ind='')
-    {
-    	return '';
-    }
-
-}
-
-
-/**
- * @package Airtime
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- * @todo Rename this class to PlaylistMetadata (notice the caps)
- */
-class PlaylistMetadataExport
-{
-    public static function OutputToSmil(&$pl, $md, $ind='')
-    {
-    	return NULL;
-    }
-
-
-    public static function OutputToM3u(&$pl, $md, $ind='')
-    {
-    	return NULL;
-    }
-
-
-    public static function OutputToRss(&$pl, $md, $ind='')
-    {
-    	return NULL;
-    }
-}
-

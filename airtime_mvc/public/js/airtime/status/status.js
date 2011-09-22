@@ -26,7 +26,7 @@ function generatePartitions(partitions){
         var spaceUsedGb = sprintf("%01.1f", spaceUsed/Math.pow(10, 9));
         var totalSpaceGb = sprintf("%01.1f", totalSpace/Math.pow(10, 9));
         
-        var row = sprintf(rowTemplate, i, i, spaceUsedGb, totalSpaceGb, percUsed, percUsed);
+        var row = sprintf(rowTemplate, i+1, i, spaceUsedGb, totalSpaceGb, percUsed, percUsed);
         var tr = $(row);
         lastElement.after(tr);
 
