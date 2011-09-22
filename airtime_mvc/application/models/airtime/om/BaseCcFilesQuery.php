@@ -61,6 +61,9 @@
  * @method     CcFilesQuery orderByDbSubject($order = Criteria::ASC) Order by the subject column
  * @method     CcFilesQuery orderByDbContributor($order = Criteria::ASC) Order by the contributor column
  * @method     CcFilesQuery orderByDbLanguage($order = Criteria::ASC) Order by the language column
+ * @method     CcFilesQuery orderByDbSoundcloudId($order = Criteria::ASC) Order by the soundcloud_id column
+ * @method     CcFilesQuery orderByDbSoundcloudErrorCode($order = Criteria::ASC) Order by the soundcloud_error_code column
+ * @method     CcFilesQuery orderByDbSoundcloudErrorMsg($order = Criteria::ASC) Order by the soundcloud_error_msg column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
  * @method     CcFilesQuery groupByDbGunid() Group by the gunid column
@@ -117,6 +120,9 @@
  * @method     CcFilesQuery groupByDbSubject() Group by the subject column
  * @method     CcFilesQuery groupByDbContributor() Group by the contributor column
  * @method     CcFilesQuery groupByDbLanguage() Group by the language column
+ * @method     CcFilesQuery groupByDbSoundcloudId() Group by the soundcloud_id column
+ * @method     CcFilesQuery groupByDbSoundcloudErrorCode() Group by the soundcloud_error_code column
+ * @method     CcFilesQuery groupByDbSoundcloudErrorMsg() Group by the soundcloud_error_msg column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -200,6 +206,9 @@
  * @method     CcFiles findOneByDbSubject(string $subject) Return the first CcFiles filtered by the subject column
  * @method     CcFiles findOneByDbContributor(string $contributor) Return the first CcFiles filtered by the contributor column
  * @method     CcFiles findOneByDbLanguage(string $language) Return the first CcFiles filtered by the language column
+ * @method     CcFiles findOneByDbSoundcloudId(int $soundcloud_id) Return the first CcFiles filtered by the soundcloud_id column
+ * @method     CcFiles findOneByDbSoundcloudErrorCode(int $soundcloud_error_code) Return the first CcFiles filtered by the soundcloud_error_code column
+ * @method     CcFiles findOneByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return the first CcFiles filtered by the soundcloud_error_msg column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method     array findByDbGunid(string $gunid) Return CcFiles objects filtered by the gunid column
@@ -256,6 +265,9 @@
  * @method     array findByDbSubject(string $subject) Return CcFiles objects filtered by the subject column
  * @method     array findByDbContributor(string $contributor) Return CcFiles objects filtered by the contributor column
  * @method     array findByDbLanguage(string $language) Return CcFiles objects filtered by the language column
+ * @method     array findByDbSoundcloudId(int $soundcloud_id) Return CcFiles objects filtered by the soundcloud_id column
+ * @method     array findByDbSoundcloudErrorCode(int $soundcloud_error_code) Return CcFiles objects filtered by the soundcloud_error_code column
+ * @method     array findByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return CcFiles objects filtered by the soundcloud_error_msg column
  *
  * @package    propel.generator.airtime.om
  */
@@ -1631,6 +1643,90 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::LANGUAGE, $dbLanguage, $comparison);
+	}
+
+	/**
+	 * Filter the query on the soundcloud_id column
+	 * 
+	 * @param     int|array $dbSoundcloudId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbSoundcloudId($dbSoundcloudId = null, $comparison = null)
+	{
+		if (is_array($dbSoundcloudId)) {
+			$useMinMax = false;
+			if (isset($dbSoundcloudId['min'])) {
+				$this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ID, $dbSoundcloudId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbSoundcloudId['max'])) {
+				$this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ID, $dbSoundcloudId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ID, $dbSoundcloudId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the soundcloud_error_code column
+	 * 
+	 * @param     int|array $dbSoundcloudErrorCode The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbSoundcloudErrorCode($dbSoundcloudErrorCode = null, $comparison = null)
+	{
+		if (is_array($dbSoundcloudErrorCode)) {
+			$useMinMax = false;
+			if (isset($dbSoundcloudErrorCode['min'])) {
+				$this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $dbSoundcloudErrorCode['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbSoundcloudErrorCode['max'])) {
+				$this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $dbSoundcloudErrorCode['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $dbSoundcloudErrorCode, $comparison);
+	}
+
+	/**
+	 * Filter the query on the soundcloud_error_msg column
+	 * 
+	 * @param     string $dbSoundcloudErrorMsg The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbSoundcloudErrorMsg($dbSoundcloudErrorMsg = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbSoundcloudErrorMsg)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbSoundcloudErrorMsg)) {
+				$dbSoundcloudErrorMsg = str_replace('*', '%', $dbSoundcloudErrorMsg);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_MSG, $dbSoundcloudErrorMsg, $comparison);
 	}
 
 	/**

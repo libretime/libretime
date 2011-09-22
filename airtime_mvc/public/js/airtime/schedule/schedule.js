@@ -180,20 +180,19 @@ function uploadToSoundCloud(show_instance_id){
     
     var url = "/Schedule/upload-to-sound-cloud";
     var span = $(window.triggerElement).find(".recording");
-
-    span.removeClass("recording")
+    
+    if(span.length == 0){
+        span = $(window.triggerElement).find(".soundcloud");
+        span.removeClass("soundcloud")
+        .addClass("progress")
+    }else{
+        span.removeClass("recording")
         .addClass("progress");
+    }
 
     $.post(url,
         {id: show_instance_id, format: "json"},
-        function(data){
-            if(data.error) {
-                span.removeClass("progress")
-                    .addClass("recording");
-
-                alert(data.error);
-                return;
-            }
+        function(){
             scheduleRefetchEvents();
     });
 

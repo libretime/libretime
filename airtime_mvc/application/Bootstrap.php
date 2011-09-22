@@ -73,7 +73,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.5.2.min.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.11.custom.min.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js','text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip-1.0.0.min.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip2.min.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
 
 

@@ -111,41 +111,145 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
 	// insert id on lenth field
 	$('td:eq(4)', nRow).attr("id", "length");
-
-    $('td:eq(5) img', nRow).qtip({
-
-        content: {
-            url: '/Library/get-file-meta-data',
-            type: 'post',
-            data: ({format: "html", id : id, type: type}),
-            title: {
-               text: aData[1] + ' MetaData',
-               button: 'Close' // Show a close link in the title
-            }
-         },
-
-         position: {
-
-            adjust: {
-               screen: true // Keep the tooltip on-screen at all times
-            }
-         },
-
-         style: {
-            border: {
-               width: 0,
-               radius: 4
+    
+	$('td:gt(0)', nRow).qtip({
+            content: {
+	            text: "Loading...",
+                title: {
+                    text: aData[1] + " MetaData"
+                },
+                ajax: {
+                    url: "/Library/get-file-meta-data",
+                    type: "post",
+                    data: ({format: "html", id : id, type: type}),
+                    success: function(data, status){
+                        this.set('content.text', data)
+                    }
+                }
             },
-            name: 'dark', // Use the default light style
-            width: 570 // Set the tooltip width
-         }
-    });
+            position: {
+                adjust: {
+                    resize: true,
+                    method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            style: {
+                width: 570,
+                classes: "ui-tooltip-dark"
+            },
+            show: {
+                delay: 700
+            }
+        }
+    );
 
 	return nRow;
 }
 
 function dtDrawCallback() {
 	addLibraryItemEvents();
+}
+
+function redrawDataTable() {
+    var dt;
+    
+    dt = $('#library_display').dataTable();
+    dt.fnDraw(false);
+}
+
+function checkSCUploadStatus(){
+    var url = '/Library/get-upload-to-sc-status/format/json';
+    $("span[class*=progress]").each(function(){
+        var id = $(this).attr("id");
+        $.post(url, {format: "json", id: id, type:"file"}, function(json){
+            if(json.sc_id > 0){
+                $("span[id="+id+"]").removeClass("progress").addClass("soundcloud");
+            }else if(json.sc_id == "-3"){
+                $("span[id="+id+"]").removeClass("progress").addClass("sc-error");
+            }
+        });
+    })
+}
+
+function addQtipToSCIcons(){
+    $(".progress, .soundcloud, .sc-error").live('mouseover', function(){
+        var id = $(this).attr("id");
+        if($(this).hasClass("progress")){
+            $(this).qtip({
+                content: {
+                    text: "Uploading in the progress..."
+                },
+                position:{
+                    adjust: {
+                    resize: true,
+                    method: "flip flip"
+                    },
+                    at: "right center",
+                    my: "left top",
+                    viewport: $(window)
+                },
+                show: {
+                    ready: true // Needed to make it show on first mouseover event
+                }
+            })
+        }else if($(this).hasClass("soundcloud")){
+            $(this).qtip({
+                content: {
+                    text: "Retreiving data from the server...",
+                    ajax: {
+                        url: "/Library/get-upload-to-sc-status",
+                        type: "post",
+                        data: ({format: "json", id : id, type: "file"}),
+                        success: function(json, status){
+                            this.set('content.text', "The soundcloud id for this file is: "+json.sc_id)
+                        }
+                    }
+                },
+                position:{
+                    adjust: {
+                    resize: true,
+                    method: "flip flip"
+                    },
+                    at: "right center",
+                    my: "left top",
+                    viewport: $(window)
+                },
+                show: {
+                    ready: true // Needed to make it show on first mouseover event
+                }
+            })
+        }else if($(this).hasClass("sc-error")){
+            $(this).qtip({
+                content: {
+                    text: "Retreiving data from the server...",
+                    ajax: {
+                        url: "/Library/get-upload-to-sc-status",
+                        type: "post",
+                        data: ({format: "json", id : id, type: "file"}),
+                        success: function(json, status){
+                            this.set('content.text', "There was error while uploading to soundcloud.<br>"+"Error code: "+json.error_code+
+                                    "<br>"+"Error msg: "+json.error_msg+"<br>")
+                        }
+                    }
+                },
+                position:{
+                    adjust: {
+                    resize: true,
+                    method: "flip flip"
+                    },
+                    at: "right center",
+                    my: "left top",
+                    viewport: $(window)
+                },
+                show: {
+                    ready: true // Needed to make it show on first mouseover event
+                }
+            })
+        }
+    });
 }
 
 $(document).ready(function() {
@@ -187,4 +291,7 @@ $(document).ready(function() {
 	
 	checkImportStatus()
 	setInterval( "checkImportStatus()", 5000 );
+	setInterval( "checkSCUploadStatus()", 5000 );
+	
+	addQtipToSCIcons()
 });

@@ -53,6 +53,7 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css');
         
         Schedule::createNewFormSections($this->view);
 
@@ -134,43 +135,10 @@ class ScheduleController extends Zend_Controller_Action
         $show_inst = new ShowInstance($show_instance);
 
         $file = $show_inst->getRecordedFile();
-
-        if(is_null($file)) {
-            $this->view->error = "Recorded file does not exist";
-            return;
-        }
-
-        $show_name = $show_inst->getName();
-        $show_genre = $show_inst->getGenre();
-        $show_start_time = $show_inst->getShowStart();
-
-        if(Application_Model_Preference::GetDoSoundCloudUpload())
-        {
-            for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
-
-                $show = new Show($show_inst->getShowId());
-                $description = $show->getDescription();
-                $hosts = $show->getHosts();
-
-                $tags = array_merge($hosts, array($show_name));
-
-                try {
-                    $soundcloud = new ATSoundcloud();
-                    $soundcloud_id = $soundcloud->uploadTrack($file->getFilePath(), $file->getName(), $description, $tags, $show_start_time, $show_genre);
-                    $show_inst->setSoundCloudFileId($soundcloud_id);
-                    $this->view->soundcloud_id = $soundcloud_id;
-                    break;
-                }
-                catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
-                    $code = $e->getHttpCode();
-                    if(!in_array($code, array(0, 100))) {
-                        break;
-                    }
-                }
-
-                sleep($CC_CONFIG['soundcloud-connection-wait']);
-            }
-        }
+        $id = $file->getId();
+        $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
+        // we should die with ui info
+        die();
     }
 
     public function makeContextMenuAction()
@@ -206,12 +174,17 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         if ($showEndDateHelper->getTimestamp() <= $epochNow
-            && is_null($show->getSoundCloudFileId())
             && $show->isRecorded()
             && Application_Model_Preference::GetDoSoundCloudUpload()) {
-            $menu[] = array('action' => array('type' => 'fn',
-                'callback' => "window['uploadToSoundCloud']($id)"),
-                'title' => 'Upload to Soundcloud');
+                if(is_null($show->getSoundCloudFileId())){
+                    $menu[] = array('action' => array('type' => 'fn',
+                        'callback' => "window['uploadToSoundCloud']($id)"),
+                        'title' => 'Upload to Soundcloud');
+                }else{
+                    $menu[] = array('action' => array('type' => 'fn',
+                        'callback' => "window['uploadToSoundCloud']($id)"),
+                        'title' => 'Re-upload to Soundcloud');
+                }
         }
 
 

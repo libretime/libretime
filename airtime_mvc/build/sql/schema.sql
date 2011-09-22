@@ -114,6 +114,9 @@ CREATE TABLE "cc_files"
 	"subject" VARCHAR(512),
 	"contributor" VARCHAR(512),
 	"language" VARCHAR(512),
+	"soundcloud_id" INTEGER,
+	"soundcloud_error_code" INTEGER,
+	"soundcloud_error_msg" VARCHAR(512),
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_files_gunid_idx" UNIQUE ("gunid")
 );
@@ -191,7 +194,6 @@ CREATE TABLE "cc_show_instances"
 	"rebroadcast" INT2 default 0,
 	"instance_id" INTEGER,
 	"file_id" INTEGER,
-	"soundcloud_id" INTEGER,
 	"time_filled" TIME,
 	PRIMARY KEY ("id")
 );
@@ -509,7 +511,7 @@ DROP TABLE "cc_component" CASCADE;
 CREATE TABLE "cc_component"
 (
 	"name" VARCHAR(32)  NOT NULL,
-	"ip" VARCHAR(32)  NOT NULL,
+	"ip" VARCHAR(18)  NOT NULL,
 	PRIMARY KEY ("name")
 );
 

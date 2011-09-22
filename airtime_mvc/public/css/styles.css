@@ -1566,6 +1566,9 @@ div.success{
 	background:url(images/icon_soundcloud.png) no-repeat 0 0;
 	width:21px;
 }
+.small-icon.sc-error {
+    background:url(images/icon_record.png) no-repeat 0 0;
+}
 .small-icon.progress {
 	background:url(images/upload-icon.gif) no-repeat;
     background-color:black;

@@ -88,6 +88,9 @@
     <column name="subject" phpName="DbSubject" type="VARCHAR" size="512" required="false"/>
     <column name="contributor" phpName="DbContributor" type="VARCHAR" size="512" required="false"/>
     <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
+    <column name="soundcloud_id" phpName="DbSoundcloudId" type="Integer" required="false"/>
+    <column name="soundcloud_error_code" phpName="DbSoundcloudErrorCode" type="Integer" required="false"/>
+    <column name="soundcloud_error_msg" phpName="DbSoundcloudErrorMsg" type="VARCHAR" size="512" required="false"/>
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id"/>
     </foreign-key>
@@ -144,7 +147,6 @@
     <column name="rebroadcast" phpName="DbRebroadcast" type="TINYINT" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
-    <column name="soundcloud_id" phpName="DbSoundCloudId" type="INTEGER" required="false"/>
     <column name="time_filled" phpName="DbTimeFilled" type="TIME" />
     <behavior name="aggregate_column">
       <parameter name="name" value="time_filled" />

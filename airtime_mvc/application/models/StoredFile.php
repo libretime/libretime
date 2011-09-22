@@ -878,5 +878,74 @@ class StoredFile {
 
         return $results;
     }
+    
+    public function setSoundCloudFileId($p_soundcloud_id)
+    {
+        $this->_file->setDbSoundCloudId($p_soundcloud_id)
+            ->save();
+    }
+    
+    public function getSoundCloudId(){
+        return $this->_file->getDbSoundCloudId();
+    }
+    
+    public function setSoundCloudErrorCode($code){
+        $this->_file->setDbSoundCloudErrorCode($code)
+            ->save();
+    }
+    
+    public function getSoundCloudErrorCode(){
+        return $this->_file->getDbSoundCloudErrorCode();
+    }
+    
+    public function setSoundCloudErrorMsg($msg){
+        $this->_file->setDbSoundCloudErrorMsg($msg)
+            ->save();
+    }
+    
+    public function getSoundCloudErrorMsg(){
+        return $this->_file->getDbSoundCloudErrorMsg();
+    }
+    
+    public function uploadToSoundCloud()
+    {
+        global $CC_CONFIG;
+        
+        $file = $this->_file;
+        if(is_null($file)) {
+            return "File does not exist";
+        }
+        if(Application_Model_Preference::GetDoSoundCloudUpload())
+        {
+            for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
+                $description = $file->getDbTrackTitle();
+                $tag = "";
+                $genre = $file->getDbGenre();
+                $release = $file->getDbYear();
+
+                try {
+                    $soundcloud = new ATSoundcloud();
+                    $soundcloud_id = $soundcloud->uploadTrack($this->getFilePath(), $this->getName(), $description, $tag, $release, $genre);
+                    $this->setSoundCloudFileId($soundcloud_id);
+                    break;
+                }
+                catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+                    $code = $e->getHttpCode();
+                    $msg = $e->getHttpBody();
+                    $temp = explode('"error":',$msg);
+                    $msg = trim($temp[1], '"}');
+                    $this->setSoundCloudErrorCode($code);
+                    $this->setSoundCloudErrorMsg($msg);
+                    // setting sc id to -3 which indicates error
+                    $this->setSoundCloudFileId(-3);
+                    if(!in_array($code, array(0, 100))) {
+                        break;
+                    }
+                }
+
+                sleep($CC_CONFIG['soundcloud-connection-wait']);
+            }
+        }
+    }
 }
 
