@@ -42,8 +42,6 @@ function generatePartitions(partitions){
 function success(data, textStatus, jqXHR){
     var services = data.status.services;
 
-    console.log(data.status);
-
     for (var key in services){
         var s = services[key];
         var children = $("#"+s.name).children();
