@@ -81,7 +81,7 @@ class LibraryController extends Zend_Controller_Action
 	    	$id = $this->_getParam('id');
 
 	    	$file_id = $this->_getParam('id', null);
-	        $file = StoredFile::Recall($file_id);
+	        $file = Application_Model_StoredFile::Recall($file_id);
 
 	        $url = $file->getRelativeFileUrl($baseUrl).'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
@@ -132,7 +132,7 @@ class LibraryController extends Zend_Controller_Action
         if ($user->isAdmin()) {
 
             if (!is_null($id)) {
-                $file = StoredFile::Recall($id);
+                $file = Application_Model_StoredFile::Recall($id);
 
                 if (PEAR::isError($file)) {
                     $this->view->message = $file->getMessage();
@@ -163,12 +163,12 @@ class LibraryController extends Zend_Controller_Action
     public function contentsAction()
     {
         $post = $this->getRequest()->getPost();
-        $datatables = StoredFile::searchFilesForPlaylistBuilder($post);
+        $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($post);
 
         //format clip lengh to 1 decimal
         foreach($datatables["aaData"] as &$data){
-            $sec = Playlist::playlistTimeToSeconds($data[5]);
-            $data[5] = Playlist::secondsToPlaylistTime($sec);
+            $sec = Application_Model_Playlist::playlistTimeToSeconds($data[5]);
+            $data[5] = Application_Model_Playlist::secondsToPlaylistTime($sec);
         }
 
         die(json_encode($datatables));
@@ -180,7 +180,7 @@ class LibraryController extends Zend_Controller_Action
         $form = new Application_Form_EditAudioMD();
         
         $file_id = $this->_getParam('id', null);
-        $file = StoredFile::Recall($file_id);
+        $file = Application_Model_StoredFile::Recall($file_id);
         $form->populate($file->getDbColMetadata());
 
         if ($request->isPost()) {
@@ -206,12 +206,12 @@ class LibraryController extends Zend_Controller_Action
         $type = $this->_getParam('type');
 
         if($type == "au") {
-            $file = StoredFile::Recall($id);
+            $file = Application_Model_StoredFile::Recall($id);
             $this->view->type = $type;
             $this->view->md = $file->getMetadata();
         }
         else if($type == "pl") {
-            $file = Playlist::Recall($id);
+            $file = Application_Model_Playlist::Recall($id);
             $this->view->type = $type;
             $this->view->md = $file->getAllPLMetaData();
             $this->view->contents = $file->getContents();

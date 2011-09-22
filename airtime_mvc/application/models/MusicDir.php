@@ -2,7 +2,7 @@
 
 class NestedDirectoryException extends Exception { }
 
-class MusicDir {
+class Application_Model_MusicDir {
 
     /**
      * @holds propel database object
@@ -193,7 +193,7 @@ class MusicDir {
     {
         $dir = CcMusicDirsQuery::create()->findPK($pk);
 
-        $mus_dir = new MusicDir($dir);
+        $mus_dir = new Application_Model_MusicDir($dir);
 
         return $mus_dir;
     }
@@ -208,7 +208,7 @@ class MusicDir {
             return null;
         }
         else{
-            $mus_dir = new MusicDir($dir);
+            $mus_dir = new Application_Model_MusicDir($dir);
             return $mus_dir;
         }
     }
@@ -222,7 +222,7 @@ class MusicDir {
                     ->find();
 
         foreach($dirs as $dir) {
-            $result[] = new MusicDir($dir);
+            $result[] = new Application_Model_MusicDir($dir);
         }
 
         return $result;
@@ -234,7 +234,7 @@ class MusicDir {
                     ->filterByType("stor")
                     ->findOne();
 
-        $mus_dir = new MusicDir($dir);
+        $mus_dir = new Application_Model_MusicDir($dir);
 
         return $mus_dir;
     }
@@ -272,7 +272,7 @@ class MusicDir {
         foreach($dirs as $dir) {
             $directory = $dir->getDirectory();
             if (substr($p_filepath, 0, strlen($directory)) === $directory) {
-                $mus_dir = new MusicDir($dir);
+                $mus_dir = new Application_Model_MusicDir($dir);
                 return $mus_dir;
             }
         }
@@ -282,7 +282,7 @@ class MusicDir {
 
     public static function removeWatchedDir($p_dir){
         $p_dir = realpath($p_dir)."/";
-        $dir = MusicDir::getDirByPath($p_dir);
+        $dir = Application_Model_MusicDir::getDirByPath($p_dir);
         if($dir == NULL){
             return array("code"=>1,"error"=>"'$p_dir' doesn't exist in the watched list.");
         }else{

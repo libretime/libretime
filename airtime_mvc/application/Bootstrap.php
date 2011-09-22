@@ -12,9 +12,9 @@ require_once __DIR__."/configs/conf.php";
 require_once 'DB.php';
 
 require_once 'Soundcloud.php';
-require_once 'MusicDir.php';
-require_once 'Playlist.php';
-require_once 'StoredFile.php';
+//require_once 'MusicDir.php';
+//require_once 'Playlist.php';
+//require_once 'StoredFile.php';
 require_once 'Schedule.php';
 require_once 'Preference.php';
 require_once 'Shows.php';
@@ -37,6 +37,7 @@ $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
 Logging::setLogPath('/var/log/airtime/zendphp.log');
+Logging::log("bootstrap");
 
 Zend_Validate::setDefaultNamespaces("Zend");
 

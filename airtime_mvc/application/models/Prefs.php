@@ -6,7 +6,7 @@
  * @subpackage StorageServer
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- * @see StoredFile
+ * @see Application_Model_StoredFile
  */
 /* ================== Prefs ================== */
 class Prefs {

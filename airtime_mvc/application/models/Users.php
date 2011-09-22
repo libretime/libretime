@@ -232,7 +232,7 @@ class User {
             $username = $auth->getIdentity()->login;
         }
         
-        $res = StoredFile::searchFiles($fromTable, $datatables_post);
+        $res = Application_Model_StoredFile::searchFiles($fromTable, $datatables_post);
         
         // mark record which is for the current user
         foreach($res['aaData'] as &$record){

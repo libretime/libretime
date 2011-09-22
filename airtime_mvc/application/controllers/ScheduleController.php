@@ -290,8 +290,8 @@ class ScheduleController extends Zend_Controller_Action
 		$playlists = $show->searchPlaylistsForShow($post);
 		foreach( $playlists['aaData'] as &$data){
 		    // calling two functions to format time to 1 decimal place
-            $sec = Playlist::playlistTimeToSeconds($data[4]);
-            $data[4] = Playlist::secondsToPlaylistTime($sec); 
+            $sec = Application_Model_Playlist::playlistTimeToSeconds($data[4]);
+            $data[4] = Application_Model_Playlist::secondsToPlaylistTime($sec); 
 		}
 
 		//for datatables
@@ -744,7 +744,7 @@ class ScheduleController extends Zend_Controller_Action
         $id = $this->_getParam('id');
 
         $file_id = $this->_getParam('id', null);
-        $file = StoredFile::Recall($file_id);
+        $file = Application_Model_StoredFile::Recall($file_id);
 
         $url = $file->getFileURL().'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
         $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),

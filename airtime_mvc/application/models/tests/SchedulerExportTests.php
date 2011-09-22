@@ -12,18 +12,18 @@ class SchedulerExportTests extends PHPUnit_TestCase {
 
     // Add a file
     $values = array("filepath" => dirname(__FILE__)."/test10001.mp3");
-    $this->storedFile = StoredFile::Insert($values, false);
+    $this->storedFile = Application_Model_StoredFile::Insert($values, false);
 
     // Add a file
     $values = array("filepath" => dirname(__FILE__)."/test10002.mp3");
-    $this->storedFile2 = StoredFile::Insert($values, false);
+    $this->storedFile2 = Application_Model_StoredFile::Insert($values, false);
 
     // Clear the schedule table
     $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"];
     $CC_DBC->query($sql);
 
     // Create a playlist
-    $playlist = new Playlist();
+    $playlist = new Application_Model_Playlist();
     $playlist->create("Scheduler Unit Test");
     $result = $playlist->addAudioClip($this->storedFile->getId());
     $result = $playlist->addAudioClip($this->storedFile2->getId());

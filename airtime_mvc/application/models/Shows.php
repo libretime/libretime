@@ -1370,7 +1370,7 @@ class ShowInstance {
         $file_id =  $this->_showInstance->getDbRecordedFile();
 
         if(isset($file_id)) {
-            $file =  StoredFile::Recall($file_id);
+            $file =  Application_Model_StoredFile::Recall($file_id);
 
             if (PEAR::isError($file)) {
                 return null;
@@ -1717,7 +1717,7 @@ class ShowInstance {
 
     public function searchPlaylistsForShow($datatables)
     {
-        return StoredFile::searchPlaylistsForSchedule($datatables);
+        return Application_Model_StoredFile::searchPlaylistsForSchedule($datatables);
     }
 
     public function getShowListContent()
