@@ -898,8 +898,8 @@ class Show {
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
 
-        $sql = "SELECT starts, ends, record, rebroadcast, soundcloud_id, instance_id, show_id, name, description,
-                color, background_color, cc_show_instances.id AS instance_id
+        $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, description,
+                color, background_color, file_id, cc_show_instances.id AS instance_id
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id";
 
@@ -1242,7 +1242,15 @@ class Show {
         $event["showId"] = $show["show_id"];
         $event["record"] = intval($show["record"]);
         $event["rebroadcast"] = intval($show["rebroadcast"]);
-        $event["soundcloud_id"] = (is_null($show["soundcloud_id"]) ? -1 : $show["soundcloud_id"]);
+        
+        // get soundcloud_id
+        if(!is_null($show["file_id"])){
+            $file = StoredFile::Recall($show["file_id"]);
+            $soundcloud_id = $file->getSoundCloudId();
+        }else{
+            $soundcloud_id = null;
+        }
+        $event["soundcloud_id"] = (is_null($soundcloud_id) ? -1 : $soundcloud_id);
 
         //event colouring
         if($show["color"] != "") {
@@ -1356,13 +1364,14 @@ class ShowInstance {
 
     public function setSoundCloudFileId($p_soundcloud_id)
     {
-        $this->_showInstance->setDbSoundCloudId($p_soundcloud_id)
-            ->save();
+        $file = StoredFile::Recall($this->_showInstance->getDbRecordedFile());
+        $file->setSoundCloudFileId($p_soundcloud_id);
     }
 
     public function getSoundCloudFileId()
     {
-        return $this->_showInstance->getDbSoundCloudId();
+        $file = StoredFile::Recall($this->_showInstance->getDbRecordedFile());
+        return $file->getSoundCloudId();
     }
 
     public function getRecordedFile()

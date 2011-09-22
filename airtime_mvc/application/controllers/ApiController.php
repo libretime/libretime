@@ -402,7 +402,7 @@ class ApiController extends Zend_Controller_Action
         		try {
         			$soundcloud = new ATSoundcloud();
         			$soundcloud_id = $soundcloud->uploadTrack($file->getFilePath(), $tmpTitle, $description, $tags, $show_start_time, $show_genre);
-        			$show_inst->setSoundCloudFileId($soundcloud_id);
+        			$file->setSoundCloudFileId($soundcloud_id);
         			break;
         		}
         		catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {

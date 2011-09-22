@@ -38,7 +38,7 @@ class CcComponentTableMap extends TableMap {
 		$this->setUseIdGenerator(false);
 		// columns
 		$this->addPrimaryKey('NAME', 'DbName', 'VARCHAR', true, 32, null);
-		$this->addColumn('IP', 'DbIp', 'VARCHAR', true, 32, null);
+		$this->addColumn('IP', 'DbIp', 'VARCHAR', true, 18, null);
 		// validators
 	} // initialize()
 

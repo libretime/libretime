@@ -14,7 +14,6 @@
  * @method     CcShowInstancesQuery orderByDbRebroadcast($order = Criteria::ASC) Order by the rebroadcast column
  * @method     CcShowInstancesQuery orderByDbOriginalShow($order = Criteria::ASC) Order by the instance_id column
  * @method     CcShowInstancesQuery orderByDbRecordedFile($order = Criteria::ASC) Order by the file_id column
- * @method     CcShowInstancesQuery orderByDbSoundCloudId($order = Criteria::ASC) Order by the soundcloud_id column
  * @method     CcShowInstancesQuery orderByDbTimeFilled($order = Criteria::ASC) Order by the time_filled column
  *
  * @method     CcShowInstancesQuery groupByDbId() Group by the id column
@@ -25,7 +24,6 @@
  * @method     CcShowInstancesQuery groupByDbRebroadcast() Group by the rebroadcast column
  * @method     CcShowInstancesQuery groupByDbOriginalShow() Group by the instance_id column
  * @method     CcShowInstancesQuery groupByDbRecordedFile() Group by the file_id column
- * @method     CcShowInstancesQuery groupByDbSoundCloudId() Group by the soundcloud_id column
  * @method     CcShowInstancesQuery groupByDbTimeFilled() Group by the time_filled column
  *
  * @method     CcShowInstancesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -63,7 +61,6 @@
  * @method     CcShowInstances findOneByDbRebroadcast(int $rebroadcast) Return the first CcShowInstances filtered by the rebroadcast column
  * @method     CcShowInstances findOneByDbOriginalShow(int $instance_id) Return the first CcShowInstances filtered by the instance_id column
  * @method     CcShowInstances findOneByDbRecordedFile(int $file_id) Return the first CcShowInstances filtered by the file_id column
- * @method     CcShowInstances findOneByDbSoundCloudId(int $soundcloud_id) Return the first CcShowInstances filtered by the soundcloud_id column
  * @method     CcShowInstances findOneByDbTimeFilled(string $time_filled) Return the first CcShowInstances filtered by the time_filled column
  *
  * @method     array findByDbId(int $id) Return CcShowInstances objects filtered by the id column
@@ -74,7 +71,6 @@
  * @method     array findByDbRebroadcast(int $rebroadcast) Return CcShowInstances objects filtered by the rebroadcast column
  * @method     array findByDbOriginalShow(int $instance_id) Return CcShowInstances objects filtered by the instance_id column
  * @method     array findByDbRecordedFile(int $file_id) Return CcShowInstances objects filtered by the file_id column
- * @method     array findByDbSoundCloudId(int $soundcloud_id) Return CcShowInstances objects filtered by the soundcloud_id column
  * @method     array findByDbTimeFilled(string $time_filled) Return CcShowInstances objects filtered by the time_filled column
  *
  * @package    propel.generator.airtime.om
@@ -417,37 +413,6 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowInstancesPeer::FILE_ID, $dbRecordedFile, $comparison);
-	}
-
-	/**
-	 * Filter the query on the soundcloud_id column
-	 * 
-	 * @param     int|array $dbSoundCloudId The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowInstancesQuery The current query, for fluid interface
-	 */
-	public function filterByDbSoundCloudId($dbSoundCloudId = null, $comparison = null)
-	{
-		if (is_array($dbSoundCloudId)) {
-			$useMinMax = false;
-			if (isset($dbSoundCloudId['min'])) {
-				$this->addUsingAlias(CcShowInstancesPeer::SOUNDCLOUD_ID, $dbSoundCloudId['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbSoundCloudId['max'])) {
-				$this->addUsingAlias(CcShowInstancesPeer::SOUNDCLOUD_ID, $dbSoundCloudId['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcShowInstancesPeer::SOUNDCLOUD_ID, $dbSoundCloudId, $comparison);
 	}
 
 	/**
