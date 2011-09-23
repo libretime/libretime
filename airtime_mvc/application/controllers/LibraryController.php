@@ -253,7 +253,7 @@ class LibraryController extends Zend_Controller_Action
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
         if($type == "show"){
-            $show_instance = new ShowInstance($id);
+            $show_instance = new Application_Model_ShowInstance($id);
             $this->view->sc_id = $show_instance->getSoundCloudFileId();
             $file = $show_instance->getRecordedFile();
             $this->view->error_code = $file->getSoundCloudErrorCode();

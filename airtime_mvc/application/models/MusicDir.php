@@ -54,7 +54,7 @@ class Application_Model_MusicDir {
         $this->_dir->delete();
 
         foreach ($show_instances as $show_instance_row) {
-            $temp_show = new ShowInstance($show_instance_row["instance_id"]);
+            $temp_show = new Application_Model_ShowInstance($show_instance_row["instance_id"]);
             $temp_show->updateScheduledTime();
         }
 

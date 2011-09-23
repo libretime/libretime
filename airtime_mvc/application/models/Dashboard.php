@@ -9,7 +9,7 @@ class Application_Model_Dashboard
         //after the last item in the schedule table, then return the show's
         //name. Else return the last item from the schedule.
 
-        $showInstance = ShowInstance::GetLastShowInstance($p_timeNow);
+        $showInstance = Application_Model_ShowInstance::GetLastShowInstance($p_timeNow);
         $row = Schedule::GetLastScheduleItem($p_timeNow);
 
         if (is_null($showInstance)){
@@ -53,7 +53,7 @@ class Application_Model_Dashboard
         //name. Else return the last item from the schedule.
 
         $row = array();
-        $showInstance = ShowInstance::GetCurrentShowInstance($p_timeNow);
+        $showInstance = Application_Model_ShowInstance::GetCurrentShowInstance($p_timeNow);
         if (!is_null($showInstance)){
             $instanceId = $showInstance->getShowInstanceId();
             $row = Schedule::GetCurrentScheduleItem($p_timeNow, $instanceId);
@@ -98,7 +98,7 @@ class Application_Model_Dashboard
         //after the last item in the schedule table, then return the show's
         //name. Else return the last item from the schedule.
 
-        $showInstance = ShowInstance::GetNextShowInstance($p_timeNow);
+        $showInstance = Application_Model_ShowInstance::GetNextShowInstance($p_timeNow);
         $row = Schedule::GetNextScheduleItem($p_timeNow);
 
         if (is_null($showInstance)){

@@ -306,7 +306,7 @@ class ApiController extends Zend_Controller_Action
         $now = new DateTime($today_timestamp);
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
-        $this->view->shows = Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
+        $this->view->shows = Application_Model_Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
 
 
         $this->view->is_recording = false;
@@ -361,7 +361,7 @@ class ApiController extends Zend_Controller_Action
 
         $show_name = null;
         try {
-            $show_inst = new ShowInstance($show_instance_id);
+            $show_inst = new Application_Model_ShowInstance($show_instance_id);
 
             $show_inst->setRecordedFile($file_id);
             $show_name = $show_inst->getName();
@@ -393,7 +393,7 @@ class ApiController extends Zend_Controller_Action
         {
         	for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
 
-        		$show = new Show($show_inst->getShowId());
+        		$show = new Application_Model_Show($show_inst->getShowId());
         		$description = $show->getDescription();
         		$hosts = $show->getHosts();
 

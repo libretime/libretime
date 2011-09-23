@@ -1,6 +1,6 @@
 <?php
 
-class Show {
+class Application_Model_Show {
 
     private $_showId;
 
@@ -773,7 +773,7 @@ class Show {
         $isRecorded = (isset($data['add_show_record']) && $data['add_show_record']) ? 1 : 0;
 
         if ($data['add_show_id'] != -1){
-            $show = new Show($showId);
+            $show = new Application_Model_Show($showId);
             $show->deletePossiblyInvalidInstances($data, $endDate, $isRecorded, $repeatType);
         }
 
@@ -870,7 +870,7 @@ class Show {
             }
         }
 
-        Show::populateShowUntil($showId);
+        Application_Model_Show::populateShowUntil($showId);
         RabbitMq::PushSchedule();
         return $showId;
     }
@@ -894,7 +894,7 @@ class Show {
 
         //if application is requesting shows past our previous populated until date, generate shows up until this point.
         if ($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end_timestamp)) {
-            Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
+            Application_Model_Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
 
@@ -958,7 +958,7 @@ class Show {
             $date = new DateHelper();
             $currentTimestamp = $date->getTimestamp();
 
-            $show = new Show($show_id);
+            $show = new Application_Model_Show($show_id);
             if ($show->hasInstance()){
                 $ccShowInstance = $show->getInstance();
                 $newInstance = false;
@@ -977,7 +977,7 @@ class Show {
             }
 
             $show_instance_id = $ccShowInstance->getDbId();
-            $showInstance = new ShowInstance($show_instance_id);
+            $showInstance = new Application_Model_ShowInstance($show_instance_id);
 
             if (!$newInstance){
                 $showInstance->correctScheduleStartTimes();
@@ -1026,7 +1026,7 @@ class Show {
 
         $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
         $rebroadcasts = $CC_DBC->GetAll($sql);
-        $show = new Show($show_id);
+        $show = new Application_Model_Show($show_id);
 
         $date = new DateHelper();
         $currentTimestamp = $date->getTimestamp();
@@ -1058,7 +1058,7 @@ class Show {
             }
 
             $show_instance_id = $ccShowInstance->getDbId();
-            $showInstance = new ShowInstance($show_instance_id);
+            $showInstance = new Application_Model_ShowInstance($show_instance_id);
 
             if (!$newInstance){
                 $showInstance->correctScheduleStartTimes();
@@ -1090,7 +1090,7 @@ class Show {
             $next_date = $CC_DBC->GetOne($sql);
         }
 
-        Show::setNextPop($next_date, $show_id, $day);
+        Application_Model_Show::setNextPop($next_date, $show_id, $day);
         RabbitMq::PushSchedule();
     }
 
@@ -1098,18 +1098,18 @@ class Show {
                 $first_show, $last_show, $start_time, $duration, $day, $record, $end_timestamp) {
 
         if($repeatType == -1) {
-            Show::populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp);
+            Application_Model_Show::populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp);
         }
         else if($repeatType == 0) {
-            Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
+            Application_Model_Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
                     $start_time, $duration, $day, $record, $end_timestamp, '7 days');
         }
         else if($repeatType == 1) {
-            Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
+            Application_Model_Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
                     $start_time, $duration, $day, $record, $end_timestamp, '14 days');
         }
         else if($repeatType == 2) {
-            Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
+            Application_Model_Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
                     $start_time, $duration, $day, $record, $end_timestamp, '1 month');
         }
     }
@@ -1141,7 +1141,7 @@ class Show {
         $res = $CC_DBC->GetAll($sql);
 
         foreach ($res as $row) {
-            Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"],
+            Application_Model_Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"],
                                $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $p_date);
         }
     }
@@ -1173,7 +1173,7 @@ class Show {
         $res = $CC_DBC->GetAll($sql);
 
         foreach ($res as $row) {
-            Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"],
+            Application_Model_Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"],
                                $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $p_endTimestamp);
         }
     }
@@ -1195,7 +1195,7 @@ class Show {
         $interval = $start_range->diff($end_range);
         $days =  $interval->format('%a');
 
-        $shows = Show::getShows($start, $end);
+        $shows = Application_Model_Show::getShows($start, $end);
 
         $today_timestamp = date("Y-m-d H:i:s");
         foreach ($shows as $show) {
@@ -1203,16 +1203,16 @@ class Show {
 
             //only bother calculating percent for week or day view.
             if(intval($days) <= 7) {
-                $show_instance = new ShowInstance($show["instance_id"]);
+                $show_instance = new Application_Model_ShowInstance($show["instance_id"]);
                 $options["percent"] =  $show_instance->getPercentScheduled();
             }
 
             if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
                 $options["editable"] = true;
-                $events[] = Show::makeFullCalendarEvent($show, $options);
+                $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
             }
             else {
-                $events[] = Show::makeFullCalendarEvent($show, $options);
+                $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
             }
         }
 
@@ -1286,7 +1286,7 @@ class Show {
     }
 }
 
-class ShowInstance {
+class Application_Model_ShowInstance {
 
     private $_instanceId;
     private $_showInstance;
@@ -1312,7 +1312,7 @@ class ShowInstance {
     }
     
     public function getShow(){
-        return new Show($this->getShowId());
+        return new Application_Model_Show($this->getShowId());
     }
 
     public function isRebroadcast()
@@ -1479,7 +1479,7 @@ class ShowInstance {
             return "Can't move show into past";
         }
 
-        $overlap = Show::getShows($new_starts, $new_ends, array($this->_instanceId));
+        $overlap = Application_Model_Show::getShows($new_starts, $new_ends, array($this->_instanceId));
         
         if(count($overlap) > 0) {
             return "Should not overlap shows";
@@ -1499,7 +1499,7 @@ class ShowInstance {
         $this->setShowEnd($new_ends);
         $this->correctScheduleStartTimes();
         
-        $show = new Show($this->getShowId());
+        $show = new Application_Model_Show($this->getShowId());
         if(!$show->isRepeating()){
             $show->setShowFirstShow($new_starts);
             $show->setShowLastShow($new_ends);
@@ -1533,7 +1533,7 @@ class ShowInstance {
 
         //only need to check overlap if show increased in size.
         if(strtotime($new_ends) > strtotime($ends)) {
-            $overlap =  Show::getShows($ends, $new_ends);
+            $overlap =  Application_Model_Show::getShows($ends, $new_ends);
 
             if(count($overlap) > 0) {
                 return "Should not overlap shows";
@@ -1678,7 +1678,7 @@ class ShowInstance {
 
         foreach ($rebroadcasts as $rebroadcast) {
 
-            $rebroad = new ShowInstance($rebroadcast->getDbId());
+            $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
             $rebroad->addFileToShow($file_id);
         }
     }
@@ -1877,7 +1877,7 @@ class ShowInstance {
         if (is_null($id)){
             return null;
         } else {
-            return new ShowInstance($id);
+            return new Application_Model_ShowInstance($id);
         }
     }
 
@@ -1894,7 +1894,7 @@ class ShowInstance {
         if (is_null($id)){
             return null;
         } else {
-            return new ShowInstance($id);
+            return new Application_Model_ShowInstance($id);
         }
     }
 
@@ -1911,7 +1911,7 @@ class ShowInstance {
         if (is_null($id)){
             return null;
         } else {
-            return new ShowInstance($id);
+            return new Application_Model_ShowInstance($id);
         }
     }
     

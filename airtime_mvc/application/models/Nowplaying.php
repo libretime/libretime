@@ -72,14 +72,14 @@ class Application_Model_Nowplaying
         
         $data = array();
 
-        $showIds = ShowInstance::GetShowsInstancesIdsInRange($timeNow, $startCutoff, $endCutoff);
+        $showIds = Application_Model_ShowInstance::GetShowsInstancesIdsInRange($timeNow, $startCutoff, $endCutoff);
         foreach ($showIds as $showId){
             $instanceId = $showId['id'];
             
-            $si = new ShowInstance($instanceId);
+            $si = new Application_Model_ShowInstance($instanceId);
             
             $showId = $si->getShowId();
-            $show = new Show($showId);
+            $show = new Application_Model_Show($showId);
             
             $showStartDateTime = DateHelper::ConvertToLocalDateTime($si->getShowStart());
             $showEndDateTime = DateHelper::ConvertToLocalDateTime($si->getShowEnd());

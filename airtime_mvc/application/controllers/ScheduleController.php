@@ -75,7 +75,7 @@ class ScheduleController extends Zend_Controller_Action
         else
             $editable = false;
 
-		$this->view->events = Show::getFullCalendarEvents($start, $end, $editable);
+		$this->view->events = Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
     }
 
     public function moveShowAction()
@@ -88,7 +88,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            $showInstance = new ShowInstance($showInstanceId);
+            $showInstance = new Application_Model_ShowInstance($showInstanceId);
             $error = $showInstance->moveShow($deltaDay, $deltaMin);
         }
 
@@ -107,7 +107,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-		    $show = new ShowInstance($showInstanceId);
+		    $show = new Application_Model_ShowInstance($showInstanceId);
 		    $error = $show->resizeShow($deltaDay, $deltaMin);
         }
 
@@ -123,7 +123,7 @@ class ScheduleController extends Zend_Controller_Action
 		$user = new User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-		    $show = new ShowInstance($showInstanceId);
+		    $show = new Application_Model_ShowInstance($showInstanceId);
 		    $show->deleteShow();
         }
     }
@@ -132,7 +132,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
         $show_instance = $this->_getParam('id');
-        $show_inst = new ShowInstance($show_instance);
+        $show_inst = new Application_Model_ShowInstance($show_instance);
 
         $file = $show_inst->getRecordedFile();
         $id = $file->getId();
@@ -148,7 +148,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-        $show = new ShowInstance($id);
+        $show = new Application_Model_ShowInstance($id);
 
 		$params = '/format/json/id/#id#';
         
@@ -225,7 +225,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-		$show = new ShowInstance($showInstanceId);
+		$show = new Application_Model_ShowInstance($showInstanceId);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId())) {
 		    $show->scheduleShow(array($plId));
@@ -244,7 +244,7 @@ class ScheduleController extends Zend_Controller_Action
         $showInstanceId = $this->_getParam('id');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-        $show = new ShowInstance($showInstanceId);
+        $show = new Application_Model_ShowInstance($showInstanceId);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()))
             $show->clearShow();
@@ -259,7 +259,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $post = $this->getRequest()->getPost();
 
-		$show = new ShowInstance($this->sched_sess->showInstanceId);
+		$show = new Application_Model_ShowInstance($this->sched_sess->showInstanceId);
 		$playlists = $show->searchPlaylistsForShow($post);
 		foreach( $playlists['aaData'] as &$data){
 		    // calling two functions to format time to 1 decimal place
@@ -279,7 +279,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
-        $show = new ShowInstance($showInstanceId);
+        $show = new Application_Model_ShowInstance($showInstanceId);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId())) {
 		    $show->removeGroupFromShow($group_id);
@@ -297,12 +297,12 @@ class ScheduleController extends Zend_Controller_Action
         $showInstanceId = $this->_getParam('id');
         $this->sched_sess->showInstanceId = $showInstanceId;
 
-        $show = new ShowInstance($showInstanceId);
+        $show = new Application_Model_ShowInstance($showInstanceId);
         $start_timestamp = $show->getShowStart();
 		$end_timestamp = $show->getShowEnd();
 
         //check to make sure show doesn't overlap.
-        if(Show::getShows($start_timestamp, $end_timestamp, array($showInstanceId))) {
+        if(Application_Model_Show::getShows($start_timestamp, $end_timestamp, array($showInstanceId))) {
             $this->view->error = "cannot schedule an overlapping show.";
             return;
         }
@@ -337,11 +337,11 @@ class ScheduleController extends Zend_Controller_Action
     public function showContentDialogAction()
     {
         $showInstanceId = $this->_getParam('id');
-		$show = new ShowInstance($showInstanceId);
+		$show = new Application_Model_ShowInstance($showInstanceId);
 
         $originalShowId = $show->isRebroadcast();
         if (!is_null($originalShowId)){
-            $originalShow = new ShowInstance($originalShowId);
+            $originalShow = new Application_Model_ShowInstance($originalShowId);
             $originalShowName = $originalShow->getName();
             $originalShowStart = $originalShow->getShowStart();
 
@@ -386,8 +386,8 @@ class ScheduleController extends Zend_Controller_Action
 	    $this->view->style = $formStyle;
         $this->view->addNewShow = false;
 
-        $showInstance = new ShowInstance($showInstanceId);
-        $show = new Show($showInstance->getShowId());
+        $showInstance = new Application_Model_ShowInstance($showInstanceId);
+        $show = new Application_Model_Show($showInstance->getShowId());
 
         $formWhat->populate(array('add_show_id' => $show->getId(),
                     'add_show_name' => $show->getName(),
@@ -496,7 +496,7 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
-        $show = new Show($data['add_show_id']);
+        $show = new Application_Model_Show($data['add_show_id']);
 
         $startDateModified = true;
  	 	if ($data['add_show_id'] != -1 && !array_key_exists('add_show_start_date', $data)){
@@ -627,7 +627,7 @@ class ScheduleController extends Zend_Controller_Action
                     $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                     $user = new User($userInfo->id);
                     if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-                        Show::create($data);
+                        Application_Model_Show::create($data);
                     }
                     
                     //send back a new form for the user.
@@ -639,7 +639,7 @@ class ScheduleController extends Zend_Controller_Action
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new User($userInfo->id);
                 if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-                    Show::create($data);
+                    Application_Model_Show::create($data);
                 }
                 
                 //send back a new form for the user.
@@ -682,8 +682,8 @@ class ScheduleController extends Zend_Controller_Action
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $showInstanceId = $this->_getParam('id');
 
-            $showInstance = new ShowInstance($showInstanceId);
-            $show = new Show($showInstance->getShowId());
+            $showInstance = new Application_Model_ShowInstance($showInstanceId);
+            $show = new Application_Model_Show($showInstance->getShowId());
 
             $show->cancelShow($showInstance->getShowStart());
         }
@@ -696,7 +696,7 @@ class ScheduleController extends Zend_Controller_Action
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $showInstanceId = $this->_getParam('id');
-            $show = new ShowInstance($showInstanceId);
+            $show = new Application_Model_ShowInstance($showInstanceId);
             $show->clearShow();
             $show->deleteShow();
             // send 'cancel-current-show' command to pypo

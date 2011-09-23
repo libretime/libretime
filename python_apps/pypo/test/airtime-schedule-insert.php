@@ -110,7 +110,7 @@ $playTime = date("Y-m-d H:i:s", time()+($secondsFromNow));
 //$scheduleGroup = new ScheduleGroup();
 //$scheduleGroup->add($playTime, null, $pl->getId());
 
-//$show = new ShowInstance($showInstanceId);
+//$show = new Application_Model_ShowInstance($showInstanceId);
 //$show->scheduleShow(array($pl->getId()));
 
 //$show->setShowStart();

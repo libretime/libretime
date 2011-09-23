@@ -337,7 +337,7 @@ class Application_Model_Preference
     	$outputArray['NUM_OF_SONGS'] = Application_Model_StoredFile::getFileCount();
     	$outputArray['NUM_OF_PLAYLISTS'] = Application_Model_Playlist::getPlaylistCount();
     	$outputArray['NUM_OF_SCHEDULED_PLAYLISTS'] = Schedule::getSchduledPlaylistCount();
-    	$outputArray['NUM_OF_PAST_SHOWS'] = ShowInstance::GetShowInstanceCount(date("Y-m-d H:i:s"));
+    	$outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(date("Y-m-d H:i:s"));
     	$outputArray['UNIQUE_ID'] = Application_Model_Preference::GetUniqueId();
 
     	$outputArray = array_merge($systemInfoArray, $outputArray);
