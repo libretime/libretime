@@ -30,12 +30,12 @@ class SchedulerExportTests extends PHPUnit_TestCase {
     $result = $playlist->addAudioClip($this->storedFile2->getId());
 
     // Schedule it
-    $i = new ScheduleGroup();
+    $i = new Application_Model_ScheduleGroup();
     $this->groupIdCreated = $i->add('2010-11-11 01:30:23', null, $playlist->getId());
   }
 
    public function testExport() {
-     echo Schedule::ExportRangeAsJson("2010-01-01 00:00:00", "2011-01-01 00:00:00");
+     echo Application_Model_Schedule::ExportRangeAsJson("2010-01-01 00:00:00", "2011-01-01 00:00:00");
    }
 }
 

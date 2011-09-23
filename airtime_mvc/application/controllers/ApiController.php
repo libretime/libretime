@@ -219,7 +219,7 @@ class ApiController extends Zend_Controller_Action
 
         PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
-        $result = Schedule::GetScheduledPlaylists();
+        $result = Application_Model_Schedule::GetScheduledPlaylists();
         echo json_encode($result);
     }
 
@@ -241,7 +241,7 @@ class ApiController extends Zend_Controller_Action
 
         $schedule_group_id = $this->_getParam("schedule_id");
         $media_id = $this->_getParam("media_id");
-        $result = Schedule::UpdateMediaPlayedStatus($media_id);
+        $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
 
         if (!PEAR::isError($result)) {
             echo json_encode(array("status"=>1, "message"=>""));
@@ -270,7 +270,7 @@ class ApiController extends Zend_Controller_Action
 
         $schedule_group_id = $this->_getParam("schedule_id");
         if (is_numeric($schedule_group_id)) {
-            $sg = new ScheduleGroup($schedule_group_id);
+            $sg = new Application_Model_ScheduleGroup($schedule_group_id);
             if ($sg->exists()) {
                 $result = $sg->notifyGroupStartPlay();
                 if (!PEAR::isError($result)) {

@@ -55,7 +55,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css');
         
-        Schedule::createNewFormSections($this->view);
+        Application_Model_Schedule::createNewFormSections($this->view);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new User($userInfo->id);
@@ -252,7 +252,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentPlaylistAction()
     {
-        $this->view->entries = Schedule::GetPlayOrderRange();
+        $this->view->entries = Application_Model_Schedule::GetPlayOrderRange();
     }
 
     public function findPlaylistsAction()
@@ -482,7 +482,7 @@ class ScheduleController extends Zend_Controller_Action
     }
 
     public function getFormAction(){    
-        Schedule::createNewFormSections($this->view);
+        Application_Model_Schedule::createNewFormSections($this->view);
         $this->view->form = $this->view->render('schedule/add-show-form.phtml');
     }
 
@@ -631,7 +631,7 @@ class ScheduleController extends Zend_Controller_Action
                     }
                     
                     //send back a new form for the user.
-                    Schedule::createNewFormSections($this->view);
+                    Application_Model_Schedule::createNewFormSections($this->view);
         
                     $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
                 }
@@ -643,7 +643,7 @@ class ScheduleController extends Zend_Controller_Action
                 }
                 
                 //send back a new form for the user.
-                Schedule::createNewFormSections($this->view);
+                Application_Model_Schedule::createNewFormSections($this->view);
     
                 $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
             }

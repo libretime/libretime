@@ -338,7 +338,7 @@ class Application_Model_StoredFile {
         }
 
         // Check if the file is scheduled to be played in the future
-        if (Schedule::IsFileScheduledInTheFuture($this->getId())) {
+        if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             return PEAR::raiseError('Cannot delete a file that is scheduled in the future.');
         }
 

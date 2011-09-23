@@ -286,7 +286,7 @@ class Application_Model_ShowInstance {
      */
     public function addPlaylistToShow($plId)
     {
-        $sched = new ScheduleGroup();
+        $sched = new Application_Model_ScheduleGroup();
         $lastGroupId = $this->getLastGroupId();
 
         if (is_null($lastGroupId)) {
@@ -306,7 +306,7 @@ class Application_Model_ShowInstance {
      */
     public function addFileToShow($file_id)
     {
-        $sched = new ScheduleGroup();
+        $sched = new Application_Model_ScheduleGroup();
         $lastGroupId = $this->getLastGroupId();
 
         if (is_null($lastGroupId)) {
@@ -415,7 +415,7 @@ class Application_Model_ShowInstance {
 
         $s_epoch = strtotime($start_timestamp);
         $e_epoch = strtotime($end_timestamp);
-        $i_epoch = Schedule::WallTimeToMillisecs($time_filled) / 1000;
+        $i_epoch = Application_Model_Schedule::WallTimeToMillisecs($time_filled) / 1000;
 
         $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
 

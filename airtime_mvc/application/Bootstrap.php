@@ -15,7 +15,7 @@ require_once 'Soundcloud.php';
 //require_once 'MusicDir.php';
 //require_once 'Playlist.php';
 //require_once 'StoredFile.php';
-require_once 'Schedule.php';
+//require_once 'Schedule.php';
 require_once 'Preference.php';
 //require_once 'Shows.php';
 require_once 'Users.php';

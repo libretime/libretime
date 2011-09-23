@@ -98,7 +98,7 @@ while ($showTime < $endDate) {
 }
 
 if (RabbitMq::$doPush) {
-    $md = array('schedule' => Schedule::GetScheduledPlaylists());
+    $md = array('schedule' => Application_Model_Schedule::GetScheduledPlaylists());
     RabbitMq::SendMessageToPypo("update_schedule", $md);
 }
 
