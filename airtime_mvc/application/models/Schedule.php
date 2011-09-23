@@ -369,8 +369,8 @@ class Schedule {
             "previous"=>Application_Model_Dashboard::GetPreviousItem($timeNow),
             "current"=>Application_Model_Dashboard::GetCurrentItem($timeNow),
             "next"=>Application_Model_Dashboard::GetNextItem($timeNow),
-            "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
-            "nextShow"=>Show_DAL::GetNextShows($timeNow, 1),
+            "currentShow"=>Application_Model_Show::GetCurrentShow($timeNow),
+            "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 1),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
     }

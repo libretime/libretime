@@ -101,7 +101,7 @@ class Application_Model_Nowplaying
             	$data[] = self::CreateGapRow($gapTime);
         }
 
-        return array("currentShow"=>Show_DAL::GetCurrentShow($timeNow), "rows"=>$data);
+        return array("currentShow"=>Application_Model_Show::GetCurrentShow($timeNow), "rows"=>$data);
     }
 
     public static function ShouldShowPopUp(){

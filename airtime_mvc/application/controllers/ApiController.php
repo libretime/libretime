@@ -162,8 +162,8 @@ class ApiController extends Zend_Controller_Action
             $timeNow = $date->getTimestamp();
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
-                "nextShow"=>Show_DAL::GetNextShows($timeNow, 5),
+                "currentShow"=>Application_Model_Show::GetCurrentShow($timeNow),
+                "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 5),
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"));
 
@@ -188,7 +188,7 @@ class ApiController extends Zend_Controller_Action
 
             $result = array();
             for ($i=0; $i<7; $i++){
-                $result[$dow[$i]] = Show_DAL::GetShowsByDayOfWeek($i);
+                $result[$dow[$i]] = Application_Model_Show::GetShowsByDayOfWeek($i);
             }
 
             header("Content-type: text/javascript");
@@ -311,7 +311,7 @@ class ApiController extends Zend_Controller_Action
 
         $this->view->is_recording = false;
 
-        $rows = Show_DAL::GetCurrentShow($today_timestamp);
+        $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
         if (count($rows) > 0){
             $this->view->is_recording = ($rows[0]['record'] == 1);
         }
