@@ -55,7 +55,7 @@ try:
 
   print "Creating log directories"
   create_path(config["log_dir"])
-  os.system("chmod -R 755 " + config["log_dir"])
+  #os.system("chmod -R 755 " + config["log_dir"])
   os.system("chown -R pypo:pypo "+config["log_dir"])
 
   copy_dir("%s/.."%current_script_dir, config["bin_dir"])

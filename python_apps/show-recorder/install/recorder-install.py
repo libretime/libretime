@@ -48,7 +48,7 @@ try:
 
   print "Creating temporary media storage directory"
   create_path(config["base_recorded_files"])
-  os.system("chmod -R 755 "+config["base_recorded_files"])
+  #os.system("chmod -R 755 "+config["base_recorded_files"])
   os.system("chown -R pypo:pypo "+config["base_recorded_files"])
 
   print "Creating log directories"

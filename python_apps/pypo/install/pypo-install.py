@@ -103,7 +103,7 @@ try:
   os.remove(config["bin_dir"]+"/bin/liquidsoap_scripts/liquidsoap.cfg")
   
   print "Setting permissions"
-  os.system("chmod -R 755 "+config["bin_dir"])
+  #os.system("chmod -R 755 "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["cache_base_dir"])
 
@@ -112,8 +112,12 @@ try:
 
   p = Popen("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
+
+  #copy logrotate script
+  shutil.copy(config["bin_dir"]+"/bin/liquidsoap_scripts/airtime-liquidsoap.logrotate", "/etc/logrotate.d/airtime-liquidsoap")
   
-  # we should access the DB and generate liquidsoap.cfg under etc/airtime/
+  
+  # we should access the DB and generate liquidsoap.cfg under /etc/airtime/
   api_client = api_client.api_client_factory(config)
   ss = api_client.get_stream_setting()
   
