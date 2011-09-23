@@ -167,7 +167,7 @@ function updatePlaybar(){
 
     $('#show-length').empty();
     if (currentShow.length > 0){
-        $('#show-length').text(convertDateToHHMM(currentShow[0].showStartPosixTime) + " - " + convertDateToHHMM(currentShow[0].showEndPosixTime));
+        $('#show-length').text(convertDateToHHMM(currentShow[0].showStartPosixTime + timezoneOffset) + " - " + convertDateToHHMM(currentShow[0].showEndPosixTime + timezoneOffset));
     }
 
     /* Column 2 update */

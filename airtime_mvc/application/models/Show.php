@@ -1296,6 +1296,7 @@ class Application_Model_Show {
         ." AND si.ends > TIMESTAMP '$timeNow'";
 
         $rows = $CC_DBC->GetAll($sql);
+        
         return $rows;
     }
 
