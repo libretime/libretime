@@ -83,7 +83,7 @@ class LoginController extends Zend_Controller_Action
 		$this->view->message = $message;
 		$this->view->error = $error;
 		$this->view->form = $form;
-		$this->view->airtimeVersion = AIRTIME_VERSION;
+		$this->view->airtimeVersion = Application_Model_Preference::GetAirtimeVersion();
 		$this->view->airtimeCopyright = AIRTIME_COPYRIGHT_DATE;
     }
 

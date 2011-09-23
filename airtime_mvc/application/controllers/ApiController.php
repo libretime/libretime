@@ -36,7 +36,7 @@ class ApiController extends Zend_Controller_Action
      *
      * First checks to ensure the correct API key was
      * supplied, then returns AIRTIME_VERSION as defined
-     * in application/conf.php
+     * in the database
      *
      * @return void
      *
@@ -56,7 +56,7 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        $jsonStr = json_encode(array("version"=>AIRTIME_VERSION));
+        $jsonStr = json_encode(array("version"=>Application_Model_Preference::GetAirtimeVersion()));
         echo $jsonStr;
     }
     
@@ -662,7 +662,7 @@ class ApiController extends Zend_Controller_Action
         
         $status = array(
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
-            "airtime_version"=>Application_Model_Systemstatus::GetAirtimeVersion(),
+            "airtime_version"=>Application_Model_Preference::GetAirtimeVersion(),
             "services"=>array(
                 "icecast2"=>Application_Model_Systemstatus::GetIcecastStatus(),
                 "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),

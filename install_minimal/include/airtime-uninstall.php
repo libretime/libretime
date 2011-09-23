@@ -15,7 +15,7 @@ if (!file_exists(AirtimeIni::CONF_FILE_AIRTIME)) {
     echo "Most likely this means that Airtime is not installed, so there is nothing to do.".PHP_EOL.PHP_EOL;
     exit();
 }
-require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.php');
+require_once(__DIR__.'/airtime-constants.php');
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
 echo PHP_EOL;
