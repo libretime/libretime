@@ -23,7 +23,7 @@ class NowplayingController extends Zend_Controller_Action
         
         $refer_sses = new Zend_Session_Namespace('referrer');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
         
         if ($request->isPost()) {
             $form = new Application_Form_RegisterAirtime();

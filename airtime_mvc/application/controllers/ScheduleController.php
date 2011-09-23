@@ -58,7 +58,7 @@ class ScheduleController extends Zend_Controller_Action
         Application_Model_Schedule::createNewFormSections($this->view);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
         $this->view->isAdmin = $user->isAdmin();
         $this->view->isProgramManager = $user->isUserType('P');
     }
@@ -69,7 +69,7 @@ class ScheduleController extends Zend_Controller_Action
 		$end = $this->_getParam('end', null);
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)))
             $editable = true;
         else
@@ -85,7 +85,7 @@ class ScheduleController extends Zend_Controller_Action
         $showInstanceId = $this->_getParam('showInstanceId');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $showInstance = new Application_Model_ShowInstance($showInstanceId);
@@ -104,7 +104,7 @@ class ScheduleController extends Zend_Controller_Action
 		$showInstanceId = $this->_getParam('showInstanceId');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $show = new Application_Model_ShowInstance($showInstanceId);
@@ -120,7 +120,7 @@ class ScheduleController extends Zend_Controller_Action
         $showInstanceId = $this->_getParam('id');
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-		$user = new User($userInfo->id);
+		$user = new Application_Model_User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $show = new Application_Model_ShowInstance($showInstanceId);
@@ -147,7 +147,7 @@ class ScheduleController extends Zend_Controller_Action
         $epochNow = time();
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
         $show = new Application_Model_ShowInstance($id);
 
 		$params = '/format/json/id/#id#';
@@ -224,7 +224,7 @@ class ScheduleController extends Zend_Controller_Action
 		}
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 		$show = new Application_Model_ShowInstance($showInstanceId);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId())) {
@@ -243,7 +243,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $showInstanceId = $this->_getParam('id');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
         $show = new Application_Model_ShowInstance($showInstanceId);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()))
@@ -278,7 +278,7 @@ class ScheduleController extends Zend_Controller_Action
 		$search = $this->_getParam('search', null);
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
         $show = new Application_Model_ShowInstance($showInstanceId);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId())) {
@@ -358,7 +358,7 @@ class ScheduleController extends Zend_Controller_Action
     public function editShowAction()
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
         if(!$user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             return;
         }
@@ -625,7 +625,7 @@ class ScheduleController extends Zend_Controller_Action
             if(!$isSaas){
                 if($record && $rebroadAb && $rebroad){
                     $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                    $user = new User($userInfo->id);
+                    $user = new Application_Model_User($userInfo->id);
                     if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
                         Application_Model_Show::create($data);
                     }
@@ -637,7 +637,7 @@ class ScheduleController extends Zend_Controller_Action
                 }
             }else{
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                $user = new User($userInfo->id);
+                $user = new Application_Model_User($userInfo->id);
                 if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
                     Application_Model_Show::create($data);
                 }
@@ -677,7 +677,7 @@ class ScheduleController extends Zend_Controller_Action
     public function cancelShowAction()
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $showInstanceId = $this->_getParam('id');
@@ -692,7 +692,7 @@ class ScheduleController extends Zend_Controller_Action
     public function cancelCurrentShowAction()
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $showInstanceId = $this->_getParam('id');

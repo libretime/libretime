@@ -26,7 +26,7 @@ require_once 'Playlist.php';
 require_once 'StoredFile.php';
 require_once 'Schedule.php';
 require_once 'Shows.php';
-require_once 'Users.php';
+require_once 'User.php';
 require_once 'RabbitMq.php';
 require_once 'Preference.php';
 //require_once APPLICATION_PATH.'/controllers/plugins/RabbitMqPlugin.php';

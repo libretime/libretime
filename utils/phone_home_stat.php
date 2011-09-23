@@ -29,7 +29,7 @@ require_once($CC_CONFIG['phpDir'].'/application/configs/conf.php');
 
 $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
 
-require_once($CC_CONFIG['phpDir'].'/application/models/Users.php');
+require_once($CC_CONFIG['phpDir'].'/application/models/User.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Playlist.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Schedule.php');

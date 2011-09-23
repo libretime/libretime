@@ -333,7 +333,7 @@ class Application_Model_Preference
            $outputArray['WEB_SERVER'] = $headerInfo['Server'][0];
     	}
     	
-    	$outputArray['NUM_OF_USERS'] = User::getUserCount();
+    	$outputArray['NUM_OF_USERS'] = Application_Model_User::getUserCount();
     	$outputArray['NUM_OF_SONGS'] = Application_Model_StoredFile::getFileCount();
     	$outputArray['NUM_OF_PLAYLISTS'] = Application_Model_Playlist::getPlaylistCount();
     	$outputArray['NUM_OF_SCHEDULED_PLAYLISTS'] = Application_Model_Schedule::getSchduledPlaylistCount();

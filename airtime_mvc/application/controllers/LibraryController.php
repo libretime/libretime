@@ -67,7 +67,7 @@ class LibraryController extends Zend_Controller_Action
         $paramsPop = str_replace('#type#', $type, $paramsPop);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 
         $pl_sess = $this->pl_sess;
 
@@ -139,7 +139,7 @@ class LibraryController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 
         if ($user->isAdmin()) {
 

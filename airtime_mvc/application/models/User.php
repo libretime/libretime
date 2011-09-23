@@ -5,7 +5,7 @@ define('UTYPE_ADMIN', 'A');
 define('UTYPE_GUEST', 'G');
 define('UTYPE_PROGRAM_MANAGER', 'P');
 
-class User {
+class Application_Model_User {
 
     private $_userInstance;
 
@@ -217,7 +217,7 @@ class User {
     }
 
     public static function getHosts($search=NULL) {
-        return User::getUsers(array('H'), $search);
+        return Application_Model_User::getUsers(array('H'), $search);
     }
     
     public static function getUsersDataTablesInfo($datatables_post) {

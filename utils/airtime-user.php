@@ -10,7 +10,7 @@ require_once("$airtime_base_dir/library/propel/runtime/lib/Propel.php");
 Propel::init("$airtime_base_dir/application/configs/airtime-conf.php");
 
 require_once("$airtime_base_dir/application/configs/conf.php");
-require_once("$airtime_base_dir/application/models/Users.php");
+require_once("$airtime_base_dir/application/models/User.php");
 require_once('DB.php');
 require_once('Console/Getopt.php');
 
@@ -84,17 +84,17 @@ $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 
 // Check if the user exists
-$id = User::GetUserID($username);
+$id = Application_Model_User::GetUserID($username);
 
 if ($action == "addupdate") {
 
 	if ($id < 0) {
         echo "Creating user\n";
-		$user = new User("");
+		$user = new Application_Model_User("");
 		$user->setLogin($username);
     } else {
 		echo "Updating user\n";
-		$user = new User($id);
+		$user = new Application_Model_User($id);
 	}
 
 	do{
@@ -130,7 +130,7 @@ if ($action == "addupdate") {
 		exit;
 	} else {
 		echo "Deleting user\n";
-		$user = new User($id);
+		$user = new Application_Model_User($id);
 		$user->delete();
 	}
 }
