@@ -571,7 +571,7 @@ if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
     }
 }
 
-AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110922153933');
+AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110925171256');
 
 AirtimeInstall::SetDefaultStreamSetting();
 
