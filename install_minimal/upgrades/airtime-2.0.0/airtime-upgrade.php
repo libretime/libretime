@@ -238,7 +238,7 @@ class Airtime200Upgrade{
     }
     
     public static function InstallAirtimePhpServerCode($phpDir)
-        {
+    {
     
             $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
     
@@ -247,7 +247,11 @@ class Airtime200Upgrade{
             echo "* Installing PHP code to ".$phpDir.PHP_EOL;
             exec("mkdir -p ".$phpDir);
             exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
-        }
+    }
+        
+    public static function RemoveOldMonitFile(){
+        unlink("/etc/monit/conf.d/airtime-monit.cfg");
+    }
 }
 
 class ConvertToUtc{
@@ -576,6 +580,8 @@ AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110925171256');
 AirtimeInstall::SetDefaultStreamSetting();
 
 AirtimeInstall::GetOldLiquidsoapCfgAndUpdate();
+
+AirtimeUpgrade::RemoveOldMonitFile();
 
 // restart monit
 exec("service monit restart");
