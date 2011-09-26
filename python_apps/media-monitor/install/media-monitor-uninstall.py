@@ -18,6 +18,9 @@ def get_current_script_dir():
   index = current_script_dir.rindex('/')
   return current_script_dir[0:index]
 
+def remove_monit_file():
+    os.system("rm -f /etc/monit/conf.d/monit-airtime-media-monitor.cfg")
+
 try:
     # load config file
     try:
@@ -29,6 +32,9 @@ try:
     os.system("/etc/init.d/airtime-media-monitor stop")
     os.system("rm -f /etc/init.d/airtime-media-monitor")
     os.system("update-rc.d -f airtime-media-monitor remove >/dev/null 2>&1")
+
+    print "Removing monit file"
+    remove_monit_file()
 
     print "Removing log directories"
     remove_path(config["log_dir"])

@@ -17,6 +17,10 @@ def get_current_script_dir():
   current_script_dir = os.path.realpath(__file__)
   index = current_script_dir.rindex('/')
   return current_script_dir[0:index]
+
+def remove_monit_file():
+    os.system("rm -f /etc/monit/conf.d/monit-airtime-playout.cfg")
+    os.system("rm -f /etc/monit/conf.d/monit-airtime-liquidsoap.cfg")
     
 try:
     # load config file
@@ -30,8 +34,11 @@ try:
     os.system("rm -f /etc/init.d/airtime-playout")
     os.system("update-rc.d -f airtime-playout remove >/dev/null 2>&1")
 
-    #copy logrotate script
+    #remove logrotate script
     os.system("rm -f /etc/logrotate.d/airtime-liquidsoap")
+
+    print "Removing monit file"
+    remove_monit_file()
         
     print "Removing cache directories"
     remove_path(config["cache_base_dir"])

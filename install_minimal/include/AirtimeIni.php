@@ -120,13 +120,6 @@ class AirtimeIni
                 chmod($filename, 0640));
     }
     
-    public static function CreateMonitFile(){
-        if (!copy(__DIR__."/../../python_apps/monit/airtime-monit.cfg", AirtimeIni::CONF_FILE_MONIT)){
-            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
-            exit(1);
-        }
-    }
-
     public static function RemoveMonitFile(){
         @unlink("/etc/monit/conf.d/airtime-monit.cfg");
     }

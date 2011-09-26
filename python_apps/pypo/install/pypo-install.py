@@ -50,6 +50,10 @@ def is_natty():
             return True
     return False
 
+def copy_monit_file(current_script_dir):
+    shutil.copy("%s/../monit-airtime-playout.cfg"%current_script_dir, "/etc/monit/conf.d/")
+    shutil.copy("%s/../monit-airtime-liquidsoap.cfg"%current_script_dir, "/etc/monit/conf.d/")
+    shutil.copy("%s/../../monit/monit-airtime-generic.cfg"%current_script_dir, "/etc/monit/conf.d/")
 
 try:
   # load config file
@@ -60,6 +64,8 @@ try:
     sys.exit(1)
 
   current_script_dir = get_current_script_dir()
+
+  copy_monit_file(current_script_dir)
 
   p = Popen("/etc/init.d/airtime-playout stop >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
