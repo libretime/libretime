@@ -16,10 +16,10 @@ require_once 'DB.php';
 //require_once 'Playlist.php';
 //require_once 'StoredFile.php';
 //require_once 'Schedule.php';
-//require_once 'Preference.php';
+require_once 'Preference.php';
 //require_once 'Shows.php';
 //require_once 'User.php';
-//require_once 'RabbitMq.php';
+require_once 'RabbitMq.php';
 //require_once 'DateHelper.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 

@@ -1,7 +1,7 @@
 <?php
 require_once 'php-amqplib/amqp.inc';
 
-class RabbitMq
+class Application_Model_RabbitMq
 {
     static public $doPush = FALSE;
 
