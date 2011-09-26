@@ -14,10 +14,10 @@ class Application_Model_Nowplaying
         
         foreach ($p_dbRows as $dbRow){
                     
-            $showStartDateTime = DateHelper::ConvertToLocalDateTime($dbRow['show_starts']);
-            $showEndDateTime = DateHelper::ConvertToLocalDateTime($dbRow['show_ends']);
-            $itemStartDateTime = DateHelper::ConvertToLocalDateTime($dbRow['item_starts']);
-            $itemEndDateTime = DateHelper::ConvertToLocalDateTime($dbRow['item_ends']);
+            $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['show_starts']);
+            $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['show_ends']);
+            $itemStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_starts']);
+            $itemEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_ends']);
         
             $showStarts = $showStartDateTime->format("Y-m-d H:i:s");
             $showEnds = $showEndDateTime->format("Y-m-d H:i:s");
@@ -61,7 +61,7 @@ class Application_Model_Nowplaying
             $startCutoff = 60;
             $endCutoff = 86400; //60*60*24 - seconds in a day
         } else {
-            $date = new DateHelper;
+            $date = new Application_Model_DateHelper;
             $time = $date->getTime();
             $date->setDate($dateString." ".$time);
             $timeNow = $date->getUtcTimestamp();
@@ -81,8 +81,8 @@ class Application_Model_Nowplaying
             $showId = $si->getShowId();
             $show = new Application_Model_Show($showId);
             
-            $showStartDateTime = DateHelper::ConvertToLocalDateTime($si->getShowStart());
-            $showEndDateTime = DateHelper::ConvertToLocalDateTime($si->getShowEnd());
+            $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowStart());
+            $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowEnd());
             
             //append show header row
             $data[] = self::CreateHeaderRow($show->getName(), $showStartDateTime->format("Y-m-d H:i:s"), $showEndDateTime->format("Y-m-d H:i:s"));

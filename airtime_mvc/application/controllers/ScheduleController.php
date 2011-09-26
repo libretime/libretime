@@ -152,8 +152,8 @@ class ScheduleController extends Zend_Controller_Action
 
 		$params = '/format/json/id/#id#';
         
-        $showStartDateHelper = DateHelper::ConvertToLocalDateTime($show->getShowStart());
-        $showEndDateHelper = DateHelper::ConvertToLocalDateTime($show->getShowEnd());
+        $showStartDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowStart());
+        $showEndDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowEnd());
         		
 		if ($epochNow < $showStartDateHelper->getTimestamp()) {
 
@@ -461,7 +461,7 @@ class ScheduleController extends Zend_Controller_Action
             $i = 1;
             foreach ($rebroadcastsRelative as $rebroadcast){
                 $rebroadcastFormValues["add_show_rebroadcast_date_$i"] = $rebroadcast['day_offset'];
-                $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
+                $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = Application_Model_DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
                 $i++;
             }
             $formRebroadcast->populate($rebroadcastFormValues);
@@ -471,7 +471,7 @@ class ScheduleController extends Zend_Controller_Action
             $i = 1;
             foreach ($rebroadcastsAbsolute as $rebroadcast){
                 $rebroadcastAbsoluteFormValues["add_show_rebroadcast_date_absolute_$i"] = $rebroadcast['start_date'];
-                $rebroadcastAbsoluteFormValues["add_show_rebroadcast_time_absolute_$i"] = DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
+                $rebroadcastAbsoluteFormValues["add_show_rebroadcast_time_absolute_$i"] = Application_Model_DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
                 $i++;
             }
             $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);

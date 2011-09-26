@@ -137,7 +137,7 @@ class Application_Model_Show {
         $uncheckedDaysImploded = implode(",", $p_uncheckedDays);
         $showId = $this->getId();
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $sql = "DELETE FROM cc_show_instances"
@@ -302,7 +302,7 @@ class Application_Model_Show {
     public function deleteAllInstances(){
         global $CC_DBC;
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $showId = $this->getId();
@@ -321,7 +321,7 @@ class Application_Model_Show {
     public function deleteAllRebroadcasts(){
         global $CC_DBC;
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $showId = $this->getId();
@@ -343,11 +343,11 @@ class Application_Model_Show {
     public function removeAllInstancesFromDate($p_date=null){
         global $CC_DBC;
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
         if(is_null($p_date)) {
-            $date = new DateHelper;
+            $date = new Application_Model_DateHelper;
             $p_date = $date->getDate();
         }
 
@@ -377,7 +377,7 @@ class Application_Model_Show {
     public function removeAllInstancesBeforeDate($p_date){
         global $CC_DBC;
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $showId = $this->getId();
@@ -481,7 +481,7 @@ class Application_Model_Show {
      *      true if the StartDate is in the past, false otherwise
      */
     public function isStartDateTimeInPast(){
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $current_timestamp = $date->getTimestamp();
         return ($current_timestamp > $this->getStartDate()." ".$this->getStartTime());
     }
@@ -495,7 +495,7 @@ class Application_Model_Show {
     public function getAllFutureInstanceIds(){
         global $CC_DBC;
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $showId = $this->getId();
@@ -517,7 +517,7 @@ class Application_Model_Show {
 
         global $CC_DBC;
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $sql = "UPDATE cc_show_days "
@@ -538,7 +538,7 @@ class Application_Model_Show {
 
         global $CC_DBC;
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $sql = "UPDATE cc_show_days "
@@ -955,7 +955,7 @@ class Application_Model_Show {
             $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
             $end = $CC_DBC->GetOne($sql);
 
-            $date = new DateHelper();
+            $date = new Application_Model_DateHelper();
             $currentTimestamp = $date->getTimestamp();
 
             $show = new Application_Model_Show($show_id);
@@ -1028,7 +1028,7 @@ class Application_Model_Show {
         $rebroadcasts = $CC_DBC->GetAll($sql);
         $show = new Application_Model_Show($show_id);
 
-        $date = new DateHelper();
+        $date = new Application_Model_DateHelper();
         $currentTimestamp = $date->getTimestamp();
 
         while(strtotime($next_date) <= strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {

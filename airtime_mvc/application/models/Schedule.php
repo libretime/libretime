@@ -143,7 +143,7 @@ class Application_Model_Schedule {
 
         global $CC_CONFIG;
 
-        $date = new DateHelper;
+        $date = new Application_Model_DateHelper;
         $timeNow = $date->getUtcTimestamp();
         return array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
@@ -499,8 +499,8 @@ class Application_Model_Schedule {
                     'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
                     'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
                     'fade_cross' => 0,
-                    'cue_in' => DateHelper::CalculateLengthInSeconds($item["cue_in"]),
-                    'cue_out' => DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+                    'cue_in' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+                    'cue_out' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
                     'export_source' => 'scheduler',
                     'start' => $starts,
                     'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["ends"])

@@ -158,7 +158,7 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
-            $date = new DateHelper;
+            $date = new Application_Model_DateHelper;
             $timeNow = $date->getTimestamp();
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
