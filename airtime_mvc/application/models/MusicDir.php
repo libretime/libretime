@@ -58,7 +58,7 @@ class Application_Model_MusicDir {
             $temp_show->updateScheduledTime();
         }
 
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     /**
@@ -184,7 +184,7 @@ class Application_Model_MusicDir {
 
             $data = array();
             $data["directory"] = $p_path;
-            RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
+            Application_Model_RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
         }
         return $res;
     }
@@ -256,7 +256,7 @@ class Application_Model_MusicDir {
             $data = array();
             $data["directory"] = $p_dir;
             $data["dir_id"] = $dirId;
-            RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
+            Application_Model_RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
             return array("code"=>0);
         }else{
             return array("code"=>1, "error"=>"'$p_dir' is already set as the current storage dir or in the watched folders list.");
@@ -289,7 +289,7 @@ class Application_Model_MusicDir {
             $dir->remove();
             $data = array();
             $data["directory"] = $p_dir;
-            RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
+            Application_Model_RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
             return array("code"=>0);
         }
     }

@@ -19,7 +19,7 @@ class Application_Model_Show {
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbName($name);
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     public function getDescription()
@@ -119,7 +119,7 @@ class Application_Model_Show {
                     WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
 
         $CC_DBC->query($sql);
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     /**
@@ -871,7 +871,7 @@ class Application_Model_Show {
         }
 
         Application_Model_Show::populateShowUntil($showId);
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
         return $showId;
     }
 
@@ -1008,7 +1008,7 @@ class Application_Model_Show {
                 }
             }
         }
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     //for a show with repeat_type == 0,1,2
@@ -1091,7 +1091,7 @@ class Application_Model_Show {
         }
 
         Application_Model_Show::setNextPop($next_date, $show_id, $day);
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     private static function populateShow($repeatType, $show_id, $next_pop_date,

@@ -111,14 +111,14 @@ class Application_Model_ShowInstance {
     {
         $this->_showInstance->setDbStarts($start)
             ->save();
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     public function setShowEnd($end)
     {
         $this->_showInstance->setDbEnds($end)
             ->save();
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     public function updateScheduledTime()
@@ -153,7 +153,7 @@ class Application_Model_ShowInstance {
                 $CC_DBC->query($sql);
             }
         }
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     public function moveShow($deltaDay, $deltaMin)
@@ -219,7 +219,7 @@ class Application_Model_ShowInstance {
             $show->setShowLastShow($new_ends);
         }
         
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     public function resizeShow($deltaDay, $deltaMin)
@@ -263,7 +263,7 @@ class Application_Model_ShowInstance {
         }
 
         $this->setShowEnd($new_ends);
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     /**
@@ -295,7 +295,7 @@ class Application_Model_ShowInstance {
         else {
             $groupId = $sched->addPlaylistAfter($this->_instanceId, $lastGroupId, $plId);
         }
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
         $this->updateScheduledTime();
     }
 
@@ -315,7 +315,7 @@ class Application_Model_ShowInstance {
         else {
             $groupId = $sched->addFileAfter($this->_instanceId, $lastGroupId, $file_id);
         }
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
         $this->updateScheduledTime();
     }
 
@@ -351,7 +351,7 @@ class Application_Model_ShowInstance {
                     WHERE starts >= '{$groupBoundry["end_timestamp"]}' AND instance_id = {$this->_instanceId}";
 
         $CC_DBC->query($sql);
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
         $this->updateScheduledTime();
     }
 
@@ -360,7 +360,7 @@ class Application_Model_ShowInstance {
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->_instanceId)
             ->delete();
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
         $this->updateScheduledTime();
     }
 
@@ -373,9 +373,9 @@ class Application_Model_ShowInstance {
         CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
             ->delete();
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
         if($recording){
-            RabbitMq::SendMessageToShowRecorder("cancel_recording");
+            Application_Model_RabbitMq::SendMessageToShowRecorder("cancel_recording");
         }
     }
 

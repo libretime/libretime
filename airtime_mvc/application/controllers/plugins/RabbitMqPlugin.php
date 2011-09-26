@@ -4,10 +4,10 @@ class RabbitMqPlugin extends Zend_Controller_Plugin_Abstract
 {
     public function dispatchLoopShutdown()
     {
-        if (RabbitMq::$doPush) {
+        if (Application_Model_RabbitMq::$doPush) {
             $md = array('schedule' => Application_Model_Schedule::GetScheduledPlaylists());
-            RabbitMq::SendMessageToPypo("update_schedule", $md);
-            RabbitMq::SendMessageToShowRecorder("update_schedule");
+            Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
+            Application_Model_RabbitMq::SendMessageToShowRecorder("update_schedule");
         }
     }
 }

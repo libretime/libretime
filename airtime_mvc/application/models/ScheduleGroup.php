@@ -116,7 +116,7 @@ class Application_Model_ScheduleGroup {
             }
         }
 
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
         return $this->groupId;
     }
 
@@ -155,7 +155,7 @@ class Application_Model_ScheduleGroup {
         ." WHERE group_id = ".$this->groupId;
         //echo $sql;
         $retVal = $CC_DBC->query($sql);
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
         return $retVal;
     }
 
