@@ -400,7 +400,7 @@ class ApiController extends Zend_Controller_Action
         		$tags = array_merge($hosts, array($show_name));
 
         		try {
-        			$soundcloud = new ATSoundcloud();
+        			$soundcloud = new Application_Model_AtSoundcloud();
         			$soundcloud_id = $soundcloud->uploadTrack($file->getFilePath(), $tmpTitle, $description, $tags, $show_start_time, $show_genre);
         			$file->setSoundCloudFileId($soundcloud_id);
         			break;

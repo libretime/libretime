@@ -924,7 +924,7 @@ class Application_Model_StoredFile {
                 $release = $file->getDbYear();
 
                 try {
-                    $soundcloud = new ATSoundcloud();
+                    $soundcloud = new Application_Model_AtSoundcloud();
                     $soundcloud_id = $soundcloud->uploadTrack($this->getFilePath(), $this->getName(), $description, $tag, $release, $genre);
                     $this->setSoundCloudFileId($soundcloud_id);
                     break;

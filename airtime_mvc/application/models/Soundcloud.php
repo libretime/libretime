@@ -2,7 +2,7 @@
 
 require_once 'soundcloud-api/Services/Soundcloud.php';
 
-class ATSoundcloud {
+class Application_Model_AtSoundcloud {
 
     private $_soundcloud;
 
