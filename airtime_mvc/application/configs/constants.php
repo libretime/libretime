@@ -35,3 +35,7 @@ define('UI_MDATA_VALUE_FORMAT_STREAM', 'live stream');
 // Session Keys
 define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 
+
+// Soundcloud contants
+define('SC_PROGRESS', -2);
+define('SC_ERROR', -2);

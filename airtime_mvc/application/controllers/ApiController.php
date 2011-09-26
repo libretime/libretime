@@ -413,7 +413,7 @@ class ApiController extends Zend_Controller_Action
                     $this->setSoundCloudErrorCode($code);
                     $this->setSoundCloudErrorMsg($msg);
                     // setting sc id to -3 which indicates error
-                    $this->setSoundCloudFileId(-3);
+                    $this->setSoundCloudFileId(SC_ERROR);
         			if(!in_array($code, array(0, 100))) {
         				break;
         			}
