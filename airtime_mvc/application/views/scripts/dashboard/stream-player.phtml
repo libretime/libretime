@@ -15,21 +15,24 @@ $(document).ready(function(){
         supplied: "oga",
         wmode: "window"
     });
+
+    $('.bit-rates').click(function(){console.log("click")});
 });
 </script>
   <div class="jp-logo"></div>
         <div class="jp-stream">
             <div class="jp-stream-text">Select stream:</div>
               <form id="form1" method="post" action="">
+
+                  <?php $ids = Application_Model_StreamSetting::getEnabledStreamIds();
+                        foreach($ids as $id):
+                        $streamData = Application_Model_StreamSetting::getStreamData($id);
+                        Logging::log("id: ".print_r($streamData, true));
+                    ?>
                   <label>
-                    <input type="radio" name="select-stream" value="radio" id="select-stream_0" checked="checked" />
-                    48 Kbit/s</label>
-                  <label>
-                    <input type="radio" name="select-stream" value="radio" id="select-stream_1" />
-                    96 Kbit/s</label>
-                  <label>
-                    <input type="radio" name="select-stream" value="radio" id="select-stream_2" />
-                    192 Kbit/s</label>
+                    <input class='bit-rates' type="radio" name="select-stream" value="radio" id="select-stream_<?php echo $id ?>" checked="checked" />
+                    <?php echo "Stream ".substr($id, 1)." (".$streamData["${id}_bitrate"]; ?> Kbit/s)</label>                    
+                    <?php endforeach; ?>
               </form>
         </div>
         <div id="jquery_jplayer_1" class="jp-jplayer"></div>
