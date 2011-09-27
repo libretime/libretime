@@ -576,6 +576,27 @@ class Application_Model_StoredFile {
     {
         return Application_Model_StoredFile::Recall(null, null, null, $p_filepath);
     }
+    
+    public static function RecallByPartialFilepath($partial_path){
+        $path_info = Application_Model_MusicDir::splitFilePath($partial_path);
+
+        if (is_null($path_info)) {
+            return null;
+        }
+        $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
+
+        $files = CcFilesQuery::create()
+                        ->filterByDbDirectory($music_dir->getId())
+                        ->filterByDbFilepath("$path_info[1]%")
+                        ->find();
+        $res = array();
+        foreach ($files as $file){
+            $storedFile = new Application_Model_StoredFile();
+            $storedFile->_file = $file;
+            $res[] = $storedFile;
+        }
+        return $res;
+    }
 
 	public static function searchFilesForPlaylistBuilder($datatables) {
 		global $CC_CONFIG;

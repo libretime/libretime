@@ -535,6 +535,14 @@ class ApiController extends Zend_Controller_Action
                 $file->delete();
             }
         }
+        else if ($mode == "delete_dir") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+            $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
+            foreach($files as $file){
+                $file->delete();
+            }
+        }
         $this->view->id = $file->getId();
     }
 
