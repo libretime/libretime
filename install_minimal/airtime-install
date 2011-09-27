@@ -7,11 +7,6 @@ if [ `whoami` != 'root' ]; then
     exit 1
 fi
 
-#Sync to force flushing all buffered writes to the disk. We need to do this because
-#sometimes packages that have been installed by a script before this one are
-#not yet available to call.
-sync
-
 set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 set -e
@@ -63,9 +58,6 @@ if [ ! -d "$VIRTUAL_ENV_DIR" ]; then
 else
     echo -e "\n*** Existing Airtime Virtualenv Found ***"
 fi 
-
-#Another sync to flush buffered writes to disk.
-sync
 
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
