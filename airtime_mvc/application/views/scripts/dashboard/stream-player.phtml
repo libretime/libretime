@@ -1,22 +1,43 @@
 <div id="content" class="jp-container">
+<?php $ids = Application_Model_StreamSetting::getEnabledStreamIds(); ?>
 <script>
-$(document).ready(function(){
-
+function setjPlayer(url, type){
+    var obj = new Object();
+    obj[type] = url;
+    
+    $("#jquery_jplayer_1").jPlayer("destroy");
     $("#jquery_jplayer_1").jPlayer({
         ready: function () {
-            $(this).jPlayer("setMedia", {
-                oga: "http://localhost:8000/airtime_128"
-            }).jPlayer("play");
+            $(this).jPlayer("setMedia", obj).jPlayer("play");
         },
         ended: function (event) {
             $(this).jPlayer("play");
         },
         swfPath: "js",
-        supplied: "oga",
+        supplied: type,
         wmode: "window"
     });
+}
+    
+$(document).ready(function(){
 
-    $('.bit-rates').click(function(){console.log("click")});
+    $('.bit-rates').click(function(eventObject){
+        var elem = $(eventObject.target);
+
+        setjPlayer(elem.attr("data-url"), elem.attr("data-type"));
+    });
+
+        <?php
+            if (count($ids) > 0){
+                $id = $ids[0];
+                $streamData = Application_Model_StreamSetting::getStreamData($id);
+                $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
+                $type = $streamData["${id}_type"];
+                if ($type == "ogg")
+                    $type = "oga";
+                echo "setjPlayer('$url', '$type');";
+            }
+        ?>
 });
 </script>
   <div class="jp-logo"></div>
@@ -24,15 +45,22 @@ $(document).ready(function(){
             <div class="jp-stream-text">Select stream:</div>
               <form id="form1" method="post" action="">
 
-                  <?php $ids = Application_Model_StreamSetting::getEnabledStreamIds();
+                  <?php
+                        $i=0;
                         foreach($ids as $id):
                         $streamData = Application_Model_StreamSetting::getStreamData($id);
                         Logging::log("id: ".print_r($streamData, true));
+
+                        $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
+                        $type = $streamData["${id}_type"];
+
+                        if ($type == "ogg")
+                            $type = "oga";
                     ?>
                   <label>
-                    <input class='bit-rates' type="radio" name="select-stream" value="radio" id="select-stream_<?php echo $id ?>" checked="checked" />
+                    <input class='bit-rates' type="radio" name="select-stream" value="radio" data-url="<?php echo $url ?>" data-type="<?php echo $type ?>" id="select-stream_<?php echo $id ?>" <?php echo $i==0 ? "checked=\"checked\"": ""; ?>/>
                     <?php echo "Stream ".substr($id, 1)." (".$streamData["${id}_bitrate"]; ?> Kbit/s)</label>                    
-                    <?php endforeach; ?>
+                    <?php $i++; endforeach; ?>
               </form>
         </div>
         <div id="jquery_jplayer_1" class="jp-jplayer"></div>
