@@ -74,15 +74,13 @@ echo "4. Enable Monit"
 echo "----------------------------------------------------"
 cd /etc/default/
 sed -i 's/startup=0/startup=1/g' monit
-cp $SCRIPTPATH/../../python_apps/monit/airtime-monit.cfg /etc/monit/conf.d
 
 grep -q "include /etc/monit/conf.d" /etc/monit/monitrc
 RETVAL=$?
 if [ $RETVAL -ne 0 ] ; then
+    mkdir -p /etc/monit/conf.d
     echo "include /etc/monit/conf.d/*" >> /etc/monit/monitrc 
 fi
-
-service monit start
 
 # Run Airtime Install
 echo "----------------------------------------------------"
