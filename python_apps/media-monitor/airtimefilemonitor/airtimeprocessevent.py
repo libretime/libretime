@@ -8,10 +8,12 @@ from pyinotify import ProcessEvent
 from airtimemetadata import AirtimeMetadata
 from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 
+from api_clients import api_client
+
 class AirtimeProcessEvent(ProcessEvent):
 
     #TODO
-    def my_init(self, queue, airtime_config=None, wm=None, mmc=None):
+    def my_init(self, queue, airtime_config=None, wm=None, mmc=None, api_client=api_client):
         """
         Method automatically called from ProcessEvent.__init__(). Additional
         keyworded arguments passed to ProcessEvent.__init__() are then
@@ -33,10 +35,58 @@ class AirtimeProcessEvent(ProcessEvent):
         self.wm = wm
         self.md_manager = AirtimeMetadata()
         self.mmc = mmc
+        self.api_client = api_client
 
     def add_filepath_to_ignore(self, filepath):
         self.ignore_event.add(filepath)
 
+    def process_IN_MOVE_SELF(self, event):
+        self.logger.info("event: %s", event)
+        path = event.path
+        if event.dir:
+            if "-unknown-path" in path:
+                unkown_path = path
+                pos = path.find("-unknown-path")
+                path = path[0:pos]+"/"
+                
+                list = self.api_client.list_all_watched_dirs()
+                # case where the dir that is being watched is moved to somewhere 
+                if path in list[u'dirs'].values():
+                    self.logger.info("Requesting the airtime server to remove '%s'", path)
+                    res = self.api_client.remove_watched_dir(path)
+                    if(res is None):
+                        self.logger.info("Unable to connect to the Airtime server.")
+                    # sucess
+                    if(res['msg']['code'] == 0):
+                        self.logger.info("%s removed from watch folder list successfully.", path)
+                    else:
+                        self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
+                else:
+                    # subdir being moved
+                    # in this case, it has to remove watch manualy and also have to manually delete all records
+                    # on cc_files table
+                    wd = self.wm.get_wd(unkown_path)
+                    self.logger.info("Removing watch on: %s wd %s", unkown_path, wd)
+                    self.wm.rm_watch(wd, rec=True)
+                    self.file_events.append({'mode': self.config.MODE_DELETE_DIR, 'filepath': path})
+                
+            
+    def process_IN_DELETE_SELF(self, event):
+        self.logger.info("event: %s", event)
+        path = event.path + '/'
+        if event.dir:
+            list = self.api_client.list_all_watched_dirs()
+            if path in list[u'dirs'].values():
+                self.logger.info("Requesting the airtime server to remove '%s'", path)
+                res = self.api_client.remove_watched_dir(path)
+                if(res is None):
+                    self.logger.info("Unable to connect to the Airtime server.")
+                # sucess
+                if(res['msg']['code'] == 0):
+                    self.logger.info("%s removed from watch folder list successfully.", path)
+                else:
+                    self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
+                    
     #event.dir: True if the event was raised against a directory.
     #event.name: filename
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
@@ -98,7 +148,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 if self.mmc.is_audio_file(event.name):
                     self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
         else:
-            self.cookies_IN_MOVED_FROM[event.cookie] = event.pathname
+            self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
 
 
     #Some weird thing to note about this event: it seems that if a file is moved to a newly
@@ -150,10 +200,10 @@ class AirtimeProcessEvent(ProcessEvent):
                 for file in files:
                     filepath = self.mmc.organize_new_file(file)
                     if (filepath is not None):
-                        self.file_events.append({'mode': mode, 'filepath': filepath})
+                        self.file_events.append({'mode': mode, 'filepath': filepath, 'is_recorded_show': False})
             else:
                 for file in files:
-                    self.file_events.append({'mode': mode, 'filepath': file})
+                    self.file_events.append({'mode': mode, 'filepath': file, 'is_recorded_show': False})
 
 
     def process_IN_DELETE(self, event):

@@ -60,7 +60,7 @@ try:
 
     wm = WatchManager()
     mmc = MediaMonitorCommon(config)
-    pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm, mmc=mmc)
+    pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm, mmc=mmc, api_client=api_client)
 
     bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client, mmc)
     bootstrap.scan()
@@ -90,4 +90,7 @@ except KeyboardInterrupt:
     notifier.stop()
     logger.info("Keyboard Interrupt")
 except Exception, e:
+    import traceback
+    top = traceback.format_exc()
     logger.error('Exception: %s', e)
+    logger.error("traceback: %s", top)
