@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Absolute path to this script
+SCRIPT=`readlink -f $0`
+# Absolute directory this script is in
+SCRIPTPATH=`dirname $SCRIPT`
+
+VIRTUAL_ENV_DIR="/usr/lib/airtime/airtime_virtualenv"
+if [ -d $VIRTUAL_ENV_DIR ]; then
+    virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+    
+    if [ -f ${virtualenv_bin}activate ]; then
+        . ${virtualenv_bin}activate
+    else
+        echo 1
+        exit 0
+    fi
+    
+    CHECK=$(python ${SCRIPTPATH}/virtualenv-check.py)
+    if [ "$CHECK" == "1" ]; then
+        echo 1
+        exit 0
+    fi
+    echo 0
+else
+    echo 1
+fi
