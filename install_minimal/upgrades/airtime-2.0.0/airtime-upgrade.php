@@ -341,7 +341,6 @@ class AirtimeIni200{
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
     const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
     const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
-    const CONF_FILE_MONIT = "/etc/monit/conf.d/airtime-monit.cfg";
 
     const CONF_PYPO_GRP = "pypo";
     const CONF_WWW_DATA_GRP = "www-data";
@@ -405,7 +404,7 @@ class AirtimeIni200{
         foreach ($configFiles as $conf) {
             // we want to use new liquidsoap.cfg so don't merge
             // also for monit
-            if( $conf == AirtimeIni200::CONF_FILE_LIQUIDSOAP || $conf == AirtimeIni200::CONF_FILE_MONIT){
+            if( $conf == AirtimeIni200::CONF_FILE_LIQUIDSOAP){
                 continue;
             }
             if (file_exists("$conf$suffix.bak")) {
@@ -493,7 +492,7 @@ class AirtimeIni200{
         $suffix = date("Ymdhis")."-2.0.0";
         foreach ($configFiles as $conf) {
             // do not back up monit cfg
-            if (file_exists($conf) && $conf != AirtimeIni200::CONF_FILE_MONIT) {
+            if (file_exists($conf)) {
                 echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
                 //copy($conf, $conf.$suffix.".bak");
                 exec("cp -p $conf $conf$suffix.bak"); //use cli version to preserve file attributes
@@ -535,10 +534,6 @@ class AirtimeIni200{
             exit(1);
         }*/
         if (!copy(__DIR__."/api_client.cfg.$suffix", AirtimeIni200::CONF_FILE_API_CLIENT)){
-            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
-            exit(1);
-        }
-        if (!copy(__DIR__."/airtime-monit.cfg.$suffix", AirtimeIni200::CONF_FILE_MONIT)){
             echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
             exit(1);
         }
