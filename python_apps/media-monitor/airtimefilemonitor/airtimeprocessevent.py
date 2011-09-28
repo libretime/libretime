@@ -42,44 +42,41 @@ class AirtimeProcessEvent(ProcessEvent):
 
     def process_IN_MOVE_SELF(self, event):
         self.logger.info("event: %s", event)
+        path = event.path
         if event.dir:
-            path = event.path
-            wd = self.wm.get_wd(path)
-            self.logger.info("Removing watch on: %s wd %s", path, wd)
-            self.wm.rm_watch(wd, rec=True)
             if "-unknown-path" in path:
+                unkown_path = path
                 pos = path.find("-unknown-path")
-                path = path[0:pos]
+                path = path[0:pos]+"/"
                 
-            list = self.api_client.list_all_watched_dirs()
-            # case where the dir that is being watched is moved to somewhere 
-            if path in list:
-                self.logger.info("Requesting the airtime server to remove '%s'", path)
-                res = self.api_client.remove_watched_dir(path)
-                if(res is None):
-                    self.logger.info("Unable to connect to the Airtime server.")
-                # sucess
-                if(res['msg']['code'] == 0):
-                    self.logger.info("%s removed from watch folder list successfully.", path)
+                list = self.api_client.list_all_watched_dirs()
+                # case where the dir that is being watched is moved to somewhere 
+                if path in list[u'dirs'].values():
+                    self.logger.info("Requesting the airtime server to remove '%s'", path)
+                    res = self.api_client.remove_watched_dir(path)
+                    if(res is None):
+                        self.logger.info("Unable to connect to the Airtime server.")
+                    # sucess
+                    if(res['msg']['code'] == 0):
+                        self.logger.info("%s removed from watch folder list successfully.", path)
+                    else:
+                        self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
                 else:
-                    self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
-            else:
-                self.file_events.append({'mode': self.config.MODE_DELETE_DIR, 'filepath': path})
+                    # subdir being moved
+                    # in this case, it has to remove watch manualy and also have to manually delete all records
+                    # on cc_files table
+                    wd = self.wm.get_wd(unkown_path)
+                    self.logger.info("Removing watch on: %s wd %s", unkown_path, wd)
+                    self.wm.rm_watch(wd, rec=True)
+                    self.file_events.append({'mode': self.config.MODE_DELETE_DIR, 'filepath': path})
                 
             
     def process_IN_DELETE_SELF(self, event):
         self.logger.info("event: %s", event)
+        path = event.path + '/'
         if event.dir:
-            path = event.path
-            wd = self.wm.get_wd(path)
-            self.logger.info("Removing watch on: %s wd %s", path, wd)
-            self.wm.rm_watch(wd, rec=True)
-            if "-unknown-path" in path:
-                pos = path.find("-unknown-path")
-                path = path[0:pos]
-                
             list = self.api_client.list_all_watched_dirs()
-            if path in list:
+            if path in list[u'dirs'].values():
                 self.logger.info("Requesting the airtime server to remove '%s'", path)
                 res = self.api_client.remove_watched_dir(path)
                 if(res is None):
@@ -89,8 +86,6 @@ class AirtimeProcessEvent(ProcessEvent):
                     self.logger.info("%s removed from watch folder list successfully.", path)
                 else:
                     self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
-            else:
-                self.file_events.append({'mode': self.config.MODE_DELETE_DIR, 'filepath': path})
                     
     #event.dir: True if the event was raised against a directory.
     #event.name: filename

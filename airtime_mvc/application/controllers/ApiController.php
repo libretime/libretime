@@ -525,6 +525,7 @@ class ApiController extends Zend_Controller_Action
             foreach($files as $file){
                 $file->delete();
             }
+            return;
         }
         $this->view->id = $file->getId();
     }
