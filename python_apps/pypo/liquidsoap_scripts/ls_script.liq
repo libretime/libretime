@@ -69,3 +69,4 @@ if s3_output != "disabled" then
     output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s3_user, s)
 end
 
+ignore(output.dummy(blank()))
