@@ -12,18 +12,18 @@ if [ "$CHECK" == "1" ]; then
     EXTRAOPTION=$(virtualenv --help | grep extra-search-dir)
 
     if [ "$?" -eq "0" ]; then
-        virtualenv --extra-search-dir=${SCRIPTPATH}/3rd_party --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
+        virtualenv --extra-search-dir=${SCRIPTPATH}/3rd_party --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv || exit 1
     else
         # copy distribute-0.6.10.tar.gz to /usr/share/python-virtualenv/
         # this is due to the bug in virtualenv 1.4.9
         if [ -d "$VIRTUAL_ENV_SHARE" ]; then
             cp ${SCRIPTPATH}/3rd_party/distribute-0.6.10.tar.gz /usr/share/python-virtualenv/
         fi
-        virtualenv --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv
+        virtualenv --no-site-package -p /usr/bin/python2.6 /usr/lib/airtime/airtime_virtualenv || exit 1
     fi
     
     echo -e "\n*** Installing Python Libraries ***"
-    /usr/lib/airtime/airtime_virtualenv/bin/pip install ${SCRIPTPATH}/airtime_virtual_env.pybundle -E /usr/lib/airtime/airtime_virtualenv
+    /usr/lib/airtime/airtime_virtualenv/bin/pip install ${SCRIPTPATH}/airtime_virtual_env.pybundle -E /usr/lib/airtime/airtime_virtualenv || exit 1
     
     echo -e "\n*** Patching Python Libraries ***"
     PATCHES=${SCRIPTPATH}/patches/*
