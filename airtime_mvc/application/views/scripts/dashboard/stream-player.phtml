@@ -21,8 +21,9 @@ function setjPlayer(url, type){
     
 $(document).ready(function(){
 
-    $('.bit-rates').click(function(eventObject){
-        var elem = $(eventObject.target);
+    $("#combo-box").change(function(eventObject){
+        var elem = $("#combo-box option:selected");
+        console.log(elem);
 
         setjPlayer(elem.attr("data-url"), elem.attr("data-type"));
     });
@@ -45,22 +46,20 @@ $(document).ready(function(){
             <div class="jp-stream-text">Select stream:</div>
               <form id="form1" method="post" action="">
 
-                  <?php
-                        $i=0;
-                        foreach($ids as $id):
-                        $streamData = Application_Model_StreamSetting::getStreamData($id);
-                        Logging::log("id: ".print_r($streamData, true));
+                <select id="combo-box">
+                    <?php
+                        foreach($ids as $id) {
+                            $streamData = Application_Model_StreamSetting::getStreamData($id);
+                            $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
+                            $type = $streamData["${id}_type"];
+                            if ($type == "ogg")
+                                $type = "oga";
 
-                        $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
-                        $type = $streamData["${id}_type"];
-
-                        if ($type == "ogg")
-                            $type = "oga";
+                            $label = "Stream ".substr($id, 1)." (".$streamData["${id}_bitrate"]." Kbit/s)";
+                            echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s'>%s</option>", $id, $url, $type, $label);
+                        }
                     ?>
-                  <label>
-                    <input class='bit-rates' type="radio" name="select-stream" value="radio" data-url="<?php echo $url ?>" data-type="<?php echo $type ?>" id="select-stream_<?php echo $id ?>" <?php echo $i==0 ? "checked=\"checked\"": ""; ?>/>
-                    <?php echo "Stream ".substr($id, 1)." (".$streamData["${id}_bitrate"]; ?> Kbit/s)</label>                    
-                    <?php $i++; endforeach; ?>
+                </select>
               </form>
         </div>
         <div id="jquery_jplayer_1" class="jp-jplayer"></div>
