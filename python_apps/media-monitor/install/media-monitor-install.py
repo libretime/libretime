@@ -39,6 +39,10 @@ def get_current_script_dir():
   index = current_script_dir.rindex('/')
   return current_script_dir[0:index]
 
+def copy_monit_file(current_script_dir):
+    shutil.copy("%s/../monit-airtime-media-monitor.cfg"%current_script_dir, "/etc/monit/conf.d/")
+    shutil.copy("%s/../../monit/monit-airtime-generic.cfg"%current_script_dir, "/etc/monit/conf.d/")
+
 
 try:
   # load config file
@@ -49,6 +53,8 @@ try:
     sys.exit(1)
 
   current_script_dir = get_current_script_dir()
+
+  copy_monit_file(current_script_dir)
 
   p = Popen("/etc/init.d/airtime-media-monitor stop >/dev/null 2>&1", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
@@ -72,7 +78,7 @@ try:
   sts = os.waitpid(p.pid, 0)[1]
 
   print "Waiting for processes to start..."
-  p = Popen("/etc/init.d/airtime-media-monitor start", shell=True)
+  p = Popen("/etc/init.d/airtime-media-monitor start-no-monit", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
 
 except Exception, e:

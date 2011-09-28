@@ -18,8 +18,7 @@ class SystemstatusController extends Zend_Controller_Action
             "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
             "show-recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
             "media-monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus(),
-            "rabbitmq-server"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
-            "icecast2"=>Application_Model_Systemstatus::GetIcecastStatus()
+            "rabbitmq-server"=>Application_Model_Systemstatus::GetRabbitMqStatus()
         );
 
         $partitions = Application_Model_Systemstatus::GetDiskInfo();
@@ -27,7 +26,6 @@ class SystemstatusController extends Zend_Controller_Action
         $this->view->status = new StdClass;
         $this->view->status->services = $services;
         $this->view->status->partitions = $partitions;
-
     }
 
     public function getLogFileAction()

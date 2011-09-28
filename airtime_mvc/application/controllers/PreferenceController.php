@@ -188,7 +188,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_StreamSetting::setStreamSetting($values);
                 $data = array();
                 $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
-                RabbitMq::SendMessageToPypo("update_stream_setting", $data);
+                Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
                 $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
             }
         }

@@ -42,13 +42,6 @@ elif [ "$result" -ne "0" ]; then
 fi
 set -e
 
-# Need to ensure monit is running before Airtime daemons are run. This is
-# so we can ensure they can register with monit to monitor them when they start.
-# If monit is already running, this step is still useful as we need monit to
-# reload its config files.
-/etc/init.d/monit restart
-
-
 echo -e "\n*** API Client Installation ***"
 python ${SCRIPTPATH}/../python_apps/api_clients/install/api_client_install.py
 
@@ -61,8 +54,20 @@ python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
 echo -e "\n*** Media Monitor Installation ***"
 python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
 
-monit monitor icecast2
+# Need to ensure monit is running before Airtime daemons are run. This is
+# so we can ensure they can register with monit to monitor them when they start.
+# If monit is already running, this step is still useful as we need monit to
+# reload its config files.
+/etc/init.d/monit restart
+
+
+set +e
+monit monitor airtime-media-monitor
+monit monitor airtime-liquidsoap
+monit monitor airtime-playout
+monit monitor airtime-show-recorder
 monit monitor rabbitmq-server
+set -e
 
 echo -e "\n*** Verifying your system environment ***"
 sleep 10

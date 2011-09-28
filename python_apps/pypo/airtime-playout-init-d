@@ -66,6 +66,11 @@ monit_restart() {
         
 }
 
+start_no_monit() {
+        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0        
+        liquidsoap_start
+}
+
 case "${1:-''}" in
   'start')
             # start commands here
@@ -84,6 +89,12 @@ case "${1:-''}" in
            echo -n "Restarting $NAME: "
            stop
            start
+           echo "Done."
+        ;;
+  'start-no-monit')
+           # restart commands here
+           echo -n "Starting $NAME: "
+           start_no_monit
            echo "Done."
         ;;
   'monit-restart')

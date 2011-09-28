@@ -1,6 +1,6 @@
 <?php
 
-class DateHelper
+class Application_Model_DateHelper
 {
     private $_dateTime;
 

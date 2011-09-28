@@ -18,6 +18,8 @@ rm -rf "/var/tmp/airtime"
 rm -rf "/opt/pypo"
 rm -rf "/opt/recorder"
 rm -rf "/srv/airtime"
+rm -rf "/etc/monit/conf.d/airtime-monit.cfg"
+rm -rf /etc/monit/conf.d/monit-airtime-*
 
 echo "DROP DATABASE AIRTIME;" | su postgres -c psql
 echo "DROP LANGUAGE plpgsql;" | su postgres -c psql

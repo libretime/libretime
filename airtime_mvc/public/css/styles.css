@@ -456,7 +456,7 @@ dl.inline-list dd {
     background-color: #95d5f7 !important;
 }
 
-.datatable tr td:first-child, .datatable tr th:first-child, .datatable tr th.ui-state-default:first-child, tr td:first-child, tr th:first-child {
+.datatable tr td:first-child, .datatable tr th:first-child, .datatable tr th.ui-state-default:first-child {
 	border-left-width:0 !important;
 }
 .ui-widget-header + .datatable {
@@ -1057,7 +1057,7 @@ h2#scheduled_playlist_name span {
 }
 
 .stream-setting-content dd.block-display {
-	width: 60%;
+	/*width: 60%;*/
 }
 
 .simple-formblock.padded-strong {
@@ -1566,9 +1566,6 @@ div.success{
 	background:url(images/icon_soundcloud.png) no-repeat 0 0;
 	width:21px;
 }
-.small-icon.sc-error {
-    background:url(images/icon_soundcloud_error2.png) no-repeat 0 0;
-}
 .small-icon.progress {
 	background:url(images/upload-icon.gif) no-repeat;
     background-color:black;
@@ -1658,8 +1655,10 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 .preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
     width: 100%;
 }
-.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text {
-    width: 99.5%;
+.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text 
+.stream-config dd.block-display .input_text_area, .stream-config dd.block-display .input_text,
+.stream-config dd.block-display input[type="text"], .stream-config dd.block-display input[type="password"] {
+    width: 98.5%;
 }
 
 .preferences dd#SoundCloudTags-element.block-display .input_text_area {
@@ -1935,12 +1934,13 @@ dd .info-text-small {
 	line-height:140%;
 }
 
-.stream-config dd input {
-    width:300px;
+.stream-config dd input[type="text"] {
+    /*width:98.5%;*/
+	min-width:152px;
 }
 
 .stream-config dd input[id$=port] {
-    width:160px;
+    width:152px;
 }
 
 dt.block-display.info-block {
@@ -1979,7 +1979,7 @@ dt.block-display.info-block {
 }
 
 .stream-config dt.block-display, .stream-config dd.block-display {
-	float: left;
+	/*float: left;*/
 }
 .collapsible-header-disabled {
 	cursor:default;
@@ -2049,8 +2049,7 @@ dt.block-display.info-block {
 table {
     border-color: #5b5b5b;
     border-style: solid;
-    border-width: 2px 1px 1px 1px;
-	background-color: #D8D8D8;
+    border-width: 0;
 }
 tbody tr th	{
 	color: #000000;
@@ -2067,7 +2066,7 @@ tbody tr th	{
 }
 thead tr th	{
 	color: #FFFFFF;
-    font-size: 13px;
+    font-size: 12px;
     padding: 5px 5px;
 	border-color:#CCCCCC;
 	background-color: #6e6e6e;
@@ -2079,8 +2078,8 @@ thead tr th	{
 tr td	{
     border-color: #b1b1b1;
     border-style: solid;
-    border-width: 1px 0 0 1px;
-    font-size: 13px;
+    border-width: 0;
+    font-size: 12px;
     padding: 5px 5px;
 }
 tfoot tr td, tfoot tr th	{
@@ -2101,13 +2100,21 @@ tfoot tr th	{
 	
 	
 /*---////////////////////    STATUS TABLE    ////////////////////---*/
-
-.statustable tr td	{
+.statustable	{
+	background-color: #D8D8D8;
+    border-width: 2px 1px 1px;
+}
+.statustable tr td, .statustable tr th	{
 	text-align:center;
 	vertical-align:text-top;
+	font-size:13px;
+}
+.statustable tr td	{
+	border-width: 1px 0 0 1px;
 }
 .statustable tr td:first-child, .statustable tr th:first-child {
 	text-align:left;
+    border-left-width: 0 !important;
 }
 .checked-icon	{
 	width:100%;
@@ -2140,7 +2147,7 @@ tfoot tr th	{
 	-moz-border-radius: 4px;
 	font-size:13px;
 }
-.big	{
+.statustable .big	{
 	width:120px;
 	height:10px;
 	background:#444444;
@@ -2194,4 +2201,95 @@ tfoot tr th	{
 	margin-bottom:2px;
 	border:none;
 	margin:0;
+}
+
+/*---////////////////////    TRIAL BOX HEADER    ////////////////////---*/
+
+.trial-box	{
+	width:142px;
+	height:38px;
+	display:block;
+	position:absolute;
+	right:20px;
+	bottom:10px;
+	background-color:#222;
+	background-color:rgba(0, 0, 0, 0.7);
+	z-index:100;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	color:#FFF;
+	font-size:11px;
+	padding:7px;
+}
+.trial-box p	{
+	padding:0 0 3px 0;
+	margin:0 0 5px 0;
+	float:left;
+}
+.trial-box-button a {
+	width:92px;
+	height:14px;
+	display:block;	
+	padding: 1px 3px;
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	text-transform:uppercase;
+	text-align:center;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	text-decoration:none;
+	color:#FFFFFF;
+	background-color:#ff5d1a;
+    background: -moz-linear-gradient(top, #ff5d1a 0, #dd4202 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff5d1a), color-stop(100%, #dd4202));
+	box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
+	-moz-box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
+	-webkit-box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
+	float:left;
+}
+.trial-box-button a:hover {
+	background-color:#dd4202;
+    background: -moz-linear-gradient(top, #dd4202 0, #ff5d1a 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #dd4202), color-stop(100%, #ff5d1a));
+	box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
+	-moz-box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
+	-webkit-box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
+}
+.trial-box-calendar	{
+	float:right;
+	text-align:center;
+	font-weight:bold;
+}
+.trial-box-calendar-white	{
+	font-size:18px;
+	color:#ff5d1a;
+	background:#FFF;
+	width:36px;
+	height:22px;
+	display:block;
+	-webkit-border-top-right-radius: 1px;
+	-moz-border-radius-topright: 1px;	
+	-webkit-border-top-left-radius: 1px;
+	-moz-border-radius-topleft: 1px;	
+}
+.trial-box-calendar-gray	{
+	width:36px;
+	height:14px;
+	display:block;
+	color:#FFF;
+	font-size:11px;
+	padding:1px 0;
+	text-transform:uppercase;
+	background-color:#676767;
+    background: -moz-linear-gradient(top, #7f7f7f 0, #555555 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #7f7f7f), color-stop(100%, #555555));
+	-webkit-border-bottom-right-radius: 1px;
+	-moz-border-radius-bottomright: 1px;	
+	-webkit-border-bottom-left-radius: 1px;
+	-moz-border-radius-bottomleft: 1px;	
+	box-shadow: rgba(0, 0, 0, 0.4) 0 2px 1px inset;
+	-moz-box-shadow: rgba(0, 0, 0, 0.4) 0 2px 2px inset;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.4) 0 2px 2px inset;
 }

@@ -17,6 +17,10 @@ def get_current_script_dir():
   current_script_dir = os.path.realpath(__file__)
   index = current_script_dir.rindex('/')
   return current_script_dir[0:index]
+
+def remove_monit_file():
+    os.system("rm -f /etc/monit/conf.d/monit-airtime-show-recorder.cfg")
+
     
 try:
     # load config file
@@ -29,6 +33,9 @@ try:
     os.system("/etc/init.d/airtime-show-recorder stop")
     os.system("rm -f /etc/init.d/airtime-show-recorder")
     os.system("update-rc.d -f airtime-show-recorder remove >/dev/null 2>&1")
+
+    print "Removing monit file"
+    remove_monit_file()
     
     print "Removing log directories"
     remove_path(config["log_dir"])

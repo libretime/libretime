@@ -158,7 +158,7 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
-            $date = new DateHelper;
+            $date = new Application_Model_DateHelper;
             $timeNow = $date->getTimestamp();
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
@@ -400,7 +400,7 @@ class ApiController extends Zend_Controller_Action
         		$tags = array_merge($hosts, array($show_name));
 
         		try {
-        			$soundcloud = new ATSoundcloud();
+        			$soundcloud = new Application_Model_AtSoundcloud();
         			$soundcloud_id = $soundcloud->uploadTrack($file->getFilePath(), $tmpTitle, $description, $tags, $show_start_time, $show_genre);
         			$file->setSoundCloudFileId($soundcloud_id);
         			break;
@@ -673,7 +673,6 @@ class ApiController extends Zend_Controller_Action
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
             "airtime_version"=>Application_Model_Preference::GetAirtimeVersion(),
             "services"=>array(
-                "icecast2"=>Application_Model_Systemstatus::GetIcecastStatus(),
                 "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
                 "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
                 "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),

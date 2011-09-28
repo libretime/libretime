@@ -1,7 +1,43 @@
 <?php
 class Application_Model_StreamSetting {
-    public function __construct(){
-    
+
+    /* Returns the id's of all streams that are enabled in an array. An
+     * example of the array returned in JSON notation is ["s1", "s2", "s3"] */
+    public static function getEnabledStreamIds(){
+        global $CC_DBC;
+        $sql = "SELECT * "
+                ."FROM cc_stream_setting "
+                ."WHERE keyname LIKE '%_output' "
+                ."AND value != 'disabled'";
+
+        $rows = $CC_DBC->getAll($sql);
+        $ids = array();
+
+        foreach ($rows as $row){
+            $ids[] = substr($row["keyname"], 0, strpos($row["keyname"], "_"));
+        }
+
+        //Logging::log(print_r($ids, true));
+        
+        return $ids;
+    }
+
+    /* Returns all information related to a specific stream. An example
+     * of a stream id is 's1' or 's2'. */
+    public static function getStreamData($p_streamId){
+        global $CC_DBC;
+        $sql = "SELECT * "
+                ."FROM cc_stream_setting "
+                ."WHERE keyname LIKE '${p_streamId}_%'";
+
+        $rows = $CC_DBC->getAll($sql);
+        $data = array();
+
+        foreach($rows as $row){
+            $data[$row["keyname"]] = $row["value"];
+        }
+
+        return $data;
     }
     
     public static function getStreamSetting(){
@@ -12,6 +48,7 @@ class Application_Model_StreamSetting {
         $rows = $CC_DBC->getAll($sql);
         return $rows;
     }
+    
     public static function setStreamSetting($data){
         global $CC_DBC;
         foreach($data as $key=>$d){

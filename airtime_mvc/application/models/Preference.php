@@ -81,7 +81,7 @@ class Application_Model_Preference
         self::SetValue("station_name", $title);
         $defaultNamespace = new Zend_Session_Namespace('title_name');
         $defaultNamespace->title = $title;
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
 
         //set session variable to new station name so that html title is updated.
         //should probably do this in a view helper to keep this controller as minimal as possible.
@@ -107,7 +107,7 @@ class Application_Model_Preference
 
     public static function SetStreamLabelFormat($type){
         self::SetValue("stream_label_format", $type);
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     public static function GetStreamLabelFormat(){

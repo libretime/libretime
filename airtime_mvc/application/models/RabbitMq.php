@@ -1,7 +1,7 @@
 <?php
 require_once 'php-amqplib/amqp.inc';
 
-class RabbitMq
+class Application_Model_RabbitMq
 {
     static public $doPush = FALSE;
 
@@ -9,7 +9,7 @@ class RabbitMq
      * Sets a flag to push the schedule at the end of the request.
      */
     public static function PushSchedule() {
-        RabbitMq::$doPush = TRUE;
+        Application_Model_RabbitMq::$doPush = TRUE;
     }
 
     public static function SendMessageToPypo($event_type, $md)
