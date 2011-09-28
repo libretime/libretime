@@ -40,10 +40,13 @@ def to_unicode(obj, encoding='utf-8'):
     return obj
 
 def encode_to(obj, encoding='utf-8'):
-    if isinstance(obj, basestring):
-        if not isinstance(obj, str):
-            obj = obj.encode(encoding)
+    if isinstance(obj, unicode):
+        obj = obj.encode(encoding)
     return obj
+    
+def convert_dict_value_to_utf8:
+    #list comprehension to convert all values of md to utf-8
+    return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
 
 class ApiClientInterface:
 
@@ -408,7 +411,9 @@ class AirTimeApiClient(ApiClientInterface):
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%mode%%", mode)
-
+           
+            md = convert_dict_value_to_utf8(md)
+            
             data = urllib.urlencode(md)
             req = urllib2.Request(url, data)
 
@@ -422,7 +427,7 @@ class AirTimeApiClient(ApiClientInterface):
             if(is_record):
                 url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
                 url = url.replace("%%fileid%%", str(response[u'id']))
-                url = url.replace("%%showinstanceid%%", str(md['MDATA_KEY_TRACKNUMBER']))
+                url = url.replace("%%showinstanceid%%", md['MDATA_KEY_TRACKNUMBER'])
                 logger.debug(url)
                 url = url.replace("%%api_key%%", self.config["api_key"])
 
@@ -434,7 +439,7 @@ class AirTimeApiClient(ApiClientInterface):
 
         except Exception, e:
             response = None
-            logger.error("Exception with filepath %s: %s", md['MDATA_KEY_FILEPATH'], e)
+            logger.error("Exception with file %s: %s", md, e)
 
         return response
 

@@ -112,6 +112,7 @@ class ApiController extends Zend_Controller_Action
                     $file_base_name = substr($file_base_name, 1);
                     header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
                 }
+                $logger->info("Sending $filepath");
                 header("Content-Length: " . filesize($filepath));
 
                 // !! binary mode !!
