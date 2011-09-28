@@ -664,7 +664,6 @@ class ApiController extends Zend_Controller_Action
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
             "airtime_version"=>Application_Model_Preference::GetAirtimeVersion(),
             "services"=>array(
-                "icecast2"=>Application_Model_Systemstatus::GetIcecastStatus(),
                 "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
                 "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
                 "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),

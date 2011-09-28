@@ -85,10 +85,6 @@ class AirtimeCheck {
         self::output_status("SHOW_RECORDER_RUNNING_SECONDS", $p_status->services->show_recorder->uptime_seconds);
         self::output_status("SHOW_RECORDER_MEM_PERC", $p_status->services->show_recorder->memory_perc);
         self::output_status("SHOW_RECORDER_CPU_PERC", $p_status->services->show_recorder->cpu_perc);
-        self::output_status("ICECAST_PROCESS_ID", $p_status->services->icecast2->process_id);
-        self::output_status("ICECAST_RUNNING_SECONDS", $p_status->services->icecast2->uptime_seconds);
-        self::output_status("ICECAST_MEM_PERC", $p_status->services->icecast2->memory_perc);
-        self::output_status("ICECAST_CPU_PERC", $p_status->services->icecast2->cpu_perc);
         self::output_status("RABBITMQ_PROCESS_ID", $p_status->services->rabbitmq->process_id);
         self::output_status("RABBITMQ_RUNNING_SECONDS", $p_status->services->rabbitmq->uptime_seconds);
         self::output_status("RABBITMQ_MEM_PERC", $p_status->services->rabbitmq->memory_perc);
