@@ -78,7 +78,7 @@ try:
   sts = os.waitpid(p.pid, 0)[1]
 
   print "Waiting for processes to start..."
-  p = Popen("/etc/init.d/airtime-media-monitor start", shell=True)
+  p = Popen("/etc/init.d/airtime-media-monitor start-no-monit", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
 
 except Exception, e:

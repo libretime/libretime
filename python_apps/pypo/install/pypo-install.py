@@ -153,7 +153,7 @@ try:
   else:
       print "Unable to connect to the Airtime server."
   print "Waiting for processes to start..."
-  p = Popen("/etc/init.d/airtime-playout start", shell=True)
+  p = Popen("/etc/init.d/airtime-playout start-no-monit", shell=True)
   sts = os.waitpid(p.pid, 0)[1]
  
   

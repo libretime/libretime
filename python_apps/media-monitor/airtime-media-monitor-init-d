@@ -28,6 +28,10 @@ stop () {
         rm -f $PIDFILE
 }
 
+start_no_monit() {
+    start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
+}
+
 
 case "${1:-''}" in
   'start')
@@ -47,6 +51,12 @@ case "${1:-''}" in
            echo -n "Restarting $NAME: "
            stop
            start
+           echo "Done."
+        ;;
+  'start-no-monit')
+           # restart commands here
+           echo -n "Starting $NAME: "
+           start_no_monit
            echo "Done."
         ;;
   'status')
