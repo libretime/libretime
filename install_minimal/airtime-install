@@ -38,6 +38,7 @@ if [ "$result" -eq "2" ]; then
     exit 0
 elif [ "$result" -ne "0" ]; then
     #There was an error, exit with error code.
+    echo "There was an error during upgrade. Exit code $result"
     exit 1
 fi
 set -e

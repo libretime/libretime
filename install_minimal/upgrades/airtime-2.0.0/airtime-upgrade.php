@@ -5,6 +5,17 @@
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
+ 
+/*
+ * In the future, most Airtime upgrades will involve just mutating the
+ * data that is stored on the system. For example, The only data
+ * we need to preserve between versions is the database, /etc/airtime, and
+ * /srv/airtime. Everything else is just binary files that can be removed/replaced
+ * with the new version of Airtime. Of course, the data may need to be in a new
+ * format, and that's what this upgrade script will be for.
+ */
+
+const VERSION_NUMBER = "2.0";
 
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
@@ -12,14 +23,249 @@ set_include_path(__DIR__.'/../../../airtime_mvc/application/models' . PATH_SEPAR
 set_include_path(__DIR__.'/../../../airtime_mvc/application/configs' . PATH_SEPARATOR . get_include_path());
 require_once 'conf.php';
 require_once 'DB.php';
-
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/../../../airtime_mvc/application/configs/airtime-conf.php");
 
-class AirtimeInstall{
-    const CONF_DIR_BINARIES = "/usr/lib/airtime";
+
+/* These are helper functions that are common to each upgrade such as
+ * creating connections to a database, backing up config files etc.
+ */
+class UpgradeCommon{
+    const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
+    const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
+    const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
+    const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
+    const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
+    const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
+
+    const CONF_PYPO_GRP = "pypo";
+    const CONF_WWW_DATA_GRP = "www-data";
+
+    public static function connectToDatabase(){
+        global $CC_DBC, $CC_CONFIG;
+
+        $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+
+        // Database config
+        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
+        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
+        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
+        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+
+        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
+    }
     
-    public static function SetDefaultTimezone()
+    public static function DbTableExists($p_name)
+    {
+        global $CC_DBC;
+        $sql = "SELECT * FROM ".$p_name;
+        $result = $CC_DBC->GetOne($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
+
+    private static function GetAirtimeSrcDir()
+    {
+        return __DIR__."/../../../airtime_mvc";
+    }
+
+    public static function MigrateTablesToVersion($dir, $version)
+    {
+        $appDir = self::GetAirtimeSrcDir();
+        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
+                    "--no-interaction migrations:migrate $version";
+        system($command);
+    }
+
+    public static function BypassMigrations($dir, $version)
+    {
+        $appDir = self::GetAirtimeSrcDir();
+        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
+                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
+                    "--no-interaction --add migrations:version $version";
+        system($command);
+    }
+
+    public static function upgradeConfigFiles(){
+
+        $configFiles = array(UpgradeCommon::CONF_FILE_AIRTIME,
+                             UpgradeCommon::CONF_FILE_PYPO,
+                             UpgradeCommon::CONF_FILE_RECORDER,
+                             UpgradeCommon::CONF_FILE_LIQUIDSOAP,
+                             UpgradeCommon::CONF_FILE_MEDIAMONITOR,
+                             UpgradeCommon::CONF_FILE_API_CLIENT);
+
+        // Backup the config files
+        $suffix = date("Ymdhis")."-2.0.0";
+        foreach ($configFiles as $conf) {
+            // do not back up monit cfg
+            if (file_exists($conf)) {
+                echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
+                //copy($conf, $conf.$suffix.".bak");
+                exec("cp -p $conf $conf$suffix.bak"); //use cli version to preserve file attributes
+            }
+        }
+
+        $default_suffix = "200";
+        self::CreateIniFiles($default_suffix);
+        self::MergeConfigFiles($configFiles, $suffix);
+    }
+
+    /**
+     * This function creates the /etc/airtime configuration folder
+     * and copies the default config files to it.
+     */
+    public static function CreateIniFiles($suffix)
+    {
+        if (!file_exists("/etc/airtime/")){
+            if (!mkdir("/etc/airtime/", 0755, true)){
+                echo "Could not create /etc/airtime/ directory. Exiting.";
+                exit(1);
+            }
+        }
+
+        if (!copy(__DIR__."/airtime.conf.$suffix", UpgradeCommon::CONF_FILE_AIRTIME)){
+            echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy(__DIR__."/pypo.cfg.$suffix", UpgradeCommon::CONF_FILE_PYPO)){
+            echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy(__DIR__."/recorder.cfg.$suffix", UpgradeCommon::CONF_FILE_RECORDER)){
+            echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
+        if (!copy(__DIR__."/api_client.cfg.$suffix", UpgradeCommon::CONF_FILE_API_CLIENT)){
+            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
+            exit(1);
+        }
+    }
+
+    private static function MergeConfigFiles($configFiles, $suffix) {
+        foreach ($configFiles as $conf) {
+            // we want to use new liquidsoap.cfg so don't merge
+            // also for monit
+            if( $conf == self::CONF_FILE_LIQUIDSOAP){
+                continue;
+            }
+            if (file_exists("$conf$suffix.bak")) {
+
+                if($conf === self::CONF_FILE_AIRTIME) {
+                    // Parse with sections
+                    $newSettings = parse_ini_file($conf, true);
+                    $oldSettings = parse_ini_file("$conf$suffix.bak", true);
+                }
+                else {
+                    $newSettings = self::ReadPythonConfig($conf);
+                    $oldSettings = self::ReadPythonConfig("$conf$suffix.bak");
+                }
+
+                $settings = array_keys($newSettings);
+
+                foreach($settings as $section) {
+                    if(isset($oldSettings[$section])) {
+                        if(is_array($oldSettings[$section])) {
+                            $sectionKeys = array_keys($newSettings[$section]);
+                            foreach($sectionKeys as $sectionKey) {
+                                // skip airtim_dir as we want to use new value
+                                if($sectionKey != "airtime_dir"){
+                                    if(isset($oldSettings[$section][$sectionKey])) {
+                                        self::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            self::UpdateIniValue($conf, $section, $oldSettings[$section]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static function ReadPythonConfig($p_filename)
+    {
+        $values = array();
+        
+        $fh = fopen($p_filename, 'r');
+        
+        while(!feof($fh)){
+            $line = fgets($fh);
+            if(substr(trim($line), 0, 1) == '#' || trim($line) == ""){
+                continue;
+            }else{
+                $info = explode('=', $line, 2);
+                $values[trim($info[0])] = trim($info[1]);
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * This function updates an INI style config file.
+     *
+     * A property and the value the property should be changed to are
+     * supplied. If the property is not found, then no changes are made.
+     *
+     * @param string $p_filename
+     *      The path the to the file.
+     * @param string $p_property
+     *      The property to look for in order to change its value.
+     * @param string $p_value
+     *      The value the property should be changed to.
+     *
+     */
+    private static function UpdateIniValue($p_filename, $p_property, $p_value)
+    {
+        $lines = file($p_filename);
+        $n=count($lines);
+        foreach ($lines as &$line) {
+            if ($line[0] != "#"){
+                $key_value = explode("=", $line);
+                $key = trim($key_value[0]);
+
+                if ($key == $p_property){
+                    $line = "$p_property = $p_value".PHP_EOL;
+                }
+            }
+        }
+
+        $fp=fopen($p_filename, 'w');
+        for($i=0; $i<$n; $i++){
+            fwrite($fp, $lines[$i]);
+        }
+        fclose($fp);
+    }
+}
+
+/* All functions other than start() should be marked as
+ * private.
+ */
+class AirtimeDatabaseUpgrade{
+
+    public static function start(){
+        self::SetDefaultTimezone();
+        self::setPhpDefaultTimeZoneToSystemTimezone();
+        self::convert_cc_playlist();
+        self::convert_cc_schedule();
+        self::convert_cc_show_days();
+        self::convert_cc_show_instances();
+
+        self::doDbMigration();
+        self::SetDefaultStreamSetting();
+        self::GetOldLiquidsoapCfgAndUpdate();
+    }
+
+    private static function SetDefaultTimezone()
     {
         global $CC_DBC;
         
@@ -33,28 +279,94 @@ class AirtimeInstall{
         return true;
     }
 
-    public static function GetUtilsSrcDir()
-    {
-        return __DIR__."/../../../utils";
+    private static function setPhpDefaultTimeZoneToSystemTimezone(){
+        //we can get the default system timezone on debian/ubuntu by reading "/etc/timezone"
+        $filename = "/etc/timezone";
+        $handle = fopen($filename, "r");
+        $contents = trim(fread($handle, filesize($filename)));
+        echo "System timezone detected as: $contents".PHP_EOL;
+        fclose($handle);
+
+        date_default_timezone_set($contents);
     }
 
-    public static function InstallBinaries()
-    {
-        echo "* Installing binaries to ".AirtimeInstall::CONF_DIR_BINARIES.PHP_EOL;
-        exec("mkdir -p ".AirtimeInstall::CONF_DIR_BINARIES);
-        exec("cp -R ".AirtimeInstall::GetUtilsSrcDir()." ".AirtimeInstall::CONF_DIR_BINARIES);
-    }
-
-    public static function CreateSymlinksToUtils()
-    {
-        echo "* Installing airtime-log".PHP_EOL;
-        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-log";
-        copy(AirtimeInstall::GetUtilsSrcDir()."/airtime-log.php", AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-log.php");
+    private static function convert_cc_playlist(){
+        /* cc_playlist has a field that keeps track of when the playlist was last modified. */
+        $playlists = CcPlaylistQuery::create()->find();
         
-        exec("ln -s $dir /usr/bin/airtime-log");
+        foreach ($playlists as $pl){
+            $dt = new DateTime($pl->getDbMtime(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $pl->setDbMtime($dt);
+            
+            $pl->save();
+        }
     }
 
-    public static function SetDefaultStreamSetting()
+    private static function convert_cc_schedule(){
+        /* cc_schedule has start and end fields that need to be changed to UTC. */
+        $schedules = CcScheduleQuery::create()->find();
+        
+        foreach ($schedules as $s){
+            $dt = new DateTime($s->getDbStarts(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $s->setDbStarts($dt);
+            
+            $dt = new DateTime($s->getDbEnds(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $s->setDbEnds($dt);
+            
+            $s->save();
+        }
+    }
+    
+    private static function convert_cc_show_days(){
+        /* cc_show_days has first_show, last_show and start_time fields that need to be changed to UTC. */
+        $showDays = CcShowDaysQuery::create()->find();
+        
+        foreach ($showDays as $sd){
+            $dt = new DateTime($sd->getDbFirstShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $sd->setDbFirstShow($dt->format("Y-m-d"));
+            $sd->setDbStartTime($dt->format("H:i:s"));
+            
+            $dt = new DateTime($sd->getDbLastShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $sd->setDbLastShow($dt->format("Y-m-d"));
+            
+            $sd->save();
+        }
+    }
+    
+    private static function convert_cc_show_instances(){
+        /* convert_cc_show_instances has starts and ends fields that need to be changed to UTC. */
+        $showInstances = CcShowInstancesQuery::create()->find();
+        
+        foreach ($showInstances as $si){
+            $dt = new DateTime($si->getDbStarts(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $si->setDbStarts($dt);
+            
+            $dt = new DateTime($si->getDbEnds(), new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            $si->setDbEnds($dt);
+            
+            $si->save();
+        }
+    }
+
+    private static function doDbMigration(){
+        if(UpgradeCommon::DbTableExists('doctrine_migration_versions') === false) {
+            $migrations = array('20110312121200', '20110331111708', '20110402164819', '20110406182005', '20110629143017', '20110711161043', '20110713161043');
+            foreach($migrations as $migration) {
+                UpgradeCommon::BypassMigrations(__DIR__, $migration);
+            }
+        }
+
+        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20110925171256');
+    }
+
+    private static function SetDefaultStreamSetting()
     {
         global $CC_DBC;
 
@@ -109,43 +421,8 @@ class AirtimeInstall{
         }
         return true;
     }
-    
-    public static function BypassMigrations($dir, $version)
-    {
-        $appDir = AirtimeInstall::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
-                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
-                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
-                    "--no-interaction --add migrations:version $version";
-        system($command);
-    }
 
-    public static function MigrateTablesToVersion($dir, $version)
-    {
-        $appDir = AirtimeInstall::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
-                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
-                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
-                    "--no-interaction migrations:migrate $version";
-        system($command);
-    }
-    
-    public static function GetAirtimeSrcDir()
-    {
-        return __DIR__."/../../../airtime_mvc";
-    }
-    
-    public static function DbTableExists($p_name)
-    {
-        global $CC_DBC;
-        $sql = "SELECT * FROM ".$p_name;
-        $result = $CC_DBC->GetOne($sql);
-        if (PEAR::isError($result)) {
-            return false;
-        }
-        return true;
-    }
-    public static function GetOldLiquidsoapCfgAndUpdate(){
+    private static function GetOldLiquidsoapCfgAndUpdate(){
         global $CC_DBC;
         echo "* Retrieving old liquidsoap configuration".PHP_EOL;
         $map = array();
@@ -220,367 +497,74 @@ class AirtimeInstall{
     }
 }
 
-class Airtime200Upgrade{
+class AirtimeStorWatchedDirsUpgrade{
 
-    public static function connectToDatabase(){
-        global $CC_DBC, $CC_CONFIG;
-
-        $values = parse_ini_file('/etc/airtime/airtime.conf', true);
-
-        // Database config
-        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
-        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
-        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
-        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
-        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
-
-        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
-    }
-    
-    public static function InstallAirtimePhpServerCode($phpDir)
-    {
-    
-            $AIRTIME_SRC = realpath(__DIR__.'/../../../airtime_mvc');
-    
-            // delete old files
-            exec("rm -rf ".$phpDir);
-            echo "* Installing PHP code to ".$phpDir.PHP_EOL;
-            exec("mkdir -p ".$phpDir);
-            exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
-    }
-        
-    public static function RemoveOldMonitFile(){
-        unlink("/etc/monit/conf.d/airtime-monit.cfg");
+    public static function start(){
     }
 }
 
-class ConvertToUtc{
+/* This class deals with any modifications to config files in /etc/airtime
+ * as well as backups. All functions other than start() should be marked
+ * as private. */
+class AirtimeConfigFileUpgrade{
 
-    public static function setPhpDefaultTimeZoneToSystemTimezone(){
-        //we can get the default system timezone on debian/ubuntu by reading "/etc/timezone"
-        $filename = "/etc/timezone";
-        $handle = fopen($filename, "r");
-        $contents = trim(fread($handle, filesize($filename)));
-        echo "System timezone detected as: $contents".PHP_EOL;
-        fclose($handle);
-
-        date_default_timezone_set($contents);
-    }
-
-    public static function convert_cc_playlist(){
-        /* cc_playlist has a field that keeps track of when the playlist was last modified. */
-        $playlists = CcPlaylistQuery::create()->find();
-        
-        foreach ($playlists as $pl){
-            $dt = new DateTime($pl->getDbMtime(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $pl->setDbMtime($dt);
-            
-            $pl->save();
-        }
-    }
-
-    public static function convert_cc_schedule(){
-        /* cc_schedule has start and end fields that need to be changed to UTC. */
-        $schedules = CcScheduleQuery::create()->find();
-        
-        foreach ($schedules as $s){
-            $dt = new DateTime($s->getDbStarts(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $s->setDbStarts($dt);
-            
-            $dt = new DateTime($s->getDbEnds(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $s->setDbEnds($dt);
-            
-            $s->save();
-        }
-    }
-    
-    public static function convert_cc_show_days(){
-        /* cc_show_days has first_show, last_show and start_time fields that need to be changed to UTC. */
-        $showDays = CcShowDaysQuery::create()->find();
-        
-        foreach ($showDays as $sd){
-            $dt = new DateTime($sd->getDbFirstShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $sd->setDbFirstShow($dt->format("Y-m-d"));
-            $sd->setDbStartTime($dt->format("H:i:s"));
-            
-            $dt = new DateTime($sd->getDbLastShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $sd->setDbLastShow($dt->format("Y-m-d"));
-            
-            $sd->save();
-        }
-    }
-    
-    public static function convert_cc_show_instances(){
-        /* convert_cc_show_instances has starts and ends fields that need to be changed to UTC. */
-        $showInstances = CcShowInstancesQuery::create()->find();
-        
-        foreach ($showInstances as $si){
-            $dt = new DateTime($si->getDbStarts(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $si->setDbStarts($dt);
-            
-            $dt = new DateTime($si->getDbEnds(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $si->setDbEnds($dt);
-            
-            $si->save();
-        }
-    }
-}
-
-class AirtimeIni200{
-
-    const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
-    const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
-    const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
-    const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
-    const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
-    const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
-
-    const CONF_PYPO_GRP = "pypo";
-    const CONF_WWW_DATA_GRP = "www-data";
-
-    /**
-     * This function updates an INI style config file.
-     *
-     * A property and the value the property should be changed to are
-     * supplied. If the property is not found, then no changes are made.
-     *
-     * @param string $p_filename
-     *      The path the to the file.
-     * @param string $p_property
-     *      The property to look for in order to change its value.
-     * @param string $p_value
-     *      The value the property should be changed to.
-     *
-     */
-    public static function UpdateIniValue($p_filename, $p_property, $p_value)
-    {
-        $lines = file($p_filename);
-        $n=count($lines);
-        foreach ($lines as &$line) {
-            if ($line[0] != "#"){
-                $key_value = explode("=", $line);
-                $key = trim($key_value[0]);
-
-                if ($key == $p_property){
-                    $line = "$p_property = $p_value".PHP_EOL;
-                }
-            }
-        }
-
-        $fp=fopen($p_filename, 'w');
-        for($i=0; $i<$n; $i++){
-            fwrite($fp, $lines[$i]);
-        }
-        fclose($fp);
-    }
-
-    public static function ReadPythonConfig($p_filename)
-    {
-        $values = array();
-        
-        $fh = fopen($p_filename, 'r');
-        
-        while(!feof($fh)){
-            $line = fgets($fh);
-            if(substr(trim($line), 0, 1) == '#' || trim($line) == ""){
-                continue;
-            }else{
-                $info = explode('=', $line, 2);
-                $values[trim($info[0])] = trim($info[1]);
-            }
-        }
-
-        return $values;
-    }
-
-    public static function MergeConfigFiles($configFiles, $suffix) {
-        foreach ($configFiles as $conf) {
-            // we want to use new liquidsoap.cfg so don't merge
-            // also for monit
-            if( $conf == AirtimeIni200::CONF_FILE_LIQUIDSOAP){
-                continue;
-            }
-            if (file_exists("$conf$suffix.bak")) {
-
-                if($conf === AirtimeIni200::CONF_FILE_AIRTIME) {
-                    // Parse with sections
-                    $newSettings = parse_ini_file($conf, true);
-                    $oldSettings = parse_ini_file("$conf$suffix.bak", true);
-                }
-                else {
-                    $newSettings = AirtimeIni200::ReadPythonConfig($conf);
-                    $oldSettings = AirtimeIni200::ReadPythonConfig("$conf$suffix.bak");
-                }
-
-                $settings = array_keys($newSettings);
-
-                foreach($settings as $section) {
-                    if(isset($oldSettings[$section])) {
-                        if(is_array($oldSettings[$section])) {
-                            $sectionKeys = array_keys($newSettings[$section]);
-                            foreach($sectionKeys as $sectionKey) {
-                                // skip airtim_dir as we want to use new value
-                                if($sectionKey != "airtime_dir"){
-                                    if(isset($oldSettings[$section][$sectionKey])) {
-                                        AirtimeIni200::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            AirtimeIni200::UpdateIniValue($conf, $section, $oldSettings[$section]);
-                        }
-                    }
-                }
-            }
-        }
+    public static function start(){
+        echo "* Updating configFiles\n";
+        self::changeConfigFilePermissions();
+        UpgradeCommon::upgradeConfigFiles();
     }
 
     /* Re: http://dev.sourcefabric.org/browse/CC-2797
      * We don't want config files to be world-readable so we
      * set the strictest permissions possible. */
-    public static function changeConfigFilePermissions(){
-        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_AIRTIME, self::CONF_WWW_DATA_GRP)){
+    private static function changeConfigFilePermissions(){
+        if (!self::ChangeFileOwnerGroupMod(UpgradeCommon::CONF_FILE_AIRTIME, UpgradeCommon::CONF_WWW_DATA_GRP)){
             echo "Could not set ownership of api_client.cfg to 'pypo'. Exiting.";
             exit(1);
         }
-        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_API_CLIENT, self::CONF_PYPO_GRP)){
+        if (!self::ChangeFileOwnerGroupMod(UpgradeCommon::CONF_FILE_API_CLIENT, UpgradeCommon::CONF_PYPO_GRP)){
             echo "Could not set ownership of api_client.cfg to 'pypo'. Exiting.";
             exit(1);
         }
-        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_PYPO, self::CONF_PYPO_GRP)){
+        if (!self::ChangeFileOwnerGroupMod(UpgradeCommon::CONF_FILE_PYPO, UpgradeCommon::CONF_PYPO_GRP)){
             echo "Could not set ownership of pypo.cfg to 'pypo'. Exiting.";
             exit(1);
         }
-        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_RECORDER, self::CONF_PYPO_GRP)){
+        if (!self::ChangeFileOwnerGroupMod(UpgradeCommon::CONF_FILE_RECORDER, UpgradeCommon::CONF_PYPO_GRP)){
             echo "Could not set ownership of recorder.cfg to 'pypo'. Exiting.";
             exit(1);
         }
-        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_LIQUIDSOAP, self::CONF_PYPO_GRP)){
+        if (!self::ChangeFileOwnerGroupMod(UpgradeCommon::CONF_FILE_LIQUIDSOAP, UpgradeCommon::CONF_PYPO_GRP)){
             echo "Could not set ownership of liquidsoap.cfg to 'pypo'. Exiting.";
             exit(1);
         }
-        if (!self::ChangeFileOwnerGroupMod(AirtimeIni200::CONF_FILE_MEDIAMONITOR, self::CONF_PYPO_GRP)){
+        if (!self::ChangeFileOwnerGroupMod(UpgradeCommon::CONF_FILE_MEDIAMONITOR, UpgradeCommon::CONF_PYPO_GRP)){
             echo "Could not set ownership of media-monitor.cfg to 'pypo'. Exiting.";
             exit(1);
         }
     }
 
-    public static function ChangeFileOwnerGroupMod($filename, $user){
-        return (chown($filename, $user) &&
-                chgrp($filename, $user) &&
-                chmod($filename, 0640));
+
+}
+
+/* Into this class put operations that don't fit into any of the other
+ * 3 classes. For example, there may be stray files scattered throughout
+ * the filesystem that we don't need anymore. Put the functions to clean
+ * those out into this class. */
+class AirtimeMiscUpgrade{
+
+    public static function start(){
+        self::RemoveOldMonitFile();
     }
 
-    public static function upgradeConfigFiles(){
-
-        $configFiles = array(AirtimeIni200::CONF_FILE_AIRTIME,
-                             AirtimeIni200::CONF_FILE_PYPO,
-                             AirtimeIni200::CONF_FILE_RECORDER,
-                             AirtimeIni200::CONF_FILE_LIQUIDSOAP,
-                             AirtimeIni200::CONF_FILE_MEDIAMONITOR,
-                             AirtimeIni200::CONF_FILE_API_CLIENT);
-
-        // Backup the config files
-        $suffix = date("Ymdhis")."-2.0.0";
-        foreach ($configFiles as $conf) {
-            // do not back up monit cfg
-            if (file_exists($conf)) {
-                echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
-                //copy($conf, $conf.$suffix.".bak");
-                exec("cp -p $conf $conf$suffix.bak"); //use cli version to preserve file attributes
-            }
-        }
-
-        $default_suffix = "200";
-        AirtimeIni200::CreateIniFiles($default_suffix);
-        AirtimeIni200::MergeConfigFiles($configFiles, $suffix);
-    }
-
-    /**
-     * This function creates the /etc/airtime configuration folder
-     * and copies the default config files to it.
-     */
-    public static function CreateIniFiles($suffix)
-    {
-        if (!file_exists("/etc/airtime/")){
-            if (!mkdir("/etc/airtime/", 0755, true)){
-                echo "Could not create /etc/airtime/ directory. Exiting.";
-                exit(1);
-            }
-        }
-
-        if (!copy(__DIR__."/airtime.conf.$suffix", AirtimeIni200::CONF_FILE_AIRTIME)){
-            echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
-            exit(1);
-        }
-        if (!copy(__DIR__."/pypo.cfg.$suffix", AirtimeIni200::CONF_FILE_PYPO)){
-            echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
-            exit(1);
-        }
-        if (!copy(__DIR__."/recorder.cfg.$suffix", AirtimeIni200::CONF_FILE_RECORDER)){
-            echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
-            exit(1);
-        }
-        /*if (!copy(__DIR__."/liquidsoap.cfg.$suffix", AirtimeIni200::CONF_FILE_LIQUIDSOAP)){
-            echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
-            exit(1);
-        }*/
-        if (!copy(__DIR__."/api_client.cfg.$suffix", AirtimeIni200::CONF_FILE_API_CLIENT)){
-            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
-            exit(1);
-        }
+    private static function RemoveOldMonitFile(){
+        unlink("/etc/monit/conf.d/airtime-monit.cfg");
     }
 }
 
-Airtime200Upgrade::connectToDatabase();
-AirtimeInstall::SetDefaultTimezone();
+UpgradeCommon::connectToDatabase();
 
-AirtimeInstall::InstallBinaries();
-AirtimeInstall::CreateSymlinksToUtils();
-
-/* Airtime 2.0.0 starts interpreting all database times in UTC format. Prior to this, all the times
- * were stored using the local time zone. Let's convert to UTC time. */
-ConvertToUtc::setPhpDefaultTimeZoneToSystemTimezone();
-ConvertToUtc::convert_cc_playlist();
-ConvertToUtc::convert_cc_schedule();
-ConvertToUtc::convert_cc_show_days();
-ConvertToUtc::convert_cc_show_instances();
-
-// merging/updating config files
-echo "* Updating configFiles\n";
-AirtimeIni200::changeConfigFilePermissions();
-AirtimeIni200::upgradeConfigFiles();
-
-$values = parse_ini_file(AirtimeIni200::CONF_FILE_AIRTIME, true);
-$phpDir = $values['general']['airtime_dir'];
-Airtime200Upgrade::InstallAirtimePhpServerCode($phpDir);
-
-if(AirtimeInstall::DbTableExists('doctrine_migration_versions') === false) {
-    $migrations = array('20110312121200', '20110331111708', '20110402164819', '20110406182005', '20110629143017', '20110711161043', '20110713161043');
-    foreach($migrations as $migration) {
-        AirtimeInstall::BypassMigrations(__DIR__, $migration);
-    }
-}
-
-AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110925171256');
-
-AirtimeInstall::SetDefaultStreamSetting();
-
-AirtimeInstall::GetOldLiquidsoapCfgAndUpdate();
-
-AirtimeUpgrade::RemoveOldMonitFile();
-
-// restart monit
-exec("service monit restart");
-
-
-
- 
+AirtimeDatabaseUpgrade::start();
+AirtimeStorWatchedDirsUpgrade::start();
+AirtimeConfigFileUpgrade::start();
+AirtimeMiscUpgrade::start();

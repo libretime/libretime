@@ -28,7 +28,6 @@ $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
 Logging::setLogPath('/var/log/airtime/zendphp.log');
-Logging::log("bootstrap");
 
 Zend_Validate::setDefaultNamespaces("Zend");
 
