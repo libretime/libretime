@@ -1,5 +1,11 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong stream-config">
-    <h2>Stream Settings</h2>
+    <h2 style="float:left">Stream Settings</h2>
+    <?php if($this->disable_stream_conf != "true"){?>
+    <div class="button-bar bottom" id="submit-element" style="float:right">
+        <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
+    </div>
+    <div style="clear:both"></div>
+    <?php }?>
 <?php echo $this->statusMsg;?>
     <form method="post" action="/Preference/stream-setting" enctype="application/x-www-form-urlencoded">
     <fieldset class="padded">

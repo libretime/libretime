@@ -138,7 +138,6 @@
                 </dt>
                 <dd id="outputMountpoint-element" class="block-display">
                     <?php echo $this->element->getElement('mount')?>
-                    <span class="info-text-small">(Your radio station website)</span>
                     <?php if($this->element->getElement('mount')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('mount')->getMessages() as $error): ?>
