@@ -37,5 +37,6 @@ define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 
 
 // Soundcloud contants
-define('SC_PROGRESS', -2);
-define('SC_ERROR', -2);
+define('SOUNDCLOUD_NULL', -1);
+define('SOUNDCLOUD_PROGRESS', -2);
+define('SOUNDCLOUD_ERROR', -3);
