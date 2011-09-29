@@ -45,7 +45,7 @@ class AirtimeProcessEvent(ProcessEvent):
         path = event.path
         if event.dir:
             if "-unknown-path" in path:
-                unkown_path = path
+                unknown_path = path
                 pos = path.find("-unknown-path")
                 path = path[0:pos]+"/"
                 
@@ -65,8 +65,8 @@ class AirtimeProcessEvent(ProcessEvent):
                     # subdir being moved
                     # in this case, it has to remove watch manualy and also have to manually delete all records
                     # on cc_files table
-                    wd = self.wm.get_wd(unkown_path)
-                    self.logger.info("Removing watch on: %s wd %s", unkown_path, wd)
+                    wd = self.wm.get_wd(unknown_path)
+                    self.logger.info("Removing watch on: %s wd %s", unknown_path, wd)
                     self.wm.rm_watch(wd, rec=True)
                     self.file_events.append({'mode': self.config.MODE_DELETE_DIR, 'filepath': path})
                 
