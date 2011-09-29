@@ -2,8 +2,8 @@ function showErrorSections() {
 
     $(".errors").each(function(i){
         if($(this).length > 0){
-            // -250 is due to static panel on the top
-            $(window).scrollTop($(this).closest("div").position().top-250);
+            $(window).scrollTop($(this).closest("div").position().top);
+            $(this).closest("fieldset").removeClass('closed');
             return false;
         }
     });
