@@ -54,6 +54,8 @@ python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
 echo -e "\n*** Media Monitor Installation ***"
 python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
 
+python ${SCRIPTPATH}/../python_apps/icecast2/install/icecast2-install.py
+
 # Need to ensure monit is running before Airtime daemons are run. This is
 # so we can ensure they can register with monit to monitor them when they start.
 # If monit is already running, this step is still useful as we need monit to

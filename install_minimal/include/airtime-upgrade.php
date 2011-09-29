@@ -102,6 +102,8 @@ passthru("python $SCRIPTPATH/../../python_apps/show-recorder/install/recorder-in
 echo PHP_EOL."*** Updating Media Monitor ***".PHP_EOL;
 passthru("python $SCRIPTPATH/../../python_apps/media-monitor/install/media-monitor-install.py");
 
+passthru("python $SCRIPTPATH/../../python_apps/icecast2/install/icecast2-install.py");
+
 sleep(4);
 passthru("airtime-check-system");
 
