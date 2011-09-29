@@ -544,6 +544,12 @@ class AirtimeConfigFileUpgrade{
         }
     }
 
+    private static function ChangeFileOwnerGroupMod($filename, $user){
+        return (chown($filename, $user) &&
+                chgrp($filename, $user) &&
+                chmod($filename, 0640));
+    }
+
 
 }
 
