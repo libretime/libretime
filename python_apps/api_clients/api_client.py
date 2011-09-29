@@ -561,7 +561,6 @@ class AirTimeApiClient(ApiClientInterface):
             response = urllib2.urlopen(req).read()
         except Exception, e:
             logger.error("Exception: %s", e)
-            logger.error("Response: %s", response)
 
 ################################################################################
 # OpenBroadcast API Client

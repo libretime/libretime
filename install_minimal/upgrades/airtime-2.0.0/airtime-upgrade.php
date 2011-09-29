@@ -363,7 +363,7 @@ class AirtimeDatabaseUpgrade{
             }
         }
 
-        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20110925171256');
+        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20110929184401');
     }
 
     private static function SetDefaultStreamSetting()
