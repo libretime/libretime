@@ -259,13 +259,13 @@ class Application_Model_Preference
 	public static function GetStationDescription(){
     	return self::GetValue("description");
     }
-    
+
     public static function SetTimezone($timezone){
         self::SetValue("timezone", $timezone);
         date_default_timezone_set($timezone);
         $md = array("timezone" => $timezone);
     }
-    
+
     public static function GetTimezone(){
         return self::GetValue("timezone");
     }
@@ -328,11 +328,11 @@ class Application_Model_Preference
     	   $url = $systemInfoArray["AIRTIME_VERSION_URL"];
            $index = strpos($url,'/api/');
            $url = substr($url, 0, $index);
-    
+
            $headerInfo = get_headers(trim($url),1);
            $outputArray['WEB_SERVER'] = $headerInfo['Server'][0];
     	}
-    	
+
     	$outputArray['NUM_OF_USERS'] = Application_Model_User::getUserCount();
     	$outputArray['NUM_OF_SONGS'] = Application_Model_StoredFile::getFileCount();
     	$outputArray['NUM_OF_PLAYLISTS'] = Application_Model_Playlist::getPlaylistCount();
@@ -365,74 +365,74 @@ class Application_Model_Preference
     public static function GetRemindMeDate(){
         return self::GetValue("remindme");
     }
-    
+
     public static function SetImportTimestamp(){
         $now = time();
         if(self::GetImportTimestamp()+5 < $now){
             self::SetValue("import_timestamp", $now);
         }
     }
-    
+
     public static function GetImportTimestamp(){
         return self::GetValue("import_timestamp");
     }
-    
+
     public static function GetStreamType(){
         $st = self::GetValue("stream_type");
         return explode(',', $st);
     }
-    
+
     public static function GetStreamBitrate(){
         $sb = self::GetValue("stream_bitrate");
         return explode(',', $sb);
     }
-    
+
     public static function SetPrivacyPolicyCheck($flag){
         self::SetValue("privacy_policy", $flag);
     }
-    
+
     public static function GetPrivacyPolicyCheck(){
         return self::GetValue("privacy_policy");
     }
-    
+
     public static function SetNumOfStreams($num){
         self::SetValue("num_of_streams", intval($num));
     }
-    
+
     public static function GetNumOfStreams(){
         return self::GetValue("num_of_streams");
     }
-    
+
     public static function SetMaxBitrate($bitrate){
         self::SetValue("max_bitrate", intval($bitrate));
     }
-    
+
     public static function GetMaxBitrate(){
         return self::GetValue("max_bitrate");
     }
-    
+
     public static function SetPlanLevel($plan){
         self::SetValue("plan_level", $plan);
     }
-    
+
     public static function GetPlanLevel(){
         return self::GetValue("plan_level");
     }
-    
+
     public static function SetTrialEndingDate($date){
         self::SetValue("trial_end_date", $date);
     }
-    
+
     public static function GetTrialEndingDate(){
         return self::GetValue("trial_end_date");
     }
-    
-    public static function SetDisableStreamConf($bool){
-        self::SetValue("disable_stream_conf", $bool);
+
+    public static function SetEnableStreamConf($bool){
+        self::SetValue("enable_stream_conf", $bool);
     }
-    
-    public static function GetDisableStreamConf(){
-        return self::GetValue("disable_stream_conf");
+
+    public static function GetEnableStreamConf(){
+        return self::GetValue("enable_stream_conf");
     }
 
     public static function GetAirtimeVersion(){

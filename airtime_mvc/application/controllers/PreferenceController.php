@@ -76,10 +76,10 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
                     Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                     Application_Model_Preference::SetPublicise($values["Publicise"]);
-    
+
                     $form->Logo->receive();
                     $imagePath = $form->Logo->getFileName();
-    
+
                     Application_Model_Preference::SetStationCountry($values["Country"]);
                     Application_Model_Preference::SetStationCity($values["City"]);
                     Application_Model_Preference::SetStationDescription($values["Description"]);
@@ -103,36 +103,36 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->form = $form;
         //$form->render($this->view);
     }
-    
+
     public function directoryConfigAction()
     {
         if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
             $request = $this->getRequest();
             $baseUrl = $request->getBaseUrl();
-    
+
             $this->view->headScript()->appendFile($baseUrl.'/js/serverbrowse/serverbrowser.js','text/javascript');
             $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/musicdirs.js','text/javascript');
-    
+
             $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
-    
+
             $this->view->form = $watched_dirs_pref;
         }
     }
-    
+
     public function streamSettingAction()
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js','text/javascript');
-        
+
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();
         $setting = array();
         foreach ($temp as $t){
             $setting[$t['keyname']] = $t['value'];
         }
-        
+
         // get predefined type and bitrate from pref table
         $temp_types = Application_Model_Preference::GetStreamType();
         $stream_types = array();
@@ -144,7 +144,7 @@ class PreferenceController extends Zend_Controller_Action
             }
             $stream_types[trim($type)] = $temp;
         }
-        
+
         $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
         $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
         $stream_bitrates = array();
@@ -153,7 +153,7 @@ class PreferenceController extends Zend_Controller_Action
                 $stream_bitrates[trim($type)] = strtoupper(trim($type))." Kbit/s";
             }
         }
-        
+
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
         $form->setSetting($setting);
@@ -193,7 +193,7 @@ class PreferenceController extends Zend_Controller_Action
             }
         }
         $this->view->num_stream = $num_of_stream;
-        $this->view->disable_stream_conf = Application_Model_Preference::GetDisableStreamConf();
+        $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
         $this->view->form = $form;
     }
 
@@ -273,7 +273,7 @@ class PreferenceController extends Zend_Controller_Action
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
         $this->view->subform = $watched_dirs_form->render();
     }
-    
+
     public function isImportInProgressAction(){
         $now = time();
         $res = false;
