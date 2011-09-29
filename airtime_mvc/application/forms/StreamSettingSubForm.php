@@ -4,43 +4,43 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
     private $setting;
     private $stream_types;
     private $stream_bitrates;
-    
+
     public function init()
     {
-        
+
     }
-    
+
     public function setPrefix($prefix){
         $this->prefix = $prefix;
     }
-    
+
     public function setSetting($setting){
         $this->setting = $setting;
     }
-    
+
     public function setStreamTypes($stream_types){
         $this->stream_types = $stream_types;
     }
-    
+
     public function setStreamBitrates($stream_bitrates){
         $this->stream_bitrates = $stream_bitrates;
     }
-    
+
     public function startForm(){
         $prefix = "s".$this->prefix;
         $stream_number = $this->prefix;
         $setting = $this->setting;
         $stream_types = $this->stream_types;
         $stream_bitrates = $this->stream_bitrates;
-        
+
         $this->setIsArray(true);
         $this->setElementsBelongTo($prefix."_data");
-        
+
         $disable_all = false;
-        if(Application_Model_Preference::GetDisableStreamConf() == "true"){
+        if(Application_Model_Preference::GetEnableStreamConf() == "false"){
             $disable_all = true;
         }
-        
+
         $enable = new Zend_Form_Element_Checkbox('enable');
         $enable->setLabel('Enabled:')
                             ->setValue($setting[$prefix.'_output'] != 'disabled'?1:0)
@@ -49,7 +49,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $enable->setAttrib("disabled", "disabled");
         }
         $this->addElement($enable);
-        
+
         $type = new Zend_Form_Element_Select('type');
         $type->setLabel("Stream Type:")
                 ->setMultiOptions($stream_types)
@@ -59,7 +59,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $type->setAttrib("disabled", "disabled");
         }
         $this->addElement($type);
-        
+
         $bitrate = new Zend_Form_Element_Select('bitrate');
         $bitrate->setLabel("Bit Rate:")
                 ->setMultiOptions($stream_bitrates)
@@ -70,7 +70,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         }
         $this->addElement($type);
         $this->addElement($bitrate);
-        
+
         $output = new Zend_Form_Element_Select('output');
         $output->setLabel("Service Type:")
                 ->setMultiOptions(array("icecast"=>"Icecast", "shoutcast"=>"Shoutcast"))
@@ -80,7 +80,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $output->setAttrib("disabled", "disabled");
         }
         $this->addElement($output);
-        
+
         $host = new Zend_Form_Element_Text('host');
         $host->setLabel("Server")
                 ->setValue(isset($setting[$prefix.'_host'])?$setting[$prefix.'_host']:"")
@@ -89,7 +89,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $host->setAttrib("disabled", "disabled");
         }
         $this->addElement($host);
-        
+
         $port = new Zend_Form_Element_Text('port');
         $port->setLabel("Port")
                 ->setValue(isset($setting[$prefix.'_port'])?$setting[$prefix.'_port']:"")
@@ -100,7 +100,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $port->setAttrib("disabled", "disabled");
         }
         $this->addElement($port);
-        
+
         $pass = new Zend_Form_Element_Text('pass');
         $pass->setLabel("Password")
                 ->setValue(isset($setting[$prefix.'_pass'])?$setting[$prefix.'_pass']:"")
@@ -109,7 +109,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $pass->setAttrib("disabled", "disabled");
         }
         $this->addElement($pass);
-        
+
         $genre = new Zend_Form_Element_Text('genre');
         $genre->setLabel("Genre")
                 ->setValue(isset($setting[$prefix.'_genre'])?$setting[$prefix.'_genre']:"")
@@ -118,7 +118,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $genre->setAttrib("disabled", "disabled");
         }
         $this->addElement($genre);
-        
+
         $url = new Zend_Form_Element_Text('url');
         $url->setLabel("URL")
                 ->setValue(isset($setting[$prefix.'_url'])?$setting[$prefix.'_url']:"")
@@ -127,7 +127,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $url->setAttrib("disabled", "disabled");
         }
         $this->addElement($url);
-        
+
         $description = new Zend_Form_Element_Text('description');
         $description->setLabel("Name/Description")
                 ->setValue(isset($setting[$prefix.'_description'])?$setting[$prefix.'_description']:"")
@@ -136,7 +136,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $description->setAttrib("disabled", "disabled");
         }
         $this->addElement($description);
-        
+
         $mount = new Zend_Form_Element_Text('mount');
         $mount->setLabel("Mount Point")
                 ->setValue(isset($setting[$prefix.'_mount'])?$setting[$prefix.'_mount']:"")
@@ -145,7 +145,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $mount->setAttrib("disabled", "disabled");
         }
         $this->addElement($mount);
-        
+
         $user = new Zend_Form_Element_Text('user');
         $user->setLabel("Username")
                 ->setValue(isset($setting[$prefix.'_user'])?$setting[$prefix.'_user']:"")
@@ -154,12 +154,12 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
             $user->setAttrib("disabled", "disabled");
         }
         $this->addElement($user);
-        
+
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml', "stream_number"=>$stream_number))
         ));
     }
-    
+
     public function isValid ($data){
         $isValid = parent::isValid($data);
         if($data['enable'] == 1){
