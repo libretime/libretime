@@ -86,16 +86,19 @@ class AirtimeProcessEvent(ProcessEvent):
                     self.logger.info("%s removed from watch folder list successfully.", path)
                 else:
                     self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
-                    
+    
     #event.dir: True if the event was raised against a directory.
     #event.name: filename
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
-    def process_IN_CREATE(self, event):
+    # we used to use IN_CREATE event, but the IN_CREATE event gets fired before the
+    # copy was done. Hence, IN_CLOSE_WRITE is the correct one to handle.    
+    def process_IN_CLOSE_WRITE(self, event):
+        self.logger.info("event: %s", event)
         self.handle_created_file(event.dir, event.pathname, event.name)
-
+        
     def handle_created_file(self, dir, pathname, name):
         if not dir:
-            self.logger.debug("PROCESS_IN_CREATE: %s, name: %s, pathname: %s ", dir, name, pathname)
+            self.logger.debug("PROCESS_IN_CLOSE_WRITE: %s, name: %s, pathname: %s ", dir, name, pathname)
             #event is because of a created file
 
             if self.mmc.is_temp_file(name) :
