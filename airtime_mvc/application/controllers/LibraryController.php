@@ -91,7 +91,7 @@ class LibraryController extends Zend_Controller_Action
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
             
-            if (Application_Model_Preference::GetDoSoundCloudUpload()) {
+            if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
                 $text = "Upload to Soundcloud";
                 if(!is_null($file->getSoundCloudId())){
                     $text = "Re-upload to Soundcloud";

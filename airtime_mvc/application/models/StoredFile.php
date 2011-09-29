@@ -931,19 +931,18 @@ class Application_Model_StoredFile {
     public function uploadToSoundCloud()
     {
         global $CC_CONFIG;
-
+        
         $file = $this->_file;
         if(is_null($file)) {
             return "File does not exist";
         }
-        if(Application_Model_Preference::GetDoSoundCloudUpload())
+        if(Application_Model_Preference::GetUploadToSoundcloudOption())
         {
             for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
                 $description = $file->getDbTrackTitle();
                 $tag = "";
                 $genre = $file->getDbGenre();
                 $release = $file->getDbYear();
-
                 try {
                     $soundcloud = new Application_Model_AtSoundcloud();
                     $soundcloud_id = $soundcloud->uploadTrack($this->getFilePath(), $this->getName(), $description, $tag, $release, $genre);

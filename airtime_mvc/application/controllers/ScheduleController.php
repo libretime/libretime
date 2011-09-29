@@ -175,7 +175,7 @@ class ScheduleController extends Zend_Controller_Action
 
         if ($showEndDateHelper->getTimestamp() <= $epochNow
             && $show->isRecorded()
-            && Application_Model_Preference::GetDoSoundCloudUpload()) {
+            && Application_Model_Preference::GetUploadToSoundcloudOption()) {
                 if(is_null($show->getSoundCloudFileId())){
                     $menu[] = array('action' => array('type' => 'fn',
                         'callback' => "window['uploadToSoundCloud']($id)"),
