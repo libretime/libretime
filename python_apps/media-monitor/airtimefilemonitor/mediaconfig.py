@@ -8,6 +8,7 @@ class AirtimeMediaConfig:
     MODE_MODIFY = "modify"
     MODE_MOVED = "moved"
     MODE_DELETE = "delete"
+    MODE_DELETE_DIR = "delete_dir"
 
     def __init__(self, logger):
 

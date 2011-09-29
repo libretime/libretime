@@ -283,6 +283,14 @@ class MusicDir {
 
     public static function removeWatchedDir($p_dir){
         $p_dir = realpath($p_dir)."/";
+        $real_path = realpath($p_dir)."/";
+        if($real_path != "/"){
+            $p_dir = $real_path;
+        }else{
+            // this is the case where user removes watched directory on 
+            // the file system directly.
+            $p_dir .= "/";
+        }
         $dir = MusicDir::getDirByPath($p_dir);
         if($dir == NULL){
             return array("code"=>1,"error"=>"'$p_dir' doesn't exist in the watched list.");

@@ -171,6 +171,9 @@ class AirtimeNotifier(Notifier):
 
             elif (mode == self.config.MODE_DELETE):
                 self.api_client.update_media_metadata(md, mode)
+            
+            elif (mode == self.config.MODE_DELETE_DIR):
+                self.api_client.update_media_metadata(md, mode)
 
         except Exception, e:
             self.logger.error("failed updating filepath: %s ", event['filepath'])
