@@ -56,7 +56,7 @@ $(document).ready(function(){
                             if ($type == "ogg")
                                 $type = "oga";
 
-                            $label = "Stream ".substr($id, 1)." (".$streamData["${id}_bitrate"]." Kbit/s)";
+                            $label = $streamData["${id}_description"]." (".$streamData["${id}_bitrate"]." Kbit/s)";
                             echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s'>%s</option>", $id, $url, $type, $label);
                         }
                     ?>

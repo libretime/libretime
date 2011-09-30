@@ -249,6 +249,8 @@ function setupQtip(){
     }
 }
 
+var stream_window = null;
+
 function init() {
     //begin producer "thread"
     getScheduleFromServer();
@@ -259,8 +261,9 @@ function init() {
     setupQtip();
     
     $('#on-air-info').click(function() {
-        newwindow=window.open("/Dashboard/stream-player", 'name', 'width=400,height=216');
-        if (window.focus) {newwindow.focus()}
+        if (stream_window == null || stream_window.closed)
+            stream_window=window.open("/Dashboard/stream-player", 'name', 'width=400,height=216');
+        stream_window.focus();
         return false;
     });
 }
