@@ -262,7 +262,7 @@ function init() {
     
     $('#on-air-info').click(function() {
         if (stream_window == null || stream_window.closed)
-            stream_window=window.open("/Dashboard/stream-player", 'name', 'width=400,height=216');
+            stream_window=window.open(baseUrl+"Dashboard/stream-player", 'name', 'width=400,height=216');
         stream_window.focus();
         return false;
     });
