@@ -318,14 +318,15 @@ div.jp-seeking-bg {
 }
 
 a.jp-mute,
-a.jp-unmute {
-	width:30px;
-	height:30px;
+a.jp-unmute,
+a.jp-volume-max {
+	width:20px;
+	height:20px;
 }
 div.jp-audio div.jp-type-single a.jp-mute,
 div.jp-audio div.jp-type-single a.jp-unmute {
-	top:22px;
-	left:300px;
+	top:30px;
+	left:227px;
 }
 div.jp-audio div.jp-type-playlist a.jp-mute,
 div.jp-audio div.jp-type-playlist a.jp-unmute {
@@ -353,29 +354,45 @@ div.jp-video-360p div.jp-type-playlist a.jp-unmute {
 	left:443px;
 }
 a.jp-mute {
-	background: url("jplayer.png") 0 -110px no-repeat;
+	background: url("jplayer.png") 0 -90px no-repeat;
 }
 a.jp-mute:hover {
-	background: url("jplayer.png") -30px -80px no-repeat;
+	background: url("jplayer.png") -30px -90px no-repeat;
 }
 a.jp-unmute {
-	background: url("jplayer.png") 0 -80px no-repeat;
+	background: url("jplayer.png") -61px -90px no-repeat;
 	display: none;
 }
 a.jp-unmute:hover {
-	background: url("jplayer.png") -30px -110px no-repeat;
+	background: url("jplayer.png") -91px -90px no-repeat;
+}
+div.jp-interface ul.jp-controls a.jp-volume-max {
+    background: url("jplayer.png") no-repeat scroll 0 -110px transparent;
+}
+div.jp-interface ul.jp-controls a.jp-volume-max:hover {
+    background: url("jplayer.png") no-repeat scroll -30px -110px transparent;
+}
+div.jp-audio ul.jp-controls a.jp-volume-max {
+    left: 340px;
+    top: 28px;
 }
 div.jp-volume-bar {
 	position: absolute;
 	overflow:hidden;
-	background: url("jplayer.png") 0 -250px repeat-x;
-	width:46px;
-	height:5px;
+	background:#393939;
+	-moz-box-shadow: rgba(0, 0, 0, 0.5) 0 0 1px inset;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.5) 0 0 1px inset;
+	border-bottom:1px solid #5e5e5e;
+	border-top:1px solid #262526;
+	border-left:1px solid #262526;
+	border-right:1px solid #262526;
+	width:130px;
+	height:4px;
 	cursor: pointer;
 }
 div.jp-audio div.jp-type-single div.jp-volume-bar {
-	top:37px;
-	left:302px;
+	top:48px;
+	left:225px;
 }
 div.jp-audio div.jp-type-playlist div.jp-volume-bar {
 	top:37px;
@@ -397,9 +414,11 @@ div.jp-video-360p div.jp-type-playlist div.jp-volume-bar {
 	left:471px;
 }
 div.jp-volume-bar-value {
-	background: url("jplayer.png") 0 -256px repeat-x;
+	background-color:#fb7018;
+    background: -moz-linear-gradient(top, #fc9318 0, #e56815 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fc9318), color-stop(100%, #e56815));
 	width:0px;
-	height:5px;
+	height:3px;
 }
 div.jp-current-time,
 div.jp-duration {

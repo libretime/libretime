@@ -71,9 +71,13 @@ $(document).ready(function(){
             <ul class="jp-controls">
                 <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
                 <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-                <li><a href="javascript:;" class="jp-mute" tabindex="1">mute</a></li>
-                <li><a href="javascript:;" class="jp-unmute" tabindex="1">unmute</a></li>
+                <li><a title="mute" tabindex="1" class="jp-mute" href="javascript:;">mute</a></li>
+                <li><a title="unmute" tabindex="1" class="jp-unmute" href="javascript:;">unmute</a></li>
+                <li><a title="max volume" tabindex="1" class="jp-volume-max" href="javascript:;">max volume</a></li>
             </ul>
+            <div class="jp-volume-bar">
+                <div class="jp-volume-bar-value"></div>
+            </div>
         </div>
         <div id="jp_playlist_1" class="jp-playlist"></div>
     </div>
