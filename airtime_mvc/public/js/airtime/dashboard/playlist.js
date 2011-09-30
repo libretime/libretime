@@ -259,7 +259,7 @@ function init() {
     setupQtip();
     
     $('#on-air-info').click(function() {
-        newwindow=window.open("Dashboard/stream-player", 'name', 'width=380,height=168');
+        newwindow=window.open("/Dashboard/stream-player", 'name', 'width=400,height=216');
         if (window.focus) {newwindow.focus()}
         return false;
     });
