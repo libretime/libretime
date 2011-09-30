@@ -2,28 +2,28 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'cc_component' table.
+ * Base static class for performing query and update operations on the 'cc_service_register' table.
  *
  * 
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcComponentPeer {
+abstract class BaseCcServiceRegisterPeer {
 
 	/** the default database name for this class */
 	const DATABASE_NAME = 'airtime';
 
 	/** the table name for this class */
-	const TABLE_NAME = 'cc_component';
+	const TABLE_NAME = 'cc_service_register';
 
 	/** the related Propel class for this table */
-	const OM_CLASS = 'CcComponent';
+	const OM_CLASS = 'CcServiceRegister';
 
 	/** A class that can be returned by this peer. */
-	const CLASS_DEFAULT = 'airtime.CcComponent';
+	const CLASS_DEFAULT = 'airtime.CcServiceRegister';
 
 	/** the related TableMap class for this table */
-	const TM_CLASS = 'CcComponentTableMap';
+	const TM_CLASS = 'CcServiceRegisterTableMap';
 	
 	/** The total number of columns. */
 	const NUM_COLUMNS = 2;
@@ -32,16 +32,16 @@ abstract class BaseCcComponentPeer {
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
 	/** the column name for the NAME field */
-	const NAME = 'cc_component.NAME';
+	const NAME = 'cc_service_register.NAME';
 
 	/** the column name for the IP field */
-	const IP = 'cc_component.IP';
+	const IP = 'cc_service_register.IP';
 
 	/**
-	 * An identiy map to hold any loaded instances of CcComponent objects.
+	 * An identiy map to hold any loaded instances of CcServiceRegister objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
 	 * queries.
-	 * @var        array CcComponent[]
+	 * @var        array CcServiceRegister[]
 	 */
 	public static $instances = array();
 
@@ -122,12 +122,12 @@ abstract class BaseCcComponentPeer {
 	 *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
 	 * </code>
 	 * @param      string $alias The alias for the current table.
-	 * @param      string $column The column name for current table. (i.e. CcComponentPeer::COLUMN_NAME).
+	 * @param      string $column The column name for current table. (i.e. CcServiceRegisterPeer::COLUMN_NAME).
 	 * @return     string
 	 */
 	public static function alias($alias, $column)
 	{
-		return str_replace(CcComponentPeer::TABLE_NAME.'.', $alias.'.', $column);
+		return str_replace(CcServiceRegisterPeer::TABLE_NAME.'.', $alias.'.', $column);
 	}
 
 	/**
@@ -145,8 +145,8 @@ abstract class BaseCcComponentPeer {
 	public static function addSelectColumns(Criteria $criteria, $alias = null)
 	{
 		if (null === $alias) {
-			$criteria->addSelectColumn(CcComponentPeer::NAME);
-			$criteria->addSelectColumn(CcComponentPeer::IP);
+			$criteria->addSelectColumn(CcServiceRegisterPeer::NAME);
+			$criteria->addSelectColumn(CcServiceRegisterPeer::IP);
 		} else {
 			$criteria->addSelectColumn($alias . '.NAME');
 			$criteria->addSelectColumn($alias . '.IP');
@@ -169,21 +169,21 @@ abstract class BaseCcComponentPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcComponentPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcServiceRegisterPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcComponentPeer::addSelectColumns($criteria);
+			CcServiceRegisterPeer::addSelectColumns($criteria);
 		}
 
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 		$criteria->setDbName(self::DATABASE_NAME); // Set the correct dbName
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 		// BasePeer returns a PDOStatement
 		$stmt = BasePeer::doCount($criteria, $con);
@@ -201,7 +201,7 @@ abstract class BaseCcComponentPeer {
 	 *
 	 * @param      Criteria $criteria object used to create the SELECT statement.
 	 * @param      PropelPDO $con
-	 * @return     CcComponent
+	 * @return     CcServiceRegister
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -209,7 +209,7 @@ abstract class BaseCcComponentPeer {
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
-		$objects = CcComponentPeer::doSelect($critcopy, $con);
+		$objects = CcServiceRegisterPeer::doSelect($critcopy, $con);
 		if ($objects) {
 			return $objects[0];
 		}
@@ -226,7 +226,7 @@ abstract class BaseCcComponentPeer {
 	 */
 	public static function doSelect(Criteria $criteria, PropelPDO $con = null)
 	{
-		return CcComponentPeer::populateObjects(CcComponentPeer::doSelectStmt($criteria, $con));
+		return CcServiceRegisterPeer::populateObjects(CcServiceRegisterPeer::doSelectStmt($criteria, $con));
 	}
 	/**
 	 * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -244,12 +244,12 @@ abstract class BaseCcComponentPeer {
 	public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		if (!$criteria->hasSelectClause()) {
 			$criteria = clone $criteria;
-			CcComponentPeer::addSelectColumns($criteria);
+			CcServiceRegisterPeer::addSelectColumns($criteria);
 		}
 
 		// Set the correct dbName
@@ -267,10 +267,10 @@ abstract class BaseCcComponentPeer {
 	 * to the cache in order to ensure that the same objects are always returned by doSelect*()
 	 * and retrieveByPK*() calls.
 	 *
-	 * @param      CcComponent $value A CcComponent object.
+	 * @param      CcServiceRegister $value A CcServiceRegister object.
 	 * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
 	 */
-	public static function addInstanceToPool(CcComponent $obj, $key = null)
+	public static function addInstanceToPool(CcServiceRegister $obj, $key = null)
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
@@ -288,18 +288,18 @@ abstract class BaseCcComponentPeer {
 	 * methods in your stub classes -- you may need to explicitly remove objects
 	 * from the cache in order to prevent returning objects that no longer exist.
 	 *
-	 * @param      mixed $value A CcComponent object or a primary key value.
+	 * @param      mixed $value A CcServiceRegister object or a primary key value.
 	 */
 	public static function removeInstanceFromPool($value)
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
-			if (is_object($value) && $value instanceof CcComponent) {
+			if (is_object($value) && $value instanceof CcServiceRegister) {
 				$key = (string) $value->getDbName();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;
 			} else {
-				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcComponent object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcServiceRegister object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
 				throw $e;
 			}
 
@@ -314,7 +314,7 @@ abstract class BaseCcComponentPeer {
 	 * a multi-column primary key, a serialize()d version of the primary key will be returned.
 	 *
 	 * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-	 * @return     CcComponent Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+	 * @return     CcServiceRegister Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
 	 * @see        getPrimaryKeyHash()
 	 */
 	public static function getInstanceFromPool($key)
@@ -338,7 +338,7 @@ abstract class BaseCcComponentPeer {
 	}
 	
 	/**
-	 * Method to invalidate the instance pool of all tables related to cc_component
+	 * Method to invalidate the instance pool of all tables related to cc_service_register
 	 * by a foreign key with ON DELETE CASCADE
 	 */
 	public static function clearRelatedInstancePool()
@@ -390,11 +390,11 @@ abstract class BaseCcComponentPeer {
 		$results = array();
 	
 		// set the class once to avoid overhead in the loop
-		$cls = CcComponentPeer::getOMClass(false);
+		$cls = CcServiceRegisterPeer::getOMClass(false);
 		// populate the object(s)
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key = CcComponentPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj = CcComponentPeer::getInstanceFromPool($key))) {
+			$key = CcServiceRegisterPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj = CcServiceRegisterPeer::getInstanceFromPool($key))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj->hydrate($row, 0, true); // rehydrate
@@ -403,7 +403,7 @@ abstract class BaseCcComponentPeer {
 				$obj = new $cls();
 				$obj->hydrate($row);
 				$results[] = $obj;
-				CcComponentPeer::addInstanceToPool($obj, $key);
+				CcServiceRegisterPeer::addInstanceToPool($obj, $key);
 			} // if key exists
 		}
 		$stmt->closeCursor();
@@ -416,21 +416,21 @@ abstract class BaseCcComponentPeer {
 	 * @param      int $startcol The 0-based offset for reading from the resultset row.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
-	 * @return     array (CcComponent object, last column rank)
+	 * @return     array (CcServiceRegister object, last column rank)
 	 */
 	public static function populateObject($row, $startcol = 0)
 	{
-		$key = CcComponentPeer::getPrimaryKeyHashFromRow($row, $startcol);
-		if (null !== ($obj = CcComponentPeer::getInstanceFromPool($key))) {
+		$key = CcServiceRegisterPeer::getPrimaryKeyHashFromRow($row, $startcol);
+		if (null !== ($obj = CcServiceRegisterPeer::getInstanceFromPool($key))) {
 			// We no longer rehydrate the object, since this can cause data loss.
 			// See http://www.propelorm.org/ticket/509
 			// $obj->hydrate($row, $startcol, true); // rehydrate
-			$col = $startcol + CcComponentPeer::NUM_COLUMNS;
+			$col = $startcol + CcServiceRegisterPeer::NUM_COLUMNS;
 		} else {
-			$cls = CcComponentPeer::OM_CLASS;
+			$cls = CcServiceRegisterPeer::OM_CLASS;
 			$obj = new $cls();
 			$col = $obj->hydrate($row, $startcol);
-			CcComponentPeer::addInstanceToPool($obj, $key);
+			CcServiceRegisterPeer::addInstanceToPool($obj, $key);
 		}
 		return array($obj, $col);
 	}
@@ -451,10 +451,10 @@ abstract class BaseCcComponentPeer {
 	 */
 	public static function buildTableMap()
 	{
-	  $dbMap = Propel::getDatabaseMap(BaseCcComponentPeer::DATABASE_NAME);
-	  if (!$dbMap->hasTable(BaseCcComponentPeer::TABLE_NAME))
+	  $dbMap = Propel::getDatabaseMap(BaseCcServiceRegisterPeer::DATABASE_NAME);
+	  if (!$dbMap->hasTable(BaseCcServiceRegisterPeer::TABLE_NAME))
 	  {
-	    $dbMap->addTableObject(new CcComponentTableMap());
+	    $dbMap->addTableObject(new CcServiceRegisterTableMap());
 	  }
 	}
 
@@ -471,13 +471,13 @@ abstract class BaseCcComponentPeer {
 	 */
 	public static function getOMClass($withPrefix = true)
 	{
-		return $withPrefix ? CcComponentPeer::CLASS_DEFAULT : CcComponentPeer::OM_CLASS;
+		return $withPrefix ? CcServiceRegisterPeer::CLASS_DEFAULT : CcServiceRegisterPeer::OM_CLASS;
 	}
 
 	/**
-	 * Method perform an INSERT on the database, given a CcComponent or Criteria object.
+	 * Method perform an INSERT on the database, given a CcServiceRegister or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcComponent object containing data that is used to create the INSERT statement.
+	 * @param      mixed $values Criteria or CcServiceRegister object containing data that is used to create the INSERT statement.
 	 * @param      PropelPDO $con the PropelPDO connection to use
 	 * @return     mixed The new primary key.
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -486,13 +486,13 @@ abstract class BaseCcComponentPeer {
 	public static function doInsert($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 		} else {
-			$criteria = $values->buildCriteria(); // build Criteria from CcComponent object
+			$criteria = $values->buildCriteria(); // build Criteria from CcServiceRegister object
 		}
 
 
@@ -514,9 +514,9 @@ abstract class BaseCcComponentPeer {
 	}
 
 	/**
-	 * Method perform an UPDATE on the database, given a CcComponent or Criteria object.
+	 * Method perform an UPDATE on the database, given a CcServiceRegister or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcComponent object containing data that is used to create the UPDATE statement.
+	 * @param      mixed $values Criteria or CcServiceRegister object containing data that is used to create the UPDATE statement.
 	 * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -525,7 +525,7 @@ abstract class BaseCcComponentPeer {
 	public static function doUpdate($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$selectCriteria = new Criteria(self::DATABASE_NAME);
@@ -533,15 +533,15 @@ abstract class BaseCcComponentPeer {
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 
-			$comparison = $criteria->getComparison(CcComponentPeer::NAME);
-			$value = $criteria->remove(CcComponentPeer::NAME);
+			$comparison = $criteria->getComparison(CcServiceRegisterPeer::NAME);
+			$value = $criteria->remove(CcServiceRegisterPeer::NAME);
 			if ($value) {
-				$selectCriteria->add(CcComponentPeer::NAME, $value, $comparison);
+				$selectCriteria->add(CcServiceRegisterPeer::NAME, $value, $comparison);
 			} else {
-				$selectCriteria->setPrimaryTableName(CcComponentPeer::TABLE_NAME);
+				$selectCriteria->setPrimaryTableName(CcServiceRegisterPeer::TABLE_NAME);
 			}
 
-		} else { // $values is CcComponent object
+		} else { // $values is CcServiceRegister object
 			$criteria = $values->buildCriteria(); // gets full criteria
 			$selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
 		}
@@ -553,26 +553,26 @@ abstract class BaseCcComponentPeer {
 	}
 
 	/**
-	 * Method to DELETE all rows from the cc_component table.
+	 * Method to DELETE all rows from the cc_service_register table.
 	 *
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	public static function doDeleteAll($con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		$affectedRows = 0; // initialize var to track total num of affected rows
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			$affectedRows += BasePeer::doDeleteAll(CcComponentPeer::TABLE_NAME, $con, CcComponentPeer::DATABASE_NAME);
+			$affectedRows += BasePeer::doDeleteAll(CcServiceRegisterPeer::TABLE_NAME, $con, CcServiceRegisterPeer::DATABASE_NAME);
 			// Because this db requires some delete cascade/set null emulation, we have to
 			// clear the cached instance *after* the emulation has happened (since
 			// instances get re-added by the select statement contained therein).
-			CcComponentPeer::clearInstancePool();
-			CcComponentPeer::clearRelatedInstancePool();
+			CcServiceRegisterPeer::clearInstancePool();
+			CcServiceRegisterPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -582,9 +582,9 @@ abstract class BaseCcComponentPeer {
 	}
 
 	/**
-	 * Method perform a DELETE on the database, given a CcComponent or Criteria object OR a primary key value.
+	 * Method perform a DELETE on the database, given a CcServiceRegister or Criteria object OR a primary key value.
 	 *
-	 * @param      mixed $values Criteria or CcComponent object or primary key or array of primary keys
+	 * @param      mixed $values Criteria or CcServiceRegister object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
 	 * @param      PropelPDO $con the connection to use
 	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -595,27 +595,27 @@ abstract class BaseCcComponentPeer {
 	 public static function doDelete($values, PropelPDO $con = null)
 	 {
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			// invalidate the cache for all objects of this type, since we have no
 			// way of knowing (without running a query) what objects should be invalidated
 			// from the cache based on this Criteria.
-			CcComponentPeer::clearInstancePool();
+			CcServiceRegisterPeer::clearInstancePool();
 			// rename for clarity
 			$criteria = clone $values;
-		} elseif ($values instanceof CcComponent) { // it's a model object
+		} elseif ($values instanceof CcServiceRegister) { // it's a model object
 			// invalidate the cache for this single object
-			CcComponentPeer::removeInstanceFromPool($values);
+			CcServiceRegisterPeer::removeInstanceFromPool($values);
 			// create criteria based on pk values
 			$criteria = $values->buildPkeyCriteria();
 		} else { // it's a primary key, or an array of pks
 			$criteria = new Criteria(self::DATABASE_NAME);
-			$criteria->add(CcComponentPeer::NAME, (array) $values, Criteria::IN);
+			$criteria->add(CcServiceRegisterPeer::NAME, (array) $values, Criteria::IN);
 			// invalidate the cache for this object(s)
 			foreach ((array) $values as $singleval) {
-				CcComponentPeer::removeInstanceFromPool($singleval);
+				CcServiceRegisterPeer::removeInstanceFromPool($singleval);
 			}
 		}
 
@@ -630,7 +630,7 @@ abstract class BaseCcComponentPeer {
 			$con->beginTransaction();
 			
 			$affectedRows += BasePeer::doDelete($criteria, $con);
-			CcComponentPeer::clearRelatedInstancePool();
+			CcServiceRegisterPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -640,24 +640,24 @@ abstract class BaseCcComponentPeer {
 	}
 
 	/**
-	 * Validates all modified columns of given CcComponent object.
+	 * Validates all modified columns of given CcServiceRegister object.
 	 * If parameter $columns is either a single column name or an array of column names
 	 * than only those columns are validated.
 	 *
 	 * NOTICE: This does not apply to primary or foreign keys for now.
 	 *
-	 * @param      CcComponent $obj The object to validate.
+	 * @param      CcServiceRegister $obj The object to validate.
 	 * @param      mixed $cols Column name or array of column names.
 	 *
 	 * @return     mixed TRUE if all columns are valid or the error message of the first invalid column.
 	 */
-	public static function doValidate(CcComponent $obj, $cols = null)
+	public static function doValidate(CcServiceRegister $obj, $cols = null)
 	{
 		$columns = array();
 
 		if ($cols) {
-			$dbMap = Propel::getDatabaseMap(CcComponentPeer::DATABASE_NAME);
-			$tableMap = $dbMap->getTable(CcComponentPeer::TABLE_NAME);
+			$dbMap = Propel::getDatabaseMap(CcServiceRegisterPeer::DATABASE_NAME);
+			$tableMap = $dbMap->getTable(CcServiceRegisterPeer::TABLE_NAME);
 
 			if (! is_array($cols)) {
 				$cols = array($cols);
@@ -673,7 +673,7 @@ abstract class BaseCcComponentPeer {
 
 		}
 
-		return BasePeer::doValidate(CcComponentPeer::DATABASE_NAME, CcComponentPeer::TABLE_NAME, $columns);
+		return BasePeer::doValidate(CcServiceRegisterPeer::DATABASE_NAME, CcServiceRegisterPeer::TABLE_NAME, $columns);
 	}
 
 	/**
@@ -681,23 +681,23 @@ abstract class BaseCcComponentPeer {
 	 *
 	 * @param      string $pk the primary key.
 	 * @param      PropelPDO $con the connection to use
-	 * @return     CcComponent
+	 * @return     CcServiceRegister
 	 */
 	public static function retrieveByPK($pk, PropelPDO $con = null)
 	{
 
-		if (null !== ($obj = CcComponentPeer::getInstanceFromPool((string) $pk))) {
+		if (null !== ($obj = CcServiceRegisterPeer::getInstanceFromPool((string) $pk))) {
 			return $obj;
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria = new Criteria(CcComponentPeer::DATABASE_NAME);
-		$criteria->add(CcComponentPeer::NAME, $pk);
+		$criteria = new Criteria(CcServiceRegisterPeer::DATABASE_NAME);
+		$criteria->add(CcServiceRegisterPeer::NAME, $pk);
 
-		$v = CcComponentPeer::doSelect($criteria, $con);
+		$v = CcServiceRegisterPeer::doSelect($criteria, $con);
 
 		return !empty($v) > 0 ? $v[0] : null;
 	}
@@ -713,23 +713,23 @@ abstract class BaseCcComponentPeer {
 	public static function retrieveByPKs($pks, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		$objs = null;
 		if (empty($pks)) {
 			$objs = array();
 		} else {
-			$criteria = new Criteria(CcComponentPeer::DATABASE_NAME);
-			$criteria->add(CcComponentPeer::NAME, $pks, Criteria::IN);
-			$objs = CcComponentPeer::doSelect($criteria, $con);
+			$criteria = new Criteria(CcServiceRegisterPeer::DATABASE_NAME);
+			$criteria->add(CcServiceRegisterPeer::NAME, $pks, Criteria::IN);
+			$objs = CcServiceRegisterPeer::doSelect($criteria, $con);
 		}
 		return $objs;
 	}
 
-} // BaseCcComponentPeer
+} // BaseCcServiceRegisterPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseCcComponentPeer::buildTableMap();
+BaseCcServiceRegisterPeer::buildTableMap();
 

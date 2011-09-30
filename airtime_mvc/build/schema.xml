@@ -327,7 +327,7 @@
     <column name="ip" phpName="DbIP" primaryKey="true" type="VARCHAR" size="32" required="true"/>
     <column name="attempts" phpName="DbAttempts" type="INTEGER" required="false" defaultValue="0"/>
   </table>
-  <table name="cc_component" phpName="CcComponent">
+  <table name="cc_service_register" phpName="CcServiceRegister">
     <column name="name" phpName="DbName" primaryKey="true" type="VARCHAR" size="32" required="true" />
     <column name="ip" phpName="DbIp" type="VARCHAR" size="18" required="true"/>
   </table>

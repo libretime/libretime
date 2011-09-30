@@ -2,60 +2,60 @@
 
 
 /**
- * Base class that represents a query for the 'cc_component' table.
+ * Base class that represents a query for the 'cc_service_register' table.
  *
  * 
  *
- * @method     CcComponentQuery orderByDbName($order = Criteria::ASC) Order by the name column
- * @method     CcComponentQuery orderByDbIp($order = Criteria::ASC) Order by the ip column
+ * @method     CcServiceRegisterQuery orderByDbName($order = Criteria::ASC) Order by the name column
+ * @method     CcServiceRegisterQuery orderByDbIp($order = Criteria::ASC) Order by the ip column
  *
- * @method     CcComponentQuery groupByDbName() Group by the name column
- * @method     CcComponentQuery groupByDbIp() Group by the ip column
+ * @method     CcServiceRegisterQuery groupByDbName() Group by the name column
+ * @method     CcServiceRegisterQuery groupByDbIp() Group by the ip column
  *
- * @method     CcComponentQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     CcComponentQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     CcComponentQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     CcServiceRegisterQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     CcServiceRegisterQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     CcServiceRegisterQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcComponent findOne(PropelPDO $con = null) Return the first CcComponent matching the query
- * @method     CcComponent findOneOrCreate(PropelPDO $con = null) Return the first CcComponent matching the query, or a new CcComponent object populated from the query conditions when no match is found
+ * @method     CcServiceRegister findOne(PropelPDO $con = null) Return the first CcServiceRegister matching the query
+ * @method     CcServiceRegister findOneOrCreate(PropelPDO $con = null) Return the first CcServiceRegister matching the query, or a new CcServiceRegister object populated from the query conditions when no match is found
  *
- * @method     CcComponent findOneByDbName(string $name) Return the first CcComponent filtered by the name column
- * @method     CcComponent findOneByDbIp(string $ip) Return the first CcComponent filtered by the ip column
+ * @method     CcServiceRegister findOneByDbName(string $name) Return the first CcServiceRegister filtered by the name column
+ * @method     CcServiceRegister findOneByDbIp(string $ip) Return the first CcServiceRegister filtered by the ip column
  *
- * @method     array findByDbName(string $name) Return CcComponent objects filtered by the name column
- * @method     array findByDbIp(string $ip) Return CcComponent objects filtered by the ip column
+ * @method     array findByDbName(string $name) Return CcServiceRegister objects filtered by the name column
+ * @method     array findByDbIp(string $ip) Return CcServiceRegister objects filtered by the ip column
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcComponentQuery extends ModelCriteria
+abstract class BaseCcServiceRegisterQuery extends ModelCriteria
 {
 
 	/**
-	 * Initializes internal state of BaseCcComponentQuery object.
+	 * Initializes internal state of BaseCcServiceRegisterQuery object.
 	 *
 	 * @param     string $dbName The dabase name
 	 * @param     string $modelName The phpName of a model, e.g. 'Book'
 	 * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
 	 */
-	public function __construct($dbName = 'airtime', $modelName = 'CcComponent', $modelAlias = null)
+	public function __construct($dbName = 'airtime', $modelName = 'CcServiceRegister', $modelAlias = null)
 	{
 		parent::__construct($dbName, $modelName, $modelAlias);
 	}
 
 	/**
-	 * Returns a new CcComponentQuery object.
+	 * Returns a new CcServiceRegisterQuery object.
 	 *
 	 * @param     string $modelAlias The alias of a model in the query
 	 * @param     Criteria $criteria Optional Criteria to build the query from
 	 *
-	 * @return    CcComponentQuery
+	 * @return    CcServiceRegisterQuery
 	 */
 	public static function create($modelAlias = null, $criteria = null)
 	{
-		if ($criteria instanceof CcComponentQuery) {
+		if ($criteria instanceof CcServiceRegisterQuery) {
 			return $criteria;
 		}
-		$query = new CcComponentQuery();
+		$query = new CcServiceRegisterQuery();
 		if (null !== $modelAlias) {
 			$query->setModelAlias($modelAlias);
 		}
@@ -74,11 +74,11 @@ abstract class BaseCcComponentQuery extends ModelCriteria
 	 * @param     mixed $key Primary key to use for the query
 	 * @param     PropelPDO $con an optional connection object
 	 *
-	 * @return    CcComponent|array|mixed the result, formatted by the current formatter
+	 * @return    CcServiceRegister|array|mixed the result, formatted by the current formatter
 	 */
 	public function findPk($key, $con = null)
 	{
-		if ((null !== ($obj = CcComponentPeer::getInstanceFromPool((string) $key))) && $this->getFormatter()->isObjectFormatter()) {
+		if ((null !== ($obj = CcServiceRegisterPeer::getInstanceFromPool((string) $key))) && $this->getFormatter()->isObjectFormatter()) {
 			// the object is alredy in the instance pool
 			return $obj;
 		} else {
@@ -114,11 +114,11 @@ abstract class BaseCcComponentQuery extends ModelCriteria
 	 *
 	 * @param     mixed $key Primary key to use for the query
 	 *
-	 * @return    CcComponentQuery The current query, for fluid interface
+	 * @return    CcServiceRegisterQuery The current query, for fluid interface
 	 */
 	public function filterByPrimaryKey($key)
 	{
-		return $this->addUsingAlias(CcComponentPeer::NAME, $key, Criteria::EQUAL);
+		return $this->addUsingAlias(CcServiceRegisterPeer::NAME, $key, Criteria::EQUAL);
 	}
 
 	/**
@@ -126,11 +126,11 @@ abstract class BaseCcComponentQuery extends ModelCriteria
 	 *
 	 * @param     array $keys The list of primary key to use for the query
 	 *
-	 * @return    CcComponentQuery The current query, for fluid interface
+	 * @return    CcServiceRegisterQuery The current query, for fluid interface
 	 */
 	public function filterByPrimaryKeys($keys)
 	{
-		return $this->addUsingAlias(CcComponentPeer::NAME, $keys, Criteria::IN);
+		return $this->addUsingAlias(CcServiceRegisterPeer::NAME, $keys, Criteria::IN);
 	}
 
 	/**
@@ -140,7 +140,7 @@ abstract class BaseCcComponentQuery extends ModelCriteria
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
-	 * @return    CcComponentQuery The current query, for fluid interface
+	 * @return    CcServiceRegisterQuery The current query, for fluid interface
 	 */
 	public function filterByDbName($dbName = null, $comparison = null)
 	{
@@ -152,7 +152,7 @@ abstract class BaseCcComponentQuery extends ModelCriteria
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcComponentPeer::NAME, $dbName, $comparison);
+		return $this->addUsingAlias(CcServiceRegisterPeer::NAME, $dbName, $comparison);
 	}
 
 	/**
@@ -162,7 +162,7 @@ abstract class BaseCcComponentQuery extends ModelCriteria
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
-	 * @return    CcComponentQuery The current query, for fluid interface
+	 * @return    CcServiceRegisterQuery The current query, for fluid interface
 	 */
 	public function filterByDbIp($dbIp = null, $comparison = null)
 	{
@@ -174,23 +174,23 @@ abstract class BaseCcComponentQuery extends ModelCriteria
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcComponentPeer::IP, $dbIp, $comparison);
+		return $this->addUsingAlias(CcServiceRegisterPeer::IP, $dbIp, $comparison);
 	}
 
 	/**
 	 * Exclude object from result
 	 *
-	 * @param     CcComponent $ccComponent Object to remove from the list of results
+	 * @param     CcServiceRegister $ccServiceRegister Object to remove from the list of results
 	 *
-	 * @return    CcComponentQuery The current query, for fluid interface
+	 * @return    CcServiceRegisterQuery The current query, for fluid interface
 	 */
-	public function prune($ccComponent = null)
+	public function prune($ccServiceRegister = null)
 	{
-		if ($ccComponent) {
-			$this->addUsingAlias(CcComponentPeer::NAME, $ccComponent->getDbName(), Criteria::NOT_EQUAL);
+		if ($ccServiceRegister) {
+			$this->addUsingAlias(CcServiceRegisterPeer::NAME, $ccServiceRegister->getDbName(), Criteria::NOT_EQUAL);
 	  }
 	  
 		return $this;
 	}
 
-} // BaseCcComponentQuery
+} // BaseCcServiceRegisterQuery

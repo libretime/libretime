@@ -2,25 +2,25 @@
 
 
 /**
- * Base class that represents a row from the 'cc_component' table.
+ * Base class that represents a row from the 'cc_service_register' table.
  *
  * 
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcComponent extends BaseObject  implements Persistent
+abstract class BaseCcServiceRegister extends BaseObject  implements Persistent
 {
 
 	/**
 	 * Peer class name
 	 */
-  const PEER = 'CcComponentPeer';
+  const PEER = 'CcServiceRegisterPeer';
 
 	/**
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var        CcComponentPeer
+	 * @var        CcServiceRegisterPeer
 	 */
 	protected static $peer;
 
@@ -74,7 +74,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 * Set the value of [name] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     CcComponent The current object (for fluent API support)
+	 * @return     CcServiceRegister The current object (for fluent API support)
 	 */
 	public function setDbName($v)
 	{
@@ -84,7 +84,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 
 		if ($this->name !== $v) {
 			$this->name = $v;
-			$this->modifiedColumns[] = CcComponentPeer::NAME;
+			$this->modifiedColumns[] = CcServiceRegisterPeer::NAME;
 		}
 
 		return $this;
@@ -94,7 +94,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 * Set the value of [ip] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     CcComponent The current object (for fluent API support)
+	 * @return     CcServiceRegister The current object (for fluent API support)
 	 */
 	public function setDbIp($v)
 	{
@@ -104,7 +104,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 
 		if ($this->ip !== $v) {
 			$this->ip = $v;
-			$this->modifiedColumns[] = CcComponentPeer::IP;
+			$this->modifiedColumns[] = CcServiceRegisterPeer::IP;
 		}
 
 		return $this;
@@ -152,10 +152,10 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 2; // 2 = CcComponentPeer::NUM_COLUMNS - CcComponentPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 2; // 2 = CcServiceRegisterPeer::NUM_COLUMNS - CcServiceRegisterPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
-			throw new PropelException("Error populating CcComponent object", $e);
+			throw new PropelException("Error populating CcServiceRegister object", $e);
 		}
 	}
 
@@ -198,13 +198,13 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		// We don't need to alter the object instance pool; we're just modifying this instance
 		// already in the pool.
 
-		$stmt = CcComponentPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+		$stmt = CcServiceRegisterPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
 		$row = $stmt->fetch(PDO::FETCH_NUM);
 		$stmt->closeCursor();
 		if (!$row) {
@@ -233,14 +233,14 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
 			if ($ret) {
-				CcComponentQuery::create()
+				CcServiceRegisterQuery::create()
 					->filterByPrimaryKey($this->getPrimaryKey())
 					->delete($con);
 				$this->postDelete($con);
@@ -275,7 +275,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcComponentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcServiceRegisterPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
@@ -295,7 +295,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 					$this->postUpdate($con);
 				}
 				$this->postSave($con);
-				CcComponentPeer::addInstanceToPool($this);
+				CcServiceRegisterPeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
 			}
@@ -333,7 +333,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 					$affectedRows = 1;
 					$this->setNew(false);
 				} else {
-					$affectedRows = CcComponentPeer::doUpdate($this, $con);
+					$affectedRows = CcServiceRegisterPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
@@ -405,7 +405,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 			$failureMap = array();
 
 
-			if (($retval = CcComponentPeer::doValidate($this, $columns)) !== true) {
+			if (($retval = CcServiceRegisterPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
@@ -428,7 +428,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 */
 	public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = CcComponentPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = CcServiceRegisterPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		$field = $this->getByPosition($pos);
 		return $field;
 	}
@@ -470,7 +470,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 */
 	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
 	{
-		$keys = CcComponentPeer::getFieldNames($keyType);
+		$keys = CcServiceRegisterPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getDbName(),
 			$keys[1] => $this->getDbIp(),
@@ -490,7 +490,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 */
 	public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = CcComponentPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = CcServiceRegisterPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->setByPosition($pos, $value);
 	}
 
@@ -533,7 +533,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 */
 	public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = CcComponentPeer::getFieldNames($keyType);
+		$keys = CcServiceRegisterPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbName($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbIp($arr[$keys[1]]);
@@ -546,10 +546,10 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 */
 	public function buildCriteria()
 	{
-		$criteria = new Criteria(CcComponentPeer::DATABASE_NAME);
+		$criteria = new Criteria(CcServiceRegisterPeer::DATABASE_NAME);
 
-		if ($this->isColumnModified(CcComponentPeer::NAME)) $criteria->add(CcComponentPeer::NAME, $this->name);
-		if ($this->isColumnModified(CcComponentPeer::IP)) $criteria->add(CcComponentPeer::IP, $this->ip);
+		if ($this->isColumnModified(CcServiceRegisterPeer::NAME)) $criteria->add(CcServiceRegisterPeer::NAME, $this->name);
+		if ($this->isColumnModified(CcServiceRegisterPeer::IP)) $criteria->add(CcServiceRegisterPeer::IP, $this->ip);
 
 		return $criteria;
 	}
@@ -564,8 +564,8 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 */
 	public function buildPkeyCriteria()
 	{
-		$criteria = new Criteria(CcComponentPeer::DATABASE_NAME);
-		$criteria->add(CcComponentPeer::NAME, $this->name);
+		$criteria = new Criteria(CcServiceRegisterPeer::DATABASE_NAME);
+		$criteria->add(CcServiceRegisterPeer::NAME, $this->name);
 
 		return $criteria;
 	}
@@ -605,7 +605,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 * If desired, this method can also make copies of all associated (fkey referrers)
 	 * objects.
 	 *
-	 * @param      object $copyObj An object of CcComponent (or compatible) type.
+	 * @param      object $copyObj An object of CcServiceRegister (or compatible) type.
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @throws     PropelException
 	 */
@@ -626,7 +626,7 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 * objects.
 	 *
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-	 * @return     CcComponent Clone of current object.
+	 * @return     CcServiceRegister Clone of current object.
 	 * @throws     PropelException
 	 */
 	public function copy($deepCopy = false)
@@ -645,12 +645,12 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 	 * same instance for all member of this class. The method could therefore
 	 * be static, but this would prevent one from overriding the behavior.
 	 *
-	 * @return     CcComponentPeer
+	 * @return     CcServiceRegisterPeer
 	 */
 	public function getPeer()
 	{
 		if (self::$peer === null) {
-			self::$peer = new CcComponentPeer();
+			self::$peer = new CcServiceRegisterPeer();
 		}
 		return self::$peer;
 	}
@@ -705,4 +705,4 @@ abstract class BaseCcComponent extends BaseObject  implements Persistent
 		throw new PropelException('Call to undefined method: ' . $name);
 	}
 
-} // BaseCcComponent
+} // BaseCcServiceRegister
