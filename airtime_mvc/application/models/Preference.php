@@ -432,6 +432,9 @@ class Application_Model_Preference
     }
 
     public static function GetEnableStreamConf(){
+        if(self::GetValue("enable_stream_conf") == Null){
+            return "true";
+        }
         return self::GetValue("enable_stream_conf");
     }
 

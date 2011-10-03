@@ -64,10 +64,10 @@
                     Additional Options
                 </legend>
                 <dl class="zend_form">
-                <dt id="outputUser-label" class="block-display">
+                <dt id="outputUser-label">
                     <label for="outputUser"><?php echo $this->element->getElement('user')->getLabel()?> :</label>
                 </dt>
-                <dd id="outputUser-element" class="block-display">
+                <dd id="outputUser-element">
                     <?php echo $this->element->getElement('user')?>
                     <?php if($this->element->getElement('user')->hasErrors()) : ?>
                         <ul class='errors'>
@@ -77,10 +77,10 @@
                         </ul>
                     <?php endif; ?>
                 </dd>
-                <dt id="outputPassword-label" class="block-display">
+                <dt id="outputPassword-label">
                     <label class="optional" for="outputPassword"><?php echo $this->element->getElement('pass')->getLabel()?> :</label>
                 </dt>
-                <dd id="outputPassword-element" class="block-display clearfix">
+                <dd id="outputPassword-element" class="clearfix">
                     <?php echo $this->element->getElement('pass')?>
                     <?php if($this->element->getElement('pass')->hasErrors()) : ?>
                         <ul class='errors'>
@@ -93,10 +93,10 @@
                 <dt class="block-display info-block">
                     The following info will be displayed to listeners in their media player:
                 </dt>
-                <dt id="stationDescription-label" class="block-display">
+                <dt id="stationDescription-label">
                     <label for="stationDescription"><?php echo $this->element->getElement('description')->getLabel()?> :</label>
                 </dt>
-                <dd id="stationDescription-element" class="block-display clearfix">
+                <dd id="stationDescription-element" class="clearfix">
                     <?php echo $this->element->getElement('description')?>
                     <?php if($this->element->getElement('description')->hasErrors()) : ?>
                         <ul class='errors'>
@@ -106,10 +106,10 @@
                         </ul>
                     <?php endif; ?>
                 </dd>
-                <dt id="stationURL-label" class="block-display">
+                <dt id="stationURL-label">
                     <label for="stationURL"><?php echo $this->element->getElement('url')->getLabel()?> :</label>
                 </dt>
-                <dd id="stationURL-element" class="block-display clearfix">
+                <dd id="stationURL-element" class="clearfix">
                     <?php echo $this->element->getElement('url')?>
                     <span class="info-text-small">(Your radio station website)</span>
                     <?php if($this->element->getElement('url')->hasErrors()) : ?>
@@ -120,10 +120,10 @@
                         </ul>
                     <?php endif; ?>
                 </dd>
-                <dt id="outputGenre-label" class="block-display">
+                <dt id="outputGenre-label">
                     <label for="outputGenre"><?php echo $this->element->getElement('genre')->getLabel()?> :</label>
                 </dt>
-                <dd id="outputGenre-element" class="block-display">
+                <dd id="outputGenre-element">
                     <?php echo $this->element->getElement('genre')?>
                     <?php if($this->element->getElement('genre')->hasErrors()) : ?>
                         <ul class='errors'>
@@ -133,10 +133,10 @@
                         </ul>
                     <?php endif; ?>
                 </dd>
-                <dt id="outputMountpoint-label" class="block-display">
+                <dt id="outputMountpoint-label">
                     <label for="outputMountpoint"><?php echo $this->element->getElement('mount')->getLabel()?> :</label>
                 </dt>
-                <dd id="outputMountpoint-element" class="block-display">
+                <dd id="outputMountpoint-element">
                     <?php echo $this->element->getElement('mount')?>
                     <?php if($this->element->getElement('mount')->hasErrors()) : ?>
                         <ul class='errors'>
@@ -148,11 +148,11 @@
                 </dd>
                 </dl>
             </fieldset>
-            <dt id="outputStreamURL-label" class="block-display">
+            <dt id="outputStreamURL-label">
                 <label for="outputStreamURL">Stream URL: </label>
             </dt>
-            <dd id="outputStreamURL-element" class="block-display">
-                <p id="stream_url"></p>
+            <dd id="outputStreamURL-element">
+                <span id="stream_url"></span>
             </dd>
             </dl>
         </fieldset>
