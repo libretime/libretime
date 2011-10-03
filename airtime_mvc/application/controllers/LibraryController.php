@@ -191,7 +191,10 @@ class LibraryController extends Zend_Controller_Action
                 $file->setDbColMetadata($formdata);
 
                 $data = $file->getMetadata();
-
+                
+                // set MDATA_KEY_FILEPATH
+                $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
+                Logging::log($data['MDATA_KEY_FILEPATH']);
                 RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
                 $this->_helper->redirector('index');

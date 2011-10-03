@@ -36,6 +36,7 @@ class AirtimeProcessEvent(ProcessEvent):
         self.md_manager = AirtimeMetadata()
         self.mmc = mmc
         self.api_client = api_client
+        self.create_dict = {}
 
     def add_filepath_to_ignore(self, filepath):
         self.ignore_event.add(filepath)
@@ -87,6 +88,14 @@ class AirtimeProcessEvent(ProcessEvent):
                 else:
                     self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
     
+    def process_IN_CREATE(self, event):
+        self.logger.info("event: %s", event)
+        if not event.dir:
+            if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
+                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': True})
+            self.create_dict[event.pathname] = time.time()
+            
+        
     #event.dir: True if the event was raised against a directory.
     #event.name: filename
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
@@ -94,7 +103,10 @@ class AirtimeProcessEvent(ProcessEvent):
     # copy was done. Hence, IN_CLOSE_WRITE is the correct one to handle.    
     def process_IN_CLOSE_WRITE(self, event):
         self.logger.info("event: %s", event)
-        self.handle_created_file(event.dir, event.pathname, event.name)
+        self.logger.info("create_dict: %s", self.create_dict)
+        if event.pathname in self.create_dict:
+            self.create_dict.pop(event.pathname)
+            self.handle_created_file(event.dir, event.pathname, event.name)
         
     def handle_created_file(self, dir, pathname, name):
         if not dir:
@@ -255,6 +267,10 @@ class AirtimeProcessEvent(ProcessEvent):
                 del self.cookies_IN_MOVED_FROM[k]
                 self.handle_removed_file(False, event.pathname)
 
+        for k, t in self.create_dict.items():
+            now = time.time()
+            if now - t > 5:
+                del self.create_dict[k]
 
         #check for any events received from Airtime.
         try:
