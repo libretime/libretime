@@ -156,10 +156,10 @@ function dtDrawCallback() {
 function addProgressIcon(id) {
     if($("#au_"+id).find("td:eq(0)").find("span").length > 0){
         $("#au_"+id).find("td:eq(0)").find("span").removeClass();
+        $("span[id="+id+"]").addClass("small-icon progress");
     }else{
         $("#au_"+id).find("td:eq(0)").append('<span id="'+id+'" class="small-icon progress"></span>')
     }
-    $("span[id="+id+"]").addClass("small-icon progress");
 }
 
 function checkSCUploadStatus(){
