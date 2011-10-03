@@ -47,6 +47,7 @@ class ScheduleController extends Zend_Controller_Action
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js','text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js','text/javascript');
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js','text/javascript');
+    	$this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery-ui-timepicker.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/fullcalendar.css');

@@ -419,10 +419,16 @@ function showErrorSections() {
         $("#schedule-record-rebroadcast").show();
         $("#add_show_rebroadcast_relative").show();
     }
+    $('input:text').setMask()
 }
 
 $(document).ready(function() {
-
+    $.mask.masks = $.extend($.mask.masks,{
+        date:{ mask: '9999-19-39'},
+        time:{ mask: '29:69'}
+    })
+    
+    $('input:text').setMask()
 	//setAddShowEvents();
 });
 
@@ -438,6 +444,13 @@ $(window).resize(function(){
 });
 
 $(window).load(function() {
-
+    $.mask.masks = $.extend($.mask.masks,{
+        date:{ mask: '9999-19-39'},
+        time:{ mask: '29:69'}
+    })
+    
+    $('input:text').setMask()
+    
 	setAddShowEvents();
+	
 });
