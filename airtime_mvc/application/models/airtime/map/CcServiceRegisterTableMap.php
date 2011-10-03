@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_component' table.
+ * This class defines the structure of the 'cc_service_register' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcComponentTableMap extends TableMap {
+class CcServiceRegisterTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'airtime.map.CcComponentTableMap';
+	const CLASS_NAME = 'airtime.map.CcServiceRegisterTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,9 +31,9 @@ class CcComponentTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('cc_component');
-		$this->setPhpName('CcComponent');
-		$this->setClassname('CcComponent');
+		$this->setName('cc_service_register');
+		$this->setPhpName('CcServiceRegister');
+		$this->setClassname('CcServiceRegister');
 		$this->setPackage('airtime');
 		$this->setUseIdGenerator(false);
 		// columns
@@ -49,4 +49,4 @@ class CcComponentTableMap extends TableMap {
 	{
 	} // buildRelations()
 
-} // CcComponentTableMap
+} // CcServiceRegisterTableMap

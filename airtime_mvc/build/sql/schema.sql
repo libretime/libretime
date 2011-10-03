@@ -502,20 +502,20 @@ COMMENT ON TABLE "cc_login_attempts" IS '';
 
 SET search_path TO public;
 -----------------------------------------------------------------------------
--- cc_component
+-- cc_service_register
 -----------------------------------------------------------------------------
 
-DROP TABLE "cc_component" CASCADE;
+DROP TABLE "cc_service_register" CASCADE;
 
 
-CREATE TABLE "cc_component"
+CREATE TABLE "cc_service_register"
 (
 	"name" VARCHAR(32)  NOT NULL,
 	"ip" VARCHAR(18)  NOT NULL,
 	PRIMARY KEY ("name")
 );
 
-COMMENT ON TABLE "cc_component" IS '';
+COMMENT ON TABLE "cc_service_register" IS '';
 
 
 SET search_path TO public;

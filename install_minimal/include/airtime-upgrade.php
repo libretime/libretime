@@ -19,6 +19,25 @@ if(exec("whoami") != "root"){
     exit(1);
 }
 
+
+/* This class is responsible for tasks that need to be executed only *once*
+ * per upgrade, even if it's upgrading over multiple versions of Airtime. */
+class AirtimeMasterUpgrade{
+    const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
+
+    public static function InstallAirtimePhpServerCode($phpDir)
+    {
+        $AIRTIME_SRC = realpath(__DIR__.'/../../airtime_mvc');
+
+        // delete old files
+        exec("rm -rf \"$phpDir\"");
+        echo "* Installing PHP code to ".$phpDir.PHP_EOL;
+        exec("mkdir -p ".$phpDir);
+        exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
+    }
+}
+
+
 global $CC_DBC, $CC_CONFIG;
 
 $values = parse_ini_file('/etc/airtime/airtime.conf', true);
@@ -86,10 +105,18 @@ if (strcmp($version, "2.0.0") < 0){
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
 $CC_DBC->query($sql);
 
+$values = parse_ini_file(AirtimeMasterUpgrade::CONF_FILE_AIRTIME, true);
+$phpDir = $values['general']['airtime_dir'];
+AirtimeMasterUpgrade::InstallAirtimePhpServerCode($phpDir);
+AirtimeInstall::InstallBinaries();
+AirtimeInstall::CreateSymlinksToUtils();
+
+
 $newVersion = AIRTIME_VERSION;
 $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$newVersion')";
 $CC_DBC->query($sql);
 
+/*
 echo PHP_EOL."*** Updating Api Client ***".PHP_EOL;
 passthru("python $SCRIPTPATH/../../python_apps/api_clients/install/api_client_install.py");
 
@@ -108,3 +135,4 @@ sleep(4);
 passthru("airtime-check-system");
 
 echo "******************************* Update Complete *******************************".PHP_EOL;
+*/

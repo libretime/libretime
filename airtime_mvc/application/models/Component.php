@@ -3,10 +3,10 @@ class Application_Model_Component {
 
     public static function Register($p_componentName, $p_ipAddress){
 
-        $component = CcComponentQuery::create()->findOneByDbName($p_componentName);
+        $component = CcServiceRegisterQuery::create()->findOneByDbName($p_componentName);
 
         if ($component == NULL){
-            $component = new CcComponent();
+            $component = new CcServiceRegister();
             $component->setDbName($p_componentName);
         }
 

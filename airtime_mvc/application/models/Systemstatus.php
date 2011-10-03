@@ -118,7 +118,7 @@ class Application_Model_Systemstatus
 
     public static function GetPypoStatus(){
 
-        $component = CcComponentQuery::create()->findOneByDbName("pypo");
+        $component = CcServiceRegisterQuery::create()->findOneByDbName("pypo");
         $ip = $component->getDbIp();
         
         $docRoot = self::GetMonitStatus($ip);
@@ -129,7 +129,7 @@ class Application_Model_Systemstatus
     
     public static function GetLiquidsoapStatus(){
 
-        $component = CcComponentQuery::create()->findOneByDbName("pypo");
+        $component = CcServiceRegisterQuery::create()->findOneByDbName("pypo");
         $ip = $component->getDbIp();
         
         $docRoot = self::GetMonitStatus($ip);
@@ -140,7 +140,7 @@ class Application_Model_Systemstatus
     
     public static function GetShowRecorderStatus(){
 
-        $component = CcComponentQuery::create()->findOneByDbName("show-recorder");
+        $component = CcServiceRegisterQuery::create()->findOneByDbName("show-recorder");
         $ip = $component->getDbIp();
         
         $docRoot = self::GetMonitStatus($ip);
@@ -151,7 +151,7 @@ class Application_Model_Systemstatus
     
     public static function GetMediaMonitorStatus(){
 
-        $component = CcComponentQuery::create()->findOneByDbName("media-monitor");
+        $component = CcServiceRegisterQuery::create()->findOneByDbName("media-monitor");
         $ip = $component->getDbIp();
         
         $docRoot = self::GetMonitStatus($ip);

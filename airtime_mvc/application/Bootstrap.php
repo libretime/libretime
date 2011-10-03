@@ -28,7 +28,6 @@ $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
 Logging::setLogPath('/var/log/airtime/zendphp.log');
-Logging::log("bootstrap");
 
 Zend_Validate::setDefaultNamespaces("Zend");
 
@@ -67,7 +66,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip2.min.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
-
+        $view->headScript()->appendScript("var baseUrl='$baseUrl/'");
 
         //scripts for now playing bar
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js','text/javascript');

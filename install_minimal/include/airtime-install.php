@@ -64,8 +64,7 @@ if (isset($version) && ($version != false) && ($version < AIRTIME_VERSION) && !i
     echo "Airtime version $version found.".PHP_EOL;
 
     require_once("airtime-upgrade.php");
-
-    exit(2);
+    exit(0);
 }
 
 if($version === false){

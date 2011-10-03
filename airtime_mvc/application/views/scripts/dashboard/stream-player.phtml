@@ -1,4 +1,5 @@
 <div id="content" class="jp-container">
+<h1>Live stream</h1> 
 <?php $ids = Application_Model_StreamSetting::getEnabledStreamIds(); ?>
 <script>
 function setjPlayer(url, type){
@@ -18,7 +19,7 @@ function setjPlayer(url, type){
         wmode: "window"
     });
 }
-    
+
 $(document).ready(function(){
 
     $("#combo-box").change(function(eventObject){
@@ -55,7 +56,7 @@ $(document).ready(function(){
                             if ($type == "ogg")
                                 $type = "oga";
 
-                            $label = "Stream ".substr($id, 1)." (".$streamData["${id}_bitrate"]." Kbit/s)";
+                            $label = $streamData["${id}_description"]." (".$streamData["${id}_bitrate"]." Kbit/s)";
                             echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s'>%s</option>", $id, $url, $type, $label);
                         }
                     ?>
@@ -64,19 +65,20 @@ $(document).ready(function(){
         </div>
         <div id="jquery_jplayer_1" class="jp-jplayer"></div>
 
-  <div id="jp_container_1" class="jp-audio">
-            <div class="jp-type-single">
-                <div id="jp_interface_1" class="jp-gui jp-interface">
-                    <ul class="jp-controls">
-                        <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
-                        <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-                        <li><a href="javascript:;" class="jp-mute" tabindex="1">mute</a></li>
-                        <li><a href="javascript:;" class="jp-unmute" tabindex="1">unmute</a></li>
-                    </ul>
-                </div>
-                <div id="jp_playlist_1" class="jp-playlist">
-                </div>
-
+<div id="jp_container_1" class="jp-audio">
+    <div class="jp-type-single">
+        <div id="jp_interface_1" class="jp-gui jp-interface">
+            <ul class="jp-controls">
+                <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+                <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+                <li><a title="mute" tabindex="1" class="jp-mute" href="javascript:;">mute</a></li>
+                <li><a title="unmute" tabindex="1" class="jp-unmute" href="javascript:;">unmute</a></li>
+                <li><a title="max volume" tabindex="1" class="jp-volume-max" href="javascript:;">max volume</a></li>
+            </ul>
+            <div class="jp-volume-bar">
+                <div class="jp-volume-bar-value"></div>
             </div>
         </div>
+        <div id="jp_playlist_1" class="jp-playlist"></div>
+    </div>
 </div>

@@ -13,6 +13,9 @@ api_base = 'api'
 # URL to get the version number of the server API
 version_url = 'version/api_key/%%api_key%%'
 
+#URL to register a components IP Address with the central web server
+register_component = 'register-component/format/json/api_key/%%api_key%%/component/%%component%%'
+
 # Hostname
 base_url = 'localhost'
 base_port = 80
@@ -44,9 +47,6 @@ remove_watched_dir = 'remove-watched-dir/format/json/api_key/%%api_key%%/path/%%
 
 # URL to tell Airtime we want to add watched directory
 set_storage_dir = 'set-storage-dir/format/json/api_key/%%api_key%%/path/%%path%%'
-
-# URL to tell Airtime we want to get stream setting
-get_stream_setting = 'get-stream-setting/format/json/api_key/%%api_key%%/'
 
 #############################
 ## Config for Recorder
@@ -89,6 +89,8 @@ update_start_playing_url = 'notify-media-item-start-play/api_key/%%api_key%%/med
 # ???
 generate_range_url = 'generate_range_dp.php'
 
+# URL to tell Airtime we want to get stream setting
+get_stream_setting = 'get-stream-setting/format/json/api_key/%%api_key%%/'
 
 ##############
 # OBP config #
