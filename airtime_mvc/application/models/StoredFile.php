@@ -597,6 +597,27 @@ class Application_Model_StoredFile {
         }
         return $res;
     }
+    
+    public static function RecallByPartialFilepath($partial_path){
+        $path_info = MusicDir::splitFilePath($partial_path);
+
+        if (is_null($path_info)) {
+            return null;
+        }
+        $music_dir = MusicDir::getDirByPath($path_info[0]);
+
+        $files = CcFilesQuery::create()
+                        ->filterByDbDirectory($music_dir->getId())
+                        ->filterByDbFilepath("$path_info[1]%")
+                        ->find();
+        $res = array();
+        foreach ($files as $file){
+            $storedFile = new StoredFile();
+            $storedFile->_file = $file;
+            $res[] = $storedFile;
+        }
+        return $res;
+    }
 
 	public static function searchFilesForPlaylistBuilder($datatables) {
 		global $CC_CONFIG;
@@ -751,7 +772,7 @@ class Application_Model_StoredFile {
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
 		$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        Logging::log(__FILE__.':uploadFile(): filename='.$fileName);
+        Logging::log(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
 		// Clean the fileName for security reasons
         //this needs fixing for songs not in ascii.
 		//$fileName = preg_replace('/[^\w\._]+/', '', $fileName);

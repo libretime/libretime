@@ -122,6 +122,7 @@ class ApiController extends Zend_Controller_Action
                     $file_base_name = substr($file_base_name, 1);
                     header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
                 }
+                $logger->info("Sending $filepath");
                 header("Content-Length: " . filesize($filepath));
 
                 // !! binary mode !!
@@ -539,6 +540,7 @@ class ApiController extends Zend_Controller_Action
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
             $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
+
             foreach($files as $file){
                 $file->delete();
             }
