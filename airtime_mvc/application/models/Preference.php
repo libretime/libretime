@@ -118,12 +118,12 @@ class Application_Model_Preference
         return self::getValue("station_name");
     }
 
-    public static function SetDoSoundCloudUpload($upload) {
-        self::SetValue("soundcloud_upload", $upload);
+    public static function SetAutoUploadRecordedShowToSoundcloud($upload) {
+        self::SetValue("soundcloud_auto_upload_recorded_show", $upload);
     }
 
-    public static function GetDoSoundCloudUpload() {
-        return self::GetValue("soundcloud_upload");
+    public static function GetAutoUploadRecordedShowToSoundcloud() {
+        return self::GetValue("soundcloud_auto_upload_recorded_show");
     }
 
     public static function SetSoundCloudUser($user) {

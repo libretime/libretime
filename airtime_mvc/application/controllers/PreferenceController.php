@@ -36,7 +36,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
                 Application_Model_Preference::SetTimezone($values["preferences_general"]["timezone"]);
 
-                Application_Model_Preference::SetDoSoundCloudUpload($values["preferences_soundcloud"]["UseSoundCloud"]);
+                Application_Model_Preference::SetAutoUploadRecordedShowToSoundcloud($values["preferences_soundcloud"]["UseSoundCloud"]);
                 Application_Model_Preference::SetUploadToSoundcloudOption($values["preferences_soundcloud"]["UploadToSoundcloudOption"]);
                 Application_Model_Preference::SetSoundCloudDownloadbleOption($values["preferences_soundcloud"]["SoundCloudDownloadbleOption"]);
                 Application_Model_Preference::SetSoundCloudUser($values["preferences_soundcloud"]["SoundCloudUser"]);

@@ -13,7 +13,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         $this->addElement('checkbox', 'UseSoundCloud', array(
             'label'      => 'Automatically Upload Recorded Shows',
             'required'   => false,
-            'value' => Application_Model_Preference::GetDoSoundCloudUpload(),
+            'value' => Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud(),
             'decorators' => array(
                 'ViewHelper'
             )

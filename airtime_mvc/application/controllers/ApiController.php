@@ -390,7 +390,7 @@ class ApiController extends Zend_Controller_Action
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', null);
 
-        if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
+        if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud())
         {
         	for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
 
