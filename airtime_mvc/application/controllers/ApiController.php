@@ -694,7 +694,7 @@ class ApiController extends Zend_Controller_Action
         $remoteAddr = $_SERVER['REMOTE_ADDR'];
         Logging::log("Registered Component: ".$component."@".$remoteAddr);
 
-        Application_Model_Component::Register($component, $remoteAddr);
+        Application_Model_ServiceRegister::Register($component, $remoteAddr);
     }
 }
 

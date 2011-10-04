@@ -1,5 +1,5 @@
 <?php
-class Application_Model_Component {
+class Application_Model_ServiceRegister {
 
     public static function Register($p_componentName, $p_ipAddress){
 
