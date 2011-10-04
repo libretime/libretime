@@ -94,7 +94,24 @@ class AirtimeCheck {
     }
 
     public static function output_status($key, $value){
-        echo sprintf("%-31s= %s", $key, $value).PHP_EOL; 
+        $RED = "[0;31m";
+        $GREEN = "[1;32m";
+
+        $color = $GREEN;
+        
+        if ($value == "FAILED"){
+            $color = $RED;
+        }
+        
+        echo sprintf("%-31s= %s", $key, self::term_color($value, $color)).PHP_EOL; 
     }
 
+    public static function term_color($text, $color){
+
+        if($color == ""){
+            $color = "[0m";
+        }
+
+        return chr(27)."$color$text".chr(27)."[0m";
+    }
 }
