@@ -70,7 +70,7 @@ class UpgradeCommon{
             }
         }
 
-        $default_suffix = "200";
+        $default_suffix = CONF_BACKUP_SUFFIX;
         self::CreateIniFiles($default_suffix);
         self::MergeConfigFiles($configFiles, $suffix);
     }

@@ -16,6 +16,7 @@
  */
 
 const VERSION_NUMBER = "2.0.0";
+const CONF_BACKUP_SUFFIX = "200";
 
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
@@ -28,6 +29,8 @@ Propel::init(__DIR__."/../../../airtime_mvc/application/configs/airtime-conf.php
 
 require_once 'UpgradeCommon.php';
 
+$bypassMigrations=array('20110312121200', '20110331111708', '20110402164819', '20110406182005', '20110629143017', '20110711161043', '20110713161043');
+$targetMigration='20110925171256';
 
 /* All functions other than start() should be marked as
  * private.
@@ -39,14 +42,14 @@ class AirtimeDatabaseUpgrade{
     }
 
     private static function doDbMigration(){
+        global $bypassMigrations, $targetMigration;
         if(UpgradeCommon::DbTableExists('doctrine_migration_versions') === false) {
-            $migrations = array('20110312121200', '20110331111708', '20110402164819', '20110406182005', '20110629143017', '20110711161043', '20110713161043');
-            foreach($migrations as $migration) {
+            foreach($bypassMigrations as $migration) {
                 UpgradeCommon::BypassMigrations(__DIR__, $migration);
             }
         }
 
-        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20110925171256');
+        UpgradeCommon::MigrateTablesToVersion(__DIR__, $targetMigration);
     }
 }
 
@@ -70,7 +73,7 @@ class AirtimeConfigFileUpgrade{
  * 3 classes. For example, there may be stray files scattered throughout
  * the filesystem that we don't need anymore. Put the functions to clean
  * those out into this class. */
-class AirtimeMiscUpgrade{1
+class AirtimeMiscUpgrade{
 
     public static function start(){
     }

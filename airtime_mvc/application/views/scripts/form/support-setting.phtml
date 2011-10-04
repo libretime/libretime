@@ -134,7 +134,7 @@
         </dt>
         <dd id="Logo-element" class="block-display clearfix">
             <?php if($this->element->getView()->logoImg){?>
-            <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
+            <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
             <?php }?>
             
             <?php echo $this->element->getElement('Logo') ?>
