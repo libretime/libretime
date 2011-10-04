@@ -93,6 +93,7 @@ class AirtimeProcessEvent(ProcessEvent):
         if not event.dir:
             if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
                 self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': True})
+            # record the timestamp of the time on IN_CREATE event
             self.create_dict[event.pathname] = time.time()
             
         
@@ -104,7 +105,9 @@ class AirtimeProcessEvent(ProcessEvent):
     def process_IN_CLOSE_WRITE(self, event):
         self.logger.info("event: %s", event)
         self.logger.info("create_dict: %s", self.create_dict)
+        
         if event.pathname in self.create_dict:
+            # detele corresponding entry from create_dict
             self.create_dict.pop(event.pathname)
             self.handle_created_file(event.dir, event.pathname, event.name)
         
@@ -144,6 +147,9 @@ class AirtimeProcessEvent(ProcessEvent):
         self.handle_modified_file(event.dir, event.pathname, event.name)
 
     def handle_modified_file(self, dir, pathname, name):
+        # update timestamp on create_dict for the entry with pathname as the key
+        if pathname in self.create_dict:
+            self.create_dict[pathname] = time.time()
         if not dir and not self.mmc.is_parent_directory(pathname, self.config.organize_directory):
             self.logger.info("Modified: %s", pathname)
             if self.mmc.is_audio_file(name):
@@ -266,10 +272,12 @@ class AirtimeProcessEvent(ProcessEvent):
                 #it from the Airtime directory.
                 del self.cookies_IN_MOVED_FROM[k]
                 self.handle_removed_file(False, event.pathname)
-
+        
+        # we don't want create_dict grow infinitely
+        # this part is like a garbage collector
         for k, t in self.create_dict.items():
             now = time.time()
-            if now - t > 5:
+            if now - t > 300:
                 del self.create_dict[k]
 
         #check for any events received from Airtime.
