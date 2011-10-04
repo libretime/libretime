@@ -90,12 +90,8 @@ class AirtimeProcessEvent(ProcessEvent):
     
     def process_IN_CREATE(self, event):
         self.logger.info("event: %s", event)
-        if not event.dir:
-            if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
-                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': True})
-            # record the timestamp of the time on IN_CREATE event
-            self.create_dict[event.pathname] = time.time()
-            
+        # record the timestamp of the time on IN_CREATE event
+        self.create_dict[event.pathname] = time.time()
         
     #event.dir: True if the event was raised against a directory.
     #event.name: filename
@@ -171,11 +167,6 @@ class AirtimeProcessEvent(ProcessEvent):
         else:
             self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
 
-
-    #Some weird thing to note about this event: it seems that if a file is moved to a newly
-    #created directory, then the IN_MOVED_FROM event will be called, but instead of a corresponding
-    #IN_MOVED_TO event, a IN_CREATED event will happen instead. However if the directory existed before
-    #then the IN_MOVED_TO event will be called.
     def process_IN_MOVED_TO(self, event):
         self.logger.info("process_IN_MOVED_TO: %s", event)
         #if stuff dropped in stor via a UI move must change file permissions.
