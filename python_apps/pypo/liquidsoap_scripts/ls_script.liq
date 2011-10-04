@@ -51,7 +51,7 @@ add_skip_command(s)
 s = map_metadata(append_title, s)
 
 if output_sound_device then
-    ignore(output.alsa(s))
+    ignore(out(s))
 end
 
 if s1_output != "disabled" then
