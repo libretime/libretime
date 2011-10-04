@@ -42,11 +42,11 @@ $(document).ready(function(){
         ?>
 });
 </script>
-  <div class="jp-logo"></div>
+  <div class="jp-logo"><img id="logo-img" onload='resizeToMaxHeight(this, 67);' src="<?php echo $this->logo ?>" /></div>
         <div class="jp-stream">
             <div class="jp-stream-text">Select stream:</div>
+                
               <form id="form1" method="post" action="">
-
                 <select id="combo-box">
                     <?php
                         foreach($ids as $id) {

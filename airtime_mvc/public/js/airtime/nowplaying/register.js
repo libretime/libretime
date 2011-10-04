@@ -102,27 +102,25 @@ $(document).ready(function(){
     }); 
 });
         
-function resizeImg(ele){
-
+function resizeImg(ele, targetWidth, targetHeight){
     var img = $(ele);
 
     var width = ele.width;
     var height = ele.height;
 
     // resize img proportionaly
-    if( width > height && width > 430){
-        var ratio = 430/width;
-        img.css("width", "430px");
+    if( width > height && width > targetWidth){
+        var ratio = targetWidth/width;
+        img.css("width", targetHeight+"px");
         var newHeight = height * ratio;
-        img.css("height", newHeight );
-
-    }else if( width < height && height > 430){
-        var ratio = 430/height;
-        img.css("height", "430px");
+        img.css("height", newHeight);
+    }else if( width < height && height > targetHeight){
+        var ratio = targetHeight/height;
+        img.css("height", targetHeight+"px");
         var newWidth = width * ratio;
-        img.css("width", newWidth );
-    }else if( width == height && width > 430){
-        img.css("height", "430px");
-        img.css("width", "430px" );
-    }	
+        img.css("width", newWidth);
+    }else if( width == height && width > targetWidth){
+        img.css("height", targetHeight+"px");
+        img.css("width", targetWidth+"px" );
+    }
 }

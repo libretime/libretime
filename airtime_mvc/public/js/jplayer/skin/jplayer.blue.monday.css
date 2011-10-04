@@ -38,14 +38,25 @@
 	text-shadow: 0px -1px 1px #000;
 }
 
-.jp-logo	{
+.jp-logo{
 	width:400px;
 	height: 67px;
-	background:#282828 url(../../../css/images/airtime_logo_jp.png) no-repeat 120px 14px;
+	/* background:#282828 url(../../../css/images/airtime_logo_jp.png) no-repeat 120px 14px; 
 	background: url(../../../css/images/airtime_logo_jp.png) no-repeat 120px 14px, -moz-radial-gradient(200px 0px, circle cover, rgba(70,70,70,1) 0%, rgba(40,40,40,1) 90%);
-	background: url(../../../css/images/airtime_logo_jp.png) no-repeat 120px 14px, -webkit-radial-gradient(170px 20px, rgba(70,70,70,1) 0%,rgba(40,40,40,1) 70%);
+	background: url(../../../css/images/airtime_logo_jp.png) no-repeat 120px 14px, -webkit-radial-gradient(170px 20px, rgba(70,70,70,1) 0%,rgba(40,40,40,1) 70%); */
+    background:#282828 no-repeat 120px 14px; 
+	background: no-repeat 120px 14px, -moz-radial-gradient(200px 0px, circle cover, rgba(70,70,70,1) 0%, rgba(40,40,40,1) 90%);
+	background: no-repeat 120px 14px, -webkit-radial-gradient(170px 20px, rgba(70,70,70,1) 0%,rgba(40,40,40,1) 70%);
 	display:block;
 }
+
+.jp-logo img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
 .jp-stream	{
 	height: 27px;
 	display:block;

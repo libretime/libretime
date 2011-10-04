@@ -222,3 +222,41 @@ function audioPreview(filename, elemID){
 
     $('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
 }
+
+function resizeImg(ele, targetWidth, targetHeight){
+    var img = $(ele);
+
+    var width = ele.width;
+    var height = ele.height;
+
+    // resize img proportionaly
+    if( width > height && width > targetWidth){
+        var ratio = targetWidth/width;
+        img.css("width", targetHeight+"px");
+        var newHeight = height * ratio;
+        img.css("height", newHeight+"px");
+    }else if( width < height && height > targetHeight){
+        var ratio = targetHeight/height;
+        img.css("height", targetHeight+"px");
+        var newWidth = width * ratio;
+        img.css("width", newWidth+"px");
+    }else if( width == height && width > targetWidth){
+        img.css("height", targetHeight+"px");
+        img.css("width", targetWidth+"px" );
+    }
+}
+
+function resizeToMaxHeight(ele, targetHeight){
+    var img = $(ele);
+
+    var width = ele.width;
+    var height = ele.height;
+
+    // resize img proportionaly
+    if( height > targetHeight){
+        var ratio = targetHeight/height;
+        img.css("height", targetHeight+"px");
+        var newWidth = width * ratio;
+        img.css("width", newWidth+"px");
+    }
+}
