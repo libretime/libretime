@@ -462,4 +462,11 @@ class AirtimeInstall
         fwrite($fp, "$minute $hour * * * root /usr/lib/airtime/utils/phone_home_stat\n");
         fclose($fp);
     }
+    
+    public static function removeVirtualEnvDistributeFile(){
+        echo "* Removing distribute-0.6.10.tar.gz".PHP_EOL;
+        if(file_exists('/usr/share/python-virtualenv/distribute-0.6.10.tar.gz')){
+            exec("rm -f /usr/share/python-virtualenv/distribute-0.6.10.tar.gz");
+        }
+    }
 }

@@ -47,6 +47,7 @@ class ScheduleController extends Zend_Controller_Action
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js','text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js','text/javascript');
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js','text/javascript');
+    	$this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js','text/javascript');
 
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery-ui-timepicker.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/fullcalendar.css');
@@ -175,7 +176,7 @@ class ScheduleController extends Zend_Controller_Action
 
         if ($showEndDateHelper->getTimestamp() <= $epochNow
             && $show->isRecorded()
-            && Application_Model_Preference::GetDoSoundCloudUpload()) {
+            && Application_Model_Preference::GetUploadToSoundcloudOption()) {
                 if(is_null($show->getSoundCloudFileId())){
                     $menu[] = array('action' => array('type' => 'fn',
                         'callback' => "window['uploadToSoundCloud']($id)"),

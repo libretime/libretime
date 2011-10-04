@@ -13,6 +13,7 @@ require_once 'DB.php';
 
 require_once 'Preference.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
+require_once 'soundcloud-api/Services/Soundcloud.php';
 
 global $CC_CONFIG, $CC_DBC;
 $dsn = $CC_CONFIG['dsn'];

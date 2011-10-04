@@ -91,7 +91,7 @@ class LibraryController extends Zend_Controller_Action
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
             
-            if (Application_Model_Preference::GetDoSoundCloudUpload()) {
+            if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
                 $text = "Upload to Soundcloud";
                 if(!is_null($file->getSoundCloudId())){
                     $text = "Re-upload to Soundcloud";
@@ -213,7 +213,10 @@ class LibraryController extends Zend_Controller_Action
                 $file->setDbColMetadata($formdata);
 
                 $data = $file->getMetadata();
-
+                
+                // set MDATA_KEY_FILEPATH
+                $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
+                Logging::log($data['MDATA_KEY_FILEPATH']);
                 Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
                 $this->_helper->redirector('index');

@@ -125,7 +125,7 @@ class AirtimeMetadata:
                         self.logger.debug("Saving %s to file", key)
                         self.logger.debug(value)
                         if isinstance(value, basestring) and (len(value) > 0):
-                            airtime_file[self.airtime2mutagen[key]] = unicode(value, "utf-8")
+                            airtime_file[self.airtime2mutagen[key]] = api_client.encode_to(value, 'utf-8')
                         elif isinstance(value, int):
                             airtime_file[self.airtime2mutagen[key]] = str(value)
 

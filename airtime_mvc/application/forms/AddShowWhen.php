@@ -20,6 +20,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         'ViewHelper',
                         'Description',
                         array('Label', array('tag' =>'dt'))));
+        $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
         
         // Add start time element
@@ -36,6 +37,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         'ViewHelper',
                         'Errors',
                         array(array('close'=>'HtmlTag'), array('tag' => 'dd', 'closeOnly'=>true))));
+        $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
 
         // Add end date element
@@ -53,6 +55,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         'ViewHelper',
                         'Description',
                         array('Label', array('tag' =>'dt'))));
+        $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
         
         // Add end time element
@@ -69,6 +72,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         'ViewHelper',
                         'Errors',
                         array(array('close'=>'HtmlTag'), array('tag' => 'dd', 'closeOnly'=>true))));
+        $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
         
         // Add duration element

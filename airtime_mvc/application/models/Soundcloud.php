@@ -1,8 +1,6 @@
 <?php
 
-require_once 'soundcloud-api/Services/Soundcloud.php';
-
-class Application_Model_AtSoundcloud {
+class Application_Model_Soundcloud {
 
     private $_soundcloud;
 
@@ -40,13 +38,15 @@ class Application_Model_AtSoundcloud {
                 $tags = Application_Model_Preference::GetSoundCloudTags();
             }
 
+            $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1'?true:false;
+            
             $track_data = array(
                 'track[sharing]' => 'private',
                 'track[title]' => $filename,
                 'track[asset_data]' => '@' . $filepath,
                 'track[tag_list]' => $tags,
                 'track[description]' => $description,
-                'track[downloadable]' => true,
+                'track[downloadable]' => $downloadable,
 
             );
 

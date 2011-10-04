@@ -1,6 +1,19 @@
 <fieldset class="padded">
     <dl class="zend_form">
-        <dd id="UseSoundCloud-element" class="block-display" style=" margin:6px 0 10px 0">
+        <dd id="UploadToSoundcloudOption-element" class="block-display" style=" margin:6px 0 10px 0">
+            <label class="optional" for="UploadToSoundcloudOption">
+                <?php echo $this->element->getElement('UploadToSoundcloudOption') ?>
+                <strong><?php echo $this->element->getElement('UploadToSoundcloudOption')->getLabel() ?></strong>
+            </label>
+            <?php if($this->element->getElement('UploadToSoundcloudOption')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('UploadToSoundcloudOption')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <dd id="UseSoundCloud-element" class="block-display" style="padding-left:20px; margin:6px 0 10px 0">
             <label class="optional" for="UseSoundCloud">
                 <?php echo $this->element->getElement('UseSoundCloud') ?>
                 <strong><?php echo $this->element->getElement('UseSoundCloud')->getLabel() ?></strong>
@@ -8,6 +21,19 @@
             <?php if($this->element->getElement('UseSoundCloud')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('UseSoundCloud')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <dd id="SoundCloudDownloadbleOption-element" class="block-display" style="padding-left:20px; margin:6px 0 10px 0">
+            <label class="optional" for="SoundCloudDownloadbleOption">
+                <?php echo $this->element->getElement('SoundCloudDownloadbleOption') ?>
+                <strong><?php echo $this->element->getElement('SoundCloudDownloadbleOption')->getLabel() ?></strong>
+            </label>
+            <?php if($this->element->getElement('SoundCloudDownloadbleOption')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('SoundCloudDownloadbleOption')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>

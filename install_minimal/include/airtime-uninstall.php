@@ -80,6 +80,7 @@ if ($results == 0) {
 AirtimeInstall::RemoveSymlinks();
 AirtimeInstall::UninstallBinaries();
 AirtimeInstall::RemoveLogDirectories();
+AirtimeInstall::removeVirtualEnvDistributeFile();
 AirtimeIni::RemoveMonitFile();
 
 @unlink('/etc/cron.d/airtime-crons');

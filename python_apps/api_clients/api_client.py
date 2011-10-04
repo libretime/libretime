@@ -422,12 +422,12 @@ class AirTimeApiClient(ApiClientInterface):
             elapsed = (time.time() - start)
             logger.info("time taken to get response %s", elapsed)
 
-            if(is_record):
+            if("error" not in response and is_record):
                 url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
                 url = url.replace("%%fileid%%", str(response[u'id']))
                 url = url.replace("%%showinstanceid%%", str(md['MDATA_KEY_TRACKNUMBER']))
-                logger.debug(url)
                 url = url.replace("%%api_key%%", self.config["api_key"])
+                logger.debug(url)
 
                 req = urllib2.Request(url)
                 response = urllib2.urlopen(req).read()

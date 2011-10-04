@@ -432,11 +432,30 @@ class Application_Model_Preference
     }
 
     public static function GetEnableStreamConf(){
+        if(self::GetValue("enable_stream_conf") == Null){
+            return "true";
+        }
         return self::GetValue("enable_stream_conf");
     }
 
     public static function GetAirtimeVersion(){
         return self::GetValue("system_version");
+    }
+    
+    public static function SetUploadToSoundcloudOption($upload) {
+        self::SetValue("soundcloud_upload_option", $upload);
+    }
+
+    public static function GetUploadToSoundcloudOption() {
+        return self::GetValue("soundcloud_upload_option");
+    }
+    
+    public static function SetSoundCloudDownloadbleOption($upload) {
+        self::SetValue("soundcloud_downloadable", $upload);
+    }
+
+    public static function GetSoundCloudDownloadbleOption() {
+        return self::GetValue("soundcloud_downloadable");
     }
 }
 

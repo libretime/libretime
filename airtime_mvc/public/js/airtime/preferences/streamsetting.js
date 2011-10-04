@@ -120,6 +120,12 @@ $(document).ready(function() {
         return false;
     });
     
+    $('.collapsible-header').click(function() {
+        $(this).next().toggle('fast');
+        $(this).toggleClass("close");
+        return false;
+    })
+    
     showErrorSections()
     
     
