@@ -38,7 +38,6 @@ class AirtimeProcessEvent(ProcessEvent):
         self.api_client = api_client
         self.create_dict = {}
 
-
     def add_filepath_to_ignore(self, filepath):
         self.ignore_event.add(filepath)
 
@@ -110,7 +109,6 @@ class AirtimeProcessEvent(ProcessEvent):
             # detele corresponding entry from create_dict
             self.create_dict.pop(event.pathname)
             self.handle_created_file(event.dir, event.pathname, event.name)
-
         
     def handle_created_file(self, dir, pathname, name):
         if not dir:

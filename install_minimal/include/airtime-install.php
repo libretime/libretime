@@ -129,9 +129,9 @@ AirtimeInstall::InstallStorageDirectory();
 
 if ($db_install) {
     if($newInstall) {
-        // This is called with "system" so that we can pass in a parameter.  See the file itself
+        // This is called with "passthru" so that we can pass in a parameter.  See the file itself
         // for why we need to do this.
-        system('php '.__DIR__.'/airtime-db-install.php y');
+        passthru('php '.__DIR__.'/airtime-db-install.php y');
         AirtimeInstall::DbConnect(true);
     } else {
         require_once('airtime-db-install.php');
