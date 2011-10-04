@@ -363,7 +363,6 @@ class AirTimeApiClient(ApiClientInterface):
 
         logger.debug(url)
         url = url.replace("%%api_key%%", self.config["api_key"])
-        logger.debug(url)
 
         for i in range(0, retries):
             logger.debug("Upload attempt: %s", i+1)
