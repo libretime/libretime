@@ -1,4 +1,5 @@
 <?php
+require_once 'soundcloud-api/Services/Soundcloud.php';
 
 class Application_Model_Soundcloud {
 
