@@ -8,6 +8,7 @@ import os
 import sys
 import shutil
 import socket
+import pytz
 
 from configobj import ConfigObj
 
@@ -174,6 +175,7 @@ class CommandListener(Thread):
         self.shows_to_record = {}
         self.time_till_next_show = 3600
         self.logger.info("RecorderFetch: init complete")
+        self.server_timezone = '';
 
     def init_rabbit_mq(self):
         self.logger.info("Initializing RabbitMQ stuff")
@@ -203,6 +205,7 @@ class CommandListener(Thread):
             temp = m['shows']
             if temp is not None:
                 self.parse_shows(temp)
+                self.server_timezone = m['server_timezone']
         elif(command == 'cancel_recording'):
             if self.sr.is_recording():
                 self.sr.cancel_recording()
@@ -252,8 +255,14 @@ class CommandListener(Thread):
                 show_length = self.shows_to_record[start_time][0]
                 show_instance = self.shows_to_record[start_time][1]
                 show_name = self.shows_to_record[start_time][2]
-
-                self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time, filetype="mp3")
+                
+                T = pytz.timezone(self.server_timezone)
+                start_time_on_UTC = getDateTimeObj(start_time)
+                start_time_on_server = start_time_on_UTC.replace(tzinfo=pytz.utc).astimezone(T)
+                start_time_formatted = '%(year)d-%(month)02d-%(day)02d %(hour)02d:%(min)02d:%(sec)02d' % \
+                    {'year': start_time_on_server.year, 'month': start_time_on_server.month, 'day': start_time_on_server.day,\
+                     'hour': start_time_on_server.hour, 'min': start_time_on_server.minute, 'sec': start_time_on_server.second}
+                self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time_formatted, filetype="mp3")
                 self.sr.start()
 
                 #remove show from shows to record.

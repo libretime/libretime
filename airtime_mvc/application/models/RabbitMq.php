@@ -78,6 +78,7 @@ class Application_Model_RabbitMq
         $end_timestamp = new DateTime("@".time() + 3600*2);
 
         $temp['event_type'] = $event_type;
+        $temp['server_timezone'] = Application_Model_Preference::GetTimezone();
         if($event_type = "update_schedule"){
             $temp['shows'] = Application_Model_Show::getShows($now->format("Y-m-d H:i:s"), $end_timestamp->format("Y-m-d H:i:s"), $excludeInstance=NULL, $onlyRecord=TRUE);
         }
