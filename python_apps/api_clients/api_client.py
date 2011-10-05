@@ -431,7 +431,6 @@ class AirTimeApiClient(ApiClientInterface):
                 url = url.replace("%%fileid%%", str(response[u'id']))
                 url = url.replace("%%showinstanceid%%", str(md['MDATA_KEY_TRACKNUMBER']))
                 url = url.replace("%%api_key%%", self.config["api_key"])
-                logger.debug(url)
 
                 req = urllib2.Request(url)
                 response = urllib2.urlopen(req).read()
