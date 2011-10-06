@@ -10,16 +10,18 @@ from fabric.contrib.files import comment, sed, append
 # Globals
 
 env.user = 'martin'
-env.hosts = ['192.168.5.36']
+env.hosts = []
+env.host_string
 
 """
 Main dispatcher function to be called from the command-line. Allows us to specify source and target version of Airtime,
 to test upgrade scripts, along with whether we should load a fresh version of the OS (from a VM snapshot), the OS version
 and architecture. 
 """
-def dispatcher(source_version="182", target_version="194", fresh_os=True, os_version='10.04', os_arch='amd64'):
+def dispatcher(source_version="182", target_version="194", fresh_os=True, os_version='10.04', os_arch='32'):
     if (fresh_os):
         create_fresh_os(os_version, os_arch)
+    print env.hosts
     globals()["airtime_%s"%source_version]()
     globals()["airtime_%s"%target_version]()
 
@@ -31,17 +33,26 @@ def test():
     print x.return_code
 
 def create_fresh_os(os_version, os_arch):
-    ret = local('VBoxManage snapshot ubuntu_64_server restore Fresh', capture=True)
+    ret = local('VBoxManage snapshot Ubuntu_%s_%s restore fresh_install'%(os_version, os_arch), capture=True)
     if (ret.failed):
         print ret
         print "Restoring snapshot failed, are you sure it's not already running?"
         
-    ret = local('VBoxManage startvm ubuntu_64_server', capture=True)
+    ret = local('VBoxManage startvm Ubuntu_%s_%s'%(os_version, os_arch), capture=True)
     if (ret.failed):
         print ret
         print "Starting Virtual Machine failed, are you sure it's not already running?"
         
-    time.sleep(15)
+    time.sleep(20)
+    
+    ret = local('VBoxManage --nologo guestproperty get "Ubuntu_%s_%s" /VirtualBox/GuestInfo/Net/0/V4/IP'%(os_version, os_arch), capture=True)
+    
+    triple = ret.partition(':')
+    ip_addr = triple[2].strip(' \r\n')
+    print "Address found %s"%ip_addr
+    env.hosts.append(ip_addr)
+    env.host_string = ip_addr
+    
 
 def airtime_182():
     sudo('apt-get update')
@@ -57,7 +68,7 @@ def airtime_182():
 
     sudo('mkdir -p /tmp/pear/cache')
     sudo('pear channel-discover pear.phing.info || true')
-    sudo('pear install phing/phing-2.4.2')
+    sudo('pear install phing/phing-2.4.2 || true')
     
     sudo('ln -sf /etc/apache2/mods-available/php5.* /etc/apache2/mods-enabled')
     sudo('ln -sf /etc/apache2/mods-available/rewrite.* /etc/apache2/mods-enabled')
