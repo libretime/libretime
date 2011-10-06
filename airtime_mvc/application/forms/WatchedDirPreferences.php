@@ -22,7 +22,7 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
 
         $this->addElement('text', 'watchedFolder', array(
             'class'      => 'input_text',
-            'label'      => 'Choose a Folder to Watch:',
+            'label'      => 'Choose a Watched Folder:',
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => '',
