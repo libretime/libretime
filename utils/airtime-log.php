@@ -118,7 +118,7 @@ try {
     $opts = new Zend_Console_Getopt(
         array(
             'view|v=s' => "Display log file\n"
-                            ."\t\t$keys (ALL by default)",
+                            ."\t\t$keys",
             'dump|d-s' => "Collect all log files and compress into a tarball\n"
                             ."\t\t$keys (ALL by default)",
             'tail|t-s' => "View any new entries appended to log files in real-time\n"
