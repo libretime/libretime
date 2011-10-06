@@ -34,6 +34,7 @@ require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Playlist.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Schedule.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Show.php');
+require_once($CC_CONFIG['phpDir'].'/application/models/ShowInstance.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
 
 //Pear classes.

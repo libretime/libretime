@@ -16,6 +16,9 @@ if (substr($sapi_type, 0, 3) == 'cli') {
 }
 
 class AirtimeCheck {
+
+    private static $AIRTIME_STATUS_OK = true;
+    
     /**
      * Ensures that the user is running this PHP script with root
      * permissions. If not running with root permissions, causes the
@@ -90,7 +93,14 @@ class AirtimeCheck {
         self::output_status("RABBITMQ_MEM_PERC", $p_status->services->rabbitmq->memory_perc);
         self::output_status("RABBITMQ_CPU_PERC", $p_status->services->rabbitmq->cpu_perc);
 
-
+        if (self::$AIRTIME_STATUS_OK){
+            echo PHP_EOL."-- Your installation of Airtime looks OK!".PHP_EOL;
+            exit(0);
+        } else {
+            echo PHP_EOL."-- There appears to be a problem with your Airtime installation.".PHP_EOL;
+            echo "-- Please visit http://wiki.sourcefabric.org/x/HABQ".PHP_EOL;
+            exit(1);
+        }
     }
 
     public static function output_status($key, $value){
@@ -101,6 +111,7 @@ class AirtimeCheck {
         
         if ($value == "FAILED"){
             $color = $RED;
+            self::$AIRTIME_STATUS_OK = false;
         }
         
         echo sprintf("%-31s= %s", $key, self::term_color($value, $color)).PHP_EOL; 
