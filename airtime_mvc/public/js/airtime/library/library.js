@@ -116,7 +116,7 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
             content: {
 	            text: "Loading...",
                 title: {
-                    text: aData[1] + " MetaData"
+                    text: aData[1]
                 },
                 ajax: {
                     url: "/Library/get-file-meta-data",
