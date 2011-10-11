@@ -16,7 +16,7 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        <dd class="block-display selected-item"><strong>Current Storage Folder:</strong><?php $stor = Application_Model_MusicDir::getStorDir(); echo $stor->getDirectory(); ?></dd>
+        <dd class="block-display selected-item"><strong>Current Import Folder:</strong><?php $stor = Application_Model_MusicDir::getStorDir(); echo $stor->getDirectory(); ?></dd>
 
         <dt id="watchedFolder-label" class="block-display">
             <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
