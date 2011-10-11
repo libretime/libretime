@@ -34,7 +34,6 @@ class Application_Form_AddUser extends Zend_Form
         $firstName = new Zend_Form_Element_Text('first_name');
         $firstName->setLabel('Firstname:');
         $firstName->setAttrib('class', 'input_text');
-        $firstName->setRequired(true);
         $firstName->addFilter('StringTrim');
         $firstName->addValidator('NotEmpty');
         $this->addElement($firstName);
@@ -42,7 +41,6 @@ class Application_Form_AddUser extends Zend_Form
         $lastName = new Zend_Form_Element_Text('last_name');
         $lastName->setLabel('Lastname:');
         $lastName->setAttrib('class', 'input_text');
-        $lastName->setRequired(true);
         $lastName->addFilter('StringTrim');
         $lastName->addValidator('NotEmpty');
         $this->addElement($lastName);
