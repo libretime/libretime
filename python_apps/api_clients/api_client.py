@@ -577,7 +577,9 @@ class AirTimeApiClient(ApiClientInterface):
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_liquidsoap_error"])
             
             url = url.replace("%%api_key%%", self.config["api_key"])
-            url = url.replace("%%error_msg%%", error_msg)
+            error_msg = error_msg.replace('/', ' ')
+            encoded_msg = urllib.quote(error_msg, '')
+            url = url.replace("%%error_msg%%", encoded_msg)
             url = url.replace("%%stream_id%%", stream_id)
             logger.debug(url)
             req = urllib2.Request(url)

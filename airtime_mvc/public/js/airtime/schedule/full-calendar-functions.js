@@ -48,6 +48,17 @@ function removeAddShowButton(){
     span.remove();
 }
 
+function pad(number, length) {
+    
+    var str = '' + number;
+    while (str.length < length) {
+        str = '0' + str;
+    }
+   
+    return str;
+
+}
+
 function makeTimeStamp(date){
 	var sy, sm, sd, h, m, s, timestamp;
 	sy = date.getFullYear();
@@ -57,7 +68,7 @@ function makeTimeStamp(date){
 	m = date.getMinutes();
 	s = date.getSeconds();
 
-	timestamp = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+	timestamp = sy+"-"+ pad(sm, 2) +"-"+ pad(sd, 2) +" "+ pad(h, 2) +":"+ pad(m, 2) +":"+ pad(s, 2);
 	return timestamp;
 }
 
