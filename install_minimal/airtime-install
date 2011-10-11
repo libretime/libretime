@@ -61,6 +61,8 @@ python ${SCRIPTPATH}/../python_apps/icecast2/install/icecast2-install.py
 # reload its config files.
 /etc/init.d/monit restart
 
+#allow monit to boot up before issuing commands
+sleep 1
 
 set +e
 monit monitor airtime-media-monitor

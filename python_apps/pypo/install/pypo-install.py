@@ -109,7 +109,7 @@ try:
   os.remove(config["bin_dir"]+"/bin/liquidsoap_scripts/liquidsoap.cfg")
   
   print "Setting permissions"
-  #os.system("chmod -R 755 "+config["bin_dir"])
+  os.system("chmod 755 "+os.path.join(config["bin_dir"], "liquidsoap_scripts/notify.sh"))
   os.system("chown -R pypo:pypo "+config["bin_dir"])
   os.system("chown -R pypo:pypo "+config["cache_base_dir"])
 

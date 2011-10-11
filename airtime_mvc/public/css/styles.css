@@ -1752,6 +1752,8 @@ button.ui-button.md-cancel {
 .dialogPopup fieldset dd input[type="text"], .dialogPopup fieldset dd textarea {
 	width:99.5%;
 	padding:0;
+}
+.dialogPopup fieldset dd input[type="text"] {
 	height:23px;
 }
 .dialogPopup fieldset dd select {
@@ -1792,7 +1794,7 @@ label span {
     font-size: 12px;
     text-indent: 0;
 	margin:0;
-	width:100%;
+	width:99%;
 	line-height:180%;
 	resize: none;
 }
@@ -2297,3 +2299,5 @@ tfoot tr th	{
 	-moz-box-shadow: rgba(0, 0, 0, 0.4) 0 2px 2px inset;
 	-webkit-box-shadow: rgba(0, 0, 0, 0.4) 0 2px 2px inset;
 }
+#stream_url {font-size:12px; line-height: 170%;}
+.stream-setting-content fieldset {border-width:0 1px 1px 1px;}

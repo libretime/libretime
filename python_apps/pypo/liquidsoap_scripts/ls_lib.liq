@@ -1,6 +1,6 @@
 def notify(m)
+  log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
   system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
-  print("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
 end
 
 # A function applied to each metadata chunk
@@ -55,7 +55,6 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         end
         output = output.icecast(host = host,
                     port = port,
-                    encoding = "UTF-8",
                     password = pass,
                     mount = mount_point,
                     fallible = true,
