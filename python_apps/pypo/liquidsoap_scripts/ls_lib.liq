@@ -37,7 +37,17 @@ def to_live(old,new) =
 end
 
 
-def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s) =
+def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream) =
+    def on_error(msg)
+        system("airtime-check-system > ~/temp/temp1.log 2>&1")
+        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} > ~/temp/temp.log 2>&1")
+        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream}")
+        5.
+    end
+    def on_connect()
+        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream}")
+        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream}")
+    end
     if output_type == "icecast" then
         user_ref = ref user
         if user == "" then
@@ -51,7 +61,9 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     url = url,
                     description = description,
                     genre = genre,
-                    user = !user_ref)
+                    user = !user_ref,
+                    on_error = on_error,
+                    on_connect = on_connect)
         if type == "mp3" then
             if bitrate == 24 then 
                 ignore(output(%mp3(bitrate = 24),s))

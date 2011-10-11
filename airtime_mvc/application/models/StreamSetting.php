@@ -43,7 +43,8 @@ class Application_Model_StreamSetting {
     public static function getStreamSetting(){
         global $CC_DBC;
         $sql = "SELECT *"
-                ." FROM cc_stream_setting";
+                ." FROM cc_stream_setting"
+                ." WHERE keyname not like '%_error'";
 
         $rows = $CC_DBC->getAll($sql);
         return $rows;
@@ -73,5 +74,34 @@ class Application_Model_StreamSetting {
                 }
             }
         }
+    }
+    
+    public static function setLiquidsoapError($stream_id, $msg){
+        global $CC_DBC;
+        
+        $keyname = "s".$stream_id."_liquidsoap_error";
+        $sql = "SELECT COUNT(*) FROM cc_stream_setting"
+            ." WHERE keyname = '$keyname'";
+        $result = $CC_DBC->GetOne($sql);
+        
+        if ($result == 1){
+            $sql = "UPDATE cc_stream_setting"
+                ." SET value = '$value'"
+                ." WHERE keyname = '$keyname'";
+        }else{
+            $sql = "INSERT INTO cc_stream_setting (keyname, value, type)"
+                ." VALUES ($keyname, '$msg', 'string')";
+        }
+    }
+    
+    public static function getLiquidsoapError($stream_id){
+        global $CC_DBC;
+        
+        $keyname = "s".$stream_id."_liquidsoap_error";
+        $sql = "SELECT value FROM cc_stream_setting"
+            ." WHERE keyname = '$key'";
+        $result = $CC_DBC->GetOne($sql);
+        
+        return $result;
     }
 }

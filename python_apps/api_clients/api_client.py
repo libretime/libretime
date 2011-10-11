@@ -140,6 +140,12 @@ class ApiClientInterface:
     def register_component(self):
         pass
 
+    def notify_liquidsoap_error(self, error_msg, stream_id):
+        pass
+    
+    def notify_liquidsoap_connection(self, stream_id):
+        pass
+        
     # Put here whatever tests you want to run to make sure your API is working
     def test(self):
         pass
@@ -564,7 +570,34 @@ class AirTimeApiClient(ApiClientInterface):
             response = urllib2.urlopen(req).read()
         except Exception, e:
             logger.error("Exception: %s", e)
-
+    
+    def notify_liquidsoap_error(self, error_msg, stream_id):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_liquidsoap_error"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%error_msg%%", error_msg)
+            url = url.replace("%%stream_id%%", stream_id)
+            logger.debug(url)
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            logger.error("Exception: %s", e)
+        
+    def notify_liquidsoap_connection(self, stream_id):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_liquidsoap_connection"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%stream_id%%", stream_id)
+            logger.debug(url)
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            logger.error("Exception: %s", e)
+        
 ################################################################################
 # OpenBroadcast API Client
 ################################################################################
