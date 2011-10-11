@@ -20,12 +20,9 @@ def test():
     print x.succeeded
     print x.return_code
     
-def download_if_needed(vdi_dir, vdi_snapshot_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
+def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
     if not os.path.exists(vdi_dir):
         os.makedirs(vdi_dir)
-        
-    if not os.path.exists(vdi_snapshot_dir):
-        os.makedirs(vdi_snapshot_dir)
     
     if os.path.exists(os.path.join(vdi_dir, vm_vdi_file)):
         print "File %s already exists. No need to re-download" % os.path.join(vdi_dir, vm_vdi_file)
@@ -34,14 +31,7 @@ def download_if_needed(vdi_dir, vdi_snapshot_dir, xml_dir, vm_name, vm_vdi_file,
         print "File %s not found. Downloading" % vm_vdi_file
         local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_vdi_file, os.path.join(vdi_dir, vm_vdi_file)))
         downloaded = True
-       
-    snapshot_file = "{fd4f1d58-2737-49dd-8cd3-aef484d93a9d}.vdi"
-    if os.path.exists(os.path.join(vdi_snapshot_dir, snapshot_file)):
-        print "File %s already exists. No need to re-download" % os.path.join(vdi_snapshot_dir, snapshot_file)
-    else:
-        print "File %s not found. Downloading" % snapshot_file
-        local("wget %s/%s/Snapshots/%s -O %s"%(env.vm_download_url, vm_name, snapshot_file, os.path.join(vdi_snapshot_dir, snapshot_file))) 
-    
+           
     if os.path.exists(os.path.join(xml_dir, vm_xml_file)):
         print "File %s already exists. No need to re-download" % os.path.join(xml_dir, vm_xml_file)
     else:
@@ -59,7 +49,7 @@ def create_fresh_os(os_version, os_arch):
     vdi_snapshot_dir = os.path.expanduser('~/tmp/vms/%s/Snapshots'%vm_name)
     xml_dir = os.path.expanduser('~/.VirtualBox')
     
-    downloaded = download_if_needed(vdi_dir, vdi_snapshot_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file)
+    downloaded = download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file)
 
     if downloaded:
         local("VBoxManage registervm %s"%os.path.join(xml_dir, vm_xml_file), capture=True)
@@ -81,9 +71,6 @@ def create_fresh_os(os_version, os_arch):
     print "Address found %s"%ip_addr
     env.hosts.append(ip_addr)
     env.host_string = ip_addr
-    
-    time.sleep(5)
-    
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
@@ -153,6 +140,12 @@ def airtime_194_tar():
     run('wget http://downloads.sourceforge.net/project/airtime/1.9.4/airtime-1.9.4.tar.gz')
     run('tar xfz airtime-1.9.4.tar.gz')
     sudo('cd ~/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
+    
+def airtime_devel():
+    sudo('apt-get update')
+    sudo('apt-get install -y git-core')
+    run('git clone https://github.com/sourcefabric/Airtime.git ~/airtime')
+    sudo('cd ~/airtime && git checkout devel && install_full/ubuntu/airtime-full-install')
 
 
 def airtime_200():
