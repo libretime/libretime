@@ -75,7 +75,7 @@ class Application_Model_RabbitMq
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
     
         $now = new DateTime("@".time());
-        $end_timestamp = new DateTime("@".time() + 3600*2);
+        $end_timestamp = new DateTime("@".(time() + 3600*2));
 
         $temp['event_type'] = $event_type;
         $temp['server_timezone'] = Application_Model_Preference::GetTimezone();

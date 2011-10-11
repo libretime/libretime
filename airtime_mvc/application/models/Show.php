@@ -804,7 +804,7 @@ class Application_Model_Show {
                         
                     $utcStartDateTime->add(new DateInterval("P".$daysAdd."D"));
                 }
-                if (is_null($endDateTime) || $utcStartDateTime->getTimestamp() <= $endDateTime->getTimestamp()) {
+                if (is_null($endDate) || $utcStartDateTime->getTimestamp() <= $endDateTime->getTimestamp()) {
                     $showDay = new CcShowDays();
                     $showDay->setDbFirstShow($utcStartDateTime->format("Y-m-d"));
                     $showDay->setDbLastShow($endDate);
