@@ -83,15 +83,18 @@ class Application_Model_StreamSetting {
         $sql = "SELECT COUNT(*) FROM cc_stream_setting"
             ." WHERE keyname = '$keyname'";
         $result = $CC_DBC->GetOne($sql);
-        
+        Logging::log("setError");
         if ($result == 1){
             $sql = "UPDATE cc_stream_setting"
-                ." SET value = '$value'"
+                ." SET value = '$msg'"
                 ." WHERE keyname = '$keyname'";
         }else{
             $sql = "INSERT INTO cc_stream_setting (keyname, value, type)"
-                ." VALUES ($keyname, '$msg', 'string')";
+                ." VALUES ('$keyname', '$msg', 'string')";
         }
+        Logging::log($sql);
+        $res = $CC_DBC->query($sql);
+        Logging::log($res);
     }
     
     public static function getLiquidsoapError($stream_id){
