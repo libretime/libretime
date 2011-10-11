@@ -23,6 +23,8 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('get-stream-setting', 'json')
                 ->addActionContext('status', 'json')
                 ->addActionContext('register-component', 'json')
+                ->addActionContext('update-liquidsoap-error', 'json')
+                ->addActionContext('update-liquidsoap-connection', 'json')
                 ->initContext();
     }
 
@@ -695,6 +697,22 @@ class ApiController extends Zend_Controller_Action
         Logging::log("Registered Component: ".$component."@".$remoteAddr);
 
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
+    }
+    
+    public function updateLiquidsoapErrorAction(){
+        $request = $this->getRequest();
+        
+        $error_msg = $request->getParam('error_msg');
+        $stream_id = $request->getParam('stream_id');
+        Application_Model_StreamSetting::setLiquidsoapError($stream_id, $error_msg);
+    }
+    
+    public function updateLiquidsoapConnectionAction(){
+        $request = $this->getRequest();
+        
+        $stream_id = $request->getParam('stream_id');
+        // setting error_msg as "" when there is no error_msg
+        Application_Model_StreamSetting::setLiquidsoapError($stream_id, "");
     }
 }
 

@@ -46,7 +46,7 @@ def is_natty():
         split = line.split("=")
         split[0] = split[0].strip(" \r\n")
         split[1] = split[1].strip(" \r\n")
-        if split[0] == "DISTRIB_CODENAME" and split[1] == "natty":
+        if split[0] == "DISTRIB_CODENAME" and (split[1] == "natty" or split[1] == "oneiric"):
             return True
     return False
 
