@@ -3,6 +3,15 @@
 echo "Are you sure? Press Enter to continue..."
 read
 
+service airtime-playout stop >/dev/null 2>&1
+service airtime-media-monitor stop >/dev/null 2>&1
+service airtime-show-recorder stop >/dev/null 2>&1
+
+airtime-pypo-stop >/dev/null 2>&1
+airtime-show-recorder-stop >/dev/null 2>&1
+
+killall liquidsoap
+
 rm -rf "/etc/airtime"
 rm -rf "/var/log/airtime"
 rm -rf "/etc/service/pypo"
