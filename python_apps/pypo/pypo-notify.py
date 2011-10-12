@@ -47,7 +47,7 @@ parser = OptionParser(usage=usage)
 # Options
 parser.add_option("-d", "--data", help="Pass JSON data from liquidsoap into this script.", metavar="data")
 parser.add_option("-m", "--media-id", help="ID of the file that is currently playing.", metavar="media_id")
-parser.add_option("-e", "--error", help="liquidsoap error msg.", metavar="error_msg")
+parser.add_option("-e", "--error", action="store", dest="error", type="string", help="liquidsoap error msg.", metavar="error_msg")
 parser.add_option("-s", "--stream-id", help="ID stream", metavar="stream_id")
 parser.add_option("-c", "--connect", help="liquidsoap connected", action="store_true", metavar="connect")
 
@@ -109,13 +109,13 @@ if __name__ == '__main__':
     # initialize
     logger = logging.getLogger()
     
-    if options.error_msg and options.stream_id:
+    if options.error and options.stream_id:
         try:
             n = Notify()
-            n.notify_liquidsoap_error(options.error_msg, options.stream_id)
+            n.notify_liquidsoap_error(options.error, options.stream_id)
         except Exception, e:
             print e
-    elif optioins.connect and options.stream_id:
+    elif options.connect and options.stream_id:
         try:
             n = Notify()
             n.notify_liquidsoap_connection(options.stream_id)

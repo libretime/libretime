@@ -39,8 +39,7 @@ end
 
 def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream) =
     def on_error(msg)
-        system("airtime-check-system > ~/temp/temp1.log 2>&1")
-        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} > ~/temp/temp.log 2>&1")
+        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream}")
         log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream}")
         5.
     end

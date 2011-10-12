@@ -7,7 +7,7 @@ class Application_Form_AddShowRR extends Zend_Form_SubForm
     {
         // Add record element
 		$this->addElement('checkbox', 'add_show_record', array(
-            'label'      => 'Record?',
+            'label'      => 'Record from Line In?',
             'required'   => false,
 		));
 
