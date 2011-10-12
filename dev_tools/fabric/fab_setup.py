@@ -145,7 +145,7 @@ def airtime_devel():
     sudo('apt-get update')
     sudo('apt-get install -y git-core')
     run('git clone https://github.com/sourcefabric/Airtime.git ~/airtime')
-    sudo('cd ~/airtime && git checkout devel && install_full/ubuntu/airtime-full-install')
+    sudo('cd ~/airtime && git checkout devel && install_full/ubuntu/airtime-full-install || true')
 
 
 def airtime_200():
