@@ -260,7 +260,7 @@ function init() {
 
     setupQtip();
     
-    $('#on-air-info').click(function() {
+    $('.listen-control-block').click(function() {
         if (stream_window == null || stream_window.closed)
             stream_window=window.open(baseUrl+"Dashboard/stream-player", 'name', 'width=400,height=216');
         stream_window.focus();
