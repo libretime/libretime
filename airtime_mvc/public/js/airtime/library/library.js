@@ -111,46 +111,13 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
 	// insert id on lenth field
 	$('td:eq(4)', nRow).attr("id", "length");
-    
-	$('td:gt(0)', nRow).qtip({
-            content: {
-	            text: "Loading...",
-                title: {
-                    text: aData[1]
-                },
-                ajax: {
-                    url: "/Library/get-file-meta-data",
-                    type: "post",
-                    data: ({format: "html", id : id, type: type}),
-                    success: function(data, status){
-                        this.set('content.text', data)
-                    }
-                }
-            },
-            position: {
-                adjust: {
-                    resize: true,
-                    method: "flip flip"
-                },
-                at: "right center",
-                my: "left top",
-                viewport: $(window)
-            },
-            style: {
-                width: 570,
-                classes: "ui-tooltip-dark"
-            },
-            show: {
-                delay: 700
-            }
-        }
-    );
 
 	return nRow;
 }
 
 function dtDrawCallback() {
 	addLibraryItemEvents();
+	addMetadataQtip();
 }
 
 function addProgressIcon(id) {
@@ -252,6 +219,60 @@ function addQtipToSCIcons(){
             })
         }
     });
+}
+
+function addMetadataQtip(){
+    var tableRow = $('#library_display tbody tr');
+    tableRow.each(function(){
+        var title = $(this).find('td:eq(0)').html()
+        var info = $(this).attr("id")
+        info = info.split("_");
+        var id = info[1];
+        var type = info[0];
+        $(this).qtip({
+            content: {
+                text: "Loading...",
+                title: {
+                    text: title
+                },
+                ajax: {
+                    url: "/Library/get-file-meta-data",
+                    type: "post",
+                    data: ({format: "html", id : id, type: type}),
+                    success: function(data, status){
+                        this.set('content.text', data)
+                    }
+                }
+            },
+            position: {
+                target: 'event',
+                adjust: {
+                    resize: true,
+                    method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            style: {
+                width: 570,
+                classes: "ui-tooltip-dark"
+            },
+            show: 'mousedown',
+            events: {
+               show: function(event, api) {
+                  // Only show the tooltip if it was a right-click
+                  if(event.originalEvent.button !== 2) {
+                     event.preventDefault();
+                  }
+               }
+            }
+        })
+    })
+    
+    tableRow.bind('contextmenu', function(e){
+        return false;
+    })
 }
 
 $(document).ready(function() {
