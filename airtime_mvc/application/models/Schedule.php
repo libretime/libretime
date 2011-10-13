@@ -489,7 +489,7 @@ class Application_Model_Schedule {
             foreach ($items as $item)
             {
                 $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
-                $uri = $storedFile->getFileUrl();
+                $uri = $storedFile->getFileUrlUsingConfigAddress();
 
                 $starts = Application_Model_Schedule::AirtimeTimeToPypoTime($item["starts"]);
                 $medias[$starts] = array(
