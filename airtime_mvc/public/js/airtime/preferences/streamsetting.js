@@ -69,6 +69,29 @@ function showForIcecast(ele){
     div.find("select[id$=data-type]").find("option[value='ogg']").attr("disabled","");
 }
 
+function checkLiquidsoapStatus(){
+    var url = '/Preference/get-liquidsoap-status/format/json';
+    var id = $(this).attr("id");
+    $.post(url, function(json){
+        var json_obj = jQuery.parseJSON(json);
+        for(var i=0;i<json_obj.length;i++){
+            var obj = json_obj[i];
+            var id
+            var status
+            for(var key in obj){
+                if(key == "id"){
+                    id = obj[key];
+                }
+                if(key == "status"){
+                    status = obj[key];
+                }
+            }
+            $("#s"+id+"Liquidsoap-error-msg-element").html(status);
+        }
+    });
+}
+
+
 $(document).ready(function() {
     // initial stream url
     $("dd[id=outputStreamURL-element]").each(function(){
@@ -127,6 +150,6 @@ $(document).ready(function() {
     })
     
     showErrorSections()
-    
+    setInterval('checkLiquidsoapStatus()', 5000)
     
 });

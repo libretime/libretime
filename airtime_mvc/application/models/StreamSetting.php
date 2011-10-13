@@ -99,8 +99,24 @@ class Application_Model_StreamSetting {
         
         $keyname = "s".$stream_id."_liquidsoap_error";
         $sql = "SELECT value FROM cc_stream_setting"
-            ." WHERE keyname = '$key'";
+            ." WHERE keyname = '$keyname'";
         $result = $CC_DBC->GetOne($sql);
+        
+        return $result;
+    }
+    
+    public static function getStreamEnabled($stream_id){
+        global $CC_DBC;
+        
+        $keyname = "s".$stream_id."_ouput";
+        $sql = "SELECT value FROM cc_stream_setting"
+        ." WHERE keyname = '$keyname'";
+        $result = $CC_DBC->GetOne($sql);
+        if($result == 'disabled'){
+            $result = false;
+        }else{
+            $result = true;
+        }
         
         return $result;
     }
