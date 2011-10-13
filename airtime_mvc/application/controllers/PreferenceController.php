@@ -13,6 +13,7 @@ class PreferenceController extends Zend_Controller_Action
                     ->addActionContext('remove-watch-directory', 'json')
                     ->addActionContext('is-import-in-progress', 'json')
                     ->addActionContext('change-stream-setting', 'json')
+                    ->addActionContext('get-liquidsoap-status', 'json')
                     ->initContext();
     }
 
@@ -283,6 +284,20 @@ class PreferenceController extends Zend_Controller_Action
             $res = true;
         }
         die(json_encode($res));
+    }
+    
+    public function getLiquidsoapStatusAction(){
+        $out = array();
+        $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
+        for($i=1; $i<=$num_of_stream; $i++){
+            $status = Application_Model_StreamSetting::getLiquidsoapError($i);
+            $status = $status == ''?"OK":$status;
+            if(!Application_Model_StreamSetting::getStreamEnabled($i)){
+                $status = "N/A";
+            }
+            $out[] = array("id"=>$i, "status"=>$status);
+        }
+        die(json_encode($out));
     }
 }
 

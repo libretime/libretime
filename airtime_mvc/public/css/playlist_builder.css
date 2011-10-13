@@ -2,6 +2,7 @@
 	width: 40%;
 	min-height: 475px;
 	padding: 8px;
+	padding-bottom: 0px;
 	font-size: 16px;
 }
 
@@ -39,10 +40,11 @@
 #spl_sortable {
 	list-style: none;
 	padding:0;
-	height: 300px;
-	overflow: auto;
+	padding-bottom:50px;
 	width:100%;
+	min-height: 320px;
 	margin-top:0;
+	margin-bottom:0;
 }
 
 #side_playlist li {
