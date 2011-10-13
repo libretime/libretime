@@ -713,7 +713,7 @@ class Schedule {
             foreach ($items as $item)
             {
                 $storedFile = StoredFile::Recall($item["file_id"]);
-                $uri = $storedFile->getFileUrl();
+                $uri = $storedFile->getFileUrlUsingConfigAddress();
 
                 $starts = Schedule::AirtimeTimeToPypoTime($item["starts"]);
                 $medias[$starts] = array(

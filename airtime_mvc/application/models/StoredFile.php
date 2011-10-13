@@ -435,14 +435,32 @@ class StoredFile {
     }
 
     /**
-     * Get the URL to access this file.
+     * Get the URL to access this file using the server name/address that
+     * this PHP script was invoked through.
      */
     public function getFileUrl()
     {       
         $serverName = $_SERVER['SERVER_NAME'];
         $serverPort = $_SERVER['SERVER_PORT'];
         
-        return "http://$serverName:$serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
+        return constructGetFileUrl($serverName, $serverPort);
+    }
+    
+    /**
+     * Get the URL to access this file using the server name/address that
+     * is specified in the airtime.conf config file.
+     */
+    public function getFileUrlUsingConfigAddress(){
+        global $CC_CONFIG;
+        
+        $serverName = $CC_CONFIG['baseUrl'];
+        $serverPort = $CC_CONFIG['basePort'];
+        
+        return constructGetFileUrl($serverName, $serverPort);
+    }
+    
+    private function constructGetFileUrl($p_serverName, $p_serverPort){
+        return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
     /**
