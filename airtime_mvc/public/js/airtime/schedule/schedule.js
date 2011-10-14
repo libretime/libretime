@@ -293,19 +293,34 @@ function buildEditDialog(json){
 
 }
 
+/**
+ * Use user preference for time scale; defaults to month if preference was never set
+ */
+function getTimeScalePreference(data) {
+	var timeScale = data.calendarInit.timeScale;
+    if(timeScale == 'day') {
+    	timeScale = 'agendaDay';
+    } else if(timeScale == 'week') {
+    	timeScale = 'agendaWeek';
+    } else {
+    	timeScale = 'month';
+    }
+    return timeScale;
+}
+
 function createFullCalendar(data){
 
-    serverTimezoneOffset = data.serverTimestamp.timezoneOffset;
+    serverTimezoneOffset = data.calendarInit.timezoneOffset;
 
     var mainHeight = document.documentElement.clientHeight - 200 - 50;
-
+    
     $('#schedule_calendar').fullCalendar({
         header: {
             left: 'prev, next, today',
             center: 'title',
             right: 'agendaDay, agendaWeek, month'
         }, 
-        defaultView: 'month',
+        defaultView: getTimeScalePreference(data),
         editable: false,
         allDaySlot: false,
         axisFormat: 'H:mm',
@@ -316,8 +331,8 @@ function createFullCalendar(data){
         contentHeight: mainHeight,
         theme: true,
         lazyFetching: false,
-        serverTimestamp: parseInt(data.serverTimestamp.timestamp, 10),
-        serverTimezoneOffset: parseInt(data.serverTimestamp.timezoneOffset, 10),
+        serverTimestamp: parseInt(data.calendarInit.timestamp, 10),
+        serverTimezoneOffset: parseInt(data.calendarInit.timezoneOffset, 10),
        
         events: getFullCalendarEvents,
 
@@ -330,11 +345,19 @@ function createFullCalendar(data){
         eventResize: eventResize 
     });
 
+    //Update time scale preference when day/week/month button is clicked
+    $(".fc-button-content").click(function() {
+    	url = '/Schedule/set-time-scale/format/json';
+		$.post(url, {timeScale: $(this).text()}, 
+				function(json){
+					if(json.error) {
+						alert(json.error);
+					}
+		});
+    });
 }
 
 $(window).load(function() {
-
-    $.ajax({ url: "/Api/server-timestamp/format/json", dataType:"json", success:createFullCalendar
-            , error:function(jqXHR, textStatus, errorThrown){}});    
+	$.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
+            , error:function(jqXHR, textStatus, errorThrown){}});
 });
-

@@ -3,11 +3,11 @@
 class Application_Model_Preference
 {
 
-    public static function SetValue($key, $value){
+    public static function SetValue($key, $value, $isUserValue = false){
         global $CC_CONFIG, $CC_DBC;
 
         //called from a daemon process
-        if(!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
+        if(!Zend_Auth::getInstance()->hasIdentity()) {
             $id = NULL;
         }
         else {
@@ -21,6 +21,12 @@ class Application_Model_Preference
         //Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_pref"
         ." WHERE keystr = '$key'";
+        
+        //For user specific preference, check if id matches as well
+        if($isUserValue) {
+        	$sql .= " AND subjid = '$id'";
+        }
+        
         $result = $CC_DBC->GetOne($sql);
 
         if ($result == 1 && is_null($id)){
@@ -29,9 +35,15 @@ class Application_Model_Preference
             ." WHERE keystr = '$key'";
         }
         else if ($result == 1 && !is_null($id)){
-            $sql = "UPDATE cc_pref"
-            ." SET subjid = $id, valstr = '$value'"
-            ." WHERE keystr = '$key'";
+            if($isUserValue) {
+            	$sql = "UPDATE cc_pref"
+	            ." SET valstr = '$value'"
+	            ." WHERE keystr = '$key' AND subjid = $id";
+            } else {
+	        	$sql = "UPDATE cc_pref"
+	            ." SET subjid = $id, valstr = '$value'"
+	            ." WHERE keystr = '$key'";
+            }
         }
         else if(is_null($id)) {
             $sql = "INSERT INTO cc_pref (keystr, valstr)"
@@ -44,11 +56,21 @@ class Application_Model_Preference
         return $CC_DBC->query($sql);
     }
 
-    public static function GetValue($key){
+    public static function GetValue($key, $isUserValue = false){
         global $CC_CONFIG, $CC_DBC;
         //Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_pref"
         ." WHERE keystr = '$key'";
+        
+    	//For user specific preference, check if id matches as well
+        if($isUserValue) {
+	        $auth = Zend_Auth::getInstance();
+	        if($auth->hasIdentity()) {
+		        $id = $auth->getIdentity()->id;
+	        	$sql .= " AND subjid = '$id'";
+		    }
+        }
+        
         $result = $CC_DBC->GetOne($sql);
 
         if ($result == 0)
@@ -56,6 +78,12 @@ class Application_Model_Preference
         else {
             $sql = "SELECT valstr FROM cc_pref"
             ." WHERE keystr = '$key'";
+            
+	        //For user specific preference, check if id matches as well
+	        if($isUserValue && $auth->hasIdentity()) {
+	        	$sql .= " AND subjid = '$id'";
+	        }
+	        
             $result = $CC_DBC->GetOne($sql);
             return $result;
         }
@@ -441,7 +469,7 @@ class Application_Model_Preference
     public static function GetAirtimeVersion(){
         return self::GetValue("system_version");
     }
-    
+
     public static function SetUploadToSoundcloudOption($upload) {
         self::SetValue("soundcloud_upload_option", $upload);
     }
@@ -449,13 +477,29 @@ class Application_Model_Preference
     public static function GetUploadToSoundcloudOption() {
         return self::GetValue("soundcloud_upload_option");
     }
-    
+
     public static function SetSoundCloudDownloadbleOption($upload) {
         self::SetValue("soundcloud_downloadable", $upload);
     }
 
     public static function GetSoundCloudDownloadbleOption() {
         return self::GetValue("soundcloud_downloadable");
+    }
+
+    /**
+     * Sets the time scale preference (day/week/month) in Calendar.
+     * 
+     * @param $timeScale	new time scale
+     */
+	public static function SetCalendarTimeScale($timeScale) {
+        return self::SetValue("calendar_time_scale", $timeScale, true /* user specific */);
+    }
+
+    /**
+     * Retrieves the time scale preference for the current user.
+     */
+    public static function GetCalendarTimeScale() {
+    	return self::GetValue("calendar_time_scale", true /* user specific */);
     }
 }
 

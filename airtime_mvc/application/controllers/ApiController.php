@@ -9,7 +9,7 @@ class ApiController extends Zend_Controller_Action
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
                 ->addActionContext('recorded-shows', 'json')
-                ->addActionContext('server-timestamp', 'json')
+                ->addActionContext('calendar-init', 'json')
                 ->addActionContext('upload-file', 'json')
                 ->addActionContext('upload-recorded', 'json')
                 ->addActionContext('media-monitor-setup', 'json')
@@ -62,10 +62,26 @@ class ApiController extends Zend_Controller_Action
         echo $jsonStr;
     }
     
-    public function serverTimestampAction(){
-    
-        $this->view->serverTimestamp = array("timestamp"=>time(), "timezoneOffset"=> date("Z"));
-    
+    /**
+     * Sets up and send init values used in the Calendar.
+     * This is only being used by schedule.js at the moment.
+     */
+    public function calendarInitAction(){
+    	$this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            return;
+        }
+        
+    	$this->view->calendarInit = array(
+        	"timestamp"=>time(), 
+        	"timezoneOffset"=> date("Z"), 
+        	"timeScale"=>Application_Model_Preference::GetCalendarTimeScale()
+        );
+    	
     }
 
     /**
@@ -163,6 +179,7 @@ class ApiController extends Zend_Controller_Action
 
             $date = new Application_Model_DateHelper;
             $timeNow = $date->getTimestamp();
+            
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
                 "currentShow"=>Application_Model_Show::GetCurrentShow($timeNow),
