@@ -28,6 +28,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('get-form', 'json')
                     ->addActionContext('upload-to-sound-cloud', 'json')
                     ->addActionContext('content-context-menu', 'json')
+                    ->addActionContext('set-time-scale', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -727,6 +728,14 @@ class ScheduleController extends Zend_Controller_Action
 
         //returns format jjmenu is looking for.
         die(json_encode($menu));
+    }
+    
+    /**
+     * Sets the user specific preference for which time scale to use in Calendar.
+     * This is only being used by schedule.js at the moment.
+     */
+    public function setTimeScaleAction() {
+    	Application_Model_Preference::SetCalendarTimeScale($this->_getParam('timeScale'));
     }
 }
 
