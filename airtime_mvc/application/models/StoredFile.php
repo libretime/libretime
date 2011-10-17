@@ -443,7 +443,7 @@ class StoredFile {
         $serverName = $_SERVER['SERVER_NAME'];
         $serverPort = $_SERVER['SERVER_PORT'];
         
-        return constructGetFileUrl($serverName, $serverPort);
+        return $this->constructGetFileUrl($serverName, $serverPort);
     }
     
     /**
@@ -456,7 +456,7 @@ class StoredFile {
         $serverName = $CC_CONFIG['baseUrl'];
         $serverPort = $CC_CONFIG['basePort'];
         
-        return constructGetFileUrl($serverName, $serverPort);
+        return $this->constructGetFileUrl($serverName, $serverPort);
     }
     
     private function constructGetFileUrl($p_serverName, $p_serverPort){
