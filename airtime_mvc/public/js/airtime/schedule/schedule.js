@@ -347,7 +347,7 @@ function createFullCalendar(data){
 
     //Update time scale preference when day/week/month button is clicked
     $(".fc-button-content").click(function() {
-    	url = '/Schedule/set-time-scale/format/json';
+    	var url = '/Schedule/set-time-scale/format/json';
 		$.post(url, {timeScale: $(this).text()}, 
 				function(json){
 					if(json.error) {
