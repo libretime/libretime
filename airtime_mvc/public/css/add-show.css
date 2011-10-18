@@ -75,7 +75,7 @@
 }
 label.wrapp-label input[type="checkbox"] {
 	float:left;
-	margin:-1px 4px 0 0;
+	margin:-1px 2px 0 0;
 }
 
 #schedule-add-show fieldset:last-child {
@@ -91,7 +91,7 @@ label.wrapp-label input[type="checkbox"] {
 #add_show_day_check-element.block-display label.wrapp-label {
 	font-size:12px;
 	float:left;
-	margin-right:5px;
+	margin-right:10px;
 }
 #add_show_name-element .input_text {
 	/*width:99%;*/
