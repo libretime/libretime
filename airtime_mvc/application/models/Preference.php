@@ -501,5 +501,37 @@ class Application_Model_Preference
     public static function GetCalendarTimeScale() {
     	return self::GetValue("calendar_time_scale", true /* user specific */);
     }
+    
+    /**
+     * Sets the number of entries to show preference in library under Playlist Builder.
+     * 
+     * @param $numEntries	new number of entries to show
+     */
+    public static function SetLibraryNumEntries($numEntries) {
+    	return self::SetValue("library_num_entries", $numEntries, true /* user specific */);
+    }
+    
+    /**
+     * Retrieves the number of entries to show preference in library under Playlist Builder.
+     */
+    public static function GetLibraryNumEntries() {
+    	return self::GetValue("library_num_entries", true /* user specific */);
+    }
+    
+    /**
+     * Sets the time interval preference in Calendar.
+     * 
+     * @param $timeInterval		new time interval
+     */
+	public static function SetCalendarTimeInterval($timeInterval) {
+        return self::SetValue("calendar_time_interval", $timeInterval, true /* user specific */);
+    }
+
+    /**
+     * Retrieves the time interval preference for the current user.
+     */
+    public static function GetCalendarTimeInterval() {
+    	return self::GetValue("calendar_time_interval", true /* user specific */);
+    }
 }
 

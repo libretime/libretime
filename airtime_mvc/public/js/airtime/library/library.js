@@ -275,11 +275,20 @@ function addMetadataQtip(){
     })
 }
 
-$(document).ready(function() {
+/**
+ * Use user preference for number of entries to show;
+ * defaults to 10 if preference was never set
+ */
+function getNumEntriesPreference(data) {
+	var numEntries = data.libraryInit.numEntries;
+    if(numEntries == '') {
+    	numEntries = '10';
+    }
+    return parseInt(numEntries);
+}
 
-	$('.tabs').tabs();
-
-	$('#library_display').dataTable( {
+function createDataTable(data) {
+	var dTable = $('#library_display').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
 		"sAjaxSource": "/Library/contents/format/json",
@@ -309,8 +318,28 @@ $(document).ready(function() {
 		"bAutoWidth": false,
         "oLanguage": {
             "sSearch": ""
-        }
-	}).fnSetFilteringDelay(350);
+        },
+        "iDisplayLength": getNumEntriesPreference(data)
+	});
+	dTable.fnSetFilteringDelay(350);
+    
+    // Updates pref db when user changes the # of entries to show
+    $('select[name=library_display_length]').change(function() {
+		var url = '/Library/set-num-entries/format/json';
+		$.post(url, {numEntries: $(this).val()}, 
+				function(json){
+					if(json.error) {
+						alert(json.error);
+					}
+		});
+	});
+}
+
+$(document).ready(function() {
+	$('.tabs').tabs();
+	
+	$.ajax({ url: "/Api/library-init/format/json", dataType:"json", success:createDataTable
+        , error:function(jqXHR, textStatus, errorThrown){}});
 	
 	checkImportStatus()
 	setInterval( "checkImportStatus()", 5000 );

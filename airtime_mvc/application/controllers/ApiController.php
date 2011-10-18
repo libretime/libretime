@@ -25,6 +25,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('register-component', 'json')
                 ->addActionContext('update-liquidsoap-error', 'json')
                 ->addActionContext('update-liquidsoap-connection', 'json')
+                ->addActionContext('library-init', 'json')
                 ->initContext();
     }
 
@@ -77,9 +78,10 @@ class ApiController extends Zend_Controller_Action
         }
         
     	$this->view->calendarInit = array(
-        	"timestamp"=>time(), 
-        	"timezoneOffset"=> date("Z"), 
-        	"timeScale"=>Application_Model_Preference::GetCalendarTimeScale()
+        	"timestamp" => time(), 
+        	"timezoneOffset" => date("Z"), 
+        	"timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
+    		"timeInterval" => Application_Model_Preference::GetCalendarTimeInterval()
         );
     	
     }
@@ -730,6 +732,26 @@ class ApiController extends Zend_Controller_Action
         $stream_id = $request->getParam('stream_id');
         // setting error_msg as "" when there is no error_msg
         Application_Model_StreamSetting::setLiquidsoapError($stream_id, "");
+    }
+    
+    /**
+     * Sets up and send init values used in the Library.
+     * This is being used by library.js
+     */
+    public function libraryInitAction(){
+    	$this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            return;
+        }
+        
+    	$this->view->libraryInit = array(
+        	"numEntries"=>Application_Model_Preference::GetLibraryNumEntries()
+        );
+    	
     }
 }
 

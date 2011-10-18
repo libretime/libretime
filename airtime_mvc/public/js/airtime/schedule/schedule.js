@@ -308,6 +308,17 @@ function getTimeScalePreference(data) {
     return timeScale;
 }
 
+/**
+ * Use user preference for time interval; defaults to 30m if preference was never set
+ */
+function getTimeIntervalPreference(data) {
+	var timeInterval = data.calendarInit.timeInterval;
+    if(timeInterval == '') {
+    	timeInterval = '30';
+    }
+    return parseInt(timeInterval);
+}
+
 function createFullCalendar(data){
 
     serverTimezoneOffset = data.calendarInit.timezoneOffset;
@@ -321,6 +332,7 @@ function createFullCalendar(data){
             right: 'agendaDay, agendaWeek, month'
         }, 
         defaultView: getTimeScalePreference(data),
+        slotMinutes: getTimeIntervalPreference(data),
         editable: false,
         allDaySlot: false,
         axisFormat: 'H:mm',
@@ -349,6 +361,17 @@ function createFullCalendar(data){
     $(".fc-button-content").click(function() {
     	var url = '/Schedule/set-time-scale/format/json';
 		$.post(url, {timeScale: $(this).text()}, 
+				function(json){
+					if(json.error) {
+						alert(json.error);
+					}
+		});
+    });
+    
+  //Update time interval preference when dropdown is updated
+    $(".schedule_change_slots.input_select").change(function() {
+    	var url = '/Schedule/set-time-interval/format/json';
+		$.post(url, {timeInterval: $(this).val()}, 
 				function(json){
 					if(json.error) {
 						alert(json.error);
