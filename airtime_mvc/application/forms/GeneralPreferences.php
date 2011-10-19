@@ -65,6 +65,14 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $timezone->setValue(Application_Model_Preference::GetTimezone());
         $timezone->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
+        
+        /* Form Element for setting which day is the start of the week */
+        $week_start_day = new Zend_Form_Element_Select("weekStartDay");
+        $week_start_day->setLabel("Week Starts On");
+        $week_start_day->setMultiOptions($this->getWeekStartDays());
+        $week_start_day->setValue(Application_Model_Preference::GetWeekStartDay());
+        $week_start_day->setDecorators(array('ViewHelper'));
+        $this->addElement($week_start_day);
     }
     
     private function getTimezones(){
@@ -90,7 +98,19 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         return $tzlist;
     }
+    
 
-
+    private function getWeekStartDays() {
+    	$days = array(
+    		'Sunday',
+    		'Monday',
+		    'Tuesday',
+		    'Wednesday',
+		    'Thursday',
+		    'Friday',
+		    'Saturday'
+    	);
+    	return $days;   	
+    }
 }
 

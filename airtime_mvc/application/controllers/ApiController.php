@@ -81,7 +81,8 @@ class ApiController extends Zend_Controller_Action
         	"timestamp" => time(), 
         	"timezoneOffset" => date("Z"), 
         	"timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
-    		"timeInterval" => Application_Model_Preference::GetCalendarTimeInterval()
+    		"timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
+    		"weekStartDay" => Application_Model_Preference::GetWeekStartDay()
         );
     	
     }

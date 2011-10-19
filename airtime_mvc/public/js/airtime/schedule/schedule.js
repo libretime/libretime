@@ -333,6 +333,7 @@ function createFullCalendar(data){
         }, 
         defaultView: getTimeScalePreference(data),
         slotMinutes: getTimeIntervalPreference(data),
+        firstDay: data.calendarInit.weekStartDay,
         editable: false,
         allDaySlot: false,
         axisFormat: 'H:mm',

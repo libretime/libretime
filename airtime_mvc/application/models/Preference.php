@@ -485,6 +485,21 @@ class Application_Model_Preference
     public static function GetSoundCloudDownloadbleOption() {
         return self::GetValue("soundcloud_downloadable");
     }
+    
+    public static function SetWeekStartDay($day) {
+        self::SetValue("week_start_day", $day);
+    }
+
+    public static function GetWeekStartDay() {
+    	$val = self::GetValue("week_start_day");
+        if (strlen($val) == 0){
+            return "0";
+        } else {
+            return $val;
+        }
+    }
+
+	/* User specific preferences start */
 
     /**
      * Sets the time scale preference (day/week/month) in Calendar.
@@ -533,5 +548,7 @@ class Application_Model_Preference
     public static function GetCalendarTimeInterval() {
     	return self::GetValue("calendar_time_interval", true /* user specific */);
     }
+    
+    /* User specific preferences end */
 }
 
