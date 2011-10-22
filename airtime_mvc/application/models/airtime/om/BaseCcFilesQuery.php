@@ -64,6 +64,7 @@
  * @method     CcFilesQuery orderByDbSoundcloudId($order = Criteria::ASC) Order by the soundcloud_id column
  * @method     CcFilesQuery orderByDbSoundcloudErrorCode($order = Criteria::ASC) Order by the soundcloud_error_code column
  * @method     CcFilesQuery orderByDbSoundcloudErrorMsg($order = Criteria::ASC) Order by the soundcloud_error_msg column
+ * @method     CcFilesQuery orderByDbSoundcloudLinkToFile($order = Criteria::ASC) Order by the soundcloud_link_to_file column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
  * @method     CcFilesQuery groupByDbGunid() Group by the gunid column
@@ -123,6 +124,7 @@
  * @method     CcFilesQuery groupByDbSoundcloudId() Group by the soundcloud_id column
  * @method     CcFilesQuery groupByDbSoundcloudErrorCode() Group by the soundcloud_error_code column
  * @method     CcFilesQuery groupByDbSoundcloudErrorMsg() Group by the soundcloud_error_msg column
+ * @method     CcFilesQuery groupByDbSoundcloudLinkToFile() Group by the soundcloud_link_to_file column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -209,6 +211,7 @@
  * @method     CcFiles findOneByDbSoundcloudId(int $soundcloud_id) Return the first CcFiles filtered by the soundcloud_id column
  * @method     CcFiles findOneByDbSoundcloudErrorCode(int $soundcloud_error_code) Return the first CcFiles filtered by the soundcloud_error_code column
  * @method     CcFiles findOneByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return the first CcFiles filtered by the soundcloud_error_msg column
+ * @method     CcFiles findOneByDbSoundcloudLinkToFile(string $soundcloud_link_to_file) Return the first CcFiles filtered by the soundcloud_link_to_file column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method     array findByDbGunid(string $gunid) Return CcFiles objects filtered by the gunid column
@@ -268,6 +271,7 @@
  * @method     array findByDbSoundcloudId(int $soundcloud_id) Return CcFiles objects filtered by the soundcloud_id column
  * @method     array findByDbSoundcloudErrorCode(int $soundcloud_error_code) Return CcFiles objects filtered by the soundcloud_error_code column
  * @method     array findByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return CcFiles objects filtered by the soundcloud_error_msg column
+ * @method     array findByDbSoundcloudLinkToFile(string $soundcloud_link_to_file) Return CcFiles objects filtered by the soundcloud_link_to_file column
  *
  * @package    propel.generator.airtime.om
  */
@@ -1727,6 +1731,28 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_MSG, $dbSoundcloudErrorMsg, $comparison);
+	}
+
+	/**
+	 * Filter the query on the soundcloud_link_to_file column
+	 * 
+	 * @param     string $dbSoundcloudLinkToFile The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbSoundcloudLinkToFile($dbSoundcloudLinkToFile = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbSoundcloudLinkToFile)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbSoundcloudLinkToFile)) {
+				$dbSoundcloudLinkToFile = str_replace('*', '%', $dbSoundcloudLinkToFile);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE, $dbSoundcloudLinkToFile, $comparison);
 	}
 
 	/**

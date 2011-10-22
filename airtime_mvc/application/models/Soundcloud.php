@@ -17,11 +17,6 @@ class Application_Model_Soundcloud {
         $username = Application_Model_Preference::GetSoundCloudUser();
         $password = Application_Model_Preference::GetSoundCloudPassword();
 
-        if($username === "" || $password === "")
-        {
-            return false;
-        }
-
         $token = $this->_soundcloud->accessTokenResourceOwner($username, $password);
 
         return $token;
@@ -82,13 +77,13 @@ class Application_Model_Soundcloud {
             if ($license != "") {
                 $track_data['track[license]'] = $license;
             }
-
+            
             $response = json_decode(
                 $this->_soundcloud->post('tracks', $track_data),
                 true
             );
 
-            return $response["id"];
+            return $response;
         }
     }
 

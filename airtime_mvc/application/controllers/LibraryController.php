@@ -98,6 +98,15 @@ class LibraryController extends Zend_Controller_Action
                 }
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
                                 'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
+         
+                $scid = $file->getSoundCloudId();
+                
+                if($scid > 0){
+                    $link_to_file = $file->getSoundCloudLinkToFile();
+                    $menu[] = array('action' => array('type' => 'fn', 
+                    	    'callback' => "window['openFileOnSoundCloud']('$link_to_file')"),
+                                				'title' => 'View on SoundCloud');
+                }
             }
 
             if ($user->isAdmin()) {

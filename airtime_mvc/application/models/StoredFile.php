@@ -918,6 +918,16 @@ class Application_Model_StoredFile {
         return $results;
     }
 
+    public function setSoundCloudLinkToFile($link_to_file)
+    {
+        $this->_file->setDbSoundCloudLinkToFile($link_to_file)
+        ->save();
+    }
+    
+    public function getSoundCloudLinkToFile(){
+        return $this->_file->getDbSoundCloudLinkToFile();
+    }
+    
     public function setSoundCloudFileId($p_soundcloud_id)
     {
         $this->_file->setDbSoundCloudId($p_soundcloud_id)
@@ -958,13 +968,14 @@ class Application_Model_StoredFile {
         {
             for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
                 $description = $file->getDbTrackTitle();
-                $tag = "";
+                $tag = array();
                 $genre = $file->getDbGenre();
                 $release = $file->getDbYear();
                 try {
                     $soundcloud = new Application_Model_Soundcloud();
-                    $soundcloud_id = $soundcloud->uploadTrack($this->getFilePath(), $this->getName(), $description, $tag, $release, $genre);
-                    $this->setSoundCloudFileId($soundcloud_id);
+                    $soundcloud_res = $soundcloud->uploadTrack($this->getFilePath(), $this->getName(), $description, $tag, $release, $genre);
+                    $this->setSoundCloudFileId($soundcloud_res['id']);
+                    $this->setSoundCloudLinkToFile($soundcloud_res['permalink_url']);
                     break;
                 }
                 catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
