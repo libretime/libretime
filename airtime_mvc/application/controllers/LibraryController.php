@@ -15,6 +15,7 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('get-file-meta-data', 'html')
                     ->addActionContext('upload-file-soundcloud', 'json')
                     ->addActionContext('get-upload-to-soundcloud-status', 'json')
+                    ->addActionContext('set-num-entries', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -277,5 +278,15 @@ class LibraryController extends Zend_Controller_Action
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
         }
+    }
+    
+    /**
+     * Stores the number of entries user chose to show in the Library
+     * to the pref db
+     */
+    public function setNumEntriesAction() {
+    	$request = $this->getRequest();
+    	$numEntries = $request->getParam('numEntries');
+    	Application_Model_Preference::SetLibraryNumEntries($numEntries);
     }
 }

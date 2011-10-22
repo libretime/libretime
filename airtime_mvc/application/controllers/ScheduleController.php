@@ -29,6 +29,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('upload-to-sound-cloud', 'json')
                     ->addActionContext('content-context-menu', 'json')
                     ->addActionContext('set-time-scale', 'json')
+                    ->addActionContext('set-time-interval', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -736,6 +737,14 @@ class ScheduleController extends Zend_Controller_Action
      */
     public function setTimeScaleAction() {
     	Application_Model_Preference::SetCalendarTimeScale($this->_getParam('timeScale'));
+    }
+    
+/**
+     * Sets the user specific preference for which time interval to use in Calendar.
+     * This is only being used by schedule.js at the moment.
+     */
+    public function setTimeIntervalAction() {
+    	Application_Model_Preference::SetCalendarTimeInterval($this->_getParam('timeInterval'));
     }
 }
 

@@ -126,7 +126,12 @@ def airtime_182_tar():
     reboot(45)
     sudo('airtime-check-system')
     
-def airtime_182_deb():
+def airtime_194_tar():
+    run('wget http://downloads.sourceforge.net/project/airtime/1.9.4/airtime-1.9.4.tar.gz')
+    run('tar xfz airtime-1.9.4.tar.gz')
+    sudo('cd ~/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_latest_deb():
     append('/etc/apt/sources.list', "deb http://apt.sourcefabric.org/ lucid main", use_sudo=True)
     append('/etc/apt/sources.list', "deb http://archive.ubuntu.com/ubuntu/ lucid multiverse", use_sudo=True)
     sudo('apt-get update')
@@ -135,11 +140,6 @@ def airtime_182_deb():
     sudo('apt-get install -y icecast2')
     sudo('apt-get purge -y pulseaudio')
     sudo('apt-get install -y --force-yes airtime')
-
-def airtime_194_tar():
-    run('wget http://downloads.sourceforge.net/project/airtime/1.9.4/airtime-1.9.4.tar.gz')
-    run('tar xfz airtime-1.9.4.tar.gz')
-    sudo('cd ~/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
     
 def airtime_devel():
     sudo('apt-get update')
