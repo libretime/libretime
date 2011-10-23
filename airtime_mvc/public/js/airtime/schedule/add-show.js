@@ -439,8 +439,11 @@ $(window).resize(function(){
         var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
         var widthPercent = parseInt(calendarWidth)+"%";
         $("#schedule_calendar").css("width", widthPercent);
-        $("#schedule_calendar").fullCalendar('render');
 	}
+	var mainHeight = document.documentElement.clientHeight - 200 - 50;
+	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight)
+	$("#schedule_calendar").fullCalendar('render');
+	
 });
 
 $(window).load(function() {
