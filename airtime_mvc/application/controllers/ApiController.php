@@ -732,7 +732,7 @@ class ApiController extends Zend_Controller_Action
         
         $stream_id = $request->getParam('stream_id');
         // setting error_msg as "" when there is no error_msg
-        Application_Model_StreamSetting::setLiquidsoapError($stream_id, "");
+        Application_Model_StreamSetting::setLiquidsoapError($stream_id, "OK");
     }
     
     /**
