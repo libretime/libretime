@@ -172,6 +172,20 @@ class Application_Model_DateHelper
         return $totalSeconds;
     }
     
+    public static function ConvertToUtcDateTime($p_dateString, $timezone){
+        $dateTime = new DateTime($p_dateString, new DateTimeZone($timezone));
+        $dateTime->setTimezone(new DateTimeZone("UTC"));
+        
+        return $dateTime; 
+    }
+	
+    public static function ConvertToSpecificTimezoneDateTime($p_dateString, $timezone){
+        $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
+        $dateTime->setTimezone(new DateTimeZone($timezone));
+
+        return $dateTime;
+    }
+    
     public static function ConvertToLocalDateTime($p_dateString){
         $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
         $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));

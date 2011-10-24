@@ -49,6 +49,12 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 	protected $start_time;
 
 	/**
+	 * The value for the timezone field.
+	 * @var        string
+	 */
+	protected $timezone;
+
+	/**
 	 * The value for the duration field.
 	 * @var        string
 	 */
@@ -232,6 +238,16 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 		} else {
 			return $dt->format($format);
 		}
+	}
+
+	/**
+	 * Get the [timezone] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbTimezone()
+	{
+		return $this->timezone;
 	}
 
 	/**
@@ -485,6 +501,26 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 	} // setDbStartTime()
 
 	/**
+	 * Set the value of [timezone] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcShowDays The current object (for fluent API support)
+	 */
+	public function setDbTimezone($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->timezone !== $v) {
+			$this->timezone = $v;
+			$this->modifiedColumns[] = CcShowDaysPeer::TIMEZONE;
+		}
+
+		return $this;
+	} // setDbTimezone()
+
+	/**
 	 * Set the value of [duration] column.
 	 * 
 	 * @param      string $v new value
@@ -677,12 +713,13 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 			$this->first_show = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
 			$this->last_show = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->start_time = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->duration = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->day = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
-			$this->repeat_type = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-			$this->next_pop_date = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-			$this->show_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
-			$this->record = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
+			$this->timezone = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->duration = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->day = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+			$this->repeat_type = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+			$this->next_pop_date = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->show_id = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
+			$this->record = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -691,7 +728,7 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 10; // 10 = CcShowDaysPeer::NUM_COLUMNS - CcShowDaysPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 11; // 11 = CcShowDaysPeer::NUM_COLUMNS - CcShowDaysPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowDays object", $e);
@@ -1031,21 +1068,24 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 				return $this->getDbStartTime();
 				break;
 			case 4:
-				return $this->getDbDuration();
+				return $this->getDbTimezone();
 				break;
 			case 5:
-				return $this->getDbDay();
+				return $this->getDbDuration();
 				break;
 			case 6:
-				return $this->getDbRepeatType();
+				return $this->getDbDay();
 				break;
 			case 7:
-				return $this->getDbNextPopDate();
+				return $this->getDbRepeatType();
 				break;
 			case 8:
-				return $this->getDbShowId();
+				return $this->getDbNextPopDate();
 				break;
 			case 9:
+				return $this->getDbShowId();
+				break;
+			case 10:
 				return $this->getDbRecord();
 				break;
 			default:
@@ -1076,12 +1116,13 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 			$keys[1] => $this->getDbFirstShow(),
 			$keys[2] => $this->getDbLastShow(),
 			$keys[3] => $this->getDbStartTime(),
-			$keys[4] => $this->getDbDuration(),
-			$keys[5] => $this->getDbDay(),
-			$keys[6] => $this->getDbRepeatType(),
-			$keys[7] => $this->getDbNextPopDate(),
-			$keys[8] => $this->getDbShowId(),
-			$keys[9] => $this->getDbRecord(),
+			$keys[4] => $this->getDbTimezone(),
+			$keys[5] => $this->getDbDuration(),
+			$keys[6] => $this->getDbDay(),
+			$keys[7] => $this->getDbRepeatType(),
+			$keys[8] => $this->getDbNextPopDate(),
+			$keys[9] => $this->getDbShowId(),
+			$keys[10] => $this->getDbRecord(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
@@ -1131,21 +1172,24 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 				$this->setDbStartTime($value);
 				break;
 			case 4:
-				$this->setDbDuration($value);
+				$this->setDbTimezone($value);
 				break;
 			case 5:
-				$this->setDbDay($value);
+				$this->setDbDuration($value);
 				break;
 			case 6:
-				$this->setDbRepeatType($value);
+				$this->setDbDay($value);
 				break;
 			case 7:
-				$this->setDbNextPopDate($value);
+				$this->setDbRepeatType($value);
 				break;
 			case 8:
-				$this->setDbShowId($value);
+				$this->setDbNextPopDate($value);
 				break;
 			case 9:
+				$this->setDbShowId($value);
+				break;
+			case 10:
 				$this->setDbRecord($value);
 				break;
 		} // switch()
@@ -1176,12 +1220,13 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 		if (array_key_exists($keys[1], $arr)) $this->setDbFirstShow($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbLastShow($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setDbStartTime($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbDuration($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbDay($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setDbRepeatType($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDbNextPopDate($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setDbShowId($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setDbRecord($arr[$keys[9]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbTimezone($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbDuration($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbDay($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbRepeatType($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbNextPopDate($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbShowId($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbRecord($arr[$keys[10]]);
 	}
 
 	/**
@@ -1197,6 +1242,7 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowDaysPeer::FIRST_SHOW)) $criteria->add(CcShowDaysPeer::FIRST_SHOW, $this->first_show);
 		if ($this->isColumnModified(CcShowDaysPeer::LAST_SHOW)) $criteria->add(CcShowDaysPeer::LAST_SHOW, $this->last_show);
 		if ($this->isColumnModified(CcShowDaysPeer::START_TIME)) $criteria->add(CcShowDaysPeer::START_TIME, $this->start_time);
+		if ($this->isColumnModified(CcShowDaysPeer::TIMEZONE)) $criteria->add(CcShowDaysPeer::TIMEZONE, $this->timezone);
 		if ($this->isColumnModified(CcShowDaysPeer::DURATION)) $criteria->add(CcShowDaysPeer::DURATION, $this->duration);
 		if ($this->isColumnModified(CcShowDaysPeer::DAY)) $criteria->add(CcShowDaysPeer::DAY, $this->day);
 		if ($this->isColumnModified(CcShowDaysPeer::REPEAT_TYPE)) $criteria->add(CcShowDaysPeer::REPEAT_TYPE, $this->repeat_type);
@@ -1267,6 +1313,7 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 		$copyObj->setDbFirstShow($this->first_show);
 		$copyObj->setDbLastShow($this->last_show);
 		$copyObj->setDbStartTime($this->start_time);
+		$copyObj->setDbTimezone($this->timezone);
 		$copyObj->setDbDuration($this->duration);
 		$copyObj->setDbDay($this->day);
 		$copyObj->setDbRepeatType($this->repeat_type);
@@ -1374,6 +1421,7 @@ abstract class BaseCcShowDays extends BaseObject  implements Persistent
 		$this->first_show = null;
 		$this->last_show = null;
 		$this->start_time = null;
+		$this->timezone = null;
 		$this->duration = null;
 		$this->day = null;
 		$this->repeat_type = null;

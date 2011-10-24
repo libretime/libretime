@@ -725,7 +725,8 @@ class Application_Model_Show {
     public static function create($data)
     {
 
-        $utcStartDateTime = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time']);
+        $startDateTime = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time']);
+		$utcStartDateTime = clone $startDateTime;
         $utcStartDateTime->setTimezone(new DateTimeZone('UTC'));
 
         if ($data['add_show_no_end']) {
@@ -733,18 +734,20 @@ class Application_Model_Show {
         }
         else if ($data['add_show_repeats']) {
             $endDateTime = new DateTime($data['add_show_end_date']);
-            $endDateTime->setTimezone(new DateTimeZone('UTC'));
+            //$endDateTime->setTimezone(new DateTimeZone('UTC'));
             $endDateTime->add(new DateInterval("P1D"));
             $endDate = $endDateTime->format("Y-m-d");
         }
         else {
             $endDateTime = new DateTime($data['add_show_start_date']);
-            $endDateTime->setTimezone(new DateTimeZone('UTC'));
+            //$endDateTime->setTimezone(new DateTimeZone('UTC'));
             $endDateTime->add(new DateInterval("P1D"));
             $endDate = $endDateTime->format("Y-m-d");
         }
 
-        //only want the day of the week from the start date.
+        //What we are doing here is checking if the show repeats or if
+		//any repeating days have been checked. If not, then by default
+		//the "selected" DOW is the initial day.
         $startDow = date("w", $utcStartDateTime->getTimestamp());
         if (!$data['add_show_repeats']) {
             $data['add_show_day_check'] = array($startDow);
@@ -786,9 +789,10 @@ class Application_Model_Show {
         //don't set day for monthly repeat type, it's invalid.
         if ($data['add_show_repeats'] && $data['add_show_repeat_type'] == 2){
             $showDay = new CcShowDays();
-            $showDay->setDbFirstShow($utcStartDateTime->format("Y-m-d"));
+            $showDay->setDbFirstShow($startDateTime->format("Y-m-d"));
             $showDay->setDbLastShow($endDate);
-            $showDay->setDbStartTime($utcStartDateTime->format("H:i:s"));
+            $showDay->setDbStartTime($startDateTime->format("H:i:s"));
+			$showDay->setDbTimezone(date_default_timezone_get());
             $showDay->setDbDuration($data['add_show_duration']);
             $showDay->setDbRepeatType($repeatType);
             $showDay->setDbShowId($showId);
@@ -796,19 +800,22 @@ class Application_Model_Show {
             $showDay->save();
         } else {
             foreach ($data['add_show_day_check'] as $day) {
+				$daysAdd=0;
+				$startDateTimeClone = clone $startDateTime;
                 if ($startDow !== $day){
                     if ($startDow > $day)
                         $daysAdd = 6 - $startDow + 1 + $day;
                     else
                         $daysAdd = $day - $startDow;
                         
-                    $utcStartDateTime->add(new DateInterval("P".$daysAdd."D"));
+                    $startDateTimeClone->add(new DateInterval("P".$daysAdd."D"));
                 }
-                if (is_null($endDate) || $utcStartDateTime->getTimestamp() <= $endDateTime->getTimestamp()) {
+                if (is_null($endDate) || $startDateTimeClone->getTimestamp() <= $endDateTime->getTimestamp()) {
                     $showDay = new CcShowDays();
-                    $showDay->setDbFirstShow($utcStartDateTime->format("Y-m-d"));
+                    $showDay->setDbFirstShow($startDateTimeClone->format("Y-m-d"));
                     $showDay->setDbLastShow($endDate);
-                    $showDay->setDbStartTime($utcStartDateTime->format("H:i"));
+                    $showDay->setDbStartTime($startDateTimeClone->format("H:i"));
+					$showDay->setDbTimezone(date_default_timezone_get());
                     $showDay->setDbDuration($data['add_show_duration']);
                     $showDay->setDbDay($day);
                     $showDay->setDbRepeatType($repeatType);
@@ -873,6 +880,223 @@ class Application_Model_Show {
         Application_Model_Show::populateShowUntil($showId);
         Application_Model_RabbitMq::PushSchedule();
         return $showId;
+    }
+	
+    /**
+     * Generate repeating show instances for a single show up to the given date.
+     * If no date is given, use the one in the user's preferences, which is stored
+     * automatically by FullCalendar as the furthest date in the future the user
+     * has looked at.
+     *
+     * @param int $p_showId
+     * @param string $p_endTimestamp
+     *        In the format "YYYY-MM-DD HH:mm:ss, non-UTC"
+     */
+    public static function populateShowUntil($p_showId, $p_endTimestamp = NULL)
+    {
+        global $CC_DBC;
+        if (is_null($p_endTimestamp)) {
+            $p_endTimestamp = Application_Model_Preference::GetShowsPopulatedUntil();
+
+            if ($p_endTimestamp == "") {
+                $today_timestamp = date("Y-m-d");
+                Application_Model_Preference::SetShowsPopulatedUntil($today_timestamp);
+            }
+        }
+
+        $sql = "SELECT * FROM cc_show_days WHERE show_id = $p_showId";
+        $res = $CC_DBC->GetAll($sql);
+
+        foreach ($res as $showRow) {
+            Application_Model_Show::populateShow($showRow, $p_endTimestamp);
+        }
+    }
+	
+    private static function populateShow($p_showRow, $p_endTimestamp) {
+				
+        if($p_showRow["repeat_type"] == -1) {
+            Application_Model_Show::populateNonRepeatingShow($p_showRow, $p_endTimestamp);
+        }
+        else if($p_showRow["repeat_type"] == 0) {
+            Application_Model_Show::populateRepeatingShow($p_showRow, $p_endTimestamp, '7 days');
+        }
+        else if($p_showRow["repeat_type"] == 1) {
+            Application_Model_Show::populateRepeatingShow($p_showRow, $p_endTimestamp, '14 days');
+        }
+        else if($p_showRow["repeat_type"] == 2) {
+            Application_Model_Show::populateRepeatingShow($p_showRow, $p_endTimestamp, '1 month');
+        }
+		Application_Model_RabbitMq::PushSchedule();
+    }
+	
+    //for a show with repeat_type == -1
+    private static function populateNonRepeatingShow($p_showRow, $end_timestamp)
+    {
+        global $CC_DBC;
+        
+		$show_id = $p_showRow["show_id"];
+		$first_show = $p_showRow["first_show"]; //non-UTC
+		$start_time = $p_showRow["start_time"]; //non-UTC
+		$duration = $p_showRow["duration"];
+		$day = $p_showRow["day"];
+		$record = $p_showRow["record"];
+        
+        $start = $first_show." ".$start_time;
+		
+		$utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
+		$utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
+
+        if (strtotime($utcStart) < strtotime($end_timestamp)) {
+
+            $sql = "SELECT timestamp '{$utcStart}' + interval '{$duration}'";
+            $utcEnd = $CC_DBC->GetOne($sql);
+
+            $date = new Application_Model_DateHelper();
+            $currentUtcTimestamp = $date->getUtcTimestamp();
+
+            $show = new Application_Model_Show($show_id);
+            if ($show->hasInstance()){
+                $ccShowInstance = $show->getInstance();
+                $newInstance = false;
+            }
+            else {
+                $ccShowInstance = new CcShowInstances();
+                $newInstance = true;
+            }
+
+            if ($newInstance || $ccShowInstance->getDbStarts() > $currentUtcTimestamp){							
+                $ccShowInstance->setDbShowId($show_id);
+                $ccShowInstance->setDbStarts($utcStart);
+                $ccShowInstance->setDbEnds($utcEnd);
+                $ccShowInstance->setDbRecord($record);
+                $ccShowInstance->save();
+            }
+
+            $show_instance_id = $ccShowInstance->getDbId();
+            $showInstance = new Application_Model_ShowInstance($show_instance_id);
+
+            if (!$newInstance){
+                $showInstance->correctScheduleStartTimes();
+            }
+
+            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
+            $rebroadcasts = $CC_DBC->GetAll($sql);
+
+            foreach($rebroadcasts as $rebroadcast) {
+
+                $timeinfo = explode(" ", $utcStart);
+
+                $sql = "SELECT timestamp '{$timeinfo[0]}' + interval '{$rebroadcast["day_offset"]}' + interval '{$rebroadcast["start_time"]}'";
+                $rebroadcast_start_time = $CC_DBC->GetOne($sql);
+
+                $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
+                $rebroadcast_end_time = $CC_DBC->GetOne($sql);
+
+                if ($rebroadcast_start_time > $currentUtcTimestamp){
+                    $newRebroadcastInstance = new CcShowInstances();
+                    $newRebroadcastInstance->setDbShowId($show_id);
+                    $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
+                    $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
+                    $newRebroadcastInstance->setDbRecord(0);
+                    $newRebroadcastInstance->setDbRebroadcast(1);
+                    $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
+                    $newRebroadcastInstance->save();
+                }
+            }
+        }
+    }
+
+    //for a show with repeat_type == 0,1,2
+    private static function populateRepeatingShow($p_showRow, $end_timestamp, $interval)
+    {
+        global $CC_DBC;
+		  
+		$show_id = $p_showRow["show_id"];
+		$next_pop_date = $p_showRow["next_pop_date"];
+		$first_show = $p_showRow["first_show"]; //non-UTC
+		$last_show = $p_showRow["last_show"]; //non-UTC
+		$start_time = $p_showRow["start_time"]; //non-UTC
+		$duration = $p_showRow["duration"];
+		$day = $p_showRow["day"];
+		$record = $p_showRow["record"];
+		$timezone = $p_showRow["timezone"];
+
+
+        if(isset($next_pop_date)) {
+            $utcStart = $next_pop_date." ".$start_time;
+        } else {
+            $start = $first_show." ".$start_time;
+			$utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
+			$utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
+        }
+				
+        $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
+        $rebroadcasts = $CC_DBC->GetAll($sql);
+        $show = new Application_Model_Show($show_id);
+
+        $date = new Application_Model_DateHelper();
+        $currentUtcTimestamp = $date->getUtcTimestamp();
+		
+        while(strtotime($utcStart) <= strtotime($end_timestamp) && (strtotime($utcStart) < strtotime($last_show) || is_null($last_show))) {
+
+            $sql = "SELECT timestamp '{$utcStart}' + interval '{$duration}'";
+            $utcEnd = $CC_DBC->GetOne($sql);
+
+            if ($show->hasInstanceOnDate($utcStart)){
+                $ccShowInstance = $show->getInstanceOnDate($utcStart);
+                $newInstance = false;
+            } else {
+                $ccShowInstance = new CcShowInstances();
+                $newInstance = true;
+            }
+
+            /* When editing the start/end time of a repeating show, we don't want to
+             * change shows that started in the past. So check the start time.
+             */
+            if ($newInstance || $ccShowInstance->getDbStarts() > $currentUtcTimestamp){			
+                $ccShowInstance->setDbShowId($show_id);
+                $ccShowInstance->setDbStarts($utcStart);
+                $ccShowInstance->setDbEnds($utcEnd);
+                $ccShowInstance->setDbRecord($record);
+                $ccShowInstance->save();
+            }
+
+            $show_instance_id = $ccShowInstance->getDbId();
+            $showInstance = new Application_Model_ShowInstance($show_instance_id);
+
+            if (!$newInstance){
+                $showInstance->correctScheduleStartTimes();
+            }
+
+            foreach($rebroadcasts as $rebroadcast) {
+
+                $timeinfo = explode(" ", $utcStart);
+
+                $sql = "SELECT timestamp '{$timeinfo[0]}' + interval '{$rebroadcast["day_offset"]}' + interval '{$rebroadcast["start_time"]}'";
+                $rebroadcast_start_time = $CC_DBC->GetOne($sql);
+
+                $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
+                $rebroadcast_end_time = $CC_DBC->GetOne($sql);
+
+                if ($rebroadcast_start_time > $currentUtcTimestamp){
+                    $newRebroadcastInstance = new CcShowInstances();
+                    $newRebroadcastInstance->setDbShowId($show_id);
+                    $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
+                    $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
+                    $newRebroadcastInstance->setDbRecord(0);
+                    $newRebroadcastInstance->setDbRebroadcast(1);
+                    $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
+                    $newRebroadcastInstance->save();
+                }
+            }
+
+            $sql = "SELECT timestamp '{$start}' + interval '{$interval}'";
+            $start = $CC_DBC->GetOne($sql);
+			$utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
+			$utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
+        }
+		
+        Application_Model_Show::setNextPop($utcStart, $show_id, $day);
     }
 
     /**
@@ -943,209 +1167,6 @@ class Application_Model_Show {
             ->save();
     }
 
-    //for a show with repeat_type == -1
-    private static function populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp)
-    {
-        global $CC_DBC;
-        $next_date = $first_show." ".$start_time;
-
-        if (strtotime($next_date) < strtotime($end_timestamp)) {
-
-            $start = $next_date;
-            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
-            $end = $CC_DBC->GetOne($sql);
-
-            $date = new Application_Model_DateHelper();
-            $currentTimestamp = $date->getTimestamp();
-
-            $show = new Application_Model_Show($show_id);
-            if ($show->hasInstance()){
-                $ccShowInstance = $show->getInstance();
-                $newInstance = false;
-            }
-            else {
-                $ccShowInstance = new CcShowInstances();
-                $newInstance = true;
-            }
-
-            if ($newInstance || $ccShowInstance->getDbStarts() > $currentTimestamp){
-                $ccShowInstance->setDbShowId($show_id);
-                $ccShowInstance->setDbStarts($start);
-                $ccShowInstance->setDbEnds($end);
-                $ccShowInstance->setDbRecord($record);
-                $ccShowInstance->save();
-            }
-
-            $show_instance_id = $ccShowInstance->getDbId();
-            $showInstance = new Application_Model_ShowInstance($show_instance_id);
-
-            if (!$newInstance){
-                $showInstance->correctScheduleStartTimes();
-            }
-
-            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-            $rebroadcasts = $CC_DBC->GetAll($sql);
-
-            foreach($rebroadcasts as $rebroadcast) {
-
-                $timeinfo = explode(" ", $start);
-
-                $sql = "SELECT timestamp '{$timeinfo[0]}' + interval '{$rebroadcast["day_offset"]}' + interval '{$rebroadcast["start_time"]}'";
-                $rebroadcast_start_time = $CC_DBC->GetOne($sql);
-
-                $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
-                $rebroadcast_end_time = $CC_DBC->GetOne($sql);
-
-                if ($rebroadcast_start_time > $currentTimestamp){
-                    $newRebroadcastInstance = new CcShowInstances();
-                    $newRebroadcastInstance->setDbShowId($show_id);
-                    $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
-                    $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
-                    $newRebroadcastInstance->setDbRecord(0);
-                    $newRebroadcastInstance->setDbRebroadcast(1);
-                    $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
-                    $newRebroadcastInstance->save();
-                }
-            }
-        }
-        Application_Model_RabbitMq::PushSchedule();
-    }
-
-    //for a show with repeat_type == 0,1,2
-    private static function populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
-                                $start_time, $duration, $day, $record, $end_timestamp, $interval)
-    {
-        global $CC_DBC;
-
-        if(isset($next_pop_date)) {
-            $next_date = $next_pop_date." ".$start_time;
-        }
-        else {
-            $next_date = $first_show." ".$start_time;
-        }
-
-        $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-        $rebroadcasts = $CC_DBC->GetAll($sql);
-        $show = new Application_Model_Show($show_id);
-
-        $date = new Application_Model_DateHelper();
-        $currentTimestamp = $date->getTimestamp();
-
-        while(strtotime($next_date) <= strtotime($end_timestamp) && (strtotime($last_show) > strtotime($next_date) || is_null($last_show))) {
-
-            $start = $next_date;
-
-            $sql = "SELECT timestamp '{$start}' + interval '{$duration}'";
-            $end = $CC_DBC->GetOne($sql);
-
-            if ($show->hasInstanceOnDate($start)){
-                $ccShowInstance = $show->getInstanceOnDate($start);
-                $newInstance = false;
-            } else {
-                $ccShowInstance = new CcShowInstances();
-                $newInstance = true;
-            }
-
-            /* When editing the start/end time of a repeating show, we don't want to
-             * change shows that started in the past. So check the start time.
-             */
-            if ($newInstance || $ccShowInstance->getDbStarts() > $currentTimestamp){
-                $ccShowInstance->setDbShowId($show_id);
-                $ccShowInstance->setDbStarts($start);
-                $ccShowInstance->setDbEnds($end);
-                $ccShowInstance->setDbRecord($record);
-                $ccShowInstance->save();
-            }
-
-            $show_instance_id = $ccShowInstance->getDbId();
-            $showInstance = new Application_Model_ShowInstance($show_instance_id);
-
-            if (!$newInstance){
-                $showInstance->correctScheduleStartTimes();
-            }
-
-            foreach($rebroadcasts as $rebroadcast) {
-
-                $timeinfo = explode(" ", $next_date);
-
-                $sql = "SELECT timestamp '{$timeinfo[0]}' + interval '{$rebroadcast["day_offset"]}' + interval '{$rebroadcast["start_time"]}'";
-                $rebroadcast_start_time = $CC_DBC->GetOne($sql);
-
-                $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$duration}'";
-                $rebroadcast_end_time = $CC_DBC->GetOne($sql);
-
-                if ($rebroadcast_start_time > $currentTimestamp){
-                    $newRebroadcastInstance = new CcShowInstances();
-                    $newRebroadcastInstance->setDbShowId($show_id);
-                    $newRebroadcastInstance->setDbStarts($rebroadcast_start_time);
-                    $newRebroadcastInstance->setDbEnds($rebroadcast_end_time);
-                    $newRebroadcastInstance->setDbRecord(0);
-                    $newRebroadcastInstance->setDbRebroadcast(1);
-                    $newRebroadcastInstance->setDbOriginalShow($show_instance_id);
-                    $newRebroadcastInstance->save();
-                }
-            }
-
-            $sql = "SELECT timestamp '{$start}' + interval '{$interval}'";
-            $next_date = $CC_DBC->GetOne($sql);
-        }
-
-        Application_Model_Show::setNextPop($next_date, $show_id, $day);
-        Application_Model_RabbitMq::PushSchedule();
-    }
-
-    private static function populateShow($repeatType, $show_id, $next_pop_date,
-                $first_show, $last_show, $start_time, $duration, $day, $record, $end_timestamp) {
-
-        if($repeatType == -1) {
-            Application_Model_Show::populateNonRepeatingShow($show_id, $first_show, $start_time, $duration, $day, $record, $end_timestamp);
-        }
-        else if($repeatType == 0) {
-            Application_Model_Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
-                    $start_time, $duration, $day, $record, $end_timestamp, '7 days');
-        }
-        else if($repeatType == 1) {
-            Application_Model_Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
-                    $start_time, $duration, $day, $record, $end_timestamp, '14 days');
-        }
-        else if($repeatType == 2) {
-            Application_Model_Show::populateRepeatingShow($show_id, $next_pop_date, $first_show, $last_show,
-                    $start_time, $duration, $day, $record, $end_timestamp, '1 month');
-        }
-    }
-
-
-    /**
-     * Generate repeating show instances for a single show up to the given date.
-     * If no date is given, use the one in the user's preferences, which is stored
-     * automatically by FullCalendar as the furthest date in the future the user
-     * has looked at.
-     *
-     * @param int $p_showId
-     * @param string $p_date
-     *        In the format "YYYY-MM-DD HH:mm:ss"
-     */
-    public static function populateShowUntil($p_showId, $p_date = NULL)
-    {
-        global $CC_DBC;
-        if (is_null($p_date)) {
-            $p_date = Application_Model_Preference::GetShowsPopulatedUntil();
-
-            if ($p_date == "") {
-                $today_timestamp = date("Y-m-d");
-                Application_Model_Preference::SetShowsPopulatedUntil($today_timestamp);
-            }
-        }
-
-        $sql = "SELECT * FROM cc_show_days WHERE show_id = $p_showId";
-        $res = $CC_DBC->GetAll($sql);
-
-        foreach ($res as $row) {
-            Application_Model_Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"],
-                               $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $p_date);
-        }
-    }
-
     /**
      * Generate all the repeating shows in the given range.
      *
@@ -1173,8 +1194,7 @@ class Application_Model_Show {
         $res = $CC_DBC->GetAll($sql);
 
         foreach ($res as $row) {
-            Application_Model_Show::populateShow($row["repeat_type"], $row["show_id"], $row["next_pop_date"], $row["first_show"],
-                               $row["last_show"], $row["start_time"], $row["duration"], $row["day"], $row["record"], $p_endTimestamp);
+            Application_Model_Show::populateShow($row, $p_endTimestamp);
         }
     }
 
@@ -1196,7 +1216,7 @@ class Application_Model_Show {
         $days =  $interval->format('%a');
 
         $shows = Application_Model_Show::getShows($start, $end);
-
+		
         $today_timestamp = date("Y-m-d H:i:s");
         foreach ($shows as $show) {
             $options = array();
@@ -1226,10 +1246,10 @@ class Application_Model_Show {
         if($show["rebroadcast"]) {
             $event["disableResizing"] = true;
         }
-        
+        		
         $startDateTime = new DateTime($show["starts"], new DateTimeZone("UTC"));
         $startDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        
+		
         $endDateTime = new DateTime($show["ends"], new DateTimeZone("UTC"));
         $endDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
