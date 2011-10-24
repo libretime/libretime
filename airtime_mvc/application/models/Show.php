@@ -940,6 +940,7 @@ class Application_Model_Show {
 		$duration = $p_showRow["duration"];
 		$day = $p_showRow["day"];
 		$record = $p_showRow["record"];
+		$timezone = $p_showRow["timezone"];
         
         $start = $first_show." ".$start_time;
 		
@@ -1023,12 +1024,13 @@ class Application_Model_Show {
 
 
         if(isset($next_pop_date)) {
-            $utcStart = $next_pop_date." ".$start_time;
+            $start = $next_pop_date." ".$start_time;
         } else {
             $start = $first_show." ".$start_time;
-			$utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
-			$utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
         }
+        
+        $utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
+        $utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
 				
         $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
         $rebroadcasts = $CC_DBC->GetAll($sql);
@@ -1038,7 +1040,7 @@ class Application_Model_Show {
         $currentUtcTimestamp = $date->getUtcTimestamp();
 		
         while(strtotime($utcStart) <= strtotime($end_timestamp) && (strtotime($utcStart) < strtotime($last_show) || is_null($last_show))) {
-
+            
             $sql = "SELECT timestamp '{$utcStart}' + interval '{$duration}'";
             $utcEnd = $CC_DBC->GetOne($sql);
 
@@ -1092,11 +1094,11 @@ class Application_Model_Show {
 
             $sql = "SELECT timestamp '{$start}' + interval '{$interval}'";
             $start = $CC_DBC->GetOne($sql);
-			$utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
+            $utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
 			$utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
         }
 		
-        Application_Model_Show::setNextPop($utcStart, $show_id, $day);
+        Application_Model_Show::setNextPop($start, $show_id, $day);
     }
 
     /**
