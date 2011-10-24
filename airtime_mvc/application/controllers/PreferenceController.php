@@ -292,7 +292,7 @@ class PreferenceController extends Zend_Controller_Action
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         for($i=1; $i<=$num_of_stream; $i++){
             $status = Application_Model_StreamSetting::getLiquidsoapError($i);
-            $status = $status == ''?"OK":$status;
+            $status = $status == NULL?"Problem with Liquidsoap...":$status;
             if(!Application_Model_StreamSetting::getStreamEnabled($i)){
                 $status = "N/A";
             }

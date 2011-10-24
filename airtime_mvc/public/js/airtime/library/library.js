@@ -56,6 +56,10 @@ function confirmDeletePlaylist(params){
     }
 }
 
+function openFileOnSoundCloud(link){
+	window.open(link)
+}
+
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');

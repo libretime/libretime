@@ -108,10 +108,11 @@ class Application_Model_StreamSetting {
     public static function getStreamEnabled($stream_id){
         global $CC_DBC;
         
-        $keyname = "s".$stream_id."_ouput";
+        $keyname = "s".$stream_id."_output";
         $sql = "SELECT value FROM cc_stream_setting"
         ." WHERE keyname = '$keyname'";
         $result = $CC_DBC->GetOne($sql);
+        
         if($result == 'disabled'){
             $result = false;
         }else{
