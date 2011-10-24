@@ -12,7 +12,7 @@ if (substr($sapi_type, 0, 3) == 'cli') {
     $apiKey = $airtimeIni['general']['api_key'];
 
     $status = AirtimeCheck::GetStatus($apiKey);
-    AirtimeCheck::PrintStatus($status->status);
+    AirtimeCheck::PrintStatus($status);
 }
 
 class AirtimeCheck {
@@ -59,39 +59,48 @@ class AirtimeCheck {
         $data = curl_exec($ch);
 
         //$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
         curl_close($ch);
 
-        return json_decode($data);
+        return $data;
     }
 
     public static function PrintStatus($p_status){
-
-
-        self::output_status("KERNEL_VERSION", $p_status->platform->release);
-        self::output_status("MACHINE_ARCHITECTURE", $p_status->platform->machine);
-        self::output_status("TOTAL_MEMORY_MBYTES", $p_status->platform->memory);
-        self::output_status("TOTAL_SWAP_MBYTES", $p_status->platform->swap);
-        self::output_status("AIRTIME_VERSION", $p_status->airtime_version);
-        self::output_status("PLAYOUT_ENGINE_PROCESS_ID", $p_status->services->pypo->process_id);
-        self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $p_status->services->pypo->uptime_seconds);
-        self::output_status("PLAYOUT_ENGINE_MEM_PERC", $p_status->services->pypo->memory_perc);
-        self::output_status("PLAYOUT_ENGINE_CPU_PERC", $p_status->services->pypo->cpu_perc);
-        self::output_status("LIQUIDSOAP_PROCESS_ID", $p_status->services->liquidsoap->process_id);
-        self::output_status("LIQUIDSOAP_RUNNING_SECONDS", $p_status->services->liquidsoap->uptime_seconds);
-        self::output_status("LIQUIDSOAP_MEM_PERC", $p_status->services->liquidsoap->memory_perc);
-        self::output_status("LIQUIDSOAP_CPU_PERC", $p_status->services->liquidsoap->cpu_perc);
-        self::output_status("MEDIA_MONITOR_PROCESS_ID", $p_status->services->media_monitor->process_id);
-        self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", $p_status->services->media_monitor->uptime_seconds);
-        self::output_status("MEDIA_MONITOR_MEM_PERC", $p_status->services->media_monitor->memory_perc);
-        self::output_status("MEDIA_MONITOR_CPU_PERC", $p_status->services->media_monitor->cpu_perc);
-        self::output_status("SHOW_RECORDER_PROCESS_ID", $p_status->services->show_recorder->process_id);
-        self::output_status("SHOW_RECORDER_RUNNING_SECONDS", $p_status->services->show_recorder->uptime_seconds);
-        self::output_status("SHOW_RECORDER_MEM_PERC", $p_status->services->show_recorder->memory_perc);
-        self::output_status("SHOW_RECORDER_CPU_PERC", $p_status->services->show_recorder->cpu_perc);
-        self::output_status("RABBITMQ_PROCESS_ID", $p_status->services->rabbitmq->process_id);
-        self::output_status("RABBITMQ_RUNNING_SECONDS", $p_status->services->rabbitmq->uptime_seconds);
-        self::output_status("RABBITMQ_MEM_PERC", $p_status->services->rabbitmq->memory_perc);
-        self::output_status("RABBITMQ_CPU_PERC", $p_status->services->rabbitmq->cpu_perc);
+        
+        if ($p_status === false){
+            self::output_status("AIRTIME_SERVER_RESPONDING", "FAILED");
+        } else {
+            self::output_status("AIRTIME_SERVER_RESPONDING", "OK");
+            $p_status = json_decode($p_status);
+            
+            $data = $p_status->status;
+                        
+            self::output_status("KERNEL_VERSION", $data->platform->release);
+            self::output_status("MACHINE_ARCHITECTURE", $data->platform->machine);
+            self::output_status("TOTAL_MEMORY_MBYTES", $data->platform->memory);
+            self::output_status("TOTAL_SWAP_MBYTES", $data->platform->swap);
+            self::output_status("AIRTIME_VERSION", $data->airtime_version);
+            self::output_status("PLAYOUT_ENGINE_PROCESS_ID", $data->services->pypo->process_id);
+            self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $data->services->pypo->uptime_seconds);
+            self::output_status("PLAYOUT_ENGINE_MEM_PERC", $data->services->pypo->memory_perc);
+            self::output_status("PLAYOUT_ENGINE_CPU_PERC", $data->services->pypo->cpu_perc);
+            self::output_status("LIQUIDSOAP_PROCESS_ID", $data->services->liquidsoap->process_id);
+            self::output_status("LIQUIDSOAP_RUNNING_SECONDS", $data->services->liquidsoap->uptime_seconds);
+            self::output_status("LIQUIDSOAP_MEM_PERC", $data->services->liquidsoap->memory_perc);
+            self::output_status("LIQUIDSOAP_CPU_PERC", $data->services->liquidsoap->cpu_perc);
+            self::output_status("MEDIA_MONITOR_PROCESS_ID", $data->services->media_monitor->process_id);
+            self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", $data->services->media_monitor->uptime_seconds);
+            self::output_status("MEDIA_MONITOR_MEM_PERC", $data->services->media_monitor->memory_perc);
+            self::output_status("MEDIA_MONITOR_CPU_PERC", $data->services->media_monitor->cpu_perc);
+            self::output_status("SHOW_RECORDER_PROCESS_ID", $data->services->show_recorder->process_id);
+            self::output_status("SHOW_RECORDER_RUNNING_SECONDS", $data->services->show_recorder->uptime_seconds);
+            self::output_status("SHOW_RECORDER_MEM_PERC", $data->services->show_recorder->memory_perc);
+            self::output_status("SHOW_RECORDER_CPU_PERC", $data->services->show_recorder->cpu_perc);
+            self::output_status("RABBITMQ_PROCESS_ID", $data->services->rabbitmq->process_id);
+            self::output_status("RABBITMQ_RUNNING_SECONDS", $data->services->rabbitmq->uptime_seconds);
+            self::output_status("RABBITMQ_MEM_PERC", $data->services->rabbitmq->memory_perc);
+            self::output_status("RABBITMQ_CPU_PERC", $data->services->rabbitmq->cpu_perc);
+        }
 
         if (self::$AIRTIME_STATUS_OK){
             echo PHP_EOL."-- Your installation of Airtime looks OK!".PHP_EOL;
