@@ -1338,4 +1338,19 @@ class Application_Model_Show {
 
         return $CC_DBC->GetAll($sql);
     }
+    
+    public static function GetMaxLengths() {
+    	global $CC_CONFIG, $CC_DBC;
+        $sql = "SELECT column_name, character_maximum_length FROM information_schema.columns"
+        ." WHERE table_name = 'cc_show' AND character_maximum_length > 0";
+    	$result = $CC_DBC->GetAll($sql);
+    	
+    	// store result into assoc array
+    	$assocArray = array();
+    	foreach($result as $row) {
+    		$assocArray[$row['column_name']] = $row['character_maximum_length'];
+    	}
+    	
+        return $assocArray;
+    }
 }
