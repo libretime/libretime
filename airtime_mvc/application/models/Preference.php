@@ -29,30 +29,32 @@ class Application_Model_Preference
         
         $result = $CC_DBC->GetOne($sql);
 
-        if ($result == 1 && is_null($id)){
-            $sql = "UPDATE cc_pref"
-            ." SET subjid = NULL, valstr = '$value'"
-            ." WHERE keystr = '$key'";
-        }
-        else if ($result == 1 && !is_null($id)){
-            if($isUserValue) {
-            	$sql = "UPDATE cc_pref"
-	            ." SET valstr = '$value'"
-	            ." WHERE keystr = '$key' AND subjid = $id";
-            } else {
-	        	$sql = "UPDATE cc_pref"
-	            ." SET subjid = $id, valstr = '$value'"
+        if($result == 1) {
+        	// result found
+	        if(is_null($id) || !$isUserValue) {
+	        	// system pref
+	            $sql = "UPDATE cc_pref"
+	            ." SET subjid = NULL, valstr = '$value'"
 	            ." WHERE keystr = '$key'";
-            }
+	        } else {
+	        	// user pref
+	            $sql = "UPDATE cc_pref" 
+	            . " SET valstr = '$value'" 
+	            . " WHERE keystr = '$key' AND subjid = $id";
+	        }
+        } else {
+        	// result not found
+	        if(is_null($id) || !$isUserValue) {
+	        	// system pref
+	            $sql = "INSERT INTO cc_pref (keystr, valstr)"
+	            ." VALUES ('$key', '$value')";
+	        } else {
+	        	// user pref
+	            $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
+	            ." VALUES ($id, '$key', '$value')";
+	        }
         }
-        else if(is_null($id)) {
-            $sql = "INSERT INTO cc_pref (keystr, valstr)"
-            ." VALUES ('$key', '$value')";
-        }
-        else {
-            $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
-            ." VALUES ($id, '$key', '$value')";
-        }
+        
         return $CC_DBC->query($sql);
     }
 
