@@ -440,6 +440,9 @@ $(window).resize(function(){
         var widthPercent = parseInt(calendarWidth)+"%";
         $("#schedule_calendar").css("width", widthPercent);
 	}
+	
+	// 200 px for top dashboard and 50 for padding on main content
+	// this calculation was copied from schedule.js line 326
 	var mainHeight = document.documentElement.clientHeight - 200 - 50;
 	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight)
 	$("#schedule_calendar").fullCalendar('render');
