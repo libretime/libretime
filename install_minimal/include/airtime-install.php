@@ -112,15 +112,12 @@ if (isset($opts->o) || $newInstall == true) {
 if ($overwrite) {
     echo "* Creating INI files".PHP_EOL;
     AirtimeIni::CreateIniFiles();
-}
-
-//AirtimeInstall::InstallPhpCode();
-//AirtimeInstall::InstallBinaries();
-
-if ($overwrite) {
     echo "* Initializing INI files".PHP_EOL;
     AirtimeIni::UpdateIniFiles();
 }
+
+//AirtimeInstall::InstallPhpCode(); //copies contents of airtime_mvc to /usr/share
+//AirtimeInstall::InstallBinaries(); //copies utils to /usr/lib/airtime
 
 // Update the build.properties file to point to the correct directory.
 AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
@@ -141,10 +138,10 @@ if ($db_install) {
     }
 }
 
-#AirtimeInstall::CreateSymlinksToUtils();
+//AirtimeInstall::CreateSymlinksToUtils();
 
 AirtimeInstall::CreateZendPhpLogFile();
 
-#AirtimeInstall::CreateCronFile();
+//AirtimeInstall::CreateCronFile();
 
 /* FINISHED AIRTIME PHP INSTALLER */

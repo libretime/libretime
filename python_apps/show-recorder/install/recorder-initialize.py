@@ -12,8 +12,9 @@ try:
     sts = os.waitpid(p.pid, 0)[1]
     
     #start daemon
-    print "Waiting for processes to start..."
+    print "Waiting for show-recorder processes to start..."
     p = Popen("/etc/init.d/airtime-show-recorder stop", shell=True)
+    sts = os.waitpid(p.pid, 0)[1]
     p = Popen("/etc/init.d/airtime-show-recorder start-no-monit", shell=True)
     sts = os.waitpid(p.pid, 0)[1]
 except Exception, e:

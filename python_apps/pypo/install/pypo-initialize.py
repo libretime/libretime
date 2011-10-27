@@ -101,8 +101,9 @@ try:
         print "Unable to connect to the Airtime server."
 
     #restart airtime-playout   
-    print "Waiting for processes to start..."
+    print "Waiting for pypo processes to start..."
     p = Popen("/etc/init.d/airtime-playout stop", shell=True)
+    sts = os.waitpid(p.pid, 0)[1]
     p = Popen("/etc/init.d/airtime-playout start-no-monit", shell=True)
     sts = os.waitpid(p.pid, 0)[1]
     
