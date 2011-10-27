@@ -22,4 +22,5 @@ except Exception, e:
     print 'Error loading config file: ', e
     sys.exit(1)
 
+#copy python files
 copy_dir("%s/../../api_clients"%current_script_dir, config["bin_dir"])
