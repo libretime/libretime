@@ -338,17 +338,6 @@ function noOpenPL(json) {
 		.click(newSPL);
 }
 
-function closeSPL() {
-	var url;
-	
-	// stop playing any preview
-	$('#jquery_jplayer_1').jPlayer('stop');
-
-	url = '/Playlist/close/format/json';
-
-	$.post(url, noOpenPL);
-}
-
 function createPlaylistMetaForm(json) {
     var submit, form;
 
@@ -458,10 +447,6 @@ function setUpSPL() {
 	$("#spl_new")
 		.button()
 		.click(newSPL);
-
-	$("#spl_close")
-		.button()
-		.click(closeSPL);
 
     $("#spl_crossfade").click(function(){
 
