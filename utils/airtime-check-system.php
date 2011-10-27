@@ -52,7 +52,6 @@ class AirtimeCheck {
         $url = "http://localhost/api/status/format/json/api_key/%%api_key%%";
         self::output_status("AIRTIME_STATUS_URL", $url);
         $url = str_replace("%%api_key%%", $p_apiKey, $url);
-
         
         $ch = curl_init($url);
 
@@ -105,13 +104,17 @@ class AirtimeCheck {
         }
 
         if (self::$AIRTIME_STATUS_OK){
-            echo PHP_EOL."-- Your installation of Airtime looks OK!".PHP_EOL;
+            self::output_comment("Your installation of Airtime looks OK!");
             exit(0);
         } else {
-            echo PHP_EOL."-- There appears to be a problem with your Airtime installation.".PHP_EOL;
-            echo "-- Please visit http://wiki.sourcefabric.org/x/HABQ".PHP_EOL;
+            self::output_comment("There appears to be a problem with your Airtime installation.");
+            self::output_comment("Please visit http://wiki.sourcefabric.org/x/HABQ");
             exit(1);
         }
+    }
+    
+    public static function output_comment($comment){
+        echo PHP_EOL."-- $comment".PHP_EOL;
     }
 
     public static function output_status($key, $value){
