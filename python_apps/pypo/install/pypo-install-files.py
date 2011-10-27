@@ -45,9 +45,11 @@ try:
 
     #create pypo log dir
     create_dir(config['pypo_log_dir'])
+    os.system("chown -R pypo:pypo "+config["pypo_log_dir"])
 
     #create liquidsoap log dir
     create_dir(config['liquidsoap_log_dir'])
+    os.system("chown -R pypo:pypo "+config["liquidsoap_log_dir"])
 
     #create cache, tmp, file dirs
     create_dir(config['cache_dir'])

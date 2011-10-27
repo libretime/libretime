@@ -102,8 +102,8 @@ try:
 
     #restart airtime-playout   
     print "Waiting for processes to start..."
-    #p = Popen("/etc/init.d/airtime-playout start-no-monit", shell=True)
-    p = Popen("/etc/init.d/airtime-playout restart", shell=True)
+    p = Popen("/etc/init.d/airtime-playout stop", shell=True)
+    p = Popen("/etc/init.d/airtime-playout start-no-monit", shell=True)
     sts = os.waitpid(p.pid, 0)[1]
     
 except Exception, e:

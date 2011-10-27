@@ -15,6 +15,7 @@ if [[ "$DEB" = "Status: install ok installed" ]]; then
     exit 1
 fi
 
+
 #Check whether version of virtualenv is <= 1.4.8. If so exit install. 
 BAD_VERSION="1.4.8"
 VERSION=$(virtualenv --version)
@@ -32,18 +33,18 @@ fi
 
 echo -e "\n******************************** Install Begin *********************************"
 
-# Absolute path to this script, e.g. /home/user/bin/foo.sh
+# Absolute path to this script
 SCRIPT=`readlink -f $0`
-# Absolute path this script is in, thus /home/user/bin
+# Absolute directory this script is in
 SCRIPTPATH=`dirname $SCRIPT`
 
-python $SCRIPTPATH/../python_apps/create-pypo-user.py
-
-$SCRIPTPATH/include/airtime-copy-files.sh
-
 ${SCRIPTPATH}/../python_apps/python-virtualenv/virtualenv-install.sh
+
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
+
+echo -e "\n*** Creating Pypo User ***"
+python ${SCRIPTPATH}/../python_apps/create-pypo-user.py
 
 set +e
 php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-install.php $@
@@ -56,32 +57,35 @@ if [ "$result" -ne "0" ]; then
 fi
 set -e
 
-python $SCRIPTPATH/../python_apps/pypo/install/pypo-initialize.py
-python $SCRIPTPATH/../python_apps/media-monitor/install/media-monitor-initialize.py
-python $SCRIPTPATH/../python_apps/show-recorder/install/recorder-initialize.py
+echo -e "\n*** API Client Installation ***"
+python ${SCRIPTPATH}/../python_apps/api_clients/install/api_client_install.py
+
+echo -e "\n*** Pypo Installation ***"
+python ${SCRIPTPATH}/../python_apps/pypo/install/pypo-install.py
+
+echo -e "\n*** Recorder Installation ***"
+python ${SCRIPTPATH}/../python_apps/show-recorder/install/recorder-install.py
+
+echo -e "\n*** Media Monitor Installation ***"
+python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.py
+
+python ${SCRIPTPATH}/../python_apps/icecast2/install/icecast2-install.py
 
 # Start monit if it is not running, or restart if it is.
 # Need to ensure monit is running before Airtime daemons are run. This is
 # so we can ensure they can register with monit to monitor them when they start.
 # If monit is already running, this step is still useful as we need monit to
 # reload its config files.
-
-echo "Restarting"
 /etc/init.d/monit restart
-echo "Restarting Done"
 
 #give monit some time to boot-up before issuing commands
 sleep 1
 
 set +e
 monit monitor airtime-media-monitor
-sleep 0.5
 monit monitor airtime-liquidsoap
-sleep 0.5
 monit monitor airtime-playout
-sleep 0.5
 monit monitor airtime-show-recorder
-sleep 0.5
 monit monitor rabbitmq-server
 set -e
 

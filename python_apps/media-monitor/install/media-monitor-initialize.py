@@ -11,8 +11,8 @@ try:
     sts = os.waitpid(p.pid, 0)[1]
 
     #Start media-monitor daemon
-    #p = Popen("/etc/init.d/airtime-media-monitor start-no-monit", shell=True)
-    p = Popen("/etc/init.d/airtime-media-monitor restart", shell=True)
+    p = Popen("/etc/init.d/airtime-media-monitor stop", shell=True)
+    p = Popen("/etc/init.d/airtime-media-monitor start-no-monit", shell=True)
     sts = os.waitpid(p.pid, 0)[1]
 except Exception, e:
     print e

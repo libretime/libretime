@@ -16,9 +16,6 @@ require_once(dirname(__FILE__).'/AirtimeInstall.php');
 require_once(__DIR__.'/airtime-constants.php');
 
 
-
-
-
 AirtimeInstall::ExitIfNotRoot();
 
 require_once('Zend/Loader/Autoloader.php');
@@ -117,8 +114,8 @@ if ($overwrite) {
     AirtimeIni::CreateIniFiles();
 }
 
-AirtimeInstall::InstallPhpCode();
-AirtimeInstall::InstallBinaries();
+//AirtimeInstall::InstallPhpCode();
+//AirtimeInstall::InstallBinaries();
 
 if ($overwrite) {
     echo "* Initializing INI files".PHP_EOL;
@@ -144,10 +141,10 @@ if ($db_install) {
     }
 }
 
-AirtimeInstall::CreateSymlinksToUtils();
+#AirtimeInstall::CreateSymlinksToUtils();
 
 AirtimeInstall::CreateZendPhpLogFile();
 
-AirtimeInstall::CreateCronFile();
+#AirtimeInstall::CreateCronFile();
 
 /* FINISHED AIRTIME PHP INSTALLER */

@@ -44,6 +44,7 @@ try:
     
     #create log dir
     create_dir(config['log_dir'])
+    os.system("chown -R pypo:pypo "+config["log_dir"])
 
     #copy python files
     copy_dir("%s/.."%current_script_dir, config["bin_dir"])
