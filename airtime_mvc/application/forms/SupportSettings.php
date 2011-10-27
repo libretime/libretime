@@ -105,7 +105,7 @@ class Application_Form_SupportSettings extends Zend_Form
 					'minheight'	=> 200,
 					'maxwidth'	=> 600,
 					'maxheight'	=>	600));
-		$upload->setAttrib('accept', 'image/jpeg');
+		$upload->setAttrib('accept', 'image/jpeg,image/gif,image/png,image/jpg');
 		$this->addElement($upload);
 		
         //enable support feedback
