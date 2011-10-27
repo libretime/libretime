@@ -72,6 +72,7 @@ class AirtimeCheck {
             self::output_status("AIRTIME_SERVER_RESPONDING", "FAILED");
         } else {
             self::output_status("AIRTIME_SERVER_RESPONDING", "OK");
+                        
             $p_status = json_decode($p_status);
             
             $data = $p_status->status;
@@ -81,26 +82,61 @@ class AirtimeCheck {
             self::output_status("TOTAL_MEMORY_MBYTES", $data->platform->memory);
             self::output_status("TOTAL_SWAP_MBYTES", $data->platform->swap);
             self::output_status("AIRTIME_VERSION", $data->airtime_version);
-            self::output_status("PLAYOUT_ENGINE_PROCESS_ID", $data->services->pypo->process_id);
-            self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $data->services->pypo->uptime_seconds);
-            self::output_status("PLAYOUT_ENGINE_MEM_PERC", $data->services->pypo->memory_perc);
-            self::output_status("PLAYOUT_ENGINE_CPU_PERC", $data->services->pypo->cpu_perc);
-            self::output_status("LIQUIDSOAP_PROCESS_ID", $data->services->liquidsoap->process_id);
-            self::output_status("LIQUIDSOAP_RUNNING_SECONDS", $data->services->liquidsoap->uptime_seconds);
-            self::output_status("LIQUIDSOAP_MEM_PERC", $data->services->liquidsoap->memory_perc);
-            self::output_status("LIQUIDSOAP_CPU_PERC", $data->services->liquidsoap->cpu_perc);
-            self::output_status("MEDIA_MONITOR_PROCESS_ID", $data->services->media_monitor->process_id);
-            self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", $data->services->media_monitor->uptime_seconds);
-            self::output_status("MEDIA_MONITOR_MEM_PERC", $data->services->media_monitor->memory_perc);
-            self::output_status("MEDIA_MONITOR_CPU_PERC", $data->services->media_monitor->cpu_perc);
-            self::output_status("SHOW_RECORDER_PROCESS_ID", $data->services->show_recorder->process_id);
-            self::output_status("SHOW_RECORDER_RUNNING_SECONDS", $data->services->show_recorder->uptime_seconds);
-            self::output_status("SHOW_RECORDER_MEM_PERC", $data->services->show_recorder->memory_perc);
-            self::output_status("SHOW_RECORDER_CPU_PERC", $data->services->show_recorder->cpu_perc);
-            self::output_status("RABBITMQ_PROCESS_ID", $data->services->rabbitmq->process_id);
-            self::output_status("RABBITMQ_RUNNING_SECONDS", $data->services->rabbitmq->uptime_seconds);
-            self::output_status("RABBITMQ_MEM_PERC", $data->services->rabbitmq->memory_perc);
-            self::output_status("RABBITMQ_CPU_PERC", $data->services->rabbitmq->cpu_perc);
+            if ($data->services->pypo){
+                self::output_status("PLAYOUT_ENGINE_PROCESS_ID", $data->services->pypo->process_id);
+                self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $data->services->pypo->uptime_seconds);
+                self::output_status("PLAYOUT_ENGINE_MEM_PERC", $data->services->pypo->memory_perc);
+                self::output_status("PLAYOUT_ENGINE_CPU_PERC", $data->services->pypo->cpu_perc);
+            } else {
+                self::output_status("PLAYOUT_ENGINE_PROCESS_ID", "FAILED");
+                self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", "0");
+                self::output_status("PLAYOUT_ENGINE_MEM_PERC", "0%");
+                self::output_status("PLAYOUT_ENGINE_CPU_PERC", "0%");
+            }
+            if (isset($data->services->liquidsoap)){
+                self::output_status("LIQUIDSOAP_PROCESS_ID", $data->services->liquidsoap->process_id);
+                self::output_status("LIQUIDSOAP_RUNNING_SECONDS", $data->services->liquidsoap->uptime_seconds);
+                self::output_status("LIQUIDSOAP_MEM_PERC", $data->services->liquidsoap->memory_perc);
+                self::output_status("LIQUIDSOAP_CPU_PERC", $data->services->liquidsoap->cpu_perc);
+            } else {
+                self::output_status("LIQUIDSOAP_PROCESS_ID", "FAILED");
+                self::output_status("LIQUIDSOAP_RUNNING_SECONDS", "0");
+                self::output_status("LIQUIDSOAP_MEM_PERC", "0%");
+                self::output_status("LIQUIDSOAP_CPU_PERC", "0%");
+            }
+            if (isset($data->services->media_monitor)){
+                self::output_status("MEDIA_MONITOR_PROCESS_ID", $data->services->media_monitor->process_id);
+                self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", $data->services->media_monitor->uptime_seconds);
+                self::output_status("MEDIA_MONITOR_MEM_PERC", $data->services->media_monitor->memory_perc);
+                self::output_status("MEDIA_MONITOR_CPU_PERC", $data->services->media_monitor->cpu_perc);
+            } else {
+                self::output_status("MEDIA_MONITOR_PROCESS_ID", "FAILED");
+                self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", "0");
+                self::output_status("MEDIA_MONITOR_MEM_PERC", "0%");
+                self::output_status("MEDIA_MONITOR_CPU_PERC", "0%");
+            }
+            if (isset($data->services->show_recorder)){
+                self::output_status("SHOW_RECORDER_PROCESS_ID", $data->services->show_recorder->process_id);
+                self::output_status("SHOW_RECORDER_RUNNING_SECONDS", $data->services->show_recorder->uptime_seconds);
+                self::output_status("SHOW_RECORDER_MEM_PERC", $data->services->show_recorder->memory_perc);
+                self::output_status("SHOW_RECORDER_CPU_PERC", $data->services->show_recorder->cpu_perc);
+            } else {
+                self::output_status("SHOW_RECORDER_PROCESS_ID", "FAILED");
+                self::output_status("SHOW_RECORDER_RUNNING_SECONDS", "0");
+                self::output_status("SHOW_RECORDER_MEM_PERC", "0%");
+                self::output_status("SHOW_RECORDER_CPU_PERC", "0%");
+            }
+            if (isset($data->services->rabbitmq)){
+                self::output_status("RABBITMQ_PROCESS_ID", $data->services->rabbitmq->process_id);
+                self::output_status("RABBITMQ_RUNNING_SECONDS", $data->services->rabbitmq->uptime_seconds);
+                self::output_status("RABBITMQ_MEM_PERC", $data->services->rabbitmq->memory_perc);
+                self::output_status("RABBITMQ_CPU_PERC", $data->services->rabbitmq->cpu_perc);
+            } else {
+                self::output_status("RABBITMQ_PROCESS_ID", "FAILED");
+                self::output_status("RABBITMQ_RUNNING_SECONDS", "0");
+                self::output_status("RABBITMQ_MEM_PERC", "0%");
+                self::output_status("RABBITMQ_CPU_PERC", "0%");
+            }
         }
 
         if (self::$AIRTIME_STATUS_OK){
