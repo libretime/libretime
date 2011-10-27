@@ -4,6 +4,8 @@ AirtimeCheck::ExitIfNotRoot();
 
 $sapi_type = php_sapi_name();
 
+$showColor = !in_array("--no-color", $argv);
+
 //detect if we are running via the command line
 if (substr($sapi_type, 0, 3) == 'cli') {
     //we are running from the command-line
@@ -113,6 +115,8 @@ class AirtimeCheck {
     }
 
     public static function output_status($key, $value){
+        global $showColor;
+        
         $RED = "[0;31m";
         $GREEN = "[1;32m";
 
@@ -123,7 +127,10 @@ class AirtimeCheck {
             self::$AIRTIME_STATUS_OK = false;
         }
         
-        echo sprintf("%-31s= %s", $key, self::term_color($value, $color)).PHP_EOL; 
+        if ($showColor)
+            echo sprintf("%-31s= %s", $key, self::term_color($value, $color)).PHP_EOL;
+        else
+            echo sprintf("%-31s= %s", $key, $value).PHP_EOL; 
     }
 
     public static function term_color($text, $color){
