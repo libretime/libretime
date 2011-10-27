@@ -26,9 +26,14 @@ class MediaMonitorCommon:
 
     def is_temp_file(self, filename):
         info = filename.split(".")
-
-        if(info[-2] in self.supported_file_formats):
-            return True
+        
+        # if file doesn't have any extension, info[-2] throws exception
+        # Hence, checking length of info before we do anything
+        if(len(info) >= 3):
+            if(info[-2] in self.supported_file_formats):
+                return True
+            else:
+                return False
         else:
             return False
 
