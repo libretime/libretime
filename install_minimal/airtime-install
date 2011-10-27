@@ -16,7 +16,7 @@ if [[ "$DEB" = "Status: install ok installed" ]]; then
 fi
 
 
-#Check whether version of virtualenv is <= 1.4.5. If so exit install. 
+#Check whether version of virtualenv is <= 1.4.8. If so exit install. 
 BAD_VERSION="1.4.8"
 VERSION=$(virtualenv --version)
 NEWEST_VERSION=$(echo -e "$BAD_VERSION\n$VERSION\n'" | sort -t '.' -g | tail -n 1)
@@ -71,13 +71,14 @@ python ${SCRIPTPATH}/../python_apps/media-monitor/install/media-monitor-install.
 
 python ${SCRIPTPATH}/../python_apps/icecast2/install/icecast2-install.py
 
+# Start monit if it is not running, or restart if it is.
 # Need to ensure monit is running before Airtime daemons are run. This is
 # so we can ensure they can register with monit to monitor them when they start.
 # If monit is already running, this step is still useful as we need monit to
 # reload its config files.
 /etc/init.d/monit restart
 
-#allow monit to boot up before issuing commands
+#give monit some time to boot-up before issuing commands
 sleep 1
 
 set +e

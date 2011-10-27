@@ -24,7 +24,6 @@ def create_path(path):
 
 def copy_dir(src_dir, dest_dir):
   if (os.path.exists(dest_dir)) and (dest_dir != "/"):
-    #print "Removing old directory "+dest_dir
     shutil.rmtree(dest_dir)
   if not (os.path.exists(dest_dir)):
     print "Copying directory "+os.path.realpath(src_dir)+" to "+os.path.realpath(dest_dir)
