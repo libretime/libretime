@@ -20,7 +20,7 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 
 echo PHP_EOL;
 echo "* Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
-AirtimeInstall::UninstallPhpCode();
+//AirtimeInstall::UninstallPhpCode();
 
 //------------------------------------------------------------------------
 // Delete the database
@@ -77,12 +77,11 @@ if ($results == 0) {
     echo "   * Nothing to delete.".PHP_EOL;
 }
 
-AirtimeInstall::RemoveSymlinks();
-AirtimeInstall::UninstallBinaries();
-AirtimeInstall::RemoveLogDirectories();
-AirtimeInstall::removeVirtualEnvDistributeFile();
-AirtimeIni::RemoveMonitFile();
-
-@unlink('/etc/cron.d/airtime-crons');
+//AirtimeInstall::RemoveSymlinks();
+//AirtimeInstall::UninstallBinaries();
+//AirtimeInstall::RemoveLogDirectories();
+//AirtimeInstall::removeVirtualEnvDistributeFile();
+//AirtimeIni::RemoveMonitFile();
+//@unlink('/etc/cron.d/airtime-crons');
 
 /* FINISHED AIRTIME PHP UNINSTALLER */

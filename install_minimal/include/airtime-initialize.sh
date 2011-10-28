@@ -24,7 +24,7 @@ result=$?
 
 if [ "$result" -ne "0" ]; then
     #There was an error, exit with error code.
-    echo "There was an error during upgrade. Exit code $result"
+    echo "There was an error during install. Exit code $result"
     exit 1
 fi
 set -e
@@ -54,4 +54,3 @@ set -e
 echo -e "\n*** Verifying your system environment ***"
 sleep 10
 airtime-check-system
-

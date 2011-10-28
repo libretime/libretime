@@ -84,7 +84,6 @@ class ApiController extends Zend_Controller_Action
     		"timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
     		"weekStartDay" => Application_Model_Preference::GetWeekStartDay()
         );
-    	
     }
 
     /**
@@ -752,7 +751,6 @@ class ApiController extends Zend_Controller_Action
     	$this->view->libraryInit = array(
         	"numEntries"=>Application_Model_Preference::GetLibraryNumEntries()
         );
-    	
     }
 }
 

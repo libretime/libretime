@@ -37,6 +37,10 @@ except Exception, e:
 try:
     # Absolute path this script is in
     current_script_dir = get_current_script_dir()
+    
+    #copy monit files
+    shutil.copy('%s/../monit-airtime-show-recorder.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
         
     #create temporary media-storage directory
     print "Creating temporary media storage directory"
@@ -63,5 +67,3 @@ try:
 
 except Exception, e:
     print e
-
-
