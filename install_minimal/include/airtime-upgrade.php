@@ -107,9 +107,9 @@ $CC_DBC->query($sql);
 
 $values = parse_ini_file(AirtimeMasterUpgrade::CONF_FILE_AIRTIME, true);
 $phpDir = $values['general']['airtime_dir'];
-AirtimeMasterUpgrade::InstallAirtimePhpServerCode($phpDir);
-AirtimeInstall::InstallBinaries();
-AirtimeInstall::CreateSymlinksToUtils();
+//AirtimeMasterUpgrade::InstallAirtimePhpServerCode($phpDir);
+//AirtimeInstall::InstallBinaries();
+//AirtimeInstall::CreateSymlinksToUtils();
 
 
 $newVersion = AIRTIME_VERSION;
