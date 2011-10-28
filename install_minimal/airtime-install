@@ -42,4 +42,9 @@ python $SCRIPTPATH/../python_apps/create-pypo-user.py
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
 
+
+echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
+sleep 10
+airtime-check-system
+
 echo -e "\n******************************* Install Complete *******************************"

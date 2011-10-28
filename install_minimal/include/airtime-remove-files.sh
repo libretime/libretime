@@ -29,16 +29,14 @@ AIRTIMEROOT=$SCRIPTPATH/../../
 
 rm -f /etc/cron.d/airtime-crons
 
-echo "API Client"
+echo "* API Client"
 python $AIRTIMEROOT/python_apps/api_clients/install/api_client_uninstall.py
-echo "Pypo"
+echo "* Pypo"
 python $AIRTIMEROOT/python_apps/pypo/install/pypo-remove-files.py
-echo "Media-Monitor"
+echo "* Media-Monitor"
 python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-remove-files.py
-echo "Show-Recorder"
+echo "* Show-Recorder"
 python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-remove-files.py
-
-rm -rf /usr/lib/airtime
 
 #remove symlinks
 rm -f /usr/bin/airtime-import
@@ -46,6 +44,7 @@ rm -f /usr/bin/airtime-update-db-settings
 rm -f /usr/bin/airtime-check-system
 rm -f /usr/bin/airtime-log
 
+rm -rf /usr/lib/airtime
 rm -rf /usr/share/airtime
 
 rm -rf /var/log/airtime

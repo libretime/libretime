@@ -29,15 +29,15 @@ try:
     
     #remove bin dir
     print "* Removing Show-Recorder Program Directories"
-    shutil.rmtree(config["bin_dir"])
+    shutil.rmtree(config["bin_dir"], ignore_errors=True)
     
     #remove log dir
     print "* Removing Show-Recorder Log Directory"
-    shutil.rmtree(config["log_dir"])
+    shutil.rmtree(config["log_dir"], ignore_errors=True)
     
     #remove temporary media-storage dir
     print "* Removing Show-Recorder Temporary Directory"
-    shutil.rmtree(config["base_recorded_files"])
+    shutil.rmtree(config["base_recorded_files"], ignore_errors=True)
     
     #remove monit files
     print "* Removing Show-Recorder Monit Files"

@@ -50,7 +50,3 @@ monit monitor airtime-playout
 monit monitor airtime-show-recorder
 #monit monitor rabbitmq-server
 set -e
-
-echo -e "\n*** Verifying your system environment ***"
-sleep 10
-airtime-check-system

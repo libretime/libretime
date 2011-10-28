@@ -45,10 +45,6 @@ HOUR=$(($RANDOM%24))
 MIN=$(($RANDOM%60))
 echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.d/airtime-crons
 
-#cp $AIRTIMEROOT/python_apps/show-recorder/airtime-show-recorder-init-d /etc/init.d/airtime-show-recorder
-#cp $AIRTIMEROOT/python_apps/media-monitor/airtime-media-monitor-init-d /etc/init.d/airtime-media-monitor
-#cp $AIRTIMEROOT/python_apps/pypo/airtime-playout-init-d /etc/init.d/airtime-playout
-
 #cp $AIRTIMEROOT/python_apps/monit/monit-airtime-generic.cfg /etc/monit/conf.d/
 #cp $AIRTIMEROOT/python_apps/monit/monit-airtime-rabbitmq-server.cfg /etc/monit/conf.d/
 #cp $AIRTIMEROOT/python_apps/media-monitor/monit-airtime-media-monitor.cfg /etc/monit/conf.d/
