@@ -19,23 +19,7 @@ if(exec("whoami") != "root"){
     exit(1);
 }
 
-
-/* This class is responsible for tasks that need to be executed only *once*
- * per upgrade, even if it's upgrading over multiple versions of Airtime. */
-class AirtimeMasterUpgrade{
-    const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
-
-    public static function InstallAirtimePhpServerCode($phpDir)
-    {
-        $AIRTIME_SRC = realpath(__DIR__.'/../../airtime_mvc');
-
-        // delete old files
-        exec("rm -rf \"$phpDir\"");
-        echo "* Installing PHP code to ".$phpDir.PHP_EOL;
-        exec("mkdir -p ".$phpDir);
-        exec("cp -R ".$AIRTIME_SRC."/* ".$phpDir);
-    }
-}
+const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
 
 
 global $CC_DBC, $CC_CONFIG;
@@ -65,7 +49,7 @@ if (PEAR::isError($CC_DBC)) {
 
 $version = AirtimeInstall::GetVersionInstalled();
 
-echo "******************************** Update Begin *********************************".PHP_EOL;
+echo "******************************** Upgrade Begin *********************************".PHP_EOL;
 
 //convert strings like 1.9.0-devel to 1.9.0
 $version = substr($version, 0, 5);
@@ -105,34 +89,11 @@ if (strcmp($version, "2.0.0") < 0){
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
 $CC_DBC->query($sql);
 
-$values = parse_ini_file(AirtimeMasterUpgrade::CONF_FILE_AIRTIME, true);
+$values = parse_ini_file(CONF_FILE_AIRTIME, true);
 $phpDir = $values['general']['airtime_dir'];
-//AirtimeMasterUpgrade::InstallAirtimePhpServerCode($phpDir);
-//AirtimeInstall::InstallBinaries();
-//AirtimeInstall::CreateSymlinksToUtils();
-
 
 $newVersion = AIRTIME_VERSION;
 $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$newVersion')";
 $CC_DBC->query($sql);
 
-/*
-echo PHP_EOL."*** Updating Api Client ***".PHP_EOL;
-passthru("python $SCRIPTPATH/../../python_apps/api_clients/install/api_client_install.py");
-
-echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
-passthru("python $SCRIPTPATH/../../python_apps/pypo/install/pypo-install.py");
-
-echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
-passthru("python $SCRIPTPATH/../../python_apps/show-recorder/install/recorder-install.py");
-
-echo PHP_EOL."*** Updating Media Monitor ***".PHP_EOL;
-passthru("python $SCRIPTPATH/../../python_apps/media-monitor/install/media-monitor-install.py");
-
-passthru("python $SCRIPTPATH/../../python_apps/icecast2/install/icecast2-install.py");
-
-sleep(4);
-passthru("airtime-check-system");
-
-echo "******************************* Update Complete *******************************".PHP_EOL;
-*/
+echo "******************************* Upgrade Complete *******************************".PHP_EOL;
