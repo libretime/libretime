@@ -51,7 +51,7 @@
     margin: 0;
     padding: 4px 0;
     text-align: left;
-	min-width:100px;
+	min-width:103px;
 	clear:left;
 }
 #schedule-add-show dt.big {
@@ -75,7 +75,7 @@
 }
 label.wrapp-label input[type="checkbox"] {
 	float:left;
-	margin:-1px 4px 0 0;
+	margin:-1px 2px 0 0;
 }
 
 #schedule-add-show fieldset:last-child {
@@ -91,10 +91,10 @@ label.wrapp-label input[type="checkbox"] {
 #add_show_day_check-element.block-display label.wrapp-label {
 	font-size:12px;
 	float:left;
-	margin-right:5px;
+	margin-right:10px;
 }
 #add_show_name-element .input_text {
-	width:99%;
+	/*width:99%;*/
 }
 
 #schedule-add-show-overlap {
@@ -113,12 +113,13 @@ label.wrapp-label input[type="checkbox"] {
 }
 
 #add_show_start_time, #add_show_end_time	{
-	width: 60px;
+	width: 54px;
 	margin-left:10px;
 }
 
 #add_show_end_date_no_repeat, #add_show_start_date  {
-	width: 95px;
+	width: 89px;
+
 }
 
 #add_show_duration	{

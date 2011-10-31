@@ -61,7 +61,7 @@ class SmilPlaylist {
             return $lspl;
         }
         require_once("Playlist.php");
-        $pl =& Playlist::create($gb, $plid, "imported_SMIL");
+        $pl =& Application_Model_Playlist::create($gb, $plid, "imported_SMIL");
         if (PEAR::isError($pl)) {
             return $pl;
         }
@@ -220,14 +220,14 @@ class SmilPlaylistAudioElement {
             }
         }
         if ($fadeIn > 0 || $fadeOut > 0) {
-            $fiGunid = StoredFile::CreateGunid();
-            $fadeIn  = Playlist::secondsToPlaylistTime($fadeIn);
-            $fadeOut = Playlist::secondsToPlaylistTime($fadeOut);
+            $fiGunid = Application_Model_StoredFile::CreateGunid();
+            $fadeIn  = Application_Model_Playlist::secondsToPlaylistTime($fadeIn);
+            $fadeOut = Application_Model_Playlist::secondsToPlaylistTime($fadeOut);
             $fInfo   = "$ind2<fadeInfo id=\"$fiGunid\" fadeIn=\"$fadeIn\" fadeOut=\"$fadeOut\"/>\n";
         } else {
             $fInfo = '';
         }
-        $plElGunid  = StoredFile::CreateGunid();
+        $plElGunid  = Application_Model_StoredFile::CreateGunid();
         $acGunid     = $gunid;
         $type = 'audioClip';
         if (preg_match("|\.([a-zA-Z0-9]+)$|", $uri, $va)) {
@@ -244,7 +244,7 @@ class SmilPlaylistAudioElement {
                     }
                     //break;
                 default:
-                    $ac = StoredFile::RecallByGunid($gunid);
+                    $ac = Application_Model_StoredFile::RecallByGunid($gunid);
                     if (is_null($ac) || PEAR::isError($ac)) {
                         return $ac;
                     }
@@ -257,10 +257,10 @@ class SmilPlaylistAudioElement {
         }
 
         $title = basename($tree->attrs['src']->val);
-        $offset = Playlist::secondsToPlaylistTime($tree->attrs['begin']->val);
-        $clipStart = Playlist::secondsToPlaylistTime($tree->attrs['clipStart']->val);
-        $clipEnd = Playlist::secondsToPlaylistTime($tree->attrs['clipEnd']->val);
-        $clipLength = Playlist::secondsToPlaylistTime($tree->attrs['clipLength']->val);
+        $offset = Application_Model_Playlist::secondsToPlaylistTime($tree->attrs['begin']->val);
+        $clipStart = Application_Model_Playlist::secondsToPlaylistTime($tree->attrs['clipStart']->val);
+        $clipEnd = Application_Model_Playlist::secondsToPlaylistTime($tree->attrs['clipEnd']->val);
+        $clipLength = Application_Model_Playlist::secondsToPlaylistTime($tree->attrs['clipLength']->val);
         $res = "$ind<playlistElement id=\"$plElGunid\" relativeOffset=\"$offset\" clipStart=\"$clipStart\" clipEnd=\"$clipEnd\" clipLength=\"$clipLength\">\n".
             "$ind2<$type id=\"$acGunid\" playlength=\"$playlength\" title=\"$title\"/>\n".
         $fInfo.

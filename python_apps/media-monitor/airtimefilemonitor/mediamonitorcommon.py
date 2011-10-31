@@ -6,16 +6,18 @@ import logging
 from subprocess import Popen, PIPE
 from airtimemetadata import AirtimeMetadata
 from api_clients import api_client
+import pyinotify
 
 class MediaMonitorCommon:
 
     timestamp_file = "/var/tmp/airtime/last_index"
 
-    def __init__(self, airtime_config):
+    def __init__(self, airtime_config, wm=None):
         self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger()
         self.config = airtime_config
         self.md_manager = AirtimeMetadata()
+        self.wm = wm
 
     def is_parent_directory(self, filepath, directory):
         filepath = os.path.normpath(filepath)
@@ -24,9 +26,14 @@ class MediaMonitorCommon:
 
     def is_temp_file(self, filename):
         info = filename.split(".")
-
-        if(info[-2] in self.supported_file_formats):
-            return True
+        
+        # if file doesn't have any extension, info[-2] throws exception
+        # Hence, checking length of info before we do anything
+        if(len(info) >= 3):
+            if(info[-2] in self.supported_file_formats):
+                return True
+            else:
+                return False
         else:
             return False
 
@@ -85,6 +92,7 @@ class MediaMonitorCommon:
             omask = os.umask(0)
             if not os.path.exists(directory):
                 os.makedirs(directory, 02777)
+                self.wm.add_watch(directory, pyinotify.ALL_EVENTS, rec=True, auto_add=True)
             elif not os.path.isdir(directory):
                 #path exists but it is a file not a directory!
                 self.logger.error("path %s exists, but it is not a directory!!!")

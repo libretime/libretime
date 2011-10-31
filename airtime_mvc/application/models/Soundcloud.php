@@ -1,8 +1,7 @@
 <?php
-
 require_once 'soundcloud-api/Services/Soundcloud.php';
 
-class ATSoundcloud {
+class Application_Model_Soundcloud {
 
     private $_soundcloud;
 
@@ -17,11 +16,6 @@ class ATSoundcloud {
     {
         $username = Application_Model_Preference::GetSoundCloudUser();
         $password = Application_Model_Preference::GetSoundCloudPassword();
-
-        if($username === "" || $password === "")
-        {
-            return false;
-        }
 
         $token = $this->_soundcloud->accessTokenResourceOwner($username, $password);
 
@@ -40,13 +34,15 @@ class ATSoundcloud {
                 $tags = Application_Model_Preference::GetSoundCloudTags();
             }
 
+            $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1'?true:false;
+            
             $track_data = array(
                 'track[sharing]' => 'private',
                 'track[title]' => $filename,
                 'track[asset_data]' => '@' . $filepath,
                 'track[tag_list]' => $tags,
                 'track[description]' => $description,
-                'track[downloadable]' => true,
+                'track[downloadable]' => $downloadable,
 
             );
 
@@ -81,13 +77,13 @@ class ATSoundcloud {
             if ($license != "") {
                 $track_data['track[license]'] = $license;
             }
-
+            
             $response = json_decode(
                 $this->_soundcloud->post('tracks', $track_data),
                 true
             );
 
-            return $response["id"];
+            return $response;
         }
     }
 

@@ -26,7 +26,7 @@ require_once 'Playlist.php';
 require_once 'StoredFile.php';
 require_once 'Schedule.php';
 require_once 'Shows.php';
-require_once 'Users.php';
+require_once 'User.php';
 require_once 'RabbitMq.php';
 require_once 'Preference.php';
 //require_once APPLICATION_PATH.'/controllers/plugins/RabbitMqPlugin.php';
@@ -68,11 +68,11 @@ $pl = new Playlist();
 $pl->create($playlistName);
 
 
-$mediaFile = StoredFile::findByOriginalName("Peter_Rudenko_-_Opening.mp3");
+$mediaFile = Application_Model_StoredFile::findByOriginalName("Peter_Rudenko_-_Opening.mp3");
 if (is_null($mediaFile)) {
     echo "Adding test audio clip to the database.\n";
     $v = array("filepath" => __DIR__."/../../../audio_samples/vorbis.com/Hydrate-Kenny_Beltrey.ogg");
-    $mediaFile = StoredFile::Insert($v);
+    $mediaFile = Application_Model_StoredFile::Insert($v);
     if (PEAR::isError($mediaFile)) {
     	var_dump($mediaFile);
     	exit();
@@ -110,7 +110,7 @@ $playTime = date("Y-m-d H:i:s", time()+($secondsFromNow));
 //$scheduleGroup = new ScheduleGroup();
 //$scheduleGroup->add($playTime, null, $pl->getId());
 
-//$show = new ShowInstance($showInstanceId);
+//$show = new Application_Model_ShowInstance($showInstanceId);
 //$show->scheduleShow(array($pl->getId()));
 
 //$show->setShowStart();

@@ -1,0 +1,84 @@
+<div id="content" class="jp-container">
+<h1>Live stream</h1> 
+<?php $ids = Application_Model_StreamSetting::getEnabledStreamIds(); ?>
+<script>
+function setjPlayer(url, type){
+    var obj = new Object();
+    obj[type] = url;
+    
+    $("#jquery_jplayer_1").jPlayer("destroy");
+    $("#jquery_jplayer_1").jPlayer({
+        ready: function () {
+            $(this).jPlayer("setMedia", obj).jPlayer("play");
+        },
+        ended: function (event) {
+            $(this).jPlayer("play");
+        },
+        swfPath: "js",
+        supplied: type,
+        wmode: "window"
+    });
+}
+
+$(document).ready(function(){
+
+    $("#combo-box").change(function(eventObject){
+        var elem = $("#combo-box option:selected");
+        console.log(elem);
+
+        setjPlayer(elem.attr("data-url"), elem.attr("data-type"));
+    });
+
+        <?php
+            if (count($ids) > 0){
+                $id = $ids[0];
+                $streamData = Application_Model_StreamSetting::getStreamData($id);
+                $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
+                $type = $streamData["${id}_type"];
+                if ($type == "ogg")
+                    $type = "oga";
+                echo "setjPlayer('$url', '$type');";
+            }
+        ?>
+});
+</script>
+  <div class="jp-logo"><img id="logo-img" onload='resizeToMaxHeight(this, 40);' src="<?php echo $this->logo ?>" /></div>
+        <div class="jp-stream">
+            <div class="jp-stream-text">Select stream:</div>
+                
+              <form id="form1" method="post" action="">
+                <select id="combo-box">
+                    <?php
+                        foreach($ids as $id) {
+                            $streamData = Application_Model_StreamSetting::getStreamData($id);
+                            $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
+                            $type = $streamData["${id}_type"];
+                            if ($type == "ogg")
+                                $type = "oga";
+
+                            $label = $streamData["${id}_description"]." (".$streamData["${id}_bitrate"]." Kbit/s)";
+                            echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s'>%s</option>", $id, $url, $type, $label);
+                        }
+                    ?>
+                </select>
+              </form>
+        </div>
+        <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+
+<div id="jp_container_1" class="jp-audio">
+    <div class="jp-type-single">
+        <div id="jp_interface_1" class="jp-gui jp-interface">
+            <ul class="jp-controls">
+                <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+                <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+                <li><a title="mute" tabindex="1" class="jp-mute" href="javascript:;">mute</a></li>
+                <li><a title="unmute" tabindex="1" class="jp-unmute" href="javascript:;">unmute</a></li>
+                <li><a title="max volume" tabindex="1" class="jp-volume-max" href="javascript:;">max volume</a></li>
+            </ul>
+            <div class="jp-volume-bar">
+                <div class="jp-volume-bar-value"></div>
+            </div>
+        </div>
+        <div id="jp_playlist_1" class="jp-playlist"></div>
+    </div>
+</div>

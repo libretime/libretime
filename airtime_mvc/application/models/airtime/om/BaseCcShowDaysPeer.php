@@ -26,7 +26,7 @@ abstract class BaseCcShowDaysPeer {
 	const TM_CLASS = 'CcShowDaysTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 10;
+	const NUM_COLUMNS = 11;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -42,6 +42,9 @@ abstract class BaseCcShowDaysPeer {
 
 	/** the column name for the START_TIME field */
 	const START_TIME = 'cc_show_days.START_TIME';
+
+	/** the column name for the TIMEZONE field */
+	const TIMEZONE = 'cc_show_days.TIMEZONE';
 
 	/** the column name for the DURATION field */
 	const DURATION = 'cc_show_days.DURATION';
@@ -77,12 +80,12 @@ abstract class BaseCcShowDaysPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFirstShow', 'DbLastShow', 'DbStartTime', 'DbDuration', 'DbDay', 'DbRepeatType', 'DbNextPopDate', 'DbShowId', 'DbRecord', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFirstShow', 'dbLastShow', 'dbStartTime', 'dbDuration', 'dbDay', 'dbRepeatType', 'dbNextPopDate', 'dbShowId', 'dbRecord', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::FIRST_SHOW, self::LAST_SHOW, self::START_TIME, self::DURATION, self::DAY, self::REPEAT_TYPE, self::NEXT_POP_DATE, self::SHOW_ID, self::RECORD, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FIRST_SHOW', 'LAST_SHOW', 'START_TIME', 'DURATION', 'DAY', 'REPEAT_TYPE', 'NEXT_POP_DATE', 'SHOW_ID', 'RECORD', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'first_show', 'last_show', 'start_time', 'duration', 'day', 'repeat_type', 'next_pop_date', 'show_id', 'record', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFirstShow', 'DbLastShow', 'DbStartTime', 'DbTimezone', 'DbDuration', 'DbDay', 'DbRepeatType', 'DbNextPopDate', 'DbShowId', 'DbRecord', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFirstShow', 'dbLastShow', 'dbStartTime', 'dbTimezone', 'dbDuration', 'dbDay', 'dbRepeatType', 'dbNextPopDate', 'dbShowId', 'dbRecord', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::FIRST_SHOW, self::LAST_SHOW, self::START_TIME, self::TIMEZONE, self::DURATION, self::DAY, self::REPEAT_TYPE, self::NEXT_POP_DATE, self::SHOW_ID, self::RECORD, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FIRST_SHOW', 'LAST_SHOW', 'START_TIME', 'TIMEZONE', 'DURATION', 'DAY', 'REPEAT_TYPE', 'NEXT_POP_DATE', 'SHOW_ID', 'RECORD', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'first_show', 'last_show', 'start_time', 'timezone', 'duration', 'day', 'repeat_type', 'next_pop_date', 'show_id', 'record', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
 	);
 
 	/**
@@ -92,12 +95,12 @@ abstract class BaseCcShowDaysPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFirstShow' => 1, 'DbLastShow' => 2, 'DbStartTime' => 3, 'DbDuration' => 4, 'DbDay' => 5, 'DbRepeatType' => 6, 'DbNextPopDate' => 7, 'DbShowId' => 8, 'DbRecord' => 9, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFirstShow' => 1, 'dbLastShow' => 2, 'dbStartTime' => 3, 'dbDuration' => 4, 'dbDay' => 5, 'dbRepeatType' => 6, 'dbNextPopDate' => 7, 'dbShowId' => 8, 'dbRecord' => 9, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::FIRST_SHOW => 1, self::LAST_SHOW => 2, self::START_TIME => 3, self::DURATION => 4, self::DAY => 5, self::REPEAT_TYPE => 6, self::NEXT_POP_DATE => 7, self::SHOW_ID => 8, self::RECORD => 9, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FIRST_SHOW' => 1, 'LAST_SHOW' => 2, 'START_TIME' => 3, 'DURATION' => 4, 'DAY' => 5, 'REPEAT_TYPE' => 6, 'NEXT_POP_DATE' => 7, 'SHOW_ID' => 8, 'RECORD' => 9, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'first_show' => 1, 'last_show' => 2, 'start_time' => 3, 'duration' => 4, 'day' => 5, 'repeat_type' => 6, 'next_pop_date' => 7, 'show_id' => 8, 'record' => 9, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFirstShow' => 1, 'DbLastShow' => 2, 'DbStartTime' => 3, 'DbTimezone' => 4, 'DbDuration' => 5, 'DbDay' => 6, 'DbRepeatType' => 7, 'DbNextPopDate' => 8, 'DbShowId' => 9, 'DbRecord' => 10, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFirstShow' => 1, 'dbLastShow' => 2, 'dbStartTime' => 3, 'dbTimezone' => 4, 'dbDuration' => 5, 'dbDay' => 6, 'dbRepeatType' => 7, 'dbNextPopDate' => 8, 'dbShowId' => 9, 'dbRecord' => 10, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::FIRST_SHOW => 1, self::LAST_SHOW => 2, self::START_TIME => 3, self::TIMEZONE => 4, self::DURATION => 5, self::DAY => 6, self::REPEAT_TYPE => 7, self::NEXT_POP_DATE => 8, self::SHOW_ID => 9, self::RECORD => 10, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FIRST_SHOW' => 1, 'LAST_SHOW' => 2, 'START_TIME' => 3, 'TIMEZONE' => 4, 'DURATION' => 5, 'DAY' => 6, 'REPEAT_TYPE' => 7, 'NEXT_POP_DATE' => 8, 'SHOW_ID' => 9, 'RECORD' => 10, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'first_show' => 1, 'last_show' => 2, 'start_time' => 3, 'timezone' => 4, 'duration' => 5, 'day' => 6, 'repeat_type' => 7, 'next_pop_date' => 8, 'show_id' => 9, 'record' => 10, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
 	);
 
 	/**
@@ -173,6 +176,7 @@ abstract class BaseCcShowDaysPeer {
 			$criteria->addSelectColumn(CcShowDaysPeer::FIRST_SHOW);
 			$criteria->addSelectColumn(CcShowDaysPeer::LAST_SHOW);
 			$criteria->addSelectColumn(CcShowDaysPeer::START_TIME);
+			$criteria->addSelectColumn(CcShowDaysPeer::TIMEZONE);
 			$criteria->addSelectColumn(CcShowDaysPeer::DURATION);
 			$criteria->addSelectColumn(CcShowDaysPeer::DAY);
 			$criteria->addSelectColumn(CcShowDaysPeer::REPEAT_TYPE);
@@ -184,6 +188,7 @@ abstract class BaseCcShowDaysPeer {
 			$criteria->addSelectColumn($alias . '.FIRST_SHOW');
 			$criteria->addSelectColumn($alias . '.LAST_SHOW');
 			$criteria->addSelectColumn($alias . '.START_TIME');
+			$criteria->addSelectColumn($alias . '.TIMEZONE');
 			$criteria->addSelectColumn($alias . '.DURATION');
 			$criteria->addSelectColumn($alias . '.DAY');
 			$criteria->addSelectColumn($alias . '.REPEAT_TYPE');

@@ -2,7 +2,7 @@
 
 class NestedDirectoryException extends Exception { }
 
-class MusicDir {
+class Application_Model_MusicDir {
 
     /**
      * @holds propel database object
@@ -54,11 +54,11 @@ class MusicDir {
         $this->_dir->delete();
 
         foreach ($show_instances as $show_instance_row) {
-            $temp_show = new ShowInstance($show_instance_row["instance_id"]);
+            $temp_show = new Application_Model_ShowInstance($show_instance_row["instance_id"]);
             $temp_show->updateScheduledTime();
         }
 
-        RabbitMq::PushSchedule();
+        Application_Model_RabbitMq::PushSchedule();
     }
 
     /**
@@ -184,7 +184,7 @@ class MusicDir {
 
             $data = array();
             $data["directory"] = $p_path;
-            RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
+            Application_Model_RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
         }
         return $res;
     }
@@ -193,7 +193,7 @@ class MusicDir {
     {
         $dir = CcMusicDirsQuery::create()->findPK($pk);
 
-        $mus_dir = new MusicDir($dir);
+        $mus_dir = new Application_Model_MusicDir($dir);
 
         return $mus_dir;
     }
@@ -208,7 +208,7 @@ class MusicDir {
             return null;
         }
         else{
-            $mus_dir = new MusicDir($dir);
+            $mus_dir = new Application_Model_MusicDir($dir);
             return $mus_dir;
         }
     }
@@ -222,8 +222,7 @@ class MusicDir {
                     ->find();
 
         foreach($dirs as $dir) {
-            $tmp = new MusicDir($dir);
-            $result[] = $tmp;
+            $result[] = new Application_Model_MusicDir($dir);
         }
 
         return $result;
@@ -235,7 +234,7 @@ class MusicDir {
                     ->filterByType("stor")
                     ->findOne();
 
-        $mus_dir = new MusicDir($dir);
+        $mus_dir = new Application_Model_MusicDir($dir);
 
         return $mus_dir;
     }
@@ -257,7 +256,7 @@ class MusicDir {
             $data = array();
             $data["directory"] = $p_dir;
             $data["dir_id"] = $dirId;
-            RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
+            Application_Model_RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
             return array("code"=>0);
         }else{
             return array("code"=>1, "error"=>"'$p_dir' is already set as the current storage dir or in the watched folders list.");
@@ -273,7 +272,7 @@ class MusicDir {
         foreach($dirs as $dir) {
             $directory = $dir->getDirectory();
             if (substr($p_filepath, 0, strlen($directory)) === $directory) {
-                $mus_dir = new MusicDir($dir);
+                $mus_dir = new Application_Model_MusicDir($dir);
                 return $mus_dir;
             }
         }
@@ -282,15 +281,19 @@ class MusicDir {
     }
 
     public static function removeWatchedDir($p_dir){
-        $p_dir = realpath($p_dir)."/";
-        $dir = MusicDir::getDirByPath($p_dir);
+
+        $real_path = realpath($p_dir)."/";
+        if($real_path != "/"){
+            $p_dir = $real_path;
+        }
+        $dir = Application_Model_MusicDir::getDirByPath($p_dir);
         if($dir == NULL){
             return array("code"=>1,"error"=>"'$p_dir' doesn't exist in the watched list.");
         }else{
             $dir->remove();
             $data = array();
             $data["directory"] = $p_dir;
-            RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
+            Application_Model_RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
             return array("code"=>0);
         }
     }

@@ -48,6 +48,17 @@ function removeAddShowButton(){
     span.remove();
 }
 
+function pad(number, length) {
+    
+    var str = '' + number;
+    while (str.length < length) {
+        str = '0' + str;
+    }
+   
+    return str;
+
+}
+
 function makeTimeStamp(date){
 	var sy, sm, sd, h, m, s, timestamp;
 	sy = date.getFullYear();
@@ -57,14 +68,27 @@ function makeTimeStamp(date){
 	m = date.getMinutes();
 	s = date.getSeconds();
 
-	timestamp = sy+"-"+ sm +"-"+ sd +" "+ h +":"+ m +":"+ s;
+	timestamp = sy+"-"+ pad(sm, 2) +"-"+ pad(sd, 2) +" "+ pad(h, 2) +":"+ pad(m, 2) +":"+ pad(s, 2);
 	return timestamp;
+}
+
+function adjustDateToServerDate(date, serverTimezoneOffset){
+    //date object stores time in the browser's localtime. We need to artificially shift 
+    //it to 
+    var timezoneOffset = date.getTimezoneOffset()*60*1000;
+    
+    date.setTime(date.getTime() + timezoneOffset + serverTimezoneOffset*1000);
+    
+    /* date object has been shifted to artificial UTC time. Now let's
+     * shift it to the server's timezone */
+    
+    return date;
 }
 
 function dayClick(date, allDay, jsEvent, view) {
     var now, today, selected, chosenDate, chosenTime;
 
-    now = new Date();
+    now = adjustDateToServerDate(new Date(), serverTimezoneOffset);
 
     if(view.name === "month") {
         today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -208,34 +232,53 @@ function eventRender(event, element, view) {
 	}
 
     //add the record/rebroadcast icons if needed.
-
     //record icon (only if not on soundcloud, will always be true for future events)
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -1) {
 
-		$(element).find(".fc-event-time").before('<span class="small-icon recording"></span>');
+		$(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span>');
 	}
     if(view.name === 'month' && event.record === 1 && event.soundcloud_id === -1) {
 
-		$(element).find(".fc-event-title").after('<span class="small-icon recording"></span>');
+		$(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span>');
 	}
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
 
-		$(element).find(".fc-event-time").before('<span class="small-icon rebroadcast"></span>');
+		$(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
 	}
     if(view.name === 'month' && event.rebroadcast === 1) {
 
-		$(element).find(".fc-event-title").after('<span class="small-icon rebroadcast"></span>');
+		$(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
 	}
     //soundcloud icon
-    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id !== -1 && event.record === 1) {
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id > 0 && event.record === 1) {
 
-		$(element).find(".fc-event-time").before('<span class="small-icon soundcloud"></span>');
+		$(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon soundcloud"></span>');
 	}
-    if(view.name === 'month' && event.soundcloud_id !== -1 && event.record === 1) {
+    if(view.name === 'month' && event.soundcloud_id > 0 && event.record === 1) {
 
-		$(element).find(".fc-event-title").after('<span class="small-icon soundcloud"></span>');
+		$(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon soundcloud"></span>');
 	}
+    
+    //progress icon
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id === -2 && event.record === 1) {
+
+        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon progress"></span>');
+    }
+    if(view.name === 'month' && event.soundcloud_id === -2 && event.record === 1) {
+
+        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon progress"></span>');
+    }
+    
+    //error icon
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id === -3 && event.record === 1) {
+
+        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon sc-error"></span>');
+    }
+    if(view.name === 'month' && event.soundcloud_id === -3 && event.record === 1) {
+
+        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon sc-error"></span>');
+    }
 }
 
 function eventAfterRender( event, element, view ) {
@@ -245,6 +288,9 @@ function eventAfterRender( event, element, view ) {
 			[{get:"/Schedule/make-context-menu/format/json/id/#id#"}],
 			{id: event.id},
 			{xposition: "mouse", yposition: "mouse"});
+    $(element).find(".small-icon").live('mouseover',function(){
+        addQtipToSCIcons($(this));
+    })
 }
 
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
@@ -293,3 +339,97 @@ function getFullCalendarEvents(start, end, callback) {
 		callback(json.events);
 	});
 }
+
+function checkSCUploadStatus(){
+    var url = '/Library/get-upload-to-soundcloud-status/format/json';
+    $("span[class*=progress]").each(function(){
+        var id = $(this).attr("id");
+        $.post(url, {format: "json", id: id, type:"show"}, function(json){
+            if(json.sc_id > 0){
+                $("span[id="+id+"]").removeClass("progress").addClass("soundcloud");
+            }else if(json.sc_id == "-3"){
+                $("span[id="+id+"]").removeClass("progress").addClass("sc-error");
+            }
+        });
+    })
+}
+
+function addQtipToSCIcons(ele){
+    var id = $(ele).attr("id");
+    if($(ele).hasClass("progress")){
+        $(ele).qtip({
+            content: {
+                text: "Uploading in progress..."
+            },
+            position:{
+                adjust: {
+                resize: true,
+                method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            show: {
+                ready: true // Needed to make it show on first mouseover event
+            }
+        })
+    }else if($(ele).hasClass("soundcloud")){
+        $(ele).qtip({
+            content: {
+                text: "Retreiving data from the server...",
+                ajax: {
+                    url: "/Library/get-upload-to-soundcloud-status",
+                    type: "post",
+                    data: ({format: "json", id : id, type: "file"}),
+                    success: function(json, status){
+                        this.set('content.text', "The soundcloud id for this file is: "+json.sc_id)
+                    }
+                }
+            },
+            position:{
+                adjust: {
+                resize: true,
+                method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            show: {
+                ready: true // Needed to make it show on first mouseover event
+            }
+        })
+    }else if($(ele).hasClass("sc-error")){
+        $(ele).qtip({
+            content: {
+                text: "Retreiving data from the server...",
+                ajax: {
+                    url: "/Library/get-upload-to-soundcloud-status",
+                    type: "post",
+                    data: ({format: "json", id : id, type: "show"}),
+                    success: function(json, status){
+                        this.set('content.text', "There was error while uploading to soundcloud.<br>"+"Error code: "+json.error_code+
+                                "<br>"+"Error msg: "+json.error_msg+"<br>")
+                    }
+                }
+            },
+            position:{
+                adjust: {
+                resize: true,
+                method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            show: {
+                ready: true // Needed to make it show on first mouseover event
+            }
+        })
+    }
+}
+
+$(document).ready(function(){
+    setInterval( "checkSCUploadStatus()", 5000 );
+})

@@ -13,12 +13,10 @@ set_include_path(__DIR__.'/../../airtime_mvc/library' . PATH_SEPARATOR . get_inc
 
 require_once(dirname(__FILE__).'/AirtimeIni.php');
 require_once(dirname(__FILE__).'/AirtimeInstall.php');
-require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/constants.php');
+require_once(__DIR__.'/airtime-constants.php');
+
 
 AirtimeInstall::ExitIfNotRoot();
-
-$newInstall = false;
-$version = AirtimeInstall::GetVersionInstalled();
 
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
@@ -41,8 +39,7 @@ try {
         )
     );
     $opts->parse();
-}
-catch (Zend_Console_Getopt_Exception $e) {
+} catch (Zend_Console_Getopt_Exception $e) {
     print $e->getMessage() .PHP_EOL;
     printUsage($opts);
     exit(1);
@@ -50,9 +47,10 @@ catch (Zend_Console_Getopt_Exception $e) {
 
 if (isset($opts->h)) {
     printUsage($opts);
-    exit(1);
+    exit(0);
 }
 
+$version = AirtimeInstall::GetVersionInstalled();
 // The current version is already installed.
 if (isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime $version is already installed.".PHP_EOL;
@@ -62,13 +60,16 @@ if (isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !
 // A previous version exists - if so, upgrade.
 if (isset($version) && ($version != false) && ($version < AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime version $version found.".PHP_EOL;
-
+    
+    // remove virtualenv and reinstall
+    if(strcmp($version, '1.9.0') >= 0){
+        exec("rm -rf /usr/lib/airtime/airtime_virtualenv");
+        echo "Reinstalling virtualenv...".PHP_EOL;
+        passthru(__DIR__."/../../python_apps/python-virtualenv/virtualenv-install.sh");
+    }
+    
     require_once("airtime-upgrade.php");
-
-    //Make sure to exit with non-zero error code so that airtime-install
-    //shell script does not continue with installing pypo, show-recorder,
-    //media-monitor etc.
-    exit(2);
+    exit(0);
 }
 
 if($version === false){
@@ -80,6 +81,7 @@ if($version === false){
 // The only way we get here is if we are doing a new install or a reinstall.
 // -------------------------------------------------------------------------
 
+$newInstall = false;
 if(is_null($version)) {
     $newInstall = true;
 }
@@ -92,8 +94,7 @@ if (is_null($opts->r) && isset($opts->n)) {
 $overwrite = false;
 if (isset($opts->o) || $newInstall == true) {
     $overwrite = true;
-}
-else if (!isset($opts->p) && !isset($opts->o) && isset($opts->r)) {
+} else if (!isset($opts->p) && !isset($opts->o) && isset($opts->r)) {
     if (AirtimeIni::IniFilesExist()) {
         $userAnswer = "x";
         while (!in_array($userAnswer, array("o", "O", "p", "P", ""))) {
@@ -103,8 +104,7 @@ else if (!isset($opts->p) && !isset($opts->o) && isset($opts->r)) {
         if (in_array($userAnswer, array("o", "O"))) {
             $overwrite = true;
         }
-    }
-    else {
+    } else {
         $overwrite = true;
     }
 }
@@ -112,17 +112,12 @@ else if (!isset($opts->p) && !isset($opts->o) && isset($opts->r)) {
 if ($overwrite) {
     echo "* Creating INI files".PHP_EOL;
     AirtimeIni::CreateIniFiles();
-}
-AirtimeIni::CreateMonitFile();
-
-
-AirtimeInstall::InstallPhpCode();
-AirtimeInstall::InstallBinaries();
-
-if ($overwrite) {
     echo "* Initializing INI files".PHP_EOL;
     AirtimeIni::UpdateIniFiles();
 }
+
+//AirtimeInstall::InstallPhpCode(); //copies contents of airtime_mvc to /usr/share
+//AirtimeInstall::InstallBinaries(); //copies utils to /usr/lib/airtime
 
 // Update the build.properties file to point to the correct directory.
 AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
@@ -135,19 +130,18 @@ AirtimeInstall::InstallStorageDirectory();
 
 if ($db_install) {
     if($newInstall) {
-        // This is called with "system" so that we can pass in a parameter.  See the file itself
-        // for why we need to do this.
-        system('php '.__DIR__.'/airtime-db-install.php y');
+        //call external script. "y" argument means force creation of database tables.
+        passthru('php '.__DIR__.'/airtime-db-install.php y');
         AirtimeInstall::DbConnect(true);
     } else {
         require_once('airtime-db-install.php');
     }
 }
 
-AirtimeInstall::CreateSymlinksToUtils();
+//AirtimeInstall::CreateSymlinksToUtils();
 
 AirtimeInstall::CreateZendPhpLogFile();
 
-AirtimeInstall::CreateCronFile();
+//AirtimeInstall::CreateCronFile();
 
 /* FINISHED AIRTIME PHP INSTALLER */

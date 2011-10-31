@@ -17,6 +17,7 @@
  * @method     CcSubjsQuery orderByDbSkypeContact($order = Criteria::ASC) Order by the skype_contact column
  * @method     CcSubjsQuery orderByDbJabberContact($order = Criteria::ASC) Order by the jabber_contact column
  * @method     CcSubjsQuery orderByDbEmail($order = Criteria::ASC) Order by the email column
+ * @method     CcSubjsQuery orderByDbLoginAttempts($order = Criteria::ASC) Order by the login_attempts column
  *
  * @method     CcSubjsQuery groupByDbId() Group by the id column
  * @method     CcSubjsQuery groupByDbLogin() Group by the login column
@@ -29,6 +30,7 @@
  * @method     CcSubjsQuery groupByDbSkypeContact() Group by the skype_contact column
  * @method     CcSubjsQuery groupByDbJabberContact() Group by the jabber_contact column
  * @method     CcSubjsQuery groupByDbEmail() Group by the email column
+ * @method     CcSubjsQuery groupByDbLoginAttempts() Group by the login_attempts column
  *
  * @method     CcSubjsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcSubjsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -76,6 +78,7 @@
  * @method     CcSubjs findOneByDbSkypeContact(string $skype_contact) Return the first CcSubjs filtered by the skype_contact column
  * @method     CcSubjs findOneByDbJabberContact(string $jabber_contact) Return the first CcSubjs filtered by the jabber_contact column
  * @method     CcSubjs findOneByDbEmail(string $email) Return the first CcSubjs filtered by the email column
+ * @method     CcSubjs findOneByDbLoginAttempts(int $login_attempts) Return the first CcSubjs filtered by the login_attempts column
  *
  * @method     array findByDbId(int $id) Return CcSubjs objects filtered by the id column
  * @method     array findByDbLogin(string $login) Return CcSubjs objects filtered by the login column
@@ -88,6 +91,7 @@
  * @method     array findByDbSkypeContact(string $skype_contact) Return CcSubjs objects filtered by the skype_contact column
  * @method     array findByDbJabberContact(string $jabber_contact) Return CcSubjs objects filtered by the jabber_contact column
  * @method     array findByDbEmail(string $email) Return CcSubjs objects filtered by the email column
+ * @method     array findByDbLoginAttempts(int $login_attempts) Return CcSubjs objects filtered by the login_attempts column
  *
  * @package    propel.generator.airtime.om
  */
@@ -450,6 +454,37 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcSubjsPeer::EMAIL, $dbEmail, $comparison);
+	}
+
+	/**
+	 * Filter the query on the login_attempts column
+	 * 
+	 * @param     int|array $dbLoginAttempts The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByDbLoginAttempts($dbLoginAttempts = null, $comparison = null)
+	{
+		if (is_array($dbLoginAttempts)) {
+			$useMinMax = false;
+			if (isset($dbLoginAttempts['min'])) {
+				$this->addUsingAlias(CcSubjsPeer::LOGIN_ATTEMPTS, $dbLoginAttempts['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbLoginAttempts['max'])) {
+				$this->addUsingAlias(CcSubjsPeer::LOGIN_ATTEMPTS, $dbLoginAttempts['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcSubjsPeer::LOGIN_ATTEMPTS, $dbLoginAttempts, $comparison);
 	}
 
 	/**

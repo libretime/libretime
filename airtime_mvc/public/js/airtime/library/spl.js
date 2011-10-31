@@ -303,6 +303,9 @@ function addSPLItem(event, ui){
 
 function deleteSPLItem(event){
     event.stopPropagation();
+    
+    // stop any preview playing
+    $('#jquery_jplayer_1').jPlayer('stop');
 
 	var url, pos;
 
@@ -333,17 +336,6 @@ function noOpenPL(json) {
 	$("#spl_new")
 		.button()
 		.click(newSPL);
-}
-
-function closeSPL() {
-	var url;
-	
-	// stop playing any preview
-	$('#jquery_jplayer_1').jPlayer('stop');
-
-	url = '/Playlist/close/format/json';
-
-	$.post(url, noOpenPL);
 }
 
 function createPlaylistMetaForm(json) {
@@ -399,7 +391,7 @@ function newSPL() {
 
 function deleteSPL() {
 	var url;
-
+	
 	// stop any preview playing
 	$('#jquery_jplayer_1').jPlayer('stop');
 	
@@ -455,10 +447,6 @@ function setUpSPL() {
 	$("#spl_new")
 		.button()
 		.click(newSPL);
-
-	$("#spl_close")
-		.button()
-		.click(closeSPL);
 
     $("#spl_crossfade").click(function(){
 

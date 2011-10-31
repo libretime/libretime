@@ -2,21 +2,18 @@ import socket
 import logging
 import time
 
-
 import pyinotify
 from pyinotify import ProcessEvent
-
-# For RabbitMQ
-from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
 
 from airtimemetadata import AirtimeMetadata
 from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 
+from api_clients import api_client
+
 class AirtimeProcessEvent(ProcessEvent):
 
     #TODO
-    def my_init(self, queue, airtime_config=None, wm=None, mmc=None):
+    def my_init(self, queue, airtime_config=None, wm=None, mmc=None, api_client=api_client):
         """
         Method automatically called from ProcessEvent.__init__(). Additional
         keyworded arguments passed to ProcessEvent.__init__() are then
@@ -38,19 +35,81 @@ class AirtimeProcessEvent(ProcessEvent):
         self.wm = wm
         self.md_manager = AirtimeMetadata()
         self.mmc = mmc
+        self.api_client = api_client
+        self.create_dict = {}
 
     def add_filepath_to_ignore(self, filepath):
         self.ignore_event.add(filepath)
 
+    def process_IN_MOVE_SELF(self, event):
+        self.logger.info("event: %s", event)
+        path = event.path
+        if event.dir:
+            if "-unknown-path" in path:
+                unknown_path = path
+                pos = path.find("-unknown-path")
+                path = path[0:pos]+"/"
+                
+                list = self.api_client.list_all_watched_dirs()
+                # case where the dir that is being watched is moved to somewhere 
+                if path in list[u'dirs'].values():
+                    self.logger.info("Requesting the airtime server to remove '%s'", path)
+                    res = self.api_client.remove_watched_dir(path)
+                    if(res is None):
+                        self.logger.info("Unable to connect to the Airtime server.")
+                    # sucess
+                    if(res['msg']['code'] == 0):
+                        self.logger.info("%s removed from watch folder list successfully.", path)
+                    else:
+                        self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
+                else:
+                    # subdir being moved
+                    # in this case, it has to remove watch manualy and also have to manually delete all records
+                    # on cc_files table
+                    wd = self.wm.get_wd(unknown_path)
+                    self.logger.info("Removing watch on: %s wd %s", unknown_path, wd)
+                    self.wm.rm_watch(wd, rec=True)
+                    self.file_events.append({'mode': self.config.MODE_DELETE_DIR, 'filepath': path})
+                
+            
+    def process_IN_DELETE_SELF(self, event):
+        self.logger.info("event: %s", event)
+        path = event.path + '/'
+        if event.dir:
+            list = self.api_client.list_all_watched_dirs()
+            if path in list[u'dirs'].values():
+                self.logger.info("Requesting the airtime server to remove '%s'", path)
+                res = self.api_client.remove_watched_dir(path)
+                if(res is None):
+                    self.logger.info("Unable to connect to the Airtime server.")
+                # sucess
+                if(res['msg']['code'] == 0):
+                    self.logger.info("%s removed from watch folder list successfully.", path)
+                else:
+                    self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
+    
+    def process_IN_CREATE(self, event):
+        self.logger.info("event: %s", event)
+        # record the timestamp of the time on IN_CREATE event
+        self.create_dict[event.pathname] = time.time()
+        
     #event.dir: True if the event was raised against a directory.
     #event.name: filename
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
-    def process_IN_CREATE(self, event):
-        self.handle_created_file(event.dir, event.pathname, event.name)
-
+    # we used to use IN_CREATE event, but the IN_CREATE event gets fired before the
+    # copy was done. Hence, IN_CLOSE_WRITE is the correct one to handle.    
+    def process_IN_CLOSE_WRITE(self, event):
+        self.logger.info("event: %s", event)
+        self.logger.info("create_dict: %s", self.create_dict)
+        
+        if event.pathname in self.create_dict:
+            # detele corresponding entry from create_dict
+            self.create_dict.pop(event.pathname)
+            self.handle_created_file(event.dir, event.pathname, event.name)
+        
     def handle_created_file(self, dir, pathname, name):
         if not dir:
-            self.logger.debug("PROCESS_IN_CREATE: %s, name: %s, pathname: %s ", dir, name, pathname)
+            self.logger.debug("PROCESS_IN_CLOSE_WRITE: %s, name: %s, pathname: %s ", dir, name, pathname)
             #event is because of a created file
 
             if self.mmc.is_temp_file(name) :
@@ -84,6 +143,9 @@ class AirtimeProcessEvent(ProcessEvent):
         self.handle_modified_file(event.dir, event.pathname, event.name)
 
     def handle_modified_file(self, dir, pathname, name):
+        # update timestamp on create_dict for the entry with pathname as the key
+        if pathname in self.create_dict:
+            self.create_dict[pathname] = time.time()
         if not dir and not self.mmc.is_parent_directory(pathname, self.config.organize_directory):
             self.logger.info("Modified: %s", pathname)
             if self.mmc.is_audio_file(name):
@@ -102,12 +164,9 @@ class AirtimeProcessEvent(ProcessEvent):
                 #we don't care about moved_from events from the organize dir.
                 if self.mmc.is_audio_file(event.name):
                     self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
+        else:
+            self.cookies_IN_MOVED_FROM[event.cookie] = (event, time.time())
 
-
-    #Some weird thing to note about this event: it seems that if a file is moved to a newly
-    #created directory, then the IN_MOVED_FROM event will be called, but instead of a corresponding
-    #IN_MOVED_TO event, a IN_CREATED event will happen instead. However if the directory existed before
-    #then the IN_MOVED_TO event will be called.
     def process_IN_MOVED_TO(self, event):
         self.logger.info("process_IN_MOVED_TO: %s", event)
         #if stuff dropped in stor via a UI move must change file permissions.
@@ -141,17 +200,23 @@ class AirtimeProcessEvent(ProcessEvent):
             #When we move a directory into a watched_dir, we only get a notification that the dir was created,
             #and no additional information about files that came along with that directory.
             #need to scan the entire directory for files.
+                        
+            if event.cookie in self.cookies_IN_MOVED_FROM:
+                del self.cookies_IN_MOVED_FROM[event.cookie]
+                mode = self.config.MODE_MOVED
+            else:
+                mode = self.config.MODE_CREATE
+                        
             files = self.mmc.scan_dir_for_new_files(event.pathname)
             if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
                 for file in files:
-                    self.mmc.organize_new_file(file)
+                    filepath = self.mmc.organize_new_file(file)
+                    if (filepath is not None):
+                        self.file_events.append({'mode': mode, 'filepath': filepath, 'is_recorded_show': False})
             else:
                 for file in files:
-                    if self.mmc.is_parent_directory(pathname, self.config.recorded_directory):
-                        is_recorded = True
-                    else :
-                        is_recorded = False
-                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': file, 'is_recorded_show': is_recorded})
+                    self.file_events.append({'mode': mode, 'filepath': file, 'is_recorded_show': False})
+
 
     def process_IN_DELETE(self, event):
         self.logger.info("process_IN_DELETE: %s", event)
@@ -178,8 +243,10 @@ class AirtimeProcessEvent(ProcessEvent):
             self.mmc.touch_index_file()
             
             self.file_events = []
-        #yeild to workder thread
+
+        #yield to worker thread
         time.sleep(0)
+        
         #use items() because we are going to be modifying this
         #dictionary while iterating over it.
         for k, pair in self.cookies_IN_MOVED_FROM.items():
@@ -196,9 +263,15 @@ class AirtimeProcessEvent(ProcessEvent):
                 #it from the Airtime directory.
                 del self.cookies_IN_MOVED_FROM[k]
                 self.handle_removed_file(False, event.pathname)
+        
+        # we don't want create_dict grow infinitely
+        # this part is like a garbage collector
+        for k, t in self.create_dict.items():
+            now = time.time()
+            if now - t > 300:
+                del self.create_dict[k]
 
-
-        #check for any events recieved from Airtime.
+        #check for any events received from Airtime.
         try:
             notifier.connection.drain_events(timeout=0.1)
         #avoid logging a bunch of timeout messages.
@@ -206,4 +279,5 @@ class AirtimeProcessEvent(ProcessEvent):
             pass
         except Exception, e:
             self.logger.info("%s", e)
+            time.sleep(3)
 

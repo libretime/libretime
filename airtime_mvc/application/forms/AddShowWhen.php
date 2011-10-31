@@ -5,6 +5,10 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     public function init()
     {
+        $this->setDecorators(array(
+            array('ViewScript', array('viewScript' => 'form/add-show-when.phtml'))
+        ));
+        
         // Add start date element
         $startDate = new Zend_Form_Element_Text('add_show_start_date');
         $startDate->class = 'input_text';
@@ -15,11 +19,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValidators(array(
                         'NotEmpty',
                         array('date', false, array('YYYY-MM-DD'))))
-                    ->setDecorators(array(
-                        array(array('open'=>'HtmlTag'), array('tag' => 'dd', 'openOnly'=>true)),
-                        'ViewHelper',
-                        'Description',
-                        array('Label', array('tag' =>'dt'))));
+                    ->setDecorators(array('ViewHelper'));
+        $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
         
         // Add start time element
@@ -32,10 +33,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         'NotEmpty',
                         array('date', false, array('HH:mm')),
                         array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))))
-                    ->setDecorators(array(
-                        'ViewHelper',
-                        'Errors',
-                        array(array('close'=>'HtmlTag'), array('tag' => 'dd', 'closeOnly'=>true))));
+                    ->setDecorators(array('ViewHelper'));
+        $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
 
         // Add end date element
@@ -48,11 +47,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValidators(array(
                         'NotEmpty',
                         array('date', false, array('YYYY-MM-DD'))))
-                    ->setDecorators(array(
-                        array(array('open'=>'HtmlTag'), array('tag' => 'dd', 'openOnly'=>true)),
-                        'ViewHelper',
-                        'Description',
-                        array('Label', array('tag' =>'dt'))));
+                    ->setDecorators(array('ViewHelper'));
+        $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
         
         // Add end time element
@@ -65,10 +61,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         'NotEmpty',
                         array('date', false, array('HH:mm')),
                         array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))))
-                    ->setDecorators(array(
-                        'ViewHelper',
-                        'Errors',
-                        array(array('close'=>'HtmlTag'), array('tag' => 'dd', 'closeOnly'=>true))));
+                    ->setDecorators(array('ViewHelper'));
+        $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
         
         // Add duration element
@@ -76,30 +70,30 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         	'label'		 => 'Duration:',
             'class'      => 'input_text',
         	'value'		 => '01h00m',
-        	'readonly'	 => true
+        	'readonly'	 => true,
+            'decorators'  => array('ViewHelper')
         ));
 
 		// Add repeats element
 		$this->addElement('checkbox', 'add_show_repeats', array(
             'label'      => 'Repeats?',
             'required'   => false,
+		    'decorators'  => array('ViewHelper')
 		));
 
     }
 
     public function checkReliantFields($formData, $startDateModified) {
-
         $valid = true;
-
-        $now_timestamp = date("Y-m-d H:i:s");
-        $start_timestamp = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
-
-        $now_epoch = strtotime($now_timestamp);
-        $start_epoch = strtotime($start_timestamp);
-
+        
+        $start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
+        
+        //DateTime stores $start_time in the current timezone
+        $nowDateTime = new DateTime();
+        $showStartDateTime = new DateTime($start_time);
 
 		if ((($formData['add_show_id'] != -1) && $startDateModified) || ($formData['add_show_id'] == -1)){
-	        if($start_epoch < $now_epoch) {
+	        if($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
 	            $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
 	            $valid = false;
 	        }
@@ -118,6 +112,5 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
         return $valid;
     }
-
 }
 

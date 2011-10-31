@@ -4,6 +4,8 @@
 *
 */
 
+var serverTimezoneOffset = 0;
+
 function closeDialog(event, ui) {
 	$("#schedule_calendar").fullCalendar( 'refetchEvents' );
 	$(this).remove();
@@ -178,20 +180,19 @@ function uploadToSoundCloud(show_instance_id){
     
     var url = "/Schedule/upload-to-sound-cloud";
     var span = $(window.triggerElement).find(".recording");
-
-    span.removeClass("recording")
+    
+    if(span.length == 0){
+        span = $(window.triggerElement).find(".soundcloud");
+        span.removeClass("soundcloud")
+        .addClass("progress")
+    }else{
+        span.removeClass("recording")
         .addClass("progress");
+    }
 
     $.post(url,
         {id: show_instance_id, format: "json"},
-        function(data){
-            if(data.error) {
-                span.removeClass("progress")
-                    .addClass("recording");
-
-                alert(data.error);
-                return;
-            }
+        function(){
             scheduleRefetchEvents();
     });
 
@@ -292,18 +293,49 @@ function buildEditDialog(json){
 
 }
 
-$(window).load(function() {
-    var mainHeight = document.documentElement.clientHeight - 200 - 50;
+/**
+ * Use user preference for time scale; defaults to month if preference was never set
+ */
+function getTimeScalePreference(data) {
+	var timeScale = data.calendarInit.timeScale;
+    if(timeScale == 'day') {
+    	timeScale = 'agendaDay';
+    } else if(timeScale == 'week') {
+    	timeScale = 'agendaWeek';
+    } else {
+    	timeScale = 'month';
+    }
+    return timeScale;
+}
 
+/**
+ * Use user preference for time interval; defaults to 30m if preference was never set
+ */
+function getTimeIntervalPreference(data) {
+	var timeInterval = data.calendarInit.timeInterval;
+    if(timeInterval == '') {
+    	timeInterval = '30';
+    }
+    return parseInt(timeInterval);
+}
+
+function createFullCalendar(data){
+
+    serverTimezoneOffset = data.calendarInit.timezoneOffset;
+
+    var mainHeight = document.documentElement.clientHeight - 200 - 50;
+    
     $('#schedule_calendar').fullCalendar({
         header: {
-			left: 'prev, next, today',
-			center: 'title',
-			right: 'agendaDay, agendaWeek, month'
-		}, 
-		defaultView: 'month',
-		editable: false,
-		allDaySlot: false,
+            left: 'prev, next, today',
+            center: 'title',
+            right: 'agendaDay, agendaWeek, month'
+        }, 
+        defaultView: getTimeScalePreference(data),
+        slotMinutes: getTimeIntervalPreference(data),
+        firstDay: data.calendarInit.weekStartDay,
+        editable: false,
+        allDaySlot: false,
         axisFormat: 'H:mm',
         timeFormat: {
             agenda: 'H:mm{ - H:mm}',
@@ -312,17 +344,44 @@ $(window).load(function() {
         contentHeight: mainHeight,
         theme: true,
         lazyFetching: false,
+        serverTimestamp: parseInt(data.calendarInit.timestamp, 10),
+        serverTimezoneOffset: parseInt(data.calendarInit.timezoneOffset, 10),
        
-		events: getFullCalendarEvents,
+        events: getFullCalendarEvents,
 
-		//callbacks (in full-calendar-functions.js)
+        //callbacks (in full-calendar-functions.js)
         viewDisplay: viewDisplay,
-		dayClick: dayClick,
-		eventRender: eventRender,
-		eventAfterRender: eventAfterRender,
-		eventDrop: eventDrop,
-		eventResize: eventResize 
+        dayClick: dayClick,
+        eventRender: eventRender,
+        eventAfterRender: eventAfterRender,
+        eventDrop: eventDrop,
+        eventResize: eventResize 
+    });
+
+    //Update time scale preference when day/week/month button is clicked
+    $(".fc-button-content").click(function() {
+    	var url = '/Schedule/set-time-scale/format/json';
+		$.post(url, {timeScale: $(this).text()}, 
+				function(json){
+					if(json.error) {
+						alert(json.error);
+					}
+		});
     });
     
-});
+  //Update time interval preference when dropdown is updated
+    $(".schedule_change_slots.input_select").change(function() {
+    	var url = '/Schedule/set-time-interval/format/json';
+		$.post(url, {timeInterval: $(this).val()}, 
+				function(json){
+					if(json.error) {
+						alert(json.error);
+					}
+		});
+    });
+}
 
+$(window).load(function() {
+	$.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
+            , error:function(jqXHR, textStatus, errorThrown){}});
+});

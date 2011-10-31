@@ -1,7 +1,7 @@
 <?php
 set_include_path(__DIR__.'/..' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../library' . PATH_SEPARATOR . get_include_path());
-require_once __DIR__.'/../Shows.php';
+require_once __DIR__.'/../Show.php';
 require_once __DIR__.'/../StoredFile.php';
 require_once __DIR__.'/../Playlist.php';
 require_once __DIR__.'/../Schedule.php';
@@ -24,17 +24,17 @@ $CC_DBC->query($sql);
 
 /*
 // Create a playlist
-$playlist = new Playlist();
+$playlist = new Application_Model_Playlist();
 $playlist->create("Calendar Load test playlist ".uniqid());
 
 // Add a file
 $values = array("filepath" => __DIR__."/test10001.mp3");
-$storedFile = StoredFile::Insert($values, false);
+$storedFile = Application_Model_StoredFile::Insert($values, false);
 $result = $playlist->addAudioClip($storedFile->getId());
 
 // Add a file
 $values = array("filepath" => __DIR__."/test10002.mp3");
-$storedFile2 = StoredFile::Insert($values, false);
+$storedFile2 = Application_Model_StoredFile::Insert($values, false);
 
 $result = $playlist->addAudioClip($storedFile2->getId());
 $result = $playlist->addAudioClip($storedFile2->getId());
@@ -62,13 +62,13 @@ function createTestShow($showNumber, $showTime, $duration = "1:00")
     $data['add_show_background_color'] = "";
     $data['add_show_record'] = 0;
     $data['add_show_hosts'] ="";
-    $showId = Show::create($data);
+    $showId = Application_Model_Show::create($data);
     //echo "show created, ID: $showId\n";
 
     // populating the show with a playlist
-    $instances = Show::getShows($showTime->format("Y-m-d H:i:s"), $showTime->format("Y-m-d H:i:s"));
+    $instances = Application_Model_Show::getShows($showTime->format("Y-m-d H:i:s"), $showTime->format("Y-m-d H:i:s"));
     $instance = array_pop($instances);
-    $show = new ShowInstance($instance["instance_id"]);
+    $show = new Application_Model_ShowInstance($instance["instance_id"]);
     //echo "Adding playlist to show instance ".$show->getShowInstanceId()."\n";
     $show->scheduleShow(array(1));
     //echo "done\n";
@@ -96,7 +96,11 @@ while ($showTime < $endDate) {
     }
     $showNumber = $showNumber + 1;
 }
-RabbitMq::PushScheduleFinal();
+
+if (Application_Model_RabbitMq::$doPush) {
+    $md = array('schedule' => Application_Model_Schedule::GetScheduledPlaylists());
+    Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
+}
 
 
 

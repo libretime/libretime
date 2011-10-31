@@ -1,6 +1,5 @@
 <?php
 
-define('AIRTIME_VERSION', '1.9.1');
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
 
@@ -36,3 +35,8 @@ define('UI_MDATA_VALUE_FORMAT_STREAM', 'live stream');
 // Session Keys
 define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 
+
+// Soundcloud contants
+define('SOUNDCLOUD_NOT_UPLOADED_YET', -1);
+define('SOUNDCLOUD_PROGRESS', -2);
+define('SOUNDCLOUD_ERROR', -3);

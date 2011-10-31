@@ -13,7 +13,7 @@ function setWatchedDirEvents() {
         //knownPaths: [{text:'Desktop', image:'desktop.png', path:'/home'}],
         knownPaths: [],
         imageUrl: 'img/icons/',
-        systemImageUrl: 'img/browser/',
+        systemImageUrl: '/css/img/',
         handlerUrl: '/Preference/server-browse/format/json',
         title: 'Choose Storage Folder',
         basePath: '',
@@ -69,6 +69,7 @@ function setWatchedDirEvents() {
 
             function(json) {
                 $("#watched-folder-section").empty();
+                $("#watched-folder-section").append("<h2>Manage Media Folders</h2>");
                 $("#watched-folder-section").append(json.subform);
                 setWatchedDirEvents();
             });
@@ -86,6 +87,7 @@ function setWatchedDirEvents() {
 
                 function(json) {
                     $("#watched-folder-section").empty();
+                    $("#watched-folder-section").append("<h2>Manage Media Folders</h2>");
                     $("#watched-folder-section").append(json.subform);
                     setWatchedDirEvents();
                 });

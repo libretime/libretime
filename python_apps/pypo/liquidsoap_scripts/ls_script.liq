@@ -6,9 +6,8 @@ set("log.stdout", true)
 set("server.telnet", true)
 set("server.telnet.port", 1234)
 
-queue = request.queue(id="queue", length=0.5)
+queue = audio_to_stereo(request.queue(id="queue", length=0.5))
 queue = cue_cut(queue)
-queue = audio_to_stereo(queue)
 
 pypo_data = ref '0'
 web_stream_enabled = ref false
@@ -51,75 +50,24 @@ s = crossfade(s)
 add_skip_command(s)
 s = map_metadata(append_title, s)
 
-
 if output_sound_device then
-    ignore(output.alsa(s))
+    ignore(out(s))
 end
 
-if output_icecast_mp3 then
-
-    #format = %mp3(bitrate=192, samplerate=44100, stereo=false)
-    ignore(output.icecast(%mp3,
-            host = icecast_host,
-            port = icecast_port,
-            password = icecast_pass,
-            mount = mount_point_mp3,
-            fallible = true,
-            restart = true,
-            restart_delay = 5,
-            url = icecast_url,
-            description = icecast_description,
-            genre = icecast_genre,
-            s)
-        )
+if s1_output != "disabled" then
+    #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
+    output_to(s1_output, s1_type, s1_bitrate, s1_host, s1_port, s1_pass, s1_mount, s1_url, s1_description, s1_genre, s1_user, s, "1")
 end
 
-if output_icecast_vorbis then
-    if output_icecast_vorbis_metadata then
-        ignore(output.icecast(%vorbis,
-                host = icecast_host,
-                port = icecast_port,
-                password = icecast_pass,
-                mount = mount_point_vorbis,
-                fallible = true,
-                restart = true,
-                restart_delay = 5,
-                url = icecast_url,
-                description = icecast_description,
-                genre = icecast_genre,
-                s)
-            )
-    else
-        #remove metadata from ogg source and merge tracks to fix bug
-        #with vlc and mplayer disconnecting at the end of every track
-        s = add(normalize=false, [amplify(0.00001, noise()),s])
-        ignore(output.icecast(%vorbis,
-                host = icecast_host,
-                port = icecast_port,
-                password = icecast_pass,
-                mount = mount_point_vorbis,
-                fallible = true,
-                restart = true,
-                restart_delay = 5,
-                url = icecast_url,
-                description = icecast_description,
-                genre = icecast_genre,
-                s)
-            )
-    end
+if s2_output != "disabled" then
+    #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
+    output_to(s2_output, s2_type, s2_bitrate, s2_host, s2_port, s2_pass, s2_mount, s2_url, s2_description, s2_genre, s2_user, s, "2")
+    
 end
 
-if output_shoutcast then
-    ignore(output.shoutcast(%mp3,
-            host = shoutcast_host,
-            port = shoutcast_port,
-            password = shoutcast_pass,
-            fallible = true,
-            restart = true,
-            restart_delay = 5,
-            url = shoutcast_url,
-            genre = shoutcast_genre,
-            s)
-        )
+if s3_output != "disabled" then
+    #output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, s)
+    output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3")
 end
 
+ignore(output.dummy(blank()))

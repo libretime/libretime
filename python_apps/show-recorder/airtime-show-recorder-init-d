@@ -17,8 +17,8 @@ DAEMON=/usr/lib/airtime/show-recorder/airtime-show-recorder
 PIDFILE=/var/run/airtime-show-recorder.pid
 
 start () {
-        monit monitor airtime-show-recorder >/dev/null 2>&1
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
+        monit monitor airtime-show-recorder >/dev/null 2>&1
 }
 
 stop () {
@@ -27,6 +27,10 @@ stop () {
         monit unmonitor airtime-show-recorder >/dev/null 2>&1
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE
         rm -f $PIDFILE
+}
+
+start_no_monit() {
+        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
 }
 
 
@@ -48,6 +52,12 @@ case "${1:-''}" in
            echo -n "Restarting $NAME: "
            stop
            start
+           echo "Done."
+        ;;
+  'start-no-monit')
+           # restart commands here
+           echo -n "Starting $NAME: "
+           start_no_monit
            echo "Done."
         ;;
   'status')

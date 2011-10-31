@@ -13,6 +13,9 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('delete', 'json')
                     ->addActionContext('context-menu', 'json')
                     ->addActionContext('get-file-meta-data', 'html')
+                    ->addActionContext('upload-file-soundcloud', 'json')
+                    ->addActionContext('get-upload-to-soundcloud-status', 'json')
+                    ->addActionContext('set-num-entries', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -25,7 +28,6 @@ class LibraryController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js','text/javascript');
@@ -34,6 +36,8 @@ class LibraryController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css');
+        
 
         $this->_helper->layout->setLayout('library');
         $this->_helper->viewRenderer->setResponseSegment('library');
@@ -64,7 +68,7 @@ class LibraryController extends Zend_Controller_Action
         $paramsPop = str_replace('#type#', $type, $paramsPop);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 
         $pl_sess = $this->pl_sess;
 
@@ -82,12 +86,29 @@ class LibraryController extends Zend_Controller_Action
 	    	$id = $this->_getParam('id');
 
 	    	$file_id = $this->_getParam('id', null);
-	        $file = StoredFile::Recall($file_id);
+	        $file = Application_Model_StoredFile::Recall($file_id);
 
-	        $url = $file->getRelativeFileUrl($baseUrl).'/api_key/'.$CC_CONFIG["apiKey"][0].'/download/true';
+	        $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
-
+            
+            if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
+                $text = "Upload to Soundcloud";
+                if(!is_null($file->getSoundCloudId())){
+                    $text = "Re-upload to Soundcloud";
+                }
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
+                                'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
+         
+                $scid = $file->getSoundCloudId();
+                
+                if($scid > 0){
+                    $link_to_file = $file->getSoundCloudLinkToFile();
+                    $menu[] = array('action' => array('type' => 'fn', 
+                    	    'callback' => "window['openFileOnSoundCloud']('$link_to_file')"),
+                                				'title' => 'View on SoundCloud');
+                }
+            }
 
             if ($user->isAdmin()) {
                 $menu[] = array('action' => array('type' => 'fn',
@@ -128,12 +149,12 @@ class LibraryController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new User($userInfo->id);
+        $user = new Application_Model_User($userInfo->id);
 
         if ($user->isAdmin()) {
 
             if (!is_null($id)) {
-                $file = StoredFile::Recall($id);
+                $file = Application_Model_StoredFile::Recall($id);
 
                 if (PEAR::isError($file)) {
                     $this->view->message = $file->getMessage();
@@ -153,7 +174,7 @@ class LibraryController extends Zend_Controller_Action
                 else {
                     $res = settype($res, "integer");
                     $data = array("filepath" => $file->getFilePath(), "delete" => $res);
-                    RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+                    Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
                 }
             }
 
@@ -164,12 +185,23 @@ class LibraryController extends Zend_Controller_Action
     public function contentsAction()
     {
         $post = $this->getRequest()->getPost();
-        $datatables = StoredFile::searchFilesForPlaylistBuilder($post);
+        $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($post);
 
         //format clip lengh to 1 decimal
         foreach($datatables["aaData"] as &$data){
-            $sec = Playlist::playlistTimeToSeconds($data[5]);
-            $data[5] = Playlist::secondsToPlaylistTime($sec);
+            if($data[6] == 'audioclip'){
+                $file = Application_Model_StoredFile::Recall($data[0]);
+                $scid = $file->getSoundCloudId();
+                if($scid == "-2"){
+                    $data[1] .= '<span id="'.$data[0].'" class="small-icon progress"></span>';
+                }else if($scid == "-3"){
+                    $data[1] .= '<span id="'.$data[0].'" class="small-icon sc-error"></span>';
+                }else if(!is_null($scid)){
+                    $data[1] .= '<span id="'.$data[0].'" class="small-icon soundcloud"></span>';
+                }
+            }
+            $sec = Application_Model_Playlist::playlistTimeToSeconds($data[5]);
+            $data[5] = Application_Model_Playlist::secondsToPlaylistTime($sec);
         }
 
         die(json_encode($datatables));
@@ -179,9 +211,10 @@ class LibraryController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $form = new Application_Form_EditAudioMD();
-
+        
         $file_id = $this->_getParam('id', null);
-        $file = StoredFile::Recall($file_id);
+        $file = Application_Model_StoredFile::Recall($file_id);
+        $form->populate($file->getDbColMetadata());
 
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
@@ -190,14 +223,17 @@ class LibraryController extends Zend_Controller_Action
                 $file->setDbColMetadata($formdata);
 
                 $data = $file->getMetadata();
+                
+                // set MDATA_KEY_FILEPATH
+                $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
+                Logging::log($data['MDATA_KEY_FILEPATH']);
+                Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
-                RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
                 $this->_helper->redirector('index');
             }
         }
 
-        $form->populate($file->getDbColMetadata());
         $this->view->form = $form;
     }
 
@@ -207,16 +243,50 @@ class LibraryController extends Zend_Controller_Action
         $type = $this->_getParam('type');
 
         if($type == "au") {
-            $file = StoredFile::Recall($id);
+            $file = Application_Model_StoredFile::Recall($id);
             $this->view->type = $type;
             $this->view->md = $file->getMetadata();
         }
         else if($type == "pl") {
-            $file = Playlist::Recall($id);
+            $file = Application_Model_Playlist::Recall($id);
             $this->view->type = $type;
             $this->view->md = $file->getAllPLMetaData();
             $this->view->contents = $file->getContents();
         }
 
+    }
+    
+    public function uploadFileSoundcloudAction(){
+        $id = $this->_getParam('id');
+        $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
+        // we should die with ui info
+        die();
+    }
+    
+    public function getUploadToSoundcloudStatusAction(){
+        $id = $this->_getParam('id');
+        $type = $this->_getParam('type');
+        if($type == "show"){
+            $show_instance = new Application_Model_ShowInstance($id);
+            $this->view->sc_id = $show_instance->getSoundCloudFileId();
+            $file = $show_instance->getRecordedFile();
+            $this->view->error_code = $file->getSoundCloudErrorCode();
+            $this->view->error_msg = $file->getSoundCloudErrorMsg();
+        }else{
+            $file = Application_Model_StoredFile::Recall($id);
+            $this->view->sc_id = $file->getSoundCloudId();
+            $this->view->error_code = $file->getSoundCloudErrorCode();
+            $this->view->error_msg = $file->getSoundCloudErrorMsg();
+        }
+    }
+    
+    /**
+     * Stores the number of entries user chose to show in the Library
+     * to the pref db
+     */
+    public function setNumEntriesAction() {
+    	$request = $this->getRequest();
+    	$numEntries = $request->getParam('numEntries');
+    	Application_Model_Preference::SetLibraryNumEntries($numEntries);
     }
 }

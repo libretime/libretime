@@ -17,7 +17,7 @@
         </dd>
         <dd id="publicize-element" style="width:90%;">
             <div class="info-text">Click the box below to advertise your station on 
-            <a id="link_to_whos_using" href="http://sourcefabric.org/en/products/airtime_whosusing" onclick="window.open(this.href); return false">Sourcefabric.org</a>.
+            <a id="link_to_whos_using" href="http://sourcefabric.org/en/airtime/whosusing" onclick="window.open(this.href); return false">Sourcefabric.org</a>.
              In order to promote your station, "Send support feedback" must be enabled. This data will be collected in addition to the support feedback.</div>
             <label class="optional" for="Publicise">
                 <?php echo $this->element->getElement('Publicise') ?>
@@ -134,7 +134,7 @@
         </dt>
         <dd id="Logo-element" class="block-display clearfix">
             <?php if($this->element->getView()->logoImg){?>
-            <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
+            <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
             <?php }?>
             
             <?php echo $this->element->getElement('Logo') ?>
@@ -159,16 +159,20 @@
     </div>
     <div>
         <br>
-        <label class="optional" for="Privacy">
-            <?php echo $this->element->getElement('Privacy') ?>
-            <?php echo $this->element->getElement('Privacy')->getLabel() ?>
-        </label>
-        <?php if($this->element->getElement('Privacy')->hasErrors()) : ?>
-            <ul class='errors'>
-                <?php foreach($this->element->getElement('Privacy')->getMessages() as $error): ?>
-                    <li><?php echo $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+        <?php if(!$this->element->getView()->privacyChecked){?>
+            <label class="optional" for="Privacy">
+                <?php echo $this->element->getElement('Privacy') ?>
+                <?php echo $this->element->getElement('Privacy')->getLabel() ?>
+            </label>
+            <?php if($this->element->getElement('Privacy')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('Privacy')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        <?php }else{?>
+            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;">Terms and Conditions</a>
+        <?php }?>
     </div>
 </fieldset>

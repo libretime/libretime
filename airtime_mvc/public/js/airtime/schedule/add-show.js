@@ -374,7 +374,10 @@ function setAddShowEvents() {
 	function calculateDuration(endDateTime, startDateTime){
 		var duration;
 		var durationSeconds = (endDateTime.getTime() - startDateTime.getTime())/1000;
-		if(durationSeconds != 0){
+		if(isNaN(durationSeconds)){
+		    duration = '1h';
+		}
+		else if(durationSeconds != 0){
 			var durationHour = parseInt(durationSeconds/3600, 10);
 			var durationMin = parseInt((durationSeconds%3600)/60, 10);
 			duration = (durationHour == 0 ? '' : durationHour+'h'+' ')+(durationMin == 0 ? '' : durationMin+'m');
@@ -416,10 +419,16 @@ function showErrorSections() {
         $("#schedule-record-rebroadcast").show();
         $("#add_show_rebroadcast_relative").show();
     }
+    $('input:text').setMask()
 }
 
 $(document).ready(function() {
-
+    $.mask.masks = $.extend($.mask.masks,{
+        date:{ mask: '9999-19-39'},
+        time:{ mask: '29:69'}
+    })
+    
+    $('input:text').setMask()
 	//setAddShowEvents();
 });
 
@@ -430,11 +439,24 @@ $(window).resize(function(){
         var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
         var widthPercent = parseInt(calendarWidth)+"%";
         $("#schedule_calendar").css("width", widthPercent);
-        $("#schedule_calendar").fullCalendar('render');
 	}
+	
+	// 200 px for top dashboard and 50 for padding on main content
+	// this calculation was copied from schedule.js line 326
+	var mainHeight = document.documentElement.clientHeight - 200 - 50;
+	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight)
+	$("#schedule_calendar").fullCalendar('render');
+	
 });
 
 $(window).load(function() {
-
+    $.mask.masks = $.extend($.mask.masks,{
+        date:{ mask: '9999-19-39'},
+        time:{ mask: '29:69'}
+    })
+    
+    $('input:text').setMask()
+    
 	setAddShowEvents();
+	
 });

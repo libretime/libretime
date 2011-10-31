@@ -11,6 +11,23 @@ function popup(mylink){
     return false;
 }
 
+function convertSecondsToDaysHoursMinutesSeconds(seconds){
+    if (seconds < 0)
+        seconds = 0;
+    
+    seconds = parseInt(seconds, 10);
+
+    var days = parseInt(seconds / 86400);
+    seconds -= days*86400;
+
+    var hours = parseInt(seconds / 3600);
+    seconds -= hours*3600;
+
+    var minutes = parseInt(seconds / 60);
+    seconds -= minutes*60;
+
+    return {days:days, hours:hours, minutes:minutes, seconds:seconds}; 
+}
 
 /* Takes an input parameter of milliseconds and converts these into
  * the format HH:MM:SS */
@@ -141,6 +158,36 @@ function getFileExt(filename){
     return filename.split('.').pop();
 }
 
+function audioStream(){
+
+    if ($("#jquery_jplayer_1").data("jPlayer") && $("#jquery_jplayer_1").data("jPlayer").status.paused != true){
+        $('#jquery_jplayer_1').jPlayer('clearMedia');
+        $('#jquery_jplayer_1').jPlayer('destroy');
+        return;
+    }
+    
+    var uri = "http://localhost:8000/airtime_128.ogg";
+    var ext = getFileExt(uri);
+    
+    var media;
+    var supplied;
+    if (ext == "ogg"){
+        media = {oga:uri};
+        supplied = "oga";
+    } else {
+        media = {mp3:uri};
+        supplied = "mp3";
+    }
+
+    $("#jquery_jplayer_1").jPlayer({
+        ready: function () {
+            $(this).jPlayer("setMedia", media).jPlayer("play");
+        },
+        swfPath: "/js/jplayer",
+        supplied: supplied
+    });
+}
+
 function audioPreview(filename, elemID){
 
     var elems = $('.ui-icon.ui-icon-pause');
@@ -164,17 +211,52 @@ function audioPreview(filename, elemID){
         supplied = "mp3";
     }
 
-      //$('#jquery_jplayer_1').jPlayer('stop');
-      $("#jquery_jplayer_1").jPlayer("destroy");
-      $("#jquery_jplayer_1").jPlayer({
-		ready: function () {
-            //alert(media);
-			$(this).jPlayer("setMedia", media).jPlayer("play");
-		},
+    $("#jquery_jplayer_1").jPlayer("destroy");
+    $("#jquery_jplayer_1").jPlayer({
+        ready: function () {
+            $(this).jPlayer("setMedia", media).jPlayer("play");
+        },
         swfPath: "/js/jplayer",
-		supplied: supplied
-      });
+        supplied: supplied
+    });
 
-    //$('#jquery_jplayer_1').jPlayer('setMedia', media).jPlayer('play');
     $('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
+}
+
+function resizeImg(ele, targetWidth, targetHeight){
+    var img = $(ele);
+
+    var width = ele.width;
+    var height = ele.height;
+
+    // resize img proportionaly
+    if( width > height && width > targetWidth){
+        var ratio = targetWidth/width;
+        img.css("width", targetHeight+"px");
+        var newHeight = height * ratio;
+        img.css("height", newHeight+"px");
+    }else if( width < height && height > targetHeight){
+        var ratio = targetHeight/height;
+        img.css("height", targetHeight+"px");
+        var newWidth = width * ratio;
+        img.css("width", newWidth+"px");
+    }else if( width == height && width > targetWidth){
+        img.css("height", targetHeight+"px");
+        img.css("width", targetWidth+"px" );
+    }
+}
+
+function resizeToMaxHeight(ele, targetHeight){
+    var img = $(ele);
+
+    var width = ele.width;
+    var height = ele.height;
+
+    // resize img proportionaly
+    if( height > targetHeight){
+        var ratio = targetHeight/height;
+        img.css("height", targetHeight+"px");
+        var newWidth = width * ratio;
+        img.css("width", newWidth+"px");
+    }
 }

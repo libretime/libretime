@@ -2,7 +2,6 @@ php_value post_max_size 500M
 php_value upload_max_filesize 500M
 php_value request_order "GPC"
 php_value session.gc_probability 0
-php_value date.timezone "America/Toronto"
 php_value phar.readonly Off
 
 RewriteEngine On

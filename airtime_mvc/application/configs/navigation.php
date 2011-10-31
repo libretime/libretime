@@ -37,7 +37,7 @@ $pages = array(
         'resource'	=>	'schedule'
 	),
     array(
-        'label'      => 'Configure',
+        'label'      => 'System',
         'uri' => '#',
         'resource' => 'preference',
         'pages'      => array(
@@ -57,22 +57,55 @@ $pages = array(
                 'label'      => 'Manage Media Folders',
                 'module'     => 'default',
                 'controller' => 'Preference',
-                'action'     => 'directory-config'
+                'action'     => 'directory-config',
+                'id'		 => 'manage_folder'
+            ),
+            array(
+                'label'      => 'Stream Settings',
+                'module'     => 'default',
+                'controller' => 'Preference',
+                'action'     => 'stream-setting'
             ),
             array(
                 'label'      => 'Support Settings',
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'support-setting'
+            ),
+            array(
+                'label'      => 'Status',
+                'module'     => 'default',
+                'controller' => 'systemstatus',
+                'action'     => 'index',
+                'resource'	=>	'systemstatus'
             )
         )
     ),
 	array(
 		'label'      => 'Help',
-		'module'     => 'default',
-		'controller' => 'dashboard',
-		'action'     => 'help',
-		'resource'	=>	'dashboard'
+		'uri'     => '#',
+		'resource'	=>	'dashboard',
+        'pages'      => array(
+            array(
+                'label'      => 'Getting Started',
+                'module'     => 'default',
+                'controller' => 'dashboard',
+                'action'     => 'help',
+                'resource'   =>	'dashboard'
+            ),
+            array(
+                'label'      => 'User Manual',
+                'uri'        => "http://en.flossmanuals.net/airtime/",
+                'target'     => "_blank"
+            ),
+            array(
+                'label'      => 'About',
+                'module'     => 'default',
+                'controller' => 'dashboard',
+                'action'     => 'about',
+                'resource'   =>	'dashboard'
+            )
+        )
 	)
 );
 

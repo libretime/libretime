@@ -34,7 +34,7 @@ class UserController extends Zend_Controller_Action
     
 				$formdata = $form->getValues();
                 if ($form->validateLogin($formdata)){                                                                       
-                    $user = new User($formdata['user_id']);
+                    $user = new Application_Model_User($formdata['user_id']);
                     $user->setFirstName($formdata['first_name']);
                     $user->setLastName($formdata['last_name']);
                     $user->setLogin($formdata['login']);
@@ -63,13 +63,13 @@ class UserController extends Zend_Controller_Action
     public function getHostsAction()
     {
         $search = $this->_getParam('term');
-        $this->view->hosts = User::getHosts($search);
+        $this->view->hosts = Application_Model_User::getHosts($search);
     }
 
     public function getUserDataTableInfoAction()
     {
         $post = $this->getRequest()->getPost();
-        $users = User::getUsersDataTablesInfo($post);
+        $users = Application_Model_User::getUsersDataTablesInfo($post);
                  
         die(json_encode($users));
     }
@@ -77,7 +77,7 @@ class UserController extends Zend_Controller_Action
     public function getUserDataAction()
     {
         $id = $this->_getParam('id');
-        $this->view->entries = User::GetUserData($id);
+        $this->view->entries = Application_Model_User::GetUserData($id);
     }
 
     public function removeUserAction()
@@ -89,7 +89,7 @@ class UserController extends Zend_Controller_Action
         $userId = $userInfo->id;
 
         if ($delId != $userId){
-            $user = new User($delId);
+            $user = new Application_Model_User($delId);
             $this->view->entries = $user->delete();
         }
             

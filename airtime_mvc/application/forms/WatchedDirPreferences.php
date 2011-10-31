@@ -11,7 +11,7 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
 
         $this->addElement('text', 'storageFolder', array(
             'class'      => 'input_text',
-            'label'      => 'Airtime\'s Storage Folder:',
+            'label'      => 'Import Folder:',
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => '',
@@ -22,7 +22,7 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
 
         $this->addElement('text', 'watchedFolder', array(
             'class'      => 'input_text',
-            'label'      => 'Choose a Folder to Watch:',
+            'label'      => 'Watched Folders:',
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => '',

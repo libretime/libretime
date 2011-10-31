@@ -33,7 +33,7 @@ class PlaylistController extends Zend_Controller_Action
 
 		if(isset($pl_sess->id)) {
 
-			$pl = Playlist::Recall($pl_sess->id);
+			$pl = Application_Model_Playlist::Recall($pl_sess->id);
 			if($pl === FALSE) {
 				unset($pl_sess->id);
 				return;
@@ -48,7 +48,7 @@ class PlaylistController extends Zend_Controller_Action
 
 		if(isset($pl_sess->id)) {
 
-			$pl = Playlist::Recall($pl_sess->id);
+			$pl = Application_Model_Playlist::Recall($pl_sess->id);
 			if($pl !== FALSE) {
 				$this->closePlaylist($pl);
 			}
@@ -56,7 +56,7 @@ class PlaylistController extends Zend_Controller_Action
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-		$pl = Playlist::Recall($pl_id);
+		$pl = Application_Model_Playlist::Recall($pl_id);
 		if($pl === FALSE) {
 			return FALSE;
 		}
@@ -92,7 +92,7 @@ class PlaylistController extends Zend_Controller_Action
         $pl_sess = $this->pl_sess;
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-        $pl = new Playlist();
+        $pl = new Application_Model_Playlist();
         $pl->create("Untitled Playlist");
 		$pl->setPLMetaData('dc:creator', $userInfo->login);
 
@@ -285,11 +285,11 @@ class PlaylistController extends Zend_Controller_Action
     public function deleteAction()
     {
         $id = $this->_getParam('id', null);
-		$pl = Playlist::Recall($id);
+		$pl = Application_Model_Playlist::Recall($id);
 
 		if ($pl !== FALSE) {
 
-			Playlist::Delete($id);
+			Application_Model_Playlist::Delete($id);
 
 			$pl_sess = $this->pl_sess;
 
@@ -305,7 +305,7 @@ class PlaylistController extends Zend_Controller_Action
     public function deleteActiveAction()
     {
         $pl = $this->getPlaylist();
-		Playlist::Delete($pl->getId());
+		Application_Model_Playlist::Delete($pl->getId());
 
 		$pl_sess = $this->pl_sess;
 		unset($pl_sess->id);

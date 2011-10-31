@@ -9,6 +9,7 @@ class ApiController extends Zend_Controller_Action
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
                 ->addActionContext('recorded-shows', 'json')
+                ->addActionContext('calendar-init', 'json')
                 ->addActionContext('upload-file', 'json')
                 ->addActionContext('upload-recorded', 'json')
                 ->addActionContext('media-monitor-setup', 'json')
@@ -19,6 +20,12 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('add-watched-dir', 'json')
                 ->addActionContext('remove-watched-dir', 'json')
                 ->addActionContext('set-storage-dir', 'json')
+                ->addActionContext('get-stream-setting', 'json')
+                ->addActionContext('status', 'json')
+                ->addActionContext('register-component', 'json')
+                ->addActionContext('update-liquidsoap-error', 'json')
+                ->addActionContext('update-liquidsoap-connection', 'json')
+                ->addActionContext('library-init', 'json')
                 ->initContext();
     }
 
@@ -32,7 +39,7 @@ class ApiController extends Zend_Controller_Action
      *
      * First checks to ensure the correct API key was
      * supplied, then returns AIRTIME_VERSION as defined
-     * in application/conf.php
+     * in the database
      *
      * @return void
      *
@@ -52,8 +59,31 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        $jsonStr = json_encode(array("version"=>AIRTIME_VERSION));
+        $jsonStr = json_encode(array("version"=>Application_Model_Preference::GetAirtimeVersion()));
         echo $jsonStr;
+    }
+    
+    /**
+     * Sets up and send init values used in the Calendar.
+     * This is only being used by schedule.js at the moment.
+     */
+    public function calendarInitAction(){
+    	$this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            return;
+        }
+        
+    	$this->view->calendarInit = array(
+        	"timestamp" => time(), 
+        	"timezoneOffset" => date("Z"), 
+        	"timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
+    		"timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
+    		"weekStartDay" => Application_Model_Preference::GetWeekStartDay()
+        );
     }
 
     /**
@@ -87,7 +117,7 @@ class ApiController extends Zend_Controller_Action
         $filename = $this->_getParam("file");
         $file_id = substr($filename, 0, strpos($filename, "."));
         if (ctype_alnum($file_id) && strlen($file_id) == 32) {
-          $media = StoredFile::RecallByGunid($file_id);
+          $media = Application_Model_StoredFile::RecallByGunid($file_id);
           if ($media != null && !PEAR::isError($media)) {
             $filepath = $media->getFilePath();
             if(is_file($filepath)){
@@ -112,6 +142,7 @@ class ApiController extends Zend_Controller_Action
                     $file_base_name = substr($file_base_name, 1);
                     header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
                 }
+                $logger->info("Sending $filepath");
                 header("Content-Length: " . filesize($filepath));
 
                 // !! binary mode !!
@@ -148,12 +179,13 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
-            $date = new DateHelper;
+            $date = new Application_Model_DateHelper;
             $timeNow = $date->getTimestamp();
+            
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
-                "nextShow"=>Show_DAL::GetNextShows($timeNow, 5),
+                "currentShow"=>Application_Model_Show::GetCurrentShow($timeNow),
+                "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 5),
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"));
 
@@ -178,7 +210,7 @@ class ApiController extends Zend_Controller_Action
 
             $result = array();
             for ($i=0; $i<7; $i++){
-                $result[$dow[$i]] = Show_DAL::GetShowsByDayOfWeek($i);
+                $result[$dow[$i]] = Application_Model_Show::GetShowsByDayOfWeek($i);
             }
 
             header("Content-type: text/javascript");
@@ -209,7 +241,7 @@ class ApiController extends Zend_Controller_Action
 
         PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
-        $result = Schedule::GetScheduledPlaylists();
+        $result = Application_Model_Schedule::GetScheduledPlaylists();
         echo json_encode($result);
     }
 
@@ -231,7 +263,7 @@ class ApiController extends Zend_Controller_Action
 
         $schedule_group_id = $this->_getParam("schedule_id");
         $media_id = $this->_getParam("media_id");
-        $result = Schedule::UpdateMediaPlayedStatus($media_id);
+        $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
 
         if (!PEAR::isError($result)) {
             echo json_encode(array("status"=>1, "message"=>""));
@@ -260,7 +292,7 @@ class ApiController extends Zend_Controller_Action
 
         $schedule_group_id = $this->_getParam("schedule_id");
         if (is_numeric($schedule_group_id)) {
-            $sg = new ScheduleGroup($schedule_group_id);
+            $sg = new Application_Model_ScheduleGroup($schedule_group_id);
             if ($sg->exists()) {
                 $result = $sg->notifyGroupStartPlay();
                 if (!PEAR::isError($result)) {
@@ -296,12 +328,12 @@ class ApiController extends Zend_Controller_Action
         $now = new DateTime($today_timestamp);
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
-        $this->view->shows = Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
+        $this->view->shows = Application_Model_Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
 
 
         $this->view->is_recording = false;
 
-        $rows = Show_DAL::GetCurrentShow($today_timestamp);
+        $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
         if (count($rows) > 0){
             $this->view->is_recording = ($rows[0]['record'] == 1);
         }
@@ -320,9 +352,9 @@ class ApiController extends Zend_Controller_Action
         }
 
         $upload_dir = ini_get("upload_tmp_dir");
-        StoredFile::uploadFile($upload_dir);
+        Application_Model_StoredFile::uploadFile($upload_dir);
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        StoredFile::copyFileToStor($upload_dir, $fileName);
+        Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName);
     }
 
     public function uploadRecordedAction()
@@ -346,17 +378,17 @@ class ApiController extends Zend_Controller_Action
 
 
        	$showCanceled = false;
-       	$file = StoredFile::Recall($file_id);
+       	$file = Application_Model_StoredFile::Recall($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
         $show_name = null;
         try {
-            $show_inst = new ShowInstance($show_instance_id);
+            $show_inst = new Application_Model_ShowInstance($show_instance_id);
 
             $show_inst->setRecordedFile($file_id);
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
-            $show_start_time = $show_inst->getShowStart();
+            $show_start_time = ConvertToLocalDateTimeString($show_inst->getShowStart());
 
          } catch (Exception $e){
             //we've reached here probably because the show was
@@ -379,24 +411,31 @@ class ApiController extends Zend_Controller_Action
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', null);
 
-        if (!$showCanceled && Application_Model_Preference::GetDoSoundCloudUpload())
+        if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud())
         {
         	for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
 
-        		$show = new Show($show_inst->getShowId());
+        		$show = new Application_Model_Show($show_inst->getShowId());
         		$description = $show->getDescription();
         		$hosts = $show->getHosts();
 
         		$tags = array_merge($hosts, array($show_name));
 
         		try {
-        			$soundcloud = new ATSoundcloud();
+        			$soundcloud = new Application_Model_Soundcloud();
         			$soundcloud_id = $soundcloud->uploadTrack($file->getFilePath(), $tmpTitle, $description, $tags, $show_start_time, $show_genre);
-        			$show_inst->setSoundCloudFileId($soundcloud_id);
+        			$file->setSoundCloudFileId($soundcloud_id);
         			break;
         		}
         		catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
         			$code = $e->getHttpCode();
+                    $msg = $e->getHttpBody();
+                    $temp = explode('"error":',$msg);
+                    $msg = trim($temp[1], '"}');
+                    $this->setSoundCloudErrorCode($code);
+                    $this->setSoundCloudErrorMsg($msg);
+                    // setting sc id to -3 which indicates error
+                    $this->setSoundCloudFileId(SOUNDCLOUD_ERROR);
         			if(!in_array($code, array(0, 100))) {
         				break;
         			}
@@ -425,7 +464,14 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $this->view->stor = MusicDir::getStorDir()->getDirectory();
+        $this->view->stor = Application_Model_MusicDir::getStorDir()->getDirectory();
+        
+        $watchedDirs = Application_Model_MusicDir::getWatchedDirs();
+        $watchedDirsPath = array();
+        foreach($watchedDirs as $wd){
+            $watchedDirsPath[] = $wd->getDirectory();
+        }
+        $this->view->watched_dirs = $watchedDirsPath;
     }
 
     public function reloadMetadataAction() {
@@ -458,10 +504,10 @@ class ApiController extends Zend_Controller_Action
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
 
-            $file = StoredFile::RecallByFilepath($filepath);
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
-                $file = StoredFile::Insert($md);
+                $file = Application_Model_StoredFile::Insert($md);
             }
             else {
                 $this->view->error = "File already exists in Airtime.";
@@ -471,7 +517,7 @@ class ApiController extends Zend_Controller_Action
         else if ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
-            $file = StoredFile::RecallByFilepath($filepath);
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             //File is not in database anymore.
             if (is_null($file)) {
@@ -485,7 +531,7 @@ class ApiController extends Zend_Controller_Action
         }
         else if ($mode == "moved") {
             $md5 = $md['MDATA_KEY_MD5'];
-            $file = StoredFile::RecallByMd5($md5);
+            $file = Application_Model_StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
@@ -501,7 +547,7 @@ class ApiController extends Zend_Controller_Action
         else if ($mode == "delete") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
-            $file = StoredFile::RecallByFilepath($filepath);
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
@@ -510,6 +556,16 @@ class ApiController extends Zend_Controller_Action
             else {
                 $file->delete();
             }
+        }
+        else if ($mode == "delete_dir") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = str_replace("\\", "", $filepath);
+            $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
+
+            foreach($files as $file){
+                $file->delete();
+            }
+            return;
         }
         $this->view->id = $file->getId();
     }
@@ -527,7 +583,7 @@ class ApiController extends Zend_Controller_Action
         }
         $dir_id = $request->getParam('dir_id');
 
-        $this->view->files = StoredFile::listAllFiles($dir_id);
+        $this->view->files = Application_Model_StoredFile::listAllFiles($dir_id);
     }
 
     public function listAllWatchedDirsAction() {
@@ -544,8 +600,8 @@ class ApiController extends Zend_Controller_Action
 
         $result = array();
 
-        $arrWatchedDirs = MusicDir::getWatchedDirs();
-        $storDir = MusicDir::getStorDir();
+        $arrWatchedDirs = Application_Model_MusicDir::getWatchedDirs();
+        $storDir = Application_Model_MusicDir::getStorDir();
 
         $result[$storDir->getId()] = $storDir->getDirectory();
 
@@ -570,7 +626,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $this->view->msg = MusicDir::addWatchedDir($path);
+        $this->view->msg = Application_Model_MusicDir::addWatchedDir($path);
     }
 
     public function removeWatchedDirAction() {
@@ -587,7 +643,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $this->view->msg = MusicDir::removeWatchedDir($path);
+        $this->view->msg = Application_Model_MusicDir::removeWatchedDir($path);
     }
 
     public function setStorageDirAction() {
@@ -604,7 +660,97 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        $this->view->msg = MusicDir::setStorDir($path);
+        $this->view->msg = Application_Model_MusicDir::setStorDir($path);
+    }
+    
+    public function getStreamSettingAction() {
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $this->view->msg = Application_Model_StreamSetting::getStreamSetting();
+    }
+    
+    public function statusAction() {
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        /*
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        */
+        
+        $status = array(
+            "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
+            "airtime_version"=>Application_Model_Preference::GetAirtimeVersion(),
+            "services"=>array(
+                "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
+                "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
+                "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
+                "show_recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
+                "media_monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
+            ),
+            "partitions"=>Application_Model_Systemstatus::GetDiskInfo()
+        );
+        
+        $this->view->status = $status;
+    }
+
+    public function registerComponentAction(){
+        $request = $this->getRequest();
+
+        $component = $request->getParam('component');
+        $remoteAddr = $_SERVER['REMOTE_ADDR'];
+        Logging::log("Registered Component: ".$component."@".$remoteAddr);
+
+        Application_Model_ServiceRegister::Register($component, $remoteAddr);
+    }
+    
+    public function updateLiquidsoapErrorAction(){
+        $request = $this->getRequest();
+        
+        $error_msg = $request->getParam('error_msg');
+        $stream_id = $request->getParam('stream_id');
+        Application_Model_StreamSetting::setLiquidsoapError($stream_id, $error_msg);
+    }
+    
+    public function updateLiquidsoapConnectionAction(){
+        $request = $this->getRequest();
+        
+        $stream_id = $request->getParam('stream_id');
+        // setting error_msg as "" when there is no error_msg
+        Application_Model_StreamSetting::setLiquidsoapError($stream_id, "OK");
+    }
+    
+    /**
+     * Sets up and send init values used in the Library.
+     * This is being used by library.js
+     */
+    public function libraryInitAction(){
+    	$this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            return;
+        }
+        
+    	$this->view->libraryInit = array(
+        	"numEntries"=>Application_Model_Preference::GetLibraryNumEntries()
+        );
     }
 }
 

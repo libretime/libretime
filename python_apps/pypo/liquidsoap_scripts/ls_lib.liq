@@ -1,6 +1,6 @@
 def notify(m)
+  log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
   system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
-  print("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']}")
 end
 
 # A function applied to each metadata chunk
@@ -34,6 +34,140 @@ def to_live(old,new) =
   # Compose this in sequence with
   # the new source
   sequence([old,new])
+end
+
+
+def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream) =
+    def on_error(msg)
+        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream}")
+        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream}")
+        5.
+    end
+    def on_connect()
+        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream}")
+        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream}")
+    end
+    if output_type == "icecast" then
+        user_ref = ref user
+        if user == "" then
+            user_ref := "source"
+        end
+        output = output.icecast(host = host,
+                    port = port,
+                    password = pass,
+                    mount = mount_point,
+                    fallible = true,
+                    url = url,
+                    description = description,
+                    genre = genre,
+                    user = !user_ref,
+                    on_error = on_error,
+                    on_connect = on_connect)
+        if type == "mp3" then
+            if bitrate == 24 then 
+                ignore(output(%mp3(bitrate = 24),s))
+            elsif bitrate == 32 then
+                ignore(output(%mp3(bitrate = 32),s))
+            elsif bitrate == 48 then
+                ignore(output(%mp3(bitrate = 48),s))
+            elsif bitrate == 64 then
+                ignore(output(%mp3(bitrate = 64),s))
+            elsif bitrate == 96 then
+                ignore(output(%mp3(bitrate = 96),s))
+            elsif bitrate == 128 then
+                ignore(output(%mp3(bitrate = 128),s))
+            elsif bitrate == 160 then
+                ignore(output(%mp3(bitrate = 160),s))
+            elsif bitrate == 192 then
+                ignore(output(%mp3(bitrate = 192),s))
+            elsif bitrate == 224 then
+                ignore(output(%mp3(bitrate = 224),s))
+            elsif bitrate == 256 then
+                ignore(output(%mp3(bitrate = 256),s))
+            elsif bitrate == 320 then
+                ignore(output(%mp3(bitrate = 320),s))
+            end
+        else
+            source = ref s
+            if not icecast_vorbis_metadata then
+                source := add(normalize=false, [amplify(0.00001, noise()),s])
+            end
+            if bitrate == 24 then 
+                ignore(output(%vorbis.cbr(bitrate = 24),!source))
+            elsif bitrate == 32 then
+                ignore(output(%vorbis.cbr(bitrate = 32),!source))
+            elsif bitrate == 48 then
+                ignore(output(%vorbis.cbr(bitrate = 48),!source))
+            elsif bitrate == 64 then
+                ignore(output(%vorbis.cbr(bitrate = 64),!source))
+            elsif bitrate == 96 then
+                ignore(output(%vorbis.cbr(bitrate = 96),!source))
+            elsif bitrate == 128 then
+                ignore(output(%vorbis.cbr(bitrate = 128),!source))
+            elsif bitrate == 160 then
+                ignore(output(%vorbis.cbr(bitrate = 160),!source))
+            elsif bitrate == 192 then
+                ignore(output(%vorbis.cbr(bitrate = 192),!source))
+            elsif bitrate == 224 then
+                ignore(output(%vorbis.cbr(bitrate = 224),!source))
+            elsif bitrate == 256 then
+                ignore(output(%vorbis.cbr(bitrate = 256),!source))
+            elsif bitrate == 320 then
+                ignore(output(%vorbis.cbr(bitrate = 320),!source))
+            end
+        end
+    else
+        user_ref = ref user
+        if user == "" then
+            user_ref := "source"
+        end
+        
+        description_ref = ref description
+        if description == "" then
+            description_ref := "N/A"
+        end
+        
+        genre_ref = ref genre
+        if genre == "" then
+            genre_ref := "N/A"
+        end
+        
+        url_ref = ref url
+        if url == "" then
+            url_ref := "N/A"
+        end
+        output.shoutcast = output.shoutcast(host = host,
+                    port = port,
+                    password = pass,
+                    fallible = true,
+                    url = !url_ref,
+                    genre = !genre_ref,
+                    name = !description_ref,
+                    user = !user_ref)
+         if bitrate == 24 then 
+                ignore(output.shoutcast(%mp3(bitrate = 24),s))
+            elsif bitrate == 32 then
+                ignore(output.shoutcast(%mp3(bitrate = 32),s))
+            elsif bitrate == 48 then
+                ignore(output.shoutcast(%mp3(bitrate = 48),s))
+            elsif bitrate == 64 then
+                ignore(output.shoutcast(%mp3(bitrate = 64),s))
+            elsif bitrate == 96 then
+                ignore(output.shoutcast(%mp3(bitrate = 96),s))
+            elsif bitrate == 128 then
+                ignore(output.shoutcast(%mp3(bitrate = 128),s))
+            elsif bitrate == 160 then
+                ignore(output.shoutcast(%mp3(bitrate = 160),s))
+            elsif bitrate == 192 then
+                ignore(output.shoutcast(%mp3(bitrate = 192),s))
+            elsif bitrate == 224 then
+                ignore(output.shoutcast(%mp3(bitrate = 224),s))
+            elsif bitrate == 256 then
+                ignore(output.shoutcast(%mp3(bitrate = 256),s))
+            elsif bitrate == 320 then
+                ignore(output.shoutcast(%mp3(bitrate = 320),s))
+            end
+    end
 end
 
 # Add a skip function to a source

@@ -2,9 +2,12 @@
 
 class Application_Form_AddShowWhat extends Zend_Form_SubForm
 {
-
     public function init()
     {
+    	// retrieves the length limit for each char field
+    	// and store to assoc array
+    	$maxLens = Application_Model_Show::GetMaxLengths();
+    	
         // Hidden element to indicate whether the show is new or
         // whether we are updating an existing show.
         $this->addElement('hidden', 'add_show_id', array(
@@ -18,7 +21,8 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validators' => array('NotEmpty'),
-        	'value'		=> 'Untitled Show'
+        	'value'		=> 'Untitled Show',
+        	'validators' => array(array('StringLength', false, array(0, $maxLens['name'])))
         ));
 
          // Add URL element
@@ -27,7 +31,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'validators' => array('NotEmpty')
+            'validators' => array('NotEmpty', array('StringLength', false, array(0, $maxLens['url'])))
         ));
 
          // Add genre element
@@ -35,14 +39,16 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'label'      => 'Genre:',
             'class'      => 'input_text',
             'required'   => false,
-            'filters'    => array('StringTrim')
+            'filters'    => array('StringTrim'),
+        	'validators' => array(array('StringLength', false, array(0, $maxLens['genre'])))
         ));
 
 		 // Add the description element
         $this->addElement('textarea', 'add_show_description', array(
             'label'      => 'Description:',
             'required'   => false,
-            'class'      => 'input_text_area'
+            'class'      => 'input_text_area',
+        	'validators' => array(array('StringLength', false, array(0, $maxLens['description'])))
 		));
 
         $descText = $this->getElement('add_show_description');
@@ -53,7 +59,5 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
         ))));
 
     }
-
-
 }
 

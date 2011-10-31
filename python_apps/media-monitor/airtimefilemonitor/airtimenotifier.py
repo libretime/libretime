@@ -30,7 +30,6 @@ class AirtimeNotifier(Notifier):
         self.wm = watch_manager
         self.mask = pyinotify.ALL_EVENTS
 
-
         while not self.init_rabbit_mq():
             self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
             time.sleep(5)
@@ -171,6 +170,9 @@ class AirtimeNotifier(Notifier):
                 self.api_client.update_media_metadata(md, mode)
 
             elif (mode == self.config.MODE_DELETE):
+                self.api_client.update_media_metadata(md, mode)
+            
+            elif (mode == self.config.MODE_DELETE_DIR):
                 self.api_client.update_media_metadata(md, mode)
 
         except Exception, e:

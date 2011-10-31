@@ -6,7 +6,7 @@ require_once('DB.php');
 class AirtimeInstall
 {
     const CONF_DIR_BINARIES = "/usr/lib/airtime";
-    const CONF_DIR_WWW = "/var/www/airtime";
+    const CONF_DIR_WWW = "/usr/share/airtime";
     const CONF_DIR_LOG = "/var/log/airtime";
 
     public static $databaseTablesCreated = false;
@@ -162,7 +162,7 @@ class AirtimeInstall
             echo "* Giving Apache permission to access $rp".PHP_EOL;
             $success = chgrp($rp, $CC_CONFIG["webServerUser"]);
             $success = chown($rp, "www-data");
-            $success = chmod($rp, 02777);
+            $success = chmod($rp, 02770);
         }
     }
 
@@ -294,6 +294,20 @@ class AirtimeInstall
         return true;
     }
     
+    public static function SetDefaultTimezone()
+    {
+        global $CC_DBC;
+        
+        $defaultTimezone = date_default_timezone_get();
+
+        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', '$defaultTimezone')";
+        $result = $CC_DBC->query($sql);
+        if (PEAR::isError($result)) {
+            return false;
+        }
+        return true;
+    }
+    
     public static function SetImportTimestamp()
     {
         global $CC_DBC;
@@ -345,6 +359,10 @@ class AirtimeInstall
         echo "* Installing airtime-user".PHP_EOL;
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-user";
         exec("ln -s $dir /usr/bin/airtime-user");
+
+        echo "* Installing airtime-log".PHP_EOL;
+        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-log";
+        exec("ln -s $dir /usr/bin/airtime-log");
     }
 
     public static function RemoveSymlinks()
@@ -352,6 +370,9 @@ class AirtimeInstall
         exec("rm -f /usr/bin/airtime-import");
         exec("rm -f /usr/bin/airtime-update-db-settings");
         exec("rm -f /usr/bin/airtime-check-system");
+        exec("rm -f /usr/bin/airtime-user");
+        exec("rm -f /usr/bin/airtime-log");
+        exec("rm -f /usr/bin/airtime-clean-storage");
     }
 
     public static function InstallPhpCode()
@@ -432,6 +453,7 @@ class AirtimeInstall
     }
 
     public static function CreateCronFile(){
+        echo "* Creating Cron File".PHP_EOL;
         // Create CRON task to run every day.  Time of day is initialized to a random time.
         $hour = rand(0,23);
         $minute = rand(0,59);
@@ -439,5 +461,12 @@ class AirtimeInstall
         $fp = fopen('/etc/cron.d/airtime-crons','w');
         fwrite($fp, "$minute $hour * * * root /usr/lib/airtime/utils/phone_home_stat\n");
         fclose($fp);
+    }
+    
+    public static function removeVirtualEnvDistributeFile(){
+        echo "* Removing distribute-0.6.10.tar.gz".PHP_EOL;
+        if(file_exists('/usr/share/python-virtualenv/distribute-0.6.10.tar.gz')){
+            exec("rm -f /usr/share/python-virtualenv/distribute-0.6.10.tar.gz");
+        }
     }
 }

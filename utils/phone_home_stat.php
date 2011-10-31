@@ -1,5 +1,7 @@
-#!/usr/bin/env php
 <?php
+
+exitIfNotRoot();
+
 $values = parse_ini_file('/etc/airtime/airtime.conf', true);
 
 // Name of the web server user
@@ -7,8 +9,8 @@ $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
 $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
 $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
 
-$CC_CONFIG['baseUrl'] = $values['general']['base_url'];
-$CC_CONFIG['basePort'] = $values['general']['base_port'];
+//$CC_CONFIG['baseUrl'] = $values['general']['base_url'];
+//$CC_CONFIG['basePort'] = $values['general']['base_port'];
 
 // Database config
 $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
@@ -27,11 +29,12 @@ require_once($CC_CONFIG['phpDir'].'/application/configs/conf.php');
 
 $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
 
-require_once($CC_CONFIG['phpDir'].'/application/models/Users.php');
+require_once($CC_CONFIG['phpDir'].'/application/models/User.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Playlist.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Schedule.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/Shows.php');
+require_once($CC_CONFIG['phpDir'].'/application/models/Show.php');
+require_once($CC_CONFIG['phpDir'].'/application/models/ShowInstance.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
 
 //Pear classes.
@@ -66,4 +69,17 @@ if(Application_Model_Preference::GetSupportFeedback() == '1'){
     curl_setopt($ch, CURLOPT_POSTFIELDS, $dataArray);
     $result = curl_exec($ch);
 }
-?>
+
+/**
+ * Ensures that the user is running this PHP script with root
+ * permissions. If not running with root permissions, causes the
+ * script to exit.
+ */
+function exitIfNotRoot()
+{
+    // Need to check that we are superuser before running this.
+    if(exec("whoami") != "root"){
+        echo "Must be root user.\n";
+        exit(1);
+    }
+}

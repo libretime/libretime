@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.6
 # -*- coding: utf-8 -*-
 
 ###############################################################################
@@ -21,7 +21,7 @@ from urlparse import urlparse
 import base64
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "1.9.1"
+AIRTIME_VERSION = "2.0.0-beta1"
 
 def api_client_factory(config):
     logger = logging.getLogger()
@@ -40,10 +40,13 @@ def to_unicode(obj, encoding='utf-8'):
     return obj
 
 def encode_to(obj, encoding='utf-8'):
-    if isinstance(obj, basestring):
-        if not isinstance(obj, str):
-            obj = obj.encode(encoding)
+    if isinstance(obj, unicode):
+        obj = obj.encode(encoding)
     return obj
+    
+def convert_dict_value_to_utf8(md):
+    #list comprehension to convert all values of md to utf-8
+    return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
 
 class ApiClientInterface:
 
@@ -134,6 +137,15 @@ class ApiClientInterface:
     def set_storage_dir(self):
         pass
 
+    def register_component(self):
+        pass
+
+    def notify_liquidsoap_error(self, error_msg, stream_id):
+        pass
+    
+    def notify_liquidsoap_connection(self, stream_id):
+        pass
+        
     # Put here whatever tests you want to run to make sure your API is working
     def test(self):
         pass
@@ -156,6 +168,26 @@ class AirTimeApiClient(ApiClientInterface):
             logger = logging.getLogger()
             logger.error('Error loading config file: %s', e)
             sys.exit(1)
+            
+    def get_response_from_server(self, url):
+        logger = logging.getLogger()
+        successful_response = False
+        
+        while not successful_response:
+            try:
+                response = urllib.urlopen(url)
+                data = response.read()
+                successful_response = True
+            except IOError, e:
+                logger.error('Error Authenticating with remote server: %s', e)
+            except Exception, e:
+                logger.error('Couldn\'t connect to remote server. Is it running?')
+                logger.error("%s" % e)
+            if not successful_response:
+                time.sleep(5)
+            
+        return data
+        
 
     def __get_airtime_version(self, verbose = True):
         logger = logging.getLogger()
@@ -166,30 +198,13 @@ class AirTimeApiClient(ApiClientInterface):
         version = -1
         response = None
         try:
-            response = urllib.urlopen(url)
-            data = response.read()
+            data = self.get_response_from_server(url)
             logger.debug("Data: %s", data)
             response_json = json.loads(data)
             version = response_json['version']
             logger.debug("Airtime Version %s detected", version)
-        except IOError, e:
-            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
-            if e[1] == 401:
-                if (verbose):
-                    logger.info('#####################################')
-                    logger.info('# YOUR API KEY SEEMS TO BE INVALID:')
-                    logger.info('# ' + self.config["api_key"])
-                    logger.info('#####################################')
-
-            if e[1] == 404:
-                if (verbose):
-                    logger.info('#####################################')
-                    logger.info('# Unable to contact the Airtime-API')
-                    logger.info('# ' + url)
-                    logger.info('#####################################')
-            return -1
         except Exception, e:
-            logger.error("Unable to detect Airtime Version - %s, Response: %s", e, data)
+            logger.error("Unable to detect Airtime Version - %s", e)
             return -1
 
         return version
@@ -241,7 +256,7 @@ class AirTimeApiClient(ApiClientInterface):
         response = ""
         status = 0
         try:
-            response_json = urllib.urlopen(export_url).read()
+            response_json = self.get_response_from_server(export_url)
             response = json.loads(response_json)
             status = response['check']
         except Exception, e:
@@ -331,9 +346,10 @@ class AirTimeApiClient(ApiClientInterface):
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["show_schedule_url"])
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
+            
+            response = self.get_response_from_server(url)
 
-            response = urllib.urlopen(url)
-            response = json.loads(response.read())
+            response = json.loads(response)
             logger.info("shows %s", response)
 
         except Exception, e:
@@ -353,7 +369,6 @@ class AirTimeApiClient(ApiClientInterface):
 
         logger.debug(url)
         url = url.replace("%%api_key%%", self.config["api_key"])
-        logger.debug(url)
 
         for i in range(0, retries):
             logger.debug("Upload attempt: %s", i+1)
@@ -385,14 +400,9 @@ class AirTimeApiClient(ApiClientInterface):
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_setup_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
 
-            response = urllib.urlopen(url)
-            response = json.loads(response.read())
+            response = self.get_response_from_server(url)
+            response = json.loads(response)
             logger.info("Connected to Airtime Server. Json Media Storage Dir: %s", response)
-        except IOError:
-            #this should be a common exception when media-monitor daemon
-            #has started before apache on bootup and apache isn't accepting
-            #connections yet.
-            response = None
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
@@ -409,7 +419,9 @@ class AirTimeApiClient(ApiClientInterface):
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%mode%%", mode)
-
+           
+            md = convert_dict_value_to_utf8(md)
+            
             data = urllib.urlencode(md)
             req = urllib2.Request(url, data)
 
@@ -420,11 +432,10 @@ class AirTimeApiClient(ApiClientInterface):
             elapsed = (time.time() - start)
             logger.info("time taken to get response %s", elapsed)
 
-            if(is_record):
+            if("error" not in response and is_record):
                 url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
                 url = url.replace("%%fileid%%", str(response[u'id']))
                 url = url.replace("%%showinstanceid%%", str(md['MDATA_KEY_TRACKNUMBER']))
-                logger.debug(url)
                 url = url.replace("%%api_key%%", self.config["api_key"])
 
                 req = urllib2.Request(url)
@@ -435,7 +446,7 @@ class AirTimeApiClient(ApiClientInterface):
 
         except Exception, e:
             response = None
-            logger.error("Exception with filepath %s: %s", md['MDATA_KEY_FILEPATH'], e)
+            logger.error("Exception with file %s: %s", md, e)
 
         return response
 
@@ -526,7 +537,69 @@ class AirTimeApiClient(ApiClientInterface):
             logger.error("Exception: %s", e)
 
         return response
+    
+    def get_stream_setting(self):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_stream_setting"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            response = None
+            logger.error("Exception: %s", e)
 
+        return response
+
+    """
+    Purpose of this method is to contact the server with a "Hey its me!" message.
+    This will allow the server to register the component's (component = media-monitor, pypo etc.)
+    ip address, and later use it to query monit via monit's http service, or download log files
+    via a http server.
+    """
+    def register_component(self, component):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["register_component"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%component%%", component)
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            logger.error("Exception: %s", e)
+    
+    def notify_liquidsoap_error(self, error_msg, stream_id):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_liquidsoap_error"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            error_msg = error_msg.replace('/', ' ')
+            encoded_msg = urllib.quote(error_msg, '')
+            url = url.replace("%%error_msg%%", encoded_msg)
+            url = url.replace("%%stream_id%%", stream_id)
+            logger.debug(url)
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            logger.error("Exception: %s", e)
+        
+    def notify_liquidsoap_connection(self, stream_id):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_liquidsoap_connection"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%stream_id%%", stream_id)
+            logger.debug(url)
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            logger.error("Exception: %s", e)
+        
 ################################################################################
 # OpenBroadcast API Client
 ################################################################################
@@ -607,7 +680,9 @@ class ObpApiClient():
 
         return obp_version
 
-
+	"""
+	NOTE: The server currently ignores start and end parameters we send to it.
+	"""
     def get_schedule(self, start=None, end=None):
         logger = logging.getLogger()
 
@@ -615,13 +690,12 @@ class ObpApiClient():
         calculate start/end time range (format: YYYY-DD-MM-hh-mm-ss,YYYY-DD-MM-hh-mm-ss)
         (seconds are ignored, just here for consistency)
         """
-        tnow = time.localtime(time.time())
         if (not start):
-            tstart = time.localtime(time.time() - 3600 * int(self.config["cache_for"]))
+            tstart = time.gmtime(time.time() - 3600 * int(self.config["cache_for"]))
             start = "%04d-%02d-%02d-%02d-%02d" % (tstart[0], tstart[1], tstart[2], tstart[3], tstart[4])
 
         if (not end):
-            tend = time.localtime(time.time() + 3600 * int(self.config["prepare_ahead"]))
+            tend = time.gmtime(time.time() + 3600 * int(self.config["prepare_ahead"]))
             end = "%04d-%02d-%02d-%02d-%02d" % (tend[0], tend[1], tend[2], tend[3], tend[4])
 
         range = {}

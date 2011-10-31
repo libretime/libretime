@@ -26,7 +26,7 @@ abstract class BaseCcSubjsPeer {
 	const TM_CLASS = 'CcSubjsTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 11;
+	const NUM_COLUMNS = 12;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -64,6 +64,9 @@ abstract class BaseCcSubjsPeer {
 	/** the column name for the EMAIL field */
 	const EMAIL = 'cc_subjs.EMAIL';
 
+	/** the column name for the LOGIN_ATTEMPTS field */
+	const LOGIN_ATTEMPTS = 'cc_subjs.LOGIN_ATTEMPTS';
+
 	/**
 	 * An identiy map to hold any loaded instances of CcSubjs objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
@@ -80,12 +83,12 @@ abstract class BaseCcSubjsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbLogin', 'DbPass', 'DbType', 'DbFirstName', 'DbLastName', 'DbLastlogin', 'DbLastfail', 'DbSkypeContact', 'DbJabberContact', 'DbEmail', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbLogin', 'dbPass', 'dbType', 'dbFirstName', 'dbLastName', 'dbLastlogin', 'dbLastfail', 'dbSkypeContact', 'dbJabberContact', 'dbEmail', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::LOGIN, self::PASS, self::TYPE, self::FIRST_NAME, self::LAST_NAME, self::LASTLOGIN, self::LASTFAIL, self::SKYPE_CONTACT, self::JABBER_CONTACT, self::EMAIL, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'FIRST_NAME', 'LAST_NAME', 'LASTLOGIN', 'LASTFAIL', 'SKYPE_CONTACT', 'JABBER_CONTACT', 'EMAIL', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'first_name', 'last_name', 'lastlogin', 'lastfail', 'skype_contact', 'jabber_contact', 'email', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbLogin', 'DbPass', 'DbType', 'DbFirstName', 'DbLastName', 'DbLastlogin', 'DbLastfail', 'DbSkypeContact', 'DbJabberContact', 'DbEmail', 'DbLoginAttempts', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbLogin', 'dbPass', 'dbType', 'dbFirstName', 'dbLastName', 'dbLastlogin', 'dbLastfail', 'dbSkypeContact', 'dbJabberContact', 'dbEmail', 'dbLoginAttempts', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::LOGIN, self::PASS, self::TYPE, self::FIRST_NAME, self::LAST_NAME, self::LASTLOGIN, self::LASTFAIL, self::SKYPE_CONTACT, self::JABBER_CONTACT, self::EMAIL, self::LOGIN_ATTEMPTS, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'FIRST_NAME', 'LAST_NAME', 'LASTLOGIN', 'LASTFAIL', 'SKYPE_CONTACT', 'JABBER_CONTACT', 'EMAIL', 'LOGIN_ATTEMPTS', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'first_name', 'last_name', 'lastlogin', 'lastfail', 'skype_contact', 'jabber_contact', 'email', 'login_attempts', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
 	);
 
 	/**
@@ -95,12 +98,12 @@ abstract class BaseCcSubjsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbLogin' => 1, 'DbPass' => 2, 'DbType' => 3, 'DbFirstName' => 4, 'DbLastName' => 5, 'DbLastlogin' => 6, 'DbLastfail' => 7, 'DbSkypeContact' => 8, 'DbJabberContact' => 9, 'DbEmail' => 10, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbLogin' => 1, 'dbPass' => 2, 'dbType' => 3, 'dbFirstName' => 4, 'dbLastName' => 5, 'dbLastlogin' => 6, 'dbLastfail' => 7, 'dbSkypeContact' => 8, 'dbJabberContact' => 9, 'dbEmail' => 10, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::LOGIN => 1, self::PASS => 2, self::TYPE => 3, self::FIRST_NAME => 4, self::LAST_NAME => 5, self::LASTLOGIN => 6, self::LASTFAIL => 7, self::SKYPE_CONTACT => 8, self::JABBER_CONTACT => 9, self::EMAIL => 10, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'FIRST_NAME' => 4, 'LAST_NAME' => 5, 'LASTLOGIN' => 6, 'LASTFAIL' => 7, 'SKYPE_CONTACT' => 8, 'JABBER_CONTACT' => 9, 'EMAIL' => 10, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'first_name' => 4, 'last_name' => 5, 'lastlogin' => 6, 'lastfail' => 7, 'skype_contact' => 8, 'jabber_contact' => 9, 'email' => 10, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbLogin' => 1, 'DbPass' => 2, 'DbType' => 3, 'DbFirstName' => 4, 'DbLastName' => 5, 'DbLastlogin' => 6, 'DbLastfail' => 7, 'DbSkypeContact' => 8, 'DbJabberContact' => 9, 'DbEmail' => 10, 'DbLoginAttempts' => 11, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbLogin' => 1, 'dbPass' => 2, 'dbType' => 3, 'dbFirstName' => 4, 'dbLastName' => 5, 'dbLastlogin' => 6, 'dbLastfail' => 7, 'dbSkypeContact' => 8, 'dbJabberContact' => 9, 'dbEmail' => 10, 'dbLoginAttempts' => 11, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::LOGIN => 1, self::PASS => 2, self::TYPE => 3, self::FIRST_NAME => 4, self::LAST_NAME => 5, self::LASTLOGIN => 6, self::LASTFAIL => 7, self::SKYPE_CONTACT => 8, self::JABBER_CONTACT => 9, self::EMAIL => 10, self::LOGIN_ATTEMPTS => 11, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'FIRST_NAME' => 4, 'LAST_NAME' => 5, 'LASTLOGIN' => 6, 'LASTFAIL' => 7, 'SKYPE_CONTACT' => 8, 'JABBER_CONTACT' => 9, 'EMAIL' => 10, 'LOGIN_ATTEMPTS' => 11, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'first_name' => 4, 'last_name' => 5, 'lastlogin' => 6, 'lastfail' => 7, 'skype_contact' => 8, 'jabber_contact' => 9, 'email' => 10, 'login_attempts' => 11, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
 	);
 
 	/**
@@ -183,6 +186,7 @@ abstract class BaseCcSubjsPeer {
 			$criteria->addSelectColumn(CcSubjsPeer::SKYPE_CONTACT);
 			$criteria->addSelectColumn(CcSubjsPeer::JABBER_CONTACT);
 			$criteria->addSelectColumn(CcSubjsPeer::EMAIL);
+			$criteria->addSelectColumn(CcSubjsPeer::LOGIN_ATTEMPTS);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.LOGIN');
@@ -195,6 +199,7 @@ abstract class BaseCcSubjsPeer {
 			$criteria->addSelectColumn($alias . '.SKYPE_CONTACT');
 			$criteria->addSelectColumn($alias . '.JABBER_CONTACT');
 			$criteria->addSelectColumn($alias . '.EMAIL');
+			$criteria->addSelectColumn($alias . '.LOGIN_ATTEMPTS');
 		}
 	}
 

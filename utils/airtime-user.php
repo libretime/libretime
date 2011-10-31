@@ -1,5 +1,7 @@
 <?php
 
+exitIfNotRoot();
+
 $airtimeIni = GetAirtimeConf();
 $airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
@@ -8,7 +10,7 @@ require_once("$airtime_base_dir/library/propel/runtime/lib/Propel.php");
 Propel::init("$airtime_base_dir/application/configs/airtime-conf.php");
 
 require_once("$airtime_base_dir/application/configs/conf.php");
-require_once("$airtime_base_dir/application/models/Users.php");
+require_once("$airtime_base_dir/application/models/User.php");
 require_once('DB.php');
 require_once('Console/Getopt.php');
 
@@ -36,6 +38,19 @@ function printUsage()
     echo "\n";
 }
 
+/**
+ * Ensures that the user is running this PHP script with root
+ * permissions. If not running with root permissions, causes the
+ * script to exit.
+ */
+function exitIfNotRoot()
+{
+    // Need to check that we are superuser before running this.
+    if(exec("whoami") != "root"){
+        echo "Must be root user.\n";
+        exit(1);
+    }
+}
 
 if (count($argv) != 3) {
     printUsage();
@@ -69,17 +84,17 @@ $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 
 // Check if the user exists
-$id = User::GetUserID($username);
+$id = Application_Model_User::GetUserID($username);
 
 if ($action == "addupdate") {
 
 	if ($id < 0) {
         echo "Creating user\n";
-		$user = new User("");
+		$user = new Application_Model_User("");
 		$user->setLogin($username);
     } else {
 		echo "Updating user\n";
-		$user = new User($id);
+		$user = new Application_Model_User($id);
 	}
 
 	do{
@@ -115,7 +130,7 @@ if ($action == "addupdate") {
 		exit;
 	} else {
 		echo "Deleting user\n";
-		$user = new User($id);
+		$user = new Application_Model_User($id);
 		$user->delete();
 	}
 }

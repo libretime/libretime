@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  StoredFile class
+ *  Application_Model_StoredFile class
  *
  * @package Airtime
  * @subpackage StorageServer
@@ -9,7 +9,7 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  * @see MetaData
  */
-class StoredFile {
+class Application_Model_StoredFile {
 
     /**
      * @holds propel database object
@@ -286,7 +286,7 @@ class StoredFile {
         $playlists = array();
         if (is_array($ids) && count($ids) > 0) {
             foreach ($ids as $id) {
-                $playlists[] = Playlist::Recall($id);
+                $playlists[] = Application_Model_Playlist::Recall($id);
             }
         }
         return $playlists;
@@ -310,7 +310,7 @@ class StoredFile {
             }
         }
 
-        Playlist::DeleteFileFromAllPlaylists($this->getId());
+        Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
         $this->_file->delete();
 
         if (isset($res)) {
@@ -338,7 +338,7 @@ class StoredFile {
         }
 
         // Check if the file is scheduled to be played in the future
-        if (Schedule::IsFileScheduledInTheFuture($this->getId())) {
+        if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             return PEAR::raiseError('Cannot delete a file that is scheduled in the future.');
         }
 
@@ -395,10 +395,10 @@ class StoredFile {
     {
         $mime = $this->_file->getDbMime();
 
-        if ($mime == "audio/vorbis") {
+        if ($mime == "audio/vorbis" || $mime == "application/ogg") {
             return "ogg";
         }
-        else if ($mime == "audio/mp3") {
+        else if ($mime == "audio/mp3" || $mime == "audio/mpeg") {
             return "mp3";
         }
     }
@@ -410,7 +410,7 @@ class StoredFile {
      */
     public function getFilePath()
     {
-        $music_dir = MusicDir::getDirByPK($this->_file->getDbDirectory());
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
         $filepath = $this->_file->getDbFilepath();
 
         return $music_dir->getDirectory().$filepath;
@@ -423,11 +423,11 @@ class StoredFile {
      */
     public function setFilePath($p_filepath)
     {
-        $path_info = MusicDir::splitFilePath($p_filepath);
+        $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
         if (is_null($path_info)) {
             return -1;
         }
-        $musicDir = MusicDir::getDirByPath($path_info[0]);
+        $musicDir = Application_Model_MusicDir::getDirByPath($path_info[0]);
 
         $this->_file->setDbDirectory($musicDir->getId());
         $this->_file->setDbFilepath($path_info[1]);
@@ -435,12 +435,32 @@ class StoredFile {
     }
 
     /**
-     * Get the URL to access this file.
+     * Get the URL to access this file using the server name/address that
+     * this PHP script was invoked through.
      */
     public function getFileUrl()
     {
+        $serverName = $_SERVER['SERVER_NAME'];
+        $serverPort = $_SERVER['SERVER_PORT'];
+        
+        return $this->constructGetFileUrl($serverName, $serverPort);
+    }
+    
+    /**
+     * Get the URL to access this file using the server name/address that
+     * is specified in the airtime.conf config file.
+     */
+    public function getFileUrlUsingConfigAddress(){
         global $CC_CONFIG;
-        return "http://$CC_CONFIG[baseUrl]:$CC_CONFIG[basePort]/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
+        
+        $serverName = $CC_CONFIG['baseUrl'];
+        $serverPort = $CC_CONFIG['basePort'];
+        
+        return $this->constructGetFileUrl($serverName, $serverPort);
+    }
+    
+    private function constructGetFileUrl($p_serverName, $p_serverPort){
+        return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
     /**
@@ -457,7 +477,7 @@ class StoredFile {
         $file = new CcFiles();
         $file->setDbGunid(md5(uniqid("", true)));
 
-        $storedFile = new StoredFile();
+        $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;
 
         if(isset($md['MDATA_KEY_FILEPATH'])) {
@@ -488,7 +508,7 @@ class StoredFile {
      * 		global unique id of file
      * @param string $p_md5sum
      *    MD5 sum of the file
-     * @return StoredFile|NULL
+     * @return Application_Model_StoredFile|NULL
      *    Return NULL if the object doesnt exist in the DB.
      */
     public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null)
@@ -507,12 +527,12 @@ class StoredFile {
                             ->findOne();
         }
         else if (isset($p_filepath)) {
-            $path_info = MusicDir::splitFilePath($p_filepath);
+            $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
 
             if (is_null($path_info)) {
                 return null;
             }
-            $music_dir = MusicDir::getDirByPath($path_info[0]);
+            $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
 
             $file = CcFilesQuery::create()
                             ->filterByDbDirectory($music_dir->getId())
@@ -524,7 +544,7 @@ class StoredFile {
         }
 
         if (isset($file)) {
-            $storedFile = new StoredFile();
+            $storedFile = new Application_Model_StoredFile();
             $storedFile->_file = $file;
 
             return $storedFile;
@@ -545,36 +565,57 @@ class StoredFile {
      *
      * @param string $p_gunid
      * 		global unique id of file
-     * @return StoredFile|NULL
+     * @return Application_Model_StoredFile|NULL
      */
     public static function RecallByGunid($p_gunid)
     {
-        return StoredFile::Recall(null, $p_gunid);
+        return Application_Model_StoredFile::Recall(null, $p_gunid);
     }
 
 
     /**
-     * Fetch the StoredFile by looking up the MD5 value.
+     * Fetch the Application_Model_StoredFile by looking up the MD5 value.
      *
      * @param string $p_md5sum
-     * @return StoredFile|NULL
+     * @return Application_Model_StoredFile|NULL
      */
     public static function RecallByMd5($p_md5sum)
     {
-        return StoredFile::Recall(null, null, $p_md5sum);
+        return Application_Model_StoredFile::Recall(null, null, $p_md5sum);
     }
 
     /**
-     * Fetch the StoredFile by looking up its filepath.
+     * Fetch the Application_Model_StoredFile by looking up its filepath.
      *
      * @param string $p_filepath path of file stored in Airtime.
-     * @return StoredFile|NULL
+     * @return Application_Model_StoredFile|NULL
      */
     public static function RecallByFilepath($p_filepath)
     {
-        return StoredFile::Recall(null, null, null, $p_filepath);
+        return Application_Model_StoredFile::Recall(null, null, null, $p_filepath);
     }
+    
+    public static function RecallByPartialFilepath($partial_path){
+        $path_info = Application_Model_MusicDir::splitFilePath($partial_path);
 
+        if (is_null($path_info)) {
+            return null;
+        }
+        $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
+
+        $files = CcFilesQuery::create()
+                        ->filterByDbDirectory($music_dir->getId())
+                        ->filterByDbFilepath("$path_info[1]%")
+                        ->find();
+        $res = array();
+        foreach ($files as $file){
+            $storedFile = new Application_Model_StoredFile();
+            $storedFile->_file = $file;
+            $res[] = $storedFile;
+        }
+        return $res;
+    }
+    
 	public static function searchFilesForPlaylistBuilder($datatables) {
 		global $CC_CONFIG;
 
@@ -614,7 +655,7 @@ class StoredFile {
 
 		    (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
 
-		return StoredFile::searchFiles($fromTable, $datatables);
+		return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
 
 	}
 
@@ -624,7 +665,7 @@ class StoredFile {
         //$datatables["optWhere"][] = "INTERVAL '{$time_remaining}' > INTERVAL '00:00:00'";
         $datatables["optWhere"][] = "plt.length > INTERVAL '00:00:00'";
 
-		return StoredFile::searchFiles($fromTable, $datatables);
+		return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
 	}
 
 	public static function searchFiles($fromTable, $data)
@@ -728,7 +769,7 @@ class StoredFile {
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
 		$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-
+        Logging::log(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
 		// Clean the fileName for security reasons
         //this needs fixing for songs not in ascii.
 		//$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
@@ -799,7 +840,7 @@ class StoredFile {
 		/*$audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
 
 		$md5 = md5_file($audio_file);
-		$duplicate = StoredFile::RecallByMd5($md5);
+		$duplicate = Application_Model_StoredFile::RecallByMd5($md5);
 		if ($duplicate) {
 			if (PEAR::isError($duplicate)) {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
@@ -810,7 +851,7 @@ class StoredFile {
             }
 		}
 
-        $storDir = MusicDir::getStorDir();
+        $storDir = Application_Model_MusicDir::getStorDir();
         $stor = $storDir->getDirectory();
 
         $stor .= "/organize";
@@ -823,20 +864,20 @@ class StoredFile {
 
     public static function copyFileToStor($p_targetDir, $fileName){
         $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
-
+        Logging::log('copyFileToStor: moving file '.$audio_file);
         $md5 = md5_file($audio_file);
-        $duplicate = StoredFile::RecallByMd5($md5);
+        $duplicate = Application_Model_StoredFile::RecallByMd5($md5);
         if ($duplicate) {
             if (PEAR::isError($duplicate)) {
                 die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
             }
             if (file_exists($duplicate->getFilePath())) {
                 $duplicateName = $duplicate->getMetadataValue('MDATA_KEY_TITLE');
-                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
+                die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named \"' . $duplicateName . '\" already exists on the server."}}');
             }
         }
 
-        $storDir = MusicDir::getStorDir();
+        $storDir = Application_Model_MusicDir::getStorDir();
         $stor = $storDir->getDirectory();
 
         $stor .= "/organize";
@@ -844,6 +885,7 @@ class StoredFile {
         $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
         $r = @copy($audio_file, $audio_stor);
+        //$r = @unlink($audio_file);
     }
 
     public static function getFileCount()
@@ -874,6 +916,85 @@ class StoredFile {
         }
 
         return $results;
+    }
+
+    public function setSoundCloudLinkToFile($link_to_file)
+    {
+        $this->_file->setDbSoundCloudLinkToFile($link_to_file)
+        ->save();
+    }
+    
+    public function getSoundCloudLinkToFile(){
+        return $this->_file->getDbSoundCloudLinkToFile();
+    }
+    
+    public function setSoundCloudFileId($p_soundcloud_id)
+    {
+        $this->_file->setDbSoundCloudId($p_soundcloud_id)
+            ->save();
+    }
+
+    public function getSoundCloudId(){
+        return $this->_file->getDbSoundCloudId();
+    }
+
+    public function setSoundCloudErrorCode($code){
+        $this->_file->setDbSoundCloudErrorCode($code)
+            ->save();
+    }
+
+    public function getSoundCloudErrorCode(){
+        return $this->_file->getDbSoundCloudErrorCode();
+    }
+
+    public function setSoundCloudErrorMsg($msg){
+        $this->_file->setDbSoundCloudErrorMsg($msg)
+            ->save();
+    }
+
+    public function getSoundCloudErrorMsg(){
+        return $this->_file->getDbSoundCloudErrorMsg();
+    }
+
+    public function uploadToSoundCloud()
+    {
+        global $CC_CONFIG;
+        
+        $file = $this->_file;
+        if(is_null($file)) {
+            return "File does not exist";
+        }
+        if(Application_Model_Preference::GetUploadToSoundcloudOption())
+        {
+            for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
+                $description = $file->getDbTrackTitle();
+                $tag = array();
+                $genre = $file->getDbGenre();
+                $release = $file->getDbYear();
+                try {
+                    $soundcloud = new Application_Model_Soundcloud();
+                    $soundcloud_res = $soundcloud->uploadTrack($this->getFilePath(), $this->getName(), $description, $tag, $release, $genre);
+                    $this->setSoundCloudFileId($soundcloud_res['id']);
+                    $this->setSoundCloudLinkToFile($soundcloud_res['permalink_url']);
+                    break;
+                }
+                catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+                    $code = $e->getHttpCode();
+                    $msg = $e->getHttpBody();
+                    $temp = explode('"error":',$msg);
+                    $msg = trim($temp[1], '"}');
+                    $this->setSoundCloudErrorCode($code);
+                    $this->setSoundCloudErrorMsg($msg);
+                    // setting sc id to -3 which indicates error
+                    $this->setSoundCloudFileId(SOUNDCLOUD_ERROR);
+                    if(!in_array($code, array(0, 100))) {
+                        break;
+                    }
+                }
+
+                sleep($CC_CONFIG['soundcloud-connection-wait']);
+            }
+        }
     }
 }
 

@@ -114,6 +114,10 @@ CREATE TABLE "cc_files"
 	"subject" VARCHAR(512),
 	"contributor" VARCHAR(512),
 	"language" VARCHAR(512),
+	"soundcloud_id" INTEGER,
+	"soundcloud_error_code" INTEGER,
+	"soundcloud_error_msg" VARCHAR(512),
+	"soundcloud_link_to_file" VARCHAR(512),
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_files_gunid_idx" UNIQUE ("gunid")
 );
@@ -191,7 +195,6 @@ CREATE TABLE "cc_show_instances"
 	"rebroadcast" INT2 default 0,
 	"instance_id" INTEGER,
 	"file_id" INTEGER,
-	"soundcloud_id" INTEGER,
 	"time_filled" TIME,
 	PRIMARY KEY ("id")
 );
@@ -213,6 +216,7 @@ CREATE TABLE "cc_show_days"
 	"first_show" DATE  NOT NULL,
 	"last_show" DATE,
 	"start_time" TIME  NOT NULL,
+	"timezone" VARCHAR(255)  NOT NULL,
 	"duration" VARCHAR(255)  NOT NULL,
 	"day" INT2,
 	"repeat_type" INT2  NOT NULL,
@@ -434,6 +438,7 @@ CREATE TABLE "cc_subjs"
 	"skype_contact" VARCHAR(255),
 	"jabber_contact" VARCHAR(255),
 	"email" VARCHAR(255),
+	"login_attempts" INTEGER default 0,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_subjs_id_idx" UNIQUE ("id"),
 	CONSTRAINT "cc_subjs_login_idx" UNIQUE ("login")
@@ -458,6 +463,61 @@ CREATE TABLE "cc_country"
 );
 
 COMMENT ON TABLE "cc_country" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_stream_setting
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_stream_setting" CASCADE;
+
+
+CREATE TABLE "cc_stream_setting"
+(
+	"keyname" VARCHAR(64)  NOT NULL,
+	"value" VARCHAR(255),
+	"type" VARCHAR(16)  NOT NULL,
+	PRIMARY KEY ("keyname")
+);
+
+COMMENT ON TABLE "cc_stream_setting" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_login_attempts
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_login_attempts" CASCADE;
+
+
+CREATE TABLE "cc_login_attempts"
+(
+	"ip" VARCHAR(32)  NOT NULL,
+	"attempts" INTEGER default 0,
+	PRIMARY KEY ("ip")
+);
+
+COMMENT ON TABLE "cc_login_attempts" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_service_register
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_service_register" CASCADE;
+
+
+CREATE TABLE "cc_service_register"
+(
+	"name" VARCHAR(32)  NOT NULL,
+	"ip" VARCHAR(18)  NOT NULL,
+	PRIMARY KEY ("name")
+);
+
+COMMENT ON TABLE "cc_service_register" IS '';
 
 
 SET search_path TO public;

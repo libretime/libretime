@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -124,18 +123,23 @@ if __name__ == '__main__':
         g.test_api()
         sys.exit()
 
+    api_client = api_client.api_client_factory(config)
+    api_client.register_component("pypo")
+
     q = Queue()
 
     pp = PypoPush(q)
+    pp.daemon = True
     pp.start()
 
     pf = PypoFetch(q)
+    pf.daemon = True
     pf.start()
 
-    while True: time.sleep(3600)
-
     #pp.join()
-    #pf.join()
+    pf.join()
+    logger.info("pypo fetch exit")
+    sys.exit()
 """
     if options.check:
         try: g.check_schedule()

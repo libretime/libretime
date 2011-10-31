@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -48,6 +47,9 @@ parser = OptionParser(usage=usage)
 # Options
 parser.add_option("-d", "--data", help="Pass JSON data from liquidsoap into this script.", metavar="data")
 parser.add_option("-m", "--media-id", help="ID of the file that is currently playing.", metavar="media_id")
+parser.add_option("-e", "--error", action="store", dest="error", type="string", help="liquidsoap error msg.", metavar="error_msg")
+parser.add_option("-s", "--stream-id", help="ID stream", metavar="stream_id")
+parser.add_option("-c", "--connect", help="liquidsoap connected", action="store_true", metavar="connect")
 
 # parse options
 (options, args) = parser.parse_args()
@@ -77,8 +79,26 @@ class Notify:
         logger.debug('data = '+ str(data))
         response = self.api_client.notify_media_item_start_playing(data, media_id) 
         logger.debug("Response: "+json.dumps(response))
-
-
+    
+    def notify_liquidsoap_error(self, error_msg, stream_id):
+        logger = logging.getLogger()
+        
+        logger.debug('#################################################')
+        logger.debug('# Calling server to update liquidsoap error     #')
+        logger.debug('#################################################')
+        logger.debug('error msg = '+ str(error_msg))
+        response = self.api_client.notify_liquidsoap_error(error_msg, stream_id) 
+        logger.debug("Response: "+json.dumps(response))
+    
+    def notify_liquidsoap_connection(self, stream_id):
+        logger = logging.getLogger()
+        
+        logger.debug('#################################################')
+        logger.debug('# Calling server to update liquidsoap connection#')
+        logger.debug('#################################################')
+        response = self.api_client.notify_liquidsoap_connection(stream_id) 
+        logger.debug("Response: "+json.dumps(response))
+        
 if __name__ == '__main__':
     print
     print '#########################################'
@@ -88,17 +108,30 @@ if __name__ == '__main__':
     
     # initialize
     logger = logging.getLogger()
-
-    if not options.data:
-        print "NOTICE: 'data' command-line argument not given."
-        sys.exit()
     
-    if not options.media_id:
-        print "NOTICE: 'media_id' command-line argument not given."
-        sys.exit()
-    
-    try:
-        n = Notify()
-        n.notify_media_start_playing(options.data, options.media_id)
-    except Exception, e:
-        print e
+    if options.error and options.stream_id:
+        try:
+            n = Notify()
+            n.notify_liquidsoap_error(options.error, options.stream_id)
+        except Exception, e:
+            print e
+    elif options.connect and options.stream_id:
+        try:
+            n = Notify()
+            n.notify_liquidsoap_connection(options.stream_id)
+        except Exception, e:
+            print e
+    else:
+        if not options.data:
+            print "NOTICE: 'data' command-line argument not given."
+            sys.exit()
+        
+        if not options.media_id:
+            print "NOTICE: 'media_id' command-line argument not given."
+            sys.exit()
+        
+        try:
+            n = Notify()
+            n.notify_media_start_playing(options.data, options.media_id)
+        except Exception, e:
+            print e

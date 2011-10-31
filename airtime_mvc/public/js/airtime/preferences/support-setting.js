@@ -10,31 +10,6 @@ function showErrorSections() {
     }
 }
 
-function resizeImg(ele){
-    var img = $(ele);
-
-    var width = ele.width;
-    var height = ele.height;
-
-    // resize img proportionaly
-    if( width > height && width > 450){
-        var ratio = 450/width;
-        img.css("width", "450px");
-        var newHeight = height * ratio;
-        img.css("height", newHeight );
-
-    }else if( width < height && height > 450){
-        var ratio = 450/height;
-        img.css("height", "450px");
-        var newWidth = width * ratio;
-        img.css("width", newWidth );
-    }else if( width == height && width > 450){
-        img.css("height", "450px");
-        img.css("width", "450px" );
-    }
-
-}
-
 $(document).ready(function() {
     var form = $("form");
 
@@ -52,7 +27,10 @@ $(document).ready(function() {
     if(!$("#SupportFeedback").is(':checked')){
         promote.removeAttr("checked");
         promote.attr("disabled", true);
+    }else{
+        promote.removeAttr("disabled");
     }
+    
     promote.live('click', function(){
         if($(this).is(':checked')){
             $("#public-info").show();

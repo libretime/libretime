@@ -35,6 +35,7 @@ class Version20110711161043 extends AbstractMigration
                         LEFT JOIN cc_files
                         ON cc_schedule.file_id = cc_files.id
                         WHERE cc_files.id IS NULL)");
+
         /* 3) create a foreign key relationship from cc_schedule to cc_files */
         $cc_schedule = $schema->getTable('cc_schedule');
         $cc_schedule->addNamedForeignKeyConstraint('cc_files_folder_fkey', $cc_files, array('file_id'), array('id'), array('onDelete' => 'CASCADE'));

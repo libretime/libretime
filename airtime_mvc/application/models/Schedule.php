@@ -1,226 +1,6 @@
 <?php
-require_once("StoredFile.php");
 
-class ScheduleGroup {
-
-    private $groupId;
-
-    public function __construct($p_groupId = null) {
-        $this->groupId = $p_groupId;
-    }
-
-    /**
-     * Return true if the schedule group exists in the DB.
-     * @return boolean
-     */
-    public function exists() {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG['scheduleTable']
-                ." WHERE group_id=".$this->groupId;
-        $result = $CC_DBC->GetOne($sql);
-        if (PEAR::isError($result)) {
-            return $result;
-        }
-        return $result != "0";
-    }
-
-    /**
-     * Add a music clip or playlist to the schedule.
-     *
-     * @param int $p_showInstance
-     * 	  ID of the show.
-     * @param $p_datetime
-     *    In the format YYYY-MM-DD HH:MM:SS.mmmmmm
-     * @param $p_audioFileId
-     *    (optional, either this or $p_playlistId must be set) DB ID of the audio file
-     * @param $p_playlistId
-     *    (optional, either this of $p_audioFileId must be set) DB ID of the playlist
-     * @param $p_options
-     *    Does nothing at the moment.
-     *
-     * @return int|PEAR_Error
-     *    Return PEAR_Error if the item could not be added.
-     *    Error code 555 is a scheduling conflict.
-     */
-    public function add($p_showInstance, $p_datetime, $p_audioFileId = null, $p_playlistId = null, $p_options = null) {
-        global $CC_CONFIG, $CC_DBC;
-
-        if (!is_null($p_audioFileId)) {
-            // Schedule a single audio track
-
-            // Load existing track
-            $track = StoredFile::Recall($p_audioFileId);
-            if (is_null($track)) {
-                return new PEAR_Error("Could not find audio track.");
-            }
-
-            // Check if there are any conflicts with existing entries
-            $metadata = $track->getMetadata();
-            $length = $metadata['MDATA_KEY_DURATION'];
-            if (empty($length)) {
-                return new PEAR_Error("Length is empty.");
-            }
-            // Insert into the table
-            $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
-
-            $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-            ." (instance_id, starts, ends, clip_length, group_id, file_id, cue_out)"
-            ." VALUES ($p_showInstance, TIMESTAMP '$p_datetime', "
-            ." (TIMESTAMP '$p_datetime' + INTERVAL '$length'),"
-            ." '$length',"
-            ." {$this->groupId}, $p_audioFileId, '$length')";
-            $result = $CC_DBC->query($sql);
-            if (PEAR::isError($result)) {
-                //var_dump($sql);
-                return $result;
-            }
-
-        }
-        elseif (!is_null($p_playlistId)){
-            // Schedule a whole playlist
-
-            // Load existing playlist
-            $playlist = Playlist::Recall($p_playlistId);
-            if (is_null($playlist)) {
-                return new PEAR_Error("Could not find playlist.");
-            }
-
-            // Check if there are any conflicts with existing entries
-            $length = trim($playlist->getLength());
-            //var_dump($length);
-            if (empty($length)) {
-                return new PEAR_Error("Length is empty.");
-            }
-
-            // Insert all items into the schedule
-            $this->groupId = $CC_DBC->GetOne("SELECT nextval('schedule_group_id_seq')");
-            $itemStartTime = $p_datetime;
-
-            $plItems = $playlist->getContents();
-            //var_dump($plItems);
-            foreach ($plItems as $row) {
-                $trackLength = $row["cliplength"];
-                //var_dump($trackLength);
-                $sql = "INSERT INTO ".$CC_CONFIG["scheduleTable"]
-                ." (instance_id, playlist_id, starts, ends, group_id, file_id,"
-                ." clip_length, cue_in, cue_out, fade_in, fade_out)"
-                ." VALUES ($p_showInstance, $p_playlistId, TIMESTAMP '$itemStartTime', "
-                ." (TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'),"
-                ." '{$this->groupId}', '{$row['file_id']}', '$trackLength', '{$row['cuein']}',"
-                ." '{$row['cueout']}', '{$row['fadein']}','{$row['fadeout']}')";
-                $result = $CC_DBC->query($sql);
-                if (PEAR::isError($result)) {
-                    //var_dump($sql);
-                    return $result;
-                }
-                $itemStartTime = $CC_DBC->getOne("SELECT TIMESTAMP '$itemStartTime' + INTERVAL '$trackLength'");
-            }
-        }
-
-        RabbitMq::PushSchedule();
-        return $this->groupId;
-    }
-
-    public function addFileAfter($show_instance, $p_groupId, $p_audioFileId) {
-        global $CC_CONFIG, $CC_DBC;
-        // Get the end time for the given entry
-        $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE group_id=$p_groupId";
-        $startTime = $CC_DBC->GetOne($sql);
-        return $this->add($show_instance, $startTime, $p_audioFileId);
-    }
-
-    public function addPlaylistAfter($show_instance, $p_groupId, $p_playlistId) {
-        global $CC_CONFIG, $CC_DBC;
-        // Get the end time for the given entry
-        $sql = "SELECT MAX(ends) FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE group_id=$p_groupId";
-
-        $startTime = $CC_DBC->GetOne($sql);
-        return $this->add($show_instance, $startTime, null, $p_playlistId);
-    }
-
-    /**
-     * Remove the group from the schedule.
-     * Note: does not check if it is in the past, you can remove anything.
-     *
-     * @return boolean
-     *    TRUE on success, false if there is no group ID defined.
-     */
-    public function remove() {
-        global $CC_CONFIG, $CC_DBC;
-        if (is_null($this->groupId) || !is_numeric($this->groupId)) {
-            return false;
-        }
-        $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE group_id = ".$this->groupId;
-        //echo $sql;
-        $retVal = $CC_DBC->query($sql);
-        RabbitMq::PushSchedule();
-        return $retVal;
-    }
-
-    /**
-     * Return the number of items in this group.
-     * @return string
-     */
-    public function count() {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT COUNT(*) FROM {$CC_CONFIG['scheduleTable']}"
-        ." WHERE group_id={$this->groupId}";
-        return $CC_DBC->GetOne($sql);
-    }
-
-    /*
-     * Return the list of items in this group as a 2D array.
-     * @return array
-     */
-    public function getItems() {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT "
-        ." st.id,"
-        ." st.file_id,"
-        ." st.cue_in,"
-        ." st.cue_out,"
-        ." st.clip_length,"
-        ." st.fade_in,"
-        ." st.fade_out,"
-        ." st.starts,"
-        ." st.ends"
-        ." FROM $CC_CONFIG[scheduleTable] as st"
-        ." LEFT JOIN $CC_CONFIG[showInstances] as si"
-        ." ON st.instance_id = si.id"
-        ." WHERE st.group_id=$this->groupId"
-        ." AND st.starts < si.ends"
-        ." ORDER BY st.starts";
-        return $CC_DBC->GetAll($sql);
-    }
-
-    public function notifyGroupStartPlay() {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
-                ." SET schedule_group_played=TRUE"
-                ." WHERE group_id=".$this->groupId;
-        $retVal = $CC_DBC->query($sql);
-        return $retVal;
-    }
-
-    public function notifyMediaItemStartPlay($p_fileId) {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
-                ." SET media_item_played=TRUE"
-                ." WHERE group_id=".$this->groupId
-                ." AND file_id=".pg_escape_string($p_fileId);
-        $retVal = $CC_DBC->query($sql);
-        return $retVal;
-    }
-}
-
-class Schedule {
-
-    function __construct() {
-
-    }
+class Application_Model_Schedule {
 
     /**
      * Return true if there is nothing in the schedule for the given start time
@@ -235,7 +15,7 @@ class Schedule {
     public static function isScheduleEmptyInRange($p_datetime, $p_length) {
         global $CC_CONFIG, $CC_DBC;
         if (empty($p_length)) {
-            return new PEAR_Error("Schedule::isSchedulerEmptyInRange: param p_length is empty.");
+            return new PEAR_Error("Application_Model_Schedule::isSchedulerEmptyInRange: param p_length is empty.");
         }
         $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE (starts >= '$p_datetime') "
@@ -307,9 +87,8 @@ class Schedule {
                 $row["id"] = $row["group_id"];
             }
         } else {
-            $sql = "SELECT MIN(st.name) AS name,"
-            ." MIN(pt.creator) AS creator,"
-            ." st.group_id, "
+            $sql = "SELECT MIN(pt.creator) AS creator,"
+            ." st.group_id,"
             ." SUM(st.clip_length) AS clip_length,"
             ." MIN(st.file_id) AS file_id,"
             ." COUNT(*) as count,"
@@ -326,6 +105,7 @@ class Schedule {
             ." ON st.instance_id = si.id"
             ." LEFT JOIN $CC_CONFIG[showTable] as sh"
             ." ON si.show_id = sh.id"
+            //The next line ensures we only get songs that haven't ended yet
             ." WHERE (st.ends >= TIMESTAMP '$p_currentDateTime')"
             ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
             //next line makes sure that we aren't returning items that
@@ -363,18 +143,15 @@ class Schedule {
 
         global $CC_CONFIG;
 
-        $date = new DateHelper;
-        $timeNow = $date->getTimestamp();
+        $date = new Application_Model_DateHelper;
+        $timeNow = $date->getUtcTimestamp();
         return array("env"=>APPLICATION_ENV,
-            "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-            //"previous"=>Schedule::GetScheduledItemData($timeNow, -1, $prev, "24 hours"),
-            //"current"=>Schedule::GetScheduledItemData($timeNow, 0),
-            //"next"=>Schedule::GetScheduledItemData($timeNow, 1, $next, "48 hours"),
+            "schedulerTime"=>$timeNow,
             "previous"=>Application_Model_Dashboard::GetPreviousItem($timeNow),
             "current"=>Application_Model_Dashboard::GetCurrentItem($timeNow),
             "next"=>Application_Model_Dashboard::GetNextItem($timeNow),
-            "currentShow"=>Show_DAL::GetCurrentShow($timeNow),
-            "nextShow"=>Show_DAL::GetNextShows($timeNow, 1),
+            "currentShow"=>Application_Model_Show::GetCurrentShow($timeNow),
+            "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 1),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
     }
@@ -660,21 +437,21 @@ class Schedule {
         global $CC_CONFIG, $CC_DBC;
 
         if (is_null($p_fromDateTime)) {
-            $t1 = new DateTime();
+            $t1 = new DateTime("@".time());
             $range_start = $t1->format("Y-m-d H:i:s");
         } else {
-            $range_start = Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
+            $range_start = Application_Model_Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
         }
         if (is_null($p_fromDateTime)) {
-            $t2 = new DateTime();
+            $t2 = new DateTime("@".time());
             $t2->add(new DateInterval("PT24H"));
             $range_end = $t2->format("Y-m-d H:i:s");
         } else {
-            $range_end = Schedule::PypoTimeToAirtimeTime($p_toDateTime);
+            $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);
         }
 
         // Scheduler wants everything in a playlist
-        $data = Schedule::GetItems($range_start, $range_end, true);
+        $data = Application_Model_Schedule::GetItems($range_start, $range_end, true);
         $playlists = array();
 
         if (is_array($data)){
@@ -685,50 +462,51 @@ class Schedule {
                 $start = substr($start, 0, 19);
 
                 //Start time is the array key, needs to be in the format "YYYY-MM-DD-HH-mm-ss"
-                $pkey = Schedule::AirtimeTimeToPypoTime($start);
+                $pkey = Application_Model_Schedule::AirtimeTimeToPypoTime($start);
                 $timestamp =  strtotime($start);
                 $playlists[$pkey]['source'] = "PLAYLIST";
                 $playlists[$pkey]['x_ident'] = $dx['group_id'];
-                //$playlists[$pkey]['subtype'] = '1'; // Just needs to be between 1 and 4 inclusive
                 $playlists[$pkey]['timestamp'] = $timestamp;
                 $playlists[$pkey]['duration'] = $dx['clip_length'];
                 $playlists[$pkey]['played'] = '0';
                 $playlists[$pkey]['schedule_id'] = $dx['group_id'];
                 $playlists[$pkey]['show_name'] = $dx['show_name'];
-                $playlists[$pkey]['show_start'] = Schedule::AirtimeTimeToPypoTime($dx['show_start']);
-                $playlists[$pkey]['show_end'] = Schedule::AirtimeTimeToPypoTime($dx['show_end']);
+                $playlists[$pkey]['show_start'] = Application_Model_Schedule::AirtimeTimeToPypoTime($dx['show_start']);
+                $playlists[$pkey]['show_end'] = Application_Model_Schedule::AirtimeTimeToPypoTime($dx['show_end']);
                 $playlists[$pkey]['user_id'] = 0;
                 $playlists[$pkey]['id'] = $dx['group_id'];
-                $playlists[$pkey]['start'] = Schedule::AirtimeTimeToPypoTime($dx["start"]);
-                $playlists[$pkey]['end'] = Schedule::AirtimeTimeToPypoTime($dx["end"]);
+                $playlists[$pkey]['start'] = Application_Model_Schedule::AirtimeTimeToPypoTime($dx["start"]);
+                $playlists[$pkey]['end'] = Application_Model_Schedule::AirtimeTimeToPypoTime($dx["end"]);
             }
         }
+        ksort($playlists);
 
         foreach ($playlists as &$playlist)
         {
-            $scheduleGroup = new ScheduleGroup($playlist["schedule_id"]);
+            $scheduleGroup = new Application_Model_ScheduleGroup($playlist["schedule_id"]);
             $items = $scheduleGroup->getItems();
             $medias = array();
             foreach ($items as $item)
             {
-                $storedFile = StoredFile::Recall($item["file_id"]);
-                $uri = $storedFile->getFileUrl();
+                $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
+                $uri = $storedFile->getFileUrlUsingConfigAddress();
 
-                $starts = Schedule::AirtimeTimeToPypoTime($item["starts"]);
+                $starts = Application_Model_Schedule::AirtimeTimeToPypoTime($item["starts"]);
                 $medias[$starts] = array(
                     'row_id' => $item["id"],
                     'id' => $storedFile->getGunid(),
                     'uri' => $uri,
-                    'fade_in' => Schedule::WallTimeToMillisecs($item["fade_in"]),
-                    'fade_out' => Schedule::WallTimeToMillisecs($item["fade_out"]),
+                    'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
+                    'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
                     'fade_cross' => 0,
-                    'cue_in' => DateHelper::CalculateLengthInSeconds($item["cue_in"]),
-                    'cue_out' => DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+                    'cue_in' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+                    'cue_out' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
                     'export_source' => 'scheduler',
                     'start' => $starts,
-                    'end' => Schedule::AirtimeTimeToPypoTime($item["ends"])
+                    'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["ends"])
                 );
             }
+            ksort($medias);
             $playlist['medias'] = $medias;
         }
 
@@ -740,7 +518,6 @@ class Schedule {
         $result['stream_metadata'] = array();
         $result['stream_metadata']['format'] = Application_Model_Preference::GetStreamLabelFormat();
         $result['stream_metadata']['station_name'] = Application_Model_Preference::GetStationName();
-        $result['server_timezone'] = date('O');
 
         return $result;
     }
@@ -752,33 +529,25 @@ class Schedule {
     }
 
     public static function createNewFormSections($p_view){
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
 		$formWhen = new Application_Form_AddShowWhen();
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
-        $formRecord = new Application_Form_AddShowRR();
-        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
 		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
-        $formRecord->removeDecorator('DtDdWrapper');
-        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-        $formRebroadcast->removeDecorator('DtDdWrapper');
 
         $p_view->what = $formWhat;
         $p_view->when = $formWhen;
         $p_view->repeats = $formRepeats;
         $p_view->who = $formWho;
         $p_view->style = $formStyle;
-        $p_view->rr = $formRecord;
-        $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-        $p_view->rebroadcast = $formRebroadcast;
-        $p_view->addNewShow = true;
 
         $formWhat->populate(array('add_show_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
@@ -788,6 +557,21 @@ class Schedule {
                                       'add_show_duration' => '1h'));
 
 		$formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
+		
+        if(!$isSaas){
+            $formRecord = new Application_Form_AddShowRR();
+            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+            
+            $formRecord->removeDecorator('DtDdWrapper');
+            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+            $formRebroadcast->removeDecorator('DtDdWrapper');
+            
+            $p_view->rr = $formRecord;
+            $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+            $p_view->rebroadcast = $formRebroadcast;
+        }
+        $p_view->addNewShow = true;
     }
 }
 

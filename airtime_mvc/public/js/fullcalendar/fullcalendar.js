@@ -2275,7 +2275,7 @@ function BasicView(element, calendar, viewName) {
 	function updateCells(firstTime) {
 		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
 		var month = t.start.getMonth();
-		var today = clearTime(new Date());
+		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
 		var cell;
 		var date;
 		var row;

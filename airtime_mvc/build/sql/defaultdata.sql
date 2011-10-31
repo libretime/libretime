@@ -1,5 +1,53 @@
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 
+-- added in 2.0.0
+INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_type', 'ogg, mp3');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('num_of_streams', '3');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('max_bitrate', '320');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('plan_level', 'disabled');
+
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('output_sound_device', 'false', 'boolean');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
+
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_output', 'icecast', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_type', 'ogg', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_bitrate', '128', 'integer');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_host', '127.0.0.1', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_port', '8000', 'integer');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_pass', 'hackme', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'http://airtime.sourcefabric.org', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'Airtime Radio! Stream #1', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_genre', 'genre', 'string');
+
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_output', 'disabled', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_type', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_bitrate', '', 'integer');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_host', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_port', '', 'integer');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_pass', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_mount', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_url', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_description', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_genre', '', 'string');
+
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_output', 'disabled', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_type', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_bitrate', '', 'integer');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_host', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_port', '', 'integer');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_pass', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_mount', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_url', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_description', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_genre', '', 'string');
+-- end of added in 2.0.0
+
+
 INSERT INTO cc_country (isocode, name) VALUES ('AFG', 'Afghanistan ');
 INSERT INTO cc_country (isocode, name) VALUES ('ALA', 'Åland Islands');
 INSERT INTO cc_country (isocode, name) VALUES ('ALB', 'Albania ');

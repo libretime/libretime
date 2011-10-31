@@ -10,6 +10,7 @@
  * @method     CcShowDaysQuery orderByDbFirstShow($order = Criteria::ASC) Order by the first_show column
  * @method     CcShowDaysQuery orderByDbLastShow($order = Criteria::ASC) Order by the last_show column
  * @method     CcShowDaysQuery orderByDbStartTime($order = Criteria::ASC) Order by the start_time column
+ * @method     CcShowDaysQuery orderByDbTimezone($order = Criteria::ASC) Order by the timezone column
  * @method     CcShowDaysQuery orderByDbDuration($order = Criteria::ASC) Order by the duration column
  * @method     CcShowDaysQuery orderByDbDay($order = Criteria::ASC) Order by the day column
  * @method     CcShowDaysQuery orderByDbRepeatType($order = Criteria::ASC) Order by the repeat_type column
@@ -21,6 +22,7 @@
  * @method     CcShowDaysQuery groupByDbFirstShow() Group by the first_show column
  * @method     CcShowDaysQuery groupByDbLastShow() Group by the last_show column
  * @method     CcShowDaysQuery groupByDbStartTime() Group by the start_time column
+ * @method     CcShowDaysQuery groupByDbTimezone() Group by the timezone column
  * @method     CcShowDaysQuery groupByDbDuration() Group by the duration column
  * @method     CcShowDaysQuery groupByDbDay() Group by the day column
  * @method     CcShowDaysQuery groupByDbRepeatType() Group by the repeat_type column
@@ -43,6 +45,7 @@
  * @method     CcShowDays findOneByDbFirstShow(string $first_show) Return the first CcShowDays filtered by the first_show column
  * @method     CcShowDays findOneByDbLastShow(string $last_show) Return the first CcShowDays filtered by the last_show column
  * @method     CcShowDays findOneByDbStartTime(string $start_time) Return the first CcShowDays filtered by the start_time column
+ * @method     CcShowDays findOneByDbTimezone(string $timezone) Return the first CcShowDays filtered by the timezone column
  * @method     CcShowDays findOneByDbDuration(string $duration) Return the first CcShowDays filtered by the duration column
  * @method     CcShowDays findOneByDbDay(int $day) Return the first CcShowDays filtered by the day column
  * @method     CcShowDays findOneByDbRepeatType(int $repeat_type) Return the first CcShowDays filtered by the repeat_type column
@@ -54,6 +57,7 @@
  * @method     array findByDbFirstShow(string $first_show) Return CcShowDays objects filtered by the first_show column
  * @method     array findByDbLastShow(string $last_show) Return CcShowDays objects filtered by the last_show column
  * @method     array findByDbStartTime(string $start_time) Return CcShowDays objects filtered by the start_time column
+ * @method     array findByDbTimezone(string $timezone) Return CcShowDays objects filtered by the timezone column
  * @method     array findByDbDuration(string $duration) Return CcShowDays objects filtered by the duration column
  * @method     array findByDbDay(int $day) Return CcShowDays objects filtered by the day column
  * @method     array findByDbRepeatType(int $repeat_type) Return CcShowDays objects filtered by the repeat_type column
@@ -277,6 +281,28 @@ abstract class BaseCcShowDaysQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowDaysPeer::START_TIME, $dbStartTime, $comparison);
+	}
+
+	/**
+	 * Filter the query on the timezone column
+	 * 
+	 * @param     string $dbTimezone The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowDaysQuery The current query, for fluid interface
+	 */
+	public function filterByDbTimezone($dbTimezone = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbTimezone)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbTimezone)) {
+				$dbTimezone = str_replace('*', '%', $dbTimezone);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcShowDaysPeer::TIMEZONE, $dbTimezone, $comparison);
 	}
 
 	/**

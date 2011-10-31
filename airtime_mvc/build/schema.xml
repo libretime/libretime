@@ -88,6 +88,10 @@
     <column name="subject" phpName="DbSubject" type="VARCHAR" size="512" required="false"/>
     <column name="contributor" phpName="DbContributor" type="VARCHAR" size="512" required="false"/>
     <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
+    <column name="soundcloud_id" phpName="DbSoundcloudId" type="Integer" required="false"/>
+    <column name="soundcloud_error_code" phpName="DbSoundcloudErrorCode" type="Integer" required="false"/>
+    <column name="soundcloud_error_msg" phpName="DbSoundcloudErrorMsg" type="VARCHAR" size="512" required="false"/>
+    <column name="soundcloud_link_to_file" phpName="DbSoundcloudLinkToFile" type="VARCHAR" size="512" required="false"/>
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id"/>
     </foreign-key>
@@ -144,7 +148,6 @@
     <column name="rebroadcast" phpName="DbRebroadcast" type="TINYINT" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
-    <column name="soundcloud_id" phpName="DbSoundCloudId" type="INTEGER" required="false"/>
     <column name="time_filled" phpName="DbTimeFilled" type="TIME" />
     <behavior name="aggregate_column">
       <parameter name="name" value="time_filled" />
@@ -166,6 +169,7 @@
 	<column name="first_show" phpName="DbFirstShow" type="DATE" required="true"/>
 	<column name="last_show" phpName="DbLastShow" type="DATE" required="false"/>
 	<column name="start_time" phpName="DbStartTime" type="TIME" required="true"/>
+	<column name="timezone" phpName="DbTimezone" type="VARCHAR" required="true"/>
 	<column name="duration" phpName="DbDuration" type="VARCHAR" required="true"/>
 	<column name="day" phpName="DbDay" type="TINYINT" required="false"/>
     <column name="repeat_type" phpName="DbRepeatType" type="TINYINT" required="true"/>
@@ -304,6 +308,7 @@
     <column name="skype_contact" phpName="DbSkypeContact" type="VARCHAR" required="false"/>
     <column name="jabber_contact" phpName="DbJabberContact" type="VARCHAR" required="false"/>
     <column name="email" phpName="DbEmail" type="VARCHAR" required="false"/>
+    <column name="login_attempts" phpName="DbLoginAttempts" type="INTEGER" required="false" defaultValue="0"/>
     <unique name="cc_subjs_id_idx">
       <unique-column name="id"/>
     </unique>
@@ -314,5 +319,18 @@
   <table name="cc_country" phpName="CcCountry">
     <column name="isocode" phpName="DbIsoCode" primaryKey="true" type="CHAR" size="3" required="true"/>
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true"/>
+  </table>
+  <table name="cc_stream_setting" phpName="CcStreamSetting">
+    <column name="keyname" phpName="DbKeyName" primaryKey="true" type="VARCHAR" size="64" required="true"/>
+    <column name="value" phpName="DbValue" type="VARCHAR" size="255" required="false"/>
+    <column name="type" phpName="DbType" type="VARCHAR" size="16" required="true"/>
+  </table>
+  <table name="cc_login_attempts" phpName="CcLoginAttempts">
+    <column name="ip" phpName="DbIP" primaryKey="true" type="VARCHAR" size="32" required="true"/>
+    <column name="attempts" phpName="DbAttempts" type="INTEGER" required="false" defaultValue="0"/>
+  </table>
+  <table name="cc_service_register" phpName="CcServiceRegister">
+    <column name="name" phpName="DbName" primaryKey="true" type="VARCHAR" size="32" required="true" />
+    <column name="ip" phpName="DbIp" type="VARCHAR" size="18" required="true"/>
   </table>
 </database>

@@ -10,7 +10,7 @@
 set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 
 require_once('DB.php');
-require_once(__DIR__.'/../../airtime_mvc/application/configs/constants.php');
+require_once(__DIR__.'/airtime-constants.php');
 require_once(dirname(__FILE__).'/AirtimeIni.php');
 require_once(dirname(__FILE__).'/AirtimeInstall.php');
 
@@ -18,6 +18,9 @@ if(exec("whoami") != "root"){
     echo "Must be root user.\n";
     exit(1);
 }
+
+const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
+
 
 global $CC_DBC, $CC_CONFIG;
 
@@ -44,50 +47,41 @@ if (PEAR::isError($CC_DBC)) {
     $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 }
 
-/*
-$sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
-$version = $CC_DBC->GetOne($sql);
-
-if (PEAR::isError($version)) {
-    $version = false;
-}
-
-if (!$version){
-
-    $sql = "SELECT * FROM cc_show_rebroadcast LIMIT 1";
-    $result = $CC_DBC->GetOne($sql);
-    if (!PEAR::isError($result)) {
-        $version = "1.7.0";
-        echo "Airtime Version: ".$version." ".PHP_EOL;
-    }
-    else {
-        $version = "1.6";
-        echo "Airtime Version: ".$version." ".PHP_EOL;
-    }
-}
-*/
-
 $version = AirtimeInstall::GetVersionInstalled();
 
-echo "******************************** Update Begin *********************************".PHP_EOL;
+echo "******************************** Upgrade Begin *********************************".PHP_EOL;
 
 //convert strings like 1.9.0-devel to 1.9.0
 $version = substr($version, 0, 5);
 
+$SCRIPTPATH = __DIR__;
+
 if (strcmp($version, "1.7.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.7.0/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.7.0/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.8.0/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.0/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.1") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.8.1/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.1/airtime-upgrade.php");
 }
 if (strcmp($version, "1.8.2") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.8.2/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.2/airtime-upgrade.php");
 }
 if (strcmp($version, "1.9.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-1.9.0/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.0/airtime-upgrade.php");
+}
+if (strcmp($version, "1.9.2") < 0){
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.2/airtime-upgrade.php");
+}
+if (strcmp($version, "1.9.3") < 0){
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.3/airtime-upgrade.php");
+}
+if (strcmp($version, "1.9.4") < 0){
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.4/airtime-upgrade.php");
+}
+if (strcmp($version, "2.0.0") < 0){
+    system("php ".__DIR__."/../upgrades/airtime-2.0.0/airtime-upgrade.php");
 }
 
 
@@ -95,23 +89,11 @@ if (strcmp($version, "1.9.0") < 0){
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
 $CC_DBC->query($sql);
 
+$values = parse_ini_file(CONF_FILE_AIRTIME, true);
+$phpDir = $values['general']['airtime_dir'];
+
 $newVersion = AIRTIME_VERSION;
 $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$newVersion')";
 $CC_DBC->query($sql);
 
-echo PHP_EOL."*** Updating Api Client ***".PHP_EOL;
-passthru("python ".__DIR__."/../../python_apps/api_clients/install/api_client_install.py");
-
-echo PHP_EOL."*** Updating Pypo ***".PHP_EOL;
-passthru("python ".__DIR__."/../../python_apps/pypo/install/pypo-install.py");
-
-echo PHP_EOL."*** Updating Recorder ***".PHP_EOL;
-passthru("python ".__DIR__."/../../python_apps/show-recorder/install/recorder-install.py");
-
-echo PHP_EOL."*** Updating Media Monitor ***".PHP_EOL;
-passthru("python ".__DIR__."/../../python_apps/media-monitor/install/media-monitor-install.py");
-
-sleep(4);
-passthru("airtime-check-system");
-
-echo "******************************* Update Complete *******************************".PHP_EOL;
+echo "******************************* Upgrade Complete *******************************".PHP_EOL;

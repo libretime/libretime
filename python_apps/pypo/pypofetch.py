@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import calendar
 import logging
 import logging.config
 import shutil
@@ -9,14 +10,17 @@ import string
 import json
 import telnetlib
 import math
+import socket
 from threading import Thread
 from subprocess import Popen, PIPE
 from datetime import datetime
 from datetime import timedelta
+import filecmp
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
+from kombu.exceptions import MessageStateError
 
 from api_clients import api_client
 
@@ -37,22 +41,6 @@ except Exception, e:
     logger.error('Error loading config file: %s', e)
     sys.exit()
 
-# Yuk - using a global, i know!
-SCHEDULE_PUSH_MSG = []
-
-"""
-Handle a message from RabbitMQ, put it into our yucky global var.
-Hopefully there is a better way to do this.
-"""
-def handle_message(body, message):
-    logger = logging.getLogger('fetch')
-    global SCHEDULE_PUSH_MSG
-    logger.info("Received schedule from RabbitMQ: " + message.body)
-    SCHEDULE_PUSH_MSG = json.loads(message.body)
-    # ACK the message to take it off the queue
-    message.ack()
-
-
 class PypoFetch(Thread):
     def __init__(self, q):
         Thread.__init__(self)
@@ -60,81 +48,180 @@ class PypoFetch(Thread):
         self.api_client = api_client.api_client_factory(config)
         self.set_export_source('scheduler')
         self.queue = q
+        self.schedule_data = []
         logger.info("PypoFetch: init complete")
 
     def init_rabbit_mq(self):
         logger = logging.getLogger('fetch')
         logger.info("Initializing RabbitMQ stuff")
         try:
-            schedule_exchange = Exchange("airtime-schedule", "direct", durable=True, auto_delete=True)
+            schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
             self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
             channel = self.connection.channel()
             consumer = Consumer(channel, schedule_queue)
-            consumer.register_callback(handle_message)
+            consumer.register_callback(self.handle_message)
             consumer.consume()
         except Exception, e:
             logger.error(e)
             return False
             
         return True
+    
+    """
+    Handle a message from RabbitMQ, put it into our yucky global var.
+    Hopefully there is a better way to do this.
+    """
+    def handle_message(self, body, message):
+        try:
+            logger = logging.getLogger('fetch')
+            logger.info("Received event from RabbitMQ: " + message.body)
+            
+            m =  json.loads(message.body)
+            command = m['event_type']
+            logger.info("Handling command: " + command)
         
-
+            if command == 'update_schedule':
+                self.schedule_data  = m['schedule']
+                self.process_schedule(self.schedule_data, "scheduler", False)
+            elif command == 'update_stream_setting':
+                logger.info("Updating stream setting...")
+                self.regenerateLiquidsoapConf(m['setting'])
+            elif command == 'cancel_current_show':
+                logger.info("Cancel current show command received...")
+                self.stop_current_show()
+        except Exception, e:
+            logger.error("Exception in handling RabbitMQ message: %s", e)
+        finally:
+            # ACK the message to take it off the queue
+            try:
+                message.ack()
+            except MessageStateError, m:
+                logger.error("Message ACK error: %s", m)
+        
+    def stop_current_show(self):
+        logger = logging.getLogger('fetch')
+        logger.debug('Notifying Liquidsoap to stop playback.')
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn.write('source.skip\n')
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            logger.debug(e)
+            logger.debug('Could not connect to liquidsoap')
+    
+    def regenerateLiquidsoapConf(self, setting):
+        logger = logging.getLogger('fetch')
+        existing = {}
+        # create a temp file
+        fh = open('/etc/airtime/liquidsoap.cfg', 'r')
+        logger.info("Reading existing config...")
+        # read existing conf file and build dict
+        while 1:
+            line = fh.readline()
+            if not line:
+                break
+            
+            line = line.strip()
+            if line.find('#') == 0:
+                continue
+            # if empty line
+            if not line:
+                continue
+            key, value = line.split('=')
+            key = key.strip()
+            value = value.strip()
+            value = value.replace('"', '')
+            if value == "" or value == "0":
+                value = ''
+            existing[key] =  value
+        fh.close()
+        
+        # dict flag for any change in cofig
+        change = {}
+        # this flag is to detect diable -> disable change
+        # in that case, we don't want to restart even if there are chnges.
+        state_change_restart = {}
+        #restart flag
+        restart = False
+        
+        logger.info("Looking for changes...")
+        # look for changes
+        for s in setting:
+            if "output_sound_device" in s[u'keyname'] or "icecast_vorbis_metadata" in s[u'keyname']:
+                dump, stream = s[u'keyname'].split('_', 1)
+                state_change_restart[stream] = False
+                # This is the case where restart is required no matter what
+                if (existing[s[u'keyname']] != s[u'value']):
+                    logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                    restart = True;
+            else:
+                stream, dump = s[u'keyname'].split('_',1)
+                if "_output" in s[u'keyname']:
+                    if (existing[s[u'keyname']] != s[u'value']):
+                        logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                        restart = True;
+                        state_change_restart[stream] = True
+                    elif ( s[u'value'] != 'disabled'):
+                        state_change_restart[stream] = True
+                    else:
+                        state_change_restart[stream] = False
+                else:
+                    # setting inital value
+                    if stream not in change:
+                        change[stream] = False
+                    if not (s[u'value'] == existing[s[u'keyname']]):
+                        logger.info("Keyname: %s, Curent value: %s, New Value: %s", s[u'keyname'], existing[s[u'keyname']], s[u'value'])
+                        change[stream] = True
+                        
+        # set flag change for sound_device alway True
+        logger.info("Change:%s, State_Change:%s...", change, state_change_restart)
+        
+        for k, v in state_change_restart.items():
+            if k == "sound_device" and v:
+                restart = True
+            elif v and change[k]:
+                logger.info("'Need-to-restart' state detected for %s...", k)
+                restart = True
+        # rewrite
+        if restart:
+            fh = open('/etc/airtime/liquidsoap.cfg', 'w')
+            logger.info("Rewriting liquidsoap.cfg...")
+            fh.write("################################################\n")
+            fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
+            fh.write("################################################\n")
+            for d in setting:
+                buffer = d[u'keyname'] + " = "
+                if(d[u'type'] == 'string'):
+                    temp = d[u'value']
+                    if(temp == ""):
+                        temp = ""
+                    buffer += "\"" + temp + "\""
+                else:
+                    temp = d[u'value']
+                    if(temp == ""):
+                        temp = "0"
+                    buffer += temp
+                buffer += "\n"
+                fh.write(buffer)
+            fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
+            fh.close()
+            # restarting pypo.
+            # we could just restart liquidsoap but it take more time somehow.
+            logger.info("Restarting pypo...")
+            #p = Popen("/etc/init.d/airtime-playout restart >/dev/null 2>&1", shell=True)
+            #sts = os.waitpid(p.pid, 0)[1]
+            sys.exit()
+            self.process_schedule(self.schedule_data, "scheduler", False)
+        else:
+            logger.info("No change detected in setting...")
+        
     def set_export_source(self, export_source):
         logger = logging.getLogger('fetch')
         self.export_source = export_source
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
         logger.info("Creating cache directory at %s", self.cache_dir)
-
-    def check_matching_timezones(self, server_timezone):
-        logger = logging.getLogger('fetch')
-
-        process = Popen(["date", "+%z"], stdout=PIPE)
-        pypo_timezone = (process.communicate()[0]).strip(' \r\n\t')
-
-        if server_timezone != pypo_timezone:
-            logger.error("ERROR: Airtime server and pypo timezone offsets do not match. Audio playback will not start when expected!!!")
-            logger.error("  * Server timezone offset: %s", server_timezone)
-            logger.error("  * Pypo timezone offset: %s", pypo_timezone)
-            logger.error("  * To fix this, you need to set the 'date.timezone' value in your php.ini file and restart apache.")
-            logger.error("  * See this page for more info (v1.7): http://wiki.sourcefabric.org/x/BQBF")
-            logger.error("  * and also the 'FAQ and Support' page underneath it.")  
-
-    """
-    def get_currently_scheduled(self, playlistsOrMedias, str_tnow_s):
-        for key in playlistsOrMedias:
-            start = playlistsOrMedias[key]['start']
-            end = playlistsOrMedias[key]['end']
-            
-            if start <= str_tnow_s and str_tnow_s < end:
-                return key
-                
-        return None  
-
-    def handle_shows_currently_scheduled(self, playlists):
-        logger = logging.getLogger('fetch')
-    
-        dtnow = datetime.today()
-        tnow = dtnow.timetuple()
-        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-        
-        current_pkey = self.get_currently_scheduled(playlists, str_tnow_s)
-        if current_pkey is not None:
-            logger.debug("FOUND CURRENT PLAYLIST %s", current_pkey)
-            # So we have found that a playlist if currently scheduled
-            # even though we just started pypo. Perhaps there was a
-            # system crash. Lets calculate what position in the playlist
-            # we are supposed to be in.
-            medias = playlists[current_pkey]["medias"]
-            current_mkey = self.get_currently_scheduled(medias, str_tnow_s)
-            if current_mkey is not None:
-                mkey_split = map(int, current_mkey.split('-'))
-                media_start = datetime(mkey_split[0], mkey_split[1], mkey_split[2], mkey_split[3], mkey_split[4], mkey_split[5])
-                logger.debug("Found media item that started at %s.", media_start)
-                
-                delta = dtnow - media_start #we get a TimeDelta object from this operation
-                logger.info("Starting media item  at %d second point", delta.seconds)
-    """
 
     """
     Process the schedule
@@ -148,16 +235,12 @@ class PypoFetch(Thread):
         logger = logging.getLogger('fetch')
         playlists = schedule_data["playlists"]
 
-        #if bootstrapping:
-            #TODO: possible allow prepare_playlists to handle this.
-            #self.handle_shows_currently_scheduled(playlists)
-
-        self.check_matching_timezones(schedule_data["server_timezone"])
-            
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         stream_metadata = schedule_data['stream_metadata']
         try:
+            logger.info(LS_HOST)
+            logger.info(LS_PORT)
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             #encode in latin-1 due to telnet protocol not supporting utf-8
             tn.write(('vars.stream_metadata_type %s\n' % stream_metadata['format']).encode('latin-1'))
@@ -177,7 +260,7 @@ class PypoFetch(Thread):
         scheduled_data = dict()
         scheduled_data['liquidsoap_playlists'] = liquidsoap_playlists
         scheduled_data['schedule'] = playlists
-        scheduled_data['stream_metadata'] = schedule_data["stream_metadata"]        
+        scheduled_data['stream_metadata'] = schedule_data["stream_metadata"]
         self.queue.put(scheduled_data)
 
         # cleanup
@@ -337,7 +420,7 @@ class PypoFetch(Thread):
         for r, d, f in os.walk(self.cache_dir):
             for dir in d:
                 try:
-                    timestamp = time.mktime(time.strptime(dir, "%Y-%m-%d-%H-%M-%S"))
+                    timestamp = calendar.timegm(time.strptime(dir, "%Y-%m-%d-%H-%M-%S"))
                     if (now - timestamp) > offset:
                         try:
                             logger.debug('trying to remove  %s - timestamp: %s', os.path.join(r, dir), timestamp)
@@ -351,27 +434,24 @@ class PypoFetch(Thread):
                     logger.error(e)
 
 
-    """
-    Main loop of the thread:
-    Wait for schedule updates from RabbitMQ, but in case there arent any,
-    poll the server to get the upcoming schedule.
-    """
-    def run(self):
+    def main(self):
         logger = logging.getLogger('fetch')
-
-        while not self.init_rabbit_mq():
-            logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
-            time.sleep(5)
 
         try: os.mkdir(self.cache_dir)
         except Exception, e: pass
 
         # Bootstrap: since we are just starting up, we need to grab the
         # most recent schedule.  After that we can just wait for updates. 
-        status, schedule_data = self.api_client.get_schedule()
+        status, self.schedule_data = self.api_client.get_schedule()
         if status == 1:
-            self.process_schedule(schedule_data, "scheduler", True)                
+            logger.info("Bootstrap schedule received: %s", self.schedule_data)
+            self.process_schedule(self.schedule_data, "scheduler", True)
         logger.info("Bootstrap complete: got initial copy of the schedule")
+
+
+        while not self.init_rabbit_mq():
+            logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
+            time.sleep(5)
 
         loops = 1        
         while True:
@@ -380,15 +460,31 @@ class PypoFetch(Thread):
                 # Wait for messages from RabbitMQ.  Timeout if we
                 # dont get any after POLL_INTERVAL.
                 self.connection.drain_events(timeout=POLL_INTERVAL)
-                # Hooray for globals!
-                schedule_data = SCHEDULE_PUSH_MSG
                 status = 1
-            except:    
+            except socket.timeout, se:
                 # We didnt get a message for a while, so poll the server
                 # to get an updated schedule. 
-                status, schedule_data = self.api_client.get_schedule()
+                status, self.schedule_data = self.api_client.get_schedule()
+            except Exception, e:
+                """
+                This Generic exception is thrown whenever the RabbitMQ
+                Service is stopped. In this case let's check every few
+                seconds to see if it has come back up
+                """
+                logger.info("Exception, %s", e)
+                return
+
+            #return based on the exception
             
             if status == 1:
-                self.process_schedule(schedule_data, "scheduler", False)                
-            loops += 1
-            
+                self.process_schedule(self.schedule_data, "scheduler", False)                
+            loops += 1        
+
+    """
+    Main loop of the thread:
+    Wait for schedule updates from RabbitMQ, but in case there arent any,
+    poll the server to get the upcoming schedule.
+    """
+    def run(self):
+        while True:
+            self.main()
