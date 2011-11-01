@@ -14,7 +14,6 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 AIRTIMEROOT=$SCRIPTPATH/../../
 
-$AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
@@ -48,5 +47,5 @@ monit monitor airtime-media-monitor
 monit monitor airtime-liquidsoap
 monit monitor airtime-playout
 monit monitor airtime-show-recorder
-#monit monitor rabbitmq-server
+monit monitor rabbitmq-server
 set -e
