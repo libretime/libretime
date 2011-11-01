@@ -61,13 +61,6 @@ if (isset($version) && ($version != false) && ($version == AIRTIME_VERSION) && !
 if (isset($version) && ($version != false) && ($version < AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime version $version found.".PHP_EOL;
     
-    // remove virtualenv and reinstall
-    if(strcmp($version, '1.9.0') >= 0){
-        exec("rm -rf /usr/lib/airtime/airtime_virtualenv");
-        echo "Reinstalling virtualenv...".PHP_EOL;
-        passthru(__DIR__."/../../python_apps/python-virtualenv/virtualenv-install.sh");
-    }
-    
     require_once("airtime-upgrade.php");
     exit(0);
 }
