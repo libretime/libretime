@@ -329,7 +329,7 @@ class Application_Model_Preference
     }
 
     public static function GetSystemInfo($returnArray=false){
-    	exec('/usr/bin/airtime-check-system', $output);
+    	exec('/usr/bin/airtime-check-system --no-color', $output);
 
     	$output = preg_replace('/\s+/', ' ', $output);
 
