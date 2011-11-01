@@ -6,6 +6,8 @@ if [ `whoami` != 'root' ]; then
     exit 1
 fi
 
+echo -e "\n******************************* Uninstall Begin ********************************"
+
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=`readlink -f $0`
 # Absolute path this script is in, thus /home/user/bin
@@ -19,3 +21,5 @@ $SCRIPTPATH/include/airtime-remove-files.sh
 
 #Remove pypo user
 python $SCRIPTPATH/../python_apps/remove-pypo-user.py
+
+echo -e "\n****************************** Uninstall Complete *******************************"

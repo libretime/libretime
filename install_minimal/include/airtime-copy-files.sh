@@ -33,6 +33,7 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 AIRTIMEROOT=$SCRIPTPATH/../../
 
+echo "* Creating /etc/airtime"
 mkdir -p /etc/airtime
 cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
 cp $AIRTIMEROOT/python_apps/api_clients/api_client.cfg /etc/airtime
@@ -41,6 +42,7 @@ cp $AIRTIMEROOT/python_apps/media-monitor/media-monitor.cfg /etc/airtime
 cp $AIRTIMEROOT/python_apps/pypo/pypo.cfg /etc/airtime
 cp $AIRTIMEROOT/python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg /etc/airtime
 
+echo "* Creating /etc/cron.d/airtime-crons"
 HOUR=$(($RANDOM%24))
 MIN=$(($RANDOM%60))
 echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.d/airtime-crons
@@ -48,6 +50,7 @@ echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
+echo "* Creating /usr/lib/airtime"
 python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
 python $AIRTIMEROOT/python_apps/pypo/install/pypo-install-files.py
 python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-install-files.py
@@ -55,16 +58,21 @@ python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-install-files.py
 
 cp -R $AIRTIMEROOT/utils /usr/lib/airtime
 
+echo "* Creating symbolic links in /usr/bin"
 #create symbolic links
 ln -sf /usr/lib/airtime/utils/airtime-import/airtime-import /usr/bin/airtime-import
 ln -sf /usr/lib/airtime/utils/airtime-update-db-settings /usr/bin/airtime-update-db-settings
 ln -sf /usr/lib/airtime/utils/airtime-check-system /usr/bin/airtime-check-system
 ln -sf /usr/lib/airtime/utils/airtime-log /usr/bin/airtime-log
 
+echo "* Creating /usr/share/airtime"
 mkdir -p /usr/share/airtime
 cp -R $AIRTIMEROOT/airtime_mvc/* /usr/share/airtime/
 
+echo "* Creating /var/log/airtime"
 mkdir -p /var/log/airtime
+
+echo "* Creating /var/tmp/airtime"
 mkdir -p /var/tmp/airtime
 
 #Finished copying files

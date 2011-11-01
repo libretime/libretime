@@ -24,19 +24,19 @@ except Exception, e:
 
 try:
     #remove init.d script
-    print "* Removing Media-Monitor init.d Script"
+    print " * Removing Media-Monitor init.d Script"
     remove_file("/etc/init.d/airtime-media-monitor")
 
     #remove bin dir
-    print "* Removing Media-Monitor Program Directory"
+    print " * Removing Media-Monitor Program Directory"
     shutil.rmtree(config['bin_dir'], ignore_errors=True)
 
     #remove log dir
-    print "* Removing Media-Monitor Log Directory"
+    print " * Removing Media-Monitor Log Directory"
     shutil.rmtree(config['log_dir'], ignore_errors=True)
 
     #remove monit files
-    print "* Removing Media-Monitor Monit Files"
+    print " * Removing Media-Monitor Monit Files"
     remove_file("/etc/monit/conf.d/monit-airtime-media-monitor.cfg")
     remove_file("/etc/monit/conf.d/monit-airtime-generic.cfg")
     

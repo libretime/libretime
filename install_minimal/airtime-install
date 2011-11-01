@@ -44,6 +44,10 @@ python $AIRTIMEROOT/python_apps/create-pypo-user.py
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
 
+#Hack to parse rabbitmq pid and place it into the correct directory. This is also
+#done in our rabbitmq init.d script, but placing it here so that monit recognizes 
+# it faster (in time for the airtime-check-system)
+sed "s/.*,\(.*\)\}.*/\1/" /var/lib/rabbitmq/pids > /var/run/rabbitmq.pid
 
 echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
 sleep 10

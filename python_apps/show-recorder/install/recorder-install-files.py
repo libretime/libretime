@@ -16,7 +16,7 @@ def copy_dir(src_dir, dest_dir):
     if (os.path.exists(dest_dir)) and (dest_dir != "/"):
         shutil.rmtree(dest_dir)
     if not (os.path.exists(dest_dir)):
-        print "Copying directory "+os.path.realpath(src_dir)+" to "+os.path.realpath(dest_dir)
+        #print "Copying directory "+os.path.realpath(src_dir)+" to "+os.path.realpath(dest_dir)
         shutil.copytree(src_dir, dest_dir)
         
 def create_dir(path):
@@ -43,13 +43,13 @@ try:
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
         
     #create temporary media-storage directory
-    print "Creating temporary media storage directory"
+    #print "Creating temporary media storage directory"
     create_dir(config["base_recorded_files"])
     #os.system("chmod -R 755 "+config["base_recorded_files"])
     os.system("chown -R pypo:pypo "+config["base_recorded_files"])
     
     #create log directories
-    print "Creating log directories"
+    #print "Creating log directories"
     create_dir(config["log_dir"])
     os.system("chmod -R 755 " + config["log_dir"])
     os.system("chown -R pypo:pypo "+config["log_dir"])
@@ -58,7 +58,7 @@ try:
     copy_dir("%s/.."%current_script_dir, config["bin_dir"])
     
     #set python file permissions
-    print "Setting permissions"
+    #print "Setting permissions"
     os.system("chmod -R 755 "+config["bin_dir"])
     os.system("chown -R pypo:pypo "+config["bin_dir"])
     

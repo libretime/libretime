@@ -70,17 +70,19 @@ try:
     architecture = platform.architecture()[0]
     natty = is_natty()
     
+    print "* Detecting system architecture for Liquidsoap"
+    
     if architecture == '64bit' and natty:
-        print "Installing 64-bit liquidsoap binary (Natty)"
+        print " * Installing 64-bit liquidsoap binary (Natty)"
         shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
     elif architecture == '32bit' and natty:
-        print "Installing 32-bit liquidsoap binary (Natty)"
+        print " * Installing 32-bit liquidsoap binary (Natty)"
         shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-i386"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
     elif architecture == '64bit' and not natty:
-        print "Installing 64-bit liquidsoap binary"
+        print " * Installing 64-bit liquidsoap binary"
         shutil.copy("%s/../liquidsoap_bin/liquidsoap-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
     elif architecture == '32bit' and not natty:
-        print "Installing 32-bit liquidsoap binary"
+        print " * Installing 32-bit liquidsoap binary"
         shutil.copy("%s/../liquidsoap_bin/liquidsoap-i386"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
     else:
         print "Unknown system architecture."
@@ -101,7 +103,7 @@ try:
         print "Unable to connect to the Airtime server."
 
     #restart airtime-playout   
-    print "Waiting for pypo processes to start..."
+    print "* Waiting for pypo processes to start..."
     p = Popen("/etc/init.d/airtime-playout stop", shell=True)
     sts = os.waitpid(p.pid, 0)[1]
     p = Popen("/etc/init.d/airtime-playout start-no-monit", shell=True)

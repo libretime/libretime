@@ -3,14 +3,14 @@ import sys
 from subprocess import Popen, PIPE, STDOUT
 
 def create_user(username):
-  print "Checking for user "+username
+  print "* Checking for user "+username
 
   p = Popen('id '+username, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
   output = p.stdout.read()
 
   if (output[0:3] != "uid"):
     # Make the pypo user
-    print "Creating user "+username
+    print " * Creating user "+username
     os.system("adduser --system --quiet --group --shell /bin/bash "+username)
 
     #set pypo password

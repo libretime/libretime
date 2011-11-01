@@ -43,7 +43,7 @@ class AirtimeInstall
             $values = parse_ini_file('/etc/airtime/airtime.conf', true);
         }
         else {
-            echo "New Airtime Install.".PHP_EOL;
+            //echo "New Airtime Install.".PHP_EOL;
             return null;
         }
 
@@ -56,7 +56,7 @@ class AirtimeInstall
 
         $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
         if (PEAR::isError($CC_DBC)) {
-            echo "New Airtime Install.".PHP_EOL;
+            //echo "New Airtime Install.".PHP_EOL;
             return null;
         }
         else {
@@ -170,7 +170,7 @@ class AirtimeInstall
     {
         global $CC_CONFIG;
 
-        echo "* Creating Airtime database user".PHP_EOL;
+        echo " * Creating Airtime database user".PHP_EOL;
 
         $username = $CC_CONFIG['dsn']['username'];
         $password = $CC_CONFIG['dsn']['password'];
@@ -178,14 +178,14 @@ class AirtimeInstall
 
         @exec($command, $output, $results);
         if ($results == 0) {
-            echo "* Database user '{$CC_CONFIG['dsn']['username']}' created.".PHP_EOL;
+            echo "  * Database user '{$CC_CONFIG['dsn']['username']}' created.".PHP_EOL;
         } else {
             if (count($output) > 0) {
-                echo "* Could not create user '{$CC_CONFIG['dsn']['username']}': ".PHP_EOL;
+                echo "  * Could not create user '{$CC_CONFIG['dsn']['username']}': ".PHP_EOL;
                 echo implode(PHP_EOL, $output);
             }
             else {
-                echo "* Database user '{$CC_CONFIG['dsn']['username']}' already exists.".PHP_EOL;
+                echo "  * Database user '{$CC_CONFIG['dsn']['username']}' already exists.".PHP_EOL;
             }
         }
     }
@@ -195,7 +195,7 @@ class AirtimeInstall
     {
         global $CC_CONFIG;
 
-        echo "* Creating Airtime database".PHP_EOL;
+        echo " * Creating Airtime database".PHP_EOL;
 
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
@@ -204,14 +204,14 @@ class AirtimeInstall
 
         @exec($command, $output, $results);
         if ($results == 0) {
-            echo "* Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
+            echo "  * Database '{$CC_CONFIG['dsn']['database']}' created.".PHP_EOL;
         } else {
             if (count($output) > 0) {
-                echo "* Could not create database '{$CC_CONFIG['dsn']['database']}': ".PHP_EOL;
+                echo "  * Could not create database '{$CC_CONFIG['dsn']['database']}': ".PHP_EOL;
                 echo implode(PHP_EOL, $output);
             }
             else {
-                echo "* Database '{$CC_CONFIG['dsn']['database']}' already exists.".PHP_EOL;
+                echo "  * Database '{$CC_CONFIG['dsn']['database']}' already exists.".PHP_EOL;
             }
         }
 
@@ -227,17 +227,17 @@ class AirtimeInstall
         // Install postgres scripting language
         $langIsInstalled = $CC_DBC->GetOne('SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'');
         if ($langIsInstalled == '0') {
-            echo "* Installing Postgres scripting language".PHP_EOL;
+            echo " * Installing Postgres scripting language".PHP_EOL;
             $sql = "CREATE LANGUAGE 'plpgsql'";
             AirtimeInstall::InstallQuery($sql, false);
         } else {
-            echo "* Postgres scripting language already installed".PHP_EOL;
+            echo "  * Postgres scripting language already installed".PHP_EOL;
         }
     }
 
     public static function CreateDatabaseTables()
     {
-        echo "* Creating database tables".PHP_EOL;
+        echo " * Creating database tables".PHP_EOL;
 
         // Put Propel sql files in Database
         //$command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql";
@@ -430,8 +430,6 @@ class AirtimeInstall
 
     public static function CreateZendPhpLogFile(){
         global $CC_CONFIG;
-
-        echo "* Creating logs directory ".AirtimeInstall::CONF_DIR_LOG.PHP_EOL;
 
         $path = AirtimeInstall::CONF_DIR_LOG;
         $file = $path.'/zendphp.log';
