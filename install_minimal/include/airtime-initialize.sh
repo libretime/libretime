@@ -47,5 +47,5 @@ monit monitor airtime-media-monitor
 monit monitor airtime-liquidsoap
 monit monitor airtime-playout
 monit monitor airtime-show-recorder
-#monit monitor rabbitmq-server
+monit monitor rabbitmq-server
 set -e
