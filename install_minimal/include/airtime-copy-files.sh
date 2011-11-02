@@ -52,9 +52,9 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 
 echo "* Creating /usr/lib/airtime"
 python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
-python $AIRTIMEROOT/python_apps/pypo/install/pypo-install-files.py
-python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-install-files.py
-python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-install-files.py
+python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
+python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-copy-files.py
+python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
 
 cp -R $AIRTIMEROOT/utils /usr/lib/airtime
 
@@ -66,6 +66,7 @@ ln -sf /usr/lib/airtime/utils/airtime-check-system /usr/bin/airtime-check-system
 ln -sf /usr/lib/airtime/utils/airtime-log /usr/bin/airtime-log
 
 echo "* Creating /usr/share/airtime"
+rm -rf "/usr/share/airtime"
 mkdir -p /usr/share/airtime
 cp -R $AIRTIMEROOT/airtime_mvc/* /usr/share/airtime/
 

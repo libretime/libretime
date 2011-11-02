@@ -32,7 +32,7 @@ try:
     remove_file("/etc/init.d/airtime-playout")
 
     #remove bin, cache, tmp and file dir
-    print " * Removing Pypo Program directories"
+    print " * Removing Pypo Program Directory"
     shutil.rmtree(config['bin_dir'], ignore_errors=True)
     shutil.rmtree(config['cache_dir'], ignore_errors=True)
     shutil.rmtree(config['file_dir'], ignore_errors=True)
