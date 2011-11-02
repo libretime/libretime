@@ -79,7 +79,7 @@ class AirtimeMiscUpgrade{
     }
 }
 
-UpgradeCommonFunctions::connectToDatabase();
+UpgradeCommon::connectToDatabase();
 
 AirtimeDatabaseUpgrade::start();
 AirtimeStorWatchedDirsUpgrade::start();
