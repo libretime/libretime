@@ -166,9 +166,9 @@ class AirtimeMetadata:
         #check if file has any metadata
         if file_info is not None:
             for key in file_info.keys() :
-                if key in self.mutagen2airtime :
+                if key in self.mutagen2airtime and len(file_info[key]) > 0:
                     info = file_info[key][0]
-                    while 1:
+                    while True:
                         temp = re.search(u"[\x80-\x9f]", info)
                         if temp is not None:
                             s = temp.group(0)
