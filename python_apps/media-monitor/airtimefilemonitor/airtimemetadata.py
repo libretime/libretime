@@ -197,9 +197,9 @@ class AirtimeMetadata:
             if isinstance(md['MDATA_KEY_TRACKNUMBER'], basestring):
                 match = re.search('^(\d*/\d*)?', md['MDATA_KEY_TRACKNUMBER'])
 
-                if match.group(0) is not u'':
-                    md['MDATA_KEY_TRACKNUMBER'] = int(md['MDATA_KEY_TRACKNUMBER'].split("/")[0])
-                else:
+                try:
+                    md['MDATA_KEY_TRACKNUMBER'] = int(md['MDATA_KEY_TRACKNUMBER'].split("/")[0], 10)
+                except Exception, e:
                     del md['MDATA_KEY_TRACKNUMBER']
 
         #make sure bpm is valid, need to check more types of formats for this tag to assure correct parsing.
