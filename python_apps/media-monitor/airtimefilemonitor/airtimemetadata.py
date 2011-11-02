@@ -166,9 +166,9 @@ class AirtimeMetadata:
         #check if file has any metadata
         if file_info is not None:
             for key in file_info.keys() :
-                if key in self.mutagen2airtime :
+                if key in self.mutagen2airtime and len(file_info[key]) > 0:
                     info = file_info[key][0]
-                    while 1:
+                    while True:
                         temp = re.search(u"[\x80-\x9f]", info)
                         if temp is not None:
                             s = temp.group(0)
@@ -197,9 +197,9 @@ class AirtimeMetadata:
             if isinstance(md['MDATA_KEY_TRACKNUMBER'], basestring):
                 match = re.search('^(\d*/\d*)?', md['MDATA_KEY_TRACKNUMBER'])
 
-                if match.group(0) is not u'':
-                    md['MDATA_KEY_TRACKNUMBER'] = int(md['MDATA_KEY_TRACKNUMBER'].split("/")[0])
-                else:
+                try:
+                    md['MDATA_KEY_TRACKNUMBER'] = int(md['MDATA_KEY_TRACKNUMBER'].split("/")[0], 10)
+                except Exception, e:
                     del md['MDATA_KEY_TRACKNUMBER']
 
         #make sure bpm is valid, need to check more types of formats for this tag to assure correct parsing.
