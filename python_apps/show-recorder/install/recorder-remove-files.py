@@ -24,11 +24,11 @@ except Exception, e:
 
 try:
     #remove init.d script
-    print " * Removing Show-Recorder init.d script"
+    print " * Removing Show-Recorder init.d Script"
     remove_file('/etc/init.d/airtime-show-recorder')
     
     #remove bin dir
-    print " * Removing Show-Recorder Program Directories"
+    print " * Removing Show-Recorder Program Directory"
     shutil.rmtree(config["bin_dir"], ignore_errors=True)
     
     #remove log dir

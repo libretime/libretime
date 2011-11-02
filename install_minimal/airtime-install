@@ -38,6 +38,7 @@ SCRIPT=`readlink -f $0`
 SCRIPTPATH=`dirname $SCRIPT`
 AIRTIMEROOT=$SCRIPTPATH/../
 
+rm -rf "/usr/lib/airtime"
 $AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
 python $AIRTIMEROOT/python_apps/create-pypo-user.py
 
