@@ -55,7 +55,8 @@ class UpgradeCommon{
     public static function MigrateTablesToVersion($dir, $version)
     {
         $appDir = self::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $command = "php --php-ini $dir/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction migrations:migrate $version";
@@ -65,7 +66,8 @@ class UpgradeCommon{
     public static function BypassMigrations($dir, $version)
     {
         $appDir = self::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $command = "php --php-ini $dir/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction --add migrations:version $version";
