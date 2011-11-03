@@ -117,7 +117,7 @@ CREATE TABLE "cc_files"
 	"soundcloud_id" INTEGER,
 	"soundcloud_error_code" INTEGER,
 	"soundcloud_error_msg" VARCHAR(512),
-	"soundcloud_link_to_file" VARCHAR(512),
+	"soundcloud_link_to_file" VARCHAR(4096),
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_files_gunid_idx" UNIQUE ("gunid")
 );
