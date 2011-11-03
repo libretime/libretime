@@ -16,6 +16,8 @@ class UpgradeCommon{
 
     const CONF_PYPO_GRP = "pypo";
     const CONF_WWW_DATA_GRP = "www-data";
+    const CONF_BACKUP_SUFFIX = "200";
+    const VERSION_NUMBER = "2.0";
     
     public static function connectToDatabase($p_exitOnError = true)
     {
@@ -84,7 +86,7 @@ class UpgradeCommon{
                              UpgradeCommon::CONF_FILE_API_CLIENT);
 
         // Backup the config files
-        $suffix = date("Ymdhis")."-".VERSION_NUMBER;
+        $suffix = date("Ymdhis")."-".UpgradeCommon::VERSION_NUMBER;
         foreach ($configFiles as $conf) {
             // do not back up monit cfg
             if (file_exists($conf)) {
@@ -94,8 +96,7 @@ class UpgradeCommon{
             }
         }
 
-        $default_suffix = "200";
-        self::CreateIniFiles($default_suffix);
+        self::CreateIniFiles(UpgradeCommon::CONF_BACKUP_SUFFIX);
         self::MergeConfigFiles($configFiles, $suffix);
     }
 

@@ -16,6 +16,8 @@ class UpgradeCommon{
 
     const CONF_PYPO_GRP = "pypo";
     const CONF_WWW_DATA_GRP = "www-data";
+    const CONF_BACKUP_SUFFIX = "200";
+    const VERSION_NUMBER = "2.0.0";
     
     public static function connectToDatabase($p_exitOnError = true)
     {
@@ -34,6 +36,7 @@ class UpgradeCommon{
             $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
         }
     }
+
     
     public static function DbTableExists($p_name)
     {
@@ -54,7 +57,8 @@ class UpgradeCommon{
     public static function MigrateTablesToVersion($dir, $version)
     {
         $appDir = self::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $command = "php --php-ini $dir/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction migrations:migrate $version";
@@ -64,7 +68,8 @@ class UpgradeCommon{
     public static function BypassMigrations($dir, $version)
     {
         $appDir = self::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $command = "php --php-ini $dir/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction --add migrations:version $version";
@@ -81,7 +86,7 @@ class UpgradeCommon{
                              UpgradeCommon::CONF_FILE_API_CLIENT);
 
         // Backup the config files
-        $suffix = date("Ymdhis")."-".VERSION_NUMBER;
+        $suffix = date("Ymdhis")."-".UpgradeCommon::VERSION_NUMBER;
         foreach ($configFiles as $conf) {
             // do not back up monit cfg
             if (file_exists($conf)) {
@@ -91,8 +96,7 @@ class UpgradeCommon{
             }
         }
 
-        $default_suffix = CONF_BACKUP_SUFFIX;
-        self::CreateIniFiles($default_suffix);
+        self::CreateIniFiles(UpgradeCommon::CONF_BACKUP_SUFFIX);
         self::MergeConfigFiles($configFiles, $suffix);
     }
 
