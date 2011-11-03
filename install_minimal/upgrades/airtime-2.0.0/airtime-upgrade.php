@@ -15,14 +15,10 @@
  * format, and that's what this upgrade script will be for.
  */
 
-const VERSION_NUMBER = "2.0";
-
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
-set_include_path(__DIR__.'/../../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/application/models' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/application/configs' . PATH_SEPARATOR . get_include_path());
 require_once 'conf.php';
-require_once 'DB.php';
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/../../../airtime_mvc/application/configs/airtime-conf.php");
 
@@ -34,6 +30,8 @@ require_once 'UpgradeCommon.php';
 class AirtimeDatabaseUpgrade{
 
     public static function start(){
+        self::doDbMigration();
+
         self::SetDefaultTimezone();
         self::setPhpDefaultTimeZoneToSystemTimezone();
         self::convert_cc_playlist();
@@ -41,7 +39,6 @@ class AirtimeDatabaseUpgrade{
         self::convert_cc_show_days();
         self::convert_cc_show_instances();
 
-        self::doDbMigration();
         self::SetDefaultStreamSetting();
         self::GetOldLiquidsoapCfgAndUpdate();
     }
@@ -144,7 +141,7 @@ class AirtimeDatabaseUpgrade{
             }
         }
 
-        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20111102142811');
+        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20111103141311');
     }
 
     private static function SetDefaultStreamSetting()

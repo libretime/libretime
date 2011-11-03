@@ -5,5 +5,5 @@
 	 */
 
     $dir = __DIR__;
-    $command = "php $dir/../airtime_mvc/library/doctrine/migrations/doctrine-migrations.phar --configuration=$dir/../install_minimal/DoctrineMigrations/migrations.xml --db-configuration=$dir/../airtime_mvc/library/doctrine/migrations/migrations-db.php --no-interaction migrations:generate";
+    $command = "php --php-ini $dir/../install_minimal/airtime-php.ini $dir/../airtime_mvc/library/doctrine/migrations/doctrine-migrations.phar --configuration=$dir/../install_minimal/DoctrineMigrations/migrations.xml --db-configuration=$dir/../airtime_mvc/library/doctrine/migrations/migrations-db.php --no-interaction migrations:generate";
     system($command);
