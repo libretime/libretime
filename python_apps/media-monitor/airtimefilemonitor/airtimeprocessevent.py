@@ -1,6 +1,7 @@
 import socket
 import logging
 import time
+import os
 
 import pyinotify
 from pyinotify import ProcessEvent
@@ -90,8 +91,9 @@ class AirtimeProcessEvent(ProcessEvent):
     
     def process_IN_CREATE(self, event):
         self.logger.info("event: %s", event)
-        # record the timestamp of the time on IN_CREATE event
-        self.create_dict[event.pathname] = time.time()
+        if not event.dir:
+            # record the timestamp of the time on IN_CREATE event
+            self.create_dict[event.pathname] = time.time()
         
     #event.dir: True if the event was raised against a directory.
     #event.name: filename
@@ -268,8 +270,18 @@ class AirtimeProcessEvent(ProcessEvent):
         # this part is like a garbage collector
         for k, t in self.create_dict.items():
             now = time.time()
-            if now - t > 300:
-                del self.create_dict[k]
+            if now - t > 5:
+                # check if file exist
+                if os.path.exists(k):
+                    # check if file is open
+                    command = "lsof "+k
+                    f = os.popen(command)
+                    if not f.readlines():
+                        self.logger.info("Handling file: %s", k)
+                        self.handle_created_file(False, k, os.path.basename(k))
+                        del self.create_dict[k]
+                else:
+                        del self.create_dict[k]
 
         #check for any events received from Airtime.
         try:
