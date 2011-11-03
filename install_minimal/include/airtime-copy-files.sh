@@ -35,12 +35,29 @@ AIRTIMEROOT=$SCRIPTPATH/../../
 
 echo "* Creating /etc/airtime"
 mkdir -p /etc/airtime
-cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
+if [ ! -e /etc/airtime/airtime.conf ]; then
+    cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
+fi
+
+if [ ! -e /etc/airtime/api_client.cfg ]; then
 cp $AIRTIMEROOT/python_apps/api_clients/api_client.cfg /etc/airtime
+fi
+
+if [ ! -e /etc/airtime/recorder.cfg ]; then
 cp $AIRTIMEROOT/python_apps/show-recorder/recorder.cfg /etc/airtime
+fi
+
+if [ ! -e /etc/airtime/media-monitor.cfg ]; then
 cp $AIRTIMEROOT/python_apps/media-monitor/media-monitor.cfg /etc/airtime
+fi
+
+if [ ! -e /etc/airtime/pypo.cfg ]; then
 cp $AIRTIMEROOT/python_apps/pypo/pypo.cfg /etc/airtime
+fi
+
+if [ ! -e /etc/airtime/liquidsoap.cfg ]; then
 cp $AIRTIMEROOT/python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg /etc/airtime
+fi
 
 echo "* Creating /etc/cron.d/airtime-crons"
 HOUR=$(($RANDOM%24))
