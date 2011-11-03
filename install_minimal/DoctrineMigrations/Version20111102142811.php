@@ -15,7 +15,7 @@ class Version20111102142811 extends AbstractMigration
         
         // add soundcloud_link_to_file
         $cc_files = $schema->getTable('cc_files');
-        $cc_files->addColumn('soundcloud_link_to_file', 'string', array('length' => 255, 'notnull' => 0, 'default'=> NULL));
+        $cc_files->addColumn('soundcloud_link_to_file', 'string', array('length' => 4096, 'notnull' => 0, 'default'=> NULL));
     }
 
     public function down(Schema $schema)
