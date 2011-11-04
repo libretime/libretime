@@ -1330,45 +1330,95 @@ class Application_Model_Show {
         ->save();
     }
 
+    /**
+     * Given local current time $timeNow, returns the show being played right now.
+     * 
+     * @param type $timeNow     local current time
+     * @return type             show being played right now
+     */
     public static function GetCurrentShow($timeNow)
     {
         global $CC_CONFIG, $CC_DBC;
 
+        // Need this in the query below, so that we are NOT comparing UTC 
+        // timestamps si.starts/si.ends with local timestamps $timeNow
+        $timezoneInterval = Application_Model_Show::GetTimezoneIntervalString(true);
+        
         $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
-        ." AND si.starts <= TIMESTAMP '$timeNow'"
-        ." AND si.ends > TIMESTAMP '$timeNow'";
+        ." AND si.starts <= TIMESTAMP '$timeNow' + $timezoneInterval"
+        ." AND si.ends > TIMESTAMP '$timeNow' + $timezoneInterval";
 
+        // Convert back to local timezone
         $rows = $CC_DBC->GetAll($sql);
+        Application_Model_Show::ConvertToLocalTimeZone($rows, array("start_timestamp", "end_timestamp"));
         
         return $rows;
     }
 
-    public static function GetNextShows($timeNow, $limit)
+    /**
+     * Given local current time $timeNow, returns the next $limit number of 
+     * shows within 2 days if $timeEnd is not given; Otherwise, returns the 
+     * next $limit number of shows from $timeNow to $timeEnd, both in local time.
+     * 
+     * @param type $timeNow     local current time
+     * @param type $limit       number of shows to return
+     * @param type $timeEnd     optional: interval end time
+     * @return type             next $limit number of shows
+     */
+    public static function GetNextShows($timeNow, $limit, $timeEnd = "")
     {
         global $CC_CONFIG, $CC_DBC;
-
+        
+        // Need this in the query below, so that we are NOT comparing UTC 
+        // timestamps si.starts with local timestamps $timeNow
+        $timezoneInterval = Application_Model_Show::GetTimezoneIntervalString(true);
+        
+        // defaults to retrieving shows from next 2 days if no end time has
+        // been specified
+        if($timeEnd == "") {
+            $timeEnd = "'$timeNow' + INTERVAL '2 days' + $timezoneInterval";
+        } else {
+            $timeEnd = "'$timeEnd' + $timezoneInterval";
+        }
+        
         $sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
         ." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
-        ." AND si.starts >= TIMESTAMP '$timeNow'"
-        ." AND si.starts < TIMESTAMP '$timeNow' + INTERVAL '48 hours'"
+        ." AND si.starts >= TIMESTAMP '$timeNow' + $timezoneInterval"
+        ." AND si.starts < TIMESTAMP $timeEnd"
         ." ORDER BY si.starts"
         ." LIMIT $limit";
 
+        // Convert timestamps to local timezone
         $rows = $CC_DBC->GetAll($sql);
+        Application_Model_Show::ConvertToLocalTimeZone($rows, array("start_timestamp", "end_timestamp"));
+        
         return $rows;
     }
-
+    
+    /**
+     * Given a day of the week variable $day, based in local time, returns the 
+     * shows being played on this day of the week we're in right now.
+     * 
+     * @param type $day     day of the week
+     * @return type         shows being played on this day
+     */
     public static function GetShowsByDayOfWeek($day){
         //DOW FROM TIMESTAMP
         //The day of the week (0 - 6; Sunday is 0) (for timestamp values only)
 
         //SELECT EXTRACT(DOW FROM TIMESTAMP '2001-02-16 20:38:40');
         //Result: 5
-
+        
         global $CC_CONFIG, $CC_DBC;
+        
+        // Need this in the query below, so that we are NOT extracting DOW and WEEK
+        // information from UTC timestamps si.starts, and comparing with a local 
+        // timezone based variable $day and localtimestamp
+        $timezoneInterval = Application_Model_Show::GetTimezoneIntervalString();
+        
         $sql = "SELECT"
         ." si.starts as show_starts,"
         ." si.ends as show_ends,"
@@ -1377,11 +1427,58 @@ class Application_Model_Show {
         ." FROM $CC_CONFIG[showInstances] si"
         ." LEFT JOIN $CC_CONFIG[showTable] s"
         ." ON si.show_id = s.id"
-        ." WHERE EXTRACT(DOW FROM si.starts) = $day"
-        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)"
+        ." WHERE EXTRACT(DOW FROM si.starts + $timezoneInterval) = $day"
+        ." AND EXTRACT(WEEK FROM si.starts + $timezoneInterval) = EXTRACT(WEEK FROM localtimestamp)"
         ." ORDER BY si.starts";
+        
+        // Convert result timestamps to local timezone
+        $rows = $CC_DBC->GetAll($sql);
+        Application_Model_Show::ConvertToLocalTimeZone($rows, array("show_starts", "show_ends"));
 
-        return $CC_DBC->GetAll($sql);
+        return $rows;
+    }
+    
+    /**
+     * Convert the columns given in the array $columnsToConvert in the 
+     * database result $rows to local timezone.
+     * 
+     * @param type $rows                arrays of arrays containing database query result
+     * @param type $columnsToConvert    array of column names to convert
+     */
+    public static function ConvertToLocalTimeZone(&$rows, $columnsToConvert) {
+        $timezone = date_default_timezone_get();
+        
+        foreach($rows as &$row) {
+            foreach($columnsToConvert as $column) {
+                $row[$column] = Application_Model_DateHelper::ConvertToLocalDateTimeString($row[$column]);
+            }
+        }
+    }
+    
+    /**
+     * Returns the timezone difference as an INTERVAL string that can be used
+     * by SQL queries.
+     * 
+     * E.g., if local timezone is -4:30, this function returns:
+     * INTERVAL '-4 hours -30 minutes'
+     * 
+     * Note that if $fromLocalToUtc is true, then it returns:
+     * INTERVAL '4 hours 30 minutes'
+     * 
+     * @param type $fromLocalToUtc  true if we're converting from local to UTC 
+     */
+    public static function GetTimeZoneIntervalString($fromLocalToUtc = false) {
+        $date = new Application_Model_DateHelper;
+        $timezoneHour = $date->getLocalOffsetHour();
+        $timezoneMin = $date->getLocalOffsetMinute();
+        
+        // negate the hour and min if converting from local to UTC
+        if($fromLocalToUtc) {
+            $timezoneHour = -$timezoneHour;
+            $timezoneMin = -$timezoneMin;
+        }
+        
+        return "INTERVAL '$timezoneHour hours $timezoneMin minutes'";
     }
     
     public static function GetMaxLengths() {

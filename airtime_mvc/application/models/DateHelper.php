@@ -57,6 +57,21 @@ class Application_Model_DateHelper
     }
 
     /**
+     * Calculate and return the timestamp for end of day today
+     * in local time.
+     * 
+     * For example, if local time is 2PM on 2011-11-01,
+     * then the function would return 2011-11-02 00:00:00
+     * 
+     * @return  End of day timestamp in local timezone
+     */
+    function getDayEndTimestamp() {
+        $dateTime = new DateTime($this->getDate());
+        $dateTime->add(new DateInterval('P1D'));
+        return $dateTime->format('Y-m-d H:i:s');
+    }
+    
+    /**
      * Find the epoch timestamp difference from "now" to the beginning of today.
      */
     function getNowDayStartDiff()
@@ -79,6 +94,43 @@ class Application_Model_DateHelper
         return $this->_dateTime;
     }
 
+    /**
+     * Returns the offset in seconds, between local and UTC timezones.
+     * E.g., if local timezone is -4, this function
+     * returns -14400.
+     * 
+     * @return type     offset in int, between local and UTC timezones
+     */
+    function getLocalTimeZoneOffset() {
+        $dateTime = new DateTime("@".$this->_dateTime, new DateTimeZone("UTC"));
+        $timezone = new DateTimeZone(date_default_timezone_get());
+        return $timezone->getOffset($dateTime);
+    }
+    
+    /**
+     * Returns the offset hour in int, between local and UTC timezones.
+     * E.g., if local timezone is -4:30, this function
+     * returns -4.
+     * 
+     * @return type     offset hour in int, between local and UTC timezones
+     */
+    function getLocalOffsetHour() {
+        $offset = $this->getLocalTimeZoneOffset();
+        return (int)($offset / 3600);
+    }
+    
+    /**
+     * Returns the offset minute in int, between local and UTC timezones.
+     * E.g., if local timezone is -4:30, this function
+     * returns -30.
+     * 
+     * @return type     offset minute in int, between local and UTC timezones
+     */
+    function getLocalOffsetMinute() {
+        $offset = $this->getLocalTimeZoneOffset();
+        return (int)(($offset % 3600) / 60);
+    }
+    
     public static function TimeDiff($time1, $time2)
     {
         return strtotime($time2) - strtotime($time1);

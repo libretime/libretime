@@ -16,44 +16,28 @@
         getServerData();
 
         function updateWidget(){
-            var currentShow = sd.getCurrentShow();
-            var nextShows = sd.getNextShows();
-
-            var currentShowName = "";
-            var nextShowName = ""
-
-            if (currentShow.length > 0){
-                currentShowName = currentShow[0].getName();
-            }
-            
-            if (nextShows.length > 0){
-                nextShowName = nextShows[0].getName();
-            }
+            var shows = sd.getNextShows();
 
             tableString = "";
-            tableString += "<h3>"+options.text.onAirToday+"</h3>";
+            tableString += "<h3>" + options.text.onAirToday + "</h3>";
             tableString += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget no-playing-list small'>"+
                 "<tbody>";
             
-            var shows=currentShow.concat(nextShows);
-            
-            obj.empty();
             for (var i=0; i<shows.length; i++){
                 tableString +=
                 "<tr>" +
                 "<td class='time'>"+shows[i].getRange()+"</td>";
 
                 var url = shows[i].getURL();
-
-                if (url.length > 0)
-                    tableString += "<td><a href='"+shows[i].getURL()+"'>"+shows[i].getName()+"</a></td></tr>";
-                else
-                    tableString += "<td>"+shows[i].getName()+"</td></tr>";
-                    
+                if (url.length > 0) {
+                    tableString += "<td><a href='" + shows[i].getURL() + "'>" + shows[i].getName() + "</a></td></tr>";
+                } else {
+                    tableString += "<td>" + shows[i].getName() + "</td></tr>";
+                }  
             }
-
             tableString += "</tbody></table>";
             
+            obj.empty();
             obj.append(tableString);
         }
 
@@ -66,7 +50,7 @@
         }
 
         function getServerData(){
-            $.ajax({ url: options.sourceDomain + "api/live-info/", dataType:"jsonp", success:function(data){
+            $.ajax({ url: options.sourceDomain + "api/today-info/", dataType:"jsonp", success:function(data){
                         processData(data);
                   }, error:airtimeScheduleJsonpError});
             setTimeout(getServerData, options.updatePeriod*1000);
@@ -268,13 +252,17 @@ function ScheduleData(data){
     this.estimatedSchedulePosixTime;
 
     this.currentShow = new Array();
-    for (var i=0; i< data.currentShow.length; i++){
-        this.currentShow[i] = new Show(data.currentShow[i]);
+    if(data.currentShow != undefined) {
+        for (var i=0; i< data.currentShow.length; i++){
+            this.currentShow[i] = new Show(data.currentShow[i]);
+        }
     }
 
     this.nextShows = new Array();
-    for (var i=0; i< data.nextShow.length; i++){
-        this.nextShows[i] = new Show(data.nextShow[i]);
+    if(data.nextShow != undefined) {
+        for (var i=0; i< data.nextShow.length; i++) {
+            this.nextShows[i] = new Show(data.nextShow[i]);
+        }
     }
     
 
