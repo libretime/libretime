@@ -13,7 +13,7 @@ require_once(__DIR__.'/airtime-constants.php');
 
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
-echo PHP_EOL."*** Database Installation ***".PHP_EOL;
+echo PHP_EOL."* Database Installation".PHP_EOL;
 
 AirtimeInstall::CreateDatabaseUser();
 
@@ -44,7 +44,7 @@ if (isset($argv[1]) && $argv[1] == 'y') {
     AirtimeInstall::CreateDatabaseTables();
 }
 
-echo "* Setting Airtime version".PHP_EOL;
+echo " * Setting Airtime version".PHP_EOL;
 AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
 
@@ -57,13 +57,13 @@ if (AirtimeInstall::$databaseTablesCreated) {
     $ini = parse_ini_file(__DIR__."/airtime-install.ini");
 
     $stor_dir = realpath($ini["storage_dir"])."/";
-    echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
+    echo " * Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
 
     $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
     $result = $CC_DBC->query($sql);
     if (PEAR::isError($result)) {
-        echo "* Failed inserting {$stor_dir} in cc_music_dirs".PHP_EOL;
-        echo "* Message {$result->getMessage()}".PHP_EOL;
+        echo "  * Failed inserting {$stor_dir} in cc_music_dirs".PHP_EOL;
+        echo "  * Message {$result->getMessage()}".PHP_EOL;
         exit(1);
     }
 }

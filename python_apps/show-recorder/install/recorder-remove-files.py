@@ -24,23 +24,23 @@ except Exception, e:
 
 try:
     #remove init.d script
-    print "* Removing Show-Recorder init.d script"
+    print " * Removing Show-Recorder init.d Script"
     remove_file('/etc/init.d/airtime-show-recorder')
     
     #remove bin dir
-    print "* Removing Show-Recorder Program Directories"
+    print " * Removing Show-Recorder Program Directory"
     shutil.rmtree(config["bin_dir"], ignore_errors=True)
     
     #remove log dir
-    print "* Removing Show-Recorder Log Directory"
+    print " * Removing Show-Recorder Log Directory"
     shutil.rmtree(config["log_dir"], ignore_errors=True)
     
     #remove temporary media-storage dir
-    print "* Removing Show-Recorder Temporary Directory"
+    print " * Removing Show-Recorder Temporary Directory"
     shutil.rmtree(config["base_recorded_files"], ignore_errors=True)
     
     #remove monit files
-    print "* Removing Show-Recorder Monit Files"
+    print " * Removing Show-Recorder Monit Files"
     remove_file("/etc/monit/conf.d/monit-airtime-show-recorder.cfg")
     remove_file("/etc/monit/conf.d/monit-airtime-generic.cfg")
     

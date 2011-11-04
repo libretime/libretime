@@ -24,27 +24,27 @@ except Exception, e:
 
 try:
     #remove log rotate script
-    print "* Removing Pypo Log Rotate Script"
+    print " * Removing Pypo Log Rotate Script"
     remove_file("/etc/logrotate.d/airtime-liquidsoap")
 
     #remove init.d script
-    print "* Removing Pypo init.d Script"
+    print " * Removing Pypo init.d Script"
     remove_file("/etc/init.d/airtime-playout")
 
     #remove bin, cache, tmp and file dir
-    print "* Removing Pypo Program directories"
+    print " * Removing Pypo Program Directory"
     shutil.rmtree(config['bin_dir'], ignore_errors=True)
     shutil.rmtree(config['cache_dir'], ignore_errors=True)
     shutil.rmtree(config['file_dir'], ignore_errors=True)
     shutil.rmtree(config['tmp_dir'], ignore_errors=True)
 
     #remove liquidsoap and pypo log dir
-    print "* Removing Pypo Log Directories"
+    print " * Removing Pypo Log Directories"
     shutil.rmtree(config['liquidsoap_log_dir'], ignore_errors=True)
     shutil.rmtree(config['pypo_log_dir'], ignore_errors=True)
 
     #remove monit files
-    print "* Removing Pypo Monit Files"
+    print " * Removing Pypo Monit Files"
     remove_file("/etc/monit/conf.d/monit-airtime-playout.cfg")
     remove_file("/etc/monit/conf.d/monit-airtime-liquidsoap.cfg")
     remove_file("/etc/monit/conf.d/monit-airtime-generic.cfg")

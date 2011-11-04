@@ -16,7 +16,7 @@ def copy_dir(src_dir, dest_dir):
     if (os.path.exists(dest_dir)) and (dest_dir != "/"):
         shutil.rmtree(dest_dir)
     if not (os.path.exists(dest_dir)):
-        print "Copying directory "+os.path.realpath(src_dir)+" to "+os.path.realpath(dest_dir)
+        #print "Copying directory "+os.path.realpath(src_dir)+" to "+os.path.realpath(dest_dir)
         shutil.copytree(src_dir, dest_dir)
         
 def create_dir(path):
@@ -25,7 +25,7 @@ def create_dir(path):
     except Exception, e:
         pass
         
-PATH_INI_FILE = '/etc/airtime/recorder.cfg'
+PATH_INI_FILE = '/etc/airtime/media-monitor.cfg'
 
 # load config file
 try:
@@ -39,31 +39,23 @@ try:
     current_script_dir = get_current_script_dir()
     
     #copy monit files
-    shutil.copy('%s/../monit-airtime-show-recorder.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    shutil.copy('%s/../monit-airtime-media-monitor.cfg'%current_script_dir, '/etc/monit/conf.d/')
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
-        
-    #create temporary media-storage directory
-    print "Creating temporary media storage directory"
-    create_dir(config["base_recorded_files"])
-    #os.system("chmod -R 755 "+config["base_recorded_files"])
-    os.system("chown -R pypo:pypo "+config["base_recorded_files"])
     
-    #create log directories
-    print "Creating log directories"
-    create_dir(config["log_dir"])
-    os.system("chmod -R 755 " + config["log_dir"])
+    #create log dir
+    create_dir(config['log_dir'])
     os.system("chown -R pypo:pypo "+config["log_dir"])
-    
+
     #copy python files
     copy_dir("%s/.."%current_script_dir, config["bin_dir"])
-    
-    #set python file permissions
-    print "Setting permissions"
-    os.system("chmod -R 755 "+config["bin_dir"])
-    os.system("chown -R pypo:pypo "+config["bin_dir"])
-    
-    #copy init.d script
-    shutil.copy(config["bin_dir"]+"/airtime-show-recorder-init-d", "/etc/init.d/airtime-show-recorder")
 
+    #set executable permissions on python files
+    os.system("chown -R pypo:pypo "+config["bin_dir"])
+
+    #copy init.d script
+    shutil.copy(config["bin_dir"]+"/airtime-media-monitor-init-d", "/etc/init.d/airtime-media-monitor")
+    
 except Exception, e:
     print e
+
+

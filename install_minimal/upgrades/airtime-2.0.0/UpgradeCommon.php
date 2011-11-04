@@ -1,5 +1,8 @@
 <?php
 
+set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
+require_once('DB.php');
+
 /* These are helper functions that are common to each upgrade such as
  * creating connections to a database, backing up config files etc.
  */
@@ -13,6 +16,27 @@ class UpgradeCommon{
 
     const CONF_PYPO_GRP = "pypo";
     const CONF_WWW_DATA_GRP = "www-data";
+    const CONF_BACKUP_SUFFIX = "200";
+    const VERSION_NUMBER = "2.0";
+    
+    public static function connectToDatabase($p_exitOnError = true)
+    {
+        global $CC_DBC, $CC_CONFIG;
+        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
+        if (PEAR::isError($CC_DBC)) {
+            echo $CC_DBC->getMessage().PHP_EOL;
+            echo $CC_DBC->getUserInfo().PHP_EOL;
+            echo "Database connection problem.".PHP_EOL;
+            echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
+                 " with corresponding permissions.".PHP_EOL;
+            if ($p_exitOnError) {
+                exit(1);
+            }
+        } else {
+            $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+        }
+    }
+
     
     public static function DbTableExists($p_name)
     {
@@ -33,7 +57,8 @@ class UpgradeCommon{
     public static function MigrateTablesToVersion($dir, $version)
     {
         $appDir = self::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $command = "php --php-ini $dir/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction migrations:migrate $version";
@@ -43,7 +68,8 @@ class UpgradeCommon{
     public static function BypassMigrations($dir, $version)
     {
         $appDir = self::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
+        $command = "php --php-ini $dir/../../airtime-php.ini ".
+                    "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
                     "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction --add migrations:version $version";
@@ -60,7 +86,7 @@ class UpgradeCommon{
                              UpgradeCommon::CONF_FILE_API_CLIENT);
 
         // Backup the config files
-        $suffix = date("Ymdhis")."-".VERSION_NUMBER;
+        $suffix = date("Ymdhis")."-".UpgradeCommon::VERSION_NUMBER;
         foreach ($configFiles as $conf) {
             // do not back up monit cfg
             if (file_exists($conf)) {
@@ -70,8 +96,7 @@ class UpgradeCommon{
             }
         }
 
-        $default_suffix = "200";
-        self::CreateIniFiles($default_suffix);
+        self::CreateIniFiles(UpgradeCommon::CONF_BACKUP_SUFFIX);
         self::MergeConfigFiles($configFiles, $suffix);
     }
 

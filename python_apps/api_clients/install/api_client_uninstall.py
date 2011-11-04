@@ -17,5 +17,5 @@ except Exception, e:
     print 'Error loading config file: ', e
     sys.exit(1)
     
-print "Removing API Client files"
+print " * Removing API Client files"
 remove_path(config["bin_dir"])

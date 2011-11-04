@@ -23,6 +23,9 @@ monit unmonitor airtime-show-recorder >/dev/null 2>&1
 #monit unmonitor rabbitmq-server
 set -e
 
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
 #uninitialize Airtime services
 python $AIRTIMEROOT/python_apps/pypo/install/pypo-uninitialize.py
 python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-uninitialize.py

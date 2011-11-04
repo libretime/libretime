@@ -54,13 +54,17 @@ if (PEAR::isError($CC_DBC)) {
     //echo "* Connected to database".PHP_EOL;
     $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 }
+
 if(Application_Model_Preference::GetSupportFeedback() == '1'){
     $infoArray = Application_Model_Preference::GetSystemInfo(true);
+    
+    $url = 'http://stat.sourcefabric.org/index.php?p=airtime';
+    //$url = 'http://stat-dev.sourcefabric.org/index.php?p=airtime';
     
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_URL, 'http://stat.sourcefabric.org/index.php?p=airtime');
+    curl_setopt($ch, CURLOPT_URL, $url);
     
     $data = json_encode($infoArray);
     
