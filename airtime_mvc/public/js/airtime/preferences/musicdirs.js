@@ -69,6 +69,7 @@ function setWatchedDirEvents() {
 
             function(json) {
                 $("#watched-folder-section").empty();
+                $("#watched-folder-section").append("<h2>Manage Media Folders</h2>");
                 $("#watched-folder-section").append(json.subform);
                 setWatchedDirEvents();
             });
@@ -86,6 +87,7 @@ function setWatchedDirEvents() {
 
                 function(json) {
                     $("#watched-folder-section").empty();
+                    $("#watched-folder-section").append("<h2>Manage Media Folders</h2>");
                     $("#watched-folder-section").append(json.subform);
                     setWatchedDirEvents();
                 });
