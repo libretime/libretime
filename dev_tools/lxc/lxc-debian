@@ -28,6 +28,8 @@
 #  bridge br0 to physical ethX port to exist
 # -Automatically set-up locales to en_US.UTF-8
 
+#TODO: Check if Debian squeeze and then add "deb http://www.debian-multimedia.org squeeze main non-free" to /etc/apt/sources.list
+
 configure_debian()
 {
     rootfs=$1
@@ -82,7 +84,6 @@ EOF
 
     echo "root:root" | chroot $rootfs chpasswd
     echo "Root password is 'root', please change !"
-    echo "Please run 'dpkg-reconfigure locales' after log-in"
 
     return 0
 }
@@ -98,7 +99,8 @@ isc-dhcp-client,\
 netbase,\
 net-tools,\
 iproute,\
-openssh-server
+openssh-server,\
+wget
 
     cache=$1
     arch=$2
