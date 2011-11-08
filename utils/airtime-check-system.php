@@ -34,6 +34,17 @@ class AirtimeCheck {
             exit(1);
         }
     }
+    
+    public static function GetCpuInfo()
+    {
+        $command = "cat /proc/cpuinfo |grep -m 1 'model name' ";
+        exec($command, $output, $result);
+        
+        $choppedStr = explode(":", $output[0]);
+        $status = trim($choppedStr[1]);
+        //output_status("CPU", $status);
+        return $status;
+    }
 
     public static function GetAirtimeConf()
     {
@@ -45,6 +56,33 @@ class AirtimeCheck {
         }
 
         return $ini;
+    }
+    
+    public static function CheckOsTypeVersion(){
+        
+        exec("lsb_release -ds", $output, $rv);
+        if ($rv != 0){
+            $os_string = "Unknown";
+        } else {
+            $os_string = $output[0];
+        }
+        
+        unset($output);
+        
+        // Figure out if 32 or 64 bit
+        exec("uname -m", $output, $rv);
+        if ($rv != 0){
+            $machine = "Unknown";
+        } else {
+            $machine = $output[0];
+        }
+        
+        return $os_string." ".$machine;
+    }
+    
+    public static function GetServerType(){
+        $headerInfo = get_headers("http://localhost",1);
+        return $headerInfo['Server'][0];
     }
 
     public static function GetStatus($p_apiKey){
@@ -82,6 +120,9 @@ class AirtimeCheck {
             self::output_status("TOTAL_MEMORY_MBYTES", $data->platform->memory);
             self::output_status("TOTAL_SWAP_MBYTES", $data->platform->swap);
             self::output_status("AIRTIME_VERSION", $data->airtime_version);
+            self::output_status("OS", self::CheckOsTypeVersion());
+            self::output_status("CPU", self::GetCpuInfo());
+            self::output_status("WEB_SERVER", self::GetServerType());
             if ($data->services->pypo){
                 self::output_status("PLAYOUT_ENGINE_PROCESS_ID", $data->services->pypo->process_id);
                 self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $data->services->pypo->uptime_seconds);
