@@ -5,6 +5,7 @@
 
 # Authors:
 # Daniel Lezcano <daniel.lezcano@free.fr>
+# Martin Konecny <martin.konecny@sourcefabric.org>
 
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,6 +20,12 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+#Martin's customizations: Note that this script adds the following changes:
+# -Install debian squeeze instead of lenny
+# -Configure separate network stack from the LXC container host. Requires 
+#  bridge br0 to physical ethX port to exist
+# This script is to be used with http://wiki.debian.org/LXC
 
 configure_debian()
 {
