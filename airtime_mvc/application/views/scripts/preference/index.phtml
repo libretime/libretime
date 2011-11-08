@@ -1,7 +1,15 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong preferences">
-<h2>Preferences</h2>
-<?php
-    echo $this->statusMsg;
-    echo $this->form;
-?>
+<h2 style="float:left">Preferences</h2>
+<form method="post" action="/Preference/index" enctype="application/x-www-form-urlencoded">
+    
+    <div class="button-bar bottom" id="submit-element" style="float:right">
+        <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
+    </div>
+    <div style="clear:both"></div>
+    
+    <?php
+        echo $this->statusMsg;
+        echo $this->form;
+    ?>
+</form>
 </div>

@@ -323,7 +323,8 @@ function createDataTable(data) {
         "oLanguage": {
             "sSearch": ""
         },
-        "iDisplayLength": getNumEntriesPreference(data)
+        "iDisplayLength": getNumEntriesPreference(data),
+        "bStateSave": true
 	});
 	dTable.fnSetFilteringDelay(350);
     
