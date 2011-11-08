@@ -21,11 +21,12 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
-#Martin's customizations: Note that this script adds the following changes:
+# This script is to be used with http://wiki.debian.org/LXC
+# Martin's customizations: This script adds the following changes:
 # -Install debian squeeze instead of lenny
 # -Configure separate network stack from the LXC container host. Requires 
 #  bridge br0 to physical ethX port to exist
-# This script is to be used with http://wiki.debian.org/LXC
+# -Automatically set-up locales to en_US.UTF-8
 
 configure_debian()
 {
@@ -70,15 +71,10 @@ EOF
 $hostname
 EOF
 
-    # reconfigure some services
-    if [ -z "$LANG" ]; then
-	chroot $rootfs locale-gen en_US.UTF-8
-	chroot $rootfs update-locale LANG=en_US.UTF-8
-    else
-	chroot $rootfs locale-gen $LANG
-	chroot $rootfs update-locale LANG=$LANG
-    fi
-
+    chroot $rootfs sed -i s/"# en_US.UTF-8 UTF-8"/"en_US.UTF-8 UTF-8"/ /etc/locale.gen
+    chroot $rootfs locale-gen
+    chroot $rootfs update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
+    
     # remove pointless services in a container
     chroot $rootfs /usr/sbin/update-rc.d -f umountfs remove
     chroot $rootfs /usr/sbin/update-rc.d -f hwclock.sh remove
@@ -86,6 +82,7 @@ EOF
 
     echo "root:root" | chroot $rootfs chpasswd
     echo "Root password is 'root', please change !"
+    echo "Please run 'dpkg-reconfigure locales' after log-in"
 
     return 0
 }
