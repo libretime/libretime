@@ -151,7 +151,7 @@ class Application_Form_SupportSettings extends Zend_Form
         $submit = new Zend_Form_Element_Submit("submit");
         $submit->class = 'ui-button ui-state-default right-floated';
         $submit->setIgnore(true)
-                ->setLabel("Submit")
+                ->setLabel("Save")
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($submit);
     }
