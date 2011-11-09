@@ -310,13 +310,9 @@ class ScheduleController extends Zend_Controller_Action
             return;
         }
 
-        $start = explode(" ", $start_timestamp);
-        $end = explode(" ", $end_timestamp);
-        $startTime = explode(":", $start[1]);
-        $endTime = explode(":", $end[1]);
-        $dateInfo_s = getDate(strtotime($start_timestamp));
-        $dateInfo_e = getDate(strtotime($end_timestamp));
-
+        $dateInfo_s = getDate(strtotime(Application_Model_DateHelper::ConvertToLocalDateTimeString($start_timestamp)));
+        $dateInfo_e = getDate(strtotime(Application_Model_DateHelper::ConvertToLocalDateTimeString($end_timestamp)));
+        
 		$this->view->showContent = $show->getShowContent();
 		$this->view->timeFilled = $show->getTimeScheduled();
         $this->view->showName = $show->getName();
@@ -329,8 +325,8 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->e_wday = $dateInfo_e['weekday'];
         $this->view->e_month = $dateInfo_e['month'];
         $this->view->e_day = $dateInfo_e['mday'];
-        $this->view->startTime = sprintf("%d:%02d", $startTime[0], $startTime[1]);
-        $this->view->endTime = sprintf("%d:%02d", $endTime[0], $endTime[1]);
+        $this->view->startTime = sprintf("%02d:%02d", $dateInfo_s['hours'], $dateInfo_s['minutes']);
+        $this->view->endTime = sprintf("%02d:%02d", $dateInfo_e['hours'], $dateInfo_e['minutes']);
 
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
 		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
