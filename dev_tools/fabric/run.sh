@@ -15,7 +15,7 @@ for i in $(seq 0 $(($num1 -1)));
 do
     for j in $(seq 0 $(($num2 -1)));
     do
-        echo fab -f fab_setup.py ${ubuntu_versions[$i]} ${airtime_versions[$j]} $target 2>&1 | tee $LOG
-        fab -f fab_setup.py ${ubuntu_versions[$i]} ${airtime_versions[$j]} $target 2>&1 | tee $LOG
+        echo fab -f fab_setup.py ${ubuntu_versions[$i]} ${airtime_versions[$j]} $target shutdown
+        fab -f fab_setup.py ${ubuntu_versions[$i]} ${airtime_versions[$j]} $target shutdown 2>&1 | tee "${ubuntu_versions[$i]}_${airtime_versions[$j]}_$target.log"
     done
 done

@@ -26,6 +26,10 @@ env.vm_download_url = "http://host.sourcefabric.org/vms/VirtualBox"
 #fab -f fab_setup.py ubuntu_lucid_64 airtime_182_tar airtime_190_tar 
 
 
+def shutdown():
+    sudo("shutdown -hP now")
+    time.sleep(30)
+
 def test():
     x = sudo('airtime-check-system')
     print x.failed
@@ -174,8 +178,8 @@ def airtime_194_tar():
     sudo('cd ~/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
     
 def airtime_195_tar():
-    run('wget http://downloads.sourceforge.net/project/airtime/1.9.5-RC3/airtime-1.9.5-RC3.tar.gz')
-    run('tar xfz airtime-1.9.5-RC3.tar.gz')
+    run('wget http://downloads.sourceforge.net/project/airtime/1.9.5-RC4/airtime-1.9.5-RC4.tar.gz')
+    run('tar xfz airtime-1.9.5-RC4.tar.gz')
     sudo('cd ~/airtime-1.9.5/install_full/ubuntu && ./airtime-full-install')
 
 def airtime_latest_deb():
