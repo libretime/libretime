@@ -15,7 +15,6 @@ from xml.dom.minidom import parse
 from xml.dom.minidom import Node
 from xml.dom.minidom import Element
 
-
 env.user = 'martin'
 env.password = 'test'
 env.hosts = []
@@ -53,11 +52,10 @@ def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
         local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))
        
 
-def create_fresh_os(os_version, os_arch):
+def create_fresh_os(vm_name, update_virtualenv=False):
     
-    vm_name = 'Ubuntu_%s_%s'%(os_version, os_arch)
-    vm_vdi_file = 'Ubuntu_%s_%s.vdi'%(os_version, os_arch)
-    vm_xml_file = 'Ubuntu_%s_%s.xml'%(os_version, os_arch)
+    vm_vdi_file = '%s.vdi'%vm_name
+    vm_xml_file = '%s.xml'%vm_name
     vdi_dir = os.path.expanduser('~/tmp/vms/%s'%vm_name)
     vdi_snapshot_dir = os.path.expanduser('~/tmp/vms/%s/Snapshots'%vm_name)
     xml_dir = os.path.expanduser('~/.VirtualBox')
@@ -111,32 +109,38 @@ def create_fresh_os(os_version, os_arch):
     env.hosts.append(ip_addr)
     env.host_string = ip_addr
     
-    if os_version == "10.04":
+    if update_virtualenv:
         print "Lucid detected - updating python virtualenv"
         sudo('apt-get update')
         sudo('apt-get install -y python-setuptools')
         sudo('wget http://apt.sourcefabric.org/pool/main/p/python-virtualenv/python-virtualenv_1.4.9-3_all.deb')
-        #sudo('echo "Y" | gdebi python-virtualenv_1.4.9-3_all.deb')
-        
-        #for some weird reason have to run dpkg after gdebi for the package to be configured :/
+
         sudo('dpkg -i python-virtualenv_1.4.9-3_all.deb')
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
-        create_fresh_os('10.04', '32')
+        create_fresh_os('Ubuntu_10.04_32', update_virtualenv=True)
 
 def ubuntu_lucid_64(fresh_os=True):
     if (fresh_os):
-        create_fresh_os('10.04', '64')
+        create_fresh_os('Ubuntu_10.04_64', update_virtualenv=True)
 
 def ubuntu_natty_32(fresh_os=True):
     if (fresh_os):
-        create_fresh_os('11.04', '32')
+        create_fresh_os('Ubuntu_11.04_32')
     
 def ubuntu_natty_64(fresh_os=True):
     if (fresh_os):
-        create_fresh_os('11.04', '64')
-
+        create_fresh_os('Ubuntu_11.04_64')
+        
+def debian_squeeze_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Debian_Squeeze_32')
+        
+def debian_squeeze_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Debian_Squeeze_64')
+        
 def airtime_182_tar():
     sudo('apt-get update')
     sudo('apt-get install -y tar gzip unzip apache2 php5-pgsql libapache2-mod-php5 ' + \
