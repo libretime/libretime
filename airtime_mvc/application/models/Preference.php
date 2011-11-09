@@ -7,7 +7,7 @@ class Application_Model_Preference
         global $CC_CONFIG, $CC_DBC;
 
         //called from a daemon process
-        if(!Zend_Auth::getInstance()->hasIdentity()) {
+        if(!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
             $id = NULL;
         }
         else {
