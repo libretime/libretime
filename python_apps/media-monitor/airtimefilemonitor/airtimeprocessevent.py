@@ -274,7 +274,8 @@ class AirtimeProcessEvent(ProcessEvent):
                 # check if file exist
                 # When whole directory is copied to the organized dir,
                 # inotify doesn't fire IN_CLOSE_WRITE, hench we need special way of
-                # handling those cases. 
+                # handling those cases. We are manully calling handle_created_file
+                # function.
                 if os.path.exists(k):
                     # check if file is open
                     command = "lsof "+k
