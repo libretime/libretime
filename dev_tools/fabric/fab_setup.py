@@ -130,6 +130,11 @@ def airtime_194_tar():
     run('wget http://downloads.sourceforge.net/project/airtime/1.9.4/airtime-1.9.4.tar.gz')
     run('tar xfz airtime-1.9.4.tar.gz')
     sudo('cd ~/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
+    
+def airtime_195_RC1_tar():
+    run('wget http://downloads.sourceforge.net/project/airtime/1.9.5-RC1/airtime-1.9.5-RC1.tar.gz')
+    run('tar xfz airtime-1.9.5-RC1.tar.gz')
+    sudo('cd ~/airtime-1.9.5-RC1/install_full/ubuntu && ./airtime-full-install')
 
 def airtime_latest_deb():
     append('/etc/apt/sources.list', "deb http://apt.sourcefabric.org/ lucid main", use_sudo=True)
