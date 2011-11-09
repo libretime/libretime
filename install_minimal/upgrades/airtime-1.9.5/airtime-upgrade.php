@@ -1,6 +1,6 @@
 <?php
 require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
-class Airtime194Upgrade{
+class Airtime195Upgrade{
 
     const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
     const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
@@ -32,6 +32,6 @@ class Airtime194Upgrade{
     }
 }
 
-$values = parse_ini_file(Airtime194Upgrade::CONF_FILE_AIRTIME, true);
+$values = parse_ini_file(Airtime195Upgrade::CONF_FILE_AIRTIME, true);
 $phpDir = $values['general']['airtime_dir'];
-Airtime194Upgrade::InstallAirtimePhpServerCode($phpDir);
+Airtime195Upgrade::InstallAirtimePhpServerCode($phpDir);
