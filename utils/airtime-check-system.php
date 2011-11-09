@@ -20,6 +20,7 @@ if (substr($sapi_type, 0, 3) == 'cli') {
 class AirtimeCheck {
 
     private static $AIRTIME_STATUS_OK = true;
+    CONST UNKNOWN = "UNKNOWN";
     
     /**
      * Ensures that the user is running this PHP script with root
@@ -39,11 +40,17 @@ class AirtimeCheck {
     public static function GetCpuInfo()
     {
         $command = "cat /proc/cpuinfo |grep -m 1 'model name' ";
-        exec($command, $output, $result);
-        
+        exec($command, $output, $rv);
+
+        if ($rv != 0 || !isset($output[0]))
+            return self::UNKNOWN;
+            
         $choppedStr = explode(":", $output[0]);
+        
+        if (!isset($choppedStr[1]))
+            return self::UNKNOWN;
+            
         $status = trim($choppedStr[1]);
-        //output_status("CPU", $status);
         return $status;
     }
 
@@ -62,8 +69,8 @@ class AirtimeCheck {
     public static function CheckOsTypeVersion(){
         
         exec("lsb_release -ds", $output, $rv);
-        if ($rv != 0){
-            $os_string = "Unknown";
+        if ($rv != 0 || !isset($output[0])){
+            $os_string = self::UNKNOWN;
         } else {
             $os_string = $output[0];
         }
@@ -72,8 +79,8 @@ class AirtimeCheck {
         
         // Figure out if 32 or 64 bit
         exec("uname -m", $output, $rv);
-        if ($rv != 0){
-            $machine = "Unknown";
+        if ($rv != 0 || !isset($output[0])){
+            $machine = self::UNKNOWN;
         } else {
             $machine = $output[0];
         }
@@ -83,7 +90,11 @@ class AirtimeCheck {
     
     public static function GetServerType(){
         $headerInfo = get_headers("http://localhost",1);
-        return $headerInfo['Server'][0];
+        
+        if (!isset($headerInfo['Server'][0]))
+            return self::UNKNOWN;
+        else
+            return $headerInfo['Server'][0];
     }
 
     public static function GetStatus($p_apiKey){
