@@ -2305,3 +2305,43 @@ tfoot tr th	{
 }
 #stream_url {font-size:12px; line-height: 170%;}
 .stream-setting-content fieldset {border-width:0 1px 1px 1px;}
+
+/*---////////////////////    STREAM SETTINGS STATUS    ////////////////////---*/
+.stream-status {
+	border: 1px solid;
+	padding:2px 10px 4px 22px;
+	margin:2px 1px 10px 0px;
+	width: auto;
+}
+.stream-status h3 {
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 12px;
+	padding:0;
+	margin:5px 4px 2px 4px;
+}
+.stream-status p {
+	padding:0;
+	margin:2px 3px 1px 4px;
+	color:#4F4F4F;
+	font-size: 11px;
+}
+.stream-config dd.stream-status	{
+	padding:2px 10px 4px 22px;
+	margin:4px 0 10px 14px;
+	width: 65%;
+}
+.status-good {
+	background:#e3ffc9 url(images/stream_status.png) no-repeat 5px 5px;
+	border-color:#54b300;
+}
+.status-good h3 {
+	color:#54b300;
+}
+.status-error {
+	background:#ffeded url(images/stream_status.png) no-repeat 5px -128px;
+	border-color:#f90000;
+}
+.status-error h3 {
+	color:#DA0101;
+}
