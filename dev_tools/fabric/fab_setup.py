@@ -177,6 +177,10 @@ def airtime_182_tar():
     sudo('airtime-check-system')
     
 def airtime_194_tar():
+    #1.9.4 doesn't do apt-get update during install, and therefore the package index
+    #files are not resynchronized. Need to do this here.
+    sudo('apt-get update')
+    
     run('wget http://downloads.sourceforge.net/project/airtime/1.9.4/airtime-1.9.4.tar.gz')
     run('tar xfz airtime-1.9.4.tar.gz')
     sudo('cd ~/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
