@@ -1618,6 +1618,10 @@ div.success{
     width: 500px;
 }
 
+.preferences .padded {
+    margin-top: 5px; /* Firefox needs this */
+}
+
 dt.block-display, dd.block-display {
     display: block;
     float: none;

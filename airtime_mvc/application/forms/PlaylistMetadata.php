@@ -24,7 +24,7 @@ class Application_Form_PlaylistMetadata extends Zend_Form{
 
          // Add the comment element
         $this->addElement('button', 'new_playlist_submit', array(
-            'label'      => 'Submit',
+            'label'      => 'Save',
             'ignore'   => true
 		));
     }
