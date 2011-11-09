@@ -369,11 +369,16 @@ class Application_Model_Preference
     	$outputArray['NUM_OF_SCHEDULED_PLAYLISTS'] = Application_Model_Schedule::getSchduledPlaylistCount();
     	$outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(date("Y-m-d H:i:s"));
     	$outputArray['UNIQUE_ID'] = self::GetUniqueId();
+    	$outputArray['SAAS'] = self::GetPlanLevel();
+    	$outputArray['INSTALL_METHOD'] = self::GetInstallMethod();
 
     	$outputArray = array_merge($systemInfoArray, $outputArray);
 
     	$outputString = "\n";
     	foreach($outputArray as $key => $out){
+    	    if($key == 'SAAS' && ($out != '' || $out != 'disabled')){
+    	        continue;
+    	    }
     	    if($out != ''){
     		    $outputString .= $key.' : '.$out."\n";
     	    }
@@ -385,6 +390,20 @@ class Application_Model_Preference
     	}else{
     	    return $outputString;
     	}
+    }
+    
+    public static function GetInstallMethod(){
+        $easy_install = file_exists('/usr/bin/airtime-easy-install');
+        $debian_install = file_exists('/var/lib/dpkg/info/airtime.config');
+        if($debian_install){
+            if($easy_install){
+                return "easy_install";
+            }else{
+                return "debian_install";
+            }
+        }else{
+            return "manual_install";
+        }
     }
 
     public static function SetRemindMeDate($now){
@@ -446,7 +465,11 @@ class Application_Model_Preference
     }
 
     public static function GetPlanLevel(){
-        return self::GetValue("plan_level");
+        $plan = self::GetValue("plan_level");
+        if(trim($plan) == ''){
+            $plan = 'disabled';
+        }
+        return $plan;
     }
 
     public static function SetTrialEndingDate($date){
