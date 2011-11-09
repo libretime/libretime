@@ -20,6 +20,7 @@ if (substr($sapi_type, 0, 3) == 'cli') {
 class AirtimeCheck {
 
     private static $AIRTIME_STATUS_OK = true;
+    CONST UNKNOWN = "UNKNOWN";
     
     /**
      * Ensures that the user is running this PHP script with root
@@ -29,10 +30,28 @@ class AirtimeCheck {
     public static function ExitIfNotRoot()
     {
         // Need to check that we are superuser before running this.
-        if(exec("whoami") != "root"){
+        $user = exec("whoami");
+        if($user != "root" && $user != "www-data"){
             echo "Must be root user.\n";
             exit(1);
         }
+    }
+    
+    public static function GetCpuInfo()
+    {
+        $command = "cat /proc/cpuinfo |grep -m 1 'model name' ";
+        exec($command, $output, $rv);
+
+        if ($rv != 0 || !isset($output[0]))
+            return self::UNKNOWN;
+            
+        $choppedStr = explode(":", $output[0]);
+        
+        if (!isset($choppedStr[1]))
+            return self::UNKNOWN;
+            
+        $status = trim($choppedStr[1]);
+        return $status;
     }
 
     public static function GetAirtimeConf()
@@ -45,6 +64,37 @@ class AirtimeCheck {
         }
 
         return $ini;
+    }
+    
+    public static function CheckOsTypeVersion(){
+        
+        exec("lsb_release -ds", $output, $rv);
+        if ($rv != 0 || !isset($output[0])){
+            $os_string = self::UNKNOWN;
+        } else {
+            $os_string = $output[0];
+        }
+        
+        unset($output);
+        
+        // Figure out if 32 or 64 bit
+        exec("uname -m", $output, $rv);
+        if ($rv != 0 || !isset($output[0])){
+            $machine = self::UNKNOWN;
+        } else {
+            $machine = $output[0];
+        }
+        
+        return $os_string." ".$machine;
+    }
+    
+    public static function GetServerType(){
+        $headerInfo = get_headers("http://localhost",1);
+        
+        if (!isset($headerInfo['Server'][0]))
+            return self::UNKNOWN;
+        else
+            return $headerInfo['Server'][0];
     }
 
     public static function GetStatus($p_apiKey){
@@ -82,6 +132,9 @@ class AirtimeCheck {
             self::output_status("TOTAL_MEMORY_MBYTES", $data->platform->memory);
             self::output_status("TOTAL_SWAP_MBYTES", $data->platform->swap);
             self::output_status("AIRTIME_VERSION", $data->airtime_version);
+            self::output_status("OS", self::CheckOsTypeVersion());
+            self::output_status("CPU", self::GetCpuInfo());
+            self::output_status("WEB_SERVER", self::GetServerType());
             if ($data->services->pypo){
                 self::output_status("PLAYOUT_ENGINE_PROCESS_ID", $data->services->pypo->process_id);
                 self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $data->services->pypo->uptime_seconds);
