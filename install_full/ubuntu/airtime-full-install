@@ -22,6 +22,8 @@ echo "----------------------------------------------------"
 echo " 1. Install Packages"
 echo "----------------------------------------------------"
 
+apt-get update
+
 # Updated package list
 apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
 php-pear php5-gd postgresql odbc-postgresql python2.6 libsoundtouch-ocaml \
@@ -30,7 +32,7 @@ libesd0 icecast2 libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
 ecasound php5-curl mpg123 rabbitmq-server monit python-virtualenv patch
 
 #install packages with --force-yes option
-apt-get -y --force-yes libmp3lame-dev lame
+apt-get -y --force-yes install libmp3lame-dev lame
 
 if [ "$?" -ne "0" ]; then
    echo ""
