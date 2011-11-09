@@ -98,12 +98,16 @@ def create_fresh_os(os_version, os_arch):
     print "Please wait while attempting to acquire IP address"
         
     time.sleep(30)
-    
-    ret = local('VBoxManage --nologo guestproperty get "%s" /VirtualBox/GuestInfo/Net/0/V4/IP'%vm_name, capture=True)
-    
-    triple = ret.partition(':')
-    ip_addr = triple[2].strip(' \r\n')
-    print "Address found %s"%ip_addr
+
+    try_again = True
+    while try_again:
+        ret = local('VBoxManage --nologo guestproperty get "%s" /VirtualBox/GuestInfo/Net/0/V4/IP'%vm_name, capture=True)
+        triple = ret.partition(':')
+        ip_addr = triple[2].strip(' \r\n')
+        print "Address found %s"%ip_addr
+        
+        try_again = (len(ip_addr) == 0)
+        
     env.hosts.append(ip_addr)
     env.host_string = ip_addr
     
