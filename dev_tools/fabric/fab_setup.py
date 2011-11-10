@@ -45,12 +45,9 @@ def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
         print "File %s not found. Downloading" % vm_vdi_file
         local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_vdi_file, os.path.join(vdi_dir, vm_vdi_file)))
            
-    if os.path.exists(os.path.join(xml_dir, vm_xml_file)):
-        print "File %s already exists. No need to re-download" % os.path.join(xml_dir, vm_xml_file)
-    else:
-        print "File %s not found. Downloading" % vm_xml_file
-        local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))
-       
+    local("rm -f %s"%os.path.join(xml_dir, vm_xml_file))
+    local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))
+   
 
 def create_fresh_os(vm_name, update_virtualenv=False):
     
@@ -61,7 +58,7 @@ def create_fresh_os(vm_name, update_virtualenv=False):
     xml_dir = os.path.expanduser('~/.VirtualBox')
     vm_xml_path = os.path.join(xml_dir, vm_xml_file)
     
-
+    """
     if not os.path.exists("%s/vm_registered"%vdi_dir) and os.path.exists(vm_xml_path):
         #vm_xml file exists, but it wasn't registered. Did something go wrong on a previous attempt?
         #Let's attempt to correct this by completely removing the virtual machine.
@@ -79,6 +76,7 @@ def create_fresh_os(vm_name, update_virtualenv=False):
     
         os.remove(vm_xml_path)
         local("VBoxManage unregistervm %s --delete"% vm_name)
+    """
         
     download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file)
         
@@ -95,7 +93,7 @@ def create_fresh_os(vm_name, update_virtualenv=False):
     local('VBoxManage startvm %s'%vm_name)
     print "Please wait while attempting to acquire IP address"
         
-    time.sleep(30)
+    time.sleep(15)
 
     try_again = True
     while try_again:
@@ -105,6 +103,7 @@ def create_fresh_os(vm_name, update_virtualenv=False):
         print "Address found %s"%ip_addr
         
         try_again = (len(ip_addr) == 0)
+        time.sleep(1)
         
     env.hosts.append(ip_addr)
     env.host_string = ip_addr
@@ -187,12 +186,12 @@ def airtime_194_tar():
     
     run('wget http://downloads.sourceforge.net/project/airtime/1.9.4/airtime-1.9.4.tar.gz')
     run('tar xfz airtime-1.9.4.tar.gz')
-    sudo('cd ~/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
+    sudo('cd /home/martin/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
     
 def airtime_195_tar():
     run('wget http://downloads.sourceforge.net/project/airtime/1.9.5-RC4/airtime-1.9.5-RC4.tar.gz')
     run('tar xfz airtime-1.9.5-RC4.tar.gz')
-    sudo('cd ~/airtime-1.9.5/install_full/ubuntu && ./airtime-full-install')
+    sudo('cd /home/martin/airtime-1.9.5/install_full/ubuntu && ./airtime-full-install')
 
 def airtime_latest_deb():
     append('/etc/apt/sources.list', "deb http://apt.sourcefabric.org/ lucid main", use_sudo=True)
@@ -208,7 +207,7 @@ def airtime_git_branch(branch="devel"):
     sudo('apt-get update')
     sudo('apt-get install -y git-core')
     run('git clone https://github.com/sourcefabric/Airtime.git ~/airtime')
-    sudo('cd ~/airtime && git checkout %s && install_full/ubuntu/airtime-full-install || true' % branch)
+    sudo('cd /home/martin/airtime && git checkout %s && install_full/ubuntu/airtime-full-install || true' % branch)
 
 
 def airtime_200():
