@@ -134,7 +134,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
             'class'    => 'ui-button ui-state-default',
-            'label'    => 'Submit',
+            'label'    => 'Save',
             'decorators' => array(
                 'ViewHelper'
             )

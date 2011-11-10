@@ -241,7 +241,7 @@ select {
 	color:#a5a5a5;
 }
 
-.listen-control-block a {
+.listen-control-block a, .listen-control-button {
 	font-size:11px;
 	text-transform:uppercase;
 	padding:0;
@@ -251,9 +251,13 @@ select {
 	font-weight:bold;
 	margin-top:34px;
 	display:block;
+	text-align:center;
 	
 }
-.listen-control-block a span {
+.listen-control-button {
+	margin-top:6px;
+}
+.listen-control-block a span, .listen-control-button span {
 	background-color: #6e6e6e;
     background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
@@ -265,10 +269,13 @@ select {
 	text-shadow: #555555 0px -1px;
 	display:block;
 }
-.listen-control-block a:hover {
+.listen-control-button span {
+	padding:2px 10px;
+}
+.listen-control-block a:hover, .listen-control-button:hover {
 	border:1px solid #000;
 }
-.listen-control-block a:hover span {
+.listen-control-block a:hover span, .listen-control-button:hover span {
 	background-color: #292929;
     background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
@@ -1212,7 +1219,8 @@ button, input {
 
 .button-bar-top .input_text {
 	height:25px;
-	margin-right:6px
+	margin-right:6px;
+	padding: 0 3px;
 }
 .button-bar-top .input_text.hasDatepicker, .input_text.hasDatepicker {
 	background-image:url(images/input_with_calendar_bg.png);
@@ -1618,6 +1626,10 @@ div.success{
     width: 500px;
 }
 
+.preferences .padded {
+    margin-top: 5px; /* Firefox needs this */
+}
+
 dt.block-display, dd.block-display {
     display: block;
     float: none;
@@ -1944,7 +1956,16 @@ dd .info-text-small {
     /*width:98.5%;*/
 	min-width:152px;
 }
-
+.stream-config .display_field dd input[type="text"], .stream-config .display_field dd textarea {
+	min-width:99%;
+	padding: 4px 3px;
+}
+.stream-config .display_field dd textarea {
+	min-height:60px;
+}
+.simple-formblock .display_field dd {
+	min-width:68%;
+}
 .stream-config dd input[id$=port] {
     width:152px;
 }
@@ -2301,3 +2322,54 @@ tfoot tr th	{
 }
 #stream_url {font-size:12px; line-height: 170%;}
 .stream-setting-content fieldset {border-width:0 1px 1px 1px;}
+
+.stream-setting-content fieldset {
+    border-width: 0 1px 1px;
+}
+.stream-setting-content fieldset.display_field {
+    border: 1px solid #8F8F8F;
+    padding: 10px;
+}
+.stream-setting-content fieldset.display_field.closed {
+    border-width: 1px 0 0;
+}
+
+/*---////////////////////    STREAM SETTINGS STATUS    ////////////////////---*/
+.stream-status {
+	border: 1px solid;
+	padding:2px 10px 4px 22px;
+	margin:2px 1px 10px 0px;
+	width: auto;
+}
+.stream-status h3 {
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 12px;
+	padding:0;
+	margin:5px 4px 2px 4px;
+}
+.stream-status p {
+	padding:0;
+	margin:2px 3px 1px 4px;
+	color:#4F4F4F;
+	font-size: 11px;
+}
+.stream-config dd.stream-status	{
+	padding:2px 10px 4px 22px;
+	margin:4px 0 10px 14px;
+	width: 65%;
+}
+.status-good {
+	background:#e3ffc9 url(images/stream_status.png) no-repeat 5px 5px;
+	border-color:#54b300;
+}
+.status-good h3 {
+	color:#54b300;
+}
+.status-error {
+	background:#ffeded url(images/stream_status.png) no-repeat 5px -128px;
+	border-color:#f90000;
+}
+.status-error h3 {
+	color:#DA0101;
+}

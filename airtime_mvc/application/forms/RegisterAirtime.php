@@ -1,5 +1,7 @@
 <?php
 
+require_once 'customfilters/ImageSize.php';
+
 class Application_Form_RegisterAirtime extends Zend_Form
 {
 
@@ -102,12 +104,8 @@ class Application_Form_RegisterAirtime extends Zend_Form
 				->setRequired(false)
 				->setDecorators(array('File'))
 				->addValidator('Count', false, 1)
-				->addValidator('Extension', false, 'jpg,png,gif')
-				->addValidator('ImageSize', false, array(
-					'minwidth'	=> 200,
-					'minheight'	=> 200,
-					'maxwidth'	=> 600,
-					'maxheight'	=>	600));
+				->addValidator('Extension', false, 'jpg,jpeg,png,gif')
+				->addFilter('ImageSize');
 		$this->addElement($upload);
 		
         //enable support feedback
