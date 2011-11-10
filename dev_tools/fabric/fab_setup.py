@@ -49,7 +49,7 @@ def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
     local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))
    
 
-def create_fresh_os(vm_name, update_virtualenv=False):
+def create_fresh_os(vm_name, update_virtualenv=False, debian=False):
     
     vm_vdi_file = '%s.vdi'%vm_name
     vm_xml_file = '%s.xml'%vm_name
@@ -115,6 +115,9 @@ def create_fresh_os(vm_name, update_virtualenv=False):
         sudo('wget http://apt.sourcefabric.org/pool/main/p/python-virtualenv/python-virtualenv_1.4.9-3_all.deb')
 
         sudo('dpkg -i python-virtualenv_1.4.9-3_all.deb')
+        
+    if debian:
+        append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
@@ -134,11 +137,11 @@ def ubuntu_natty_64(fresh_os=True):
         
 def debian_squeeze_32(fresh_os=True):
     if (fresh_os):
-        create_fresh_os('Debian_Squeeze_32')
+        create_fresh_os('Debian_Squeeze_32', debian=True)
         
 def debian_squeeze_64(fresh_os=True):
     if (fresh_os):
-        create_fresh_os('Debian_Squeeze_64')
+        create_fresh_os('Debian_Squeeze_64', debian=True)
         
 def airtime_182_tar():
     sudo('apt-get update')
