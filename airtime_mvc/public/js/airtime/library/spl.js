@@ -52,7 +52,9 @@ function changeCueIn(event) {
 	}
 
 	$.post(url, {format: "json", cueIn: cueIn, pos: pos}, function(json){
-
+	    if(json.playlist_error == true){
+            alertPlaylistErrorAndReload();
+        }
         if(json.response.error) {
             showError(span, json.response.error);
 			return;
@@ -79,7 +81,9 @@ function changeCueOut(event) {
 	}
 
 	$.post(url, {format: "json", cueOut: cueOut, pos: pos}, function(json){
-
+	    if(json.playlist_error == true){
+            alertPlaylistErrorAndReload();
+        }
 		if(json.response.error) {
             showError(span, json.response.error);
 			return;
@@ -106,6 +110,9 @@ function changeFadeIn(event) {
 	}
 
 	$.post(url, {format: "json", fadeIn: fadeIn, pos: pos}, function(json){
+	    if(json.playlist_error == true){
+            alertPlaylistErrorAndReload();
+        }
 		if(json.response.error) {
 			return;
 		}
@@ -130,6 +137,9 @@ function changeFadeOut(event) {
 	}
 
 	$.post(url, {format: "json", fadeOut: fadeOut, pos: pos}, function(json){
+	    if(json.playlist_error == true){
+            alertPlaylistErrorAndReload();
+        }
 		if(json.response.error) {
 			return;
 		}
@@ -192,7 +202,9 @@ function openFadeEditor(event) {
 	highlightActive(this);
 
 	$.get(url, {format: "json", pos: pos}, function(json){
-
+	    if(json.playlist_error == true){
+            alertPlaylistErrorAndReload();
+        }
 		$("#crossfade_"+(pos)+"-"+(pos+1))
 			.empty()
 			.append(json.html)
@@ -228,7 +240,9 @@ function openCueEditor(event) {
 	highlightActive(li);
 
 	$.get(url, {format: "json", pos: pos}, function(json){
-
+	    if(json.playlist_error == true){
+            alertPlaylistErrorAndReload();
+        }
 		$("#cues_"+pos)
 			.empty()
 			.append(json.html)
@@ -245,7 +259,10 @@ function redrawDataTablePage() {
 }
 
 function setSPLContent(json) {
-
+    if(json.playlist_error == true){
+        alertPlaylistErrorAndReload();
+    }
+    
 	if(json.message) {
 		alert(json.message);
 		return;
@@ -329,6 +346,9 @@ function moveSPLItem(event, ui) {
 }
 
 function noOpenPL(json) {
+    if(json.playlist_error == true){
+        alertPlaylistErrorAndReload();
+    }
 	$("#side_playlist")
 		.empty()
 		.append(json.html);
@@ -364,6 +384,9 @@ function createPlaylistMetaForm(json) {
 			data = $("#side_playlist form").serialize();
 
 			$.post(url, data, function(json){
+			    if(json.playlist_error == true){
+			        alertPlaylistErrorAndReload();
+			    }
 				openDiffSPL(json);
 				//redraw the library list
 				redrawDataTablePage();
@@ -398,6 +421,9 @@ function deleteSPL() {
 	url = '/Playlist/delete-active/format/json';
 
 	$.post(url, function(json){
+	    if(json.playlist_error == true){
+            alertPlaylistErrorAndReload();
+        }
 		noOpenPL(json);
 		//redraw the library list
 		redrawDataTablePage();
@@ -405,7 +431,9 @@ function deleteSPL() {
 }
 
 function openDiffSPL(json) {
-
+    if(json.playlist_error == true){
+        alertPlaylistErrorAndReload();
+    }
 	$("#side_playlist")
 		.empty()
 		.append(json.html);
@@ -428,6 +456,9 @@ function editName() {
 	        url = '/Playlist/set-playlist-name';
 
 	        $.post(url, {format: "json", name: input.val()}, function(json){
+	            if(json.playlist_error == true){
+	                alertPlaylistErrorAndReload();
+	            }
                 input.addClass('element_hidden');
                 nameElement.text(json.playlistName);
                 redrawDataTablePage();
@@ -460,6 +491,9 @@ function setUpSPL() {
             var url = '/Playlist/set-playlist-fades';
 
 	        $.get(url, {format: "json"}, function(json){
+	            if(json.playlist_error == true){
+                    alertPlaylistErrorAndReload();
+                }
                 $("#spl_fade_in_main").find("span")
                     .empty()
                     .append(json.fadeIn);
@@ -491,7 +525,11 @@ function setUpSPL() {
         url = '/Playlist/set-playlist-description';
 
         $.post(url, {format: "json", description: description}, function(json){
-            textarea.val(json.playlistDescription);
+            if(json.playlist_error == true){
+                alertPlaylistErrorAndReload();
+            }else{
+                textarea.val(json.playlistDescription);
+            }
         });
     });
 
@@ -501,7 +539,11 @@ function setUpSPL() {
         url = '/Playlist/set-playlist-description';
 
         $.post(url, {format: "json"}, function(json){
-            textarea.val(json.playlistDescription);
+            if(json.playlist_error == true){
+                alertPlaylistErrorAndReload();
+            }else{
+                textarea.val(json.playlistDescription);
+            }
         });
     });
 
@@ -520,6 +562,9 @@ function setUpSPL() {
 	    }
 
 	    $.post(url, {format: "json", fadeIn: fadeIn}, function(json){
+	        if(json.playlist_error == true){
+                alertPlaylistErrorAndReload();
+            }
 		    if(json.response.error) {
 			    return;
 		    }
@@ -543,6 +588,9 @@ function setUpSPL() {
 	    }
 
 	    $.post(url, {format: "json", fadeOut: fadeOut}, function(json){
+	        if(json.playlist_error == true){
+                alertPlaylistErrorAndReload();
+            }
 		    if(json.response.error) {
 			    return;
 		    }
@@ -570,6 +618,13 @@ function setUpSPL() {
 	$("#spl_sortable").droppable();
 	$("#spl_sortable" ).bind( "drop", addSPLItem);
 }
+
+// Alert the error and reload the page
+// this function is used to resolve concurrency issue
+function alertPlaylistErrorAndReload(){
+    alert("The Playlist doesn't exist anymore!");
+    window.location.reload();
+} 
 
 $(document).ready(function() {
 	var currentlyOpenedSplId;

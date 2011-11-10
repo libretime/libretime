@@ -1,0 +1,13 @@
+* jjmenu library file has to be modified in order to handle some error cases.
+* see line 87 in jjemenu.js. Following code was added:
+
+/* jjmenu doesn't provide ability to add callback function
+in case of error. So the error handling has to be included in
+the library itself */
+if(data.show_error == true){
+    alert("The show doesn't exist anymore!");
+    window.location.reload();
+}else if(data.playlist_error == true){
+    alert("The playlist doesn't exist anymore!");
+    window.location.reload();
+}

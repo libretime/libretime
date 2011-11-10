@@ -36,9 +36,11 @@ class PlaylistController extends Zend_Controller_Action
 			$pl = Application_Model_Playlist::Recall($pl_sess->id);
 			if($pl === FALSE) {
 				unset($pl_sess->id);
-				return;
+				return false;
 			}
 			return $pl;
+        }else{
+            return false;
         }
     }
 
@@ -84,7 +86,10 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css');
 
 		$this->_helper->viewRenderer->setResponseSegment('spl');
-		$this->view->pl = $this->getPlaylist();
+		$pl = $this->getPlaylist();
+		if($pl !== false){
+		  $this->view->pl = $pl;
+		}
     }
 
     public function newAction()
@@ -113,6 +118,10 @@ class PlaylistController extends Zend_Controller_Action
 			$this->changePlaylist($pl_id);
 
 			$pl = $this->getPlaylist();
+    		if($pl === false){
+                $this->view->playlist_error = true;
+                return false;
+            }
 			$title = $pl->getPLMetaData("dc:title");
 			$desc = $pl->getPLMetaData("dc:description");
 
@@ -125,6 +134,10 @@ class PlaylistController extends Zend_Controller_Action
             $description = $this->_getParam('description', null);
 
 			$pl = $this->getPlaylist();
+            if($pl === false){
+                $this->view->playlist_error = true;
+                return false;
+            }
 
             if($title)
 			    $pl->setName($title);
@@ -152,6 +165,10 @@ class PlaylistController extends Zend_Controller_Action
 		}
 
 		$pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 
 		$this->view->pl = $pl;
 		$this->view->pl_id = $pl->getId();
@@ -167,6 +184,10 @@ class PlaylistController extends Zend_Controller_Action
 		if (!is_null($id)) {
 
 			$pl = $this->getPlaylist();
+    		if($pl === false){
+                $this->view->playlist_error = true;
+                return false;
+            }
 			$res = $pl->addAudioClip($id, $pos);
 
 			if (PEAR::isError($res)) {
@@ -191,6 +212,10 @@ class PlaylistController extends Zend_Controller_Action
 		$newPos = $this->_getParam('newPos');
 
 		$pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 
 		$pl->moveAudioClip($oldPos, $newPos);
 
@@ -215,6 +240,10 @@ class PlaylistController extends Zend_Controller_Action
 	    $positions = array_reverse($positions);
 
 		$pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 
 	    foreach ($positions as $pos) {
 	    	$pl->delAudioClip($pos);
@@ -236,6 +265,10 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
 		$pos = $this->_getParam('pos');
 		$pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 
 		if($request->isPost()) {
 			$cueIn = $this->_getParam('cueIn', null);
@@ -261,6 +294,10 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
 		$pos = $this->_getParam('pos');
 		$pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 
 		if($request->isPost()) {
 			$fadeIn = $this->_getParam('fadeIn', null);
@@ -296,7 +333,10 @@ class PlaylistController extends Zend_Controller_Action
 			if($pl_sess->id === $id){
 				unset($pl_sess->id);
 			}
-		}
+		}else{
+            $this->view->playlist_error = true;
+            return false;
+        }
 
 		$this->view->id = $id;
 		$this->view->html = $this->view->render('playlist/index.phtml');
@@ -305,6 +345,10 @@ class PlaylistController extends Zend_Controller_Action
     public function deleteActiveAction()
     {
         $pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 		Application_Model_Playlist::Delete($pl->getId());
 
 		$pl_sess = $this->pl_sess;
@@ -316,6 +360,10 @@ class PlaylistController extends Zend_Controller_Action
     public function closeAction()
     {
         $pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 		$this->closePlaylist($pl);
 
 		$this->view->html = $this->view->render('playlist/index.phtml');
@@ -325,6 +373,10 @@ class PlaylistController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
 		$pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 
 		if($request->isPost()) {
 			$fadeIn = $this->_getParam('fadeIn', null);
@@ -351,6 +403,10 @@ class PlaylistController extends Zend_Controller_Action
         $name = $this->_getParam('name', 'Unknown Playlist');
 
         $pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
         $pl->setName($name);
 
         $this->view->playlistName = $name;
@@ -360,6 +416,10 @@ class PlaylistController extends Zend_Controller_Action
     {
         $description = $this->_getParam('description', false);
         $pl = $this->getPlaylist();
+        if($pl === false){
+            $this->view->playlist_error = true;
+            return false;
+        }
 
         if($description != false) {
             $pl->setDescription($description);
@@ -373,28 +433,4 @@ class PlaylistController extends Zend_Controller_Action
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

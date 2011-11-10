@@ -144,7 +144,6 @@ class Application_Model_Subjects {
         global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT login_attempts FROM ".$CC_CONFIG['subjTable']." WHERE login='$login'";
         $res = $CC_DBC->getOne($sql);
-        Logging::log($res);
         if (PEAR::isError($res)) {
             return $res;
         }

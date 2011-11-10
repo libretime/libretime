@@ -4,7 +4,10 @@
 *
 */
 
-function scheduleRefetchEvents() {
+function scheduleRefetchEvents(json) {
+    if(json.show_error == true){
+        alert("The show instance doesn't exist anymore!")
+    }
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
 
@@ -282,7 +285,6 @@ function eventRender(event, element, view) {
 }
 
 function eventAfterRender( event, element, view ) {
-
     $(element)
 		.jjmenu("click",
 			[{get:"/Schedule/make-context-menu/format/json/id/#id#"}],
@@ -301,6 +303,9 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
 	$.post(url,
 		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
+		    if(json.show_error == true){
+                alertShowErrorAndReload();
+            }
 			if(json.error) {
                 alert(json.error);
 				revertFunc();
@@ -316,12 +321,15 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 	$.post(url,
 		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
 		function(json){
+		    if(json.show_error == true){
+                alertShowErrorAndReload();
+            }
 			if(json.error) {
                 alert(json.error);
 				revertFunc();
 			}
 
-            scheduleRefetchEvents();
+            scheduleRefetchEvents(json);
 		});
 }
 
@@ -428,6 +436,13 @@ function addQtipToSCIcons(ele){
             }
         })
     }
+}
+
+//Alert the error and reload the page
+//this function is used to resolve concurrency issue
+function alertShowErrorAndReload(){
+  alert("The show instance doesn't exist anymore!");
+  window.location.reload();
 }
 
 $(document).ready(function(){
