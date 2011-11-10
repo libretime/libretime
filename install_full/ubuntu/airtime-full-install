@@ -28,11 +28,11 @@ apt-get update
 apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
 php-pear php5-gd postgresql odbc-postgresql python2.6 libsoundtouch-ocaml \
 libvorbis-ocaml-dev libtaglib-ocaml libao-ocaml libmad-ocaml \
-libesd0 icecast2 libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
+libesd0 libportaudio2 libsamplerate0 libcamomile-ocaml-dev \
 ecasound php5-curl mpg123 rabbitmq-server monit python-virtualenv patch
 
 #install packages with --force-yes option
-apt-get -y --force-yes install libmp3lame-dev lame
+apt-get -y --force-yes install libmp3lame-dev lame icecast2
 
 if [ "$?" -ne "0" ]; then
    echo ""
