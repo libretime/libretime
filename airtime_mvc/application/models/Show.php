@@ -119,6 +119,17 @@ class Application_Model_Show {
                     WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
 
         $CC_DBC->query($sql);
+        
+        // check if we can safely delete the show
+        $showInstancesRow = CcShowInstancesQuery::create()
+            ->filterByDbShowId($this->_showId)
+            ->findOne();
+            
+        if(is_null($showInstancesRow)){
+            $sql = "DELETE FROM cc_show WHERE id = {$this->_showId}";
+            $CC_DBC->query($sql);
+        }
+        
         Application_Model_RabbitMq::PushSchedule();
     }
 
@@ -1002,7 +1013,6 @@ class Application_Model_Show {
             }
 
             $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-            Logging::log($sql);
             $rebroadcasts = $CC_DBC->GetAll($sql);
             
             self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $utcStartDateTime, $duration);

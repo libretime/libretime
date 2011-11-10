@@ -60,6 +60,10 @@ function findHosts(request, callback) {
 }
 
 function beginEditShow(data){
+    if(data.show_error == true){
+        alertShowErrorAndReload();
+        return false;
+    }
     $("#add-show-form")
         .empty()
         .append(data.newForm);
@@ -310,7 +314,7 @@ function setAddShowEvents() {
                         .append(json.newForm);
 
                     setAddShowEvents();
-                    scheduleRefetchEvents();
+                    scheduleRefetchEvents(json);
                 }
             });
 		});
@@ -431,6 +435,14 @@ $(document).ready(function() {
     $('input:text').setMask()
 	//setAddShowEvents();
 });
+
+//Alert the error and reload the page
+//this function is used to resolve concurrency issue
+function alertShowErrorAndReload(){
+    alert("The show instance doesn't exist anymore!");
+    window.location.reload();
+}
+
 
 $(window).resize(function(){
 	var windowWidth = $(this).width();

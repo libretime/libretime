@@ -84,6 +84,16 @@
 					
 					dynamicItems = true;
 					$.getJSON(uReplace(param[i].get), function(data) {
+					    /* jjmenu doesn't provide ability to add callback function
+					    in case of error. So the error handling has to be included in
+					    the library itself */
+					    if(data.show_error == true){
+					        alert("The show instance doesn't exist anymore!");
+					        window.location.reload();
+					    }else if(data.playlist_error == true){
+					        alert("The playlist doesn't exist anymore!");
+                            window.location.reload();
+					    }
 						for (var ii in data) {
 							putItem(data[ii]);
 						}

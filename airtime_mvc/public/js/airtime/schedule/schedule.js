@@ -74,6 +74,9 @@ function setScheduleDialogEvents(dialog) {
 		$.post(url, 
 			{format: "json", groupId: groupId},
 			function(json){
+			    if(json.show_error == true){
+                    alertShowErrorAndReload();
+                }
 				var dialog = $("#schedule_playlist_dialog");
 
 				setScheduleDialogHtml(json);
@@ -103,7 +106,9 @@ function dtDrawCallback() {
 }
 
 function makeScheduleDialog(dialog, json) {
-
+    if(json.show_error == true){
+        alertShowErrorAndReload();
+    }
 	dialog.find('#schedule_playlists').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
@@ -151,6 +156,9 @@ function makeScheduleDialog(dialog, json) {
 				$.post(url, 
 					{plId: pl_id, search: search},
 					function(json){
+					    if(json.show_error == true){
+					        alertShowErrorAndReload();
+					    }
 						var dialog = $("#schedule_playlist_dialog");
 
 						setScheduleDialogHtml(json);
@@ -171,7 +179,7 @@ function confirmCancelShow(show_instance_id){
         var url = "/Schedule/cancel-current-show/id/"+show_instance_id;
         $.ajax({
           url: url,
-          success: function(data){scheduleRefetchEvents();}
+          success: function(data){scheduleRefetchEvents(data);}
         });
     }
 }
@@ -181,6 +189,12 @@ function uploadToSoundCloud(show_instance_id){
     var url = "/Schedule/upload-to-sound-cloud";
     var span = $(window.triggerElement).find(".recording");
     
+    $.post(url,
+        {id: show_instance_id, format: "json"},
+        function(json){
+            scheduleRefetchEvents(json);
+    });
+    
     if(span.length == 0){
         span = $(window.triggerElement).find(".soundcloud");
         span.removeClass("soundcloud")
@@ -189,13 +203,6 @@ function uploadToSoundCloud(show_instance_id){
         span.removeClass("recording")
         .addClass("progress");
     }
-
-    $.post(url,
-        {id: show_instance_id, format: "json"},
-        function(){
-            scheduleRefetchEvents();
-    });
-
 }
 
 //used by jjmenu
@@ -208,6 +215,9 @@ function getId() {
 //end functions used by jjmenu
 
 function buildContentDialog(json){
+    if(json.show_error == true){
+        alertShowErrorAndReload();
+    }
 	var dialog = $(json.dialog);
 	
 	var viewportwidth;
@@ -263,7 +273,9 @@ function buildContentDialog(json){
 
 function buildScheduleDialog(json){
 	var dialog;
-
+	if(json.show_error == true){
+	    alertShowErrorAndReload();
+	}
     if(json.error) {
         alert(json.error);
         return;
@@ -289,9 +301,6 @@ function buildScheduleDialog(json){
     checkShowLength();
 }
 
-function buildEditDialog(json){
-
-}
 
 /**
  * Use user preference for time scale; defaults to month if preference was never set
@@ -379,6 +388,13 @@ function createFullCalendar(data){
 					}
 		});
     });
+}
+
+//Alert the error and reload the page
+//this function is used to resolve concurrency issue
+function alertShowErrorAndReload(){
+    alert("The show instance doesn't exist anymore!");
+    window.location.reload();
 }
 
 $(window).load(function() {

@@ -366,13 +366,31 @@ class Application_Model_ShowInstance {
 
     public function deleteShow()
     {
+        global $CC_DBC;
+        
         // see if it was recording show
         $recording = CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
             ->getDbRecord();
+        // get show id
+        $showId = CcShowInstancesQuery::create()
+            ->findPK($this->_instanceId)
+            ->getDbShowId();
+    
         CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
             ->delete();
+            
+        // check if we can safely delete the show
+        $showInstancesRow = CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->findOne();
+            
+        if(is_null($showInstancesRow)){
+            $sql = "DELETE FROM cc_show WHERE id = '$showId'";
+            $CC_DBC->query($sql);
+        }
+            
         Application_Model_RabbitMq::PushSchedule();
         if($recording){
             Application_Model_RabbitMq::SendMessageToShowRecorder("cancel_recording");
