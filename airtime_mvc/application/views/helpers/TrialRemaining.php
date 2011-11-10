@@ -11,6 +11,6 @@ class Airtime_View_Helper_TrialRemaining extends Zend_View_Helper_Abstract
         if($interval->format('%R') == '-'){
             return "Trial expired.";
         }
-        return $interval->format('%a days');
+        return $interval->format('%a');
     }
 }

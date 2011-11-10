@@ -32,19 +32,23 @@
   </div>
     <div class="listen-control-block"> 
         <a class="" href="#"><span>Listen</span></a> 
-    </div> 
-  <?php if($this->is_trial){?>
-  <div class="trial-info-block">
-    <ul>
-      <li>Trial remaining</li>
-      <li><?php echo $this->trial_remain?></li>
-    </ul>
-  </div>
-  <?php }?>
+    </div>
   <div class="personal-block">
     <ul>
       <li><span class="name"><?php echo $this->user ?></span> | <a href="/Login/logout">Logout</a></li>
     </ul>
   </div>
+  <?php if($this->is_trial){?>
+  <div class="trial-box">
+      <p>Your Trial expires in</p>
+      <div class="trial-box-calendar">
+           <span class="trial-box-calendar-white"><?php echo $this->trial_remain?></span>
+           <div class="trial-box-calendar-gray">days</div>
+      </div>
+      <div class="trial-box-button">
+            <a title="Purchase your copy of Airtime" href="#">Keep going on</a>
+      </div>
+  </div>
+  <?php }?> 
 </div>
 <div id="jquery_jplayer_1" class="jp-jplayer" style="width:0px; height:0px;"></div>
