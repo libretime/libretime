@@ -1212,7 +1212,8 @@ button, input {
 
 .button-bar-top .input_text {
 	height:25px;
-	margin-right:6px
+	margin-right:6px;
+	padding: 0 3px;
 }
 .button-bar-top .input_text.hasDatepicker, .input_text.hasDatepicker {
 	background-image:url(images/input_with_calendar_bg.png);
@@ -1948,7 +1949,16 @@ dd .info-text-small {
     /*width:98.5%;*/
 	min-width:152px;
 }
-
+.stream-config .display_field dd input[type="text"], .stream-config .display_field dd textarea {
+	min-width:99%;
+	padding: 4px 3px;
+}
+.stream-config .display_field dd textarea {
+	min-height:60px;
+}
+.simple-formblock .display_field dd {
+	min-width:68%;
+}
 .stream-config dd input[id$=port] {
     width:152px;
 }
@@ -2305,6 +2315,17 @@ tfoot tr th	{
 }
 #stream_url {font-size:12px; line-height: 170%;}
 .stream-setting-content fieldset {border-width:0 1px 1px 1px;}
+
+.stream-setting-content fieldset {
+    border-width: 0 1px 1px;
+}
+.stream-setting-content fieldset.display_field {
+    border: 1px solid #8F8F8F;
+    padding: 10px;
+}
+.stream-setting-content fieldset.display_field.closed {
+    border-width: 1px 0 0;
+}
 
 /*---////////////////////    STREAM SETTINGS STATUS    ////////////////////---*/
 .stream-status {
