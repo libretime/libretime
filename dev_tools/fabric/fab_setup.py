@@ -43,7 +43,9 @@ def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
         print "File %s already exists. No need to re-download" % os.path.join(vdi_dir, vm_vdi_file)
     else:
         print "File %s not found. Downloading" % vm_vdi_file
-        local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_vdi_file, os.path.join(vdi_dir, vm_vdi_file)))
+        tmpPath = local("mktemp", capture=True)
+        local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_vdi_file, tmpPath))
+        os.rename(tmpPath, os.path.join(vdi_dir, vm_vdi_file))
            
     local("rm -f %s"%os.path.join(xml_dir, vm_xml_file))
     local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))
@@ -192,8 +194,8 @@ def airtime_194_tar():
     sudo('cd /home/martin/airtime-1.9.4/install_full/ubuntu && ./airtime-full-install')
     
 def airtime_195_tar():
-    run('wget http://downloads.sourceforge.net/project/airtime/1.9.5-RC4/airtime-1.9.5-RC4.tar.gz')
-    run('tar xfz airtime-1.9.5-RC4.tar.gz')
+    run('wget http://downloads.sourceforge.net/project/airtime/1.9.5-RC5/airtime-1.9.5-RC5.tar.gz')
+    run('tar xfz airtime-1.9.5-RC5.tar.gz')
     sudo('cd /home/martin/airtime-1.9.5/install_full/ubuntu && ./airtime-full-install')
 
 def airtime_latest_deb():
