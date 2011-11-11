@@ -563,7 +563,7 @@ class ScheduleController extends Zend_Controller_Action
         foreach($js as $j){
             $data[$j["name"]] = $j["value"];
         }
-    Logging::log("id:".$data['add_show_id']);
+        
         $show = new Application_Model_Show($data['add_show_id']);
 
         $startDateModified = true;
