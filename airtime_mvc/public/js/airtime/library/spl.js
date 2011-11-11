@@ -622,7 +622,7 @@ function setUpSPL() {
 // Alert the error and reload the page
 // this function is used to resolve concurrency issue
 function alertPlaylistErrorAndReload(){
-    alert("The Playlist doesn't exist anymore!");
+    alert("The playlist doesn't exist anymore!");
     window.location.reload();
 } 
 
