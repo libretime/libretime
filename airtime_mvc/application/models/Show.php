@@ -616,13 +616,12 @@ class Application_Model_Show {
     }
 
     public function hasInstanceOnDate($p_dateTime){
-        return (!is_null($this->getInstanceOnDate($p_dateTeim)));
+        return (!is_null($this->getInstanceOnDate($p_dateTime)));
     }
 
     public function getInstanceOnDate($p_dateTime){
         global $CC_DBC;
-
-        $timestamp = $p_dateTime->getTimestamp();
+        $timestamp = $p_dateTime->format("Y-m-d H:i:s");
         
         $showId = $this->getId();
         $sql = "SELECT id FROM cc_show_instances"
@@ -908,7 +907,7 @@ class Application_Model_Show {
     public static function populateShowUntil($p_showId, $p_dateTime = NULL)
     {
         global $CC_DBC;
-        if (is_null($p_endTimestamp)) {
+        if (is_null($p_dateTime)) {
             $date = Application_Model_Preference::GetShowsPopulatedUntil();
 
             if ($date == "") {
@@ -1034,7 +1033,7 @@ class Application_Model_Show {
     private static function populateRepeatingShow($p_showRow, $p_dateTime, $p_interval)
     {
         global $CC_DBC;
-          
+                
         $show_id = $p_showRow["show_id"];
         $next_pop_date = $p_showRow["next_pop_date"];
         $first_show = $p_showRow["first_show"]; //non-UTC
@@ -1063,7 +1062,7 @@ class Application_Model_Show {
         
         while($utcStartDateTime->getTimestamp() <= $p_dateTime->getTimestamp() && 
                 ($utcStartDateTime->getTimestamp() < strtotime($last_show) || is_null($last_show))) {
-            
+                    
             $utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
             $sql = "SELECT timestamp '{$utcStart}' + interval '{$duration}'";
             $utcEndDateTime = new DateTime($CC_DBC->GetOne($sql), new DateTimeZone("UTC"));
@@ -1087,6 +1086,7 @@ class Application_Model_Show {
                 $ccShowInstance->save();
             }
 
+
             $show_instance_id = $ccShowInstance->getDbId();
             $showInstance = new Application_Model_ShowInstance($show_instance_id);
 
@@ -1104,6 +1104,7 @@ class Application_Model_Show {
             
             $dt->setTimezone(new DateTimeZone('UTC'));
             $utcStartDateTime = $dt;
+            
         }
         
         Application_Model_Show::setNextPop($start, $show_id, $day);
