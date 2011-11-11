@@ -66,7 +66,7 @@ function createTestShow($showNumber, $showTime, $duration = "1:00")
     //echo "show created, ID: $showId\n";
 
     // populating the show with a playlist
-    $instances = Application_Model_Show::getShows($showTime->format("Y-m-d H:i:s"), $showTime->format("Y-m-d H:i:s"));
+    $instances = Application_Model_Show::getShows($showTime, $showTime);
     $instance = array_pop($instances);
     $show = new Application_Model_ShowInstance($instance["instance_id"]);
     //echo "Adding playlist to show instance ".$show->getShowInstanceId()."\n";

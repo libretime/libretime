@@ -352,7 +352,10 @@ class ApiController extends Zend_Controller_Action
         $now = new DateTime($today_timestamp);
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
-        $this->view->shows = Application_Model_Show::getShows($today_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
+        
+        $this->view->shows = Application_Model_Show::getShows(Application_Model_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()), 
+                                                                Application_Model_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
+                                                                $excludeInstance=NULL, $onlyRecord=TRUE);
 
 
         $this->view->is_recording = false;

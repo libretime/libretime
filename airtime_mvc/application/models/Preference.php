@@ -119,12 +119,34 @@ class Application_Model_Preference
         $view->headTitle(self::GetHeadTitle());
     }
 
-    public static function SetShowsPopulatedUntil($timestamp) {
-        self::SetValue("shows_populated_until", $timestamp);
+    /**
+     * Set the furthest date that a never-ending show 
+     * should be populated until.
+     * 
+     * @param DateTime $dateTime
+     *        A row from cc_show_days table
+     */ 
+    public static function SetShowsPopulatedUntil($dateTime) {
+        self::SetValue("shows_populated_until", $dateTime->format("Y-m-d"));
     }
 
+    /**
+     * Get the furthest date that a never-ending show 
+     * should be populated until.
+     *
+     * Returns null if the value hasn't been set, otherwise returns
+     * a DateTime object representing the date. 
+     * 
+     * @return DateTime (in UTC Timezone)
+     */
     public static function GetShowsPopulatedUntil() {
-        return self::GetValue("shows_populated_until");
+        $date = self::GetValue("shows_populated_until");
+        
+        if ($date == ""){
+            return null;
+        } else {
+            return new DateTime($date, new DateTimeZone("UTC"));
+        }
     }
 
     public static function SetDefaultFade($fade) {

@@ -74,13 +74,13 @@ class Application_Model_RabbitMq
         $EXCHANGE = 'airtime-show-recorder';
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
     
-        $now = new DateTime("@".time());
-        $end_timestamp = new DateTime("@".(time() + 3600*2));
+        $now = new DateTime("@".time()); //in UTC timezone
+        $end_timestamp = new DateTime("@".(time() + 3600*2)); //in UTC timezone
 
         $temp['event_type'] = $event_type;
         $temp['server_timezone'] = Application_Model_Preference::GetTimezone();
         if($event_type = "update_schedule"){
-            $temp['shows'] = Application_Model_Show::getShows($now->format("Y-m-d H:i:s"), $end_timestamp->format("Y-m-d H:i:s"), $excludeInstance=NULL, $onlyRecord=TRUE);
+            $temp['shows'] = Application_Model_Show::getShows($now, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
         }
         $data = json_encode($temp);
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));

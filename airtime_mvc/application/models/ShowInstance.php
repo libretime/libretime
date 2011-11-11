@@ -51,11 +51,21 @@ class Application_Model_ShowInstance {
         return $show->getDbGenre();
     }
 
+    /**
+     * Return the start time of the Show (UTC time)
+     * @return string in format "Y-m-d H:i:s" (PHP time notation)
+     * TODO: make this function return a DateTime object instead.
+     */
     public function getShowStart()
     {
         return $this->_showInstance->getDbStarts();
     }
 
+    /**
+     * Return the end time of the Show (UTC time)
+     * @return string in format "Y-m-d H:i:s" (PHP time notation)
+     * TODO: make this function return a DateTime object instead.
+     */
     public function getShowEnd()
     {
         return $this->_showInstance->getDbEnds();
@@ -184,16 +194,18 @@ class Application_Model_ShowInstance {
 
         $sql = "SELECT timestamp '{$starts}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_starts = $CC_DBC->GetOne($sql);
+        $newStartsDateTime = new DateTime($new_starts, new DateTimeZone("UTC"));
 
         $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $new_ends = $CC_DBC->GetOne($sql);
+        $newEndsDateTime = new DateTime($new_ends, new DateTimeZone("UTC"));
 
-        $newStartsDateTime = new DateTime($new_starts, new DateTimeZone("UTC"));
+        
         if($today_timestamp > $newStartsDateTime->getTimestamp()) {
             return "Can't move show into past";
         }
 
-        $overlap = Application_Model_Show::getShows($new_starts, $new_ends, array($this->_instanceId));
+        $overlap = Application_Model_Show::getShows($newStartsDateTime, $newEndsDateTime, array($this->_instanceId));
         
         if(count($overlap) > 0) {
             return "Should not overlap shows";
@@ -247,6 +259,7 @@ class Application_Model_ShowInstance {
 
         //only need to check overlap if show increased in size.
         if(strtotime($new_ends) > strtotime($ends)) {
+            //TODO --martin
             $overlap =  Application_Model_Show::getShows($ends, $new_ends);
 
             if(count($overlap) > 0) {

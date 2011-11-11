@@ -68,8 +68,8 @@ class ScheduleController extends Zend_Controller_Action
 
     public function eventFeedAction()
     {
-        $start = $this->_getParam('start', null);
-		$end = $this->_getParam('end', null);
+        $start = new DateTime($this->_getParam('start', null));
+        $end = new DateTime($this->_getParam('end', null));
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -355,11 +355,14 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->show_error = true;
             return false;
         }
+        
         $start_timestamp = $show->getShowStart();
 		$end_timestamp = $show->getShowEnd();
 
         //check to make sure show doesn't overlap.
-        if(Application_Model_Show::getShows($start_timestamp, $end_timestamp, array($showInstanceId))) {
+        if(Application_Model_Show::getShows(new DateTime($start_timestamp, new DateTimeZone("UTC")), 
+                                            new DateTime($end_timestamp, new DateTimeZone("UTC")), 
+                                            array($showInstanceId))) {
             $this->view->error = "cannot schedule an overlapping show.";
             return;
         }
@@ -563,7 +566,7 @@ class ScheduleController extends Zend_Controller_Action
         foreach($js as $j){
             $data[$j["name"]] = $j["value"];
         }
-    Logging::log("id:".$data['add_show_id']);
+        
         $show = new Application_Model_Show($data['add_show_id']);
 
         $startDateModified = true;

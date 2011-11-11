@@ -736,7 +736,6 @@ class Application_Model_Show {
      */
     public static function create($data)
     {
-
         $startDateTime = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time']);
         $utcStartDateTime = clone $startDateTime;
         $utcStartDateTime->setTimezone(new DateTimeZone('UTC'));
@@ -888,7 +887,7 @@ class Application_Model_Show {
                 $showHost->save();
             }
         }
-
+        
         Application_Model_Show::populateShowUntil($showId);
         Application_Model_RabbitMq::PushSchedule();
         return $showId;
@@ -910,14 +909,14 @@ class Application_Model_Show {
         if (is_null($p_dateTime)) {
             $date = Application_Model_Preference::GetShowsPopulatedUntil();
 
-            if ($date == "") {
+            if (is_null($date)) {
                 $p_dateTime = new DateTime("now", new DateTimeZone('UTC'));
-                Application_Model_Preference::SetShowsPopulatedUntil($p_dateTime->format("Y-m-d"));
+                Application_Model_Preference::SetShowsPopulatedUntil($p_dateTime);
             } else {
-                $p_dateTime = new DateTime($date, new DateTimeZone('UTC'));
+                $p_dateTime = $date;
             }
         }
-
+        
         $sql = "SELECT * FROM cc_show_days WHERE show_id = $p_showId";
         $res = $CC_DBC->GetAll($sql);
 
@@ -937,8 +936,7 @@ class Application_Model_Show {
      * @param DateTime $p_dateTime
      *        DateTime object in UTC time.
      */ 
-    private static function populateShow($p_showRow, $p_dateTime) {
-                
+    private static function populateShow($p_showRow, $p_dateTime) {                
         if($p_showRow["repeat_type"] == -1) {
             Application_Model_Show::populateNonRepeatingShow($p_showRow, $p_dateTime);
         }
@@ -1033,7 +1031,7 @@ class Application_Model_Show {
     private static function populateRepeatingShow($p_showRow, $p_dateTime, $p_interval)
     {
         global $CC_DBC;
-                
+                               
         $show_id = $p_showRow["show_id"];
         $next_pop_date = $p_showRow["next_pop_date"];
         $first_show = $p_showRow["first_show"]; //non-UTC
@@ -1059,10 +1057,11 @@ class Application_Model_Show {
 
         $date = new Application_Model_DateHelper();
         $currentUtcTimestamp = $date->getUtcTimestamp();
-        
-        while($utcStartDateTime->getTimestamp() <= $p_dateTime->getTimestamp() && 
+                                
+        while($utcStartDateTime->getTimestamp()
+                <= $p_dateTime->getTimestamp() && 
                 ($utcStartDateTime->getTimestamp() < strtotime($last_show) || is_null($last_show))) {
-                    
+                                        
             $utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
             $sql = "SELECT timestamp '{$utcStart}' + interval '{$duration}'";
             $utcEndDateTime = new DateTime($CC_DBC->GetOne($sql), new DateTimeZone("UTC"));
@@ -1136,12 +1135,12 @@ class Application_Model_Show {
     }
 
     /**
-     * Get all the show instances in the given time range.
+     * Get all the show instances in the given time range (inclusive).
      *
-     * @param string $start_timestamp
-     *      In the format "YYYY-MM-DD HH:mm:ss".  This time is inclusive.
-     * @param string $end_timestamp
-     *      In the format "YYYY-MM-DD HH:mm:ss". This time is inclusive.
+     * @param DateTime $start_timestamp
+     *      In UTC time.
+     * @param DateTime $end_timestamp
+     *      In UTC time.
      * @param unknown_type $excludeInstance
      * @param boolean $onlyRecord
      * @return array
@@ -1153,7 +1152,7 @@ class Application_Model_Show {
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
         //if application is requesting shows past our previous populated until date, generate shows up until this point.
-        if ($showsPopUntil == "" || strtotime($showsPopUntil) < strtotime($end_timestamp)) {
+        if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $end_timestamp->getTimestamp()) {
             Application_Model_Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
@@ -1164,16 +1163,18 @@ class Application_Model_Show {
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id";
 
         //only want shows that are starting at the time or later.
+        $start_string = $start_timestamp->format("Y-m-d H:i:s");
+        $end_string = $end_timestamp->format("Y-m-d H:i:s");
         if ($onlyRecord) {
 
-            $sql = $sql." WHERE (starts >= '{$start_timestamp}' AND starts < timestamp '{$end_timestamp}')";
+            $sql = $sql." WHERE (starts >= '{$start_string}' AND starts < timestamp '{$end_string}')";
             $sql = $sql." AND (record = 1)";
         }
         else {
 
-            $sql = $sql." WHERE ((starts >= '{$start_timestamp}' AND starts < '{$end_timestamp}')
-                OR (ends > '{$start_timestamp}' AND ends <= '{$end_timestamp}')
-                OR (starts <= '{$start_timestamp}' AND ends >= '{$end_timestamp}'))";
+            $sql = $sql." WHERE ((starts >= '{$start_string}' AND starts < '{$end_string}')
+                OR (ends > '{$start_string}' AND ends <= '{$end_string}')
+                OR (starts <= '{$start_string}' AND ends >= '{$end_string}'))";
         }
 
 
@@ -1206,25 +1207,28 @@ class Application_Model_Show {
     /**
      * Generate all the repeating shows in the given range.
      *
-     * @param string $p_startTimestamp
-     *         In the format "YYYY-MM-DD HH:mm:ss"
-     * @param string $p_endTimestamp
-     *         In the format "YYYY-MM-DD HH:mm:ss"
+     * @param DateTime $p_startTimestamp
+     *         In UTC format.
+     * @param DateTime $p_endTimestamp
+     *         In UTC format.
      */
     public static function populateAllShowsInRange($p_startTimestamp, $p_endTimestamp)
     {
         global $CC_DBC;
-
-        if ($p_startTimestamp != "") {
+        
+        $endTimeString = $p_endTimestamp->format("Y-m-d H:i:s");
+        if (!is_null($p_startTimestamp)) {
+            $startTimeString = $p_startTimestamp->format("Y-m-d H:i:s");
             $sql = "SELECT * FROM cc_show_days
                     WHERE last_show IS NULL
-                    OR first_show < '{$p_endTimestamp}' AND last_show > '{$p_startTimestamp}'";
+                    OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
         }
         else {
-            $today_timestamp = date("Y-m-d");
+            $today_timestamp = new DateTime("now", new DateTimeZone("UTC"));
+            $today_timestamp_string = $today_timestamp->format("Y-m-d H:i:s");
             $sql = "SELECT * FROM cc_show_days
                     WHERE last_show IS NULL
-                    OR first_show < '{$p_endTimestamp}' AND last_show > '{$today_timestamp}'";
+                    OR first_show < '{$endTimeString}' AND last_show > '{$today_timestamp_string}'";
         }
 
         $res = $CC_DBC->GetAll($sql);
@@ -1236,19 +1240,17 @@ class Application_Model_Show {
 
     /**
      *
-     * @param string $start
-     *      In the format "YYYY-MM-DD HH:mm:ss"
-     * @param string $end
-     *         In the format "YYYY-MM-DD HH:mm:ss"
+     * @param DateTime $start
+     *          -in UTC time
+     * @param DateTime $end
+     *          -in UTC time
      * @param boolean $editable
      */
     public static function getFullCalendarEvents($start, $end, $editable=false)
     {
         $events = array();
 
-        $start_range = new DateTime($start);
-        $end_range = new DateTime($end);
-        $interval = $start_range->diff($end_range);
+        $interval = $start->diff($end);
         $days =  $interval->format('%a');
 
         $shows = Application_Model_Show::getShows($start, $end);
