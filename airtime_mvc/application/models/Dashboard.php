@@ -26,21 +26,21 @@ class Application_Model_Dashboard
                 if ($showInstance->isRecorded()){
                     //last item is a show instance
                     return array("name"=>$showInstance->getName(),
-                                "starts"=>$showInstance->getShowStart(),
-                                "ends"=>$showInstance->getShowEnd());
+                                "starts"=>$showInstance->getShowInstanceStart(),
+                                "ends"=>$showInstance->getShowInstanceEnd());
                 } else {
                     return null;
                 }
             } else {
                 //return the one that started later.
-                if ($row[0]["starts"] >= $showInstance->getShowStart()){
+                if ($row[0]["starts"] >= $showInstance->getShowInstanceStart()){
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
                 } else {
                     return array("name"=>$showInstance->getName(),
-                                "starts"=>$showInstance->getShowStart(),
-                                "ends"=>$showInstance->getShowEnd());
+                                "starts"=>$showInstance->getShowInstanceStart(),
+                                "ends"=>$showInstance->getShowInstanceEnd());
                 }
             }
         }
@@ -75,8 +75,8 @@ class Application_Model_Dashboard
                 //last item is a show instance
                 if ($showInstance->isRecorded()){
                     return array("name"=>$showInstance->getName(),
-                                "starts"=>$showInstance->getShowStart(),
-                                "ends"=>$showInstance->getShowEnd(),
+                                "starts"=>$showInstance->getShowInstanceStart(),
+                                "ends"=>$showInstance->getShowInstanceEnd(),
                                 "media_item_played"=>false,
                                 "record"=>true);
                 } else {
@@ -114,22 +114,22 @@ class Application_Model_Dashboard
                 if ($showInstance->isRecorded()){
                     //last item is a show instance
                     return array("name"=>$showInstance->getName(),
-                                "starts"=>$showInstance->getShowStart(),
-                                "ends"=>$showInstance->getShowEnd());
+                                "starts"=>$showInstance->getShowInstanceStart(),
+                                "ends"=>$showInstance->getShowInstanceEnd());
                 } else {
                     return null;
                 }
             } else {
                 //return the one that starts sooner.
                 
-                if ($row[0]["starts"] <= $showInstance->getShowStart()){
+                if ($row[0]["starts"] <= $showInstance->getShowInstanceStart()){
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
                 } else {
                     return array("name"=>$showInstance->getName(),
-                                "starts"=>$showInstance->getShowStart(),
-                                "ends"=>$showInstance->getShowEnd());
+                                "starts"=>$showInstance->getShowInstanceStart(),
+                                "ends"=>$showInstance->getShowInstanceEnd());
                 }
             }
         }

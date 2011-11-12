@@ -81,8 +81,8 @@ class Application_Model_Nowplaying
             $showId = $si->getShowId();
             $show = new Application_Model_Show($showId);
             
-            $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowStart());
-            $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowEnd());
+            $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowInstanceStart());
+            $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowInstanceEnd());
             
             //append show header row
             $data[] = self::CreateHeaderRow($show->getName(), $showStartDateTime->format("Y-m-d H:i:s"), $showEndDateTime->format("Y-m-d H:i:s"));

@@ -56,7 +56,7 @@ class Application_Model_ShowInstance {
      * @return string in format "Y-m-d H:i:s" (PHP time notation)
      * TODO: make this function return a DateTime object instead.
      */
-    public function getShowStart()
+    public function getShowInstanceStart()
     {
         return $this->_showInstance->getDbStarts();
     }
@@ -66,21 +66,21 @@ class Application_Model_ShowInstance {
      * @return string in format "Y-m-d H:i:s" (PHP time notation)
      * TODO: make this function return a DateTime object instead.
      */
-    public function getShowEnd()
+    public function getShowInstanceEnd()
     {
         return $this->_showInstance->getDbEnds();
     }
 
     public function getStartDate()
     {
-        $showStart = $this->getShowStart();
+        $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(" ", $showStart);
         return $showStartExplode[0];
     }
 
     public function getStartTime()
     {
-        $showStart = $this->getShowStart();
+        $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(" ", $showStart);
 
         return $showStartExplode[1];
@@ -150,7 +150,7 @@ class Application_Model_ShowInstance {
 
         if (!is_null($scheduleStarts)){
             $scheduleStartsEpoch = strtotime($scheduleStarts);
-            $showStartsEpoch = strtotime($this->getShowStart());
+            $showStartsEpoch = strtotime($this->getShowInstanceStart());
 
             $diff = $showStartsEpoch - $scheduleStartsEpoch;
 
@@ -183,8 +183,8 @@ class Application_Model_ShowInstance {
         $mins = abs($deltaMin%60);
 
         $today_timestamp = time();
-        $starts = $this->getShowStart();
-        $ends = $this->getShowEnd();
+        $starts = $this->getShowInstanceStart();
+        $ends = $this->getShowInstanceEnd();
         
         $startsDateTime = new DateTime($starts, new DateTimeZone("UTC"));
 
@@ -247,8 +247,8 @@ class Application_Model_ShowInstance {
         $mins = abs($deltaMin%60);
 
         $today_timestamp = date("Y-m-d H:i:s");
-        $starts = $this->getShowStart();
-        $ends = $this->getShowEnd();
+        $starts = $this->getShowInstanceStart();
+        $ends = $this->getShowInstanceEnd();
 
         if(strtotime($today_timestamp) > strtotime($starts)) {
             return "can't resize a past show";
@@ -303,7 +303,7 @@ class Application_Model_ShowInstance {
         $lastGroupId = $this->getLastGroupId();
 
         if (is_null($lastGroupId)) {
-            $groupId = $sched->add($this->_instanceId, $this->getShowStart(), null, $plId);
+            $groupId = $sched->add($this->_instanceId, $this->getShowInstanceStart(), null, $plId);
         }
         else {
             $groupId = $sched->addPlaylistAfter($this->_instanceId, $lastGroupId, $plId);
@@ -323,7 +323,7 @@ class Application_Model_ShowInstance {
         $lastGroupId = $this->getLastGroupId();
 
         if (is_null($lastGroupId)) {
-            $groupId = $sched->add($this->_instanceId, $this->getShowStart(), $file_id);
+            $groupId = $sched->add($this->_instanceId, $this->getShowInstanceStart(), $file_id);
         }
         else {
             $groupId = $sched->addFileAfter($this->_instanceId, $lastGroupId, $file_id);
@@ -440,8 +440,8 @@ class Application_Model_ShowInstance {
 
     public function getPercentScheduled()
     {
-        $start_timestamp = $this->getShowStart();
-        $end_timestamp = $this->getShowEnd();
+        $start_timestamp = $this->getShowInstanceStart();
+        $end_timestamp = $this->getShowInstanceEnd();
         $time_filled = $this->getTimeScheduled();
 
         $s_epoch = strtotime($start_timestamp);
@@ -460,8 +460,8 @@ class Application_Model_ShowInstance {
     {
         global $CC_DBC;
 
-        $start_timestamp = $this->getShowStart();
-        $end_timestamp = $this->getShowEnd();
+        $start_timestamp = $this->getShowInstanceStart();
+        $end_timestamp = $this->getShowInstanceEnd();
 
         $sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}' ";
         $length = $CC_DBC->GetOne($sql);
@@ -596,11 +596,11 @@ class Application_Model_ShowInstance {
 	}
 
     public function getShowEndGapTime(){
-		$showEnd = $this->getShowEnd();
+		$showEnd = $this->getShowInstanceEnd();
 		$lastItemEnd = $this->getLastAudioItemEnd();
 
 		if (is_null($lastItemEnd)){
-			$lastItemEnd = $this->getShowStart();
+			$lastItemEnd = $this->getShowInstanceStart();
 		}
 
 

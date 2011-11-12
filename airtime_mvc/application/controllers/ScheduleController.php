@@ -182,8 +182,8 @@ class ScheduleController extends Zend_Controller_Action
 
 		$params = '/format/json/id/#id#';
         
-        $showStartDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowStart());
-        $showEndDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowEnd());
+        $showStartDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowInstanceStart());
+        $showEndDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowInstanceEnd());
         
         $menu = array();
         
@@ -356,8 +356,8 @@ class ScheduleController extends Zend_Controller_Action
             return false;
         }
         
-        $start_timestamp = $show->getShowStart();
-		$end_timestamp = $show->getShowEnd();
+        $start_timestamp = $show->getShowInstanceStart();
+		$end_timestamp = $show->getShowInstanceEnd();
 
         //check to make sure show doesn't overlap.
         if(Application_Model_Show::getShows(new DateTime($start_timestamp, new DateTimeZone("UTC")), 
@@ -409,7 +409,7 @@ class ScheduleController extends Zend_Controller_Action
                 return false;
             }
             $originalShowName = $originalShow->getName();
-            $originalShowStart = $originalShow->getShowStart();
+            $originalShowStart = $originalShow->getShowInstanceStart();
 
             $timestamp  = strtotime($originalShowStart);
             $this->view->additionalShowInfo =
@@ -466,8 +466,8 @@ class ScheduleController extends Zend_Controller_Action
                     'add_show_genre' => $show->getGenre(),
                     'add_show_description' => $show->getDescription()));
                     
-        $startsDateTime = new DateTime($showInstance->getShowStart(), new DateTimeZone("UTC"));
-        $endsDateTime = new DateTime($showInstance->getShowEnd(), new DateTimeZone("UTC"));
+        $startsDateTime = new DateTime($showInstance->getShowInstanceStart(), new DateTimeZone("UTC"));
+        $endsDateTime = new DateTime($showInstance->getShowInstanceEnd(), new DateTimeZone("UTC"));
         
         $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
         $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
@@ -761,7 +761,7 @@ class ScheduleController extends Zend_Controller_Action
             }
             $show = new Application_Model_Show($showInstance->getShowId());
 
-            $show->cancelShow($showInstance->getShowStart());
+            $show->cancelShow($showInstance->getShowInstanceStart());
         }
     }
 
