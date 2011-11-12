@@ -1383,7 +1383,7 @@ class Application_Model_Show {
 
         // Convert back to local timezone
         $rows = $CC_DBC->GetAll($sql);
-        Application_Model_Show::ConvertToLocalTimeZone($rows, array("start_timestamp", "end_timestamp"));
+        Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
         
         return $rows;
     }
@@ -1424,7 +1424,7 @@ class Application_Model_Show {
 
         // Convert timestamps to local timezone
         $rows = $CC_DBC->GetAll($sql);
-        Application_Model_Show::ConvertToLocalTimeZone($rows, array("start_timestamp", "end_timestamp"));
+        Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
         
         return $rows;
     }
@@ -1478,7 +1478,7 @@ class Application_Model_Show {
      */
     public static function ConvertToLocalTimeZone(&$rows, $columnsToConvert) {
         $timezone = date_default_timezone_get();
-        
+                
         foreach($rows as &$row) {
             foreach($columnsToConvert as $column) {
                 $row[$column] = Application_Model_DateHelper::ConvertToLocalDateTimeString($row[$column]);
