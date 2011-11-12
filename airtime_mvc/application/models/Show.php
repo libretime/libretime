@@ -134,12 +134,17 @@ class Application_Model_Show {
     }
 
     /**
-     * Remove Show Instances that occur on days of the week specified
+     * This function is called when a repeating show is edited and the
+     * days that is repeats on have changed. More specifically, a day
+     * that the show originally repeated on has been "unchecked".
+     * 
+     * Removes Show Instances that occur on days of the week specified
      * by input array. For example, if array contains one value of "0",
-     * then all show instances that occur on Sunday are removed.
+     * (0 = Sunday, 1=Monday) then all show instances that occur on 
+     * Sunday are removed.
      *
      * @param array p_uncheckedDays
-     *      An array specifying which days
+     *      An array specifying which days should be removed.
      */
     public function removeUncheckedDaysInstances($p_uncheckedDays)
     {
@@ -307,8 +312,13 @@ class Application_Model_Show {
 
     /**
      * Deletes all future instances of the current show object
-     * from the show_instances table.
-     *
+     * from the show_instances table. This function is used when
+     * a show is being edited - in some cases, when a show is edited
+     * we just destroy all future show instances, and let another function
+     * regenerate them later on. Note that this isn't always the most
+     * desirable thing to do. Deleting a show instance and regenerating
+     * it cause any scheduled playlists within those show instances to
+     * be gone for good.
      */
     public function deleteAllInstances(){
         global $CC_DBC;
@@ -327,7 +337,6 @@ class Application_Model_Show {
     /**
      * Deletes all future rebroadcast instances of the current
      * show object from the show_instances table.
-     *
      */
     public function deleteAllRebroadcasts(){
         global $CC_DBC;
@@ -346,7 +355,9 @@ class Application_Model_Show {
 
     /**
      * Deletes all show instances of current show after a
-     * certain date.
+     * certain date. Note that although not enforced, $p_date
+     * should never be in the past, as we never want to allow
+     * deletion of shows that have already occured.
      *
      * @param string $p_date
      *      The date which to delete after, if null deletes from the current timestamp.
@@ -370,17 +381,16 @@ class Application_Model_Show {
 
         $CC_DBC->query($sql);
 
-        /*
-        CcShowInstancesQuery::create()
-            ->filterByDbShowId($showId)
-            ->filterByDbStartTime($p_date, Criteria::GREATER_EQUAL)
-            ->delete();
-        */
     }
 
     /**
      * Deletes all show instances of current show before a
-     * certain date.
+     * certain date. 
+     * 
+     * This function is used in the case where a repeating show is being
+     * edited and the start date of the first show has been changed more
+     * into the future. In this case, delete any show instances that
+     * exist before the new start date.
      *
      * @param string $p_date
      *      The date which to delete before
@@ -494,14 +504,15 @@ class Application_Model_Show {
     public function isStartDateTimeInPast(){
         $date = new Application_Model_DateHelper;
         $current_timestamp = $date->getTimestamp();
-        return ($current_timestamp > $this->getStartDate()." ".$this->getStartTime());
+        return ($current_timestamp > ($this->getStartDate()." ".$this->getStartTime()));
     }
 
     /**
      * Get the ID's of future instance of the current show.
      *
      * @return array
-     *      A simple array containing all future instance ID's
+     *      A simple array containing all ID's of show instance 
+     *  scheduled in the future.
      */
     public function getAllFutureInstanceIds(){
         global $CC_DBC;
@@ -523,6 +534,13 @@ class Application_Model_Show {
         return $instance_ids;
     }
 
+    /* Called when a show's duration is changed (edited).
+     * 
+     * @param array $p_data
+     *      array containing the POST data about the show from the 
+     *      browser.
+     * 
+     */
     private function updateDurationTime($p_data){
         //need to update cc_show_instances, cc_show_days
 
