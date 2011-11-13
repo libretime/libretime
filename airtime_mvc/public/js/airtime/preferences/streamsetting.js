@@ -30,7 +30,9 @@ function rebuildStreamURL(ele){
 function restrictOggBitrate(ele, on){
     var div = ele.closest("div")
     if(on){
-        div.find("select[id$=data-bitrate]").find("option[value='48']").attr('selected','selected');
+        if(parseInt(div.find("select[id$=data-bitrate]").val(),10) < 48){
+            div.find("select[id$=data-bitrate]").find("option[value='48']").attr("selected","selected");
+        }
         div.find("select[id$=data-bitrate]").find("option[value='24']").attr("disabled","disabled");
         div.find("select[id$=data-bitrate]").find("option[value='32']").attr("disabled","disabled");
     }else{
