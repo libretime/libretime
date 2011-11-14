@@ -516,6 +516,23 @@ class Application_Model_Preference
     public static function GetAirtimeVersion(){
         return self::GetValue("system_version");
     }
+    
+    public static function GetLatestVersion(){
+        $latest = self::GetValue("latest_version");
+        if($latest == null || strlen($latest) == 0) {
+            return self::GetAirtimeVersion();
+        } else {
+            return $latest;
+        }
+    }
+    
+    public static function SetLatestVersion($version){
+        $pattern = "/^[0-9]+\.[0-9]+\.[0-9]+/";
+        if(!preg_match($pattern, $version)) {
+            $version = self::GetAirtimeVersion();
+        }
+        self::SetValue("latest_version", $version);
+    }
 
     public static function SetUploadToSoundcloudOption($upload) {
         self::SetValue("soundcloud_upload_option", $upload);

@@ -53,6 +53,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $view->headLink()->appendStylesheet($baseUrl.'/css/redmond/jquery-ui-1.8.8.custom.css');
         $view->headLink()->appendStylesheet($baseUrl.'/css/pro_dropdown_3.css');
+        $view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css');
         $view->headLink()->appendStylesheet($baseUrl.'/css/styles.css');
     }
 
@@ -71,6 +72,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //scripts for now playing bar
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js','text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js','text/javascript');
     }

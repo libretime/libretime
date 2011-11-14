@@ -74,6 +74,18 @@ if(Application_Model_Preference::GetSupportFeedback() == '1'){
     $result = curl_exec($ch);
 }
 
+// Get latest version from stat server and store to db
+if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
+    $url = 'http://stat-dev.sourcefabric.org/airtime_latest_version';
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $result = curl_exec($ch);
+    
+    Application_Model_Preference::SetLatestVersion($result);
+}
+
 /**
  * Ensures that the user is running this PHP script with root
  * permissions. If not running with root permissions, causes the

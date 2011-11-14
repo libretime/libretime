@@ -36,7 +36,6 @@ class LibraryController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css');
         
 
         $this->_helper->layout->setLayout('library');

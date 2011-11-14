@@ -57,6 +57,31 @@ select {
 	display:block;
 }
 
+/* Version Notification Starts*/
+#version_icon {
+	position:absolute;
+	right:85px;
+	top:104px;
+	height:35px;
+	width:35px;
+	z-index:1000;
+	display:block;
+        cursor:pointer;
+        
+        background-repeat:no-repeat;
+        background-position:center; 
+}
+
+#ui-tooltip-version a {
+    color:#ff5d1a;
+    text-decoration:none;
+}
+
+#ui-tooltip-version {
+    font-size: 14px;
+}
+/* Version Notification Ends*/
+
 /* Clearfix */
 .clearfix:after, li:after { content: "."; display: block;	height: 0; clear: both;  visibility: hidden;}
 .clearfix, li {	display: inline-block; }

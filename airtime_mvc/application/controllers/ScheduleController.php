@@ -56,7 +56,6 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css');
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css');
         
         Application_Model_Schedule::createNewFormSections($this->view);
 

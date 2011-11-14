@@ -50,6 +50,13 @@ class Application_Model_StreamSetting {
         return $rows;
     }
     
+    /*
+     * function that take all the information of stream and sets them.
+     * This is used by stream setting via UI.
+     * 
+     * @param $data - array that contains all the data. $data is [][] which
+     * contains multiple stream information
+     */
     public static function setStreamSetting($data){
         global $CC_DBC;
         foreach($data as $key=>$d){
@@ -73,6 +80,20 @@ class Application_Model_StreamSetting {
                     $CC_DBC->query($sql);
                 }
             }
+        }
+    }
+    
+    /*
+     * Sets indivisual stream setting.
+     * 
+     * $data - data array. $data is [].
+     */
+    public static function setIndivisualStreamSetting($data){
+        global $CC_DBC;
+        
+        foreach($data as $keyname => $v){
+            $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
+            $CC_DBC->query($sql);
         }
     }
     
