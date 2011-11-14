@@ -528,10 +528,9 @@ class Application_Model_Preference
     
     public static function SetLatestVersion($version){
         $pattern = "/^[0-9]+\.[0-9]+\.[0-9]+/";
-        if(!preg_match($pattern, $version)) {
-            $version = self::GetAirtimeVersion();
+        if(preg_match($pattern, $version)) {
+            self::SetValue("latest_version", $version);
         }
-        self::SetValue("latest_version", $version);
     }
 
     public static function SetUploadToSoundcloudOption($upload) {

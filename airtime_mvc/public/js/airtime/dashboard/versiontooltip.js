@@ -29,7 +29,6 @@ function setupVersionQtip(){
                     button: true
                 }
             },
-            show: 'click',  /* Show on click */
             hide: false,    /* Don't hide on mouseout */
             position: {
                 my: "top right",
