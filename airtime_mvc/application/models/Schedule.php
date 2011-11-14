@@ -144,7 +144,7 @@ class Application_Model_Schedule {
         global $CC_CONFIG;
 
         $date = new Application_Model_DateHelper;
-        $timeNow = $date->getUtcTimestamp();
+        $timeNow = $date->getTimestamp();
         return array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
             "previous"=>Application_Model_Dashboard::GetPreviousItem($timeNow),

@@ -160,8 +160,10 @@ class PreferenceController extends Zend_Controller_Action
 
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
-        $form->setSetting($setting);
-        $form->startFrom();
+        if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
+            $form->setSetting($setting);
+            $form->startFrom();
+        }
         for($i=1; $i<=$num_of_stream; $i++){
             $subform = new Application_Form_StreamSettingSubForm();
             $subform->setPrefix($i);

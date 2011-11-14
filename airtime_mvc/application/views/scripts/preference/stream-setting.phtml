@@ -8,6 +8,7 @@
     <div style="clear:both"></div>
     <?php }?>
 <?php echo $this->statusMsg;?>
+<?php if($this->form->getElement('output_sound_device') != null){?>
     <fieldset class="padded">
         <legend>Hardware Audio Out</legend>
         <dl class="zend_form">
@@ -21,6 +22,7 @@
             </dd>
         </dl>
     </fieldset>
+<?php } ?>
     <?php
         for($i=1;$i<=$this->num_stream;$i++){
             echo $this->form->getSubform("s".$i."_subform");

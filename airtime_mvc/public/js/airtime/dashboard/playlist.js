@@ -13,7 +13,7 @@ var currentElem;
 var serverUpdateInterval = 5000;
 var uiUpdateInterval = 200;
 
-var timezoneOffset = 0;
+//var timezoneOffset = 0;
 
 //set to "development" if we are developing :). Useful to disable alerts
 //when entering production mode. 
@@ -167,11 +167,13 @@ function updatePlaybar(){
 
     $('#show-length').empty();
     if (currentShow.length > 0){
-        $('#show-length').text(convertDateToHHMM(currentShow[0].showStartPosixTime + timezoneOffset) + " - " + convertDateToHHMM(currentShow[0].showEndPosixTime + timezoneOffset));
+        //$('#show-length').text(convertDateToHHMM(currentShow[0].showStartPosixTime + timezoneOffset) + " - " + convertDateToHHMM(currentShow[0].showEndPosixTime + timezoneOffset));
+        $('#show-length').text(convertDateToHHMM(currentShow[0].showStartPosixTime) + " - " + convertDateToHHMM(currentShow[0].showEndPosixTime));
     }
 
     /* Column 2 update */
-    $('#time').text(convertDateToHHMMSS(estimatedSchedulePosixTime + timezoneOffset));
+    //$('#time').text(convertDateToHHMMSS(estimatedSchedulePosixTime + timezoneOffset));
+    $('#time').text(convertDateToHHMMSS(estimatedSchedulePosixTime));
 }
 
 function calcAdditionalData(currentItem){
@@ -211,7 +213,7 @@ function parseItems(obj){
     calcAdditionalShowData(obj.nextShow);
 
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
-    timezoneOffset = parseInt(obj.timezoneOffset)*1000;
+    //timezoneOffset = parseInt(obj.timezoneOffset)*1000;
     var date = new Date();
     localRemoteTimeOffset = date.getTime() - schedulePosixTime;
 }
