@@ -448,14 +448,24 @@ class Application_Model_StoredFile {
     
     /**
      * Get the URL to access this file using the server name/address that
-     * is specified in the airtime.conf config file.
+     * is specified in the airtime.conf config file. If either of these is
+     * not specified, then use values provided by the $_SERVER global variable.
      */
     public function getFileUrlUsingConfigAddress(){
         global $CC_CONFIG;
         
-        $serverName = $CC_CONFIG['baseUrl'];
-        $serverPort = $CC_CONFIG['basePort'];
-        
+        if (isset($CC_CONFIG['baseUrl'])){
+            $serverName = $CC_CONFIG['baseUrl'];
+        } else {
+            $serverName = $_SERVER['SERVER_NAME'];
+        }
+            
+        if (isset($CC_CONFIG['basePort'])){
+            $serverPort = $CC_CONFIG['basePort'];
+        } else {
+            $serverPort = $_SERVER['SERVER_PORT'];
+        }
+
         return $this->constructGetFileUrl($serverName, $serverPort);
     }
     
