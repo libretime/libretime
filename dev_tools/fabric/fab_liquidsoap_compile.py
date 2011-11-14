@@ -44,7 +44,7 @@ def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
     local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))
    
 
-def create_fresh_os(vm_name):
+def create_fresh_os(vm_name, debian=False):
     
     vm_vdi_file = '%s.vdi'%vm_name
     vm_xml_file = '%s.xml'%vm_name
@@ -84,6 +84,9 @@ def create_fresh_os(vm_name):
     env.hosts.append(ip_addr)
     env.host_string = ip_addr
     
+    if debian:
+        append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
+    
     
     
 def ubuntu_lucid_32(fresh_os=True):
@@ -101,13 +104,17 @@ def ubuntu_natty_32(fresh_os=True):
 def ubuntu_natty_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Ubuntu_11.04_64')
+        
+def debian_squeeze_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Debian_Squeeze_64', debian=True)
 
 
 def compile_liquidsoap(filename="liquidsoap"):
 
     sudo('apt-get update')
-    sudo('apt-get upgrade -y')
-    sudo('sudo apt-get install -y libocamlcvs-ocaml-dev ocaml-findlib libao-ocaml-dev libportaudio-ocaml-dev ' + \
+    sudo('apt-get upgrade -y --force-yes')
+    sudo('sudo apt-get install -y --force-yes libocamlcvs-ocaml-dev ocaml-findlib libao-ocaml-dev libportaudio-ocaml-dev ' + \
         'libmad-ocaml-dev libtaglib-ocaml-dev libalsa-ocaml-dev libtaglib-ocaml-dev libvorbis-ocaml-dev ' + \
         'libspeex-dev libspeexdsp-dev speex libladspa-ocaml-dev festival festival-dev ' + \
         'libsamplerate-dev libxmlplaylist-ocaml-dev libxmlrpc-light-ocaml-dev libflac-dev ' + \

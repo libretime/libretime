@@ -92,31 +92,25 @@ class Application_Model_Preference
     }
 
     public static function GetHeadTitle(){
-        /* Caches the title name as a session variable so we dont access
-         * the database on every page load. */
-        $defaultNamespace = new Zend_Session_Namespace('title_name');
-        if (isset($defaultNamespace->title)) {
-            $title = $defaultNamespace->title;
-        } else {
-            $title = self::GetValue("station_name");
-            $defaultNamespace->title = $title;
-        }
+        $title = self::GetValue("station_name");
+        $defaultNamespace->title = $title;
         if (strlen($title) > 0)
             $title .= " - ";
 
         return $title."Airtime";
     }
 
-    public static function SetHeadTitle($title, $view){
+    public static function SetHeadTitle($title, $view=null){
         self::SetValue("station_name", $title);
-        $defaultNamespace = new Zend_Session_Namespace('title_name');
-        $defaultNamespace->title = $title;
         Application_Model_RabbitMq::PushSchedule();
 
-        //set session variable to new station name so that html title is updated.
-        //should probably do this in a view helper to keep this controller as minimal as possible.
-        $view->headTitle()->exchangeArray(array()); //clear headTitle ArrayObject
-        $view->headTitle(self::GetHeadTitle());
+        // in case this is called from airtime-saas script
+        if($view !== null){
+            //set session variable to new station name so that html title is updated.
+            //should probably do this in a view helper to keep this controller as minimal as possible.
+            $view->headTitle()->exchangeArray(array()); //clear headTitle ArrayObject
+            $view->headTitle(self::GetHeadTitle());
+        }
     }
 
     /**
