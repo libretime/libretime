@@ -187,7 +187,7 @@ class PreferenceController extends Zend_Controller_Action
                     }
                 }
             }
-            if($form->isValid($post_data['output_sound_device'])){
+            if(Application_Model_Preference::GetPlanLevel() == 'disabled' && $form->isValid($post_data['output_sound_device'])){
                 $values['output_sound_device'] = $form->getValue('output_sound_device');
             }
             if(!$error){
