@@ -1,6 +1,6 @@
 import platform
 import shutil
-from subprocess import Popen
+from subprocess import Popen, PIPE
 import sys
 import os
 sys.path.append('/usr/lib/airtime/api_clients/')
@@ -11,6 +11,7 @@ if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
 
+"""
 def is_natty():
     try:
         f = open('/etc/lsb-release')
@@ -25,7 +26,27 @@ def is_natty():
         if split[0] == "DISTRIB_CODENAME" and (split[1] == "natty" or split[1] == "oneiric"):
             return True
     return False
-    
+"""
+
+"""
+    This function returns the codename of the host OS by querying lsb_release.
+    If lsb_release does not exist, or an exception occurs the codename returned
+    is 'unknown'
+"""
+def get_os_codename():
+    try:
+        p = Popen("which lsb_release", shell=True)
+        sts = os.waitpid(p.pid, 0)[1]
+        
+        if (sts == 0):
+            #lsb_release is available on this system. Let's get the os codename
+            p = Popen("lsb_release -sc", shell=True, stdout=PIPE)
+            return p.communicate()[0].strip('\r\n')
+    except Exception, e:
+        pass
+
+    return "unknown"
+        
 def get_current_script_dir():
     current_script_dir = os.path.realpath(__file__)
     index = current_script_dir.rindex('/')
@@ -56,6 +77,9 @@ def generate_liquidsoap_config(ss):
     
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
 
+#any debian/ubuntu codename in this et will automatically use the natty liquidsoap binary
+codenames_for_natty_binary = set(["natty", "oneiric", "precise", "squeeze"])
+
 # load config file
 try:
     config = ConfigObj(PATH_INI_FILE)
@@ -68,7 +92,10 @@ try:
     
     #select appropriate liquidsoap file for given system os/architecture
     architecture = platform.architecture()[0]
-    natty = is_natty()
+    #natty = is_natty()
+        
+    codename = get_os_codename()
+    natty = codename in codenames_for_natty_binary
     
     print "* Detecting system architecture for Liquidsoap"
     
