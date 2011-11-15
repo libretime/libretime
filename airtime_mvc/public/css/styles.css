@@ -70,6 +70,18 @@ select {
     background-repeat:no-repeat;
     background-position:center; 
 }
+#version_icon.outdated {
+	background-image:url(images/icon_outdated.png);
+}
+#version_icon.update2 {
+	background-image:url(images/icon_update2.png);
+}
+#version_icon.update {
+	background-image:url(images/icon_update.png);
+}
+#version_icon.uptodate {
+	background-image:url(images/icon_uptodate.png);
+}
 
 #ui-tooltip-version a {
     color:#ff5d1a;
@@ -2364,6 +2376,9 @@ tfoot tr th	{
 	padding:2px 10px 4px 22px;
 	margin:2px 1px 10px 0px;
 	width: auto;
+}
+dd .stream-status {
+	margin-bottom:1px;
 }
 .stream-status h3 {
 	font-size: 12px;
