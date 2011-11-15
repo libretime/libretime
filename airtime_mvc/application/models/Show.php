@@ -1196,6 +1196,7 @@ class Application_Model_Show {
     {
         global $CC_DBC;
 
+        //UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
         //if application is requesting shows past our previous populated until date, generate shows up until this point.

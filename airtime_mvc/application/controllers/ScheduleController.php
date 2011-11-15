@@ -68,7 +68,9 @@ class ScheduleController extends Zend_Controller_Action
     public function eventFeedAction()
     {
         $start = new DateTime($this->_getParam('start', null));
+        $start->setTimezone(new DateTimeZone("UTC"));
         $end = new DateTime($this->_getParam('end', null));
+        $end->setTimezone(new DateTimeZone("UTC"));
 
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -113,7 +115,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
-        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             try{
                 $show = new Application_Model_ShowInstance($showInstanceId);
             }catch(Exception $e){
@@ -123,8 +125,9 @@ class ScheduleController extends Zend_Controller_Action
 		    $error = $show->resizeShow($deltaDay, $deltaMin);
         }
 
-		if(isset($error))
+		if (isset($error)) {
 			$this->view->error = $error;
+		}
     }
 
     public function deleteShowAction()

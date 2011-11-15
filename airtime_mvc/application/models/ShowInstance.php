@@ -24,7 +24,7 @@ class Application_Model_ShowInstance {
     {
         return $this->_instanceId;
     }
-    
+
     public function getShow(){
         return new Application_Model_Show($this->getShowId());
     }
@@ -136,7 +136,7 @@ class Application_Model_ShowInstance {
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
         $this->_showInstance->updateDbTimeFilled($con);
     }
-    
+
     public function isDeleted()
     {
         $this->_showInstance->getDbDeletedInstance();
@@ -174,7 +174,7 @@ class Application_Model_ShowInstance {
     public function moveShow($deltaDay, $deltaMin)
     {
         global $CC_DBC;
-        
+
         if ($this->getShow()->isRepeating()){
             return "Can't drag and drop repeating shows";
         }
@@ -190,7 +190,7 @@ class Application_Model_ShowInstance {
         $today_timestamp = time();
         $starts = $this->getShowInstanceStart();
         $ends = $this->getShowInstanceEnd();
-        
+
         $startsDateTime = new DateTime($starts, new DateTimeZone("UTC"));
 
         if($today_timestamp > $startsDateTime->getTimestamp()) {
@@ -205,13 +205,13 @@ class Application_Model_ShowInstance {
         $new_ends = $CC_DBC->GetOne($sql);
         $newEndsDateTime = new DateTime($new_ends, new DateTimeZone("UTC"));
 
-        
+
         if($today_timestamp > $newStartsDateTime->getTimestamp()) {
             return "Can't move show into past";
         }
 
         $overlap = Application_Model_Show::getShows($newStartsDateTime, $newEndsDateTime, array($this->_instanceId));
-        
+
         if(count($overlap) > 0) {
             return "Should not overlap shows";
         }
@@ -229,13 +229,13 @@ class Application_Model_ShowInstance {
         $this->setShowStart($new_starts);
         $this->setShowEnd($new_ends);
         $this->correctScheduleStartTimes();
-        
+
         $show = new Application_Model_Show($this->getShowId());
         if(!$show->isRepeating()){
             $show->setShowFirstShow($new_starts);
             $show->setShowLastShow($new_ends);
         }
-        
+
         Application_Model_RabbitMq::PushSchedule();
     }
 
@@ -251,7 +251,7 @@ class Application_Model_ShowInstance {
 
         $mins = abs($deltaMin%60);
 
-        $today_timestamp = date("Y-m-d H:i:s");
+        $today_timestamp = Application_Model_DateHelper::ConvertToUtcDateTime(date("Y-m-d H:i:s"))->format("Y-m-d H:i:s");
         $starts = $this->getShowInstanceStart();
         $ends = $this->getShowInstanceEnd();
 
@@ -264,8 +264,11 @@ class Application_Model_ShowInstance {
 
         //only need to check overlap if show increased in size.
         if(strtotime($new_ends) > strtotime($ends)) {
-            //TODO --martin
-            $overlap =  Application_Model_Show::getShows($ends, $new_ends);
+
+            $utcStartDateTime = new DateTime($ends, new DateTimeZone("UTC"));
+            $utcEndDateTime = new DateTime($new_ends, new DateTimeZone("UTC"));
+
+            $overlap =  Application_Model_Show::getShows($utcStartDateTime, $utcEndDateTime);
 
             if(count($overlap) > 0) {
                 return "Should not overlap shows";
@@ -385,7 +388,7 @@ class Application_Model_ShowInstance {
     public function deleteShow()
     {
         global $CC_DBC;
-        
+
         // see if it was recording show
         $recording = CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
@@ -394,18 +397,18 @@ class Application_Model_ShowInstance {
         $showId = CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
             ->getDbShowId();
-    
+
         CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
             ->setDbDeletedInstance(true)
             ->save();
-            
+
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($showId)
             ->filterByDbDeletedInstance(false)
             ->findOne();
-            
+
         /* If we didn't find any instances of the show that haven't
          * been deleted, then just erase everything related to that show.
          * We can just delete, the show and the foreign key-constraint should
@@ -415,7 +418,7 @@ class Application_Model_ShowInstance {
                 ->filterByDbId($showId)
                 ->delete();
         }
-            
+
         Application_Model_RabbitMq::PushSchedule();
         if($recording){
             Application_Model_RabbitMq::SendMessageToShowRecorder("cancel_recording");
@@ -671,7 +674,7 @@ class Application_Model_ShowInstance {
             return new Application_Model_ShowInstance($id);
         }
     }
-    
+
     // returns number of show instances that ends later than $day
     public static function GetShowInstanceCount($day){
         global $CC_CONFIG, $CC_DBC;
