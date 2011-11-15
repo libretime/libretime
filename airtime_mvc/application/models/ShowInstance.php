@@ -136,6 +136,11 @@ class Application_Model_ShowInstance {
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
         $this->_showInstance->updateDbTimeFilled($con);
     }
+    
+    public function isDeleted()
+    {
+        $this->_showInstance->getDbDeletedInstance();
+    }
 
     public function correctScheduleStartTimes(){
         global $CC_DBC;
@@ -392,16 +397,23 @@ class Application_Model_ShowInstance {
     
         CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
-            ->delete();
+            ->setDbDeletedInstance(true)
+            ->save();
             
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($showId)
+            ->filterByDbDeletedInstance(false)
             ->findOne();
             
+        /* If we didn't find any instances of the show that haven't
+         * been deleted, then just erase everything related to that show.
+         * We can just delete, the show and the foreign key-constraint should
+         * take care of deleting all of its instances. */
         if(is_null($showInstancesRow)){
-            $sql = "DELETE FROM cc_show WHERE id = '$showId'";
-            $CC_DBC->query($sql);
+            CcShowQuery::create()
+                ->filterByDbId($showId)
+                ->delete();
         }
             
         Application_Model_RabbitMq::PushSchedule();

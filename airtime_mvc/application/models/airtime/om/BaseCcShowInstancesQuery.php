@@ -15,6 +15,7 @@
  * @method     CcShowInstancesQuery orderByDbOriginalShow($order = Criteria::ASC) Order by the instance_id column
  * @method     CcShowInstancesQuery orderByDbRecordedFile($order = Criteria::ASC) Order by the file_id column
  * @method     CcShowInstancesQuery orderByDbTimeFilled($order = Criteria::ASC) Order by the time_filled column
+ * @method     CcShowInstancesQuery orderByDbDeletedInstance($order = Criteria::ASC) Order by the deleted_instance column
  *
  * @method     CcShowInstancesQuery groupByDbId() Group by the id column
  * @method     CcShowInstancesQuery groupByDbStarts() Group by the starts column
@@ -25,6 +26,7 @@
  * @method     CcShowInstancesQuery groupByDbOriginalShow() Group by the instance_id column
  * @method     CcShowInstancesQuery groupByDbRecordedFile() Group by the file_id column
  * @method     CcShowInstancesQuery groupByDbTimeFilled() Group by the time_filled column
+ * @method     CcShowInstancesQuery groupByDbDeletedInstance() Group by the deleted_instance column
  *
  * @method     CcShowInstancesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowInstancesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -62,6 +64,7 @@
  * @method     CcShowInstances findOneByDbOriginalShow(int $instance_id) Return the first CcShowInstances filtered by the instance_id column
  * @method     CcShowInstances findOneByDbRecordedFile(int $file_id) Return the first CcShowInstances filtered by the file_id column
  * @method     CcShowInstances findOneByDbTimeFilled(string $time_filled) Return the first CcShowInstances filtered by the time_filled column
+ * @method     CcShowInstances findOneByDbDeletedInstance(boolean $deleted_instance) Return the first CcShowInstances filtered by the deleted_instance column
  *
  * @method     array findByDbId(int $id) Return CcShowInstances objects filtered by the id column
  * @method     array findByDbStarts(string $starts) Return CcShowInstances objects filtered by the starts column
@@ -72,6 +75,7 @@
  * @method     array findByDbOriginalShow(int $instance_id) Return CcShowInstances objects filtered by the instance_id column
  * @method     array findByDbRecordedFile(int $file_id) Return CcShowInstances objects filtered by the file_id column
  * @method     array findByDbTimeFilled(string $time_filled) Return CcShowInstances objects filtered by the time_filled column
+ * @method     array findByDbDeletedInstance(boolean $deleted_instance) Return CcShowInstances objects filtered by the deleted_instance column
  *
  * @package    propel.generator.airtime.om
  */
@@ -444,6 +448,23 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowInstancesPeer::TIME_FILLED, $dbTimeFilled, $comparison);
+	}
+
+	/**
+	 * Filter the query on the deleted_instance column
+	 * 
+	 * @param     boolean|string $dbDeletedInstance The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByDbDeletedInstance($dbDeletedInstance = null, $comparison = null)
+	{
+		if (is_string($dbDeletedInstance)) {
+			$deleted_instance = in_array(strtolower($dbDeletedInstance), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcShowInstancesPeer::DELETED_INSTANCE, $dbDeletedInstance, $comparison);
 	}
 
 	/**

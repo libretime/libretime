@@ -1176,7 +1176,7 @@ class Application_Model_Show {
         }
 
         $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, description,
-                color, background_color, file_id, cc_show_instances.id AS instance_id
+                color, background_color, file_id, deleted_instance, cc_show_instances.id AS instance_id
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id";
 
@@ -1275,20 +1275,22 @@ class Application_Model_Show {
         
         $today_timestamp = date("Y-m-d H:i:s");
         foreach ($shows as $show) {
-            $options = array();
 
-            //only bother calculating percent for week or day view.
-            if(intval($days) <= 7) {
-                $show_instance = new Application_Model_ShowInstance($show["instance_id"]);
-                $options["percent"] =  $show_instance->getPercentScheduled();
-            }
+            if ($show["deleted_instance"] != "t"){
+                $options = array();
 
-            if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
-                $options["editable"] = true;
-                $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
-            }
-            else {
-                $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
+                //only bother calculating percent for week or day view.
+                if(intval($days) <= 7) {
+                    $show_instance = new Application_Model_ShowInstance($show["instance_id"]);
+                    $options["percent"] =  $show_instance->getPercentScheduled();
+                }
+            
+                if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
+                    $options["editable"] = true;
+                    $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
+                } else {
+                    $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
+                }
             }
         }
 
@@ -1317,6 +1319,7 @@ class Application_Model_Show {
         $event["description"] = $show["description"];
         $event["showId"] = $show["show_id"];
         $event["record"] = intval($show["record"]);
+        $event["deleted_instance"] = $show["deleted_instance"];
         $event["rebroadcast"] = intval($show["rebroadcast"]);
         
         // get soundcloud_id

@@ -149,6 +149,11 @@
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
     <column name="time_filled" phpName="DbTimeFilled" type="TIME" />
+    <!-- The purpose of the deleted_instance column is to mark a show instance that was
+     deleted when it was part of repeating show. This is useful because the way shows work,
+     instances can be regenerated if we edit the show, which is unwanted behaviour. This column serves
+     to ensure that we don't regenerate the instance. -->
+    <column name="deleted_instance" phpName="DbDeletedInstance" type="BOOLEAN" required="true" defaultValue="false" />
     <behavior name="aggregate_column">
       <parameter name="name" value="time_filled" />
       <parameter name="foreign_table" value="cc_schedule" />
