@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 #Check if root user
 if [ `whoami` != 'root' ]; then

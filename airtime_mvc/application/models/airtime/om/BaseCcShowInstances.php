@@ -81,6 +81,13 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	protected $time_filled;
 
 	/**
+	 * The value for the deleted_instance field.
+	 * Note: this column has a database default value of: false
+	 * @var        boolean
+	 */
+	protected $deleted_instance;
+
+	/**
 	 * @var        CcShow
 	 */
 	protected $aCcShow;
@@ -129,6 +136,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	{
 		$this->record = 0;
 		$this->rebroadcast = 0;
+		$this->deleted_instance = false;
 	}
 
 	/**
@@ -298,6 +306,16 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		} else {
 			return $dt->format($format);
 		}
+	}
+
+	/**
+	 * Get the [deleted_instance] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbDeletedInstance()
+	{
+		return $this->deleted_instance;
 	}
 
 	/**
@@ -580,6 +598,26 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	} // setDbTimeFilled()
 
 	/**
+	 * Set the value of [deleted_instance] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbDeletedInstance($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->deleted_instance !== $v || $this->isNew()) {
+			$this->deleted_instance = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::DELETED_INSTANCE;
+		}
+
+		return $this;
+	} // setDbDeletedInstance()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -594,6 +632,10 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			}
 
 			if ($this->rebroadcast !== 0) {
+				return false;
+			}
+
+			if ($this->deleted_instance !== false) {
 				return false;
 			}
 
@@ -628,6 +670,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$this->instance_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
 			$this->file_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
 			$this->time_filled = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->deleted_instance = ($row[$startcol + 9] !== null) ? (boolean) $row[$startcol + 9] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -636,7 +679,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 9; // 9 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 10; // 10 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowInstances object", $e);
@@ -1060,6 +1103,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			case 8:
 				return $this->getDbTimeFilled();
 				break;
+			case 9:
+				return $this->getDbDeletedInstance();
+				break;
 			default:
 				return null;
 				break;
@@ -1093,6 +1139,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$keys[6] => $this->getDbOriginalShow(),
 			$keys[7] => $this->getDbRecordedFile(),
 			$keys[8] => $this->getDbTimeFilled(),
+			$keys[9] => $this->getDbDeletedInstance(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
@@ -1162,6 +1209,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			case 8:
 				$this->setDbTimeFilled($value);
 				break;
+			case 9:
+				$this->setDbDeletedInstance($value);
+				break;
 		} // switch()
 	}
 
@@ -1195,6 +1245,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if (array_key_exists($keys[6], $arr)) $this->setDbOriginalShow($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbRecordedFile($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setDbTimeFilled($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbDeletedInstance($arr[$keys[9]]);
 	}
 
 	/**
@@ -1215,6 +1266,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowInstancesPeer::INSTANCE_ID)) $criteria->add(CcShowInstancesPeer::INSTANCE_ID, $this->instance_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::FILE_ID)) $criteria->add(CcShowInstancesPeer::FILE_ID, $this->file_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::TIME_FILLED)) $criteria->add(CcShowInstancesPeer::TIME_FILLED, $this->time_filled);
+		if ($this->isColumnModified(CcShowInstancesPeer::DELETED_INSTANCE)) $criteria->add(CcShowInstancesPeer::DELETED_INSTANCE, $this->deleted_instance);
 
 		return $criteria;
 	}
@@ -1284,6 +1336,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$copyObj->setDbOriginalShow($this->instance_id);
 		$copyObj->setDbRecordedFile($this->file_id);
 		$copyObj->setDbTimeFilled($this->time_filled);
+		$copyObj->setDbDeletedInstance($this->deleted_instance);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1801,6 +1854,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$this->instance_id = null;
 		$this->file_id = null;
 		$this->time_filled = null;
+		$this->deleted_instance = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

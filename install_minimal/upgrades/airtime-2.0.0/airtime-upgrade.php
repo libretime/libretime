@@ -103,6 +103,7 @@ class AirtimeDatabaseUpgrade{
         $showDays = CcShowDaysQuery::create()->find();
         
         foreach ($showDays as $sd){
+            /*
             $dt = new DateTime($sd->getDbFirstShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
             $sd->setDbFirstShow($dt->format("Y-m-d"));
@@ -113,6 +114,11 @@ class AirtimeDatabaseUpgrade{
             $sd->setDbLastShow($dt->format("Y-m-d"));
             
             $sd->save();
+            * */
+            
+            $sd->setDbTimezone(date_default_timezone_get())->save();
+            
+            
         }
     }
     
@@ -141,7 +147,7 @@ class AirtimeDatabaseUpgrade{
             }
         }
 
-        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20111103141311');
+        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20111114222927');
     }
 
     private static function SetDefaultStreamSetting()

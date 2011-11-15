@@ -22,18 +22,19 @@ echo "----------------------------------------------------"
 echo " 1. Install Packages"
 echo "----------------------------------------------------"
 
+apt-get update
+
 # Updated package list
 apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
-php-pear php5-gd postgresql odbc-postgresql python2.6 lame libsoundtouch-ocaml \
-libmp3lame-dev libtaglib-ocaml libao-ocaml libmad-ocaml ecasound \
-libesd0 icecast2 libportaudio2 libsamplerate0 rabbitmq-server patch \
+php-pear php5-gd postgresql odbc-postgresql python2.6 libsoundtouch-ocaml \
+libtaglib-ocaml libao-ocaml libmad-ocaml ecasound \
+libesd0 libportaudio2 libsamplerate0 rabbitmq-server patch \
 php5-curl mpg123 monit python-virtualenv multitail libcamomile-ocaml-data \
 libvorbis-ocaml
 
-#possibly remove?
-#libvorbis-ocaml-dev
-#libcamomile-ocaml-dev
-
+#install packages with --force-yes option (this is useful in the case
+#of Debian, where these packages are unauthorized)
+apt-get -y --force-yes install libmp3lame-dev lame icecast2
 
 if [ "$?" -ne "0" ]; then
    echo ""

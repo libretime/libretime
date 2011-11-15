@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 #-e Causes bash script to exit if any of the installers
 #return with a non-zero return value.
 
