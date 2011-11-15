@@ -296,7 +296,27 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentPlaylistAction()
     {
-        $this->view->entries = Application_Model_Schedule::GetPlayOrderRange();
+        
+        $range = Application_Model_Schedule::GetPlayOrderRange();
+        
+        /* Convert all UTC times to localtime before sending back to user. */
+        if (isset($range["previous"])){
+            $range["previous"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["previous"]["starts"]);            
+            $range["previous"]["ends"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["previous"]["ends"]);
+        }
+        if (isset($range["current"])){
+            $range["current"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["current"]["starts"]);
+            $range["current"]["ends"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["current"]["ends"]);
+        }
+        if (isset($range["next"])){
+            $range["next"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["next"]["starts"]);
+            $range["next"]["ends"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["next"]["ends"]);
+        }
+        
+        Application_Model_Show::ConvertToLocalTimeZone($range["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+        Application_Model_Show::ConvertToLocalTimeZone($range["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+        
+        $this->view->entries = $range;
     }
 
     public function findPlaylistsAction()

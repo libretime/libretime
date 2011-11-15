@@ -188,6 +188,10 @@ class ApiController extends Zend_Controller_Action
                 "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 5),
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"));
+               
+            //Convert from UTC to localtime for user.
+            Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+            Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
 
             //echo json_encode($result);
             header("Content-type: text/javascript");
@@ -213,6 +217,8 @@ class ApiController extends Zend_Controller_Action
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
                 "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 5, $timeEnd));
+                
+            Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
 
             header("Content-type: text/javascript");
             echo $_GET['callback'].'('.json_encode($result).')';
@@ -234,7 +240,10 @@ class ApiController extends Zend_Controller_Action
 
             $result = array();
             for ($i=0; $i<7; $i++){
-                $result[$dow[$i]] = Application_Model_Show::GetShowsByDayOfWeek($i);
+                $shows = Application_Model_Show::GetShowsByDayOfWeek($i);
+                Application_Model_Show::ConvertToLocalTimeZone($shows, array("show_starts", "show_ends"));
+                
+                $result[$dow[$i]] = $shows;
             }
 
             header("Content-type: text/javascript");
@@ -361,6 +370,8 @@ class ApiController extends Zend_Controller_Action
         $this->view->is_recording = false;
 
         $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
+        Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
+
         if (count($rows) > 0){
             $this->view->is_recording = ($rows[0]['record'] == 1);
         }

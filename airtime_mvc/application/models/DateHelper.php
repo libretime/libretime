@@ -249,12 +249,23 @@ class Application_Model_DateHelper
 
         return $dateTime;
     }
-
-    public static function ConvertToLocalDateTimeString($p_dateString, $format="Y-m-d H:i:s"){
-        $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
-        $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-
-        return $dateTime->format($format);
+    
+    /* Convenience method to return a date formatted into a String rather than a 
+     * DateTime object. Note that if an empty string is provided for $p_dateString
+     * then the current time is provided. 
+     * 
+     * @param $p_dateString
+     *      Date string in UTC timezone.
+     * @param $p_format
+     *      Format which the string should be returned in.
+     * 
+     * @return string 
+     *      Date String in localtime 
+     * */
+    public static function ConvertToLocalDateTimeString($p_dateString, $p_format="Y-m-d H:i:s"){
+        if (is_null($p_dateString) || strlen($p_dateString) == 0)
+            return $p_dateString;
+        return self::ConvertToLocalDateTime($p_dateString)->format($p_format);
     }
 }
 

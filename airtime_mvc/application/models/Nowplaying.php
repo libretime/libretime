@@ -101,7 +101,9 @@ class Application_Model_Nowplaying
             	$data[] = self::CreateGapRow($gapTime);
         }
 
-        return array("currentShow"=>Application_Model_Show::GetCurrentShow($timeNow), "rows"=>$data);
+        $rows = Application_Model_Show::GetCurrentShow($timeNow);
+        Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
+        return array("currentShow"=>$rows, "rows"=>$data);
     }
 
     public static function ShouldShowPopUp(){

@@ -1405,19 +1405,14 @@ class Application_Model_Show {
     {
         global $CC_CONFIG, $CC_DBC;
 
-        // Need this in the query below, so that we are NOT comparing UTC
-        // timestamps si.starts/si.ends with local timestamps $timeNow
-        $timezoneInterval = Application_Model_Show::GetTimezoneIntervalString(true);
-
         $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
-        ." AND si.starts <= TIMESTAMP '$timeNow' + $timezoneInterval"
-        ." AND si.ends > TIMESTAMP '$timeNow' + $timezoneInterval";
+        ." AND si.starts <= TIMESTAMP '$timeNow'"
+        ." AND si.ends > TIMESTAMP '$timeNow'";
 
         // Convert back to local timezone
         $rows = $CC_DBC->GetAll($sql);
-        Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
 
         return $rows;
     }
@@ -1436,29 +1431,23 @@ class Application_Model_Show {
     {
         global $CC_CONFIG, $CC_DBC;
 
-        // Need this in the query below, so that we are NOT comparing UTC
-        // timestamps si.starts with local timestamps $timeNow
-        $timezoneInterval = Application_Model_Show::GetTimezoneIntervalString(true);
-
         // defaults to retrieving shows from next 2 days if no end time has
         // been specified
         if($timeEnd == "") {
-            $timeEnd = "'$timeNow' + INTERVAL '2 days' + $timezoneInterval";
+            $timeEnd = "'$timeNow' + INTERVAL '2 days'";
         } else {
-            $timeEnd = "'$timeEnd' + $timezoneInterval";
+            $timeEnd = "'$timeEnd'";
         }
 
         $sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
         ." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
-        ." AND si.starts >= TIMESTAMP '$timeNow' + $timezoneInterval"
+        ." AND si.starts >= TIMESTAMP '$timeNow'"
         ." AND si.starts < TIMESTAMP $timeEnd"
         ." ORDER BY si.starts"
         ." LIMIT $limit";
 
-        // Convert timestamps to local timezone
         $rows = $CC_DBC->GetAll($sql);
-        Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
 
         return $rows;
     }
@@ -1479,11 +1468,6 @@ class Application_Model_Show {
 
         global $CC_CONFIG, $CC_DBC;
 
-        // Need this in the query below, so that we are NOT extracting DOW and WEEK
-        // information from UTC timestamps si.starts, and comparing with a local
-        // timezone based variable $day and localtimestamp
-        $timezoneInterval = Application_Model_Show::GetTimezoneIntervalString();
-
         $sql = "SELECT"
         ." si.starts as show_starts,"
         ." si.ends as show_ends,"
@@ -1492,13 +1476,12 @@ class Application_Model_Show {
         ." FROM $CC_CONFIG[showInstances] si"
         ." LEFT JOIN $CC_CONFIG[showTable] s"
         ." ON si.show_id = s.id"
-        ." WHERE EXTRACT(DOW FROM si.starts + $timezoneInterval) = $day"
-        ." AND EXTRACT(WEEK FROM si.starts + $timezoneInterval) = EXTRACT(WEEK FROM localtimestamp)"
+        ." WHERE EXTRACT(DOW FROM si.starts) = $day"
+        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)"
         ." ORDER BY si.starts";
 
         // Convert result timestamps to local timezone
         $rows = $CC_DBC->GetAll($sql);
-        Application_Model_Show::ConvertToLocalTimeZone($rows, array("show_starts", "show_ends"));
 
         return $rows;
     }
@@ -1532,6 +1515,7 @@ class Application_Model_Show {
      *
      * @param type $fromLocalToUtc  true if we're converting from local to UTC
      */
+     /*
     public static function GetTimeZoneIntervalString($fromLocalToUtc = false) {
         $date = new Application_Model_DateHelper;
         $timezoneHour = $date->getLocalOffsetHour();
@@ -1545,6 +1529,7 @@ class Application_Model_Show {
 
         return "INTERVAL '$timezoneHour hours $timezoneMin minutes'";
     }
+    * */
 
     public static function GetMaxLengths() {
         global $CC_CONFIG, $CC_DBC;
