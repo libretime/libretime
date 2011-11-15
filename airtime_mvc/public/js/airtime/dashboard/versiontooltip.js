@@ -1,17 +1,61 @@
 /**
- * Get the tooltip message to be displayed,
- * which is stored inside a pair of hidden div tags
+ * Get the tooltip message to be displayed
  */
 function getContent() {
-    return $("#version_message").html();
+    var diff = getVersionDiff();
+    var link = getLatestLink();
+    
+    var msg = "";
+    if(isUpToDate()) {
+        msg = "You are running the latest version";
+    } else if(diff <= 2) {
+        msg = "New version available: " + link;
+    } else if(diff == 3) {
+        msg = "This version will soon be obsolete.<br/>Please upgrade to " + link;
+    } else {
+        msg = "This version is no longer supported.<br/>Please upgrade to " + link;
+    }
+    
+    return msg;
 }
 
 /**
- * Get the current version,
- * which is stored inside a pair of hidden div tags
+ * Get major version difference b/w current and latest version, in int
+ */
+function getVersionDiff() {
+    return parseInt($("#version_diff").html());
+}
+
+/**
+ * Get the current version
  */
 function getCurrentVersion() {
     return $("#version_current").html();
+}
+
+/**
+ * Get the latest version
+ */
+function getLatestVersion() {
+    return $("#version_latest").html();
+}
+
+/**
+ * Returns true if current version is up to date
+ */
+function isUpToDate() {
+    var diff = getVersionDiff();
+    var current = getCurrentVersion();
+    var latest = getLatestVersion();
+    var temp = (diff == 0 && current == latest) || diff < 0;
+    return (diff == 0 && current == latest) || diff < 0;
+}
+
+/**
+ * Returns the download link to latest release in HTML
+ */
+function getLatestLink() {
+    return "<a href='http://apt.sourcefabric.org/misc/'>" + getLatestVersion() + "</a>";
 }
 
 /**
@@ -26,10 +70,12 @@ function setupVersionQtip(){
                 text: getContent(),
                 title: {
                     text: getCurrentVersion(),
-                    button: true
+                    button: isUpToDate() ? false : true
                 }
             },
-            hide: false,    /* Don't hide on mouseout */
+            hide: {
+                event: isUpToDate() ? 'mouseleave' : 'unfocus'
+            },
             position: {
                 my: "top right",
                 at: "bottom left"
@@ -46,7 +92,7 @@ function setupVersionQtip(){
 }
 
 $(document).ready(function() {
-    if($('#version_message').length > 0) {
+    if($('#version_icon').length > 0) {
         setupVersionQtip();
     }
 });
