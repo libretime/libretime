@@ -29,7 +29,7 @@ class MediaMonitorCommon:
         
         # if file doesn't have any extension, info[-2] throws exception
         # Hence, checking length of info before we do anything
-        if(len(info) >= 3):
+        if(len(info) >= 2):
             if(info[-2] in self.supported_file_formats):
                 return True
             else:

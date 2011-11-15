@@ -1,3 +1,11 @@
+1.9.5 - Nov 2, 2011
+  *(CC-2743, CC-2769) Fixed problem where Media-Monitor would try to parse a file's metadata while the OS was still copying it
+  *(CC-2882) Fixed a bug where a couldn't unregister an old directory name from Airtime after it was renamed.
+  *(CC-2891) Fixed a bug with parsing Unicode metadata in audio files.
+  *(CC-2972) Fixed a bug where systems behind a firewall would have Airtime services communicating via its external IP.
+  *(CC-2975) Issue with older python-virtualenv identified. Airtime installer now requires virtualenv >= 1.4.9
+  *(CC-3012, CC-3013) Fixed an issue with Media-Monitor crashing when parsing certain audio tracks
+
 1.9.4 - Sept 13, 2011
   *Improvements
     -DEB packages now available for Ubuntu & Debian

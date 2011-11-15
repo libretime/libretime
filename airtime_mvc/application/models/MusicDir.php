@@ -281,7 +281,6 @@ class Application_Model_MusicDir {
     }
 
     public static function removeWatchedDir($p_dir){
-
         $real_path = realpath($p_dir)."/";
         if($real_path != "/"){
             $p_dir = $real_path;
