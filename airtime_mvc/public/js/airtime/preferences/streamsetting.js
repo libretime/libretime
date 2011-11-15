@@ -90,9 +90,9 @@ function checkLiquidsoapStatus(){
             }
             var html
             if(status == "OK"){
-                html = '<div class="stream-status status-good"><h3>Streaming server connection is working</h3></div>'
+                html = '<div class="stream-status status-good"><h3>Connected to the streaming server</h3></div>'
             }else if(status == "N/A"){
-                html = '<div class="stream-status status-error"><h3>Cannot connect to the streaming server</h3><p>This stream is disabled</p></div>'
+                html = '<div class="stream-status status-disabled"><h3>The stream is disabled</h3></div>'
             }else{
                 html = '<div class="stream-status status-error"><h3>Can not connect to the streaming server</h3><p>'+status+'</p></div>'
             }

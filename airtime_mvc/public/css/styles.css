@@ -1095,6 +1095,10 @@ h2#scheduled_playlist_name span {
 	width:60%;
 }
 
+.simple-formblock .liquidsoap_status{
+    width: 95%;
+}
+
 .simple-formblock dd.block-display {
     width: 100%;
 }
