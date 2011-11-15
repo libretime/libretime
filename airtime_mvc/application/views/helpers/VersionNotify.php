@@ -26,35 +26,31 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract{
             return "";
         }
         
-        // Calculate version diff
+        // Calculate major version diff;
+        // Example: if current = 1.9.5 and latest = 3.0.0, major diff = 11
         // Note: algorithm assumes the number after 1st dot never goes above 9
         $diff = (intval($latestMatch[1]) * 10 + intval($latestMatch[2])) 
                 - (intval($curMatch[1]) * 10 + intval($curMatch[2]));
         
-        // Pick icon and tooltip msg
+        // Pick icon
         $bg = "/css/images/";
-        $msg = "";
-        $link = "<a href='http://apt.sourcefabric.org/misc/'>" . $latest . "</a>";
         if(($diff == 0 && $current == $latest) || $diff < 0) {
             // current version is up to date
             $bg .= "icon_uptodate.png";
-            $msg = "You are running the latest version";
         } else if($diff <= 2) {
             // 2 or less major versions back
             $bg .= "icon_update.png";
-            $msg = "New version available: " . $link;
         } else if($diff == 3) {
             // 3 major versions back
             $bg .= "icon_update2.png";
-            $msg = "This version will soon be obsolete.<br/>Please upgrade to " . $link;
         } else {
             // more than 3 major versions back
             $bg .= "icon_outdated.png";
-            $msg = "This version is no longer supported.<br/>Please upgrade to " . $link;
         }
         
-        $result = "<div id='version_message' style='display:none'>" . $msg . "</div>"
+        $result = "<div id='version_diff' style='display:none'>" . $diff . "</div>"
                 . "<div id='version_current' style='display:none'>" . $current . "</div>"
+                . "<div id='version_latest' style='display:none'>" . $latest . "</div>"
                 . "<div id='version_icon' style='background-image: url(" . $bg . ");'></div>";
         return $result;
     }
