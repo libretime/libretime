@@ -58,18 +58,29 @@ select {
 }
 
 /* Version Notification Starts*/
-#version_icon {
+#version-icon {
 	position:absolute;
-	right:85px;
+	right:96px;
 	top:104px;
 	height:35px;
 	width:35px;
 	z-index:1000;
 	display:block;
-        cursor:pointer;
-        
-        background-repeat:no-repeat;
-        background-position:center; 
+    cursor:pointer;
+    background-repeat:no-repeat;
+    background-position:center;
+}
+#version-icon.outdated {
+	background-image:url(/css/images/icon_outdated.png);
+}
+#version-icon.update2 {
+	background-image:url(/css/images/icon_update2.png);
+}
+#version-icon.update {
+	background-image:url(/css/images/icon_update.png);
+}
+#version-icon.uptodate {
+	background-image:url(/css/images/icon_uptodate.png);
 }
 
 #ui-tooltip-version a {
@@ -2366,6 +2377,9 @@ tfoot tr th	{
 	margin:2px 1px 10px 0px;
 	width: auto;
 }
+dd .stream-status {
+	margin-bottom:1px;
+}
 .stream-status h3 {
 	font-size: 12px;
 	font-weight: bold;
@@ -2397,4 +2411,18 @@ tfoot tr th	{
 }
 .status-error h3 {
 	color:#DA0101;
+}
+.status-info {
+	background:#fff7e0 url(images/stream_status.png) no-repeat 5px -278px;
+	border-color:#f68826;
+}
+.status-info h3 {
+	color:#f1830c;
+}
+.status-disabled {
+	background:#c8ccc8 url(images/stream_status.png) no-repeat 5px -429px;
+	border-color:#7f827f;
+}
+.status-disabled h3 {
+	color:#646664;
 }

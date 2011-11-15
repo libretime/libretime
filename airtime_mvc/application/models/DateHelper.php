@@ -17,7 +17,7 @@ class Application_Model_DateHelper
     {
         return date("Y-m-d H:i:s", $this->_dateTime);
     }
-    
+
     /**
      * Get time of object construction in the format
      * YYYY-MM-DD HH:mm:ss
@@ -59,10 +59,10 @@ class Application_Model_DateHelper
     /**
      * Calculate and return the timestamp for end of day today
      * in local time.
-     * 
+     *
      * For example, if local time is 2PM on 2011-11-01,
      * then the function would return 2011-11-02 00:00:00
-     * 
+     *
      * @return  End of day timestamp in local timezone
      */
     function getDayEndTimestamp() {
@@ -70,7 +70,7 @@ class Application_Model_DateHelper
         $dateTime->add(new DateInterval('P1D'));
         return $dateTime->format('Y-m-d H:i:s');
     }
-    
+
     /**
      * Find the epoch timestamp difference from "now" to the beginning of today.
      */
@@ -98,7 +98,7 @@ class Application_Model_DateHelper
      * Returns the offset in seconds, between local and UTC timezones.
      * E.g., if local timezone is -4, this function
      * returns -14400.
-     * 
+     *
      * @return type     offset in int, between local and UTC timezones
      */
     function getLocalTimeZoneOffset() {
@@ -106,31 +106,31 @@ class Application_Model_DateHelper
         $timezone = new DateTimeZone(date_default_timezone_get());
         return $timezone->getOffset($dateTime);
     }
-    
+
     /**
      * Returns the offset hour in int, between local and UTC timezones.
      * E.g., if local timezone is -4:30, this function
      * returns -4.
-     * 
+     *
      * @return type     offset hour in int, between local and UTC timezones
      */
     function getLocalOffsetHour() {
         $offset = $this->getLocalTimeZoneOffset();
         return (int)($offset / 3600);
     }
-    
+
     /**
      * Returns the offset minute in int, between local and UTC timezones.
      * E.g., if local timezone is -4:30, this function
      * returns -30.
-     * 
+     *
      * @return type     offset minute in int, between local and UTC timezones
      */
     function getLocalOffsetMinute() {
         $offset = $this->getLocalTimeZoneOffset();
         return (int)(($offset % 3600) / 60);
     }
-    
+
     public static function TimeDiff($time1, $time2)
     {
         return strtotime($time2) - strtotime($time1);
@@ -193,11 +193,11 @@ class Application_Model_DateHelper
         $explode = explode(" ", $p_dateTime);
         return $explode[1];
     }
-    
-    /* Given a track length in the format HH:MM:SS.mm, we want to 
+
+    /* Given a track length in the format HH:MM:SS.mm, we want to
      * convert this to seconds. This is useful for Liquidsoap which
-     * likes input parameters give in seconds. 
-     * For example, 00:06:31.444, should be converted to 391.444 seconds 
+     * likes input parameters give in seconds.
+     * For example, 00:06:31.444, should be converted to 391.444 seconds
      * @param int $p_time
      *      The time interval in format HH:MM:SS.mm we wish to
      *      convert to seconds.
@@ -205,39 +205,44 @@ class Application_Model_DateHelper
      *      The input parameter converted to seconds.
      */
     public static function calculateLengthInSeconds($p_time){
-        
+
         if (2 !== substr_count($p_time, ":")){
             return FALSE;
         }
-               
+
         if (1 === substr_count($p_time, ".")){
             list($hhmmss, $ms) = explode(".", $p_time);
         } else {
             $hhmmss = $p_time;
             $ms = 0;
         }
-        
+
         list($hours, $minutes, $seconds) = explode(":", $hhmmss);
-        
+
         $totalSeconds = $hours*3600 + $minutes*60 + $seconds + $ms/1000;
-    
+
         return $totalSeconds;
     }
-    
-    public static function ConvertToUtcDateTime($p_dateString, $timezone){
-        $dateTime = new DateTime($p_dateString, new DateTimeZone($timezone));
+
+    public static function ConvertToUtcDateTime($p_dateString, $timezone=null){
+        if (isset($timezone)) {
+            $dateTime = new DateTime($p_dateString, new DateTimeZone($timezone));
+        }
+        else {
+            $dateTime = new DateTime($p_dateString, new DateTimeZone(date_default_timezone_get()));
+        }
         $dateTime->setTimezone(new DateTimeZone("UTC"));
-        
-        return $dateTime; 
+
+        return $dateTime;
     }
-	
+
     public static function ConvertToSpecificTimezoneDateTime($p_dateString, $timezone){
         $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
         $dateTime->setTimezone(new DateTimeZone($timezone));
 
         return $dateTime;
     }
-    
+
     public static function ConvertToLocalDateTime($p_dateString){
         $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
         $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
