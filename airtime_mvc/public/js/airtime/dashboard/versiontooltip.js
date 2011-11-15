@@ -23,21 +23,21 @@ function getContent() {
  * Get major version difference b/w current and latest version, in int
  */
 function getVersionDiff() {
-    return parseInt($("#version_diff").html());
+    return parseInt($("#version-diff").html());
 }
 
 /**
  * Get the current version
  */
 function getCurrentVersion() {
-    return $("#version_current").html();
+    return $("#version-current").html();
 }
 
 /**
  * Get the latest version
  */
 function getLatestVersion() {
-    return $("#version_latest").html();
+    return $("#version-latest").html();
 }
 
 /**
@@ -62,7 +62,7 @@ function getLatestLink() {
  * Sets up the tooltip for version notification
  */
 function setupVersionQtip(){
-    var qtipElem = $('#version_icon');
+    var qtipElem = $('#version-icon');
     if (qtipElem.length > 0){
         qtipElem.qtip({
             id: 'version',
@@ -92,7 +92,7 @@ function setupVersionQtip(){
 }
 
 $(document).ready(function() {
-    if($('#version_icon').length > 0) {
+    if($('#version-icon').length > 0) {
         setupVersionQtip();
     }
 });

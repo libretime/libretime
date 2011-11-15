@@ -33,25 +33,24 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract{
                 - (intval($curMatch[1]) * 10 + intval($curMatch[2]));
         
         // Pick icon
-        $bg = "/css/images/";
         if(($diff == 0 && $current == $latest) || $diff < 0) {
             // current version is up to date
-            $bg .= "icon_uptodate.png";
+            $class = "uptodate";
         } else if($diff <= 2) {
             // 2 or less major versions back
-            $bg .= "icon_update.png";
+            $class = "update";
         } else if($diff == 3) {
             // 3 major versions back
-            $bg .= "icon_update2.png";
+            $class = "update2";
         } else {
             // more than 3 major versions back
-            $bg .= "icon_outdated.png";
+            $class = "outdated";
         }
         
-        $result = "<div id='version_diff' style='display:none'>" . $diff . "</div>"
-                . "<div id='version_current' style='display:none'>" . $current . "</div>"
-                . "<div id='version_latest' style='display:none'>" . $latest . "</div>"
-                . "<div id='version_icon' style='background-image: url(" . $bg . ");'></div>";
+        $result = "<div id='version-diff' style='display:none'>" . $diff . "</div>"
+                . "<div id='version-current' style='display:none'>" . $current . "</div>"
+                . "<div id='version-latest' style='display:none'>" . $latest . "</div>"
+                . "<div id='version-icon' class='" . $class . "'></div>";
         return $result;
     }
 }

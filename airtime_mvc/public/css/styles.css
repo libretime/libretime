@@ -58,9 +58,9 @@ select {
 }
 
 /* Version Notification Starts*/
-#version_icon {
+#version-icon {
 	position:absolute;
-	right:98px;
+	right:96px;
 	top:104px;
 	height:35px;
 	width:35px;
@@ -68,19 +68,19 @@ select {
 	display:block;
     cursor:pointer;
     background-repeat:no-repeat;
-    background-position:center; 
+    background-position:center;
 }
-#version_icon.outdated {
-	background-image:url(images/icon_outdated.png);
+#version-icon.outdated {
+	background-image:url(/css/images/icon_outdated.png);
 }
-#version_icon.update2 {
-	background-image:url(images/icon_update2.png);
+#version-icon.update2 {
+	background-image:url(/css/images/icon_update2.png);
 }
-#version_icon.update {
-	background-image:url(images/icon_update.png);
+#version-icon.update {
+	background-image:url(/css/images/icon_update.png);
 }
-#version_icon.uptodate {
-	background-image:url(images/icon_uptodate.png);
+#version-icon.uptodate {
+	background-image:url(/css/images/icon_uptodate.png);
 }
 
 #ui-tooltip-version a {
