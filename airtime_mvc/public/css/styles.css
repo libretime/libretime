@@ -60,16 +60,15 @@ select {
 /* Version Notification Starts*/
 #version_icon {
 	position:absolute;
-	right:85px;
+	right:98px;
 	top:104px;
 	height:35px;
 	width:35px;
 	z-index:1000;
 	display:block;
-        cursor:pointer;
-        
-        background-repeat:no-repeat;
-        background-position:center; 
+    cursor:pointer;
+    background-repeat:no-repeat;
+    background-position:center; 
 }
 
 #ui-tooltip-version a {
@@ -2397,4 +2396,18 @@ tfoot tr th	{
 }
 .status-error h3 {
 	color:#DA0101;
+}
+.status-info {
+	background:#fff7e0 url(images/stream_status.png) no-repeat 5px -278px;
+	border-color:#f68826;
+}
+.status-info h3 {
+	color:#f1830c;
+}
+.status-disabled {
+	background:#c8ccc8 url(images/stream_status.png) no-repeat 5px -429px;
+	border-color:#7f827f;
+}
+.status-disabled h3 {
+	color:#646664;
 }
