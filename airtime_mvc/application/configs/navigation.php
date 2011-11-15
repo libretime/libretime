@@ -67,7 +67,8 @@ $pages = array(
                 'action'     => 'stream-setting'
             ),
             array(
-                'label'      => 'Support Settings',
+                'label'      => 
+                Application_Model_Preference::GetPlanLevel() == 'disabled'?'Support Settings':'Station Information Settings',
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'support-setting'

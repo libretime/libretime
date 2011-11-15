@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__."/configs/navigation.php";
 require_once __DIR__."/configs/ACL.php";
 
 require_once 'propel/runtime/lib/Propel.php';
@@ -23,6 +22,8 @@ if (PEAR::isError($CC_DBC)) {
     exit(1);
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+require_once __DIR__."/configs/navigation.php";
 
 //DateTime in PHP 5.3.0+ need a default timezone set.
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
