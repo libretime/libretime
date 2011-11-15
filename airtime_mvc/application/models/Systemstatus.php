@@ -96,24 +96,25 @@ class Application_Model_Systemstatus
     }
 
     public static function GetPlatformInfo(){
-        $data = array("release"=>"UNKNOWN",
-                      "machine"=>"UNKNOWN",
-                      "memory"=>"UNKNOWN",
-                      "swap"=>"UNKNOWN");
-
+        $keys = array("release", "machine", "memory", "swap");
+        foreach($keys as $key) {
+            $data[$key] = "UNKNOWN";
+        }
+        
         $docRoot = self::GetMonitStatus("localhost");
         if (!is_null($docRoot)){
             foreach ($docRoot->getElementsByTagName("platform") AS $item)
             {
-                $data["release"] = $item->getElementsByTagName("release")->item(0)->nodeValue;
-                $data["machine"] = $item->getElementsByTagName("machine")->item(0)->nodeValue;
-                $data["memory"] = $item->getElementsByTagName("memory")->item(0)->nodeValue;
-                $data["swap"] = $item->getElementsByTagName("swap")->item(0)->nodeValue;         
+                foreach($keys as $key) {
+                    $keyElement = $item->getElementsByTagName($key);
+                    if($keyElement->length > 0) {
+                        $data[$key] = $keyElement->item(0)->nodeValue;
+                    }
+                }
             }
         }
         
         return $data;
-
     }
 
     public static function GetPypoStatus(){

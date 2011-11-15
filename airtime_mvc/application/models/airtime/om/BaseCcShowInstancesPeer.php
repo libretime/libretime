@@ -26,7 +26,7 @@ abstract class BaseCcShowInstancesPeer {
 	const TM_CLASS = 'CcShowInstancesTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 9;
+	const NUM_COLUMNS = 10;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -58,6 +58,9 @@ abstract class BaseCcShowInstancesPeer {
 	/** the column name for the TIME_FILLED field */
 	const TIME_FILLED = 'cc_show_instances.TIME_FILLED';
 
+	/** the column name for the DELETED_INSTANCE field */
+	const DELETED_INSTANCE = 'cc_show_instances.DELETED_INSTANCE';
+
 	/**
 	 * An identiy map to hold any loaded instances of CcShowInstances objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
@@ -74,12 +77,12 @@ abstract class BaseCcShowInstancesPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbStarts', 'DbEnds', 'DbShowId', 'DbRecord', 'DbRebroadcast', 'DbOriginalShow', 'DbRecordedFile', 'DbTimeFilled', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbStarts', 'dbEnds', 'dbShowId', 'dbRecord', 'dbRebroadcast', 'dbOriginalShow', 'dbRecordedFile', 'dbTimeFilled', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::STARTS, self::ENDS, self::SHOW_ID, self::RECORD, self::REBROADCAST, self::INSTANCE_ID, self::FILE_ID, self::TIME_FILLED, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STARTS', 'ENDS', 'SHOW_ID', 'RECORD', 'REBROADCAST', 'INSTANCE_ID', 'FILE_ID', 'TIME_FILLED', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'starts', 'ends', 'show_id', 'record', 'rebroadcast', 'instance_id', 'file_id', 'time_filled', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbStarts', 'DbEnds', 'DbShowId', 'DbRecord', 'DbRebroadcast', 'DbOriginalShow', 'DbRecordedFile', 'DbTimeFilled', 'DbDeletedInstance', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbStarts', 'dbEnds', 'dbShowId', 'dbRecord', 'dbRebroadcast', 'dbOriginalShow', 'dbRecordedFile', 'dbTimeFilled', 'dbDeletedInstance', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::STARTS, self::ENDS, self::SHOW_ID, self::RECORD, self::REBROADCAST, self::INSTANCE_ID, self::FILE_ID, self::TIME_FILLED, self::DELETED_INSTANCE, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STARTS', 'ENDS', 'SHOW_ID', 'RECORD', 'REBROADCAST', 'INSTANCE_ID', 'FILE_ID', 'TIME_FILLED', 'DELETED_INSTANCE', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'starts', 'ends', 'show_id', 'record', 'rebroadcast', 'instance_id', 'file_id', 'time_filled', 'deleted_instance', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	/**
@@ -89,12 +92,12 @@ abstract class BaseCcShowInstancesPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbStarts' => 1, 'DbEnds' => 2, 'DbShowId' => 3, 'DbRecord' => 4, 'DbRebroadcast' => 5, 'DbOriginalShow' => 6, 'DbRecordedFile' => 7, 'DbTimeFilled' => 8, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbStarts' => 1, 'dbEnds' => 2, 'dbShowId' => 3, 'dbRecord' => 4, 'dbRebroadcast' => 5, 'dbOriginalShow' => 6, 'dbRecordedFile' => 7, 'dbTimeFilled' => 8, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::STARTS => 1, self::ENDS => 2, self::SHOW_ID => 3, self::RECORD => 4, self::REBROADCAST => 5, self::INSTANCE_ID => 6, self::FILE_ID => 7, self::TIME_FILLED => 8, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STARTS' => 1, 'ENDS' => 2, 'SHOW_ID' => 3, 'RECORD' => 4, 'REBROADCAST' => 5, 'INSTANCE_ID' => 6, 'FILE_ID' => 7, 'TIME_FILLED' => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'starts' => 1, 'ends' => 2, 'show_id' => 3, 'record' => 4, 'rebroadcast' => 5, 'instance_id' => 6, 'file_id' => 7, 'time_filled' => 8, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbStarts' => 1, 'DbEnds' => 2, 'DbShowId' => 3, 'DbRecord' => 4, 'DbRebroadcast' => 5, 'DbOriginalShow' => 6, 'DbRecordedFile' => 7, 'DbTimeFilled' => 8, 'DbDeletedInstance' => 9, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbStarts' => 1, 'dbEnds' => 2, 'dbShowId' => 3, 'dbRecord' => 4, 'dbRebroadcast' => 5, 'dbOriginalShow' => 6, 'dbRecordedFile' => 7, 'dbTimeFilled' => 8, 'dbDeletedInstance' => 9, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::STARTS => 1, self::ENDS => 2, self::SHOW_ID => 3, self::RECORD => 4, self::REBROADCAST => 5, self::INSTANCE_ID => 6, self::FILE_ID => 7, self::TIME_FILLED => 8, self::DELETED_INSTANCE => 9, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STARTS' => 1, 'ENDS' => 2, 'SHOW_ID' => 3, 'RECORD' => 4, 'REBROADCAST' => 5, 'INSTANCE_ID' => 6, 'FILE_ID' => 7, 'TIME_FILLED' => 8, 'DELETED_INSTANCE' => 9, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'starts' => 1, 'ends' => 2, 'show_id' => 3, 'record' => 4, 'rebroadcast' => 5, 'instance_id' => 6, 'file_id' => 7, 'time_filled' => 8, 'deleted_instance' => 9, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	/**
@@ -175,6 +178,7 @@ abstract class BaseCcShowInstancesPeer {
 			$criteria->addSelectColumn(CcShowInstancesPeer::INSTANCE_ID);
 			$criteria->addSelectColumn(CcShowInstancesPeer::FILE_ID);
 			$criteria->addSelectColumn(CcShowInstancesPeer::TIME_FILLED);
+			$criteria->addSelectColumn(CcShowInstancesPeer::DELETED_INSTANCE);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.STARTS');
@@ -185,6 +189,7 @@ abstract class BaseCcShowInstancesPeer {
 			$criteria->addSelectColumn($alias . '.INSTANCE_ID');
 			$criteria->addSelectColumn($alias . '.FILE_ID');
 			$criteria->addSelectColumn($alias . '.TIME_FILLED');
+			$criteria->addSelectColumn($alias . '.DELETED_INSTANCE');
 		}
 	}
 
