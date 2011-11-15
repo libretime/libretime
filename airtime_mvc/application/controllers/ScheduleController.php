@@ -465,11 +465,11 @@ class ScheduleController extends Zend_Controller_Action
                     'add_show_genre' => $show->getGenre(),
                     'add_show_description' => $show->getDescription()));
                     
-        $startsDateTime = new DateTime($showInstance->getShowInstanceStart(), new DateTimeZone("UTC"));
-        $endsDateTime = new DateTime($showInstance->getShowInstanceEnd(), new DateTimeZone("UTC"));
+        $startsDateTime = new DateTime($show->getStartDate()." ".$show->getStartTime(), new DateTimeZone(date_default_timezone_get()));
+        $endsDateTime = new DateTime($show->getEndDate()." ".$show->getEndTime(), new DateTimeZone(date_default_timezone_get()));
         
-        $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        //$startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        //$endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         $formWhen->populate(array('add_show_start_date' => $startsDateTime->format("Y-m-d"),
                                   'add_show_start_time' => $startsDateTime->format("H:i"),
