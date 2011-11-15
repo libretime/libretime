@@ -1,4 +1,5 @@
 <fieldset class="padded">
+<?php if( !$this->isSaas ){?>
     <dl class="zend_form">
         <dd id="SupportFeedback-element" style="width:90%;">
             <div class="info-text">Help Airtime improve by letting us know you are using it. This info
@@ -32,8 +33,9 @@
             <?php endif; ?> 
         </dd>
     </dl>
-        <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;"><p> Note: In order to promote your station, "Send support feedback" must be enabled</p></div>
-    <dl id="public-info" style="display:none;">
+    <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;"><p> Note: In order to promote your station, "Send support feedback" must be enabled</p></div>
+    <?php }?>
+    <dl id="public-info" style="display:<?php echo !$this->isSaas?"none":"block"?>;">
         <dt id="stationName-label" class="block-display">
             <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?>
                 <span class="info-text-small">(Required)</span>:
@@ -148,7 +150,7 @@
             <?php endif; ?>
         </dd>
     </dl>
-
+<?php if( !$this->isSaas ){?>
     <div id="show_what_sending" style="display: block;">
         <fieldset class="display_field toggle closed">
         <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>Show me what I am sending </legend>
@@ -157,6 +159,7 @@
             </dl>
         </fieldset>
     </div>
+    
     <div>
         <br>
         <?php if(!$this->element->getView()->privacyChecked){?>
@@ -175,4 +178,5 @@
             <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;">Terms and Conditions</a>
         <?php }?>
     </div>
+<?php } ?>
 </fieldset>

@@ -63,12 +63,14 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js','text/javascript');
         $this->view->statusMsg = "";
 
+        $isSass = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        
         $form = new Application_Form_SupportSettings();
-
+        
         if ($request->isPost()) {
             $values = $request->getPost();
             if ($form->isValid($values)) {
-                if ($values["Publicise"] != 1){
+                if (!$isSass && $values["Publicise"] != 1){
                     Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                     if(isset($values["Privacy"])){
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
@@ -78,8 +80,10 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetPhone($values["Phone"]);
                     Application_Model_Preference::SetEmail($values["Email"]);
                     Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                    Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                    Application_Model_Preference::SetPublicise($values["Publicise"]);
+                    if(!$isSass){
+                        Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                        Application_Model_Preference::SetPublicise($values["Publicise"]);
+                    }
 
                     $form->Logo->receive();
                     $imagePath = $form->Logo->getFileName();
@@ -88,7 +92,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetStationCity($values["City"]);
                     Application_Model_Preference::SetStationDescription($values["Description"]);
                     Application_Model_Preference::SetStationLogo($imagePath);
-                    if(isset($values["Privacy"])){
+                    if(!$isSass && isset($values["Privacy"])){
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                     }
                 }
@@ -104,6 +108,7 @@ class PreferenceController extends Zend_Controller_Action
             $privacyChecked = true;
         }
         $this->view->privacyChecked = $privacyChecked;
+        $this->view->section_title = Application_Model_Preference::GetPlanLevel() == 'disabled'?'Support Settings':'Station Information Settings';
         $this->view->form = $form;
         //$form->render($this->view);
     }
