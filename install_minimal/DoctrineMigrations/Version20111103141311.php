@@ -11,7 +11,7 @@ class Version20111103141311 extends AbstractMigration
     {
         // add timezone column to cc_show_days
         $cc_subjs = $schema->getTable('cc_show_days');
-        $cc_subjs->addColumn('timezone', 'string', array('required' => true));
+        $cc_subjs->addColumn('timezone', 'string', array('required' => true, 'default'=> ''));
     }
 
     public function down(Schema $schema)
