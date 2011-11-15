@@ -145,15 +145,18 @@ class Application_Model_Schedule {
 
         $date = new Application_Model_DateHelper;
         $timeNow = $date->getTimestamp();
-        return array("env"=>APPLICATION_ENV,
+        $utcTimeNow = $date->getUtcTimestamp();
+        $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
-            "previous"=>Application_Model_Dashboard::GetPreviousItem($timeNow),
-            "current"=>Application_Model_Dashboard::GetCurrentItem($timeNow),
-            "next"=>Application_Model_Dashboard::GetNextItem($timeNow),
-            "currentShow"=>Application_Model_Show::GetCurrentShow($timeNow),
-            "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 1),
+            "previous"=>Application_Model_Dashboard::GetPreviousItem($utcTimeNow),
+            "current"=>Application_Model_Dashboard::GetCurrentItem($utcTimeNow),
+            "next"=>Application_Model_Dashboard::GetNextItem($utcTimeNow),
+            "currentShow"=>Application_Model_Show::GetCurrentShow($utcTimeNow),
+            "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 1),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
+                                        
+        return $range;
     }
 
     public static function GetLastScheduleItem($p_timeNow){
