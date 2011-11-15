@@ -1302,7 +1302,8 @@ class Application_Model_Show {
 
         $shows = Application_Model_Show::getShows($start, $end);
 
-        $today_timestamp = date("Y-m-d H:i:s");
+        $today_timestamp = Application_Model_DateHelper::ConvertToUtcDateTime(date("Y-m-d H:i:s"))->format("Y-m-d H:i:s");
+
         foreach ($shows as $show) {
 
             if ($show["deleted_instance"] != "t"){
