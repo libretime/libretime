@@ -63,6 +63,7 @@ class UserController extends Zend_Controller_Action
     public function getHostsAction()
     {
         $search = $this->_getParam('term');
+        $res = Application_Model_User::getHosts($search);
         $this->view->hosts = Application_Model_User::getHosts($search);
     }
 

@@ -163,7 +163,7 @@ class Application_Model_User {
 
         $sql;
 
-        $sql_gen = "SELECT id AS value, login AS label FROM cc_subjs ";
+        $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
         $sql = $sql_gen;
         
         if(is_array($type)) {
