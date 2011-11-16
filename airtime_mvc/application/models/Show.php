@@ -560,7 +560,7 @@ class Application_Model_Show {
         $showId = $this->getId();
         $sql = "SELECT id from cc_show_instances"
             ." WHERE show_id = $showId"
-            ." AND starts > TIMESTAMP '$timestamp'";
+            ." AND starts > TIMESTAMP '$timestamp'"
             ." AND deleted_instance != TRUE";
 
         $rows = $CC_DBC->GetAll($sql);
