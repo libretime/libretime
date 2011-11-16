@@ -2,9 +2,12 @@ function showErrorSections() {
 
     $(".errors").each(function(i){
         if($(this).length > 0){
-            $(window).scrollTop($(this).closest("div").position().top);
-            $(this).closest("fieldset").removeClass('closed');
-            return false;
+            var div = $(this).closest("div")
+            if(div.attr('class') == "stream-setting-content"){
+                $(this).closest("div").show();
+                $(this).closest("fieldset").removeClass('closed');
+                $(window).scrollTop($(this).closest("div").position().top);
+            }
         }
     });
 }
