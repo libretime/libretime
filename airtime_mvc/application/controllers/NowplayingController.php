@@ -112,8 +112,7 @@ class NowplayingController extends Zend_Controller_Action
     {
         // unset session
         Zend_Session::namespaceUnset('referrer');
-    	$now = date("Y-m-d H:i:s");
-    	Application_Model_Preference::SetRemindMeDate($now);
+    	Application_Model_Preference::SetRemindMeDate();
     	die();
     }
     

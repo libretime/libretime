@@ -426,7 +426,7 @@ class ApiController extends Zend_Controller_Action
             $show_inst->setRecordedFile($file_id);
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
-            $show_start_time = ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
+            $show_start_time = Application_Model_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
 
          } catch (Exception $e){
             //we've reached here probably because the show was
