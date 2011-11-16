@@ -559,19 +559,24 @@ class Application_Model_Preference
 	/* User specific preferences start */
 
     /**
-     * Sets the time scale preference (day/week/month) in Calendar.
+     * Sets the time scale preference (agendaDay/agendaWeek/month) in Calendar.
      * 
      * @param $timeScale	new time scale
      */
-	public static function SetCalendarTimeScale($timeScale) {
-        return self::SetValue("calendar_time_scale", $timeScale, true /* user specific */);
+    public static function SetCalendarTimeScale($timeScale) {
+        self::SetValue("calendar_time_scale", $timeScale, true /* user specific */);
     }
 
     /**
      * Retrieves the time scale preference for the current user.
+     * Defaults to month if no entry exists
      */
     public static function GetCalendarTimeScale() {
-    	return self::GetValue("calendar_time_scale", true /* user specific */);
+        $val = self::GetValue("calendar_time_scale", true /* user specific */);
+        if(strlen($val) == 0) {
+            $val = 'month';
+        }
+    	return $val;
     }
     
     /**
@@ -580,7 +585,7 @@ class Application_Model_Preference
      * @param $numEntries	new number of entries to show
      */
     public static function SetLibraryNumEntries($numEntries) {
-    	return self::SetValue("library_num_entries", $numEntries, true /* user specific */);
+    	self::SetValue("library_num_entries", $numEntries, true /* user specific */);
     }
     
     /**
@@ -595,15 +600,20 @@ class Application_Model_Preference
      * 
      * @param $timeInterval		new time interval
      */
-	public static function SetCalendarTimeInterval($timeInterval) {
-        return self::SetValue("calendar_time_interval", $timeInterval, true /* user specific */);
+    public static function SetCalendarTimeInterval($timeInterval) {
+        self::SetValue("calendar_time_interval", $timeInterval, true /* user specific */);
     }
 
     /**
      * Retrieves the time interval preference for the current user.
+     * Defaults to 30 min if no entry exists
      */
     public static function GetCalendarTimeInterval() {
-    	return self::GetValue("calendar_time_interval", true /* user specific */);
+    	$val = self::GetValue("calendar_time_interval", true /* user specific */);
+        if(strlen($val) == 0) {
+            $val = "30";
+        }
+        return $val;
     }
     
     /* User specific preferences end */

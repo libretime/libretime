@@ -306,26 +306,14 @@ function buildScheduleDialog(json){
  * Use user preference for time scale; defaults to month if preference was never set
  */
 function getTimeScalePreference(data) {
-	var timeScale = data.calendarInit.timeScale;
-    if(timeScale == 'day') {
-    	timeScale = 'agendaDay';
-    } else if(timeScale == 'week') {
-    	timeScale = 'agendaWeek';
-    } else {
-    	timeScale = 'month';
-    }
-    return timeScale;
+    return data.calendarInit.timeScale;
 }
 
 /**
  * Use user preference for time interval; defaults to 30m if preference was never set
  */
 function getTimeIntervalPreference(data) {
-	var timeInterval = data.calendarInit.timeInterval;
-    if(timeInterval == '') {
-    	timeInterval = '30';
-    }
-    return parseInt(timeInterval);
+    return parseInt(data.calendarInit.timeInterval);
 }
 
 function createFullCalendar(data){
@@ -365,28 +353,6 @@ function createFullCalendar(data){
         eventAfterRender: eventAfterRender,
         eventDrop: eventDrop,
         eventResize: eventResize 
-    });
-
-    //Update time scale preference when day/week/month button is clicked
-    $(".fc-button-content").click(function() {
-    	var url = '/Schedule/set-time-scale/format/json';
-		$.post(url, {timeScale: $(this).text()}, 
-				function(json){
-					if(json.error) {
-						alert(json.error);
-					}
-		});
-    });
-    
-  //Update time interval preference when dropdown is updated
-    $(".schedule_change_slots.input_select").change(function() {
-    	var url = '/Schedule/set-time-interval/format/json';
-		$.post(url, {timeInterval: $(this).val()}, 
-				function(json){
-					if(json.error) {
-						alert(json.error);
-					}
-		});
     });
 }
 
