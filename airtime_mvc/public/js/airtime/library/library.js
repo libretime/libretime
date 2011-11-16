@@ -122,6 +122,7 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 function dtDrawCallback() {
 	addLibraryItemEvents();
 	addMetadataQtip();
+        saveNumEntriesSetting();
 }
 
 function addProgressIcon(id) {
@@ -280,19 +281,24 @@ function addMetadataQtip(){
 }
 
 /**
- * Use user preference for number of entries to show;
- * defaults to 10 if preference was never set
+ * Updates pref db when user changes the # of entries to show
+ */
+function saveNumEntriesSetting() {
+    $('select[name=library_display_length]').change(function() {
+        var url = '/Library/set-num-entries/format/json';
+        $.post(url, {numEntries: $(this).val()});
+    });
+}
+
+/**
+ * Use user preference for number of entries to show
  */
 function getNumEntriesPreference(data) {
-	var numEntries = data.libraryInit.numEntries;
-    if(numEntries == '') {
-    	numEntries = '10';
-    }
-    return parseInt(numEntries);
+    return parseInt(data.libraryInit.numEntries);
 }
 
 function createDataTable(data) {
-	var dTable = $('#library_display').dataTable( {
+    var dTable = $('#library_display').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
 		"sAjaxSource": "/Library/contents/format/json",
@@ -320,35 +326,24 @@ function createDataTable(data) {
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
 		"bAutoWidth": false,
-        "oLanguage": {
-            "sSearch": ""
-        },
-        "iDisplayLength": getNumEntriesPreference(data),
-        "bStateSave": true
-	});
-	dTable.fnSetFilteringDelay(350);
-    
-    // Updates pref db when user changes the # of entries to show
-    $('select[name=library_display_length]').change(function() {
-		var url = '/Library/set-num-entries/format/json';
-		$.post(url, {numEntries: $(this).val()}, 
-				function(json){
-					if(json.error) {
-						alert(json.error);
-					}
-		});
-	});
+                "oLanguage": {
+                    "sSearch": ""
+                },
+                "iDisplayLength": getNumEntriesPreference(data),
+                "bStateSave": true
+    });
+    dTable.fnSetFilteringDelay(350);
 }
 
 $(document).ready(function() {
-	$('.tabs').tabs();
-	
-	$.ajax({ url: "/Api/library-init/format/json", dataType:"json", success:createDataTable
-        , error:function(jqXHR, textStatus, errorThrown){}});
-	
-	checkImportStatus()
-	setInterval( "checkImportStatus()", 5000 );
-	setInterval( "checkSCUploadStatus()", 5000 );
-	
-	addQtipToSCIcons()
+    $('.tabs').tabs();
+    
+    $.ajax({ url: "/Api/library-init/format/json", dataType:"json", success:createDataTable, 
+        error:function(jqXHR, textStatus, errorThrown){}});
+    
+    checkImportStatus()
+    setInterval( "checkImportStatus()", 5000 );
+    setInterval( "checkSCUploadStatus()", 5000 );
+
+    addQtipToSCIcons()
 });
