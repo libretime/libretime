@@ -383,7 +383,7 @@ class Application_Model_Preference
     	$outputArray['NUM_OF_SONGS'] = Application_Model_StoredFile::getFileCount();
     	$outputArray['NUM_OF_PLAYLISTS'] = Application_Model_Playlist::getPlaylistCount();
     	$outputArray['NUM_OF_SCHEDULED_PLAYLISTS'] = Application_Model_Schedule::getSchduledPlaylistCount();
-    	$outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(date("Y-m-d H:i:s"));
+    	$outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(gmdate("Y-m-d H:i:s"));
     	$outputArray['UNIQUE_ID'] = self::GetUniqueId();
     	$outputArray['SAAS'] = self::GetPlanLevel();
     	$outputArray['INSTALL_METHOD'] = self::GetInstallMethod();
@@ -422,8 +422,8 @@ class Application_Model_Preference
         }
     }
 
-    public static function SetRemindMeDate($now){
-    	$weekAfter = mktime(0, 0, 0, date("m")  , date("d")+7, date("Y"));
+    public static function SetRemindMeDate(){
+    	$weekAfter = mktime(0, 0, 0, gmdate("m"), gmdate("d")+7, gmdate("Y"));
    		self::SetValue("remindme", $weekAfter);
     }
 

@@ -107,7 +107,7 @@ class Application_Model_Nowplaying
     }
 
     public static function ShouldShowPopUp(){
-        $today = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
+        $today = mktime(0, 0, 0, gmdate("m"), gmdate("d"), gmdate("Y"));
         $remindDate = Application_Model_Preference::GetRemindMeDate();
         if($remindDate == NULL || $today >= $remindDate){
             return true;

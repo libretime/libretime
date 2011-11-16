@@ -24,10 +24,7 @@ class Application_Model_DateHelper
      */
     function getUtcTimestamp()
     {
-        $dateTime = new DateTime("@".$this->_dateTime);
-        $dateTime->setTimezone(new DateTimeZone("UTC"));
-
-        return $dateTime->format("Y-m-d H:i:s");
+        return gmdate("Y-m-d H:i:s", $this->_dateTime);
     }
 
     /**
@@ -36,7 +33,7 @@ class Application_Model_DateHelper
      */
     function getDate()
     {
-        return date("Y-m-d", $this->_dateTime);
+        return gmdate("Y-m-d", $this->_dateTime);
     }
 
     /**
@@ -45,7 +42,7 @@ class Application_Model_DateHelper
      */
     function getTime()
     {
-        return date("H:i:s", $this->_dateTime);
+        return gmdate("H:i:s", $this->_dateTime);
     }
 
     /**
@@ -53,7 +50,8 @@ class Application_Model_DateHelper
      */
     function setDate($dateString)
     {
-        $this->_dateTime = strtotime($dateString);
+        $dateTime = new DateTime($dateString, new DateTimeZone("UTC"));
+        $this->_dateTime = $dateTime->getTimestamp();
     }
 
     /**
@@ -66,7 +64,7 @@ class Application_Model_DateHelper
      * @return  End of day timestamp in local timezone
      */
     function getDayEndTimestamp() {
-        $dateTime = new DateTime($this->getDate());
+        $dateTime = new DateTime($this->getDate(), new DateTimeZone("UTC"));
         $dateTime->add(new DateInterval('P1D'));
         return $dateTime->format('Y-m-d H:i:s');
     }

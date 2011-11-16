@@ -256,7 +256,7 @@ class Application_Model_ShowInstance {
 
         $mins = abs($deltaMin%60);
 
-        $today_timestamp = Application_Model_DateHelper::ConvertToUtcDateTime(date("Y-m-d H:i:s"))->format("Y-m-d H:i:s");
+        $today_timestamp = gmdate("Y-m-d H:i:s");
         $starts = $this->getShowInstanceStart();
         $ends = $this->getShowInstanceEnd();
 

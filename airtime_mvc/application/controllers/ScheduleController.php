@@ -435,10 +435,11 @@ class ScheduleController extends Zend_Controller_Action
 
             //convert from UTC to user's timezone for display.
             $originalDateTime = new DateTime($originalShowStart, new DateTimeZone("UTC"));
-            $timestamp  = strtotime(Application_Model_DateHelper::ConvertToLocalDateTimeString($originalDateTime->format("Y-m-d H:i:s")));
+            $originalDateTime->setTimezone(new DateTimeZone(date_default_timezone_get));
+            //$timestamp  = Application_Model_DateHelper::ConvertToLocalDateTimeString($originalDateTime->format("Y-m-d H:i:s"));
             $this->view->additionalShowInfo =
                 "Rebroadcast of show \"$originalShowName\" from "
-                .date("l, F jS", $timestamp)." at ".date("G:i", $timestamp);
+                .$originalDateTime->format("l, F jS")." at ".$originalDateTime->format("G:i");
         }
 		$this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
