@@ -574,7 +574,7 @@ class Application_Model_Preference
     public static function GetCalendarTimeScale() {
         $val = self::GetValue("calendar_time_scale", true /* user specific */);
         if(strlen($val) == 0) {
-            $val = 'month';
+            $val = "month";
         }
     	return $val;
     }
@@ -590,9 +590,14 @@ class Application_Model_Preference
     
     /**
      * Retrieves the number of entries to show preference in library under Playlist Builder.
+     * Defaults to 10 if no entry exists
      */
     public static function GetLibraryNumEntries() {
-    	return self::GetValue("library_num_entries", true /* user specific */);
+    	$val = self::GetValue("library_num_entries", true /* user specific */);
+        if(strlen($val) == 0) {
+            $val = "10";
+        }
+        return $val;
     }
     
     /**
