@@ -110,14 +110,14 @@ class ScheduleController extends Zend_Controller_Action
     {
         $deltaDay = $this->_getParam('day');
 		$deltaMin = $this->_getParam('min');
-		$showInstanceId = $this->_getParam('showInstanceId');
+		$showId = $this->_getParam('showId');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             try{
-                $show = new Application_Model_ShowInstance($showInstanceId);
+                $show = new Application_Model_Show($showId);
             }catch(Exception $e){
                 $this->view->show_error = true;
                 return false;
@@ -296,12 +296,12 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentPlaylistAction()
     {
-        
+
         $range = Application_Model_Schedule::GetPlayOrderRange();
-        
+
         /* Convert all UTC times to localtime before sending back to user. */
         if (isset($range["previous"])){
-            $range["previous"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["previous"]["starts"]);            
+            $range["previous"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["previous"]["starts"]);
             $range["previous"]["ends"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["previous"]["ends"]);
         }
         if (isset($range["current"])){
@@ -312,10 +312,10 @@ class ScheduleController extends Zend_Controller_Action
             $range["next"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["next"]["starts"]);
             $range["next"]["ends"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["next"]["ends"]);
         }
-        
+
         Application_Model_Show::ConvertToLocalTimeZone($range["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
         Application_Model_Show::ConvertToLocalTimeZone($range["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
-        
+
         $this->view->entries = $range;
     }
 

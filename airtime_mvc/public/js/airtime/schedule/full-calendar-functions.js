@@ -319,7 +319,7 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 	url = '/Schedule/resize-show/format/json';
 
 	$.post(url,
-		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
+		{day: dayDelta, min: minuteDelta, showId: event.showId},
 		function(json){
 		    if(json.show_error == true){
                 alertShowErrorAndReload();

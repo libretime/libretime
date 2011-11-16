@@ -239,6 +239,11 @@ class Application_Model_ShowInstance {
         Application_Model_RabbitMq::PushSchedule();
     }
 
+    /*
+     * FUNCTION SHOULD NOT BE CALLED
+     * - we are removing ability to resize just a single show instance
+     * -please use the resize method on the Show.php class.
+     */
     public function resizeShow($deltaDay, $deltaMin)
     {
         global $CC_DBC;
