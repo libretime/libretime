@@ -115,7 +115,11 @@ class Application_Model_Show {
             ->filterByDbShowId($this->_showId)
             ->update(array('DbLastShow' => $timeinfo[0]));
 
-        $sql = "DELETE FROM cc_show_instances
+        //$sql = "DELETE FROM cc_show_instances
+        //            WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
+
+        $sql = "UPDATE cc_show_instances
+                SET deleted_instance = TRUE
                     WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
 
         $CC_DBC->query($sql);
@@ -123,6 +127,7 @@ class Application_Model_Show {
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->_showId)
+            ->filterByDbDeletedInstance(false)
             ->findOne();
 
         if(is_null($showInstancesRow)){
@@ -175,6 +180,7 @@ class Application_Model_Show {
         $showInstancesRow = CcShowInstancesQuery::create()
         ->filterByDbShowId($this->getId())
         ->filterByDbRecord(1)
+        ->filterByDbDeletedInstance(false)
         ->findOne();
 
         return !is_null($showInstancesRow);
@@ -192,6 +198,7 @@ class Application_Model_Show {
          $showInstancesRow = CcShowInstancesQuery::create()
         ->filterByDbShowId($this->_showId)
         ->filterByDbRebroadcast(1)
+        ->filterByDbDeletedInstance(false)
         ->findOne();
 
         return !is_null($showInstancesRow);
@@ -213,7 +220,8 @@ class Application_Model_Show {
         $sql = "SELECT date(starts) "
                 ."FROM cc_show_instances "
                 ."WHERE show_id = $showId "
-                ."AND record = 1";
+                ."AND record = 1 "
+                ."AND deleted_instance != TRUE";
         $baseDate = $CC_DBC->GetOne($sql);
 
         if (is_null($baseDate)){
@@ -524,6 +532,7 @@ class Application_Model_Show {
         $sql = "SELECT id from cc_show_instances"
             ." WHERE show_id = $showId"
             ." AND starts > TIMESTAMP '$timestamp'";
+            ." AND deleted_instance != TRUE";
 
         $rows = $CC_DBC->GetAll($sql);
 
@@ -624,19 +633,48 @@ class Application_Model_Show {
         return $days;
     }
 
+    /* Only used for shows that aren't repeating. 
+     * 
+     * @return Boolean: true if show has an instance, otherwise false. */
     public function hasInstance(){
         return (!is_null($this->getInstance()));
     }
 
+    /* Only used for shows that aren't repeating. 
+     * 
+     * @return CcShowInstancesQuery: An propel object representing a 
+     *      row in the cc_show_instances table. */
     public function getInstance(){
-        $showInstances = CcShowInstancesQuery::create()->filterByDbShowId($this->getId())->findOne();
-        return $showInstances;
+        $showInstance = CcShowInstancesQuery::create()
+            ->filterByDbShowId($this->getId())
+            ->findOne();
+            
+        return $showInstance;
     }
 
+    /* Only used for shows that are repeating. Note that this will return
+     * true even for dates that only have a "deleted" show instance (does not 
+     * check if the "deleted_instance" column is set to true). This is intended
+     * behaviour. 
+     * 
+     * @param $p_dateTime: Date for which we are checking if instance 
+     * exists.
+     * 
+     * @return Boolean: true if show has an instance on $p_dateTime, 
+     *      otherwise false. */
     public function hasInstanceOnDate($p_dateTime){
         return (!is_null($this->getInstanceOnDate($p_dateTime)));
     }
 
+
+    /* Only used for shows that are repeating. Note that this will return
+     * shows that have been "deleted" (does not check if the "deleted_instance"
+     * column is set to true). This is intended behaviour.
+     * 
+     * @param $p_dateTime: Date for which we are getting an instance.
+     * 
+     * @return CcShowInstancesQuery: An propel object representing a 
+     *      row in the cc_show_instances table. */
     public function getInstanceOnDate($p_dateTime){
         global $CC_DBC;
         $timestamp = $p_dateTime->format("Y-m-d H:i:s");
@@ -647,7 +685,8 @@ class Application_Model_Show {
             ." AND show_id = $showId";
 
         $row = $CC_DBC->GetOne($sql);
-        return CcShowInstancesQuery::create()->findPk($row);
+        return CcShowInstancesQuery::create()
+            ->findPk($row);
     }
 
     public function deletePossiblyInvalidInstances($p_data, $p_endDate, $isRecorded, $repeatType)
@@ -1206,21 +1245,22 @@ class Application_Model_Show {
         }
 
         $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, description,
-                color, background_color, file_id, deleted_instance, cc_show_instances.id AS instance_id
+                color, background_color, file_id, cc_show_instances.id AS instance_id
             FROM cc_show_instances
-            LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id";
+            LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id
+            WHERE cc_show_instances.deleted_instance = FALSE";
 
         //only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
         $end_string = $end_timestamp->format("Y-m-d H:i:s");
         if ($onlyRecord) {
 
-            $sql = $sql." WHERE (starts >= '{$start_string}' AND starts < timestamp '{$end_string}')";
+            $sql = $sql." AND (starts >= '{$start_string}' AND starts < timestamp '{$end_string}')";
             $sql = $sql." AND (record = 1)";
         }
         else {
 
-            $sql = $sql." WHERE ((starts >= '{$start_string}' AND starts < '{$end_string}')
+            $sql = $sql." AND ((starts >= '{$start_string}' AND starts < '{$end_string}')
                 OR (ends > '{$start_string}' AND ends <= '{$end_string}')
                 OR (starts <= '{$start_string}' AND ends >= '{$end_string}'))";
         }
@@ -1306,22 +1346,19 @@ class Application_Model_Show {
         $today_timestamp = Application_Model_DateHelper::ConvertToUtcDateTime(date("Y-m-d H:i:s"))->format("Y-m-d H:i:s");
 
         foreach ($shows as $show) {
+            $options = array();
 
-            if ($show["deleted_instance"] != "t"){
-                $options = array();
+            //only bother calculating percent for week or day view.
+            if(intval($days) <= 7) {
+                $show_instance = new Application_Model_ShowInstance($show["instance_id"]);
+                $options["percent"] =  $show_instance->getPercentScheduled();
+            }
 
-                //only bother calculating percent for week or day view.
-                if(intval($days) <= 7) {
-                    $show_instance = new Application_Model_ShowInstance($show["instance_id"]);
-                    $options["percent"] =  $show_instance->getPercentScheduled();
-                }
-
-                if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
-                    $options["editable"] = true;
-                    $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
-                } else {
-                    $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
-                }
+            if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
+                $options["editable"] = true;
+                $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
+            } else {
+                $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
             }
         }
 

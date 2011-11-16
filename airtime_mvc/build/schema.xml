@@ -269,6 +269,10 @@
     <column name="schedule_group_played" phpName="DbScheduleGroupPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
     <column name="media_item_played" phpName="DbMediaItemPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
+    <!-- This foreign key is still useful even though it may seem we don't ever delete cc_show_instances anymore.
+        We will do delete them in some cases (when editing a show and changing the repeating days of the week
+        for example. \
+        TLDR: Don't delete this foreign key constraint. -->
     <foreign-key foreignTable="cc_show_instances" name="cc_show_inst_fkey" onDelete="CASCADE">
       <reference local="instance_id" foreign="id"/>
     </foreign-key>

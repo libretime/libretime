@@ -222,7 +222,7 @@ class Application_Model_ShowInstance {
             $isBeforeRecordedOriginal = $CC_DBC->GetOne($sql);
 
             if($isBeforeRecordedOriginal === 't'){
-                return "Cannot move a rebroadcast show before its original";
+                return "Cannot move a rebroadcast show before its original show";
             }
         }
 
@@ -402,12 +402,19 @@ class Application_Model_ShowInstance {
             ->findPK($this->_instanceId)
             ->setDbDeletedInstance(true)
             ->save();
+            
+        /* Automatically delete all files scheduled in cc_schedules table. */
+        CcScheduleQuery::create()
+            ->filterByDbInstanceId($this->_instanceId)
+            ->delete();
 
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($showId)
             ->filterByDbDeletedInstance(false)
             ->findOne();
+            
+        
 
         /* If we didn't find any instances of the show that haven't
          * been deleted, then just erase everything related to that show.
@@ -547,7 +554,7 @@ class Application_Model_ShowInstance {
 		global $CC_DBC;
 
 		$sql = "SELECT id FROM cc_show_instances AS si "
-			."WHERE ("
+			."WHERE deleted_instance != TRUE AND ("
 			."(si.starts < TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
 			."AND si.ends > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds') "
 			."OR (si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
