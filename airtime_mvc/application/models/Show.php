@@ -105,6 +105,35 @@ class Application_Model_Show {
         return $res;
     }
 
+    public function resizeShow($deltaDay, $deltaMin)
+    {
+        global $CC_DBC;
+
+        $hours = $deltaMin/60;
+        if($hours > 0)
+            $hours = floor($hours);
+        else
+            $hours = ceil($hours);
+
+        $mins = abs($deltaMin%60);
+
+        //current timesamp in UTC.
+        $current_timestamp = Application_Model_DateHelper::ConvertToUtcDateTime(date("Y-m-d H:i:s"))->format("Y-m-d H:i:s");
+
+        //update all cc_show_instances that are in the future.
+        $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
+                WHERE (show_id = {$this->_showId} AND starts > '$current_timestamp');";
+
+        //update cc_show_days so future shows can be created with the new duration.
+        $sql = $sql . " UPDATE cc_show_days SET duration = (CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
+                WHERE show_id = {$this->_showId}";
+
+        //do both the queries at once.
+        $CC_DBC->query($sql);
+
+        Application_Model_RabbitMq::PushSchedule();
+    }
+
     public function cancelShow($day_timestamp)
     {
         global $CC_DBC;
