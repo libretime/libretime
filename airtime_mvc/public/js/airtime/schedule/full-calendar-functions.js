@@ -197,6 +197,10 @@ function viewDisplay( view ) {
                     .fullCalendar('destroy')
                     .fullCalendar(opt)
                     .fullCalendar( 'gotoDate', date );
+                
+                //save slotMin value to db
+                var url = '/Schedule/set-time-interval/format/json';
+		$.post(url, {timeInterval: slotMin});
             });
 
         var topLeft = $(view.element).find("table.fc-agenda-days > thead th:first");
@@ -214,6 +218,10 @@ function viewDisplay( view ) {
     if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left > span').length == 5)) {
         makeAddShowButton();
     }
+    
+    //save view name to db
+    var url = '/Schedule/set-time-scale/format/json';
+    $.post(url, {timeScale: view.name});
 }
 
 function eventRender(event, element, view) {
