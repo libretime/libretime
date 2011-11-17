@@ -264,7 +264,7 @@ function init() {
     
     $('.listen-control-button').click(function() {
         if (stream_window == null || stream_window.closed)
-            stream_window=window.open(baseUrl+"Dashboard/stream-player", 'name', 'width=400,height=216');
+            stream_window=window.open(baseUrl+"Dashboard/stream-player", 'name', 'width=400,height=178');
         stream_window.focus();
         return false;
     });
