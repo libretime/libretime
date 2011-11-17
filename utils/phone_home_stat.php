@@ -72,6 +72,8 @@ if(Application_Model_Preference::GetSupportFeedback() == '1'){
     
     curl_setopt($ch, CURLOPT_POSTFIELDS, $dataArray);
     $result = curl_exec($ch);
+    
+    curl_close($ch);
 }
 
 // Get latest version from stat server and store to db
@@ -82,10 +84,16 @@ if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_URL, $url);
     $result = curl_exec($ch);
-    $resultArray = explode("\n", $result);
     
-    Application_Model_Preference::SetLatestVersion($resultArray[0]);
-    Application_Model_Preference::SetLatestLink($resultArray[1]);
+    if(curl_errno($ch)) {
+        echo "curl error: " . curl_error($ch) . "\n";
+    } else {
+        $resultArray = explode("\n", $result);
+        Application_Model_Preference::SetLatestVersion($resultArray[0]);
+        Application_Model_Preference::SetLatestLink($resultArray[1]);
+    }
+    
+    curl_close($ch);
 }
 
 /**

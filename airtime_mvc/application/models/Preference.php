@@ -530,14 +530,19 @@ class Application_Model_Preference
     public static function GetLatestLink(){
         $link = self::GetValue("latest_link");
         if($link == null || strlen($link) == 0) {
-            return "";
+            return "http://www.sourcefabric.org/en/airtime/download/";
         } else {
             return $link;
         }
     }
     
     public static function SetLatestLink($link){
-        self::SetValue("latest_link", $link);
+        $pattern = "#^(http|https|ftp)://" .
+                    "([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+" .
+                    "(/[a-zA-Z0-9\-\.\_\~\:\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]+)*/?$#";
+        if(preg_match($pattern, $link)) {
+            self::SetValue("latest_link", $link);
+        }
     }
 
     public static function SetUploadToSoundcloudOption($upload) {
