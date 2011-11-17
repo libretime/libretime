@@ -82,8 +82,10 @@ if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_URL, $url);
     $result = curl_exec($ch);
+    $resultArray = explode("\n", $result);
     
-    Application_Model_Preference::SetLatestVersion($result);
+    Application_Model_Preference::SetLatestVersion($resultArray[0]);
+    Application_Model_Preference::SetLatestLink($resultArray[1]);
 }
 
 /**

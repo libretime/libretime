@@ -41,6 +41,13 @@ function getLatestVersion() {
 }
 
 /**
+ * Returns the download link to latest release in HTML
+ */
+function getLatestLink() {
+    return "<a href='" + $("#version-link").html() + "'>" + getLatestVersion() + "</a>";
+}
+
+/**
  * Returns true if current version is up to date
  */
 function isUpToDate() {
@@ -49,13 +56,6 @@ function isUpToDate() {
     var latest = getLatestVersion();
     var temp = (diff == 0 && current == latest) || diff < 0;
     return (diff == 0 && current == latest) || diff < 0;
-}
-
-/**
- * Returns the download link to latest release in HTML
- */
-function getLatestLink() {
-    return "<a href='http://apt.sourcefabric.org/misc/'>" + getLatestVersion() + "</a>";
 }
 
 /**

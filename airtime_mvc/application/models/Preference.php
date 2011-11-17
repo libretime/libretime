@@ -526,6 +526,19 @@ class Application_Model_Preference
             self::SetValue("latest_version", $version);
         }
     }
+    
+    public static function GetLatestLink(){
+        $link = self::GetValue("latest_link");
+        if($link == null || strlen($link) == 0) {
+            return "";
+        } else {
+            return $link;
+        }
+    }
+    
+    public static function SetLatestLink($link){
+        self::SetValue("latest_link", $link);
+    }
 
     public static function SetUploadToSoundcloudOption($upload) {
         self::SetValue("soundcloud_upload_option", $upload);

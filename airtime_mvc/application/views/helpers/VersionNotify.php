@@ -19,6 +19,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract{
         // retrieve and validate current and latest versions,
         $current = Application_Model_Preference::GetAirtimeVersion();
         $latest = Application_Model_Preference::GetLatestVersion();
+        $link = Application_Model_Preference::GetLatestLink();
         $pattern = "/^([0-9]+)\.([0-9]+)\.[0-9]+/";
         preg_match($pattern, $current, $curMatch);
         preg_match($pattern, $latest, $latestMatch);
@@ -50,6 +51,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract{
         $result = "<div id='version-diff' style='display:none'>" . $diff . "</div>"
                 . "<div id='version-current' style='display:none'>" . $current . "</div>"
                 . "<div id='version-latest' style='display:none'>" . $latest . "</div>"
+                . "<div id='version-link' style='display:none'>" . $link . "</div>"
                 . "<div id='version-icon' class='" . $class . "'></div>";
         return $result;
     }
