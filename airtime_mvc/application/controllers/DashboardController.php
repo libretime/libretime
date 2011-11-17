@@ -35,7 +35,7 @@ class DashboardController extends Zend_Controller_Action
 
     public function aboutAction()
     {
-        // action body
+        $this->view->airtime_version = Application_Model_Preference::GetAirtimeVersion();
     }
 
 }

@@ -40,7 +40,7 @@ function createDateInput(el, onSelect) {
 
 function autoSelect(event, ui) {
 
-	$("#add_show_hosts-"+ui.item.value).attr("checked", "checked");
+    $("#add_show_hosts-"+ui.item.index).attr("checked", "checked");
 	event.preventDefault();
 }
 
@@ -50,11 +50,21 @@ function findHosts(request, callback) {
 	url = "/User/get-hosts";
 	search = request.term;
 
+	var noResult = new Array();
+    noResult[0] = new Array();
+    noResult[0]['value'] = $("#add_show_hosts_autocomplete").val();
+    noResult[0]['label'] = "No result found";
+    noResult[0]['index'] = null;
+    
 	$.post(url,
 		{format: "json", term: search},
 
 		function(json) {
-			callback(json.hosts);
+		    if(json.hosts.length<1){
+	            callback(noResult);
+	        }else{
+	            callback(json.hosts);
+	        }
 		});
 
 }
@@ -232,6 +242,12 @@ function setAddShowEvents() {
 		select: autoSelect,
         delay: 200
 	});
+	
+	form.find("#add_show_hosts_autocomplete").keypress(function(e){
+        if( e.which == 13 ){
+            return false;
+        }
+    })
 
 	form.find("#schedule-show-style input").ColorPicker({
         onChange: function (hsb, hex, rgb, el) {
