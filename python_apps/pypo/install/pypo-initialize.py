@@ -35,7 +35,7 @@ def is_natty():
 """
 def get_os_codename():
     try:
-        p = Popen("which lsb_release", shell=True)
+        p = Popen("which lsb_release > /dev/null", shell=True)
         sts = os.waitpid(p.pid, 0)[1]
         
         if (sts == 0):
