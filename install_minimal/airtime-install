@@ -15,13 +15,16 @@ if [[ "$DEB" = "Status: install ok installed" ]]; then
     exit 1
 fi
 
-echo -e "\n******************************** Install Begin *********************************"
-
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=`readlink -f $0`
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=`dirname $SCRIPT`
 AIRTIMEROOT=$SCRIPTPATH/../
+
+# Check if airtime exists already
+php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php $@
+
+echo -e "\n******************************** Install Begin *********************************"
 
 rm -rf "/usr/lib/airtime"
 $AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
