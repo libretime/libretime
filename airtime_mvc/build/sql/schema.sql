@@ -196,7 +196,7 @@ CREATE TABLE "cc_show_instances"
 	"instance_id" INTEGER,
 	"file_id" INTEGER,
 	"time_filled" TIME,
-	"deleted_instance" BOOLEAN default 'f' NOT NULL,
+	"modified_instance" BOOLEAN default 'f' NOT NULL,
 	PRIMARY KEY ("id")
 );
 
