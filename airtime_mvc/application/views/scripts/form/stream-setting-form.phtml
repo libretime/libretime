@@ -1,7 +1,7 @@
         <?php 
         $s_name = "s".$this->stream_number;
         ?>
-        <h3 class="collapsible-header <?php echo $this->stream_number != '1'?"close":""?>"><span class="arrow-icon"></span>Stream <?php echo $this->stream_number?></h3>
+        <h3 class="collapsible-header <?php echo $this->stream_number == '1'?"close":""?>"><span class="arrow-icon"></span>Stream <?php echo $this->stream_number?></h3>
         <div class="stream-setting-content" <?php echo $this->stream_number != '1'?'style="display: none;':''?> id="<?=$s_name?>-config">
         <fieldset class="padded">
             <dl class="zend_form clearfix">
