@@ -22,4 +22,7 @@ $SCRIPTPATH/include/airtime-remove-files.sh
 #Remove pypo user
 python $SCRIPTPATH/../python_apps/remove-pypo-user.py
 
-echo -e "\n****************************** Uninstall Complete *******************************"
+echo -e "\n****************************** Uninstall Complete *******************************\n"
+echo "NOTE: To fully remove all Airtime files, you will also have to manually delete"
+echo "      the directories '/srv/airtime'(default storage location of media files)"
+echo -e "      and '/etc/airtime'(where the config files are stored).\n"
