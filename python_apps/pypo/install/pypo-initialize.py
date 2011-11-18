@@ -41,11 +41,16 @@ def get_os_codename():
         if (sts == 0):
             #lsb_release is available on this system. Let's get the os codename
             p = Popen("lsb_release -sc", shell=True, stdout=PIPE)
-            return p.communicate()[0].strip('\r\n')
+            codename = p.communicate()[0].strip('\r\n')
+ 
+            p = Popen("lsb_release -sd", shell=True, stdout=PIPE)
+            fullname = p.communicate()[0].strip('\r\n')
+            
+            return (codename, fullname)
     except Exception, e:
         pass
 
-    return "unknown"
+    return ("unknown", "unknown")
         
 def get_current_script_dir():
     current_script_dir = os.path.realpath(__file__)
@@ -94,11 +99,11 @@ try:
     architecture = platform.architecture()[0]
     #natty = is_natty()
         
-    codename = get_os_codename()
+    print "* Detecting OS: ...",
+    (codename, fullname) = get_os_codename()
+    print " Found %s" % fullname
     natty = codename in codenames_for_natty_binary
-    
-    print "* Detecting system architecture for Liquidsoap"
-    
+        
     if architecture == '64bit' and natty:
         print " * Installing 64-bit liquidsoap binary (Natty)"
         shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
