@@ -1,7 +1,9 @@
 <?php
+set_include_path(__DIR__.'/../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
+require_once('Zend/Loader/Autoloader.php');
 //Pear classes.
 set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
-require_once('DB.php');
+require_once('pear/DB.php');
 
 class AirtimeInstall
 {
@@ -466,5 +468,34 @@ class AirtimeInstall
         if(file_exists('/usr/share/python-virtualenv/distribute-0.6.10.tar.gz')){
             exec("rm -f /usr/share/python-virtualenv/distribute-0.6.10.tar.gz");
         }
+    }
+    
+    public static function printUsage($opts)
+    {
+        $msg = $opts->getUsageMessage();
+        echo PHP_EOL."Usage: airtime-install [options]";
+        echo substr($msg, strpos($msg, "\n")).PHP_EOL;
+    }
+    
+    public static function getOpts()
+    {
+        try {
+            $autoloader = Zend_Loader_Autoloader::getInstance();
+            $opts = new Zend_Console_Getopt(
+                array(
+                    'help|h' => 'Displays usage information.',
+                    'overwrite|o' => 'Overwrite any existing config files.',
+                    'preserve|p' => 'Keep any existing config files.',
+                    'no-db|n' => 'Turn off database install.',
+                    'reinstall|r' => 'Force a fresh install of this Airtime Version'
+                )
+            );
+            $opts->parse();
+        } catch (Zend_Console_Getopt_Exception $e) {
+            print $e->getMessage() .PHP_EOL;
+            AirtimeInstall::printUsage($opts);
+            return NULL;
+        }
+        return $opts;
     }
 }
