@@ -2,10 +2,9 @@
 
 exec 2>&1
 
-target="airtime_195_tar"
-airtime_versions=(""  "airtime_182_tar" "airtime_194_tar")
-ubuntu_versions=("ubuntu_lucid_32" "ubuntu_natty_32")
-
+target="airtime_git_branch"
+airtime_versions=("")
+ubuntu_versions=("ubuntu_maverick_32")
 
 num1=${#ubuntu_versions[@]}
 num2=${#airtime_versions[@]}
