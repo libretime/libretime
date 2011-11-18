@@ -730,6 +730,28 @@ class ScheduleController extends Zend_Controller_Action
                     Application_Model_Schedule::createNewFormSections($this->view);
 
                     $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+                }else{
+                    $this->view->what = $formWhat;
+                    $this->view->when = $formWhen;
+                    $this->view->repeats = $formRepeats;
+                    $this->view->who = $formWho;
+                    $this->view->style = $formStyle;
+                    $this->view->rr = $formRecord;
+                    $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+                    $this->view->rebroadcast = $formRebroadcast;
+                    $this->view->addNewShow = true;
+        
+                    //the form still needs to be "update" since
+                    //the validity test failed.
+                    if ($data['add_show_id'] != -1){
+                        $this->view->addNewShow = false;
+                    }
+                    if (!$startDateModified){
+                        $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
+                    }
+        
+                    $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+                    
                 }
             }else{
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();

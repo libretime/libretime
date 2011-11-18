@@ -143,7 +143,9 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     url = !url_ref,
                     genre = !genre_ref,
                     name = !description_ref,
-                    user = !user_ref)
+                    user = !user_ref,
+                    on_error = on_error,
+                    on_connect = on_connect)
          if bitrate == 24 then 
                 ignore(output.shoutcast(%mp3(bitrate = 24),s))
             elsif bitrate == 32 then
