@@ -51,12 +51,7 @@ def get_os_codename():
         pass
 
     return ("unknown", "unknown")
-        
-def get_current_script_dir():
-    current_script_dir = os.path.realpath(__file__)
-    index = current_script_dir.rindex('/')
-    return current_script_dir[0:index]
-    
+
 def generate_liquidsoap_config(ss):
     data = ss['msg']
     fh = open('/etc/airtime/liquidsoap.cfg', 'w')
@@ -81,6 +76,7 @@ def generate_liquidsoap_config(ss):
     fh.close()
     
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
+PATH_LIQUIDSOAP_BIN = '/usr/lib/airtime/pypo/bin/liquidsoap_bin'
 
 #any debian/ubuntu codename in this et will automatically use the natty liquidsoap binary
 codenames_for_natty_binary = set(["natty", "oneiric", "precise", "squeeze"])
@@ -92,9 +88,7 @@ except Exception, e:
     print 'Error loading config file: ', e
     sys.exit(1)
     
-try:
-    current_script_dir = get_current_script_dir()
-    
+try:    
     #select appropriate liquidsoap file for given system os/architecture
     architecture = platform.architecture()[0]
     #natty = is_natty()
@@ -106,16 +100,16 @@ try:
         
     if architecture == '64bit' and natty:
         print " * Installing 64-bit liquidsoap binary (Natty)"
-        shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
+        shutil.copy("%s/liquidsoap-natty-amd64"%PATH_LIQUIDSOAP_BIN, "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
     elif architecture == '32bit' and natty:
         print " * Installing 32-bit liquidsoap binary (Natty)"
-        shutil.copy("%s/../liquidsoap_bin/liquidsoap-natty-i386"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
+        shutil.copy("%s/liquidsoap-natty-i386"%PATH_LIQUIDSOAP_BIN, "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
     elif architecture == '64bit' and not natty:
         print " * Installing 64-bit liquidsoap binary"
-        shutil.copy("%s/../liquidsoap_bin/liquidsoap-amd64"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
+        shutil.copy("%s/liquidsoap-amd64"%PATH_LIQUIDSOAP_BIN, "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
     elif architecture == '32bit' and not natty:
         print " * Installing 32-bit liquidsoap binary"
-        shutil.copy("%s/../liquidsoap_bin/liquidsoap-i386"%current_script_dir, "%s/../liquidsoap_bin/liquidsoap"%current_script_dir)
+        shutil.copy("%s/liquidsoap-i386"%PATH_LIQUIDSOAP_BIN, "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
     else:
         print "Unknown system architecture."
         sys.exit(1)
