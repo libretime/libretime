@@ -148,7 +148,7 @@ class Application_Model_Show {
         //            WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
 
         $sql = "UPDATE cc_show_instances
-                SET deleted_instance = TRUE
+                SET modified_instance = TRUE
                     WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
 
         $CC_DBC->query($sql);
@@ -156,7 +156,7 @@ class Application_Model_Show {
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->_showId)
-            ->filterByDbDeletedInstance(false)
+            ->filterByDbModifiedInstance(false)
             ->findOne();
 
         if(is_null($showInstancesRow)){
@@ -209,7 +209,7 @@ class Application_Model_Show {
         $showInstancesRow = CcShowInstancesQuery::create()
         ->filterByDbShowId($this->getId())
         ->filterByDbRecord(1)
-        ->filterByDbDeletedInstance(false)
+        ->filterByDbModifiedInstance(false)
         ->findOne();
 
         return !is_null($showInstancesRow);
@@ -227,7 +227,7 @@ class Application_Model_Show {
          $showInstancesRow = CcShowInstancesQuery::create()
         ->filterByDbShowId($this->_showId)
         ->filterByDbRebroadcast(1)
-        ->filterByDbDeletedInstance(false)
+        ->filterByDbModifiedInstance(false)
         ->findOne();
 
         return !is_null($showInstancesRow);
@@ -250,7 +250,7 @@ class Application_Model_Show {
                 ."FROM cc_show_instances "
                 ."WHERE show_id = $showId "
                 ."AND record = 1 "
-                ."AND deleted_instance != TRUE";
+                ."AND modified_instance != TRUE";
         $baseDate = $CC_DBC->GetOne($sql);
 
         if (is_null($baseDate)){
@@ -561,7 +561,7 @@ class Application_Model_Show {
         $sql = "SELECT id from cc_show_instances"
             ." WHERE show_id = $showId"
             ." AND starts > TIMESTAMP '$timestamp'"
-            ." AND deleted_instance != TRUE";
+            ." AND modified_instance != TRUE";
 
         $rows = $CC_DBC->GetAll($sql);
 
@@ -682,8 +682,8 @@ class Application_Model_Show {
     }
 
     /* Only used for shows that are repeating. Note that this will return
-     * true even for dates that only have a "deleted" show instance (does not 
-     * check if the "deleted_instance" column is set to true). This is intended
+     * true even for dates that only have a "modified" show instance (does not 
+     * check if the "modified_instance" column is set to true). This is intended
      * behaviour. 
      * 
      * @param $p_dateTime: Date for which we are checking if instance 
@@ -697,7 +697,7 @@ class Application_Model_Show {
 
 
     /* Only used for shows that are repeating. Note that this will return
-     * shows that have been "deleted" (does not check if the "deleted_instance"
+     * shows that have been "modified" (does not check if the "modified_instance"
      * column is set to true). This is intended behaviour.
      * 
      * @param $p_dateTime: Date for which we are getting an instance.
@@ -1277,7 +1277,7 @@ class Application_Model_Show {
                 color, background_color, file_id, cc_show_instances.id AS instance_id
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id
-            WHERE cc_show_instances.deleted_instance = FALSE";
+            WHERE cc_show_instances.modified_instance = FALSE";
 
         //only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format("Y-m-d H:i:s");

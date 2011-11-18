@@ -139,7 +139,7 @@ class Application_Model_ShowInstance {
 
     public function isDeleted()
     {
-        $this->_showInstance->getDbDeletedInstance();
+        $this->_showInstance->getDbModifiedInstance();
     }
 
     public function correctScheduleStartTimes(){
@@ -405,7 +405,7 @@ class Application_Model_ShowInstance {
 
         CcShowInstancesQuery::create()
             ->findPK($this->_instanceId)
-            ->setDbDeletedInstance(true)
+            ->setDbModifiedInstance(true)
             ->save();
             
         /* Automatically delete all files scheduled in cc_schedules table. */
@@ -416,7 +416,7 @@ class Application_Model_ShowInstance {
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($showId)
-            ->filterByDbDeletedInstance(false)
+            ->filterByDbModifiedInstance(false)
             ->findOne();
             
         
@@ -559,7 +559,7 @@ class Application_Model_ShowInstance {
 		global $CC_DBC;
 
 		$sql = "SELECT id FROM cc_show_instances AS si "
-			."WHERE deleted_instance != TRUE AND ("
+			."WHERE modified_instance != TRUE AND ("
 			."(si.starts < TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
 			."AND si.ends > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds') "
 			."OR (si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
