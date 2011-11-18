@@ -1,11 +1,28 @@
-Before you overwrite fullcalendar.js, note that we have changed one line
-of this file.
+Before you overwrite fullcalendar.js, note that we have changed a few lines
+in this file.
 
 Running a diff between the original fullcalendar.js and our modified one:
 
-$diff -u fullcalendar_original.js fullcalendar.js 
---- fullcalendar_original.js	2011-04-09 17:13:15.000000000 -0400
-+++ fullcalendar.js	2011-08-19 11:58:49.672894583 -0400
+martin@Thinkpad-T410:~/workspace/airtime/airtime_mvc/public/js/fullcalendar$ diff -u fullcalendar_orig.js fullcalendar.js 
+--- fullcalendar_orig.js	2011-04-09 17:13:15.000000000 -0400
++++ fullcalendar.js	2011-11-18 17:03:57.000000000 -0500
+@@ -1,6 +1,6 @@
+ /**
+  * @preserve
+- * FullCalendar v1.5.1
++ * FullCalendar v1.5.1-CUSTOM (Changes by Martin Konecny -added primitive support for timezones)
+  * http://arshaw.com/fullcalendar/
+  *
+  * Use fullcalendar.css for basic styling.
+@@ -227,7 +227,7 @@
+ 	var absoluteViewElement;
+ 	var resizeUID = 0;
+ 	var ignoreWindowResize = 0;
+-	var date = new Date();
++	var date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
+ 	var events = [];
+ 	var _dragElement;
+ 	
 @@ -2275,7 +2275,7 @@
  	function updateCells(firstTime) {
  		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
@@ -15,7 +32,22 @@ $diff -u fullcalendar_original.js fullcalendar.js
  		var cell;
  		var date;
  		var row;
-
+@@ -3108,7 +3108,7 @@
+ 		var headCell;
+ 		var bodyCell;
+ 		var date;
+-		var today = clearTime(new Date());
++		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
+ 		for (i=0; i<colCnt; i++) {
+ 			date = colDate(i);
+ 			headCell = dayHeadCells.eq(i);
+@@ -5205,4 +5205,4 @@
+ 	
+ }
+ 
+-})(jQuery);
+\ No newline at end of file
++})(jQuery);
 
 
 adjustDateToServerDate() function is defined in "js/airtime/schedule/full-calendar-functions.js"

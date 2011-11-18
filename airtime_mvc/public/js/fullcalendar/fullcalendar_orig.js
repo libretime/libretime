@@ -1,6 +1,6 @@
 /**
  * @preserve
- * FullCalendar v1.5.1-CUSTOM (Changes by Martin Konecny -added primitive support for timezones)
+ * FullCalendar v1.5.1
  * http://arshaw.com/fullcalendar/
  *
  * Use fullcalendar.css for basic styling.
@@ -227,7 +227,7 @@ function Calendar(element, options, eventSources) {
 	var absoluteViewElement;
 	var resizeUID = 0;
 	var ignoreWindowResize = 0;
-	var date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
+	var date = new Date();
 	var events = [];
 	var _dragElement;
 	
@@ -2275,7 +2275,7 @@ function BasicView(element, calendar, viewName) {
 	function updateCells(firstTime) {
 		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
 		var month = t.start.getMonth();
-		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
+		var today = clearTime(new Date());
 		var cell;
 		var date;
 		var row;
@@ -3108,7 +3108,7 @@ function AgendaView(element, calendar, viewName) {
 		var headCell;
 		var bodyCell;
 		var date;
-		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
+		var today = clearTime(new Date());
 		for (i=0; i<colCnt; i++) {
 			date = colDate(i);
 			headCell = dayHeadCells.eq(i);
