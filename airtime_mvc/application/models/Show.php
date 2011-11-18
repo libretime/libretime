@@ -1416,7 +1416,6 @@ class Application_Model_Show {
         $event["description"] = $show["description"];
         $event["showId"] = $show["show_id"];
         $event["record"] = intval($show["record"]);
-        $event["deleted_instance"] = $show["deleted_instance"];
         $event["rebroadcast"] = intval($show["rebroadcast"]);
 
         // get soundcloud_id
@@ -1470,8 +1469,9 @@ class Application_Model_Show {
     public static function GetCurrentShow($timeNow)
     {
         global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url"
+        
+        //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts <= TIMESTAMP '$timeNow'"
@@ -1505,6 +1505,7 @@ class Application_Model_Show {
             $timeEnd = "'$timeEnd'";
         }
 
+        //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
         ." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
