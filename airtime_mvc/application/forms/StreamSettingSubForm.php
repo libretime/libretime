@@ -158,7 +158,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $liquidsopa_error_msg = '<div class="stream-status status-info"><h3>Getting information from the server...</h3></div>';
         
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml', "stream_number"=>$stream_number, "liquidsoap_error_msg"=>$liquidsopa_error_msg))
+            array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml', "stream_number"=>$stream_number, "enabled"=>$enable->getValue(), "liquidsoap_error_msg"=>$liquidsopa_error_msg))
         ));
     }
 
