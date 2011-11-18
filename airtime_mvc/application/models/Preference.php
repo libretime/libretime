@@ -530,7 +530,7 @@ class Application_Model_Preference
     public static function GetLatestLink(){
         $link = self::GetValue("latest_link");
         if($link == null || strlen($link) == 0) {
-            return "http://www.sourcefabric.org/en/airtime/download/";
+            return 'http://airtime.sourcefabric.org';
         } else {
             return $link;
         }
