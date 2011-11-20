@@ -448,7 +448,7 @@ class Application_Model_Show {
     }
 
     /**
-     * Get the start date of the current show.
+     * Get the start date of the current show in UTC timezone.
      *
      * @return string
      *      The start date in the format YYYY-MM-DD
@@ -457,38 +457,49 @@ class Application_Model_Show {
         global $CC_DBC;
 
         $showId = $this->getId();
-        $sql = "SELECT first_show FROM cc_show_days"
+        $sql = "SELECT first_show, start_time, timezone FROM cc_show_days"
             ." WHERE show_id = $showId"
-            ." ORDER BY first_show";
+            ." ORDER BY first_show"
+            ." LIMIT 1";
 
-        $firstDate = $CC_DBC->GetOne($sql);
+        $rows = $CC_DBC->GetAll($sql);
 
-        if (is_null($firstDate)){
+        if (count($rows) == 0){
             return "";
         } else {
-            return $firstDate;
+            $row = $rows[0];
+                        
+            $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            return $dt->format("Y-m-d");
         }
     }
-
+	
     /**
-     * Get the start time of the current show.
+     * Get the start time of the current show in UTC timezone.
      *
      * @return string
-     *      The start time in the format HH:MM:SS
+     *      The start time in the format HH:MM
      */
+
     public function getStartTime(){
         global $CC_DBC;
 
         $showId = $this->getId();
-        $sql = "SELECT start_time FROM cc_show_days"
-            ." WHERE show_id = $showId";
+        $sql = "SELECT first_show, start_time, timezone FROM cc_show_days"
+            ." WHERE show_id = $showId"
+            ." ORDER BY first_show"
+            ." LIMIT 1";
 
-        $startTime = $CC_DBC->GetOne($sql);
+        $rows = $CC_DBC->GetAll($sql);
 
-        if (is_null($startTime)){
+        if (count($rows) == 0){
             return "";
         } else {
-            return $startTime;
+            $row = $rows[0];
+            $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            return $dt->format("H:i");
         }
     }
 
@@ -540,7 +551,7 @@ class Application_Model_Show {
      */
     public function isStartDateTimeInPast(){
         $date = new Application_Model_DateHelper;
-        $current_timestamp = $date->getTimestamp();
+        $current_timestamp = $date->getUtcTimestamp();
         return ($current_timestamp > ($this->getStartDate()." ".$this->getStartTime()));
     }
 
@@ -619,9 +630,9 @@ class Application_Model_Show {
         $sql .= "WHERE show_id = $p_data[add_show_id]";
         $CC_DBC->query($sql);
 
-        $oldStartDateTimeEpoch = strtotime($this->getStartDate()." ".$this->getStartTime());
-        $newStartDateTimeEpoch = strtotime($p_data['add_show_start_date']." ".$p_data['add_show_start_time']);
-        $diff = $newStartDateTimeEpoch - $oldStartDateTimeEpoch;
+        $dtOld = new DateTime($this->getStartDate()." ".$this->getStartTime(), new DateTimeZone("UTC"));
+        $dtNew = new DateTime($p_data['add_show_start_date']." ".$p_data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
+        $diff = $dtOld->getTimestamp() - $dtNew->getTimestamp();
 
         $sql = "UPDATE cc_show_instances "
                 ."SET starts = starts + INTERVAL '$diff sec', "
