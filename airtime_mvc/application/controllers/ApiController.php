@@ -180,12 +180,12 @@ class ApiController extends Zend_Controller_Action
             $this->_helper->viewRenderer->setNoRender(true);
 
             $date = new Application_Model_DateHelper;
-            $timeNow = $date->getTimestamp();
+            $utcTimeNow = $date->getUtcTimestamp();
             
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                "currentShow"=>Application_Model_Show::GetCurrentShow($timeNow),
-                "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 5),
+                "currentShow"=>Application_Model_Show::GetCurrentShow($utcTimeNow),
+                "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 5),
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"));
                
