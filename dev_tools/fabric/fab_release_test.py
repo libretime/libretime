@@ -96,9 +96,14 @@ def create_fresh_os(vm_name, update_virtualenv=False, debian=False):
         local("VBoxManage modifyvm %s --snapshotfolder %s"%(vm_name, vdi_snapshot_dir))
         local("VBoxManage snapshot %s take fresh_install"%vm_name)
         local("touch %s/vm_registered"%vdi_dir)
+        
+    
 
 
     local('VBoxManage snapshot %s restore fresh_install'%vm_name)
+    
+    
+    local('VBoxManage modifyvm "%s" --bridgeadapter1 eth0'%vm_name)
     local('VBoxManage startvm %s'%vm_name)
     print "Please wait while attempting to acquire IP address"
         
