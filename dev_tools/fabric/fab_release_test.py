@@ -53,6 +53,13 @@ def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
 
 def create_fresh_os(vm_name, update_virtualenv=False, debian=False):
     
+    """
+    remove known_hosts because if two virtual machines get the same ip address,
+    then they will most likey have a different host key, and ssh will fail, warning
+    about a possible man in the middle attack.
+    """
+    local("rm ~/.ssh/known_hosts")
+    
     vm_vdi_file = '%s.vdi'%vm_name
     vm_xml_file = '%s.xml'%vm_name
     vdi_dir = os.path.expanduser('~/tmp/vms/%s'%vm_name)
@@ -128,6 +135,14 @@ def ubuntu_lucid_32(fresh_os=True):
 def ubuntu_lucid_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Ubuntu_10.04_64', update_virtualenv=True)
+        
+def ubuntu_maverick_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_10.10_32')
+
+def ubuntu_maverick_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_10.10_64')
 
 def ubuntu_natty_32(fresh_os=True):
     if (fresh_os):
@@ -136,6 +151,14 @@ def ubuntu_natty_32(fresh_os=True):
 def ubuntu_natty_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Ubuntu_11.04_64')
+        
+def ubuntu_oneiric_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_11.10_32')
+    
+def ubuntu_oneiric_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_11.10_64')
         
 def debian_squeeze_32(fresh_os=True):
     if (fresh_os):
