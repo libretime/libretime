@@ -29,7 +29,7 @@ class Application_Model_DateHelper
 
     /**
      * Get date of object construction in the format
-     * YY:mm:dd
+     * YYYY-MM-DD
      */
     function getDate()
     {
@@ -43,6 +43,19 @@ class Application_Model_DateHelper
     function getTime()
     {
         return gmdate("H:i:s", $this->_dateTime);
+    }
+    
+    /**
+     * Get the week start date of this week in the format
+     * YYYY-MM-DD
+     * 
+     * @return String - week start date
+     */
+    function getWeekStartDate()
+    {
+        $startDate = date('w') == 0 ? date('Y-m-d') : date('Y-m-d', strtotime('last sunday'));
+        $startDateTime = new DateTime($startDate);
+        return $startDateTime->format('Y-m-d H:i:s');
     }
 
     /**
@@ -63,10 +76,15 @@ class Application_Model_DateHelper
      *
      * @return  End of day timestamp in local timezone
      */
-    function getDayEndTimestamp() {
-        $dateTime = new DateTime($this->getDate(), new DateTimeZone("UTC"));
+    public static function GetDayEndTimestamp($time = "") {
+        $dateTime = $time == "" ? new DateTime(date("Y-m-d")) : new DateTime($time);
         $dateTime->add(new DateInterval('P1D'));
         return $dateTime->format('Y-m-d H:i:s');
+    }
+    
+    public static function GetDayEndTimestampInUtc($time = "") {
+        $dayEndTimestamp = Application_Model_DateHelper::GetDayEndTimestamp($time);
+        return Application_Model_DateHelper::ConvertToUtcDateTime($dayEndTimestamp);
     }
 
     /**
@@ -264,6 +282,12 @@ class Application_Model_DateHelper
         if (is_null($p_dateString) || strlen($p_dateString) == 0)
             return $p_dateString;
         return self::ConvertToLocalDateTime($p_dateString)->format($p_format);
+    }
+    
+    public static function ConvertToUtcDateTimeString($p_dateString, $p_format="Y-m-d H:i:s"){
+        if (is_null($p_dateString) || strlen($p_dateString) == 0)
+            return $p_dateString;
+        return self::ConvertToUtcDateTime($p_dateString)->format($p_format);
     }
 }
 

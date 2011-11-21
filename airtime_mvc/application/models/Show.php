@@ -1461,15 +1461,15 @@ class Application_Model_Show {
     }
 
     /**
-     * Given local current time $timeNow, returns the show being played right now.
+     * Given time $timeNow, returns the show being played right now.
+     * Times are all in UTC time.
      *
-     * @param type $timeNow     local current time
-     * @return type             show being played right now
+     * @param String $timeNow - current time (in UTC)
+     * @return array - show being played right now
      */
     public static function GetCurrentShow($timeNow)
     {
         global $CC_CONFIG, $CC_DBC;
-        
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
@@ -1484,23 +1484,25 @@ class Application_Model_Show {
     }
 
     /**
-     * Given local current time $timeNow, returns the next $limit number of
-     * shows within 2 days if $timeEnd is not given; Otherwise, returns the
-     * next $limit number of shows from $timeNow to $timeEnd, both in local time.
+     * Given a start time $timeStart and end time $timeEnd, returns the next $limit
+     * number of shows within the time interval;
+     * If $timeEnd not given, shows within next 48 hours from $timeStart are returned;
+     * If $limit not given, all shows within the intervals are returns;
+     * Times are all in UTC time.
      *
-     * @param type $timeNow     local current time
-     * @param type $limit       number of shows to return
-     * @param type $timeEnd     optional: interval end time
-     * @return type             next $limit number of shows
+     * @param String $timeStart - interval start time (in UTC)
+     * @param int $limit - number of shows to return
+     * @param String $timeEnd - interval end time (in UTC)
+     * @return array - the next $limit number of shows within the time interval
      */
-    public static function GetNextShows($timeNow, $limit, $timeEnd = "")
+    public static function GetNextShows($timeStart, $limit = 0, $timeEnd = "")
     {
         global $CC_CONFIG, $CC_DBC;
 
         // defaults to retrieving shows from next 2 days if no end time has
         // been specified
         if($timeEnd == "") {
-            $timeEnd = "'$timeNow' + INTERVAL '2 days'";
+            $timeEnd = "'$timeStart' + INTERVAL '2 days'";
         } else {
             $timeEnd = "'$timeEnd'";
         }
@@ -1509,45 +1511,15 @@ class Application_Model_Show {
         $sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
         ." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
-        ." AND si.starts >= TIMESTAMP '$timeNow'"
+        ." AND si.starts >= TIMESTAMP '$timeStart'"
         ." AND si.starts < TIMESTAMP $timeEnd"
-        ." ORDER BY si.starts"
-        ." LIMIT $limit";
-
-        $rows = $CC_DBC->GetAll($sql);
-
-        return $rows;
-    }
-
-    /**
-     * Given a day of the week variable $day, based in local time, returns the
-     * shows being played on this day of the week we're in right now.
-     *
-     * @param type $day     day of the week
-     * @return type         shows being played on this day
-     */
-    public static function GetShowsByDayOfWeek($day){
-        //DOW FROM TIMESTAMP
-        //The day of the week (0 - 6; Sunday is 0) (for timestamp values only)
-
-        //SELECT EXTRACT(DOW FROM TIMESTAMP '2001-02-16 20:38:40');
-        //Result: 5
-
-        global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT"
-        ." si.starts as show_starts,"
-        ." si.ends as show_ends,"
-        ." s.name as show_name,"
-        ." s.url as url"
-        ." FROM $CC_CONFIG[showInstances] si"
-        ." LEFT JOIN $CC_CONFIG[showTable] s"
-        ." ON si.show_id = s.id"
-        ." WHERE EXTRACT(DOW FROM si.starts) = $day"
-        ." AND EXTRACT(WEEK FROM si.starts) = EXTRACT(WEEK FROM localtimestamp)"
         ." ORDER BY si.starts";
+        
+        // defaults to retrieve all shows within the interval if $limit not set
+        if($limit != 0) {
+            $sql = $sql . " LIMIT $limit";
+        }
 
-        // Convert result timestamps to local timezone
         $rows = $CC_DBC->GetAll($sql);
 
         return $rows;
@@ -1569,34 +1541,6 @@ class Application_Model_Show {
             }
         }
     }
-
-    /**
-     * Returns the timezone difference as an INTERVAL string that can be used
-     * by SQL queries.
-     *
-     * E.g., if local timezone is -4:30, this function returns:
-     * INTERVAL '-4 hours -30 minutes'
-     *
-     * Note that if $fromLocalToUtc is true, then it returns:
-     * INTERVAL '4 hours 30 minutes'
-     *
-     * @param type $fromLocalToUtc  true if we're converting from local to UTC
-     */
-     /*
-    public static function GetTimeZoneIntervalString($fromLocalToUtc = false) {
-        $date = new Application_Model_DateHelper;
-        $timezoneHour = $date->getLocalOffsetHour();
-        $timezoneMin = $date->getLocalOffsetMinute();
-
-        // negate the hour and min if converting from local to UTC
-        if($fromLocalToUtc) {
-            $timezoneHour = -$timezoneHour;
-            $timezoneMin = -$timezoneMin;
-        }
-
-        return "INTERVAL '$timezoneHour hours $timezoneMin minutes'";
-    }
-    * */
 
     public static function GetMaxLengths() {
         global $CC_CONFIG, $CC_DBC;

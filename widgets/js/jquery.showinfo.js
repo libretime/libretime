@@ -203,9 +203,9 @@
                     var url = daySchedule[j].url;
                     html +=
                       '<tr>'+
-                        '<td>'+getTime(daySchedule[j].show_starts)+ " - " + getTime(daySchedule[j].show_ends)+'</td>'+
+                        '<td>'+getTime(daySchedule[j].start_timestamp)+ " - " + getTime(daySchedule[j].end_timestamp)+'</td>'+
                         '<td>'+
-                          '<h4>'+daySchedule[j].show_name+'</h4>'+
+                          '<h4>'+daySchedule[j].name+'</h4>'+
                         '</td>'+
                         '<td>'+
                           '<ul>'+

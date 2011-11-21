@@ -211,12 +211,12 @@ class ApiController extends Zend_Controller_Action
             $this->_helper->viewRenderer->setNoRender(true);
 
             $date = new Application_Model_DateHelper;
-            $timeNow = $date->getTimestamp();
-            $timeEnd = $date->getDayEndTimestamp();
+            $utcTimeNow = $date->getUtcTimestamp();
+            $utctimeEnd = Application_Model_DateHelper::GetDayEndTimestampInUtc();
             
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                "nextShow"=>Application_Model_Show::GetNextShows($timeNow, 5, $timeEnd));
+                "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 5, $utcTimeEnd));
                 
             Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
 
@@ -236,12 +236,19 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
+            $date = new Application_Model_DateHelper;
+            $dayStart = $date->getWeekStartDate();
+            $utcDayStart = Application_Model_DateHelper::ConvertToUtcDateTimeString($dayStart);
+            
             $dow = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
 
             $result = array();
             for ($i=0; $i<7; $i++){
-                $shows = Application_Model_Show::GetShowsByDayOfWeek($i);
-                Application_Model_Show::ConvertToLocalTimeZone($shows, array("show_starts", "show_ends"));
+                $utcDayEnd = Application_Model_DateHelper::GetDayEndTimestamp($utcDayStart);
+                $shows = Application_Model_Show::GetNextShows($utcDayStart, 0, $utcDayEnd);
+                $utcDayStart = $utcDayEnd;
+                
+                Application_Model_Show::ConvertToLocalTimeZone($shows, array("starts", "ends", "start_timestamp", "end_timestamp"));
                 
                 $result[$dow[$i]] = $shows;
             }
