@@ -345,7 +345,7 @@ function setAddShowEvents() {
 		var endTime = $('#add_show_end_time').val().split(':');
         var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
 
-		if(startDateTime.getTime() > endDateTime.getTime()){
+		if(startDateTime.getTime() >= endDateTime.getTime()){
 		    var duration = $('#add_show_duration').val();
 	        // parse duration
 		    var time = 0;
