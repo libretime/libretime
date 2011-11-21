@@ -491,11 +491,11 @@ class ScheduleController extends Zend_Controller_Action
                     'add_show_genre' => $show->getGenre(),
                     'add_show_description' => $show->getDescription()));
 
-        $startsDateTime = new DateTime($show->getStartDate()." ".$show->getStartTime(), new DateTimeZone(date_default_timezone_get()));
-        $endsDateTime = new DateTime($show->getEndDate()." ".$show->getEndTime(), new DateTimeZone(date_default_timezone_get()));
-
-        //$startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        //$endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $startsDateTime = new DateTime($show->getStartDate()." ".$show->getStartTime(), new DateTimeZone("UTC"));
+        $endsDateTime = new DateTime($show->getEndDate()." ".$show->getEndTime(), new DateTimeZone("UTC"));
+        
+        $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         $formWhen->populate(array('add_show_start_date' => $startsDateTime->format("Y-m-d"),
                                   'add_show_start_time' => $startsDateTime->format("H:i"),
@@ -595,12 +595,14 @@ class ScheduleController extends Zend_Controller_Action
         $show = new Application_Model_Show($data['add_show_id']);
 
         $startDateModified = true;
- 	 	if ($data['add_show_id'] != -1 && !array_key_exists('add_show_start_date', $data)){
-     	 	//show is being updated and changing the start date was disabled, since the
-     	 	//array key does not exist. We need to repopulate this entry from the db.
-     	 	$data['add_show_start_date'] = $show->getStartDate();
-     	 	$startDateModified = false;
- 	 	}
+        if ($data['add_show_id'] != -1 && !array_key_exists('add_show_start_date', $data)){
+            //show is being updated and changing the start date was disabled, since the
+            //array key does not exist. We need to repopulate this entry from the db.
+            //The start date will be return in UTC time, so lets convert it to local time.
+            $dt = Application_Model_DateHelper::ConvertToLocalDateTime($show->getStartDate());
+            $data['add_show_start_date'] = $dt->format("Y-m-d");
+            $startDateModified = false;
+        }
 
         $data['add_show_hosts'] =  $this->_getParam('hosts');
         $data['add_show_day_check'] =  $this->_getParam('days');

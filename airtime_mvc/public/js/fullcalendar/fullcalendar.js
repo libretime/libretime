@@ -399,7 +399,9 @@ function Calendar(element, options, eventSources) {
 			elementOuterWidth = element.outerWidth();
 			
 			header.updateTitle(currentView.title);
-			var today = new Date();
+			//adjusting this date ensures that the "today" button is greyed out on the 
+			//correct day.
+			var today = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
 			if (today >= currentView.start && today < currentView.end) {
 				header.disableButton('today');
 			}else{
@@ -581,7 +583,8 @@ function Calendar(element, options, eventSources) {
 	
 	
 	function today() {
-		date = new Date();
+		//adjusting this date ensures that clicking "today" takes us to the correct date.
+		date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
 		renderView();
 	}
 	
