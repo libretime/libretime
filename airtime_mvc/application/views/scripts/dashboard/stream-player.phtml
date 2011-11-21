@@ -2,9 +2,13 @@
 <h1>Live stream</h1> 
 <?php $ids = Application_Model_StreamSetting::getEnabledStreamIds(); ?>
 <script>
-function setjPlayer(url, type){
+function setjPlayer(url, type, serverType){
     var obj = new Object();
     obj[type] = url;
+
+    if(serverType == 'shoutcast'){
+        obj[type] = url + ";stream/1";
+    }
     
     $("#jquery_jplayer_1").jPlayer("destroy");
     $("#jquery_jplayer_1").jPlayer({
@@ -14,7 +18,7 @@ function setjPlayer(url, type){
         ended: function (event) {
             $(this).jPlayer("play");
         },
-        swfPath: "js",
+        swfPath: "/js/jplayer/",
         supplied: type,
         wmode: "window"
     });
@@ -26,7 +30,7 @@ $(document).ready(function(){
         var elem = $("#combo-box option:selected");
         console.log(elem);
 
-        setjPlayer(elem.attr("data-url"), elem.attr("data-type"));
+        setjPlayer(elem.attr("data-url"), elem.attr("data-type"), elem.attr("server-type"));
     });
 
         <?php
@@ -35,9 +39,10 @@ $(document).ready(function(){
                 $streamData = Application_Model_StreamSetting::getStreamData($id);
                 $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
                 $type = $streamData["${id}_type"];
+                $serverType = $streamData["${id}_output"];
                 if ($type == "ogg")
                     $type = "oga";
-                echo "setjPlayer('$url', '$type');";
+                echo "setjPlayer('$url', '$type', '$serverType');";
             }
         ?>
 });
@@ -53,11 +58,12 @@ $(document).ready(function(){
                             $streamData = Application_Model_StreamSetting::getStreamData($id);
                             $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
                             $type = $streamData["${id}_type"];
+                            $serverType = $streamData["${id}_output"];
                             if ($type == "ogg")
                                 $type = "oga";
 
                             $label = $streamData["${id}_description"]." (".$streamData["${id}_bitrate"]." Kbit/s)";
-                            echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s'>%s</option>", $id, $url, $type, $label);
+                            echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s' server-type='%s'>%s</option>", $id, $url, $type, $serverType, $label);
                         }
                     ?>
                 </select>
