@@ -88,6 +88,15 @@ function adjustDateToServerDate(date, serverTimezoneOffset){
     return date;
 }
 
+function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {
+        str = '0' + str;
+    }
+
+    return str;
+}
+
 function dayClick(date, allDay, jsEvent, view) {
     var now, today, selected, chosenDate, chosenTime;
 
@@ -111,58 +120,23 @@ function dayClick(date, allDay, jsEvent, view) {
             $(span).prev().remove();
             $(span).remove();
         }
-
-        chosenDate = selected.getFullYear();
-
-        var month = selected.getMonth() + 1;
-        if(month < 10) {
-            chosenDate = chosenDate+'-0'+month;
-        }
-        else {
-            chosenDate = chosenDate+'-'+month;
-        }
-
-        var day = selected.getDate();
-        if(day < 10) {
-            chosenDate = chosenDate+'-0'+day;
-        }
-        else {
-            chosenDate = chosenDate+'-'+day;
-        }
-
-        var min = selected.getMinutes();
-        var hours = selected.getHours();
-        if(min < 10){
-            chosenTime = hours+":0"+min;
-        }
-        else {
-            chosenTime = hours+":"+min;
-        }
         
-        if(hours < 10){
-        	chosenTime = "0"+chosenTime;
-        }
+        // 1 hr
+        var duration = 60 * 60* 1000;
         
-        var endHour = hours + 1;
-        var chosenEndTime;
+        var endDateTime = new Date(selected.getTime() + duration);
         
-        if(min < 10){
-        	chosenEndTime = endHour+":0"+min;
-        }
-        else {
-        	chosenEndTime = endHour+":"+min;
-        }
-        
-        if(endHour < 10){
-        	chosenEndTime = "0"+chosenEndTime;
-        }
+        chosenDate = selected.getFullYear() + '-' + pad(selected.getMonth()+1,2) + '-' + pad(selected.getDate(),2);
+        chosenTime = pad(selected.getHours(),2) + ':' + pad(selected.getMinutes(),2);
+        var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
+        var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
 
         $("#add_show_start_date").val(chosenDate);
-        $("#add_show_end_date_no_repeat").val(chosenDate);
-        $("#add_show_end_date").datepicker("option", "minDate", chosenDate);
-        $("#add_show_end_date").val(chosenDate);
+        $("#add_show_end_date_no_repeat").val(endDateFormat);
+        $("#add_show_end_date").datepicker("option", "minDate", endDateFormat);
+        $("#add_show_end_date").val(endDateFormat);
         $("#add_show_start_time").val(chosenTime);
-        $("#add_show_end_time").val(chosenEndTime);
+        $("#add_show_end_time").val(endTimeFormat);
         $("#add_show_duration").val('1h');
         $("#schedule-show-when").show();
 
