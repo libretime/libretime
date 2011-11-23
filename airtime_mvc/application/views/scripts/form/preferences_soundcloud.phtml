@@ -40,7 +40,9 @@
             <?php endif; ?> 
         </dd>
         <dt id="SoundCloudUser-label" class="block-display">
-            <label class="optional" for="SoundCloudUser"><?php echo $this->element->getElement('SoundCloudUser')->getLabel() ?></label>
+            <label class="optional" for="SoundCloudUser"><?php echo $this->element->getElement('SoundCloudUser')->getLabel() ?>
+                <span class="info-text-small">(Required)</span> :
+            </label>
         </dt>
         <dd id="SoundCloudUser-element" class="block-display">
             <?php echo $this->element->getElement('SoundCloudUser') ?>
@@ -53,7 +55,9 @@
             <?php endif; ?> 
         </dd>
         <dt id="SoundCloudPassword-label" class="block-display">
-            <label class="optional" for="SoundCloudPassword"><?php echo $this->element->getElement('SoundCloudPassword')->getLabel() ?></label>
+            <label class="optional" for="SoundCloudPassword"><?php echo $this->element->getElement('SoundCloudPassword')->getLabel() ?>
+                <span class="info-text-small">(Required)</span> :
+            </label>
         </dt>
         <dd id="SoundCloudPassword-element" class="block-display">
             <?php echo $this->element->getElement('SoundCloudPassword') ?>
