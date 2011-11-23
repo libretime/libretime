@@ -1,4 +1,5 @@
 <?php
+require_once 'customvalidators/ConditionalNotEmpty.php';
 
 class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 {
@@ -43,12 +44,19 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         $this->addElement('text', 'SoundCloudUser', array(
             'class'      => 'input_text',
             'label'      => 'SoundCloud Email',
-            'required'   => true,
             'filters'    => array('StringTrim'),
             'autocomplete' => 'off',
             'value' => Application_Model_Preference::GetSoundCloudUser(),
             'decorators' => array(
                 'ViewHelper'
+            ),
+            
+            // By default, 'allowEmpty' is true. This means that our custom
+            // validators are going to be skipped if this field is empty,
+            // which is something we don't want
+            'allowEmpty' => false,
+            'validators' => array(
+                new ConditionalNotEmpty(array('UploadToSoundcloudOption'=>'1'))
             )
         ));
 
@@ -56,12 +64,19 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         $this->addElement('password', 'SoundCloudPassword', array(
             'class'      => 'input_text',
             'label'      => 'SoundCloud Password',
-            'required'   => true,
             'filters'    => array('StringTrim'),
             'autocomplete' => 'off',
             'value' => Application_Model_Preference::GetSoundCloudPassword(),
             'decorators' => array(
                 'ViewHelper'
+            ),
+            
+            // By default, 'allowEmpty' is true. This means that our custom
+            // validators are going to be skipped if this field is empty,
+            // which is something we don't want
+            'allowEmpty' => false,
+            'validators' => array(
+                new ConditionalNotEmpty(array('UploadToSoundcloudOption'=>'1'))
             )
         ));
 

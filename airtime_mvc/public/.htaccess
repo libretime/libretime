@@ -11,5 +11,3 @@ RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^.*$ - [NC,L]
 RewriteRule ^.*$ index.php [NC,L]
 RewriteBase /
-
-SetEnv APPLICATION_ENV development
