@@ -1193,25 +1193,25 @@ class Application_Model_Show {
 
 
             if ($p_interval == 'P1M'){
-                /* When adding months, there is a problem if we are on January 31st and add one month with PHP. 
+                /* When adding months, there is a problem if we are on January 31st and add one month with PHP.
                  * What ends up happening is that since February 31st doesn't exist, the date returned is
                  * March 3rd. For now let's ignore the day and assume we are always working with the
                  * first of each month, and use PHP to add 1 month to this (this will take care of rolling
-                 * over the years 2011->2012, etc.). Then let's append the actual day, and use the php 
+                 * over the years 2011->2012, etc.). Then let's append the actual day, and use the php
                  * checkdate() function, to see if it is valid. If not, then we'll just skip this month. */
-                
+
                 $startDt = new DateTime($start, new DateTimeZone($timezone));
-                
+
                 /* pass in only the year and month (not the day) */
                 $dt = new DateTime($startDt->format("Y-m"), new DateTimeZone($timezone));
-                
+
                 /* Keep adding 1 month, until we find the next month that contains the day
                  * we are looking for (31st day for example) */
                 do {
                     $dt->add(new DateInterval($p_interval));
                 } while(!checkdate($dt->format("m"), $startDt->format("d"), $dt->format("Y")));
                 $dt->setDate($dt->format("Y"), $dt->format("m"), $startDt->format("d"));
-                
+
                 $start = $dt->format("Y-m-d H:i:s");
 
                 $dt->setTimezone(new DateTimeZone('UTC'));
@@ -1251,15 +1251,13 @@ class Application_Model_Show {
         if (isset($p_offset)) {
             $startDateTime->add(new DateInterval("P{$p_offset["days"]}DT{$p_offset["hours"]}H{$p_offset["mins"]}M"));
         }
+        //convert time to UTC
+        $startDateTime->setTimezone(new DateTimeZone('UTC'));
 
-        $endDateTime = new DateTime($startDateTime->format("Y-m-d H:i:s"), new DateTimeZone($timezone));
+        $endDateTime = clone $startDateTime;
         $duration = explode(":", $p_duration);
         list($hours, $mins) = array_slice($duration, 0, 2);
         $endDateTime->add(new DateInterval("PT{$hours}H{$mins}M"));
-
-        //convert times to UTC
-        $startDateTime->setTimezone(new DateTimeZone('UTC'));
-        $endDateTime->setTimezone(new DateTimeZone('UTC'));
 
         return array($startDateTime, $endDateTime);
     }
