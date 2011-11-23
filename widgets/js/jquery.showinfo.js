@@ -16,7 +16,9 @@
         getServerData();
 
         function updateWidget(){
-            var shows = sd.getNextShows();
+            var currentShow = sd.getCurrentShow();
+            var nextShows = sd.getNextShows();
+            var shows = currentShow.length == 0 ? nextShows : currentShow.concat(nextShows);
 
             tableString = "";
             tableString += "<h3>" + options.text.onAirToday + "</h3>";
@@ -50,7 +52,7 @@
         }
 
         function getServerData(){
-            $.ajax({ url: options.sourceDomain + "api/today-info/", dataType:"jsonp", success:function(data){
+            $.ajax({ url: options.sourceDomain + "api/live-info/", dataType:"jsonp", success:function(data){
                         processData(data);
                   }, error:airtimeScheduleJsonpError});
             setTimeout(getServerData, options.updatePeriod*1000);
