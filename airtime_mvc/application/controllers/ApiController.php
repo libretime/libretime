@@ -397,9 +397,11 @@ class ApiController extends Zend_Controller_Action
         }
 
         $upload_dir = ini_get("upload_tmp_dir");
-        Application_Model_StoredFile::uploadFile($upload_dir);
+        $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
+        $tempFileName = basename($tempFilePath);
+        
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName);
+        Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
     }
 
     public function uploadRecordedAction()
