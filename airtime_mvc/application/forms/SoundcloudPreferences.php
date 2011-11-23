@@ -42,9 +42,10 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         //SoundCloud Username
         $this->addElement('text', 'SoundCloudUser', array(
             'class'      => 'input_text',
-            'label'      => 'SoundCloud Email:',
-            'required'   => false,
+            'label'      => 'SoundCloud Email',
+            'required'   => true,
             'filters'    => array('StringTrim'),
+            'autocomplete' => 'off',
             'value' => Application_Model_Preference::GetSoundCloudUser(),
             'decorators' => array(
                 'ViewHelper'
@@ -54,9 +55,10 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         //SoundCloud Password
         $this->addElement('password', 'SoundCloudPassword', array(
             'class'      => 'input_text',
-            'label'      => 'SoundCloud Password:',
-            'required'   => false,
+            'label'      => 'SoundCloud Password',
+            'required'   => true,
             'filters'    => array('StringTrim'),
+            'autocomplete' => 'off',
             'value' => Application_Model_Preference::GetSoundCloudPassword(),
             'decorators' => array(
                 'ViewHelper'
