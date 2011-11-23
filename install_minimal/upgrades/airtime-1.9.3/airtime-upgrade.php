@@ -1,5 +1,7 @@
 <?php
     require_once(dirname(__FILE__).'/../../include/AirtimeInstall.php');
+    date_default_timezone_set(exec("cat /etc/timezone"));
+    
     class Airtime193Upgrade{
 
         public static function InstallAirtimePhpServerCode($phpDir)

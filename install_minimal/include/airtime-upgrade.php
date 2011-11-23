@@ -20,7 +20,9 @@ if(exec("whoami") != "root"){
 }
 
 function pause(){
-    /* change "AIRTIME_INSTALL_DEBUG=1" in base install file to enable this. */
+    /* Type "sudo -s" to change to root user then type "export AIRTIME_INSTALL_DEBUG=1" and then
+     * start airtime-install to enable this feature. Is used to pause between upgrade scripts
+     * to examine the state of the system and see if everything is as expected. */
     if (getenv("AIRTIME_INSTALL_DEBUG") === "1"){
         echo "Press Enter to Continue".PHP_EOL;
         fgets(STDIN);

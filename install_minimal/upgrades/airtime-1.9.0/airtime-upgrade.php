@@ -16,6 +16,8 @@ require_once 'propel/runtime/lib/Propel.php';
 set_include_path(__DIR__.'/propel' . PATH_SEPARATOR . get_include_path());
 Propel::init(__DIR__."/propel/airtime-conf.php");
 
+date_default_timezone_set(exec("cat /etc/timezone"));
+
 
 const CONF_DIR_BINARIES = "/usr/lib/airtime";
 

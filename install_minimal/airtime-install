@@ -7,8 +7,6 @@ if [ `whoami` != 'root' ]; then
     exit 1
 fi
 
-export AIRTIME_INSTALL_DEBUG=1
-
 set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 set -e
@@ -25,11 +23,19 @@ AIRTIMEROOT=$SCRIPTPATH/../
 
 # Check if airtime exists already
 set +e
+DO_UPGRADE="0"
 php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php $@
 result=$?
 set -e
+if [ "$result" -eq "1" ]; then
+    DO_UPGRADE="1"
+fi
+
+#make DO_UPGRADE available in sub bash scripts
+export DO_UPGRADE
 
 if [ "$result" = "2" -o "$result" = "3" ]; then
+    #error message has already been printed inside the php script
     exit 1
 fi
 
@@ -44,7 +50,7 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 
 python $AIRTIMEROOT/python_apps/create-pypo-user.py
 
-if [ "$result" = "1" ]; then
+if [ "$DO_UPGRADE" = "1" ]; then
     #do upgrade
     php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-upgrade.php $@
 fi
