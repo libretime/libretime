@@ -1,4 +1,5 @@
 <?php
+require_once 'customvalidators/ConditionalNotEmpty.php';
 
 class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 {
@@ -42,24 +43,40 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         //SoundCloud Username
         $this->addElement('text', 'SoundCloudUser', array(
             'class'      => 'input_text',
-            'label'      => 'SoundCloud Email:',
-            'required'   => false,
+            'label'      => 'SoundCloud Email',
             'filters'    => array('StringTrim'),
+            'autocomplete' => 'off',
             'value' => Application_Model_Preference::GetSoundCloudUser(),
             'decorators' => array(
                 'ViewHelper'
+            ),
+            
+            // By default, 'allowEmpty' is true. This means that our custom
+            // validators are going to be skipped if this field is empty,
+            // which is something we don't want
+            'allowEmpty' => false,
+            'validators' => array(
+                new ConditionalNotEmpty(array('UploadToSoundcloudOption'=>'1'))
             )
         ));
 
         //SoundCloud Password
         $this->addElement('password', 'SoundCloudPassword', array(
             'class'      => 'input_text',
-            'label'      => 'SoundCloud Password:',
-            'required'   => false,
+            'label'      => 'SoundCloud Password',
             'filters'    => array('StringTrim'),
+            'autocomplete' => 'off',
             'value' => Application_Model_Preference::GetSoundCloudPassword(),
             'decorators' => array(
                 'ViewHelper'
+            ),
+            
+            // By default, 'allowEmpty' is true. This means that our custom
+            // validators are going to be skipped if this field is empty,
+            // which is something we don't want
+            'allowEmpty' => false,
+            'validators' => array(
+                new ConditionalNotEmpty(array('UploadToSoundcloudOption'=>'1'))
             )
         ));
 

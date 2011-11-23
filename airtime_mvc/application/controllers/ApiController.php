@@ -202,32 +202,6 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
     }
-
-    public function todayInfoAction()
-    {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()){
-            // disable the view and the layout
-            $this->view->layout()->disableLayout();
-            $this->_helper->viewRenderer->setNoRender(true);
-
-            $date = new Application_Model_DateHelper;
-            $utcTimeNow = $date->getUtcTimestamp();
-            $utctimeEnd = Application_Model_DateHelper::GetDayEndTimestampInUtc();
-            
-            $result = array("env"=>APPLICATION_ENV,
-                "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 5, $utcTimeEnd));
-                
-            Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
-
-            header("Content-type: text/javascript");
-            echo $_GET['callback'].'('.json_encode($result).')';
-        } else {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource. ';
-            exit;
-        }
-    }
     
     public function weekInfoAction()
     {
@@ -397,9 +371,11 @@ class ApiController extends Zend_Controller_Action
         }
 
         $upload_dir = ini_get("upload_tmp_dir");
-        Application_Model_StoredFile::uploadFile($upload_dir);
+        $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
+        $tempFileName = basename($tempFilePath);
+        
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName);
+        Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
     }
 
     public function uploadRecordedAction()

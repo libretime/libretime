@@ -809,10 +809,18 @@ class Application_Model_StoredFile {
 		if (isset($_SERVER["CONTENT_TYPE"]))
 			$contentType = $_SERVER["CONTENT_TYPE"];
 
+        // create temp file name (CC-3086)
+        $command = "mktemp --tmpdir=".$p_targetDir;
+        $tempFilePath= exec($command);
+        
+        if($tempFilePath == ""){
+            die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Unable to create tmp file."}, "id" : "id"}');
+        }
+        
 		if (strpos($contentType, "multipart") !== false) {
 			if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
 				// Open temp file
-				$out = fopen($p_targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
+				$out = fopen($tempFilePath, $chunk == 0 ? "wb" : "ab");
 				if ($out) {
 					// Read binary input stream and append it to temp file
 					$in = fopen($_FILES['file']['tmp_name'], "rb");
@@ -831,7 +839,7 @@ class Application_Model_StoredFile {
 				die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
 		} else {
 			// Open temp file
-			$out = fopen($p_targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
+			$out = fopen($tempFilePath, $chunk == 0 ? "wb" : "ab");
 			if ($out) {
 				// Read binary input stream and append it to temp file
 				$in = fopen("php://input", "rb");
@@ -846,34 +854,12 @@ class Application_Model_StoredFile {
 			} else
 				die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
 		}
-
-		/*$audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
-
-		$md5 = md5_file($audio_file);
-		$duplicate = Application_Model_StoredFile::RecallByMd5($md5);
-		if ($duplicate) {
-			if (PEAR::isError($duplicate)) {
-				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": ' . $duplicate->getMessage() .'}}');
-			}
-            if (file_exists($duplicate->getFilePath())) {
-			    $duplicateName = $duplicate->getMetadataValue('MDATA_KEY_TITLE');
-			    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "An identical audioclip named ' . $duplicateName . ' already exists in the storage server."}}');
-            }
-		}
-
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $stor = $storDir->getDirectory();
-
-        $stor .= "/organize";
-
-	    $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
-
-        $r = @copy($audio_file, $audio_stor);*/
-
+		
+		return $tempFilePath;
     }
 
-    public static function copyFileToStor($p_targetDir, $fileName){
-        $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
+    public static function copyFileToStor($p_targetDir, $fileName, $tempname){
+        $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $tempname;
         Logging::log('copyFileToStor: moving file '.$audio_file);
         $md5 = md5_file($audio_file);
         $duplicate = Application_Model_StoredFile::RecallByMd5($md5);
@@ -895,7 +881,7 @@ class Application_Model_StoredFile {
         $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
         $r = @copy($audio_file, $audio_stor);
-        //$r = @unlink($audio_file);
+        $r = @unlink($audio_file);
     }
 
     public static function getFileCount()
