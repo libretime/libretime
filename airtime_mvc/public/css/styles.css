@@ -2429,3 +2429,12 @@ dd .stream-status {
 .status-disabled h3 {
 	color:#646664;
 }
+
+.stream-setting-global dt{
+	width: 180px;
+}
+
+.stream-setting-global dd{
+    width: auto;
+}
+	
