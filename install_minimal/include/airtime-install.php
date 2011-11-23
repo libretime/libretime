@@ -19,12 +19,14 @@ if ($opts == NULL) {
 $version = AirtimeInstall::GetVersionInstalled();
 
 // A previous version exists - if so, upgrade.
+/*
 if (isset($version) && ($version != false) && ($version < AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime version $version found.".PHP_EOL;
     
     require_once("airtime-upgrade.php");
     exit(0);
 }
+* */
 
 // -------------------------------------------------------------------------
 // The only way we get here is if we are doing a new install or a reinstall.

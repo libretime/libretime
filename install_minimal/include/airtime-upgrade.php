@@ -19,6 +19,14 @@ if(exec("whoami") != "root"){
     exit(1);
 }
 
+function pause(){
+    /* change "AIRTIME_INSTALL_DEBUG=1" in base install file to enable this. */
+    if (getenv("AIRTIME_INSTALL_DEBUG") === "1"){
+        echo "Press Enter to Continue".PHP_EOL;
+        fgets(STDIN);
+    }
+}
+
 const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
 
 
@@ -58,33 +66,43 @@ $SCRIPTPATH = __DIR__;
 
 if (strcmp($version, "1.7.0") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.7.0/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "1.8.0") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.0/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "1.8.1") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.1/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "1.8.2") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.2/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "1.9.0") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.0/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "1.9.2") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.2/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "1.9.3") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.3/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "1.9.4") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.4/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "1.9.5") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.5/airtime-upgrade.php");
+    pause();
 }
 if (strcmp($version, "2.0.0") < 0){
     system("php ".__DIR__."/../upgrades/airtime-2.0.0/airtime-upgrade.php");
+    pause();
 }
 
 //set the new version in the database.
