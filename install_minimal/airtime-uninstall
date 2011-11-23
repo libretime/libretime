@@ -13,6 +13,9 @@ SCRIPT=`readlink -f $0`
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=`dirname $SCRIPT`
 
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
 #Uninitialize Airtime
 $SCRIPTPATH/include/airtime-uninitialize.sh
 
@@ -21,6 +24,9 @@ $SCRIPTPATH/include/airtime-remove-files.sh
 
 #Remove pypo user
 python $SCRIPTPATH/../python_apps/remove-pypo-user.py
+
+#deactivate virtualenv
+deactivate
 
 echo -e "\n****************************** Uninstall Complete *******************************\n"
 echo "NOTE: To fully remove all Airtime files, you will also have to manually delete"

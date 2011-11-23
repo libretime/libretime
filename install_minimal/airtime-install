@@ -37,6 +37,11 @@ echo -e "\n******************************** Install Begin **********************
 
 rm -rf "/usr/lib/airtime"
 $AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
+
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
+
 python $AIRTIMEROOT/python_apps/create-pypo-user.py
 
 if [ "$result" = "1" ]; then
@@ -52,5 +57,8 @@ $SCRIPTPATH/include/airtime-initialize.sh $@
 echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
 sleep 10
 airtime-check-system
+
+#deactivate virtualenv
+deactivate
 
 echo -e "\n******************************* Install Complete *******************************"

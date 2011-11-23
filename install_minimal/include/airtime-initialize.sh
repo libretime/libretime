@@ -14,8 +14,8 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 AIRTIMEROOT=$SCRIPTPATH/../../
 
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
+#virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+#. ${virtualenv_bin}activate
 
 set +e
 php --php-ini ${SCRIPTPATH}/../airtime-php.ini ${SCRIPTPATH}/airtime-install.php $@

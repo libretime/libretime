@@ -64,8 +64,8 @@ HOUR=$(($RANDOM%24))
 MIN=$(($RANDOM%60))
 echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.d/airtime-crons
 
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
+#virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+#. ${virtualenv_bin}activate
 
 echo "* Creating /usr/lib/airtime"
 python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
