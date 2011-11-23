@@ -468,13 +468,13 @@ class Application_Model_Show {
             return "";
         } else {
             $row = $rows[0];
-                        
+
             $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
             $dt->setTimezone(new DateTimeZone("UTC"));
             return $dt->format("Y-m-d");
         }
     }
-	
+
     /**
      * Get the start time of the current show in UTC timezone.
      *
@@ -673,34 +673,34 @@ class Application_Model_Show {
         return $days;
     }
 
-    /* Only used for shows that aren't repeating. 
-     * 
+    /* Only used for shows that aren't repeating.
+     *
      * @return Boolean: true if show has an instance, otherwise false. */
     public function hasInstance(){
         return (!is_null($this->getInstance()));
     }
 
-    /* Only used for shows that aren't repeating. 
-     * 
-     * @return CcShowInstancesQuery: An propel object representing a 
+    /* Only used for shows that aren't repeating.
+     *
+     * @return CcShowInstancesQuery: An propel object representing a
      *      row in the cc_show_instances table. */
     public function getInstance(){
         $showInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->getId())
             ->findOne();
-            
+
         return $showInstance;
     }
 
     /* Only used for shows that are repeating. Note that this will return
-     * true even for dates that only have a "modified" show instance (does not 
+     * true even for dates that only have a "modified" show instance (does not
      * check if the "modified_instance" column is set to true). This is intended
-     * behaviour. 
-     * 
-     * @param $p_dateTime: Date for which we are checking if instance 
+     * behaviour.
+     *
+     * @param $p_dateTime: Date for which we are checking if instance
      * exists.
-     * 
-     * @return Boolean: true if show has an instance on $p_dateTime, 
+     *
+     * @return Boolean: true if show has an instance on $p_dateTime,
      *      otherwise false. */
     public function hasInstanceOnDate($p_dateTime){
         return (!is_null($this->getInstanceOnDate($p_dateTime)));
@@ -710,10 +710,10 @@ class Application_Model_Show {
     /* Only used for shows that are repeating. Note that this will return
      * shows that have been "modified" (does not check if the "modified_instance"
      * column is set to true). This is intended behaviour.
-     * 
+     *
      * @param $p_dateTime: Date for which we are getting an instance.
-     * 
-     * @return CcShowInstancesQuery: An propel object representing a 
+     *
+     * @return CcShowInstancesQuery: An propel object representing a
      *      row in the cc_show_instances table. */
     public function getInstanceOnDate($p_dateTime){
         global $CC_DBC;
@@ -1071,16 +1071,13 @@ class Application_Model_Show {
         $timezone = $p_showRow["timezone"];
 
         $start = $first_show." ".$start_time;
-        $utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
+
+        //start & end UTC DateTimes for the show.
+        list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
 
         if ($utcStartDateTime->getTimestamp() < $p_dateTime->getTimestamp()) {
 
-            $utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
-            $sql = "SELECT timestamp '{$utcStart}' + interval '{$duration}'";
-            $utcEndDateTime = new DateTime($CC_DBC->GetOne($sql), new DateTimeZone("UTC"));
-
-            $date = new Application_Model_DateHelper();
-            $currentUtcTimestamp = $date->getUtcTimestamp();
+            $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
 
             $show = new Application_Model_Show($show_id);
             if ($show->hasInstance()){
@@ -1141,8 +1138,7 @@ class Application_Model_Show {
         $record = $p_showRow["record"];
         $timezone = $p_showRow["timezone"];
 
-        $date = new Application_Model_DateHelper();
-        $currentUtcTimestamp = $date->getUtcTimestamp();
+        $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
 
         if(isset($next_pop_date)) {
             $start = $next_pop_date." ".$start_time;
@@ -1162,9 +1158,7 @@ class Application_Model_Show {
         while($utcStartDateTime->getTimestamp() <= $p_dateTime->getTimestamp()
                 && (is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp())){
 
-            $utcStart = $utcStartDateTime->format("Y-m-d H:i:s");
-            $sql = "SELECT timestamp '{$utcStart}' + interval '{$duration}'";
-            $utcEndDateTime = new DateTime($CC_DBC->GetOne($sql), new DateTimeZone("UTC"));
+            list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
 
             if ($show->hasInstanceOnDate($utcStartDateTime)){
                 $ccShowInstance = $show->getInstanceOnDate($utcStartDateTime);
@@ -1209,49 +1203,80 @@ class Application_Model_Show {
         Application_Model_Show::setNextPop($start, $show_id, $day);
     }
 
+    /*
+     * @param   $p_start
+     *              timestring format "Y-m-d H:i:s" (not UTC)
+     * @param   $p_duration
+     *              string time interval (h)h:(m)m(:ss)
+     * @param   $p_timezone
+     *              string "Europe/Prague"
+     * @param   $p_offset
+     *              array (days, hours, mins) used for rebroadcast shows.
+     *
+     * @return
+     *      array of 2 DateTime objects, start/end time of the show in UTC.
+     */
+    private static function createUTCStartEndDateTime($p_start, $p_duration, $p_timezone=null, $p_offset=null)
+    {
+        $timezone = $p_timezone ? $p_timezone : date_default_timezone_get();
+
+        $startDateTime = new DateTime($p_start, new DateTimeZone($timezone));
+        if (isset($p_offset)) {
+            $startDateTime->add(new DateInterval("P{$p_offset["days"]}DT{$p_offset["hours"]}H{$p_offset["mins"]}M"));
+        }
+
+        $endDateTime = new DateTime($startDateTime->format("Y-m-d H:i:s"), new DateTimeZone($timezone));
+        $duration = explode(":", $p_duration);
+        list($hours, $mins) = array_slice($duration, 0, 2);
+        $endDateTime->add(new DateInterval("PT{$hours}H{$mins}M"));
+
+        //convert times to UTC
+        $startDateTime->setTimezone(new DateTimeZone('UTC'));
+        $endDateTime->setTimezone(new DateTimeZone('UTC'));
+
+        return array($startDateTime, $endDateTime);
+    }
+
     /*  Create rebroadcast instances for a created show marked for recording
      *
-     *  @param $p_rebroadcasts rows gotten from the db table cc_show_rebroadcasts, tells airtime when to schedule the rebroadcasts.
-     *  @param $p_currentUtcTimestamp a timestring in format "Y-m-d H:i:s", current UTC time.
-     *  @param $p_showId int of the show it belongs to (from cc_show)
-     *  @param $p_showInstanceId the instance id of the created recorded show instance
+     *  @param $p_rebroadcasts
+     *      rows gotten from the db table cc_show_rebroadcasts, tells airtime when to schedule the rebroadcasts.
+     *  @param $p_currentUtcTimestamp
+     *      a timestring in format "Y-m-d H:i:s", current UTC time.
+     *  @param $p_showId
+     *      int of the show it belongs to (from cc_show)
+     *  @param $p_showInstanceId
+     *      the instance id of the created recorded show instance
      *      (from cc_show_instances), used to associate rebroadcasts to this show.
-     *  @param $p_startTime a timestring in format "Y-m-d H:i:s" in the timezone, not UTC of the rebroadcasts' parent recorded show.
-     *  @param $p_duration duration of the show in format 1:0
-     *  @param $p_timezone string of user's timezone "Europe/Prague"
+     *  @param $p_startTime
+     *      a timestring in format "Y-m-d H:i:s" in the timezone, not UTC of the rebroadcasts' parent recorded show.
+     *  @param $p_duration
+     *      string time interval (h)h:(m)m:(ss) length of the show.
+     *  @param $p_timezone
+     *      string of user's timezone "Europe/Prague"
      *
      */
     private static function createRebroadcastInstances($p_rebroadcasts, $p_currentUtcTimestamp, $p_showId, $p_showInstanceId, $p_startTime, $p_duration, $p_timezone=null){
-        global $CC_DBC;
 
-        Logging::log('Count of rebroadcasts '. count($p_rebroadcasts));
+        //Y-m-d
+        //use only the date part of the show start time stamp for the offsets to work properly.
+        $date = explode(" ", $p_startTime);
+        $start_date = $date[0];
 
         foreach($p_rebroadcasts as $rebroadcast) {
 
-            //use only the date part of the show start time stamp for the offsets to work properly.
-            $sql = "SELECT date '{$p_startTime}' + interval '{$rebroadcast["day_offset"]}' + interval '{$rebroadcast["start_time"]}'";
-            $rebroadcast_start_time = $CC_DBC->GetOne($sql);
-            Logging::log('rebroadcast start '.$rebroadcast_start_time);
+            $days = explode(" ", $rebroadcast["day_offset"]);
+            $time = explode(":", $rebroadcast["start_time"]);
+            $offset = array("days"=>$days[0], "hours"=>$time[0], "mins"=>$time[1]);
 
-            $sql = "SELECT timestamp '{$rebroadcast_start_time}' + interval '{$p_duration}'";
-            $rebroadcast_end_time = $CC_DBC->GetOne($sql);
-            Logging::log('rebroadcast end '.$rebroadcast_end_time);
+            list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start_date, $p_duration, $p_timezone, $offset);
 
-            //convert to UTC, after we have used the defined offsets to calculate rebroadcasts.
-            $utc_rebroadcast_start_time = Application_Model_DateHelper::ConvertToUtcDateTime($rebroadcast_start_time, $p_timezone);
-            $utc_rebroadcast_end_time = Application_Model_DateHelper::ConvertToUtcDateTime($rebroadcast_end_time, $p_timezone);
-
-            Logging::log('UTC rebroadcast start '.$utc_rebroadcast_start_time->format("Y-m-d H:i:s"));
-            Logging::log('UTC rebroadcast end '.$utc_rebroadcast_end_time->format("Y-m-d H:i:s"));
-            Logging::log('Current UTC timestamp '.$p_currentUtcTimestamp);
-
-            if ($utc_rebroadcast_start_time->format("Y-m-d H:i:s") > $p_currentUtcTimestamp){
-                Logging::log('Creating rebroadcast show starting at UTC '.$utc_rebroadcast_start_time->format("Y-m-d H:i:s"));
+            if ($utcStartDateTime->format("Y-m-d H:i:s") > $p_currentUtcTimestamp){
 
                 $newRebroadcastInstance = new CcShowInstances();
                 $newRebroadcastInstance->setDbShowId($p_showId);
-                $newRebroadcastInstance->setDbStarts($utc_rebroadcast_start_time->format("Y-m-d H:i:s"));
-                $newRebroadcastInstance->setDbEnds($utc_rebroadcast_end_time->format("Y-m-d H:i:s"));
+                $newRebroadcastInstance->setDbStarts($utcStartDateTime);
+                $newRebroadcastInstance->setDbEnds($utcEndDateTime);
                 $newRebroadcastInstance->setDbRecord(0);
                 $newRebroadcastInstance->setDbRebroadcast(1);
                 $newRebroadcastInstance->setDbOriginalShow($p_showInstanceId);
@@ -1525,7 +1550,7 @@ class Application_Model_Show {
         ." AND si.starts >= TIMESTAMP '$timeStart'"
         ." AND si.starts < TIMESTAMP $timeEnd"
         ." ORDER BY si.starts";
-        
+
         // defaults to retrieve all shows within the interval if $limit not set
         if($limit != 0) {
             $sql = $sql . " LIMIT $limit";
