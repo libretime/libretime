@@ -58,7 +58,7 @@ def create_fresh_os(vm_name, update_virtualenv=False, debian=False):
     then they will most likey have a different host key, and ssh will fail, warning
     about a possible man in the middle attack.
     """
-    local("rm ~/.ssh/known_hosts")
+    local("rm -f ~/.ssh/known_hosts")
     
     vm_vdi_file = '%s.vdi'%vm_name
     vm_xml_file = '%s.xml'%vm_name
@@ -103,7 +103,7 @@ def create_fresh_os(vm_name, update_virtualenv=False, debian=False):
     local('VBoxManage snapshot %s restore fresh_install'%vm_name)
     
     
-    local('VBoxManage modifyvm "%s" --bridgeadapter1 eth0'%vm_name)
+    local('VBoxManage modifyvm "%s" --bridgeadapter1 wlan0'%vm_name)
     local('VBoxManage startvm %s'%vm_name)
     print "Please wait while attempting to acquire IP address"
         

@@ -28,8 +28,6 @@ $(document).ready(function(){
 
     $("#combo-box").change(function(eventObject){
         var elem = $("#combo-box option:selected");
-        console.log(elem);
-
         setjPlayer(elem.attr("data-url"), elem.attr("data-type"), elem.attr("server-type"));
     });
 
