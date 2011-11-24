@@ -9,6 +9,7 @@ import sys
 import shutil
 import socket
 import pytz
+import signal
 
 from configobj import ConfigObj
 
@@ -107,7 +108,7 @@ class ShowRecorder(Thread):
         #send signal interrupt (2)
         self.logger.info("Show manually cancelled!")
         if (self.p is not None):
-            self.p.kill()
+            self.p.send_signal(signal.SIGINT)
 
     #if self.p is defined, then the child process ecasound is recording
     def is_recording(self):
@@ -164,9 +165,9 @@ class ShowRecorder(Thread):
             self.logger.info("problem recording show")
             os.remove(filepath)
 
-class CommandListener(Thread):
+class CommandListener():
     def __init__(self):
-        Thread.__init__(self)
+        #Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.api_client.register_component("show-recorder")
         self.logger = logging.getLogger('root')
@@ -314,6 +315,6 @@ class CommandListener(Thread):
 
 if __name__ == '__main__':
     cl = CommandListener()
-    cl.start()
+    cl.run()
 
 
