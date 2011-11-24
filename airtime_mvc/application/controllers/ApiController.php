@@ -175,7 +175,7 @@ class ApiController extends Zend_Controller_Action
     /**
      * Retrieve the currently playing show as well as upcoming shows.
      * Number of shows returned and the time interval in which to
-     * get the next shows can be configured as post parameters.
+     * get the next shows can be configured as GET parameters.
      * 
      * TODO: in the future, make interval length a parameter instead of hardcode to 48
      * 
@@ -206,7 +206,7 @@ class ApiController extends Zend_Controller_Action
             }
             
             $limit = $request->getParam('limit');
-            if($limit == "") {
+            if($limit == "" || !is_numeric($limit)) {
                 $limit = "5";
             }
             
