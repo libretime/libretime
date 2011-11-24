@@ -856,7 +856,8 @@ class Application_Model_Show {
         //What we are doing here is checking if the show repeats or if
         //any repeating days have been checked. If not, then by default
         //the "selected" DOW is the initial day.
-        $startDow = gmdate("w", $utcStartDateTime->getTimestamp());
+        //DOW is in the local timezone.
+        $startDow = date("w", $startDateTime);
         if (!$data['add_show_repeats']) {
             $data['add_show_day_check'] = array($startDow);
         } else if ($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
