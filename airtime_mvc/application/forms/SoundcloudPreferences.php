@@ -1,5 +1,6 @@
 <?php
 require_once 'customvalidators/ConditionalNotEmpty.php';
+require_once 'customvalidators/PasswordNotEmpty.php';
 
 class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 {
@@ -76,7 +77,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
             // which is something we don't want
             'allowEmpty' => false,
             'validators' => array(
-                new ConditionalNotEmpty(array('UploadToSoundcloudOption'=>'1'))
+                new PasswordNotEmpty(array('UploadToSoundcloudOption'=>'1'))
             )
         ));
 

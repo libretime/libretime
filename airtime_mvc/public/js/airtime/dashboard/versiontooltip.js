@@ -8,7 +8,7 @@ function getContent() {
     var msg = "";
     if(isUpToDate()) {
         msg = "You are running the latest version";
-    } else if(diff == 1) {
+    } else if(diff <= 1) {  // new version is possible when major diff = 0
         msg = "New version available: " + link;
     } else if(diff == 2) {
         msg = "This version will soon be obsolete.<br/>Please upgrade to " + link;
