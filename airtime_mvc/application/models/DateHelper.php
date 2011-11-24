@@ -84,7 +84,7 @@ class Application_Model_DateHelper
     
     public static function GetDayEndTimestampInUtc($time = "") {
         $dayEndTimestamp = Application_Model_DateHelper::GetDayEndTimestamp($time);
-        return Application_Model_DateHelper::ConvertToUtcDateTime($dayEndTimestamp);
+        return Application_Model_DateHelper::ConvertToUtcDateTimeString($dayEndTimestamp);
     }
 
     /**

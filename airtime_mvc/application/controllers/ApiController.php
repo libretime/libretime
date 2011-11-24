@@ -172,6 +172,21 @@ class ApiController extends Zend_Controller_Action
       return;
     }
 
+    /**
+     * Retrieve the currently playing show as well as upcoming shows.
+     * Number of shows returned and the time interval in which to
+     * get the next shows can be configured as post parameters.
+     * 
+     * TODO: in the future, make interval length a parameter instead of hardcode to 48
+     * 
+     * Possible parameters:
+     * type - Can have values of "endofday" or "interval". If set to "endofday",
+     *        the function will retrieve shows from now to end of day.
+     *        If set to "interval", shows in the next 48 hours will be retrived.
+     *        Default is "interval".
+     * limit - How many shows to retrieve
+     *         Default is "5".
+     */
     public function liveInfoAction()
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi()){
@@ -181,11 +196,24 @@ class ApiController extends Zend_Controller_Action
 
             $date = new Application_Model_DateHelper;
             $utcTimeNow = $date->getUtcTimestamp();
+            $utcTimeEnd = "";   // if empty, GetNextShows will use interval instead of end of day
+            
+            $request = $this->getRequest();
+            $type = $request->getParam('type');
+            if($type == "endofday") {
+                // make GetNextShows use end of day
+                $utcTimeEnd = Application_Model_DateHelper::GetDayEndTimestampInUtc();
+            }
+            
+            $limit = $request->getParam('limit');
+            if($limit == "") {
+                $limit = "5";
+            }
             
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
                 "currentShow"=>Application_Model_Show::GetCurrentShow($utcTimeNow),
-                "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 5),
+                "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, $limit, $utcTimeEnd),
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"));
                
@@ -219,7 +247,7 @@ class ApiController extends Zend_Controller_Action
             $result = array();
             for ($i=0; $i<7; $i++){
                 $utcDayEnd = Application_Model_DateHelper::GetDayEndTimestamp($utcDayStart);
-                $shows = Application_Model_Show::GetNextShows($utcDayStart, 0, $utcDayEnd);
+                $shows = Application_Model_Show::GetNextShows($utcDayStart, "0", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
                 
                 Application_Model_Show::ConvertToLocalTimeZone($shows, array("starts", "ends", "start_timestamp", "end_timestamp"));

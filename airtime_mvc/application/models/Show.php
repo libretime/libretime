@@ -1556,7 +1556,7 @@ class Application_Model_Show {
      * @param String $timeEnd - interval end time (in UTC)
      * @return array - the next $limit number of shows within the time interval
      */
-    public static function GetNextShows($timeStart, $limit = 0, $timeEnd = "")
+    public static function GetNextShows($timeStart, $limit = "0", $timeEnd = "")
     {
         global $CC_CONFIG, $CC_DBC;
 
@@ -1577,7 +1577,7 @@ class Application_Model_Show {
         ." ORDER BY si.starts";
 
         // defaults to retrieve all shows within the interval if $limit not set
-        if($limit != 0) {
+        if($limit != "0") {
             $sql = $sql . " LIMIT $limit";
         }
 
