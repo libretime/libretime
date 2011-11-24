@@ -19,12 +19,14 @@ if ($opts == NULL) {
 $version = AirtimeInstall::GetVersionInstalled();
 
 // A previous version exists - if so, upgrade.
+/*
 if (isset($version) && ($version != false) && ($version < AIRTIME_VERSION) && !isset($opts->r)) {
     echo "Airtime version $version found.".PHP_EOL;
     
     require_once("airtime-upgrade.php");
     exit(0);
 }
+* */
 
 // -------------------------------------------------------------------------
 // The only way we get here is if we are doing a new install or a reinstall.
@@ -65,9 +67,6 @@ if ($overwrite) {
     AirtimeIni::UpdateIniFiles();
 }
 
-//AirtimeInstall::InstallPhpCode(); //copies contents of airtime_mvc to /usr/share
-//AirtimeInstall::InstallBinaries(); //copies utils to /usr/lib/airtime
-
 // Update the build.properties file to point to the correct directory.
 AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
 
@@ -87,10 +86,6 @@ if ($db_install) {
     }
 }
 
-//AirtimeInstall::CreateSymlinksToUtils();
-
 AirtimeInstall::CreateZendPhpLogFile();
-
-//AirtimeInstall::CreateCronFile();
 
 /* FINISHED AIRTIME PHP INSTALLER */

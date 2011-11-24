@@ -8,21 +8,29 @@
     <div style="clear:both"></div>
     <?php }?>
 <?php echo $this->statusMsg;?>
-<?php if($this->form->getElement('output_sound_device') != null){?>
-    <fieldset class="padded">
-        <legend>Hardware Audio Out</legend>
+    <fieldset class="padded stream-setting-global">
+        <legend>Global Settings</legend>
         <dl class="zend_form">
+        <?php if($this->form->getElement('output_sound_device') != null){?>
             <dt id="hardwareOut-label">
-                <label class="required" for="EnableHardwareOut">
+                <label class="required">
                 <?php echo $this->form->getElement('output_sound_device')->getLabel() ?> :
                 </label>
             </dt>
             <dd id="hardwareOut-element">
                 <?php echo $this->form->getElement('output_sound_device') ?>
             </dd>
+        <?php } ?>
+            <dt id="vorbisMetadata-label">
+                <label class="required">
+                <?php echo $this->form->getElement('icecast_vorbis_metadata')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="vorbisMetadata-element">
+                <?php echo $this->form->getElement('icecast_vorbis_metadata') ?>
+            </dd>
         </dl>
     </fieldset>
-<?php } ?>
     <?php
         for($i=1;$i<=$this->num_stream;$i++){
             echo $this->form->getSubform("s".$i."_subform");

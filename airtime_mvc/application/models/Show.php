@@ -187,13 +187,15 @@ class Application_Model_Show {
         $uncheckedDaysImploded = implode(",", $p_uncheckedDays);
         $showId = $this->getId();
 
-        $date = new Application_Model_DateHelper;
-        $timestamp = $date->getTimestamp();
+        $timestamp = gmdate("Y-m-d H:i:s");
 
         $sql = "DELETE FROM cc_show_instances"
             ." WHERE EXTRACT(DOW FROM starts) IN ($uncheckedDaysImploded)"
             ." AND starts > TIMESTAMP '$timestamp'"
             ." AND show_id = $showId";
+
+        Logging::log("sql for removing unchecked days");
+        Logging::log($sql);
 
         $CC_DBC->query($sql);
     }
@@ -856,7 +858,8 @@ class Application_Model_Show {
         //What we are doing here is checking if the show repeats or if
         //any repeating days have been checked. If not, then by default
         //the "selected" DOW is the initial day.
-        $startDow = gmdate("w", $utcStartDateTime->getTimestamp());
+        //DOW in local time.
+        $startDow = date("w", $startDateTime->getTimestamp());
         if (!$data['add_show_repeats']) {
             $data['add_show_day_check'] = array($startDow);
         } else if ($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
@@ -907,7 +910,10 @@ class Application_Model_Show {
             $showDay->setDbRecord($isRecorded);
             $showDay->save();
         } else {
+            Logging::log("startDow is: {$startDow}");
             foreach ($data['add_show_day_check'] as $day) {
+                Logging::log("day is: {$day}");
+
                 $daysAdd=0;
                 $startDateTimeClone = clone $startDateTime;
                 if ($startDow !== $day){
@@ -916,7 +922,10 @@ class Application_Model_Show {
                     else
                         $daysAdd = $day - $startDow;
 
+                    Logging::log("days to add: {$daysAdd}");
+
                     $startDateTimeClone->add(new DateInterval("P".$daysAdd."D"));
+                    Logging::log("start date: {$startDateTimeClone->format("Y-m-d")}");
                 }
                 if (is_null($endDate) || $startDateTimeClone->getTimestamp() <= $endDateTime->getTimestamp()) {
                     $showDay = new CcShowDays();

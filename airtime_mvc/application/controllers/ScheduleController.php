@@ -435,7 +435,7 @@ class ScheduleController extends Zend_Controller_Action
 
             //convert from UTC to user's timezone for display.
             $originalDateTime = new DateTime($originalShowStart, new DateTimeZone("UTC"));
-            $originalDateTime->setTimezone(new DateTimeZone(date_default_timezone_get));
+            $originalDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
             //$timestamp  = Application_Model_DateHelper::ConvertToLocalDateTimeString($originalDateTime->format("Y-m-d H:i:s"));
             $this->view->additionalShowInfo =
                 "Rebroadcast of show \"$originalShowName\" from "
@@ -493,7 +493,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $startsDateTime = new DateTime($show->getStartDate()." ".$show->getStartTime(), new DateTimeZone("UTC"));
         $endsDateTime = new DateTime($show->getEndDate()." ".$show->getEndTime(), new DateTimeZone("UTC"));
-        
+
         $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
         $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
@@ -508,13 +508,16 @@ class ScheduleController extends Zend_Controller_Action
             $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
         }
 
+        //need to get the days of the week in the php timezone (for the front end).
         $days = array();
         $showDays = CcShowDaysQuery::create()->filterByDbShowId($showInstance->getShowId())->find();
         foreach($showDays as $showDay){
-            array_push($days, $showDay->getDbDay());
+            $showStartDay = new DateTime($showDay->getDbFirstShow(), new DateTimeZone($showDay->getDbTimezone()));
+            $showStartDay->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            array_push($days, $showStartDay->format('w'));
         }
 
-        $displayedEndDate = new DateTime($show->getRepeatingEndDate(), new DateTimeZone("UTC"));
+        $displayedEndDate = new DateTime($show->getRepeatingEndDate(), new DateTimeZone($showDays[0]->getDbTimezone()));
         $displayedEndDate->sub(new DateInterval("P1D"));//end dates are stored non-inclusively.
         $displayedEndDate->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
@@ -742,7 +745,7 @@ class ScheduleController extends Zend_Controller_Action
                     $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
                     $this->view->rebroadcast = $formRebroadcast;
                     $this->view->addNewShow = true;
-        
+
                     //the form still needs to be "update" since
                     //the validity test failed.
                     if ($data['add_show_id'] != -1){
@@ -751,9 +754,9 @@ class ScheduleController extends Zend_Controller_Action
                     if (!$startDateModified){
                         $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
                     }
-        
+
                     $this->view->form = $this->view->render('schedule/add-show-form.phtml');
-                    
+
                 }
             }else{
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();

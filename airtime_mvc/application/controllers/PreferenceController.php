@@ -165,10 +165,10 @@ class PreferenceController extends Zend_Controller_Action
 
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
-        if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
-            $form->setSetting($setting);
-            $form->startFrom();
-        }
+        
+        $form->setSetting($setting);
+        $form->startFrom();
+        
         for($i=1; $i<=$num_of_stream; $i++){
             $subform = new Application_Form_StreamSettingSubForm();
             $subform->setPrefix($i);
@@ -192,9 +192,14 @@ class PreferenceController extends Zend_Controller_Action
                     }
                 }
             }
-            if(Application_Model_Preference::GetPlanLevel() == 'disabled' && $form->isValid($post_data['output_sound_device'])){
-                $values['output_sound_device'] = $form->getValue('output_sound_device');
+            if($form->isValid($post_data)){
+                if(Application_Model_Preference::GetPlanLevel() == 'disabled'){// && $form->isValid($post_data['output_sound_device'])){
+                    $values['output_sound_device'] = $form->getValue('output_sound_device');
+                }
+                
+                $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
             }
+            var_dump($form->getValue('icecast_vorbis_metadata'));
             if(!$error){
                 Application_Model_StreamSetting::setStreamSetting($values);
                 $data = array();

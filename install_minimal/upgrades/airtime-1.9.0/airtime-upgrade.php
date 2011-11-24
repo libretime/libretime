@@ -8,12 +8,16 @@
 
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
-set_include_path(__DIR__.'/../../../airtime_mvc/application/models' . PATH_SEPARATOR . get_include_path());
 require_once 'conf.php';
 require_once 'DB.php';
 
 require_once 'propel/runtime/lib/Propel.php';
-Propel::init(__DIR__."/../../../airtime_mvc/application/configs/airtime-conf.php");
+
+set_include_path(__DIR__.'/propel' . PATH_SEPARATOR . get_include_path());
+Propel::init(__DIR__."/propel/airtime-conf.php");
+
+date_default_timezone_set(exec("cat /etc/timezone"));
+
 
 const CONF_DIR_BINARIES = "/usr/lib/airtime";
 

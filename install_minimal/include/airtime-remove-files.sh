@@ -29,8 +29,8 @@ AIRTIMEROOT=$SCRIPTPATH/../../
 
 rm -f /etc/cron.d/airtime-crons
 
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
+#virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+#. ${virtualenv_bin}activate
 
 echo "* API Client"
 python $AIRTIMEROOT/python_apps/api_clients/install/api_client_uninstall.py

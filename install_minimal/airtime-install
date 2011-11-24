@@ -22,13 +22,38 @@ SCRIPTPATH=`dirname $SCRIPT`
 AIRTIMEROOT=$SCRIPTPATH/../
 
 # Check if airtime exists already
+set +e
+DO_UPGRADE="0"
 php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php $@
+result=$?
+set -e
+if [ "$result" -eq "1" ]; then
+    DO_UPGRADE="1"
+fi
+
+#make DO_UPGRADE available in sub bash scripts
+export DO_UPGRADE
+
+if [ "$result" = "2" -o "$result" = "3" ]; then
+    #error message has already been printed inside the php script
+    exit 1
+fi
 
 echo -e "\n******************************** Install Begin *********************************"
 
 rm -rf "/usr/lib/airtime"
 $AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
+
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
+
 python $AIRTIMEROOT/python_apps/create-pypo-user.py
+
+if [ "$DO_UPGRADE" = "1" ]; then
+    #do upgrade
+    php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-upgrade.php $@
+fi
 
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
@@ -38,5 +63,8 @@ $SCRIPTPATH/include/airtime-initialize.sh $@
 echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
 sleep 10
 airtime-check-system
+
+#deactivate virtualenv
+deactivate
 
 echo -e "\n******************************* Install Complete *******************************"
