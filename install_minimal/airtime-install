@@ -29,6 +29,10 @@ result=$?
 set -e
 if [ "$result" -eq "1" ]; then
     DO_UPGRADE="1"
+elif [ "$result" -eq "2" -o "$result" -eq "3" ]; then
+    exit 1
+elif [ "$result" -eq "4" ]; then
+    exit 0
 fi
 
 #make DO_UPGRADE available in sub bash scripts
