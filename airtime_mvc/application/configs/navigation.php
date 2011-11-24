@@ -96,7 +96,7 @@ $pages = array(
             ),
             array(
                 'label'      => 'User Manual',
-                'uri'        => "http://manuals.sourcefabric.org/",
+                'uri'        => "http://www.sourcefabric.org/en/airtime/manuals/",
                 'target'     => "_blank"
             ),
             array(
