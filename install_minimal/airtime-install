@@ -7,6 +7,10 @@ if [ `whoami` != 'root' ]; then
     exit 1
 fi
 
+export INSTALL_PYPO=1
+export INSTALL_MEDIA_MONITOR=1
+export INSTALL_SHOW_RECORDER=1
+
 set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 set -e

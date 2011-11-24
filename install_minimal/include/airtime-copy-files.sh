@@ -39,25 +39,12 @@ if [ ! -e /etc/airtime/airtime.conf ]; then
     cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
 fi
 
-if [ ! -e /etc/airtime/api_client.cfg ]; then
-cp $AIRTIMEROOT/python_apps/api_clients/api_client.cfg /etc/airtime
+echo "* Creating /etc/airtime"
+mkdir -p /etc/monit/conf.d/
+if [ ! -e /etc/monit/conf.d/monit-airtime-generic.cfg ]; then
+    cp $AIRTIMEROOT/python_apps/monit/monit-airtime-generic.cfg /etc/monit/conf.d/
 fi
 
-if [ ! -e /etc/airtime/recorder.cfg ]; then
-cp $AIRTIMEROOT/python_apps/show-recorder/recorder.cfg /etc/airtime
-fi
-
-if [ ! -e /etc/airtime/media-monitor.cfg ]; then
-cp $AIRTIMEROOT/python_apps/media-monitor/media-monitor.cfg /etc/airtime
-fi
-
-if [ ! -e /etc/airtime/pypo.cfg ]; then
-cp $AIRTIMEROOT/python_apps/pypo/pypo.cfg /etc/airtime
-fi
-
-if [ ! -e /etc/airtime/liquidsoap.cfg ]; then
-cp $AIRTIMEROOT/python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg /etc/airtime
-fi
 
 echo "* Creating /etc/cron.d/airtime-crons"
 HOUR=$(($RANDOM%24))
@@ -68,11 +55,20 @@ echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.
 #. ${virtualenv_bin}activate
 
 echo "* Creating /usr/lib/airtime"
-python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
-python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
-python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-copy-files.py
-python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
 
+if [ "$INSTALL_PYPO" -eq "1" -o "$INSTALL_MEDIA_MONITOR" -eq "1" -o "$INSTALL_SHOW_RECORDER" -eq "1" ]; then
+    python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
+fi
+
+if [ "$INSTALL_PYPO" -eq "1" ]; then
+    python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
+fi
+if [ "$INSTALL_MEDIA_MONITOR" -eq "1" ]; then
+    python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-copy-files.py
+fi
+if [ "$INSTALL_SHOW_RECORDER" -eq "1" ]; then
+    python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
+fi
 cp -R $AIRTIMEROOT/utils /usr/lib/airtime
 
 echo "* Creating symbolic links in /usr/bin"
