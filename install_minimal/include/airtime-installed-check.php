@@ -12,6 +12,7 @@
  * Returns 1 if a previous version of Airtime installed
  * Returns 2 if the same version of Airtime is installed
  * Returns 3 if a version of Airtime that we can't upgrade from is installed.
+ * Returns 4 if we need to print help message.
  */
 require_once(dirname(__FILE__).'/AirtimeInstall.php');
 require_once(__DIR__.'/airtime-constants.php');
@@ -20,12 +21,12 @@ AirtimeInstall::ExitIfNotRoot();
 
 $opts = AirtimeInstall::getOpts();
 if ($opts == NULL) {
-    exit(2);
+    exit(4);
 }
 
 if (isset($opts->h)) {
     AirtimeInstall::printUsage($opts);
-    exit(2);
+    exit(4);
 }
 
 $version = AirtimeInstall::GetVersionInstalled();
