@@ -178,13 +178,27 @@ class Application_Model_Show {
      * Sunday are removed.
      *
      * @param array p_uncheckedDays
-     *      An array specifying which days should be removed.
+     *      An array specifying which days should be removed. (in the local timezone)
      */
     public function removeUncheckedDaysInstances($p_uncheckedDays)
     {
         global $CC_DBC;
-
-        $uncheckedDaysImploded = implode(",", $p_uncheckedDays);
+       
+        //need to convert local doftw to UTC doftw (change made for 2.0 since shows are stored in UTC)
+        $daysRemovedUTC = array();
+        
+        $showDays = CcShowDaysQuery::create()
+                        ->filterByDbShowId($this->getId())
+                        ->find();
+        foreach($showDays as $showDay) {
+	        if (in_array($showDay->getDbDay(), $p_uncheckedDays)) {
+	           $startDay = new DateTime("{$showDay->getDbFirstShow()} {$showDay->getDbStartTime()}", new DateTimeZone($showDay->getDbTimezone()));
+               $startDay->setTimezone(new DateTimeZone("UTC"));
+               $daysRemovedUTC[] = $startDay->format("w");
+	        }
+        }
+       
+        $uncheckedDaysImploded = implode(",", $daysRemovedUTC);
         $showId = $this->getId();
 
         $timestamp = gmdate("Y-m-d H:i:s");
@@ -193,9 +207,6 @@ class Application_Model_Show {
             ." WHERE EXTRACT(DOW FROM starts) IN ($uncheckedDaysImploded)"
             ." AND starts > TIMESTAMP '$timestamp'"
             ." AND show_id = $showId";
-
-        Logging::log("sql for removing unchecked days");
-        Logging::log($sql);
 
         $CC_DBC->query($sql);
     }
@@ -797,6 +808,7 @@ class Application_Model_Show {
                     $daysRemoved = array_diff($showDaysArray, $p_data['add_show_day_check']);
 
                     if (count($daysRemoved) > 0){
+                    	
                         $this->removeUncheckedDaysInstances($daysRemoved);
                     }
                 }
