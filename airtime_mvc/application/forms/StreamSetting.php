@@ -28,7 +28,7 @@ class Application_Form_StreamSetting extends Zend_Form
         }
         
         $icecast_vorbis_metadata = new Zend_Form_Element_Checkbox('icecast_vorbis_metadata');
-        $icecast_vorbis_metadata->setLabel('Icecast Vorbis Meatadata')
+        $icecast_vorbis_metadata->setLabel('Icecast Vorbis Metadata')
                                 ->setRequired(false)
                                 ->setValue(($setting['icecast_vorbis_metadata'] == "true")?1:0)
                                 ->setDecorators(array('ViewHelper'));
