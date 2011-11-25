@@ -199,7 +199,6 @@ class PreferenceController extends Zend_Controller_Action
                 
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
             }
-            var_dump($form->getValue('icecast_vorbis_metadata'));
             if(!$error){
                 Application_Model_StreamSetting::setStreamSetting($values);
                 $data = array();

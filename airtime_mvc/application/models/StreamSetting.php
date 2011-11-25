@@ -66,7 +66,6 @@ class Application_Model_StreamSetting {
                 $CC_DBC->query($sql);
             }
             else{
-                var_dump($key);
                 $temp = explode('_', $key);
                 $prefix = $temp[0];
                 foreach($d as $k=>$v){
