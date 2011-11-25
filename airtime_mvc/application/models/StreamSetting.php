@@ -21,7 +21,23 @@ class Application_Model_StreamSetting {
         
         return $ids;
     }
-
+    
+    /* Retruns only global data as array*/
+    public static function getGlobalData(){
+        global $CC_DBC;
+        $sql = "SELECT * "
+        ."FROM cc_stream_setting "
+        ."WHERE keyname IN ('output_sound_device', 'icecast_vorbis_metadata')";
+        
+        $rows = $CC_DBC->getAll($sql);
+        $data = array();
+        
+        foreach($rows as $row){
+        $data[$row["keyname"]] = $row["value"];
+        }
+        
+        return $data;
+    }
     /* Returns all information related to a specific stream. An example
      * of a stream id is 's1' or 's2'. */
     public static function getStreamData($p_streamId){
