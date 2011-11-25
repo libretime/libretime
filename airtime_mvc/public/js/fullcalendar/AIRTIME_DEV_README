@@ -50,7 +50,7 @@ martin@Thinkpad-T410:~/workspace/airtime/airtime_mvc/public/js/fullcalendar$ dif
 +})(jQuery);
 
 
-adjustDateToServerDate() function is defined in "js/airtime/schedule/full-calendar-functions.js"
+adjustDateToServerDate() function is defined in "js/airtime/common/common.js"
 
 Please make this change before updating!!!
 

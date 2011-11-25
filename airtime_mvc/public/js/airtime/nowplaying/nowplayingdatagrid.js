@@ -204,7 +204,7 @@ $(document).ready(function() {
         $("#datepicker").datepicker({
             onSelect: function(dateText, inst) 
                 { getData();}});
-        $("#datepicker").datepicker("setDate", new Date());
+        $("#datepicker").datepicker("setDate", adjustDateToServerDate(new Date(), timezoneOffset));
     } else {
         $('#day_view').click(function(){redirect('/Nowplaying/day-view')});
     }

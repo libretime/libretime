@@ -19,11 +19,10 @@ function startDpSelect(dateText, inst) {
 
 function endDpSelect(dateText, inst) {
 	var time, date;
-
+    
 	time = dateText.split("-");
 	date = new Date(time[0], time[1] - 1, time[2]);
 
-	//$("#add_show_start_date").datepicker( "option", "maxDate", date);
 	if (inst.input)
         inst.input.trigger('change');
 }
@@ -32,7 +31,7 @@ function createDateInput(el, onSelect) {
 	var date;
 
 	el.datepicker({
-			minDate: new Date(),
+			minDate: adjustDateToServerDate(new Date(), timezoneOffset),
 			onSelect: onSelect,
 			dateFormat: 'yy-mm-dd'
 		});
@@ -188,7 +187,7 @@ function setAddShowEvents() {
     });
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
-		minDate: new Date(),
+		minDate: adjustDateToServerDate(new Date(), timezoneOffset),
 		dateFormat: 'yy-mm-dd'
 	});
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
