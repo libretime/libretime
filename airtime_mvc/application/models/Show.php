@@ -1524,21 +1524,42 @@ class Application_Model_Show {
         return $event;
     }
 
-    public function setShowFirstShow($s_date){
+    /* Takes in a UTC DateTime object. 
+     * Converts this to local time, since cc_show days
+     * requires local time. */
+    public function setShowFirstShow($p_dt){
+        
+        //clone object since we are modifying it and it was passed by reference.
+        $dt = clone $p_dt;
+        
+        $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        
         $showDay = CcShowDaysQuery::create()
         ->filterByDbShowId($this->_showId)
         ->findOne();
 
-        $showDay->setDbFirstShow($s_date)
+        $showDay->setDbFirstShow($dt)
         ->save();
     }
 
-    public function setShowLastShow($e_date){
+    /* Takes in a UTC DateTime object
+     * Converts this to local time, since cc_show days
+     * requires local time. */
+    public function setShowLastShow($p_dt){
+        
+        //clone object since we are modifying it and it was passed by reference.
+        $dt = clone $p_dt;
+        
+        $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        
+        //add one day since the Last Show date in CcShowDays is non-inclusive.
+        $dt->add(new DateInterval("P1D"));
+        
         $showDay = CcShowDaysQuery::create()
         ->filterByDbShowId($this->_showId)
         ->findOne();
 
-        $showDay->setDbLastShow($e_date)
+        $showDay->setDbLastShow($dt)
         ->save();
     }
 
