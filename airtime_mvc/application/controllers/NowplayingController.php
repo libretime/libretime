@@ -18,7 +18,11 @@ class NowplayingController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
+        
+        //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
+        $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js','text/javascript');
+        
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowview.js','text/javascript');
         
         $refer_sses = new Zend_Session_Namespace('referrer');
@@ -104,7 +108,11 @@ class NowplayingController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
+        
+        //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
+        $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js','text/javascript');
+        
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/dayview.js','text/javascript');
     }
 

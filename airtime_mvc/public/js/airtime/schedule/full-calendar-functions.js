@@ -75,19 +75,6 @@ function makeTimeStamp(date){
 	return timestamp;
 }
 
-function adjustDateToServerDate(date, serverTimezoneOffset){
-    //date object stores time in the browser's localtime. We need to artificially shift 
-    //it to 
-    var timezoneOffset = date.getTimezoneOffset()*60*1000;
-    
-    date.setTime(date.getTime() + timezoneOffset + serverTimezoneOffset*1000);
-    
-    /* date object has been shifted to artificial UTC time. Now let's
-     * shift it to the server's timezone */
-    
-    return date;
-}
-
 function pad(number, length) {
     var str = '' + number;
     while (str.length < length) {
@@ -101,7 +88,7 @@ function dayClick(date, allDay, jsEvent, view) {
     var now, today, selected, chosenDate, chosenTime;
 
     now = adjustDateToServerDate(new Date(), serverTimezoneOffset);
-
+        
     if(view.name === "month") {
         today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());

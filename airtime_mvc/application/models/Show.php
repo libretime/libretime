@@ -1538,23 +1538,44 @@ class Application_Model_Show {
         return $event;
     }
 
-    public function setShowFirstShow($s_date){
+    /* Takes in a UTC DateTime object. 
+     * Converts this to local time, since cc_show days
+     * requires local time. */
+    public function setShowFirstShow($p_dt){
+        
+        //clone object since we are modifying it and it was passed by reference.
+        $dt = clone $p_dt;
+        
+        $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        
         $showDay = CcShowDaysQuery::create()
         ->filterByDbShowId($this->_showId)
         ->findOne();
 
-        $showDay->setDbFirstShow($s_date)
+        $showDay->setDbFirstShow($dt)
         ->save();
         
         Logging::log("setting show's first show.");
     }
 
-    public function setShowLastShow($e_date){
+    /* Takes in a UTC DateTime object
+     * Converts this to local time, since cc_show days
+     * requires local time. */
+    public function setShowLastShow($p_dt){
+        
+        //clone object since we are modifying it and it was passed by reference.
+        $dt = clone $p_dt;
+        
+        $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        
+        //add one day since the Last Show date in CcShowDays is non-inclusive.
+        $dt->add(new DateInterval("P1D"));
+        
         $showDay = CcShowDaysQuery::create()
         ->filterByDbShowId($this->_showId)
         ->findOne();
 
-        $showDay->setDbLastShow($e_date)
+        $showDay->setDbLastShow($dt)
         ->save();
     }
 
@@ -1573,7 +1594,8 @@ class Application_Model_Show {
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts <= TIMESTAMP '$timeNow'"
-        ." AND si.ends > TIMESTAMP '$timeNow'";
+        ." AND si.ends > TIMESTAMP '$timeNow'"
+        ." AND modified_instance != TRUE";
 
         // Convert back to local timezone
         $rows = $CC_DBC->GetAll($sql);
@@ -1611,6 +1633,7 @@ class Application_Model_Show {
         ." WHERE si.show_id = s.id"
         ." AND si.starts >= TIMESTAMP '$timeStart'"
         ." AND si.starts < TIMESTAMP $timeEnd"
+        ." AND modified_instance != TRUE"
         ." ORDER BY si.starts";
 
         // defaults to retrieve all shows within the interval if $limit not set
@@ -1633,6 +1656,9 @@ class Application_Model_Show {
     public static function ConvertToLocalTimeZone(&$rows, $columnsToConvert) {
         $timezone = date_default_timezone_get();
 
+        if (!is_array($rows)) {
+            return;
+        }
         foreach($rows as &$row) {
             foreach($columnsToConvert as $column) {
                 $row[$column] = Application_Model_DateHelper::ConvertToLocalDateTimeString($row[$column]);

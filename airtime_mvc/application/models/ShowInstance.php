@@ -29,6 +29,10 @@ class Application_Model_ShowInstance {
         return new Application_Model_Show($this->getShowId());
     }
 
+    /* This function is weird. It should return a boolean, but instead returns
+     * an integer if it is a rebroadcast, or returns null if it isn't. You can convert
+     * it to boolean by using is_null(isRebroadcast), where true means isn't and false 
+     * means that it is. */
     public function isRebroadcast()
     {
         return $this->_showInstance->getDbOriginalShow();
@@ -231,9 +235,9 @@ class Application_Model_ShowInstance {
         $this->correctScheduleStartTimes();
 
         $show = new Application_Model_Show($this->getShowId());
-        if(!$show->isRepeating()){
-            $show->setShowFirstShow($new_starts);
-            $show->setShowLastShow($new_ends);
+        if(!$show->isRepeating() && is_null($this->isRebroadcast())){
+            $show->setShowFirstShow($newStartsDateTime);
+            $show->setShowLastShow($newEndsDateTime);
         }
 
         Application_Model_RabbitMq::PushSchedule();
