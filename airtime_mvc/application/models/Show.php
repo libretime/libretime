@@ -190,11 +190,28 @@ class Application_Model_Show {
         $showDays = CcShowDaysQuery::create()
                         ->filterByDbShowId($this->getId())
                         ->find();
+
+        Logging::log("Unchecked days:");
+        foreach($p_uncheckedDays as $day) {
+            Logging::log($day);
+        }
+        
         foreach($showDays as $showDay) {
+        	Logging::log("Local show day is: {$showDay->getDbDay()}");
+            Logging::log("First show day is: {$showDay->getDbFirstShow()}");
+            Logging::log("Id show days is: {$showDay->getDbId()}");
+               
 	        if (in_array($showDay->getDbDay(), $p_uncheckedDays)) {
+	           $showDay->reload();
+	           //Logging::log("Local show day is: {$showDay->getDbDay()}");
+	           //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
+	           //Logging::log("Id show days is: {$showDay->getDbId()}");
 	           $startDay = new DateTime("{$showDay->getDbFirstShow()} {$showDay->getDbStartTime()}", new DateTimeZone($showDay->getDbTimezone()));
+	           Logging::log("Show start day: {$startDay->format('Y-m-d H:i:s')}");
                $startDay->setTimezone(new DateTimeZone("UTC"));
-               $daysRemovedUTC[] = $startDay->format("w");
+               Logging::log("Show start day UTC: {$startDay->format('Y-m-d H:i:s')}");
+               $daysRemovedUTC[] = $startDay->format('w');
+               Logging::log("UTC show day is: {$startDay->format('w')}");
 	        }
         }
        
@@ -207,6 +224,8 @@ class Application_Model_Show {
             ." WHERE EXTRACT(DOW FROM starts) IN ($uncheckedDaysImploded)"
             ." AND starts > TIMESTAMP '$timestamp'"
             ." AND show_id = $showId";
+            
+        Logging::log($sql);
 
         $CC_DBC->query($sql);
     }
@@ -632,6 +651,7 @@ class Application_Model_Show {
         $date = new Application_Model_DateHelper;
         $timestamp = $date->getTimestamp();
 
+        //TODO fix this from overwriting info.
         $sql = "UPDATE cc_show_days "
                 ."SET start_time = TIME '$p_data[add_show_start_time]', "
                 ."first_show = DATE '$p_data[add_show_start_date]', ";
@@ -773,19 +793,6 @@ class Application_Model_Show {
                 $this->deleteAllInstances();
             }
 
-            if ($p_data['add_show_start_date'] != $this->getStartDate()
-                || $p_data['add_show_start_time'] != $this->getStartTime()){
-                //start date/time has changed
-
-                $newDate = strtotime($p_data['add_show_start_date']);
-                $oldDate = strtotime($this->getStartDate());
-                if ($newDate > $oldDate){
-                    $this->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
-                }
-
-                $this->updateStartDateTime($p_data, $p_endDate);
-            }
-
             if ($repeatType != $this->getRepeatType()){
                 //repeat type changed.
                 $this->deleteAllInstances();
@@ -812,6 +819,19 @@ class Application_Model_Show {
                         $this->removeUncheckedDaysInstances($daysRemoved);
                     }
                 }
+                
+	            if ($p_data['add_show_start_date'] != $this->getStartDate()
+	                || $p_data['add_show_start_time'] != $this->getStartTime()){
+	                //start date/time has changed
+	
+	                $newDate = strtotime($p_data['add_show_start_date']);
+	                $oldDate = strtotime($this->getStartDate());
+	                if ($newDate > $oldDate){
+	                    $this->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
+	                }
+	
+	                $this->updateStartDateTime($p_data, $p_endDate);
+	            }
             }
 
             //Check if end date for the repeat option has changed. If so, need to take care
@@ -922,10 +942,7 @@ class Application_Model_Show {
             $showDay->setDbRecord($isRecorded);
             $showDay->save();
         } else {
-            Logging::log("startDow is: {$startDow}");
             foreach ($data['add_show_day_check'] as $day) {
-                Logging::log("day is: {$day}");
-
                 $daysAdd=0;
                 $startDateTimeClone = clone $startDateTime;
                 if ($startDow !== $day){
@@ -934,10 +951,7 @@ class Application_Model_Show {
                     else
                         $daysAdd = $day - $startDow;
 
-                    Logging::log("days to add: {$daysAdd}");
-
                     $startDateTimeClone->add(new DateInterval("P".$daysAdd."D"));
-                    Logging::log("start date: {$startDateTimeClone->format("Y-m-d")}");
                 }
                 if (is_null($endDate) || $startDateTimeClone->getTimestamp() <= $endDateTime->getTimestamp()) {
                     $showDay = new CcShowDays();
@@ -1531,6 +1545,8 @@ class Application_Model_Show {
 
         $showDay->setDbFirstShow($s_date)
         ->save();
+        
+        Logging::log("setting show's first show.");
     }
 
     public function setShowLastShow($e_date){
