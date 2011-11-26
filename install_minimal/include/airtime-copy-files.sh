@@ -56,19 +56,13 @@ echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.
 
 echo "* Creating /usr/lib/airtime"
 
-if [ "$INSTALL_PYPO" -eq "1" -o "$INSTALL_MEDIA_MONITOR" -eq "1" -o "$INSTALL_SHOW_RECORDER" -eq "1" ]; then
+if [ "$WEB_ONLY" -eq "0" ]; then
     python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
-fi
-
-if [ "$INSTALL_PYPO" -eq "1" ]; then
     python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
-fi
-if [ "$INSTALL_MEDIA_MONITOR" -eq "1" ]; then
     python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-copy-files.py
-fi
-if [ "$INSTALL_SHOW_RECORDER" -eq "1" ]; then
     python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
 fi
+
 cp -R $AIRTIMEROOT/utils /usr/lib/airtime
 
 echo "* Creating symbolic links in /usr/bin"

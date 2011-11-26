@@ -487,7 +487,8 @@ class AirtimeInstall
                     'overwrite|o' => 'Overwrite any existing config files.',
                     'preserve|p' => 'Keep any existing config files.',
                     'no-db|n' => 'Turn off database install.',
-                    'reinstall|r' => 'Force a fresh install of this Airtime Version'
+                    'reinstall|r' => 'Force a fresh install of this Airtime Version',
+                    'webonly|w' => 'Install only web files'
                 )
             );
             $opts->parse();

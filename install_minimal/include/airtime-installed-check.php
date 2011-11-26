@@ -13,6 +13,7 @@
  * Returns 2 if the same version of Airtime is installed
  * Returns 3 if a version of Airtime that we can't upgrade from is installed.
  * Returns 4 if we need to print help message.
+ * Returns 5 if we need should only install apache files (web-only).
  */
 require_once(dirname(__FILE__).'/AirtimeInstall.php');
 require_once(__DIR__.'/airtime-constants.php');
@@ -20,13 +21,19 @@ require_once(__DIR__.'/airtime-constants.php');
 AirtimeInstall::ExitIfNotRoot();
 
 $opts = AirtimeInstall::getOpts();
-if ($opts == NULL) {
-    exit(4);
+
+if (is_null($opts)) {
+    exit(0);
 }
 
 if (isset($opts->h)) {
     AirtimeInstall::printUsage($opts);
     exit(4);
+}
+
+//install media-monitor
+if (isset($opts->w)){
+    exit(5);
 }
 
 $version = AirtimeInstall::GetVersionInstalled();

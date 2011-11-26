@@ -126,12 +126,20 @@ class AirtimeCheck {
             $p_status = json_decode($p_status);
             
             $data = $p_status->status;
-                        
-            self::output_status("KERNEL_VERSION", $data->platform->release);
-            self::output_status("MACHINE_ARCHITECTURE", $data->platform->machine);
-            self::output_status("TOTAL_MEMORY_MBYTES", $data->platform->memory);
-            self::output_status("TOTAL_SWAP_MBYTES", $data->platform->swap);
-            self::output_status("AIRTIME_VERSION", $data->airtime_version);
+              
+            if ($data->platform){
+                self::output_status("KERNEL_VERSION", $data->platform->release);
+                self::output_status("MACHINE_ARCHITECTURE", $data->platform->machine);
+                self::output_status("TOTAL_MEMORY_MBYTES", $data->platform->memory);
+                self::output_status("TOTAL_SWAP_MBYTES", $data->platform->swap);
+                self::output_status("AIRTIME_VERSION", $data->airtime_version);
+            } else {
+                self::output_status("KERNEL_VERSION", "UNKNOWN");
+                self::output_status("MACHINE_ARCHITECTURE", "UNKNOWN");
+                self::output_status("TOTAL_MEMORY_MBYTES", "UNKNOWN");
+                self::output_status("TOTAL_SWAP_MBYTES", "UNKNOWN");
+                self::output_status("AIRTIME_VERSION", "UNKNOWN");
+            }
             self::output_status("OS", self::CheckOsTypeVersion());
             self::output_status("CPU", self::GetCpuInfo());
             self::output_status("WEB_SERVER", self::GetServerType());
