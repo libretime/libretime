@@ -77,8 +77,9 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
             // which is something we don't want
             'allowEmpty' => false,
             'validators' => array(
-                new PasswordNotEmpty(array('UploadToSoundcloudOption'=>'1'))
-            )
+                new ConditionalNotEmpty(array('UploadToSoundcloudOption'=>'1'))
+            ),
+            'renderPassword' => true 
         ));
 
          // Add the description element
