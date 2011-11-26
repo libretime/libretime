@@ -30,9 +30,15 @@ if [ "$DO_UPGRADE" -eq "0" ]; then
 fi
 set -e
 
-python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
-python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-initialize.py
-python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-initialize.py
+if [ "$INSTALL_PYPO" -eq "1" ]; then
+    python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
+fi
+if [ "$INSTALL_MEDIA_MONITOR" -eq "1" ]; then
+    python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-initialize.py
+fi
+if [ "$INSTALL_SHOW_RECORDER" -eq "1" ]; then
+    python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-initialize.py
+fi
 
 # Start monit if it is not running, or restart if it is.
 # Need to ensure monit is running before Airtime daemons are run. This is
@@ -45,9 +51,16 @@ python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-initialize.py
 sleep 1
 
 set +e
-monit monitor airtime-media-monitor
-monit monitor airtime-liquidsoap
-monit monitor airtime-playout
-monit monitor airtime-show-recorder
+if [ "$INSTALL_PYPO" -eq "1" ]; then
+    monit monitor airtime-playout
+    monit monitor airtime-liquidsoap
+fi
+if [ "$INSTALL_MEDIA_MONITOR" -eq "1" ]; then
+    monit monitor airtime-media-monitor
+fi
+if [ "$INSTALL_SHOW_RECORDER" -eq "1" ]; then
+    monit monitor airtime-show-recorder
+fi
+
 monit monitor rabbitmq-server
 set -e

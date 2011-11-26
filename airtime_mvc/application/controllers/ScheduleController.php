@@ -46,8 +46,12 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js','text/javascript');
+        
+        //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
+        $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js','text/javascript');
-		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js','text/javascript');
+		
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js','text/javascript');
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js','text/javascript');
     	$this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js','text/javascript');
 

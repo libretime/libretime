@@ -27,16 +27,19 @@ def create_dir(path):
         
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
 
-# load config file
-try:
-    config = ConfigObj(PATH_INI_FILE)
-except Exception, e:
-    print 'Error loading config file: ', e
-    sys.exit(1)
-
-try:
+try:               
     # Absolute path this script is in
     current_script_dir = get_current_script_dir()
+    
+    if not os.path.exists(PATH_INI_FILE):
+        shutil.copy('%s/../pypo.cfg'%current_script_dir, PATH_INI_FILE)
+    
+    # load config file
+    try:
+        config = ConfigObj(PATH_INI_FILE)
+    except Exception, e:
+        print 'Error loading config file: ', e
+        sys.exit(1)
     
     #copy monit files
     shutil.copy('%s/../monit-airtime-playout.cfg'%current_script_dir, '/etc/monit/conf.d/')

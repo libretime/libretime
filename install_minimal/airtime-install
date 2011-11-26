@@ -7,6 +7,10 @@ if [ `whoami` != 'root' ]; then
     exit 1
 fi
 
+export INSTALL_PYPO=1
+export INSTALL_MEDIA_MONITOR=1
+export INSTALL_SHOW_RECORDER=1
+
 set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 set -e
@@ -62,13 +66,14 @@ fi
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
 
+#deactivate virtualenv
+deactivate
+
 /usr/lib/airtime/utils/rabbitmq-update-pid.sh
 
 echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
 sleep 10
 airtime-check-system
 
-#deactivate virtualenv
-deactivate
 
 echo -e "\n******************************* Install Complete *******************************"
