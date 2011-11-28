@@ -30,7 +30,7 @@ if [ "$DO_UPGRADE" -eq "0" ]; then
 fi
 set -e
 
-if [ "$WEB_ONLY" -eq "1" ]; then
+if [ "$WEB_ONLY" -eq "0" ]; then
     python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
     python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-initialize.py
     python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-initialize.py
