@@ -56,6 +56,8 @@ echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.
 
 echo "* Creating /usr/lib/airtime"
 
+rm -rf "/usr/lib/airtime"
+
 if [ "$WEB_ONLY" -eq "0" ]; then
     python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
     python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
