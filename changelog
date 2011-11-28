@@ -1,3 +1,13 @@
+2.0.0 - Nov 28, 2011
+  * CC-1942: Add ability to set timezone in preferences
+  * CC-2363: Diagnostic screen in Web UI
+  * CC-2438: Add a button to listen to the stream immediately
+  * CC-2591: Allow upload of any audio clip to Soundcloud
+  * CC-2607: Ability to adjust stream bitrate, type, etc from the UI interface
+  * CC-2630: Allow Liquidsoap to support multiple streams
+  * CC-2950: Tell users if they are running an out-of-date version or not
+  * CC-2959: Stream Setting: Status box design for each stream
+
 1.9.5 - Nov 2, 2011
   *(CC-2743, CC-2769) Fixed problem where Media-Monitor would try to parse a file's metadata while the OS was still copying it
   *(CC-2882) Fixed a bug where a couldn't unregister an old directory name from Airtime after it was renamed.
