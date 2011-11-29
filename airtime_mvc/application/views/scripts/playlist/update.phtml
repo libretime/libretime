@@ -4,10 +4,10 @@ if (count($items)) : ?>
 
 <?php $i = 0; ?>
 <?php foreach($items as $item) : ?>
-    <li class="ui-state-default" id="spl_<?php echo $i ?>">
+    <li class="ui-state-default" id="spl_<?php echo $i ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$i; ?>">
         <div class="list-item-container">
-            <a href="javascript:void(0);" class="big_play" 
-            onclick="audioPreview('<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["filepath"], PATHINFO_EXTENSION);?>', 
+            <a href="javascript:void(0);" class="big_play"
+            onclick="audioPreview('<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["filepath"], PATHINFO_EXTENSION);?>',
             'spl_<?php echo $i ?>')"><span class="ui-icon ui-icon-play"></span></a>
 
             <div class="text-row top">
@@ -19,16 +19,33 @@ if (count($items)) : ?>
                 <span class="spl_artist"><?php echo $item["CcFiles"]['artist_name'] ?></span>
                 <span class="spl_offset"><?php echo $item["offset"]?></span>
             </div>
-            <?php if($i < count($items) -1): ?>
+            <?php //create the crossfade icon.
+                if ($i < count($items) -1):
+            ?>
             <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div>
             <?php endif; ?>
             <span class="ui-icon ui-icon-closethick"></span>
         </div>
 
-        <div id="cues_<?php echo $i ?>" class="cue-edit clearfix" style="display: none"></div>
+        <div id="cues_<?php echo $i ?>" class="cue-edit clearfix" style="display: none">
+            <?php echo $this->partial('playlist/set-cue.phtml', array(
+                'pos' => $i,
+                'cueIn' => $item['cuein'],
+                'cueOut' => $item['cueout'],
+                'origLength' => $item["CcFiles"]['length'])); ?>
+        </div>
 
-        <?php if($i < count($items) -1): ?>
-        <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none"></div>
+
+        <?php //create a fade editor box
+              //(fadeout of current position + fade in of next position)
+            if($i < count($items) -1):
+        ?>
+        <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none">
+            <?php echo $this->partial('playlist/set-fade.phtml', array(
+                'pos' => $i,
+                'fadeOut' => $items[$i]['fadeout'],
+                'fadeIn' => $items[$i+1]['fadein'])); ?>
+        </div>
         <?php endif; ?>
 
     </li>
@@ -36,5 +53,5 @@ if (count($items)) : ?>
 <?php endforeach; ?>
 
 <?php else : ?>
-<li class="spl_empty">Empty playlist</li> 
+<li class="spl_empty">Empty playlist</li>
 <?php endif; ?>

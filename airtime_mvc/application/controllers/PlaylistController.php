@@ -256,42 +256,37 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->description = $pl->getDescription();
 
 		unset($this->view->pl);
-
-		return;
     }
 
     public function setCueAction()
     {
-        $request = $this->getRequest();
 		$pos = $this->_getParam('pos');
 		$pl = $this->getPlaylist();
-        if($pl === false){
+        if ($pl === false){
             $this->view->playlist_error = true;
             return false;
         }
 
-		if($request->isPost()) {
-			$cueIn = $this->_getParam('cueIn', null);
-			$cueOut = $this->_getParam('cueOut', null);
+		$cueIn = $this->_getParam('cueIn', null);
+		$cueOut = $this->_getParam('cueOut', null);
 
-			$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
+		$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
 
-			$this->view->response = $response;
-			return;
+		$this->view->response = $response;
+
+		if(!isset($response["error"])) {
+    		$this->view->pl = $pl;
+            $this->view->html = $this->view->render('playlist/update.phtml');
+            $this->view->name = $pl->getName();
+            $this->view->length = $pl->getLength();
+            $this->view->description = $pl->getDescription();
+
+            unset($this->view->pl);
 		}
-
-		$cues = $pl->getCueInfo($pos);
-
-		$this->view->pos = $pos;
-		$this->view->cueIn = $cues[0];
-		$this->view->cueOut = $cues[1];
-        $this->view->origLength = $cues[2];
-		$this->view->html = $this->view->render('playlist/set-cue.phtml');
     }
 
     public function setFadeAction()
     {
-        $request = $this->getRequest();
 		$pos = $this->_getParam('pos');
 		$pl = $this->getPlaylist();
         if($pl === false){
@@ -299,24 +294,22 @@ class PlaylistController extends Zend_Controller_Action
             return false;
         }
 
-		if($request->isPost()) {
-			$fadeIn = $this->_getParam('fadeIn', null);
-			$fadeOut = $this->_getParam('fadeOut', null);
+		$fadeIn = $this->_getParam('fadeIn', null);
+		$fadeOut = $this->_getParam('fadeOut', null);
 
-			$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
+		$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
 
-			$this->view->response = $response;
-			return;
-		}
+		$this->view->response = $response;
 
-		$this->view->pos = intval($pos);
+        if(!isset($response["error"])) {
+            $this->view->pl = $pl;
+            $this->view->html = $this->view->render('playlist/update.phtml');
+            $this->view->name = $pl->getName();
+            $this->view->length = $pl->getLength();
+            $this->view->description = $pl->getDescription();
 
-		$fades = $pl->getFadeInfo($pos+1);
-		$this->view->fadeIn = $fades[0];
-
-		$fades = $pl->getFadeInfo($pos);
-		$this->view->fadeOut = $fades[1];
-		$this->view->html = $this->view->render('playlist/set-fade.phtml');
+            unset($this->view->pl);
+        }
     }
 
     public function deleteAction()
