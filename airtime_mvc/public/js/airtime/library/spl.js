@@ -319,7 +319,12 @@ function newSPL() {
 	stopAudioPreview();
 	url = '/Playlist/new/format/json';
 
-	$.post(url, openDiffSPL);
+	$.post(url, function(json){
+		openDiffSPL(json);
+		
+		//redraw the library list
+		redrawDataTablePage();
+	});
 }
 
 function deleteSPL() {
@@ -340,6 +345,7 @@ function deleteSPL() {
 }
 
 function openDiffSPL(json) {
+	
     if(json.playlist_error == true){
         alertPlaylistErrorAndReload();
     }
@@ -348,8 +354,7 @@ function openDiffSPL(json) {
 		.append(json.html);
 
 	currentlyOpenedSplId = json.pl_id;
-
-		setUpSPL();
+	setUpSPL();
 }
 
 function editName() {
