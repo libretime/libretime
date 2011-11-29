@@ -23,7 +23,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
         //enable soundcloud uploads option
         $this->addElement('checkbox', 'UploadToSoundcloudOption', array(
-            'label'      => 'Enable Soundcloud Upload',
+            'label'      => 'Enable SoundCloud Upload',
             'required'   => false,
             'value' => Application_Model_Preference::GetUploadToSoundcloudOption(),
             'decorators' => array(
