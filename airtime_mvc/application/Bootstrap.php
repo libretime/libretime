@@ -3,7 +3,7 @@
 require_once __DIR__."/configs/ACL.php";
 
 require_once 'propel/runtime/lib/Propel.php';
-Propel::init(__DIR__."/configs/airtime-conf.php");
+Propel::init(__DIR__."/configs/airtime-conf-production.php");
 
 require_once __DIR__."/logging/Logging.php";
 require_once __DIR__."/configs/constants.php";
