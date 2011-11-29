@@ -313,56 +313,13 @@ function noOpenPL(json) {
 		.click(newSPL);
 }
 
-function createPlaylistMetaForm(json) {
-    var submit, form;
-
-    form = $(json.form);
-    form.find("fieldset").addClass("simple-formblock metadata");
-
-    form.find("input, textarea")
-        .keydown(function(event){
-            //enter was pressed
-            if(event.keyCode === 13) {
-                event.preventDefault();
-	            $("#new_playlist_submit").click();
-            }
-        });
-
-    form.find("#new_playlist_submit")
-		.button()
-		.click(function(event){
-            event.preventDefault();
-
-			var url, data;
-
-			url = '/Playlist/metadata/format/json';
-			data = $("#side_playlist form").serialize();
-
-			$.post(url, data, function(json){
-			    if(json.playlist_error == true){
-			        alertPlaylistErrorAndReload();
-			    }
-				openDiffSPL(json);
-				//redraw the library list
-				redrawDataTablePage();
-			});
-		});
-
-	$("#side_playlist")
-		.empty()
-		.append(form);
-
-	currentlyOpenedSplId = json.pl_id;
-}
-
 function newSPL() {
 	var url;
 
 	stopAudioPreview();
-	
 	url = '/Playlist/new/format/json';
 
-	$.post(url, createPlaylistMetaForm);
+	$.post(url, openDiffSPL);
 }
 
 function deleteSPL() {

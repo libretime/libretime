@@ -2,7 +2,6 @@
 
 class PlaylistController extends Zend_Controller_Action
 {
-
     protected $pl_sess = null;
 
     public function init()
@@ -15,7 +14,6 @@ class PlaylistController extends Zend_Controller_Action
 					->addActionContext('move-item', 'json')
 					->addActionContext('close', 'json')
 					->addActionContext('new', 'json')
-					->addActionContext('metadata', 'json')
 					->addActionContext('edit', 'json')
 					->addActionContext('delete-active', 'json')
 					->addActionContext('delete', 'json')
@@ -102,58 +100,11 @@ class PlaylistController extends Zend_Controller_Action
 		$pl->setPLMetaData('dc:creator', $userInfo->login);
 
 		$this->changePlaylist($pl->getId());
-		$form = new Application_Form_PlaylistMetadata();
-		$this->view->fieldset = $form;
-        $this->view->form = $this->view->render('playlist/new.phtml');
-    }
 
-    public function metadataAction()
-    {
-        $request = $this->getRequest();
-        $form = new Application_Form_PlaylistMetadata();
-
-		$pl_id = $this->_getParam('id', null);
-		//not a new playlist
-		if(!is_null($pl_id)) {
-			$this->changePlaylist($pl_id);
-
-			$pl = $this->getPlaylist();
-    		if($pl === false){
-                $this->view->playlist_error = true;
-                return false;
-            }
-			$title = $pl->getPLMetaData("dc:title");
-			$desc = $pl->getPLMetaData("dc:description");
-
-			$data = array( 'title' => $title, 'description' => $desc);
-			$form->populate($data);
-		}
-
-        if ($request->isPost()) {
-            $title = $this->_getParam('title', null);
-            $description = $this->_getParam('description', null);
-
-			$pl = $this->getPlaylist();
-            if($pl === false){
-                $this->view->playlist_error = true;
-                return false;
-            }
-
-            if($title)
-			    $pl->setName($title);
-
-			if(isset($description)) {
-				$pl->setPLMetaData("dc:description", $description);
-			}
-
-			$this->view->pl = $pl;
-			$this->view->html = $this->view->render('playlist/index.phtml');
-			unset($this->view->pl);
-        }
-
-        $this->view->pl_id = $pl_id;
-        $this->view->fieldset = $form;
-        $this->view->form = $this->view->render('playlist/new.phtml');
+		$this->view->pl = $pl;
+        $this->view->pl_id = $pl->getId();
+        $this->view->html = $this->view->render('playlist/index.phtml');
+        unset($this->view->pl);
     }
 
     public function editAction()
@@ -423,7 +374,5 @@ class PlaylistController extends Zend_Controller_Action
 
         $this->view->playlistDescription = $description;
     }
-
-
 }
 
