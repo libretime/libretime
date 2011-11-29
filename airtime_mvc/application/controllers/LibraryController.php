@@ -36,7 +36,7 @@ class LibraryController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
-        
+
 
         $this->_helper->layout->setLayout('library');
         $this->_helper->viewRenderer->setResponseSegment('library');
@@ -90,20 +90,20 @@ class LibraryController extends Zend_Controller_Action
 	        $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
-            
+
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
-                $text = "Upload to Soundcloud";
+                $text = "Upload to SoundCloud";
                 if(!is_null($file->getSoundCloudId())){
-                    $text = "Re-upload to Soundcloud";
+                    $text = "Re-upload to SoundCloud";
                 }
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
                                 'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
-         
+
                 $scid = $file->getSoundCloudId();
-                
+
                 if($scid > 0){
                     $link_to_file = $file->getSoundCloudLinkToFile();
-                    $menu[] = array('action' => array('type' => 'fn', 
+                    $menu[] = array('action' => array('type' => 'fn',
                     	    'callback' => "window['openFileOnSoundCloud']('$link_to_file')"),
                                 				'title' => 'View on SoundCloud');
                 }
@@ -131,8 +131,6 @@ class LibraryController extends Zend_Controller_Action
                                     'callback' => 'window["noOpenPL"]'),
                                 'title' => 'Close');
             }
-
-            //$menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/metadata/format/json/id/#id#', 'callback' => 'window["createPlaylistMetaForm"]'), 'title' => 'Edit Metadata');
 
             $menu[] = array('action' => array('type' => 'fn',
                     'callback' => "window['confirmDeletePlaylist']('$paramsPop')"),
@@ -210,7 +208,7 @@ class LibraryController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $form = new Application_Form_EditAudioMD();
-        
+
         $file_id = $this->_getParam('id', null);
         $file = Application_Model_StoredFile::Recall($file_id);
         $form->populate($file->getDbColMetadata());
@@ -222,7 +220,7 @@ class LibraryController extends Zend_Controller_Action
                 $file->setDbColMetadata($formdata);
 
                 $data = $file->getMetadata();
-                
+
                 // set MDATA_KEY_FILEPATH
                 $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
                 Logging::log($data['MDATA_KEY_FILEPATH']);
@@ -254,14 +252,14 @@ class LibraryController extends Zend_Controller_Action
         }
 
     }
-    
+
     public function uploadFileSoundcloudAction(){
         $id = $this->_getParam('id');
         $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
         // we should die with ui info
         die();
     }
-    
+
     public function getUploadToSoundcloudStatusAction(){
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
@@ -278,7 +276,7 @@ class LibraryController extends Zend_Controller_Action
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
         }
     }
-    
+
     /**
      * Stores the number of entries user chose to show in the Library
      * to the pref db

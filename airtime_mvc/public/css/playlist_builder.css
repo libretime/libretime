@@ -89,7 +89,9 @@
 	padding: 0 5px 0 0;
 	color: #D5D5D5;
 }
-
+.ui-state-active .spl_artist, .ui-state-active .spl_offset {
+    color: #606060 !important;
+}
 /*#spl_editor {
 	height: 50px;
 }*/
