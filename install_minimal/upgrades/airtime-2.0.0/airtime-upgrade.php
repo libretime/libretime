@@ -20,7 +20,7 @@ set_include_path(__DIR__.'/../../../airtime_mvc/application/models' . PATH_SEPAR
 set_include_path(__DIR__.'/../../../airtime_mvc/application/configs' . PATH_SEPARATOR . get_include_path());
 require_once 'conf.php';
 require_once 'propel/runtime/lib/Propel.php';
-Propel::init(__DIR__."/../../../airtime_mvc/application/configs/airtime-conf.php");
+Propel::init(__DIR__."/propel/airtime-conf.php");
 
 require_once 'UpgradeCommon.php';
 
