@@ -217,11 +217,11 @@ class ScheduleController extends Zend_Controller_Action
                 if(is_null($show->getSoundCloudFileId())){
                     $menu[] = array('action' => array('type' => 'fn',
                         'callback' => "window['uploadToSoundCloud']($id)"),
-                        'title' => 'Upload to Soundcloud');
+                        'title' => 'Upload to SoundCloud');
                 }else{
                     $menu[] = array('action' => array('type' => 'fn',
                         'callback' => "window['uploadToSoundCloud']($id)"),
-                        'title' => 'Re-upload to Soundcloud');
+                        'title' => 'Re-upload to SoundCloud');
                 }
         }
 
