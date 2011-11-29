@@ -30,13 +30,9 @@ if [ "$DO_UPGRADE" -eq "0" ]; then
 fi
 set -e
 
-if [ "$INSTALL_PYPO" -eq "1" ]; then
+if [ "$WEB_ONLY" -eq "0" ]; then
     python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
-fi
-if [ "$INSTALL_MEDIA_MONITOR" -eq "1" ]; then
     python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-initialize.py
-fi
-if [ "$INSTALL_SHOW_RECORDER" -eq "1" ]; then
     python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-initialize.py
 fi
 
@@ -51,14 +47,10 @@ fi
 sleep 1
 
 set +e
-if [ "$INSTALL_PYPO" -eq "1" ]; then
+if [ "$WEB_ONLY" -eq "0" ]; then
     monit monitor airtime-playout
     monit monitor airtime-liquidsoap
-fi
-if [ "$INSTALL_MEDIA_MONITOR" -eq "1" ]; then
     monit monitor airtime-media-monitor
-fi
-if [ "$INSTALL_SHOW_RECORDER" -eq "1" ]; then
     monit monitor airtime-show-recorder
 fi
 

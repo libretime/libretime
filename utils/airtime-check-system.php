@@ -125,17 +125,36 @@ class AirtimeCheck {
                         
             $p_status = json_decode($p_status);
             
-            $data = $p_status->status;
-                        
-            self::output_status("KERNEL_VERSION", $data->platform->release);
-            self::output_status("MACHINE_ARCHITECTURE", $data->platform->machine);
-            self::output_status("TOTAL_MEMORY_MBYTES", $data->platform->memory);
-            self::output_status("TOTAL_SWAP_MBYTES", $data->platform->swap);
-            self::output_status("AIRTIME_VERSION", $data->airtime_version);
+            if (isset($p_status->status)) {
+                $data = $p_status->status;
+            } else {
+                $data = array();
+            }
+            
+            if (isset($data->platform)) {
+                self::output_status("KERNEL_VERSION", $data->platform->release);
+                self::output_status("MACHINE_ARCHITECTURE", $data->platform->machine);
+                self::output_status("TOTAL_MEMORY_MBYTES", $data->platform->memory);
+                self::output_status("TOTAL_SWAP_MBYTES", $data->platform->swap);
+                self::output_status("AIRTIME_VERSION", $data->airtime_version);
+            } else {
+                self::output_status("KERNEL_VERSION", "UNKNOWN");
+                self::output_status("MACHINE_ARCHITECTURE", "UNKNOWN");
+                self::output_status("TOTAL_MEMORY_MBYTES", "UNKNOWN");
+                self::output_status("TOTAL_SWAP_MBYTES", "UNKNOWN");
+                self::output_status("AIRTIME_VERSION", "UNKNOWN");
+            }
             self::output_status("OS", self::CheckOsTypeVersion());
             self::output_status("CPU", self::GetCpuInfo());
             self::output_status("WEB_SERVER", self::GetServerType());
-            if ($data->services->pypo){
+            
+            if (isset($data->services)) {
+                $services = $data->services;
+            } else {
+                $services = array();
+            }
+            
+            if (isset($services->pypo)) {
                 self::output_status("PLAYOUT_ENGINE_PROCESS_ID", $data->services->pypo->process_id);
                 self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $data->services->pypo->uptime_seconds);
                 self::output_status("PLAYOUT_ENGINE_MEM_PERC", $data->services->pypo->memory_perc);
@@ -146,7 +165,7 @@ class AirtimeCheck {
                 self::output_status("PLAYOUT_ENGINE_MEM_PERC", "0%");
                 self::output_status("PLAYOUT_ENGINE_CPU_PERC", "0%");
             }
-            if (isset($data->services->liquidsoap)){
+            if (isset($services->liquidsoap)) {
                 self::output_status("LIQUIDSOAP_PROCESS_ID", $data->services->liquidsoap->process_id);
                 self::output_status("LIQUIDSOAP_RUNNING_SECONDS", $data->services->liquidsoap->uptime_seconds);
                 self::output_status("LIQUIDSOAP_MEM_PERC", $data->services->liquidsoap->memory_perc);
@@ -157,7 +176,7 @@ class AirtimeCheck {
                 self::output_status("LIQUIDSOAP_MEM_PERC", "0%");
                 self::output_status("LIQUIDSOAP_CPU_PERC", "0%");
             }
-            if (isset($data->services->media_monitor)){
+            if (isset($services->media_monitor)) {
                 self::output_status("MEDIA_MONITOR_PROCESS_ID", $data->services->media_monitor->process_id);
                 self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", $data->services->media_monitor->uptime_seconds);
                 self::output_status("MEDIA_MONITOR_MEM_PERC", $data->services->media_monitor->memory_perc);
@@ -168,7 +187,7 @@ class AirtimeCheck {
                 self::output_status("MEDIA_MONITOR_MEM_PERC", "0%");
                 self::output_status("MEDIA_MONITOR_CPU_PERC", "0%");
             }
-            if (isset($data->services->show_recorder)){
+            if (isset($services->show_recorder)) {
                 self::output_status("SHOW_RECORDER_PROCESS_ID", $data->services->show_recorder->process_id);
                 self::output_status("SHOW_RECORDER_RUNNING_SECONDS", $data->services->show_recorder->uptime_seconds);
                 self::output_status("SHOW_RECORDER_MEM_PERC", $data->services->show_recorder->memory_perc);
@@ -179,7 +198,7 @@ class AirtimeCheck {
                 self::output_status("SHOW_RECORDER_MEM_PERC", "0%");
                 self::output_status("SHOW_RECORDER_CPU_PERC", "0%");
             }
-            if (isset($data->services->rabbitmq)){
+            if (isset($services->rabbitmq)) {
                 self::output_status("RABBITMQ_PROCESS_ID", $data->services->rabbitmq->process_id);
                 self::output_status("RABBITMQ_RUNNING_SECONDS", $data->services->rabbitmq->uptime_seconds);
                 self::output_status("RABBITMQ_MEM_PERC", $data->services->rabbitmq->memory_perc);

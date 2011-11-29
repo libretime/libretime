@@ -92,9 +92,9 @@ class LibraryController extends Zend_Controller_Action
             				'title' => 'Download');
             
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
-                $text = "Upload to Soundcloud";
+                $text = "Upload to SoundCloud";
                 if(!is_null($file->getSoundCloudId())){
-                    $text = "Re-upload to Soundcloud";
+                    $text = "Re-upload to SoundCloud";
                 }
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
                                 'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
