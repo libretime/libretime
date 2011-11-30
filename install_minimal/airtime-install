@@ -7,14 +7,64 @@ if [ `whoami` != 'root' ]; then
     exit 1
 fi
 
-export WEB_ONLY=0
-
 set +e
 DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
 set -e
 if [[ "$DEB" = "Status: install ok installed" ]]; then
     echo -e "\nDebian package of Airtime detected. Please use the debian package to upgrade.\n"
     exit 1
+fi
+
+showhelp () {
+    echo "Usage: airtime-install [options]
+--help|-h            Displays usage information.
+--overwrite|-o       Overwrite any existing config files.
+--preserve|-p        Keep any existing config files.
+--no-db|-n           Turn off database install.
+--reinstall|-r       Force a fresh install of this Airtime Version
+--media-monitor|-m   Install only media-monitor
+--pypo|-p            Install only pypo and liquidsoap
+--show-recorder|-s   Install only show-recorder
+--web|-w             Install only files for web-server"
+}
+
+overwrite="f"
+preserve="f"
+nodb="t"
+reinstall="f"
+mediamonitor="f"
+pypo="f"
+showrecorder="f"
+web="f"
+
+set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,show-recorder,web "hopnrmysw" "$@")
+while [ $# -gt 0 ]
+do
+    case "$1" in
+    (-h|--help) showhelp; exit 0;;
+    (-o|--overwrite) overwrite="t";;
+    (-p|--preserve) preserve="t";;
+    (-n|--no-db) nodb="t";;
+    (-r|--reinstall) reinstall="t";;
+    (-m|--media-monitor) mediamonitor="t";;
+    (-y|--pypo) pypo="t";;
+    (-s|--show-recorder) showrecorder="t";;
+    (-w|--web) web="t";;
+    
+    (--) shift; break;;
+    (-*) echo "$0: error - unrecognized option $1" 1>&2; exit 1;;
+    (*)  break;;
+    esac
+    shift
+done
+
+if [ "$mediamonitor" = "f" -a "$pypo" = "f" -a "$showrecorder" = "f" -a "$web" = "f" ]; then
+    #none of these install parameters were specified, so by default we install all of them
+    mediamonitor="t"
+    pypo="t"
+    showrecorder="t"
+    web="t"
+    nodb="f"
 fi
 
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
@@ -24,40 +74,54 @@ SCRIPTPATH=`dirname $SCRIPT`
 AIRTIMEROOT=$SCRIPTPATH/../
 
 # Check if airtime exists already
+echo "* Checking for existing Airtime installation..."
 set +e
-DO_UPGRADE="0"
-php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php $@
+php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php
 result=$?
-
 set -e
-if [ "$result" -eq "1" ]; then
+
+DO_UPGRADE="0"
+if [ "$result" -eq "0" ]; then
+    echo " * None found."
+elif [ "$result" -eq "1" ]; then
+    echo " * Same version of Airtime already installed!"
+    exit 1;
+elif [ "$result" -eq "2" ]; then
+    echo " * Previous version of Airtime already installed..will perform upgrade"
     DO_UPGRADE="1"
-elif [ "$result" -eq "2" -o "$result" -eq "3" ]; then
+elif [ "$result" -eq "3" ]; then
+    echo " * You require at least Airtime 1.8.0 installed for upgrade"
     exit 1
-elif [ "$result" -eq "4" ]; then
-    exit 0
-elif [ "$result" -eq "5" ]; then
-    WEB_ONLY=1
 fi
 
-#make DO_UPGRADE available in sub bash scripts
+
+#export these variables to make them available in sub bash scripts
 export DO_UPGRADE
+export mediamonitor
+export pypo
+export showrecorder
+export web
+export reinstall
+export nodb
+export overwrite
+export preserve
 
-if [ "$result" = "2" -o "$result" = "3" ]; then
-    #error message has already been printed inside the php script
-    exit 1
-fi
+set +e
+test "$mediamonitor" = "t" -o "$pypo" = "t" -o "$showrecorder" = "t"
+export python_service=$?
+set -e
 
 echo -e "\n******************************** Install Begin *********************************"
 
-rm -rf "/usr/lib/airtime"
-$AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
+if [ "$python_service" -eq "0" ]; then
+    rm -rf "/usr/lib/airtime"
+    $AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
 
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
+    virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+    . ${virtualenv_bin}activate
+    python $AIRTIMEROOT/python_apps/create-pypo-user.py
+fi
 
-
-python $AIRTIMEROOT/python_apps/create-pypo-user.py
 
 if [ "$DO_UPGRADE" -eq "1" ]; then
     #do upgrade
@@ -67,14 +131,20 @@ fi
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
 
-#deactivate virtualenv
-deactivate
+if [ "$mediamonitor" = "t" -o "$pypo" = "t" -o "$showrecorder" = "t" ]; then
+    #deactivate virtualenv
+    deactivate
+fi
 
-/usr/lib/airtime/utils/rabbitmq-update-pid.sh
 
-echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
-sleep 10
-airtime-check-system --no-color
+/usr/lib/airtime/utils/rabbitmq-update-pid.sh > /dev/null
 
+if [ "$python_service" -eq "0" ]; then
+    #only run airtime-check-system if all components were installed
+    echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
+    sleep 15
+
+    airtime-check-system --no-color
+fi
 
 echo -e "\n******************************* Install Complete *******************************"

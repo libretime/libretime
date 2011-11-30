@@ -30,11 +30,16 @@ if [ "$DO_UPGRADE" -eq "0" ]; then
 fi
 set -e
 
-if [ "$WEB_ONLY" -eq "0" ]; then
-    python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
+if [ "$mediamonitor" = "t" ]; then
     python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-initialize.py
+fi
+if [ "$pypo" = "t" ]; then
+    python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
+fi
+if [ "$showrecorder" = "t" ]; then
     python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-initialize.py
 fi
+
 
 # Start monit if it is not running, or restart if it is.
 # Need to ensure monit is running before Airtime daemons are run. This is
@@ -47,10 +52,15 @@ fi
 sleep 1
 
 set +e
-if [ "$WEB_ONLY" -eq "0" ]; then
+
+if [ "$mediamonitor" = "t" ]; then
+    monit monitor airtime-media-monitor
+fi
+if [ "$pypo" = "t" ]; then
     monit monitor airtime-playout
     monit monitor airtime-liquidsoap
-    monit monitor airtime-media-monitor
+fi
+if [ "$showrecorder" = "t" ]; then
     monit monitor airtime-show-recorder
 fi
 

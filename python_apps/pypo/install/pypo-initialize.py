@@ -12,23 +12,6 @@ if os.geteuid() != 0:
     sys.exit(1)
 
 """
-def is_natty():
-    try:
-        f = open('/etc/lsb-release')
-    except IOError as e:
-        #File doesn't exist, so we're not even dealing with Ubuntu
-        return False
-
-    for line in f:
-        split = line.split("=")
-        split[0] = split[0].strip(" \r\n")
-        split[1] = split[1].strip(" \r\n")
-        if split[0] == "DISTRIB_CODENAME" and (split[1] == "natty" or split[1] == "oneiric"):
-            return True
-    return False
-"""
-
-"""
     This function returns the codename of the host OS by querying lsb_release.
     If lsb_release does not exist, or an exception occurs the codename returned
     is 'unknown'

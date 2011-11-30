@@ -51,18 +51,23 @@ HOUR=$(($RANDOM%24))
 MIN=$(($RANDOM%60))
 echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.d/airtime-crons
 
-#virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-#. ${virtualenv_bin}activate
-
 echo "* Creating /usr/lib/airtime"
 
-if [ "$WEB_ONLY" -eq "0" ]; then
+if [ "$python_service" -eq "0" ]; then
     python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
-    python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
-    python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-copy-files.py
-    python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
+    
+    if [ "$mediamonitor" = "t" ]; then
+        python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-copy-files.py
+    fi
+    if [ "$pypo" = "t" ]; then
+        python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
+    fi
+    if [ "$showrecorder" = "t" ]; then
+        python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
+    fi
 fi
 
+mkdir -p /usr/lib/airtime
 cp -R $AIRTIMEROOT/utils /usr/lib/airtime
 
 echo "* Creating symbolic links in /usr/bin"
@@ -72,10 +77,12 @@ ln -sf /usr/lib/airtime/utils/airtime-update-db-settings /usr/bin/airtime-update
 ln -sf /usr/lib/airtime/utils/airtime-check-system /usr/bin/airtime-check-system
 ln -sf /usr/lib/airtime/utils/airtime-log /usr/bin/airtime-log
 
-echo "* Creating /usr/share/airtime"
-rm -rf "/usr/share/airtime"
-mkdir -p /usr/share/airtime
-cp -R $AIRTIMEROOT/airtime_mvc/* /usr/share/airtime/
+if [ "$web" = "t" ]; then
+    echo "* Creating /usr/share/airtime"
+    rm -rf "/usr/share/airtime"
+    mkdir -p /usr/share/airtime
+    cp -R $AIRTIMEROOT/airtime_mvc/* /usr/share/airtime/
+fi
 
 echo "* Creating /var/log/airtime"
 mkdir -p /var/log/airtime
