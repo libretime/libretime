@@ -50,6 +50,7 @@ parser.add_option("-m", "--media-id", help="ID of the file that is currently pla
 parser.add_option("-e", "--error", action="store", dest="error", type="string", help="liquidsoap error msg.", metavar="error_msg")
 parser.add_option("-s", "--stream-id", help="ID stream", metavar="stream_id")
 parser.add_option("-c", "--connect", help="liquidsoap connected", action="store_true", metavar="connect")
+parser.add_option("-t", "--time", help="liquidsoap boot up time", action="store", dest="time", metavar="time", type="string")
 
 # parse options
 (options, args) = parser.parse_args()
@@ -80,23 +81,25 @@ class Notify:
         response = self.api_client.notify_media_item_start_playing(data, media_id) 
         logger.debug("Response: "+json.dumps(response))
     
-    def notify_liquidsoap_error(self, error_msg, stream_id):
+    # @pram time: time that LS started
+    def notify_liquidsoap_error(self, error_msg, stream_id, time):
         logger = logging.getLogger()
         
         logger.debug('#################################################')
         logger.debug('# Calling server to update liquidsoap error     #')
         logger.debug('#################################################')
         logger.debug('error msg = '+ str(error_msg))
-        response = self.api_client.notify_liquidsoap_error(error_msg, stream_id) 
+        response = self.api_client.notify_liquidsoap_error(error_msg, stream_id, time) 
         logger.debug("Response: "+json.dumps(response))
     
-    def notify_liquidsoap_connection(self, stream_id):
+    # @pram time: time that LS started
+    def notify_liquidsoap_connection(self, stream_id, time):
         logger = logging.getLogger()
         
         logger.debug('#################################################')
         logger.debug('# Calling server to update liquidsoap connection#')
         logger.debug('#################################################')
-        response = self.api_client.notify_liquidsoap_connection(stream_id) 
+        response = self.api_client.notify_liquidsoap_connection(stream_id, time) 
         logger.debug("Response: "+json.dumps(response))
         
 if __name__ == '__main__':
@@ -112,13 +115,13 @@ if __name__ == '__main__':
     if options.error and options.stream_id:
         try:
             n = Notify()
-            n.notify_liquidsoap_error(options.error, options.stream_id)
+            n.notify_liquidsoap_error(options.error, options.stream_id, options.time)
         except Exception, e:
             print e
     elif options.connect and options.stream_id:
         try:
             n = Notify()
-            n.notify_liquidsoap_connection(options.stream_id)
+            n.notify_liquidsoap_connection(options.stream_id, options.time)
         except Exception, e:
             print e
     else:
