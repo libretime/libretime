@@ -573,6 +573,25 @@ class Application_Model_Preference
             return $val;
         }
     }
+    
+    /**
+    * Stores the last timestamp of user updating stream setting
+    */
+    public static function SetStreamUpdateTimestamp() {
+        $now = time();
+        self::SetValue("stream_update_timestamp", $now);
+    }
+    
+    /**
+     * Gets the last timestamp of user updating stream setting
+     */
+    public static function GetStreamUpdateTimestemp() {
+        $update_time = self::GetValue("stream_update_timestamp");
+        if($update_time == null){
+            $update_time = 0;
+        }
+        return $update_time;
+    }
 
 	/* User specific preferences start */
 

@@ -43,7 +43,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
 
         $enable = new Zend_Form_Element_Checkbox('enable');
         $enable->setLabel('Enabled:')
-                            ->setValue($setting[$prefix.'_output'] != 'disabled'?1:0)
+                            ->setValue($setting[$prefix.'_enable'] == 'true' ? 1 : 0)
                             ->setDecorators(array('ViewHelper'));
         if($disable_all){
             $enable->setAttrib("disabled", "disabled");

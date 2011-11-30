@@ -571,7 +571,7 @@ class AirTimeApiClient(ApiClientInterface):
         except Exception, e:
             logger.error("Exception: %s", e)
     
-    def notify_liquidsoap_error(self, error_msg, stream_id):
+    def notify_liquidsoap_error(self, error_msg, stream_id, time):
         logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_liquidsoap_error"])
@@ -581,19 +581,21 @@ class AirTimeApiClient(ApiClientInterface):
             encoded_msg = urllib.quote(error_msg, '')
             url = url.replace("%%error_msg%%", encoded_msg)
             url = url.replace("%%stream_id%%", stream_id)
+	    url = url.replace("%%boot_time%%", time)
             logger.debug(url)
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
         except Exception, e:
             logger.error("Exception: %s", e)
         
-    def notify_liquidsoap_connection(self, stream_id):
+    def notify_liquidsoap_connection(self, stream_id, time):
         logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_liquidsoap_connection"])
             
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%stream_id%%", stream_id)
+	    url = url.replace("%%boot_time%%", time)
             logger.debug(url)
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()

@@ -203,6 +203,11 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_StreamSetting::setStreamSetting($values);
                 $data = array();
                 $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
+                for($i=1;$i<=$num_of_stream;$i++){
+                    Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
+                }
+                // store stream update timestamp
+                Application_Model_Preference::SetStreamUpdateTimestamp();
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
                 $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
             }

@@ -10,6 +10,7 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('plan_level', 'disabled');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('output_sound_device', 'false', 'boolean');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
 
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_enable', 'true', 'boolean');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_output', 'icecast', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_type', 'ogg', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_bitrate', '128', 'integer');
@@ -22,7 +23,8 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'ht
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'Airtime Radio! Stream #1', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_genre', 'genre', 'string');
 
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_output', 'disabled', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_enable', 'false', 'boolean');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_output', 'icecast', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_type', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_bitrate', '', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_host', '', 'string');
@@ -34,7 +36,8 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_url', '',
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_description', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_genre', '', 'string');
 
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_output', 'disabled', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_enable', 'false', 'boolean');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_output', 'icecast', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_type', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_bitrate', '', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_host', '', 'string');
