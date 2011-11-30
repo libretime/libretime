@@ -6,6 +6,8 @@ set("log.stdout", true)
 set("server.telnet", true)
 set("server.telnet.port", 1234)
 
+time = gettimeofday()
+
 queue = audio_to_stereo(request.queue(id="queue", length=0.5))
 queue = cue_cut(queue)
 

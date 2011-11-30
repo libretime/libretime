@@ -143,8 +143,8 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
         #installed before.
         do_sudo('echo "rabbitmq-server rabbitmq-server/upgrade_previous note" | debconf-set-selections')
         
-    if debian:
-        append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
+    #if debian:
+        #append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
@@ -186,11 +186,20 @@ def debian_squeeze_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Debian_Squeeze_64', debian=True)
         
+def airtime_180_tar():
+    airtime_18x_tar("airtime", "1.8.0")
+    
+def airtime_181_tar():
+    airtime_18x_tar("airtime", "1.8.1")
+    
 def airtime_182_tar():
+    airtime_18x_tar("airtime-1.8.2" "1.8.2")
+        
+def airtime_18x_tar(root_dir, version):
     do_sudo('apt-get update')
     do_sudo('apt-get install -y tar gzip unzip apache2 php5-pgsql libapache2-mod-php5 ' + \
         'php-pear php5-gd postgresql odbc-postgresql python python-configobj poc-streamer ' + \
-        'lame daemontools daemontools-run python-mutagen libsoundtouch-ocaml do_sudo ' + \
+        'lame daemontools daemontools-run python-mutagen libsoundtouch-ocaml sudo ' + \
         'libtaglib-ocaml libao-ocaml libmad-ocaml libesd0 icecast2 oggvideotools ' + \
         'libportaudio2 libsamplerate0 libcamomile-ocaml-dev ecasound php5-curl mpg123 ' + \
         'python-setuptools python-pip rabbitmq-server libvorbis-ocaml-dev libmp3lame-dev flac')
@@ -217,9 +226,9 @@ def airtime_182_tar():
     sed('/etc/default/icecast2', 'ENABLE=false', 'ENABLE=true', use_sudo=True)
     do_sudo('service icecast2 start')
     
-    do_run('wget http://downloads.sourceforge.net/project/airtime/1.8.2/airtime-1.8.2.tar.gz')
-    do_run('tar xfz airtime-1.8.2.tar.gz')
-    do_sudo('cd ~/airtime-1.8.2/install && php airtime-install.php')
+    do_run('wget http://downloads.sourceforge.net/project/airtime/%s/airtime-%s.tar.gz' % (version, version))
+    do_run('tar xfz airtime-%s.tar.gz' % version)
+    do_sudo('cd ~/%s/install && php airtime-install.php' % root_dir)
 
     #need to reboot because of daemon-tools.
     reboot(45)

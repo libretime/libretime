@@ -110,22 +110,29 @@ class Application_Model_StreamSetting {
         }
     }
     
-    public static function setLiquidsoapError($stream_id, $msg){
+    /*
+     * Stores liquidsoap status if $boot_time > save time.
+     * save time is the time that user clicked save on stream setting page
+     */
+    public static function setLiquidsoapError($stream_id, $msg, $boot_time=null){
         global $CC_DBC;
         
-        $keyname = "s".$stream_id."_liquidsoap_error";
-        $sql = "SELECT COUNT(*) FROM cc_stream_setting"
-            ." WHERE keyname = '$keyname'";
-        $result = $CC_DBC->GetOne($sql);
-        if ($result == 1){
-            $sql = "UPDATE cc_stream_setting"
-                ." SET value = '$msg'"
+        $update_time = Application_Model_Preference::GetStreamUpdateTimestemp();
+        if($boot_time == null || $boot_time > $update_time ){
+            $keyname = "s".$stream_id."_liquidsoap_error";
+            $sql = "SELECT COUNT(*) FROM cc_stream_setting"
                 ." WHERE keyname = '$keyname'";
-        }else{
-            $sql = "INSERT INTO cc_stream_setting (keyname, value, type)"
-                ." VALUES ('$keyname', '$msg', 'string')";
+            $result = $CC_DBC->GetOne($sql);
+            if ($result == 1){
+                $sql = "UPDATE cc_stream_setting"
+                    ." SET value = '$msg'"
+                    ." WHERE keyname = '$keyname'";
+            }else{
+                $sql = "INSERT INTO cc_stream_setting (keyname, value, type)"
+                    ." VALUES ('$keyname', '$msg', 'string')";
+            }
+            $res = $CC_DBC->query($sql);
         }
-        $res = $CC_DBC->query($sql);
     }
     
     public static function getLiquidsoapError($stream_id){

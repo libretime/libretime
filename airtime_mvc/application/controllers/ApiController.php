@@ -772,15 +772,17 @@ class ApiController extends Zend_Controller_Action
         
         $error_msg = $request->getParam('error_msg');
         $stream_id = $request->getParam('stream_id');
-        Application_Model_StreamSetting::setLiquidsoapError($stream_id, $error_msg);
+        $boot_time = $request->getParam('boot_time');
+        Application_Model_StreamSetting::setLiquidsoapError($stream_id, $error_msg, $boot_time);
     }
     
     public function updateLiquidsoapConnectionAction(){
         $request = $this->getRequest();
         
         $stream_id = $request->getParam('stream_id');
+        $boot_time = $request->getParam('boot_time');    
         // setting error_msg as "" when there is no error_msg
-        Application_Model_StreamSetting::setLiquidsoapError($stream_id, "OK");
+        Application_Model_StreamSetting::setLiquidsoapError($stream_id, "OK", $boot_time);
     }
     
     /**
