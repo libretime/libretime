@@ -143,8 +143,8 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
         #installed before.
         do_sudo('echo "rabbitmq-server rabbitmq-server/upgrade_previous note" | debconf-set-selections')
         
-    if debian:
-        append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
+    #if debian:
+        #append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
@@ -187,15 +187,15 @@ def debian_squeeze_64(fresh_os=True):
         create_fresh_os('Debian_Squeeze_64', debian=True)
         
 def airtime_180_tar():
-    airtime_18x_tar("1.8.0")
+    airtime_18x_tar("airtime", "1.8.0")
     
 def airtime_181_tar():
-    airtime_18x_tar("1.8.1")
+    airtime_18x_tar("airtime", "1.8.1")
     
 def airtime_182_tar():
-    airtime_18x_tar("1.8.2")
+    airtime_18x_tar("airtime-1.8.2" "1.8.2")
         
-def airtime_18x_tar(version):
+def airtime_18x_tar(root_dir, version):
     do_sudo('apt-get update')
     do_sudo('apt-get install -y tar gzip unzip apache2 php5-pgsql libapache2-mod-php5 ' + \
         'php-pear php5-gd postgresql odbc-postgresql python python-configobj poc-streamer ' + \
@@ -228,7 +228,7 @@ def airtime_18x_tar(version):
     
     do_run('wget http://downloads.sourceforge.net/project/airtime/%s/airtime-%s.tar.gz' % (version, version))
     do_run('tar xfz airtime-%s.tar.gz' % version)
-    do_sudo('cd ~/airtime-%s/install && php airtime-install.php' % version)
+    do_sudo('cd ~/%s/install && php airtime-install.php' % root_dir)
 
     #need to reboot because of daemon-tools.
     reboot(45)
