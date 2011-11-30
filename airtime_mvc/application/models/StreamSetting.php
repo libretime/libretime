@@ -7,8 +7,8 @@ class Application_Model_StreamSetting {
         global $CC_DBC;
         $sql = "SELECT * "
                 ."FROM cc_stream_setting "
-                ."WHERE keyname LIKE '%_output' "
-                ."AND value != 'disabled'";
+                ."WHERE keyname LIKE '%_enable' "
+                ."AND value == true";
 
         $rows = $CC_DBC->getAll($sql);
         $ids = array();
@@ -75,21 +75,18 @@ class Application_Model_StreamSetting {
      */
     public static function setStreamSetting($data){
         global $CC_DBC;
-        foreach($data as $key=>$d){
-            if($key == "output_sound_device" || $key == "icecast_vorbis_metadata"){
+        foreach ($data as $key=>$d) {
+            if ($key == "output_sound_device" || $key == "icecast_vorbis_metadata") {
                 $v = $d == 1?"true":"false";
                 $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$key'";
                 $CC_DBC->query($sql);
-            }
-            else{
+            } else {
                 $temp = explode('_', $key);
                 $prefix = $temp[0];
-                foreach($d as $k=>$v){
-                    $keyname = $prefix."_".$k;
-                    if( $k == 'output'){
-                        if( $d["enable"] == 0){
-                            $v = 'disabled';
-                        }
+                foreach ($d as $k=>$v) {
+                    $keyname = $prefix . "_" . $k;
+                    if ($k == 'enable') {
+                        $v = $d['enable'] == 1 ? 'true' : 'false';
                     }
                     $v = trim($v);
                     $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
@@ -152,17 +149,15 @@ class Application_Model_StreamSetting {
     public static function getStreamEnabled($stream_id){
         global $CC_DBC;
         
-        $keyname = "s".$stream_id."_output";
+        $keyname = "s" . $stream_id . "_enable";
         $sql = "SELECT value FROM cc_stream_setting"
         ." WHERE keyname = '$keyname'";
         $result = $CC_DBC->GetOne($sql);
-        
-        if($result == 'disabled'){
+        if ($result == 'false') {
             $result = false;
-        }else{
+        } else {
             $result = true;
         }
-        
         return $result;
     }
 }

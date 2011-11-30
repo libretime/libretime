@@ -20,7 +20,7 @@ set_include_path(__DIR__.'/../../../airtime_mvc/application/models' . PATH_SEPAR
 set_include_path(__DIR__.'/../../../airtime_mvc/application/configs' . PATH_SEPARATOR . get_include_path());
 require_once 'conf.php';
 require_once 'propel/runtime/lib/Propel.php';
-Propel::init(__DIR__."/../../../airtime_mvc/application/configs/airtime-conf.php");
+Propel::init(__DIR__."/propel/airtime-conf.php");
 
 require_once 'UpgradeCommon.php';
 
@@ -153,7 +153,7 @@ class AirtimeDatabaseUpgrade{
     private static function SetDefaultStreamSetting()
     {
         global $CC_DBC;
-
+        
         echo "* Setting up default stream setting".PHP_EOL;
         $sql = "INSERT INTO cc_pref(keystr, valstr) VALUES('stream_type', 'ogg, mp3');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
@@ -164,6 +164,7 @@ class AirtimeDatabaseUpgrade{
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('output_sound_device', 'false', 'boolean');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
                 
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_enable', 'true', 'boolean');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_output', 'icecast', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_type', 'ogg', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_bitrate', '128', 'integer');
@@ -176,7 +177,8 @@ class AirtimeDatabaseUpgrade{
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_description', 'Airtime Radio! Stream #1', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_genre', 'genre', 'string');
                 
-                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_output', 'disabled', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_enable', 'false', 'boolean');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_output', 'icecast', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_type', '', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_bitrate', '', 'integer');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_host', '', 'string');
@@ -188,7 +190,8 @@ class AirtimeDatabaseUpgrade{
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_description', '', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_genre', '', 'string');
                 
-                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_output', 'disabled', 'string');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_enable', 'false', 'boolean');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_output', 'icecast', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_type', '', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_bitrate', '', 'integer');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_host', '', 'string');
