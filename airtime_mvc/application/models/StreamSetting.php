@@ -8,7 +8,7 @@ class Application_Model_StreamSetting {
         $sql = "SELECT * "
                 ."FROM cc_stream_setting "
                 ."WHERE keyname LIKE '%_enable' "
-                ."AND value == true";
+                ."AND value='true'";
 
         $rows = $CC_DBC->getAll($sql);
         $ids = array();
