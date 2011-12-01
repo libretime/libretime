@@ -46,11 +46,11 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js','text/javascript');
-        
+
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js','text/javascript');
-		
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js','text/javascript');
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js','text/javascript');
     	$this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js','text/javascript');
@@ -384,14 +384,6 @@ class ScheduleController extends Zend_Controller_Action
 
         $start_timestamp = $show->getShowInstanceStart();
 		$end_timestamp = $show->getShowInstanceEnd();
-
-        //check to make sure show doesn't overlap.
-        if(Application_Model_Show::getShows(new DateTime($start_timestamp, new DateTimeZone("UTC")),
-                                            new DateTime($end_timestamp, new DateTimeZone("UTC")),
-                                            array($showInstanceId))) {
-            $this->view->error = "cannot schedule an overlapping show.";
-            return;
-        }
 
         $dateInfo_s = getDate(strtotime(Application_Model_DateHelper::ConvertToLocalDateTimeString($start_timestamp)));
         $dateInfo_e = getDate(strtotime(Application_Model_DateHelper::ConvertToLocalDateTimeString($end_timestamp)));
