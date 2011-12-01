@@ -318,7 +318,7 @@ function createDataTable(data) {
 			/* Title */		{ "sName": "track_title" },
 			/* Creator */	{ "sName": "artist_name" },
 			/* Album */		{ "sName": "album_title" },
-			/* Track */		{ "sName": "track_number" },
+			/* Genre */		{ "sName": "genre" },
 			/* Length */	{ "sName": "length" },
 			/* Type */		{ "sName": "ftype", "bSearchable": false }
 		],
