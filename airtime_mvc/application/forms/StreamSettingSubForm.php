@@ -68,7 +68,6 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         if($disable_all){
             $bitrate->setAttrib("disabled", "disabled");
         }
-        $this->addElement($type);
         $this->addElement($bitrate);
 
         $output = new Zend_Form_Element_Select('output');

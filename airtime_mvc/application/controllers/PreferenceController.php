@@ -198,6 +198,7 @@ class PreferenceController extends Zend_Controller_Action
                 }
                 
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
+                $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
             }
             if(!$error){
                 Application_Model_StreamSetting::setStreamSetting($values);

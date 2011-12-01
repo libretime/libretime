@@ -20,6 +20,14 @@
             <dd id="hardwareOut-element">
                 <?php echo $this->form->getElement('output_sound_device') ?>
             </dd>
+            <dt id="hardwareOutType-label">
+                <label class="required">
+                <?php echo $this->form->getElement('output_sound_device_type')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="hardwareOutType-element">
+                <?php echo $this->form->getElement('output_sound_device_type') ?>
+            </dd>
         <?php } ?>
             <dt id="vorbisMetadata-label">
                 <label class="required">

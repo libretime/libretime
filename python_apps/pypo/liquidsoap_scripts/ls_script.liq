@@ -53,6 +53,34 @@ add_skip_command(s)
 s = map_metadata(append_title, s)
 
 if output_sound_device then
+	output.prefered=output.dummy
+	%ifdef output.alsa
+	if output_sound_device_type == "ALSA" then
+		output.prefered=output.alsa
+	end
+	%endif
+	%ifdef output.ao
+	if output_sound_device_type == "AO" then
+		output.prefered=output.ao
+		output.prefered(mksafe(s))
+	end
+	%endif
+	%ifdef output.oss
+	if output_sound_device_type == "OSS" then
+		output.prefered=output.oss
+	end
+	%endif
+	%ifdef output.portaudio
+	if output_sound_device_type == "Portaudio" then
+		output.prefered=output.portaudio
+	end
+	%endif
+	%ifdef output.pulseaudio
+	if output_sound_device_type == "Pulseaudio" then
+		output.prefered=output.pulseaudio
+	end
+	%endif
+	
     ignore(out(s))
 end
 
