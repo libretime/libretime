@@ -364,21 +364,23 @@ function editName() {
     $("#playlist_name_input")
         .removeClass('element_hidden')
         .val(playlistName)
-        .blur(function(){
-            var input = $(this);
-            var url;
-	        url = '/Playlist/set-playlist-name';
+        .keydown(function(event){
+        	if(event.keyCode === 13) {
+                event.preventDefault();
+                var input = $(this);
+                var url;
+    	        url = '/Playlist/set-playlist-name';
 
-	        $.post(url, {format: "json", name: input.val()}, function(json){
-	            if(json.playlist_error == true){
-	                alertPlaylistErrorAndReload();
-	            }
-                input.addClass('element_hidden');
-                nameElement.text(json.playlistName);
-                redrawDataTablePage();
-	        });
+    	        $.post(url, {format: "json", name: input.val()}, function(json){
+    	            if(json.playlist_error == true){
+    	                alertPlaylistErrorAndReload();
+    	            }
+                    input.addClass('element_hidden');
+                    nameElement.text(json.playlistName);
+                    redrawDataTablePage();
+    	        });
+        	}
         })
-        .keydown(submitOnEnter)
         .focus();
 }
 
@@ -441,9 +443,12 @@ function setUpSPL() {
         $.post(url, {format: "json", description: description}, function(json){
             if(json.playlist_error == true){
                 alertPlaylistErrorAndReload();
-            }else{
+            }
+            else{
                 textarea.val(json.playlistDescription);
             }
+            
+            $("#fieldset-metadate_change").addClass("closed");
         });
     });
 
@@ -455,9 +460,12 @@ function setUpSPL() {
         $.post(url, {format: "json"}, function(json){
             if(json.playlist_error == true){
                 alertPlaylistErrorAndReload();
-            }else{
+            }
+            else{
                 textarea.val(json.playlistDescription);
             }
+            
+            $("#fieldset-metadate_change").addClass("closed");
         });
     });
 
