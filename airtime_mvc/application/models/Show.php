@@ -108,6 +108,10 @@ class Application_Model_Show {
     //remove everything about this show.
     public function deleteShow()
     {
+        //usually we hide the show-instance, but in this case we are deleting the show template
+        //so delete all show-instances as well.
+        CcShowInstancesQuery::create()->filterByDbOriginalShow($this->_showId)->delete();
+        
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->delete();
     }

@@ -21,4 +21,11 @@ class Logging {
         $logger = self::getLogger();
         $logger->info($p_msg);
     }
+    
+    public static function debug($p_msg){
+        if (APPLICATION_ENV == "development"){
+            $logger = self::getLogger();
+            $logger->debug($p_msg);            
+        }
+    }
 }
