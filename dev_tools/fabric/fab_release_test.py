@@ -106,11 +106,7 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
         do_local("VBoxManage snapshot %s take fresh_install"%vm_name)
         do_local("touch %s/vm_registered"%vdi_dir)
         
-    
-
-
     do_local('VBoxManage snapshot %s restore fresh_install'%vm_name)
-    
     
     do_local('VBoxManage modifyvm "%s" --bridgeadapter1 wlan0'%vm_name)
     do_local('VBoxManage startvm %s'%vm_name)

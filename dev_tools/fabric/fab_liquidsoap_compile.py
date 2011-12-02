@@ -23,9 +23,35 @@ env.vm_download_url = "http://host.sourcefabric.org/vms/VirtualBox"
 
 #fab -f fab_setup.py ubuntu_lucid_64 airtime_182_tar airtime_190_tar 
 
+def do_sudo(command):
+    result = sudo(command)
+    if result.return_code != 0:
+        print "Error running command: %s" %command
+        shutdown()
+        sys.exit(1)
+    else:
+        return result
+    
+def do_run(command):
+    result = run(command)
+    if result.return_code != 0:
+        print "Error running command: %s" %command
+        shutdown()
+        sys.exit(1)
+    else:
+        return result
+        
+def do_local(command, capture=True):
+    result = local(command, capture)
+    if result.return_code != 0:
+        print "Error running command: %s" %command
+        shutdown()
+        sys.exit(1)
+    else:
+        return result
 
 def shutdown():
-    sudo("shutdown -hP now")
+    do_sudo("poweroff")
     time.sleep(30)
     
 def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
@@ -36,12 +62,14 @@ def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
         print "File %s already exists. No need to re-download" % os.path.join(vdi_dir, vm_vdi_file)
     else:
         print "File %s not found. Downloading" % vm_vdi_file
-        tmpPath = local("mktemp", capture=True)
-        local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_vdi_file, tmpPath))
+        tmpPath = do_local("mktemp", capture=True)
+        do_local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_vdi_file, tmpPath))
         os.rename(tmpPath, os.path.join(vdi_dir, vm_vdi_file))
            
-    local("rm -f %s"%os.path.join(xml_dir, vm_xml_file))
-    local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))
+    if os.path.exists(os.path.join(xml_dir, vm_xml_file)):
+        print "File %s already exists. No need to re-download" % os.path.join(xml_dir, vm_xml_file)
+    else:
+        do_local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))  
    
 
 def create_fresh_os(vm_name, debian=False):
@@ -57,22 +85,23 @@ def create_fresh_os(vm_name, debian=False):
     
 
     if not os.path.exists("%s/vm_registered"%vdi_dir):
-        local("VBoxManage registervm %s"%os.path.join(xml_dir, vm_xml_file), capture=True)
-        local('VBoxManage storagectl "%s" --name "SATA Controller" --add sata'%vm_name)
-        local('VBoxManage storageattach "%s" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium %s'%(vm_name, os.path.join(vdi_dir, vm_vdi_file)))
-        local("VBoxManage modifyvm %s --snapshotfolder %s"%(vm_name, vdi_snapshot_dir))
-        local("VBoxManage snapshot %s take fresh_install"%vm_name)
-        local("touch %s/vm_registered"%vdi_dir)
+        do_local("VBoxManage registervm %s"%os.path.join(xml_dir, vm_xml_file), capture=True)
+        do_local('VBoxManage storagectl "%s" --name "SATA Controller" --add sata'%vm_name)
+        do_local('VBoxManage storageattach "%s" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium %s'%(vm_name, os.path.join(vdi_dir, vm_vdi_file)))
+        do_local("VBoxManage modifyvm %s --snapshotfolder %s"%(vm_name, vdi_snapshot_dir))
+        do_local("VBoxManage snapshot %s take fresh_install"%vm_name)
+        do_local("touch %s/vm_registered"%vdi_dir)
 
-    local('VBoxManage snapshot %s restore fresh_install'%vm_name)
-    local('VBoxManage startvm %s'%vm_name)
+    do_local('VBoxManage snapshot %s restore fresh_install'%vm_name)
+    do_local('VBoxManage modifyvm "%s" --bridgeadapter1 eth0'%vm_name)
+    do_local('VBoxManage startvm %s'%vm_name)
     print "Please wait while attempting to acquire IP address"
         
     time.sleep(15)
 
     try_again = True
     while try_again:
-        ret = local('VBoxManage --nologo guestproperty get "%s" /VirtualBox/GuestInfo/Net/0/V4/IP'%vm_name, capture=True)
+        ret = do_local('VBoxManage --nologo guestproperty get "%s" /VirtualBox/GuestInfo/Net/0/V4/IP'%vm_name, capture=True)
         triple = ret.partition(':')
         ip_addr = triple[2].strip(' \r\n')
         print "Address found %s"%ip_addr
@@ -129,25 +158,27 @@ def debian_squeeze_64(fresh_os=True):
 
 def compile_liquidsoap(filename="liquidsoap"):
 
-    sudo('apt-get update')
-    sudo('apt-get upgrade -y --force-yes')
-    sudo('sudo apt-get install -y --force-yes ocaml-findlib libao-ocaml-dev libportaudio-ocaml-dev ' + \
+    do_sudo('apt-get update')
+    do_sudo('apt-get upgrade -y --force-yes')
+    do_sudo('apt-get install -y --force-yes ocaml-findlib libao-ocaml-dev libportaudio-ocaml-dev ' + \
         'libmad-ocaml-dev libtaglib-ocaml-dev libalsa-ocaml-dev libtaglib-ocaml-dev libvorbis-ocaml-dev ' + \
         'libspeex-dev libspeexdsp-dev speex libladspa-ocaml-dev festival festival-dev ' + \
         'libsamplerate-dev libxmlplaylist-ocaml-dev libxmlrpc-light-ocaml-dev libflac-dev ' + \
         'libxml-dom-perl libxml-dom-xpath-perl icecast2 patch autoconf libmp3lame-dev ' + \
         'libcamomile-ocaml-dev libcamlimages-ocaml-dev libtool libpulse-dev libjack-dev camlidl')
         
-        #libocamlcvs-ocaml-dev
-
     root = '/home/martin/src'
-    run('mkdir -p %s' % root)
+    do_run('mkdir -p %s' % root)
     
-    tmpPath = local("mktemp", capture=True)
-    run('wget %s -O %s' % ('https://downloads.sourceforge.net/project/savonet/liquidsoap/1.0.0/liquidsoap-1.0.0-full.tar.bz2', tmpPath))
-    run('mv %s %s/liquidsoap-1.0.0-full.tar.bz2' % (tmpPath, root))
-    run('cd %s &&  bunzip2 liquidsoap-1.0.0-full.tar.bz2 && tar xf liquidsoap-1.0.0-full.tar' % root)
-    run('cd %s/liquidsoap-1.0.0-full && cp PACKAGES.minimal PACKAGES' % root)
-    run('cd %s/liquidsoap-1.0.0-full && ./configure' % root)
-    run('cd %s/liquidsoap-1.0.0-full && make' % root)
+    tmpPath = do_local("mktemp", capture=True)
+    do_run('wget %s -O %s' % ('https://downloads.sourceforge.net/project/savonet/liquidsoap/1.0.0/liquidsoap-1.0.0-full.tar.bz2', tmpPath))
+    do_run('mv %s %s/liquidsoap-1.0.0-full.tar.bz2' % (tmpPath, root))
+    do_run('cd %s &&  bunzip2 liquidsoap-1.0.0-full.tar.bz2 && tar xf liquidsoap-1.0.0-full.tar' % root)
+    
+    do_run('cd %s/liquidsoap-1.0.0-full && cp PACKAGES.minimal PACKAGES' % root)
+    sed('%s/liquidsoap-1.0.0-full/PACKAGES' % root, '#ocaml-portaudio', 'ocaml-portaudio')
+    sed('%s/liquidsoap-1.0.0-full/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
+    sed('%s/liquidsoap-1.0.0-full/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
+    do_run('cd %s/liquidsoap-1.0.0-full && ./configure' % root)
+    do_run('cd %s/liquidsoap-1.0.0-full && make' % root)
     get('%s/liquidsoap-1.0.0-full/liquidsoap-1.0.0/src/liquidsoap' % root, filename)
