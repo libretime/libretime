@@ -126,7 +126,7 @@ class UpgradeCommon{
             exit(1);
         }
         if (!copy(__DIR__."/api_client.cfg.$suffix", self::CONF_FILE_API_CLIENT)){
-            echo "Could not copy airtime-monit.cfg to /etc/monit/conf.d/. Exiting.";
+            echo "Could not copy api_client.cfg to /etc/monit/conf.d/. Exiting.";
             exit(1);
         }
     }
