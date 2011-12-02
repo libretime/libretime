@@ -6,6 +6,8 @@ require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/configs/airtime-conf-production.php");
 
 require_once __DIR__."/logging/Logging.php";
+Logging::setLogPath('/var/log/airtime/zendphp.log');
+
 require_once __DIR__."/configs/constants.php";
 require_once __DIR__."/configs/conf.php";
 require_once 'DB.php';
@@ -27,8 +29,6 @@ require_once __DIR__."/configs/navigation.php";
 
 //DateTime in PHP 5.3.0+ need a default timezone set.
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
-
-Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 Zend_Validate::setDefaultNamespaces("Zend");
 
