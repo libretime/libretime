@@ -73,7 +73,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
 
         $output = new Zend_Form_Element_Select('output');
         $output->setLabel("Service Type:")
-                ->setMultiOptions(array("icecast"=>"Icecast", "shoutcast"=>"Shoutcast"))
+                ->setMultiOptions(array("icecast"=>"Icecast", "shoutcast"=>"SHOUTcast"))
                 ->setValue(isset($setting[$prefix.'_output'])?$setting[$prefix.'_output']:"icecast")
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
