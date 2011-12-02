@@ -595,7 +595,7 @@ class AirTimeApiClient(ApiClientInterface):
             
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%stream_id%%", stream_id)
-	    url = url.replace("%%boot_time%%", time)
+            url = url.replace("%%boot_time%%", time)
             logger.debug(url)
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()

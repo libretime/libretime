@@ -294,12 +294,7 @@ class PypoFetch(Thread):
                 try:
                     os.mkdir(self.cache_dir + str(pkey))
                 except Exception, e:
-                    logger.error(e)
-
-                #June 13, 2011: Commented this block out since we are not currently setting this to '1' 
-                #on the server side. Currently using a different method to detect if already played - Martin
-                #if int(playlist['played']) == 1:
-                #    logger.info("playlist %s already played / sent to liquidsoap, so will ignore it", pkey)
+                    logger.warning(e)
                 
                 ls_playlist = self.handle_media_file(playlist, pkey, bootstrapping)
 
