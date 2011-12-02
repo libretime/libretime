@@ -105,6 +105,13 @@ class Application_Model_Show {
         return $res;
     }
 
+    //remove everything about this show.
+    public function deleteShow()
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->delete();
+    }
+
     public function resizeShow($deltaDay, $deltaMin)
     {
         global $CC_DBC;
@@ -183,10 +190,10 @@ class Application_Model_Show {
     public function removeUncheckedDaysInstances($p_uncheckedDays)
     {
         global $CC_DBC;
-       
+
         //need to convert local doftw to UTC doftw (change made for 2.0 since shows are stored in UTC)
         $daysRemovedUTC = array();
-        
+
         $showDays = CcShowDaysQuery::create()
                         ->filterByDbShowId($this->getId())
                         ->find();
@@ -195,12 +202,12 @@ class Application_Model_Show {
         foreach($p_uncheckedDays as $day) {
             Logging::log($day);
         }
-        
+
         foreach($showDays as $showDay) {
         	Logging::log("Local show day is: {$showDay->getDbDay()}");
             Logging::log("First show day is: {$showDay->getDbFirstShow()}");
             Logging::log("Id show days is: {$showDay->getDbId()}");
-               
+
 	        if (in_array($showDay->getDbDay(), $p_uncheckedDays)) {
 	           $showDay->reload();
 	           //Logging::log("Local show day is: {$showDay->getDbDay()}");
@@ -214,7 +221,7 @@ class Application_Model_Show {
                Logging::log("UTC show day is: {$startDay->format('w')}");
 	        }
         }
-       
+
         $uncheckedDaysImploded = implode(",", $daysRemovedUTC);
         $showId = $this->getId();
 
@@ -224,7 +231,7 @@ class Application_Model_Show {
             ." WHERE EXTRACT(DOW FROM starts) IN ($uncheckedDaysImploded)"
             ." AND starts > TIMESTAMP '$timestamp'"
             ." AND show_id = $showId";
-            
+
         Logging::log($sql);
 
         $CC_DBC->query($sql);
@@ -278,22 +285,27 @@ class Application_Model_Show {
         global $CC_DBC;
 
         $showId = $this->getId();
-        $sql = "SELECT date(starts) "
-                ."FROM cc_show_instances "
-                ."WHERE show_id = $showId "
-                ."AND record = 1 "
-                ."AND modified_instance != TRUE";
-        $baseDate = $CC_DBC->GetOne($sql);
 
-        if (is_null($baseDate)){
-            return array();
+        $sql = "SELECT starts FROM cc_show_instances "
+            ."WHERE show_id = $showId AND rebroadcast = 1 "
+            ."ORDER BY starts";
+
+        $rebroadcasts = $CC_DBC->GetAll($sql);
+
+        $rebroadcastsLocal = array();
+        //get each rebroadcast show in cc_show_instances, convert to current timezone to get start date/time.
+        $i = 0;
+        foreach ($rebroadcasts as $show) {
+            $startDateTime = new DateTime($show["starts"], new DateTimeZone("UTC"));
+            $startDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+            $rebroadcastsLocal[$i]["start_date"] = $startDateTime->format("Y-m-d");
+            $rebroadcastsLocal[$i]["start_time"] = $startDateTime->format("H:i");
+
+            $i = $i + 1;
         }
 
-        $sql = "SELECT date(DATE '$baseDate' + day_offset::INTERVAL) as start_date, start_time FROM cc_show_rebroadcast "
-            ."WHERE show_id = $showId "
-            ."ORDER BY start_date";
-
-        return $CC_DBC->GetAll($sql);
+        return $rebroadcastsLocal;
     }
 
     /**
@@ -815,21 +827,21 @@ class Application_Model_Show {
                     $daysRemoved = array_diff($showDaysArray, $p_data['add_show_day_check']);
 
                     if (count($daysRemoved) > 0){
-                    	
+
                         $this->removeUncheckedDaysInstances($daysRemoved);
                     }
                 }
-                
+
 	            if ($p_data['add_show_start_date'] != $this->getStartDate()
 	                || $p_data['add_show_start_time'] != $this->getStartTime()){
 	                //start date/time has changed
-	
+
 	                $newDate = strtotime($p_data['add_show_start_date']);
 	                $oldDate = strtotime($this->getStartDate());
 	                if ($newDate > $oldDate){
 	                    $this->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
 	                }
-	
+
 	                $this->updateStartDateTime($p_data, $p_endDate);
 	            }
             }
@@ -1224,8 +1236,10 @@ class Application_Model_Show {
                 $showInstance->correctScheduleStartTimes();
             }
 
-            self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-
+            //don't create rebroadcasts for a deleted recorded show.
+            if ($ccShowInstance->getDbModifiedInstance() == false) {
+                self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
+            }
 
             if ($p_interval == 'P1M'){
                 /* When adding months, there is a problem if we are on January 31st and add one month with PHP.
@@ -1538,23 +1552,23 @@ class Application_Model_Show {
         return $event;
     }
 
-    /* Takes in a UTC DateTime object. 
+    /* Takes in a UTC DateTime object.
      * Converts this to local time, since cc_show days
      * requires local time. */
     public function setShowFirstShow($p_dt){
-        
+
         //clone object since we are modifying it and it was passed by reference.
         $dt = clone $p_dt;
-        
+
         $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        
+
         $showDay = CcShowDaysQuery::create()
         ->filterByDbShowId($this->_showId)
         ->findOne();
 
         $showDay->setDbFirstShow($dt)
         ->save();
-        
+
         Logging::log("setting show's first show.");
     }
 
@@ -1562,15 +1576,15 @@ class Application_Model_Show {
      * Converts this to local time, since cc_show days
      * requires local time. */
     public function setShowLastShow($p_dt){
-        
+
         //clone object since we are modifying it and it was passed by reference.
         $dt = clone $p_dt;
-        
+
         $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        
+
         //add one day since the Last Show date in CcShowDays is non-inclusive.
         $dt->add(new DateInterval("P1D"));
-        
+
         $showDay = CcShowDaysQuery::create()
         ->filterByDbShowId($this->_showId)
         ->findOne();

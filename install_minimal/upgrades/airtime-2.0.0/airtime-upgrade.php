@@ -162,6 +162,7 @@ class AirtimeDatabaseUpgrade{
                 INSERT INTO cc_pref(keystr, valstr) VALUES('plan_level', 'disabled');
                 
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('output_sound_device', 'false', 'boolean');
+                INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('output_sound_device_type', 'ALSA', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
                 
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_enable', 'true', 'boolean');

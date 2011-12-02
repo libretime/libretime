@@ -31,7 +31,7 @@ class Application_Model_ShowInstance {
 
     /* This function is weird. It should return a boolean, but instead returns
      * an integer if it is a rebroadcast, or returns null if it isn't. You can convert
-     * it to boolean by using is_null(isRebroadcast), where true means isn't and false 
+     * it to boolean by using is_null(isRebroadcast), where true means isn't and false
      * means that it is. */
     public function isRebroadcast()
     {
@@ -175,63 +175,104 @@ class Application_Model_ShowInstance {
         Application_Model_RabbitMq::PushSchedule();
     }
 
+    /*
+     * @param $dateTime
+     *      php Datetime object to add deltas to
+     *
+     * @param $deltaDay
+     *      php int, delta days show moved
+     *
+     * @param $deltaMin
+     *      php int, delta mins show moved
+     *
+     * @return $newDateTime
+     *      php DateTime, $dateTime with the added time deltas.
+     */
+    private static function addDeltas($dateTime, $deltaDay, $deltaMin) {
+
+        $newDateTime = clone $dateTime;
+
+        Logging::log("deltaDay: {$deltaDay}");
+        Logging::log("deltaMin: {$deltaMin}");
+        Logging::log("addDeltas: original time {$newDateTime->format('Y-m-d H:i:s')}");
+
+        $days = abs($deltaDay);
+        $mins = abs($deltaMin);
+
+        $dayInterval = new DateInterval("P{$days}D");
+        $minInterval = new DateInterval("PT{$mins}M");
+
+        if ($deltaDay > 0) {
+            $newDateTime->add($dayInterval);
+        }
+        else if ($deltaDay < 0){
+            $newDateTime->sub($dayInterval);
+        }
+
+        if ($deltaMin > 0) {
+            $newDateTime->add($minInterval);
+        }
+        else if ($deltaMin < 0) {
+            $newDateTime->sub($minInterval);
+        }
+
+        Logging::log("addDeltas: modified time {$newDateTime->format('Y-m-d H:i:s')}");
+
+        return $newDateTime;
+    }
+
     public function moveShow($deltaDay, $deltaMin)
     {
-        global $CC_DBC;
-
         if ($this->getShow()->isRepeating()){
             return "Can't drag and drop repeating shows";
         }
 
-        $hours = $deltaMin/60;
-        if($hours > 0)
-            $hours = floor($hours);
-        else
-            $hours = ceil($hours);
-
-        $mins = abs($deltaMin%60);
-
         $today_timestamp = time();
-        $starts = $this->getShowInstanceStart();
-        $ends = $this->getShowInstanceEnd();
+        $startsDateTime = new DateTime($this->getShowInstanceStart(), new DateTimeZone("UTC"));
+        $endsDateTime = new DateTime($this->getShowInstanceEnd(), new DateTimeZone("UTC"));
 
-        $startsDateTime = new DateTime($starts, new DateTimeZone("UTC"));
-
-        if($today_timestamp > $startsDateTime->getTimestamp()) {
+        if ($today_timestamp > $startsDateTime->getTimestamp()) {
             return "Can't move a past show";
         }
 
-        $sql = "SELECT timestamp '{$starts}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
-        $new_starts = $CC_DBC->GetOne($sql);
-        $newStartsDateTime = new DateTime($new_starts, new DateTimeZone("UTC"));
+        //the user is moving the show on the calendar from the perspective of local time.
+        //incase a show is moved across a time change border offsets should be added to the localtime
+        //stamp and then converted back to UTC to avoid show time changes!
+        $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-        $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
-        $new_ends = $CC_DBC->GetOne($sql);
-        $newEndsDateTime = new DateTime($new_ends, new DateTimeZone("UTC"));
+        $newStartsDateTime = self::addDeltas($startsDateTime, $deltaDay, $deltaMin);
+        $newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin);
 
+        //convert our new starts/ends to UTC.
+        $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
+        $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
 
-        if($today_timestamp > $newStartsDateTime->getTimestamp()) {
+        if ($today_timestamp > $newStartsDateTime->getTimestamp()) {
             return "Can't move show into past";
         }
 
-        $overlap = Application_Model_Show::getShows($newStartsDateTime, $newEndsDateTime, array($this->_instanceId));
+        if ($this->isRebroadcast()) {
 
-        if(count($overlap) > 0) {
-            return "Should not overlap shows";
-        }
+            try {
+                $recordedShow = new Application_Model_ShowInstance($this->_showInstance->getDbOriginalShow());
+            }
+            //recorded show doesn't exist.
+            catch (Exception $e) {
+                $this->_showInstance->delete();
+                return "Show was deleted because recorded show does not exist!";
+            }
 
-        $rebroadcast = $this->isRebroadcast();
-        if($rebroadcast) {
-            $sql = "SELECT timestamp '{$new_starts}' < (SELECT starts FROM cc_show_instances WHERE id = {$rebroadcast})";
-            $isBeforeRecordedOriginal = $CC_DBC->GetOne($sql);
+            $recordEndDateTime = new DateTime($recordedShow->getShowInstanceEnd(), new DateTimeZone("UTC"));
+            $newRecordEndDateTime = self::addDeltas($recordEndDateTime, 0, 60);
 
-            if($isBeforeRecordedOriginal === 't'){
-                return "Cannot move a rebroadcast show before its original show";
+            if ($newStartsDateTime->getTimestamp() < $newRecordEndDateTime->getTimestamp()) {
+                return "Must wait 1 hour to rebroadcast.";
             }
         }
 
-        $this->setShowStart($new_starts);
-        $this->setShowEnd($new_ends);
+        $this->setShowStart($newStartsDateTime);
+        $this->setShowEnd($newEndsDateTime);
         $this->correctScheduleStartTimes();
 
         $show = new Application_Model_Show($this->getShowId());
@@ -399,40 +440,55 @@ class Application_Model_ShowInstance {
         global $CC_DBC;
 
         // see if it was recording show
-        $recording = CcShowInstancesQuery::create()
-            ->findPK($this->_instanceId)
-            ->getDbRecord();
+        $recording = $this->isRecorded();
         // get show id
-        $showId = CcShowInstancesQuery::create()
-            ->findPK($this->_instanceId)
-            ->getDbShowId();
+        $showId = $this->getShowId();
 
-        CcShowInstancesQuery::create()
-            ->findPK($this->_instanceId)
-            ->setDbModifiedInstance(true)
-            ->save();
-            
-        /* Automatically delete all files scheduled in cc_schedules table. */
-        CcScheduleQuery::create()
-            ->filterByDbInstanceId($this->_instanceId)
-            ->delete();
+        $show = $this->getShow();
 
-        // check if we can safely delete the show
-        $showInstancesRow = CcShowInstancesQuery::create()
-            ->filterByDbShowId($showId)
-            ->filterByDbModifiedInstance(false)
-            ->findOne();
-            
-        
+        $current_timestamp = gmdate("Y-m-d H:i");
 
-        /* If we didn't find any instances of the show that haven't
-         * been deleted, then just erase everything related to that show.
-         * We can just delete, the show and the foreign key-constraint should
-         * take care of deleting all of its instances. */
-        if(is_null($showInstancesRow)){
-            CcShowQuery::create()
-                ->filterByDbId($showId)
-                ->delete();
+        if ($current_timestamp < $this->getShowInstanceStart()) {
+
+            if ($show->isRepeating()) {
+
+                CcShowInstancesQuery::create()
+                    ->findPK($this->_instanceId)
+                    ->setDbModifiedInstance(true)
+                    ->save();
+
+                //delete the rebroadcasts of the removed recorded show.
+                if ($recording) {
+                    CcShowInstancesQuery::create()
+                        ->filterByDbOriginalShow($this->_instanceId)
+                        ->delete();
+                }
+
+                /* Automatically delete all files scheduled in cc_schedules table. */
+                CcScheduleQuery::create()
+                    ->filterByDbInstanceId($this->_instanceId)
+                    ->delete();
+
+                // check if we can safely delete the show
+                $showInstancesRow = CcShowInstancesQuery::create()
+                    ->filterByDbShowId($showId)
+                    ->filterByDbModifiedInstance(false)
+                    ->findOne();
+
+                /* If we didn't find any instances of the show that haven't
+                 * been deleted, then just erase everything related to that show.
+                 * We can just delete, the show and the foreign key-constraint should
+                 * take care of deleting all of its instances. */
+                if(is_null($showInstancesRow)){
+                    CcShowQuery::create()
+                        ->filterByDbId($showId)
+                        ->delete();
+                }
+            }
+            else {
+
+                $show->deleteShow();
+            }
         }
 
         Application_Model_RabbitMq::PushSchedule();

@@ -125,6 +125,14 @@ $(document).ready(function() {
         rebuildStreamURL($(this))
     })
     
+    $("#output_sound_device").change(function(){
+        if($(this).is(':checked')){
+        	$("select[id=output_sound_device_type]").removeAttr('disabled')
+        }else{
+        	$("select[id=output_sound_device_type]").attr('disabled', 'disabled')
+        }
+    })
+    
     $("select[id$=data-type]").change(function(){
         if($(this).val() == 'ogg'){
             restrictOggBitrate($(this), true)

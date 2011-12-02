@@ -442,10 +442,10 @@ class Application_Model_StoredFile {
     {
         $serverName = $_SERVER['SERVER_NAME'];
         $serverPort = $_SERVER['SERVER_PORT'];
-        
+
         return $this->constructGetFileUrl($serverName, $serverPort);
     }
-    
+
     /**
      * Get the URL to access this file using the server name/address that
      * is specified in the airtime.conf config file. If either of these is
@@ -453,13 +453,13 @@ class Application_Model_StoredFile {
      */
     public function getFileUrlUsingConfigAddress(){
         global $CC_CONFIG;
-        
+
         if (isset($CC_CONFIG['baseUrl'])){
             $serverName = $CC_CONFIG['baseUrl'];
         } else {
             $serverName = $_SERVER['SERVER_NAME'];
         }
-            
+
         if (isset($CC_CONFIG['basePort'])){
             $serverPort = $CC_CONFIG['basePort'];
         } else {
@@ -468,7 +468,7 @@ class Application_Model_StoredFile {
 
         return $this->constructGetFileUrl($serverName, $serverPort);
     }
-    
+
     private function constructGetFileUrl($p_serverName, $p_serverPort){
         return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
@@ -604,7 +604,7 @@ class Application_Model_StoredFile {
     {
         return Application_Model_StoredFile::Recall(null, null, null, $p_filepath);
     }
-    
+
     public static function RecallByPartialFilepath($partial_path){
         $path_info = Application_Model_MusicDir::splitFilePath($partial_path);
 
@@ -625,11 +625,11 @@ class Application_Model_StoredFile {
         }
         return $res;
     }
-    
+
 	public static function searchFilesForPlaylistBuilder($datatables) {
 		global $CC_CONFIG;
 
-		$displayData = array("track_title", "artist_name", "album_title", "track_number", "length", "ftype");
+		$displayData = array("track_title", "artist_name", "album_title", "genre", "length", "ftype");
 
 		$plSelect = "SELECT ";
         $fileSelect = "SELECT ";
@@ -812,11 +812,11 @@ class Application_Model_StoredFile {
         // create temp file name (CC-3086)
         $command = "mktemp --tmpdir=".$p_targetDir;
         $tempFilePath= exec($command);
-        
+
         if($tempFilePath == ""){
             die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Unable to create tmp file."}, "id" : "id"}');
         }
-        
+
 		if (strpos($contentType, "multipart") !== false) {
 			if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
 				// Open temp file
@@ -854,7 +854,7 @@ class Application_Model_StoredFile {
 			} else
 				die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
 		}
-		
+
 		return $tempFilePath;
     }
 
@@ -919,11 +919,11 @@ class Application_Model_StoredFile {
         $this->_file->setDbSoundCloudLinkToFile($link_to_file)
         ->save();
     }
-    
+
     public function getSoundCloudLinkToFile(){
         return $this->_file->getDbSoundCloudLinkToFile();
     }
-    
+
     public function setSoundCloudFileId($p_soundcloud_id)
     {
         $this->_file->setDbSoundCloudId($p_soundcloud_id)
@@ -955,7 +955,7 @@ class Application_Model_StoredFile {
     public function uploadToSoundCloud()
     {
         global $CC_CONFIG;
-        
+
         $file = $this->_file;
         if(is_null($file)) {
             return "File does not exist";

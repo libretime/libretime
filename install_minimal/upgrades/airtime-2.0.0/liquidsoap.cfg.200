@@ -6,6 +6,7 @@
 # Output settings                         #
 ###########################################
 output_sound_device = false
+output_sound_device_type = "ALSA"
 s1_output = "icecast"
 s2_output = "icecast"
 s3_output = "icecast"
