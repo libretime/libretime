@@ -30,7 +30,7 @@ showhelp () {
 
 overwrite="f"
 preserve="f"
-nodb="t"
+nodb="f"
 reinstall="f"
 mediamonitor="f"
 pypo="f"
@@ -64,7 +64,6 @@ if [ "$mediamonitor" = "f" -a "$pypo" = "f" -a "$showrecorder" = "f" -a "$web" =
     pypo="t"
     showrecorder="t"
     web="t"
-    nodb="f"
 fi
 
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
@@ -83,7 +82,7 @@ set -e
 DO_UPGRADE="0"
 if [ "$result" -eq "0" ]; then
     echo " * None found."
-elif [ "$result" -eq "1" ]; then
+elif [ "$result" -eq "1" -a "$reinstall" = "f" ]; then
     echo " * Same version of Airtime already installed!"
     exit 1;
 elif [ "$result" -eq "2" ]; then
