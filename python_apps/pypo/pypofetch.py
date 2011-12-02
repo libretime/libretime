@@ -314,9 +314,9 @@ class PypoFetch(Thread):
         
         ls_playlist = []
         
-        dtnow = datetime.today()
+        dtnow = datetime.utcnow()
         str_tnow_s = dtnow.strftime('%Y-%m-%d-%H-%M-%S')
-
+        
         sortedKeys = sorted(playlist['medias'].iterkeys())
         
         for key in sortedKeys:
@@ -326,14 +326,14 @@ class PypoFetch(Thread):
             if bootstrapping:              
                 start = media['start']
                 end = media['end']
-                
+                                
                 if end <= str_tnow_s:
                     continue
                 elif start <= str_tnow_s and str_tnow_s < end:
                     #song is currently playing and we just started pypo. Maybe there
                     #was a power outage? Let's restart playback of this song.
                     start_split = map(int, start.split('-'))
-                    media_start = datetime(start_split[0], start_split[1], start_split[2], start_split[3], start_split[4], start_split[5])
+                    media_start = datetime(start_split[0], start_split[1], start_split[2], start_split[3], start_split[4], start_split[5], 0, None)
                     logger.debug("Found media item that started at %s.", media_start)
                     
                     delta = dtnow - media_start #we get a TimeDelta object from this operation
