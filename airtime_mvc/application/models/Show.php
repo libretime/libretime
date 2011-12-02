@@ -105,6 +105,13 @@ class Application_Model_Show {
         return $res;
     }
 
+    //remove everything about this show.
+    public function deleteShow()
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->delete();
+    }
+
     public function resizeShow($deltaDay, $deltaMin)
     {
         global $CC_DBC;
@@ -280,7 +287,7 @@ class Application_Model_Show {
         $showId = $this->getId();
 
         $sql = "SELECT starts FROM cc_show_instances "
-            ."WHERE instance_id = $showId "
+            ."WHERE show_id = $showId AND rebroadcast = 1"
             ."ORDER BY starts";
 
         $rebroadcasts = $CC_DBC->GetAll($sql);
@@ -1229,8 +1236,10 @@ class Application_Model_Show {
                 $showInstance->correctScheduleStartTimes();
             }
 
-            self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-
+            //don't create rebroadcasts for a deleted recorded show.
+            if ($ccShowInstance->getDbModifiedInstance() == false) {
+                self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
+            }
 
             if ($p_interval == 'P1M'){
                 /* When adding months, there is a problem if we are on January 31st and add one month with PHP.

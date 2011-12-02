@@ -31,7 +31,7 @@ class Application_Model_ShowInstance {
 
     /* This function is weird. It should return a boolean, but instead returns
      * an integer if it is a rebroadcast, or returns null if it isn't. You can convert
-     * it to boolean by using is_null(isRebroadcast), where true means isn't and false 
+     * it to boolean by using is_null(isRebroadcast), where true means isn't and false
      * means that it is. */
     public function isRebroadcast()
     {
@@ -399,40 +399,55 @@ class Application_Model_ShowInstance {
         global $CC_DBC;
 
         // see if it was recording show
-        $recording = CcShowInstancesQuery::create()
-            ->findPK($this->_instanceId)
-            ->getDbRecord();
+        $recording = $this->isRecorded();
         // get show id
-        $showId = CcShowInstancesQuery::create()
-            ->findPK($this->_instanceId)
-            ->getDbShowId();
+        $showId = $this->getShowId();
 
-        CcShowInstancesQuery::create()
-            ->findPK($this->_instanceId)
-            ->setDbModifiedInstance(true)
-            ->save();
-            
-        /* Automatically delete all files scheduled in cc_schedules table. */
-        CcScheduleQuery::create()
-            ->filterByDbInstanceId($this->_instanceId)
-            ->delete();
+        $show = $this->getShow();
 
-        // check if we can safely delete the show
-        $showInstancesRow = CcShowInstancesQuery::create()
-            ->filterByDbShowId($showId)
-            ->filterByDbModifiedInstance(false)
-            ->findOne();
-            
-        
+        $current_timestamp = gmdate("Y-m-d H:i");
 
-        /* If we didn't find any instances of the show that haven't
-         * been deleted, then just erase everything related to that show.
-         * We can just delete, the show and the foreign key-constraint should
-         * take care of deleting all of its instances. */
-        if(is_null($showInstancesRow)){
-            CcShowQuery::create()
-                ->filterByDbId($showId)
-                ->delete();
+        if ($current_timestamp < $this->getShowInstanceStart()) {
+
+            if ($show->isRepeating()) {
+
+                CcShowInstancesQuery::create()
+                    ->findPK($this->_instanceId)
+                    ->setDbModifiedInstance(true)
+                    ->save();
+
+                //delete the rebroadcasts of the removed recorded show.
+                if ($recording) {
+                    CcShowInstancesQuery::create()
+                        ->filterByDbOriginalShow($this->_instanceId)
+                        ->delete();
+                }
+
+                /* Automatically delete all files scheduled in cc_schedules table. */
+                CcScheduleQuery::create()
+                    ->filterByDbInstanceId($this->_instanceId)
+                    ->delete();
+
+                // check if we can safely delete the show
+                $showInstancesRow = CcShowInstancesQuery::create()
+                    ->filterByDbShowId($showId)
+                    ->filterByDbModifiedInstance(false)
+                    ->findOne();
+
+                /* If we didn't find any instances of the show that haven't
+                 * been deleted, then just erase everything related to that show.
+                 * We can just delete, the show and the foreign key-constraint should
+                 * take care of deleting all of its instances. */
+                if(is_null($showInstancesRow)){
+                    CcShowQuery::create()
+                        ->filterByDbId($showId)
+                        ->delete();
+                }
+            }
+            else {
+
+                $show->deleteShow();
+            }
         }
 
         Application_Model_RabbitMq::PushSchedule();
