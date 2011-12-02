@@ -287,7 +287,7 @@ class Application_Model_Show {
         $showId = $this->getId();
 
         $sql = "SELECT starts FROM cc_show_instances "
-            ."WHERE show_id = $showId AND rebroadcast = 1"
+            ."WHERE show_id = $showId AND rebroadcast = 1 "
             ."ORDER BY starts";
 
         $rebroadcasts = $CC_DBC->GetAll($sql);
