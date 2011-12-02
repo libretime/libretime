@@ -53,35 +53,50 @@ add_skip_command(s)
 s = map_metadata(append_title, s)
 
 if output_sound_device then
-	output.prefered=output.dummy
-	%ifdef output.alsa
+	
+    success = ref false
+    
+    log(output_sound_device_type)
+	
+    %ifdef output.alsa
 	if output_sound_device_type == "ALSA" then
-		output.prefered=output.alsa
+		ignore(output.alsa(s))
+        success := true
 	end
 	%endif
+    
 	%ifdef output.ao
 	if output_sound_device_type == "AO" then
-		output.prefered=output.ao
-		output.prefered(mksafe(s))
+		ignore(output.ao(s))
+        success := true
 	end
 	%endif
+    
 	%ifdef output.oss
 	if output_sound_device_type == "OSS" then
-		output.prefered=output.oss
+        ignore(output.oss(s))
+        success := true
 	end
 	%endif
+    
 	%ifdef output.portaudio
 	if output_sound_device_type == "Portaudio" then
-		output.prefered=output.portaudio
+        ignore(output.portaudio(s))
+        success := true
 	end
 	%endif
+    
 	%ifdef output.pulseaudio
 	if output_sound_device_type == "Pulseaudio" then
-		output.prefered=output.pulseaudio
+        ignore(output.pulseaudio(s))
+        success := true
 	end
 	%endif
-	
-    ignore(out(s))
+    
+    if (!success == false) then
+        ignore(output.prefered(s))
+	end
+    
 end
 
 if s1_enable == true then
