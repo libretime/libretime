@@ -106,7 +106,7 @@ class Application_Form_SupportSettings extends Zend_Form
 				->addValidator('Count', false, 1)
 				->addValidator('Extension', false, 'jpg,jpeg,png,gif')
 				->addFilter('ImageSize');
-		$upload->setAttrib('accept', 'image/jpeg,image/gif,image/png,image/jpg');
+		$upload->setAttrib('accept', 'image/*');
 		$this->addElement($upload);
 		
 		if(!$isSass){

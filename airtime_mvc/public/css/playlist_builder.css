@@ -374,6 +374,7 @@
     -webkit-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
     box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
 	width:95%;
+	margin-bottom:10px;
 }
 
 #side_playlist .zend_form {
@@ -444,4 +445,6 @@ fieldset > legend {
 #side_playlist .zend_form input, #side_playlist .zend_form textarea {
     width: auto;
 }
-	
+#fieldset-metadate_change {
+	clear:both;
+}
