@@ -75,11 +75,15 @@ class Application_Model_StreamSetting {
      */
     public static function setStreamSetting($data){
         global $CC_DBC;
+        
         foreach ($data as $key=>$d) {
             if ($key == "output_sound_device" || $key == "icecast_vorbis_metadata") {
                 $v = $d == 1?"true":"false";
                 $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$key'";
                 $CC_DBC->query($sql);
+            } else if ($key == "output_sound_device_type") {
+                $sql = "UPDATE cc_stream_setting SET value='$d' WHERE keyname='$key'";
+                $CC_DBC->query($sql);                
             } else {
                 $temp = explode('_', $key);
                 $prefix = $temp[0];
