@@ -143,13 +143,13 @@ class ScheduleController extends Zend_Controller_Action
 
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             try{
-		      $show = new Application_Model_ShowInstance($showInstanceId);
+		      $showInstance = new Application_Model_ShowInstance($showInstanceId);
             }catch(Exception $e){
                 $this->view->show_error = true;
                 return false;
             }
 
-		    $show->deleteShow();
+		    $showInstance->delete();
         }
     }
 
@@ -821,13 +821,13 @@ class ScheduleController extends Zend_Controller_Action
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $showInstanceId = $this->_getParam('id');
             try{
-                $show = new Application_Model_ShowInstance($showInstanceId);
+                $showInstance = new Application_Model_ShowInstance($showInstanceId);
             }catch(Exception $e){
                 $this->view->show_error = true;
                 return false;
             }
-            $show->clearShow();
-            $show->deleteShow();
+            $showInstance->clearShow();
+            $showInstance->delete();
             // send 'cancel-current-show' command to pypo
             Application_Model_RabbitMq::SendMessageToPypo("cancel_current_show", array());
         }

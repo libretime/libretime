@@ -106,7 +106,7 @@ class Application_Model_Show {
     }
 
     //remove everything about this show.
-    public function deleteShow()
+    public function delete()
     {
         //usually we hide the show-instance, but in this case we are deleting the show template
         //so delete all show-instances as well.

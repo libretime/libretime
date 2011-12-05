@@ -435,10 +435,10 @@ class Application_Model_ShowInstance {
         $this->updateScheduledTime();
     }
 
-    public function deleteShow()
+    public function delete()
     {
         global $CC_DBC;
-
+        
         // see if it was recording show
         $recording = $this->isRecorded();
         // get show id
@@ -446,10 +446,9 @@ class Application_Model_ShowInstance {
 
         $show = $this->getShow();
 
-        $current_timestamp = gmdate("Y-m-d H:i");
+        $current_timestamp = gmdate("Y-m-d H:i:s");
 
-        if ($current_timestamp < $this->getShowInstanceStart()) {
-
+        if ($current_timestamp <= $this->getShowInstanceEnd()) {            
             if ($show->isRepeating()) {
 
                 CcShowInstancesQuery::create()
@@ -486,8 +485,7 @@ class Application_Model_ShowInstance {
                 }
             }
             else {
-
-                $show->deleteShow();
+                $show->delete();
             }
         }
 
