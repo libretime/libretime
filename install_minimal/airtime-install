@@ -73,7 +73,6 @@ SCRIPTPATH=`dirname $SCRIPT`
 AIRTIMEROOT=$SCRIPTPATH/../
 
 # Check if airtime exists already
-echo "* Checking for existing Airtime installation..."
 set +e
 php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php
 result=$?
