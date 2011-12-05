@@ -81,8 +81,8 @@ function checkLiquidsoapStatus(){
         var json_obj = jQuery.parseJSON(json);
         for(var i=0;i<json_obj.length;i++){
             var obj = json_obj[i];
-            var id
-            var status
+            var id;
+            var status;
             for(var key in obj){
                 if(key == "id"){
                     id = obj[key];
@@ -91,15 +91,15 @@ function checkLiquidsoapStatus(){
                     status = obj[key];
                 }
             }
-            var html
+            var html;
             if(status == "OK"){
-                html = '<div class="stream-status status-good"><h3>Connected to the streaming server</h3></div>'
+                html = '<div class="stream-status status-good"><h3>Connected to the streaming server</h3></div>';
             }else if(status == "N/A"){
-                html = '<div class="stream-status status-disabled"><h3>The stream is disabled</h3></div>'
+                html = '<div class="stream-status status-disabled"><h3>The stream is disabled</h3></div>';
             }else if(status == "waiting"){
-            	html = '<div class="stream-status status-info"><h3>Getting information from the server...</h3></div>'
+            	html = '<div class="stream-status status-info"><h3>Getting information from the server...</h3></div>';
             }else{
-                html = '<div class="stream-status status-error"><h3>Can not connect to the streaming server</h3><p>'+status+'</p></div>'
+                html = '<div class="stream-status status-error"><h3>Can not connect to the streaming server</h3><p>'+status+'</p></div>';
             }
             $("#s"+id+"Liquidsoap-error-msg-element").html(html);
         }
