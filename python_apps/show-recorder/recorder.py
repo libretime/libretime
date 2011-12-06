@@ -183,7 +183,7 @@ class CommandListener():
         try:
             schedule_exchange = Exchange("airtime-show-recorder", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("recorder-fetch", exchange=schedule_exchange, key="foo")
-            self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], "/")
+            self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], config["rabbitmq_vhost"])
             channel = self.connection.channel()
             consumer = Consumer(channel, schedule_queue)
             consumer.register_callback(self.handle_message)
