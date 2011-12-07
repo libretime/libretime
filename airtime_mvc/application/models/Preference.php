@@ -368,6 +368,7 @@ class Application_Model_Preference
     	$outputArray['STATION_COUNTRY'] = self::GetStationCountry();
     	$outputArray['STATION_CITY'] = self::GetStationCity();
     	$outputArray['STATION_DESCRIPTION'] = self::GetStationDescription();
+    	
 
     	// get web server info
     	if(isset($systemInfoArray["AIRTIME_VERSION_URL"])){
@@ -387,6 +388,8 @@ class Application_Model_Preference
     	$outputArray['UNIQUE_ID'] = self::GetUniqueId();
     	$outputArray['SAAS'] = self::GetPlanLevel();
     	$outputArray['INSTALL_METHOD'] = self::GetInstallMethod();
+    	$outputArray['NUM_OF_STREAMS'] = self::GetNumOfStreams();
+    	$outputArray['STREAM_INFO'] = Application_Model_StreamSetting::getStreamInfoForDataCollection();
 
     	$outputArray = array_merge($systemInfoArray, $outputArray);
 
@@ -396,7 +399,16 @@ class Application_Model_Preference
     	        continue;
     	    }
     	    if($out != ''){
-    		    $outputString .= $key.' : '.$out."\n";
+    	        if($key == "STREAM_INFO"){
+    	            $outputString .= $key." :\n";
+    	            foreach($out as $s_info){
+    	                foreach($s_info as $k => $v){
+    	                    $outputString .= "\t".strtoupper($k)." : ".$v."\n";
+    	                }
+    	            }    
+    	        }else{
+    		        $outputString .= $key.' : '.$out."\n";
+    	        }
     	    }
     	}
     	if($returnArray){
