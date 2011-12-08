@@ -8,6 +8,14 @@ function scheduleRefetchEvents(json) {
     if(json.show_error == true){
         alert("The show instance doesn't exist anymore!")
     }
+    if(json.show_id) {
+    	var dialog_id = parseInt($("#add_show_id").val(), 10);
+    	
+    	//if you've deleted the show you are currently editing, close the add show dialog.
+    	if (dialog_id === json.show_id) {
+    		$("#add-show-close").click();
+    	}
+    }
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
 
