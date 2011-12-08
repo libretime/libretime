@@ -604,8 +604,18 @@ class Application_Model_Preference
         }
         return $update_time;
     }
-
-	/* User specific preferences start */
+    
+    public static function GetClientId() {
+        return self::GetValue("client_id");
+    }
+    
+    public static function SetClientId($id) {
+        if (is_numeric($id)) {
+            self::SetValue("client_id", $id);
+        }
+    }
+    
+    /* User specific preferences start */
 
     /**
      * Sets the time scale preference (agendaDay/agendaWeek/month) in Calendar.
