@@ -77,6 +77,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js','text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js','text/javascript');
+        
+        if (Application_Model_Preference::GetPlanLevel() != "disabled") {
+            $view->headScript()->appendFile($baseUrl.'/js/airtime/common/livechat.js','text/javascript');
+        }
     }
 
     protected function _initViewHelpers()
