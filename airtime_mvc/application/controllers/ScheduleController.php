@@ -141,15 +141,19 @@ class ScheduleController extends Zend_Controller_Action
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 		$user = new Application_Model_User($userInfo->id);
 
-        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            try{
+        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+
+            try {
 		      $showInstance = new Application_Model_ShowInstance($showInstanceId);
-            }catch(Exception $e){
+            }
+            catch(Exception $e){
                 $this->view->show_error = true;
                 return false;
             }
 
 		    $showInstance->delete();
+
+		    $this->view->show_id = $showInstance->getShowId();
         }
     }
 
@@ -801,15 +805,18 @@ class ScheduleController extends Zend_Controller_Action
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $showInstanceId = $this->_getParam('id');
 
-		    try{
+		    try {
                 $showInstance = new Application_Model_ShowInstance($showInstanceId);
-		    }catch(Exception $e){
+		    }
+		    catch(Exception $e){
                 $this->view->show_error = true;
                 return false;
             }
             $show = new Application_Model_Show($showInstance->getShowId());
 
             $show->cancelShow($showInstance->getShowInstanceStart());
+
+            $this->view->show_id = $showInstance->getShowId();
         }
     }
 

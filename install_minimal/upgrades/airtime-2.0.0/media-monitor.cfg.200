@@ -13,6 +13,7 @@ log_dir = '/var/log/airtime/media-monitor'
 rabbitmq_host = 'localhost'
 rabbitmq_user = 'guest'
 rabbitmq_password = 'guest'
+rabbitmq_vhost = '/'
 
 ############################################
 # Media-Monitor preferences                         #

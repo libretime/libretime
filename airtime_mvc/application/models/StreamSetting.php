@@ -164,4 +164,31 @@ class Application_Model_StreamSetting {
         }
         return $result;
     }
+    
+    /*
+     * Only returns info that is needed for data collection
+     * returns array('s1'=>array(keyname=>value))
+     */
+    public static function getStreamInfoForDataCollection(){
+        global $CC_DBC;
+        
+        $out = array();
+        $enabled_stream = self::getEnabledStreamIds();
+        
+        foreach($enabled_stream as $stream){
+            $keys = "'".$stream."_output', "."'".$stream."_type', "."'".$stream."_bitrate', "."'".$stream."_host'";
+            
+            $sql = "SELECT keyname, value FROM cc_stream_setting"
+            ." WHERE keyname IN ($keys)";
+            
+            $rows = $CC_DBC->getAll($sql);
+            $info = array();
+            foreach($rows as $r){
+                $temp = explode("_", $r['keyname']);
+                $info[$temp[1]] = $r['value'];
+                $out[$stream] = $info; 
+            }
+        }
+        return $out;
+    }
 }

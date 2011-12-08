@@ -39,7 +39,7 @@ class AirtimeNotifier(Notifier):
         try:
             schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
-            self.connection = BrokerConnection(self.config.cfg["rabbitmq_host"], self.config.cfg["rabbitmq_user"], self.config.cfg["rabbitmq_password"], "/")
+            self.connection = BrokerConnection(self.config.cfg["rabbitmq_host"], self.config.cfg["rabbitmq_user"], self.config.cfg["rabbitmq_password"], self.config.cfg["rabbitmq_vhost"])
             channel = self.connection.channel()
             consumer = Consumer(channel, schedule_queue)
             consumer.register_callback(self.handle_message)
