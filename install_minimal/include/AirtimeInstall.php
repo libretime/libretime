@@ -300,7 +300,7 @@ class AirtimeInstall
     {
         global $CC_DBC;
         
-        $defaultTimezone = date_default_timezone_get();
+        $defaultTimezone = exec("cat /etc/timezone");
 
         $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', '$defaultTimezone')";
         $result = $CC_DBC->query($sql);

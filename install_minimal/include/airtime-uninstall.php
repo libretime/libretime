@@ -28,10 +28,16 @@ echo "* Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
 // before this function, even if you called $CC_DBC->disconnect(), there will
 // still be a connection to the database and you wont be able to delete it.
 //------------------------------------------------------------------------
-echo " * Dropping the database '".$CC_CONFIG['dsn']['database']."'...".PHP_EOL;
 
-// check if DB exists
-$command = "echo \"DROP DATABASE IF EXISTS ".$CC_CONFIG['dsn']['database']."\" | su postgres -c psql";
+//close connection for any process id using airtime database since we are about to drop the database.
+$sql = "SELECT pg_cancel_backend(procpid) FROM pg_stat_activity WHERE datname = 'airtime';";
+$command = "echo \"$sql\" | su postgres -c psql";
+@exec($command, $output);
+
+echo " * Dropping the database '".$CC_CONFIG["dsn"]["database"]."'...".PHP_EOL;
+
+//dropdb returns 1 if other sessions are using the database, otherwise returns 0
+$command = "su postgres -c \"dropdb ".$CC_CONFIG["dsn"]["database"]."\"";
 
 @exec($command, $output, $dbDeleteFailed);
 
