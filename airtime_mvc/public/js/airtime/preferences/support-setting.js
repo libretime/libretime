@@ -48,4 +48,37 @@ $(document).ready(function() {
         $('.toggle').toggleClass('closed');
         return false;
     }); 
+    
+    $("#Logo").change(function(ev){
+    	var content, res, logoEl;
+    	
+    	content = $(this).val();
+    	res = content.match(/(jpg|jpeg|png|gif)$/gi);
+    	logoEl = $("#Logo-element");
+    	
+    	//not an accepted image extension.
+    	if (!res) {
+    		var ul, li; 
+    			
+    		ul = logoEl.find('.errors');
+    		li = $("<li/>").append("Image must be one of jpg, jpeg, png, or gif");
+    		
+    		//errors ul has already been created.
+    		if (ul.length > 0) {
+    			ul.empty()
+    				.append(li);
+    		}
+    		else {
+    			logoEl
+    				.append('<ul class="errors"></ul>')
+    				.find(".errors")
+    					.append(li);
+    		}
+    		
+    		$(this).val("");
+    	}
+    	else {
+    		logoEl.find(".errors").remove();
+    	}
+    });
 });
