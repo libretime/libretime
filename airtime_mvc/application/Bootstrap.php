@@ -81,7 +81,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         if (Application_Model_Preference::GetPlanLevel() != "disabled"
                 && $_SERVER['REQUEST_URI'] != '/Dashboard/stream-player') {
             $client_id = Application_Model_Preference::GetClientId();
-            $view->headScript()->appendScript("var livechat_client_id = $client_id;");
+            $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
             $view->headScript()->appendFile($baseUrl . '/js/airtime/common/livechat.js', 'text/javascript');
         }
     }
