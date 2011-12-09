@@ -31,7 +31,12 @@
         <?php } ?>
             <dt id="vorbisMetadata-label">
                 <label class="required">
-                <?php echo $this->form->getElement('icecast_vorbis_metadata')->getLabel() ?> :
+                    <?php echo $this->form->getElement('icecast_vorbis_metadata')->getLabel() ?> : 
+                    <span class='info-tooltip' href='#'>
+                        <span>
+                            <?php echo $this->form->getElement('icecast_vorbis_metadata')->getDescription() ?>
+                        </span>
+                    </span>
                 </label>
             </dt>
             <dd id="vorbisMetadata-element">

@@ -93,6 +93,40 @@ select {
 }
 /* Version Notification Ends*/
 
+/* Info Tooltip Starts */
+.info-tooltip {
+        cursor: help;
+        position: relative;
+        
+        display:inline-block; zoom:1; display:inline;
+        width:14px; height:14px;
+        background:url(/css/images/icon_info.png) 0 0 no-repeat;
+        float:right; position:relative; top:2px; right:7px;
+        line-height:16px !important;
+}
+.info-tooltip span {
+        margin-left: -9999em;
+        position: absolute;
+        padding: 1em 1em 1em 1em;
+        text-indent:0; font-family:Arial, Helvetica, sans-serif !important; font-size:13px !important;
+        border:#505050 solid 3px;
+        background:#e6e6e6;
+        cursor:text;
+}
+.info-tooltip:hover span:before {
+        content:"";
+        position:absolute; top:22px; left:-11px;
+        width:8px; height:15px;
+        margin:-7px 0 0 0;
+        background:url(/css/images/tooltip_arrow.png) 0 0 no-repeat;
+}
+.info-tooltip:hover span {
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+        position: absolute; left: 25px; top: -18px; z-index: 99;
+        margin-left: 0; width: 250px;
+}
+/* Info Tooltip Ends */
+
 /* Clearfix */
 .clearfix:after, li:after { content: "."; display: block;	height: 0; clear: both;  visibility: hidden;}
 .clearfix, li {	display: inline-block; }
