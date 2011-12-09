@@ -757,24 +757,6 @@ class ApiController extends Zend_Controller_Action
         
         $this->view->status = $status;
     }
-    
-    /**
-     * Get the client id assigned by WHMCS from database
-     */
-    public function liveChatAction() {
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-        
-        if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            return;
-        }
-        
-    	$this->view->liveChat = array(
-        	"client_id"=>Application_Model_Preference::GetClientId()
-        );
-    }
 
     public function registerComponentAction(){
         $request = $this->getRequest();
