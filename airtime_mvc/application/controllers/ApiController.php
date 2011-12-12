@@ -450,8 +450,20 @@ class ApiController extends Zend_Controller_Action
         }
 
         if (isset($show_name)) {
-            $tmpTitle = "$show_name-$show_start_time";
-            $tmpTitle = str_replace(" ", "-", $tmpTitle);
+          
+            $show_name = str_replace(" ", "-", $show_name);
+            
+            //2011-12-09-19-28-00-ofirrr-256kbps
+            $filename = $file->getName();
+            
+            //replace the showname in the filepath incase it has been edited since the show started recording
+            //(some old bug)
+            $filename_parts = explode("-", $filename);
+            $new_name = array_slice($filename_parts, 0, 6);
+            $new_name[] = $show_name;
+            $new_name[] = $filename_parts[count($filename_parts)-1];
+            
+            $tmpTitle = implode("-", $new_name);
         }
         else {
             $tmpTitle = $file->getName();
