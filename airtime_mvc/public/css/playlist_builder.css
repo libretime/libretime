@@ -25,7 +25,10 @@
 }
 
 #side_playlist button {
-	font-size: 12px;
+    float: left;
+    font-size: 12px;
+    height: 28px;
+    margin: 0 7px 20px 0;
 }
 
 #side_playlist input, 

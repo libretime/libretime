@@ -1158,6 +1158,9 @@ h2#scheduled_playlist_name span {
 }
 
 .ui-button-icon-only.crossfade-main-button, .ui-button-icons-only.crossfade-main-button {
+    float: left;
+    height: 26px;
+    margin: 0 0 20px 0;
     padding-right: 8px;
 }
 .ui-button-icon-only.crossfade-main-button .ui-button-text, .ui-button-icons-only.crossfade-main-button .ui-button-text {
