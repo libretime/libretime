@@ -119,6 +119,10 @@ class Application_Model_Show {
     public function resizeShow($deltaDay, $deltaMin)
     {
         global $CC_DBC;
+        
+        if ($deltaDay > 0) {
+            return "shows can have a max length of 24 hours.";
+        }
 
         $hours = $deltaMin/60;
         if($hours > 0)
@@ -129,15 +133,18 @@ class Application_Model_Show {
         $mins = abs($deltaMin%60);
 
         //current timesamp in UTC.
-        $current_timestamp = Application_Model_DateHelper::ConvertToUtcDateTime(date("Y-m-d H:i:s"))->format("Y-m-d H:i:s");
+        $current_timestamp = gmdate("Y-m-d H:i:s");
 
         //update all cc_show_instances that are in the future.
         $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-                WHERE (show_id = {$this->_showId} AND starts > '$current_timestamp');";
+                WHERE (show_id = {$this->_showId} AND starts > '$current_timestamp')
+                AND ((ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}' - starts) <= interval '24:00');";
 
         //update cc_show_days so future shows can be created with the new duration.
+        //only setting new duration if it is less than or equal to 24 hours.
         $sql = $sql . " UPDATE cc_show_days SET duration = (CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-                WHERE show_id = {$this->_showId}";
+                WHERE show_id = {$this->_showId}
+                AND ((CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}') <= interval '24:00')";
 
         //do both the queries at once.
         $CC_DBC->query($sql);
