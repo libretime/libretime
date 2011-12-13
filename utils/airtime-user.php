@@ -76,7 +76,7 @@ if (is_null($action)) {
 }
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-$CC_DBC = DB::connect($CC_CONFIG['dsn'], TRUE);
+$CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
 if (PEAR::isError($CC_DBC)) {
     die($CC_DBC->getMessage());
 }
