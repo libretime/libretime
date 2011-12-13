@@ -192,10 +192,6 @@ class Application_Model_ShowInstance {
 
         $newDateTime = clone $dateTime;
 
-        Logging::log("deltaDay: {$deltaDay}");
-        Logging::log("deltaMin: {$deltaMin}");
-        Logging::log("addDeltas: original time {$newDateTime->format('Y-m-d H:i:s')}");
-
         $days = abs($deltaDay);
         $mins = abs($deltaMin);
 
@@ -215,8 +211,6 @@ class Application_Model_ShowInstance {
         else if ($deltaMin < 0) {
             $newDateTime->sub($minInterval);
         }
-
-        Logging::log("addDeltas: modified time {$newDateTime->format('Y-m-d H:i:s')}");
 
         return $newDateTime;
     }
@@ -250,6 +244,21 @@ class Application_Model_ShowInstance {
 
         if ($today_timestamp > $newStartsDateTime->getTimestamp()) {
             return "Can't move show into past";
+        }
+
+        if ($this->isRecorded()) {
+
+            //rebroadcasts should start at max 1 hour after a recorded show has ended.
+            $minRebroadcastStart = self::addDeltas($newEndsDateTime, 0, 60);
+            //check if we are moving a recorded show less than 1 hour before any of its own rebroadcasts.
+            $rebroadcasts = CcShowInstancesQuery::create()
+                ->filterByDbOriginalShow($this->_instanceId)
+                ->filterByDbStarts($minRebroadcastStart->format('Y-m-d H:i:s'), Criteria::LESS_THAN)
+                ->find();
+
+            if (count($rebroadcasts) > 0) {
+                return "Can't move a recorded show less than 1 hour before its rebroadcasts.";
+            }
         }
 
         if ($this->isRebroadcast()) {
@@ -438,7 +447,7 @@ class Application_Model_ShowInstance {
     public function delete()
     {
         global $CC_DBC;
-        
+
         // see if it was recording show
         $recording = $this->isRecorded();
         // get show id
@@ -448,7 +457,7 @@ class Application_Model_ShowInstance {
 
         $current_timestamp = gmdate("Y-m-d H:i:s");
 
-        if ($current_timestamp <= $this->getShowInstanceEnd()) {            
+        if ($current_timestamp <= $this->getShowInstanceEnd()) {
             if ($show->isRepeating()) {
 
                 CcShowInstancesQuery::create()
