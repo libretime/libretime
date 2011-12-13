@@ -31,7 +31,7 @@
         <?php } ?>
             <dt id="vorbisMetadata-label">
                 <label class="required">
-                    <?php echo $this->form->getElement('icecast_vorbis_metadata')->getLabel() ?> : 
+                    <?php echo $this->form->getElement('icecast_vorbis_metadata')->getLabel() ?> :
                     <span class='info-tooltip'>
                         <span>
                             <?php echo $this->form->getElement('icecast_vorbis_metadata')->getDescription() ?>
@@ -41,6 +41,29 @@
             </dt>
             <dd id="vorbisMetadata-element">
                 <?php echo $this->form->getElement('icecast_vorbis_metadata') ?>
+            </dd>
+            <dt id="streamFormat-label" class="block-display">
+                <label class="optional"><?php echo $this->form->getElement('streamFormat')->getLabel() ?></label>
+            </dt>
+            <dd id="streamFormat-element" class="block-display radio-inline-list">
+                <?php $i=0;
+                      $value = $this->form->getElement('streamFormat')->getValue();
+                ?>
+                <?php foreach ($this->form->getElement('streamFormat')->getMultiOptions() as $radio) : ?>
+                    <label for="streamFormat-<?php echo $i ?>">
+                        <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?> >
+                            <?php echo $radio ?>
+                        </input>
+                    </label>
+                    <?php $i = $i + 1; ?>
+                <?php endforeach; ?>
+                <?php if($this->form->getElement('streamFormat')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->form->getElement('streamFormat')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </dd>
         </dl>
     </fieldset>

@@ -27,29 +27,6 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        <dt id="streamFormat-label" class="block-display">
-            <label class="optional"><?php echo $this->element->getElement('streamFormat')->getLabel() ?></label>
-        </dt>
-        <dd id="streamFormat-element" class="block-display radio-inline-list">
-            <?php $i=0;
-                  $value = $this->element->getElement('streamFormat')->getValue();
-            ?>
-            <?php foreach ($this->element->getElement('streamFormat')->getMultiOptions() as $radio) : ?>
-                <label for="streamFormat-<?php echo $i ?>">
-                    <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?> >
-                        <?php echo $radio ?>
-                    </input>
-                </label>
-                <?php $i = $i + 1; ?>
-            <?php endforeach; ?>
-            <?php if($this->element->getElement('streamFormat')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('streamFormat')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
         <dt id="thirdPartyApi-label" class="block-display">
             <label class="optional"><?php echo $this->element->getElement('thirdPartyApi')->getLabel() ?></label>
         </dt>
@@ -88,7 +65,7 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        
+
         <!-- Week Start Day option -->
         <dt id="weekStartDay-label" class="block-display">
             <label class="required" for="timezone"><?php echo $this->element->getElement('weekStartDay')->getLabel() ?>:
@@ -106,7 +83,7 @@
                 <?php $i = $i + 1; ?>
             <?php endforeach; ?>
             </select>
-            
+
             <?php if($this->element->getElement('weekStartDay')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('weekStartDay')->getMessages() as $error): ?>
