@@ -72,7 +72,7 @@ class ShowRecorder(Thread):
 
         if config["record_file_type"] in ["mp3", "ogg"]:
             filetype = config["record_file_type"]
-        else
+        else:
             filetype = "ogg";
 
         filepath = "%s%s.%s" % (config["base_recorded_files"], filename, filetype)
