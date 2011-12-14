@@ -23,54 +23,35 @@ if (isset($arr["DOCUMENT_ROOT"]) && ($arr["DOCUMENT_ROOT"] != "") ) {
     exit(1);
 }
 
-function printUsage()
-{
-    echo "\n";
-    echo "airtime-user\n";
-    echo "===============\n";
-    echo "    This program allows you to manage Airtime users.\n";
-    echo "\n";
-    echo "OPTIONS:\n";
-    echo "    --addupdate <username>\n";
-    echo "        Add the user or update user information.\n";
-    echo "    --delete <username>\n";
-    echo "        Remove the user.\n";
-    echo "\n";
-}
+$shortopts = "u:p:t:f:l:";
 
-/**
- * Ensures that the user is running this PHP script with root
- * permissions. If not running with root permissions, causes the
- * script to exit.
- */
-function exitIfNotRoot()
-{
-    // Need to check that we are superuser before running this.
-    if(exec("whoami") != "root"){
-        echo "Must be root user.\n";
-        exit(1);
-    }
-}
+$longopts  = array(
+    "username:",
+    "password:",
+    "type:",
+    "first-name:",
+    "last-name:",
+    "addupdate",
+    "delete",
+);
+$options = getopt($shortopts, $longopts);
 
-if (count($argv) != 3) {
+$action = null;
+if (isset($options["addupdate"])) {
+    $action = "addupdate";
+}
+else if (isset($options["delete"])) {
+    $action = "delete";
+}
+else {
     printUsage();
     exit;
 }
 
-
-$action = null;
-switch ($argv[1]) {
-	case '--addupdate':
-		$action = "addupdate";
-		break;
-	case '--delete':
-		$action = "delete";
-		break;
+if (isset($options["u"]) || isset($options["username"])) {
+    $username = $options["u"] ?: $options["username"];
 }
-
-$username = $argv[2];
-
-if (is_null($action)) {
+else {
     printUsage();
     exit;
 }
@@ -92,43 +73,52 @@ if ($action == "addupdate") {
         echo "Creating user\n";
 		$user = new Application_Model_User("");
 		$user->setLogin($username);
-    } else {
+    }
+    else {
 		echo "Updating user\n";
 		$user = new Application_Model_User($id);
 	}
 
-	do{
-		echo "Enter password (min 6 characters): ";
-		$line = trim(fgets(fopen("php://stdin","r")));
-	}while(strlen($line) < 6);
-	$user->setPassword($line);
-	
-	do{
-		echo "Enter first name: ";
-		$line = trim(fgets(fopen("php://stdin","r")));
-	}while(strlen($line) < 1);
-	$user->setFirstName($line);
-	
-	do{
-		echo "Enter last name: ";
-		$line = trim(fgets(fopen("php://stdin","r")));
-	}while(strlen($line) < 1);
-	$user->setLastName($line);
-	
-	do{
-		echo "Enter user type [(A)dmin|(P)rogram Manager|(D)J|(G)uest]: ";
-		$line = trim(fgets(fopen("php://stdin","r")));
-	} while($line != "A" && $line != "P" && $line != "D" && $line != "G");
-    
+    //setting password
+    if (isset($options["p"]) || isset($options["password"])) {
+
+        $password = $options["p"] ?: $options["password"];
+        $user->setPassword($password);
+    }
+
+    //setting first-name
+    if (isset($options["f"]) || isset($options["first-name"])) {
+
+        $firstname = $options["f"] ?: $options["first-name"];
+        $user->setFirstName($firstname);
+    }
+
+    //setting last-name
+    if (isset($options["l"]) || isset($options["last-name"])) {
+
+        $lastname = $options["l"] ?: $options["last-name"];
+        $user->setLastName($lastname);
+    }
+
     $types = array("A"=>"A", "P"=>"P", "D"=>"H", "G"=>"G",);
-	$user->setType($types[$line]);
+    //setting type
+    if (isset($options["t"]) || isset($options["type"])) {
+
+        $type = $options["t"] ?: $options["type"];
+        if (in_array($type, $types)) {
+            $user->setType($type);
+        }
+    }
+
 	$user->save();
-	
-} elseif ($action == "delete") {
-    if ($id < 0){  
+}
+else if ($action == "delete") {
+
+    if ($id < 0){
 		echo "Username not found!\n";
 		exit;
-	} else {
+	}
+    else {
 		echo "Deleting user\n";
 		$user = new Application_Model_User($id);
 		$user->delete();
@@ -145,4 +135,34 @@ function GetAirtimeConf()
     }
 
     return $ini;
+}
+
+function printUsage()
+{
+    echo "\n";
+    echo "airtime-user\n";
+    echo "===============\n";
+    echo "    This program allows you to manage Airtime users.\n";
+    echo "\n";
+    echo "OPTIONS:\n";
+    echo "    airtime-user --addupdate -u|--username <USERNAME> [-p|--password <PASSWORD>] [-t|--type <A|P|D|G>] [-f|--first-name 'Name'] [-l|--last-name 'Name'] \n";
+    echo "        Add the user or update user information.\n";
+    echo "\n";
+    echo "    airtime-user --delete -u|--username <USERNAME>\n";
+    echo "        Remove the user.\n";
+    echo "\n";
+}
+
+/**
+ * Ensures that the user is running this PHP script with root
+ * permissions. If not running with root permissions, causes the
+ * script to exit.
+ */
+function exitIfNotRoot()
+{
+    // Need to check that we are superuser before running this.
+    if(exec("whoami") != "root"){
+        echo "Must be root user.\n";
+        exit(1);
+    }
 }
