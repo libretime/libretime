@@ -103,8 +103,14 @@ try:
 
     #restart airtime-playout   
     print "* Waiting for pypo processes to start..."
-    p = Popen("/etc/init.d/airtime-playout stop", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
+    if os.environ["liquidsoap_keep_alive"] == "f":
+        print " * Restarting any previous Liquidsoap instances"
+        p = Popen("/etc/init.d/airtime-playout stop", shell=True)
+        sts = os.waitpid(p.pid, 0)[1]
+    else:
+        print " * Keeping any previous Liquidsoap instances running"
+        p = Popen("/etc/init.d/airtime-playout pypo_stop", shell=True)
+        sts = os.waitpid(p.pid, 0)[1]
     p = Popen("/etc/init.d/airtime-playout start-no-monit", shell=True)
     sts = os.waitpid(p.pid, 0)[1]
     
