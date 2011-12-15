@@ -3,8 +3,8 @@ import shutil
 from subprocess import Popen, PIPE
 import sys
 import os
-sys.path.append('/usr/lib/airtime/api_clients/')
-import api_client
+sys.path.append('/usr/lib/airtime/')
+from api_clients import api_client
 from configobj import ConfigObj
 
 if os.geteuid() != 0:
@@ -54,7 +54,7 @@ def generate_liquidsoap_config(ss):
                 temp = "0"
             buffer += temp
         buffer += "\n"
-        fh.write(buffer)
+        fh.write(api_client.encode_to(buffer))
     fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
     fh.close()
     
@@ -93,8 +93,8 @@ try:
 
     #generate liquidsoap config file
     #access the DB and generate liquidsoap.cfg under /etc/airtime/
-    api_client = api_client.api_client_factory(config)
-    ss = api_client.get_stream_setting()
+    ac = api_client.api_client_factory(config)
+    ss = ac.get_stream_setting()
         
     if ss is not None:
         generate_liquidsoap_config(ss)

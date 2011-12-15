@@ -204,7 +204,7 @@ class PypoFetch(Thread):
                         temp = "0"
                     buffer += temp
                 buffer += "\n"
-                fh.write(buffer)
+                fh.write(api_client.encode_to(buffer))
             fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
             fh.close()
             # restarting pypo.
