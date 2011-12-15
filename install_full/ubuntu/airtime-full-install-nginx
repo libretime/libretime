@@ -2,6 +2,9 @@
 #
 # Auto install script for airtime on Ubuntu
 #
+# NGINX changes are contributed by Eugene MechanisM
+# Link to the post:
+# http://forum.sourcefabric.org/discussion/13563/first-step-to-run-airtime-via-nginx-based-on-airtime-2.0-beta-files
 
 exec > >(tee install_log.txt)
 exec 2>&1
@@ -24,7 +27,7 @@ echo "----------------------------------------------------"
 
 dist=`lsb_release -is`
 
-if [ "$dist" = "Debian" ]; then
+if [ "$dist" -eq "Debian" ]; then
     grep "deb http://www.debian-multimedia.org squeeze main non-free" /etc/apt/sources.list
     if [ "$?" -ne "0" ]; then
         echo "deb http://www.debian-multimedia.org squeeze main non-free" >> /etc/apt/sources.list
@@ -34,7 +37,7 @@ fi
 apt-get update
 
 # Updated package list
-apt-get -y install tar gzip curl apache2 php5-pgsql libapache2-mod-php5 \
+apt-get -y install tar gzip curl nginx php5-pgsql php5-fpm \
 php-pear php5-gd postgresql odbc-postgresql python2.6 libsoundtouch-ocaml \
 libtaglib-ocaml libao-ocaml libmad-ocaml ecasound \
 libesd0 libportaudio2 libsamplerate0 rabbitmq-server patch \
@@ -56,18 +59,27 @@ fi
 pear channel-discover pear.phing.info
 pear install phing/phing-2.4.2
 
-# Apache Config File
+# NGINX Config File
 echo "----------------------------------------------------"
-echo "2. Apache Config File"
+echo "2.1 NGINX Config File"
 echo "----------------------------------------------------"
-if [ ! -f /etc/apache2/sites-available/airtime ]; then
-	cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
-	rm -rf /etc/apache2/sites-enabled/000-default
-	ln -s /etc/apache2/sites-available/airtime /etc/apache2/sites-enabled/airtime
-	a2enmod rewrite php5
-	service apache2 restart
+if [ ! -f /etc/nginx/sites-available/airtime ]; then
+	cp $SCRIPTPATH/../nginx/airtime-vhost /etc/nginx/sites-available/airtime 
+	ln -s /etc/nginx/sites-available/airtime /etc/nginx/sites-enabled/airtime
+	service nginx reload
 else
-	echo "Apache config for Airtime already exists..."
+	echo "NGINX config for Airtime already exists..."
+fi
+
+# php-fpm Airtime pool file
+echo "----------------------------------------------------"
+echo "2.2 Airtime php pool file"
+echo "----------------------------------------------------"
+if [ ! -f /etc/php5/fpm/pool.d/airtime.conf ]; then
+	cp $SCRIPTPATH/../php5-fpm/airtime.conf /etc/php5/fpm/pool.d/airtime.conf 
+	service php5-fpm reload
+else
+	echo "Airtime php pool file already exists..."
 fi
 
 # Enable Icecast
@@ -90,7 +102,7 @@ grep -q "include /etc/monit/conf.d" /etc/monit/monitrc
 RETVAL=$?
 if [ $RETVAL -ne 0 ] ; then
     mkdir -p /etc/monit/conf.d
-    echo "include /etc/monit/conf.d/*" >> /etc/monit/monitrc
+    echo "include /etc/monit/conf.d/*" >> /etc/monit/monitrc 
 fi
 
 # Run Airtime Install

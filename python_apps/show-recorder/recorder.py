@@ -47,7 +47,7 @@ def getDateTimeObj(time):
     timeinfo = time.split(" ")
     date = timeinfo[0].split("-")
     time = timeinfo[1].split(":")
-    
+
     date = map(int, date)
     time = map(int, time)
 
@@ -55,12 +55,11 @@ def getDateTimeObj(time):
 
 class ShowRecorder(Thread):
 
-    def __init__ (self, show_instance, show_name, filelength, start_time, filetype):
+    def __init__ (self, show_instance, show_name, filelength, start_time):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.filelength = filelength
         self.start_time = start_time
-        self.filetype = filetype
         self.show_instance = show_instance
         self.show_name = show_name
         self.logger = logging.getLogger('root')
@@ -70,7 +69,13 @@ class ShowRecorder(Thread):
         length = str(self.filelength)+".0"
         filename = self.start_time
         filename = filename.replace(" ", "-")
-        filepath = "%s%s.%s" % (config["base_recorded_files"], filename, self.filetype)
+
+        if config["record_file_type"] in ["mp3", "ogg"]:
+            filetype = config["record_file_type"]
+        else:
+            filetype = "ogg";
+
+        filepath = "%s%s.%s" % (config["base_recorded_files"], filename, filetype)
 
         br = config["record_bitrate"]
         sr = config["record_samplerate"]
@@ -218,7 +223,7 @@ class CommandListener():
             show_starts = getDateTimeObj(show[u'starts'])
             show_end = getDateTimeObj(show[u'ends'])
             time_delta = show_end - show_starts
-            
+
             self.shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name']]
             delta = self.get_time_till_next_show()
             # awake at least 5 seconds prior to the show start
@@ -256,14 +261,14 @@ class CommandListener():
                 show_length = self.shows_to_record[start_time][0]
                 show_instance = self.shows_to_record[start_time][1]
                 show_name = self.shows_to_record[start_time][2]
-                
+
                 T = pytz.timezone(self.server_timezone)
                 start_time_on_UTC = getDateTimeObj(start_time)
                 start_time_on_server = start_time_on_UTC.replace(tzinfo=pytz.utc).astimezone(T)
                 start_time_formatted = '%(year)d-%(month)02d-%(day)02d %(hour)02d:%(min)02d:%(sec)02d' % \
                     {'year': start_time_on_server.year, 'month': start_time_on_server.month, 'day': start_time_on_server.day,\
                      'hour': start_time_on_server.hour, 'min': start_time_on_server.minute, 'sec': start_time_on_server.second}
-                self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time_formatted, filetype="mp3")
+                self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time_formatted)
                 self.sr.start()
 
                 #remove show from shows to record.

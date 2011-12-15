@@ -6,6 +6,7 @@ $(document).ready(function() {
 		runtimes : 'gears, html5, html4',
 		url : '/Plupload/upload/format/json',
 		chunk_size: '5mb',
+		unique_names: 'true',
 		multiple_queues : 'true',
 		filters : [
 			{title: "Audio Files", extensions: "ogg,mp3"}
@@ -51,7 +52,6 @@ $(document).ready(function() {
 	uploader.bind('UploadComplete', function(){
 		uploadProgress = false;
 	});
-	
 	
 	$(window).bind('beforeunload', function(){
 		if(uploadProgress){
