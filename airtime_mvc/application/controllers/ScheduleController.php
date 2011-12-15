@@ -246,7 +246,7 @@ class ScheduleController extends Zend_Controller_Action
                         'callback' => 'window["beginEditShow"]'), 'title' => 'Edit Show');
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params,
                         'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
-                if ($show->getShow()->isRepeating()) {
+                if ($show->getShow()->isRepeating() || $show->getShow()->isRebroadcast()) {
                     $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
                             'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
                 }
