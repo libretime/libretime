@@ -124,7 +124,7 @@ function dayClick(date, allDay, jsEvent, view) {
         }
         
         // get current duration value on the form
-        var duration_string = $("#add_show_duration").val();//60 * 60* 1000;
+        var duration_string = $.trim($("#add_show_duration").val());
         var duration_info = duration_string.split(" ");
         var duration_h = 0;
         var duration_m = 0;
@@ -134,14 +134,13 @@ function dayClick(date, allDay, jsEvent, view) {
         if(duration_info[1] != null){
             duration_m = parseInt(duration_info[1], 10);
         }
-        
         // duration in milisec
         var duration = (duration_h * 60 * 60 * 1000) + (duration_m * 60 * 1000);
         
         // get start time value on the form
         var startTime_string = $("#add_show_start_time").val();
         var startTime_info = startTime_string.split(':');
-        var startTime = (startTime_info[0] * 60 * 60 * 1000) + (startTime_info[1] * 60 * 1000);
+        var startTime = (parseInt(startTime_info[0],10) * 60 * 60 * 1000) + (parseInt(startTime_info[1], 10) * 60 * 1000);
         
         // calculate endDateTime
         var endDateTime = new Date(selected.getTime() + startTime + duration);
