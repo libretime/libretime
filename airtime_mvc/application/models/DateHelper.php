@@ -234,7 +234,10 @@ class Application_Model_DateHelper
         }
 
         list($hours, $minutes, $seconds) = explode(":", $hhmmss);
-
+        
+        // keep ms in 3 digits
+        $ms = substr($ms, 0, 3);
+        
         $totalSeconds = $hours*3600 + $minutes*60 + $seconds + $ms/1000;
 
         return $totalSeconds;
