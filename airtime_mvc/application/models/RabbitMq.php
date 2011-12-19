@@ -21,7 +21,8 @@ class Application_Model_RabbitMq
         $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
                                          $CC_CONFIG["rabbitmq"]["port"],
                                          $CC_CONFIG["rabbitmq"]["user"],
-                                         $CC_CONFIG["rabbitmq"]["password"]);
+                                         $CC_CONFIG["rabbitmq"]["password"],
+                                         $CC_CONFIG["rabbitmq"]["vhost"]);
         $channel = $conn->channel();
         $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false, true, true);
 
