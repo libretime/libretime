@@ -217,7 +217,7 @@ class Application_Model_DateHelper
      * @param int $p_time
      *      The time interval in format HH:MM:SS.mm we wish to
      *      convert to seconds.
-     * @return int
+     * @return float
      *      The input parameter converted to seconds.
      */
     public static function calculateLengthInSeconds($p_time){
