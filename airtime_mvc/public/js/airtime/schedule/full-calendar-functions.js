@@ -123,23 +123,35 @@ function dayClick(date, allDay, jsEvent, view) {
             $(span).remove();
         }
         
-        // 1 hr
-        var duration = 60 * 60* 1000;
+        // get current duration value on the form
+        var duration_string = $("#add_show_duration").val();//60 * 60* 1000;
+        var duration_info = duration_string.split(" ");
+        var duration_h = 0;
+        var duration_m = 0;
+        if(duration_info[0] != null){
+            duration_h = parseInt(duration_info[0], 10);
+        }
+        if(duration_info[1] != null){
+            duration_m = parseInt(duration_info[1], 10);
+        }
         
-        var endDateTime = new Date(selected.getTime() + duration);
+        // duration in milisec
+        var duration = (duration_h * 60 * 60 * 1000) + (duration_m * 60 * 1000);
+        
+        // get start time value on the form
+        var startTime_string = $("#add_show_start_time").val();
+        var startTime_info = startTime_string.split(':');
+        var startTime = (startTime_info[0] * 60 * 60 * 1000) + (startTime_info[1] * 60 * 1000);
+        
+        // calculate endDateTime
+        var endDateTime = new Date(selected.getTime() + startTime + duration);
         
         chosenDate = selected.getFullYear() + '-' + pad(selected.getMonth()+1,2) + '-' + pad(selected.getDate(),2);
-        chosenTime = pad(selected.getHours(),2) + ':' + pad(selected.getMinutes(),2);
         var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
-        var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
 
         $("#add_show_start_date").val(chosenDate);
         $("#add_show_end_date_no_repeat").val(endDateFormat);
-        $("#add_show_end_date").datepicker("option", "minDate", endDateFormat);
         $("#add_show_end_date").val(endDateFormat);
-        $("#add_show_start_time").val(chosenTime);
-        $("#add_show_end_time").val(endTimeFormat);
-        $("#add_show_duration").val('1h');
         $("#schedule-show-when").show();
 
 	    openAddShowForm();
