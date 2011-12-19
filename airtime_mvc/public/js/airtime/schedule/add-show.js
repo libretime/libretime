@@ -444,12 +444,7 @@ function showErrorSections() {
 }
 
 $(document).ready(function() {
-    $.mask.masks = $.extend($.mask.masks,{
-        date:{ mask: '9999-19-39', selectCharsOnFocus: true, autoTab: false},
-        time:{ mask: '29:69', selectCharsOnFocus: true, autoTab: false}
-    })
-    
-    $('input:text').setMask()
+    setAddShowEvents();
 });
 
 //Alert the error and reload the page
@@ -474,17 +469,5 @@ $(window).resize(function(){
 	var mainHeight = document.documentElement.clientHeight - 200 - 50;
 	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight)
 	$("#schedule_calendar").fullCalendar('render');
-	
-});
-
-$(window).load(function() {
-    $.mask.masks = $.extend($.mask.masks,{
-        date:{ mask: '9999-19-39', selectCharsOnFocus: true, autoTab: false},
-        time:{ mask: '29:69', selectCharsOnFocus: true, autoTab: false}
-    })
-    
-    $('input:text').setMask()
-    
-	setAddShowEvents();
 	
 });
