@@ -11,16 +11,6 @@ function startDpSelect(dateText, inst) {
 	time = dateText.split("-");
 	date = new Date(time[0], time[1] - 1, time[2]);
 
-	$("#add_show_end_date").datepicker({
-	    minDate: date,
-	    closeText: 'Close',
-	    showButtonPanel: true
-	});
-    $('input[name^="add_show_rebroadcast_absolute_date"]').datepicker({
-        minDate: date,
-        closeText: 'Close',
-        showButtonPanel: true
-    });
     if (inst.input)
         inst.input.trigger('change');
 }
@@ -455,12 +445,11 @@ function showErrorSections() {
 
 $(document).ready(function() {
     $.mask.masks = $.extend($.mask.masks,{
-        date:{ mask: '9999-19-39'},
-        time:{ mask: '29:69'}
+        date:{ mask: '9999-19-39', selectCharsOnFocus: true, autoTab: false},
+        time:{ mask: '29:69', selectCharsOnFocus: true, autoTab: false}
     })
     
     $('input:text').setMask()
-	//setAddShowEvents();
 });
 
 //Alert the error and reload the page
@@ -490,8 +479,8 @@ $(window).resize(function(){
 
 $(window).load(function() {
     $.mask.masks = $.extend($.mask.masks,{
-        date:{ mask: '9999-19-39'},
-        time:{ mask: '29:69'}
+        date:{ mask: '9999-19-39', selectCharsOnFocus: true, autoTab: false},
+        time:{ mask: '29:69', selectCharsOnFocus: true, autoTab: false}
     })
     
     $('input:text').setMask()
