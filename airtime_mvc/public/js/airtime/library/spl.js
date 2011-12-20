@@ -38,7 +38,7 @@ function changeCueIn(event) {
 	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
 	url = "/Playlist/set-cue";
-	cueIn = span.text().trim();
+	cueIn = $.trim(span.text());
 	li = span.parent().parent().parent().parent();
 	unqid = li.attr("unqid");
 
@@ -71,7 +71,7 @@ function changeCueOut(event) {
 	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
 	url = "/Playlist/set-cue";
-	cueOut = span.text().trim();
+	cueOut = $.trim(span.text());
 	li = span.parent().parent().parent().parent();
 	unqid = li.attr("unqid");
 
@@ -104,7 +104,7 @@ function changeFadeIn(event) {
 	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
 	url = "/Playlist/set-fade";
-	fadeIn = span.text().trim();
+	fadeIn = $.trim(span.text());
 	li = span.parent().parent().parent().parent();
 	unqid = li.attr("unqid");
 
@@ -136,7 +136,7 @@ function changeFadeOut(event) {
 	span = $(this);
 	pos = span.parent().attr("id").split("_").pop();
 	url = "/Playlist/set-fade";
-	fadeOut = span.text().trim();
+	fadeOut = $.trim(span.text());
 	li = span.parent().parent().parent().parent();
 	unqid = li.attr("unqid");
 
@@ -476,7 +476,7 @@ function setUpSPL() {
 
 	    span = $(this);
 	    url = "/Playlist/set-playlist-fades";
-	    fadeIn = span.text().trim();
+	    fadeIn = $.trim(span.text());
 
 	    if(!isTimeValid(fadeIn)){
             showError(span, "please put in a time '00:00:00 (.000000)'");
@@ -502,7 +502,7 @@ function setUpSPL() {
 
 	    span = $(this);
 	    url = "/Playlist/set-playlist-fades";
-	    fadeOut = span.text().trim();
+	    fadeOut = $.trim(span.text());
 
 	    if(!isTimeValid(fadeOut)){
             showError(span, "please put in a time '00:00:00 (.000000)'");
