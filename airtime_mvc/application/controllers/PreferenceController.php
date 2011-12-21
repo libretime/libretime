@@ -133,6 +133,7 @@ class PreferenceController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js','text/javascript');
 
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();

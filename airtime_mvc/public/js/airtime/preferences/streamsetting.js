@@ -174,5 +174,16 @@ $(document).ready(function() {
     
     showErrorSections()
     setInterval('checkLiquidsoapStatus()', 1000)
+    $.mask.rules = {
+        '@': /[^ &<>]/,
+        'u': /[0-9a-zA-Z-_.:/]/
+    }
+    // add masking on the fields that don't allow special chars
+    
+    $.mask.masks = $.extend($.mask.masks,{
+         regular_text:{ mask: '@', type:'repeat', 'maxLength': 256, selectCharsOnFocus: false, autoTab: false, fixedChars : '[(),:/]'},
+         url:{ mask: 'u', type:'repeat', 'maxLength': 261, selectCharsOnFocus: false, autoTab: false, fixedChars : '[(),]'}
+     })
+    $('input:text').setMask()
     
 });
