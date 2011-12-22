@@ -84,12 +84,12 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $host->setLabel("Server")
                 ->setValue(isset($setting[$prefix.'_host'])?$setting[$prefix.'_host']:"")
                 ->setValidators(array(
-                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
+                        array('regex', false, array('/^[0-9a-zA-Z-_.]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
             $host->setAttrib("disabled", "disabled");
         }
-        $host->setAttrib('alt', 'regular_text');
+        $host->setAttrib('alt', 'domain');
         $this->addElement($host);
 
         $port = new Zend_Form_Element_Text('port');
