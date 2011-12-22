@@ -450,6 +450,28 @@ COMMENT ON TABLE "cc_subjs" IS '';
 
 SET search_path TO public;
 -----------------------------------------------------------------------------
+-- cc_subjs_token
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_subjs_token" CASCADE;
+
+
+CREATE TABLE "cc_subjs_token"
+(
+	"id" serial  NOT NULL,
+	"user_id" INTEGER  NOT NULL,
+	"action" VARCHAR(255)  NOT NULL,
+	"token" VARCHAR(40)  NOT NULL,
+	"created" TIMESTAMP  NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "cc_subjs_token_idx" UNIQUE ("token")
+);
+
+COMMENT ON TABLE "cc_subjs_token" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
 -- cc_country
 -----------------------------------------------------------------------------
 
@@ -557,3 +579,5 @@ ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_inst_fkey" FOREIGN KEY ("insta
 ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_file_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_subjs_token" ADD CONSTRAINT "cc_subjs_token_userid_fkey" FOREIGN KEY ("user_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;

@@ -325,6 +325,19 @@
       <unique-column name="login"/>
     </unique>
   </table>
+  <table name="cc_subjs_token" phpName="CcSubjsToken">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user_id" phpName="DbUserId" type="INTEGER" required="true"/>
+    <column name="action" phpName="DbAction" type="VARCHAR" size="255" required="true"/>
+    <column name="token" phpName="DbToken" type="VARCHAR" size="40" required="true"/>
+    <column name="created" phpName="DbCreated" type="TIMESTAMP" required="true"/>
+    <unique name="cc_subjs_token_idx">
+      <unique-column name="token"/>
+    </unique>
+    <foreign-key foreignTable="cc_subjs" name="cc_subjs_token_userid_fkey" onDelete="CASCADE">
+      <reference local="user_id" foreign="id"/>
+    </foreign-key>
+  </table>
   <table name="cc_country" phpName="CcCountry">
     <column name="isocode" phpName="DbIsoCode" primaryKey="true" type="CHAR" size="3" required="true"/>
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true"/>
