@@ -68,8 +68,10 @@ class Application_Form_StreamSetting extends Zend_Form
     }
 
     public function isValid($data){
-        $this->populate(array("output_sound_device"=>$data['output_sound_device'], "icecast_vorbis_metadata"=>$data['icecast_vorbis_metadata'],
+        if($data['output_sound_device']){
+            $this->populate(array("output_sound_device"=>$data['output_sound_device'], "icecast_vorbis_metadata"=>$data['icecast_vorbis_metadata'],
                                 "output_sound_device_type"=>$data['output_sound_device_type'], "streamFormat"=>$data['streamFormat']));
+        }
         return true;
     }
 }
