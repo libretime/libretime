@@ -41,10 +41,11 @@ try:
         print 'Error loading config file: ', e
         sys.exit(1)
 
-    
+
     #copy monit files
-    shutil.copy('%s/../monit-airtime-show-recorder.cfg'%current_script_dir, '/etc/monit/conf.d/')
-    shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')    
+    if os.environ["disable_auto_start_services"] == "f": 
+        shutil.copy('%s/../monit-airtime-show-recorder.cfg'%current_script_dir, '/etc/monit/conf.d/')
         
     #create temporary media-storage directory
     #print "Creating temporary media storage directory"

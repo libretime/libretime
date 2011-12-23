@@ -42,8 +42,9 @@ try:
         sys.exit(1)
     
     #copy monit files
-    shutil.copy('%s/../monit-airtime-media-monitor.cfg'%current_script_dir, '/etc/monit/conf.d/')
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    if os.environ["disable_auto_start_services"] == "f":
+        shutil.copy('%s/../monit-airtime-media-monitor.cfg'%current_script_dir, '/etc/monit/conf.d/')
     
     #create log dir
     create_dir(config['log_dir'])
