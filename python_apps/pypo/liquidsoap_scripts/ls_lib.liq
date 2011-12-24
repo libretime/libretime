@@ -37,15 +37,17 @@ def to_live(old,new) =
 end
 
 
-def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream) =
+def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, connected) =
     def on_error(msg)
-        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{time}")
-        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{time}")
+        connected := "false"
+        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time}")
+        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time}")
         5.
     end
     def on_connect()
-        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{time}")
-        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{time}")
+        connected := "true"
+        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time}")
+        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time}")
     end
     if output_type == "icecast" then
         user_ref = ref user
@@ -136,7 +138,8 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         if url == "" then
             url_ref := "N/A"
         end
-        output.shoutcast = output.shoutcast(host = host,
+        output.shoutcast = output.shoutcast(id = "shoutcast_stream_#{stream}",
+                    host = host,
                     port = port,
                     password = pass,
                     fallible = true,
