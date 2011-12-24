@@ -8,7 +8,9 @@
  * that the user can customize these.
  */
  
-$ini = parse_ini_file('/etc/airtime/airtime.conf', true);
+
+$configFile = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+$ini = parse_ini_file($configFile, true);
 
 $dbhost = $ini['database']['host'];
 $dbname = $ini['database']['dbname'];
