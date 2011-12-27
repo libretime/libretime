@@ -25,7 +25,7 @@ class Application_Model_Email {
         $mail = new Zend_Mail('utf-8');
         $mail->setSubject($subject);
         $mail->setBodyText($message);
-        $mail->setFrom(isset($from) ? $from : 'naomiaro@gmail.com');
+        $mail->setFrom(isset($from) ? $from : 'naomi.aro@sourcefabric.org');
 
         foreach ((array) $tos as $to) {
             $mail->addTo($to);

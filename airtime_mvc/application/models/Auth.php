@@ -12,7 +12,7 @@ class Application_Model_Auth {
 	   $info = new CcSubjsToken();
 	   $info->setDbUserId($user_id);
 	   $info->setDbAction($action);
-	   $info->setDbToken(sha1($token + $salt));
+	   $info->setDbToken(sha1($token.$salt));
 	   $info->setDbCreated(gmdate('Y-m-d H:i:s'));
 	   $info->save();
 	   
@@ -23,12 +23,15 @@ class Application_Model_Auth {
 	{
         $token = $this->generateToken('password.restore', $user->getDbId());
                
-        $e_link = $view->url(array('user_id' => $user->getDbId(), 
+        $e_link_protocol = empty($_SERVER['HTTPS']) ? "http" : "https";
+        $e_link_base = $_SERVER['SERVER_NAME'];
+        $e_link_path = $view->url(array('user_id' => $user->getDbId(), 
                                     'token' => $token
                                     ), 
                                     'password-change');
        
-        $message = "Click this link: {$e_link}";
+        $message = "Click this link: {$e_link_protocol}://{$e_link_base}{$e_link_path}";
+       
 	    Application_Model_Email::send('Airtime Password Reset', $message, $user->getDbEmail());
 	}
 	
@@ -47,7 +50,7 @@ class Application_Model_Auth {
         $token_info = CcSubjsTokenQuery::create()
            ->filterByDbAction($action)
            ->filterByDbUserId($user_id)
-           ->filterByDbToken(sha1($token + $salt))
+           ->filterByDbToken(sha1($token.$salt))
            ->findOne();
 
         if (empty($token_info)) {

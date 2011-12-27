@@ -24,7 +24,7 @@ class AuthController extends Zend_Controller_Action
                 $auth = new Application_Model_Auth();
                 
                 $auth->sendPasswordRestoreLink($user, $this->view);
-                //$this->_helper->redirector('password-restore-after', 'auth');
+                $this->_helper->redirector('password-restore-after', 'auth');
             } 
             else {
                 $form->email->addError($this->view->translate("Given email not found."));
