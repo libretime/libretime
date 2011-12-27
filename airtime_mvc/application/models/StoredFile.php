@@ -409,11 +409,13 @@ class Application_Model_StoredFile {
      * @return string
      */
     public function getFilePath()
-    {
+    {        
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
+        $directory = $music_dir->getDirectory();
+        
         $filepath = $this->_file->getDbFilepath();
 
-        return $music_dir->getDirectory().$filepath;
+        return $directory.$filepath;
     }
 
     /**
@@ -877,8 +879,13 @@ class Application_Model_StoredFile {
 
         $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
-        $r = @copy($audio_file, $audio_stor);
-        $r = @unlink($audio_file);
+        Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
+        
+        //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
+        $r = @rename($audio_file, $audio_stor);
+        
+        //$r = @copy($audio_file, $audio_stor);
+        //$r = @unlink($audio_file);
     }
 
     public static function getFileCount()

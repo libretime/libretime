@@ -23,7 +23,9 @@ $CC_CONFIG = array(
     'phingPath'      =>  dirname(__FILE__).'/../../library/phing'
 );
 
-Config::loadConfig("/etc/airtime/airtime.conf");
+
+$configFile = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+Config::loadConfig($configFile);
 
 // Add database table names
 $CC_CONFIG['playListTable'] = $CC_CONFIG['tblNamePrefix'].'playlist';

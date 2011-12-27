@@ -216,6 +216,41 @@ class PypoFetch(Thread):
             self.process_schedule(self.schedule_data, "scheduler", False)
         else:
             logger.info("No change detected in setting...")
+            self.update_liquidsoap_connection_status()
+    """
+        updates the status of liquidsoap connection to the streaming server
+        This fucntion updates the bootup time variable in liquidsoap script
+    """
+    def update_liquidsoap_connection_status(self):
+        logger = logging.getLogger('fetch')
+        tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+        # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
+        # we are manually adjusting the bootup time variable so the status msg will get
+        # updated.
+        current_time = time.time()
+        boot_up_time_command = "vars.bootup_time "+str(current_time)+"\n"
+        tn.write(boot_up_time_command)
+        tn.write("streams.connection_status\n")
+        tn.write('exit\n')
+        
+        output = tn.read_all()
+        output_list = output.split("\r\n")
+        stream_info = output_list[2]
+        
+        # streamin info is in the form of:
+        # eg. s1:true,2:true,3:false
+        streams = stream_info.split(",")
+        logger.info(streams)
+        
+        fake_time = current_time + 1
+        for s in streams:
+            info = s.split(':')
+            stream_id = info[0]
+            status = info[1]
+            if(status == "true"):
+                self.api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
+                
+        
         
     def set_export_source(self, export_source):
         logger = logging.getLogger('fetch')

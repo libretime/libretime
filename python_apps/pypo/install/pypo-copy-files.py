@@ -42,9 +42,11 @@ try:
         sys.exit(1)
     
     #copy monit files
-    shutil.copy('%s/../monit-airtime-playout.cfg'%current_script_dir, '/etc/monit/conf.d/')
-    shutil.copy('%s/../monit-airtime-liquidsoap.cfg'%current_script_dir, '/etc/monit/conf.d/')
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    shutil.copy('%s/../../monit/monit-airtime-rabbitmq-server.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    if os.environ["disable_auto_start_services"] == "f": 
+        shutil.copy('%s/../monit-airtime-liquidsoap.cfg'%current_script_dir, '/etc/monit/conf.d/')
+        shutil.copy('%s/../monit-airtime-playout.cfg'%current_script_dir, '/etc/monit/conf.d/')
 
     #create pypo log dir
     create_dir(config['pypo_log_dir'])
