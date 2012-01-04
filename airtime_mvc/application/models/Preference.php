@@ -680,6 +680,18 @@ class Application_Model_Preference
         return $val;
     }
     
+    public static function SetDiskQuota($value){
+        self::SetValue("disk_quota", $value, false);
+    }
+    
+    public static function GetDiskQuota(){
+        $val = self::GetValue("disk_quota");
+        if(strlen($val) == 0) {
+            $val = "0";
+        }
+        return $val;
+    }
+    
     /* User specific preferences end */
 }
 
