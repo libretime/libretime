@@ -52,6 +52,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 		$this->addElement('checkbox', 'add_show_no_end', array(
             'label'      => 'No End?',
             'required'   => false,
+            'checked' => true,
 		));
     }
 
