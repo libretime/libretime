@@ -182,6 +182,7 @@ class LibraryController extends Zend_Controller_Action
     public function contentsAction()
     {
         $post = $this->getRequest()->getPost();
+        Logging::log(print_r($post, true));
         $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($post);
 
         //format clip lengh to 1 decimal

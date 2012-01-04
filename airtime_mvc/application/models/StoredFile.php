@@ -666,9 +666,8 @@ class Application_Model_StoredFile {
 		    UNION
 
 		    (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
-
+		
 		return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
-
 	}
 
 	public static function searchPlaylistsForSchedule($datatables)
@@ -690,7 +689,12 @@ class Application_Model_StoredFile {
 			$searchTerms = explode(" ", $data["sSearch"]);
 
 		$selectorCount = "SELECT COUNT(*)";
-		$selectorRows = "SELECT ". join("," , $columnsDisplayed);
+		foreach( $columnsDisplayed as $key=>$col){
+		  if($col == ''){
+		      unset($columnsDisplayed[$key]);
+		  }
+		}
+		$selectorRows = "SELECT " . join(',', $columnsDisplayed );
 
         $sql = $selectorCount." FROM ".$fromTable;
 		$totalRows = $CC_DBC->getOne($sql);
@@ -733,7 +737,7 @@ class Application_Model_StoredFile {
 		// End Order By clause
 
 		//ordered by integer as expected by datatables.
-		$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
+		//$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
 
 		if(isset($where)) {
 			$where = join(" AND ", $where);
@@ -746,6 +750,13 @@ class Application_Model_StoredFile {
 		}
 
 		$results = $CC_DBC->getAll($sql);
+		// add checkbox row
+		foreach($results as &$row){
+		    $row['checkbox'] = "<input type='checkbox' name='cb_".$row[id]."'>";
+		}
+		//$results['checkbox']
+		//$results = $CC_DBC->getAssoc($sql);
+		Logging::log(print_r($results, true));
 		//echo $results;
 		//echo $sql;
 

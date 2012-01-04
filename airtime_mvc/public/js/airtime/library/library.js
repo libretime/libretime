@@ -1,13 +1,15 @@
+var dTable;
+
 //used by jjmenu
 function getId() {
-	var tr_id =  $(this.triggerElement).attr("id");
+	var tr_id =  $(this.triggerElement).parent().attr("id");
 	tr_id = tr_id.split("_");
 
 	return tr_id[1];
 }
 
 function getType() {
-	var tr_id =  $(this.triggerElement).attr("id");
+	var tr_id =  $(this.triggerElement).parent().attr("id");
 	tr_id = tr_id.split("_");
 
 	return tr_id[0];
@@ -90,7 +92,7 @@ function addLibraryItemEvents() {
 			cursor: 'pointer'
 		});
 
-	$('#library_display tbody tr')
+	$('#library_display tbody tr td').not('[class=datatable_checkbox]')
 		.jjmenu("click",
 			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
 			{id: getId, type: getType},
@@ -101,20 +103,20 @@ function addLibraryItemEvents() {
 function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 	var id, type, once;
 
-    type = aData[6].substring(0,2);
-    id = aData[0];
+    type = aData["ftype"].substring(0,2);
+    id = aData["id"];
 
     if(type == "au") {
-        $('td:eq(5)', nRow).html( '<img src="css/images/icon_audioclip.png">' );
+        $('td:eq(6)', nRow).html( '<img src="css/images/icon_audioclip.png">' );
     }
     else if(type == "pl") {
-        $('td:eq(5)', nRow).html( '<img src="css/images/icon_playlist.png">' );
+        $('td:eq(6)', nRow).html( '<img src="css/images/icon_playlist.png">' );
     }
 
 	$(nRow).attr("id", type+'_'+id);
 
 	// insert id on lenth field
-	$('td:eq(4)', nRow).attr("id", "length");
+	$('td:eq(5)', nRow).attr("id", "length");
 
 	return nRow;
 }
@@ -123,6 +125,8 @@ function dtDrawCallback() {
 	addLibraryItemEvents();
 	addMetadataQtip();
         saveNumEntriesSetting();
+    var temp = dTable.fnGetData()
+    console.log(temp)
 }
 
 function addProgressIcon(id) {
@@ -298,29 +302,30 @@ function getNumEntriesPreference(data) {
 }
 
 function createDataTable(data) {
-    var dTable = $('#library_display').dataTable( {
+    dTable = $('#library_display').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
 		"sAjaxSource": "/Library/contents/format/json",
-		"fnServerData": function ( sSource, aoData, fnCallback ) {
+		"fnServerData": function ( sSource, aoData, testCallback ) {
 			$.ajax( {
 				"dataType": 'json',
 				"type": "POST",
 				"url": sSource,
 				"data": aoData,
-				"success": fnCallback
+				"success": testCallback
 			} );
 		},
 		"fnRowCallback": dtRowCallback,
 		"fnDrawCallback": dtDrawCallback,
 		"aoColumns": [
-			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false },
-			/* Title */		{ "sTitle": "Title", "sName": "track_title" },
-			/* Creator */	{ "sTitle": "Creator", "sName": "artist_name" },
-			/* Album */		{ "sTitle": "Album", "sName": "album_title" },
-			/* Genre */		{ "sTitle": "Genre", "sName": "genre" },
-			/* Length */	{ "sTitle": "Length", "sName": "length" },
-			/* Type */		{ "sTitle": "Type", "sName": "ftype", "bSearchable": false }
+		    /* Checkbox */  { "sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "datatable_checkbox"  },
+			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id" },
+			/* Title */		{ "sTitle": "Title", "sName": "track_title", "mDataProp": "track_title" },
+			/* Creator */	{ "sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name" },
+			/* Album */		{ "sTitle": "Album", "sName": "album_title", "mDataProp": "album_title" },
+			/* Genre */		{ "sTitle": "Genre", "sName": "genre", "mDataProp": "genre" },
+			/* Length */	{ "sTitle": "Length", "sName": "length", "mDataProp": "length" },
+			/* Type */		{ "sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "50px" },
 		],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",

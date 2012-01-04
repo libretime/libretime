@@ -67,3 +67,11 @@
   -o-user-select: none;
   user-select: none;
 }
+
+.datatable_checkbox {
+    text-align: center;
+}
+
+.datatable_checkbox .DataTables_sort_wrapper {
+    text-align: center;
+}
