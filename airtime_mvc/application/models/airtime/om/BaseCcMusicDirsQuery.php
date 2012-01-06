@@ -9,10 +9,12 @@
  * @method     CcMusicDirsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     CcMusicDirsQuery orderByDirectory($order = Criteria::ASC) Order by the directory column
  * @method     CcMusicDirsQuery orderByType($order = Criteria::ASC) Order by the type column
+ * @method     CcMusicDirsQuery orderByRemoved($order = Criteria::ASC) Order by the removed column
  *
  * @method     CcMusicDirsQuery groupById() Group by the id column
  * @method     CcMusicDirsQuery groupByDirectory() Group by the directory column
  * @method     CcMusicDirsQuery groupByType() Group by the type column
+ * @method     CcMusicDirsQuery groupByRemoved() Group by the removed column
  *
  * @method     CcMusicDirsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcMusicDirsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -28,10 +30,12 @@
  * @method     CcMusicDirs findOneById(int $id) Return the first CcMusicDirs filtered by the id column
  * @method     CcMusicDirs findOneByDirectory(string $directory) Return the first CcMusicDirs filtered by the directory column
  * @method     CcMusicDirs findOneByType(string $type) Return the first CcMusicDirs filtered by the type column
+ * @method     CcMusicDirs findOneByRemoved(boolean $removed) Return the first CcMusicDirs filtered by the removed column
  *
  * @method     array findById(int $id) Return CcMusicDirs objects filtered by the id column
  * @method     array findByDirectory(string $directory) Return CcMusicDirs objects filtered by the directory column
  * @method     array findByType(string $type) Return CcMusicDirs objects filtered by the type column
+ * @method     array findByRemoved(boolean $removed) Return CcMusicDirs objects filtered by the removed column
  *
  * @package    propel.generator.airtime.om
  */
@@ -200,6 +204,23 @@ abstract class BaseCcMusicDirsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcMusicDirsPeer::TYPE, $type, $comparison);
+	}
+
+	/**
+	 * Filter the query on the removed column
+	 * 
+	 * @param     boolean|string $removed The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcMusicDirsQuery The current query, for fluid interface
+	 */
+	public function filterByRemoved($removed = null, $comparison = null)
+	{
+		if (is_string($removed)) {
+			$removed = in_array(strtolower($removed), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcMusicDirsPeer::REMOVED, $removed, $comparison);
 	}
 
 	/**

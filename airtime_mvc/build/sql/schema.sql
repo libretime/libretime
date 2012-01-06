@@ -42,6 +42,7 @@ CREATE TABLE "cc_music_dirs"
 	"id" serial  NOT NULL,
 	"directory" TEXT,
 	"type" VARCHAR(255),
+	"removed" BOOLEAN default 'f',
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_music_dir_unique" UNIQUE ("directory")
 );
@@ -114,6 +115,7 @@ CREATE TABLE "cc_files"
 	"subject" VARCHAR(512),
 	"contributor" VARCHAR(512),
 	"language" VARCHAR(512),
+	"file_exist" BOOLEAN default 't',
 	"soundcloud_id" INTEGER,
 	"soundcloud_error_code" INTEGER,
 	"soundcloud_error_msg" VARCHAR(512),
@@ -548,7 +550,7 @@ ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owne
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
 
-ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey" FOREIGN KEY ("directory") REFERENCES "cc_music_dirs" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey" FOREIGN KEY ("directory") REFERENCES "cc_music_dirs" ("id");
 
 ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey" FOREIGN KEY ("subj") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 

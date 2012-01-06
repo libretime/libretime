@@ -93,6 +93,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('SUBJECT', 'DbSubject', 'VARCHAR', false, 512, null);
 		$this->addColumn('CONTRIBUTOR', 'DbContributor', 'VARCHAR', false, 512, null);
 		$this->addColumn('LANGUAGE', 'DbLanguage', 'VARCHAR', false, 512, null);
+		$this->addColumn('FILE_EXIST', 'DbFileExist', 'BOOLEAN', false, null, true);
 		$this->addColumn('SOUNDCLOUD_ID', 'DbSoundcloudId', 'INTEGER', false, null, null);
 		$this->addColumn('SOUNDCLOUD_ERROR_CODE', 'DbSoundcloudErrorCode', 'INTEGER', false, null, null);
 		$this->addColumn('SOUNDCLOUD_ERROR_MSG', 'DbSoundcloudErrorMsg', 'VARCHAR', false, 512, null);
@@ -106,7 +107,7 @@ class CcFilesTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
-    $this->addRelation('CcMusicDirs', 'CcMusicDirs', RelationMap::MANY_TO_ONE, array('directory' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcMusicDirs', 'CcMusicDirs', RelationMap::MANY_TO_ONE, array('directory' => 'id', ), null, null);
     $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);

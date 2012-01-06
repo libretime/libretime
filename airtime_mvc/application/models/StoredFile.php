@@ -310,8 +310,13 @@ class Application_Model_StoredFile {
             }
         }
 
-        Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
-        $this->_file->delete();
+        // don't delete from the playslist. We might want to put a flag
+        //Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
+        
+        // set file_exist falg to false
+        $this->_file->setDbFileExist(false);
+        $this->_file->save();
+        //$this->_file->delete();
 
         if (isset($res)) {
             return $res;
@@ -426,6 +431,7 @@ class Application_Model_StoredFile {
     public function setFilePath($p_filepath)
     {
         $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
+        Logging::log("path_info:".print_r($path_info, true));
         if (is_null($path_info)) {
             return -1;
         }
@@ -665,7 +671,7 @@ class Application_Model_StoredFile {
 
 		    UNION
 
-		    (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
+		    (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exist = 'TRUE')) AS RESULTS";
 
 		return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
 
@@ -744,7 +750,7 @@ class Application_Model_StoredFile {
 		else {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
-
+		
 		$results = $CC_DBC->getAll($sql);
 		//echo $results;
 		//echo $sql;
@@ -954,6 +960,15 @@ class Application_Model_StoredFile {
 
     public function getSoundCloudErrorMsg(){
         return $this->_file->getDbSoundCloudErrorMsg();
+    }
+    
+    public function setFileExistFlag($flag){
+        $this->_file->setDbFileExist($flag)
+            ->save();
+    }
+    
+    public function getFileExistFlag(){
+        return $this->_file->getDbFileExist();
     }
 
     public function uploadToSoundCloud()

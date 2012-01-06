@@ -40,24 +40,50 @@ class Application_Model_MusicDir {
         $this->_dir->save();
     }
 
+    public function setRemoved($flag){
+        $this->_dir->setRemoved($flag);
+        $this->_dir->save();
+    }
+    
+    public function getRemoved(){
+        return $this->_dir->getRemoved();
+    }
+    
     public function remove()
     {
         global $CC_DBC;
-
+Logging::log("remove!!");
         $music_dir_id = $this->getId();
 
         $sql = "SELECT DISTINCT s.instance_id from cc_music_dirs as md LEFT JOIN cc_files as f on f.directory = md.id
         RIGHT JOIN cc_schedule as s on s.file_id = f.id WHERE md.id = $music_dir_id";
 
         $show_instances = $CC_DBC->GetAll($sql);
+        
+        // get all the files on this dir
+        $sql = "SELECT f.id FROM cc_music_dirs as md LEFT JOIN cc_files as f on f.directory = md.id WHERE md.id = $music_dir_id";
+        $files = $CC_DBC->GetAll($sql);
+        
+        // set file_exist flag to false
+        foreach( $files as $file_row ){
+            Logging::log(print_r($file_row['id'], true));
+            $temp_file = Application_Model_StoredFile::Recall($file_row['id']);
+            $temp_file->setFileExistFlag(false);
+        }
+        
+Logging::log("remove!!222222");
+Logging::log(print_r($this->_dir,true));
 
-        $this->_dir->delete();
-
+        // set Removed flat to true
+        self::setRemoved(true);
+        //$res = $this->_dir->delete();
+        
+Logging::log("remove!!44444");
         foreach ($show_instances as $show_instance_row) {
             $temp_show = new Application_Model_ShowInstance($show_instance_row["instance_id"]);
             $temp_show->updateScheduledTime();
         }
-
+Logging::log("remove end!!");
         Application_Model_RabbitMq::PushSchedule();
     }
 
@@ -93,7 +119,7 @@ class Application_Model_MusicDir {
     public static function isPathValid($p_path){
         $dirs = self::getWatchedDirs();
         $dirs[] = self::getStorDir();
-
+Logging::log("dirs: ".print_r($dirs, true));
         foreach ($dirs as $dirObj){
             $dir = $dirObj->getDirectory();
             $diff = strlen($dir) - strlen($p_path);
@@ -118,7 +144,21 @@ class Application_Model_MusicDir {
         if(!is_dir($p_path)){
             return array("code"=>2, "error"=>"'$p_path' is not a valid directory.");
         }
-        $dir = new CcMusicDirs();
+        $real_path = realpath($p_path)."/";
+        if($real_path != "/"){
+            $p_path = $real_path;
+        }
+        Logging::log("dir:".print_r($p_path, true));
+        $exist_dir = self::getDirByPath($p_path);
+        Logging::log(print_r($exist_dir, true));
+        if( $exist_dir == NULL ){
+            Logging::log("new");
+            $dir = new CcMusicDirs();
+        }else{
+            Logging::log("exist");
+            $dir = $exist_dir;
+        }
+        
         $dir->setType($p_type);
         $p_path = realpath($p_path)."/";
 
@@ -127,9 +167,12 @@ class Application_Model_MusicDir {
             /* isPathValid() checks if path is a substring or a superstring of an
              * existing dir and if not, throws NestedDirectoryException */
             self::isPathValid($p_path);
+            $dir->setRemoved(false);
             $dir->setDirectory($p_path);
-
-            $dir->save();
+ Logging::log("dir obj:".print_r($dir, true));
+            if( $exist_dir == NULL ){
+                $dir->save();
+            }
             return array("code"=>0);
         } catch (NestedDirectoryException $nde){
             $msg = $nde->getMessage();
@@ -200,6 +243,7 @@ class Application_Model_MusicDir {
 
     public static function getDirByPath($p_path)
     {
+        Logging::log($p_path);
         $dir = CcMusicDirsQuery::create()
                     ->filterByDirectory($p_path)
                     ->findOne();
@@ -219,6 +263,7 @@ class Application_Model_MusicDir {
 
         $dirs = CcMusicDirsQuery::create()
                     ->filterByType("watched")
+                    ->filterByRemoved(false)
                     ->find();
 
         foreach($dirs as $dir) {
@@ -248,7 +293,6 @@ class Application_Model_MusicDir {
         }
         $dir = self::getStorDir();
         // if $p_dir doesn't exist in DB
-        $p_dir = realpath($p_dir)."/";
         $exist = $dir->getDirByPath($p_dir);
         if($exist == NULL){
             $dir->setDirectory($p_dir);
@@ -267,6 +311,7 @@ class Application_Model_MusicDir {
     {
         $dirs = CcMusicDirsQuery::create()
                     ->filterByType(array("watched", "stor"))
+                    ->filterByRemoved(false)
                     ->find();
 
         foreach($dirs as $dir) {
@@ -286,6 +331,7 @@ class Application_Model_MusicDir {
             $p_dir = $real_path;
         }
         $dir = Application_Model_MusicDir::getDirByPath($p_dir);
+        Logging::log(print_r($dir,true));
         if($dir == NULL){
             return array("code"=>1,"error"=>"'$p_dir' doesn't exist in the watched list.");
         }else{
@@ -300,7 +346,7 @@ class Application_Model_MusicDir {
     public static function splitFilePath($p_filepath)
     {
         $mus_dir = self::getWatchedDirFromFilepath($p_filepath);
-
+Logging::log("mus_dir:".print_r($mus_dir, true));
         if(is_null($mus_dir)) {
             return null;
         }

@@ -560,7 +560,7 @@ class ApiController extends Zend_Controller_Action
 
         // update import timestamp
         Application_Model_Preference::SetImportTimestamp();
-        
+        Logging::log("mode: ".$mode);
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
@@ -569,10 +569,18 @@ class ApiController extends Zend_Controller_Action
 
             if (is_null($file)) {
                 $file = Application_Model_StoredFile::Insert($md);
+                Logging::log("file: ".print_r($file, true));
             }
             else {
-                $this->view->error = "File already exists in Airtime.";
-                return;
+                // path already exist
+                if($file->getFileExistFlag()){
+                    // file marked as exists
+                    $this->view->error = "File already exists in Airtime.";
+                    return;
+                }else{
+                    // file marked as not exists
+                    $file->setFileExistFlag(true);
+                }
             }
         }
         else if ($mode == "modify") {

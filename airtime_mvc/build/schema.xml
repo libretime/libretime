@@ -28,6 +28,7 @@
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="directory" phpName="Directory" type="LONGVARCHAR" required="false"/>
     <column name="type" phpName="Type" type="VARCHAR" size="255" required="false"/>
+    <column name="removed" phpName="Removed" type="BOOLEAN" required="false" defaultValue="false"/>
     <unique name="cc_music_dir_unique">
       <unique-column name="directory"/>
     </unique>
@@ -88,6 +89,7 @@
     <column name="subject" phpName="DbSubject" type="VARCHAR" size="512" required="false"/>
     <column name="contributor" phpName="DbContributor" type="VARCHAR" size="512" required="false"/>
     <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
+    <column name="file_exist" phpName="DbFileExist" type="BOOLEAN" required="false" defaultValue="true"/>
     <column name="soundcloud_id" phpName="DbSoundcloudId" type="Integer" required="false"/>
     <column name="soundcloud_error_code" phpName="DbSoundcloudErrorCode" type="Integer" required="false"/>
     <column name="soundcloud_error_msg" phpName="DbSoundcloudErrorMsg" type="VARCHAR" size="512" required="false"/>
@@ -95,7 +97,7 @@
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id"/>
     </foreign-key>
-    <foreign-key foreignTable="cc_music_dirs" name="cc_music_dirs_folder_fkey" onDelete="CASCADE">
+    <foreign-key foreignTable="cc_music_dirs" name="cc_music_dirs_folder_fkey">
       <reference local="directory" foreign="id"/>
     </foreign-key>
     <unique name="cc_files_gunid_idx">
