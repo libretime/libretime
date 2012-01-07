@@ -556,7 +556,11 @@ ColVis.prototype = {
 		nSpan.innerHTML = text;
 		
 		$(nButton).bind( sEvent, function (e) {
-			that._fnCollectionShow();
+			if ($(".ColVis_collectionBackground").length == 0) {
+                            that._fnCollectionShow();
+                        } else {
+                            that._fnCollectionHide();
+                        }
 			e.preventDefault();
 		} );
 		
@@ -661,6 +665,7 @@ ColVis.prototype = {
 		nHidden.style.top = iDivY+"px";
 		nHidden.style.left = iDivX+"px";
 		nHidden.style.display = "block";
+                nHidden.style.zIndex = "999";
 		$(nHidden).css('opacity',0);
 		
 		var iWinHeight = $(window).height(), iDocHeight = $(document).height(),
@@ -668,6 +673,7 @@ ColVis.prototype = {
 		
 		nBackground.style.height = ((iWinHeight>iDocHeight)? iWinHeight : iDocHeight) +"px";
 		nBackground.style.width = ((iWinWidth<iDocWidth)? iWinWidth : iDocWidth) +"px";
+                nBackground.style.zIndex = "998";
 		
 		var oStyle = this.dom.catcher.style;
 		oStyle.height = $(this.dom.button).outerHeight()+"px";
