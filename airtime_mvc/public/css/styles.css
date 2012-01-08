@@ -623,13 +623,16 @@ dl.inline-list dd {
     vertical-align: top;
 }
 
-.library_toolbar .ui-button {
+.ColVis.TableTools .ui-button {
+    height: 21px;
+}
+.library_toolbar .ui-button, .ColVis.TableTools .ui-button {
     float: right;
     text-align:center;
     font-size:12px;
     font-weight:normal;
     padding: 0.2em 1em;
-    margin: 0.5em 0.2em;
+    margin: 0.5em 0.2em -0.5em 0.2em;
 }
 
 /*----END Data Table----*/

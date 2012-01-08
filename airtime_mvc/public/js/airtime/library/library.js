@@ -397,8 +397,28 @@ function toggleAll() {
     
     if (checked) {
         checkedCount = $('#library_display tbody tr').size();
+        enableGroupBtn('library_group_add', groupAdd);
+        enableGroupBtn('library_group_delete', confirmDeleteGroup);
     } else {
         checkedCount = 0;
+        disableGroupBtn('library_group_add');
+        disableGroupBtn('library_group_delete');
+    }
+}
+
+function enableGroupBtn(btnId, func) {
+    btnId = '#' + btnId;
+    if ($(btnId).hasClass('ui-state-disabled')) {
+        $(btnId).removeClass('ui-state-disabled');
+        $(btnId).click(func);
+    }
+}
+
+function disableGroupBtn(btnId) {
+    btnId = '#' + btnId;
+    if (!$(btnId).hasClass('ui-state-disabled')) {
+        $(btnId).addClass('ui-state-disabled');
+        $(btnId).unbind("click");
     }
 }
 
@@ -411,10 +431,16 @@ function checkBoxChanged() {
        if (checkedCount < size) {
            checkedCount++;
        }
+       enableGroupBtn('library_group_add', groupAdd);
+       enableGroupBtn('library_group_delete', confirmDeleteGroup);
        $(this).parent().parent().addClass('selected');
     } else {
-        if (!checked && checkedCount > 0) {
+        if (checkedCount > 0) {
             checkedCount--;
+        }
+        if (checkedCount == 0) {
+            disableGroupBtn('library_group_add');
+            disableGroupBtn('library_group_delete');
         }
         $(this).parent().parent().removeClass('selected');
     }
@@ -435,6 +461,9 @@ function setupGroupActions() {
     $('#library_display tbody tr').each(function() {
         $(this).find(":checkbox").change(checkBoxChanged);
     });
+    
+    disableGroupBtn('library_group_add');
+    disableGroupBtn('library_group_delete');
 }
 
 function fnShowHide(iCol) {
@@ -464,12 +493,12 @@ function createDataTable(data) {
 		"aoColumns": [
 		    /* Checkbox */  { "sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
 			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
-			/* Title */		{ "sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
+			/* Title */		{ "sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sWidth": "30%", "sClass": "library_title"},
 			/* Creator */	{ "sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
 			/* Album */		 { "sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
-			/* Genre */		{ "sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sClass": "library_genre"},
-			/* Length */	{ "sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "15%", "sClass": "library_length"},
-			/* Type */		{ "sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "7%", "sClass": "library_type"},
+			/* Genre */		{ "sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
+			/* Length */	{ "sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "16%", "sClass": "library_length"},
+			/* Type */		{ "sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "9%", "sClass": "library_type"},
 		],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
@@ -480,15 +509,18 @@ function createDataTable(data) {
                 },
                 "iDisplayLength": getNumEntriesPreference(data),
                 "bStateSave": true,
-                "sDom": 'lfr<"H"C<"library_toolbar">>t<"F"ip>'
+                "sDom": 'lfr<"H"C<"library_toolbar">>t<"F"ip>',
+                "oColVis": {
+			"sAlign": "right",
+                        "aiExclude": [0, 1, 2],
+                        "sSize": "css"
+		}
     });
     dTable.fnSetFilteringDelay(350);
     
     
-    $("div.library_toolbar").html('<span class="fg-button ui-button ui-state-default" id="library_group_delete">Delete</span>' + 
-        '<span class="fg-button ui-button ui-state-default" id="library_group_add">Add</span>');
-    $('#library_group_add').click(groupAdd);
-    $('#library_group_delete').click(confirmDeleteGroup);
+    $("div.library_toolbar").html('<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_delete">Delete</span>' + 
+        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_add">Add</span>');
 }
 
 $(document).ready(function() {
