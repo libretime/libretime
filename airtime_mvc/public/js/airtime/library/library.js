@@ -1,4 +1,5 @@
 var dTable;
+var checkedCount = 0;
 
 //used by jjmenu
 function getId() {
@@ -32,8 +33,20 @@ function deleteAudioClip(json) {
 		return;
 	}
 
-	deleteItem("au", json.id);
+        if (json.ids != undefined) {
+            for (var i = json.ids.length - 1; i >= 0; i--) {
+                deleteItem("au", json.ids[i]);
+            }
+        } else if (json.id != undefined) {
+            deleteItem("au", json.id);
+        }
 	location.reload(true);
+} 
+
+function confirmDeleteGroup() {
+    if(confirm('Are you sure you want to delete the selected items?')){
+        groupDelete();
+    }
 }
 
 //callbacks called by jjmenu
@@ -75,11 +88,17 @@ function checkImportStatus(){
 
 function deletePlaylist(json) {
 	if(json.message) {
-		alert(json.message);
-		return;
+            alert(json.message);
+            return;
 	}
-
-	deleteItem("pl", json.id);
+        
+        if (json.ids != undefined) {
+            for (var i = json.ids.length - 1; i >= 0; i--) {
+                deleteItem("pl", json.ids[i]);
+            }
+        } else if (json.id != undefined) {
+            deleteItem("pl", json.id);
+        }
 	window.location.reload();
 }
 //end callbacks called by jjmenu
@@ -92,7 +111,7 @@ function addLibraryItemEvents() {
 			cursor: 'pointer'
 		});
 
-	$('#library_display tbody tr td').not('[class=datatable_checkbox]')
+	$('#library_display tbody tr td').not('[class=library_checkbox]')
 		.jjmenu("click",
 			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
 			{id: getId, type: getType},
@@ -105,36 +124,34 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
     type = aData["ftype"].substring(0,2);
     id = aData["id"];
-
+    
     if(type == "au") {
-        $('td:eq(6)', nRow).html( '<img src="css/images/icon_audioclip.png">' );
+        $('td.library_type', nRow).html( '<img src="css/images/icon_audioclip.png">' );
+    } else if(type == "pl") {
+        $('td.library_type', nRow).html( '<img src="css/images/icon_playlist.png">' );
     }
-    else if(type == "pl") {
-        $('td:eq(6)', nRow).html( '<img src="css/images/icon_playlist.png">' );
-    }
 
-	$(nRow).attr("id", type+'_'+id);
+    $(nRow).attr("id", type+'_'+id);
 
-	// insert id on lenth field
-	$('td:eq(5)', nRow).attr("id", "length");
+    // insert id on lenth field
+    $('td.library_length', nRow).attr("id", "length");
 
-	return nRow;
+    return nRow;
 }
 
 function dtDrawCallback() {
-	addLibraryItemEvents();
-	addMetadataQtip();
-        saveNumEntriesSetting();
-    var temp = dTable.fnGetData()
-    console.log(temp)
+    addLibraryItemEvents();
+    addMetadataQtip();
+    saveNumEntriesSetting();
+    setupGroupActions();
 }
 
 function addProgressIcon(id) {
-    if($("#au_"+id).find("td:eq(0)").find("span").length > 0){
-        $("#au_"+id).find("td:eq(0)").find("span").removeClass();
+    if($("#au_"+id).find("td.library_title").find("span").length > 0){
+        $("#au_"+id).find("td.library_title").find("span").removeClass();
         $("span[id="+id+"]").addClass("small-icon progress");
     }else{
-        $("#au_"+id).find("td:eq(0)").append('<span id="'+id+'" class="small-icon progress"></span>')
+        $("#au_"+id).find("td.library_title").append('<span id="'+id+'" class="small-icon progress"></span>')
     }
 }
 
@@ -233,7 +250,7 @@ function addQtipToSCIcons(){
 function addMetadataQtip(){
     var tableRow = $('#library_display tbody tr');
     tableRow.each(function(){
-        var title = $(this).find('td:eq(0)').html()
+        var title = $(this).find('td.library_title').html()
         var info = $(this).attr("id")
         info = info.split("_");
         var id = info[1];
@@ -301,6 +318,133 @@ function getNumEntriesPreference(data) {
     return parseInt(data.libraryInit.numEntries);
 }
 
+function groupAdd() {
+    var ids = new Array();
+    var addGroupUrl = '/Playlist/add-group';
+    var newSPLUrl = '/Playlist/new/format/json';
+    var dirty = true;
+    $('#library_display tbody tr').each(function() {
+        var idSplit = $(this).attr('id').split("_");
+        var id = idSplit.pop();
+        var type = idSplit.pop();
+        if (dirty && $(this).find(":checkbox").attr("checked")) {
+            if (type == "au") {
+                ids.push(id);
+            } else if (type == "pl") {
+                alert("Can't add playlist to another playlist");
+                dirty = false;
+            }
+        }
+    });
+    
+    if (dirty && ids.length > 0) {
+        stopAudioPreview();
+        
+        if ($('#spl_sortable').length == 0) {
+            $.post(newSPLUrl, function(json) {
+                openDiffSPL(json);
+		redrawDataTablePage();
+                
+                $.post(addGroupUrl, {format: "json", ids: ids}, setSPLContent);
+            });
+        } else {
+            $.post(addGroupUrl, {format: "json", ids: ids}, setSPLContent);
+        }
+    }
+}
+
+function groupDelete() {
+    var auIds = new Array();
+    var plIds = new Array();
+    var auUrl = '/Library/delete-group';
+    var plUrl = '/Playlist/delete-group';
+    var dirty = true;
+    $('#library_display tbody tr').each(function() {
+        var idSplit = $(this).attr('id').split("_");
+        var id = idSplit.pop();
+        var type = idSplit.pop();
+        if (dirty && $(this).find(":checkbox").attr("checked")) {
+            if (type == "au") {
+                auIds.push(id);
+            } else if (type == "pl") {
+                plIds.push(id);
+            }
+        }
+    });
+    
+    if (dirty && (auIds.length > 0 || plIds.length > 0)) {
+        stopAudioPreview();
+        
+        if (auIds.length > 0) {
+            $.post(auUrl, {format: "json", ids: auIds}, deleteAudioClip);
+        }
+        if (plIds.length > 0) {
+            $.post(plUrl, {format: "json", ids: plIds}, deletePlaylist);
+        }
+    }
+}
+
+function toggleAll() {
+    var checked = $(this).attr("checked");
+    $('#library_display tr').each(function() {
+        $(this).find(":checkbox").attr("checked", checked);
+        if (checked) {
+            $(this).addClass('selected');
+        } else {
+            $(this).removeClass('selected');
+        }
+    });
+    
+    if (checked) {
+        checkedCount = $('#library_display tbody tr').size();
+    } else {
+        checkedCount = 0;
+    }
+}
+
+function checkBoxChanged() {
+    var cbAll = $('#library_display thead').find(":checkbox");
+    var cbAllChecked = cbAll.attr("checked");
+    var checked = $(this).attr("checked");
+    var size = $('#library_display tbody tr').size();
+    if (checked) {
+       if (checkedCount < size) {
+           checkedCount++;
+       }
+       $(this).parent().parent().addClass('selected');
+    } else {
+        if (!checked && checkedCount > 0) {
+            checkedCount--;
+        }
+        $(this).parent().parent().removeClass('selected');
+    }
+    
+    if (cbAllChecked && checkedCount < size) {
+        cbAll.attr("checked", false);
+    } else if (!cbAllChecked && checkedCount == size) {
+        cbAll.attr("checked", true);
+    }
+    
+    
+}
+
+function setupGroupActions() {
+    checkedCount = 0;
+    $('#library_display tr:nth-child(1)').find(":checkbox").attr("checked", false);
+    $('#library_display thead').find(":checkbox").change(toggleAll);
+    $('#library_display tbody tr').each(function() {
+        $(this).find(":checkbox").change(checkBoxChanged);
+    });
+}
+
+function fnShowHide(iCol) {
+	/* Get the DataTables object again - this is not a recreation, just a get of the object */
+	var oTable = dTable;
+	
+	var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+	oTable.fnSetColumnVis( iCol, bVis ? false : true );
+}
+
 function createDataTable(data) {
     dTable = $('#library_display').dataTable( {
 		"bProcessing": true,
@@ -318,14 +462,14 @@ function createDataTable(data) {
 		"fnRowCallback": dtRowCallback,
 		"fnDrawCallback": dtDrawCallback,
 		"aoColumns": [
-		    /* Checkbox */  { "sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "datatable_checkbox"  },
-			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id" },
-			/* Title */		{ "sTitle": "Title", "sName": "track_title", "mDataProp": "track_title" },
-			/* Creator */	{ "sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name" },
-			/* Album */		{ "sTitle": "Album", "sName": "album_title", "mDataProp": "album_title" },
-			/* Genre */		{ "sTitle": "Genre", "sName": "genre", "mDataProp": "genre" },
-			/* Length */	{ "sTitle": "Length", "sName": "length", "mDataProp": "length" },
-			/* Type */		{ "sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "50px" },
+		    /* Checkbox */  { "sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
+			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
+			/* Title */		{ "sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
+			/* Creator */	{ "sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
+			/* Album */		 { "sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
+			/* Genre */		{ "sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sClass": "library_genre"},
+			/* Length */	{ "sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "15%", "sClass": "library_length"},
+			/* Type */		{ "sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "7%", "sClass": "library_type"},
 		],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
@@ -335,9 +479,16 @@ function createDataTable(data) {
                     "sSearch": ""
                 },
                 "iDisplayLength": getNumEntriesPreference(data),
-                "bStateSave": true
+                "bStateSave": true,
+                "sDom": 'lfr<"H"C<"library_toolbar">>t<"F"ip>'
     });
     dTable.fnSetFilteringDelay(350);
+    
+    
+    $("div.library_toolbar").html('<span class="fg-button ui-button ui-state-default" id="library_group_delete">Delete</span>' + 
+        '<span class="fg-button ui-button ui-state-default" id="library_group_add">Add</span>');
+    $('#library_group_add').click(groupAdd);
+    $('#library_group_delete').click(confirmDeleteGroup);
 }
 
 $(document).ready(function() {
@@ -346,7 +497,7 @@ $(document).ready(function() {
     $.ajax({ url: "/Api/library-init/format/json", dataType:"json", success:createDataTable, 
         error:function(jqXHR, textStatus, errorThrown){}});
     
-    checkImportStatus()
+    checkImportStatus();
     setInterval( "checkImportStatus()", 5000 );
     setInterval( "checkSCUploadStatus()", 5000 );
 

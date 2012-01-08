@@ -607,10 +607,10 @@ dl.inline-list dd {
 }
 .dataTables_filter input {
     background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;
-	width: 60%;
-	border: 1px solid #5B5B5B;
-    margin: 0;
-    padding: 4px 3px 4px 25px;	
+    width: 60%;
+    border: 1px solid #5B5B5B;
+    margin-left: -8px;
+    padding: 4px 3px 4px 25px;
 }
 .dataTables_length select {
     background-color: #DDDDDD;
@@ -621,6 +621,15 @@ dl.inline-list dd {
     margin: 0;
     padding: 2px 2px 2px 0;
     vertical-align: top;
+}
+
+.library_toolbar .ui-button {
+    float: right;
+    text-align:center;
+    font-size:12px;
+    font-weight:normal;
+    padding: 0.2em 1em;
+    margin: 0.5em 0.2em;
 }
 
 /*----END Data Table----*/

@@ -11,6 +11,7 @@ class LibraryController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents', 'json')
                     ->addActionContext('delete', 'json')
+                    ->addActionContext('delete-group', 'json')
                     ->addActionContext('context-menu', 'json')
                     ->addActionContext('get-file-meta-data', 'html')
                     ->addActionContext('upload-file-soundcloud', 'json')
@@ -176,6 +177,45 @@ class LibraryController extends Zend_Controller_Action
             }
 
             $this->view->id = $id;
+        }
+    }
+    
+    public function deleteGroupAction()
+    {
+        $ids = $this->_getParam('ids');
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+
+        if ($user->isAdmin()) {
+
+            if (!is_null($ids)) {
+                foreach ($ids as $key => $id) {
+                    $file = Application_Model_StoredFile::Recall($id);
+
+                    if (PEAR::isError($file)) {
+                        $this->view->message = $file->getMessage();
+                        return;
+                    }
+                    else if(is_null($file)) {
+                        $this->view->message = "file doesn't exist";
+                        return;
+                    }
+
+                    $res = $file->delete();
+
+                    if (PEAR::isError($res)) {
+                        $this->view->message = $res->getMessage();
+                        return;
+                    }
+                    else {
+                        $res = settype($res, "integer");
+                        $data = array("filepath" => $file->getFilePath(), "delete" => $res);
+                        Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+                    }
+                }
+                
+                $this->view->ids = $ids;
+            }
         }
     }
 
