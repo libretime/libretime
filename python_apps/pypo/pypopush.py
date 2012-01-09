@@ -41,6 +41,7 @@ class PypoPush(Thread):
         self.playlists = dict()
         self.stream_metadata = dict()
 
+        self.liquidsoap_state_play = True
         self.push_ahead = 10
 
     def set_export_source(self, export_source):
@@ -70,6 +71,7 @@ class PypoPush(Thread):
         schedule = self.schedule
         playlists = self.playlists
         
+        currently_on_air = False
         if schedule:
             timenow = time.time()
             tnow = time.gmtime(timenow)
@@ -83,11 +85,15 @@ class PypoPush(Thread):
                 if str_tnow_s <= plstart and plstart < str_tcoming_s:
                     logger.debug('Preparing to push playlist scheduled at: %s', pkey)
                     playlist = schedule[pkey]
-
+                                       
+                    
                     # We have a match, replace the current playlist and
                     # force liquidsoap to refresh.
                     if (self.push_liquidsoap(pkey, schedule, playlists) == 1):
                         logger.debug("Pushed to liquidsoap, updating 'played' status.")
+                        
+                        currently_on_air = True
+                        self.liquidsoap_state_play = True
 
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
@@ -95,6 +101,28 @@ class PypoPush(Thread):
 
                 show_start = schedule[pkey]['show_start']
                 show_end = schedule[pkey]['show_end']
+                
+                if show_start <= str_tnow_s and str_tnow_s < show_end:
+                    currently_on_air = True
+            """
+            If currently_on_air = False but liquidsoap_state_play = True then it means that Liquidsoap may
+            still be playing audio even though the show has ended ('currently_on_air = False' means no show is scheduled)
+            See CC-3231.
+            This is a temporary solution for Airtime 2.0
+            """                
+            if not currently_on_air and self.liquidsoap_state_play:
+                logger.debug('Notifying Liquidsoap to stop playback.')
+                try:
+                    tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                    tn.write('source.skip\n')
+                    tn.write('exit\n')
+                    tn.read_all()
+                except Exception, e:
+                    logger.debug(e)
+                    logger.debug('Could not connect to liquidsoap')
+
+                self.liquidsoap_state_play = False
+
 
     def push_liquidsoap(self, pkey, schedule, playlists):
         logger = logging.getLogger('push')
