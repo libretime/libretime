@@ -9,15 +9,12 @@
  */
  
 
-$configFile = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
-$ini = parse_ini_file($configFile, true);
+global $CC_CONFIG;
 
-$dbhost = $ini['database']['host'];
-$dbname = $ini['database']['dbname'];
-$dbuser = $ini['database']['dbuser'];
-$dbpass = $ini['database']['dbpass'];
-
-
+$dbhost = $CC_CONFIG['dsn']['hostspec'];
+$dbname = $CC_CONFIG['dsn']['database'];
+$dbuser = $CC_CONFIG['dsn']['username'];
+$dbpass = $CC_CONFIG['dsn']['password'];
 
 $conf = array (
   'datasources' => 

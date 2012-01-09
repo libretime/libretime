@@ -23,8 +23,8 @@ function generatePartitions(partitions){
         var totalSpace = partitions[i].totalSpace;
         var percUsed = sprintf("%01.1f", spaceUsed/totalSpace*100);
 
-        var spaceUsedGb = sprintf("%01.1f", spaceUsed/Math.pow(10, 9));
-        var totalSpaceGb = sprintf("%01.1f", totalSpace/Math.pow(10, 9));
+        var spaceUsedGb = sprintf("%01.1f", spaceUsed/Math.pow(2, 30));
+        var totalSpaceGb = sprintf("%01.1f", totalSpace/Math.pow(2, 30));
         
         var row = sprintf(rowTemplate, i+1, i, spaceUsedGb, totalSpaceGb, percUsed, percUsed);
         var tr = $(row);
@@ -51,16 +51,17 @@ function success(data, textStatus, jqXHR){
         $(children[3]).text(s.cpu_perc);
         $(children[4]).text(sprintf('%01.1fMB (%s)', parseInt(s.memory_kb)/1000, s.memory_perc));
     }
-
-    generatePartitions(data.status.partitions);
+    if (data.status.partitions){
+        generatePartitions(data.status.partitions);
+    }
 }
 
-function updateStatus(){
-    $.getJSON( "api/status/format/json", null, success);
+function updateStatus(getDiskInfo){
+    $.getJSON( "api/status/format/json/diskinfo/"+getDiskInfo, null, success);
     
 }
 
 $(document).ready(function() {
-    updateStatus();
-    setInterval(updateStatus, 5000);
+    updateStatus(true);
+    setInterval(function(){updateStatus(false);}, 5000);
 });
