@@ -125,6 +125,10 @@ class UpgradeCommon{
             echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
+        if (!copy(__DIR__."/media-monitor.cfg.$suffix", self::CONF_FILE_MEDIAMONITOR)){
+            echo "Could not copy meadia-monitor.cfg to /etc/airtime/. Exiting.";
+            exit(1);
+        }
         if (!copy(__DIR__."/api_client.cfg.$suffix", self::CONF_FILE_API_CLIENT)){
             echo "Could not copy api_client.cfg to /etc/monit/conf.d/. Exiting.";
             exit(1);

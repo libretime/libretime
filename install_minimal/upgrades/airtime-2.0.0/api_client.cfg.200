@@ -92,11 +92,8 @@ generate_range_url = 'generate_range_dp.php'
 # URL to tell Airtime we want to get stream setting
 get_stream_setting = 'get-stream-setting/format/json/api_key/%%api_key%%/'
 
-#URL to update liquidsoap error msg
-update_liquidsoap_error = 'update-liquidsoap-error/format/json/api_key/%%api_key%%/error_msg/%%error_msg%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
-
-#URL to update liquidsoap connection
-update_liquidsoap_connection = 'update-liquidsoap-connection/format/json/api_key/%%api_key%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
+#URL to update liquidsoap status
+update_liquidsoap_status = 'update-liquidsoap-status/format/json/api_key/%%api_key%%/msg/%%msg%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
 
 ##############
 # OBP config #

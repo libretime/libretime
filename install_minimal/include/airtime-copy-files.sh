@@ -39,7 +39,7 @@ if [ ! -e /etc/airtime/airtime.conf ]; then
     cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
 fi
 
-echo "* Creating /etc/airtime"
+echo "* Creating /etc/monit/conf.d/monit-airtime-generic.cfg"
 mkdir -p /etc/monit/conf.d/
 if [ ! -e /etc/monit/conf.d/monit-airtime-generic.cfg ]; then
     cp $AIRTIMEROOT/python_apps/monit/monit-airtime-generic.cfg /etc/monit/conf.d/

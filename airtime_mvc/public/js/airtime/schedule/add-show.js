@@ -11,8 +11,6 @@ function startDpSelect(dateText, inst) {
 	time = dateText.split("-");
 	date = new Date(time[0], time[1] - 1, time[2]);
 
-	$("#add_show_end_date").datepicker("option", "minDate", date);
-    $('input[name^="add_show_rebroadcast_absolute_date"]').datepicker("option", "minDate", date);
     if (inst.input)
         inst.input.trigger('change');
 }
@@ -33,7 +31,9 @@ function createDateInput(el, onSelect) {
 	el.datepicker({
 			minDate: adjustDateToServerDate(new Date(), timezoneOffset),
 			onSelect: onSelect,
-			dateFormat: 'yy-mm-dd'
+			dateFormat: 'yy-mm-dd',
+			closeText: 'Close',
+			showButtonPanel: true
 		});
 }
 
@@ -180,7 +180,7 @@ function setAddShowEvents() {
 
     form.find("#add_show_start_time").timepicker({
         amPmText: ['', ''],
-        defaultTime: '00:00'
+        defaultTime: '00:00',
     });
     form.find("#add_show_end_time").timepicker({
         amPmText: ['', '']
@@ -188,7 +188,9 @@ function setAddShowEvents() {
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
 		minDate: adjustDateToServerDate(new Date(), timezoneOffset),
-		dateFormat: 'yy-mm-dd'
+		dateFormat: 'yy-mm-dd',
+		closeText: 'Close',
+		showButtonPanel: true
 	});
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
@@ -442,13 +444,7 @@ function showErrorSections() {
 }
 
 $(document).ready(function() {
-    $.mask.masks = $.extend($.mask.masks,{
-        date:{ mask: '9999-19-39'},
-        time:{ mask: '29:69'}
-    })
-    
-    $('input:text').setMask()
-	//setAddShowEvents();
+    setAddShowEvents();
 });
 
 //Alert the error and reload the page
@@ -473,17 +469,5 @@ $(window).resize(function(){
 	var mainHeight = document.documentElement.clientHeight - 200 - 50;
 	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight)
 	$("#schedule_calendar").fullCalendar('render');
-	
-});
-
-$(window).load(function() {
-    $.mask.masks = $.extend($.mask.masks,{
-        date:{ mask: '9999-19-39'},
-        time:{ mask: '29:69'}
-    })
-    
-    $('input:text').setMask()
-    
-	setAddShowEvents();
 	
 });

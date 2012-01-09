@@ -33,7 +33,6 @@ class PreferenceController extends Zend_Controller_Action
 
                 Application_Model_Preference::SetHeadTitle($values["preferences_general"]["stationName"], $this->view);
                 Application_Model_Preference::SetDefaultFade($values["preferences_general"]["stationDefaultFade"]);
-                Application_Model_Preference::SetStreamLabelFormat($values["preferences_general"]["streamFormat"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
                 Application_Model_Preference::SetTimezone($values["preferences_general"]["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["preferences_general"]["weekStartDay"]);
@@ -64,9 +63,9 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->statusMsg = "";
 
         $isSass = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        
+
         $form = new Application_Form_SupportSettings();
-        
+
         if ($request->isPost()) {
             $values = $request->getPost();
             if ($form->isValid($values)) {
@@ -134,6 +133,7 @@ class PreferenceController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js','text/javascript');
 
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();
@@ -165,10 +165,10 @@ class PreferenceController extends Zend_Controller_Action
 
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
-        
+
         $form->setSetting($setting);
         $form->startFrom();
-        
+
         for($i=1; $i<=$num_of_stream; $i++){
             $subform = new Application_Form_StreamSettingSubForm();
             $subform->setPrefix($i);
@@ -180,6 +180,7 @@ class PreferenceController extends Zend_Controller_Action
         }
         if ($request->isPost()) {
             $post_data = $request->getPost();
+
             $error = false;
             $values = array();
             for($i=1; $i<=$num_of_stream; $i++){
@@ -196,9 +197,11 @@ class PreferenceController extends Zend_Controller_Action
                 if(Application_Model_Preference::GetPlanLevel() == 'disabled'){// && $form->isValid($post_data['output_sound_device'])){
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
                 }
+
                 
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
                 $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
+
             }
             if(!$error){
                 Application_Model_StreamSetting::setStreamSetting($values);
@@ -303,7 +306,7 @@ class PreferenceController extends Zend_Controller_Action
         }
         die(json_encode($res));
     }
-    
+
     public function getLiquidsoapStatusAction(){
         $out = array();
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());

@@ -83,10 +83,13 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $host = new Zend_Form_Element_Text('host');
         $host->setLabel("Server")
                 ->setValue(isset($setting[$prefix.'_host'])?$setting[$prefix.'_host']:"")
+                ->setValidators(array(
+                        array('regex', false, array('/^[0-9a-zA-Z-_.]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
             $host->setAttrib("disabled", "disabled");
         }
+        $host->setAttrib('alt', 'domain');
         $this->addElement($host);
 
         $port = new Zend_Form_Element_Text('port');
@@ -103,10 +106,13 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $pass = new Zend_Form_Element_Text('pass');
         $pass->setLabel("Password")
                 ->setValue(isset($setting[$prefix.'_pass'])?$setting[$prefix.'_pass']:"")
+                ->setValidators(array(
+                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
             $pass->setAttrib("disabled", "disabled");
         }
+        $pass->setAttrib('alt', 'regular_text');
         $this->addElement($pass);
 
         $genre = new Zend_Form_Element_Text('genre');
@@ -121,10 +127,13 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $url = new Zend_Form_Element_Text('url');
         $url->setLabel("URL")
                 ->setValue(isset($setting[$prefix.'_url'])?$setting[$prefix.'_url']:"")
+                ->setValidators(array(
+                        array('regex', false, array('/^[0-9a-zA-Z\-_.:\/]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
             $url->setAttrib("disabled", "disabled");
         }
+        $url->setAttrib('alt', 'url');
         $this->addElement($url);
 
         $description = new Zend_Form_Element_Text('description');
@@ -139,19 +148,25 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $mount = new Zend_Form_Element_Text('mount');
         $mount->setLabel("Mount Point")
                 ->setValue(isset($setting[$prefix.'_mount'])?$setting[$prefix.'_mount']:"")
+                ->setValidators(array(
+                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
             $mount->setAttrib("disabled", "disabled");
         }
+        $mount->setAttrib('alt', 'regular_text');
         $this->addElement($mount);
 
         $user = new Zend_Form_Element_Text('user');
         $user->setLabel("Username")
                 ->setValue(isset($setting[$prefix.'_user'])?$setting[$prefix.'_user']:"")
+                ->setValidators(array(
+                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
             $user->setAttrib("disabled", "disabled");
         }
+        $user->setAttrib('alt', 'regular_text');
         $this->addElement($user);
         
         $liquidsopa_error_msg = '<div class="stream-status status-info"><h3>Getting information from the server...</h3></div>';

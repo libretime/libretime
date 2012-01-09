@@ -3,8 +3,8 @@ import shutil
 from subprocess import Popen, PIPE
 import sys
 import os
-sys.path.append('/usr/lib/airtime/api_clients/')
-import api_client
+sys.path.append('/usr/lib/airtime/')
+from api_clients import api_client
 from configobj import ConfigObj
 
 if os.geteuid() != 0:
@@ -54,7 +54,7 @@ def generate_liquidsoap_config(ss):
                 temp = "0"
             buffer += temp
         buffer += "\n"
-        fh.write(buffer)
+        fh.write(api_client.encode_to(buffer))
     fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
     fh.close()
     
@@ -87,26 +87,33 @@ try:
         print "Unsupported system architecture."
         sys.exit(1)
         
-    #initialize init.d scripts
-    p = Popen("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
-
     #generate liquidsoap config file
     #access the DB and generate liquidsoap.cfg under /etc/airtime/
-    api_client = api_client.api_client_factory(config)
-    ss = api_client.get_stream_setting()
+    ac = api_client.api_client_factory(config)
+    ss = ac.get_stream_setting()
         
     if ss is not None:
         generate_liquidsoap_config(ss)
     else:
         print "Unable to connect to the Airtime server."
 
-    #restart airtime-playout   
-    print "* Waiting for pypo processes to start..."
-    p = Popen("/etc/init.d/airtime-playout stop", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
-    p = Popen("/etc/init.d/airtime-playout start-no-monit", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
+    if os.environ["disable_auto_start_services"] == "f": 
+        #initialize init.d scripts
+        p = Popen("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
+        sts = os.waitpid(p.pid, 0)[1]
+
+        #restart airtime-playout
+        print "* Waiting for pypo processes to start..."
+        if os.environ["liquidsoap_keep_alive"] == "f":
+            print " * Restarting any previous Liquidsoap instances"
+            p = Popen("/etc/init.d/airtime-playout stop", shell=True)
+            sts = os.waitpid(p.pid, 0)[1]
+        else:
+            print " * Keeping any previous Liquidsoap instances running"
+            p = Popen("/etc/init.d/airtime-playout pypo-stop", shell=True)
+            sts = os.waitpid(p.pid, 0)[1]
+        p = Popen("/etc/init.d/airtime-playout start-no-monit", shell=True)
+        sts = os.waitpid(p.pid, 0)[1]
     
 except Exception, e:
     print e

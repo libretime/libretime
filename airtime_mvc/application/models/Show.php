@@ -111,7 +111,7 @@ class Application_Model_Show {
         //usually we hide the show-instance, but in this case we are deleting the show template
         //so delete all show-instances as well.
         CcShowInstancesQuery::create()->filterByDbOriginalShow($this->_showId)->delete();
-        
+
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->delete();
     }
@@ -119,9 +119,9 @@ class Application_Model_Show {
     public function resizeShow($deltaDay, $deltaMin)
     {
         global $CC_DBC;
-        
+
         if ($deltaDay > 0) {
-            return "shows can have a max length of 24 hours.";
+            return "Shows can have a max length of 24 hours.";
         }
 
         $hours = $deltaMin/60;

@@ -219,7 +219,11 @@ function buildContentDialog(json){
         alertShowErrorAndReload();
     }
 	var dialog = $(json.dialog);
-	
+        
+	dialog.find("#show_progressbar").progressbar({
+		value: json.percentFilled
+	});
+        
 	var viewportwidth;
 	var viewportheight;
 

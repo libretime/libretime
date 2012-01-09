@@ -217,7 +217,7 @@ class Application_Model_DateHelper
      * @param int $p_time
      *      The time interval in format HH:MM:SS.mm we wish to
      *      convert to seconds.
-     * @return int
+     * @return float
      *      The input parameter converted to seconds.
      */
     public static function calculateLengthInSeconds($p_time){
@@ -234,7 +234,10 @@ class Application_Model_DateHelper
         }
 
         list($hours, $minutes, $seconds) = explode(":", $hhmmss);
-
+        
+        // keep ms in 3 digits
+        $ms = substr($ms, 0, 3);
+        
         $totalSeconds = $hours*3600 + $minutes*60 + $seconds + $ms/1000;
 
         return $totalSeconds;

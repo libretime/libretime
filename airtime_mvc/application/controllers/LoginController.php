@@ -43,7 +43,7 @@ class LoginController extends Zend_Controller_Action
                 if(Application_Model_Subjects::getLoginAttempts($username) >= 3 && $form->getElement('captcha') == NULL){
                     $form->addRecaptcha();
                 }else{
-                    $authAdapter = $this->getAuthAdapter();
+                    $authAdapter = Application_Model_Auth::getAuthAdapter();
 
                     //pass to the adapter the submitted username and password
                     $authAdapter->setIdentity($username)
@@ -92,25 +92,6 @@ class LoginController extends Zend_Controller_Action
         Zend_Auth::getInstance()->clearIdentity();
         $this->_redirect('login/index');
     }
-
-	 /**
-     * Gets the adapter for authentication against a database table
-     *
-     * @return object
-     */
-    protected function getAuthAdapter()
-    {
-        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-        $authAdapter = new Zend_Auth_Adapter_DbTable($dbAdapter);
-
-        $authAdapter->setTableName('cc_subjs')
-                    ->setIdentityColumn('login')
-                    ->setCredentialColumn('pass')
-                    ->setCredentialTreatment('MD5(?)');
-                    
-        return $authAdapter;
-    }
-
 }
 
 

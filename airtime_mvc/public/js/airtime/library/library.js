@@ -315,12 +315,12 @@ function createDataTable(data) {
 		"fnDrawCallback": dtDrawCallback,
 		"aoColumns": [
 			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false },
-			/* Title */		{ "sName": "track_title" },
-			/* Creator */	{ "sName": "artist_name" },
-			/* Album */		{ "sName": "album_title" },
-			/* Genre */		{ "sName": "genre" },
-			/* Length */	{ "sName": "length" },
-			/* Type */		{ "sName": "ftype", "bSearchable": false }
+			/* Title */		{ "sTitle": "Title", "sName": "track_title" },
+			/* Creator */	{ "sTitle": "Creator", "sName": "artist_name" },
+			/* Album */		{ "sTitle": "Album", "sName": "album_title" },
+			/* Genre */		{ "sTitle": "Genre", "sName": "genre" },
+			/* Length */	{ "sTitle": "Length", "sName": "length" },
+			/* Type */		{ "sTitle": "Type", "sName": "ftype", "bSearchable": false }
 		],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",

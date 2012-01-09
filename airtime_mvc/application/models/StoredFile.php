@@ -409,11 +409,13 @@ class Application_Model_StoredFile {
      * @return string
      */
     public function getFilePath()
-    {
+    {        
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
+        $directory = $music_dir->getDirectory();
+        
         $filepath = $this->_file->getDbFilepath();
 
-        return $music_dir->getDirectory().$filepath;
+        return $directory.$filepath;
     }
 
     /**
@@ -810,12 +812,9 @@ class Application_Model_StoredFile {
 			$contentType = $_SERVER["CONTENT_TYPE"];
 
         // create temp file name (CC-3086)
-        $command = "mktemp --tmpdir=".$p_targetDir;
-        $tempFilePath= exec($command);
-
-        if($tempFilePath == ""){
-            die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Unable to create tmp file."}, "id" : "id"}');
-        }
+        // we are not using mktemp command anymore.
+        // plupload support unique_name feature.
+        $tempFilePath= $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
 
 		if (strpos($contentType, "multipart") !== false) {
 			if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
@@ -880,8 +879,13 @@ class Application_Model_StoredFile {
 
         $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
-        $r = @copy($audio_file, $audio_stor);
-        $r = @unlink($audio_file);
+        Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
+        
+        //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
+        $r = @rename($audio_file, $audio_stor);
+        
+        //$r = @copy($audio_file, $audio_stor);
+        //$r = @unlink($audio_file);
     }
 
     public static function getFileCount()

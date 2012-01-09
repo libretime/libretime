@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__).'/../StoredFile.php');
 
 $dsn = $CC_CONFIG['dsn'];
-$CC_DBC = DB::connect($dsn, TRUE);
+$CC_DBC = DB::connect($dsn, FALSE);
 if (PEAR::isError($CC_DBC)) {
 	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
 	exit(1);

@@ -64,6 +64,10 @@
  * @method     CcSubjsQuery rightJoinCcSess($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSess relation
  * @method     CcSubjsQuery innerJoinCcSess($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSess relation
  *
+ * @method     CcSubjsQuery leftJoinCcSubjsToken($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcSubjsToken relation
+ * @method     CcSubjsQuery rightJoinCcSubjsToken($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSubjsToken relation
+ * @method     CcSubjsQuery innerJoinCcSubjsToken($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSubjsToken relation
+ *
  * @method     CcSubjs findOne(PropelPDO $con = null) Return the first CcSubjs matching the query
  * @method     CcSubjs findOneOrCreate(PropelPDO $con = null) Return the first CcSubjs matching the query, or a new CcSubjs object populated from the query conditions when no match is found
  *
@@ -933,6 +937,70 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 		return $this
 			->joinCcSess($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcSess', 'CcSessQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcSubjsToken object
+	 *
+	 * @param     CcSubjsToken $ccSubjsToken  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByCcSubjsToken($ccSubjsToken, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcSubjsPeer::ID, $ccSubjsToken->getDbUserId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcSubjsToken relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function joinCcSubjsToken($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcSubjsToken');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcSubjsToken');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcSubjsToken relation CcSubjsToken object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcSubjsTokenQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcSubjsTokenQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCcSubjsToken($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcSubjsToken', 'CcSubjsTokenQuery');
 	}
 
 	/**

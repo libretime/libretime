@@ -121,7 +121,7 @@ class Application_Model_Preference
      *        A row from cc_show_days table
      */ 
     public static function SetShowsPopulatedUntil($dateTime) {
-        self::SetValue("shows_populated_until", $dateTime->format("Y-m-d"));
+        self::SetValue("shows_populated_until", $dateTime->format("Y-m-d H:i:s"));
     }
 
     /**

@@ -11,9 +11,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if($defaultFade == ""){
-            $defaultFade = '00:00:00.000000';
+            $defaultFade = '00:00:00.500000';
         }
-        
+
         //Station name
         $this->addElement('text', 'stationName', array(
             'class'      => 'input_text',
@@ -25,7 +25,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
                 'ViewHelper'
             )
         ));
-        
+
         //Default station fade
         $this->addElement('text', 'stationDefaultFade', array(
             'class'      => 'input_text',
@@ -41,15 +41,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             )
         ));
 
-        $stream_format = new Zend_Form_Element_Radio('streamFormat');
-        $stream_format->setLabel('Stream Label:');
-        $stream_format->setMultiOptions(array("Artist - Title",
-                                            "Show - Artist - Title",
-                                            "Station name - Show name"));
-        $stream_format->setValue(Application_Model_Preference::GetStreamLabelFormat());
-        $stream_format->setDecorators(array('ViewHelper'));
-        $this->addElement($stream_format);
-
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
         $third_party_api->setLabel('Allow Remote Websites To Access "Schedule" Info?<br> (Enable this to make front-end widgets work.)');
         $third_party_api->setMultiOptions(array("Disabled",
@@ -57,7 +48,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
         $third_party_api->setDecorators(array('ViewHelper'));
         $this->addElement($third_party_api);
-        
+
         /* Form Element for setting the Timezone */
         $timezone = new Zend_Form_Element_Select("timezone");
         $timezone->setLabel("Timezone");
@@ -65,7 +56,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $timezone->setValue(Application_Model_Preference::GetTimezone());
         $timezone->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
-        
+
         /* Form Element for setting which day is the start of the week */
         $week_start_day = new Zend_Form_Element_Select("weekStartDay");
         $week_start_day->setLabel("Week Starts On");
@@ -74,7 +65,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $week_start_day->setDecorators(array('ViewHelper'));
         $this->addElement($week_start_day);
     }
-    
+
     private function getTimezones(){
         $regions = array(
             'Africa' => DateTimeZone::AFRICA,
@@ -86,9 +77,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'Indian' => DateTimeZone::INDIAN,
             'Pacific' => DateTimeZone::PACIFIC
         );
-        
+
         $tzlist = array();
-        
+
         foreach ($regions as $name => $mask){
             $ids = DateTimeZone::listIdentifiers($mask);
             foreach ($ids as $id){
@@ -98,7 +89,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         return $tzlist;
     }
-    
+
 
     private function getWeekStartDays() {
     	$days = array(
@@ -110,7 +101,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 		    'Friday',
 		    'Saturday'
     	);
-    	return $days;   	
+    	return $days;
     }
 }
 

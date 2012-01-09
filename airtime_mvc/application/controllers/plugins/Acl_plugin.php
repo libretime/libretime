@@ -110,8 +110,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     {
 		$controller = strtolower($request->getControllerName());
 		
-		if ($controller == 'api'){
-
+		if (in_array($controller, array("api", "auth"))){
+            			
 			$this->setRoleName("G");	
 		} 
         else if (!Zend_Auth::getInstance()->hasIdentity()){

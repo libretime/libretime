@@ -119,5 +119,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $frontController->registerPlugin($debug);
         }
     }
+    
+    protected function _initRouter()
+    {
+    	$front = Zend_Controller_Front::getInstance();
+        $router = $front->getRouter();
+        
+        $router->addRoute(
+            'password-change',
+            new Zend_Controller_Router_Route('password-change/:user_id/:token', array(
+                'module' => 'default',
+                'controller' => 'auth',
+                'action' => 'password-change',
+            )));
+    }
 }
 

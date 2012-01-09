@@ -23,7 +23,9 @@ $CC_CONFIG = array(
     'phingPath'      =>  dirname(__FILE__).'/../../library/phing'
 );
 
-$CC_CONFIG = Config::loadConfig($CC_CONFIG);
+
+$configFile = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+Config::loadConfig($configFile);
 
 // Add database table names
 $CC_CONFIG['playListTable'] = $CC_CONFIG['tblNamePrefix'].'playlist';
@@ -56,8 +58,11 @@ set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
 					.PATH_SEPARATOR.$old_include_path);
 
 class Config {
-    public static function loadConfig($CC_CONFIG) {
-        $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+    public static function loadConfig($p_path) {
+        global $CC_CONFIG;
+        
+        $filename = $p_path;
+        $values = parse_ini_file($filename, true);
 
         // Name of the web server user
         $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
@@ -77,7 +82,5 @@ class Config {
 
         $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
         $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
-
-        return $CC_CONFIG;
     }
 }

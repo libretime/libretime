@@ -238,7 +238,7 @@ class ScheduleController extends Zend_Controller_Action
                     'title' => 'Cancel Current Show');
         }
 
-		if ($epochNow < $showStartDateHelper->getTimestamp()) {
+        if ($epochNow < $showStartDateHelper->getTimestamp()) {
 
             if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 
@@ -246,13 +246,15 @@ class ScheduleController extends Zend_Controller_Action
                         'callback' => 'window["beginEditShow"]'), 'title' => 'Edit Show');
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params,
                         'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
-                        'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
+                if ($show->getShow()->isRepeating() || $show->getShow()->isRebroadcast()) {
+                    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
+                            'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
+                }
             }
-		}
+        }
 
-		//returns format jjmenu is looking for.
-		die(json_encode($menu));
+        //returns format jjmenu is looking for.
+        die(json_encode($menu));
     }
 
     public function scheduleShowAction()
@@ -441,7 +443,10 @@ class ScheduleController extends Zend_Controller_Action
                 "Rebroadcast of show \"$originalShowName\" from "
                 .$originalDateTime->format("l, F jS")." at ".$originalDateTime->format("G:i");
         }
-		$this->view->showContent = $show->getShowListContent();
+        $this->view->showLength = $show->getShowLength();
+        $this->view->timeFilled = $show->getTimeScheduled();
+        $this->view->percentFilled = $show->getPercentScheduled();
+        $this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         unset($this->view->showContent);
     }
