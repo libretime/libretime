@@ -11,6 +11,7 @@ class LibraryController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents', 'json')
                     ->addActionContext('delete', 'json')
+                    ->addActionContext('delete-group', 'json')
                     ->addActionContext('context-menu', 'json')
                     ->addActionContext('get-file-meta-data', 'html')
                     ->addActionContext('upload-file-soundcloud', 'json')
@@ -31,12 +32,16 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
-
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css');
 
         $this->_helper->layout->setLayout('library');
         $this->_helper->viewRenderer->setResponseSegment('library');
@@ -178,10 +183,50 @@ class LibraryController extends Zend_Controller_Action
             $this->view->id = $id;
         }
     }
+    
+    public function deleteGroupAction()
+    {
+        $ids = $this->_getParam('ids');
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+
+        if ($user->isAdmin()) {
+
+            if (!is_null($ids)) {
+                foreach ($ids as $key => $id) {
+                    $file = Application_Model_StoredFile::Recall($id);
+
+                    if (PEAR::isError($file)) {
+                        $this->view->message = $file->getMessage();
+                        return;
+                    }
+                    else if(is_null($file)) {
+                        $this->view->message = "file doesn't exist";
+                        return;
+                    }
+
+                    $res = $file->delete();
+
+                    if (PEAR::isError($res)) {
+                        $this->view->message = $res->getMessage();
+                        return;
+                    }
+                    else {
+                        $res = settype($res, "integer");
+                        $data = array("filepath" => $file->getFilePath(), "delete" => $res);
+                        Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+                    }
+                }
+                
+                $this->view->ids = $ids;
+            }
+        }
+    }
 
     public function contentsAction()
     {
         $post = $this->getRequest()->getPost();
+        Logging::log(print_r($post, true));
         $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($post);
 
         //format clip lengh to 1 decimal

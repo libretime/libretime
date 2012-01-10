@@ -488,6 +488,7 @@ class Application_Model_StoredFile {
     {
         $file = new CcFiles();
         $file->setDbGunid(md5(uniqid("", true)));
+        $file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
 
         $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;
@@ -628,50 +629,52 @@ class Application_Model_StoredFile {
         return $res;
     }
 
-	public static function searchFilesForPlaylistBuilder($datatables) {
-		global $CC_CONFIG;
+    public static function searchFilesForPlaylistBuilder($datatables)
+    {
+        global $CC_CONFIG;
 
-		$displayData = array("track_title", "artist_name", "album_title", "genre", "length", "ftype");
+        $displayData = array("track_title", "artist_name", "album_title", "genre", "length", "year", "upload_time", "ftype");
 
-		$plSelect = "SELECT ";
+        $plSelect = "SELECT ";
         $fileSelect = "SELECT ";
-        foreach ($displayData as $key){
+        foreach ($displayData as $key) {
 
-            if($key === "track_title"){
+            if ($key === "track_title") {
                 $plSelect .= "name AS ".$key.", ";
                 $fileSelect .= $key.", ";
-            }
-			else if ($key === "ftype"){
+            } else if ($key === "ftype") {
                 $plSelect .= "'playlist' AS ".$key.", ";
                 $fileSelect .= $key.", ";
-            }
-            else if ($key === "artist_name"){
+            } else if ($key === "artist_name") {
                 $plSelect .= "creator AS ".$key.", ";
                 $fileSelect .= $key.", ";
-            }
-            else if ($key === "length"){
+            } else if ($key === "length") {
                 $plSelect .= $key.", ";
                 $fileSelect .= $key.", ";
-            }
-            else {
+            } else if ($key === "year") {
+                $plSelect .= "CAST(mtime AS varchar) AS ".$key.", ";
+                $fileSelect .= $key.", ";
+            } else if ($key === "upload_time") {
+                $plSelect .= "mtime AS ".$key.", ";
+                $fileSelect .= "mtime AS ".$key.", ";
+            } else {
                 $plSelect .= "NULL AS ".$key.", ";
                 $fileSelect .= $key.", ";
             }
         }
 
-		$fromTable = " ((".$plSelect."PL.id
-		    FROM ".$CC_CONFIG["playListTable"]." AS PL
-			LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
+        $fromTable = " ((".$plSelect."PL.id
+            FROM ".$CC_CONFIG["playListTable"]." AS PL
+                LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
 
-		    UNION
+            UNION
 
-		    (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
+            (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
+        
+        return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+    }
 
-		return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
-
-	}
-
-	public static function searchPlaylistsForSchedule($datatables)
+    public static function searchPlaylistsForSchedule($datatables)
     {
 		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
         //$datatables["optWhere"][] = "INTERVAL '{$time_remaining}' > INTERVAL '00:00:00'";
@@ -690,7 +693,12 @@ class Application_Model_StoredFile {
 			$searchTerms = explode(" ", $data["sSearch"]);
 
 		$selectorCount = "SELECT COUNT(*)";
-		$selectorRows = "SELECT ". join("," , $columnsDisplayed);
+		foreach( $columnsDisplayed as $key=>$col){
+		  if($col == ''){
+		      unset($columnsDisplayed[$key]);
+		  }
+		}
+		$selectorRows = "SELECT " . join(',', $columnsDisplayed );
 
         $sql = $selectorCount." FROM ".$fromTable;
 		$totalRows = $CC_DBC->getOne($sql);
@@ -733,7 +741,7 @@ class Application_Model_StoredFile {
 		// End Order By clause
 
 		//ordered by integer as expected by datatables.
-		$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
+		//$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
 
 		if(isset($where)) {
 			$where = join(" AND ", $where);
@@ -746,6 +754,18 @@ class Application_Model_StoredFile {
 		}
 
 		$results = $CC_DBC->getAll($sql);
+		foreach($results as &$row){
+                    // add checkbox row
+		    $row['checkbox'] = "<input type='checkbox' name='cb_".$row[id]."'>";
+                    
+                    // a full timestamp is being returned for playlists' year column;
+                    // split it and grab only the year info
+                    $yearSplit = explode('-', $row['year']);
+                    $row['year'] = $yearSplit[0];
+		}
+		//$results['checkbox']
+		//$results = $CC_DBC->getAssoc($sql);
+		Logging::log(print_r($results, true));
 		//echo $results;
 		//echo $sql;
 
