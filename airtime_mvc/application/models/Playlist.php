@@ -443,7 +443,8 @@ class Application_Model_Playlist {
     	$pl = new CcPlaylist();
     	$pl->setDbName($this->name);
     	$pl->setDbState("incomplete");
-    	$pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+    	$pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $pl->setDbUtime(new DateTime("now"), new DateTimeZone("UTC"));
     	$pl->save();
 
     	$this->id = $pl->getDbId();
@@ -534,6 +535,10 @@ class Application_Model_Playlist {
 
         $res = $this->insertPlaylistElement($this->id, $p_mediaId, $p_position, $p_cliplength, $p_cuein, $p_cueout, $p_fadeIn, $p_fadeOut);
 
+        $pl = CcPlaylistQuery::create()->findPK($this->id);
+        $pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $pl->save();
+        
         return TRUE;
     }
 
@@ -559,6 +564,11 @@ class Application_Model_Playlist {
             return FALSE;
 
         $row->delete();
+        
+        $pl = CcPlaylistQuery::create()->findPK($this->id);
+        $pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $pl->save();
+        
         return $row;
     }
 
@@ -584,6 +594,10 @@ class Application_Model_Playlist {
         if($res !== TRUE)
             return FALSE;
 
+        $pl = CcPlaylistQuery::create()->findPK($this->id);
+        $pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $pl->save();
+        
         return TRUE;
     }
 

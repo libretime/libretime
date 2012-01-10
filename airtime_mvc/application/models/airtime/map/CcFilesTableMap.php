@@ -49,6 +49,8 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('CURRENTLYACCESSING', 'DbCurrentlyaccessing', 'INTEGER', true, null, 0);
 		$this->addForeignKey('EDITEDBY', 'DbEditedby', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', false, 6, null);
+		$this->addColumn('UTIME', 'DbUtime', 'TIMESTAMP', false, 6, null);
+		$this->addColumn('LPTIME', 'DbLPtime', 'TIMESTAMP', false, 6, null);
 		$this->addColumn('MD5', 'DbMd5', 'CHAR', false, 32, null);
 		$this->addColumn('TRACK_TITLE', 'DbTrackTitle', 'VARCHAR', false, 512, null);
 		$this->addColumn('ARTIST_NAME', 'DbArtistName', 'VARCHAR', false, 512, null);
