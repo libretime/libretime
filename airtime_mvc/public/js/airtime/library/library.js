@@ -1,5 +1,6 @@
 var dTable;
 var checkedCount = 0;
+var checkedPLCount = 0;
 
 //used by jjmenu
 function getId() {
@@ -319,6 +320,12 @@ function getNumEntriesPreference(data) {
 }
 
 function groupAdd() {
+    if (checkedPLCount > 0) {
+        alert("Can't add playlist to another playlist");
+        return;
+    }
+    disableGroupBtn('library_group_add');
+    
     var ids = new Array();
     var addGroupUrl = '/Playlist/add-group';
     var newSPLUrl = '/Playlist/new/format/json';
@@ -354,6 +361,8 @@ function groupAdd() {
 }
 
 function groupDelete() {
+    disableGroupBtn('library_group_delete');
+    
     var auIds = new Array();
     var plIds = new Array();
     var auUrl = '/Library/delete-group';
@@ -387,10 +396,18 @@ function groupDelete() {
 function toggleAll() {
     var checked = $(this).attr("checked");
     $('#library_display tr').each(function() {
+        var idSplit = $(this).attr('id').split("_");
+        var type = idSplit[0];
         $(this).find(":checkbox").attr("checked", checked);
         if (checked) {
+            if (type == "pl") {
+                checkedPLCount++;
+            }
             $(this).addClass('selected');
         } else {
+            if (type == "pl") {
+                checkedPLCount--;
+            }
             $(this).removeClass('selected');
         }
     });
@@ -401,6 +418,7 @@ function toggleAll() {
         enableGroupBtn('library_group_delete', confirmDeleteGroup);
     } else {
         checkedCount = 0;
+        checkedPLCount = 0;
         disableGroupBtn('library_group_add');
         disableGroupBtn('library_group_delete');
     }
@@ -427,9 +445,14 @@ function checkBoxChanged() {
     var cbAllChecked = cbAll.attr("checked");
     var checked = $(this).attr("checked");
     var size = $('#library_display tbody tr').size();
+    var idSplit = $(this).parent().parent().attr('id').split("_");
+    var type = idSplit[0];
     if (checked) {
        if (checkedCount < size) {
            checkedCount++;
+       }
+       if (type == "pl" && checkedPLCount < size) {
+           checkedPLCount++;
        }
        enableGroupBtn('library_group_add', groupAdd);
        enableGroupBtn('library_group_delete', confirmDeleteGroup);
@@ -437,6 +460,9 @@ function checkBoxChanged() {
     } else {
         if (checkedCount > 0) {
             checkedCount--;
+        }
+        if (type == "pl" && checkedPLCount > 0) {
+           checkedPLCount--;
         }
         if (checkedCount == 0) {
             disableGroupBtn('library_group_add');
@@ -491,17 +517,17 @@ function createDataTable(data) {
 		"fnRowCallback": dtRowCallback,
 		"fnDrawCallback": dtDrawCallback,
 		"aoColumns": [
-		    /* Checkbox */  { "sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
-			/* Id */		{ "sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
-			/* Title */		{ "sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
-			/* Creator */	{ "sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
-			/* Album */		 { "sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
-			/* Genre */		{ "sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
-			/* Year */	{ "sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
-			/* Length */	{ "sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "16%", "sClass": "library_length"},
-                        /* Type */		{ "sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "9%", "sClass": "library_type"},
-                        /* Upload Time */	{ "sTitle": "Upload Time", "sName": "upload_time", "mDataProp": "upload_time", "sClass": "library_upload_time"},
-		],
+                    /* Checkbox */      {"sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
+                    /* Id */            {"sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
+                    /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
+                    /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
+                    /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
+                    /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
+                    /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
+                    /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "16%", "sClass": "library_length"},
+                    /* Type */          {"sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "9%", "sClass": "library_type"},
+                    /* Upload Time */   {"sTitle": "Upload Time", "sName": "upload_time", "mDataProp": "upload_time", "sClass": "library_upload_time"},
+                ],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
@@ -511,18 +537,30 @@ function createDataTable(data) {
                 },
                 "iDisplayLength": getNumEntriesPreference(data),
                 "bStateSave": true,
-                "sDom": 'lfr<"H"C<"library_toolbar">>t<"F"ip>',
+                // R = ColReorder, C = ColVis, see datatables doc for others
+                "sDom": 'Rlfr<"H"C<"library_toolbar">>t<"F"ip>',
                 "oColVis": {
-			"sAlign": "right",
-                        "aiExclude": [0, 1, 2],
-                        "sSize": "css"
+                    "buttonText": "Show/Hide Columns",
+                    "sAlign": "right",
+                    "aiExclude": [0, 1, 2],
+                    "sSize": "css",
+                    "bShowAll": true
+		},
+                "oColReorder": {
+                    "aiOrder": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ] /* code this */,
+                    "iFixedColumns": 3
 		}
     });
     dTable.fnSetFilteringDelay(350);
     
-    
-    $("div.library_toolbar").html('<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_delete">Delete</span>' + 
+    $("div.library_toolbar").html('<span class="fg-button ui-button ui-state-default" id="library_order_reset">Reset Order</span>' + 
+        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_delete">Delete</span>' + 
         '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_add">Add</span>');
+    
+    $('#library_order_reset').click(function() {
+        ColReorder.fnReset( dTable );
+        return false;
+    });
 }
 
 $(document).ready(function() {

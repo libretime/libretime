@@ -622,9 +622,21 @@ dl.inline-list dd {
     padding: 2px 2px 2px 0;
     vertical-align: top;
 }
+#library_display thead th, #library_display tbody td {
+    cursor: pointer;
+}
+#library_display thead th.library_checkbox,
+#library_display thead th.library_id,
+#library_display thead th.library_title {
+    cursor: default;
+}
 
 .ColVis.TableTools .ui-button {
     height: 21px;
+}
+button.ColVis_Button.ColVis_ShowAll {
+    text-align: center;
+    margin-top: 10px;
 }
 .library_toolbar .ui-button, .ColVis.TableTools .ui-button {
     float: right;

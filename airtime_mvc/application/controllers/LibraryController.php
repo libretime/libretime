@@ -33,12 +33,15 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css');
 
         $this->_helper->layout->setLayout('library');
         $this->_helper->viewRenderer->setResponseSegment('library');
