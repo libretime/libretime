@@ -90,6 +90,9 @@ class Application_Model_StoredFile {
             }
             $this->setDbColMetadata($dbMd);
         }
+        
+        $this->_file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $this->_file->save();
     }
 
     /**
@@ -120,6 +123,7 @@ class Application_Model_StoredFile {
             }
         }
 
+        $this->_file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
         $this->_file->save();
     }
 
@@ -488,6 +492,7 @@ class Application_Model_StoredFile {
     {
         $file = new CcFiles();
         $file->setDbGunid(md5(uniqid("", true)));
+        $file->setDbUtime(new DateTime("now"), new DateTimeZone("UTC"));
         $file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
 
         $storedFile = new Application_Model_StoredFile();
@@ -633,7 +638,7 @@ class Application_Model_StoredFile {
     {
         global $CC_CONFIG;
 
-        $displayData = array("track_title", "artist_name", "album_title", "genre", "length", "year", "upload_time", "ftype");
+        $displayData = array("track_title", "artist_name", "album_title", "genre", "length", "year", "utime", "mtime", "ftype");
 
         $plSelect = "SELECT ";
         $fileSelect = "SELECT ";
@@ -652,11 +657,14 @@ class Application_Model_StoredFile {
                 $plSelect .= $key.", ";
                 $fileSelect .= $key.", ";
             } else if ($key === "year") {
-                $plSelect .= "CAST(mtime AS varchar) AS ".$key.", ";
+                $plSelect .= "CAST(utime AS varchar) AS ".$key.", ";
                 $fileSelect .= $key.", ";
-            } else if ($key === "upload_time") {
-                $plSelect .= "mtime AS ".$key.", ";
-                $fileSelect .= "mtime AS ".$key.", ";
+            } else if ($key === "utime") {
+                $plSelect .= $key.", ";
+                $fileSelect .= $key.", ";
+            } else if ($key === "mtime") {
+                $plSelect .= $key.", ";
+                $fileSelect .= $key.", ";
             } else {
                 $plSelect .= "NULL AS ".$key.", ";
                 $fileSelect .= $key.", ";

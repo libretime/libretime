@@ -70,6 +70,8 @@ CREATE TABLE "cc_files"
 	"currentlyaccessing" INTEGER default 0 NOT NULL,
 	"editedby" INTEGER,
 	"mtime" TIMESTAMP(6),
+	"utime" TIMESTAMP(6),
+	"lptime" TIMESTAMP(6),
 	"md5" CHAR(32),
 	"track_title" VARCHAR(512),
 	"artist_name" VARCHAR(512),
@@ -285,6 +287,8 @@ CREATE TABLE "cc_playlist"
 	"currentlyaccessing" INTEGER default 0 NOT NULL,
 	"editedby" INTEGER,
 	"mtime" TIMESTAMP(6),
+	"utime" TIMESTAMP(6),
+	"lptime" TIMESTAMP(6),
 	"creator" VARCHAR(32),
 	"description" VARCHAR(512),
 	PRIMARY KEY ("id")
