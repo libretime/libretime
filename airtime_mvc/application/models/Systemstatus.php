@@ -176,8 +176,14 @@ class Application_Model_Systemstatus
         return $data;
     }
 
-    public static function GetRabbitMqStatus(){     
-        $docRoot = self::GetMonitStatus("localhost");
+    public static function GetRabbitMqStatus(){
+        
+        if (isset($_SERVER["RABBITMQ_HOST"])){
+            $rabbitmq_host = $_SERVER["RABBITMQ_HOST"];
+        } else {
+            $rabbitmq_host = "localhost";
+        }
+        $docRoot = self::GetMonitStatus($rabbitmq_host);
         $data = self::ExtractServiceInformation($docRoot, "rabbitmq-server");
 
         return $data;
@@ -192,7 +198,7 @@ class Application_Model_Systemstatus
             
             $storPath = Application_Model_MusicDir::getStorDir()->getDirectory();
             
-            list($usedSpace,) = preg_split("/[\s]+/", exec("du -s $storPath"));
+            list($usedSpace,) = preg_split("/[\s]+/", exec("du -bs $storPath"));
             
             $partitions[$totalSpace]->totalSpace = $totalSpace;
             $partitions[$totalSpace]->totalFreeSpace = $totalSpace - $usedSpace;
