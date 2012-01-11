@@ -60,7 +60,7 @@ $(document).ready(function(){
                             if ($type == "ogg")
                                 $type = "oga";
 
-                            $label = $streamData["${id}_description"]." (".$streamData["${id}_bitrate"]." Kbit/s)";
+                            $label = "(".$streamData["${id}_host"].") ".$streamData["${id}_description"]." - ".$streamData["${id}_bitrate"]." Kbit/s";
                             echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s' server-type='%s'>%s</option>", $id, $url, $type, $serverType, $label);
                         }
                     ?>
