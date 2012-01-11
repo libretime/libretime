@@ -443,7 +443,10 @@ class ScheduleController extends Zend_Controller_Action
                 "Rebroadcast of show \"$originalShowName\" from "
                 .$originalDateTime->format("l, F jS")." at ".$originalDateTime->format("G:i");
         }
-		$this->view->showContent = $show->getShowListContent();
+        $this->view->showLength = $show->getShowLength();
+        $this->view->timeFilled = $show->getTimeScheduled();
+        $this->view->percentFilled = $show->getPercentScheduled();
+        $this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         unset($this->view->showContent);
     }

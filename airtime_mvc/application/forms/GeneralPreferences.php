@@ -11,7 +11,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if($defaultFade == ""){
-            $defaultFade = '00:00:00.000000';
+            $defaultFade = '00:00:00.500000';
         }
 
         //Station name
