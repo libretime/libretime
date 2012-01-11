@@ -28,6 +28,7 @@
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="directory" phpName="Directory" type="LONGVARCHAR" required="false"/>
     <column name="type" phpName="Type" type="VARCHAR" size="255" required="false"/>
+    <column name="exists" phpName="Exists" type="BOOLEAN" required="false" defaultValue="true"/>
     <column name="removed" phpName="Removed" type="BOOLEAN" required="false" defaultValue="false"/>
     <unique name="cc_music_dir_unique">
       <unique-column name="directory"/>

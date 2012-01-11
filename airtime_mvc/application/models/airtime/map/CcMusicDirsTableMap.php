@@ -41,6 +41,7 @@ class CcMusicDirsTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
 		$this->addColumn('DIRECTORY', 'Directory', 'LONGVARCHAR', false, null, null);
 		$this->addColumn('TYPE', 'Type', 'VARCHAR', false, 255, null);
+		$this->addColumn('EXISTS', 'Exists', 'BOOLEAN', false, null, true);
 		$this->addColumn('REMOVED', 'Removed', 'BOOLEAN', false, null, false);
 		// validators
 	} // initialize()

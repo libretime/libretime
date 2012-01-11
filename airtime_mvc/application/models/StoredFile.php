@@ -431,7 +431,7 @@ class Application_Model_StoredFile {
     public function setFilePath($p_filepath)
     {
         $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
-        Logging::log("path_info:".print_r($path_info, true));
+        
         if (is_null($path_info)) {
             return -1;
         }
@@ -499,7 +499,9 @@ class Application_Model_StoredFile {
         $storedFile->_file = $file;
 
         if(isset($md['MDATA_KEY_FILEPATH'])) {
-            $res = $storedFile->setFilePath($md['MDATA_KEY_FILEPATH']);
+            // removed "//" in the path. Always use '/' for path separator 
+            $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
+            $res = $storedFile->setFilePath($filepath);
             if ($res === -1) {
                 return null;
             }

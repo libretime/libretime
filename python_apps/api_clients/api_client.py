@@ -20,6 +20,7 @@ import os
 from urlparse import urlparse
 import base64
 from configobj import ConfigObj
+import string
 
 AIRTIME_VERSION = "2.0.0"
 
@@ -399,7 +400,7 @@ class AirTimeApiClient(ApiClientInterface):
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_setup_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
-
+            
             response = self.get_response_from_server(url)
             response = json.loads(response)
             logger.info("Connected to Airtime Server. Json Media Storage Dir: %s", response)
@@ -582,11 +583,55 @@ class AirTimeApiClient(ApiClientInterface):
             url = url.replace("%%msg%%", encoded_msg)
             url = url.replace("%%stream_id%%", stream_id)
             url = url.replace("%%boot_time%%", time)
-            logger.debug(url)
+            
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
         except Exception, e:
             logger.error("Exception: %s", e)
+    
+    """
+    This function updates status of mounted file system information on airtime
+    """
+    def update_file_system_mount(self, mount_list):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_fs_mount"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+
+            data_string = string.join(mount_list, ',')
+            map = [("mount_list", data_string)]
+            data = urllib.urlencode(map)
+            
+            req = urllib2.Request(url, data)
+            response = urllib2.urlopen(req).read()
+            logger.info("update file system mount: %s", response)
+        except Exception, e:
+            import traceback
+            top = traceback.format_exc()
+            logger.error('Exception: %s', e)
+            logger.error("traceback: %s", top)
+    
+    """
+        When watched dir is missing(unplugged or something) on boot up, this function will get called
+        and will call approperiate function on Airtime.
+    """
+    def handle_watched_dir_missing(self, dir):
+        logger = logging.getLogger()
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["handle_watched_dir_missing"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%dir%%", base64.b64encode(dir))
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            logger.info("update file system mount: %s", response)
+        except Exception, e:
+            import traceback
+            top = traceback.format_exc()
+            logger.error('Exception: %s', e)
+            logger.error("traceback: %s", top)
         
 ################################################################################
 # OpenBroadcast API Client

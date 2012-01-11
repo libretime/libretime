@@ -42,6 +42,7 @@ CREATE TABLE "cc_music_dirs"
 	"id" serial  NOT NULL,
 	"directory" TEXT,
 	"type" VARCHAR(255),
+	"exists" BOOLEAN default 't',
 	"removed" BOOLEAN default 'f',
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_music_dir_unique" UNIQUE ("directory")

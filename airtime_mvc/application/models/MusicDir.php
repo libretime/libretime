@@ -40,19 +40,28 @@ class Application_Model_MusicDir {
         $this->_dir->save();
     }
 
-    public function setRemoved($flag){
+    public function setExistsFlag($flag){
+        $this->_dir->setExists($flag);
+        $this->_dir->save();
+    }
+    
+    public function setRemovedFlag($flag){
         $this->_dir->setRemoved($flag);
         $this->_dir->save();
     }
     
-    public function getRemoved(){
+    public function getRemovedFlag(){
         return $this->_dir->getRemoved();
     }
     
-    public function remove()
+    public function getExistsFlag(){
+        return $this->_dir->getExists();
+    }
+    
+    public function remove($setRemovedFlag=true)
     {
         global $CC_DBC;
-Logging::log("remove!!");
+        
         $music_dir_id = $this->getId();
 
         $sql = "SELECT DISTINCT s.instance_id from cc_music_dirs as md LEFT JOIN cc_files as f on f.directory = md.id
@@ -66,24 +75,24 @@ Logging::log("remove!!");
         
         // set file_exist flag to false
         foreach( $files as $file_row ){
-            Logging::log(print_r($file_row['id'], true));
             $temp_file = Application_Model_StoredFile::Recall($file_row['id']);
-            $temp_file->setFileExistFlag(false);
+            if($temp_file != null){
+                $temp_file->setFileExistFlag(false);
+            }
         }
-        
-Logging::log("remove!!222222");
-Logging::log(print_r($this->_dir,true));
 
-        // set Removed flat to true
-        self::setRemoved(true);
+        // set RemovedFlag to true
+        if($setRemovedFlag){
+            self::setRemovedFlag(true);
+        }else{
+            self::setExistsFlag(false);
+        }
         //$res = $this->_dir->delete();
         
-Logging::log("remove!!44444");
         foreach ($show_instances as $show_instance_row) {
             $temp_show = new Application_Model_ShowInstance($show_instance_row["instance_id"]);
             $temp_show->updateScheduledTime();
         }
-Logging::log("remove end!!");
         Application_Model_RabbitMq::PushSchedule();
     }
 
@@ -119,7 +128,7 @@ Logging::log("remove end!!");
     public static function isPathValid($p_path){
         $dirs = self::getWatchedDirs();
         $dirs[] = self::getStorDir();
-Logging::log("dirs: ".print_r($dirs, true));
+        
         foreach ($dirs as $dirObj){
             $dir = $dirObj->getDirectory();
             $diff = strlen($dir) - strlen($p_path);
@@ -139,7 +148,7 @@ Logging::log("dirs: ".print_r($dirs, true));
         }
     }
 
-    public static function addDir($p_path, $p_type)
+    public static function addDir($p_path, $p_type, $setRemovedFlag=true)
     {
         if(!is_dir($p_path)){
             return array("code"=>2, "error"=>"'$p_path' is not a valid directory.");
@@ -148,14 +157,13 @@ Logging::log("dirs: ".print_r($dirs, true));
         if($real_path != "/"){
             $p_path = $real_path;
         }
-        Logging::log("dir:".print_r($p_path, true));
+        
         $exist_dir = self::getDirByPath($p_path);
-        Logging::log(print_r($exist_dir, true));
+        
         if( $exist_dir == NULL ){
-            Logging::log("new");
-            $dir = new CcMusicDirs();
+            $temp_dir = new CcMusicDirs();
+            $dir = new Application_Model_MusicDir($temp_dir);
         }else{
-            Logging::log("exist");
             $dir = $exist_dir;
         }
         
@@ -167,12 +175,13 @@ Logging::log("dirs: ".print_r($dirs, true));
             /* isPathValid() checks if path is a substring or a superstring of an
              * existing dir and if not, throws NestedDirectoryException */
             self::isPathValid($p_path);
-            $dir->setRemoved(false);
-            $dir->setDirectory($p_path);
- Logging::log("dir obj:".print_r($dir, true));
-            if( $exist_dir == NULL ){
-                $dir->save();
+            if($setRemovedFlag){
+                $dir->setRemovedFlag(false);
+            }else{
+                $dir->setExistsFlag(true);
             }
+            $dir->setDirectory($p_path);
+            
             return array("code"=>0);
         } catch (NestedDirectoryException $nde){
             $msg = $nde->getMessage();
@@ -183,9 +192,20 @@ Logging::log("dirs: ".print_r($dirs, true));
 
     }
 
-    public static function addWatchedDir($p_path)
+    /** There are 2 cases where this function can be called.
+     * 1. When watched dir was added
+     * 2. When some dir was watched, but it was unmounted somehow, but gets mounted again
+     * 
+     *  In case of 1, $setRemovedFlag should be true
+     *  In case of 2, $setRemovedFlag should be false
+     *  
+     *  When $setRemovedFlag is true, it will set "Removed" flag to false
+     *  otherwise, it will set "Exists" flag to true
+    **/ 
+    public static function addWatchedDir($p_path, $setRemovedFlag=true)
     {
-        $res = self::addDir($p_path, "watched");
+        $res = self::addDir($p_path, "watched", $setRemovedFlag);
+        
         if ($res['code'] == 0){
 
             //convert "linked" files (Airtime <= 1.8.2) to watched files.
@@ -243,7 +263,6 @@ Logging::log("dirs: ".print_r($dirs, true));
 
     public static function getDirByPath($p_path)
     {
-        Logging::log($p_path);
         $dir = CcMusicDirsQuery::create()
                     ->filterByDirectory($p_path)
                     ->findOne();
@@ -256,15 +275,26 @@ Logging::log("dirs: ".print_r($dirs, true));
             return $mus_dir;
         }
     }
-
-    public static function getWatchedDirs()
+    
+    /**
+     * Search and returns watched dirs
+     * 
+     * @param $exists search condition with exists flag
+     * @param $removed search condition with removed flag
+     */
+    public static function getWatchedDirs($exists=true, $removed=false)
     {
         $result = array();
 
         $dirs = CcMusicDirsQuery::create()
-                    ->filterByType("watched")
-                    ->filterByRemoved(false)
-                    ->find();
+                    ->filterByType("watched");
+        if($exists !== null){
+            $dirs = $dirs->filterByExists($exists);
+        }
+        if($removed !== null){
+            $dirs = $dirs->filterByRemoved($removed);
+        }
+         $dirs = $dirs->find();
 
         foreach($dirs as $dir) {
             $result[] = new Application_Model_MusicDir($dir);
@@ -311,7 +341,7 @@ Logging::log("dirs: ".print_r($dirs, true));
     {
         $dirs = CcMusicDirsQuery::create()
                     ->filterByType(array("watched", "stor"))
-                    ->filterByRemoved(false)
+                    ->filterByExists(true)
                     ->find();
 
         foreach($dirs as $dir) {
@@ -325,17 +355,27 @@ Logging::log("dirs: ".print_r($dirs, true));
         return null;
     }
 
-    public static function removeWatchedDir($p_dir){
+    /** There are 2 cases where this function can be called.
+     * 1. When watched dir was removed
+     * 2. When some dir was watched, but it was unmounted
+     * 
+     *  In case of 1, $setRemovedFlag should be true
+     *  In case of 2, $setRemovedFlag should be false
+     *  
+     *  When $setRemovedFlag is true, it will set "Removed" flag to false
+     *  otherwise, it will set "Exists" flag to true
+    **/ 
+    public static function removeWatchedDir($p_dir, $setRemovedFlag=true){
         $real_path = realpath($p_dir)."/";
         if($real_path != "/"){
             $p_dir = $real_path;
         }
         $dir = Application_Model_MusicDir::getDirByPath($p_dir);
-        Logging::log(print_r($dir,true));
+        
         if($dir == NULL){
             return array("code"=>1,"error"=>"'$p_dir' doesn't exist in the watched list.");
         }else{
-            $dir->remove();
+            $dir->remove($setRemovedFlag);
             $data = array();
             $data["directory"] = $p_dir;
             Application_Model_RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
@@ -346,7 +386,7 @@ Logging::log("dirs: ".print_r($dirs, true));
     public static function splitFilePath($p_filepath)
     {
         $mus_dir = self::getWatchedDirFromFilepath($p_filepath);
-Logging::log("mus_dir:".print_r($mus_dir, true));
+        
         if(is_null($mus_dir)) {
             return null;
         }
@@ -354,7 +394,7 @@ Logging::log("mus_dir:".print_r($mus_dir, true));
         $length_dir = strlen($mus_dir->getDirectory());
         $fp = substr($p_filepath, $length_dir);
 
-        return array($mus_dir->getDirectory(), $fp);
+        return array($mus_dir->getDirectory(), trim($fp));
     }
 
 }

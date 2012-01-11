@@ -26,6 +26,8 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-liquidsoap-status', 'json')
                 ->addActionContext('library-init', 'json')
                 ->addActionContext('live-chat', 'json')
+                ->addActionContext('update-file-system-mount', 'json')
+                ->addActionContext('handle-watched-dir-missing', 'json')
                 ->initContext();
     }
 
@@ -560,16 +562,15 @@ class ApiController extends Zend_Controller_Action
 
         // update import timestamp
         Application_Model_Preference::SetImportTimestamp();
-        Logging::log("mode: ".$mode);
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
+            $filepath = str_replace("//", "/", $filepath);
 
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-
+            
             if (is_null($file)) {
                 $file = Application_Model_StoredFile::Insert($md);
-                Logging::log("file: ".print_r($file, true));
             }
             else {
                 // path already exist
@@ -814,6 +815,79 @@ class ApiController extends Zend_Controller_Action
     	$this->view->libraryInit = array(
         	"numEntries"=>Application_Model_Preference::GetLibraryNumEntries()
         );
+    }
+    
+    // handles addition/deletion of mount point which watched dirs reside
+    public function updateFileSystemMountAction(){
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $params = $request->getParams();
+        
+        $temp_list = $params['mount_list'];
+        $mount_list = explode(',',$temp_list);
+        
+        // get all watched dirs
+        $dirs = Application_Model_MusicDir::getWatchedDirs(null, null);
+        
+        // dirs to be added to watch list again
+        $addedDirs = array();
+        // dirs to be deleted from watch list
+        $removedDirs = array();
+        
+        $tempDirs = Application_Model_MusicDir::getWatchedDirs(true,null);
+        foreach( $tempDirs as $d)
+        {
+            $removedDirs[$d->getDirectory()] = $d;
+        }
+        foreach( $dirs as $dir){
+            // set Exsits as false as default
+            foreach($mount_list as $mount_path){
+                if($mount_path == '/'){
+                    continue;
+                }
+                // if dir contaions mount_path
+                if(strstr($dir->getDirectory(),$mount_path)){
+                    if($dir->getExistsFlag() == false){
+                        $addedDirs[] = $dir;
+                    }else{
+                        unset($removedDirs[$dir->getDirector()]);
+                    }
+                }
+            }
+        }
+        
+        foreach($addedDirs as $ad){
+            Application_Model_MusicDir::addWatchedDir($ad->getDirectory(), false);
+        }
+        foreach($removedDirs as $rd){
+            Application_Model_MusicDir::removeWatchedDir($rd->getDirectory(), false);
+        }
+    }
+    
+    // handles case where watched dir is missing
+    public function handleWatchedDirMissingAction(){
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        $dir = base64_decode($request->getParam('dir'));
+        Application_Model_MusicDir::removeWatchedDir($dir, false);
     }
 }
 
