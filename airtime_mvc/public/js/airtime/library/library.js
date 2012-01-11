@@ -524,7 +524,7 @@ function createDataTable(data) {
                     /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
                     /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
                     /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
-                    /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "16%", "sClass": "library_length"},
+                    /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "10%", "sClass": "library_length"},
                     /* Type */          {"sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "9%", "sClass": "library_type"},
                     /* Upload Time */   {"sTitle": "Upload Time", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
                     /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
@@ -548,7 +548,7 @@ function createDataTable(data) {
                     "bShowAll": true
 		},
                 "oColReorder": {
-                    "aiOrder": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ] /* code this */,
+                    "aiOrder": [ 0, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] /* code this */,
                     "iFixedColumns": 3
 		}
     });
@@ -573,6 +573,6 @@ $(document).ready(function() {
     checkImportStatus();
     setInterval( "checkImportStatus()", 5000 );
     setInterval( "checkSCUploadStatus()", 5000 );
-
+    
     addQtipToSCIcons()
 });

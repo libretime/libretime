@@ -228,22 +228,22 @@ class LibraryController extends Zend_Controller_Action
         $post = $this->getRequest()->getPost();
         Logging::log(print_r($post, true));
         $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($post);
-
+        
         //format clip lengh to 1 decimal
         foreach($datatables["aaData"] as &$data){
-            if($data[6] == 'audioclip'){
-                $file = Application_Model_StoredFile::Recall($data[0]);
+            if($data['ftype'] == 'audioclip'){
+                $file = Application_Model_StoredFile::Recall($data['id']);
                 $scid = $file->getSoundCloudId();
                 if($scid == "-2"){
-                    $data[1] .= '<span id="'.$data[0].'" class="small-icon progress"></span>';
+                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon progress"></span>';
                 }else if($scid == "-3"){
-                    $data[1] .= '<span id="'.$data[0].'" class="small-icon sc-error"></span>';
+                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon sc-error"></span>';
                 }else if(!is_null($scid)){
-                    $data[1] .= '<span id="'.$data[0].'" class="small-icon soundcloud"></span>';
+                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon soundcloud"></span>';
                 }
             }
-            $sec = Application_Model_Playlist::playlistTimeToSeconds($data[5]);
-            $data[5] = Application_Model_Playlist::secondsToPlaylistTime($sec);
+            $sec = Application_Model_Playlist::playlistTimeToSeconds($data['length']);
+            $data['length'] = Application_Model_Playlist::secondsToPlaylistTime($sec);
         }
 
         die(json_encode($datatables));
