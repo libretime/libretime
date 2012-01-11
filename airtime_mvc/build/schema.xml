@@ -46,6 +46,8 @@
     <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
     <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false"/>
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false"/>
     <column name="md5" phpName="DbMd5" type="CHAR" size="32" required="false"/>
     <column name="track_title" phpName="DbTrackTitle" type="VARCHAR" size="512" required="false"/>
     <column name="artist_name" phpName="DbArtistName" type="VARCHAR" size="512" required="false"/>
@@ -215,6 +217,8 @@
     <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
     <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false"/>
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false"/>
     <column name="creator" phpName="DbCreator" type="VARCHAR" size="32" required="false"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
     <foreign-key foreignTable="cc_subjs" name="cc_playlist_editedby_fkey">

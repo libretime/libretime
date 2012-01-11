@@ -215,7 +215,6 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	 */
 	public function setExists($v)
 	{
-	    Logging::log("setting exists to ".print_r($v, true));
 		if ($v !== null) {
 			$v = (boolean) $v;
 		}

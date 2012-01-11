@@ -449,6 +449,9 @@ function setUpSPL() {
             }
             
             $("#fieldset-metadate_change").addClass("closed");
+            
+            // update the "Last Modified" time for this playlist
+            redrawDataTablePage();
         });
     });
 
