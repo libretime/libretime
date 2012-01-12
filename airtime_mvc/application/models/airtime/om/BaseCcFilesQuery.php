@@ -63,7 +63,7 @@
  * @method     CcFilesQuery orderByDbSubject($order = Criteria::ASC) Order by the subject column
  * @method     CcFilesQuery orderByDbContributor($order = Criteria::ASC) Order by the contributor column
  * @method     CcFilesQuery orderByDbLanguage($order = Criteria::ASC) Order by the language column
- * @method     CcFilesQuery orderByDbFileExist($order = Criteria::ASC) Order by the file_exist column
+ * @method     CcFilesQuery orderByDbFileExists($order = Criteria::ASC) Order by the file_exists column
  * @method     CcFilesQuery orderByDbSoundcloudId($order = Criteria::ASC) Order by the soundcloud_id column
  * @method     CcFilesQuery orderByDbSoundcloudErrorCode($order = Criteria::ASC) Order by the soundcloud_error_code column
  * @method     CcFilesQuery orderByDbSoundcloudErrorMsg($order = Criteria::ASC) Order by the soundcloud_error_msg column
@@ -126,7 +126,7 @@
  * @method     CcFilesQuery groupByDbSubject() Group by the subject column
  * @method     CcFilesQuery groupByDbContributor() Group by the contributor column
  * @method     CcFilesQuery groupByDbLanguage() Group by the language column
- * @method     CcFilesQuery groupByDbFileExist() Group by the file_exist column
+ * @method     CcFilesQuery groupByDbFileExists() Group by the file_exists column
  * @method     CcFilesQuery groupByDbSoundcloudId() Group by the soundcloud_id column
  * @method     CcFilesQuery groupByDbSoundcloudErrorCode() Group by the soundcloud_error_code column
  * @method     CcFilesQuery groupByDbSoundcloudErrorMsg() Group by the soundcloud_error_msg column
@@ -216,7 +216,7 @@
  * @method     CcFiles findOneByDbSubject(string $subject) Return the first CcFiles filtered by the subject column
  * @method     CcFiles findOneByDbContributor(string $contributor) Return the first CcFiles filtered by the contributor column
  * @method     CcFiles findOneByDbLanguage(string $language) Return the first CcFiles filtered by the language column
- * @method     CcFiles findOneByDbFileExist(boolean $file_exist) Return the first CcFiles filtered by the file_exist column
+ * @method     CcFiles findOneByDbFileExists(boolean $file_exists) Return the first CcFiles filtered by the file_exists column
  * @method     CcFiles findOneByDbSoundcloudId(int $soundcloud_id) Return the first CcFiles filtered by the soundcloud_id column
  * @method     CcFiles findOneByDbSoundcloudErrorCode(int $soundcloud_error_code) Return the first CcFiles filtered by the soundcloud_error_code column
  * @method     CcFiles findOneByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return the first CcFiles filtered by the soundcloud_error_msg column
@@ -279,7 +279,7 @@
  * @method     array findByDbSubject(string $subject) Return CcFiles objects filtered by the subject column
  * @method     array findByDbContributor(string $contributor) Return CcFiles objects filtered by the contributor column
  * @method     array findByDbLanguage(string $language) Return CcFiles objects filtered by the language column
- * @method     array findByDbFileExist(boolean $file_exist) Return CcFiles objects filtered by the file_exist column
+ * @method     array findByDbFileExists(boolean $file_exists) Return CcFiles objects filtered by the file_exists column
  * @method     array findByDbSoundcloudId(int $soundcloud_id) Return CcFiles objects filtered by the soundcloud_id column
  * @method     array findByDbSoundcloudErrorCode(int $soundcloud_error_code) Return CcFiles objects filtered by the soundcloud_error_code column
  * @method     array findByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return CcFiles objects filtered by the soundcloud_error_msg column
@@ -1724,20 +1724,20 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the file_exist column
+	 * Filter the query on the file_exists column
 	 * 
-	 * @param     boolean|string $dbFileExist The value to use as filter.
+	 * @param     boolean|string $dbFileExists The value to use as filter.
 	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByDbFileExist($dbFileExist = null, $comparison = null)
+	public function filterByDbFileExists($dbFileExists = null, $comparison = null)
 	{
-		if (is_string($dbFileExist)) {
-			$file_exist = in_array(strtolower($dbFileExist), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		if (is_string($dbFileExists)) {
+			$file_exists = in_array(strtolower($dbFileExists), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
 		}
-		return $this->addUsingAlias(CcFilesPeer::FILE_EXIST, $dbFileExist, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::FILE_EXISTS, $dbFileExists, $comparison);
 	}
 
 	/**

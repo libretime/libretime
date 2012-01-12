@@ -95,7 +95,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('SUBJECT', 'DbSubject', 'VARCHAR', false, 512, null);
 		$this->addColumn('CONTRIBUTOR', 'DbContributor', 'VARCHAR', false, 512, null);
 		$this->addColumn('LANGUAGE', 'DbLanguage', 'VARCHAR', false, 512, null);
-		$this->addColumn('FILE_EXIST', 'DbFileExist', 'BOOLEAN', false, null, true);
+		$this->addColumn('FILE_EXISTS', 'DbFileExists', 'BOOLEAN', false, null, true);
 		$this->addColumn('SOUNDCLOUD_ID', 'DbSoundcloudId', 'INTEGER', false, null, null);
 		$this->addColumn('SOUNDCLOUD_ERROR_CODE', 'DbSoundcloudErrorCode', 'INTEGER', false, null, null);
 		$this->addColumn('SOUNDCLOUD_ERROR_MSG', 'DbSoundcloudErrorMsg', 'VARCHAR', false, 512, null);

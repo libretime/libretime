@@ -574,13 +574,13 @@ class ApiController extends Zend_Controller_Action
             }
             else {
                 // path already exist
-                if($file->getFileExistFlag()){
+                if($file->getFileExistsFlag()){
                     // file marked as exists
                     $this->view->error = "File already exists in Airtime.";
                     return;
                 }else{
                     // file marked as not exists
-                    $file->setFileExistFlag(true);
+                    $file->setFileExistsFlag(true);
                 }
             }
         }
@@ -831,46 +831,70 @@ class ApiController extends Zend_Controller_Action
         }
 
         $params = $request->getParams();
-        
-        $temp_list = $params['mount_list'];
-        $mount_list = explode(',',$temp_list);
+        $added_list = empty($params['added_dir'])?array():explode(',',$params['added_dir']);
+        $removed_list = empty($params['removed_dir'])?array():explode(',',$params['removed_dir']);
         
         // get all watched dirs
-        $dirs = Application_Model_MusicDir::getWatchedDirs(null, null);
+        $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null,null);
         
-        // dirs to be added to watch list again
-        $addedDirs = array();
-        // dirs to be deleted from watch list
-        $removedDirs = array();
-        
-        $tempDirs = Application_Model_MusicDir::getWatchedDirs(true,null);
-        foreach( $tempDirs as $d)
-        {
-            $removedDirs[$d->getDirectory()] = $d;
-        }
-        foreach( $dirs as $dir){
-            // set Exsits as false as default
-            foreach($mount_list as $mount_path){
-                if($mount_path == '/'){
-                    continue;
-                }
-                // if dir contaions mount_path
-                if(strstr($dir->getDirectory(),$mount_path)){
-                    if($dir->getExistsFlag() == false){
-                        $addedDirs[] = $dir;
-                    }else{
-                        unset($removedDirs[$dir->getDirector()]);
+            foreach( $added_list as $ad){
+                foreach( $watched_dirs as $dir ){
+                    $dirPath = $dir->getDirectory();
+                    
+                    $ad .= '/';
+                    
+                    // if mount path itself was watched
+                    if($dirPath == $ad){
+                        Application_Model_MusicDir::addWatchedDir($dirPath, false);
+                        break;
+                    }
+                    // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
+                    else if(substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false){
+                        Application_Model_MusicDir::addWatchedDir($dirPath, false);
+                        break;
+                    }
+                    // is new mount point within the watched dir?
+                    // pyinotify doesn't notify anyhing in this case, so we add this mount point as
+                    // watched dir
+                    else if(substr($ad, 0, strlen($dirPath)) === $dirPath){
+                        // bypass nested loop check
+                        Application_Model_MusicDir::addWatchedDir($ad, false, true);
+                        break;
                     }
                 }
             }
-        }
-        
-        foreach($addedDirs as $ad){
-            Application_Model_MusicDir::addWatchedDir($ad->getDirectory(), false);
-        }
-        foreach($removedDirs as $rd){
-            Application_Model_MusicDir::removeWatchedDir($rd->getDirectory(), false);
-        }
+            foreach( $removed_list as $rd){
+                foreach( $watched_dirs as $dir ){
+                    $dirPath = $dir->getDirectory();
+                    $rd .= '/';
+                    // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
+                    if(substr($dirPath, 0, strlen($rd)) === $rd && $dir->getExistsFlag() == true){
+                        Application_Model_MusicDir::removeWatchedDir($dirPath, false);
+                        break;
+                    }
+                    // is new mount point within the watched dir?
+                    // pyinotify doesn't notify anyhing in this case, so we walk through all files within
+                    // this watched dir in DB and mark them deleted.
+                    // In case of h) of use cases, due to pyinotify behaviour of noticing mounted dir, we need to 
+                    // compare agaisnt all files in cc_files table
+                    else if(substr($rd, 0, strlen($dirPath)) === $dirPath ){
+                        $watchDir = Application_Model_MusicDir::getDirByPath($rd);
+                        // get all the files that is under $dirPath
+                        $files = Application_Model_StoredFile::listAllFiles($dir->getId(), true);
+                        foreach($files as $f){
+                            // if the file is from this mount
+                            if(substr( $f->getFilePath(),0,strlen($rd) ) === $rd){
+                                $f->delete();
+                            }
+                        }
+                        if($watchDir){
+                            Application_Model_MusicDir::removeWatchedDir($rd, false);
+                        }
+                        break;
+                    }
+                }
+            }
+            
     }
     
     // handles case where watched dir is missing

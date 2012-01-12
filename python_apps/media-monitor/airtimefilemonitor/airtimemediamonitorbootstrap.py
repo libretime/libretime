@@ -1,6 +1,7 @@
 import os
 import time
 import pyinotify
+import shutil
 
 from subprocess import Popen, PIPE
 from api_clients import api_client
@@ -22,8 +23,13 @@ class AirtimeMediaMonitorBootstrap():
         self.wm = wm
         # add /etc on watch list so we can detect mount
         self.mount_file = "/etc"
+        self.curr_mtab_file = "/var/tmp/airtime/media-monitor/currMtab"
         self.logger.info("Adding %s on watch list...", self.mount_file)
         self.wm.add_watch(self.mount_file, pyinotify.ALL_EVENTS, rec=False, auto_add=False)
+        
+        # create currMtab file if it's the first time
+        if not os.path.exists(self.curr_mtab_file):
+            shutil.copy('/etc/mtab', self.curr_mtab_file)
 
     """On bootup we want to scan all directories and look for files that
     weren't there or files that changed before media-monitor process

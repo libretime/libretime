@@ -10,7 +10,7 @@ import pyinotify
 
 class MediaMonitorCommon:
 
-    timestamp_file = "/var/tmp/airtime/last_index"
+    timestamp_file = "/var/tmp/airtime/media-monitor/last_index"
 
     def __init__(self, airtime_config, wm=None):
         self.supported_file_formats = ['mp3', 'ogg']

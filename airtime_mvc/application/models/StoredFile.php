@@ -317,8 +317,8 @@ class Application_Model_StoredFile {
         // don't delete from the playslist. We might want to put a flag
         //Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
         
-        // set file_exist falg to false
-        $this->_file->setDbFileExist(false);
+        // set file_exists falg to false
+        $this->_file->setDbFileExists(false);
         $this->_file->save();
         //$this->_file->delete();
 
@@ -683,7 +683,7 @@ class Application_Model_StoredFile {
             FROM ".$CC_CONFIG["playListTable"]." AS PL
                 LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
             UNION
-            (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exist = 'TRUE')) AS RESULTS";
+            (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
         
         return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
     }
@@ -754,9 +754,6 @@ class Application_Model_StoredFile {
 		$orderby = join("," , $orderby);
 		// End Order By clause
 
-		//ordered by integer as expected by datatables.
-		//$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
-
 		if(isset($where)) {
 			$where = join(" AND ", $where);
 			$sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
@@ -770,21 +767,13 @@ class Application_Model_StoredFile {
 		$results = $CC_DBC->getAll($sql);
 		foreach($results as &$row){
                     // add checkbox row
-		    $row['checkbox'] = "<input type='checkbox' name='cb_".$row[id]."'>";
+		    $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
                     
                     // a full timestamp is being returned for playlists' year column;
                     // split it and grab only the year info
                     $yearSplit = explode('-', $row['year']);
                     $row['year'] = $yearSplit[0];
 		}
-		//$results['checkbox']
-		//$results = $CC_DBC->getAssoc($sql);
-		Logging::log(print_r($results, true));
-		//echo $results;
-		//echo $sql;
-
-		//put back to default fetch mode.
-		$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
 		if(!isset($totalDisplayRows)) {
 			$totalDisplayRows = $totalRows;
@@ -929,24 +918,34 @@ class Application_Model_StoredFile {
         return $CC_DBC->GetOne($sql);
     }
 
-    public static function listAllFiles($dir_id){
+    /**
+     * 
+     * Enter description here ...
+     * @param $dir_id - if this is not provided, it returns all files with full path constructed.
+     * @param $propelObj - if this is true, it returns array of proepl obj
+     */
+    public static function listAllFiles($dir_id=null, $propelObj=false){
         global $CC_DBC;
-
-        // $sql = "SELECT m.directory || '/' || f.filepath as fp"
-                // ." FROM CC_MUSIC_DIRS m"
-                // ." LEFT JOIN CC_FILES f"
-                // ." ON m.id = f.directory"
-                // ." WHERE m.id = f.directory"
-                // ." AND m.id = $dir_id";
-        $sql = "SELECT filepath as fp"
-                ." FROM CC_FILES"
-                ." WHERE directory = $dir_id";
-
+        
+        if($propelObj){
+            $sql = "SELECT m.directory || f.filepath as fp"
+                    ." FROM CC_MUSIC_DIRS m"
+                    ." LEFT JOIN CC_FILES f"
+                    ." ON m.id = f.directory WHERE m.id = $dir_id and f.file_exists = 'TRUE'";
+        }else{
+            $sql = "SELECT filepath as fp"
+                    ." FROM CC_FILES"
+                    ." WHERE directory = $dir_id and file_exists = 'TRUE'";
+        }
         $rows = $CC_DBC->getAll($sql);
 
         $results = array();
         foreach ($rows as $row){
-            $results[] = $row["fp"];
+            if($propelObj){
+                $results[] = Application_Model_StoredFile::RecallByFilepath($row["fp"]);
+            }else{
+                $results[] = $row["fp"];
+            }
         }
 
         return $results;
@@ -990,13 +989,13 @@ class Application_Model_StoredFile {
         return $this->_file->getDbSoundCloudErrorMsg();
     }
     
-    public function setFileExistFlag($flag){
-        $this->_file->setDbFileExist($flag)
+    public function setFileExistsFlag($flag){
+        $this->_file->setDbFileExists($flag)
             ->save();
     }
     
-    public function getFileExistFlag(){
-        return $this->_file->getDbFileExist();
+    public function getFileExistsFlag(){
+        return $this->_file->getDbFileExists();
     }
 
     public function uploadToSoundCloud()
