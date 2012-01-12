@@ -225,8 +225,10 @@ def airtime_18x_tar(root_dir, version):
     sed('/etc/default/icecast2', 'ENABLE=false', 'ENABLE=true', use_sudo=True)
     do_sudo('service icecast2 start')
     
-    do_run('wget http://downloads.sourceforge.net/project/airtime/%s/airtime-%s.tar.gz' % (version, version))
-    do_run('tar xfz airtime-%s.tar.gz' % version)
+    #these are do_sudo instead of do_run because in Debian we would be working with different home directores (/home/martin and /root in debian)
+    do_sudo('wget http://downloads.sourceforge.net/project/airtime/%s/airtime-%s.tar.gz' % (version, version))
+    do_sudo('tar xfz airtime-%s.tar.gz' % version)
+    
     do_sudo('cd ~/%s/install && php airtime-install.php' % root_dir)
 
     #need to reboot because of daemon-tools.
