@@ -405,9 +405,6 @@ function toggleAll() {
             }
             $(this).addClass('selected');
         } else {
-            if (type == "pl") {
-                checkedPLCount--;
-            }
             $(this).removeClass('selected');
         }
     });
@@ -428,7 +425,7 @@ function enableGroupBtn(btnId, func) {
     btnId = '#' + btnId;
     if ($(btnId).hasClass('ui-state-disabled')) {
         $(btnId).removeClass('ui-state-disabled');
-        $(btnId).click(func);
+        $(btnId).unbind("click").click(func);
     }
 }
 
@@ -476,16 +473,15 @@ function checkBoxChanged() {
     } else if (!cbAllChecked && checkedCount == size) {
         cbAll.attr("checked", true);
     }
-    
-    
 }
 
 function setupGroupActions() {
     checkedCount = 0;
+    checkedPLCount = 0;
     $('#library_display tr:nth-child(1)').find(":checkbox").attr("checked", false);
-    $('#library_display thead').find(":checkbox").change(toggleAll);
+    $('#library_display thead').find(":checkbox").unbind('change').change(toggleAll);
     $('#library_display tbody tr').each(function() {
-        $(this).find(":checkbox").change(checkBoxChanged);
+        $(this).find(":checkbox").unbind('change').change(checkBoxChanged);
     });
     
     disableGroupBtn('library_group_add');
@@ -567,7 +563,7 @@ function createDataTable(data) {
 $(document).ready(function() {
     $('.tabs').tabs();
     
-    $.ajax({ url: "/Api/library-init/format/json", dataType:"json", success:createDataTable, 
+    $.ajax({url: "/Api/library-init/format/json", dataType:"json", success:createDataTable, 
         error:function(jqXHR, textStatus, errorThrown){}});
     
     checkImportStatus();
