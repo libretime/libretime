@@ -86,7 +86,7 @@ function setScheduleDialogEvents(dialog) {
 }
 
 function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-	var id = "pl_" + aData[0];
+	var id = "pl_" + aData['id'];
 
 	$(nRow).attr("id", id);
 
@@ -125,12 +125,12 @@ function makeScheduleDialog(dialog, json) {
 		"fnRowCallback": dtRowCallback,
 		"fnDrawCallback": dtDrawCallback,
 		"aoColumns": [ 
-			/* Id */			{ "sName": "pl.id", "bSearchable": false, "bVisible": false },
-			/* Description */	{ "sName": "pl.description", "bVisible": false },
-			/* Name */			{ "sName": "pl.name" },
-			/* Creator */		{ "sName": "pl.creator" },
-			/* Length */		{ "sName": "plt.length" },
-			/* Editing */		{ "sName": "sub.login" }
+			/* Id */		{"sTitle": "ID", "sName": "pl.id", "bSearchable": false, "bVisible": false, "mDataProp": "id"},
+                        /* Description */	{"sTitle": "Description", "sName": "pl.description", "bSearchable": false, "bVisible": false, "mDataProp": "description"},
+			/* Name */		{"sTitle": "Title", "sName": "pl.name", "mDataProp": "name"},
+			/* Creator */		{"sTitle": "Creator", "sName": "pl.creator", "mDataProp": "creator"},
+			/* Length */		{"sTitle": "Length", "sName": "plt.length", "mDataProp": "length"},
+			/* Editing */		{"sTitle": "Editing", "sName": "sub.login", "mDataProp": "login"}
 		],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
