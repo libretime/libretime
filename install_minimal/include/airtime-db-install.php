@@ -23,8 +23,15 @@ AirtimeInstall::DbConnect(true);
 
 AirtimeInstall::InstallPostgresScriptingLanguage();
 
+//Load Database parameters
+global $CC_CONFIG;
+$dbuser = $CC_CONFIG['dsn']['username'];
+$dbpasswd = $CC_CONFIG['dsn']['password'];
+$dbname = $CC_CONFIG['dsn']['database'];
+$dbhost = $CC_CONFIG['dsn']['hostspec'];
+
 if (isset($argv[1]) && $argv[1] == 'y') {
-    AirtimeInstall::CreateDatabaseTables();
+    AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
 } else if ($databaseExisted) {
     //Database already exists. Ask the user how they want to
     //proceed. Warn them that creating the database tables again
@@ -36,12 +43,12 @@ if (isset($argv[1]) && $argv[1] == 'y') {
         $userAnswer = trim(fgets(STDIN));
     }
     if (in_array($userAnswer, array("y", "Y"))) {
-        AirtimeInstall::CreateDatabaseTables();
+        AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
     }
 } else {
     //Database was just created, meaning the tables do not
     //exist. Let's create them.
-    AirtimeInstall::CreateDatabaseTables();
+    AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
 }
 
 echo " * Setting Airtime version".PHP_EOL;

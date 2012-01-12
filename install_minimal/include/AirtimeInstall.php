@@ -242,14 +242,21 @@ class AirtimeInstall
         }
     }
 
-    public static function CreateDatabaseTables()
+    public static function CreateDatabaseTables($p_dbuser, $p_dbpasswd, $p_dbname, $p_dbhost)
     {
         echo " * Creating database tables".PHP_EOL;
 
         // Put Propel sql files in Database
-        //$command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql";
-        $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
-        @exec($command, $output, $results);
+        //$command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
+        
+        $dir = AirtimeInstall::CONF_DIR_WWW."/build/sql/";
+        $files = array("schema.sql", "sequences.sql", "views.sql", "triggers.sql", "defaultdata.sql");
+        
+        foreach ($files as $f){
+            $command = "export PGPASSWORD=$p_dbpasswd && psql --username $p_dbuser --dbname $p_dbname --host $p_dbhost --file $dir$f 2>/dev/null";
+            @exec($command, $output, $results);
+        }
+        
         AirtimeInstall::$databaseTablesCreated = true;
     }
 
