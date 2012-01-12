@@ -33,7 +33,8 @@ function createDateInput(el, onSelect) {
 			onSelect: onSelect,
 			dateFormat: 'yy-mm-dd',
 			closeText: 'Close',
-			showButtonPanel: true
+			showButtonPanel: true,
+                        firstDay: weekStart
 		});
 }
 
@@ -190,7 +191,8 @@ function setAddShowEvents() {
 		minDate: adjustDateToServerDate(new Date(), timezoneOffset),
 		dateFormat: 'yy-mm-dd',
 		closeText: 'Close',
-		showButtonPanel: true
+		showButtonPanel: true,
+                firstDay: weekStart
 	});
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
