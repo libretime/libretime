@@ -111,7 +111,7 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
         
     do_local('VBoxManage snapshot %s restore fresh_install'%vm_name)
     
-    do_local('VBoxManage modifyvm "%s" --bridgeadapter1 wlan0'%vm_name)
+    do_local('VBoxManage modifyvm "%s" --bridgeadapter1 eth0'%vm_name)
     do_local('VBoxManage startvm %s'%vm_name)
     print "Please wait while attempting to acquire IP address"
         
@@ -192,7 +192,7 @@ def airtime_181_tar():
     airtime_18x_tar("airtime", "1.8.1")
     
 def airtime_182_tar():
-    airtime_18x_tar("airtime-1.8.2" "1.8.2")
+    airtime_18x_tar("airtime-1.8.2", "1.8.2")
         
 def airtime_18x_tar(root_dir, version):
     do_sudo('apt-get update')
