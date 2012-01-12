@@ -298,8 +298,8 @@ def airtime_latest_deb():
 def airtime_git_branch(branch="devel"):
     do_sudo('apt-get update')
     do_sudo('apt-get install -y git-core')
-    do_run('git clone https://github.com/sourcefabric/Airtime.git ~/airtime')
-    do_sudo('cd /home/martin/airtime && git checkout %s && install_full/ubuntu/airtime-full-install || true' % branch)
+    do_run('git clone https://github.com/sourcefabric/Airtime.git ~/airtime_git')
+    do_sudo('cd /home/martin/airtime_git && git checkout %s && install_full/ubuntu/airtime-full-install || true' % branch)
 
 
 def airtime_200():
