@@ -377,6 +377,7 @@ class ApiController extends Zend_Controller_Action
 
 
         $this->view->is_recording = false;
+        $this->view->server_timezone = Application_Model_Preference::GetTimezone();
 
         $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
         Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
