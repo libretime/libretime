@@ -339,15 +339,15 @@ class ScheduleController extends Zend_Controller_Action
             return false;
         }
 
-		$playlists = $show->searchPlaylistsForShow($post);
-		foreach( $playlists['aaData'] as &$data){
-		    // calling two functions to format time to 1 decimal place
-            $sec = Application_Model_Playlist::playlistTimeToSeconds($data[4]);
-            $data[4] = Application_Model_Playlist::secondsToPlaylistTime($sec);
-		}
+        $playlists = $show->searchPlaylistsForShow($post);
+        foreach( $playlists['aaData'] as &$data){
+            // calling two functions to format time to 1 decimal place
+            $sec = Application_Model_Playlist::playlistTimeToSeconds($data['length']);
+            $data['length'] = Application_Model_Playlist::secondsToPlaylistTime($sec);
+        }
 
-		//for datatables
-		die(json_encode($playlists));
+        //for datatables
+        die(json_encode($playlists));
     }
 
     public function removeGroupAction()
