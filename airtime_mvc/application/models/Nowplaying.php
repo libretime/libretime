@@ -27,7 +27,9 @@ class Application_Model_Nowplaying
             $status = ($dbRow['show_ends'] < $dbRow['item_ends']) ? "x" : "";
             
             $type = "a";
-            $type .= ($itemEndDateTime->getTimestamp() > $epochNow && $itemStartDateTime->getTimestamp() <= $epochNow) ? "c" : "";
+            $type .= ($itemStartDateTime->getTimestamp() <= $epochNow 
+                    && $epochNow < $itemEndDateTime->getTimestamp()
+                    && $epochNow < $showEndDateTime->getTimestamp()) ? "c" : "";
             
             // remove millisecond from the time format
             $itemStart = explode('.', $dbRow['item_starts']);
