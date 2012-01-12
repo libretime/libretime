@@ -139,8 +139,8 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
         #installed before.
         do_sudo('echo "rabbitmq-server rabbitmq-server/upgrade_previous note" | debconf-set-selections')
         
-    #if debian:
-        #append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
+    if debian:
+        append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
