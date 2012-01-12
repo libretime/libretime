@@ -16,10 +16,13 @@ class SystemstatusController extends Zend_Controller_Action
         $services = array(
             "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
             "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
-            "show-recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
             "media-monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus(),
             "rabbitmq-server"=>Application_Model_Systemstatus::GetRabbitMqStatus()
         );
+        
+        if (!isset($_SERVER["AIRTIME_SRV"])){
+            $services["show-recorder"]=Application_Model_Systemstatus::GetShowRecorderStatus();
+        }
 
         $partitions = Application_Model_Systemstatus::GetDiskInfo();
         

@@ -51,6 +51,9 @@ def do_local(command, capture=True):
         sys.exit(1)
     else:
         return result
+
+def pause():
+    raw_input("--> Press Enter to continue...")
     
 def shutdown():
     do_sudo("poweroff")
@@ -108,7 +111,7 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
         
     do_local('VBoxManage snapshot %s restore fresh_install'%vm_name)
     
-    do_local('VBoxManage modifyvm "%s" --bridgeadapter1 wlan0'%vm_name)
+    do_local('VBoxManage modifyvm "%s" --bridgeadapter1 eth0'%vm_name)
     do_local('VBoxManage startvm %s'%vm_name)
     print "Please wait while attempting to acquire IP address"
         
@@ -139,8 +142,8 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
         #installed before.
         do_sudo('echo "rabbitmq-server rabbitmq-server/upgrade_previous note" | debconf-set-selections')
         
-    #if debian:
-        #append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
+    if debian:
+        append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
@@ -189,11 +192,11 @@ def airtime_181_tar():
     airtime_18x_tar("airtime", "1.8.1")
     
 def airtime_182_tar():
-    airtime_18x_tar("airtime-1.8.2" "1.8.2")
+    airtime_18x_tar("airtime-1.8.2", "1.8.2")
         
 def airtime_18x_tar(root_dir, version):
     do_sudo('apt-get update')
-    do_sudo('apt-get install -y tar gzip unzip apache2 php5-pgsql libapache2-mod-php5 ' + \
+    do_sudo('apt-get install -y --force-yes tar gzip unzip apache2 php5-pgsql libapache2-mod-php5 ' + \
         'php-pear php5-gd postgresql odbc-postgresql python python-configobj poc-streamer ' + \
         'lame daemontools daemontools-run python-mutagen libsoundtouch-ocaml sudo ' + \
         'libtaglib-ocaml libao-ocaml libmad-ocaml libesd0 icecast2 oggvideotools ' + \
@@ -222,8 +225,10 @@ def airtime_18x_tar(root_dir, version):
     sed('/etc/default/icecast2', 'ENABLE=false', 'ENABLE=true', use_sudo=True)
     do_sudo('service icecast2 start')
     
-    do_run('wget http://downloads.sourceforge.net/project/airtime/%s/airtime-%s.tar.gz' % (version, version))
-    do_run('tar xfz airtime-%s.tar.gz' % version)
+    #these are do_sudo instead of do_run because in Debian we would be working with different home directores (/home/martin and /root in debian)
+    do_sudo('wget http://downloads.sourceforge.net/project/airtime/%s/airtime-%s.tar.gz' % (version, version))
+    do_sudo('tar xfz airtime-%s.tar.gz' % version)
+    
     do_sudo('cd ~/%s/install && php airtime-install.php' % root_dir)
 
     #need to reboot because of daemon-tools.
@@ -293,8 +298,8 @@ def airtime_latest_deb():
 def airtime_git_branch(branch="devel"):
     do_sudo('apt-get update')
     do_sudo('apt-get install -y git-core')
-    do_run('git clone https://github.com/sourcefabric/Airtime.git ~/airtime')
-    do_sudo('cd /home/martin/airtime && git checkout %s && install_full/ubuntu/airtime-full-install || true' % branch)
+    do_run('git clone https://github.com/sourcefabric/Airtime.git ~/airtime_git')
+    do_sudo('cd /home/martin/airtime_git && git checkout %s && install_full/ubuntu/airtime-full-install || true' % branch)
 
 
 def airtime_200():
