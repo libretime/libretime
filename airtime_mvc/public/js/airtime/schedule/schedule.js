@@ -184,6 +184,16 @@ function confirmCancelShow(show_instance_id){
     }
 }
 
+function confirmCancelRecordedShow(show_instance_id){
+    if(confirm('Erase current show and stop recording?')){
+        var url = "/Schedule/cancel-current-show/id/"+show_instance_id;
+        $.ajax({
+          url: url,
+          success: function(data){scheduleRefetchEvents(data);}
+        });
+    }
+}
+
 function uploadToSoundCloud(show_instance_id){
     
     var url = "/Schedule/upload-to-sound-cloud";

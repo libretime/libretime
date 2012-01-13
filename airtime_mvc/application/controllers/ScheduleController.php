@@ -235,9 +235,15 @@ class ScheduleController extends Zend_Controller_Action
         if ($showStartDateHelper->getTimestamp() <= $epochNow &&
                 $epochNow < $showEndDateHelper->getTimestamp() &&
                 $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+            if ($show->isRecorded()) {
+                $menu[] = array('action' => array('type' => 'fn',
+                    'callback' => "window['confirmCancelRecordedShow']($id)"),
+                    'title' => 'Cancel Current Show');
+            } else {
                 $menu[] = array('action' => array('type' => 'fn',
                     'callback' => "window['confirmCancelShow']($id)"),
                     'title' => 'Cancel Current Show');
+            }
         }
 
         if ($epochNow < $showStartDateHelper->getTimestamp()) {
