@@ -125,6 +125,12 @@ $(document).ready(function() {
         rebuildStreamURL($(this))
     })
     
+    if(!$("#output_sound_device").is(':checked')){
+        $("select[id=output_sound_device_type]").attr('disabled', 'disabled')
+    }else{
+        $("select[id=output_sound_device_type]").removeAttr('disabled')
+    }
+    
     $("#output_sound_device").change(function(){
         if($(this).is(':checked')){
         	$("select[id=output_sound_device_type]").removeAttr('disabled')

@@ -36,15 +36,15 @@
       <li><span class="name"><?php echo $this->user ?></span> | <a href="/Login/logout">Logout</a></li>
     </ul>
   </div>
-  <?php if($this->is_trial){?>
+  <?php if($this->trial_remain != '' && $this->trial_remain != "Trial expired."){?>
   <div class="trial-box">
-      <p>Your Trial expires in</p>
+      <p>Your trial expires in</p>
       <div class="trial-box-calendar">
            <span class="trial-box-calendar-white"><?php echo $this->trial_remain?></span>
            <div class="trial-box-calendar-gray">days</div>
       </div>
       <div class="trial-box-button">
-            <a title="Purchase your copy of Airtime" href="https://account.sourcefabric.com/clientarea.php" target="_blank">Buy Now</a>
+            <a title="Purchase your copy of Airtime" href="https://account.sourcefabric.com/clientarea.php" target="_blank">My Account</a>
       </div>
   </div>
   <?php }?> 
