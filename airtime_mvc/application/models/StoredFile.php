@@ -314,8 +314,13 @@ class Application_Model_StoredFile {
             }
         }
 
-        Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
-        $this->_file->delete();
+        // don't delete from the playslist. We might want to put a flag
+        //Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
+        
+        // set file_exists falg to false
+        $this->_file->setDbFileExists(false);
+        $this->_file->save();
+        //$this->_file->delete();
 
         if (isset($res)) {
             return $res;
@@ -430,6 +435,7 @@ class Application_Model_StoredFile {
     public function setFilePath($p_filepath)
     {
         $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
+        
         if (is_null($path_info)) {
             return -1;
         }
@@ -499,7 +505,9 @@ class Application_Model_StoredFile {
         $storedFile->_file = $file;
 
         if(isset($md['MDATA_KEY_FILEPATH'])) {
-            $res = $storedFile->setFilePath($md['MDATA_KEY_FILEPATH']);
+            // removed "//" in the path. Always use '/' for path separator 
+            $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
+            $res = $storedFile->setFilePath($filepath);
             if ($res === -1) {
                 return null;
             }
@@ -674,12 +682,20 @@ class Application_Model_StoredFile {
         $fromTable = " ((".$plSelect."PL.id
             FROM ".$CC_CONFIG["playListTable"]." AS PL
                 LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
-
             UNION
-
-            (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES)) AS RESULTS";
+            (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
         
-        return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+        $results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+        foreach($results['aaData'] as &$row){
+            // add checkbox row
+            $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
+
+            // a full timestamp is being returned for playlists' year column;
+            // split it and grab only the year info
+            $yearSplit = explode('-', $row['year']);
+            $row['year'] = $yearSplit[0];
+        }
+        return $results;
     }
 
     public static function searchPlaylistsForSchedule($datatables)
@@ -748,9 +764,6 @@ class Application_Model_StoredFile {
 		$orderby = join("," , $orderby);
 		// End Order By clause
 
-		//ordered by integer as expected by datatables.
-		//$CC_DBC->setFetchMode(DB_FETCHMODE_ORDERED);
-
 		if(isset($where)) {
 			$where = join(" AND ", $where);
 			$sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
@@ -760,26 +773,9 @@ class Application_Model_StoredFile {
 		else {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
-
+		
 		$results = $CC_DBC->getAll($sql);
-		foreach($results as &$row){
-                    // add checkbox row
-		    $row['checkbox'] = "<input type='checkbox' name='cb_".$row[id]."'>";
-                    
-                    // a full timestamp is being returned for playlists' year column;
-                    // split it and grab only the year info
-                    $yearSplit = explode('-', $row['year']);
-                    $row['year'] = $yearSplit[0];
-		}
-		//$results['checkbox']
-		//$results = $CC_DBC->getAssoc($sql);
-		Logging::log(print_r($results, true));
-		//echo $results;
-		//echo $sql;
-
-		//put back to default fetch mode.
-		$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-
+                
 		if(!isset($totalDisplayRows)) {
 			$totalDisplayRows = $totalRows;
 		}
@@ -923,24 +919,34 @@ class Application_Model_StoredFile {
         return $CC_DBC->GetOne($sql);
     }
 
-    public static function listAllFiles($dir_id){
+    /**
+     * 
+     * Enter description here ...
+     * @param $dir_id - if this is not provided, it returns all files with full path constructed.
+     * @param $propelObj - if this is true, it returns array of proepl obj
+     */
+    public static function listAllFiles($dir_id=null, $propelObj=false){
         global $CC_DBC;
-
-        // $sql = "SELECT m.directory || '/' || f.filepath as fp"
-                // ." FROM CC_MUSIC_DIRS m"
-                // ." LEFT JOIN CC_FILES f"
-                // ." ON m.id = f.directory"
-                // ." WHERE m.id = f.directory"
-                // ." AND m.id = $dir_id";
-        $sql = "SELECT filepath as fp"
-                ." FROM CC_FILES"
-                ." WHERE directory = $dir_id";
-
+        
+        if($propelObj){
+            $sql = "SELECT m.directory || f.filepath as fp"
+                    ." FROM CC_MUSIC_DIRS m"
+                    ." LEFT JOIN CC_FILES f"
+                    ." ON m.id = f.directory WHERE m.id = $dir_id and f.file_exists = 'TRUE'";
+        }else{
+            $sql = "SELECT filepath as fp"
+                    ." FROM CC_FILES"
+                    ." WHERE directory = $dir_id and file_exists = 'TRUE'";
+        }
         $rows = $CC_DBC->getAll($sql);
 
         $results = array();
         foreach ($rows as $row){
-            $results[] = $row["fp"];
+            if($propelObj){
+                $results[] = Application_Model_StoredFile::RecallByFilepath($row["fp"]);
+            }else{
+                $results[] = $row["fp"];
+            }
         }
 
         return $results;
@@ -982,6 +988,15 @@ class Application_Model_StoredFile {
 
     public function getSoundCloudErrorMsg(){
         return $this->_file->getDbSoundCloudErrorMsg();
+    }
+    
+    public function setFileExistsFlag($flag){
+        $this->_file->setDbFileExists($flag)
+            ->save();
+    }
+    
+    public function getFileExistsFlag(){
+        return $this->_file->getDbFileExists();
     }
 
     public function uploadToSoundCloud()
