@@ -685,7 +685,17 @@ class Application_Model_StoredFile {
             UNION
             (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
         
-        return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+        $results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+        foreach($results['aaData'] as &$row){
+            // add checkbox row
+            $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
+
+            // a full timestamp is being returned for playlists' year column;
+            // split it and grab only the year info
+            $yearSplit = explode('-', $row['year']);
+            $row['year'] = $yearSplit[0];
+        }
+        return $results;
     }
 
     public static function searchPlaylistsForSchedule($datatables)
@@ -765,16 +775,7 @@ class Application_Model_StoredFile {
 		}
 		
 		$results = $CC_DBC->getAll($sql);
-		foreach($results as &$row){
-                    // add checkbox row
-		    $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
-                    
-                    // a full timestamp is being returned for playlists' year column;
-                    // split it and grab only the year info
-                    $yearSplit = explode('-', $row['year']);
-                    $row['year'] = $yearSplit[0];
-		}
-
+                
 		if(!isset($totalDisplayRows)) {
 			$totalDisplayRows = $totalRows;
 		}

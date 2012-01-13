@@ -236,8 +236,10 @@ class Application_Model_User {
         
         // mark record which is for the current user
         foreach($res['aaData'] as &$record){
-            if($record[1] == $username){
-                $record[5] = "self";
+            if($record['login'] == $username){
+                $record['delete'] = "self";
+            } else {
+                $record['delete'] = "";
             }
         }
         
