@@ -23,7 +23,15 @@ class LibraryController extends Zend_Controller_Action
         $this->search_sess = new Zend_Session_Namespace("search");
     }
 
-    public function indexAction()
+    public function indexAction() {
+
+        $this->_helper->layout->setLayout('library');
+
+        $this->_helper->actionStack('library', 'library');
+        $this->_helper->actionStack('index', 'playlist');
+    }
+
+    public function libraryAction()
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
@@ -43,7 +51,6 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css');
 
-        $this->_helper->layout->setLayout('library');
         $this->_helper->viewRenderer->setResponseSegment('library');
 
         $form = new Application_Form_AdvancedSearch();
@@ -53,8 +60,6 @@ class LibraryController extends Zend_Controller_Action
         $this->search_sess->next_row[1] = 2;
         $this->view->form = $form;
         $this->view->md = $this->search_sess->md;
-
-        $this->_helper->actionStack('index', 'playlist');
     }
 
     public function contextMenuAction()
@@ -183,7 +188,7 @@ class LibraryController extends Zend_Controller_Action
             $this->view->id = $id;
         }
     }
-    
+
     public function deleteGroupAction()
     {
         $ids = $this->_getParam('ids');
@@ -217,7 +222,7 @@ class LibraryController extends Zend_Controller_Action
                         Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
                     }
                 }
-                
+
                 $this->view->ids = $ids;
             }
         }
@@ -228,7 +233,7 @@ class LibraryController extends Zend_Controller_Action
         $post = $this->getRequest()->getPost();
         Logging::log(print_r($post, true));
         $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($post);
-        
+
         //format clip lengh to 1 decimal
         foreach($datatables["aaData"] as &$data){
             if($data['ftype'] == 'audioclip'){

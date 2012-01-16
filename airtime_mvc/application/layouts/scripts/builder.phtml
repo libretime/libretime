@@ -1,0 +1,28 @@
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<?php echo $this->headTitle() ?>
+	<?php echo $this->headScript() ?>
+	<?php echo $this->headLink() ?>
+</head>
+<body>
+
+<div id="Panel">
+    <div class="logo"></div>
+    <?php echo $this->versionNotify() ?>
+    <?php echo $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs(), "is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining())) ?>
+
+<?php 	$partial = array('menu.phtml', 'default');
+		$this->navigation()->menu()->setPartial($partial); ?>
+
+<?php echo $this->navigation()->menu() ?>
+</div>
+
+<div class="wrapper">
+    <!--Set to z-index 254 to make it lower than the top-panel and the ZFDebug info bar, but higher than the side-playlist-->
+	<div id="library_content" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded" style="z-index:254"><?php echo $this->layout()->library ?></div>
+	<div id="show_builder" class="ui-widget ui-widget-content block-shadow omega-block"><?php echo $this->layout()->builder ?></div>
+</div>
+</body>
+</html>

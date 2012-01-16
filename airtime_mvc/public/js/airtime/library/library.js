@@ -73,7 +73,7 @@ function confirmDeletePlaylist(params){
 }
 
 function openFileOnSoundCloud(link){
-	window.open(link)
+	window.open(link);
 }
 
 function checkImportStatus(){
@@ -84,7 +84,7 @@ function checkImportStatus(){
         }else{
             div.css('visibility', 'hidden');
         }
-    })
+    });
 }
 
 function deletePlaylist(json) {
@@ -152,7 +152,7 @@ function addProgressIcon(id) {
         $("#au_"+id).find("td.library_title").find("span").removeClass();
         $("span[id="+id+"]").addClass("small-icon progress");
     }else{
-        $("#au_"+id).find("td.library_title").append('<span id="'+id+'" class="small-icon progress"></span>')
+        $("#au_"+id).find("td.library_title").append('<span id="'+id+'" class="small-icon progress"></span>');
     }
 }
 
@@ -167,7 +167,7 @@ function checkSCUploadStatus(){
                 $("span[id="+id+"]").removeClass("progress").addClass("sc-error");
             }
         });
-    })
+    });
 }
 
 function addQtipToSCIcons(){
@@ -190,7 +190,7 @@ function addQtipToSCIcons(){
                 show: {
                     ready: true // Needed to make it show on first mouseover event
                 }
-            })
+            });
         }else if($(this).hasClass("soundcloud")){
             $(this).qtip({
                 content: {
@@ -200,7 +200,7 @@ function addQtipToSCIcons(){
                         type: "post",
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){
-                            this.set('content.text', "The soundcloud id for this file is: "+json.sc_id)
+                            this.set('content.text', "The soundcloud id for this file is: "+json.sc_id);
                         }
                     }
                 },
@@ -216,7 +216,7 @@ function addQtipToSCIcons(){
                 show: {
                     ready: true // Needed to make it show on first mouseover event
                 }
-            })
+            });
         }else if($(this).hasClass("sc-error")){
             $(this).qtip({
                 content: {
@@ -227,7 +227,7 @@ function addQtipToSCIcons(){
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){
                             this.set('content.text', "There was error while uploading to soundcloud.<br>"+"Error code: "+json.error_code+
-                                    "<br>"+"Error msg: "+json.error_msg+"<br>")
+                                    "<br>"+"Error msg: "+json.error_msg+"<br>");
                         }
                     }
                 },
@@ -243,7 +243,7 @@ function addQtipToSCIcons(){
                 show: {
                     ready: true // Needed to make it show on first mouseover event
                 }
-            })
+            });
         }
     });
 }
@@ -251,8 +251,8 @@ function addQtipToSCIcons(){
 function addMetadataQtip(){
     var tableRow = $('#library_display tbody tr');
     tableRow.each(function(){
-        var title = $(this).find('td.library_title').html()
-        var info = $(this).attr("id")
+        var title = $(this).find('td.library_title').html();
+        var info = $(this).attr("id");
         info = info.split("_");
         var id = info[1];
         var type = info[0];
@@ -267,7 +267,7 @@ function addMetadataQtip(){
                     type: "post",
                     data: ({format: "html", id : id, type: type}),
                     success: function(data, status){
-                        this.set('content.text', data)
+                        this.set('content.text', data);
                     }
                 }
             },
@@ -294,12 +294,12 @@ function addMetadataQtip(){
                   }
                }
             }
-        })
-    })
+        });
+    });
     
     tableRow.bind('contextmenu', function(e){
         return false;
-    })
+    });
 }
 
 /**
@@ -570,5 +570,5 @@ $(document).ready(function() {
     setInterval( "checkImportStatus()", 5000 );
     setInterval( "checkSCUploadStatus()", 5000 );
     
-    addQtipToSCIcons()
+    addQtipToSCIcons();
 });

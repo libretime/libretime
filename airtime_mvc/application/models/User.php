@@ -11,11 +11,16 @@ class Application_Model_User {
 
     public function __construct($userId)
     {
-        if (strlen($userId)==0){
+        if (empty($userId)){
             $this->_userInstance = $this->createUser();
-        } else {
+        }
+        else {
             $this->_userInstance = CcSubjsQuery::create()->findPK($userId);
-        } 
+
+            if (is_null($this->_userInstance)){
+                throw new Exception();
+            }
+        }
     }
 
     public function getId() {
@@ -29,7 +34,7 @@ class Application_Model_User {
     public function isAdmin() {
         return $this->isUserType(UTYPE_ADMIN);
     }
-    
+
     public function isUserType($type, $showId=''){
     	if(is_array($type)){
     		$result = false;
@@ -62,99 +67,99 @@ class Application_Model_User {
 	    	}
     	}
     }
-    
+
     public function setLogin($login){
         $user = $this->_userInstance;
-        $user->setDbLogin($login); 
+        $user->setDbLogin($login);
     }
-     
+
     public function setPassword($password){
         $user = $this->_userInstance;
-        $user->setDbPass(md5($password));     
+        $user->setDbPass(md5($password));
     }
-    
+
     public function setFirstName($firstName){
         $user = $this->_userInstance;
-        $user->setDbFirstName($firstName);   
+        $user->setDbFirstName($firstName);
     }
-    
+
     public function setLastName($lastName){
         $user = $this->_userInstance;
-        $user->setDbLastName($lastName);      
+        $user->setDbLastName($lastName);
     }
-    
+
     public function setType($type){
         $user = $this->_userInstance;
-        $user->setDbType($type);  
+        $user->setDbType($type);
     }
 
     public function setEmail($email){
         $user = $this->_userInstance;
-        $user->setDbEmail($email);   
+        $user->setDbEmail($email);
     }
 
     public function setSkype($skype){
         $user = $this->_userInstance;
-        $user->setDbSkypeContact($skype);   
+        $user->setDbSkypeContact($skype);
     }
 
     public function setJabber($jabber){
         $user = $this->_userInstance;
-        $user->setDbJabberContact($jabber);   
+        $user->setDbJabberContact($jabber);
     }
-    
+
     public function getLogin(){
         $user = $this->_userInstance;
-        return $user->getDbLogin();       
-    }    
-    
+        return $user->getDbLogin();
+    }
+
     public function getPassword(){
         $user = $this->_userInstance;
-        return $user->getDbPass();       
+        return $user->getDbPass();
     }
-    
+
     public function getFirstName(){
         $user = $this->_userInstance;
-        return $user->getDbFirstName();          
+        return $user->getDbFirstName();
     }
-    
+
     public function getLastName(){
         $user = $this->_userInstance;
-        return $user->getDbLastName();           
+        return $user->getDbLastName();
     }
-    
+
     public function getType(){
         $user = $this->_userInstance;
-        return $user->getDbType();          
+        return $user->getDbType();
     }
 
     public function getEmail(){
         $user = $this->_userInstance;
-        return $user->getDbEmail();     
+        return $user->getDbEmail();
     }
 
     public function getSkype(){
         $user = $this->_userInstance;
-        return $user->getDbSkypeContact();      
+        return $user->getDbSkypeContact();
     }
 
     public function getJabber(){
         $user = $this->_userInstance;
-        return $user->getDbJabberContact();     
- 
+        return $user->getDbJabberContact();
+
     }
-    
+
     public function save(){
         $this->_userInstance->save();
     }
-    
+
     public function delete(){
         if (!$this->_userInstance->isDeleted())
             $this->_userInstance->delete();
     }
 
     private function createUser() {
-        $user = new CcSubjs();        
+        $user = new CcSubjs();
         return $user;
     }
 
@@ -165,7 +170,7 @@ class Application_Model_User {
 
         $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
         $sql = $sql_gen;
-        
+
         if(is_array($type)) {
             for($i=0; $i<count($type); $i++) {
                 $type[$i] = "type = '{$type[$i]}'";
@@ -175,9 +180,9 @@ class Application_Model_User {
         else {
             $sql_type = "type = {$type}";
         }
-        
+
         $sql = $sql_gen ." WHERE (". $sql_type.") ";
-    
+
         if(!is_null($search)) {
             $like = "login ILIKE '%{$search}%'";
 
@@ -185,17 +190,17 @@ class Application_Model_User {
         }
 
         $sql = $sql ." ORDER BY login";
-    
-        return  $CC_DBC->GetAll($sql);  
+
+        return  $CC_DBC->GetAll($sql);
     }
-    
+
     public static function getUserCount($type=NULL){
     	global $CC_DBC;
 
         $sql;
 
         $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs ";
-        
+
         if(!isset($type)){
         	$sql = $sql_gen;
         }
@@ -209,21 +214,21 @@ class Application_Model_User {
 	        else {
 	            $sql_type = "type = {$type}";
 	        }
-	        
+
 	        $sql = $sql_gen ." WHERE (". $sql_type.") ";
         }
-        
+
         return  $CC_DBC->GetOne($sql);
     }
 
     public static function getHosts($search=NULL) {
         return Application_Model_User::getUsers(array('H'), $search);
     }
-    
+
     public static function getUsersDataTablesInfo($datatables_post) {
 
         $fromTable = "cc_subjs";
-        
+
         // get current user
         $username = "";
         $auth = Zend_Auth::getInstance();
@@ -231,29 +236,29 @@ class Application_Model_User {
         if ($auth->hasIdentity()) {
             $username = $auth->getIdentity()->login;
         }
-        
+
         $res = Application_Model_StoredFile::searchFiles($fromTable, $datatables_post);
-        
+
         // mark record which is for the current user
         foreach($res['aaData'] as &$record){
             if($record[1] == $username){
                 $record[5] = "self";
             }
         }
-        
+
         return $res;
     }
-    
+
     public static function getUserData($id){
         global $CC_DBC;
-        
+
         $sql = "SELECT login, first_name, last_name, type, id, email, skype_contact, jabber_contact"
         ." FROM cc_subjs"
         ." WHERE id = $id";
-        
+
         return $CC_DBC->GetRow($sql);
     }
-    
+
     public static function GetUserID($login){
         $user = CcSubjsQuery::create()->findOneByDbLogin($login);
         if (is_null($user)){
