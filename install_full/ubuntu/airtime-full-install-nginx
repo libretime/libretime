@@ -55,10 +55,6 @@ if [ "$?" -ne "0" ]; then
    exit 1
 fi
 
-# Install phing
-pear channel-discover pear.phing.info
-pear install phing/phing-2.4.2
-
 # NGINX Config File
 echo "----------------------------------------------------"
 echo "2.1 NGINX Config File"
