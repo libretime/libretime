@@ -229,7 +229,8 @@ def airtime_18x_tar(root_dir, version):
     do_sudo('wget http://downloads.sourceforge.net/project/airtime/%s/airtime-%s.tar.gz' % (version, version))
     do_sudo('tar xfz airtime-%s.tar.gz' % version)
     
-    do_sudo('cd ~/%s/install && php airtime-install.php' % root_dir)
+    #do_sudo('cd ~/%s/install && php airtime-install.php' % root_dir)
+    do_sudo('php ~/%s/install/airtime-install.php' % root_dir)
 
     #need to reboot because of daemon-tools.
     reboot(45)

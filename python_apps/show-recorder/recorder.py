@@ -261,7 +261,7 @@ class CommandListener():
                 show_length = self.shows_to_record[start_time][0]
                 show_instance = self.shows_to_record[start_time][1]
                 show_name = self.shows_to_record[start_time][2]
-
+                
                 T = pytz.timezone(self.server_timezone)
                 start_time_on_UTC = getDateTimeObj(start_time)
                 start_time_on_server = start_time_on_UTC.replace(tzinfo=pytz.utc).astimezone(T)
@@ -270,13 +270,15 @@ class CommandListener():
                      'hour': start_time_on_server.hour, 'min': start_time_on_server.minute, 'sec': start_time_on_server.second}
                 self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time_formatted)
                 self.sr.start()
-
                 #remove show from shows to record.
                 del self.shows_to_record[start_time]
                 time_till_next_show = self.get_time_till_next_show()
                 self.time_till_next_show = time_till_next_show
             except Exception,e :
-                self.logger.error(e)
+                import traceback
+                top = traceback.format_exc()
+                self.logger.error('Exception: %s', e)
+                self.logger.error("traceback: %s", top)
         else:
             self.logger.debug("No recording scheduled...")
 
@@ -297,6 +299,7 @@ class CommandListener():
             temp = self.api_client.get_shows_to_record()
             if temp is not None:
                 shows = temp['shows']
+                self.server_timezone = temp['server_timezone']
                 self.parse_shows(shows)
             self.logger.info("Bootstrap complete: got initial copy of the schedule")
         except Exception, e:
