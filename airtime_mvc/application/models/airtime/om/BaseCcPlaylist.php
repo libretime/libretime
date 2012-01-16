@@ -64,6 +64,18 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	protected $mtime;
 
 	/**
+	 * The value for the utime field.
+	 * @var        string
+	 */
+	protected $utime;
+
+	/**
+	 * The value for the lptime field.
+	 * @var        string
+	 */
+	protected $lptime;
+
+	/**
 	 * The value for the creator field.
 	 * @var        string
 	 */
@@ -193,6 +205,72 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$dt = new DateTime($this->mtime);
 		} catch (Exception $x) {
 			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->mtime, true), $x);
+		}
+
+		if ($format === null) {
+			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+			return $dt;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $dt->format('U'));
+		} else {
+			return $dt->format($format);
+		}
+	}
+
+	/**
+	 * Get the [optionally formatted] temporal [utime] column value.
+	 * 
+	 *
+	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 *							If format is NULL, then the raw DateTime object will be returned.
+	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 */
+	public function getDbUtime($format = 'Y-m-d H:i:s')
+	{
+		if ($this->utime === null) {
+			return null;
+		}
+
+
+
+		try {
+			$dt = new DateTime($this->utime);
+		} catch (Exception $x) {
+			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->utime, true), $x);
+		}
+
+		if ($format === null) {
+			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+			return $dt;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $dt->format('U'));
+		} else {
+			return $dt->format($format);
+		}
+	}
+
+	/**
+	 * Get the [optionally formatted] temporal [lptime] column value.
+	 * 
+	 *
+	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 *							If format is NULL, then the raw DateTime object will be returned.
+	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 */
+	public function getDbLPtime($format = 'Y-m-d H:i:s')
+	{
+		if ($this->lptime === null) {
+			return null;
+		}
+
+
+
+		try {
+			$dt = new DateTime($this->lptime);
+		} catch (Exception $x) {
+			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->lptime, true), $x);
 		}
 
 		if ($format === null) {
@@ -379,6 +457,104 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	} // setDbMtime()
 
 	/**
+	 * Sets the value of [utime] column to a normalized version of the date/time value specified.
+	 * 
+	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+	 *						be treated as NULL for temporal objects.
+	 * @return     CcPlaylist The current object (for fluent API support)
+	 */
+	public function setDbUtime($v)
+	{
+		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
+		// -- which is unexpected, to say the least.
+		if ($v === null || $v === '') {
+			$dt = null;
+		} elseif ($v instanceof DateTime) {
+			$dt = $v;
+		} else {
+			// some string/numeric value passed; we normalize that so that we can
+			// validate it.
+			try {
+				if (is_numeric($v)) { // if it's a unix timestamp
+					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+					// We have to explicitly specify and then change the time zone because of a
+					// DateTime bug: http://bugs.php.net/bug.php?id=43003
+					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+				} else {
+					$dt = new DateTime($v);
+				}
+			} catch (Exception $x) {
+				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+			}
+		}
+
+		if ( $this->utime !== null || $dt !== null ) {
+			// (nested ifs are a little easier to read in this case)
+
+			$currNorm = ($this->utime !== null && $tmpDt = new DateTime($this->utime)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
+			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
+
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
+					)
+			{
+				$this->utime = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
+				$this->modifiedColumns[] = CcPlaylistPeer::UTIME;
+			}
+		} // if either are not null
+
+		return $this;
+	} // setDbUtime()
+
+	/**
+	 * Sets the value of [lptime] column to a normalized version of the date/time value specified.
+	 * 
+	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+	 *						be treated as NULL for temporal objects.
+	 * @return     CcPlaylist The current object (for fluent API support)
+	 */
+	public function setDbLPtime($v)
+	{
+		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
+		// -- which is unexpected, to say the least.
+		if ($v === null || $v === '') {
+			$dt = null;
+		} elseif ($v instanceof DateTime) {
+			$dt = $v;
+		} else {
+			// some string/numeric value passed; we normalize that so that we can
+			// validate it.
+			try {
+				if (is_numeric($v)) { // if it's a unix timestamp
+					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+					// We have to explicitly specify and then change the time zone because of a
+					// DateTime bug: http://bugs.php.net/bug.php?id=43003
+					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+				} else {
+					$dt = new DateTime($v);
+				}
+			} catch (Exception $x) {
+				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+			}
+		}
+
+		if ( $this->lptime !== null || $dt !== null ) {
+			// (nested ifs are a little easier to read in this case)
+
+			$currNorm = ($this->lptime !== null && $tmpDt = new DateTime($this->lptime)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
+			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
+
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
+					)
+			{
+				$this->lptime = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
+				$this->modifiedColumns[] = CcPlaylistPeer::LPTIME;
+			}
+		} // if either are not null
+
+		return $this;
+	} // setDbLPtime()
+
+	/**
 	 * Set the value of [creator] column.
 	 * 
 	 * @param      string $v new value
@@ -468,8 +644,10 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$this->currentlyaccessing = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
 			$this->editedby = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
 			$this->mtime = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-			$this->creator = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-			$this->description = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->utime = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->lptime = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->creator = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->description = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -478,7 +656,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 8; // 8 = CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 10; // 10 = CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcPlaylist object", $e);
@@ -842,9 +1020,15 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 				return $this->getDbMtime();
 				break;
 			case 6:
-				return $this->getDbCreator();
+				return $this->getDbUtime();
 				break;
 			case 7:
+				return $this->getDbLPtime();
+				break;
+			case 8:
+				return $this->getDbCreator();
+				break;
+			case 9:
 				return $this->getDbDescription();
 				break;
 			default:
@@ -877,8 +1061,10 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$keys[3] => $this->getDbCurrentlyaccessing(),
 			$keys[4] => $this->getDbEditedby(),
 			$keys[5] => $this->getDbMtime(),
-			$keys[6] => $this->getDbCreator(),
-			$keys[7] => $this->getDbDescription(),
+			$keys[6] => $this->getDbUtime(),
+			$keys[7] => $this->getDbLPtime(),
+			$keys[8] => $this->getDbCreator(),
+			$keys[9] => $this->getDbDescription(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcSubjs) {
@@ -934,9 +1120,15 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 				$this->setDbMtime($value);
 				break;
 			case 6:
-				$this->setDbCreator($value);
+				$this->setDbUtime($value);
 				break;
 			case 7:
+				$this->setDbLPtime($value);
+				break;
+			case 8:
+				$this->setDbCreator($value);
+				break;
+			case 9:
 				$this->setDbDescription($value);
 				break;
 		} // switch()
@@ -969,8 +1161,10 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		if (array_key_exists($keys[3], $arr)) $this->setDbCurrentlyaccessing($arr[$keys[3]]);
 		if (array_key_exists($keys[4], $arr)) $this->setDbEditedby($arr[$keys[4]]);
 		if (array_key_exists($keys[5], $arr)) $this->setDbMtime($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setDbCreator($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDbDescription($arr[$keys[7]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbUtime($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbLPtime($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbCreator($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbDescription($arr[$keys[9]]);
 	}
 
 	/**
@@ -988,6 +1182,8 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcPlaylistPeer::CURRENTLYACCESSING)) $criteria->add(CcPlaylistPeer::CURRENTLYACCESSING, $this->currentlyaccessing);
 		if ($this->isColumnModified(CcPlaylistPeer::EDITEDBY)) $criteria->add(CcPlaylistPeer::EDITEDBY, $this->editedby);
 		if ($this->isColumnModified(CcPlaylistPeer::MTIME)) $criteria->add(CcPlaylistPeer::MTIME, $this->mtime);
+		if ($this->isColumnModified(CcPlaylistPeer::UTIME)) $criteria->add(CcPlaylistPeer::UTIME, $this->utime);
+		if ($this->isColumnModified(CcPlaylistPeer::LPTIME)) $criteria->add(CcPlaylistPeer::LPTIME, $this->lptime);
 		if ($this->isColumnModified(CcPlaylistPeer::CREATOR)) $criteria->add(CcPlaylistPeer::CREATOR, $this->creator);
 		if ($this->isColumnModified(CcPlaylistPeer::DESCRIPTION)) $criteria->add(CcPlaylistPeer::DESCRIPTION, $this->description);
 
@@ -1056,6 +1252,8 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		$copyObj->setDbCurrentlyaccessing($this->currentlyaccessing);
 		$copyObj->setDbEditedby($this->editedby);
 		$copyObj->setDbMtime($this->mtime);
+		$copyObj->setDbUtime($this->utime);
+		$copyObj->setDbLPtime($this->lptime);
 		$copyObj->setDbCreator($this->creator);
 		$copyObj->setDbDescription($this->description);
 
@@ -1309,6 +1507,8 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		$this->currentlyaccessing = null;
 		$this->editedby = null;
 		$this->mtime = null;
+		$this->utime = null;
+		$this->lptime = null;
 		$this->creator = null;
 		$this->description = null;
 		$this->alreadyInSave = false;

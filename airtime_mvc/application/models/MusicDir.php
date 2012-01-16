@@ -40,24 +40,69 @@ class Application_Model_MusicDir {
         $this->_dir->save();
     }
 
-    public function remove()
+    public function setExistsFlag($flag){
+        $this->_dir->setExists($flag);
+        $this->_dir->save();
+    }
+    
+    public function setWatchedFlag($flag){
+        $this->_dir->setWatched($flag);
+        $this->_dir->save();
+    }
+    
+    public function getWatchedFlag(){
+        return $this->_dir->getWatched();
+    }
+    
+    public function getExistsFlag(){
+        return $this->_dir->getExists();
+    }
+    
+    /** There are 2 cases where this function can be called.
+     * 1. When watched dir was removed
+     * 2. When some dir was watched, but it was unmounted
+     * 
+     *  In case of 1, $userAddedWatchedDir should be true
+     *  In case of 2, $userAddedWatchedDir should be false
+     *  
+     *  When $userAddedWatchedDir is true, it will set "Watched" flag to false
+     *  otherwise, it will set "Exists" flag to true
+    **/ 
+    public function remove($userAddedWatchedDir=true)
     {
         global $CC_DBC;
-
+        
         $music_dir_id = $this->getId();
 
         $sql = "SELECT DISTINCT s.instance_id from cc_music_dirs as md LEFT JOIN cc_files as f on f.directory = md.id
         RIGHT JOIN cc_schedule as s on s.file_id = f.id WHERE md.id = $music_dir_id";
 
         $show_instances = $CC_DBC->GetAll($sql);
-
-        $this->_dir->delete();
-
+        
+        // get all the files on this dir
+        $sql = "SELECT f.id FROM cc_music_dirs as md LEFT JOIN cc_files as f on f.directory = md.id WHERE md.id = $music_dir_id";
+        $files = $CC_DBC->GetAll($sql);
+        
+        // set file_exist flag to false
+        foreach( $files as $file_row ){
+            $temp_file = Application_Model_StoredFile::Recall($file_row['id']);
+            if($temp_file != null){
+                $temp_file->setFileExistsFlag(false);
+            }
+        }
+        
+        // set RemovedFlag to true
+        if($userAddedWatchedDir){
+            self::setWatchedFlag(false);
+        }else{
+            self::setExistsFlag(false);
+        }
+        //$res = $this->_dir->delete();
+        
         foreach ($show_instances as $show_instance_row) {
             $temp_show = new Application_Model_ShowInstance($show_instance_row["instance_id"]);
             $temp_show->updateScheduledTime();
         }
-
         Application_Model_RabbitMq::PushSchedule();
     }
 
@@ -93,7 +138,7 @@ class Application_Model_MusicDir {
     public static function isPathValid($p_path){
         $dirs = self::getWatchedDirs();
         $dirs[] = self::getStorDir();
-
+        
         foreach ($dirs as $dirObj){
             $dir = $dirObj->getDirectory();
             $diff = strlen($dir) - strlen($p_path);
@@ -113,12 +158,37 @@ class Application_Model_MusicDir {
         }
     }
 
-    public static function addDir($p_path, $p_type)
+    /** There are 2 cases where this function can be called.
+     * 1. When watched dir was added
+     * 2. When some dir was watched, but it was unmounted somehow, but gets mounted again
+     * 
+     *  In case of 1, $userAddedWatchedDir should be true
+     *  In case of 2, $userAddedWatchedDir should be false
+     *  
+     *  When $userAddedWatchedDir is true, it will set "Removed" flag to false
+     *  otherwise, it will set "Exists" flag to true
+     *  
+     *  @param $nestedWatch - if true, bypass path check, and Watched to false
+    **/ 
+    public static function addDir($p_path, $p_type, $userAddedWatchedDir=true, $nestedWatch=false)
     {
         if(!is_dir($p_path)){
             return array("code"=>2, "error"=>"'$p_path' is not a valid directory.");
         }
-        $dir = new CcMusicDirs();
+        $real_path = realpath($p_path)."/";
+        if($real_path != "/"){
+            $p_path = $real_path;
+        }
+        
+        $exist_dir = self::getDirByPath($p_path);
+        
+        if( $exist_dir == NULL ){
+            $temp_dir = new CcMusicDirs();
+            $dir = new Application_Model_MusicDir($temp_dir);
+        }else{
+            $dir = $exist_dir;
+        }
+        
         $dir->setType($p_type);
         $p_path = realpath($p_path)."/";
 
@@ -126,10 +196,19 @@ class Application_Model_MusicDir {
         try {
             /* isPathValid() checks if path is a substring or a superstring of an
              * existing dir and if not, throws NestedDirectoryException */
-            self::isPathValid($p_path);
+            if(!$nestedWatch){
+                self::isPathValid($p_path);
+            }
+            if($userAddedWatchedDir){
+                $dir->setWatchedFlag(true);
+            }else{
+                if($nestedWatch){
+                    $dir->setWatchedFlag(false);
+                }
+                $dir->setExistsFlag(true);
+            }
             $dir->setDirectory($p_path);
-
-            $dir->save();
+            
             return array("code"=>0);
         } catch (NestedDirectoryException $nde){
             $msg = $nde->getMessage();
@@ -140,9 +219,20 @@ class Application_Model_MusicDir {
 
     }
 
-    public static function addWatchedDir($p_path)
+    /** There are 2 cases where this function can be called.
+     * 1. When watched dir was added
+     * 2. When some dir was watched, but it was unmounted somehow, but gets mounted again
+     * 
+     *  In case of 1, $userAddedWatchedDir should be true
+     *  In case of 2, $userAddedWatchedDir should be false
+     *  
+     *  When $userAddedWatchedDir is true, it will set "Watched" flag to true
+     *  otherwise, it will set "Exists" flag to true
+    **/ 
+    public static function addWatchedDir($p_path, $userAddedWatchedDir=true, $nestedWatch=false)
     {
-        $res = self::addDir($p_path, "watched");
+        $res = self::addDir($p_path, "watched", $userAddedWatchedDir, $nestedWatch);
+        
         if ($res['code'] == 0){
 
             //convert "linked" files (Airtime <= 1.8.2) to watched files.
@@ -203,7 +293,6 @@ class Application_Model_MusicDir {
         $dir = CcMusicDirsQuery::create()
                     ->filterByDirectory($p_path)
                     ->findOne();
-
         if($dir == NULL){
             return null;
         }
@@ -212,14 +301,26 @@ class Application_Model_MusicDir {
             return $mus_dir;
         }
     }
-
-    public static function getWatchedDirs()
+    
+    /**
+     * Search and returns watched dirs
+     * 
+     * @param $exists search condition with exists flag
+     * @param $watched search condition with watched flag
+     */
+    public static function getWatchedDirs($exists=true, $watched=true)
     {
         $result = array();
 
         $dirs = CcMusicDirsQuery::create()
-                    ->filterByType("watched")
-                    ->find();
+                    ->filterByType("watched");
+        if($exists !== null){
+            $dirs = $dirs->filterByExists($exists);
+        }
+        if($watched !== null){
+            $dirs = $dirs->filterByWatched($watched);
+        }
+         $dirs = $dirs->find();
 
         foreach($dirs as $dir) {
             $result[] = new Application_Model_MusicDir($dir);
@@ -248,7 +349,6 @@ class Application_Model_MusicDir {
         }
         $dir = self::getStorDir();
         // if $p_dir doesn't exist in DB
-        $p_dir = realpath($p_dir)."/";
         $exist = $dir->getDirByPath($p_dir);
         if($exist == NULL){
             $dir->setDirectory($p_dir);
@@ -267,6 +367,7 @@ class Application_Model_MusicDir {
     {
         $dirs = CcMusicDirsQuery::create()
                     ->filterByType(array("watched", "stor"))
+                    ->filterByExists(true)
                     ->find();
 
         foreach($dirs as $dir) {
@@ -280,7 +381,17 @@ class Application_Model_MusicDir {
         return null;
     }
 
-    public static function removeWatchedDir($p_dir){
+    /** There are 2 cases where this function can be called.
+     * 1. When watched dir was removed
+     * 2. When some dir was watched, but it was unmounted
+     * 
+     *  In case of 1, $userAddedWatchedDir should be true
+     *  In case of 2, $userAddedWatchedDir should be false
+     *  
+     *  When $userAddedWatchedDir is true, it will set "Watched" flag to false
+     *  otherwise, it will set "Exists" flag to true
+    **/ 
+    public static function removeWatchedDir($p_dir, $userAddedWatchedDir=true){
         $real_path = realpath($p_dir)."/";
         if($real_path != "/"){
             $p_dir = $real_path;
@@ -289,7 +400,7 @@ class Application_Model_MusicDir {
         if($dir == NULL){
             return array("code"=>1,"error"=>"'$p_dir' doesn't exist in the watched list.");
         }else{
-            $dir->remove();
+            $dir->remove($userAddedWatchedDir);
             $data = array();
             $data["directory"] = $p_dir;
             Application_Model_RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
@@ -300,7 +411,7 @@ class Application_Model_MusicDir {
     public static function splitFilePath($p_filepath)
     {
         $mus_dir = self::getWatchedDirFromFilepath($p_filepath);
-
+        
         if(is_null($mus_dir)) {
             return null;
         }
@@ -308,7 +419,7 @@ class Application_Model_MusicDir {
         $length_dir = strlen($mus_dir->getDirectory());
         $fp = substr($p_filepath, $length_dir);
 
-        return array($mus_dir->getDirectory(), $fp);
+        return array($mus_dir->getDirectory(), trim($fp));
     }
 
 }

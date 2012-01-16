@@ -2,6 +2,8 @@ import socket
 import logging
 import time
 import os
+import shutil
+import difflib
 
 import pyinotify
 from pyinotify import ProcessEvent
@@ -38,6 +40,10 @@ class AirtimeProcessEvent(ProcessEvent):
         self.mmc = mmc
         self.api_client = api_client
         self.create_dict = {}
+        self.mount_file_dir = "/etc";
+        self.mount_file = "/etc/mtab";
+        self.curr_mtab_file = "/var/tmp/airtime/media-monitor/currMtab"
+        self.prev_mtab_file = "/var/tmp/airtime/media-monitor/prevMtab"
 
     def add_filepath_to_ignore(self, filepath):
         self.ignore_event.add(filepath)
@@ -74,6 +80,8 @@ class AirtimeProcessEvent(ProcessEvent):
                 
             
     def process_IN_DELETE_SELF(self, event):
+        if event.path in self.mount_file_dir:
+            return
         self.logger.info("event: %s", event)
         path = event.path + '/'
         if event.dir:
@@ -90,6 +98,8 @@ class AirtimeProcessEvent(ProcessEvent):
                     self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
     
     def process_IN_CREATE(self, event):
+        if event.path in self.mount_file_dir:
+            return
         self.logger.info("event: %s", event)
         if not event.dir:
             # record the timestamp of the time on IN_CREATE event
@@ -101,6 +111,8 @@ class AirtimeProcessEvent(ProcessEvent):
     # we used to use IN_CREATE event, but the IN_CREATE event gets fired before the
     # copy was done. Hence, IN_CLOSE_WRITE is the correct one to handle.    
     def process_IN_CLOSE_WRITE(self, event):
+        if event.path in self.mount_file_dir:
+            return
         self.logger.info("event: %s", event)
         self.logger.info("create_dict: %s", self.create_dict)
         
@@ -145,6 +157,9 @@ class AirtimeProcessEvent(ProcessEvent):
         self.handle_modified_file(event.dir, event.pathname, event.name)
 
     def handle_modified_file(self, dir, pathname, name):
+        # if /etc/mtab is modified
+        if pathname in self.mount_file:
+            self.handle_mount_change()
         # update timestamp on create_dict for the entry with pathname as the key
         if pathname in self.create_dict:
             self.create_dict[pathname] = time.time()
@@ -152,12 +167,48 @@ class AirtimeProcessEvent(ProcessEvent):
             self.logger.info("Modified: %s", pathname)
             if self.mmc.is_audio_file(name):
                 self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY})
-
+    
+    # if change is detected on /etc/mtab, we check what mount(file system) was added/removed
+    # and act accordingly
+    def handle_mount_change(self):
+        self.logger.info("Mount change detected, handling changes...");
+        # take snapshot of mtab file and update currMtab and prevMtab
+        # move currMtab to prevMtab and create new currMtab
+        shutil.move(self.curr_mtab_file, self.prev_mtab_file)
+        # create the file
+        shutil.copy(self.mount_file, self.curr_mtab_file)
+        
+        d = difflib.Differ()
+        curr_fh = open(self.curr_mtab_file, 'r')
+        prev_fh = open(self.prev_mtab_file, 'r')
+        
+        diff = list(d.compare(prev_fh.readlines(), curr_fh.readlines()))
+        added_mount_points = []
+        removed_mount_points = []
+        
+        for dir in diff:
+            info = dir.split(' ')
+            if info[0] == '+':
+                added_mount_points.append(info[2])
+            elif info[0] == '-':
+                removed_mount_points.append(info[2])
+        
+        self.logger.info("added: %s", added_mount_points)
+        self.logger.info("removed: %s", removed_mount_points)
+        
+        # send current mount information to Airtime
+        self.api_client.update_file_system_mount(added_mount_points, removed_mount_points);
+    
+    def handle_watched_dir_missing(self, dir):
+        self.api_client.handle_watched_dir_missing(dir);
+        
     #if a file is moved somewhere, this callback is run. With details about
     #where the file is being moved from. The corresponding process_IN_MOVED_TO
     #callback is only called if the destination of the file is also in a watched
     #directory.
     def process_IN_MOVED_FROM(self, event):
+        if event.path in self.mount_file:
+            return
         self.logger.info("process_IN_MOVED_FROM: %s", event)
         if not event.dir:
             if event.pathname in self.temp_files:
@@ -171,6 +222,10 @@ class AirtimeProcessEvent(ProcessEvent):
 
     def process_IN_MOVED_TO(self, event):
         self.logger.info("process_IN_MOVED_TO: %s", event)
+        # if /etc/mtab is modified
+        filename = self.mount_file_dir +"/mtab"
+        if event.pathname in filename:
+            self.handle_mount_change()
         #if stuff dropped in stor via a UI move must change file permissions.
         self.mmc.set_needed_file_permissions(event.pathname, event.dir)
         if not event.dir:
@@ -221,6 +276,8 @@ class AirtimeProcessEvent(ProcessEvent):
 
 
     def process_IN_DELETE(self, event):
+        if event.path in self.mount_file_dir:
+            return
         self.logger.info("process_IN_DELETE: %s", event)
         self.handle_removed_file(event.dir, event.pathname)
 

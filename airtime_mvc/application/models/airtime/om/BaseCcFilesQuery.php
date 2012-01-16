@@ -17,6 +17,8 @@
  * @method     CcFilesQuery orderByDbCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
  * @method     CcFilesQuery orderByDbEditedby($order = Criteria::ASC) Order by the editedby column
  * @method     CcFilesQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
+ * @method     CcFilesQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
+ * @method     CcFilesQuery orderByDbLPtime($order = Criteria::ASC) Order by the lptime column
  * @method     CcFilesQuery orderByDbMd5($order = Criteria::ASC) Order by the md5 column
  * @method     CcFilesQuery orderByDbTrackTitle($order = Criteria::ASC) Order by the track_title column
  * @method     CcFilesQuery orderByDbArtistName($order = Criteria::ASC) Order by the artist_name column
@@ -61,6 +63,7 @@
  * @method     CcFilesQuery orderByDbSubject($order = Criteria::ASC) Order by the subject column
  * @method     CcFilesQuery orderByDbContributor($order = Criteria::ASC) Order by the contributor column
  * @method     CcFilesQuery orderByDbLanguage($order = Criteria::ASC) Order by the language column
+ * @method     CcFilesQuery orderByDbFileExists($order = Criteria::ASC) Order by the file_exists column
  * @method     CcFilesQuery orderByDbSoundcloudId($order = Criteria::ASC) Order by the soundcloud_id column
  * @method     CcFilesQuery orderByDbSoundcloudErrorCode($order = Criteria::ASC) Order by the soundcloud_error_code column
  * @method     CcFilesQuery orderByDbSoundcloudErrorMsg($order = Criteria::ASC) Order by the soundcloud_error_msg column
@@ -77,6 +80,8 @@
  * @method     CcFilesQuery groupByDbCurrentlyaccessing() Group by the currentlyaccessing column
  * @method     CcFilesQuery groupByDbEditedby() Group by the editedby column
  * @method     CcFilesQuery groupByDbMtime() Group by the mtime column
+ * @method     CcFilesQuery groupByDbUtime() Group by the utime column
+ * @method     CcFilesQuery groupByDbLPtime() Group by the lptime column
  * @method     CcFilesQuery groupByDbMd5() Group by the md5 column
  * @method     CcFilesQuery groupByDbTrackTitle() Group by the track_title column
  * @method     CcFilesQuery groupByDbArtistName() Group by the artist_name column
@@ -121,6 +126,7 @@
  * @method     CcFilesQuery groupByDbSubject() Group by the subject column
  * @method     CcFilesQuery groupByDbContributor() Group by the contributor column
  * @method     CcFilesQuery groupByDbLanguage() Group by the language column
+ * @method     CcFilesQuery groupByDbFileExists() Group by the file_exists column
  * @method     CcFilesQuery groupByDbSoundcloudId() Group by the soundcloud_id column
  * @method     CcFilesQuery groupByDbSoundcloudErrorCode() Group by the soundcloud_error_code column
  * @method     CcFilesQuery groupByDbSoundcloudErrorMsg() Group by the soundcloud_error_msg column
@@ -164,6 +170,8 @@
  * @method     CcFiles findOneByDbCurrentlyaccessing(int $currentlyaccessing) Return the first CcFiles filtered by the currentlyaccessing column
  * @method     CcFiles findOneByDbEditedby(int $editedby) Return the first CcFiles filtered by the editedby column
  * @method     CcFiles findOneByDbMtime(string $mtime) Return the first CcFiles filtered by the mtime column
+ * @method     CcFiles findOneByDbUtime(string $utime) Return the first CcFiles filtered by the utime column
+ * @method     CcFiles findOneByDbLPtime(string $lptime) Return the first CcFiles filtered by the lptime column
  * @method     CcFiles findOneByDbMd5(string $md5) Return the first CcFiles filtered by the md5 column
  * @method     CcFiles findOneByDbTrackTitle(string $track_title) Return the first CcFiles filtered by the track_title column
  * @method     CcFiles findOneByDbArtistName(string $artist_name) Return the first CcFiles filtered by the artist_name column
@@ -208,6 +216,7 @@
  * @method     CcFiles findOneByDbSubject(string $subject) Return the first CcFiles filtered by the subject column
  * @method     CcFiles findOneByDbContributor(string $contributor) Return the first CcFiles filtered by the contributor column
  * @method     CcFiles findOneByDbLanguage(string $language) Return the first CcFiles filtered by the language column
+ * @method     CcFiles findOneByDbFileExists(boolean $file_exists) Return the first CcFiles filtered by the file_exists column
  * @method     CcFiles findOneByDbSoundcloudId(int $soundcloud_id) Return the first CcFiles filtered by the soundcloud_id column
  * @method     CcFiles findOneByDbSoundcloudErrorCode(int $soundcloud_error_code) Return the first CcFiles filtered by the soundcloud_error_code column
  * @method     CcFiles findOneByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return the first CcFiles filtered by the soundcloud_error_msg column
@@ -224,6 +233,8 @@
  * @method     array findByDbCurrentlyaccessing(int $currentlyaccessing) Return CcFiles objects filtered by the currentlyaccessing column
  * @method     array findByDbEditedby(int $editedby) Return CcFiles objects filtered by the editedby column
  * @method     array findByDbMtime(string $mtime) Return CcFiles objects filtered by the mtime column
+ * @method     array findByDbUtime(string $utime) Return CcFiles objects filtered by the utime column
+ * @method     array findByDbLPtime(string $lptime) Return CcFiles objects filtered by the lptime column
  * @method     array findByDbMd5(string $md5) Return CcFiles objects filtered by the md5 column
  * @method     array findByDbTrackTitle(string $track_title) Return CcFiles objects filtered by the track_title column
  * @method     array findByDbArtistName(string $artist_name) Return CcFiles objects filtered by the artist_name column
@@ -268,6 +279,7 @@
  * @method     array findByDbSubject(string $subject) Return CcFiles objects filtered by the subject column
  * @method     array findByDbContributor(string $contributor) Return CcFiles objects filtered by the contributor column
  * @method     array findByDbLanguage(string $language) Return CcFiles objects filtered by the language column
+ * @method     array findByDbFileExists(boolean $file_exists) Return CcFiles objects filtered by the file_exists column
  * @method     array findByDbSoundcloudId(int $soundcloud_id) Return CcFiles objects filtered by the soundcloud_id column
  * @method     array findByDbSoundcloudErrorCode(int $soundcloud_error_code) Return CcFiles objects filtered by the soundcloud_error_code column
  * @method     array findByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return CcFiles objects filtered by the soundcloud_error_msg column
@@ -652,6 +664,68 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::MTIME, $dbMtime, $comparison);
+	}
+
+	/**
+	 * Filter the query on the utime column
+	 * 
+	 * @param     string|array $dbUtime The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbUtime($dbUtime = null, $comparison = null)
+	{
+		if (is_array($dbUtime)) {
+			$useMinMax = false;
+			if (isset($dbUtime['min'])) {
+				$this->addUsingAlias(CcFilesPeer::UTIME, $dbUtime['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbUtime['max'])) {
+				$this->addUsingAlias(CcFilesPeer::UTIME, $dbUtime['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::UTIME, $dbUtime, $comparison);
+	}
+
+	/**
+	 * Filter the query on the lptime column
+	 * 
+	 * @param     string|array $dbLPtime The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbLPtime($dbLPtime = null, $comparison = null)
+	{
+		if (is_array($dbLPtime)) {
+			$useMinMax = false;
+			if (isset($dbLPtime['min'])) {
+				$this->addUsingAlias(CcFilesPeer::LPTIME, $dbLPtime['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbLPtime['max'])) {
+				$this->addUsingAlias(CcFilesPeer::LPTIME, $dbLPtime['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::LPTIME, $dbLPtime, $comparison);
 	}
 
 	/**
@@ -1647,6 +1721,23 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::LANGUAGE, $dbLanguage, $comparison);
+	}
+
+	/**
+	 * Filter the query on the file_exists column
+	 * 
+	 * @param     boolean|string $dbFileExists The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbFileExists($dbFileExists = null, $comparison = null)
+	{
+		if (is_string($dbFileExists)) {
+			$file_exists = in_array(strtolower($dbFileExists), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcFilesPeer::FILE_EXISTS, $dbFileExists, $comparison);
 	}
 
 	/**

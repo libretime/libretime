@@ -43,6 +43,20 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	protected $type;
 
 	/**
+	 * The value for the exists field.
+	 * Note: this column has a database default value of: true
+	 * @var        boolean
+	 */
+	protected $exists;
+
+	/**
+	 * The value for the watched field.
+	 * Note: this column has a database default value of: true
+	 * @var        boolean
+	 */
+	protected $watched;
+
+	/**
 	 * @var        array CcFiles[] Collection to store aggregation of CcFiles objects.
 	 */
 	protected $collCcFiless;
@@ -60,6 +74,28 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	 * @var        boolean
 	 */
 	protected $alreadyInValidation = false;
+
+	/**
+	 * Applies default values to this object.
+	 * This method should be called from the object's constructor (or
+	 * equivalent initialization method).
+	 * @see        __construct()
+	 */
+	public function applyDefaultValues()
+	{
+		$this->exists = true;
+		$this->watched = true;
+	}
+
+	/**
+	 * Initializes internal state of BaseCcMusicDirs object.
+	 * @see        applyDefaults()
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->applyDefaultValues();
+	}
 
 	/**
 	 * Get the [id] column value.
@@ -89,6 +125,26 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	public function getType()
 	{
 		return $this->type;
+	}
+
+	/**
+	 * Get the [exists] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getExists()
+	{
+		return $this->exists;
+	}
+
+	/**
+	 * Get the [watched] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getWatched()
+	{
+		return $this->watched;
 	}
 
 	/**
@@ -152,6 +208,46 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	} // setType()
 
 	/**
+	 * Set the value of [exists] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcMusicDirs The current object (for fluent API support)
+	 */
+	public function setExists($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->exists !== $v || $this->isNew()) {
+			$this->exists = $v;
+			$this->modifiedColumns[] = CcMusicDirsPeer::EXISTS;
+		}
+
+		return $this;
+	} // setExists()
+
+	/**
+	 * Set the value of [watched] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcMusicDirs The current object (for fluent API support)
+	 */
+	public function setWatched($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->watched !== $v || $this->isNew()) {
+			$this->watched = $v;
+			$this->modifiedColumns[] = CcMusicDirsPeer::WATCHED;
+		}
+
+		return $this;
+	} // setWatched()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -161,6 +257,14 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	 */
 	public function hasOnlyDefaultValues()
 	{
+			if ($this->exists !== true) {
+				return false;
+			}
+
+			if ($this->watched !== true) {
+				return false;
+			}
+
 		// otherwise, everything was equal, so return TRUE
 		return true;
 	} // hasOnlyDefaultValues()
@@ -186,6 +290,8 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->directory = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
 			$this->type = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->exists = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
+			$this->watched = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -194,7 +300,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 3; // 3 = CcMusicDirsPeer::NUM_COLUMNS - CcMusicDirsPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 5; // 5 = CcMusicDirsPeer::NUM_COLUMNS - CcMusicDirsPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcMusicDirs object", $e);
@@ -520,6 +626,12 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 			case 2:
 				return $this->getType();
 				break;
+			case 3:
+				return $this->getExists();
+				break;
+			case 4:
+				return $this->getWatched();
+				break;
 			default:
 				return null;
 				break;
@@ -546,6 +658,8 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 			$keys[0] => $this->getId(),
 			$keys[1] => $this->getDirectory(),
 			$keys[2] => $this->getType(),
+			$keys[3] => $this->getExists(),
+			$keys[4] => $this->getWatched(),
 		);
 		return $result;
 	}
@@ -586,6 +700,12 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 			case 2:
 				$this->setType($value);
 				break;
+			case 3:
+				$this->setExists($value);
+				break;
+			case 4:
+				$this->setWatched($value);
+				break;
 		} // switch()
 	}
 
@@ -613,6 +733,8 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDirectory($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setType($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setExists($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setWatched($arr[$keys[4]]);
 	}
 
 	/**
@@ -627,6 +749,8 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcMusicDirsPeer::ID)) $criteria->add(CcMusicDirsPeer::ID, $this->id);
 		if ($this->isColumnModified(CcMusicDirsPeer::DIRECTORY)) $criteria->add(CcMusicDirsPeer::DIRECTORY, $this->directory);
 		if ($this->isColumnModified(CcMusicDirsPeer::TYPE)) $criteria->add(CcMusicDirsPeer::TYPE, $this->type);
+		if ($this->isColumnModified(CcMusicDirsPeer::EXISTS)) $criteria->add(CcMusicDirsPeer::EXISTS, $this->exists);
+		if ($this->isColumnModified(CcMusicDirsPeer::WATCHED)) $criteria->add(CcMusicDirsPeer::WATCHED, $this->watched);
 
 		return $criteria;
 	}
@@ -690,6 +814,8 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	{
 		$copyObj->setDirectory($this->directory);
 		$copyObj->setType($this->type);
+		$copyObj->setExists($this->exists);
+		$copyObj->setWatched($this->watched);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -889,9 +1015,12 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 		$this->id = null;
 		$this->directory = null;
 		$this->type = null;
+		$this->exists = null;
+		$this->watched = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
+		$this->applyDefaultValues();
 		$this->resetModified();
 		$this->setNew(true);
 		$this->setDeleted(false);

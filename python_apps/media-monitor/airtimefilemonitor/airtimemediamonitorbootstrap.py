@@ -1,11 +1,13 @@
 import os
 import time
+import pyinotify
+import shutil
 
 from subprocess import Popen, PIPE
 from api_clients import api_client
 
 class AirtimeMediaMonitorBootstrap():
-
+    
     """AirtimeMediaMonitorBootstrap constructor
 
     Keyword Arguments:
@@ -13,11 +15,21 @@ class AirtimeMediaMonitorBootstrap():
     pe          -- reference to an instance of ProcessEvent
     api_clients -- reference of api_clients to communicate with airtime-server
     """
-    def __init__(self, logger, pe, api_client, mmc):
+    def __init__(self, logger, pe, api_client, mmc, wm):
         self.logger = logger
         self.pe = pe
         self.api_client = api_client
         self.mmc = mmc
+        self.wm = wm
+        # add /etc on watch list so we can detect mount
+        self.mount_file = "/etc"
+        self.curr_mtab_file = "/var/tmp/airtime/media-monitor/currMtab"
+        self.logger.info("Adding %s on watch list...", self.mount_file)
+        self.wm.add_watch(self.mount_file, pyinotify.ALL_EVENTS, rec=False, auto_add=False)
+        
+        # create currMtab file if it's the first time
+        if not os.path.exists(self.curr_mtab_file):
+            shutil.copy('/etc/mtab', self.curr_mtab_file)
 
     """On bootup we want to scan all directories and look for files that
     weren't there or files that changed before media-monitor process
@@ -78,6 +90,10 @@ class AirtimeMediaMonitorBootstrap():
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
                 all_files_set.add(file_path[len(dir):])
+
+        # if dir doesn't exists, update db
+        if not os.path.exists(dir):
+            self.pe.handle_watched_dir_missing(dir)
 
         if os.path.exists(self.mmc.timestamp_file):
             """find files that have been modified since the last time media-monitor process started."""

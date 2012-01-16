@@ -49,6 +49,8 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('CURRENTLYACCESSING', 'DbCurrentlyaccessing', 'INTEGER', true, null, 0);
 		$this->addForeignKey('EDITEDBY', 'DbEditedby', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', false, 6, null);
+		$this->addColumn('UTIME', 'DbUtime', 'TIMESTAMP', false, 6, null);
+		$this->addColumn('LPTIME', 'DbLPtime', 'TIMESTAMP', false, 6, null);
 		$this->addColumn('MD5', 'DbMd5', 'CHAR', false, 32, null);
 		$this->addColumn('TRACK_TITLE', 'DbTrackTitle', 'VARCHAR', false, 512, null);
 		$this->addColumn('ARTIST_NAME', 'DbArtistName', 'VARCHAR', false, 512, null);
@@ -93,6 +95,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('SUBJECT', 'DbSubject', 'VARCHAR', false, 512, null);
 		$this->addColumn('CONTRIBUTOR', 'DbContributor', 'VARCHAR', false, 512, null);
 		$this->addColumn('LANGUAGE', 'DbLanguage', 'VARCHAR', false, 512, null);
+		$this->addColumn('FILE_EXISTS', 'DbFileExists', 'BOOLEAN', false, null, true);
 		$this->addColumn('SOUNDCLOUD_ID', 'DbSoundcloudId', 'INTEGER', false, null, null);
 		$this->addColumn('SOUNDCLOUD_ERROR_CODE', 'DbSoundcloudErrorCode', 'INTEGER', false, null, null);
 		$this->addColumn('SOUNDCLOUD_ERROR_MSG', 'DbSoundcloudErrorMsg', 'VARCHAR', false, 512, null);
@@ -106,7 +109,7 @@ class CcFilesTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
-    $this->addRelation('CcMusicDirs', 'CcMusicDirs', RelationMap::MANY_TO_ONE, array('directory' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcMusicDirs', 'CcMusicDirs', RelationMap::MANY_TO_ONE, array('directory' => 'id', ), null, null);
     $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);

@@ -23,7 +23,8 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
 	  ->add(new Zend_Acl_Resource('search'))
       ->add(new Zend_Acl_Resource('dashboard'))
       ->add(new Zend_Acl_Resource('preference'))
-      ->add(new Zend_Acl_Resource('recorder'));
+      ->add(new Zend_Acl_Resource('recorder'))
+      ->add(new Zend_Acl_Resource('auth'));
 
 /** Creating permissions */
 $ccAcl->allow('G', 'index')
@@ -31,6 +32,7 @@ $ccAcl->allow('G', 'index')
 	  ->allow('G', 'error')
 	  ->allow('G', 'nowplaying')
 	  ->allow('G', 'api')
+	  ->allow('G', 'auth')
       //->allow('G', 'plupload', array('upload-recorded'))
       ->allow('G', 'recorder')
       ->allow('G', 'schedule')

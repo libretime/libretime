@@ -62,7 +62,7 @@ try:
     mmc = MediaMonitorCommon(config, wm=wm)
     pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm, mmc=mmc, api_client=api_client)
 
-    bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client, mmc)
+    bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client, mmc, wm)
     bootstrap.scan()
     
     notifier = AirtimeNotifier(wm, pe, read_freq=0, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap, mmc=mmc)

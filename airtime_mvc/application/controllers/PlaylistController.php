@@ -8,18 +8,20 @@ class PlaylistController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('add-item', 'json')
-					->addActionContext('delete-item', 'json')
-					->addActionContext('set-fade', 'json')
-					->addActionContext('set-cue', 'json')
-					->addActionContext('move-item', 'json')
-					->addActionContext('close', 'json')
-					->addActionContext('new', 'json')
-					->addActionContext('edit', 'json')
-					->addActionContext('delete-active', 'json')
-					->addActionContext('delete', 'json')
+                    ->addActionContext('delete-item', 'json')
+                    ->addActionContext('add-group', 'json')
+                    ->addActionContext('delete-group', 'json')
+                    ->addActionContext('set-fade', 'json')
+                    ->addActionContext('set-cue', 'json')
+                    ->addActionContext('move-item', 'json')
+                    ->addActionContext('close', 'json')
+                    ->addActionContext('new', 'json')
+                    ->addActionContext('edit', 'json')
+                    ->addActionContext('delete-active', 'json')
+                    ->addActionContext('delete', 'json')
                     ->addActionContext('set-playlist-fades', 'json')
                     ->addActionContext('set-playlist-name', 'json')
-					->addActionContext('set-playlist-description', 'json')
+                    ->addActionContext('set-playlist-description', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -209,6 +211,59 @@ class PlaylistController extends Zend_Controller_Action
 		unset($this->view->pl);
     }
 
+    public function addGroupAction()
+    {
+        $ids = $this->_getParam('ids');
+        $pos = $this->_getParam('pos', null);
+
+        if (!is_null($ids)) {
+            $pl = $this->getPlaylist();
+            if ($pl === false) {
+                $this->view->playlist_error = true;
+                return false;
+            }
+            
+            foreach ($ids as $key => $value) {
+                $res = $pl->addAudioClip($value);
+                if (PEAR::isError($res)) {
+                    $this->view->message = $res->getMessage();
+                    break;
+                }
+            }
+
+            $this->view->pl = $pl;
+            $this->view->html = $this->view->render('playlist/update.phtml');
+            $this->view->name = $pl->getName();
+            $this->view->length = $pl->getLength();
+            $this->view->description = $pl->getDescription();
+            return;
+        }
+        $this->view->message =  "a file is not chosen";
+    }
+    
+    public function deleteGroupAction()
+    {
+        $ids = $this->_getParam('ids', null);
+        
+        foreach ($ids as $key => $id) {
+            $pl = Application_Model_Playlist::Recall($id);
+
+            if ($pl !== FALSE) {
+                Application_Model_Playlist::Delete($id);
+                $pl_sess = $this->pl_sess;
+                if($pl_sess->id === $id){
+                    unset($pl_sess->id);
+                }
+            } else {
+                $this->view->playlist_error = true;
+                return false;
+            }
+        }
+        
+        $this->view->ids = $ids;
+        $this->view->html = $this->view->render('playlist/index.phtml');
+    }
+    
     public function setCueAction()
     {
 		$pos = $this->_getParam('pos');

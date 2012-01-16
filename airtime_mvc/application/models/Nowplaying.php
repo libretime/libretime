@@ -23,8 +23,9 @@ class Application_Model_Nowplaying
             $showEnds = $showEndDateTime->format("Y-m-d H:i:s");
             $itemStarts = $itemStartDateTime->format("Y-m-d H:i:s");
             $itemEnds = $itemEndDateTime->format("Y-m-d H:i:s");
-        
-            $status = ($dbRow['show_ends'] < $dbRow['item_ends']) ? "x" : "";
+            
+            // Allow show to exceed 1 second per CC-3183
+            $status = ($showEnds < $itemEnds) ? "x" : "";
             
             $type = "a";
             $type .= ($itemStartDateTime->getTimestamp() <= $epochNow 

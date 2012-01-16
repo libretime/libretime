@@ -42,6 +42,8 @@ CREATE TABLE "cc_music_dirs"
 	"id" serial  NOT NULL,
 	"directory" TEXT,
 	"type" VARCHAR(255),
+	"exists" BOOLEAN default 't',
+	"watched" BOOLEAN default 't',
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_music_dir_unique" UNIQUE ("directory")
 );
@@ -70,6 +72,8 @@ CREATE TABLE "cc_files"
 	"currentlyaccessing" INTEGER default 0 NOT NULL,
 	"editedby" INTEGER,
 	"mtime" TIMESTAMP(6),
+	"utime" TIMESTAMP(6),
+	"lptime" TIMESTAMP(6),
 	"md5" CHAR(32),
 	"track_title" VARCHAR(512),
 	"artist_name" VARCHAR(512),
@@ -114,6 +118,7 @@ CREATE TABLE "cc_files"
 	"subject" VARCHAR(512),
 	"contributor" VARCHAR(512),
 	"language" VARCHAR(512),
+	"file_exists" BOOLEAN default 't',
 	"soundcloud_id" INTEGER,
 	"soundcloud_error_code" INTEGER,
 	"soundcloud_error_msg" VARCHAR(512),
@@ -129,6 +134,8 @@ SET search_path TO public;
 CREATE INDEX "cc_files_md5_idx" ON "cc_files" ("md5");
 
 CREATE INDEX "cc_files_name_idx" ON "cc_files" ("name");
+
+CREATE INDEX "cc_files_file_exists_idx" ON "cc_files" ("file_exists");
 
 -----------------------------------------------------------------------------
 -- cc_perms
@@ -285,6 +292,8 @@ CREATE TABLE "cc_playlist"
 	"currentlyaccessing" INTEGER default 0 NOT NULL,
 	"editedby" INTEGER,
 	"mtime" TIMESTAMP(6),
+	"utime" TIMESTAMP(6),
+	"lptime" TIMESTAMP(6),
 	"creator" VARCHAR(32),
 	"description" VARCHAR(512),
 	PRIMARY KEY ("id")
@@ -450,6 +459,28 @@ COMMENT ON TABLE "cc_subjs" IS '';
 
 SET search_path TO public;
 -----------------------------------------------------------------------------
+-- cc_subjs_token
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_subjs_token" CASCADE;
+
+
+CREATE TABLE "cc_subjs_token"
+(
+	"id" serial  NOT NULL,
+	"user_id" INTEGER  NOT NULL,
+	"action" VARCHAR(255)  NOT NULL,
+	"token" VARCHAR(40)  NOT NULL,
+	"created" TIMESTAMP  NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "cc_subjs_token_idx" UNIQUE ("token")
+);
+
+COMMENT ON TABLE "cc_subjs_token" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
 -- cc_country
 -----------------------------------------------------------------------------
 
@@ -526,7 +557,7 @@ ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owne
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
 
-ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey" FOREIGN KEY ("directory") REFERENCES "cc_music_dirs" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey" FOREIGN KEY ("directory") REFERENCES "cc_music_dirs" ("id");
 
 ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey" FOREIGN KEY ("subj") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
@@ -557,3 +588,5 @@ ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_inst_fkey" FOREIGN KEY ("insta
 ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_file_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_subjs_token" ADD CONSTRAINT "cc_subjs_token_userid_fkey" FOREIGN KEY ("user_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;

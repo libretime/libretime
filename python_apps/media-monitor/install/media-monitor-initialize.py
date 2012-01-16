@@ -6,7 +6,9 @@ if os.geteuid() != 0:
     sys.exit(1)
 
 try:
-    
+    #create media-monitor dir under /var/tmp/airtime
+    if not os.path.exists("/var/tmp/airtime/media-monitor"):
+        os.makedirs("/var/tmp/airtime/media-monitor")
     if os.environ["disable_auto_start_services"] == "f":
         #update-rc.d init script
         p = Popen("update-rc.d airtime-media-monitor defaults >/dev/null 2>&1", shell=True)

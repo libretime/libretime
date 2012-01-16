@@ -26,6 +26,8 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-liquidsoap-status', 'json')
                 ->addActionContext('library-init', 'json')
                 ->addActionContext('live-chat', 'json')
+                ->addActionContext('update-file-system-mount', 'json')
+                ->addActionContext('handle-watched-dir-missing', 'json')
                 ->initContext();
     }
 
@@ -561,19 +563,26 @@ class ApiController extends Zend_Controller_Action
 
         // update import timestamp
         Application_Model_Preference::SetImportTimestamp();
-        
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
+            $filepath = str_replace("//", "/", $filepath);
 
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-
+            
             if (is_null($file)) {
                 $file = Application_Model_StoredFile::Insert($md);
             }
             else {
-                $this->view->error = "File already exists in Airtime.";
-                return;
+                // path already exist
+                if($file->getFileExistsFlag()){
+                    // file marked as exists
+                    $this->view->error = "File already exists in Airtime.";
+                    return;
+                }else{
+                    // file marked as not exists
+                    $file->setFileExistsFlag(true);
+                }
             }
         }
         else if ($mode == "modify") {
@@ -811,6 +820,103 @@ class ApiController extends Zend_Controller_Action
     	$this->view->libraryInit = array(
         	"numEntries"=>Application_Model_Preference::GetLibraryNumEntries()
         );
+    }
+    
+    // handles addition/deletion of mount point which watched dirs reside
+    public function updateFileSystemMountAction(){
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+
+        $params = $request->getParams();
+        $added_list = empty($params['added_dir'])?array():explode(',',$params['added_dir']);
+        $removed_list = empty($params['removed_dir'])?array():explode(',',$params['removed_dir']);
+        
+        // get all watched dirs
+        $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null,null);
+        
+            foreach( $added_list as $ad){
+                foreach( $watched_dirs as $dir ){
+                    $dirPath = $dir->getDirectory();
+                    
+                    $ad .= '/';
+                    
+                    // if mount path itself was watched
+                    if($dirPath == $ad){
+                        Application_Model_MusicDir::addWatchedDir($dirPath, false);
+                        break;
+                    }
+                    // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
+                    else if(substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false){
+                        Application_Model_MusicDir::addWatchedDir($dirPath, false);
+                        break;
+                    }
+                    // is new mount point within the watched dir?
+                    // pyinotify doesn't notify anyhing in this case, so we add this mount point as
+                    // watched dir
+                    else if(substr($ad, 0, strlen($dirPath)) === $dirPath){
+                        // bypass nested loop check
+                        Application_Model_MusicDir::addWatchedDir($ad, false, true);
+                        break;
+                    }
+                }
+            }
+            foreach( $removed_list as $rd){
+                foreach( $watched_dirs as $dir ){
+                    $dirPath = $dir->getDirectory();
+                    $rd .= '/';
+                    // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
+                    if(substr($dirPath, 0, strlen($rd)) === $rd && $dir->getExistsFlag() == true){
+                        Application_Model_MusicDir::removeWatchedDir($dirPath, false);
+                        break;
+                    }
+                    // is new mount point within the watched dir?
+                    // pyinotify doesn't notify anyhing in this case, so we walk through all files within
+                    // this watched dir in DB and mark them deleted.
+                    // In case of h) of use cases, due to pyinotify behaviour of noticing mounted dir, we need to 
+                    // compare agaisnt all files in cc_files table
+                    else if(substr($rd, 0, strlen($dirPath)) === $dirPath ){
+                        $watchDir = Application_Model_MusicDir::getDirByPath($rd);
+                        // get all the files that is under $dirPath
+                        $files = Application_Model_StoredFile::listAllFiles($dir->getId(), true);
+                        foreach($files as $f){
+                            // if the file is from this mount
+                            if(substr( $f->getFilePath(),0,strlen($rd) ) === $rd){
+                                $f->delete();
+                            }
+                        }
+                        if($watchDir){
+                            Application_Model_MusicDir::removeWatchedDir($rd, false);
+                        }
+                        break;
+                    }
+                }
+            }
+            
+    }
+    
+    // handles case where watched dir is missing
+    public function handleWatchedDirMissingAction(){
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        $dir = base64_decode($request->getParam('dir'));
+        Application_Model_MusicDir::removeWatchedDir($dir, false);
     }
 }
 

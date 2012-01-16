@@ -138,6 +138,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	protected $collCcSesss;
 
 	/**
+	 * @var        array CcSubjsToken[] Collection to store aggregation of CcSubjsToken objects.
+	 */
+	protected $collCcSubjsTokens;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -793,6 +798,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 			$this->collCcSesss = null;
 
+			$this->collCcSubjsTokens = null;
+
 		} // if (deep)
 	}
 
@@ -982,6 +989,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcSubjsTokens !== null) {
+				foreach ($this->collCcSubjsTokens as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -1103,6 +1118,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 				if ($this->collCcSesss !== null) {
 					foreach ($this->collCcSesss as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcSubjsTokens !== null) {
+					foreach ($this->collCcSubjsTokens as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -1456,6 +1479,12 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			foreach ($this->getCcSesss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcSess($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getCcSubjsTokens() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcSubjsToken($relObj->copy($deepCopy));
 				}
 			}
 
@@ -2318,6 +2347,115 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcSubjsTokens collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcSubjsTokens()
+	 */
+	public function clearCcSubjsTokens()
+	{
+		$this->collCcSubjsTokens = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcSubjsTokens collection.
+	 *
+	 * By default this just sets the collCcSubjsTokens collection to an empty array (like clearcollCcSubjsTokens());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcSubjsTokens()
+	{
+		$this->collCcSubjsTokens = new PropelObjectCollection();
+		$this->collCcSubjsTokens->setModel('CcSubjsToken');
+	}
+
+	/**
+	 * Gets an array of CcSubjsToken objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcSubjs is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcSubjsToken[] List of CcSubjsToken objects
+	 * @throws     PropelException
+	 */
+	public function getCcSubjsTokens($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcSubjsTokens || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcSubjsTokens) {
+				// return empty collection
+				$this->initCcSubjsTokens();
+			} else {
+				$collCcSubjsTokens = CcSubjsTokenQuery::create(null, $criteria)
+					->filterByCcSubjs($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcSubjsTokens;
+				}
+				$this->collCcSubjsTokens = $collCcSubjsTokens;
+			}
+		}
+		return $this->collCcSubjsTokens;
+	}
+
+	/**
+	 * Returns the number of related CcSubjsToken objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcSubjsToken objects.
+	 * @throws     PropelException
+	 */
+	public function countCcSubjsTokens(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcSubjsTokens || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcSubjsTokens) {
+				return 0;
+			} else {
+				$query = CcSubjsTokenQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcSubjs($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcSubjsTokens);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcSubjsToken object to this object
+	 * through the CcSubjsToken foreign key attribute.
+	 *
+	 * @param      CcSubjsToken $l CcSubjsToken
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcSubjsToken(CcSubjsToken $l)
+	{
+		if ($this->collCcSubjsTokens === null) {
+			$this->initCcSubjsTokens();
+		}
+		if (!$this->collCcSubjsTokens->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcSubjsTokens[]= $l;
+			$l->setCcSubjs($this);
+		}
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -2390,6 +2528,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcSubjsTokens) {
+				foreach ((array) $this->collCcSubjsTokens as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
 		$this->collCcAccesss = null;
@@ -2399,6 +2542,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		$this->collCcPlaylists = null;
 		$this->collCcPrefs = null;
 		$this->collCcSesss = null;
+		$this->collCcSubjsTokens = null;
 	}
 
 	/**

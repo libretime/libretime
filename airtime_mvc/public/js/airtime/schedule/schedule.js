@@ -86,7 +86,7 @@ function setScheduleDialogEvents(dialog) {
 }
 
 function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-	var id = "pl_" + aData[0];
+	var id = "pl_" + aData['id'];
 
 	$(nRow).attr("id", id);
 
@@ -125,12 +125,12 @@ function makeScheduleDialog(dialog, json) {
 		"fnRowCallback": dtRowCallback,
 		"fnDrawCallback": dtDrawCallback,
 		"aoColumns": [ 
-			/* Id */			{ "sName": "pl.id", "bSearchable": false, "bVisible": false },
-			/* Description */	{ "sName": "pl.description", "bVisible": false },
-			/* Name */			{ "sName": "pl.name" },
-			/* Creator */		{ "sName": "pl.creator" },
-			/* Length */		{ "sName": "plt.length" },
-			/* Editing */		{ "sName": "sub.login" }
+			/* Id */		{"sTitle": "ID", "sName": "pl.id", "bSearchable": false, "bVisible": false, "mDataProp": "id"},
+                        /* Description */	{"sTitle": "Description", "sName": "pl.description", "bSearchable": false, "bVisible": false, "mDataProp": "description"},
+			/* Name */		{"sTitle": "Title", "sName": "pl.name", "mDataProp": "name"},
+			/* Creator */		{"sTitle": "Creator", "sName": "pl.creator", "mDataProp": "creator"},
+			/* Length */		{"sTitle": "Length", "sName": "plt.length", "mDataProp": "length"},
+			/* Editing */		{"sTitle": "Editing", "sName": "sub.login", "mDataProp": "login"}
 		],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
@@ -184,6 +184,16 @@ function confirmCancelShow(show_instance_id){
     }
 }
 
+function confirmCancelRecordedShow(show_instance_id){
+    if(confirm('Erase current show and stop recording?')){
+        var url = "/Schedule/cancel-current-show/id/"+show_instance_id;
+        $.ajax({
+          url: url,
+          success: function(data){scheduleRefetchEvents(data);}
+        });
+    }
+}
+
 function uploadToSoundCloud(show_instance_id){
     
     var url = "/Schedule/upload-to-sound-cloud";
@@ -219,7 +229,11 @@ function buildContentDialog(json){
         alertShowErrorAndReload();
     }
 	var dialog = $(json.dialog);
-	
+        
+	dialog.find("#show_progressbar").progressbar({
+		value: json.percentFilled
+	});
+        
 	var viewportwidth;
 	var viewportheight;
 

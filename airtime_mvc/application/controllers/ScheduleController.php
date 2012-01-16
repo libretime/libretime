@@ -41,11 +41,11 @@ class ScheduleController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js','text/javascript');
-		$this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
-		$this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
+	$this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
+	$this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker-0.0.6.js','text/javascript');
-		$this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js','text/javascript');
+	$this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js','text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
@@ -55,10 +55,10 @@ class ScheduleController extends Zend_Controller_Action
     	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js','text/javascript');
     	$this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js','text/javascript');
 
-		$this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery-ui-timepicker.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery-ui-timepicker.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/fullcalendar.css');
-		$this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css');
-		$this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
 
         Application_Model_Schedule::createNewFormSections($this->view);
@@ -67,6 +67,8 @@ class ScheduleController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
         $this->view->isAdmin = $user->isAdmin();
         $this->view->isProgramManager = $user->isUserType('P');
+        
+        $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
     }
 
     public function eventFeedAction()
@@ -233,9 +235,15 @@ class ScheduleController extends Zend_Controller_Action
         if ($showStartDateHelper->getTimestamp() <= $epochNow &&
                 $epochNow < $showEndDateHelper->getTimestamp() &&
                 $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+            if ($show->isRecorded()) {
+                $menu[] = array('action' => array('type' => 'fn',
+                    'callback' => "window['confirmCancelRecordedShow']($id)"),
+                    'title' => 'Cancel Current Show');
+            } else {
                 $menu[] = array('action' => array('type' => 'fn',
                     'callback' => "window['confirmCancelShow']($id)"),
                     'title' => 'Cancel Current Show');
+            }
         }
 
         if ($epochNow < $showStartDateHelper->getTimestamp()) {
@@ -339,15 +347,15 @@ class ScheduleController extends Zend_Controller_Action
             return false;
         }
 
-		$playlists = $show->searchPlaylistsForShow($post);
-		foreach( $playlists['aaData'] as &$data){
-		    // calling two functions to format time to 1 decimal place
-            $sec = Application_Model_Playlist::playlistTimeToSeconds($data[4]);
-            $data[4] = Application_Model_Playlist::secondsToPlaylistTime($sec);
-		}
+        $playlists = $show->searchPlaylistsForShow($post);
+        foreach( $playlists['aaData'] as &$data){
+            // calling two functions to format time to 1 decimal place
+            $sec = Application_Model_Playlist::playlistTimeToSeconds($data['length']);
+            $data['length'] = Application_Model_Playlist::secondsToPlaylistTime($sec);
+        }
 
-		//for datatables
-		die(json_encode($playlists));
+        //for datatables
+        die(json_encode($playlists));
     }
 
     public function removeGroupAction()
@@ -443,7 +451,10 @@ class ScheduleController extends Zend_Controller_Action
                 "Rebroadcast of show \"$originalShowName\" from "
                 .$originalDateTime->format("l, F jS")." at ".$originalDateTime->format("G:i");
         }
-		$this->view->showContent = $show->getShowListContent();
+        $this->view->showLength = $show->getShowLength();
+        $this->view->timeFilled = $show->getTimeScheduled();
+        $this->view->percentFilled = $show->getPercentScheduled();
+        $this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         unset($this->view->showContent);
     }

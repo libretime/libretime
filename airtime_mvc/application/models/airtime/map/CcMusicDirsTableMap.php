@@ -41,6 +41,8 @@ class CcMusicDirsTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
 		$this->addColumn('DIRECTORY', 'Directory', 'LONGVARCHAR', false, null, null);
 		$this->addColumn('TYPE', 'Type', 'VARCHAR', false, 255, null);
+		$this->addColumn('EXISTS', 'Exists', 'BOOLEAN', false, null, true);
+		$this->addColumn('WATCHED', 'Watched', 'BOOLEAN', false, null, true);
 		// validators
 	} // initialize()
 
@@ -49,7 +51,7 @@ class CcMusicDirsTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcFiles', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'directory', ), 'CASCADE', null);
+    $this->addRelation('CcFiles', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'directory', ), null, null);
 	} // buildRelations()
 
 } // CcMusicDirsTableMap

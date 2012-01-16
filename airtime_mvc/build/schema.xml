@@ -28,6 +28,8 @@
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="directory" phpName="Directory" type="LONGVARCHAR" required="false"/>
     <column name="type" phpName="Type" type="VARCHAR" size="255" required="false"/>
+    <column name="exists" phpName="Exists" type="BOOLEAN" required="false" defaultValue="true"/>
+    <column name="watched" phpName="Watched" type="BOOLEAN" required="false" defaultValue="true"/>
     <unique name="cc_music_dir_unique">
       <unique-column name="directory"/>
     </unique>
@@ -44,6 +46,8 @@
     <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
     <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false"/>
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false"/>
     <column name="md5" phpName="DbMd5" type="CHAR" size="32" required="false"/>
     <column name="track_title" phpName="DbTrackTitle" type="VARCHAR" size="512" required="false"/>
     <column name="artist_name" phpName="DbArtistName" type="VARCHAR" size="512" required="false"/>
@@ -88,6 +92,7 @@
     <column name="subject" phpName="DbSubject" type="VARCHAR" size="512" required="false"/>
     <column name="contributor" phpName="DbContributor" type="VARCHAR" size="512" required="false"/>
     <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
+    <column name="file_exists" phpName="DbFileExists" type="BOOLEAN" required="false" defaultValue="true"/>
     <column name="soundcloud_id" phpName="DbSoundcloudId" type="Integer" required="false"/>
     <column name="soundcloud_error_code" phpName="DbSoundcloudErrorCode" type="Integer" required="false"/>
     <column name="soundcloud_error_msg" phpName="DbSoundcloudErrorMsg" type="VARCHAR" size="512" required="false"/>
@@ -95,7 +100,7 @@
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id"/>
     </foreign-key>
-    <foreign-key foreignTable="cc_music_dirs" name="cc_music_dirs_folder_fkey" onDelete="CASCADE">
+    <foreign-key foreignTable="cc_music_dirs" name="cc_music_dirs_folder_fkey">
       <reference local="directory" foreign="id"/>
     </foreign-key>
     <unique name="cc_files_gunid_idx">
@@ -106,6 +111,9 @@
     </index>
     <index name="cc_files_name_idx">
       <index-column name="name"/>
+    </index>
+    <index name="cc_files_file_exists_idx">
+      <index-column name="file_exists"/>
     </index>
   </table>
   <table name="cc_perms" phpName="CcPerms">
@@ -212,6 +220,8 @@
     <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
     <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false"/>
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false"/>
     <column name="creator" phpName="DbCreator" type="VARCHAR" size="32" required="false"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
     <foreign-key foreignTable="cc_subjs" name="cc_playlist_editedby_fkey">
@@ -324,6 +334,19 @@
     <unique name="cc_subjs_login_idx">
       <unique-column name="login"/>
     </unique>
+  </table>
+  <table name="cc_subjs_token" phpName="CcSubjsToken">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="user_id" phpName="DbUserId" type="INTEGER" required="true"/>
+    <column name="action" phpName="DbAction" type="VARCHAR" size="255" required="true"/>
+    <column name="token" phpName="DbToken" type="VARCHAR" size="40" required="true"/>
+    <column name="created" phpName="DbCreated" type="TIMESTAMP" required="true"/>
+    <unique name="cc_subjs_token_idx">
+      <unique-column name="token"/>
+    </unique>
+    <foreign-key foreignTable="cc_subjs" name="cc_subjs_token_userid_fkey" onDelete="CASCADE">
+      <reference local="user_id" foreign="id"/>
+    </foreign-key>
   </table>
   <table name="cc_country" phpName="CcCountry">
     <column name="isocode" phpName="DbIsoCode" primaryKey="true" type="CHAR" size="3" required="true"/>

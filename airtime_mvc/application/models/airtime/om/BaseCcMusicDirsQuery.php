@@ -9,10 +9,14 @@
  * @method     CcMusicDirsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     CcMusicDirsQuery orderByDirectory($order = Criteria::ASC) Order by the directory column
  * @method     CcMusicDirsQuery orderByType($order = Criteria::ASC) Order by the type column
+ * @method     CcMusicDirsQuery orderByExists($order = Criteria::ASC) Order by the exists column
+ * @method     CcMusicDirsQuery orderByWatched($order = Criteria::ASC) Order by the watched column
  *
  * @method     CcMusicDirsQuery groupById() Group by the id column
  * @method     CcMusicDirsQuery groupByDirectory() Group by the directory column
  * @method     CcMusicDirsQuery groupByType() Group by the type column
+ * @method     CcMusicDirsQuery groupByExists() Group by the exists column
+ * @method     CcMusicDirsQuery groupByWatched() Group by the watched column
  *
  * @method     CcMusicDirsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcMusicDirsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -28,10 +32,14 @@
  * @method     CcMusicDirs findOneById(int $id) Return the first CcMusicDirs filtered by the id column
  * @method     CcMusicDirs findOneByDirectory(string $directory) Return the first CcMusicDirs filtered by the directory column
  * @method     CcMusicDirs findOneByType(string $type) Return the first CcMusicDirs filtered by the type column
+ * @method     CcMusicDirs findOneByExists(boolean $exists) Return the first CcMusicDirs filtered by the exists column
+ * @method     CcMusicDirs findOneByWatched(boolean $watched) Return the first CcMusicDirs filtered by the watched column
  *
  * @method     array findById(int $id) Return CcMusicDirs objects filtered by the id column
  * @method     array findByDirectory(string $directory) Return CcMusicDirs objects filtered by the directory column
  * @method     array findByType(string $type) Return CcMusicDirs objects filtered by the type column
+ * @method     array findByExists(boolean $exists) Return CcMusicDirs objects filtered by the exists column
+ * @method     array findByWatched(boolean $watched) Return CcMusicDirs objects filtered by the watched column
  *
  * @package    propel.generator.airtime.om
  */
@@ -200,6 +208,40 @@ abstract class BaseCcMusicDirsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcMusicDirsPeer::TYPE, $type, $comparison);
+	}
+
+	/**
+	 * Filter the query on the exists column
+	 * 
+	 * @param     boolean|string $exists The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcMusicDirsQuery The current query, for fluid interface
+	 */
+	public function filterByExists($exists = null, $comparison = null)
+	{
+		if (is_string($exists)) {
+			$exists = in_array(strtolower($exists), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcMusicDirsPeer::EXISTS, $exists, $comparison);
+	}
+
+	/**
+	 * Filter the query on the watched column
+	 * 
+	 * @param     boolean|string $watched The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcMusicDirsQuery The current query, for fluid interface
+	 */
+	public function filterByWatched($watched = null, $comparison = null)
+	{
+		if (is_string($watched)) {
+			$watched = in_array(strtolower($watched), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcMusicDirsPeer::WATCHED, $watched, $comparison);
 	}
 
 	/**
