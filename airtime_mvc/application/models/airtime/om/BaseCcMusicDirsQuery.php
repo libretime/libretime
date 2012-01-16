@@ -10,13 +10,13 @@
  * @method     CcMusicDirsQuery orderByDirectory($order = Criteria::ASC) Order by the directory column
  * @method     CcMusicDirsQuery orderByType($order = Criteria::ASC) Order by the type column
  * @method     CcMusicDirsQuery orderByExists($order = Criteria::ASC) Order by the exists column
- * @method     CcMusicDirsQuery orderByRemoved($order = Criteria::ASC) Order by the removed column
+ * @method     CcMusicDirsQuery orderByWatched($order = Criteria::ASC) Order by the watched column
  *
  * @method     CcMusicDirsQuery groupById() Group by the id column
  * @method     CcMusicDirsQuery groupByDirectory() Group by the directory column
  * @method     CcMusicDirsQuery groupByType() Group by the type column
  * @method     CcMusicDirsQuery groupByExists() Group by the exists column
- * @method     CcMusicDirsQuery groupByRemoved() Group by the removed column
+ * @method     CcMusicDirsQuery groupByWatched() Group by the watched column
  *
  * @method     CcMusicDirsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcMusicDirsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -33,13 +33,13 @@
  * @method     CcMusicDirs findOneByDirectory(string $directory) Return the first CcMusicDirs filtered by the directory column
  * @method     CcMusicDirs findOneByType(string $type) Return the first CcMusicDirs filtered by the type column
  * @method     CcMusicDirs findOneByExists(boolean $exists) Return the first CcMusicDirs filtered by the exists column
- * @method     CcMusicDirs findOneByRemoved(boolean $removed) Return the first CcMusicDirs filtered by the removed column
+ * @method     CcMusicDirs findOneByWatched(boolean $watched) Return the first CcMusicDirs filtered by the watched column
  *
  * @method     array findById(int $id) Return CcMusicDirs objects filtered by the id column
  * @method     array findByDirectory(string $directory) Return CcMusicDirs objects filtered by the directory column
  * @method     array findByType(string $type) Return CcMusicDirs objects filtered by the type column
  * @method     array findByExists(boolean $exists) Return CcMusicDirs objects filtered by the exists column
- * @method     array findByRemoved(boolean $removed) Return CcMusicDirs objects filtered by the removed column
+ * @method     array findByWatched(boolean $watched) Return CcMusicDirs objects filtered by the watched column
  *
  * @package    propel.generator.airtime.om
  */
@@ -228,20 +228,20 @@ abstract class BaseCcMusicDirsQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the removed column
+	 * Filter the query on the watched column
 	 * 
-	 * @param     boolean|string $removed The value to use as filter.
+	 * @param     boolean|string $watched The value to use as filter.
 	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcMusicDirsQuery The current query, for fluid interface
 	 */
-	public function filterByRemoved($removed = null, $comparison = null)
+	public function filterByWatched($watched = null, $comparison = null)
 	{
-		if (is_string($removed)) {
-			$removed = in_array(strtolower($removed), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		if (is_string($watched)) {
+			$watched = in_array(strtolower($watched), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
 		}
-		return $this->addUsingAlias(CcMusicDirsPeer::REMOVED, $removed, $comparison);
+		return $this->addUsingAlias(CcMusicDirsPeer::WATCHED, $watched, $comparison);
 	}
 
 	/**

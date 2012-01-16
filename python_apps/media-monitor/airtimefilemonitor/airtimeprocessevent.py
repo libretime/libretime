@@ -2,6 +2,8 @@ import socket
 import logging
 import time
 import os
+import shutil
+import difflib
 
 import pyinotify
 from pyinotify import ProcessEvent
@@ -40,6 +42,8 @@ class AirtimeProcessEvent(ProcessEvent):
         self.create_dict = {}
         self.mount_file_dir = "/etc";
         self.mount_file = "/etc/mtab";
+        self.curr_mtab_file = "/var/tmp/airtime/media-monitor/currMtab"
+        self.prev_mtab_file = "/var/tmp/airtime/media-monitor/prevMtab"
 
     def add_filepath_to_ignore(self, filepath):
         self.ignore_event.add(filepath)
@@ -167,23 +171,33 @@ class AirtimeProcessEvent(ProcessEvent):
     # if change is detected on /etc/mtab, we check what mount(file system) was added/removed
     # and act accordingly
     def handle_mount_change(self):
-        mount_list = [];
-        # parse /etc/mtab
-        fh = open(self.mount_file, 'r')
-        while 1:
-            line = fh.readline()
-            if not line:
-                break
-            
-            line_info = line.split(' ')
-            # the line format is like following:
-            # /dev/sdg1 /media/809D-D2A1 vfat rw,nosuid,nodev,uhelper=udisks..........
-            # so we always get [1] after split to get the mount point
-            mount_list.append(line_info[1])
-        fh.close()
-        self.logger.info("Mount List: %s", mount_list)
+        self.logger.info("Mount change detected, handling changes...");
+        # take snapshot of mtab file and update currMtab and prevMtab
+        # move currMtab to prevMtab and create new currMtab
+        shutil.move(self.curr_mtab_file, self.prev_mtab_file)
+        # create the file
+        shutil.copy(self.mount_file, self.curr_mtab_file)
+        
+        d = difflib.Differ()
+        curr_fh = open(self.curr_mtab_file, 'r')
+        prev_fh = open(self.prev_mtab_file, 'r')
+        
+        diff = list(d.compare(prev_fh.readlines(), curr_fh.readlines()))
+        added_mount_points = []
+        removed_mount_points = []
+        
+        for dir in diff:
+            info = dir.split(' ')
+            if info[0] == '+':
+                added_mount_points.append(info[2])
+            elif info[0] == '-':
+                removed_mount_points.append(info[2])
+        
+        self.logger.info("added: %s", added_mount_points)
+        self.logger.info("removed: %s", removed_mount_points)
+        
         # send current mount information to Airtime
-        self.api_client.update_file_system_mount(mount_list);
+        self.api_client.update_file_system_mount(added_mount_points, removed_mount_points);
     
     def handle_watched_dir_missing(self, dir):
         self.api_client.handle_watched_dir_missing(dir);

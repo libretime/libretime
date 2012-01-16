@@ -373,11 +373,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $language;
 
 	/**
-	 * The value for the file_exist field.
+	 * The value for the file_exists field.
 	 * Note: this column has a database default value of: true
 	 * @var        boolean
 	 */
-	protected $file_exist;
+	protected $file_exists;
 
 	/**
 	 * The value for the soundcloud_id field.
@@ -456,7 +456,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->filepath = '';
 		$this->state = 'empty';
 		$this->currentlyaccessing = 0;
-		$this->file_exist = true;
+		$this->file_exists = true;
 	}
 
 	/**
@@ -1132,13 +1132,13 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [file_exist] column value.
+	 * Get the [file_exists] column value.
 	 * 
 	 * @return     boolean
 	 */
-	public function getDbFileExist()
+	public function getDbFileExists()
 	{
-		return $this->file_exist;
+		return $this->file_exists;
 	}
 
 	/**
@@ -2446,24 +2446,24 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbLanguage()
 
 	/**
-	 * Set the value of [file_exist] column.
+	 * Set the value of [file_exists] column.
 	 * 
 	 * @param      boolean $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setDbFileExist($v)
+	public function setDbFileExists($v)
 	{
 		if ($v !== null) {
 			$v = (boolean) $v;
 		}
 
-		if ($this->file_exist !== $v || $this->isNew()) {
-			$this->file_exist = $v;
-			$this->modifiedColumns[] = CcFilesPeer::FILE_EXIST;
+		if ($this->file_exists !== $v || $this->isNew()) {
+			$this->file_exists = $v;
+			$this->modifiedColumns[] = CcFilesPeer::FILE_EXISTS;
 		}
 
 		return $this;
-	} // setDbFileExist()
+	} // setDbFileExists()
 
 	/**
 	 * Set the value of [soundcloud_id] column.
@@ -2579,7 +2579,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return false;
 			}
 
-			if ($this->file_exist !== true) {
+			if ($this->file_exists !== true) {
 				return false;
 			}
 
@@ -2662,7 +2662,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->subject = ($row[$startcol + 54] !== null) ? (string) $row[$startcol + 54] : null;
 			$this->contributor = ($row[$startcol + 55] !== null) ? (string) $row[$startcol + 55] : null;
 			$this->language = ($row[$startcol + 56] !== null) ? (string) $row[$startcol + 56] : null;
-			$this->file_exist = ($row[$startcol + 57] !== null) ? (boolean) $row[$startcol + 57] : null;
+			$this->file_exists = ($row[$startcol + 57] !== null) ? (boolean) $row[$startcol + 57] : null;
 			$this->soundcloud_id = ($row[$startcol + 58] !== null) ? (int) $row[$startcol + 58] : null;
 			$this->soundcloud_error_code = ($row[$startcol + 59] !== null) ? (int) $row[$startcol + 59] : null;
 			$this->soundcloud_error_msg = ($row[$startcol + 60] !== null) ? (string) $row[$startcol + 60] : null;
@@ -3245,7 +3245,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return $this->getDbLanguage();
 				break;
 			case 57:
-				return $this->getDbFileExist();
+				return $this->getDbFileExists();
 				break;
 			case 58:
 				return $this->getDbSoundcloudId();
@@ -3340,7 +3340,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[54] => $this->getDbSubject(),
 			$keys[55] => $this->getDbContributor(),
 			$keys[56] => $this->getDbLanguage(),
-			$keys[57] => $this->getDbFileExist(),
+			$keys[57] => $this->getDbFileExists(),
 			$keys[58] => $this->getDbSoundcloudId(),
 			$keys[59] => $this->getDbSoundcloudErrorCode(),
 			$keys[60] => $this->getDbSoundcloudErrorMsg(),
@@ -3556,7 +3556,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->setDbLanguage($value);
 				break;
 			case 57:
-				$this->setDbFileExist($value);
+				$this->setDbFileExists($value);
 				break;
 			case 58:
 				$this->setDbSoundcloudId($value);
@@ -3651,7 +3651,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[54], $arr)) $this->setDbSubject($arr[$keys[54]]);
 		if (array_key_exists($keys[55], $arr)) $this->setDbContributor($arr[$keys[55]]);
 		if (array_key_exists($keys[56], $arr)) $this->setDbLanguage($arr[$keys[56]]);
-		if (array_key_exists($keys[57], $arr)) $this->setDbFileExist($arr[$keys[57]]);
+		if (array_key_exists($keys[57], $arr)) $this->setDbFileExists($arr[$keys[57]]);
 		if (array_key_exists($keys[58], $arr)) $this->setDbSoundcloudId($arr[$keys[58]]);
 		if (array_key_exists($keys[59], $arr)) $this->setDbSoundcloudErrorCode($arr[$keys[59]]);
 		if (array_key_exists($keys[60], $arr)) $this->setDbSoundcloudErrorMsg($arr[$keys[60]]);
@@ -3724,7 +3724,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcFilesPeer::SUBJECT)) $criteria->add(CcFilesPeer::SUBJECT, $this->subject);
 		if ($this->isColumnModified(CcFilesPeer::CONTRIBUTOR)) $criteria->add(CcFilesPeer::CONTRIBUTOR, $this->contributor);
 		if ($this->isColumnModified(CcFilesPeer::LANGUAGE)) $criteria->add(CcFilesPeer::LANGUAGE, $this->language);
-		if ($this->isColumnModified(CcFilesPeer::FILE_EXIST)) $criteria->add(CcFilesPeer::FILE_EXIST, $this->file_exist);
+		if ($this->isColumnModified(CcFilesPeer::FILE_EXISTS)) $criteria->add(CcFilesPeer::FILE_EXISTS, $this->file_exists);
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ID)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ID, $this->soundcloud_id);
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_CODE)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $this->soundcloud_error_code);
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_MSG)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ERROR_MSG, $this->soundcloud_error_msg);
@@ -3846,7 +3846,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setDbSubject($this->subject);
 		$copyObj->setDbContributor($this->contributor);
 		$copyObj->setDbLanguage($this->language);
-		$copyObj->setDbFileExist($this->file_exist);
+		$copyObj->setDbFileExists($this->file_exists);
 		$copyObj->setDbSoundcloudId($this->soundcloud_id);
 		$copyObj->setDbSoundcloudErrorCode($this->soundcloud_error_code);
 		$copyObj->setDbSoundcloudErrorMsg($this->soundcloud_error_msg);
@@ -4507,7 +4507,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->subject = null;
 		$this->contributor = null;
 		$this->language = null;
-		$this->file_exist = null;
+		$this->file_exists = null;
 		$this->soundcloud_id = null;
 		$this->soundcloud_error_code = null;
 		$this->soundcloud_error_msg = null;

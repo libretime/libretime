@@ -43,7 +43,7 @@ CREATE TABLE "cc_music_dirs"
 	"directory" TEXT,
 	"type" VARCHAR(255),
 	"exists" BOOLEAN default 't',
-	"removed" BOOLEAN default 'f',
+	"watched" BOOLEAN default 't',
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_music_dir_unique" UNIQUE ("directory")
 );
@@ -118,7 +118,7 @@ CREATE TABLE "cc_files"
 	"subject" VARCHAR(512),
 	"contributor" VARCHAR(512),
 	"language" VARCHAR(512),
-	"file_exist" BOOLEAN default 't',
+	"file_exists" BOOLEAN default 't',
 	"soundcloud_id" INTEGER,
 	"soundcloud_error_code" INTEGER,
 	"soundcloud_error_msg" VARCHAR(512),
@@ -134,6 +134,8 @@ SET search_path TO public;
 CREATE INDEX "cc_files_md5_idx" ON "cc_files" ("md5");
 
 CREATE INDEX "cc_files_name_idx" ON "cc_files" ("name");
+
+CREATE INDEX "cc_files_file_exists_idx" ON "cc_files" ("file_exists");
 
 -----------------------------------------------------------------------------
 -- cc_perms

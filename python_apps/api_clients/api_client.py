@@ -592,15 +592,18 @@ class AirTimeApiClient(ApiClientInterface):
     """
     This function updates status of mounted file system information on airtime
     """
-    def update_file_system_mount(self, mount_list):
+    def update_file_system_mount(self, added_dir, removed_dir):
         logger = logging.getLogger()
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_fs_mount"])
             
             url = url.replace("%%api_key%%", self.config["api_key"])
 
-            data_string = string.join(mount_list, ',')
-            map = [("mount_list", data_string)]
+            added_data_string = string.join(added_dir, ',')
+            removed_data_string = string.join(removed_dir, ',')
+            
+            map = [("added_dir", added_data_string),("removed_dir",removed_data_string)]
+            
             data = urllib.urlencode(map)
             
             req = urllib2.Request(url, data)
@@ -614,7 +617,7 @@ class AirTimeApiClient(ApiClientInterface):
     
     """
         When watched dir is missing(unplugged or something) on boot up, this function will get called
-        and will call approperiate function on Airtime.
+        and will call appropriate function on Airtime.
     """
     def handle_watched_dir_missing(self, dir):
         logger = logging.getLogger()

@@ -43,8 +43,8 @@ abstract class BaseCcMusicDirsPeer {
 	/** the column name for the EXISTS field */
 	const EXISTS = 'cc_music_dirs.EXISTS';
 
-	/** the column name for the REMOVED field */
-	const REMOVED = 'cc_music_dirs.REMOVED';
+	/** the column name for the WATCHED field */
+	const WATCHED = 'cc_music_dirs.WATCHED';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcMusicDirs objects.
@@ -62,11 +62,11 @@ abstract class BaseCcMusicDirsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Directory', 'Type', 'Exists', 'Removed', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'directory', 'type', 'exists', 'removed', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::DIRECTORY, self::TYPE, self::EXISTS, self::REMOVED, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'DIRECTORY', 'TYPE', 'EXISTS', 'REMOVED', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'directory', 'type', 'exists', 'removed', ),
+		BasePeer::TYPE_PHPNAME => array ('Id', 'Directory', 'Type', 'Exists', 'Watched', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'directory', 'type', 'exists', 'watched', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::DIRECTORY, self::TYPE, self::EXISTS, self::WATCHED, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'DIRECTORY', 'TYPE', 'EXISTS', 'WATCHED', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'directory', 'type', 'exists', 'watched', ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
 	);
 
@@ -77,11 +77,11 @@ abstract class BaseCcMusicDirsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Directory' => 1, 'Type' => 2, 'Exists' => 3, 'Removed' => 4, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'directory' => 1, 'type' => 2, 'exists' => 3, 'removed' => 4, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::DIRECTORY => 1, self::TYPE => 2, self::EXISTS => 3, self::REMOVED => 4, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'DIRECTORY' => 1, 'TYPE' => 2, 'EXISTS' => 3, 'REMOVED' => 4, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'directory' => 1, 'type' => 2, 'exists' => 3, 'removed' => 4, ),
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Directory' => 1, 'Type' => 2, 'Exists' => 3, 'Watched' => 4, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'directory' => 1, 'type' => 2, 'exists' => 3, 'watched' => 4, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::DIRECTORY => 1, self::TYPE => 2, self::EXISTS => 3, self::WATCHED => 4, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'DIRECTORY' => 1, 'TYPE' => 2, 'EXISTS' => 3, 'WATCHED' => 4, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'directory' => 1, 'type' => 2, 'exists' => 3, 'watched' => 4, ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
 	);
 
@@ -158,13 +158,13 @@ abstract class BaseCcMusicDirsPeer {
 			$criteria->addSelectColumn(CcMusicDirsPeer::DIRECTORY);
 			$criteria->addSelectColumn(CcMusicDirsPeer::TYPE);
 			$criteria->addSelectColumn(CcMusicDirsPeer::EXISTS);
-			$criteria->addSelectColumn(CcMusicDirsPeer::REMOVED);
+			$criteria->addSelectColumn(CcMusicDirsPeer::WATCHED);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.DIRECTORY');
 			$criteria->addSelectColumn($alias . '.TYPE');
 			$criteria->addSelectColumn($alias . '.EXISTS');
-			$criteria->addSelectColumn($alias . '.REMOVED');
+			$criteria->addSelectColumn($alias . '.WATCHED');
 		}
 	}
 

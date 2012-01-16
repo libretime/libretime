@@ -50,11 +50,11 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	protected $exists;
 
 	/**
-	 * The value for the removed field.
-	 * Note: this column has a database default value of: false
+	 * The value for the watched field.
+	 * Note: this column has a database default value of: true
 	 * @var        boolean
 	 */
-	protected $removed;
+	protected $watched;
 
 	/**
 	 * @var        array CcFiles[] Collection to store aggregation of CcFiles objects.
@@ -84,7 +84,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	public function applyDefaultValues()
 	{
 		$this->exists = true;
-		$this->removed = false;
+		$this->watched = true;
 	}
 
 	/**
@@ -138,13 +138,13 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [removed] column value.
+	 * Get the [watched] column value.
 	 * 
 	 * @return     boolean
 	 */
-	public function getRemoved()
+	public function getWatched()
 	{
-		return $this->removed;
+		return $this->watched;
 	}
 
 	/**
@@ -228,24 +228,24 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	} // setExists()
 
 	/**
-	 * Set the value of [removed] column.
+	 * Set the value of [watched] column.
 	 * 
 	 * @param      boolean $v new value
 	 * @return     CcMusicDirs The current object (for fluent API support)
 	 */
-	public function setRemoved($v)
+	public function setWatched($v)
 	{
 		if ($v !== null) {
 			$v = (boolean) $v;
 		}
 
-		if ($this->removed !== $v || $this->isNew()) {
-			$this->removed = $v;
-			$this->modifiedColumns[] = CcMusicDirsPeer::REMOVED;
+		if ($this->watched !== $v || $this->isNew()) {
+			$this->watched = $v;
+			$this->modifiedColumns[] = CcMusicDirsPeer::WATCHED;
 		}
 
 		return $this;
-	} // setRemoved()
+	} // setWatched()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -261,7 +261,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 				return false;
 			}
 
-			if ($this->removed !== false) {
+			if ($this->watched !== true) {
 				return false;
 			}
 
@@ -291,7 +291,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 			$this->directory = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
 			$this->type = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->exists = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
-			$this->removed = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
+			$this->watched = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -630,7 +630,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 				return $this->getExists();
 				break;
 			case 4:
-				return $this->getRemoved();
+				return $this->getWatched();
 				break;
 			default:
 				return null;
@@ -659,7 +659,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 			$keys[1] => $this->getDirectory(),
 			$keys[2] => $this->getType(),
 			$keys[3] => $this->getExists(),
-			$keys[4] => $this->getRemoved(),
+			$keys[4] => $this->getWatched(),
 		);
 		return $result;
 	}
@@ -704,7 +704,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 				$this->setExists($value);
 				break;
 			case 4:
-				$this->setRemoved($value);
+				$this->setWatched($value);
 				break;
 		} // switch()
 	}
@@ -734,7 +734,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 		if (array_key_exists($keys[1], $arr)) $this->setDirectory($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setType($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setExists($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setRemoved($arr[$keys[4]]);
+		if (array_key_exists($keys[4], $arr)) $this->setWatched($arr[$keys[4]]);
 	}
 
 	/**
@@ -750,7 +750,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcMusicDirsPeer::DIRECTORY)) $criteria->add(CcMusicDirsPeer::DIRECTORY, $this->directory);
 		if ($this->isColumnModified(CcMusicDirsPeer::TYPE)) $criteria->add(CcMusicDirsPeer::TYPE, $this->type);
 		if ($this->isColumnModified(CcMusicDirsPeer::EXISTS)) $criteria->add(CcMusicDirsPeer::EXISTS, $this->exists);
-		if ($this->isColumnModified(CcMusicDirsPeer::REMOVED)) $criteria->add(CcMusicDirsPeer::REMOVED, $this->removed);
+		if ($this->isColumnModified(CcMusicDirsPeer::WATCHED)) $criteria->add(CcMusicDirsPeer::WATCHED, $this->watched);
 
 		return $criteria;
 	}
@@ -815,7 +815,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 		$copyObj->setDirectory($this->directory);
 		$copyObj->setType($this->type);
 		$copyObj->setExists($this->exists);
-		$copyObj->setRemoved($this->removed);
+		$copyObj->setWatched($this->watched);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1016,7 +1016,7 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 		$this->directory = null;
 		$this->type = null;
 		$this->exists = null;
-		$this->removed = null;
+		$this->watched = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

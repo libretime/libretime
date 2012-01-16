@@ -29,7 +29,7 @@
     <column name="directory" phpName="Directory" type="LONGVARCHAR" required="false"/>
     <column name="type" phpName="Type" type="VARCHAR" size="255" required="false"/>
     <column name="exists" phpName="Exists" type="BOOLEAN" required="false" defaultValue="true"/>
-    <column name="removed" phpName="Removed" type="BOOLEAN" required="false" defaultValue="false"/>
+    <column name="watched" phpName="Watched" type="BOOLEAN" required="false" defaultValue="true"/>
     <unique name="cc_music_dir_unique">
       <unique-column name="directory"/>
     </unique>
@@ -92,7 +92,7 @@
     <column name="subject" phpName="DbSubject" type="VARCHAR" size="512" required="false"/>
     <column name="contributor" phpName="DbContributor" type="VARCHAR" size="512" required="false"/>
     <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
-    <column name="file_exist" phpName="DbFileExist" type="BOOLEAN" required="false" defaultValue="true"/>
+    <column name="file_exists" phpName="DbFileExists" type="BOOLEAN" required="false" defaultValue="true"/>
     <column name="soundcloud_id" phpName="DbSoundcloudId" type="Integer" required="false"/>
     <column name="soundcloud_error_code" phpName="DbSoundcloudErrorCode" type="Integer" required="false"/>
     <column name="soundcloud_error_msg" phpName="DbSoundcloudErrorMsg" type="VARCHAR" size="512" required="false"/>
@@ -111,6 +111,9 @@
     </index>
     <index name="cc_files_name_idx">
       <index-column name="name"/>
+    </index>
+    <index name="cc_files_file_exists_idx">
+      <index-column name="file_exists"/>
     </index>
   </table>
   <table name="cc_perms" phpName="CcPerms">
