@@ -17,7 +17,7 @@ if (count($items)) : ?>
             </div>
             <div class="text-row">
                 <span class="spl_artist"><?php echo $item["CcFiles"]['artist_name'] ?></span>
-                <span class="spl_artist"><?php echo ($item["CcFiles"]['file_exists'])?"":"NO FILE FOUND!" ?></span>
+                <span class="spl_artist"><?php echo ($item["CcFiles"]['file_exists'])?"":"<img src='/css/images/warning-icon.png'>" ?></span>
                 <span class="spl_offset"><?php echo $item["offset"]?></span>
             </div>
             <?php //create the crossfade icon.
