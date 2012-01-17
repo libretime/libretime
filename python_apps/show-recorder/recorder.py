@@ -299,6 +299,7 @@ class CommandListener():
             temp = self.api_client.get_shows_to_record()
             if temp is not None:
                 shows = temp['shows']
+                self.server_timezone = temp['server_timezone']
                 self.parse_shows(shows)
             self.logger.info("Bootstrap complete: got initial copy of the schedule")
         except Exception, e:

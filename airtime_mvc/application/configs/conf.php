@@ -19,8 +19,7 @@ $CC_CONFIG = array(
 
     "rootDir" => __DIR__."/../..",
     'pearPath'      =>  dirname(__FILE__).'/../../library/pear',
-    'zendPath'      =>  dirname(__FILE__).'/../../library/Zend',
-    'phingPath'      =>  dirname(__FILE__).'/../../library/phing'
+    'zendPath'      =>  dirname(__FILE__).'/../../library/Zend'
 );
 
 

@@ -176,32 +176,51 @@ class Application_Model_Systemstatus
         return $data;
     }
 
-    public static function GetRabbitMqStatus(){     
-        $docRoot = self::GetMonitStatus("localhost");
+    public static function GetRabbitMqStatus(){
+        
+        if (isset($_SERVER["RABBITMQ_HOST"])){
+            $rabbitmq_host = $_SERVER["RABBITMQ_HOST"];
+        } else {
+            $rabbitmq_host = "localhost";
+        }
+        $docRoot = self::GetMonitStatus($rabbitmq_host);
         $data = self::ExtractServiceInformation($docRoot, "rabbitmq-server");
 
         return $data;
     }
     
     public static function GetDiskInfo(){
-        /* First lets get all the watched directories. Then we can group them
-         * into the same paritions by comparing the partition sizes. */
-        $musicDirs = Application_Model_MusicDir::getWatchedDirs();
-        $musicDirs[] = Application_Model_MusicDir::getStorDir();
-
-
         $partions = array();
-
-        foreach($musicDirs as $md){
-            $totalSpace = disk_total_space($md->getDirectory());
-
-            if (!isset($partitions[$totalSpace])){
-                $partitions[$totalSpace] = new StdClass;
-                $partitions[$totalSpace]->totalSpace = $totalSpace;
-                $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
-            }
+        
+        if (isset($_SERVER['AIRTIME_SRV'])){
+            //connect to DB and find how much total space user has allocated.
+            $totalSpace = Application_Model_Preference::GetDiskQuota();
             
-            $partitions[$totalSpace]->dirs[] = $md->getDirectory();
+            $storPath = Application_Model_MusicDir::getStorDir()->getDirectory();
+            
+            list($usedSpace,) = preg_split("/[\s]+/", exec("du -bs $storPath"));
+            
+            $partitions[$totalSpace]->totalSpace = $totalSpace;
+            $partitions[$totalSpace]->totalFreeSpace = $totalSpace - $usedSpace;
+            Logging::log($partitions[$totalSpace]->totalFreeSpace);
+        } else {
+            /* First lets get all the watched directories. Then we can group them
+            * into the same partitions by comparing the partition sizes. */
+            $musicDirs = Application_Model_MusicDir::getWatchedDirs();
+            $musicDirs[] = Application_Model_MusicDir::getStorDir();
+            
+            foreach($musicDirs as $md){
+                $totalSpace = disk_total_space($md->getDirectory());
+
+                if (!isset($partitions[$totalSpace])){
+                    $partitions[$totalSpace] = new StdClass;
+                    $partitions[$totalSpace]->totalSpace = $totalSpace;
+                    $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
+
+                }
+                
+                $partitions[$totalSpace]->dirs[] = $md->getDirectory();
+            }
         }
 
         return array_values($partitions);

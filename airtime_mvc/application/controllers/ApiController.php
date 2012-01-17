@@ -379,6 +379,7 @@ class ApiController extends Zend_Controller_Action
 
 
         $this->view->is_recording = false;
+        $this->view->server_timezone = Application_Model_Preference::GetTimezone();
 
         $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
         Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
@@ -753,6 +754,7 @@ class ApiController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
+        $getDiskInfo = $request->getParam('diskinfo') == "true";
         /*
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -771,9 +773,12 @@ class ApiController extends Zend_Controller_Action
                 "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
                 "show_recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
                 "media_monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
-            ),
-            "partitions"=>Application_Model_Systemstatus::GetDiskInfo()
+            )
         );
+        
+        if ($getDiskInfo){
+            $status["partitions"] = Application_Model_Systemstatus::GetDiskInfo();
+        }
         
         $this->view->status = $status;
     }

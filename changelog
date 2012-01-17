@@ -1,69 +1,137 @@
-2.0.0 - Nov 28, 2011
-  * CC-1942: Add ability to set timezone in preferences
-  * CC-2363: Diagnostic screen in Web UI
-  * CC-2438: Add a button to listen to the stream immediately
-  * CC-2591: Allow upload of any audio clip to Soundcloud
-  * CC-2607: Ability to adjust stream bitrate, type, etc from the UI interface
-  * CC-2630: Allow Liquidsoap to support multiple streams
-  * CC-2950: Tell users if they are running an out-of-date version or not
-  * CC-2959: Stream Setting: Status box design for each stream
+2.0.0 - January 24, 2011
+  * The cool stuff:
+    * Stream configuration through the browser
+      * You can have up to three streams with different bitrates and point them
+        to different Icecast/SHOUTcast servers
+      * Any connection problems between Liquidsoap and Icecast are shown in the
+        interface (no more blaming Airtime for your misconfigured Icecast
+        server!)
+      * Ability to change the hardware output API from the browser: you can now
+        switch between ALSA, OSS, AO, Pulseaudio, and Portaudio.
+      * Listen from the browser: You can now listen to the streams directly from
+        the web interface without having to start a 3rd party application(such
+        as VLC) to listen to the stream.
+      * Service monitoring from the browser: You can now see the status of the
+        services and the disk space available.
+      * Time zone can now be set in the browser.  Times are now stored in the
+        database in UTC time, there is no more need to adjust server time or
+        values stored in ".htaccess" or "php.ini" files.
+      * Ability to change the "Start Day of the Week" that is shown in the
+        calendar.
+      * View settings saved in calendar(time scale and time increments) and
+        playlists(number of items displayed, search term)
+      * Soundcloud integration improvements
+        * Upload any clip to Soundcloud (not just the recorded shows as it was
+          in previous versions)
+        * Upload many files at once
+        * View the file on Soundcloud.com once it is uploaded
+        * Re-upload a file to Soundcloud (for example, if the file has been
+          edited)
+        * Automatically set the Soundcloud "Downloadable" flag
+      * Protection against brute-force password guessing attacks: after three
+        failed login attempts, the user will be presented with a RECAPTCHA.
+      * Right-click on an item in the library to see the metadata for the audio
+        file.
+      * Notification of new Airtime releases built into the interface.
+    * Improvements
+      * Add Show: only allow valid input when entering times
+      * Login page auto-focuses on user name field
+      * Install checks that Virtualenv is functional before proceeding
+      * Added a 404 page design
+      * Changing password does not require first & last name to be filled in
+      * The playlist now expands as you add items instead of keeping everything
+        within a small scrolled box.
+      * Better error checking in cases where two users alter the same data at
+        the same time (for example, in playlists and shows)
+      * Playlists: Removed intermediate "Add Playlist" screen where it asked you
+        to fill in the name and description of the playlist. This wasnt
+        necessary since everything could be changed from the playlist editor
+        itself.
+      * Added "airtime-log" command to display, dump, and view all of Airtime's
+        log files
+    * Bug fixes
+      * Liquidsoap logs are now logrotated
+      * Media monitor
+        * Now correctly handles the case where a watched directory or
+          subdirectory is deleted or moved
+        * Fixed bug where Airtime import could start reading a file before it
+          had finished copying, leading to import failure.  This only happened
+          in rare cases.
 
 1.9.5 - Nov 2, 2011
-  *(CC-2743, CC-2769) Fixed problem where Media-Monitor would try to parse a file's metadata while the OS was still copying it
-  *(CC-2882) Fixed a bug where a couldn't unregister an old directory name from Airtime after it was renamed.
-  *(CC-2891) Fixed a bug with parsing Unicode metadata in audio files.
-  *(CC-2972) Fixed a bug where systems behind a firewall would have Airtime services communicating via its external IP.
-  *(CC-2975) Issue with older python-virtualenv identified. Airtime installer now requires virtualenv >= 1.4.9
-  *(CC-3012, CC-3013) Fixed an issue with Media-Monitor crashing when parsing certain audio tracks
+  * Bug fixes:
+    * (CC-2743, CC-2769) Fixed problem where Media-Monitor would try to parse a
+      file's metadata while the OS was still copying it
+    * (CC-2882) Fixed a bug where a couldn't unregister an old directory name
+      from Airtime after it was renamed.
+    * (CC-2891) Fixed a bug with parsing Unicode metadata in audio files.
+    * (CC-2972) Fixed a bug where systems behind a firewall would have Airtime
+      services communicating via its external IP.
+    * (CC-2975) Issue with older python-virtualenv identified. Airtime installer
+      now requires virtualenv >= 1.4.9
+    * (CC-3012, CC-3013) Fixed an issue with Media-Monitor crashing when parsing
+      certain audio tracks
 
 1.9.4 - Sept 13, 2011
-  *Improvements
-    -DEB packages now available for Ubuntu & Debian
-    -"airtime-easy-install" DEB package now available which will install everything with a single click
-    -"airtime-import" command-line utility now offers better help when invalid parameters have been passed.
-  *Fixes
-    -Fixed "Show Contents" displaying full-length of tracks, even if cue-points had been set.
-    -Fixed start date of show not updating after dragging and dropping.
-    -Fixed audio preview still playing after deleting a file in the Playlist Builder.
-    -Fixed uploads via the web-interface while using Internet Explorer failing when tracks contained "+" or
-     whitespace characters.
-    -Fixed issue where deleting a file from the Playlist Builder wouldn't always refresh the list to
-     remove the file.
-    -Fixed issue where upgrading from any previous Airtime would set "Toronto/America" as the default timezone
-    -Fixed playout engine (Pypo) using a large amount of CPU when there was a long history of played shows
-    -Fixed playout engine (Pypo) using 100% CPU when it could not connect to RabbitMQ
-    -Fixed issue where incorrect Start Date and Time entered for a new show was not handled gracefully
-    -Fixed issue where using Cyrillic characters in a show name would sometimes cause it to not play
-    -Fixed pypo hanging if web server is unavailable
-    -Fixed items that were being dragged and dropped in the Playlist Builder being obscured by other UI elements.
+  * Improvements
+    - DEB packages now available for Ubuntu & Debian
+    - "airtime-easy-install" DEB package now available which will install
+      everything with a single click
+    - "airtime-import" command-line utility now offers better help when invalid
+      parameters have been passed.
+  * Fixes
+    - Fixed "Show Contents" displaying full-length of tracks, even if cue-points
+      had been set.
+    - Fixed start date of show not updating after dragging and dropping.
+    - Fixed audio preview still playing after deleting a file in the Playlist
+      Builder.
+    - Fixed uploads via the web-interface while using Internet Explorer failing
+      when tracks contained "+" or whitespace characters.
+    - Fixed issue where deleting a file from the Playlist Builder wouldn't
+      always refresh the list to remove the file.
+    - Fixed issue where upgrading from any previous Airtime would set
+      "Toronto/America" as the default timezone
+    - Fixed playout engine (Pypo) using a large amount of CPU when there was a
+      long history of played shows
+    - Fixed playout engine (Pypo) using 100% CPU when it could not connect to
+      RabbitMQ
+    - Fixed issue where incorrect Start Date and Time entered for a new show was
+      not handled gracefully
+    - Fixed issue where using Cyrillic characters in a show name would sometimes
+      cause it to not play
+    - Fixed pypo hanging if web server is unavailable
+    - Fixed items that were being dragged and dropped in the Playlist Builder
+      being obscured by other UI elements.
     
 1.9.3 - August 26th, 2011
-  *Improvements
-    -It is now possible to upgrade your system while a show is playing.
-     Playout will be temporarily interrupted for about 5-10 seconds and then 
-     playout will resume.  Previously playout would not resume until the next
-     scheduled show.
-  *Fixes
-    -Fixed bug where playout system did not work with mono files.
-    -Fixed bug where sometimes audio files could be played out of order.
+  * Improvements
+    - It is now possible to upgrade your system while a show is playing.
+      Playout will be temporarily interrupted for about 5-10 seconds and then 
+      playout will resume.  Previously playout would not resume until the next
+      scheduled show.
+  * Fixes
+    - Fixed bug where playout system did not work with mono files.
+    - Fixed bug where sometimes audio files could be played out of order.
 
 
 1.9.2 - August 23rd, 2011
-  *Fixes
-    -Fixed restarting sometimes caused media-monitor to forget all of its watched directories
-    -Fixed Media-monitor crashes when moving sub-directories within its watched directory
-    -upgrade script would crash on upgrade from 1.8.2
+  * Fixes
+    - Fixed restarting sometimes caused media-monitor to forget all of its
+      watched directories
+    - Fixed Media-monitor crashes when moving sub-directories within its watched
+      directory
+    - Upgrade script would crash on upgrade from 1.8.2
 
 1.9.1 - August 17th, 2011
-  *Fixes
-    -airtime-user shell script failing to start
-    -Progress bar for tracks appearing when no content scheduled
-    -Fix upgrades from Airtime 1.8.2 failing
-    -Fix various install issues with virtualenv
-    -Prevent users from doing a manual install of Airtime if they already have the
-     Debian package version installed
-  *Changes
-    -Support Settings moved to a seperate page accessible by Admin user only. 
+  * Fixes
+    - "airtime-user" shell script failing to start
+    - Progress bar for tracks appearing when no content scheduled
+    - Fix upgrades from Airtime 1.8.2 failing
+    - Fix various install issues with virtualenv
+    - Prevent users from doing a manual install of Airtime if they already have
+      the Debian package version installed
+  * Changes
+    - Support Settings moved to a seperate page accessible by Admin user only. 
 
 1.9.0 - August 9, 2011
 
@@ -136,40 +204,61 @@ The cool stuff:
 1.8.2 - June 8, 2011
 Highlights:
   * Improvements:
-    - You can now download audio files from the search screen and from the "Show Content" screen.
+    - You can now download audio files from the search screen and from the "Show
+      Content" screen.
     - The "Now Playing" screen now shows whether a show is being recorded.
-    - In the "Playlist Builder" screen, you can now edit the title of the playlist and the description inline, without having to switch to another page.
-    - When you click on "Add Show", the cursor is placed on the show title field and a default name is automatically filled in.
+    - In the "Playlist Builder" screen, you can now edit the title of the
+      playlist and the description inline, without having to switch to another
+      page.
+    - When you click on "Add Show", the cursor is placed on the show title field
+      and a default name is automatically filled in.
     - It is now possible to cancel a show that was recording.
-    - An new command-line program was added to verify an installation and help identify where problems are: "airtime-check-system"
-    - Airtime now runs on Ubuntu 11.04 (though we do not offer support for this).
+    - An new command-line program was added to verify an installation and help
+      identify where problems are: "airtime-check-system"
+    - Airtime now runs on Ubuntu 11.04 (though we do not offer support for
+      this).
   * Bug fixes:
-    - Fixed serious problem with the upgrading and installing process.  The Airtime install will now automatically detect if you should upgrade or install and take the appropriate action.  Reinstalls cannot happen except by using a specific command.
+    - Fixed serious problem with the upgrading and installing process.  The
+      Airtime install will now automatically detect if you should upgrade or
+      install and take the appropriate action.  Reinstalls cannot happen except
+      by using a specific command.
     - "Show Contents" screen will now display properly on smaller screens.
     - Install/uninstall now works on Debian without needing the "sudo" command.
-    - Editing a playlist name or deleting a playlist now reflects immediately in the media search window.
-    - In the "Add Media" page, the "start upload" button vanished after upload.  Now it remains there after upload so it is possible to upload again.
-    - When canceling a playing show, the currently playing audio file still showed as playing.  This has been fixed.
+    - Editing a playlist name or deleting a playlist now reflects immediately in
+      the media search window.
+    - In the "Add Media" page, the "start upload" button vanished after upload.
+      Now it remains there after upload so it is possible to upload again.
+    - When canceling a playing show, the currently playing audio file still
+      showed as playing.  This has been fixed.
     - Audio files greater than 100MB were not being played.
     - Fixed uploading audio on Chrome 11 and higher
     - Fixed various editing show problems
     - Fixed airtime-pypo-stop/start causing playback problems
     - Fixed incorrect information being occasionally shown in the top panel
-    - Fixed problem with Record Check box occasionally being greyed-out when creating new show
+    - Fixed problem with Record Check box occasionally being greyed-out when
+      creating new show
     - Fixed a problem with default genre not being applied to recorded shows
-    - Fixed a problem where shows repeating bi-weekly or monthly did not update properly when edited.
-    - Fixed problem when a user changed the name of a recorded show right before it started playing would cause the recorded audio not to be linked to the show.
+    - Fixed a problem where shows repeating bi-weekly or monthly did not update
+      properly when edited.
+    - Fixed problem when a user changed the name of a recorded show right before
+      it started playing would cause the recorded audio not to be linked to the
+      show.
     - and many more...
 
 1.8.1 - May 2, 2011
-  * Fixed issue where an track's progress bar would keep updating, even if the track was no longer playing.
-  * Fixed problem where editing a show would only update some of the show instances.
-  * Fixed an issue related to editing a show that had instances scheduled in the past.
+  * Fixed issue where an track's progress bar would keep updating, even if the
+    track was no longer playing.
+  * Fixed problem where editing a show would only update some of the show
+    instances.
+  * Fixed an issue related to editing a show that had instances scheduled in the
+    past.
   * airtime-clean-storage command-line utility should now work properly
   * Fixed an issue related the "airtime-import" command-line utility
-  * Fixed an issue with the Airtime Debian package overwriting configuration files
+  * Fixed an issue with the Airtime Debian package overwriting configuration
+    files
   * Fixed some database install issues on Debian
-  * Fixed an issue with show names and foreign characters causing the show to not start (temporarily disabled allowing the usage of these characters)
+  * Fixed an issue with show names and foreign characters causing the show to
+    not start (temporarily disabled allowing the usage of these characters)
 
 
 1.8.0 - April 19, 2011
@@ -202,32 +291,43 @@ Highlights:
   * Bug fixes:
     - CC-2192 Schedule sent to pypo is not sorted by start time.
     - CC-2175 Overbooking: Cut off shows when they are done
-    - CC-2174 Need formatting and a warning icon for the message for overbooking a show
+    - CC-2174 Need formatting and a warning icon for the message for overbooking
+      a show
     - CC-2039 Upload file: file name cropped
     - CC-2177 Schedule editing does not work under Firefox 4
 
 1.7.0 - April 4, 2011
   * Recording and automatic scheduling/broadcasting of live shows
-    - Recording/rebroadcast status of a show is shown in "Now Playing" and "Calendar"
+    - Recording/rebroadcast status of a show is shown in "Now Playing" and
+      "Calendar"
     - Can rebroadcast a show at multiple times and dates
   * Automatic upload of recorded shows to Soundcloud
-  * Frontend JQuery widgets for public-facing websites to show your visitors what's playing and the upcoming schedule.
-  * Ability to over-book a show and automatically cut and fade out song if it goes beyond the show time
+  * Frontend JQuery widgets for public-facing websites to show your visitors
+    what's playing and the upcoming schedule.
+  * Ability to over-book a show and automatically cut and fade out song if it
+    goes beyond the show time
   * Ability to delete audio files
   * Ability to cancel the currently playing show
   * Any changes to the schedule are immediately seen by the playout engine
-    - In version 1.6, you had to make sure that your show was ready to go 30 seconds before it started.
-  * Upgrade support (should be able to upgrade from any version, unlike 1.6.1 which required an uninstall of 1.6.0 first)
+    - In version 1.6, you had to make sure that your show was ready to go 30
+      seconds before it started.
+  * Upgrade support (should be able to upgrade from any version, unlike 1.6.1
+    which required an uninstall of 1.6.0 first)
   * "Now Playing" list view:
     - audio items are now grouped by show.
-    - If a show is not fully scheduled, the user is notified how many seconds of silence are at the end of the show in this View.
-    - Audio items that play past the show's end time have a visual notification that they will be cut off
+    - If a show is not fully scheduled, the user is notified how many seconds of
+      silence are at the end of the show in this View.
+    - Audio items that play past the show's end time have a visual notification
+      that they will be cut off
   * Ability to change metadata tag display format for web streams
-  * Config files moved to /etc/airtime.  This means all config files are in one convenient location and separated from the code, so you can upgrade your code independently of your config files.
+  * Config files moved to /etc/airtime.  This means all config files are in one
+    convenient location and separated from the code, so you can upgrade your
+    code independently of your config files.
   * Redesign of Preferences screen
   * Bug fixes:
     - CC-2082 OGG stream dies after every song when using MPlayer
-    - CC-1894 Warn users about time zone differences or clock drift problems on the server 
+    - CC-1894 Warn users about time zone differences or clock drift problems on
+      the server 
     - CC-2058 Utilities are not in the system $PATH
     - CC-2051 Unable to change user password
     - CC-2030 Icon needed for Cue In/Out
@@ -236,7 +336,8 @@ Highlights:
 1.6.1 - Feb 23, 2011
 Bug fixes:
   * CC-1973 Liquidsoap crashes after multi-day playout
-  * CC-1970 API key fix (Security fix) - Each time you run the install scripts, a new API key is now generated.
+  * CC-1970 API key fix (Security fix) - Each time you run the install scripts,
+    a new API key is now generated.
   * CC-1992 Editing metadata goes blank on 'submit' 
   * CC-1993 ui start time and song time unsynchronized
 
