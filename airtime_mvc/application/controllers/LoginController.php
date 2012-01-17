@@ -10,6 +10,8 @@ class LoginController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        global $CC_CONFIG;
+        
         if(Zend_Auth::getInstance()->hasIdentity())
         {
         	$this->_redirect('Nowplaying');
@@ -80,11 +82,14 @@ class LoginController extends Zend_Controller_Action
             }
         }
         
-		$this->view->message = $message;
-		$this->view->error = $error;
-		$this->view->form = $form;
-		$this->view->airtimeVersion = Application_Model_Preference::GetAirtimeVersion();
-		$this->view->airtimeCopyright = AIRTIME_COPYRIGHT_DATE;
+        $this->view->message = $message;
+        $this->view->error = $error;
+        $this->view->form = $form;
+        $this->view->airtimeVersion = Application_Model_Preference::GetAirtimeVersion();
+        $this->view->airtimeCopyright = AIRTIME_COPYRIGHT_DATE;
+        if(isset($CC_CONFIG['demo'])){
+            $this->view->demo = $CC_CONFIG['demo'];
+        }
     }
 
     public function logoutAction()

@@ -5,6 +5,8 @@ class Application_Form_Login extends Zend_Form
 
     public function init()
     { 
+        global $CC_CONFIG;
+        
 		// Set the method for the display form to POST
         $this->setMethod('post');
 
@@ -13,17 +15,19 @@ class Application_Form_Login extends Zend_Form
             'label'      => 'Username:',
             'class'      => 'input_text',
             'required'   => true,
+            'value'      => (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1)?'admin':'',
             'filters'    => array('StringTrim'),
             'validators' => array(
                 'NotEmpty',
             )
         ));
-
+        
 		// Add password element
         $this->addElement('password', 'password', array(
             'label'      => 'Password:',
             'class'      => 'input_text',
             'required'   => true,
+            'value'      => (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1)?'admin':'',
             'filters'    => array('StringTrim'),
             'validators' => array(
                 'NotEmpty',
