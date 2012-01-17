@@ -43,7 +43,7 @@ Linked code:
  * Phing 
    - What is it: PHP project build system
    - Web site: http://phing.info/trac/
-   - Note: Only used for database installation and development, not needed to run Airtime.
+   - Note: Only used for development, not needed to run Airtime.
    - License: LGPLv3
 
  * PHP-AMQPLIB
@@ -175,7 +175,7 @@ Non-linked code:
    - Web site: http://www.python.org/
    - License: PSF License. See http://docs.python.org/license.html
 
- * Liquidsoap (pre-release of 1.0) 
+ * Liquidsoap 1.0.0 
    - Web site: http://savonet.sourceforge.net/
    - License: GPLv2
 
