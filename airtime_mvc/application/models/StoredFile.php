@@ -90,7 +90,7 @@ class Application_Model_StoredFile {
             }
             $this->setDbColMetadata($dbMd);
         }
-        
+
         $this->_file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
         $this->_file->save();
     }
@@ -316,7 +316,7 @@ class Application_Model_StoredFile {
 
         // don't delete from the playslist. We might want to put a flag
         //Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
-        
+
         // set file_exists falg to false
         $this->_file->setDbFileExists(false);
         $this->_file->save();
@@ -418,10 +418,10 @@ class Application_Model_StoredFile {
      * @return string
      */
     public function getFilePath()
-    {        
+    {
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
         $directory = $music_dir->getDirectory();
-        
+
         $filepath = $this->_file->getDbFilepath();
 
         return $directory.$filepath;
@@ -435,7 +435,7 @@ class Application_Model_StoredFile {
     public function setFilePath($p_filepath)
     {
         $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
-        
+
         if (is_null($path_info)) {
             return -1;
         }
@@ -505,7 +505,7 @@ class Application_Model_StoredFile {
         $storedFile->_file = $file;
 
         if(isset($md['MDATA_KEY_FILEPATH'])) {
-            // removed "//" in the path. Always use '/' for path separator 
+            // removed "//" in the path. Always use '/' for path separator
             $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
             $res = $storedFile->setFilePath($filepath);
             if ($res === -1) {
@@ -684,8 +684,23 @@ class Application_Model_StoredFile {
                 LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
             UNION
             (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
-        
+
         $results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+
+        /*
+        type = aData["ftype"].substring(0,2);
+        id = aData["id"];
+
+        if(type == "au") {
+            $('td.library_type', nRow).html( '<img src="css/images/icon_audioclip.png">' );
+        } else if(type == "pl") {
+            $('td.library_type', nRow).html( '<img src="css/images/icon_playlist.png">' );
+        }
+
+
+        $(nRow).attr("id", type+'_'+id);
+        */
+
         foreach($results['aaData'] as &$row){
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
@@ -694,7 +709,22 @@ class Application_Model_StoredFile {
             // split it and grab only the year info
             $yearSplit = explode('-', $row['year']);
             $row['year'] = $yearSplit[0];
+
+            $type = substr($row['ftype'], 0, 2);
+
+            $row['id'] = "{$type}_{$row['id']}";
+
+            //TODO url like this to work on both playlist/showbuilder screens.
+            //datatable stuff really needs to be pulled out and generalized within the project
+            //access to zend view methods to access url helpers is needed.
+            if($type == "au") {
+                $row['ftype'] = '<img src="/css/images/icon_audioclip.png">';
+            }
+            else {
+                $row['ftype'] = '<img src="/css/images/icon_playlist.png">';
+            }
         }
+
         return $results;
     }
 
@@ -773,9 +803,9 @@ class Application_Model_StoredFile {
 		else {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
-		
+
 		$results = $CC_DBC->getAll($sql);
-                
+
 		if(!isset($totalDisplayRows)) {
 			$totalDisplayRows = $totalRows;
 		}
@@ -904,10 +934,10 @@ class Application_Model_StoredFile {
         $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
         Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
-        
+
         //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
         $r = @rename($audio_file, $audio_stor);
-        
+
         //$r = @copy($audio_file, $audio_stor);
         //$r = @unlink($audio_file);
     }
@@ -920,14 +950,14 @@ class Application_Model_StoredFile {
     }
 
     /**
-     * 
+     *
      * Enter description here ...
      * @param $dir_id - if this is not provided, it returns all files with full path constructed.
      * @param $propelObj - if this is true, it returns array of proepl obj
      */
     public static function listAllFiles($dir_id=null, $propelObj=false){
         global $CC_DBC;
-        
+
         if($propelObj){
             $sql = "SELECT m.directory || f.filepath as fp"
                     ." FROM CC_MUSIC_DIRS m"
@@ -989,12 +1019,12 @@ class Application_Model_StoredFile {
     public function getSoundCloudErrorMsg(){
         return $this->_file->getDbSoundCloudErrorMsg();
     }
-    
+
     public function setFileExistsFlag($flag){
         $this->_file->setDbFileExists($flag)
             ->save();
     }
-    
+
     public function getFileExistsFlag(){
         return $this->_file->getDbFileExists();
     }

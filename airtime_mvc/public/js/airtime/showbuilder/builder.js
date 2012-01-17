@@ -26,7 +26,7 @@ $(document).ready(function() {
 		
 		events: getFullCalendarEvents,
 		
-		axisFormat: 'H:mm:ss',
+		axisFormat: 'H:mm',
 		slotMinutes: 1,
 		timeFormat: {
             agenda: 'H:mm:ss{ - H:mm:ss}'
@@ -44,6 +44,18 @@ $(document).ready(function() {
 			// we need to copy it, so that multiple events don't have a reference to the same object
 			//var copiedEventObject = $.extend({}, originalEventObject);
 			var copiedEventObject = {};
+			var data = $(this).data("show_builder");
+			
+			$.ajax({url: "/showbuilder/schedule", 
+				data:{format: "json", sid:"", schedule_start: date},
+				dataType:"json", 
+				success:function(json){
+					var x;
+				}, 
+				error:function(jqXHR, textStatus, errorThrown){
+					var x;
+				}	
+			});
 			
 			// assign it the date that was reported
 			copiedEventObject.title = "test title";
@@ -56,8 +68,9 @@ $(document).ready(function() {
 			
 			// render the event on the calendar
 			// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-			$('#show_builder').fullCalendar('renderEvent', copiedEventObject, true);
+			//$('#show_builder').fullCalendar('renderEvent', copiedEventObject, true);
 			
+			$("#schedule_calendar").fullCalendar( 'refetchEvents' );			
 		}
 	});
 });

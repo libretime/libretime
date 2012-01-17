@@ -29,6 +29,8 @@ class ShowbuilderController extends Zend_Controller_Action
         if ($user->isAdmin() || $user->isHost($show_instance->getShowId())) {
             $this->_helper->layout->setLayout('builder');
 
+            $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js'),'text/javascript');
+
             $this->_helper->actionStack('library', 'library');
             $this->_helper->actionStack('builder', 'showbuilder');
         }
@@ -55,6 +57,15 @@ class ShowbuilderController extends Zend_Controller_Action
     }
 
     public function scheduleAction() {
+
+        $request = $this->getRequest();
+
+        $show_instance_id = $request->getParam("sid", 0);
+        $scheduled_item_id = $request->getParam("time", 0);
+        $scheduled_start = $request->getParam("start", 0);
+
+        //snap to previous/next default.
+        $scheduled_type = $request->getParam("type", 0);
 
     }
 }

@@ -120,33 +120,6 @@ function addLibraryItemEvents() {
 
 }
 
-function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-	var id, type, once;
-
-    type = aData["ftype"].substring(0,2);
-    id = aData["id"];
-    
-    if(type == "au") {
-        $('td.library_type', nRow).html( '<img src="css/images/icon_audioclip.png">' );
-    } else if(type == "pl") {
-        $('td.library_type', nRow).html( '<img src="css/images/icon_playlist.png">' );
-    }
-
-    $(nRow).attr("id", type+'_'+id);
-
-    // insert id on lenth field
-    $('td.library_length', nRow).attr("id", "length");
-
-    return nRow;
-}
-
-function dtDrawCallback() {
-    addLibraryItemEvents();
-    addMetadataQtip();
-    saveNumEntriesSetting();
-    setupGroupActions();
-}
-
 function addProgressIcon(id) {
     if($("#au_"+id).find("td.library_title").find("span").length > 0){
         $("#au_"+id).find("td.library_title").find("span").removeClass();
@@ -513,46 +486,42 @@ function createDataTable(data) {
 		"fnRowCallback": dtRowCallback,
 		"fnDrawCallback": dtDrawCallback,
 		"aoColumns": [
-                    /* Checkbox */      {"sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
-                    /* Id */            {"sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
-                    /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
-                    /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
-                    /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
-                    /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
-                    /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
-                    /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "10%", "sClass": "library_length"},
-                    /* Type */          {"sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "9%", "sClass": "library_type"},
-                    /* Upload Time */   {"sTitle": "Upload Time", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
-                    /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
-                ],
+                /* Checkbox */      {"sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
+                /* Id */            {"sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
+                /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
+                /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
+                /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
+                /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
+                /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
+                /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "10%", "sClass": "library_length"},
+                /* Type */          {"sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "9%", "sClass": "library_type"},
+                /* Upload Time */   {"sTitle": "Upload Time", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
+                /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
+            ],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
 		"bAutoWidth": false,
-                "oLanguage": {
-                    "sSearch": ""
-                },
-                "iDisplayLength": getNumEntriesPreference(data),
-                "bStateSave": true,
-                // R = ColReorder, C = ColVis, see datatables doc for others
-                "sDom": 'Rlfr<"H"C<"library_toolbar">>t<"F"ip>',
-                "oColVis": {
-                    "buttonText": "Show/Hide Columns",
-                    "sAlign": "right",
-                    "aiExclude": [0, 1, 2],
-                    "sSize": "css",
-                    "bShowAll": true
+        "oLanguage": {
+            "sSearch": ""
+        },
+        "iDisplayLength": getNumEntriesPreference(data),
+        "bStateSave": true,
+        // R = ColReorder, C = ColVis, see datatables doc for others
+        "sDom": 'Rlfr<"H"C<"library_toolbar">>t<"F"ip>',
+        "oColVis": {
+            "buttonText": "Show/Hide Columns",
+            "sAlign": "right",
+            "aiExclude": [0, 1, 2],
+            "sSize": "css",
+            "bShowAll": true
 		},
-                "oColReorder": {
-                    "aiOrder": [ 0, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] /* code this */,
-                    "iFixedColumns": 3
+        "oColReorder": {
+            "aiOrder": [ 0, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], /* code this */
+            "iFixedColumns": 3
 		}
     });
     dTable.fnSetFilteringDelay(350);
-    
-    $("div.library_toolbar").html('<span class="fg-button ui-button ui-state-default" id="library_order_reset">Reset Order</span>' + 
-        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_delete">Delete</span>' + 
-        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_add">Add</span>');
     
     $('#library_order_reset').click(function() {
         ColReorder.fnReset( dTable );
