@@ -180,7 +180,7 @@ function setAddShowEvents() {
 
     form.find("#add_show_start_time").timepicker({
         amPmText: ['', ''],
-        defaultTime: '00:00',
+        defaultTime: '00:00'
     });
     form.find("#add_show_end_time").timepicker({
         amPmText: ['', '']
