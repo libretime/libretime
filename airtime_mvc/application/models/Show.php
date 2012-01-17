@@ -298,8 +298,10 @@ class Application_Model_Show {
         $showId = $this->getId();
 
         $sql = "SELECT starts FROM cc_show_instances "
-            ."WHERE show_id = $showId AND rebroadcast = 1 "
+            ."WHERE instance_id = (SELECT id FROM cc_show_instances WHERE show_id = $showId ORDER BY starts LIMIT 1) AND rebroadcast = 1 "
             ."ORDER BY starts";
+
+        Logging::log($sql);
 
         $rebroadcasts = $CC_DBC->GetAll($sql);
 
@@ -415,8 +417,7 @@ class Application_Model_Show {
     public function deleteAllInstances(){
         global $CC_DBC;
 
-        $date = new Application_Model_DateHelper;
-        $timestamp = $date->getTimestamp();
+        $timestamp = gmdate("Y-m-d H:i:s");
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances"
@@ -433,8 +434,7 @@ class Application_Model_Show {
     public function deleteAllRebroadcasts(){
         global $CC_DBC;
 
-        $date = new Application_Model_DateHelper;
-        $timestamp = $date->getTimestamp();
+        $timestamp = gmdate("Y-m-d H:i:s");
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances"
@@ -457,8 +457,7 @@ class Application_Model_Show {
     public function removeAllInstancesFromDate($p_date=null){
         global $CC_DBC;
 
-        $date = new Application_Model_DateHelper;
-        $timestamp = $date->getTimestamp();
+        $timestamp = gmdate("Y-m-d H:i:s");
 
         if(is_null($p_date)) {
             $date = new Application_Model_DateHelper;
@@ -490,8 +489,7 @@ class Application_Model_Show {
     public function removeAllInstancesBeforeDate($p_date){
         global $CC_DBC;
 
-        $date = new Application_Model_DateHelper;
-        $timestamp = $date->getTimestamp();
+        $timestamp = gmdate("Y-m-d H:i:s");
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances "

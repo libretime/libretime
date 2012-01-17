@@ -494,7 +494,12 @@ class Application_Model_ShowInstance {
                 }
             }
             else {
-                $show->delete();
+                if ($this->isRebroadcast()) {
+                    $this->_showInstance->delete();
+                }
+                else {
+                    $show->delete();
+                }
             }
         }
 

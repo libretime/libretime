@@ -81,5 +81,9 @@ class Config {
 
         $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
         $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
+        
+        if(isset($values['demo']['demo'])){
+            $CC_CONFIG['demo'] = $values['demo']['demo'];
+        } 
     }
 }
