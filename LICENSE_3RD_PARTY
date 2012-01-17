@@ -40,6 +40,12 @@ Linked code:
    - License: MIT/Expat License
    - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
 
+ * Phing 
+   - What is it: PHP project build system
+   - Web site: http://phing.info/trac/
+   - Note: Only used for development, not needed to run Airtime.
+   - License: LGPLv3
+
  * PHP-AMQPLIB
    - What is it: PHP library to interact with RabbitMQ
    - Web site: https://github.com/tnc/php-amqplib 
