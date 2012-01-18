@@ -444,6 +444,81 @@ class Application_Model_ShowInstance {
         $this->updateScheduledTime();
     }
 
+    private function checkToDeleteShow($showId)
+    {
+        //UTC DateTime object
+        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+        $showDays = CcShowDaysQuery::create()
+            ->filterByDbShowId($showId)
+            ->findOne();
+
+        $showEnd = $showDays->getDbLastShow();
+
+        //there will always be more shows populated.
+        if (is_null($showEnd)) {
+            return false;
+        }
+
+        $lastShowStartDateTime = new DateTime("{$showEnd} {$showDays->getDbStartTime()}", new DateTimeZone($showDays->getDbTimezone()));
+        //end dates were non inclusive.
+        $lastShowStartDateTime = self::addDeltas($lastShowStartDateTime, -1, 0);
+
+        //there's still some shows left to be populated.
+        if ($lastShowStartDateTime->getTimestamp() > $showsPopUntil->getTimestamp()) {
+            return false;
+        }
+
+        // check if there are any non deleted show instances remaining.
+        $showInstances = CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbModifiedInstance(false)
+            ->filterByDbRebroadcast(0)
+            ->find();
+
+        if (is_null($showInstances)){
+            return true;
+        }
+        //only 1 show instance left of the show, make it non repeating.
+        else if (count($showInstances) === 1) {
+            $showInstance = $showInstances[0];
+
+            $showDaysOld = CcShowDaysQuery::create()
+                ->filterByDbShowId($showId)
+                ->find();
+
+            $tz = $showDaysOld[0]->getDbTimezone();
+
+            $startDate = new DateTime($showInstance->getDbStarts(), new DateTimeZone("UTC"));
+            $startDate->setTimeZone(new DateTimeZone($tz));
+            $endDate = self::addDeltas($startDate, 1, 0);
+
+            //make a new rule for a non repeating show.
+            $showDayNew = new CcShowDays();
+            $showDayNew->setDbFirstShow($startDate->format("Y-m-d"));
+            $showDayNew->setDbLastShow($endDate->format("Y-m-d"));
+            $showDayNew->setDbStartTime($startDate->format("H:i:s"));
+            $showDayNew->setDbTimezone($tz);
+            $showDayNew->setDbDay($startDate->format('w'));
+            $showDayNew->setDbDuration($showDaysOld[0]->getDbDuration());
+            $showDayNew->setDbRepeatType(-1);
+            $showDayNew->setDbShowId($showDaysOld[0]->getDbShowId());
+            $showDayNew->setDbRecord($showDaysOld[0]->getDbRecord());
+            $showDayNew->save();
+
+            //delete the old rules for repeating shows
+            $showDaysOld->delete();
+
+            //remove the old repeating deleted instances.
+            $showInstances = CcShowInstancesQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbModifiedInstance(true)
+                ->delete();
+        }
+
+        return false;
+    }
+
     public function delete()
     {
         global $CC_DBC;
@@ -465,6 +540,10 @@ class Application_Model_ShowInstance {
                     ->setDbModifiedInstance(true)
                     ->save();
 
+                if ($this->isRebroadcast()) {
+                    return;
+                }
+
                 //delete the rebroadcasts of the removed recorded show.
                 if ($recording) {
                     CcShowInstancesQuery::create()
@@ -477,17 +556,8 @@ class Application_Model_ShowInstance {
                     ->filterByDbInstanceId($this->_instanceId)
                     ->delete();
 
-                // check if we can safely delete the show
-                $showInstancesRow = CcShowInstancesQuery::create()
-                    ->filterByDbShowId($showId)
-                    ->filterByDbModifiedInstance(false)
-                    ->findOne();
 
-                /* If we didn't find any instances of the show that haven't
-                 * been deleted, then just erase everything related to that show.
-                 * We can just delete, the show and the foreign key-constraint should
-                 * take care of deleting all of its instances. */
-                if(is_null($showInstancesRow)){
+                if ($this->checkToDeleteShow($showId)){
                     CcShowQuery::create()
                         ->filterByDbId($showId)
                         ->delete();

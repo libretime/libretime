@@ -351,13 +351,15 @@ class Application_Model_Show {
     public function isRepeating()
     {
         $showDaysRow = CcShowDaysQuery::create()
-        ->filterByDbShowId($this->_showId)
-        ->findOne();
+            ->filterByDbShowId($this->_showId)
+            ->findOne();
 
         if (!is_null($showDaysRow)){
             return ($showDaysRow->getDbRepeatType() != -1);
-        } else
+        }
+        else {
             return false;
+        }
     }
 
     /**
@@ -1164,7 +1166,9 @@ class Application_Model_Show {
 
             Logging::log('$start time of non repeating record '.$start);
 
-            self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
+            if ($newInstance){
+                self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
+            }
         }
     }
 
@@ -1455,17 +1459,17 @@ class Application_Model_Show {
         $endTimeString = $p_endTimestamp->format("Y-m-d H:i:s");
         if (!is_null($p_startTimestamp)) {
             $startTimeString = $p_startTimestamp->format("Y-m-d H:i:s");
-            $sql = "SELECT * FROM cc_show_days
-                    WHERE last_show IS NULL
-                    OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
         }
         else {
             $today_timestamp = new DateTime("now", new DateTimeZone("UTC"));
-            $today_timestamp_string = $today_timestamp->format("Y-m-d H:i:s");
-            $sql = "SELECT * FROM cc_show_days
-                    WHERE last_show IS NULL
-                    OR first_show < '{$endTimeString}' AND last_show > '{$today_timestamp_string}'";
+            $startTimeString = $today_timestamp->format("Y-m-d H:i:s");
         }
+
+        $sql = "SELECT * FROM cc_show_days
+                WHERE last_show IS NULL
+                OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
+
+        Logging::log($sql);
 
         $res = $CC_DBC->GetAll($sql);
 

@@ -56,6 +56,8 @@ class UpgradeCommon{
 
     public static function MigrateTablesToVersion($dir, $version)
     {
+        echo "Upgrading database, may take several minutes, please wait".PHP_EOL;
+        
         $appDir = self::GetAirtimeSrcDir();
         $command = "php --php-ini $dir/../../airtime-php.ini ".
                     "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
