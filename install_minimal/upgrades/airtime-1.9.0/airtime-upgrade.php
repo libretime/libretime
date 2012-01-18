@@ -99,6 +99,8 @@ class AirtimeInstall{
 
     public static function MigrateTablesToVersion($dir, $version)
     {
+        echo "Upgrading database, may take several minutes, please wait".PHP_EOL;
+        
         $appDir = AirtimeInstall::GetAirtimeSrcDir();
         $SCRIPTPATH = __DIR__;
         $command = "php --php-ini $SCRIPTPATH/../../airtime-php.ini ".
