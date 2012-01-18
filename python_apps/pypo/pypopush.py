@@ -58,9 +58,12 @@ class PypoPush(Thread):
     def push(self, export_source):
         logger = logging.getLogger('push')
 
+
         # get a new schedule from pypo-fetch
         if not self.queue.empty():
-            scheduled_data = self.queue.get()
+            # make sure we get the latest schedule
+            while not self.queue.empty():
+                scheduled_data = self.queue.get()
             logger.debug("Received data from pypo-fetch")
             self.schedule = scheduled_data['schedule']
             self.playlists = scheduled_data['liquidsoap_playlists']
