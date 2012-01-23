@@ -104,22 +104,6 @@ function deletePlaylist(json) {
 }
 //end callbacks called by jjmenu
 
-function addLibraryItemEvents() {
-
-	$('#library_display tr[id ^= "au"]')
-		.draggable({
-			helper: 'clone',
-			cursor: 'pointer'
-		});
-
-	$('#library_display tbody tr td').not('[class=library_checkbox]')
-		.jjmenu("click",
-			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
-			{id: getId, type: getType},
-			{xposition: "mouse", yposition: "mouse"});
-
-}
-
 function addProgressIcon(id) {
     if($("#au_"+id).find("td.library_title").find("span").length > 0){
         $("#au_"+id).find("td.library_title").find("span").removeClass();

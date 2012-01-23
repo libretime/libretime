@@ -12,3 +12,20 @@ function dtDrawCallback() {
     //addMetadataQtip();
     //setupGroupActions();
 }
+
+function addLibraryItemEvents() {
+
+	$('#library_display tr')
+		.draggable({
+			helper: 'clone',
+			cursor: 'pointer',
+			connectToSortable: '#show_builder_table'
+		});
+
+	$('#library_display tbody tr td').not('[class=library_checkbox]')
+		.jjmenu("click",
+			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
+			{id: getId, type: getType},
+			{xposition: "mouse", yposition: "mouse"});
+
+}

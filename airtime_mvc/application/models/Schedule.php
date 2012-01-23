@@ -155,7 +155,7 @@ class Application_Model_Schedule {
             "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 1),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
-                                        
+
         return $range;
     }
 
@@ -293,6 +293,38 @@ class Application_Model_Schedule {
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
 	}
+
+	/*
+	 *
+	 * @param DateTime $p_startDateTime
+	 *
+	 * @param DateTime $p_endDateTime
+	 *
+	 * @return array $scheduledItems
+	 *
+	 */
+    public static function GetScheduleDetailItems($p_startDateTime, $p_endDateTime)
+    {
+        global $CC_CONFIG, $CC_DBC;
+
+        $sql = "SELECT DISTINCT
+
+        showt.name, showt.color, showt.background_color,
+        si.starts, si.ends, si.time_filled, si.record, si.rebroadcast,
+        sched.starts, sched.ends,
+        ft.track_title, ft.artist_name, ft.album_title, ft.length
+
+        FROM
+        ((cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
+        RIGHT OUTER JOIN cc_show_instances AS si ON (si.id = sched.instance_id))
+        JOIN cc_show AS showt ON (showt.id = si.show_id)
+        )
+
+        ORDER BY sched.starts;";
+
+        $rows = $CC_DBC->GetAll($sql);
+        return $rows;
+    }
 
     public static function GetShowInstanceItems($instance_id)
     {
@@ -533,7 +565,7 @@ class Application_Model_Schedule {
 
     public static function createNewFormSections($p_view){
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        
+
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
 		$formWhen = new Application_Form_AddShowWhen();
@@ -560,16 +592,16 @@ class Application_Model_Schedule {
                                       'add_show_duration' => '1h'));
 
 		$formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
-		
+
         if(!$isSaas){
             $formRecord = new Application_Form_AddShowRR();
             $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
             $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-            
+
             $formRecord->removeDecorator('DtDdWrapper');
             $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
             $formRebroadcast->removeDecorator('DtDdWrapper');
-            
+
             $p_view->rr = $formRecord;
             $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
             $p_view->rebroadcast = $formRebroadcast;
