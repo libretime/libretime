@@ -32,8 +32,10 @@ class AirtimeDatabaseUpgrade{
     public static function start(){
         self::doDbMigration();
 
-        self::SetDefaultTimezone();
         self::setPhpDefaultTimeZoneToSystemTimezone();
+        self::SetDefaultTimezone();
+        
+        echo "* Converting database to store all schedule times in UTC. This may take a a while...".PHP_EOL;
         self::convert_cc_playlist();
         self::convert_cc_schedule();
         self::convert_cc_show_days();
@@ -69,6 +71,7 @@ class AirtimeDatabaseUpgrade{
     }
 
     private static function convert_cc_playlist(){
+        echo " * Converting playlists to UTC".PHP_EOL;
         /* cc_playlist has a field that keeps track of when the playlist was last modified. */
         $playlists = CcPlaylistQuery::create()->find();
         
@@ -78,10 +81,14 @@ class AirtimeDatabaseUpgrade{
             $pl->setDbMtime($dt);
             
             $pl->save();
+            echo ".";
         }
+        
+        echo PHP_EOL;
     }
 
     private static function convert_cc_schedule(){
+        echo " * Converting schedule to UTC".PHP_EOL;
         /* cc_schedule has start and end fields that need to be changed to UTC. */
         $schedules = CcScheduleQuery::create()->find();
         
@@ -95,10 +102,15 @@ class AirtimeDatabaseUpgrade{
             $s->setDbEnds($dt);
             
             $s->save();
+            echo ".";
         }
+        
+        echo PHP_EOL;
     }
     
     private static function convert_cc_show_days(){
+        echo " * Converting show days to UTC".PHP_EOL;
+        
         /* cc_show_days has first_show, last_show and start_time fields that need to be changed to UTC. */
         $showDays = CcShowDaysQuery::create()->find();
         
@@ -118,11 +130,15 @@ class AirtimeDatabaseUpgrade{
             
             $sd->setDbTimezone(date_default_timezone_get())->save();
             
-            
+            echo ".";
         }
+        
+        echo PHP_EOL;
     }
     
     private static function convert_cc_show_instances(){
+        echo " * Converting show instances to UTC".PHP_EOL;
+        
         /* convert_cc_show_instances has starts and ends fields that need to be changed to UTC. */
         $showInstances = CcShowInstancesQuery::create()->find();
         
@@ -136,7 +152,11 @@ class AirtimeDatabaseUpgrade{
             $si->setDbEnds($dt);
             
             $si->save();
+            
+            echo ".";
         }
+        
+        echo PHP_EOL;
     }
 
     private static function doDbMigration(){
@@ -356,9 +376,15 @@ class AirtimeMiscUpgrade{
     }
 }
 
+echo "Pausing Pypo".PHP_EOL;
+exec("/etc/init.d/airtime-playout stop");
+
 UpgradeCommon::connectToDatabase();
 
 AirtimeDatabaseUpgrade::start();
 AirtimeStorWatchedDirsUpgrade::start();
 AirtimeConfigFileUpgrade::start();
 AirtimeMiscUpgrade::start();
+
+echo "Resuming Pypo".PHP_EOL;
+exec("/etc/init.d/airtime-playout start");
