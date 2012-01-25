@@ -234,4 +234,16 @@ class UpgradeCommon{
         }
         fclose($fp);
     }
+    
+    public static function queryDb($p_sql){
+        global $CC_DBC;
+
+        $result = $CC_DBC->query($p_sql);
+        if (PEAR::isError($result)) {
+            echo "Error executing $sql. Exiting.";
+            exit(1);
+        }
+        
+        return $result;
+    }
 }
