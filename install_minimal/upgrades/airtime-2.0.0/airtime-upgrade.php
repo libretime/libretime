@@ -72,7 +72,28 @@ class AirtimeDatabaseUpgrade{
 
     private static function convert_cc_playlist(){
         echo " * Converting playlists to UTC".PHP_EOL;
-        /* cc_playlist has a field that keeps track of when the playlist was last modified. */
+        
+        $sql = "SELECT * FROM cc_playlist";
+        $result = UpgradeCommon::queryDb($sql);
+
+        while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
+            $dt = new DateTime($row['mtime'], new DateTimeZone(date_default_timezone_get()));
+            $dt->setTimezone(new DateTimeZone("UTC"));
+            
+            $id = $row['id'];
+            $mtime = $dt->format("Y-m-d H:i:s");
+            
+            $sql = "UPDATE cc_playlist SET mtime = '$mtime' WHERE id = $id";
+            UpgradeCommon::queryDb($sql);
+            //echo ".";
+            //flush();
+            //usleep(100000);
+        }
+        
+        
+        /*
+        echo " * Converting playlists to UTC".PHP_EOL;
+        // cc_playlist has a field that keeps track of when the playlist was last modified.
         $playlists = CcPlaylistQuery::create()->find();
         
         foreach ($playlists as $pl){
@@ -81,15 +102,39 @@ class AirtimeDatabaseUpgrade{
             $pl->setDbMtime($dt);
             
             $pl->save();
-            echo ".";
+            
         }
-        
-        echo PHP_EOL;
+        */
     }
 
     private static function convert_cc_schedule(){
+        
         echo " * Converting schedule to UTC".PHP_EOL;
-        /* cc_schedule has start and end fields that need to be changed to UTC. */
+        
+        $sql = "SELECT * FROM cc_schedule";
+        $result = UpgradeCommon::queryDb($sql);
+
+        while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
+            $dtStarts = new DateTime($row['starts'], new DateTimeZone(date_default_timezone_get()));
+            $dtStarts->setTimezone(new DateTimeZone("UTC"));
+
+            $dtEnds = new DateTime($row['ends'], new DateTimeZone(date_default_timezone_get()));
+            $dtEnds->setTimezone(new DateTimeZone("UTC"));
+            
+            $id = $row['id'];
+            $starts = $dtStarts->format("Y-m-d H:i:s");
+            $ends = $dtEnds->format("Y-m-d H:i:s");
+            
+            $sql = "UPDATE cc_schedule SET starts = '$starts', ends = '$ends' WHERE id = $id";
+            UpgradeCommon::queryDb($sql);
+            //echo ".";
+            //flush();
+            //usleep(100000);
+        }
+        /*
+        
+        echo " * Converting schedule to UTC".PHP_EOL;
+        //cc_schedule has start and end fields that need to be changed to UTC.
         $schedules = CcScheduleQuery::create()->find();
         
         foreach ($schedules as $s){
@@ -104,42 +149,67 @@ class AirtimeDatabaseUpgrade{
             $s->save();
             echo ".";
         }
-        
-        echo PHP_EOL;
+        * */
     }
     
     private static function convert_cc_show_days(){
+
         echo " * Converting show days to UTC".PHP_EOL;
         
-        /* cc_show_days has first_show, last_show and start_time fields that need to be changed to UTC. */
+        $sql = "SELECT * FROM cc_show_days";
+        $result = UpgradeCommon::queryDb($sql);
+
+        while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
+            
+            $id = $row['id'];
+            $timezone = date_default_timezone_get();
+            
+            $sql = "UPDATE cc_show_days SET timezone = '$timezone' WHERE id = $id";
+            UpgradeCommon::queryDb($sql);
+            //echo ".";
+            //flush();
+            //usleep(100000);
+        }
+        
+        /*
+        // cc_show_days has first_show, last_show and start_time fields that need to be changed to UTC.
         $showDays = CcShowDaysQuery::create()->find();
         
-        foreach ($showDays as $sd){
-            /*
-            $dt = new DateTime($sd->getDbFirstShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $sd->setDbFirstShow($dt->format("Y-m-d"));
-            $sd->setDbStartTime($dt->format("H:i:s"));
-            
-            $dt = new DateTime($sd->getDbLastShow()." ".$sd->getDbStartTime(), new DateTimeZone(date_default_timezone_get()));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            $sd->setDbLastShow($dt->format("Y-m-d"));
-            
-            $sd->save();
-            * */
-            
+        foreach ($showDays as $sd){            
             $sd->setDbTimezone(date_default_timezone_get())->save();
             
             echo ".";
         }
-        
-        echo PHP_EOL;
+        */
     }
     
     private static function convert_cc_show_instances(){
         echo " * Converting show instances to UTC".PHP_EOL;
         
-        /* convert_cc_show_instances has starts and ends fields that need to be changed to UTC. */
+        // convert_cc_show_instances has starts and ends fields that need to be changed to UTC.
+        
+        $sql = "SELECT * FROM cc_show_instances";
+        $result = UpgradeCommon::queryDb($sql);
+
+        while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
+            $dtStarts = new DateTime($row['starts'], new DateTimeZone(date_default_timezone_get()));
+            $dtStarts->setTimezone(new DateTimeZone("UTC"));
+
+            $dtEnds = new DateTime($row['ends'], new DateTimeZone(date_default_timezone_get()));
+            $dtEnds->setTimezone(new DateTimeZone("UTC"));
+            
+            $id = $row['id'];
+            $starts = $dtStarts->format("Y-m-d H:i:s");
+            $ends = $dtEnds->format("Y-m-d H:i:s");
+            
+            $sql = "UPDATE cc_show_instances SET starts = '$starts', ends = '$ends' WHERE id = $id";
+            UpgradeCommon::queryDb($sql);
+            //echo ".";
+            //flush();
+            //usleep(100000);
+        }        
+        
+        /*
         $showInstances = CcShowInstancesQuery::create()->find();
         
         foreach ($showInstances as $si){
@@ -155,8 +225,7 @@ class AirtimeDatabaseUpgrade{
             
             echo ".";
         }
-        
-        echo PHP_EOL;
+        * */
     }
 
     private static function doDbMigration(){
@@ -379,6 +448,8 @@ class AirtimeMiscUpgrade{
 echo "Pausing Pypo".PHP_EOL;
 exec("/etc/init.d/airtime-playout stop");
 
+while (@ob_end_flush());
+
 UpgradeCommon::connectToDatabase();
 
 AirtimeDatabaseUpgrade::start();
@@ -386,5 +457,5 @@ AirtimeStorWatchedDirsUpgrade::start();
 AirtimeConfigFileUpgrade::start();
 AirtimeMiscUpgrade::start();
 
-echo "Resuming Pypo".PHP_EOL;
-exec("/etc/init.d/airtime-playout start");
+//echo "Resuming Pypo".PHP_EOL;
+//exec("/etc/init.d/airtime-playout start");
