@@ -1,3 +1,4 @@
+/*
 function tpStartOnHourShowCallback(hour) {
     var tpEndHour = $('#show_builder_timepicker_end').timepicker('getHour');
     
@@ -39,6 +40,7 @@ function tpEndOnMinuteShowCallback(hour, minute) {
     // if minute did not match, it can not be selected
     return false;
 }
+*/
 
 /*
  * Get the schedule range start in unix timestamp form (in seconds).
@@ -56,8 +58,8 @@ function fnGetUIPickerUnixTimestamp(sDatePickerId, sTimePickerId) {
 		iTime,
 		iHour,
 		iMin,
-		iClientOffset,
-		iServerOffset;
+		iServerOffset,
+		iClientOffset;
 	
 	oDate = $( sDatePickerId ).datepicker( "getDate" );
 	
@@ -74,25 +76,52 @@ function fnGetUIPickerUnixTimestamp(sDatePickerId, sTimePickerId) {
 	
 	iTime = oDate.getTime(); //value is in millisec.
 	iTime = Math.round(iTime / 1000);
-	iClientOffset = -(oDate.getTimezoneOffset() * 60); //offset is returned in minutes.
 	iServerOffset = serverTimezoneOffset;
+	iClientOffset = oDate.getTimezoneOffset() * 60;//function returns minutes
+	
+	//adjust for the fact the the Date object is
+	iTime = iTime + iServerOffset + iClientOffset;
 	
 	return iTime;
 }
-
+/*
+ * Returns an object containing a unix timestamp in seconds for the start/end range
+ * 
+ * @return Object {"start", "end", "range"}
+ */
 function fnGetScheduleRange() {
 	var iStart, 
 		iEnd, 
-		iRange;
+		iRange,
+		MIN_RANGE = 60*60*24;
 	
 	iStart = fnGetUIPickerUnixTimestamp("#show_builder_datepicker_start", "#show_builder_timepicker_start");
 	iEnd = fnGetUIPickerUnixTimestamp("#show_builder_datepicker_end", "#show_builder_timepicker_end");
 	
 	iRange = iEnd - iStart;
+	
+	//return min range
+	if (iRange < MIN_RANGE){
+		iEnd = iStart + MIN_RANGE;
+		iRange = MIN_RANGE;
+	}
+		
+	return {
+		start: iStart,
+		end: iEnd,
+		range: iRange
+	};
 }
 
-function fnServerData( sSource, aoData, fnCallback ) {
+var fnServerData = function fnServerData( sSource, aoData, fnCallback ) {
 	aoData.push( { name: "format", value: "json"} );
+	
+	if (fnServerData.hasOwnProperty("start")) {
+		aoData.push( { name: "start", value: fnServerData.start} );
+	}
+	if (fnServerData.hasOwnProperty("end")) {
+		aoData.push( { name: "end", value: fnServerData.end} );
+	}
 	
 	$.ajax( {
 		"dataType": "json",
@@ -101,16 +130,70 @@ function fnServerData( sSource, aoData, fnCallback ) {
 		"data": aoData,
 		"success": fnCallback
 	} );
-}
+};
+
+var fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
+	var i,
+		sSeparatorHTML,
+		fnPrepareSeparatorRow;
+	
+	fnPrepareSeparatorRow = function(sRowContent, sClass) {
+		var node;
+		
+		node = nRow.children[0];
+		node.innerHTML = sRowContent;
+		node.setAttribute('colspan',100);
+		for (i = 1; i < nRow.children.length; i = i+1) {
+			node = nRow.children[i];
+			node.innerHTML = "";
+			node.setAttribute("style", "display : none");
+		}
+		
+		nRow.className = sClass;
+	};
+	
+	if (aData.header === true) {
+		sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
+		fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-header");
+	}
+	else if (aData.footer === true) {
+		sSeparatorHTML = '<span>Show Footer</span>';
+		fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-footer");
+	}
+	
+	return nRow;
+};
 
 $(document).ready(function() {
-	var dTable;
+	var dTable,
+		oBaseDatePickerSettings,
+		oBaseTimePickerSettings;
+	
+	oBaseDatePickerSettings = {
+		dateFormat: 'yy-mm-dd',
+		onSelect: function(sDate, oDatePicker) {
+			var oDate,
+				dInput;
+			
+			dInput = $(this);			
+			oDate = dInput.datepicker( "setDate", sDate );
+		}
+	};
+	
+	oBaseTimePickerSettings = {
+		showPeriodLabels: false,
+		showCloseButton: true,
+		showLeadingZero: false,
+		defaultTime: '0:00'
+	};
 	
 	dTable = $('#show_builder_table').dataTable( {
 		"aoColumns": [
+		     /* hidden */ {"mDataProp": "instance", "bVisible": false, "sTitle": "hidden"},
+		    /* instance */{"mDataProp": "instance", "sTitle": "si_id"},
             /* starts */{"mDataProp": "starts", "sTitle": "starts"},
             /* ends */{"mDataProp": "ends", "sTitle": "ends"},
-            /* title */{"mDataProp": "file_id", "sTitle": "file_id"}
+            /* title */{"mDataProp": "title", "sTitle": "track_title"}
         ],
         
         "asStripClasses": [ 'odd' ],
@@ -123,6 +206,11 @@ $(document).ready(function() {
 		"bInfo": false,
         
 		"fnServerData": fnServerData,
+		"fnRowCallback": fnShowBuilderRowCallback,
+		
+		"oColVis": {
+			"aiExclude": [ 0 ]
+		},
 		
         // R = ColReorder, C = ColVis, see datatables doc for others
         "sDom": 'Rr<"H"C>t<"F">',
@@ -137,53 +225,33 @@ $(document).ready(function() {
 		
 	});
 	
-	$( "#show_builder_datepicker_start" ).datepicker({
-		dateFormat: '@',
-		onSelect: function(sDate, oDatePicker) {
-			var oDate;
-			
-			oDate = new Date(parseInt(sDate, 10));
-			$(this).val(oDate.toDateString());
-		}
-	});
+	$( "#show_builder_datepicker_start" ).datepicker(oBaseDatePickerSettings);
 	
-	$( "#show_builder_timepicker_start" ).timepicker({
-		showPeriodLabels: false,
-		showCloseButton: true,
-		showLeadingZero: false
-	});
+	$( "#show_builder_timepicker_start" ).timepicker(oBaseTimePickerSettings);
 	
-	$( "#show_builder_datepicker_end" ).datepicker({
-		dateFormat: '@',
-		onSelect: function(sDate, oDatePicker) {
-			var oDate;
-			
-			oDate = new Date(parseInt(sDate, 10));
-			$(this).val(oDate.toDateString());
-		}
-	});
+	$( "#show_builder_datepicker_end" ).datepicker(oBaseDatePickerSettings);
 	
-	$( "#show_builder_timepicker_end" ).timepicker({
-		showPeriodLabels: false,
-		showCloseButton: true,
-		showLeadingZero: false
-	});
+	$( "#show_builder_timepicker_end" ).timepicker(oBaseTimePickerSettings);
 	
 	$( "#show_builder_timerange_button" ).click(function(ev){
-		var oTable, oSettings, iStartDate, iEndDate, iStartTime, iEndTime;
+		var oTable, 
+			oSettings,
+			oRange;
 		
-		fnGetScheduleRange();
+		oRange = fnGetScheduleRange();
 		
 		oTable = $('#show_builder_table').dataTable({"bRetrieve": true});
 	    oSettings = oTable.fnSettings();
-	    oSettings["_iDisplayStart"] = 1050;
+	    oSettings.fnServerData.start = oRange.start;
+	    oSettings.fnServerData.end = oRange.end;
 		
 		oTable.fnDraw();
 	});
 	
 	$( "#show_builder_table" ).sortable({
-		placeholder: "ui-state-highlight",
+		placeholder: "placeholder show-builder-placeholder",
 		items: 'tr',
+		cancel: ".show-builder-header .show-builder-footer",
 		receive: function(event, ui) {
 			var x;
 		}

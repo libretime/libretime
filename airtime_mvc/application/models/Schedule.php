@@ -309,10 +309,15 @@ class Application_Model_Schedule {
 
         $sql = "SELECT DISTINCT
 
-        showt.name, showt.color, showt.background_color,
-        si.starts, si.ends, si.time_filled, si.record, si.rebroadcast,
-        sched.starts, sched.ends,
-        ft.track_title, ft.artist_name, ft.album_title, ft.length
+        showt.name AS show_name, showt.color AS show_color, showt.background_color AS show_background_colour,
+
+        si.starts AS si_starts, si.ends AS si_ends, si.time_filled AS si_time_filled,
+        si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.id AS si_id,
+
+        sched.starts AS sched_starts, sched.ends AS sched_ends,
+
+        ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
+        ft.album_title AS file_album_title, ft.length AS file_length
 
         FROM
         ((cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
@@ -320,7 +325,11 @@ class Application_Model_Schedule {
         JOIN cc_show AS showt ON (showt.id = si.show_id)
         )
 
-        ORDER BY sched.starts;";
+        WHERE si.starts >= '{$p_startDateTime}' AND si.ends <= '{$p_endDateTime}'
+
+        ORDER BY si.starts, sched.starts;";
+
+        //Logging::log($sql);
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;

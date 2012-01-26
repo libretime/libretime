@@ -1,4 +1,4 @@
-function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
     $(nRow).attr("id", aData["id"]);
     
@@ -7,7 +7,7 @@ function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
     return nRow;
 }
 
-function dtDrawCallback() {
+function fnLibraryTableDrawCallback() {
     addLibraryItemEvents();
     //addMetadataQtip();
     //setupGroupActions();
@@ -28,4 +28,7 @@ function addLibraryItemEvents() {
 			{id: getId, type: getType},
 			{xposition: "mouse", yposition: "mouse"});
 
+}
+
+function setupLibraryToolbar() {
 }

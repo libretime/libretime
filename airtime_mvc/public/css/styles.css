@@ -523,6 +523,11 @@ dl.inline-list dd {
 .even {
     background-color:#c7c7c7;
 }
+	
+.datatable .show-builder-placeholder {
+	height: 30px;
+}
+
 .datatable tr.even.selected td {
     background-color: #abcfe2;
 }

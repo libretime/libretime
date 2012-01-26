@@ -467,8 +467,8 @@ function createDataTable(data) {
 				"success": testCallback
 			} );
 		},
-		"fnRowCallback": dtRowCallback,
-		"fnDrawCallback": dtDrawCallback,
+		"fnRowCallback": fnLibraryTableRowCallback,
+		"fnDrawCallback": fnLibraryTableDrawCallback,
 		"aoColumns": [
                 /* Checkbox */      {"sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
                 /* Id */            {"sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
@@ -506,6 +506,8 @@ function createDataTable(data) {
 		}
     });
     dTable.fnSetFilteringDelay(350);
+    
+    setupLibraryToolbar();
     
     $('#library_order_reset').click(function() {
         ColReorder.fnReset( dTable );

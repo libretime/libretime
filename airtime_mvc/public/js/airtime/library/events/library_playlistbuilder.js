@@ -1,11 +1,11 @@
-function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
     $(nRow).attr("id", aData["id"]);
 
     return nRow;
 }
 
-function dtDrawCallback() {
+function fnLibraryTableDrawCallback() {
     addLibraryItemEvents();
     addMetadataQtip();
     //saveNumEntriesSetting();
@@ -33,4 +33,3 @@ function setupLibraryToolbar() {
 	        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_delete">Delete</span>' + 
 	        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_add">Add</span>');	
 }
-
