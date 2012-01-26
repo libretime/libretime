@@ -32,6 +32,7 @@ class ShowbuilderController extends Zend_Controller_Action
         //$this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
         //$this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js','text/javascript');
         //$this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedHeader.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js','text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css');

@@ -10,10 +10,15 @@ class Application_Model_ShowBuilder {
         "header" => false,
         "footer" => false,
         "empty" => false,
+        "checkbox" => false,
+        "id" => "",
         "instance" => "",
         "starts" => "",
         "ends" => "",
-        "title" => ""
+        "runtime" => "",
+        "title" => "",
+        "creator" => "",
+        "album" => ""
     );
 
     /*
@@ -25,6 +30,26 @@ class Application_Model_ShowBuilder {
         $this->startDT = $p_startDT;
         $this->endDT = $p_endDT;
         $this->timezone = date_default_timezone_get();
+    }
+
+    /*
+     * @param DateInterval $p_interval
+     *
+     * @return string $runtime
+     */
+    private function formatDuration($p_interval){
+
+        $hours = $p_interval->format("%h");
+        $mins = $p_interval->format("%i");
+
+        if( $hours == 0) {
+            $runtime = $p_interval->format("%i:%S");
+        }
+        else {
+            $runtime = $p_interval->format("%h:%I:%S");
+        }
+
+        return $runtime;
     }
 
     private function makeFooterRow() {
@@ -44,6 +69,8 @@ class Application_Model_ShowBuilder {
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
 
+        //$diff =
+
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
         $row["ends"] = $showEndDT->format("Y-m-d H:i");
@@ -62,10 +89,16 @@ class Application_Model_ShowBuilder {
             $schedEndDT = new DateTime($p_item["sched_ends"], new DateTimeZone("UTC"));
             $schedEndDT->setTimezone(new DateTimeZone($this->timezone));
 
+            $runtime = $schedStartDT->diff($schedEndDT);
+
+            $row["id"] = $p_item["sched_id"];
             $row["instance"] = $p_item["si_id"];
-            $row["starts"] = $schedStartDT->format("Y-m-d H:i:s");
-            $row["ends"] = $schedEndDT->format("Y-m-d H:i:s");
+            $row["starts"] = $schedStartDT->format("H:i:s");
+            $row["ends"] = $schedEndDT->format("H:i:s");
+            $row["runtime"] = $this->formatDuration($runtime);
             $row["title"] = $p_item["file_track_title"];
+            $row["creator"] = $p_item["file_artist_name"];
+            $row["album"] = $p_item["file_album_title"];
         }
         //show is empty
         else {

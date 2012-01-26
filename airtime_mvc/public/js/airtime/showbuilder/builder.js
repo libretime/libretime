@@ -135,15 +135,15 @@ var fnServerData = function fnServerData( sSource, aoData, fnCallback ) {
 var fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
 	var i,
 		sSeparatorHTML,
-		fnPrepareSeparatorRow;
+		fnPrepareSeparatorRow,
+		node;
 	
 	fnPrepareSeparatorRow = function(sRowContent, sClass) {
-		var node;
 		
-		node = nRow.children[0];
+		node = nRow.children[1];
 		node.innerHTML = sRowContent;
 		node.setAttribute('colspan',100);
-		for (i = 1; i < nRow.children.length; i = i+1) {
+		for (i = 2; i < nRow.children.length; i = i+1) {
 			node = nRow.children[i];
 			node.innerHTML = "";
 			node.setAttribute("style", "display : none");
@@ -153,10 +153,17 @@ var fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIn
 	};
 	
 	if (aData.header === true) {
+		node = nRow.children[0];
+		node.innerHTML = '<span class="ui-icon ui-icon-play"></span>';
+		
 		sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
 		fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-header");
 	}
 	else if (aData.footer === true) {
+		
+		node = nRow.children[0];
+		node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
+			
 		sSeparatorHTML = '<span>Show Footer</span>';
 		fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-footer");
 	}
@@ -165,7 +172,7 @@ var fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIn
 };
 
 $(document).ready(function() {
-	var dTable,
+	var oTable,
 		oBaseDatePickerSettings,
 		oBaseTimePickerSettings;
 	
@@ -187,13 +194,17 @@ $(document).ready(function() {
 		defaultTime: '0:00'
 	};
 	
-	dTable = $('#show_builder_table').dataTable( {
+	oTable = $('#show_builder_table').dataTable( {
 		"aoColumns": [
-		     /* hidden */ {"mDataProp": "instance", "bVisible": false, "sTitle": "hidden"},
-		    /* instance */{"mDataProp": "instance", "sTitle": "si_id"},
-            /* starts */{"mDataProp": "starts", "sTitle": "starts"},
-            /* ends */{"mDataProp": "ends", "sTitle": "ends"},
-            /* title */{"mDataProp": "title", "sTitle": "track_title"}
+		    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_all'>", "sWidth": "25px"},
+		   // /* scheduled id */{"mDataProp": "id", "sTitle": "id", "bVisible": false, "sWidth": "1px"},
+		   // /* instance */{"mDataProp": "instance", "sTitle": "si_id"},
+            /* starts */{"mDataProp": "starts", "sTitle": "Airtime"},
+            /* ends */{"mDataProp": "ends", "sTitle": "Off Air"},
+            /* runtime */{"mDataProp": "runtime", "sTitle": "Runtime"},
+            /* title */{"mDataProp": "title", "sTitle": "Title"},
+            /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
+            /* album */{"mDataProp": "album", "sTitle": "Album"}
         ],
         
         "asStripClasses": [ 'odd' ],
@@ -209,7 +220,7 @@ $(document).ready(function() {
 		"fnRowCallback": fnShowBuilderRowCallback,
 		
 		"oColVis": {
-			"aiExclude": [ 0 ]
+			"aiExclude": [ 0, 1 ]
 		},
 		
         // R = ColReorder, C = ColVis, see datatables doc for others
@@ -218,12 +229,14 @@ $(document).ready(function() {
         //options for infinite scrolling
         //"bScrollInfinite": true,
         //"bScrollCollapse": true,
-        "sScrollY": "400px",
+        //"sScrollY": "400px",
         
         "sAjaxDataProp": "schedule",
 		"sAjaxSource": "/showbuilder/builder-feed"
 		
 	});
+	//new FixedHeader( oTable );
+	new FixedColumns( oTable );
 	
 	$( "#show_builder_datepicker_start" ).datepicker(oBaseDatePickerSettings);
 	

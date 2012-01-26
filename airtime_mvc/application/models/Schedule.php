@@ -314,7 +314,7 @@ class Application_Model_Schedule {
         si.starts AS si_starts, si.ends AS si_ends, si.time_filled AS si_time_filled,
         si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.id AS si_id,
 
-        sched.starts AS sched_starts, sched.ends AS sched_ends,
+        sched.starts AS sched_starts, sched.ends AS sched_ends, sched.id AS sched_id,
 
         ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
         ft.album_title AS file_album_title, ft.length AS file_length
