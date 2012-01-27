@@ -26,13 +26,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js','text/javascript');
-
         $this->view->headScript()->appendScript("var serverTimezoneOffset = ".date("Z")."; //in seconds");
-        //$this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
-        //$this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js','text/javascript');
-        //$this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedHeader.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js','text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css');
@@ -64,12 +59,44 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-        $show_instance_id = $request->getParam("sid", 0);
-        $scheduled_item_id = $request->getParam("time", 0);
-        $scheduled_start = $request->getParam("start", 0);
+        $instance = $request->getParam("instance", null);
+        $id = $request->getParam("id", null);
+        $starts_epoch = $request->getParam("start", null);
+        $file_id = $request->getParam("file", null);
 
-        //snap to previous/next default.
-        $scheduled_type = $request->getParam("type", 0);
+        $startDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
 
+        //invalid request
+        if (is_null($start)) {
+            return;
+        }
+
+        //updating a scheduled item.
+        if (isset($id)) {
+            $schedItem = CcScheduleQuery::create()->findPK($id);
+            $duration = $schedItem->getDbEnds('U') - $schedItem->getDbStarts('U');
+
+            $endDT = DateTime::createFromFormat("U", $starts_epoch + $duration, new DateTimeZone("UTC"));
+
+            $oldInstance = $schedItem->getDbInstanceId();
+
+            if ($instance === $oldInstance) {
+                CcScheduleQuery::create()
+                ->filterByDbInstanceId($oldInstance)
+                ->find();
+            }
+            //file was dragged out of the show into another show or scheduled not within a show.
+            else {
+            }
+
+
+        }
+        else {
+            $schedItem = new CcSchedule();
+        }
+
+        $schedItem->setDbStarts($startDT);
+        $schedItem->setDbEnds($endDT);
+        $schedItem->save();
     }
 }

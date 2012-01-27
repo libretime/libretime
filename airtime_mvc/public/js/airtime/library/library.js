@@ -273,7 +273,7 @@ function saveNumEntriesSetting() {
  * Use user preference for number of entries to show
  */
 function getNumEntriesPreference(data) {
-    return parseInt(data.libraryInit.numEntries);
+    return parseInt(data.libraryInit.numEntries, 10);
 }
 
 function groupAdd() {
@@ -457,11 +457,12 @@ function createDataTable(data) {
     dTable = $('#library_display').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
-		"sAjaxSource": "/Library/contents/format/json",
+		"sAjaxSource": "/Library/contents",
 		"fnServerData": function ( sSource, aoData, testCallback ) {
+    		aoData.push( { name: "format", value: "json"} );
 			$.ajax( {
 				"dataType": 'json',
-				"type": "POST",
+				"type": "GET",
 				"url": sSource,
 				"data": aoData,
 				"success": testCallback
@@ -490,7 +491,7 @@ function createDataTable(data) {
             "sSearch": ""
         },
         "iDisplayLength": getNumEntriesPreference(data),
-        "bStateSave": true,
+
         // R = ColReorder, C = ColVis, see datatables doc for others
         "sDom": 'Rlfr<"H"C<"library_toolbar">>t<"F"ip>',
         "oColVis": {
@@ -499,10 +500,6 @@ function createDataTable(data) {
             "aiExclude": [0, 1, 2],
             "sSize": "css",
             "bShowAll": true
-		},
-        "oColReorder": {
-            "aiOrder": [ 0, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], /* code this */
-            "iFixedColumns": 3
 		}
     });
     dTable.fnSetFilteringDelay(350);

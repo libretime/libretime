@@ -804,6 +804,8 @@ class Application_Model_StoredFile {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 
+		Logging::log($sql);
+
 		$results = $CC_DBC->getAll($sql);
 
 		if(!isset($totalDisplayRows)) {

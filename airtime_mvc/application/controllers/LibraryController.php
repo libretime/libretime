@@ -232,8 +232,8 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsAction()
     {
-        $post = $this->getRequest()->getPost();
-        $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($post);
+        $params = $this->getRequest()->getParams();
+        $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($params);
 
         //format clip lengh to 1 decimal
         foreach($datatables["aaData"] as &$data){

@@ -30,6 +30,13 @@ $pages = array(
 		'resource'	=>	'library'
 	),
 	array(
+        'label'      => 'Show Builder',
+        'module'     => 'default',
+        'controller' => 'Showbuilder',
+        'action'     => 'index',
+        'resource'  =>  'showbuilder'
+    ),
+	array(
 		'label'      => 'Calendar',
         'module'     => 'default',
         'controller' => 'Schedule',
@@ -67,7 +74,7 @@ $pages = array(
                 'action'     => 'stream-setting'
             ),
             array(
-                'label'      => 
+                'label'      =>
                 Application_Model_Preference::GetPlanLevel() == 'disabled'?'Support Settings':'Station Information Settings',
                 'module'     => 'default',
                 'controller' => 'Preference',

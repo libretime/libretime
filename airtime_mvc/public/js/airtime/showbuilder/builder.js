@@ -138,6 +138,9 @@ var fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIn
 		fnPrepareSeparatorRow,
 		node;
 	
+	//save some info for reordering purposes.
+	$(nRow).data({aData: aData});
+	
 	fnPrepareSeparatorRow = function(sRowContent, sClass) {
 		
 		node = nRow.children[1];
@@ -166,6 +169,12 @@ var fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIn
 			
 		sSeparatorHTML = '<span>Show Footer</span>';
 		fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-footer");
+	}
+	else if (aData.empty === true) {
+		
+	}
+	else {
+		$(nRow).attr("id", "sched_"+aData.id);
 	}
 	
 	return nRow;
@@ -197,7 +206,7 @@ $(document).ready(function() {
 	oTable = $('#show_builder_table').dataTable( {
 		"aoColumns": [
 		    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_all'>", "sWidth": "25px"},
-		   // /* scheduled id */{"mDataProp": "id", "sTitle": "id", "bVisible": false, "sWidth": "1px"},
+		   // /* scheduled id */{"mDataProp": "id", "sTitle": "id"},
 		   // /* instance */{"mDataProp": "instance", "sTitle": "si_id"},
             /* starts */{"mDataProp": "starts", "sTitle": "Airtime"},
             /* ends */{"mDataProp": "ends", "sTitle": "Off Air"},
@@ -215,6 +224,7 @@ $(document).ready(function() {
         "bProcessing": true,
 		"bServerSide": true,
 		"bInfo": false,
+		"bAutoWidth": false,
         
 		"fnServerData": fnServerData,
 		"fnRowCallback": fnShowBuilderRowCallback,
@@ -235,8 +245,6 @@ $(document).ready(function() {
 		"sAjaxSource": "/showbuilder/builder-feed"
 		
 	});
-	//new FixedHeader( oTable );
-	new FixedColumns( oTable );
 	
 	$( "#show_builder_datepicker_start" ).datepicker(oBaseDatePickerSettings);
 	
@@ -263,10 +271,39 @@ $(document).ready(function() {
 	
 	$( "#show_builder_table" ).sortable({
 		placeholder: "placeholder show-builder-placeholder",
-		items: 'tr',
-		cancel: ".show-builder-header .show-builder-footer",
+		forceHelperSize: true,
+		forcePlaceholderSize: true,
+		items: 'tr:not(.show-builder-header):not(.show-builder-footer)',
+		//cancel: ".show-builder-header .show-builder-footer",
 		receive: function(event, ui) {
 			var x;
+		},
+		update: function(event, ui) {
+			var oItemData = ui.item.data("aData"),
+				oPrevData = ui.item.prev().data("aData"),
+				oRequestData = {format: "json"};
+			
+			//if prev item is a footer, item is not scheduled into a show.
+			if (oPrevData.footer === false) {
+				oRequestData.instance = oPrevData.instance;
+			}
+			
+			//set the start time appropriately
+			if (oPrevData.header === true) {
+				oRequestData.start = oPrevData.startsUnix;
+			}
+			else {
+				oRequestData.start = oPrevData.endsUnix;
+			}
+			
+			oRequestData.id = oItemData.id;
+			oRequestData.duration = oItemData.duration;
+			
+			/*
+			$.post("/showbuilder/schedule", oRequestData, function(json){
+				var x;
+			});
+			*/
 		}
 	});
 	
