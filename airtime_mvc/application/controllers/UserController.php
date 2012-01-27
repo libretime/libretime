@@ -23,9 +23,11 @@ class UserController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/user/user.js','text/javascript');    
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
+        
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/user/user.js?'.filemtime($baseDir.'/js/airtime/user/user.js'),'text/javascript');    
 
         $form = new Application_Form_AddUser();
 
