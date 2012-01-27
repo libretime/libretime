@@ -17,7 +17,9 @@ class DashboardController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.blue.monday.css');
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
+        
+        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.blue.monday.css'));
         $this->_helper->layout->setLayout('bare');
 
         $logo = Application_Model_Preference::GetStationLogo();
