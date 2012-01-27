@@ -81,9 +81,10 @@ class PlaylistController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js','text/javascript');
-		$this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.filemtime($baseDir.'/js/airtime/library/spl.js'),'text/javascript');
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.filemtime($baseDir.'/css/playlist_builder.css'));
 
 		$this->_helper->viewRenderer->setResponseSegment('spl');
 		$pl = $this->getPlaylist();

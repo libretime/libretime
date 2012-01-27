@@ -23,8 +23,9 @@ class LoginController extends Zend_Controller_Action
         $error = false;
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
         
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/login.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/login.js?'.filemtime($baseDir.'/js/airtime/login/login.js'),'text/javascript');
         
         $form = new Application_Form_Login();
         
