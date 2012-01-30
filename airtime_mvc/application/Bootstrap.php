@@ -62,6 +62,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initHeadScript()
     {
+        global $CC_CONFIG;
+        
         $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
@@ -85,6 +87,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $client_id = Application_Model_Preference::GetClientId();
             $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
             $view->headScript()->appendFile($baseUrl . '/js/airtime/common/livechat.js?'.filemtime($baseDir.'/js/airtime/common/livechat.js'), 'text/javascript');
+        }
+        if(isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1){
+            // since we need to append google analytic code right before </head> we can't use appendFile function
+            // we will just store raw html into some variable
+            $view->google_analytics = "<script type=\"text/javascript\">
+
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', 'UA-28765064-1']);
+              _gaq.push(['_trackPageview']);
+            
+              (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+              })();
+            
+            </script>";
         }
     }
 
