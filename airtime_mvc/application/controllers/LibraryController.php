@@ -39,12 +39,15 @@ class LibraryController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js','text/javascript');
+
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorderResize.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.TableTools.js','text/javascript');
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
 
@@ -52,6 +55,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/TableTools.css');
 
         $this->_helper->viewRenderer->setResponseSegment('library');
 

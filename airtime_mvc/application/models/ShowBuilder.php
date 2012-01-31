@@ -5,6 +5,7 @@ class Application_Model_ShowBuilder {
     private $timezone;
     private $startDT;
     private $endDT;
+    private $user;
 
     private $defaultRowArray = array(
         "header" => false,
@@ -32,6 +33,7 @@ class Application_Model_ShowBuilder {
         $this->startDT = $p_startDT;
         $this->endDT = $p_endDT;
         $this->timezone = date_default_timezone_get();
+        $this->user = Application_Model_User::GetCurrentUser();
     }
 
     /*
@@ -96,8 +98,8 @@ class Application_Model_ShowBuilder {
 
             $runtime = $schedStartDT->diff($schedEndDT);
 
-            $row["id"] = $p_item["sched_id"];
-            $row["instance"] = $p_item["si_id"];
+            $row["id"] = intval($p_item["sched_id"]);
+            $row["instance"] = intval($p_item["si_id"]);
             $row["starts"] = $schedStartDT->format("H:i:s");
             $row["startsUnix"] = $schedStartDT->format("U");
             $row["ends"] = $schedEndDT->format("H:i:s");
@@ -107,6 +109,10 @@ class Application_Model_ShowBuilder {
             $row["title"] = $p_item["file_track_title"];
             $row["creator"] = $p_item["file_artist_name"];
             $row["album"] = $p_item["file_album_title"];
+
+            if ($this->user->canSchedule($item["show_id"]) === true) {
+                $row["checkbox"] = true;
+            }
         }
         //show is empty
         else {

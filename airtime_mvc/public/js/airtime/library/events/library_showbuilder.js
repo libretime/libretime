@@ -21,14 +21,33 @@ function addLibraryItemEvents() {
 			cursor: 'pointer',
 			connectToSortable: '#show_builder_table'
 		});
-
-	$('#library_display tbody tr td').not('[class=library_checkbox]')
-		.jjmenu("click",
-			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
-			{id: getId, type: getType},
-			{xposition: "mouse", yposition: "mouse"});
-
 }
 
 function setupLibraryToolbar() {
+	var aButtons,
+		fnTest,
+		fnAddSelectedItems;
+	
+	fnTest = function() {
+		alert("hi");
+	};
+	
+	fnAddSelectedItems = function() {
+		var oTT = TableTools.fnGetInstance('show_builder_table'),
+			aData = oTT.fnGetSelectedData(),
+			i,
+			length = aData.length;
+		
+		for (i=0, i<length; i+=1;) {
+			var x;
+		}
+	};
+	//[0] = button text
+	//[1] = id 
+	//[2] = enabled
+	aButtons = [["Reset Order", "library_order_reset", true, fnTest], 
+	                ["Delete", "library_group_delete", false, fnTest], 
+	                ["Add", "library_group_add", false, fnTest]];
+	
+	addToolBarButtonsLibrary(aButtons);
 }

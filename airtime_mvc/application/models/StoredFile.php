@@ -687,20 +687,6 @@ class Application_Model_StoredFile {
 
         $results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
 
-        /*
-        type = aData["ftype"].substring(0,2);
-        id = aData["id"];
-
-        if(type == "au") {
-            $('td.library_type', nRow).html( '<img src="css/images/icon_audioclip.png">' );
-        } else if(type == "pl") {
-            $('td.library_type', nRow).html( '<img src="css/images/icon_playlist.png">' );
-        }
-
-
-        $(nRow).attr("id", type+'_'+id);
-        */
-
         foreach($results['aaData'] as &$row){
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";

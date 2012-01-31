@@ -35,6 +35,19 @@ class Application_Model_User {
         return $this->isUserType(UTYPE_ADMIN);
     }
 
+    public function canSchedule($p_showId) {
+       $type = $this->getType();
+
+       if ( $type === UTYPE_ADMIN ||
+            $type === UTYPE_PROGRAM_MANAGER ||
+            CcShowHostsQuery::create()->filterByDbShow($p_showId)->filterByDbHost($this->getId())->count() > 0 )
+       {
+            return true;
+       }
+
+       return false;
+    }
+
     public function isUserType($type, $showId=''){
     	if(is_array($type)){
     		$result = false;
@@ -270,4 +283,9 @@ class Application_Model_User {
         }
     }
 
+    public static function GetCurrentUser() {
+        $userinfo = Zend_Auth::getInstance()->getStorage()->read();
+
+        return new self($userinfo->id);
+    }
 }

@@ -6,7 +6,9 @@ class ShowbuilderController extends Zend_Controller_Action
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('schedule', 'json')
+        $ajaxContext->addActionContext('schedule-update', 'json')
+                    ->addActionContext('schedule-add', 'json')
+                    ->addActionContext('schedule-remove', 'json')
                     ->addActionContext('builder-feed', 'json')
                     ->initContext();
     }
@@ -53,6 +55,38 @@ class ShowbuilderController extends Zend_Controller_Action
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT);
 
         $this->view->schedule = $showBuilder->GetItems();
+    }
+
+    public function scheduleAddAction() {
+
+        $request = $this->getRequest();
+
+        $id = $request->getParam("id", null);
+        $instance = $request->getParam("instance", null);
+
+        $items = $request->getParam("items", array());
+    }
+
+    public function scheduleRemoveAction()
+    {
+        $request = $this->getRequest();
+
+        $ids = $request->getParam("ids", null);
+
+        Logging::log($ids);
+
+        $json = array();
+
+        try {
+            Application_Model_Scheduler::removeItems($ids);
+            $json["message"]="success... maybe";
+        }
+        catch (Exception $e) {
+            $json["message"]=$e->getMessage();
+            Logging::log($e->getMessage());
+        }
+
+        $this->view->data = $json;
     }
 
     public function scheduleAction() {

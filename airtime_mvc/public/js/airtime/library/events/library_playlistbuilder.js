@@ -9,7 +9,7 @@ function fnLibraryTableDrawCallback() {
     addLibraryItemEvents();
     addMetadataQtip();
     //saveNumEntriesSetting();
-    setupGroupActions();
+    //setupGroupActions();
 }
 
 function addLibraryItemEvents() {
@@ -20,16 +20,23 @@ function addLibraryItemEvents() {
 			cursor: 'pointer'
 		});
 
+	/*
 	$('#library_display tbody tr td').not('[class=library_checkbox]')
 		.jjmenu("click",
 			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
 			{id: getId, type: getType},
 			{xposition: "mouse", yposition: "mouse"});
+	*/
 
 }
 
 function setupLibraryToolbar() {
-	$("div.library_toolbar").html('<span class="fg-button ui-button ui-state-default" id="library_order_reset">Reset Order</span>' + 
-	        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_delete">Delete</span>' + 
-	        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_add">Add</span>');	
+	//[0] = button text
+	//[1] = id 
+	//[2] = enabled
+	var aButtons = [["Reset Order", "library_order_reset", true], 
+	                ["Delete", "library_group_delete", false], 
+	                ["Add", "library_group_add", false]];
+	
+	addToolBarButtonsLibrary(aButtons);
 }
