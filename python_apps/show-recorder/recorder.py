@@ -275,8 +275,9 @@ class CommandListener():
                 self.sr.start()
                 #remove show from shows to record.
                 del self.shows_to_record[start_time]
-                time_till_next_show = self.get_time_till_next_show()
-                self.time_till_next_show = time_till_next_show
+                self.time_till_next_show = self.get_time_till_next_show()
+                # set real_timtout to false no matter what
+                self.real_timeout = False
             except Exception,e :
                 import traceback
                 top = traceback.format_exc()
