@@ -904,10 +904,16 @@ class Application_Model_StoredFile {
         $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
         Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
-        
         //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
+
         $r = @rename($audio_file, $audio_stor);
-        
+
+        if ($r === false) {
+           #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
+           #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
+           die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "File was not uploaded, this error will occur if the computer hard drive does not have enough disk space."}}');
+        }
+
         //$r = @copy($audio_file, $audio_stor);
         //$r = @unlink($audio_file);
     }
