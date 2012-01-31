@@ -303,7 +303,7 @@ class Application_Model_StoredFile {
      *
      * @return void|PEAR_Error
      */
-    public function delete()
+    public function delete($deleteFromPlaylist=false)
     {
         if ($this->exists()) {
             if ($this->getFormat() == 'audioclip') {
@@ -314,8 +314,9 @@ class Application_Model_StoredFile {
             }
         }
 
-        // don't delete from the playslist. We might want to put a flag
-        //Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
+        if($deleteFromPlaylist){
+            Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
+        }
         
         // set file_exists falg to false
         $this->_file->setDbFileExists(false);
