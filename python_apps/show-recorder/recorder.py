@@ -180,6 +180,7 @@ class CommandListener():
         self.current_schedule = {}
         self.shows_to_record = {}
         self.time_till_next_show = 3600
+        self.real_timeout = True
         self.logger.info("RecorderFetch: init complete")
         self.server_timezone = '';
 
@@ -240,11 +241,13 @@ class CommandListener():
             next_show = getDateTimeObj(start_time)
 
             delta = next_show - tnow
+            self.real_timeout = False
             out = delta.seconds
 
             self.logger.debug("Next show %s", next_show)
             self.logger.debug("Now %s", tnow)
         else:
+            self.real_timeout = True
             out = 3600
         return out
 
@@ -306,6 +309,8 @@ class CommandListener():
             self.logger.error(e)
 
         loops = 1
+        recording = False
+        
         while True:
             self.logger.info("Loop #%s", loops)
             try:
@@ -315,10 +320,19 @@ class CommandListener():
                 self.logger.info(s)
                 # start recording
                 self.start_record()
+                
+                # if real timeout happended get show schedule from airtime
+                if self.real_timeout :
+                    temp = self.api_client.get_shows_to_record()
+                    if temp is not None:
+                        shows = temp['shows']
+                        self.server_timezone = temp['server_timezone']
+                        self.parse_shows(shows)
+                    self.logger.info("Real Timeout: the schedule has updated")
+                
             except Exception, e:
                 self.logger.info(e)
                 time.sleep(3)
-
             loops += 1
 
 if __name__ == '__main__':
