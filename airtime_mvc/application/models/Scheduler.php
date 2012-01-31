@@ -154,6 +154,8 @@ class Application_Model_Scheduler {
                     self::removeGaps($instance);
                 }
             }
+
+            $this->con->commit();
         }
         catch (Exception $e) {
             $this->con->rollback();
