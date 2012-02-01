@@ -61,10 +61,23 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-        $id = $request->getParam("id", null);
-        $instance = $request->getParam("instance", null);
+        $mediaItems = $request->getParam("mediaIds", null);
+        $scheduledIds = $request->getParam("schedIds", null);
 
-        $items = $request->getParam("items", array());
+        $json = array();
+
+        try {
+            $scheduler = new Application_Model_Scheduler();
+            $scheduler->scheduleAfter($scheduledIds, $mediaItems);
+
+            $json["message"]="success... maybe";
+        }
+        catch (Exception $e) {
+            $json["message"]=$e->getMessage();
+            Logging::log($e->getMessage());
+        }
+
+        $this->view->data = $json;
     }
 
     public function scheduleRemoveAction()
@@ -73,12 +86,12 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $ids = $request->getParam("ids", null);
 
-        Logging::log($ids);
-
         $json = array();
 
         try {
-            Application_Model_Scheduler::removeItems($ids);
+            $scheduler = new Application_Model_Scheduler();
+            $scheduler->removeItems($ids);
+
             $json["message"]="success... maybe";
         }
         catch (Exception $e) {

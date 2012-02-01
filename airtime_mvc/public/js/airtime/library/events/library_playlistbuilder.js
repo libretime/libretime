@@ -1,6 +1,6 @@
 function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
-    $(nRow).attr("id", aData["id"]);
+    $(nRow).attr("id", aData["row_id"]);
 
     return nRow;
 }
@@ -30,13 +30,22 @@ function addLibraryItemEvents() {
 
 }
 
-function setupLibraryToolbar() {
+/*
+ * @param oTable the datatables instance for the library.
+ */
+function setupLibraryToolbar(oTable) {
+	var aButtons,
+		oSettings;
+	
 	//[0] = button text
 	//[1] = id 
 	//[2] = enabled
-	var aButtons = [["Reset Order", "library_order_reset", true], 
+	aButtons = [["Reset Order", "library_order_reset", true], 
 	                ["Delete", "library_group_delete", false], 
 	                ["Add", "library_group_add", false]];
 	
 	addToolBarButtonsLibrary(aButtons);
+	
+	oSettings = oTable.fnSettings();
+    oSettings.fnServerData.start = oRange.start;
 }

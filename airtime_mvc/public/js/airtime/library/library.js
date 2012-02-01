@@ -327,7 +327,7 @@ function createDataTable(data) {
                 /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
                 /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
                 /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "10%", "sClass": "library_length"},
-                /* Type */          {"sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "9%", "sClass": "library_type"},
+                /* Type */          {"sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "9%", "sClass": "library_type"},
                 /* Upload Time */   {"sTitle": "Upload Time", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
                 /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
             ],
@@ -347,8 +347,7 @@ function createDataTable(data) {
         	"sRowSelect": "multi",
 			"aButtons": [],
 			"fnRowSelected": function ( node ) {
-                var x;
-                        
+                    
                 //seems to happen if everything is selected
                 if ( node === null) {
                 	oTable.find("input[type=checkbox]").attr("checked", true);
@@ -358,8 +357,7 @@ function createDataTable(data) {
                 }
             },
             "fnRowDeselected": function ( node ) {
-                var x;
-                
+             
               //seems to happen if everything is deselected
                 if ( node === null) {
                 	oTable.find("input[type=checkbox]").attr("checked", false);
@@ -380,7 +378,7 @@ function createDataTable(data) {
     });
     oTable.fnSetFilteringDelay(350);
     
-    setupLibraryToolbar();
+    setupLibraryToolbar(oTable);
     
     $('#library_order_reset').click(function() {
         ColReorder.fnReset( oTable );

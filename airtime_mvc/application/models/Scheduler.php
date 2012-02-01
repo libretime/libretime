@@ -2,17 +2,10 @@
 
 class Application_Model_Scheduler {
 
-    private $propSched;
     private $con;
 
     public function __construct($id = null) {
 
-        if (is_null($id)) {
-            $this->propSched = new CcSchedule();
-        }
-        else {
-            $this->propSched = CcScheduleQuery::create()->findPK($id);
-        }
     }
 
     /*
@@ -21,7 +14,7 @@ class Application_Model_Scheduler {
      *
      * @return $files
      */
-    private static function retrieveMediaFiles($id, $type) {
+    private function retrieveMediaFiles($id, $type) {
 
         $fileInfo = array(
             "id" => "",
@@ -34,8 +27,8 @@ class Application_Model_Scheduler {
 
         $files = array();
 
-        if ($type === "file") {
-            $file = CcFilesQuery::create()->findByPK($id);
+        if ($type === "audioclip") {
+            $file = CcFilesQuery::create()->findPK($id);
 
             $data = $fileInfo;
             $data["id"] = $id;
@@ -51,28 +44,60 @@ class Application_Model_Scheduler {
     }
 
     /*
+     * @param DateTime startDT
+     * @param string duration
+     *      in format H:i:s.u (could be more that 24 hours)
+     */
+    private function findEndTime($startDT, $duration) {
+
+    }
+
+    /*
      * @param array $scheduledIds
      * @param array $fileIds
      * @param array $playlistIds
      */
-    public static function scheduleAfter($scheduledIds, $mediaIds, $adjustSched = true) {
+    public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true) {
 
-        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
-        $con->beginTransaction();
+        $this->con->beginTransaction();
+
+        $schedFiles = array();
 
         try {
 
-            $schedFiles = array();
-            foreach($mediaIds as $id => $type) {
-                $schedFiles = array_merge($schedFiles, self::retrieveMediaFiles($id, $type));
+            foreach($mediaItems as $media) {
+                Logging::log("Media Id ".$media["id"]);
+                Logging::log("Type ".$media["type"]);
+
+                $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
             }
 
-            foreach ($scheduledIds as $id) {
+            foreach ($scheduleItems as $schedule) {
+                $id = intval($schedule["id"]);
 
-                $schedItem = CcScheduleQuery::create()->findByPK($id);
+                Logging::log("scheduling after scheduled item: ".$id);
 
-                if ($adjustSched === true) {
+                if ($id !== 0) {
+                    $schedItem = CcScheduleQuery::create()->findPK($id);
+                    $instance = $schedItem->getDbInstanceId();
+
+                    //user has an old copy of the time line opened.
+                    if ($instance !== intval($schedule["instance"])) {
+                        return;
+                    }
+
+                    $nextStartDT = $schedItem->getDbEnds(null);
+                }
+                //selected empty row to add after
+                else {
+                    $showInstance = CcShowInstancesQuery::create()->findPK($schedule["instance"]);
+                    $nextStartDT = $showInstance->getDbStarts(null);
+                    $instance = intval($schedule["instance"]);
+                }
+
+                if ($id !== 0 && $adjustSched === true) {
                     $followingSchedItems = CcScheduleQuery::create()
                         ->filterByDBStarts($schedItem->getDbStarts("Y-m-d H:i:s.u"), Criteria::GREATER_THAN)
                         ->filterByDbInstanceId($instance)
@@ -80,49 +105,54 @@ class Application_Model_Scheduler {
                         ->find();
                 }
 
-                $nextItemDT = $schedItem->getDbEnds(null);
-                $instance = $schedItem->getDbInstanceId();
-
                 foreach($schedFiles as $file) {
 
-                    $durationDT = DateTime::createFromFormat("Y-m-d H:i:s.u", "1970-01-01 {$file['cliplength']}", new DateTimeZone("UTC"));
-                    $endTimeEpoch = $nextItemDT->format("U.u") + $durationDT->format("U.u");
-                    $endTimeDT = DateTime::createFromFormat("U.u", $endTimeEpoch, new DateTimeZone("UTC"));
+                    Logging::log("adding file with id: ".$file["id"]);
+
+                    $durationDT = new DateTime("1970-01-01 {$file['cliplength']}", new DateTimeZone("UTC"));
+                    $endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
+                    $endTimeDT = DateTime::createFromFormat("U", $endTimeEpoch, new DateTimeZone("UTC"));
 
                     $newItem = new CcSchedule();
-                    $newItem->setDbStarts($nextItemDT);
+                    $newItem->setDbStarts($nextStartDT);
                     $newItem->setDbEnds($endTimeDT);
                     $newItem->setDbFileId($file['id']);
                     $newItem->setDbCueIn($file['cuein']);
                     $newItem->setDbCueOut($file['cueout']);
                     $newItem->setDbFadeIn($file['fadein']);
                     $newItem->setDbFadeOut($file['fadeout']);
+                    $newItem->setDbClipLength($durationDT->format("H:i:s.u"));
                     $newItem->setDbInstanceId($instance);
-                    $newItem->save($con);
+                    $newItem->save($this->con);
 
-                    $nextItemDT = $endTimeDT;
+                    $nextStartDT = $endTimeDT;
                 }
 
-                if ($adjustSched === true) {
+                if ($id !== 0 && $adjustSched === true) {
 
                     //recalculate the start/end times after the inserted items.
-                    foreach($followingSchedItems as $followingItem) {
+                    foreach($followingSchedItems as $item) {
 
-                        $durationDT = DateTime::createFromFormat("Y-m-d H:i:s.u", "1970-01-01 {$file['cliplength']}", new DateTimeZone("UTC"));
-                        $endTimeEpoch = $nextItemDT->format("U.u") + $durationDT->format("U.u");
-                        $endTimeDT = DateTime::createFromFormat("U.u", $endTimeEpoch, new DateTimeZone("UTC"));
+                        $durationDT = new DateTime("1970-01-01 {$item->getDbClipLength()}", new DateTimeZone("UTC"));
+                        $a = $nextStartDT->format("U");
+                        $b = $durationDT->format("U");
+                        $endTimeEpoch = $a + $b;
+                        //$endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
+                        $endTimeDT = DateTime::createFromFormat("U", $endTimeEpoch, new DateTimeZone("UTC"));
 
-                        $followingItem->setDbStarts($nextItemDT);
-                        $followingItem->setDbEnds($endTimeDT);
-                        $followingItem->save($con);
+                        $item->setDbStarts($nextStartDT);
+                        $item->setDbEnds($endTimeDT);
+                        $item->save($this->con);
 
-                        $nextItemDT = $endTimeDT;
+                        $nextStartDT = $endTimeDT;
                     }
                 }
             }
+
+            $this->con->commit();
         }
         catch (Exception $e) {
-            $con->rollback();
+            $this->con->rollback();
             throw $e;
         }
     }
@@ -151,7 +181,7 @@ class Application_Model_Scheduler {
                 }
 
                 foreach($showInstances as $instance) {
-                    self::removeGaps($instance);
+                    $this->removeGaps($instance);
                 }
             }
 
@@ -204,50 +234,5 @@ class Application_Model_Scheduler {
                 $itemStartDT = $itemEndDT;
             }
         }
-    }
-
-    public function addScheduledItem($starts, $duration, $adjustSched = true) {
-
-    }
-
-    /*
-     * @param DateTime $starts
-     */
-    public function updateScheduledItem($p_newStarts, $p_adjustSched = true) {
-
-        $origStarts = $this->propSched->getDbStarts(null);
-
-        $diff = $origStarts->diff($p_newStarts);
-
-        //item is scheduled further in future
-        if ($diff->format("%R") === "+") {
-
-            CcScheduleQuery::create()
-                ->filterByDbStarts($this->propSched->getDbStarts(), Criteria::GREATER_THAN)
-                ->filterByDbId($this->propSched->getDbId(), Criteria::NOT_EQUAL)
-                ->find();
-
-        }
-        //item has been scheduled earlier
-        else {
-            CcScheduleQuery::create()
-                ->filterByDbStarts($this->propSched->getDbStarts(), Criteria::GREATER_THAN)
-                ->filterByDbId($this->propSched->getDbId(), Criteria::NOT_EQUAL)
-                ->find();
-        }
-    }
-
-    public function removeScheduledItem($adjustSched = true) {
-
-        if ($adjustSched === true) {
-            $duration = $this->propSched->getDbEnds('U') - $this->propSched->getDbStarts('U');
-
-            CcScheduleQuery::create()
-                ->filterByDbInstanceId()
-                ->filterByDbStarts()
-                ->find();
-        }
-
-        $this->propSched->delete();
     }
 }

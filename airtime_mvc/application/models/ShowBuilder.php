@@ -117,6 +117,8 @@ class Application_Model_ShowBuilder {
         //show is empty
         else {
             $row["empty"] = true;
+            $row["id"] = 0 ;
+            $row["instance"] = intval($p_item["si_id"]);
         }
 
         return $row;

@@ -154,6 +154,11 @@ $(document).ready(function() {
 		}
 		else if (aData.empty === true) {
 			
+			node = nRow.children[0];
+			node.innerHTML = '';
+				
+			sSeparatorHTML = '<span>Show Empty</span>';
+			fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-empty odd");
 		}
 		else {
 			$(nRow).attr("id", "sched_"+aData.id);
@@ -189,7 +194,7 @@ $(document).ready(function() {
 		$.post( "/showbuilder/schedule-remove",
 			{"ids": ids, "format": "json"},
 			function(data) {
-				var x;
+				oTable.fnDraw();
 			});
 	};
 	
@@ -226,9 +231,18 @@ $(document).ready(function() {
 		"oTableTools": {
         	"sRowSelect": "multi",
 			"aButtons": [],
+			"fnPreRowSelect": function ( e ) {
+				var node = e.currentTarget;
+				//don't select separating rows, or shows without privileges.
+				if ($(node).hasClass("show-builder-header")
+						|| $(node).hasClass("show-builder-footer")
+						|| $(node).hasClass("show-builder-not-allowed")){
+					return false;
+				}
+				return true;
+            },
 			"fnRowSelected": function ( node ) {
-                var x;
-                        
+
                 //seems to happen if everything is selected
                 if ( node === null) {
                 	oTable.find("input[type=checkbox]").attr("checked", true);
@@ -238,8 +252,7 @@ $(document).ready(function() {
                 }
             },
             "fnRowDeselected": function ( node ) {
-                var x;
-                
+               
               //seems to happen if everything is deselected
                 if ( node === null) {
                 	oTable.find("input[type=checkbox]").attr("checked", false);
@@ -250,24 +263,24 @@ $(document).ready(function() {
             }
 		},
 		
-        // R = ColReorder, C = ColVis, see datatables doc for others
+        // R = ColReorderResize, C = ColVis, T = TableTools
         "sDom": 'Rr<"H"CT<"#show_builder_toolbar">>t<"F">',
         
-        //options for infinite scrolling
-        //"bScrollInfinite": true,
-        //"bScrollCollapse": true,
-        //"sScrollY": "400px",
-        
         "sAjaxDataProp": "schedule",
-		"sAjaxSource": "/showbuilder/builder-feed"
-		
+		"sAjaxSource": "/showbuilder/builder-feed"	
 	});
 	
 	$('[name="sb_cb_all"]').click(function(){
     	var oTT = TableTools.fnGetInstance('show_builder_table');
     	
     	if ($(this).is(":checked")) {
-    		oTT.fnSelectAll();
+    		var allowedNodes;
+    		
+    		allowedNodes = oTable.find('tr:not(.show-builder-header):not(.show-builder-footer):not(.show-builder-not-allowed)');
+    		
+    		allowedNodes.each(function(i, el){
+    			oTT.fnSelect(el);
+    		});	
     	}
     	else {
     		oTT.fnSelectNone();
@@ -299,7 +312,7 @@ $(document).ready(function() {
 		placeholder: "placeholder show-builder-placeholder",
 		forceHelperSize: true,
 		forcePlaceholderSize: true,
-		items: 'tr:not(.show-builder-header):not(.show-builder-footer)',
+		items: 'tr:not(.show-builder-header):not(.show-builder-footer):not(.show-builder-not-allowed):not(.show-builder-empty)',
 		//cancel: ".show-builder-header .show-builder-footer",
 		receive: function(event, ui) {
 			var x;

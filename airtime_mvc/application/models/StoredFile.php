@@ -688,6 +688,9 @@ class Application_Model_StoredFile {
         $results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
 
         foreach($results['aaData'] as &$row){
+
+            $row['id'] = intval($row['id']);
+
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
 
@@ -698,16 +701,16 @@ class Application_Model_StoredFile {
 
             $type = substr($row['ftype'], 0, 2);
 
-            $row['id'] = "{$type}_{$row['id']}";
+            $row['row_id'] = "{$type}_{$row['id']}";
 
             //TODO url like this to work on both playlist/showbuilder screens.
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
             if($type == "au") {
-                $row['ftype'] = '<img src="/css/images/icon_audioclip.png">';
+                $row['image'] = '<img src="/css/images/icon_audioclip.png">';
             }
             else {
-                $row['ftype'] = '<img src="/css/images/icon_playlist.png">';
+                $row['image'] = '<img src="/css/images/icon_playlist.png">';
             }
         }
 

@@ -240,6 +240,7 @@ class LibraryController extends Zend_Controller_Action
         $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($params);
 
         //format clip lengh to 1 decimal
+        /*
         foreach($datatables["aaData"] as &$data){
             if($data['ftype'] == 'audioclip'){
                 $file = Application_Model_StoredFile::Recall($data['id']);
@@ -255,6 +256,7 @@ class LibraryController extends Zend_Controller_Action
             $sec = Application_Model_Playlist::playlistTimeToSeconds($data['length']);
             $data['length'] = Application_Model_Playlist::secondsToPlaylistTime($sec);
         }
+        */
 
         die(json_encode($datatables));
     }
