@@ -239,7 +239,6 @@ class LibraryController extends Zend_Controller_Action
         $params = $this->getRequest()->getParams();
         $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($params);
 
-        //format clip lengh to 1 decimal
         /*
         foreach($datatables["aaData"] as &$data){
             if($data['ftype'] == 'audioclip'){
@@ -253,8 +252,6 @@ class LibraryController extends Zend_Controller_Action
                     $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon soundcloud"></span>';
                 }
             }
-            $sec = Application_Model_Playlist::playlistTimeToSeconds($data['length']);
-            $data['length'] = Application_Model_Playlist::secondsToPlaylistTime($sec);
         }
         */
 

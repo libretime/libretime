@@ -318,6 +318,10 @@ function createDataTable(data) {
 		},
 		"fnRowCallback": fnLibraryTableRowCallback,
 		"fnDrawCallback": fnLibraryTableDrawCallback,
+		"fnHeaderCallback": function(nHead) {
+			$(nHead).find("input[type=checkbox]").attr("checked", false);
+		},
+		
 		"aoColumns": [
                 /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
                 /* Id */            {"sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
@@ -327,7 +331,7 @@ function createDataTable(data) {
                 /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
                 /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
                 /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "10%", "sClass": "library_length"},
-                /* Type */          {"sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "9%", "sClass": "library_type"},
+                /* Type */          {"sTitle": "", "sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "25px", "sClass": "library_type"},
                 /* Upload Time */   {"sTitle": "Upload Time", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
                 /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
             ],
@@ -340,7 +344,7 @@ function createDataTable(data) {
         },
         "iDisplayLength": getNumEntriesPreference(data),
 
-        // R = ColReorder, C = ColVis, see datatables doc for others
+        // R = ColReorder, C = ColVis, T = TableTools
         "sDom": 'Rlfr<"H"T<"library_toolbar"C>>t<"F"ip>',
         
         "oTableTools": {
@@ -374,7 +378,12 @@ function createDataTable(data) {
             "aiExclude": [0, 1, 2],
             "sSize": "css",
             "bShowAll": true
+		},
+		
+		"oColReorder": {
+			"iFixedColumns": 1
 		}
+		
     });
     oTable.fnSetFilteringDelay(350);
     

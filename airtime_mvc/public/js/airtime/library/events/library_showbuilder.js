@@ -1,6 +1,6 @@
 function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
-    $(nRow).attr("id", aData["id"]);
+    $(nRow).attr("id", aData["tr_id"]);
     
     $(nRow).data("show_builder", {"id": aData["id"], "length": aData["length"]});
 
@@ -15,7 +15,7 @@ function fnLibraryTableDrawCallback() {
 
 function addLibraryItemEvents() {
 
-	$('#library_display tr')
+	$('#library_display tr:not(:first)')
 		.draggable({
 			helper: 'clone',
 			cursor: 'pointer',

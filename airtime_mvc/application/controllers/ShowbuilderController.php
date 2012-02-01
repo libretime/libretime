@@ -33,6 +33,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js','text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/showbuilder.css');
 
         $this->_helper->viewRenderer->setResponseSegment('builder');
     }

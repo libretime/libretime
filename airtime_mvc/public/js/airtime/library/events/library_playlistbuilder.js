@@ -1,15 +1,12 @@
 function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
-    $(nRow).attr("id", aData["row_id"]);
+    $(nRow).attr("id", aData["tr_id"]);
 
     return nRow;
 }
 
 function fnLibraryTableDrawCallback() {
-    addLibraryItemEvents();
     addMetadataQtip();
-    //saveNumEntriesSetting();
-    //setupGroupActions();
 }
 
 function addLibraryItemEvents() {

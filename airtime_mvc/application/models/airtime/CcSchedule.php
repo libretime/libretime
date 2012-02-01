@@ -15,6 +15,28 @@
  */
 class CcSchedule extends BaseCcSchedule {
 
+    public function getDbClipLength($format = 'H:i:s.u')
+    {
+        if ($this->clip_length === null) {
+            return null;
+        }
+
+        try {
+            $dt = new DateTime($this->clip_length);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->clip_length, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+            return $dt;
+        } elseif (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        } else {
+            return $dt->format($format);
+        }
+    }
+
     /**
      * Get the [optionally formatted] temporal [starts] column value.
      *

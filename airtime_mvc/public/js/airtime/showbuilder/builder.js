@@ -223,9 +223,16 @@ $(document).ready(function() {
         
 		"fnServerData": fnServerData,
 		"fnRowCallback": fnShowBuilderRowCallback,
+		"fnHeaderCallback": function(nHead) {
+			$(nHead).find("input[type=checkbox]").attr("checked", false);
+		},
 		
 		"oColVis": {
 			"aiExclude": [ 0, 1 ]
+		},
+		
+		"oColReorder": {
+			"iFixedColumns": 1
 		},
 		
 		"oTableTools": {
@@ -312,7 +319,7 @@ $(document).ready(function() {
 		placeholder: "placeholder show-builder-placeholder",
 		forceHelperSize: true,
 		forcePlaceholderSize: true,
-		items: 'tr:not(.show-builder-header):not(.show-builder-footer):not(.show-builder-not-allowed):not(.show-builder-empty)',
+		items: 'tr:not(:first):not(.show-builder-header):not(.show-builder-footer):not(.show-builder-not-allowed):not(.show-builder-empty)',
 		//cancel: ".show-builder-header .show-builder-footer",
 		receive: function(event, ui) {
 			var x;
