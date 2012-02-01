@@ -62,6 +62,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initHeadScript()
     {
+        global $CC_CONFIG;
+        
         $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
@@ -85,6 +87,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $client_id = Application_Model_Preference::GetClientId();
             $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
             $view->headScript()->appendFile($baseUrl . '/js/airtime/common/livechat.js?'.filemtime($baseDir.'/js/airtime/common/livechat.js'), 'text/javascript');
+        }
+        if(isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1){
+            $view->headScript()->appendFile($baseUrl.'/js/libs/google-analytics.js?'.filemtime($baseDir.'/js/libs/google-analytics.js'),'text/javascript');
         }
     }
 
