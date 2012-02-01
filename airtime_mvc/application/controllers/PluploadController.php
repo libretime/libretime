@@ -15,12 +15,13 @@ class PluploadController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/plupload/plupload.full.min.js','text/javascript');
-		$this->view->headScript()->appendFile($baseUrl.'/js/plupload/jquery.plupload.queue.min.js','text/javascript');
-		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/plupload.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/plupload/plupload.full.min.js?'.filemtime($baseDir.'/js/plupload/plupload.full.min.js'),'text/javascript');
+		$this->view->headScript()->appendFile($baseUrl.'/js/plupload/jquery.plupload.queue.min.js?'.filemtime($baseDir.'/js/plupload/jquery.plupload.queue.min.js'),'text/javascript');
+		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/plupload.js?'.filemtime($baseDir.'/js/airtime/library/plupload.js'),'text/javascript');
 
-		$this->view->headLink()->appendStylesheet($baseUrl.'/css/plupload.queue.css');
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/plupload.queue.css?'.filemtime($baseDir.'/css/plupload.queue.css'));
     }
 
     public function uploadAction()

@@ -26,16 +26,17 @@ class LibraryController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js?'.filemtime($baseDir.'/js/contextmenu/jjmenu.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.filemtime($baseDir.'/js/airtime/library/library.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js?'.filemtime($baseDir.'/js/airtime/library/advancedsearch.js'),'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.filemtime($baseDir.'/css/media_library.css'));
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css?'.filemtime($baseDir.'/css/contextmenu.css'));
 
 
         $this->_helper->layout->setLayout('library');

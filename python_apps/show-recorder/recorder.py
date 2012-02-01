@@ -179,7 +179,7 @@ class CommandListener():
         self.sr = None
         self.current_schedule = {}
         self.shows_to_record = {}
-        self.time_till_next_show = 3600
+        self.time_till_next_show = config["record_timeout"]
         self.logger.info("RecorderFetch: init complete")
         self.server_timezone = '';
 
@@ -213,7 +213,7 @@ class CommandListener():
                 self.parse_shows(temp)
                 self.server_timezone = m['server_timezone']
         elif(command == 'cancel_recording'):
-            if self.sr.is_recording():
+            if self.sr is not None and self.sr.is_recording():
                 self.sr.cancel_recording()
 
     def parse_shows(self, shows):
@@ -245,7 +245,7 @@ class CommandListener():
             self.logger.debug("Next show %s", next_show)
             self.logger.debug("Now %s", tnow)
         else:
-            out = 3600
+            out = config["record_timeout"]
         return out
 
     def start_record(self):
@@ -272,8 +272,7 @@ class CommandListener():
                 self.sr.start()
                 #remove show from shows to record.
                 del self.shows_to_record[start_time]
-                time_till_next_show = self.get_time_till_next_show()
-                self.time_till_next_show = time_till_next_show
+                self.time_till_next_show = self.get_time_till_next_show()
             except Exception,e :
                 import traceback
                 top = traceback.format_exc()
@@ -306,19 +305,40 @@ class CommandListener():
             self.logger.error(e)
 
         loops = 1
+        recording = False
+        
         while True:
             self.logger.info("Loop #%s", loops)
             try:
                 # block until 5 seconds before the next show start
-                self.connection.drain_events(timeout=self.time_till_next_show)
+                self.connection.drain_events(timeout=int(self.time_till_next_show))
             except socket.timeout, s:
                 self.logger.info(s)
+                
+                # start_record set time_till_next_show to config["record_timeout"] so we should check before
+                # if timeout amount was 1 hr..
+                update_schedule = False
+                if int(self.time_till_next_show) == int(config["record_timeout"]) :
+                    update_schedule = True
+                    
                 # start recording
                 self.start_record()
+                
+                # if real timeout happended get show schedule from airtime
+                if update_schedule :
+                    temp = self.api_client.get_shows_to_record()
+                    if temp is not None:
+                        shows = temp['shows']
+                        self.server_timezone = temp['server_timezone']
+                        self.parse_shows(shows)
+                    self.logger.info("Real Timeout: the schedule has updated")
+                
             except Exception, e:
-                self.logger.info(e)
+                import traceback
+                top = traceback.format_exc()
+                self.logger.error('Exception: %s', e)
+                self.logger.error("traceback: %s", top)
                 time.sleep(3)
-
             loops += 1
 
 if __name__ == '__main__':

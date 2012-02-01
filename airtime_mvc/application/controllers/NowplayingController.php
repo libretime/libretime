@@ -16,14 +16,15 @@ class NowplayingController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.min.js'),'text/javascript');
         
         //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js?'.filemtime($baseDir.'/js/airtime/nowplaying/nowplayingdatagrid.js'),'text/javascript');
         
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowview.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowview.js?'.filemtime($baseDir.'/js/airtime/nowplaying/nowview.js'),'text/javascript');
         
         $refer_sses = new Zend_Session_Namespace('referrer');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -67,7 +68,7 @@ class NowplayingController extends Zend_Controller_Action
                     $this->view->logoImg = $logo;
                 }
                 $this->view->dialog = $form;
-                $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js','text/javascript');
+                $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.filemtime($baseDir.'/js/airtime/nowplaying/register.js'),'text/javascript');
             }
         }else{
             //popup if previous page was login
@@ -82,7 +83,7 @@ class NowplayingController extends Zend_Controller_Action
                     $this->view->logoImg = $logo;
                 }
                 $this->view->dialog = $form;
-            	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js','text/javascript');
+            	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.filemtime($baseDir.'/js/airtime/nowplaying/register.js'),'text/javascript');
             }
         }
     }
@@ -106,14 +107,15 @@ class NowplayingController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.min.js'),'text/javascript');
         
         //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js?'.filemtime($baseDir.'/js/airtime/nowplaying/nowplayingdatagrid.js'),'text/javascript');
         
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/dayview.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/dayview.js?'.filemtime($baseDir.'/js/airtime/nowplaying/dayview.js'),'text/javascript');
     }
 
     public function remindmeAction()
