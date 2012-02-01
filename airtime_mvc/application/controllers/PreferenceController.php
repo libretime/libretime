@@ -205,6 +205,7 @@ class PreferenceController extends Zend_Controller_Action
                 
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
                 $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
+                $values['streamFormat'] = $form->getValue('streamFormat'); 
 
             }
             if(!$error){
@@ -214,6 +215,8 @@ class PreferenceController extends Zend_Controller_Action
                 for($i=1;$i<=$num_of_stream;$i++){
                     Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
                 }
+                // this goes into cc_pref table
+                Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
