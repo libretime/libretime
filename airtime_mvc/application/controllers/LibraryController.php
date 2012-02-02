@@ -168,7 +168,7 @@ class LibraryController extends Zend_Controller_Action
                     return;
                 }
 
-                $res = $file->delete();
+                $res = $file->delete(true);
 
                 if (PEAR::isError($res)) {
                     $this->view->message = $res->getMessage();
