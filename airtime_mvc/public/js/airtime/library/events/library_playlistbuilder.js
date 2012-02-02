@@ -6,7 +6,7 @@ function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFul
 }
 
 function fnLibraryTableDrawCallback() {
-    addMetadataQtip();
+	addLibraryItemEvents();
 }
 
 function addLibraryItemEvents() {
@@ -44,5 +44,4 @@ function setupLibraryToolbar(oTable) {
 	addToolBarButtonsLibrary(aButtons);
 	
 	oSettings = oTable.fnSettings();
-    oSettings.fnServerData.start = oRange.start;
 }

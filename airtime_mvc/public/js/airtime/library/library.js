@@ -324,16 +324,15 @@ function createDataTable(data) {
 		
 		"aoColumns": [
                 /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
-                /* Id */            {"sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
+                /* Type */          {"sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "25px", "sClass": "library_type"},
                 /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
                 /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
                 /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
                 /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
                 /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
                 /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "10%", "sClass": "library_length"},
-                /* Type */          {"sTitle": "", "sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "25px", "sClass": "library_type"},
                 /* Upload Time */   {"sTitle": "Upload Time", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
-                /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
+                /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"}
             ],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
@@ -375,13 +374,13 @@ function createDataTable(data) {
         "oColVis": {
             "buttonText": "Show/Hide Columns",
             "sAlign": "right",
-            "aiExclude": [0, 1, 2],
+            "aiExclude": [0, 1],
             "sSize": "css",
             "bShowAll": true
 		},
 		
 		"oColReorder": {
-			"iFixedColumns": 1
+			"iFixedColumns": 2
 		}
 		
     });

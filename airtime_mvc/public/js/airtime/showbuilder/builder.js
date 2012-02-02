@@ -232,7 +232,7 @@ $(document).ready(function() {
 		},
 		
 		"oColReorder": {
-			"iFixedColumns": 1
+			"iFixedColumns": 2
 		},
 		
 		"oTableTools": {

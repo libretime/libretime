@@ -772,7 +772,8 @@ class Application_Model_StoredFile {
 		      unset($columnsDisplayed[$key]);
 		  }
 		}
-		$selectorRows = "SELECT " . join(',', $columnsDisplayed );
+		//$selectorRows = "SELECT " . join(',', $columnsDisplayed );
+		$selectorRows = "SELECT * ";
 
         $sql = $selectorCount." FROM ".$fromTable;
 		$totalRows = $CC_DBC->getOne($sql);
