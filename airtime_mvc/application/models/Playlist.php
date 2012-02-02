@@ -1020,15 +1020,15 @@ class Application_Model_Playlist {
 
         if(is_null($fadeIn)) {
             if($defaultFade != "")
-                $fadeIn = $defaultFade;
+                $fadeIn = '00:00:'.$defaultFade;
             else
-                $fadeIn = '00.000000';
+                $fadeIn = '00:00:00';
         }
         if(is_null($fadeOut)) {
             if($defaultFade != "")
-                $fadeOut = $defaultFade;
+                $fadeOut = '00:00:'.$defaultFade;
             else
-                $fadeOut = '00.000000';
+                $fadeOut = '00:00:00';
         }
 
         $row = new CcPlaylistcontents();
