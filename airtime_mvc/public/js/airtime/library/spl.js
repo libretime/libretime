@@ -7,6 +7,12 @@ function stopAudioPreview() {
 	$('#jquery_jplayer_1').jPlayer('stop');
 }
 
+function isFadeValid(fade) {
+        var regExpr = new RegExp("^\\d{2}([.]\\d{1,6})?$");
+
+        return regExpr.test(fade);
+}
+
 function isTimeValid(time) {
 	var regExpr = new RegExp("^\\d{2}[:]\\d{2}[:]\\d{2}([.]\\d{1,6})?$");
 
@@ -108,7 +114,7 @@ function changeFadeIn(event) {
 	li = span.parent().parent().parent().parent();
 	unqid = li.attr("unqid");
 
-	if(!isTimeValid(fadeIn)){
+	if(!isFadeValid(fadeIn)){
         showError(span, "please put in a time in seconds '00 (.000000)'");
 		return;
 	}
@@ -140,7 +146,7 @@ function changeFadeOut(event) {
 	li = span.parent().parent().parent().parent();
 	unqid = li.attr("unqid");
 
-	if(!isTimeValid(fadeOut)){
+	if(!isFadeValid(fadeOut)){
         showError(span, "please put in a time in seconds '00 (.000000)'");
 		return;
 	}
@@ -481,7 +487,7 @@ function setUpSPL() {
 	    url = "/Playlist/set-playlist-fades";
 	    fadeIn = $.trim(span.text());
 
-	    if(!isTimeValid(fadeIn)){
+	    if(!isFadeValid(fadeIn)){
             showError(span, "please put in a time in seconds '00 (.000000)'");
 		    return;
 	    }
@@ -507,7 +513,7 @@ function setUpSPL() {
 	    url = "/Playlist/set-playlist-fades";
 	    fadeOut = $.trim(span.text());
 
-	    if(!isTimeValid(fadeOut)){
+	    if(!isFadeValid(fadeOut)){
             showError(span, "please put in a time in seconds '00 (.000000)'");
 		    return;
 	    }

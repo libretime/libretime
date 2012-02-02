@@ -436,7 +436,7 @@ class Application_Model_Playlist {
           if ( $dbFadeStrPos === False )
              $fade .= '.000000';
           else
-             while( strlen( $fade ) < 8 )
+             while( strlen( $fade ) < 9 )
                  $fade .= '0';
           //done, just need to set back the formated values
           return $fade;
