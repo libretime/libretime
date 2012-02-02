@@ -7,30 +7,14 @@ function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFul
 			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
 			{id: aData["id"], type: aData["ftype"]},
 			{xposition: "mouse", yposition: "mouse"});
-	
-    return nRow;
 }
 
 function fnLibraryTableDrawCallback() {
-	addLibraryItemEvents();
-}
-
-function addLibraryItemEvents() {
-
-	$('#library_display tr[id ^= "au"]')
-		.draggable({
-			helper: 'clone',
-			cursor: 'pointer'
-		});
-
-	/*
-	$('#library_display tbody tr td').not('[class=library_checkbox]')
-		.jjmenu("click",
-			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
-			{id: getId, type: getType},
-			{xposition: "mouse", yposition: "mouse"});
-	*/
-
+	
+	$('#library_display tr[id ^= "au"]').draggable({
+		helper: 'clone',
+		cursor: 'pointer'
+	});
 }
 
 /*

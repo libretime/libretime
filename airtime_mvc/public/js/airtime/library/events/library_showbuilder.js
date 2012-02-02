@@ -6,22 +6,15 @@ function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFul
     
     //save some info for reordering purposes.
 	jRow.data({"aData": aData});
-
-    return nRow;
 }
 
 function fnLibraryTableDrawCallback() {
-    addLibraryItemEvents();
-}
-
-function addLibraryItemEvents() {
-
-	$('#library_display tr:not(:first)')
-		.draggable({
-			helper: 'clone',
-			cursor: 'pointer',
-			connectToSortable: '#show_builder_table'
-		});
+	
+	$('#library_display tr:not(:first)').draggable({
+		helper: 'clone',
+		cursor: 'pointer',
+		connectToSortable: '#show_builder_table'
+	});	
 }
 
 function setupLibraryToolbar() {
