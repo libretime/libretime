@@ -409,10 +409,37 @@ class Application_Model_Playlist {
           $files[$i]['cliplength'] = Application_Model_Playlist::secondsToPlaylistTime($clipSec);
           $offset += $clipSec;
           $files[$i]['offset'] = Application_Model_Playlist::secondsToPlaylistTime($offset);
+          
+          #For issue CC-2065 - update fade in and out values between playlst elements
+          #modified from the db default format of 00:00:00 to the more practical
+          #00.000000 format which is for only seconds.
+          $files[$i]['fadein'] = $this->normalizeFade($files[$i]['fadein']);
+          $files[$i]['fadeout'] = $this->normalizeFade($files[$i]['fadeout']);
+
           $i++;
         }
 
         return $files;
+    }
+
+    /**
+    * The database stores fades in 00:00:00 Time format with optional millisecond resolution .000000
+    * but this isn't practical since fades shouldn't be very long usuall 1 second or less. This function
+    * will normalize the fade so that it looks like 00.000000 to the user.
+    **/
+    public function normalizeFade($fade) {
+          //First get rid of the first six characters 00:00: which will be added back later for db update
+          $fade = substr($fade, 6);
+
+          //Second add .000000 if the fade does't have milliseconds format already
+          $dbFadeStrPos = strpos( $fade, '.' );
+          if ( $dbFadeStrPos === False )
+             $fade .= '.000000';
+          else
+             while( strlen( $fade ) < 8 )
+                 $fade .= '0';
+          //done, just need to set back the formated values
+          return $fade;
     }
 
     public function getLength() {
@@ -496,9 +523,9 @@ class Application_Model_Playlist {
      * @param string $p_position
      *    optional, Which position in the playlist to insert the audio clip
      * @param string $p_fadeIn
-     * 		optional, in time format hh:mm:ss.ssssss - total duration
+     * 		optional, in time format ss.ssssss - total duration
      * @param string $p_fadeOut
-     * 		optional, in time format hh:mm:ss.ssssss - total duration
+     * 		optional, in time format ss.ssssss - total duration
      * @param string $p_clipLength
      * 		optional length in in time format hh:mm:ss.ssssss -
      *      for webstream (or for overrule length of audioclip)
@@ -612,7 +639,13 @@ class Application_Model_Playlist {
         $fadeIn = $row->getDbFadein();
         $fadeOut = $row->getDbFadeout();
 
-		return array($fadeIn, $fadeOut);
+            #For issue CC-2065, fade in and out values are for the Playlist itself and must be
+            #modified from the db default format of 00:00:00 to the more practical
+            #00.000000 format which is for only seconds.
+            $fadeIn = $this->normalizeFade($fadeIn);
+            $fadeOut = $this->normalizeFade($fadeOut);
+
+            return array($fadeIn, $fadeOut);
 	}
 
     /**
@@ -628,6 +661,10 @@ class Application_Model_Playlist {
      */
     public function changeFadeInfo($pos, $fadeIn, $fadeOut)
     {
+        #See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
+        $fadeIn = '00:00:'.$fadeIn;
+        $fadeOut = '00:00:'.$fadeOut;
+
         $errArray= array();
 		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
@@ -651,7 +688,6 @@ class Application_Model_Playlist {
                 //"Fade In can't be larger than overall playlength.";
                 $fadeIn = $clipLength;
             }
-
             $row->setDbFadein($fadeIn);
         }
         if(!is_null($fadeOut)){
@@ -662,7 +698,6 @@ class Application_Model_Playlist {
                 //Fade Out can't be larger than overall playlength.";
                 $fadeOut = $clipLength;
             }
-
             $row->setDbFadeout($fadeOut);
         }
 
@@ -987,13 +1022,13 @@ class Application_Model_Playlist {
             if($defaultFade != "")
                 $fadeIn = $defaultFade;
             else
-                $fadeIn = '00:00:00.000';
+                $fadeIn = '00.000000';
         }
         if(is_null($fadeOut)) {
             if($defaultFade != "")
                 $fadeOut = $defaultFade;
             else
-                $fadeOut = '00:00:00.000';
+                $fadeOut = '00.000000';
         }
 
         $row = new CcPlaylistcontents();
@@ -1004,6 +1039,7 @@ class Application_Model_Playlist {
 
         $row->setDbCliplength($clipLength);
         $row->setDbCuein($cuein);
+
         $row->setDbCueout($cueout);
         $row->setDbFadein($fadeIn);
         $row->setDbFadeout($fadeOut);

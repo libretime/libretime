@@ -109,7 +109,7 @@ function changeFadeIn(event) {
 	unqid = li.attr("unqid");
 
 	if(!isTimeValid(fadeIn)){
-        showError(span, "please put in a time '00:00:00 (.000000)'");
+        showError(span, "please put in a time in seconds '00 (.000000)'");
 		return;
 	}
 
@@ -141,7 +141,7 @@ function changeFadeOut(event) {
 	unqid = li.attr("unqid");
 
 	if(!isTimeValid(fadeOut)){
-        showError(span, "please put in a time '00:00:00 (.000000)'");
+        showError(span, "please put in a time in seconds '00 (.000000)'");
 		return;
 	}
 
@@ -482,7 +482,7 @@ function setUpSPL() {
 	    fadeIn = $.trim(span.text());
 
 	    if(!isTimeValid(fadeIn)){
-            showError(span, "please put in a time '00:00:00 (.000000)'");
+            showError(span, "please put in a time in seconds '00 (.000000)'");
 		    return;
 	    }
 
@@ -508,7 +508,7 @@ function setUpSPL() {
 	    fadeOut = $.trim(span.text());
 
 	    if(!isTimeValid(fadeOut)){
-            showError(span, "please put in a time '00:00:00 (.000000)'");
+            showError(span, "please put in a time in seconds '00 (.000000)'");
 		    return;
 	    }
 
