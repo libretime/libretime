@@ -20,18 +20,23 @@ function fnLibraryTableDrawCallback() {
 /*
  * @param oTable the datatables instance for the library.
  */
-function setupLibraryToolbar(oTable) {
+function setupLibraryToolbar(oLibTable) {
 	var aButtons,
-		oSettings;
+		oLibTT = TableTools.fnGetInstance('library_display'),
+		fnResetCol;
+	
+	fnResetCol = function () {
+		ColReorder.fnReset( oLibTable );
+		return false;
+	};
 	
 	//[0] = button text
 	//[1] = id 
 	//[2] = enabled
-	aButtons = [["Reset Order", "library_order_reset", true], 
-	                ["Delete", "library_group_delete", false], 
-	                ["Add", "library_group_add", false]];
+	//[3] = click event
+	aButtons = [["Reset Order", "library_order_reset", true, fnResetCol], 
+	                ["Delete", "library_group_delete", true], 
+	                ["Add", "library_group_add", true]];
 	
 	addToolBarButtonsLibrary(aButtons);
-	
-	oSettings = oTable.fnSettings();
 }

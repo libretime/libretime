@@ -17,18 +17,22 @@ function fnLibraryTableDrawCallback() {
 	});	
 }
 
-function setupLibraryToolbar() {
+function setupLibraryToolbar(oLibTable) {
 	var aButtons,
 		fnTest,
+		fnResetCol,
 		fnAddSelectedItems,
-		oSettings,
-		oLibTable = $("#library_display").dataTable(),
 		oSchedTable = $("#show_builder_table").dataTable(),
 		oLibTT = TableTools.fnGetInstance('library_display'),
 		oSchedTT = TableTools.fnGetInstance('show_builder_table');
 	
 	fnTest = function() {
 		alert("hi");
+	};
+	
+	fnResetCol = function () {
+		ColReorder.fnReset( oLibTable );
+		return false;
 	};
 	
 	fnAddSelectedItems = function() {
@@ -66,9 +70,10 @@ function setupLibraryToolbar() {
 	//[0] = button text
 	//[1] = id 
 	//[2] = enabled
-	aButtons = [["Reset Order", "library_order_reset", true, fnTest], 
-	                ["Delete", "library_group_delete", false, fnTest], 
-	                ["Add", "library_group_add", false, fnAddSelectedItems]];
+	//[3] = click event
+	aButtons = [["Reset Order", "library_order_reset", true, fnResetCol], 
+	                ["Delete", "library_group_delete", true, fnTest], 
+	                ["Add", "library_group_add", true, fnAddSelectedItems]];
 	
 	addToolBarButtonsLibrary(aButtons);
 }

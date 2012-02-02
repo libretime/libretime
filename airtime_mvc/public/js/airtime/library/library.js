@@ -337,19 +337,15 @@ function createDataTable(data) {
 		},
 		
 		"oColReorder": {
-			"iFixedColumns": 2
+			"iFixedColumns": 2,
+			"aiOrder": [ 0,1,2,3,4,5,6,7,8,9 ]
 		}
 		
     });
     oTable.fnSetFilteringDelay(350);
     
     setupLibraryToolbar(oTable);
-    
-    $('#library_order_reset').click(function() {
-        ColReorder.fnReset( oTable );
-        return false;
-    });
-    
+      
     $('[name="pl_cb_all"]').click(function(){
     	var oTT = TableTools.fnGetInstance('library_display');
     	
