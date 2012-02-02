@@ -15,6 +15,7 @@ class Application_Model_Scheduler {
 
     public function __construct($id = null) {
 
+        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
     }
 
     /*
@@ -28,7 +29,7 @@ class Application_Model_Scheduler {
         $files = array();
 
         if ($type === "audioclip") {
-            $file = CcFilesQuery::create()->findPK($id);
+            $file = CcFilesQuery::create()->findPK($id, $this->con);
 
             $data = $this->fileInfo;
             $data["id"] = $id;
@@ -38,6 +39,23 @@ class Application_Model_Scheduler {
         }
         else if ($type === "playlist") {
 
+            $contents = CcPlaylistcontentsQuery::create()
+                ->orderByDbPosition()
+                ->filterByDbPlaylistId($id)
+                ->find($this->con);
+
+            foreach ($contents as $plItem) {
+
+                $data = $this->fileInfo;
+                $data["id"] = $plItem->getDbFileId();
+                $data["cliplength"] = $plItem->getDbCliplength();
+                $data["cuein"] = $plItem->getDbCuein();
+                $data["cueout"] = $plItem->getDbCueout();
+                $data["fadein"] = $plItem->getDbFadein();
+                $data["fadeout"] = $plItem->getDbFadeout();
+
+                $files[] = $data;
+            }
         }
 
         return $files;
@@ -67,7 +85,7 @@ class Application_Model_Scheduler {
                 Logging::log("scheduling after scheduled item: ".$id);
 
                 if ($id !== 0) {
-                    $schedItem = CcScheduleQuery::create()->findPK($id);
+                    $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
                     $instance = $schedItem->getDbInstanceId();
 
                     //user has an old copy of the time line opened.
@@ -80,7 +98,7 @@ class Application_Model_Scheduler {
                 }
                 //selected empty row to add after
                 else {
-                    $showInstance = CcShowInstancesQuery::create()->findPK($schedule["instance"]);
+                    $showInstance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
                     $nextStartDT = $showInstance->getDbStarts(null);
                     $instance = intval($schedule["instance"]);
                 }
@@ -90,7 +108,7 @@ class Application_Model_Scheduler {
                         ->filterByDBStarts($schedItem->getDbStarts("Y-m-d H:i:s.u"), Criteria::GREATER_THAN)
                         ->filterByDbInstanceId($instance)
                         ->orderByDbStarts()
-                        ->find();
+                        ->find($this->con);
                 }
 
                 foreach($schedFiles as $file) {
@@ -104,7 +122,7 @@ class Application_Model_Scheduler {
                     //item existed previously and is being moved.
                     //need to keep same id for resources if we want REST.
                     if (isset($file['sched_id'])) {
-                        $sched = CcScheduleQuery::create()->findPK($file['sched_id']);
+                        $sched = CcScheduleQuery::create()->findPK($file['sched_id'], $this->con);
                     }
                     else {
                         $sched = new CcSchedule();
@@ -155,7 +173,6 @@ class Application_Model_Scheduler {
      */
     public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true) {
 
-        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         $this->con->beginTransaction();
 
         $schedFiles = array();
@@ -184,7 +201,6 @@ class Application_Model_Scheduler {
      */
     public function moveItem($selectedItem, $afterItem, $adjustSched = true) {
 
-        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         $this->con->beginTransaction();
 
         try {
@@ -234,8 +250,6 @@ class Application_Model_Scheduler {
     public function removeItems($scheduledIds, $adjustSched = true) {
 
         $showInstances = array();
-
-        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         $this->con->beginTransaction();
 
         try {
@@ -275,14 +289,14 @@ class Application_Model_Scheduler {
 
         Logging::log("removing gaps from show instance #".$showInstance);
 
-        $instance = CcShowInstancesQuery::create()->findPK($showInstance);
+        $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
         $itemStartDT = $instance->getDbStarts(null);
 
         $schedule = CcScheduleQuery::create()
             ->filterByDbInstanceId($showInstance)
             ->filterByDbId($exclude, Criteria::NOT_IN)
             ->orderByDbStarts()
-            ->find();
+            ->find($this->con);
 
 
         foreach ($schedule as $item) {

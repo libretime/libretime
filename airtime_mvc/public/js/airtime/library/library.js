@@ -198,58 +198,43 @@ function addQtipToSCIcons(){
     });
 }
 
-function addMetadataQtip(){
-    var tableRow = $('#library_display tbody tr');
-    tableRow.each(function(){
-        var title = $(this).find('td.library_title').html();
-        var info = $(this).attr("id");
-        info = info.split("_");
-        var id = info[1];
-        var type = info[0];
-        $(this).qtip({
-            content: {
-                text: "Loading...",
-                title: {
-                    text: title
-                },
-                ajax: {
-                    url: "/Library/get-file-meta-data",
-                    type: "post",
-                    data: ({format: "html", id : id, type: type}),
-                    success: function(data, status){
-                        this.set('content.text', data);
-                    }
-                }
-            },
-            position: {
-                target: 'event',
-                adjust: {
-                    resize: true,
-                    method: "flip flip"
-                },
-                at: "right center",
-                my: "left top",
-                viewport: $(window)
-            },
-            style: {
-                width: 570,
-                classes: "ui-tooltip-dark"
-            },
-            show: 'mousedown',
-            events: {
-               show: function(event, api) {
-                  // Only show the tooltip if it was a right-click
-                  if(event.originalEvent.button !== 2) {
-                     event.preventDefault();
-                  }
-               }
-            }
-        });
-    });
-    
-    tableRow.bind('contextmenu', function(e){
-        return false;
-    });
+function fnCreatedRow( nRow, aData, iDataIndex ) {
+
+	//add a tool tip to appear when the user clicks on the type icon.
+	$(nRow.children[1]).qtip({
+		content: {
+			text: "Loading...",
+			title: {
+				text: aData.track_title
+			},
+			ajax: {
+				url: "/Library/get-file-meta-data",
+				type: "get",
+				data: ({format: "html", id : aData.id, type: aData.ftype}),
+				success: function(data, status) {
+					this.set('content.text', data);
+				}
+			}
+		},
+		position: {
+			my: 'left center',
+            at: 'right center', // Position the tooltip above the link 
+            viewport: $(window), // Keep the tooltip on-screen at all times
+            effect: false // Disable positioning animation
+        },
+		style: {
+			classes: "ui-tooltip-dark"
+		},
+		show: {
+		    event: 'click',
+		    solo: true // Only show one tooltip at a time
+		},
+		hide: 'mouseout',
+		
+	}).click(function(event) { 
+		event.preventDefault();
+		event.stopPropagation();
+	});
 }
 
 /**
@@ -267,14 +252,6 @@ function saveNumEntriesSetting() {
  */
 function getNumEntriesPreference(data) {
     return parseInt(data.libraryInit.numEntries, 10);
-}
-
-function groupAdd() {
-   
-}
-
-function groupDelete() {
-   
 }
 
 function createDataTable(data) {
@@ -295,6 +272,8 @@ function createDataTable(data) {
 			} );
 		},
 		"fnRowCallback": fnLibraryTableRowCallback,
+		"fnCreatedRow": fnCreatedRow,
+		"fnCreatedRowCallback": fnCreatedRow,
 		"fnDrawCallback": fnLibraryTableDrawCallback,
 		"fnHeaderCallback": function(nHead) {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
@@ -309,7 +288,7 @@ function createDataTable(data) {
                 /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sClass": "library_genre"},
                 /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sClass": "library_year"},
                 /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sClass": "library_length"},
-                /* Upload Time */   {"sTitle": "Upload Time", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
+                /* Upload Time */   {"sTitle": "Uploaded", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
                 /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"}
             ],
 		"aaSorting": [[2,'asc']],

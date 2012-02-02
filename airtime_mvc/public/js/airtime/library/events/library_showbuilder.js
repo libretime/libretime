@@ -12,8 +12,6 @@ function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFul
 
 function fnLibraryTableDrawCallback() {
     addLibraryItemEvents();
-    //addMetadataQtip();
-    //setupGroupActions();
 }
 
 function addLibraryItemEvents() {

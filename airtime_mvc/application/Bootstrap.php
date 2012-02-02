@@ -55,7 +55,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $view->headLink()->appendStylesheet($baseUrl.'/css/redmond/jquery-ui-1.8.8.custom.css');
         $view->headLink()->appendStylesheet($baseUrl.'/css/pro_dropdown_3.css');
-        $view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css');
+        $view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.css');
         $view->headLink()->appendStylesheet($baseUrl.'/css/styles.css');
     }
 
@@ -64,10 +64,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
 
-        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.5.2.min.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.7.1.min.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.11.custom.min.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js','text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip2.min.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.min.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js');
         $view->headScript()->appendScript("var baseUrl='$baseUrl/'");
 
