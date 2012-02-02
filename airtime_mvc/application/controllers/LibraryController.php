@@ -85,73 +85,48 @@ class LibraryController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
-        $pl_sess = $this->pl_sess;
+        if ($type === "audioclip") {
 
-        if($type === "au") {
-
-            if(isset($pl_sess->id)) {
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/add-item'.$params, 'callback' => 'window["setSPLContent"]'),
-                    'title' => 'Add to Playlist');
-            }
+            $file = Application_Model_StoredFile::Recall($id);
 
             $menu[] = array('action' => array('type' => 'gourl', 'url' => '/Library/edit-file-md/id/#id#'),
                             'title' => 'Edit Metadata');
-
-            // added for downlaod
-	    	$id = $this->_getParam('id');
-
-	    	$file_id = $this->_getParam('id', null);
-	        $file = Application_Model_StoredFile::Recall($file_id);
 
 	        $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
             				'title' => 'Download');
 
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
-                $text = "Upload to SoundCloud";
-                if(!is_null($file->getSoundCloudId())){
-                    $text = "Re-upload to SoundCloud";
-                }
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
-                                'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
 
                 $scid = $file->getSoundCloudId();
 
-                if($scid > 0){
+                if (!is_null($scid)){
+                    $text = "Re-upload to SoundCloud";
+                }
+                else {
+                    $text = "Upload to SoundCloud";
+                }
+
+                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
+                                'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
+
+
+                if ($scid > 0){
                     $link_to_file = $file->getSoundCloudLinkToFile();
-                    $menu[] = array('action' => array('type' => 'fn',
-                    	    'callback' => "window['openFileOnSoundCloud']('$link_to_file')"),
-                                				'title' => 'View on SoundCloud');
+                    $menu[] = array('action' => array('type' => 'gourl', 'url' => $link_to_file, 'target' => '_blank'),
+                            'title' => 'View on Soundcloud');
                 }
             }
-
-            if ($user->isAdmin()) {
-                $menu[] = array('action' => array('type' => 'fn',
-                        'callback' => "window['confirmDeleteAudioClip']('$paramsPop')"),
-                        'title' => 'Delete');
-            }
         }
-        else if($type === "pl") {
+        else if ($type === "playlist") {
 
-            if(!isset($pl_sess->id) || $pl_sess->id !== $id) {
+            if (!isset($this->pl_sess->id) || $this->pl_sess->id !== $id) {
                 $menu[] = array('action' =>
                                     array('type' => 'ajax',
                                     'url' => '/Playlist/edit'.$params,
                                     'callback' => 'window["openDiffSPL"]'),
                                 'title' => 'Edit');
             }
-            else if(isset($pl_sess->id) && $pl_sess->id === $id) {
-                $menu[] = array('action' =>
-                                    array('type' => 'ajax',
-                                    'url' => '/Playlist/close'.$params,
-                                    'callback' => 'window["noOpenPL"]'),
-                                'title' => 'Close');
-            }
-
-            $menu[] = array('action' => array('type' => 'fn',
-                    'callback' => "window['confirmDeletePlaylist']('$paramsPop')"),
-                    'title' => 'Delete');
-
         }
 
         //returns format jjmenu is looking for.

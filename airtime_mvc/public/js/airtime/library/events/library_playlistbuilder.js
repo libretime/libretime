@@ -1,6 +1,18 @@
 function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
+	function test() {
+		alert("hi");
+	}
+	
     $(nRow).attr("id", aData["tr_id"]);
+    
+	$(nRow).find('td')
+		.jjmenu("rightClick",
+			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
+			{id: aData["id"], type: aData["ftype"]},
+			{xposition: "mouse", yposition: "mouse"});
+	
+	//{title:"Menu Item 4 - Js function", action:{type:"fn",callback:function(){ alert('THIS IS THE TEST'); }
 
     return nRow;
 }

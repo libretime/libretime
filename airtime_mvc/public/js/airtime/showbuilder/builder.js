@@ -121,7 +121,7 @@ $(document).ready(function() {
 			node;
 		
 		//save some info for reordering purposes.
-		$(nRow).data({aData: aData});
+		$(nRow).data({"aData": aData});
 		
 		fnPrepareSeparatorRow = function(sRowContent, sClass) {
 			
@@ -142,7 +142,7 @@ $(document).ready(function() {
 			node.innerHTML = '<span class="ui-icon ui-icon-play"></span>';
 			
 			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-header");
+			fnPrepareSeparatorRow(sSeparatorHTML, "sb-header");
 		}
 		else if (aData.footer === true) {
 			
@@ -150,7 +150,7 @@ $(document).ready(function() {
 			node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
 				
 			sSeparatorHTML = '<span>Show Footer</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-footer");
+			fnPrepareSeparatorRow(sSeparatorHTML, "sb-footer");
 		}
 		else if (aData.empty === true) {
 			
@@ -158,7 +158,7 @@ $(document).ready(function() {
 			node.innerHTML = '';
 				
 			sSeparatorHTML = '<span>Show Empty</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "show-builder-empty odd");
+			fnPrepareSeparatorRow(sSeparatorHTML, "sb-empty odd");
 		}
 		else {
 			$(nRow).attr("id", "sched_"+aData.id);
@@ -170,7 +170,7 @@ $(document).ready(function() {
 			else {
 				node.innerHTML = '';
 				
-				$(nRow).addClass("show-builder-not-allowed");
+				$(nRow).addClass("sb-not-allowed");
 			}
 		}
 		
@@ -241,9 +241,9 @@ $(document).ready(function() {
 			"fnPreRowSelect": function ( e ) {
 				var node = e.currentTarget;
 				//don't select separating rows, or shows without privileges.
-				if ($(node).hasClass("show-builder-header")
-						|| $(node).hasClass("show-builder-footer")
-						|| $(node).hasClass("show-builder-not-allowed")){
+				if ($(node).hasClass("sb-header")
+						|| $(node).hasClass("sb-footer")
+						|| $(node).hasClass("sb-not-allowed")){
 					return false;
 				}
 				return true;
@@ -283,7 +283,7 @@ $(document).ready(function() {
     	if ($(this).is(":checked")) {
     		var allowedNodes;
     		
-    		allowedNodes = oTable.find('tr:not(.show-builder-header):not(.show-builder-footer):not(.show-builder-not-allowed)');
+    		allowedNodes = oTable.find('tr:not(.sb-header):not(.sb-footer):not(.sb-not-allowed)');
     		
     		allowedNodes.each(function(i, el){
     			oTT.fnSelect(el);
@@ -315,43 +315,60 @@ $(document).ready(function() {
 		oTable.fnDraw();
 	});
 	
-	tableDiv.sortable({
-		placeholder: "placeholder show-builder-placeholder",
-		forceHelperSize: true,
-		forcePlaceholderSize: true,
-		items: 'tr:not(:first):not(.show-builder-header):not(.show-builder-footer):not(.show-builder-not-allowed):not(.show-builder-empty)',
-		//cancel: ".show-builder-header .show-builder-footer",
-		receive: function(event, ui) {
-			var x;
-		},
-		update: function(event, ui) {
-			var oItemData = ui.item.data("aData"),
-				oPrevData = ui.item.prev().data("aData"),
-				oRequestData = {format: "json"};
+	var sortableConf = (function(){
+		var origRow,
+			oItemData,
+			oPrevData,
+			fnAdd,
+			fnMove,
+			fnReceive,
+			fnUpdate;
+		
+		fnAdd = function() {
+			var aSchedIds = [],
+				aMediaIds = [];
 			
-			//if prev item is a footer, item is not scheduled into a show.
-			if (oPrevData.footer === false) {
-				oRequestData.instance = oPrevData.instance;
-			}
+			aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance});
+			aMediaIds.push({"id": oItemData.id, "type": oItemData.ftype});
+
+			$.post("/showbuilder/schedule-add", 
+				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
+				function(json){
+					oTable.fnDraw();
+				});
+		};
+		
+		fnReceive = function(event, ui) {
+			origRow = ui.item;
+		};
+		
+		fnUpdate = function(event, ui) {
+			oPrevData = ui.item.prev().data("aData");
 			
-			//set the start time appropriately
-			if (oPrevData.header === true) {
-				oRequestData.start = oPrevData.startsUnix;
+			//item was dragged in
+			if (origRow !== undefined) {
+				oItemData = origRow.data("aData");
+				fnAdd();
 			}
+			//item was reordered.
 			else {
-				oRequestData.start = oPrevData.endsUnix;
+				oItemData = ui.item.data("aData");
 			}
 			
-			oRequestData.id = oItemData.id;
-			oRequestData.duration = oItemData.duration;
-			
-			/*
-			$.post("/showbuilder/schedule", oRequestData, function(json){
-				var x;
-			});
-			*/
-		}
-	});
+			origRow = undefined;
+		};
+		
+		return {
+			placeholder: "placeholder show-builder-placeholder",
+			forceHelperSize: true,
+			forcePlaceholderSize: true,
+			items: 'tr:not(:first):not(.sb-header):not(.sb-footer):not(.sb-not-allowed):not(.sb-empty)',
+			receive: fnReceive,
+			update: fnUpdate
+		};
+	}());
+	
+	tableDiv.sortable(sortableConf);
 	
 	$("#show_builder_toolbar")
 		.append('<span class="ui-icon ui-icon-trash"></span>')

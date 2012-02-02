@@ -1,21 +1,3 @@
-//used by jjmenu
-/*
-function getId() {
-	var tr_id =  $(this.triggerElement).parent().attr("id");
-	tr_id = tr_id.split("_");
-
-	return tr_id[1];
-}
-
-function getType() {
-	var tr_id =  $(this.triggerElement).parent().attr("id");
-	tr_id = tr_id.split("_");
-
-	return tr_id[0];
-}
-*/
-//end functions used by jjmenu
-
 function addToolBarButtonsLibrary(aButtons) {
 	var i,
 		length = aButtons.length,
@@ -86,10 +68,6 @@ function confirmDeleteGroup() {
     if(confirm('Are you sure you want to delete the selected items?')){
         groupDelete();
     }
-}
-
-function openFileOnSoundCloud(link){
-	window.open(link);
 }
 
 function checkImportStatus(){

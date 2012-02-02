@@ -1,8 +1,11 @@
 function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-
-    $(nRow).attr("id", aData["tr_id"]);
+	var jRow = $(nRow);
+	
+	jRow.attr("id", aData["tr_id"]);
+	jRow.addClass("lib-sb");
     
-    $(nRow).data("show_builder", {"id": aData["id"], "length": aData["length"]});
+    //save some info for reordering purposes.
+	jRow.data({"aData": aData});
 
     return nRow;
 }
