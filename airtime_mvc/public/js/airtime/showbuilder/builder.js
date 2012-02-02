@@ -173,8 +173,6 @@ $(document).ready(function() {
 				$(nRow).addClass("sb-not-allowed");
 			}
 		}
-		
-		return nRow;
 	};
 
 	fnRemoveSelectedItems = function() {
@@ -201,8 +199,6 @@ $(document).ready(function() {
 	oTable = tableDiv.dataTable( {
 		"aoColumns": [
 		    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
-		   // /* scheduled id */{"mDataProp": "id", "sTitle": "id"},
-		   // /* instance */{"mDataProp": "instance", "sTitle": "si_id"},
             /* starts */{"mDataProp": "starts", "sTitle": "Airtime"},
             /* ends */{"mDataProp": "ends", "sTitle": "Off Air"},
             /* runtime */{"mDataProp": "runtime", "sTitle": "Runtime"},
@@ -210,8 +206,6 @@ $(document).ready(function() {
             /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
             /* album */{"mDataProp": "album", "sTitle": "Album"}
         ],
-        
-        "asStripClasses": [ 'odd' ],
         
         "bJQueryUI": true,
         "bSort": false,
@@ -362,6 +356,7 @@ $(document).ready(function() {
 			//item was dragged in
 			if (origRow !== undefined) {
 				oItemData = origRow.data("aData");
+				origRow = undefined;
 				fnAdd();
 			}
 			//item was reordered.
@@ -369,13 +364,10 @@ $(document).ready(function() {
 				oItemData = ui.item.data("aData");
 				fnMove();
 			}
-			
-			origRow = undefined;
 		};
 		
 		return {
 			placeholder: "placeholder show-builder-placeholder",
-			forceHelperSize: true,
 			forcePlaceholderSize: true,
 			items: 'tr:not(:first):not(.sb-header):not(.sb-footer):not(.sb-not-allowed):not(.sb-empty)',
 			receive: fnReceive,
