@@ -57,36 +57,6 @@ class Application_Model_Scheduler {
      * @param array $fileIds
      * @param array $playlistIds
      */
-    public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true) {
-
-        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-        $this->con->beginTransaction();
-
-        $schedFiles = array();
-
-        try {
-
-            foreach($mediaItems as $media) {
-                Logging::log("Media Id ".$media["id"]);
-                Logging::log("Type ".$media["type"]);
-
-                $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
-            }
-            $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
-
-            $this->con->commit();
-        }
-        catch (Exception $e) {
-            $this->con->rollback();
-            throw $e;
-        }
-    }
-
-    /*
-     * @param array $scheduledIds
-     * @param array $fileIds
-     * @param array $playlistIds
-     */
     private function insertAfter($scheduleItems, $schedFiles, $adjustSched = true) {
 
         try {
@@ -131,13 +101,13 @@ class Application_Model_Scheduler {
                     $endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
                     $endTimeDT = DateTime::createFromFormat("U", $endTimeEpoch, new DateTimeZone("UTC"));
 
-                    $sched = new CcSchedule();
-
                     //item existed previously and is being moved.
-                    //TODO make it possible to insert the primary key of the item
                     //need to keep same id for resources if we want REST.
                     if (isset($file['sched_id'])) {
-                        //$sched->setDbId($file['sched_id']);
+                        $sched = CcScheduleQuery::create()->findPK($file['sched_id']);
+                    }
+                    else {
+                        $sched = new CcSchedule();
                     }
 
                     $sched->setDbStarts($nextStartDT);
@@ -160,10 +130,7 @@ class Application_Model_Scheduler {
                     foreach($followingSchedItems as $item) {
 
                         $durationDT = new DateTime("1970-01-01 {$item->getDbClipLength()}", new DateTimeZone("UTC"));
-                        $a = $nextStartDT->format("U");
-                        $b = $durationDT->format("U");
-                        $endTimeEpoch = $a + $b;
-                        //$endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
+                        $endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
                         $endTimeDT = DateTime::createFromFormat("U", $endTimeEpoch, new DateTimeZone("UTC"));
 
                         $item->setDbStarts($nextStartDT);
@@ -182,13 +149,42 @@ class Application_Model_Scheduler {
     }
 
     /*
+     * @param array $scheduledIds
+     * @param array $fileIds
+     * @param array $playlistIds
+     */
+    public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true) {
+
+        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $this->con->beginTransaction();
+
+        $schedFiles = array();
+
+        try {
+
+            foreach($mediaItems as $media) {
+                Logging::log("Media Id ".$media["id"]);
+                Logging::log("Type ".$media["type"]);
+
+                $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
+            }
+            $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
+
+            $this->con->commit();
+        }
+        catch (Exception $e) {
+            $this->con->rollback();
+            throw $e;
+        }
+    }
+
+    /*
      * @param array $selectedItem
      * @param array $afterItem
      */
     public function moveItem($selectedItem, $afterItem, $adjustSched = true) {
 
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-
         $this->con->beginTransaction();
 
         try {
@@ -209,8 +205,7 @@ class Application_Model_Scheduler {
                 return;
             }
 
-            $selected->delete($this->con);
-            $this->removeGaps($origSelIns);
+            $this->removeGaps($origSelIns, $selected->getDbId());
 
             //moved to another show, remove gaps from original show.
             if ($adjustSched === true && $origSelIns !== $origAfterIns) {
@@ -241,7 +236,6 @@ class Application_Model_Scheduler {
         $showInstances = array();
 
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-
         $this->con->beginTransaction();
 
         try {
@@ -272,7 +266,12 @@ class Application_Model_Scheduler {
         }
     }
 
-    public function removeGaps($showInstance) {
+    /*
+     * @param int $showInstance
+     * @param array $exclude
+     *   ids of sched items to remove from the calulation.
+     */
+    public function removeGaps($showInstance, $exclude=null) {
 
         Logging::log("removing gaps from show instance #".$showInstance);
 
@@ -281,6 +280,7 @@ class Application_Model_Scheduler {
 
         $schedule = CcScheduleQuery::create()
             ->filterByDbInstanceId($showInstance)
+            ->filterByDbId($exclude, Criteria::NOT_IN)
             ->orderByDbStarts()
             ->find();
 
