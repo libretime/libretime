@@ -3,6 +3,15 @@
 class Application_Model_Scheduler {
 
     private $con;
+    private $fileInfo = array(
+            "id" => "",
+            "cliplength" => "",
+            "cuein" => "00:00:00",
+            "cueout" => "00:00:00",
+            "fadein" => "00:00:00",
+            "fadeout" => "00:00:00",
+            "sched_id" => null,
+        );
 
     public function __construct($id = null) {
 
@@ -16,21 +25,12 @@ class Application_Model_Scheduler {
      */
     private function retrieveMediaFiles($id, $type) {
 
-        $fileInfo = array(
-            "id" => "",
-            "cliplength" => "",
-            "cuein" => "00:00:00",
-            "cueout" => "00:00:00",
-            "fadein" => "00:00:00",
-            "fadeout" => "00:00:00"
-        );
-
         $files = array();
 
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id);
 
-            $data = $fileInfo;
+            $data = $this->fileInfo;
             $data["id"] = $id;
             $data["cliplength"] = $file->getDbLength();
 
@@ -60,7 +60,6 @@ class Application_Model_Scheduler {
     public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true) {
 
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-
         $this->con->beginTransaction();
 
         $schedFiles = array();
@@ -73,6 +72,24 @@ class Application_Model_Scheduler {
 
                 $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
             }
+            $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
+
+            $this->con->commit();
+        }
+        catch (Exception $e) {
+            $this->con->rollback();
+            throw $e;
+        }
+    }
+
+    /*
+     * @param array $scheduledIds
+     * @param array $fileIds
+     * @param array $playlistIds
+     */
+    private function insertAfter($scheduleItems, $schedFiles, $adjustSched = true) {
+
+        try {
 
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
@@ -85,6 +102,7 @@ class Application_Model_Scheduler {
 
                     //user has an old copy of the time line opened.
                     if ($instance !== intval($schedule["instance"])) {
+                        Logging::log("items have been since updated");
                         return;
                     }
 
@@ -113,17 +131,25 @@ class Application_Model_Scheduler {
                     $endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
                     $endTimeDT = DateTime::createFromFormat("U", $endTimeEpoch, new DateTimeZone("UTC"));
 
-                    $newItem = new CcSchedule();
-                    $newItem->setDbStarts($nextStartDT);
-                    $newItem->setDbEnds($endTimeDT);
-                    $newItem->setDbFileId($file['id']);
-                    $newItem->setDbCueIn($file['cuein']);
-                    $newItem->setDbCueOut($file['cueout']);
-                    $newItem->setDbFadeIn($file['fadein']);
-                    $newItem->setDbFadeOut($file['fadeout']);
-                    $newItem->setDbClipLength($durationDT->format("H:i:s.u"));
-                    $newItem->setDbInstanceId($instance);
-                    $newItem->save($this->con);
+                    $sched = new CcSchedule();
+
+                    //item existed previously and is being moved.
+                    //TODO make it possible to insert the primary key of the item
+                    //need to keep same id for resources if we want REST.
+                    if (isset($file['sched_id'])) {
+                        //$sched->setDbId($file['sched_id']);
+                    }
+
+                    $sched->setDbStarts($nextStartDT);
+                    $sched->setDbEnds($endTimeDT);
+                    $sched->setDbFileId($file['id']);
+                    $sched->setDbCueIn($file['cuein']);
+                    $sched->setDbCueOut($file['cueout']);
+                    $sched->setDbFadeIn($file['fadein']);
+                    $sched->setDbFadeOut($file['fadeout']);
+                    $sched->setDbClipLength($durationDT->format("H:i:s.u"));
+                    $sched->setDbInstanceId($instance);
+                    $sched->save($this->con);
 
                     $nextStartDT = $endTimeDT;
                 }
@@ -148,6 +174,59 @@ class Application_Model_Scheduler {
                     }
                 }
             }
+
+        }
+        catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /*
+     * @param array $selectedItem
+     * @param array $afterItem
+     */
+    public function moveItem($selectedItem, $afterItem, $adjustSched = true) {
+
+        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+
+        $this->con->beginTransaction();
+
+        try {
+
+            $origSelIns = intval($selectedItem[0]["instance"]);
+            $origAfterIns = intval($afterItem[0]["instance"]);
+
+            Logging::log("Moving item {$selectedItem[0]["id"]}");
+            Logging::log("After {$afterItem[0]["id"]}");
+
+            $selected = CcScheduleQuery::create()->findPk($selectedItem[0]["id"]);
+            $after = CcScheduleQuery::create()->findPk($afterItem[0]["id"]);
+
+            if ($origSelIns !== $selected->getDBInstanceId()
+                || $origAfterIns !== $after->getDBInstanceId()) {
+
+                Logging::log("items have been since updated");
+                return;
+            }
+
+            $selected->delete($this->con);
+            $this->removeGaps($origSelIns);
+
+            //moved to another show, remove gaps from original show.
+            if ($adjustSched === true && $origSelIns !== $origAfterIns) {
+
+            }
+
+            $data = $this->fileInfo;
+            $data["id"] = $selected->getDbFileId();
+            $data["cliplength"] = $selected->getDbClipLength();
+            $data["cuein"] = $selected->getDbCueIn();
+            $data["cueout"] = $selected->getDbCueOut();
+            $data["fadein"] = $selected->getDbFadeIn();
+            $data["fadeout"] = $selected->getDbFadeOut();
+            $data["sched_id"] = $selected->getDbId();
+
+            $this->insertAfter($afterItem, array($data), $adjustSched);
 
             $this->con->commit();
         }
@@ -219,7 +298,6 @@ class Application_Model_Scheduler {
                 Logging::log($itemStartDT->format("Y-m-d H:i:s"));
 
                 Logging::log("duration");
-                Logging::log($durationDT->format("Y-m-d H:i:s"));
                 Logging::log($durationDT->format("U"). "seconds");
 
                 $endEpoch = $itemStartDT->format("U") + $durationDT->format("U");

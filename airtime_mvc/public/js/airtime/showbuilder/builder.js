@@ -325,14 +325,28 @@ $(document).ready(function() {
 			fnUpdate;
 		
 		fnAdd = function() {
-			var aSchedIds = [],
-				aMediaIds = [];
+			var aMediaIds = [],
+			aSchedIds = [];
 			
 			aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance});
 			aMediaIds.push({"id": oItemData.id, "type": oItemData.ftype});
 
 			$.post("/showbuilder/schedule-add", 
 				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
+				function(json){
+					oTable.fnDraw();
+				});
+		};
+		
+		fnMove = function() {
+			var aSelect = [],
+				aAfter = [];
+		
+			aSelect.push({"id": oItemData.id, "instance": oItemData.instance});
+			aAfter.push({"id": oPrevData.id, "instance": oPrevData.instance});
+	
+			$.post("/showbuilder/schedule-move", 
+				{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
 				function(json){
 					oTable.fnDraw();
 				});
@@ -353,6 +367,7 @@ $(document).ready(function() {
 			//item was reordered.
 			else {
 				oItemData = ui.item.data("aData");
+				fnMove();
 			}
 			
 			origRow = undefined;

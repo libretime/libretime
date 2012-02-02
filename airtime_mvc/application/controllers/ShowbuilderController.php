@@ -6,7 +6,7 @@ class ShowbuilderController extends Zend_Controller_Action
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('schedule-update', 'json')
+        $ajaxContext->addActionContext('schedule-move', 'json')
                     ->addActionContext('schedule-add', 'json')
                     ->addActionContext('schedule-remove', 'json')
                     ->addActionContext('builder-feed', 'json')
@@ -103,48 +103,26 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->data = $json;
     }
 
-    public function scheduleAction() {
+    public function scheduleMoveAction() {
 
         $request = $this->getRequest();
 
-        $instance = $request->getParam("instance", null);
-        $id = $request->getParam("id", null);
-        $starts_epoch = $request->getParam("start", null);
-        $file_id = $request->getParam("file", null);
+        $selectedItem = $request->getParam("selectedItem");
+        $afterItem = $request->getParam("afterItem");
 
-        $startDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
+        $json = array();
 
-        //invalid request
-        if (is_null($start)) {
-            return;
+        try {
+            $scheduler = new Application_Model_Scheduler();
+            $scheduler->moveItem($selectedItem, $afterItem);
+
+            $json["message"]="success... maybe";
+        }
+        catch (Exception $e) {
+            $json["message"]=$e->getMessage();
+            Logging::log($e->getMessage());
         }
 
-        //updating a scheduled item.
-        if (isset($id)) {
-            $schedItem = CcScheduleQuery::create()->findPK($id);
-            $duration = $schedItem->getDbEnds('U') - $schedItem->getDbStarts('U');
-
-            $endDT = DateTime::createFromFormat("U", $starts_epoch + $duration, new DateTimeZone("UTC"));
-
-            $oldInstance = $schedItem->getDbInstanceId();
-
-            if ($instance === $oldInstance) {
-                CcScheduleQuery::create()
-                ->filterByDbInstanceId($oldInstance)
-                ->find();
-            }
-            //file was dragged out of the show into another show or scheduled not within a show.
-            else {
-            }
-
-
-        }
-        else {
-            $schedItem = new CcSchedule();
-        }
-
-        $schedItem->setDbStarts($startDT);
-        $schedItem->setDbEnds($endDT);
-        $schedItem->save();
+        $this->view->data = $json;
     }
 }
