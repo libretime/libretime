@@ -219,14 +219,6 @@ function redrawDataTablePage() {
 }
 
 function setSPLContent(json) {
-    if(json.playlist_error == true){
-        alertPlaylistErrorAndReload();
-    }
-    
-	if(json.message) {
-		alert(json.message);
-		return;
-	}
 
 	$('#spl_name > a')
 		.empty()
@@ -243,8 +235,6 @@ function setSPLContent(json) {
 
 	//redraw the library list
 	redrawDataTablePage();
-
-	return false;
 }
 
 function addSPLItem(event, ui){
@@ -301,12 +291,11 @@ function moveSPLItem(event, ui) {
 }
 
 function noOpenPL(json) {
-    if(json.playlist_error == true){
-        alertPlaylistErrorAndReload();
-    }
+    
 	$("#side_playlist")
 		.empty()
-		.append(json.html);
+		.append(json.html)
+		.data("id", null);
 
 	$("#spl_new")
 		.button()
@@ -317,9 +306,9 @@ function newSPL() {
 	var url;
 
 	stopAudioPreview();
-	url = '/Playlist/new/format/json';
+	url = '/Playlist/new';
 
-	$.post(url, function(json){
+	$.post(url, {format: "json"}, function(json){
 		openDiffSPL(json);
 		
 		//redraw the library list
@@ -328,16 +317,16 @@ function newSPL() {
 }
 
 function deleteSPL() {
-	var url;
+	var url, id;
 	
 	stopAudioPreview();
 	
+	id = $("#side_playlist").data("id");
+	
 	url = '/Playlist/delete';
 
-	$.post(url, {"format": "json", "active": true}, function(json){
-	    if(json.playlist_error == true){
-            alertPlaylistErrorAndReload();
-        }
+	$.post(url, {format: "json", ids: id}, function(json){
+	   
 		noOpenPL(json);
 		//redraw the library list
 		redrawDataTablePage();
@@ -346,15 +335,11 @@ function deleteSPL() {
 
 function openDiffSPL(json) {
 	
-    if(json.playlist_error == true){
-        alertPlaylistErrorAndReload();
-    }
 	$("#side_playlist")
 		.empty()
 		.append(json.html)
-		.data("id", json.pl_id);
+		.data("id", json.id);
 
-	currentlyOpenedSplId = json.pl_id;
 	setUpSPL();
 }
 
@@ -386,12 +371,102 @@ function editName() {
 }
 
 function setUpSPL() {
+	
+	var sortableConf = (function(){
+		var origRow,
+			iItem,
+			iAfter,
+			setSPLContent,
+			fnAdd,
+			fnMove,
+			fnReceive,
+			fnUpdate;
+		
+		function redrawDataTablePage() {
+		    var dt;
+		    dt = $("#library_display").dataTable();
+		    dt.fnStandingRedraw();
+		}
+		
+		setSPLContent = function(json) {
 
-    $("#spl_sortable").sortable({
-        handle: 'div.list-item-container'
-    });
-    $("#spl_sortable" ).bind( "sortstop", moveSPLItem);
+			$('#spl_name > a')
+				.empty()
+				.append(json.name);
+			$('#spl_length')
+				.empty()
+				.append(json.length);
+		    $('#fieldset-metadate_change textarea')
+		        .empty()
+		        .val(json.description);
+			$('#spl_sortable')
+				.empty()
+				.append(json.html);
+
+			//redraw the library list
+			redrawDataTablePage();
+		}
+		
+		fnAdd = function() {
+			
+			$.post("/playlist/add-items", 
+				{format: "json", "ids": iItem, "afterItem": iAfter}, 
+				function(json){
+					setSPLContent(json);
+				});
+		};
+		
+		fnMove = function() {
+			
+			$.post("/showbuilder/schedule-move", 
+				{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
+				function(json){
+					oTable.fnDraw();
+				});
+		};
+		
+		fnReceive = function(event, ui) {
+			origRow = ui.item;
+		};
+		
+		fnUpdate = function(event, ui) {
+			var prev;
+			
+			prev = ui.item.prev();
+			if (prev.hasClass("spl_empty") || prev.length === 0) {
+				iAfter = null;
+			}
+			else {
+				iAfter = prev.attr("id").split("_").pop();
+			}
+			
+			//item was dragged in from library datatable
+			if (origRow !== undefined) {
+				iItem = origRow.data("aData").id;
+				origRow = undefined;
+				fnAdd();
+			}
+			//item was reordered.
+			else {
+				oItemData = ui.item.data("aData");
+				fnMove();
+			}
+		};
+		
+		return {
+			items: 'li',
+			placeholder: "placeholder lib-placeholder ui-state-highlight",
+			forcePlaceholderSize: true,
+			handle: 'div.list-item-container',
+			receive: fnReceive,
+			update: fnUpdate
+		};
+	}());
+
+    $("#spl_sortable").sortable(sortableConf);
+    
 	$("#spl_remove_selected").click(deleteSPLItem);
+	
 	$("#spl_new")
 		.button()
 		.click(newSPL);
@@ -536,10 +611,6 @@ function setUpSPL() {
 	$("#spl_delete")
 		.button()
 		.click(deleteSPL);
-		
-
-	$("#spl_sortable").droppable();
-	$("#spl_sortable" ).bind( "drop", addSPLItem);
 }
 
 //sets events dynamically for playlist entries (each row in the playlist)
@@ -579,15 +650,7 @@ function setFadeEvents(el) {
     		"keydown": submitOnEnter});
 }
 
-// Alert the error and reload the page
-// this function is used to resolve concurrency issue
-function alertPlaylistErrorAndReload(){
-    alert("The playlist doesn't exist anymore!");
-    window.location.reload();
-}
-
 $(document).ready(function() {
-	var currentlyOpenedSplId;
 	var playlist = $("#side_playlist");
 	
 	setUpSPL(playlist);

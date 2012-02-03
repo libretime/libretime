@@ -1,6 +1,7 @@
 function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 
     $(nRow).attr("id", aData["tr_id"]);
+    $(nRow).data("aData", aData);
     
 	$(nRow).find('td')
 		.jjmenu("rightClick",
@@ -12,8 +13,19 @@ function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFul
 function fnLibraryTableDrawCallback() {
 	
 	$('#library_display tr[id ^= "au"]').draggable({
-		helper: 'clone',
-		cursor: 'pointer'
+		//helper: 'clone',
+		helper: function(ev, el) {
+			var data, li;
+			
+			data = $(ev.currentTarget).data("aData");
+			
+			li = $("<li></li>");
+			li.append(data.track_title);
+			
+			return li;
+		},
+		cursor: 'pointer',
+		connectToSortable: '#spl_sortable'
 	});
 }
 

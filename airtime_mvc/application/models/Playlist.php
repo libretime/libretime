@@ -55,20 +55,25 @@ class Application_Model_Playlist {
         if (isset($id)) {
             $this->pl = CcPlaylistQuery::create()->findPK($id);
 
-            if (is_null($this->_pl)){
-                throw new Exception();
+            if (is_null($this->pl)){
+                throw new PlaylistNotFoundException();
             }
         }
         else {
             $this->pl = new CcPlaylist();
+            $this->pl->setDbState('ready');
             $this->pl->setDbUtime(new DateTime("now"), new DateTimeZone("UTC"));
+            $this->pl->save();
         }
 
-        $this->plItem["fadein"] = Application_Model_Preference::GetDefaultFade();
-        $this->plItem["fadeout"] = Application_Model_Preference::GetDefaultFade();
+        $defaultFade = Application_Model_Preference::GetDefaultFade();
+        if ($defaultFade !== "") {
+            $this->plItem["fadein"] = $defaultFade;
+            $this->plItem["fadeout"] = $defaultFade;
+        }
 
-        $this->id = $this->pl->getDbId();
         $this->con = isset($con) ? $con : Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
+        $this->id = $this->pl->getDbId();
     }
 
     /**
@@ -124,6 +129,9 @@ class Application_Model_Playlist {
      * @return array
      */
     public function getContents() {
+
+        Logging::log("Getting contents for playlist {$this->id}");
+
         $files = array();
         $rows = CcPlaylistcontentsQuery::create()
             ->joinWith('CcFiles')
@@ -181,12 +189,13 @@ class Application_Model_Playlist {
      */
     private function buildEntry($p_item, $pos)
     {
-        $file = CcFilesQuery::create()->findPK($p_item["id"], $this->con);
+        $file = CcFilesQuery::create()->findPK($p_item, $this->con);
 
         $entry = $this->plItem;
         $entry["id"] = $file->getDbId();
         $entry["pos"] = $pos;
         $entry["cliplength"] = $file->getDbLength();
+        $entry["cueout"] = $file->getDbLength();
 
         return $entry;
     }
@@ -204,35 +213,44 @@ class Application_Model_Playlist {
 
         try {
 
-            if (isset($p_afterItem)) {
+            if (is_numeric($p_afterItem)) {
+                Logging::log("Finding playlist content item {$p_afterItem}");
+
                 $afterItem = CcPlaylistcontentsQuery::create()->findPK($p_afterItem);
+                $pos = $afterItem->getDbPosition() + 1;
 
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
                     ->filterByDbPlaylistId($this->id)
+                    ->filterByDbPosition($pos-1, Criteria::GREATER_THAN)
                     ->orderByDbPosition()
                     ->find($this->con);
 
-                $pos = $afterItem->getDbPosition() + 1;
+                Logging::log("Adding to playlist");
+                Logging::log("at position {$pos}");
             }
             else {
+
                 $pos = $this->getSize();
+                Logging::log("Adding to end of playlist");
+                Logging::log("at position {$pos}");
             }
 
             foreach($p_items as $ac) {
+                Logging::log("Adding audio file {$ac}");
 
-                $res = $this->insertPlaylistElement($this->buildEntry($ac), $pos);
+                $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
                 $pos = $pos + 1;
             }
 
             //reset the positions of the remaining items.
             for ($i = 0; $i < count($contentsToUpdate); $i++) {
-                $contents[$i]->setDbPosition($pos);
-                $contents[$i]->save($this->con);
+                $contentsToUpdate[$i]->setDbPosition($pos);
+                $contentsToUpdate[$i]->save($this->con);
                 $pos = $pos + 1;
             }
 
-            $pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
-            $pl->save($this->con);
+            $this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+            $this->pl->save($this->con);
 
             $this->con->commit();
         }
@@ -245,12 +263,12 @@ class Application_Model_Playlist {
     /**
      * Move audioClip to the new position in the playlist
      *
-     * @param array $selectedItems
+     * @param array $p_items
      *      array of unique ids of the selected items
-     * @param int $afterItem
+     * @param int $p_afterItem
      *      unique id of the item to move the clip after
      */
-    public function moveAudioClip($selectedItems, $afterItem)
+    public function moveAudioClips($p_items, $p_afterItem=NULL)
     {
         $this->con->beginTransaction();
 
@@ -533,7 +551,6 @@ class Application_Model_Playlist {
     public function getAllPLMetaData()
     {
         $categories = $this->categories;
-        $row = CcPlaylistQuery::create()->findPK($this->id);
         $md = array();
 
         foreach($categories as $key => $val) {
@@ -543,7 +560,7 @@ class Application_Model_Playlist {
             }
 
             $method = 'get' . $val;
-            $md[$key] = $row->$method();
+            $md[$key] = $this->pl->$method();
         }
 
         return $md;
@@ -557,21 +574,17 @@ class Application_Model_Playlist {
             return $this->getLength();
         }
 
-        $row = CcPlaylistQuery::create()->findPK($this->id);
         $method = 'get' . $cat;
-        return $row->$method();
+        return $this->pl->$method();
     }
 
     public function setPLMetaData($category, $value)
     {
         $cat = $this->categories[$category];
 
-        $row = CcPlaylistQuery::create()->findPK($this->id);
         $method = 'set' . $cat;
-        $row->$method($value);
-        $row->save();
-
-        return TRUE;
+        $this->pl->$method($value);
+        $this->pl->save($this->con);
     }
 
 
@@ -639,4 +652,16 @@ class Application_Model_Playlist {
         CcPlaylistcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
     }
 
+    /**
+     * Delete playlists that match the ids..
+     * @param array $p_ids
+     */
+    public static function DeletePlaylists($p_ids)
+    {
+        CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+    }
+
 } // class Playlist
+
+class PlaylistNotFoundException extends Exception {}
+class OutDatedException extends Exception {}

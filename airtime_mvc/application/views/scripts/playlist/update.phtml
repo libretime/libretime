@@ -4,7 +4,7 @@ if (count($items)) : ?>
 
 <?php $i = 0; ?>
 <?php foreach($items as $item) : ?>
-    <li class="ui-state-default" id="spl_<?php echo $i ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$i; ?>">
+    <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$i; ?>">
         <div class="list-item-container">
             <a href="javascript:void(0);" class="big_play"
             onclick="audioPreview('<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["filepath"], PATHINFO_EXTENSION);?>',
