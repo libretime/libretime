@@ -332,9 +332,9 @@ function deleteSPL() {
 	
 	stopAudioPreview();
 	
-	url = '/Playlist/delete-active/format/json';
+	url = '/Playlist/delete';
 
-	$.post(url, function(json){
+	$.post(url, {"format": "json", "active": true}, function(json){
 	    if(json.playlist_error == true){
             alertPlaylistErrorAndReload();
         }
@@ -351,7 +351,8 @@ function openDiffSPL(json) {
     }
 	$("#side_playlist")
 		.empty()
-		.append(json.html);
+		.append(json.html)
+		.data("id", json.pl_id);
 
 	currentlyOpenedSplId = json.pl_id;
 	setUpSPL();

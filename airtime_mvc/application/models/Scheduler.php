@@ -83,6 +83,7 @@ class Application_Model_Scheduler {
                 $id = intval($schedule["id"]);
 
                 Logging::log("scheduling after scheduled item: ".$id);
+                Logging::log("in show: ".intval($schedule["instance"]));
 
                 if ($id !== 0) {
                     $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);

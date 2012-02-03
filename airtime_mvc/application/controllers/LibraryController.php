@@ -135,43 +135,6 @@ class LibraryController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        $id = $this->_getParam('id');
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-
-        if ($user->isAdmin()) {
-
-            if (!is_null($id)) {
-                $file = Application_Model_StoredFile::Recall($id);
-
-                if (PEAR::isError($file)) {
-                    $this->view->message = $file->getMessage();
-                    return;
-                }
-                else if(is_null($file)) {
-                    $this->view->message = "file doesn't exist";
-                    return;
-                }
-
-                $res = $file->delete();
-
-                if (PEAR::isError($res)) {
-                    $this->view->message = $res->getMessage();
-                    return;
-                }
-                else {
-                    $res = settype($res, "integer");
-                    $data = array("filepath" => $file->getFilePath(), "delete" => $res);
-                    Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
-                }
-            }
-
-            $this->view->id = $id;
-        }
-    }
-
-    public function deleteGroupAction()
-    {
         $ids = $this->_getParam('ids');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);

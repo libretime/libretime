@@ -73,7 +73,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         //scripts for now playing bar
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js','text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js','text/javascript');
+        //$view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js','text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js','text/javascript');
@@ -132,16 +132,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'controller' => 'auth',
                 'action' => 'password-change',
             )));
-
-        /*
-        $router->addRoute(
-            'show-builder',
-            new Zend_Controller_Router_Route('show/builder/:show_instance_id/:user_id', array(
-                'module' => 'default',
-                'controller' => 'showbuilder',
-                'action' => 'index',
-            )));
-        */
     }
 }
 
