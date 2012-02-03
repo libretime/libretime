@@ -163,23 +163,24 @@ class PlaylistController extends Zend_Controller_Action
     public function moveItemAction()
     {
         $oldPos = $this->_getParam('oldPos');
-		$newPos = $this->_getParam('newPos');
-
-		$pl = $this->getPlaylist();
+	$newPos = $this->_getParam('newPos');
+	
+	
+	$pl = $this->getPlaylist();
         if($pl === false){
             $this->view->playlist_error = true;
             return false;
         }
 
-		$pl->moveAudioClip($oldPos, $newPos);
+	$pl->moveAudioClip($oldPos, $newPos);
 
-		$this->view->pl = $pl;
-		$this->view->html = $this->view->render('playlist/update.phtml');
-		$this->view->name = $pl->getName();
-		$this->view->length = $pl->getLength();
+	$this->view->pl = $pl;
+	$this->view->html = $this->view->render('playlist/update.phtml');
+	$this->view->name = $pl->getName();
+	$this->view->length = $pl->getLength();
         $this->view->description = $pl->getDescription();
 
-		unset($this->view->pl);
+	unset($this->view->pl);
     }
 
     public function deleteItemAction()
@@ -294,19 +295,19 @@ class PlaylistController extends Zend_Controller_Action
 
     public function setFadeAction()
     {
-		$pos = $this->_getParam('pos');
-		$pl = $this->getPlaylist();
+	$pos = $this->_getParam('pos');
+	$pl = $this->getPlaylist();
+	
         if($pl === false){
             $this->view->playlist_error = true;
             return false;
         }
 
-		$fadeIn = $this->_getParam('fadeIn', null);
-		$fadeOut = $this->_getParam('fadeOut', null);
-
-		$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
-
-		$this->view->response = $response;
+        $fadeIn = $this->_getParam('fadeIn', null);
+        $fadeOut = $this->_getParam('fadeOut', null);
+		
+        $response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
+        $this->view->response = $response;
 
         if(!isset($response["error"])) {
             $this->view->pl = $pl;
@@ -369,33 +370,39 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->html = $this->view->render('playlist/index.phtml');
     }
 
+    /**
+     * The playlist fades are stored in the elements themselves.
+     * The fade in is set to the first elements fade in and
+     * the fade out is set to the last elments fade out.
+     **/
     public function setPlaylistFadesAction()
     {
         $request = $this->getRequest();
-		$pl = $this->getPlaylist();
+	$pl = $this->getPlaylist();
         if($pl === false){
             $this->view->playlist_error = true;
             return false;
         }
 
-		if($request->isPost()) {
-			$fadeIn = $this->_getParam('fadeIn', null);
-			$fadeOut = $this->_getParam('fadeOut', null);
+	if($request->isPost()) {
+	    $fadeIn = $this->_getParam('fadeIn', null);
+	    $fadeOut = $this->_getParam('fadeOut', null);
 
             if($fadeIn)
-			    $response = $pl->changeFadeInfo(0, $fadeIn, $fadeOut);
+		$response = $pl->changeFadeInfo(0, $fadeIn, $fadeOut);
             else if($fadeOut)
                  $response = $pl->changeFadeInfo($pl->getSize(), $fadeIn, $fadeOut);
 
-			$this->view->response = $response;
-			return;
-		}
+	    $this->view->response = $response;   
 
-		$fades = $pl->getFadeInfo(0);
-		$this->view->fadeIn = $fades[0];
+	    return;
+	}
 
-		$fades = $pl->getFadeInfo($pl->getSize());
-		$this->view->fadeOut = $fades[1];
+	$fades = $pl->getFadeInfo(0);
+	$this->view->fadeIn = $fades[0];
+
+	$fades = $pl->getFadeInfo($pl->getSize());
+	$this->view->fadeOut = $fades[1];
     }
 
     public function setPlaylistNameAction()

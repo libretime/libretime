@@ -219,7 +219,6 @@ class Application_Model_Playlist {
 
     	if($pl === NULL)
     	    return FALSE;
-
     	$pl->setDbDescription($p_description);
     	$pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
     	$pl->save();
@@ -428,18 +427,20 @@ class Application_Model_Playlist {
     * will normalize the fade so that it looks like 00.000000 to the user.
     **/
     public function normalizeFade($fade) {
-          //First get rid of the first six characters 00:00: which will be added back later for db update
-          $fade = substr($fade, 6);
+      
+      //First get rid of the first six characters 00:00: which will be added back later for db update
+      $fade = substr($fade, 6);
 
-          //Second add .000000 if the fade does't have milliseconds format already
-          $dbFadeStrPos = strpos( $fade, '.' );
-          if ( $dbFadeStrPos === False )
-             $fade .= '.000000';
-          else
-             while( strlen( $fade ) < 9 )
-                 $fade .= '0';
-          //done, just need to set back the formated values
-          return $fade;
+      //Second add .000000 if the fade does't have milliseconds format already
+      $dbFadeStrPos = strpos( $fade, '.' );
+      if ( $dbFadeStrPos === False )
+         $fade .= '.000000';
+      else
+         while( strlen( $fade ) < 9 )
+            $fade .= '0';
+      
+      //done, just need to set back the formated values
+      return $fade;
     }
 
     public function getLength() {
@@ -610,7 +611,7 @@ class Application_Model_Playlist {
      */
     public function moveAudioClip($oldPos, $newPos)
     {
-        if($newPos < 0 || $newPos >= $this->getNextPos() || $oldPos < 0 || $oldPos >= $this->getNextPos())
+        if($newPos < 0 || $newPos >= $this->getNextPos() || $oldPos < 0 || $oldPos >= $this->getNextPos() || $oldPos === $newPos)
             return FALSE;
 
         $row = $this->delAudioClip($oldPos);
@@ -630,21 +631,17 @@ class Application_Model_Playlist {
 
 	public function getFadeInfo($pos) {
 
-		$row = CcPlaylistcontentsQuery::create()
+	  $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
             ->findOne();
 
-        $fadeIn = $row->getDbFadein();
-        $fadeOut = $row->getDbFadeout();
-
             #For issue CC-2065, fade in and out values are for the Playlist itself and must be
             #modified from the db default format of 00:00:00 to the more practical
             #00.000000 format which is for only seconds.
-            $fadeIn = $this->normalizeFade($fadeIn);
-            $fadeOut = $this->normalizeFade($fadeOut);
-
+            $fadeIn = $this->normalizeFade($row->getDbFadein());
+            $fadeOut = $this->normalizeFade($row->getDbFadeout());
             return array($fadeIn, $fadeOut);
 	}
 
@@ -661,9 +658,11 @@ class Application_Model_Playlist {
      */
     public function changeFadeInfo($pos, $fadeIn, $fadeOut)
     {
-        #See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
-        $fadeIn = '00:00:'.$fadeIn;
-        $fadeOut = '00:00:'.$fadeOut;
+        //See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
+        //For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
+	//setting it to nonNull for checks down below
+        $fadeIn = $fadeIn?'00:00:'.$fadeIn:$fadeIn;
+        $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
 
         $errArray= array();
 		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
