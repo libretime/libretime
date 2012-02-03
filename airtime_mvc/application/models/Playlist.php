@@ -54,6 +54,10 @@ class Application_Model_Playlist {
     {
         if (isset($id)) {
             $this->pl = CcPlaylistQuery::create()->findPK($id);
+
+            if (is_null($this->_pl)){
+                throw new Exception();
+            }
         }
         else {
             $this->pl = new CcPlaylist();
@@ -206,7 +210,7 @@ class Application_Model_Playlist {
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
                     ->filterByDbPlaylistId($this->id)
                     ->orderByDbPosition()
-                    ->find();
+                    ->find($this->con);
 
                 $pos = $afterItem->getDbPosition() + 1;
             }
@@ -279,12 +283,12 @@ class Application_Model_Playlist {
 
             CcPlaylistcontentsQuery::create()
                 ->findPKs($p_items)
-                ->delete();
+                ->delete($this->con);
 
             $contents = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->orderByDbPosition()
-                ->find();
+                ->find($this->con);
 
             //reset the positions of the remaining items.
             for ($i = 0; $i < count($contents); $i++) {
