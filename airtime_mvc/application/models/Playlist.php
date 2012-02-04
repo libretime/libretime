@@ -119,7 +119,11 @@ class Application_Model_Playlist {
         return $this->pl->getDbDescription();
     }
 
-     public function getSize() {
+    public function getLastModified($format = null) {
+        return $this->pl->getDbMtime($format);
+    }
+
+    public function getSize() {
 
         return $this->pl->countCcPlaylistcontentss();
     }
@@ -273,6 +277,55 @@ class Application_Model_Playlist {
         $this->con->beginTransaction();
 
         try {
+
+            $contentsToMove = CcPlaylistcontentsQuery::create()
+                    ->filterByDbId($p_items, Criteria::IN)
+                    ->orderByDbPosition()
+                    ->find($this->con);
+
+            $otherContent = CcPlaylistcontentsQuery::create()
+                    ->filterByDbId($p_items, Criteria::NOT_IN)
+                    ->filterByDbPlaylistId($this->id)
+                    ->orderByDbPosition()
+                    ->find($this->con);
+
+            $pos = 0;
+            //moving items to beginning of the playlist.
+            if (is_null($p_afterItem)) {
+                Logging::log("moving items to beginning of playlist");
+
+                foreach ($contentsToMove as $item) {
+                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    $item->setDbPosition($pos);
+                    $item->save($this->con);
+                    $pos = $pos + 1;
+                }
+                foreach ($otherContent as $item) {
+                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    $item->setDbPosition($pos);
+                    $item->save($this->con);
+                    $pos = $pos + 1;
+                }
+            }
+            else {
+                Logging::log("moving items after {$p_afterItem}");
+
+                foreach ($otherContent as $item) {
+                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    $item->setDbPosition($pos);
+                    $item->save($this->con);
+                    $pos = $pos + 1;
+
+                    if ($item->getDbId() == $p_afterItem) {
+                        foreach ($contentsToMove as $move) {
+                            Logging::log("item {$move->getDbId()} to pos {$pos}");
+                            $move->setDbPosition($pos);
+                            $move->save($this->con);
+                            $pos = $pos + 1;
+                        }
+                    }
+                }
+            }
 
             $this->con->commit();
         }

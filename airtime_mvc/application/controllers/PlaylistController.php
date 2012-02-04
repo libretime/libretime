@@ -8,8 +8,8 @@ class PlaylistController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('add-items', 'json')
-                    ->addActionContext('move-item', 'json')
-                    ->addActionContext('delete-item', 'json')
+                    ->addActionContext('move-items', 'json')
+                    ->addActionContext('delete-items', 'json')
                     ->addActionContext('set-fade', 'json')
                     ->addActionContext('set-cue', 'json')
                     ->addActionContext('new', 'json')
@@ -165,7 +165,7 @@ class PlaylistController extends Zend_Controller_Action
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
     	$afterItem = $this->_getParam('afterItem', null);
-
+    	//$afterItem =  (!is_numeric($afterItem)) ? null : intval($afterItem);
 
         try {
             $pl = $this->getPlaylist();
@@ -184,11 +184,12 @@ class PlaylistController extends Zend_Controller_Action
 	    $this->createUpdateResponse($pl);
     }
 
-    public function moveItemAction()
+    public function moveItemsAction()
     {
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
+        //$afterItem =  (!is_numeric($afterItem)) ? null : intval($afterItem);
 
         try {
             $pl = $this->getPlaylist();

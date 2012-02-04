@@ -2,10 +2,123 @@
 //Side Playlist Functions
 //--------------------------------------------------------------------------------------------------------------------------------
 
-function stopAudioPreview() {
-	// stop any preview playing
-	$('#jquery_jplayer_1').jPlayer('stop');
-}
+var AIRTIME = (function(AIRTIME){
+	AIRTIME.playlist = {};
+	var mod = AIRTIME.playlist;
+	
+	function stopAudioPreview() {
+		// stop any preview playing
+		$('#jquery_jplayer_1').jPlayer('stop');
+	}
+	
+	function highlightActive(el) {
+
+		$(el).addClass("ui-state-active");
+	}
+
+	function unHighlightActive(el) {
+
+		$(el).removeClass("ui-state-active");
+	}
+		
+	function redrawLib() {
+	    var dt;
+	    dt = $("#library_display").dataTable();
+	    dt.fnStandingRedraw();
+	}
+	
+	function setPlaylistContent(json) {
+
+		$('#spl_name > a')
+			.empty()
+			.append(json.name);
+		$('#spl_length')
+			.empty()
+			.append(json.length);
+	    $('#fieldset-metadate_change textarea')
+	        .empty()
+	        .val(json.description);
+		$('#spl_sortable')
+			.empty()
+			.append(json.html);
+
+		redrawLib();
+	}
+	
+	function getId() {
+		return parseInt($("#pl_id").val(), 10);
+	}
+	
+	function getModified() {
+		return parseInt($("#pl_lastMod").val(), 10);
+	}
+	
+	function openPlaylist(json) {
+		
+		$("#side_playlist")
+			.empty()
+			.append(json.html);
+	}
+	
+	mod.fnNew = function() {
+		var url;
+
+		stopAudioPreview();
+		url = '/Playlist/new';
+
+		$.post(url, {format: "json"}, function(json){
+			openPlaylist(json);
+			redrawLib();
+		});
+	}
+	
+	mod.fnDelete = function() {
+		var url, id, lastMod;
+		
+		stopAudioPreview();	
+		id = getId();
+		lastMod = getModified(); 
+		url = '/Playlist/delete';
+
+		$.post(url, 
+			{format: "json", ids: id, modified: lastMod}, 
+			function(json){
+				openPlaylist(json);
+				redrawLib();
+		});
+	}
+	
+	mod.fnAddItems = function(aItem, iAfter) {
+		
+		$.post("/playlist/add-items", 
+			{format: "json", "ids": aItem, "afterItem": iAfter}, 
+			function(json){
+				setPlaylistContent(json);
+			});
+	};
+	
+	mod.fnMoveItems = function(aIds, iAfter) {
+		
+		$.post("/playlist/move-items", 
+			{format: "json", "ids": aIds, "afterItem": iAfter}, 
+			function(json){
+				setPlaylistContent(json);
+			});
+	};
+	
+	mod.fnDeleteItems = function(aItems) {
+		
+		$.post("/playlist/delete-items", 
+			{format: "json", "ids": aItems}, 
+			function(json){
+				setPlaylistContent(json);
+			});
+	};
+	
+	return AIRTIME;
+	
+}(AIRTIME || {}));
+
 
 function isTimeValid(time) {
 	var regExpr = new RegExp("^\\d{2}[:]\\d{2}[:]\\d{2}([.]\\d{1,6})?$");
@@ -167,16 +280,6 @@ function submitOnEnter(event) {
 	}
 }
 
-function highlightActive(el) {
-
-	$(el).addClass("ui-state-active");
-}
-
-function unHighlightActive(el) {
-
-	$(el).removeClass("ui-state-active");
-}
-
 function openFadeEditor(event) {
 	var pos, url, li;
 	
@@ -212,137 +315,6 @@ function openCueEditor(event) {
 	}
 }
 
-function redrawDataTablePage() {
-    var dt;
-    dt = $("#library_display").dataTable();
-    dt.fnStandingRedraw();
-}
-
-function setSPLContent(json) {
-
-	$('#spl_name > a')
-		.empty()
-		.append(json.name);
-	$('#spl_length')
-		.empty()
-		.append(json.length);
-    $('#fieldset-metadate_change textarea')
-        .empty()
-        .val(json.description);
-	$('#spl_sortable')
-		.empty()
-		.append(json.html);
-
-	//redraw the library list
-	redrawDataTablePage();
-}
-
-function addSPLItem(event, ui){
-	var url, tr, id, items, draggableOffset, elOffset, pos;
-
-	tr = ui.helper;
-
-	if(tr.get(0).tagName === 'LI')
-		return;
-
-	items = $(event.currentTarget).children();
-
-	draggableOffset = ui.offset;
-
-	$.each(items, function(i, val){
-		elOffset = $(this).offset();
-
-		if(elOffset.top > draggableOffset.top) {
-			pos = $(this).attr('id').split("_").pop();
-			return false;
-		}
-	});
-
-	id = tr.attr('id').split("_").pop();
-
-	url = '/Playlist/add-item';
-
-	$.post(url, {format: "json", id: id, pos: pos}, setSPLContent);
-}
-
-function deleteSPLItem(event){
-    event.stopPropagation(); 
-    stopAudioPreview();
-
-	var url, pos;
-
-	pos = $(this).parent().parent().attr("id").split("_").pop();
-	url = '/Playlist/delete-item';
-
-	$.post(url, {format: "json", pos: pos}, setSPLContent);
-}
-
-function moveSPLItem(event, ui) {
-	var li, newPos, oldPos, url;
-
-	li = ui.item;
-
-    newPos = li.index();
-    oldPos = li.attr('id').split("_").pop();
-
-	url = '/Playlist/move-item';
-
-	$.post(url, {format: "json", oldPos: oldPos, newPos: newPos}, setSPLContent);
-}
-
-function noOpenPL(json) {
-    
-	$("#side_playlist")
-		.empty()
-		.append(json.html)
-		.data("id", null);
-
-	$("#spl_new")
-		.button()
-		.click(newSPL);
-}
-
-function newSPL() {
-	var url;
-
-	stopAudioPreview();
-	url = '/Playlist/new';
-
-	$.post(url, {format: "json"}, function(json){
-		openDiffSPL(json);
-		
-		//redraw the library list
-		redrawDataTablePage();
-	});
-}
-
-function deleteSPL() {
-	var url, id;
-	
-	stopAudioPreview();
-	
-	id = $("#side_playlist").data("id");
-	
-	url = '/Playlist/delete';
-
-	$.post(url, {format: "json", ids: id}, function(json){
-	   
-		noOpenPL(json);
-		//redraw the library list
-		redrawDataTablePage();
-	});
-}
-
-function openDiffSPL(json) {
-	
-	$("#side_playlist")
-		.empty()
-		.append(json.html)
-		.data("id", json.id);
-
-	setUpSPL();
-}
-
 function editName() {
     var nameElement = $(this);
     var playlistName = nameElement.text();
@@ -370,86 +342,249 @@ function editName() {
         .focus();
 }
 
-function setUpSPL() {
+
+
+$(document).ready(function() {
+	var playlist = $("#side_playlist"),
+		sortableConf;
 	
-	var sortableConf = (function(){
+	function setUpSPL() {
+		
+		/*
+	    $("#spl_crossfade").on("click", function(){
+
+	        if ($(this).hasClass("ui-state-active")) {
+	            $(this).removeClass("ui-state-active");
+	            $("#crossfade_main").hide();
+	        }
+	        else {
+	            $(this).addClass("ui-state-active");
+
+	            var url = '/Playlist/set-playlist-fades';
+
+		        $.get(url, {format: "json"}, function(json){
+		            if(json.playlist_error == true){
+	                    alertPlaylistErrorAndReload();
+	                }
+	                $("#spl_fade_in_main").find("span")
+	                    .empty()
+	                    .append(json.fadeIn);
+	                $("#spl_fade_out_main").find("span")
+	                    .empty()
+	                    .append(json.fadeOut);
+
+	                $("#crossfade_main").show();
+	            });
+	        }
+	    });
+
+	    $("#playlist_name_display").on("click", editName);
+	    
+	    $("#fieldset-metadate_change > legend").on("click", function(){
+	        var descriptionElement = $(this).parent();
+
+	        if(descriptionElement.hasClass("closed")) {
+	            descriptionElement.removeClass("closed");
+	        }
+	        else {
+	            descriptionElement.addClass("closed");
+	        }
+	    });
+
+	    $("#description_save").on("click", function(){
+	        var textarea = $("#fieldset-metadate_change textarea"),
+	        	description = textarea.val(),
+	        	url;
+	        
+	        url = '/Playlist/set-playlist-description';
+
+	        $.post(url, {format: "json", description: description}, function(json){
+	            if(json.playlist_error == true){
+	                alertPlaylistErrorAndReload();
+	            }
+	            else{
+	                textarea.val(json.playlistDescription);
+	            }
+	            
+	            $("#fieldset-metadate_change").addClass("closed");
+	            
+	            // update the "Last Modified" time for this playlist
+	            redrawDataTablePage();
+	        });
+	    });
+
+	    $("#description_cancel").on("click", function(){
+	        var textarea = $("#fieldset-metadate_change textarea"),
+	        	url;
+	        
+	        url = '/Playlist/set-playlist-description';
+
+	        $.post(url, {format: "json"}, function(json){
+	            if(json.playlist_error == true){
+	                alertPlaylistErrorAndReload();
+	            }
+	            else{
+	                textarea.val(json.playlistDescription);
+	            }
+	            
+	            $("#fieldset-metadate_change").addClass("closed");
+	        });
+	    });
+
+	    $("#spl_fade_in_main span:first").on("blur", function(event){
+	        event.stopPropagation();
+
+		    var url, fadeIn, span;
+
+		    span = $(this);
+		    url = "/Playlist/set-playlist-fades";
+		    fadeIn = $.trim(span.text());
+
+		    if (!isTimeValid(fadeIn)){
+	            showError(span, "please put in a time '00:00:00 (.000000)'");
+			    return;
+		    }
+
+		    $.post(url, {format: "json", fadeIn: fadeIn}, function(json){
+		        if(json.playlist_error == true){
+	                alertPlaylistErrorAndReload();
+	            }
+			    if(json.response.error) {
+				    return;
+			    }
+
+	             hideError(span);
+		    });
+	    });
+
+	    $("#spl_fade_out_main span:first").on("blur", function(event){
+	        event.stopPropagation();
+
+		    var url, fadeIn, span;
+
+		    span = $(this);
+		    url = "/Playlist/set-playlist-fades";
+		    fadeOut = $.trim(span.text());
+
+		    if(!isTimeValid(fadeOut)){
+	            showError(span, "please put in a time '00:00:00 (.000000)'");
+			    return;
+		    }
+
+		    $.post(url, {format: "json", fadeOut: fadeOut}, function(json){
+		        if(json.playlist_error == true){
+	                alertPlaylistErrorAndReload();
+	            }
+			    if(json.response.error) {
+				    return;
+			    }
+
+	             hideError(span);
+		    });
+	    });
+
+	    $("#spl_fade_in_main span:first, #spl_fade_out_main span:first")
+	        .on("keydown", submitOnEnter);
+
+	    $("#crossfade_main > .ui-icon-closethick").on("click", function(){
+	        $("#spl_crossfade").removeClass("ui-state-active");
+	        $("#crossfade_main").hide();
+	    });
+	    */
+
+	}
+
+	function setPlaylistButtonEvents(el) {
+		
+		$(el).delegate("#spl_new", 
+	    		{"click": AIRTIME.playlist.fnNew});
+	
+		$(el).delegate("#spl_delete", 
+	    		{"click": AIRTIME.playlist.fnDelete});
+	}
+	
+	//sets events dynamically for playlist entries (each row in the playlist)
+	function setPlaylistEntryEvents(el) {
+		
+		$(el).delegate("#spl_sortable .ui-icon-closethick", 
+				{"click": function(ev){
+					var id;
+					id = parseInt($(this).attr("id").split("_").pop(), 10);
+					AIRTIME.playlist.fnDeleteItems([id]);
+				}});
+		
+		/*
+		$(el).delegate(".spl_fade_control", 
+	    		{"click": openFadeEditor});
+		
+		$(el).delegate(".spl_cue", 
+				{"click": openCueEditor});
+		*/
+	}
+	
+	//sets events dynamically for the cue editor.
+	function setCueEvents(el) {
+	
+	    $(el).delegate(".spl_cue_in span", 
+	    		{"focusout": changeCueIn, 
+	    		"keydown": submitOnEnter});
+	    
+	    $(el).delegate(".spl_cue_out span", 
+	    		{"focusout": changeCueOut, 
+	    		"keydown": submitOnEnter});
+	}
+	
+	//sets events dynamically for the fade editor.
+	function setFadeEvents(el) {
+	
+	    $(el).delegate(".spl_fade_in span", 
+	    		{"focusout": changeFadeIn, 
+	    		"keydown": submitOnEnter});
+	    
+	    $(el).delegate(".spl_fade_out span", 
+	    		{"focusout": changeFadeOut, 
+	    		"keydown": submitOnEnter});
+	}
+
+
+	
+	setPlaylistButtonEvents(playlist);
+	setPlaylistEntryEvents(playlist);
+	//setCueEvents(playlist);
+	//setFadeEvents(playlist);
+	
+	sortableConf = (function(){
 		var origRow,
-			iItem,
-			iAfter,
-			setSPLContent,
-			fnAdd,
-			fnMove,
 			fnReceive,
-			fnUpdate;
-		
-		function redrawDataTablePage() {
-		    var dt;
-		    dt = $("#library_display").dataTable();
-		    dt.fnStandingRedraw();
-		}
-		
-		setSPLContent = function(json) {
-
-			$('#spl_name > a')
-				.empty()
-				.append(json.name);
-			$('#spl_length')
-				.empty()
-				.append(json.length);
-		    $('#fieldset-metadate_change textarea')
-		        .empty()
-		        .val(json.description);
-			$('#spl_sortable')
-				.empty()
-				.append(json.html);
-
-			//redraw the library list
-			redrawDataTablePage();
-		}
-		
-		fnAdd = function() {
-			
-			$.post("/playlist/add-items", 
-				{format: "json", "ids": iItem, "afterItem": iAfter}, 
-				function(json){
-					setSPLContent(json);
-				});
-		};
-		
-		fnMove = function() {
-			
-			$.post("/showbuilder/schedule-move", 
-				{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
-				function(json){
-					oTable.fnDraw();
-				});
-		};
+			fnUpdate;		
 		
 		fnReceive = function(event, ui) {
 			origRow = ui.item;
 		};
 		
 		fnUpdate = function(event, ui) {
-			var prev;
+			var prev,
+				aItem = [],
+				iAfter;
 			
 			prev = ui.item.prev();
 			if (prev.hasClass("spl_empty") || prev.length === 0) {
-				iAfter = null;
+				iAfter = undefined;
 			}
 			else {
-				iAfter = prev.attr("id").split("_").pop();
+				iAfter = parseInt(prev.attr("id").split("_").pop(), 10);
 			}
 			
 			//item was dragged in from library datatable
 			if (origRow !== undefined) {
-				iItem = origRow.data("aData").id;
+				aItem.push(origRow.data("aData").id);
 				origRow = undefined;
-				fnAdd();
+				AIRTIME.playlist.fnAddItems(aItem, iAfter);
 			}
 			//item was reordered.
 			else {
-				oItemData = ui.item.data("aData");
-				fnMove();
+				aItem.push(parseInt(ui.item.attr("id").split("_").pop(), 10));
+				AIRTIME.playlist.fnMoveItems(aItem, iAfter);
 			}
 		};
 		
@@ -469,199 +604,5 @@ function setUpSPL() {
 		};
 	}());
 
-    $("#spl_sortable").sortable(sortableConf);
-    
-	$("#spl_remove_selected").click(deleteSPLItem);
-	
-	$("#spl_new")
-		.button()
-		.click(newSPL);
-
-    $("#spl_crossfade").click(function(){
-
-        if($(this).hasClass("ui-state-active")) {
-            $(this).removeClass("ui-state-active");
-            $("#crossfade_main").hide();
-        }
-        else {
-            $(this).addClass("ui-state-active");
-
-            var url = '/Playlist/set-playlist-fades';
-
-	        $.get(url, {format: "json"}, function(json){
-	            if(json.playlist_error == true){
-                    alertPlaylistErrorAndReload();
-                }
-                $("#spl_fade_in_main").find("span")
-                    .empty()
-                    .append(json.fadeIn);
-                $("#spl_fade_out_main").find("span")
-                    .empty()
-                    .append(json.fadeOut);
-
-                $("#crossfade_main").show();
-            });
-        }
-    });
-
-    $("#playlist_name_display").click(editName);
-    $("#fieldset-metadate_change > legend").click(function(){
-        var descriptionElement = $(this).parent();
-
-        if(descriptionElement.hasClass("closed")) {
-            descriptionElement.removeClass("closed");
-        }
-        else {
-            descriptionElement.addClass("closed");
-        }
-    });
-
-    $("#description_save").click(function(){
-        var textarea = $("#fieldset-metadate_change textarea");
-        var description = textarea.val();
-        var url;
-        url = '/Playlist/set-playlist-description';
-
-        $.post(url, {format: "json", description: description}, function(json){
-            if(json.playlist_error == true){
-                alertPlaylistErrorAndReload();
-            }
-            else{
-                textarea.val(json.playlistDescription);
-            }
-            
-            $("#fieldset-metadate_change").addClass("closed");
-            
-            // update the "Last Modified" time for this playlist
-            redrawDataTablePage();
-        });
-    });
-
-    $("#description_cancel").click(function(){
-        var textarea = $("#fieldset-metadate_change textarea");
-        var url;
-        url = '/Playlist/set-playlist-description';
-
-        $.post(url, {format: "json"}, function(json){
-            if(json.playlist_error == true){
-                alertPlaylistErrorAndReload();
-            }
-            else{
-                textarea.val(json.playlistDescription);
-            }
-            
-            $("#fieldset-metadate_change").addClass("closed");
-        });
-    });
-
-    $("#spl_fade_in_main span:first").blur(function(event){
-        event.stopPropagation();
-
-	    var url, fadeIn, span;
-
-	    span = $(this);
-	    url = "/Playlist/set-playlist-fades";
-	    fadeIn = $.trim(span.text());
-
-	    if(!isTimeValid(fadeIn)){
-            showError(span, "please put in a time '00:00:00 (.000000)'");
-		    return;
-	    }
-
-	    $.post(url, {format: "json", fadeIn: fadeIn}, function(json){
-	        if(json.playlist_error == true){
-                alertPlaylistErrorAndReload();
-            }
-		    if(json.response.error) {
-			    return;
-		    }
-
-             hideError(span);
-	    });
-    });
-
-    $("#spl_fade_out_main span:first").blur(function(event){
-        event.stopPropagation();
-
-	    var url, fadeIn, span;
-
-	    span = $(this);
-	    url = "/Playlist/set-playlist-fades";
-	    fadeOut = $.trim(span.text());
-
-	    if(!isTimeValid(fadeOut)){
-            showError(span, "please put in a time '00:00:00 (.000000)'");
-		    return;
-	    }
-
-	    $.post(url, {format: "json", fadeOut: fadeOut}, function(json){
-	        if(json.playlist_error == true){
-                alertPlaylistErrorAndReload();
-            }
-		    if(json.response.error) {
-			    return;
-		    }
-
-             hideError(span);
-	    });
-    });
-
-    $("#spl_fade_in_main span:first, #spl_fade_out_main span:first")
-        .keydown(submitOnEnter);
-
-    $("#crossfade_main > .ui-icon-closethick").click(function(){
-        $("#spl_crossfade").removeClass("ui-state-active");
-        $("#crossfade_main").hide();
-    });
-
-	$("#spl_delete")
-		.button()
-		.click(deleteSPL);
-}
-
-//sets events dynamically for playlist entries (each row in the playlist)
-function setPlaylistEntryEvents(el) {
-	
-	$(el).delegate("#spl_sortable .ui-icon-closethick", 
-    		{"click": deleteSPLItem});
-	
-	$(el).delegate(".spl_fade_control", 
-    		{"click": openFadeEditor});
-	
-	$(el).delegate(".spl_cue", 
-			{"click": openCueEditor});
-}
-
-//sets events dynamically for the cue editor.
-function setCueEvents(el) {
-
-    $(el).delegate(".spl_cue_in span", 
-    		{"focusout": changeCueIn, 
-    		"keydown": submitOnEnter});
-    
-    $(el).delegate(".spl_cue_out span", 
-    		{"focusout": changeCueOut, 
-    		"keydown": submitOnEnter});
-}
-
-//sets events dynamically for the fade editor.
-function setFadeEvents(el) {
-
-    $(el).delegate(".spl_fade_in span", 
-    		{"focusout": changeFadeIn, 
-    		"keydown": submitOnEnter});
-    
-    $(el).delegate(".spl_fade_out span", 
-    		{"focusout": changeFadeOut, 
-    		"keydown": submitOnEnter});
-}
-
-$(document).ready(function() {
-	var playlist = $("#side_playlist");
-	
-	setUpSPL(playlist);
-	
-	setPlaylistEntryEvents(playlist);
-	setCueEvents(playlist);
-	setFadeEvents(playlist);
+    playlist.sortable(sortableConf);
 });

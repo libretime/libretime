@@ -64,6 +64,7 @@ function setupLibraryToolbar(oLibTable) {
 			{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
 			function(json){
 				oLibTT.fnSelectNone();
+				oSchedTT.fnSelectNone();
 				oSchedTable.fnDraw();
 			});
 	};

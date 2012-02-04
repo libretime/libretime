@@ -192,6 +192,7 @@ $(document).ready(function() {
 		$.post( "/showbuilder/schedule-remove",
 			{"ids": ids, "format": "json"},
 			function(data) {
+				oTT.fnSelectNone();
 				oTable.fnDraw();
 			});
 	};
@@ -316,7 +317,8 @@ $(document).ready(function() {
 			fnAdd,
 			fnMove,
 			fnReceive,
-			fnUpdate;
+			fnUpdate,
+			oTT = TableTools.fnGetInstance('show_builder_table');
 		
 		fnAdd = function() {
 			var aMediaIds = [],
@@ -328,6 +330,7 @@ $(document).ready(function() {
 			$.post("/showbuilder/schedule-add", 
 				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
 				function(json){
+					oTT.fnSelectNone();
 					oTable.fnDraw();
 				});
 		};
