@@ -165,15 +165,18 @@ class PlaylistController extends Zend_Controller_Action
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
     	$afterItem = $this->_getParam('afterItem', null);
-    	//$afterItem =  (!is_numeric($afterItem)) ? null : intval($afterItem);
+    	$addType = $this->_getParam('type', 'after');
+
+    	Logging::log("type is ".$addType);
 
         try {
             $pl = $this->getPlaylist();
-            $pl->addAudioClips($ids, $afterItem);
+            $pl->addAudioClips($ids, $afterItem, $addType);
         }
         catch (PlaylistNotFoundException $e) {
-            Logging::log("Playlist {$pl_id} not found");
+            Logging::log("Playlist not found");
             $this->changePlaylist(null);
+            $this->createFullResponse(null);
         }
         catch (Exception $e) {
             Logging::log("{$e->getFile()}");
@@ -189,15 +192,15 @@ class PlaylistController extends Zend_Controller_Action
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
-        //$afterItem =  (!is_numeric($afterItem)) ? null : intval($afterItem);
 
         try {
             $pl = $this->getPlaylist();
             $pl->moveAudioClips($ids, $afterItem);
         }
         catch (PlaylistNotFoundException $e) {
-            Logging::log("Playlist {$pl_id} not found");
+            Logging::log("Playlist not found");
             $this->changePlaylist(null);
+            $this->createFullResponse(null);
         }
         catch (Exception $e) {
             Logging::log("{$e->getFile()}");
@@ -218,8 +221,9 @@ class PlaylistController extends Zend_Controller_Action
             $pl->delAudioClips($ids);
         }
         catch (PlaylistNotFoundException $e) {
-            Logging::log("Playlist {$pl_id} not found");
+            Logging::log("Playlist not found");
             $this->changePlaylist(null);
+            $this->createFullResponse(null);
         }
         catch (Exception $e) {
             Logging::log("{$e->getFile()}");
@@ -232,23 +236,30 @@ class PlaylistController extends Zend_Controller_Action
 
     public function setCueAction()
     {
-		$pos = $this->_getParam('pos');
-		$pl = $this->getPlaylist();
-        if ($pl === false){
-            $this->view->playlist_error = true;
-            return false;
-        }
-
+		$id = $this->_getParam('id');
 		$cueIn = $this->_getParam('cueIn', null);
 		$cueOut = $this->_getParam('cueOut', null);
 
-		$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
+        try {
+            $pl = $this->getPlaylist();
+            $response = $pl->changeClipLength($id, $cueIn, $cueOut);
 
-		$this->view->response = $response;
+            $this->view->response = $response;
 
-		if(!isset($response["error"])) {
-    		$this->createUpdateResponse($pl);
-		}
+            if(!isset($response["error"])) {
+                $this->createUpdateResponse($pl);
+            }
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
     }
 
     public function setFadeAction()

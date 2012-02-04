@@ -27,7 +27,7 @@ function fnLibraryTableDrawCallback() {
 		},
 		*/
 		cursor: 'pointer',
-		connectToSortable: '#side_playlist'
+		connectToSortable: '#spl_sortable'
 	});
 }
 

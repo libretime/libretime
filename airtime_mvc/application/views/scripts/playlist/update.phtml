@@ -30,7 +30,7 @@ if (count($items)) : ?>
 
         <div id="cues_<?php echo $i ?>" class="cue-edit clearfix" style="display: none">
             <?php echo $this->partial('playlist/set-cue.phtml', array(
-                'pos' => $i,
+                'id' => $item["id"],
                 'cueIn' => $item['cuein'],
                 'cueOut' => $item['cueout'],
                 'origLength' => $item["CcFiles"]['length'])); ?>

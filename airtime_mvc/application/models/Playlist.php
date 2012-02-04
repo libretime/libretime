@@ -209,8 +209,10 @@ class Application_Model_Playlist {
      *     an array of audioclips to add to the playlist
      * @param int|null $p_afterItem
      *     item which to add the new items after in the playlist, null if added to the end.
+     * @param string (before|after) $addAfter
+     *      whether to add the clips before or after the selected item.
      */
-    public function addAudioClips($p_items, $p_afterItem=NULL)
+    public function addAudioClips($p_items, $p_afterItem=NULL, $addType = 'after')
     {
         $this->con->beginTransaction();
         $contentsToUpdate = array();
@@ -221,11 +223,14 @@ class Application_Model_Playlist {
                 Logging::log("Finding playlist content item {$p_afterItem}");
 
                 $afterItem = CcPlaylistcontentsQuery::create()->findPK($p_afterItem);
-                $pos = $afterItem->getDbPosition() + 1;
+
+                $index = $afterItem->getDbPosition();
+                Logging::log("index is {$index}");
+                $pos = ($addType == 'after') ? $index + 1 : $index;
 
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
                     ->filterByDbPlaylistId($this->id)
-                    ->filterByDbPosition($pos-1, Criteria::GREATER_THAN)
+                    ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
                     ->orderByDbPosition()
                     ->find($this->con);
 
@@ -234,8 +239,9 @@ class Application_Model_Playlist {
             }
             else {
 
-                $pos = $this->getSize();
-                Logging::log("Adding to end of playlist");
+                $pos = ($addType == 'after') ? $this->getSize() : 0;
+
+                Logging::log("Adding to playlist");
                 Logging::log("at position {$pos}");
             }
 
@@ -449,22 +455,6 @@ class Application_Model_Playlist {
         return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
     }
 
-	public function getCueInfo($pos) {
-
-		$row = CcPlaylistcontentsQuery::create()
-            ->joinWith(CcFilesPeer::OM_CLASS)
-            ->filterByDbPlaylistId($this->id)
-            ->filterByDbPosition($pos)
-            ->findOne();
-
-        $file = $row->getCcFiles();
-        $origLength = $file->getDbLength();
-        $cueIn = $row->getDBCuein();
-        $cueOut = $row->getDbCueout();
-
-		return array($cueIn, $cueOut, $origLength);
-	}
-
     /**
      * Change cueIn/cueOut values for playlist element
      *
@@ -476,26 +466,25 @@ class Application_Model_Playlist {
      * 		new value in ss.ssssss or extent format
      * @return boolean or pear error object
      */
-    public function changeClipLength($pos, $cueIn, $cueOut)
+    public function changeClipLength($id, $cueIn, $cueOut)
     {
         $errArray= array();
 		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
-        if(is_null($cueIn) && is_null($cueOut)) {
+        if (is_null($cueIn) && is_null($cueOut)) {
             $errArray["error"]="Cue in and cue out are null.";
-            return $errArray;
-        }
-
-        if(is_null($pos) || $pos < 0 || $pos >= $this->getNextPos()) {
-            $errArray["error"]="Invalid position.";
             return $errArray;
         }
 
         $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
-            ->filterByDbPlaylistId($this->id)
-            ->filterByDbPosition($pos)
+            ->filterByPrimaryKey($id)
             ->findOne();
+
+        if (is_null($row)) {
+            $errArray["error"]="Playlist item does not exist!.";
+            return $errArray;
+        }
 
         $oldCueIn = $row->getDBCuein();
         $oldCueOut = $row->getDbCueout();
