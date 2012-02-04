@@ -458,6 +458,12 @@ function setUpSPL() {
 			placeholder: "placeholder lib-placeholder ui-state-highlight",
 			forcePlaceholderSize: true,
 			handle: 'div.list-item-container',
+			start: function(event, ui) {
+				ui.placeholder.html("PLACE HOLDER")
+					.width("99.5%")
+					.height(56)
+					.append('<div style="clear:both;"/>');
+			},
 			receive: fnReceive,
 			update: fnUpdate
 		};

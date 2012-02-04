@@ -13,8 +13,9 @@ function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFul
 function fnLibraryTableDrawCallback() {
 	
 	$('#library_display tr[id ^= "au"]').draggable({
-		//helper: 'clone',
-		helper: function(ev, el) {
+		helper: 'clone',
+		/*
+		helper: function(ev) {
 			var data, li;
 			
 			data = $(ev.currentTarget).data("aData");
@@ -24,6 +25,7 @@ function fnLibraryTableDrawCallback() {
 			
 			return li;
 		},
+		*/
 		cursor: 'pointer',
 		connectToSortable: '#spl_sortable'
 	});
