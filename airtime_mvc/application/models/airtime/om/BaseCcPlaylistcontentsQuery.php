@@ -578,4 +578,90 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 		return $this;
 	}
 
+	/**
+	 * Code to execute before every DELETE statement
+	 * 
+	 * @param     PropelPDO $con The connection object used by the query
+	 */
+	protected function basePreDelete(PropelPDO $con)
+	{
+		// aggregate_column_relation behavior
+		$this->findRelatedCcPlaylists($con);
+		
+		return $this->preDelete($con);
+	}
+
+	/**
+	 * Code to execute after every DELETE statement
+	 * 
+	 * @param     int $affectedRows the number of deleted rows
+	 * @param     PropelPDO $con The connection object used by the query
+	 */
+	protected function basePostDelete($affectedRows, PropelPDO $con)
+	{
+		// aggregate_column_relation behavior
+		$this->updateRelatedCcPlaylists($con);
+		
+		return $this->postDelete($affectedRows, $con);
+	}
+
+	/**
+	 * Code to execute before every UPDATE statement
+	 * 
+	 * @param     array $values The associatiove array of columns and values for the update
+	 * @param     PropelPDO $con The connection object used by the query
+	 * @param     boolean $forceIndividualSaves If false (default), the resulting call is a BasePeer::doUpdate(), ortherwise it is a series of save() calls on all the found objects
+	 */
+	protected function basePreUpdate(&$values, PropelPDO $con, $forceIndividualSaves = false)
+	{
+		// aggregate_column_relation behavior
+		$this->findRelatedCcPlaylists($con);
+		
+		return $this->preUpdate($values, $con, $forceIndividualSaves);
+	}
+
+	/**
+	 * Code to execute after every UPDATE statement
+	 * 
+	 * @param     int $affectedRows the number of udated rows
+	 * @param     PropelPDO $con The connection object used by the query
+	 */
+	protected function basePostUpdate($affectedRows, PropelPDO $con)
+	{
+		// aggregate_column_relation behavior
+		$this->updateRelatedCcPlaylists($con);
+		
+		return $this->postUpdate($affectedRows, $con);
+	}
+
+	// aggregate_column_relation behavior
+	
+	/**
+	 * Finds the related CcPlaylist objects and keep them for later
+	 *
+	 * @param PropelPDO $con A connection object
+	 */
+	protected function findRelatedCcPlaylists($con)
+	{
+		$criteria = clone $this;
+		if ($this->useAliasInSQL) {
+			$alias = $this->getModelAlias();
+			$criteria->removeAlias($alias);
+		} else {
+			$alias = '';
+		}
+		$this->ccPlaylists = CcPlaylistQuery::create()
+			->joinCcPlaylistcontents($alias)
+			->mergeWith($criteria)
+			->find($con);
+	}
+	
+	protected function updateRelatedCcPlaylists($con)
+	{
+		foreach ($this->ccPlaylists as $ccPlaylist) {
+			$ccPlaylist->updateDbLength($con);
+		}
+		$this->ccPlaylists = array();
+	}
+
 } // BaseCcPlaylistcontentsQuery

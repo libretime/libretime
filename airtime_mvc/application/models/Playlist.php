@@ -24,11 +24,6 @@ class Application_Model_Playlist {
 	private $pl;
 
 	/**
-	 * MetaData
-	 */
-	public $md;
-
-	/**
      * info needed to insert a new playlist element.
      */
 	private $plItem = array(
@@ -44,9 +39,9 @@ class Application_Model_Playlist {
 	//using propel's phpNames.
 	private $categories = array(
 	    "dc:title" => "DbName",
-    	"dc:creator" => "DbCreator",
+    	"dc:creator" => "DbCreatorId",
     	"dc:description" => "DbDescription",
-    	"dcterms:extent" => "length"
+    	"dcterms:extent" => "getDbLength"
 	);
 
 
@@ -61,8 +56,7 @@ class Application_Model_Playlist {
         }
         else {
             $this->pl = new CcPlaylist();
-            $this->pl->setDbState('ready');
-            $this->pl->setDbUtime(new DateTime("now"), new DateTimeZone("UTC"));
+            $this->pl->setDbUTime("now", new DateTimeZone("UTC"));
             $this->pl->save();
         }
 
@@ -158,19 +152,9 @@ class Application_Model_Playlist {
         return $files;
     }
 
-    //TODO make another aggregate column for playlist length.
+    //aggregate column on playlistcontents cliplength column.
     public function getLength() {
-        /*
-        $res = CcPlaylistQuery::create()
-            ->findPK($this->id)
-            ->computeLength();
-
-        if (is_null($res)) {
-            $res = '00:00:00';
-        }
-        */
-
-        return '00:00:00';
+        $this->pl->getDbLength();
     }
 
 
@@ -239,7 +223,25 @@ class Application_Model_Playlist {
             }
             else {
 
-                $pos = ($addType == 'after') ? $this->getSize() : 0;
+                //add to the end of the playlist
+                if ($addType == 'after') {
+                    $pos = $this->getSize();
+                }
+                //add to the beginning of the playlist.
+                else {
+                    $pos = 0;
+
+                    $contentsToUpdate = CcPlaylistcontentsQuery::create()
+                        ->filterByDbPlaylistId($this->id)
+                        ->orderByDbPosition()
+                        ->find($this->con);
+                }
+
+                $contentsToUpdate = CcPlaylistcontentsQuery::create()
+                    ->filterByDbPlaylistId($this->id)
+                    ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
+                    ->orderByDbPosition()
+                    ->find($this->con);
 
                 Logging::log("Adding to playlist");
                 Logging::log("at position {$pos}");
@@ -596,11 +598,6 @@ class Application_Model_Playlist {
         $md = array();
 
         foreach($categories as $key => $val) {
-            if($val === 'length') {
-                $md[$key] = $this->getLength();
-                continue;
-            }
-
             $method = 'get' . $val;
             $md[$key] = $this->pl->$method();
         }
@@ -611,11 +608,6 @@ class Application_Model_Playlist {
     public function getPLMetaData($category)
     {
         $cat = $this->categories[$category];
-
-        if($cat === 'length') {
-            return $this->getLength();
-        }
-
         $method = 'get' . $cat;
         return $this->pl->$method();
     }

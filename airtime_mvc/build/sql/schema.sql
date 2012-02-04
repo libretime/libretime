@@ -288,14 +288,12 @@ CREATE TABLE "cc_playlist"
 (
 	"id" serial  NOT NULL,
 	"name" VARCHAR(255) default '' NOT NULL,
-	"state" VARCHAR(128) default 'empty' NOT NULL,
-	"currentlyaccessing" INTEGER default 0 NOT NULL,
-	"editedby" INTEGER,
 	"mtime" TIMESTAMP(6),
 	"utime" TIMESTAMP(6),
 	"lptime" TIMESTAMP(6),
-	"creator" VARCHAR(32),
+	"creator_id" INTEGER,
 	"description" VARCHAR(512),
+	"length" interval default '00:00:00',
 	PRIMARY KEY ("id")
 );
 
@@ -575,7 +573,7 @@ ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_show_fkey" FOREIGN KEY ("sho
 
 ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_host_fkey" FOREIGN KEY ("subjs_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
+ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 

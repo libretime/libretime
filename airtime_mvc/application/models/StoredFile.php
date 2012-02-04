@@ -687,11 +687,11 @@ class Application_Model_StoredFile {
                 $plSelect .= "'playlist' AS ".$key.", ";
                 $fileSelect .= $key.", ";
             } else if ($key === "artist_name") {
-                $plSelect .= "creator AS ".$key.", ";
+                $plSelect .= "login AS ".$key.", ";
                 $fileSelect .= $key.", ";
             } else if ($key === "length") {
                 $plSelect .= $key.", ";
-                $fileSelect .= $key.", ";
+                $fileSelect .= $key."::interval, ";
             } else if ($key === "year") {
                 $plSelect .= "CAST(utime AS varchar) AS ".$key.", ";
                 $fileSelect .= $key.", ";
@@ -708,8 +708,7 @@ class Application_Model_StoredFile {
         }
 
         $fromTable = " ((".$plSelect."PL.id
-            FROM ".$CC_CONFIG["playListTable"]." AS PL
-                LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
+            FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))
             UNION
             (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
 
@@ -825,7 +824,7 @@ class Application_Model_StoredFile {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 
-		//Logging::log($sql);
+		Logging::log($sql);
 
 		$results = $CC_DBC->getAll($sql);
 

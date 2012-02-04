@@ -95,7 +95,7 @@ class PlaylistController extends Zend_Controller_Action
 
         $pl = new Application_Model_Playlist();
         $pl->setName("Untitled Playlist");
-		$pl->setPLMetaData('dc:creator', $userInfo->login);
+		$pl->setPLMetaData('dc:creator', $userInfo->id);
 
 		$this->changePlaylist($pl->getId());
 		$this->createFullResponse($pl);

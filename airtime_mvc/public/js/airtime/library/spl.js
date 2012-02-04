@@ -282,16 +282,7 @@ var AIRTIME = (function(AIRTIME){
 			.empty()
 			.append(json.html);
 		
-		mod.setUpPlaylist();
-	}
-	
-	function setPlaylistButtonEvents(el) {
-		
-		$(el).delegate("#spl_new", 
-	    		{"click": AIRTIME.playlist.fnNew});
-	
-		$(el).delegate("#spl_delete", 
-	    		{"click": AIRTIME.playlist.fnDelete});
+		setUpPlaylist();
 	}
 	
 	//sets events dynamically for playlist entries (each row in the playlist)
@@ -336,7 +327,7 @@ var AIRTIME = (function(AIRTIME){
 	    		"keydown": submitOnEnter});
 	}
 	
-	mod.setUpPlaylist = function() {
+	function setUpPlaylist(playlist) {
 		
 		var playlist = $("#side_playlist"),
 			sortableConf;
@@ -478,11 +469,6 @@ var AIRTIME = (function(AIRTIME){
 			playlist.find("#spl_crossfade").removeClass("ui-state-active");
 			playlist.find("#crossfade_main").hide();
 	    });
-	    
-	    setPlaylistButtonEvents(playlist);
-		setPlaylistEntryEvents(playlist);
-		setCueEvents(playlist);
-		setFadeEvents(playlist);
 		
 		sortableConf = (function(){
 			var origRow,
@@ -530,8 +516,7 @@ var AIRTIME = (function(AIRTIME){
 				start: function(event, ui) {
 					ui.placeholder.html("PLACE HOLDER")
 						.width("99.5%")
-						.height(56)
-						.append('<div style="clear:both;"/>');
+						.height(56);
 				},
 				receive: fnReceive,
 				update: fnUpdate
@@ -600,12 +585,27 @@ var AIRTIME = (function(AIRTIME){
 			});
 	};
 	
+	mod.init = function() {
+		var playlist = $("#side_playlist");
+		
+		$(playlist).delegate("#spl_new", 
+	    		{"click": AIRTIME.playlist.fnNew});
+
+		$(playlist).delegate("#spl_delete", 
+	    		{"click": AIRTIME.playlist.fnDelete});
+		
+		setPlaylistEntryEvents(playlist);
+		setCueEvents(playlist);
+		setFadeEvents(playlist);
+		
+		setUpPlaylist(playlist);
+	}
+	
 	return AIRTIME;
 	
 }(AIRTIME || {}));
 
 
 $(document).ready(function() {
-	
-	AIRTIME.playlist.setUpPlaylist();
+	AIRTIME.playlist.init();	
 });

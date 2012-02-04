@@ -107,6 +107,9 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	 */
 	protected $alreadyInValidation = false;
 
+	// aggregate_column_relation behavior
+	protected $oldCcPlaylist;
+
 	/**
 	 * Applies default values to this object.
 	 * This method should be called from the object's constructor (or
@@ -895,6 +898,8 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 					$this->postUpdate($con);
 				}
 				$this->postSave($con);
+				// aggregate_column_relation behavior
+				$this->updateRelatedCcPlaylist($con);
 				CcPlaylistcontentsPeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
@@ -1437,6 +1442,10 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	 */
 	public function setCcPlaylist(CcPlaylist $v = null)
 	{
+		// aggregate_column_relation behavior
+		if (null !== $this->aCcPlaylist && $v !== $this->aCcPlaylist) {
+			$this->oldCcPlaylist = $this->aCcPlaylist;
+		}
 		if ($v === null) {
 			$this->setDbPlaylistId(NULL);
 		} else {
@@ -1516,6 +1525,24 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 		$this->aCcFiles = null;
 		$this->aCcPlaylist = null;
+	}
+
+	// aggregate_column_relation behavior
+	
+	/**
+	 * Update the aggregate column in the related CcPlaylist object
+	 *
+	 * @param PropelPDO $con A connection object
+	 */
+	protected function updateRelatedCcPlaylist(PropelPDO $con)
+	{
+		if ($ccPlaylist = $this->getCcPlaylist()) {
+			$ccPlaylist->updateDbLength($con);
+		}
+		if ($this->oldCcPlaylist) {
+			$this->oldCcPlaylist->updateDbLength($con);
+			$this->oldCcPlaylist = null;
+		}
 	}
 
 	/**

@@ -40,14 +40,12 @@ class CcPlaylistTableMap extends TableMap {
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, '');
-		$this->addColumn('STATE', 'DbState', 'VARCHAR', true, 128, 'empty');
-		$this->addColumn('CURRENTLYACCESSING', 'DbCurrentlyaccessing', 'INTEGER', true, null, 0);
-		$this->addForeignKey('EDITEDBY', 'DbEditedby', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', false, 6, null);
 		$this->addColumn('UTIME', 'DbUtime', 'TIMESTAMP', false, 6, null);
 		$this->addColumn('LPTIME', 'DbLPtime', 'TIMESTAMP', false, 6, null);
-		$this->addColumn('CREATOR', 'DbCreator', 'VARCHAR', false, 32, null);
+		$this->addForeignKey('CREATOR_ID', 'DbCreatorId', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', false, 512, null);
+		$this->addColumn('LENGTH', 'DbLength', 'VARCHAR', false, null, '00:00:00');
 		// validators
 	} // initialize()
 
@@ -56,8 +54,21 @@ class CcPlaylistTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
+    $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('creator_id' => 'id', ), null, null);
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'playlist_id', ), 'CASCADE', null);
 	} // buildRelations()
+
+	/**
+	 * 
+	 * Gets the list of behaviors registered for this table
+	 * 
+	 * @return array Associative array (name => parameters) of behaviors
+	 */
+	public function getBehaviors()
+	{
+		return array(
+			'aggregate_column' => array('name' => 'length', 'expression' => 'SUM(cliplength)', 'foreign_table' => 'cc_playlistcontents', ),
+		);
+	} // getBehaviors()
 
 } // CcPlaylistTableMap
