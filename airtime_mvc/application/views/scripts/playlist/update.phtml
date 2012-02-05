@@ -43,7 +43,8 @@ if (count($items)) : ?>
         ?>
         <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none">
             <?php echo $this->partial('playlist/set-fade.phtml', array(
-                'pos' => $i,
+                'item1' => $items[$i]['id'],
+                'item2' => $items[$i+1]['id'],
                 'fadeOut' => $items[$i]['fadeout'],
                 'fadeIn' => $items[$i+1]['fadein'])); ?>
         </div>

@@ -74,7 +74,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         //scripts for now playing bar
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js','text/javascript');
-        //$view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js','text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js','text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js','text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js','text/javascript');

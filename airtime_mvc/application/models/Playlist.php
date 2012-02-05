@@ -389,6 +389,8 @@ class Application_Model_Playlist {
 
 	public function getFadeInfo($pos) {
 
+	    Logging::log("Getting fade info for pos {$pos}");
+
 		$row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
             ->filterByDbPlaylistId($this->id)
@@ -412,20 +414,17 @@ class Application_Model_Playlist {
      * 		new value in ss.ssssss or extent format
      * @return boolean
      */
-    public function changeFadeInfo($pos, $fadeIn, $fadeOut)
+    public function changeFadeInfo($id, $fadeIn, $fadeOut)
     {
         $errArray= array();
 		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
-        if(is_null($pos) || $pos < 0 || $pos >= $this->getNextPos()) {
-            $errArray["error"]="Invalid position.";
+        $row = CcPlaylistcontentsQuery::create()->findPK($id);
+
+        if (is_null($row)) {
+            $errArray["error"]="Playlist item does not exist.";
             return $errArray;
         }
-
-        $row = CcPlaylistcontentsQuery::create()
-            ->filterByDbPlaylistId($this->id)
-            ->filterByDbPosition($pos)
-            ->findOne();
 
         $clipLength = $row->getDbCliplength();
 
@@ -455,6 +454,28 @@ class Application_Model_Playlist {
         $row->save();
 
         return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
+    }
+
+    public function setPlaylistfades($fadein, $fadeout) {
+
+        if (isset($fadein)) {
+            Logging::log("Setting playlist fade in {$fadein}");
+            $row = CcPlaylistcontentsQuery::create()
+                ->filterByDbPlaylistId($this->id)
+                ->filterByDbPosition(0)
+                ->findOne();
+
+            $this->changeFadeInfo($row->getDbId(), $fadein, null);
+        }
+
+        if (isset($fadeout)) {
+            $row = CcPlaylistcontentsQuery::create()
+                ->filterByDbPlaylistId($this->id)
+                ->filterByDbPosition($this->getSize()-1)
+                ->findOne();
+
+            $this->changeFadeInfo($row->getDbId(), null, $fadeout);
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('edit', 'json')
                     ->addActionContext('delete', 'json')
                     ->addActionContext('set-playlist-fades', 'json')
+                    ->addActionContext('get-playlist-fades', 'json')
                     ->addActionContext('set-playlist-name', 'json')
                     ->addActionContext('set-playlist-description', 'json')
                     ->initContext();
@@ -265,52 +266,73 @@ class PlaylistController extends Zend_Controller_Action
 
     public function setFadeAction()
     {
-		$pos = $this->_getParam('pos');
-		$pl = $this->getPlaylist();
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
-        }
-
+		$id = $this->_getParam('id');
 		$fadeIn = $this->_getParam('fadeIn', null);
 		$fadeOut = $this->_getParam('fadeOut', null);
 
-		$response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
+        try {
+            $pl = $this->getPlaylist();
+            $response = $pl->changeFadeInfo($id, $fadeIn, $fadeOut);
 
-		$this->view->response = $response;
+            $this->view->response = $response;
 
-        if(!isset($response["error"])) {
-            $this->createUpdateResponse($pl);
+            if (!isset($response["error"])) {
+                $this->createUpdateResponse($pl);
+            }
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
+    }
+
+    public function getPlaylistFadesAction()
+    {
+        try {
+            $pl = $this->getPlaylist();
+            $fades = $pl->getFadeInfo(0);
+            $this->view->fadeIn = $fades[0];
+
+            $fades = $pl->getFadeInfo($pl->getSize()-1);
+            $this->view->fadeOut = $fades[1];
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
         }
     }
 
     public function setPlaylistFadesAction()
     {
-        $request = $this->getRequest();
-		$pl = $this->getPlaylist();
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
+		$fadeIn = $this->_getParam('fadeIn', null);
+		$fadeOut = $this->_getParam('fadeOut', null);
+
+        try {
+            $pl = $this->getPlaylist();
+            $pl->setPlaylistfades($fadeIn, $fadeOut);
         }
-
-		if($request->isPost()) {
-			$fadeIn = $this->_getParam('fadeIn', null);
-			$fadeOut = $this->_getParam('fadeOut', null);
-
-            if($fadeIn)
-			    $response = $pl->changeFadeInfo(0, $fadeIn, $fadeOut);
-            else if($fadeOut)
-                 $response = $pl->changeFadeInfo($pl->getSize(), $fadeIn, $fadeOut);
-
-			$this->view->response = $response;
-			return;
-		}
-
-		$fades = $pl->getFadeInfo(0);
-		$this->view->fadeIn = $fades[0];
-
-		$fades = $pl->getFadeInfo($pl->getSize());
-		$this->view->fadeOut = $fades[1];
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
     }
 
     public function setPlaylistNameAction()

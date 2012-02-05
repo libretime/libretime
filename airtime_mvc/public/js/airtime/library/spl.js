@@ -114,10 +114,10 @@ var AIRTIME = (function(AIRTIME){
 	function changeFadeIn(event) {
 	    event.stopPropagation();
 
-		var pos, url, fadeIn, li, unqid;
+		var id, url, fadeIn, li, unqid;
 
 		span = $(this);
-		pos = span.parent().attr("id").split("_").pop();
+		id = span.parent().attr("id").split("_").pop();
 		url = "/Playlist/set-fade";
 		fadeIn = $.trim(span.text());
 		li = span.parent().parent().parent().parent();
@@ -128,7 +128,7 @@ var AIRTIME = (function(AIRTIME){
 			return;
 		}
 
-		$.post(url, {format: "json", fadeIn: fadeIn, pos: pos}, function(json){
+		$.post(url, {format: "json", fadeIn: fadeIn, id: id}, function(json){
 			
 			if(json.response !== undefined && json.response.error) {
 	            showError(span, json.response.error);
@@ -146,10 +146,10 @@ var AIRTIME = (function(AIRTIME){
 	function changeFadeOut(event) {
 	    event.stopPropagation();
 
-		var pos, url, fadeOut, li, unqid;
+		var id, url, fadeOut, li, unqid;
 
 		span = $(this);
-		pos = span.parent().attr("id").split("_").pop();
+		id = span.parent().attr("id").split("_").pop();
 		url = "/Playlist/set-fade";
 		fadeOut = $.trim(span.text());
 		li = span.parent().parent().parent().parent();
@@ -160,7 +160,7 @@ var AIRTIME = (function(AIRTIME){
 			return;
 		}
 
-		$.post(url, {format: "json", fadeOut: fadeOut, pos: pos}, function(json){
+		$.post(url, {format: "json", fadeOut: fadeOut, id: id}, function(json){
 			if(json.response !== undefined && json.response.error) {
 	            showError(span, json.response.error);
 				return;
@@ -341,7 +341,7 @@ var AIRTIME = (function(AIRTIME){
 	        else {
 	            $(this).addClass("ui-state-active");
 
-	            var url = '/Playlist/set-playlist-fades';
+	            var url = '/Playlist/get-playlist-fades';
 
 		        $.get(url, {format: "json"}, function(json){
 		            if(json.playlist_error == true){
@@ -425,21 +425,15 @@ var AIRTIME = (function(AIRTIME){
 		    }
 
 		    $.post(url, {format: "json", fadeIn: fadeIn}, function(json){
-		        if(json.playlist_error == true){
-	                alertPlaylistErrorAndReload();
-	            }
-			    if(json.response.error) {
-				    return;
-			    }
-
-	             hideError(span);
+		        
+	            hideError(span);
 		    });
 	    });
 
-		playlist.find("#spl_fade_out_main span:first").on("blur", function(event){
+		playlist.find("#spl_fade_out_main span:last").on("blur", function(event){
 	        event.stopPropagation();
 
-		    var url, fadeIn, span;
+		    var url, fadeOut, span;
 
 		    span = $(this);
 		    url = "/Playlist/set-playlist-fades";
@@ -451,14 +445,8 @@ var AIRTIME = (function(AIRTIME){
 		    }
 
 		    $.post(url, {format: "json", fadeOut: fadeOut}, function(json){
-		        if(json.playlist_error == true){
-	                alertPlaylistErrorAndReload();
-	            }
-			    if(json.response.error) {
-				    return;
-			    }
-
-	             hideError(span);
+		   
+	            hideError(span);
 		    });
 	    });
 

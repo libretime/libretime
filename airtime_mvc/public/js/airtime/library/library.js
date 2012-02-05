@@ -215,7 +215,6 @@ function fnCreatedRow( nRow, aData, iDataIndex ) {
 	
 	//call the context menu so we can prevent the event from propagating.
 	$(nRow).find('td:not(.library_checkbox):not(.library_type)').click(function(e){
-		var x;
 		
 		$(this).contextMenu();
 		
@@ -390,7 +389,7 @@ $(document).ready(function() {
     setInterval( checkSCUploadStatus, 5000 );
     
     addQtipToSCIcons();
-    
+
     $.contextMenu({
         selector: '#library_display td:not(.library_checkbox):not(.library_type)',
         trigger: "left",
