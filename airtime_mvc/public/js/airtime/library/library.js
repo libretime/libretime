@@ -82,7 +82,7 @@ function disableGroupBtn(btnId) {
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
-        if(data == true){
+        if (data == true){
             div.css('visibility', 'visible');
         }else{
             div.css('visibility', 'hidden');
@@ -114,7 +114,7 @@ function checkSCUploadStatus(){
     	var span, id;
     	
         span = $(this);
-        id = span.parentsUntil('tr').attr("id").split("_").pop();
+        id = span.parent().parent().data("aData").id;
        
         $.post(url, {format: "json", id: id, type:"file"}, function(json){
             if (json.sc_id > 0) {
@@ -132,8 +132,10 @@ function checkSCUploadStatus(){
 
 function addQtipToSCIcons(){
     $(".progress, .soundcloud, .sc-error").live('mouseover', function(){
-        var id = $(this).attr("id");
-        if($(this).hasClass("progress")){
+    	
+        var id = $(this).parent().parent().data("aData").id;
+        
+        if ($(this).hasClass("progress")){
             $(this).qtip({
                 content: {
                     text: "Uploading in progress..."
@@ -151,7 +153,8 @@ function addQtipToSCIcons(){
                     ready: true // Needed to make it show on first mouseover event
                 }
             });
-        }else if($(this).hasClass("soundcloud")){
+        }
+        else if($(this).hasClass("soundcloud")){
             $(this).qtip({
                 content: {
                     text: "Retreiving data from the server...",
@@ -383,8 +386,8 @@ $(document).ready(function() {
         error:function(jqXHR, textStatus, errorThrown){}});
     
     checkImportStatus();
-    //setInterval( "checkImportStatus()", 5000 );
-    //setInterval( "checkSCUploadStatus()", 5000 );
+    setInterval( checkImportStatus, 5000 );
+    setInterval( checkSCUploadStatus, 5000 );
     
     addQtipToSCIcons();
     

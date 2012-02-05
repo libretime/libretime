@@ -187,21 +187,24 @@ class LibraryController extends Zend_Controller_Action
         $params = $this->getRequest()->getParams();
         $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($params);
 
-        /*
-        foreach($datatables["aaData"] as &$data){
-            if($data['ftype'] == 'audioclip'){
+        //TODO move this to the datatables row callback.
+        foreach ($datatables["aaData"] as &$data) {
+
+            if ($data['ftype'] == 'audioclip'){
                 $file = Application_Model_StoredFile::Recall($data['id']);
                 $scid = $file->getSoundCloudId();
-                if($scid == "-2"){
-                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon progress"></span>';
-                }else if($scid == "-3"){
-                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon sc-error"></span>';
-                }else if(!is_null($scid)){
-                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon soundcloud"></span>';
+
+                if ($scid == "-2"){
+                    $data['track_title'] .= '<span class="small-icon progress"/>';
+                }
+                else if ($scid == "-3"){
+                    $data['track_title'] .= '<span class="small-icon sc-error"/>';
+                }
+                else if (!is_null($scid)){
+                    $data['track_title'] .= '<span class="small-icon soundcloud"/>';
                 }
             }
         }
-        */
 
         die(json_encode($datatables));
     }
