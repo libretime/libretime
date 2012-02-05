@@ -538,15 +538,26 @@ var AIRTIME = (function(AIRTIME){
 		});
 	}
 	
-	mod.fnEdit = function() {
+	mod.fnEdit = function(id) {
+		var url;
 		
+		stopAudioPreview();	
+		
+		url = '/Playlist/edit';
+
+		$.post(url, 
+			{format: "json", id: id}, 
+			function(json){
+				openPlaylist(json);
+				//redrawLib();
+		});
 	}
 	
-	mod.fnDelete = function() {
+	mod.fnDelete = function(plid) {
 		var url, id, lastMod;
 		
 		stopAudioPreview();	
-		id = getId();
+		id = (plid === undefined) ? getId() : plid;
 		lastMod = getModified(); 
 		url = '/Playlist/delete';
 

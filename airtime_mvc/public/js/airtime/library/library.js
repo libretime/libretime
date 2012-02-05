@@ -37,39 +37,6 @@ function disableGroupBtn(btnId) {
     }
 }
 
-function deleteItem(type, id) {
-	var tr_id, tr, dt;
-
-	tr_id = type+"_"+id;
-	tr = $("#"+tr_id);
-
-	dt = $("#library_display").dataTable();
-	dt.fnDeleteRow( tr );
-}
-
-function deleteAudioClip(json) {
-	if(json.message) {
-		alert(json.message);
-		return;
-	}
-
-    if (json.ids != undefined) {
-        for (var i = json.ids.length - 1; i >= 0; i--) {
-            deleteItem("au", json.ids[i]);
-        }
-    } 
-    else if (json.id != undefined) {
-        deleteItem("au", json.id);
-    }
-    location.reload(true);
-} 
-
-function confirmDeleteGroup() {
-    if(confirm('Are you sure you want to delete the selected items?')){
-        groupDelete();
-    }
-}
-
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
@@ -81,40 +48,41 @@ function checkImportStatus(){
     });
 }
 
-function deletePlaylist(json) {
-	if(json.message) {
-            alert(json.message);
-            return;
-	}
-        
-        if (json.ids != undefined) {
-            for (var i = json.ids.length - 1; i >= 0; i--) {
-                deleteItem("pl", json.ids[i]);
-            }
-        } else if (json.id != undefined) {
-            deleteItem("pl", json.id);
-        }
-	window.location.reload();
-}
-
 function addProgressIcon(id) {
-    if($("#au_"+id).find("td.library_title").find("span").length > 0){
-        $("#au_"+id).find("td.library_title").find("span").removeClass();
-        $("span[id="+id+"]").addClass("small-icon progress");
-    }else{
-        $("#au_"+id).find("td.library_title").append('<span id="'+id+'" class="small-icon progress"></span>');
+	var tr = $("#au_"+id),
+		span;
+	
+	span = tr.find("td.library_title").find("span");
+	
+    if (span.length > 0){	
+        span.removeClass()
+        	.addClass("small-icon progress");
+    }
+    else{
+        tr.find("td.library_title")
+        	.append('<span class="small-icon progress"></span>');
     }
 }
 
 function checkSCUploadStatus(){
-    var url = '/Library/get-upload-to-soundcloud-status/format/json';
+	
+    var url = '/Library/get-upload-to-soundcloud-status';
+    
     $("span[class*=progress]").each(function(){
-        var id = $(this).attr("id");
+    	var span, id;
+    	
+        span = $(this);
+        id = span.parentsUntil('tr').attr("id").split("_").pop();
+       
         $.post(url, {format: "json", id: id, type:"file"}, function(json){
-            if(json.sc_id > 0){
-                $("span[id="+id+"]").removeClass("progress").addClass("soundcloud");
-            }else if(json.sc_id == "-3"){
-                $("span[id="+id+"]").removeClass("progress").addClass("sc-error");
+            if (json.sc_id > 0) {
+                span.removeClass("progress")
+                	.addClass("soundcloud");
+                
+            }
+            else if (json.sc_id == "-3") {
+                span.removeClass("progress")
+                	.addClass("sc-error");
             }
         });
     });
@@ -280,10 +248,9 @@ function createDataTable(data) {
 				"success": testCallback
 			} );
 		},
-		"fnRowCallback": fnLibraryTableRowCallback,
+		"fnRowCallback": AIRTIME.library.events.fnRowCallback,
 		"fnCreatedRow": fnCreatedRow,
-		"fnCreatedRowCallback": fnCreatedRow,
-		"fnDrawCallback": fnLibraryTableDrawCallback,
+		"fnDrawCallback": AIRTIME.library.events.fnDrawCallback,
 		"fnHeaderCallback": function(nHead) {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
 		},
@@ -353,7 +320,7 @@ function createDataTable(data) {
     });
     oTable.fnSetFilteringDelay(350);
     
-    setupLibraryToolbar(oTable);
+    AIRTIME.library.events.setupLibraryToolbar(oTable);
       
     $('[name="pl_cb_all"]').click(function(){
     	var oTT = TableTools.fnGetInstance('library_display');
@@ -385,9 +352,11 @@ $(document).ready(function() {
         ignoreRightClick: true,
         
         build: function($el, e) {
-    		var x, request, data, items, callback;
+    		var x, request, data, screen, items, callback, $tr;
     		
-    		data = $el.parent().data("aData");
+    		$tr = $el.parent();
+    		data = $tr.data("aData");
+    		screen = $tr.data("screen");
     		
     		function processMenuItems(oItems) {
     			
@@ -400,9 +369,44 @@ $(document).ready(function() {
 						};
     				}
 	    			else {
-	    				
+	    				callback = function() {
+	    					AIRTIME.playlist.fnEdit(data.id);
+						};
 	    			}
     				oItems.edit.callback = callback;
+    			}
+    			
+    			//define a delete callback.
+    			if (oItems.del !== undefined) {
+    				
+    				//delete through the playlist controller, will reset
+    				//playlist screen if this is the currently edited playlist.
+    				if (data.ftype === "playlist" && screen === "playlist") {
+    					callback = function() {
+        					
+        					if (confirm('Are you sure you want to delete the selected item?')) {
+        						AIRTIME.playlist.fnDelete(data.id);
+        				    }
+    					};
+    				}
+    				else {
+    					callback = function() {
+        					var media = [];
+        					
+        					if (confirm('Are you sure you want to delete the selected item?')) {
+        						
+        						media.push({"id": data.id, "type": data.ftype});
+        						$.post(oItems.del.url, {format: "json", media: media }, function(json){
+        							var oTable, tr;
+        							
+        							oTable = $("#library_display").dataTable();
+            						oTable.fnDeleteRow( $tr[0] );
+        						});
+        				    }
+    					};
+    				}
+    				
+    				oItems.del.callback = callback;
     			}
     			
     			//define a download callback.
@@ -444,7 +448,7 @@ $(document).ready(function() {
     		request = $.ajax({
 			  url: "/library/context-menu",
 			  type: "GET",
-			  data: {id : data.id, type: data.ftype, format: "json"},
+			  data: {id : data.id, type: data.ftype, format: "json", "screen": screen},
 			  dataType: "json",
 			  async: false,
 			  success: function(json){
@@ -452,16 +456,7 @@ $(document).ready(function() {
 			  }
 			});
 
-			
-    		
-            // this callback is executed every time the menu is to be shown
-            // its results are destroyed every time the menu is hidden
-            // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
             return {
-                callback: function(key, options) {
-                    var m = "clicked: " + key;
-                    window.console && console.log(m) || alert(m); 
-                },
                 items: items,
                 determinePosition : function($menu, x, y) {
                 	$menu.css('display', 'block')

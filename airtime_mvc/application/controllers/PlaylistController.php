@@ -103,17 +103,18 @@ class PlaylistController extends Zend_Controller_Action
 
     public function editAction()
     {
-        $pl_id = $this->_getParam('id', null);
+        $id = $this->_getParam('id', null);
+        Logging::log("editing playlist {$id}");
 
-		if (!is_null($pl_id)) {
-			$this->changePlaylist($pl_id);
+		if (!is_null($id)) {
+			$this->changePlaylist($id);
 		}
 
 		try {
             $pl = $this->getPlaylist();
 		}
 		catch (PlaylistNotFoundException $e) {
-		    Logging::log("Playlist {$pl_id} not found");
+		    Logging::log("Playlist {$id} not found");
             $this->changePlaylist(null);
 		}
 		catch (Exception $e) {

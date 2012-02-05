@@ -49,7 +49,6 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.TableTools.js','text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css');
@@ -74,6 +73,8 @@ class LibraryController extends Zend_Controller_Action
 
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
+        //playlist||timeline
+        $screen = $this->_getParam('screen');
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -87,7 +88,7 @@ class LibraryController extends Zend_Controller_Action
             $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
 
             if ($user->isAdmin()) {
-                $menu["delete"] = array("name"=> "Delete", "icon" => "delete");
+                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
 
 	        $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
@@ -120,11 +121,11 @@ class LibraryController extends Zend_Controller_Action
         }
         else if ($type === "playlist") {
 
-            if (!isset($this->pl_sess->id) || $this->pl_sess->id !== $id) {
+            if ($this->pl_sess->id !== $id && $screen == "playlist") {
                 $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
             }
 
-            $menu["delete"] = array("name"=> "Delete", "icon" => "delete");
+            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
         }
 
         $this->view->items = $menu;
@@ -132,40 +133,52 @@ class LibraryController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        $ids = $this->_getParam('ids');
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
+        //array containing id and type of media to delete.
+        $mediaItems = $this->_getParam('media', null);
 
-        if ($user->isAdmin()) {
+        $user = Application_Model_User::GetCurrentUser();
 
-            if (!is_null($ids)) {
-                foreach ($ids as $key => $id) {
-                    $file = Application_Model_StoredFile::Recall($id);
+        $files = array();
+        $playlists = array();
 
-                    if (PEAR::isError($file)) {
-                        $this->view->message = $file->getMessage();
-                        return;
-                    }
-                    else if(is_null($file)) {
-                        $this->view->message = "file doesn't exist";
-                        return;
-                    }
+        $message = null;
 
-                    $res = $file->delete();
+        foreach ($mediaItems as $media) {
 
-                    if (PEAR::isError($res)) {
-                        $this->view->message = $res->getMessage();
-                        return;
-                    }
-                    else {
-                        $res = settype($res, "integer");
-                        $data = array("filepath" => $file->getFilePath(), "delete" => $res);
-                        Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
-                    }
-                }
-
-                $this->view->ids = $ids;
+            if ($media["type"] === "audioclip") {
+                $files[] = intval($media["id"]);
             }
+            else if ($media["type"] === "playlist") {
+                $playlists[] = intval($media["id"]);
+            }
+        }
+
+        if (count($playlists)) {
+            Application_Model_Playlist::DeletePlaylists($playlists);
+        }
+
+        if (!$user->isAdmin()) {
+            return;
+        }
+
+        foreach ($files as $id) {
+            Logging::log("deleting file {$id}");
+
+            $file = Application_Model_StoredFile::Recall($id);
+
+            if (isset($file)) {
+                try {
+                    $res = $file->delete();
+                }
+                //could throw a scheduled in future exception.
+                catch (Exception $e) {
+                    $message = "Could not delete some scheduled files.";
+                }
+            }
+        }
+
+        if (isset($message)) {
+            $this->view->message = $message;
         }
     }
 
@@ -252,13 +265,15 @@ class LibraryController extends Zend_Controller_Action
     public function getUploadToSoundcloudStatusAction(){
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
-        if($type == "show"){
+
+        if ($type == "show") {
             $show_instance = new Application_Model_ShowInstance($id);
             $this->view->sc_id = $show_instance->getSoundCloudFileId();
             $file = $show_instance->getRecordedFile();
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
-        }else{
+        }
+        else if ($type == "file") {
             $file = Application_Model_StoredFile::Recall($id);
             $this->view->sc_id = $file->getSoundCloudId();
             $this->view->error_code = $file->getSoundCloudErrorCode();

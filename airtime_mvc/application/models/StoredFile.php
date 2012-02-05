@@ -228,30 +228,6 @@ class Application_Model_StoredFile {
     }
 
     /**
-     * Delete and insert media file
-     *
-     * @param string $p_localFilePath
-     *      local path
-     * @return TRUE|PEAR_Error
-     */
-    public function replaceFile($p_localFilePath, $p_copyMedia=TRUE)
-    {
-        // Dont do anything if the source and destination files are
-        // the same.
-        if ($this->name == $p_localFilePath) {
-            return TRUE;
-        }
-
-        if ($this->exists) {
-            $r = $this->deleteFile();
-            if (PEAR::isError($r)) {
-                return $r;
-            }
-        }
-        return $this->addFile($p_localFilePath, $p_copyMedia);
-    }
-
-    /**
      * Set state of virtual file
      *
      * @param string $p_state
@@ -301,97 +277,27 @@ class Application_Model_StoredFile {
      *
      * @param boolean $p_deleteFile
      *
-     * @return void|PEAR_Error
      */
     public function delete()
     {
-        if ($this->exists()) {
-            if ($this->getFormat() == 'audioclip') {
-                $res = $this->deleteFile();
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
-            }
+        // Check if the file is scheduled to be played in the future
+        if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
+            throw new DeleteScheduledFileException();
         }
 
-        // don't delete from the playslist. We might want to put a flag
-        //Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
+        $filepath = $this->getFilePath();
+
+        if (file_exists($filepath)) {
+
+            $data = array("filepath" => $filepath, "delete" => 1);
+            Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+        }
+
+        Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
 
         // set file_exists falg to false
         $this->_file->setDbFileExists(false);
         $this->_file->save();
-        //$this->_file->delete();
-
-        if (isset($res)) {
-            return $res;
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * Delete media file from filesystem.
-     * You cant delete a file if it is being accessed.
-     * You cant delete a file if it is scheduled to be played in the future.
-     * The file will be removed from all playlists it is a part of.
-     *
-     * @return boolean|PEAR_Error
-     */
-    public function deleteFile()
-    {
-        global $CC_CONFIG;
-
-        if ($this->isAccessed()) {
-            return PEAR::raiseError('Cannot delete a file that is currently accessed.');
-        }
-
-        // Check if the file is scheduled to be played in the future
-        if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
-            return PEAR::raiseError('Cannot delete a file that is scheduled in the future.');
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns true if media file exists
-     * @return boolean
-     */
-    public function exists()
-    {
-        if ($this->_file->isDeleted()) {
-            return false;
-        }
-        if ($this->getFormat() == 'audioclip') {
-            return $this->existsFile();
-        }
-    }
-
-    /**
-     * Returns true if raw media file exists
-     * @return boolean
-     */
-    public function existsFile() {
-
-        $filepath = $this->getFilePath();
-
-        if (!isset($filepath) || !file_exists($filepath) || !is_readable($filepath)) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
-     /**
-     * Returns true if virtual file is currently in use.<br>
-     *
-     * @return boolean
-     */
-    public function isAccessed()
-    {
-       return ($this->_file->getDbCurrentlyaccessing() > 0);
     }
 
     /**
@@ -824,7 +730,7 @@ class Application_Model_StoredFile {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 
-		Logging::log($sql);
+		//Logging::log($sql);
 
 		$results = $CC_DBC->getAll($sql);
 
@@ -1093,3 +999,4 @@ class Application_Model_StoredFile {
     }
 }
 
+class DeleteScheduledFileException extends Exception {}

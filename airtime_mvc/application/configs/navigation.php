@@ -30,7 +30,7 @@ $pages = array(
 		'resource'	=>	'library'
 	),
 	array(
-        'label'      => 'Show Builder',
+        'label'      => 'Airtimeline',
         'module'     => 'default',
         'controller' => 'Showbuilder',
         'action'     => 'index',
