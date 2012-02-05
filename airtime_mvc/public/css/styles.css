@@ -128,10 +128,10 @@ select {
 /* Info Tooltip Ends */
 
 /* Clearfix */
-.clearfix:after, li:after { content: "."; display: block;	height: 0; clear: both;  visibility: hidden;}
-.clearfix, li {	display: inline-block; }
+.clearfix:after, #side_playlist li:after { content: "."; display: block;	height: 0; clear: both;  visibility: hidden;}
+.clearfix, #side_playlist li {	display: inline-block; }
 * html .clearfix, * html li { height: 1%;}
-.clearfix, li {	display: block;	}
+.clearfix, #side_playlist li {	display: block;	}
 
 
 /* Master Panel */

@@ -199,6 +199,15 @@ function addQtipToSCIcons(){
 }
 
 function fnCreatedRow( nRow, aData, iDataIndex ) {
+	
+	//call the context menu so we can prevent the event from propagating.
+	$(nRow).find('td:not(.library_checkbox):not(.library_type)').click(function(e){
+		var x;
+		
+		$(this).contextMenu();
+		
+		return false;
+	});
 
 	//add a tool tip to appear when the user clicks on the type icon.
 	$(nRow.children[1]).qtip({
@@ -369,4 +378,97 @@ $(document).ready(function() {
     //setInterval( "checkSCUploadStatus()", 5000 );
     
     addQtipToSCIcons();
+    
+    $.contextMenu({
+        selector: 'td:not(.library_checkbox):not(.library_type)',
+        trigger: "left",
+        ignoreRightClick: true,
+        
+        build: function($el, e) {
+    		var x, request, data, items, callback;
+    		
+    		data = $el.parent().data("aData");
+    		
+    		function processMenuItems(oItems) {
+    			
+    			//define an edit callback.
+    			if (oItems.edit !== undefined) {
+    				
+    				if (data.ftype === "audioclip") {
+	    				callback = function() {
+	    					document.location.href = oItems.edit.url;
+						};
+    				}
+	    			else {
+	    				
+	    			}
+    				oItems.edit.callback = callback;
+    			}
+    			
+    			//define a download callback.
+    			if (oItems.download !== undefined) {
+    				
+    				callback = function() {
+    					document.location.href = oItems.download.url;
+					};
+    				oItems.download.callback = callback;
+    			}
+    			//add callbacks for Soundcloud menu items.
+    			if (oItems.soundcloud !== undefined) {
+    				var soundcloud = oItems.soundcloud.items;
+    				
+    				//define an upload to soundcloud callback.
+    				if (soundcloud.upload !== undefined) {
+    					
+    					callback = function() {
+	    					$.post(soundcloud.upload.url, function(){
+	    						addProgressIcon(data.id);
+	    					});
+    					};
+    					soundcloud.upload.callback = callback;
+    				}
+    				
+    				//define a view on soundcloud callback
+    				if (soundcloud.view !== undefined) {
+    					
+    					callback = function() {
+	    					window.open(soundcloud.view.url);
+    					};
+    					soundcloud.view.callback = callback;
+    				}
+    			}
+    		
+    			items = oItems;
+    		}
+    		
+    		request = $.ajax({
+			  url: "/library/context-menu",
+			  type: "GET",
+			  data: {id : data.id, type: data.ftype, format: "json"},
+			  dataType: "json",
+			  async: false,
+			  success: function(json){
+				  processMenuItems(json.items);
+			  }
+			});
+
+			
+    		
+            // this callback is executed every time the menu is to be shown
+            // its results are destroyed every time the menu is hidden
+            // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
+            return {
+                callback: function(key, options) {
+                    var m = "clicked: " + key;
+                    window.console && console.log(m) || alert(m); 
+                },
+                items: items,
+                determinePosition : function($menu, x, y) {
+                	$menu.css('display', 'block')
+                		.position({ my: "left top", at: "right top", of: this, offset: "-20 10", collision: "fit"})
+                		.css('display', 'none');
+                }
+            };
+        }
+    });
 });

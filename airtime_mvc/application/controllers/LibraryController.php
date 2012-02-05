@@ -38,7 +38,7 @@ class LibraryController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js','text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
@@ -52,7 +52,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js','text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/TableTools.css');
@@ -77,11 +77,6 @@ class LibraryController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $params = '/format/json/id/#id#/type/#type#';
-
-        $paramsPop = str_replace('#id#', $id, $params);
-        $paramsPop = str_replace('#type#', $type, $paramsPop);
-
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
@@ -89,14 +84,22 @@ class LibraryController extends Zend_Controller_Action
 
             $file = Application_Model_StoredFile::Recall($id);
 
-            $menu[] = array('action' => array('type' => 'gourl', 'url' => '/Library/edit-file-md/id/#id#'),
-                            'title' => 'Edit Metadata');
+            $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
+
+            if ($user->isAdmin()) {
+                $menu["delete"] = array("name"=> "Delete", "icon" => "delete");
+            }
 
 	        $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
-            $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
-            				'title' => 'Download');
+	        $menu["download"] = array("name" => "Download", "url" => $url);
 
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
+
+                //create a menu separator
+                $menu["sep1"] = "-----------";
+
+                //create a sub menu for Soundcloud actions.
+                $menu["soundcloud"] = array("name" => "Soundcloud", "icon" => "soundcloud", "items" => array());
 
                 $scid = $file->getSoundCloudId();
 
@@ -107,30 +110,24 @@ class LibraryController extends Zend_Controller_Action
                     $text = "Upload to SoundCloud";
                 }
 
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
-                                'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
-
+                $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "url" => "/library/upload-file-soundcloud/id/{$id}");
 
                 if ($scid > 0){
-                    $link_to_file = $file->getSoundCloudLinkToFile();
-                    $menu[] = array('action' => array('type' => 'gourl', 'url' => $link_to_file, 'target' => '_blank'),
-                            'title' => 'View on Soundcloud');
+                    $url = $file->getSoundCloudLinkToFile();
+                    $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "url" => $url);
                 }
             }
         }
         else if ($type === "playlist") {
 
             if (!isset($this->pl_sess->id) || $this->pl_sess->id !== $id) {
-                $menu[] = array('action' =>
-                                    array('type' => 'ajax',
-                                    'url' => '/Playlist/edit'.$params,
-                                    'callback' => 'window["openDiffSPL"]'),
-                                'title' => 'Edit');
+                $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
             }
+
+            $menu["delete"] = array("name"=> "Delete", "icon" => "delete");
         }
 
-        //returns format jjmenu is looking for.
-        die(json_encode($menu));
+        $this->view->items = $menu;
     }
 
     public function deleteAction()

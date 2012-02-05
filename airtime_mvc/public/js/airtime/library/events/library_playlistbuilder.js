@@ -3,11 +3,16 @@ function fnLibraryTableRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFul
     $(nRow).attr("id", aData["tr_id"]);
     $(nRow).data("aData", aData);
     
+    //var oTT = TableTools.fnGetInstance('library_display');
+    //oTT.fnSelect(el);
+    
+    /*
 	$(nRow).find('td')
 		.jjmenu("rightClick",
 			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
 			{id: aData["id"], type: aData["ftype"]},
 			{xposition: "mouse", yposition: "mouse"});
+	*/
 }
 
 function fnLibraryTableDrawCallback() {
