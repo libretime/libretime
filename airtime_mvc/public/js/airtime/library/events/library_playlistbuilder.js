@@ -68,13 +68,13 @@ var AIRTIME = (function(AIRTIME){
 		
 			AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
 		};
-		
+			
 		//[0] = button text
 		//[1] = id 
 		//[2] = enabled
 		//[3] = click event
 		aButtons = [["Reset Order", "library_order_reset", true, fnResetCol], 
-		                ["Delete", "library_group_delete", true], 
+		                ["Delete", "library_group_delete", true, AIRTIME.library.fnDeleteSelectedItems], 
 		                ["Add", "library_group_add", true, fnAddSelectedItems]];
 		
 		addToolBarButtonsLibrary(aButtons);

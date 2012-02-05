@@ -1,3 +1,45 @@
+var AIRTIME = (function(AIRTIME){
+	var mod;
+	
+	if (AIRTIME.library === undefined) {
+		AIRTIME.library = {}
+	}
+	mod = AIRTIME.library;
+	
+	mod.fnDeleteItems = function(aMedia) {
+		var oLibTT = TableTools.fnGetInstance('library_display'),
+			oLibTable = $("#library_display").dataTable();
+		
+		$.post("/library/delete", 
+			{"format": "json", "media": aMedia}, 
+			function(json){
+				oLibTT.fnSelectNone();
+				oLibTable.fnDraw();
+			});
+	};
+	
+	mod.fnDeleteSelectedItems = function() {
+		var oLibTT = TableTools.fnGetInstance('library_display'),
+			aData = oLibTT.fnGetSelectedData(),
+			item,
+			temp,
+			aMedia = [];
+		
+		//process selected files/playlists.
+		for (item in aData) {
+			temp = aData[item];
+			if (temp !== null && temp.hasOwnProperty('id') ) {
+				aMedia.push({"id": temp.id, "type": temp.ftype});
+			} 	
+		}
+	
+		AIRTIME.library.fnDeleteItems(aMedia);
+	};
+	
+	return AIRTIME;
+	
+}(AIRTIME || {}));
+
 function addToolBarButtonsLibrary(aButtons) {
 	var i,
 		length = aButtons.length,

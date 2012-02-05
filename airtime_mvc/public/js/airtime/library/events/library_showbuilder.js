@@ -81,7 +81,7 @@ var AIRTIME = (function(AIRTIME){
 		//[2] = enabled
 		//[3] = click event
 		aButtons = [["Reset Order", "library_order_reset", true, fnResetCol], 
-		                ["Delete", "library_group_delete", true, fnTest], 
+		                ["Delete", "library_group_delete", true, AIRTIME.library.fnDeleteSelectedItems], 
 		                ["Add", "library_group_add", true, fnAddSelectedItems]];
 		
 		addToolBarButtonsLibrary(aButtons);
