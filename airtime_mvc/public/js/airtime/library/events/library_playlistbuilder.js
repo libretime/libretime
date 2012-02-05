@@ -43,11 +43,30 @@ var AIRTIME = (function(AIRTIME){
 	 */
 	mod.setupLibraryToolbar = function( oLibTable ) {
 		var aButtons,
-			fnResetCol;
+			fnResetCol,
+			fnAddSelectedItems;
 		
 		fnResetCol = function () {
 			ColReorder.fnReset( oLibTable );
 			return false;
+		};
+		
+		fnAddSelectedItems = function() {
+			var oLibTT = TableTools.fnGetInstance('library_display'),
+				aData = oLibTT.fnGetSelectedData(),
+				item,
+				temp,
+				aMediaIds = [];
+			
+			//process selected files/playlists.
+			for (item in aData) {
+				temp = aData[item];
+				if (temp !== null && temp.hasOwnProperty('id') && temp.ftype === "audioclip") {
+					aMediaIds.push(temp.id);
+				} 	
+			}
+		
+			AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
 		};
 		
 		//[0] = button text
@@ -56,7 +75,7 @@ var AIRTIME = (function(AIRTIME){
 		//[3] = click event
 		aButtons = [["Reset Order", "library_order_reset", true, fnResetCol], 
 		                ["Delete", "library_group_delete", true], 
-		                ["Add", "library_group_add", true]];
+		                ["Add", "library_group_add", true, fnAddSelectedItems]];
 		
 		addToolBarButtonsLibrary(aButtons);
 	}

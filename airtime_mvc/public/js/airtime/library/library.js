@@ -347,7 +347,7 @@ $(document).ready(function() {
     addQtipToSCIcons();
     
     $.contextMenu({
-        selector: 'td:not(.library_checkbox):not(.library_type)',
+        selector: '#library_display td:not(.library_checkbox):not(.library_type)',
         trigger: "left",
         ignoreRightClick: true,
         

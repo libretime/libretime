@@ -41,14 +41,14 @@ var AIRTIME = (function(AIRTIME){
 		};
 		
 		fnAddSelectedItems = function() {
-			var aData = oLibTT.fnGetSelectedData(),
+			var oSchedTable = $("#show_builder_table").dataTable(),
+				oLibTT = TableTools.fnGetInstance('library_display'),
+				oSchedTT = TableTools.fnGetInstance('show_builder_table'),
+				aData = oLibTT.fnGetSelectedData(),
 				item,
 				temp,
 				aMediaIds = [],
-				aSchedIds = [],
-				oSchedTable = $("#show_builder_table").dataTable(),
-				oLibTT = TableTools.fnGetInstance('library_display'),
-				oSchedTT = TableTools.fnGetInstance('show_builder_table');;
+				aSchedIds = [];
 			
 			//process selected files/playlists.
 			for (item in aData) {
