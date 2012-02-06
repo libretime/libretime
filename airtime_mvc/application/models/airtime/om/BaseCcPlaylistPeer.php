@@ -26,7 +26,7 @@ abstract class BaseCcPlaylistPeer {
 	const TM_CLASS = 'CcPlaylistTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 10;
+	const NUM_COLUMNS = 8;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -37,15 +37,6 @@ abstract class BaseCcPlaylistPeer {
 	/** the column name for the NAME field */
 	const NAME = 'cc_playlist.NAME';
 
-	/** the column name for the STATE field */
-	const STATE = 'cc_playlist.STATE';
-
-	/** the column name for the CURRENTLYACCESSING field */
-	const CURRENTLYACCESSING = 'cc_playlist.CURRENTLYACCESSING';
-
-	/** the column name for the EDITEDBY field */
-	const EDITEDBY = 'cc_playlist.EDITEDBY';
-
 	/** the column name for the MTIME field */
 	const MTIME = 'cc_playlist.MTIME';
 
@@ -55,11 +46,14 @@ abstract class BaseCcPlaylistPeer {
 	/** the column name for the LPTIME field */
 	const LPTIME = 'cc_playlist.LPTIME';
 
-	/** the column name for the CREATOR field */
-	const CREATOR = 'cc_playlist.CREATOR';
+	/** the column name for the CREATOR_ID field */
+	const CREATOR_ID = 'cc_playlist.CREATOR_ID';
 
 	/** the column name for the DESCRIPTION field */
 	const DESCRIPTION = 'cc_playlist.DESCRIPTION';
+
+	/** the column name for the LENGTH field */
+	const LENGTH = 'cc_playlist.LENGTH';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcPlaylist objects.
@@ -77,12 +71,12 @@ abstract class BaseCcPlaylistPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbState', 'DbCurrentlyaccessing', 'DbEditedby', 'DbMtime', 'DbUtime', 'DbLPtime', 'DbCreator', 'DbDescription', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbState', 'dbCurrentlyaccessing', 'dbEditedby', 'dbMtime', 'dbUtime', 'dbLPtime', 'dbCreator', 'dbDescription', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::STATE, self::CURRENTLYACCESSING, self::EDITEDBY, self::MTIME, self::UTIME, self::LPTIME, self::CREATOR, self::DESCRIPTION, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'STATE', 'CURRENTLYACCESSING', 'EDITEDBY', 'MTIME', 'UTIME', 'LPTIME', 'CREATOR', 'DESCRIPTION', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'state', 'currentlyaccessing', 'editedby', 'mtime', 'utime', 'lptime', 'creator', 'description', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbMtime', 'DbUtime', 'DbLPtime', 'DbCreatorId', 'DbDescription', 'DbLength', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbMtime', 'dbUtime', 'dbLPtime', 'dbCreatorId', 'dbDescription', 'dbLength', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::MTIME, self::UTIME, self::LPTIME, self::CREATOR_ID, self::DESCRIPTION, self::LENGTH, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'MTIME', 'UTIME', 'LPTIME', 'CREATOR_ID', 'DESCRIPTION', 'LENGTH', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'mtime', 'utime', 'lptime', 'creator_id', 'description', 'length', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	/**
@@ -92,12 +86,12 @@ abstract class BaseCcPlaylistPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbState' => 2, 'DbCurrentlyaccessing' => 3, 'DbEditedby' => 4, 'DbMtime' => 5, 'DbUtime' => 6, 'DbLPtime' => 7, 'DbCreator' => 8, 'DbDescription' => 9, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbState' => 2, 'dbCurrentlyaccessing' => 3, 'dbEditedby' => 4, 'dbMtime' => 5, 'dbUtime' => 6, 'dbLPtime' => 7, 'dbCreator' => 8, 'dbDescription' => 9, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::STATE => 2, self::CURRENTLYACCESSING => 3, self::EDITEDBY => 4, self::MTIME => 5, self::UTIME => 6, self::LPTIME => 7, self::CREATOR => 8, self::DESCRIPTION => 9, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'STATE' => 2, 'CURRENTLYACCESSING' => 3, 'EDITEDBY' => 4, 'MTIME' => 5, 'UTIME' => 6, 'LPTIME' => 7, 'CREATOR' => 8, 'DESCRIPTION' => 9, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'state' => 2, 'currentlyaccessing' => 3, 'editedby' => 4, 'mtime' => 5, 'utime' => 6, 'lptime' => 7, 'creator' => 8, 'description' => 9, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbMtime' => 2, 'DbUtime' => 3, 'DbLPtime' => 4, 'DbCreatorId' => 5, 'DbDescription' => 6, 'DbLength' => 7, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbMtime' => 2, 'dbUtime' => 3, 'dbLPtime' => 4, 'dbCreatorId' => 5, 'dbDescription' => 6, 'dbLength' => 7, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::MTIME => 2, self::UTIME => 3, self::LPTIME => 4, self::CREATOR_ID => 5, self::DESCRIPTION => 6, self::LENGTH => 7, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'MTIME' => 2, 'UTIME' => 3, 'LPTIME' => 4, 'CREATOR_ID' => 5, 'DESCRIPTION' => 6, 'LENGTH' => 7, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'mtime' => 2, 'utime' => 3, 'lptime' => 4, 'creator_id' => 5, 'description' => 6, 'length' => 7, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	/**
@@ -171,25 +165,21 @@ abstract class BaseCcPlaylistPeer {
 		if (null === $alias) {
 			$criteria->addSelectColumn(CcPlaylistPeer::ID);
 			$criteria->addSelectColumn(CcPlaylistPeer::NAME);
-			$criteria->addSelectColumn(CcPlaylistPeer::STATE);
-			$criteria->addSelectColumn(CcPlaylistPeer::CURRENTLYACCESSING);
-			$criteria->addSelectColumn(CcPlaylistPeer::EDITEDBY);
 			$criteria->addSelectColumn(CcPlaylistPeer::MTIME);
 			$criteria->addSelectColumn(CcPlaylistPeer::UTIME);
 			$criteria->addSelectColumn(CcPlaylistPeer::LPTIME);
-			$criteria->addSelectColumn(CcPlaylistPeer::CREATOR);
+			$criteria->addSelectColumn(CcPlaylistPeer::CREATOR_ID);
 			$criteria->addSelectColumn(CcPlaylistPeer::DESCRIPTION);
+			$criteria->addSelectColumn(CcPlaylistPeer::LENGTH);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.NAME');
-			$criteria->addSelectColumn($alias . '.STATE');
-			$criteria->addSelectColumn($alias . '.CURRENTLYACCESSING');
-			$criteria->addSelectColumn($alias . '.EDITEDBY');
 			$criteria->addSelectColumn($alias . '.MTIME');
 			$criteria->addSelectColumn($alias . '.UTIME');
 			$criteria->addSelectColumn($alias . '.LPTIME');
-			$criteria->addSelectColumn($alias . '.CREATOR');
+			$criteria->addSelectColumn($alias . '.CREATOR_ID');
 			$criteria->addSelectColumn($alias . '.DESCRIPTION');
+			$criteria->addSelectColumn($alias . '.LENGTH');
 		}
 	}
 
@@ -514,7 +504,7 @@ abstract class BaseCcPlaylistPeer {
 			$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CcPlaylistPeer::EDITEDBY, CcSubjsPeer::ID, $join_behavior);
+		$criteria->addJoin(CcPlaylistPeer::CREATOR_ID, CcSubjsPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -550,7 +540,7 @@ abstract class BaseCcPlaylistPeer {
 		$startcol = (CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS);
 		CcSubjsPeer::addSelectColumns($criteria);
 
-		$criteria->addJoin(CcPlaylistPeer::EDITEDBY, CcSubjsPeer::ID, $join_behavior);
+		$criteria->addJoin(CcPlaylistPeer::CREATOR_ID, CcSubjsPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -630,7 +620,7 @@ abstract class BaseCcPlaylistPeer {
 			$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CcPlaylistPeer::EDITEDBY, CcSubjsPeer::ID, $join_behavior);
+		$criteria->addJoin(CcPlaylistPeer::CREATOR_ID, CcSubjsPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -668,7 +658,7 @@ abstract class BaseCcPlaylistPeer {
 		CcSubjsPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcSubjsPeer::NUM_COLUMNS - CcSubjsPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		$criteria->addJoin(CcPlaylistPeer::EDITEDBY, CcSubjsPeer::ID, $join_behavior);
+		$criteria->addJoin(CcPlaylistPeer::CREATOR_ID, CcSubjsPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();

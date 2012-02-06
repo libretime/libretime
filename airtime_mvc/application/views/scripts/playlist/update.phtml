@@ -4,7 +4,7 @@ if (count($items)) : ?>
 
 <?php $i = 0; ?>
 <?php foreach($items as $item) : ?>
-    <li class="ui-state-default" id="spl_<?php echo $i ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$i; ?>">
+    <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$i; ?>">
         <div class="list-item-container">
             <a href="javascript:void(0);" class="big_play"
             onclick="audioPreview('<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["filepath"], PATHINFO_EXTENSION);?>',
@@ -25,12 +25,12 @@ if (count($items)) : ?>
             ?>
             <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div>
             <?php endif; ?>
-            <span class="ui-icon ui-icon-closethick"></span>
+            <span id="remove_<?php echo $item["id"] ?>" class="ui-icon ui-icon-closethick"></span>
         </div>
 
         <div id="cues_<?php echo $i ?>" class="cue-edit clearfix" style="display: none">
             <?php echo $this->partial('playlist/set-cue.phtml', array(
-                'pos' => $i,
+                'id' => $item["id"],
                 'cueIn' => $item['cuein'],
                 'cueOut' => $item['cueout'],
                 'origLength' => $item["CcFiles"]['length'])); ?>
@@ -43,7 +43,8 @@ if (count($items)) : ?>
         ?>
         <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none">
             <?php echo $this->partial('playlist/set-fade.phtml', array(
-                'pos' => $i,
+                'item1' => $items[$i]['id'],
+                'item2' => $items[$i+1]['id'],
                 'fadeOut' => $items[$i]['fadeout'],
                 'fadeIn' => $items[$i+1]['fadein'])); ?>
         </div>

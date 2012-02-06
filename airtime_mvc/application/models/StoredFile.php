@@ -90,7 +90,7 @@ class Application_Model_StoredFile {
             }
             $this->setDbColMetadata($dbMd);
         }
-        
+
         $this->_file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
         $this->_file->save();
     }
@@ -228,30 +228,6 @@ class Application_Model_StoredFile {
     }
 
     /**
-     * Delete and insert media file
-     *
-     * @param string $p_localFilePath
-     *      local path
-     * @return TRUE|PEAR_Error
-     */
-    public function replaceFile($p_localFilePath, $p_copyMedia=TRUE)
-    {
-        // Dont do anything if the source and destination files are
-        // the same.
-        if ($this->name == $p_localFilePath) {
-            return TRUE;
-        }
-
-        if ($this->exists) {
-            $r = $this->deleteFile();
-            if (PEAR::isError($r)) {
-                return $r;
-            }
-        }
-        return $this->addFile($p_localFilePath, $p_copyMedia);
-    }
-
-    /**
      * Set state of virtual file
      *
      * @param string $p_state
@@ -301,98 +277,30 @@ class Application_Model_StoredFile {
      *
      * @param boolean $p_deleteFile
      *
-     * @return void|PEAR_Error
      */
     public function delete($deleteFromPlaylist=false)
     {
-        if ($this->exists()) {
-            if ($this->getFormat() == 'audioclip') {
-                $res = $this->deleteFile();
-                if (PEAR::isError($res)) {
-                    return $res;
-                }
-            }
-        }
-
-        if($deleteFromPlaylist){
-            Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
-        }
-        
-        // set file_exists falg to false
-        $this->_file->setDbFileExists(false);
-        $this->_file->save();
-        //$this->_file->delete();
-
-        if (isset($res)) {
-            return $res;
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * Delete media file from filesystem.
-     * You cant delete a file if it is being accessed.
-     * You cant delete a file if it is scheduled to be played in the future.
-     * The file will be removed from all playlists it is a part of.
-     *
-     * @return boolean|PEAR_Error
-     */
-    public function deleteFile()
-    {
-        global $CC_CONFIG;
-
-        if ($this->isAccessed()) {
-            return PEAR::raiseError('Cannot delete a file that is currently accessed.');
-        }
-
-        // Check if the file is scheduled to be played in the future
-        if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
-            return PEAR::raiseError('Cannot delete a file that is scheduled in the future.');
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns true if media file exists
-     * @return boolean
-     */
-    public function exists()
-    {
-        if ($this->_file->isDeleted()) {
-            return false;
-        }
-        if ($this->getFormat() == 'audioclip') {
-            return $this->existsFile();
-        }
-    }
-
-    /**
-     * Returns true if raw media file exists
-     * @return boolean
-     */
-    public function existsFile() {
 
         $filepath = $this->getFilePath();
 
-        if (!isset($filepath) || !file_exists($filepath) || !is_readable($filepath)) {
-            return false;
+        // Check if the file is scheduled to be played in the future
+        if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
+            throw new DeleteScheduledFileException();
         }
-        else {
-            return true;
-        }
-    }
 
-     /**
-     * Returns true if virtual file is currently in use.<br>
-     *
-     * @return boolean
-     */
-    public function isAccessed()
-    {
-       return ($this->_file->getDbCurrentlyaccessing() > 0);
+        if (file_exists($filepath)) {
+
+            $data = array("filepath" => $filepath, "delete" => 1);
+            Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+        }
+
+        if ($deleteFromPlaylist){
+            Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
+        }
+
+        // set file_exists falg to false
+        $this->_file->setDbFileExists(false);
+        $this->_file->save();
     }
 
     /**
@@ -419,10 +327,10 @@ class Application_Model_StoredFile {
      * @return string
      */
     public function getFilePath()
-    {        
+    {
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
         $directory = $music_dir->getDirectory();
-        
+
         $filepath = $this->_file->getDbFilepath();
 
         return $directory.$filepath;
@@ -436,7 +344,7 @@ class Application_Model_StoredFile {
     public function setFilePath($p_filepath)
     {
         $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
-        
+
         if (is_null($path_info)) {
             return -1;
         }
@@ -506,7 +414,7 @@ class Application_Model_StoredFile {
         $storedFile->_file = $file;
 
         if(isset($md['MDATA_KEY_FILEPATH'])) {
-            // removed "//" in the path. Always use '/' for path separator 
+            // removed "//" in the path. Always use '/' for path separator
             $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
             $res = $storedFile->setFilePath($filepath);
             if ($res === -1) {
@@ -643,6 +551,34 @@ class Application_Model_StoredFile {
         return $res;
     }
 
+/*
+     * @param DateInterval $p_interval
+     *
+     * @return string $runtime
+     */
+    private static function formatDuration($dt){
+
+        $hours = $dt->format("H");
+        $min = $dt->format("i");
+        $sec = $dt->format("s");
+
+        $time = "PT{$hours}H{$min}M{$sec}S";
+
+        $p_interval = new DateInterval($time);
+
+        $hours = $p_interval->format("%h");
+        $mins = $p_interval->format("%i");
+
+        if( $hours == 0) {
+            $runtime = $p_interval->format("%i:%S");
+        }
+        else {
+            $runtime = $p_interval->format("%h:%I:%S");
+        }
+
+        return $runtime;
+    }
+
     public static function searchFilesForPlaylistBuilder($datatables)
     {
         global $CC_CONFIG;
@@ -660,11 +596,11 @@ class Application_Model_StoredFile {
                 $plSelect .= "'playlist' AS ".$key.", ";
                 $fileSelect .= $key.", ";
             } else if ($key === "artist_name") {
-                $plSelect .= "creator AS ".$key.", ";
+                $plSelect .= "login AS ".$key.", ";
                 $fileSelect .= $key.", ";
             } else if ($key === "length") {
                 $plSelect .= $key.", ";
-                $fileSelect .= $key.", ";
+                $fileSelect .= $key."::interval, ";
             } else if ($key === "year") {
                 $plSelect .= "CAST(utime AS varchar) AS ".$key.", ";
                 $fileSelect .= $key.", ";
@@ -681,13 +617,19 @@ class Application_Model_StoredFile {
         }
 
         $fromTable = " ((".$plSelect."PL.id
-            FROM ".$CC_CONFIG["playListTable"]." AS PL
-                LEFT JOIN ".$CC_CONFIG['playListTimeView']." AS PLT USING(id))
+            FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))
             UNION
             (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
-        
+
         $results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+
         foreach($results['aaData'] as &$row){
+
+            $row['id'] = intval($row['id']);
+
+            $length = new DateTime($row['length']);
+            $row['length'] = self::formatDuration($length);
+
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
 
@@ -695,7 +637,22 @@ class Application_Model_StoredFile {
             // split it and grab only the year info
             $yearSplit = explode('-', $row['year']);
             $row['year'] = $yearSplit[0];
+
+            $type = substr($row['ftype'], 0, 2);
+
+            $row['tr_id'] = "{$type}_{$row['id']}";
+
+            //TODO url like this to work on both playlist/showbuilder screens.
+            //datatable stuff really needs to be pulled out and generalized within the project
+            //access to zend view methods to access url helpers is needed.
+            if($type == "au") {
+                $row['image'] = '<img src="/css/images/icon_audioclip.png">';
+            }
+            else {
+                $row['image'] = '<img src="/css/images/icon_playlist.png">';
+            }
         }
+
         return $results;
     }
 
@@ -723,7 +680,8 @@ class Application_Model_StoredFile {
 		      unset($columnsDisplayed[$key]);
 		  }
 		}
-		$selectorRows = "SELECT " . join(',', $columnsDisplayed );
+		//$selectorRows = "SELECT " . join(',', $columnsDisplayed );
+		$selectorRows = "SELECT * ";
 
         $sql = $selectorCount." FROM ".$fromTable;
 		$totalRows = $CC_DBC->getOne($sql);
@@ -774,9 +732,11 @@ class Application_Model_StoredFile {
 		else {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
-		
+
+		//Logging::log($sql);
+
 		$results = $CC_DBC->getAll($sql);
-                
+
 		if(!isset($totalDisplayRows)) {
 			$totalDisplayRows = $totalRows;
 		}
@@ -905,6 +865,7 @@ class Application_Model_StoredFile {
         $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
         Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
+
         //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
 
         $r = @rename($audio_file, $audio_stor);
@@ -927,14 +888,14 @@ class Application_Model_StoredFile {
     }
 
     /**
-     * 
+     *
      * Enter description here ...
      * @param $dir_id - if this is not provided, it returns all files with full path constructed.
      * @param $propelObj - if this is true, it returns array of proepl obj
      */
     public static function listAllFiles($dir_id=null, $propelObj=false){
         global $CC_DBC;
-        
+
         if($propelObj){
             $sql = "SELECT m.directory || f.filepath as fp"
                     ." FROM CC_MUSIC_DIRS m"
@@ -996,12 +957,12 @@ class Application_Model_StoredFile {
     public function getSoundCloudErrorMsg(){
         return $this->_file->getDbSoundCloudErrorMsg();
     }
-    
+
     public function setFileExistsFlag($flag){
         $this->_file->setDbFileExists($flag)
             ->save();
     }
-    
+
     public function getFileExistsFlag(){
         return $this->_file->getDbFileExists();
     }
@@ -1048,3 +1009,4 @@ class Application_Model_StoredFile {
     }
 }
 
+class DeleteScheduledFileException extends Exception {}

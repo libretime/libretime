@@ -23,28 +23,40 @@ class LibraryController extends Zend_Controller_Action
         $this->search_sess = new Zend_Session_Namespace("search");
     }
 
-    public function indexAction()
+    public function indexAction() {
+
+        $this->_helper->layout->setLayout('library');
+
+        $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_playlistbuilder.js'),'text/javascript');
+
+        $this->_helper->actionStack('library', 'library');
+        $this->_helper->actionStack('index', 'playlist');
+    }
+
+    public function libraryAction()
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js?'.filemtime($baseDir.'/js/contextmenu/jjmenu.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.filemtime($baseDir.'/js/contextmenu/jquery.contextMenu.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.ColVis.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.ColReorder.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorderResize.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.ColReorderResize.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.FixedColumns.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.TableTools.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.TableTools.js'),'text/javascript');
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.filemtime($baseDir.'/js/airtime/library/library.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js?'.filemtime($baseDir.'/js/airtime/library/advancedsearch.js'),'text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.filemtime($baseDir.'/css/media_library.css'));
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css?'.filemtime($baseDir.'/css/contextmenu.css'));
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.filemtime($baseDir.'/css/jquery.contextMenu.css'));
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.filemtime($baseDir.'/css/datatables/css/ColVis.css'));
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.filemtime($baseDir.'/css/datatables/css/ColReorder.css'));
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/TableTools.css?'.filemtime($baseDir.'/css/TableTools.css'));
 
-        $this->_helper->layout->setLayout('library');
         $this->_helper->viewRenderer->setResponseSegment('library');
 
         $form = new Application_Form_AdvancedSearch();
@@ -54,8 +66,6 @@ class LibraryController extends Zend_Controller_Action
         $this->search_sess->next_row[1] = 2;
         $this->view->form = $form;
         $this->view->md = $this->search_sess->md;
-
-        $this->_helper->actionStack('index', 'playlist');
     }
 
     public function contextMenuAction()
@@ -64,186 +74,137 @@ class LibraryController extends Zend_Controller_Action
 
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
+        //playlist||timeline
+        $screen = $this->_getParam('screen');
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-
-        $params = '/format/json/id/#id#/type/#type#';
-
-        $paramsPop = str_replace('#id#', $id, $params);
-        $paramsPop = str_replace('#type#', $type, $paramsPop);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
-        $pl_sess = $this->pl_sess;
+        if ($type === "audioclip") {
 
-        if($type === "au") {
+            $file = Application_Model_StoredFile::Recall($id);
 
-            if(isset($pl_sess->id)) {
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Playlist/add-item'.$params, 'callback' => 'window["setSPLContent"]'),
-                    'title' => 'Add to Playlist');
+            $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
+
+            if ($user->isAdmin()) {
+                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
 
-            $menu[] = array('action' => array('type' => 'gourl', 'url' => '/Library/edit-file-md/id/#id#'),
-                            'title' => 'Edit Metadata');
-
-            // added for downlaod
-	    	$id = $this->_getParam('id');
-
-	    	$file_id = $this->_getParam('id', null);
-	        $file = Application_Model_StoredFile::Recall($file_id);
-
 	        $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
-            $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
-            				'title' => 'Download');
+	        $menu["download"] = array("name" => "Download", "url" => $url);
 
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
-                $text = "Upload to SoundCloud";
-                if(!is_null($file->getSoundCloudId())){
-                    $text = "Re-upload to SoundCloud";
-                }
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Library/upload-file-soundcloud/id/#id#',
-                                'callback'=>"window['addProgressIcon']('$file_id')"),'title' => $text);
+
+                //create a menu separator
+                $menu["sep1"] = "-----------";
+
+                //create a sub menu for Soundcloud actions.
+                $menu["soundcloud"] = array("name" => "Soundcloud", "icon" => "soundcloud", "items" => array());
 
                 $scid = $file->getSoundCloudId();
 
-                if($scid > 0){
-                    $link_to_file = $file->getSoundCloudLinkToFile();
-                    $menu[] = array('action' => array('type' => 'fn',
-                    	    'callback' => "window['openFileOnSoundCloud']('$link_to_file')"),
-                                				'title' => 'View on SoundCloud');
+                if (!is_null($scid)){
+                    $text = "Re-upload to SoundCloud";
+                }
+                else {
+                    $text = "Upload to SoundCloud";
+                }
+
+                $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "url" => "/library/upload-file-soundcloud/id/{$id}");
+
+                if ($scid > 0){
+                    $url = $file->getSoundCloudLinkToFile();
+                    $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "url" => $url);
                 }
             }
-
-            if ($user->isAdmin()) {
-                $menu[] = array('action' => array('type' => 'fn',
-                        'callback' => "window['confirmDeleteAudioClip']('$paramsPop')"),
-                        'title' => 'Delete');
-            }
         }
-        else if($type === "pl") {
+        else if ($type === "playlist") {
 
-            if(!isset($pl_sess->id) || $pl_sess->id !== $id) {
-                $menu[] = array('action' =>
-                                    array('type' => 'ajax',
-                                    'url' => '/Playlist/edit'.$params,
-                                    'callback' => 'window["openDiffSPL"]'),
-                                'title' => 'Edit');
-            }
-            else if(isset($pl_sess->id) && $pl_sess->id === $id) {
-                $menu[] = array('action' =>
-                                    array('type' => 'ajax',
-                                    'url' => '/Playlist/close'.$params,
-                                    'callback' => 'window["noOpenPL"]'),
-                                'title' => 'Close');
+            if ($this->pl_sess->id !== $id && $screen == "playlist") {
+                $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
             }
 
-            $menu[] = array('action' => array('type' => 'fn',
-                    'callback' => "window['confirmDeletePlaylist']('$paramsPop')"),
-                    'title' => 'Delete');
-
+            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
         }
 
-        //returns format jjmenu is looking for.
-        die(json_encode($menu));
+        $this->view->items = $menu;
     }
 
     public function deleteAction()
     {
-        $id = $this->_getParam('id');
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
+        //array containing id and type of media to delete.
+        $mediaItems = $this->_getParam('media', null);
 
-        if ($user->isAdmin()) {
+        $user = Application_Model_User::GetCurrentUser();
 
-            if (!is_null($id)) {
-                $file = Application_Model_StoredFile::Recall($id);
+        $files = array();
+        $playlists = array();
 
-                if (PEAR::isError($file)) {
-                    $this->view->message = $file->getMessage();
-                    return;
-                }
-                else if(is_null($file)) {
-                    $this->view->message = "file doesn't exist";
-                    return;
-                }
+        $message = null;
 
-                $res = $file->delete(true);
+        foreach ($mediaItems as $media) {
 
-                if (PEAR::isError($res)) {
-                    $this->view->message = $res->getMessage();
-                    return;
-                }
-                else {
-                    $res = settype($res, "integer");
-                    $data = array("filepath" => $file->getFilePath(), "delete" => $res);
-                    Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
-                }
+            if ($media["type"] === "audioclip") {
+                $files[] = intval($media["id"]);
             }
-
-            $this->view->id = $id;
+            else if ($media["type"] === "playlist") {
+                $playlists[] = intval($media["id"]);
+            }
         }
-    }
-    
-    public function deleteGroupAction()
-    {
-        $ids = $this->_getParam('ids');
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
 
-        if ($user->isAdmin()) {
+        if (count($playlists)) {
+            Application_Model_Playlist::DeletePlaylists($playlists);
+        }
 
-            if (!is_null($ids)) {
-                foreach ($ids as $key => $id) {
-                    $file = Application_Model_StoredFile::Recall($id);
+        if (!$user->isAdmin()) {
+            return;
+        }
 
-                    if (PEAR::isError($file)) {
-                        $this->view->message = $file->getMessage();
-                        return;
-                    }
-                    else if(is_null($file)) {
-                        $this->view->message = "file doesn't exist";
-                        return;
-                    }
+        foreach ($files as $id) {
+            Logging::log("deleting file {$id}");
 
-                    $res = $file->delete();
+            $file = Application_Model_StoredFile::Recall($id);
 
-                    if (PEAR::isError($res)) {
-                        $this->view->message = $res->getMessage();
-                        return;
-                    }
-                    else {
-                        $res = settype($res, "integer");
-                        $data = array("filepath" => $file->getFilePath(), "delete" => $res);
-                        Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
-                    }
+            if (isset($file)) {
+                try {
+                    $res = $file->delete(true);
                 }
-                
-                $this->view->ids = $ids;
+                //could throw a scheduled in future exception.
+                catch (Exception $e) {
+                    $message = "Could not delete some scheduled files.";
+                }
             }
+        }
+
+        if (isset($message)) {
+            $this->view->message = $message;
         }
     }
 
     public function contentsAction()
     {
-        $post = $this->getRequest()->getPost();
-        $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($post);
-        
-        //format clip lengh to 1 decimal
-        foreach($datatables["aaData"] as &$data){
-            if($data['ftype'] == 'audioclip'){
+        $params = $this->getRequest()->getParams();
+        $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($params);
+
+        //TODO move this to the datatables row callback.
+        foreach ($datatables["aaData"] as &$data) {
+
+            if ($data['ftype'] == 'audioclip'){
                 $file = Application_Model_StoredFile::Recall($data['id']);
                 $scid = $file->getSoundCloudId();
-                if($scid == "-2"){
-                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon progress"></span>';
-                }else if($scid == "-3"){
-                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon sc-error"></span>';
-                }else if(!is_null($scid)){
-                    $data['track_title'] .= '<span id="'.$data['id'].'" class="small-icon soundcloud"></span>';
+
+                if ($scid == "-2"){
+                    $data['track_title'] .= '<span class="small-icon progress"/>';
+                }
+                else if ($scid == "-3"){
+                    $data['track_title'] .= '<span class="small-icon sc-error"/>';
+                }
+                else if (!is_null($scid)){
+                    $data['track_title'] .= '<span class="small-icon soundcloud"/>';
                 }
             }
-            $sec = Application_Model_Playlist::playlistTimeToSeconds($data['length']);
-            $data['length'] = Application_Model_Playlist::secondsToPlaylistTime($sec);
         }
 
         die(json_encode($datatables));
@@ -284,13 +245,13 @@ class LibraryController extends Zend_Controller_Action
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
 
-        if($type == "au") {
+        if ($type == "audioclip") {
             $file = Application_Model_StoredFile::Recall($id);
             $this->view->type = $type;
             $this->view->md = $file->getMetadata();
         }
-        else if($type == "pl") {
-            $file = Application_Model_Playlist::Recall($id);
+        else if ($type == "playlist") {
+            $file = new Application_Model_Playlist($id);
             $this->view->type = $type;
             $this->view->md = $file->getAllPLMetaData();
             $this->view->contents = $file->getContents();
@@ -308,13 +269,15 @@ class LibraryController extends Zend_Controller_Action
     public function getUploadToSoundcloudStatusAction(){
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
-        if($type == "show"){
+
+        if ($type == "show") {
             $show_instance = new Application_Model_ShowInstance($id);
             $this->view->sc_id = $show_instance->getSoundCloudFileId();
             $file = $show_instance->getRecordedFile();
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
-        }else{
+        }
+        else if ($type == "file") {
             $file = Application_Model_StoredFile::Recall($id);
             $this->view->sc_id = $file->getSoundCloudId();
             $this->view->error_code = $file->getSoundCloudErrorCode();

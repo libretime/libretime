@@ -45,7 +45,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js?'.filemtime($baseDir.'/js/fullcalendar/fullcalendar.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker-0.0.6.js?'.filemtime($baseDir.'/js/timepicker/jquery.ui.timepicker-0.0.6.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js?'.filemtime($baseDir.'/js/timepicker/jquery.ui.timepicker.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js?'.filemtime($baseDir.'/js/colorpicker/js/colorpicker.js'),'text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
@@ -68,7 +68,7 @@ class ScheduleController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
         $this->view->isAdmin = $user->isAdmin();
         $this->view->isProgramManager = $user->isUserType('P');
-        
+
         $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
     }
 

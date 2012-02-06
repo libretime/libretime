@@ -59,4 +59,17 @@ class CcPlaylistcontentsTableMap extends TableMap {
     $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('playlist_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
+	/**
+	 * 
+	 * Gets the list of behaviors registered for this table
+	 * 
+	 * @return array Associative array (name => parameters) of behaviors
+	 */
+	public function getBehaviors()
+	{
+		return array(
+			'aggregate_column_relation' => array('foreign_table' => 'cc_playlist', 'update_method' => 'updateDbLength', ),
+		);
+	} // getBehaviors()
+
 } // CcPlaylistcontentsTableMap

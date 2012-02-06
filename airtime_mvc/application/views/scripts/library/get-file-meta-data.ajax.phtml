@@ -1,4 +1,4 @@
-<?php if($this->type == "au") : ?>
+<?php if($this->type == "audioclip") : ?>
 <div><span>Title:</span><span><?php echo ($this->md["MDATA_KEY_TITLE"]);?></span></div>
 <div><span>Artist:</span><span><?php echo ($this->md["MDATA_KEY_CREATOR"]);?></span></div>
 <div><span>Album:</span><span><?php echo ($this->md["MDATA_KEY_SOURCE"]);?></span></div>
@@ -19,7 +19,7 @@
 
 <?php endif; ?>
 
-<?php if($this->type == "pl") : ?>
+<?php if($this->type == "playlist") : ?>
 <div><span>Name:</span><span><?php echo ($this->md["dc:title"]);?></span></div>
 <div><span>Creator:</span><span><?php echo ($this->md["dc:creator"]);?></span></div>
 <div><span>Length:</span><span><?php echo ($this->md["dcterms:extent"]);?></span></div>

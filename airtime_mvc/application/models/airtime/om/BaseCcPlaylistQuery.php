@@ -8,25 +8,21 @@
  *
  * @method     CcPlaylistQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcPlaylistQuery orderByDbName($order = Criteria::ASC) Order by the name column
- * @method     CcPlaylistQuery orderByDbState($order = Criteria::ASC) Order by the state column
- * @method     CcPlaylistQuery orderByDbCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
- * @method     CcPlaylistQuery orderByDbEditedby($order = Criteria::ASC) Order by the editedby column
  * @method     CcPlaylistQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
  * @method     CcPlaylistQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
  * @method     CcPlaylistQuery orderByDbLPtime($order = Criteria::ASC) Order by the lptime column
- * @method     CcPlaylistQuery orderByDbCreator($order = Criteria::ASC) Order by the creator column
+ * @method     CcPlaylistQuery orderByDbCreatorId($order = Criteria::ASC) Order by the creator_id column
  * @method     CcPlaylistQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
+ * @method     CcPlaylistQuery orderByDbLength($order = Criteria::ASC) Order by the length column
  *
  * @method     CcPlaylistQuery groupByDbId() Group by the id column
  * @method     CcPlaylistQuery groupByDbName() Group by the name column
- * @method     CcPlaylistQuery groupByDbState() Group by the state column
- * @method     CcPlaylistQuery groupByDbCurrentlyaccessing() Group by the currentlyaccessing column
- * @method     CcPlaylistQuery groupByDbEditedby() Group by the editedby column
  * @method     CcPlaylistQuery groupByDbMtime() Group by the mtime column
  * @method     CcPlaylistQuery groupByDbUtime() Group by the utime column
  * @method     CcPlaylistQuery groupByDbLPtime() Group by the lptime column
- * @method     CcPlaylistQuery groupByDbCreator() Group by the creator column
+ * @method     CcPlaylistQuery groupByDbCreatorId() Group by the creator_id column
  * @method     CcPlaylistQuery groupByDbDescription() Group by the description column
+ * @method     CcPlaylistQuery groupByDbLength() Group by the length column
  *
  * @method     CcPlaylistQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlaylistQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -45,25 +41,21 @@
  *
  * @method     CcPlaylist findOneByDbId(int $id) Return the first CcPlaylist filtered by the id column
  * @method     CcPlaylist findOneByDbName(string $name) Return the first CcPlaylist filtered by the name column
- * @method     CcPlaylist findOneByDbState(string $state) Return the first CcPlaylist filtered by the state column
- * @method     CcPlaylist findOneByDbCurrentlyaccessing(int $currentlyaccessing) Return the first CcPlaylist filtered by the currentlyaccessing column
- * @method     CcPlaylist findOneByDbEditedby(int $editedby) Return the first CcPlaylist filtered by the editedby column
  * @method     CcPlaylist findOneByDbMtime(string $mtime) Return the first CcPlaylist filtered by the mtime column
  * @method     CcPlaylist findOneByDbUtime(string $utime) Return the first CcPlaylist filtered by the utime column
  * @method     CcPlaylist findOneByDbLPtime(string $lptime) Return the first CcPlaylist filtered by the lptime column
- * @method     CcPlaylist findOneByDbCreator(string $creator) Return the first CcPlaylist filtered by the creator column
+ * @method     CcPlaylist findOneByDbCreatorId(int $creator_id) Return the first CcPlaylist filtered by the creator_id column
  * @method     CcPlaylist findOneByDbDescription(string $description) Return the first CcPlaylist filtered by the description column
+ * @method     CcPlaylist findOneByDbLength(string $length) Return the first CcPlaylist filtered by the length column
  *
  * @method     array findByDbId(int $id) Return CcPlaylist objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcPlaylist objects filtered by the name column
- * @method     array findByDbState(string $state) Return CcPlaylist objects filtered by the state column
- * @method     array findByDbCurrentlyaccessing(int $currentlyaccessing) Return CcPlaylist objects filtered by the currentlyaccessing column
- * @method     array findByDbEditedby(int $editedby) Return CcPlaylist objects filtered by the editedby column
  * @method     array findByDbMtime(string $mtime) Return CcPlaylist objects filtered by the mtime column
  * @method     array findByDbUtime(string $utime) Return CcPlaylist objects filtered by the utime column
  * @method     array findByDbLPtime(string $lptime) Return CcPlaylist objects filtered by the lptime column
- * @method     array findByDbCreator(string $creator) Return CcPlaylist objects filtered by the creator column
+ * @method     array findByDbCreatorId(int $creator_id) Return CcPlaylist objects filtered by the creator_id column
  * @method     array findByDbDescription(string $description) Return CcPlaylist objects filtered by the description column
+ * @method     array findByDbLength(string $length) Return CcPlaylist objects filtered by the length column
  *
  * @package    propel.generator.airtime.om
  */
@@ -213,90 +205,6 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the state column
-	 * 
-	 * @param     string $dbState The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcPlaylistQuery The current query, for fluid interface
-	 */
-	public function filterByDbState($dbState = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbState)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbState)) {
-				$dbState = str_replace('*', '%', $dbState);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcPlaylistPeer::STATE, $dbState, $comparison);
-	}
-
-	/**
-	 * Filter the query on the currentlyaccessing column
-	 * 
-	 * @param     int|array $dbCurrentlyaccessing The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcPlaylistQuery The current query, for fluid interface
-	 */
-	public function filterByDbCurrentlyaccessing($dbCurrentlyaccessing = null, $comparison = null)
-	{
-		if (is_array($dbCurrentlyaccessing)) {
-			$useMinMax = false;
-			if (isset($dbCurrentlyaccessing['min'])) {
-				$this->addUsingAlias(CcPlaylistPeer::CURRENTLYACCESSING, $dbCurrentlyaccessing['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbCurrentlyaccessing['max'])) {
-				$this->addUsingAlias(CcPlaylistPeer::CURRENTLYACCESSING, $dbCurrentlyaccessing['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcPlaylistPeer::CURRENTLYACCESSING, $dbCurrentlyaccessing, $comparison);
-	}
-
-	/**
-	 * Filter the query on the editedby column
-	 * 
-	 * @param     int|array $dbEditedby The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcPlaylistQuery The current query, for fluid interface
-	 */
-	public function filterByDbEditedby($dbEditedby = null, $comparison = null)
-	{
-		if (is_array($dbEditedby)) {
-			$useMinMax = false;
-			if (isset($dbEditedby['min'])) {
-				$this->addUsingAlias(CcPlaylistPeer::EDITEDBY, $dbEditedby['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbEditedby['max'])) {
-				$this->addUsingAlias(CcPlaylistPeer::EDITEDBY, $dbEditedby['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcPlaylistPeer::EDITEDBY, $dbEditedby, $comparison);
-	}
-
-	/**
 	 * Filter the query on the mtime column
 	 * 
 	 * @param     string|array $dbMtime The value to use as filter.
@@ -390,25 +298,34 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the creator column
+	 * Filter the query on the creator_id column
 	 * 
-	 * @param     string $dbCreator The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     int|array $dbCreatorId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistQuery The current query, for fluid interface
 	 */
-	public function filterByDbCreator($dbCreator = null, $comparison = null)
+	public function filterByDbCreatorId($dbCreatorId = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($dbCreator)) {
+		if (is_array($dbCreatorId)) {
+			$useMinMax = false;
+			if (isset($dbCreatorId['min'])) {
+				$this->addUsingAlias(CcPlaylistPeer::CREATOR_ID, $dbCreatorId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbCreatorId['max'])) {
+				$this->addUsingAlias(CcPlaylistPeer::CREATOR_ID, $dbCreatorId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbCreator)) {
-				$dbCreator = str_replace('*', '%', $dbCreator);
-				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcPlaylistPeer::CREATOR, $dbCreator, $comparison);
+		return $this->addUsingAlias(CcPlaylistPeer::CREATOR_ID, $dbCreatorId, $comparison);
 	}
 
 	/**
@@ -434,6 +351,28 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 	}
 
 	/**
+	 * Filter the query on the length column
+	 * 
+	 * @param     string $dbLength The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistQuery The current query, for fluid interface
+	 */
+	public function filterByDbLength($dbLength = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbLength)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbLength)) {
+				$dbLength = str_replace('*', '%', $dbLength);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcPlaylistPeer::LENGTH, $dbLength, $comparison);
+	}
+
+	/**
 	 * Filter the query by a related CcSubjs object
 	 *
 	 * @param     CcSubjs $ccSubjs  the related object to use as filter
@@ -444,7 +383,7 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 	public function filterByCcSubjs($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcPlaylistPeer::EDITEDBY, $ccSubjs->getDbId(), $comparison);
+			->addUsingAlias(CcPlaylistPeer::CREATOR_ID, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**

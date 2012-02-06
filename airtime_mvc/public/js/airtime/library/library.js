@@ -1,179 +1,141 @@
-var dTable;
-var checkedCount = 0;
-var checkedPLCount = 0;
-
-//used by jjmenu
-function getId() {
-	var tr_id =  $(this.triggerElement).parent().attr("id");
-	tr_id = tr_id.split("_");
-
-	return tr_id[1];
-}
-
-function getType() {
-	var tr_id =  $(this.triggerElement).parent().attr("id");
-	tr_id = tr_id.split("_");
-
-	return tr_id[0];
-}
-//end functions used by jjmenu
-
-function deleteItem(type, id) {
-	var tr_id, tr, dt;
-
-	tr_id = type+"_"+id;
-	tr = $("#"+tr_id);
-
-	dt = $("#library_display").dataTable();
-	dt.fnDeleteRow( tr );
-}
-
-function deleteAudioClip(json) {
-	if(json.message) {
-		alert(json.message);
-		return;
+var AIRTIME = (function(AIRTIME){
+	var mod;
+	
+	if (AIRTIME.library === undefined) {
+		AIRTIME.library = {}
 	}
+	mod = AIRTIME.library;
+	
+	mod.fnDeleteItems = function(aMedia) {
+		var oLibTT = TableTools.fnGetInstance('library_display'),
+			oLibTable = $("#library_display").dataTable();
+		
+		$.post("/library/delete", 
+			{"format": "json", "media": aMedia}, 
+			function(json){
+				oLibTT.fnSelectNone();
+				oLibTable.fnDraw();
+			});
+	};
+	
+	mod.fnDeleteSelectedItems = function() {
+		var oLibTT = TableTools.fnGetInstance('library_display'),
+			aData = oLibTT.fnGetSelectedData(),
+			item,
+			temp,
+			aMedia = [];
+		
+		//process selected files/playlists.
+		for (item in aData) {
+			temp = aData[item];
+			if (temp !== null && temp.hasOwnProperty('id') ) {
+				aMedia.push({"id": temp.id, "type": temp.ftype});
+			} 	
+		}
+	
+		AIRTIME.library.fnDeleteItems(aMedia);
+	};
+	
+	return AIRTIME;
+	
+}(AIRTIME || {}));
 
-        if (json.ids != undefined) {
-            for (var i = json.ids.length - 1; i >= 0; i--) {
-                deleteItem("au", json.ids[i]);
-            }
-        } else if (json.id != undefined) {
-            deleteItem("au", json.id);
-        }
-	location.reload(true);
-} 
+function addToolBarButtonsLibrary(aButtons) {
+	var i,
+		length = aButtons.length,
+		libToolBar,
+		html,
+		buttonClass = '',
+		DEFAULT_CLASS = 'ui-button ui-state-default',
+		DISABLED_CLASS = 'ui-state-disabled';
+	
+	libToolBar = $(".library_toolbar");
+	
+	for ( i=0; i < length; i+=1 ) {
+		buttonClass = '';
+		
+		//add disabled class if not enabled.
+		if (aButtons[i][2] === false) {
+			buttonClass+=DISABLED_CLASS;
+		}
+		
+		html = '<div id="'+aButtons[i][1]+'" class="ColVis TableTools"><button class="'+DEFAULT_CLASS+' '+buttonClass+'"><span>'+aButtons[i][0]+'</span></button></div>';	
+		libToolBar.append(html);
+		libToolBar.find("#"+aButtons[i][1]).click(aButtons[i][3]);
+	}
+}
 
-function confirmDeleteGroup() {
-    if(confirm('Are you sure you want to delete the selected items?')){
-        groupDelete();
+function enableGroupBtn(btnId, func) {
+    btnId = '#' + btnId;
+    if ($(btnId).hasClass('ui-state-disabled')) {
+        $(btnId).removeClass('ui-state-disabled');
     }
 }
 
-//callbacks called by jjmenu
-function confirmDeleteAudioClip(params){
-    if(confirm('The file will be deleted from disk, are you sure you want to delete?')){
-        var url = '/Library/delete' + params;
-        $.ajax({
-          url: url,
-          success: deleteAudioClip
-        });
+function disableGroupBtn(btnId) {
+    btnId = '#' + btnId;
+    if (!$(btnId).hasClass('ui-state-disabled')) {
+        $(btnId).addClass('ui-state-disabled');
     }
-}
-
-//callbacks called by jjmenu
-function confirmDeletePlaylist(params){
-    if(confirm('Are you sure you want to delete?')){
-        var url = '/Playlist/delete' + params;
-        $.ajax({
-          url: url,
-          success: deletePlaylist
-        });
-    }
-}
-
-function openFileOnSoundCloud(link){
-	window.open(link)
 }
 
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
-        if(data == true){
+        if (data == true){
             div.css('visibility', 'visible');
         }else{
             div.css('visibility', 'hidden');
         }
-    })
-}
-
-function deletePlaylist(json) {
-	if(json.message) {
-            alert(json.message);
-            return;
-	}
-        
-        if (json.ids != undefined) {
-            for (var i = json.ids.length - 1; i >= 0; i--) {
-                deleteItem("pl", json.ids[i]);
-            }
-        } else if (json.id != undefined) {
-            deleteItem("pl", json.id);
-        }
-	window.location.reload();
-}
-//end callbacks called by jjmenu
-
-function addLibraryItemEvents() {
-
-	$('#library_display tr[id ^= "au"]')
-		.draggable({
-			helper: 'clone',
-			cursor: 'pointer'
-		});
-
-	$('#library_display tbody tr td').not('[class=library_checkbox]')
-		.jjmenu("click",
-			[{get:"/Library/context-menu/format/json/id/#id#/type/#type#"}],
-			{id: getId, type: getType},
-			{xposition: "mouse", yposition: "mouse"});
-
-}
-
-function dtRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-	var id, type, once;
-
-    type = aData["ftype"].substring(0,2);
-    id = aData["id"];
-    
-    if(type == "au") {
-        $('td.library_type', nRow).html( '<img src="css/images/icon_audioclip.png">' );
-    } else if(type == "pl") {
-        $('td.library_type', nRow).html( '<img src="css/images/icon_playlist.png">' );
-    }
-
-    $(nRow).attr("id", type+'_'+id);
-
-    // insert id on lenth field
-    $('td.library_length', nRow).attr("id", "length");
-
-    return nRow;
-}
-
-function dtDrawCallback() {
-    addLibraryItemEvents();
-    addMetadataQtip();
-    saveNumEntriesSetting();
-    setupGroupActions();
+    });
 }
 
 function addProgressIcon(id) {
-    if($("#au_"+id).find("td.library_title").find("span").length > 0){
-        $("#au_"+id).find("td.library_title").find("span").removeClass();
-        $("span[id="+id+"]").addClass("small-icon progress");
-    }else{
-        $("#au_"+id).find("td.library_title").append('<span id="'+id+'" class="small-icon progress"></span>')
+	var tr = $("#au_"+id),
+		span;
+	
+	span = tr.find("td.library_title").find("span");
+	
+    if (span.length > 0){	
+        span.removeClass()
+        	.addClass("small-icon progress");
+    }
+    else{
+        tr.find("td.library_title")
+        	.append('<span class="small-icon progress"></span>');
     }
 }
 
 function checkSCUploadStatus(){
-    var url = '/Library/get-upload-to-soundcloud-status/format/json';
+	
+    var url = '/Library/get-upload-to-soundcloud-status';
+    
     $("span[class*=progress]").each(function(){
-        var id = $(this).attr("id");
+    	var span, id;
+    	
+        span = $(this);
+        id = span.parent().parent().data("aData").id;
+       
         $.post(url, {format: "json", id: id, type:"file"}, function(json){
-            if(json.sc_id > 0){
-                $("span[id="+id+"]").removeClass("progress").addClass("soundcloud");
-            }else if(json.sc_id == "-3"){
-                $("span[id="+id+"]").removeClass("progress").addClass("sc-error");
+            if (json.sc_id > 0) {
+                span.removeClass("progress")
+                	.addClass("soundcloud");
+                
+            }
+            else if (json.sc_id == "-3") {
+                span.removeClass("progress")
+                	.addClass("sc-error");
             }
         });
-    })
+    });
 }
 
 function addQtipToSCIcons(){
     $(".progress, .soundcloud, .sc-error").live('mouseover', function(){
-        var id = $(this).attr("id");
-        if($(this).hasClass("progress")){
+    	
+        var id = $(this).parent().parent().data("aData").id;
+        
+        if ($(this).hasClass("progress")){
             $(this).qtip({
                 content: {
                     text: "Uploading in progress..."
@@ -190,8 +152,9 @@ function addQtipToSCIcons(){
                 show: {
                     ready: true // Needed to make it show on first mouseover event
                 }
-            })
-        }else if($(this).hasClass("soundcloud")){
+            });
+        }
+        else if($(this).hasClass("soundcloud")){
             $(this).qtip({
                 content: {
                     text: "Retreiving data from the server...",
@@ -200,7 +163,7 @@ function addQtipToSCIcons(){
                         type: "post",
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){
-                            this.set('content.text', "The soundcloud id for this file is: "+json.sc_id)
+                            this.set('content.text', "The soundcloud id for this file is: "+json.sc_id);
                         }
                     }
                 },
@@ -216,7 +179,7 @@ function addQtipToSCIcons(){
                 show: {
                     ready: true // Needed to make it show on first mouseover event
                 }
-            })
+            });
         }else if($(this).hasClass("sc-error")){
             $(this).qtip({
                 content: {
@@ -227,7 +190,7 @@ function addQtipToSCIcons(){
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){
                             this.set('content.text', "There was error while uploading to soundcloud.<br>"+"Error code: "+json.error_code+
-                                    "<br>"+"Error msg: "+json.error_msg+"<br>")
+                                    "<br>"+"Error msg: "+json.error_msg+"<br>");
                         }
                     }
                 },
@@ -243,63 +206,56 @@ function addQtipToSCIcons(){
                 show: {
                     ready: true // Needed to make it show on first mouseover event
                 }
-            })
+            });
         }
     });
 }
 
-function addMetadataQtip(){
-    var tableRow = $('#library_display tbody tr');
-    tableRow.each(function(){
-        var title = $(this).find('td.library_title').html()
-        var info = $(this).attr("id")
-        info = info.split("_");
-        var id = info[1];
-        var type = info[0];
-        $(this).qtip({
-            content: {
-                text: "Loading...",
-                title: {
-                    text: title
-                },
-                ajax: {
-                    url: "/Library/get-file-meta-data",
-                    type: "post",
-                    data: ({format: "html", id : id, type: type}),
-                    success: function(data, status){
-                        this.set('content.text', data)
-                    }
-                }
-            },
-            position: {
-                target: 'event',
-                adjust: {
-                    resize: true,
-                    method: "flip flip"
-                },
-                at: "right center",
-                my: "left top",
-                viewport: $(window)
-            },
-            style: {
-                width: 570,
-                classes: "ui-tooltip-dark"
-            },
-            show: 'mousedown',
-            events: {
-               show: function(event, api) {
-                  // Only show the tooltip if it was a right-click
-                  if(event.originalEvent.button !== 2) {
-                     event.preventDefault();
-                  }
-               }
-            }
-        })
-    })
-    
-    tableRow.bind('contextmenu', function(e){
-        return false;
-    })
+function fnCreatedRow( nRow, aData, iDataIndex ) {
+	
+	//call the context menu so we can prevent the event from propagating.
+	$(nRow).find('td:not(.library_checkbox):not(.library_type)').click(function(e){
+		
+		$(this).contextMenu();
+		
+		return false;
+	});
+
+	//add a tool tip to appear when the user clicks on the type icon.
+	$(nRow.children[1]).qtip({
+		content: {
+			text: "Loading...",
+			title: {
+				text: aData.track_title
+			},
+			ajax: {
+				url: "/Library/get-file-meta-data",
+				type: "get",
+				data: ({format: "html", id : aData.id, type: aData.ftype}),
+				success: function(data, status) {
+					this.set('content.text', data);
+				}
+			}
+		},
+		position: {
+			my: 'left center',
+            at: 'right center', // Position the tooltip above the link 
+            viewport: $(window), // Keep the tooltip on-screen at all times
+            effect: false // Disable positioning animation
+        },
+		style: {
+			classes: "ui-tooltip-dark"
+		},
+		show: {
+		    event: 'click',
+		    solo: true // Only show one tooltip at a time
+		},
+		hide: 'mouseout',
+		
+	}).click(function(event) { 
+		event.preventDefault();
+		event.stopPropagation();
+	});
 }
 
 /**
@@ -316,247 +272,109 @@ function saveNumEntriesSetting() {
  * Use user preference for number of entries to show
  */
 function getNumEntriesPreference(data) {
-    return parseInt(data.libraryInit.numEntries);
-}
-
-function groupAdd() {
-    if (checkedPLCount > 0) {
-        alert("Can't add playlist to another playlist");
-        return;
-    }
-    disableGroupBtn('library_group_add');
-    
-    var ids = new Array();
-    var addGroupUrl = '/Playlist/add-group';
-    var newSPLUrl = '/Playlist/new/format/json';
-    var dirty = true;
-    $('#library_display tbody tr').each(function() {
-        var idSplit = $(this).attr('id').split("_");
-        var id = idSplit.pop();
-        var type = idSplit.pop();
-        if (dirty && $(this).find(":checkbox").attr("checked")) {
-            if (type == "au") {
-                ids.push(id);
-            } else if (type == "pl") {
-                alert("Can't add playlist to another playlist");
-                dirty = false;
-            }
-        }
-    });
-    
-    if (dirty && ids.length > 0) {
-        stopAudioPreview();
-        
-        if ($('#spl_sortable').length == 0) {
-            $.post(newSPLUrl, function(json) {
-                openDiffSPL(json);
-		redrawDataTablePage();
-                
-                $.post(addGroupUrl, {format: "json", ids: ids}, setSPLContent);
-            });
-        } else {
-            $.post(addGroupUrl, {format: "json", ids: ids}, setSPLContent);
-        }
-    }
-}
-
-function groupDelete() {
-    disableGroupBtn('library_group_delete');
-    
-    var auIds = new Array();
-    var plIds = new Array();
-    var auUrl = '/Library/delete-group';
-    var plUrl = '/Playlist/delete-group';
-    var dirty = true;
-    $('#library_display tbody tr').each(function() {
-        var idSplit = $(this).attr('id').split("_");
-        var id = idSplit.pop();
-        var type = idSplit.pop();
-        if (dirty && $(this).find(":checkbox").attr("checked")) {
-            if (type == "au") {
-                auIds.push(id);
-            } else if (type == "pl") {
-                plIds.push(id);
-            }
-        }
-    });
-    
-    if (dirty && (auIds.length > 0 || plIds.length > 0)) {
-        stopAudioPreview();
-        
-        if (auIds.length > 0) {
-            $.post(auUrl, {format: "json", ids: auIds}, deleteAudioClip);
-        }
-        if (plIds.length > 0) {
-            $.post(plUrl, {format: "json", ids: plIds}, deletePlaylist);
-        }
-    }
-}
-
-function toggleAll() {
-    var checked = $(this).attr("checked");
-    $('#library_display tr').each(function() {
-        var idSplit = $(this).attr('id').split("_");
-        var type = idSplit[0];
-        $(this).find(":checkbox").attr("checked", checked);
-        if (checked) {
-            if (type == "pl") {
-                checkedPLCount++;
-            }
-            $(this).addClass('selected');
-        } else {
-            $(this).removeClass('selected');
-        }
-    });
-    
-    if (checked) {
-        checkedCount = $('#library_display tbody tr').size();
-        enableGroupBtn('library_group_add', groupAdd);
-        enableGroupBtn('library_group_delete', confirmDeleteGroup);
-    } else {
-        checkedCount = 0;
-        checkedPLCount = 0;
-        disableGroupBtn('library_group_add');
-        disableGroupBtn('library_group_delete');
-    }
-}
-
-function enableGroupBtn(btnId, func) {
-    btnId = '#' + btnId;
-    if ($(btnId).hasClass('ui-state-disabled')) {
-        $(btnId).removeClass('ui-state-disabled');
-        $(btnId).unbind("click").click(func);
-    }
-}
-
-function disableGroupBtn(btnId) {
-    btnId = '#' + btnId;
-    if (!$(btnId).hasClass('ui-state-disabled')) {
-        $(btnId).addClass('ui-state-disabled');
-        $(btnId).unbind("click");
-    }
-}
-
-function checkBoxChanged() {
-    var cbAll = $('#library_display thead').find(":checkbox");
-    var cbAllChecked = cbAll.attr("checked");
-    var checked = $(this).attr("checked");
-    var size = $('#library_display tbody tr').size();
-    var idSplit = $(this).parent().parent().attr('id').split("_");
-    var type = idSplit[0];
-    if (checked) {
-       if (checkedCount < size) {
-           checkedCount++;
-       }
-       if (type == "pl" && checkedPLCount < size) {
-           checkedPLCount++;
-       }
-       enableGroupBtn('library_group_add', groupAdd);
-       enableGroupBtn('library_group_delete', confirmDeleteGroup);
-       $(this).parent().parent().addClass('selected');
-    } else {
-        if (checkedCount > 0) {
-            checkedCount--;
-        }
-        if (type == "pl" && checkedPLCount > 0) {
-           checkedPLCount--;
-        }
-        if (checkedCount == 0) {
-            disableGroupBtn('library_group_add');
-            disableGroupBtn('library_group_delete');
-        }
-        $(this).parent().parent().removeClass('selected');
-    }
-    
-    if (cbAllChecked && checkedCount < size) {
-        cbAll.attr("checked", false);
-    } else if (!cbAllChecked && checkedCount == size) {
-        cbAll.attr("checked", true);
-    }
-}
-
-function setupGroupActions() {
-    checkedCount = 0;
-    checkedPLCount = 0;
-    $('#library_display tr:nth-child(1)').find(":checkbox").attr("checked", false);
-    $('#library_display thead').find(":checkbox").unbind('change').change(toggleAll);
-    $('#library_display tbody tr').each(function() {
-        $(this).find(":checkbox").unbind('change').change(checkBoxChanged);
-    });
-    
-    disableGroupBtn('library_group_add');
-    disableGroupBtn('library_group_delete');
-}
-
-function fnShowHide(iCol) {
-	/* Get the DataTables object again - this is not a recreation, just a get of the object */
-	var oTable = dTable;
-	
-	var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
-	oTable.fnSetColumnVis( iCol, bVis ? false : true );
+    return parseInt(data.libraryInit.numEntries, 10);
 }
 
 function createDataTable(data) {
-    dTable = $('#library_display').dataTable( {
+	var oTable;
+	
+    oTable = $('#library_display').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
-		"sAjaxSource": "/Library/contents/format/json",
+		"sAjaxSource": "/Library/contents",
 		"fnServerData": function ( sSource, aoData, testCallback ) {
+    		aoData.push( { name: "format", value: "json"} );
 			$.ajax( {
 				"dataType": 'json',
-				"type": "POST",
+				"type": "GET",
 				"url": sSource,
 				"data": aoData,
 				"success": testCallback
 			} );
 		},
-		"fnRowCallback": dtRowCallback,
-		"fnDrawCallback": dtDrawCallback,
+		"fnRowCallback": AIRTIME.library.events.fnRowCallback,
+		"fnCreatedRow": fnCreatedRow,
+		"fnDrawCallback": AIRTIME.library.events.fnDrawCallback,
+		"fnHeaderCallback": function(nHead) {
+			$(nHead).find("input[type=checkbox]").attr("checked", false);
+		},
+		
 		"aoColumns": [
-                    /* Checkbox */      {"sTitle": "<input type='checkbox' name='cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
-                    /* Id */            {"sName": "id", "bSearchable": false, "bVisible": false, "mDataProp": "id", "sClass": "library_id"},
-                    /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
-                    /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
-                    /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
-                    /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sWidth": "10%", "sClass": "library_genre"},
-                    /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sWidth": "8%", "sClass": "library_year"},
-                    /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sWidth": "10%", "sClass": "library_length"},
-                    /* Type */          {"sTitle": "Type", "sName": "ftype", "bSearchable": false, "mDataProp": "ftype", "sWidth": "9%", "sClass": "library_type"},
-                    /* Upload Time */   {"sTitle": "Upload Time", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
-                    /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
-                ],
+                /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
+                /* Type */          {"sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "25px", "sClass": "library_type"},
+                /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
+                /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
+                /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
+                /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sClass": "library_genre"},
+                /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sClass": "library_year"},
+                /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sClass": "library_length"},
+                /* Upload Time */   {"sTitle": "Uploaded", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
+                /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"}
+            ],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
 		"bAutoWidth": false,
-                "oLanguage": {
-                    "sSearch": ""
-                },
-                "iDisplayLength": getNumEntriesPreference(data),
-                "bStateSave": true,
-                // R = ColReorder, C = ColVis, see datatables doc for others
-                "sDom": 'Rlfr<"H"C<"library_toolbar">>t<"F"ip>',
-                "oColVis": {
-                    "buttonText": "Show/Hide Columns",
-                    "sAlign": "right",
-                    "aiExclude": [0, 1, 2],
-                    "sSize": "css",
-                    "bShowAll": true
+        "oLanguage": {
+            "sSearch": ""
+        },
+        "iDisplayLength": getNumEntriesPreference(data),
+
+        // R = ColReorder, C = ColVis, T = TableTools
+        "sDom": 'Rlfr<"H"T<"library_toolbar"C>>t<"F"ip>',
+        
+        "oTableTools": {
+        	"sRowSelect": "multi",
+			"aButtons": [],
+			"fnRowSelected": function ( node ) {
+                    
+                //seems to happen if everything is selected
+                if ( node === null) {
+                	oTable.find("input[type=checkbox]").attr("checked", true);
+                }
+                else {
+                	$(node).find("input[type=checkbox]").attr("checked", true);
+                }
+            },
+            "fnRowDeselected": function ( node ) {
+             
+              //seems to happen if everything is deselected
+                if ( node === null) {
+                	oTable.find("input[type=checkbox]").attr("checked", false);
+                }
+                else {
+                	$(node).find("input[type=checkbox]").attr("checked", false);
+                }
+            }
 		},
-                "oColReorder": {
-                    "aiOrder": [ 0, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] /* code this */,
-                    "iFixedColumns": 3
+		
+        "oColVis": {
+            "buttonText": "Show/Hide Columns",
+            "sAlign": "right",
+            "aiExclude": [0, 1],
+            "sSize": "css",
+            "bShowAll": true
+		},
+		
+		"oColReorder": {
+			"iFixedColumns": 2,
+			"aiOrder": [ 0,1,2,3,4,5,6,7,8,9 ]
 		}
+		
     });
-    dTable.fnSetFilteringDelay(350);
+    oTable.fnSetFilteringDelay(350);
     
-    $("div.library_toolbar").html('<span class="fg-button ui-button ui-state-default" id="library_order_reset">Reset Order</span>' + 
-        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_delete">Delete</span>' + 
-        '<span class="fg-button ui-button ui-state-default ui-state-disabled" id="library_group_add">Add</span>');
-    
-    $('#library_order_reset').click(function() {
-        ColReorder.fnReset( dTable );
-        return false;
+    AIRTIME.library.events.setupLibraryToolbar(oTable);
+      
+    $('[name="pl_cb_all"]').click(function(){
+    	var oTT = TableTools.fnGetInstance('library_display');
+    	
+    	if ($(this).is(":checked")) {
+    		oTT.fnSelectAll();
+    	}
+    	else {
+    		oTT.fnSelectNone();
+    	}       
     });
 }
 
@@ -567,8 +385,133 @@ $(document).ready(function() {
         error:function(jqXHR, textStatus, errorThrown){}});
     
     checkImportStatus();
-    setInterval( "checkImportStatus()", 5000 );
-    setInterval( "checkSCUploadStatus()", 5000 );
+    setInterval( checkImportStatus, 5000 );
+    setInterval( checkSCUploadStatus, 5000 );
     
-    addQtipToSCIcons()
+    addQtipToSCIcons();
+
+    $.contextMenu({
+        selector: '#library_display td:not(.library_checkbox):not(.library_type)',
+        trigger: "left",
+        ignoreRightClick: true,
+        
+        build: function($el, e) {
+    		var x, request, data, screen, items, callback, $tr;
+    		
+    		$tr = $el.parent();
+    		data = $tr.data("aData");
+    		screen = $tr.data("screen");
+    		
+    		function processMenuItems(oItems) {
+    			
+    			//define an edit callback.
+    			if (oItems.edit !== undefined) {
+    				
+    				if (data.ftype === "audioclip") {
+	    				callback = function() {
+	    					document.location.href = oItems.edit.url;
+						};
+    				}
+	    			else {
+	    				callback = function() {
+	    					AIRTIME.playlist.fnEdit(data.id);
+						};
+	    			}
+    				oItems.edit.callback = callback;
+    			}
+    			
+    			//define a delete callback.
+    			if (oItems.del !== undefined) {
+    				
+    				//delete through the playlist controller, will reset
+    				//playlist screen if this is the currently edited playlist.
+    				if (data.ftype === "playlist" && screen === "playlist") {
+    					callback = function() {
+        					
+        					if (confirm('Are you sure you want to delete the selected item?')) {
+        						AIRTIME.playlist.fnDelete(data.id);
+        				    }
+    					};
+    				}
+    				else {
+    					callback = function() {
+        					var media = [];
+        					
+        					if (confirm('Are you sure you want to delete the selected item?')) {
+        						
+        						media.push({"id": data.id, "type": data.ftype});
+        						$.post(oItems.del.url, {format: "json", media: media }, function(json){
+        							var oTable, tr;
+        							
+        							if (json.message) {
+        								alert(json.message);
+        							}
+        							
+        							oTable = $("#library_display").dataTable();
+            						oTable.fnDeleteRow( $tr[0] );
+        						});
+        				    }
+    					};
+    				}
+    				
+    				oItems.del.callback = callback;
+    			}
+    			
+    			//define a download callback.
+    			if (oItems.download !== undefined) {
+    				
+    				callback = function() {
+    					document.location.href = oItems.download.url;
+					};
+    				oItems.download.callback = callback;
+    			}
+    			//add callbacks for Soundcloud menu items.
+    			if (oItems.soundcloud !== undefined) {
+    				var soundcloud = oItems.soundcloud.items;
+    				
+    				//define an upload to soundcloud callback.
+    				if (soundcloud.upload !== undefined) {
+    					
+    					callback = function() {
+	    					$.post(soundcloud.upload.url, function(){
+	    						addProgressIcon(data.id);
+	    					});
+    					};
+    					soundcloud.upload.callback = callback;
+    				}
+    				
+    				//define a view on soundcloud callback
+    				if (soundcloud.view !== undefined) {
+    					
+    					callback = function() {
+	    					window.open(soundcloud.view.url);
+    					};
+    					soundcloud.view.callback = callback;
+    				}
+    			}
+    		
+    			items = oItems;
+    		}
+    		
+    		request = $.ajax({
+			  url: "/library/context-menu",
+			  type: "GET",
+			  data: {id : data.id, type: data.ftype, format: "json", "screen": screen},
+			  dataType: "json",
+			  async: false,
+			  success: function(json){
+				  processMenuItems(json.items);
+			  }
+			});
+
+            return {
+                items: items,
+                determinePosition : function($menu, x, y) {
+                	$menu.css('display', 'block')
+                		.position({ my: "left top", at: "right top", of: this, offset: "-20 10", collision: "fit"})
+                		.css('display', 'none');
+                }
+            };
+        }
+    });
 });

@@ -7,19 +7,16 @@ class PlaylistController extends Zend_Controller_Action
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('add-item', 'json')
-                    ->addActionContext('delete-item', 'json')
-                    ->addActionContext('add-group', 'json')
-                    ->addActionContext('delete-group', 'json')
+        $ajaxContext->addActionContext('add-items', 'json')
+                    ->addActionContext('move-items', 'json')
+                    ->addActionContext('delete-items', 'json')
                     ->addActionContext('set-fade', 'json')
                     ->addActionContext('set-cue', 'json')
-                    ->addActionContext('move-item', 'json')
-                    ->addActionContext('close', 'json')
                     ->addActionContext('new', 'json')
                     ->addActionContext('edit', 'json')
-                    ->addActionContext('delete-active', 'json')
                     ->addActionContext('delete', 'json')
                     ->addActionContext('set-playlist-fades', 'json')
+                    ->addActionContext('get-playlist-fades', 'json')
                     ->addActionContext('set-playlist-name', 'json')
                     ->addActionContext('set-playlist-description', 'json')
                     ->initContext();
@@ -29,52 +26,41 @@ class PlaylistController extends Zend_Controller_Action
 
     private function getPlaylist()
     {
-        $pl_sess = $this->pl_sess;
+        $pl = null;
 
-		if(isset($pl_sess->id)) {
-
-			$pl = Application_Model_Playlist::Recall($pl_sess->id);
-			if($pl === FALSE) {
-				unset($pl_sess->id);
-				return false;
-			}
-			return $pl;
-        }else{
-            return false;
+    	if (isset($this->pl_sess->id)) {
+            $pl = new Application_Model_Playlist($this->pl_sess->id);
         }
+        return $pl;
     }
 
     private function changePlaylist($pl_id)
     {
-        $pl_sess = $this->pl_sess;
-
-		if(isset($pl_sess->id)) {
-
-			$pl = Application_Model_Playlist::Recall($pl_sess->id);
-			if($pl !== FALSE) {
-				$this->closePlaylist($pl);
-			}
-		}
-
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-		$pl = Application_Model_Playlist::Recall($pl_id);
-		if($pl === FALSE) {
-			return FALSE;
-		}
-		$pl->lock($userInfo->id);
-		$pl_sess->id = $pl_id;
+		$this->pl_sess->id = intval($pl_id);
     }
 
-    private function closePlaylist($pl)
+    private function createUpdateResponse($pl)
     {
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $res = $pl->unlock($userInfo->id);
+        $this->view->pl = $pl;
+        $this->view->html = $this->view->render('playlist/update.phtml');
+        $this->view->name = $pl->getName();
+        $this->view->length = $pl->getLength();
+        $this->view->description = $pl->getDescription();
 
-		$pl_sess = $this->pl_sess;
-		unset($pl_sess->id);
+        unset($this->view->pl);
+    }
 
-        return $res;
+    private function createFullResponse($pl = null)
+    {
+        if (isset($pl)) {
+            $this->view->pl = $pl;
+            $this->view->id = $pl->getId();
+            $this->view->html = $this->view->render('playlist/index.phtml');
+            unset($this->view->pl);
+        }
+        else {
+            $this->view->html = $this->view->render('playlist/index.phtml');
+        }
     }
 
     public function indexAction()
@@ -87,10 +73,21 @@ class PlaylistController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.filemtime($baseDir.'/css/playlist_builder.css'));
 
 		$this->_helper->viewRenderer->setResponseSegment('spl');
-		$pl = $this->getPlaylist();
-		if($pl !== false){
-		  $this->view->pl = $pl;
-		}
+
+        try {
+            $pl = $this->getPlaylist();
+
+            if (isset($pl)) {
+              $this->view->pl = $pl;
+            }
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getMessage()}");
+        }
     }
 
     public function newAction()
@@ -99,275 +96,223 @@ class PlaylistController extends Zend_Controller_Action
 		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
         $pl = new Application_Model_Playlist();
-        $pl->create("Untitled Playlist");
-		$pl->setPLMetaData('dc:creator', $userInfo->login);
+        $pl->setName("Untitled Playlist");
+		$pl->setPLMetaData('dc:creator', $userInfo->id);
 
 		$this->changePlaylist($pl->getId());
-
-		$this->view->pl = $pl;
-        $this->view->pl_id = $pl->getId();
-        $this->view->html = $this->view->render('playlist/index.phtml');
-        unset($this->view->pl);
+		$this->createFullResponse($pl);
     }
 
     public function editAction()
     {
-        $pl_id = $this->_getParam('id', null);
-
-		if(!is_null($pl_id)) {
-			$this->changePlaylist($pl_id);
-		}
-
-		$pl = $this->getPlaylist();
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
-        }
-
-		$this->view->pl = $pl;
-		$this->view->pl_id = $pl->getId();
-		$this->view->html = $this->view->render('playlist/index.phtml');
-		unset($this->view->pl);
-    }
-
-    public function addItemAction()
-    {
-        $id = $this->_getParam('id');
-		$pos = $this->_getParam('pos', null);
+        $id = $this->_getParam('id', null);
+        Logging::log("editing playlist {$id}");
 
 		if (!is_null($id)) {
-
-			$pl = $this->getPlaylist();
-    		if($pl === false){
-                $this->view->playlist_error = true;
-                return false;
-            }
-			$res = $pl->addAudioClip($id, $pos);
-
-			if (PEAR::isError($res)) {
-				$this->view->message = $res->getMessage();
-			}
-
-			$this->view->pl = $pl;
-			$this->view->html = $this->view->render('playlist/update.phtml');
-			$this->view->name = $pl->getName();
-			$this->view->length = $pl->getLength();
-            $this->view->description = $pl->getDescription();
-
-			unset($this->view->pl);
-			return;
+			$this->changePlaylist($id);
 		}
-		$this->view->message =  "a file is not chosen";
-    }
 
-    public function moveItemAction()
-    {
-        $oldPos = $this->_getParam('oldPos');
-	$newPos = $this->_getParam('newPos');
-	
-	
-	$pl = $this->getPlaylist();
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
-        }
-
-	$pl->moveAudioClip($oldPos, $newPos);
-
-	$this->view->pl = $pl;
-	$this->view->html = $this->view->render('playlist/update.phtml');
-	$this->view->name = $pl->getName();
-	$this->view->length = $pl->getLength();
-        $this->view->description = $pl->getDescription();
-
-	unset($this->view->pl);
-    }
-
-    public function deleteItemAction()
-    {
-        $positions = $this->_getParam('pos', array());
-
-		if (!is_array($positions))
-	        $positions = array($positions);
-
-	    //so the automatic updating of playlist positioning doesn't affect removal.
-	    sort($positions);
-	    $positions = array_reverse($positions);
-
-		$pl = $this->getPlaylist();
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
-        }
-
-	    foreach ($positions as $pos) {
-	    	$pl->delAudioClip($pos);
-	    }
-
-		$this->view->pl = $pl;
-		$this->view->html = $this->view->render('playlist/update.phtml');
-		$this->view->name = $pl->getName();
-		$this->view->length = $pl->getLength();
-        $this->view->description = $pl->getDescription();
-
-		unset($this->view->pl);
-    }
-
-    public function addGroupAction()
-    {
-        $ids = $this->_getParam('ids');
-        $pos = $this->_getParam('pos', null);
-
-        if (!is_null($ids)) {
+		try {
             $pl = $this->getPlaylist();
-            if ($pl === false) {
-                $this->view->playlist_error = true;
-                return false;
-            }
-            
-            foreach ($ids as $key => $value) {
-                $res = $pl->addAudioClip($value);
-                if (PEAR::isError($res)) {
-                    $this->view->message = $res->getMessage();
-                    break;
-                }
-            }
-
-            $this->view->pl = $pl;
-            $this->view->html = $this->view->render('playlist/update.phtml');
-            $this->view->name = $pl->getName();
-            $this->view->length = $pl->getLength();
-            $this->view->description = $pl->getDescription();
-            return;
-        }
-        $this->view->message =  "a file is not chosen";
-    }
-    
-    public function deleteGroupAction()
-    {
-        $ids = $this->_getParam('ids', null);
-        
-        foreach ($ids as $key => $id) {
-            $pl = Application_Model_Playlist::Recall($id);
-
-            if ($pl !== FALSE) {
-                Application_Model_Playlist::Delete($id);
-                $pl_sess = $this->pl_sess;
-                if($pl_sess->id === $id){
-                    unset($pl_sess->id);
-                }
-            } else {
-                $this->view->playlist_error = true;
-                return false;
-            }
-        }
-        
-        $this->view->ids = $ids;
-        $this->view->html = $this->view->render('playlist/index.phtml');
-    }
-    
-    public function setCueAction()
-    {
-		$pos = $this->_getParam('pos');
-		$pl = $this->getPlaylist();
-        if ($pl === false){
-            $this->view->playlist_error = true;
-            return false;
-        }
-
-		$cueIn = $this->_getParam('cueIn', null);
-		$cueOut = $this->_getParam('cueOut', null);
-
-		$response = $pl->changeClipLength($pos, $cueIn, $cueOut);
-
-		$this->view->response = $response;
-
-		if(!isset($response["error"])) {
-    		$this->view->pl = $pl;
-            $this->view->html = $this->view->render('playlist/update.phtml');
-            $this->view->name = $pl->getName();
-            $this->view->length = $pl->getLength();
-            $this->view->description = $pl->getDescription();
-
-            unset($this->view->pl);
 		}
-    }
+		catch (PlaylistNotFoundException $e) {
+		    Logging::log("Playlist {$id} not found");
+            $this->changePlaylist(null);
+		}
+		catch (Exception $e) {
+		    Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+		    $this->changePlaylist(null);
+		}
 
-    public function setFadeAction()
-    {
-	$pos = $this->_getParam('pos');
-	$pl = $this->getPlaylist();
-	
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
-        }
-
-        $fadeIn = $this->_getParam('fadeIn', null);
-        $fadeOut = $this->_getParam('fadeOut', null);
-		
-        $response = $pl->changeFadeInfo($pos, $fadeIn, $fadeOut);
-        $this->view->response = $response;
-
-        if(!isset($response["error"])) {
-            $this->view->pl = $pl;
-            $this->view->html = $this->view->render('playlist/update.phtml');
-            $this->view->name = $pl->getName();
-            $this->view->length = $pl->getLength();
-            $this->view->description = $pl->getDescription();
-
-            unset($this->view->pl);
-        }
+		$this->createFullResponse($pl);
     }
 
     public function deleteAction()
     {
-        $id = $this->_getParam('id', null);
-		$pl = Application_Model_Playlist::Recall($id);
+        $ids = $this->_getParam('ids');
+        $ids = (!is_array($ids)) ? array($ids) : $ids;
+        $pl = null;
 
-		if ($pl !== FALSE) {
+        try {
 
-			Application_Model_Playlist::Delete($id);
+            Logging::log("Currently active playlist {$this->pl_sess->id}");
+            if (in_array($this->pl_sess->id, $ids)) {
+                Logging::log("Deleting currently active playlist");
+                $this->changePlaylist(null);
+            }
+            else {
+                $pl = $this->getPlaylist();
+                Logging::log("Not deleting currently active playlist");
+            }
 
-			$pl_sess = $this->pl_sess;
-
-			if($pl_sess->id === $id){
-				unset($pl_sess->id);
-			}
-		}else{
-            $this->view->playlist_error = true;
-            return false;
+            Application_Model_Playlist::DeletePlaylists($ids);
+        }
+        catch(PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $pl = null;
+        }
+        catch(Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
         }
 
-		$this->view->id = $id;
-		$this->view->html = $this->view->render('playlist/index.phtml');
+        $this->createFullResponse($pl);
     }
 
-    public function deleteActiveAction()
+    public function addItemsAction()
     {
-        $pl = $this->getPlaylist();
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
+        $ids = $this->_getParam('ids');
+        $ids = (!is_array($ids)) ? array($ids) : $ids;
+    	$afterItem = $this->_getParam('afterItem', null);
+    	$addType = $this->_getParam('type', 'after');
+
+    	Logging::log("type is ".$addType);
+
+        try {
+            $pl = $this->getPlaylist();
+            $pl->addAudioClips($ids, $afterItem, $addType);
         }
-		Application_Model_Playlist::Delete($pl->getId());
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
 
-		$pl_sess = $this->pl_sess;
-		unset($pl_sess->id);
-
-		$this->view->html = $this->view->render('playlist/index.phtml');
+	    $this->createUpdateResponse($pl);
     }
 
-    public function closeAction()
+    public function moveItemsAction()
     {
-        $pl = $this->getPlaylist();
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
-        }
-		$this->closePlaylist($pl);
+        $ids = $this->_getParam('ids');
+        $ids = (!is_array($ids)) ? array($ids) : $ids;
+        $afterItem = $this->_getParam('afterItem', null);
 
-		$this->view->html = $this->view->render('playlist/index.phtml');
+        try {
+            $pl = $this->getPlaylist();
+            $pl->moveAudioClips($ids, $afterItem);
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
+
+		$this->createUpdateResponse($pl);
+    }
+
+    public function deleteItemsAction()
+    {
+        $ids = $this->_getParam('ids');
+        $ids = (!is_array($ids)) ? array($ids) : $ids;
+
+        try {
+            $pl = $this->getPlaylist();
+            $pl->delAudioClips($ids);
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
+
+		$this->createUpdateResponse($pl);
+    }
+
+    public function setCueAction()
+    {
+		$id = $this->_getParam('id');
+		$cueIn = $this->_getParam('cueIn', null);
+		$cueOut = $this->_getParam('cueOut', null);
+
+        try {
+            $pl = $this->getPlaylist();
+            $response = $pl->changeClipLength($id, $cueIn, $cueOut);
+
+            $this->view->response = $response;
+
+            if(!isset($response["error"])) {
+                $this->createUpdateResponse($pl);
+            }
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
+    }
+
+    public function setFadeAction()
+    {
+		$id = $this->_getParam('id');
+		$fadeIn = $this->_getParam('fadeIn', null);
+		$fadeOut = $this->_getParam('fadeOut', null);
+
+        try {
+            $pl = $this->getPlaylist();
+            $response = $pl->changeFadeInfo($id, $fadeIn, $fadeOut);
+
+            $this->view->response = $response;
+
+            if (!isset($response["error"])) {
+                $this->createUpdateResponse($pl);
+            }
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
+    }
+
+    public function getPlaylistFadesAction()
+    {
+        try {
+            $pl = $this->getPlaylist();
+            $fades = $pl->getFadeInfo(0);
+            $this->view->fadeIn = $fades[0];
+
+            $fades = $pl->getFadeInfo($pl->getSize()-1);
+            $this->view->fadeOut = $fades[1];
+        }
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
     }
 
     /**
@@ -377,32 +322,23 @@ class PlaylistController extends Zend_Controller_Action
      **/
     public function setPlaylistFadesAction()
     {
-        $request = $this->getRequest();
-	$pl = $this->getPlaylist();
-        if($pl === false){
-            $this->view->playlist_error = true;
-            return false;
+		$fadeIn = $this->_getParam('fadeIn', null);
+		$fadeOut = $this->_getParam('fadeOut', null);
+
+        try {
+            $pl = $this->getPlaylist();
+            $pl->setPlaylistfades($fadeIn, $fadeOut);
         }
-
-	if($request->isPost()) {
-	    $fadeIn = $this->_getParam('fadeIn', null);
-	    $fadeOut = $this->_getParam('fadeOut', null);
-
-            if($fadeIn)
-		$response = $pl->changeFadeInfo(0, $fadeIn, $fadeOut);
-            else if($fadeOut)
-                 $response = $pl->changeFadeInfo($pl->getSize(), $fadeIn, $fadeOut);
-
-	    $this->view->response = $response;   
-
-	    return;
-	}
-
-	$fades = $pl->getFadeInfo(0);
-	$this->view->fadeIn = $fades[0];
-
-	$fades = $pl->getFadeInfo($pl->getSize());
-	$this->view->fadeOut = $fades[1];
+        catch (PlaylistNotFoundException $e) {
+            Logging::log("Playlist not found");
+            $this->changePlaylist(null);
+            $this->createFullResponse(null);
+        }
+        catch (Exception $e) {
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
+            Logging::log("{$e->getMessage()}");
+        }
     }
 
     public function setPlaylistNameAction()

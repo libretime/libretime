@@ -33,11 +33,11 @@ date_default_timezone_set(Application_Model_Preference::GetTimezone());
 Zend_Validate::setDefaultNamespaces("Zend");
 
 $front = Zend_Controller_Front::getInstance();
-$front->registerPlugin(new RabbitMqPlugin()); 
+$front->registerPlugin(new RabbitMqPlugin());
 
 Logging::debug($_SERVER['REQUEST_URI']);
 
-/* The bootstrap class should only be used to initialize actions that return a view. 
+/* The bootstrap class should only be used to initialize actions that return a view.
    Actions that return JSON will not use the bootstrap class! */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
@@ -56,23 +56,25 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $view->headLink()->appendStylesheet($baseUrl.'/css/redmond/jquery-ui-1.8.8.custom.css?'.filemtime($baseDir.'/css/redmond/jquery-ui-1.8.8.custom.css'));
         $view->headLink()->appendStylesheet($baseUrl.'/css/pro_dropdown_3.css?'.filemtime($baseDir.'/css/pro_dropdown_3.css'));
-        $view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css?'.filemtime($baseDir.'/css/qtip/jquery.qtip.min.css'));
+        $view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.css?'.filemtime($baseDir.'/css/qtip/jquery.qtip.min.css'));
         $view->headLink()->appendStylesheet($baseUrl.'/css/styles.css?'.filemtime($baseDir.'/css/styles.css'));
+
     }
 
     protected function _initHeadScript()
     {
         global $CC_CONFIG;
-        
+
         $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.5.2.min.js?'.filemtime($baseDir.'/js/libs/jquery-1.5.2.min.js'),'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.11.custom.min.js?'.filemtime($baseDir.'/js/libs/jquery-ui-1.8.11.custom.min.js'),'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.7.1.min.js?'.filemtime($baseDir.'/js/libs/jquery-1.7.1.min.js'),'text/javascript');
+        $view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js?'.filemtime($baseDir.'/js/libs/jquery.stickyPanel.js'),'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip2.min.js?'.filemtime($baseDir.'/js/qtip/jquery.qtip2.min.js'),'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.min.js?'.filemtime($baseDir.'/js/qtip/jquery.qtip2.min.js'),'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.filemtime($baseDir.'/js/jplayer/jquery.jplayer.min.js'));
+
         $view->headScript()->appendScript("var baseUrl='$baseUrl/'");
 
         //scripts for now playing bar
@@ -81,7 +83,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js?'.filemtime($baseDir.'/js/airtime/dashboard/versiontooltip.js'),'text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js?'.filemtime($baseDir.'/js/airtime/common/common.js'),'text/javascript');
-        
+
         if (Application_Model_Preference::GetPlanLevel() != "disabled"
                 && $_SERVER['REQUEST_URI'] != '/Dashboard/stream-player') {
             $client_id = Application_Model_Preference::GetClientId();
@@ -109,12 +111,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         if (APPLICATION_ENV == "development"){
             global $CC_DBC;
-            
+
             $autoloader = Zend_Loader_Autoloader::getInstance();
             $autoloader->registerNamespace('ZFDebug');
 
             $options = array(
-                'plugins' => array('Variables', 
+                'plugins' => array('Variables',
                                    'Exception',
                                    'Memory',
                                    'Time')
@@ -126,12 +128,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $frontController->registerPlugin($debug);
         }
     }
-    
+
     protected function _initRouter()
     {
     	$front = Zend_Controller_Front::getInstance();
         $router = $front->getRouter();
-        
+
         $router->addRoute(
             'password-change',
             new Zend_Controller_Router_Route('password-change/:user_id/:token', array(
