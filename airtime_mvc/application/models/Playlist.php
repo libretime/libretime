@@ -62,8 +62,10 @@ class Application_Model_Playlist {
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if ($defaultFade !== "") {
-            $this->plItem["fadein"] = $defaultFade;
-            $this->plItem["fadeout"] = $defaultFade;
+            //fade is in format SS.uuuuuu
+            $fade = DateTime::createFromFormat("U.u", $defaultFade, new DateTimeZone("UTC"));
+            $this->plItem["fadein"] = $fade->format("H:i:s.u");
+            $this->plItem["fadeout"] = $fade->format("H:i:s.u");
         }
 
         $this->con = isset($con) ? $con : Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
