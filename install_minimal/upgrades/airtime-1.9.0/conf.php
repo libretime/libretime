@@ -18,9 +18,7 @@ $CC_CONFIG = array(
     'soundcloud-client-secret' => 'pZ7beWmF06epXLHVUP1ufOg2oEnIt9XhE8l8xt0bBs',
 
     "rootDir" => __DIR__."/../..",
-    'pearPath'      =>  dirname(__FILE__).'/../../../airtime_mvc/library/pear',
-    'zendPath'      =>  dirname(__FILE__).'/../../../airtime_mvc/library/Zend',
-    'phingPath'      =>  dirname(__FILE__).'/../../../airtime_mvc/library/phing'
+    'zendPath'      =>  dirname(__FILE__).'/../../../airtime_mvc/library/Zend'
 );
 
 $CC_CONFIG = Config::loadConfig($CC_CONFIG);
@@ -51,8 +49,7 @@ $CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
 
 // Add libs to the PHP path
 $old_include_path = get_include_path();
-set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
-					.PATH_SEPARATOR.$CC_CONFIG['zendPath']
+set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['zendPath']
 					.PATH_SEPARATOR.$old_include_path);
 
 class Config {
