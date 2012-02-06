@@ -52,9 +52,9 @@ $CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
 
 // Add libs to the PHP path
 $old_include_path = get_include_path();
-set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['pearPath']
-					.PATH_SEPARATOR.$CC_CONFIG['zendPath']
-					.PATH_SEPARATOR.$old_include_path);
+set_include_path('.'
+                .PATH_SEPARATOR.$CC_CONFIG['zendPath']
+                .PATH_SEPARATOR.$old_include_path);
 
 class Config {
     public static function loadConfig($p_path) {
