@@ -75,6 +75,9 @@ class MediaMonitorCommon:
             omask = os.umask(0)
             
             if not has_correct_permissions(item, 'www-data', 'www-data'):
+                uid = pwd.getpwnam('www-data')[2]
+                gid = grp.getgrnam('www-data')[2]
+                
                 os.chown(item, uid, gid)
     
                 if is_dir is True:
