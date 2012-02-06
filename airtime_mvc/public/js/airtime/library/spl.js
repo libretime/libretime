@@ -421,7 +421,7 @@ var AIRTIME = (function(AIRTIME){
 		    url = "/Playlist/set-playlist-fades";
 		    fadeIn = $.trim(span.text());
 
-		    if(!isFadeValid(fadeOut)){
+		    if(!isFadeValid(fadeIn)){
 	            showError(span, "please put in a time in seconds '00 (.000000)'");
 			    return;
 		    }

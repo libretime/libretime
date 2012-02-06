@@ -72,7 +72,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.7.1.min.js?'.filemtime($baseDir.'/js/libs/jquery-1.7.1.min.js'),'text/javascript');
         $view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js?'.filemtime($baseDir.'/js/libs/jquery.stickyPanel.js'),'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.min.js?'.filemtime($baseDir.'/js/qtip/jquery.qtip2.min.js'),'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.min.js?'.filemtime($baseDir.'/js/qtip/jquery.qtip.min.js'),'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.filemtime($baseDir.'/js/jplayer/jquery.jplayer.min.js'));
 
         $view->headScript()->appendScript("var baseUrl='$baseUrl/'");

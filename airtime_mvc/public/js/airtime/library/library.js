@@ -2,7 +2,7 @@ var AIRTIME = (function(AIRTIME){
 	var mod;
 	
 	if (AIRTIME.library === undefined) {
-		AIRTIME.library = {}
+		AIRTIME.library = {};
 	}
 	mod = AIRTIME.library;
 	
@@ -250,7 +250,7 @@ function fnCreatedRow( nRow, aData, iDataIndex ) {
 		    event: 'click',
 		    solo: true // Only show one tooltip at a time
 		},
-		hide: 'mouseout',
+		hide: 'mouseout'
 		
 	}).click(function(event) { 
 		event.preventDefault();
