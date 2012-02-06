@@ -14,7 +14,7 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function isFadeValid(fade) {
-        var regExpr = new RegExp("^\\d{2}([.]\\d{1,6})?$");
+        var regExpr = new RegExp("^\\d{1}(\\d{1})?([.]\\d{1,6})?$");
 
         return regExpr.test(fade);
 	}
