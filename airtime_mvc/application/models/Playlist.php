@@ -41,7 +41,7 @@ class Application_Model_Playlist {
 	    "dc:title" => "DbName",
     	"dc:creator" => "DbCreatorId",
     	"dc:description" => "DbDescription",
-    	"dcterms:extent" => "getDbLength"
+    	"dcterms:extent" => "DbLength"
 	);
 
 
