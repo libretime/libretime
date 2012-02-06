@@ -48,9 +48,7 @@ if (PEAR::isError($CC_DBC)) {
     echo "Database connection problem.".PHP_EOL;
     echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
         " with corresponding permissions.".PHP_EOL;*/
-    if ($p_exitOnError) {
-        exit(1);
-    }
+    exit(1);
 } else {
     //echo "* Connected to database".PHP_EOL;
     $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);

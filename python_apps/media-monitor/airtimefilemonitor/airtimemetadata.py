@@ -161,22 +161,24 @@ class AirtimeMetadata:
             self.logger.error("Exception %s", e)
             return None
 
+        #check if file has any metadata
         if file_info is None:
             return None
-        #check if file has any metadata
-        if file_info is not None:
-            for key in file_info.keys() :
-                if key in self.mutagen2airtime and len(file_info[key]) > 0:
-                    info = file_info[key][0]
-                    while True:
-                        temp = re.search(u"[\x80-\x9f]", info)
-                        if temp is not None:
-                            s = temp.group(0)
-                            replace = self.cp1252toUnicode.get(s)
-                            info = re.sub(s, replace, info)
-                        else:
-                            break
-                    md[self.mutagen2airtime[key]] = info
+
+        for key in file_info.keys() :
+            if key in self.mutagen2airtime and len(file_info[key]) > 0:
+                info = file_info[key][0]
+                while True:
+                    temp = re.search(u"[\x80-\x9f]", info)
+                    if temp is not None:
+                        s = temp.group(0)
+                        replace = self.cp1252toUnicode.get(s)
+                        info = re.sub(s, replace, info)
+                    else:
+                        break
+                md[self.mutagen2airtime[key]] = info
+                    
+                    
         if 'MDATA_KEY_TITLE' not in md:
             #get rid of file extention from original name, name might have more than 1 '.' in it.
             #filepath = to_unicode(filepath)
