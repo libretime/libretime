@@ -79,6 +79,14 @@ class Application_Model_Scheduler {
 
         try {
 
+            //dont want to recalculate times for moved items.
+            $excludeIds = array();
+            foreach ($schedFiles as $file) {
+                if (isset($file["sched_id"])) {
+                    $excludeIds[] = intval($file["sched_id"]);
+                }
+            }
+
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
 
@@ -104,12 +112,18 @@ class Application_Model_Scheduler {
                     $instance = intval($schedule["instance"]);
                 }
 
-                if ($id !== 0 && $adjustSched === true) {
+                Logging::log("finding items >= {$nextStartDT->format("Y-m-d H:i:s.u")}");
+                if ($adjustSched === true) {
                     $followingSchedItems = CcScheduleQuery::create()
-                        ->filterByDBStarts($schedItem->getDbStarts("Y-m-d H:i:s.u"), Criteria::GREATER_THAN)
+                        ->filterByDBStarts($nextStartDT->format("Y-m-d H:i:s.u"), Criteria::GREATER_EQUAL)
                         ->filterByDbInstanceId($instance)
+                        ->filterByDbId($excludeIds, Criteria::NOT_IN)
                         ->orderByDbStarts()
                         ->find($this->con);
+
+                     foreach ($excludeIds as $id) {
+                        Logging::log("Excluding id {$id}");
+                     }
                 }
 
                 foreach($schedFiles as $file) {
@@ -128,6 +142,9 @@ class Application_Model_Scheduler {
                     else {
                         $sched = new CcSchedule();
                     }
+                    Logging::log("id {$sched->getDbId()}");
+                    Logging::log("start time {$nextStartDT->format("Y-m-d H:i:s.u")}");
+                    Logging::log("end time {$endTimeDT->format("Y-m-d H:i:s.u")}");
 
                     $sched->setDbStarts($nextStartDT);
                     $sched->setDbEnds($endTimeDT);
@@ -143,10 +160,12 @@ class Application_Model_Scheduler {
                     $nextStartDT = $endTimeDT;
                 }
 
-                if ($id !== 0 && $adjustSched === true) {
+                if ($adjustSched === true) {
 
                     //recalculate the start/end times after the inserted items.
                     foreach($followingSchedItems as $item) {
+
+                        Logging::log("adjusting iterm {$item->getDbId()}");
 
                         $durationDT = new DateTime("1970-01-01 {$item->getDbClipLength()}", new DateTimeZone("UTC"));
                         $endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
@@ -215,12 +234,14 @@ class Application_Model_Scheduler {
             $selected = CcScheduleQuery::create()->findPk($selectedItem[0]["id"]);
             $after = CcScheduleQuery::create()->findPk($afterItem[0]["id"]);
 
-            if ($origSelIns !== $selected->getDBInstanceId()
+            /*
+            if (isset($after) && $origSelIns !== $selected->getDBInstanceId()
                 || $origAfterIns !== $after->getDBInstanceId()) {
 
                 Logging::log("items have been since updated");
                 return;
             }
+            */
 
             $this->removeGaps($origSelIns, $selected->getDbId());
 

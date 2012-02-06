@@ -42,6 +42,10 @@ $(document).ready(function() {
 			iMin,
 			iServerOffset,
 			iClientOffset;
+	
+		if ($(sDatePickerId).val() === "") {
+			return 0;
+		}
 		
 		oDate = $( sDatePickerId ).datepicker( "getDate" );
 		
@@ -75,19 +79,18 @@ $(document).ready(function() {
 		var iStart, 
 			iEnd, 
 			iRange,
-			MIN_RANGE = 60*60*24;
+			DEFAULT_RANGE = 60*60*24;
 		
 		iStart = fnGetUIPickerUnixTimestamp("#show_builder_datepicker_start", "#show_builder_timepicker_start");
 		iEnd = fnGetUIPickerUnixTimestamp("#show_builder_datepicker_end", "#show_builder_timepicker_end");
 		
 		iRange = iEnd - iStart;
 		
-		//return min range
-		if (iRange < MIN_RANGE){
-			iEnd = iStart + MIN_RANGE;
-			iRange = MIN_RANGE;
+		if (iRange === 0 || iEnd < iStart) {
+			iEnd = iStart + DEFAULT_RANGE;
+			iRange = DEFAULT_RANGE;
 		}
-			
+		
 		return {
 			start: iStart,
 			end: iEnd,
@@ -370,11 +373,14 @@ $(document).ready(function() {
 		};
 		
 		return {
-			placeholder: "placeholder show-builder-placeholder",
+			placeholder: "placeholder show-builder-placeholder ui-state-highlight",
 			forcePlaceholderSize: true,
-			items: 'tr:not(:first):not(.sb-header):not(.sb-footer):not(.sb-not-allowed):not(.sb-empty)',
+			items: 'tr:not(:first):not(.sb-header):not(.sb-footer):not(.sb-not-allowed)',
 			receive: fnReceive,
-			update: fnUpdate
+			update: fnUpdate,
+			start: function(event, ui) {
+				//ui.placeholder.html("PLACE HOLDER");
+			},
 		};
 	}());
 	

@@ -12,7 +12,7 @@ class Application_Model_ShowBuilder {
         "footer" => false,
         "empty" => false,
         "checkbox" => false,
-        "id" => "",
+        "id" => 0,
         "instance" => "",
         "starts" => "",
         "startsUnix" => null,
@@ -77,11 +77,10 @@ class Application_Model_ShowBuilder {
 
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
-        $row["startsUnix"] = $showStartDT->format("U");
         $row["ends"] = $showEndDT->format("Y-m-d H:i");
-        $row["endsUnix"] = $showEndDT->format("U");
         $row["duration"] = $showEndDT->format("U") - $showStartDT->format("U");
         $row["title"] = $p_item["show_name"];
+        $row["instance"] = intval($p_item["si_id"]);
 
         return $row;
     }
@@ -101,10 +100,7 @@ class Application_Model_ShowBuilder {
             $row["id"] = intval($p_item["sched_id"]);
             $row["instance"] = intval($p_item["si_id"]);
             $row["starts"] = $schedStartDT->format("H:i:s");
-            $row["startsUnix"] = $schedStartDT->format("U");
             $row["ends"] = $schedEndDT->format("H:i:s");
-            $row["endsUnix"] = $schedEndDT->format("U");
-            $row["duration"] = $schedEndDT->format("U") - $schedStartDT->format("U");
             $row["runtime"] = $this->formatDuration($runtime);
             $row["title"] = $p_item["file_track_title"];
             $row["creator"] = $p_item["file_artist_name"];

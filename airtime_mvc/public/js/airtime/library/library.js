@@ -443,6 +443,10 @@ $(document).ready(function() {
         						$.post(oItems.del.url, {format: "json", media: media }, function(json){
         							var oTable, tr;
         							
+        							if (json.message) {
+        								alert(json.message);
+        							}
+        							
         							oTable = $("#library_display").dataTable();
             						oTable.fnDeleteRow( $tr[0] );
         						});
