@@ -63,7 +63,7 @@ class Application_Model_Playlist {
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if ($defaultFade !== "") {
             //fade is in format SS.uuuuuu
-            $fade = DateTime::createFromFormat("U.u", $defaultFade, new DateTimeZone("UTC"));
+            $fade = DateTime::createFromFormat("s.u", $defaultFade, new DateTimeZone("UTC"));
             $this->plItem["fadein"] = $fade->format("H:i:s.u");
             $this->plItem["fadeout"] = $fade->format("H:i:s.u");
         }
