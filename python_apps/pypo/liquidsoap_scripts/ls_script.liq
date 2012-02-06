@@ -38,7 +38,20 @@ server.register(namespace="streams", "connection_status", fun (s) -> begin "1:#{
 default = amplify(0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 
-s = fallback(track_sensitive=false, [queue, default])
+#live stream setup
+set("harbor.bind_addr", "0.0.0.0")
+#auth function for live stream
+def auth(user, password) =
+    if user == 'james' and password == 'james' then
+        true
+    else
+        false
+    end
+end
+
+live = input.harbor("test", port=8080, auth=auth)
+
+s = fallback(track_sensitive=false, [live, queue, default])
 
 s = on_metadata(notify, s)
 s = crossfade(s)
