@@ -51,8 +51,8 @@ class MediaMonitorCommon:
         gid = grp.getgrnam(egid)[2]
         
         #drop root permissions and become "nobody"
-        os.seteuid(uid)
         os.setegid(gid)
+        os.seteuid(uid)
 
         try:
             open(filepath)
@@ -66,6 +66,7 @@ class MediaMonitorCommon:
         finally:
             #reset effective user to root
             os.seteuid(0)
+            os.setegid(0)
 
         return readable
 
@@ -74,7 +75,7 @@ class MediaMonitorCommon:
         try:
             omask = os.umask(0)
             
-            if not has_correct_permissions(item, 'www-data', 'www-data'):
+            if not self.has_correct_permissions(item, 'www-data', 'www-data'):
                 uid = pwd.getpwnam('www-data')[2]
                 gid = grp.getgrnam('www-data')[2]
                 

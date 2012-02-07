@@ -351,6 +351,9 @@ class AirtimeProcessEvent(ProcessEvent):
         except socket.timeout:
             pass
         except Exception, e:
-            self.logger.info("%s", e)
+            import traceback
+            top = traceback.format_exc()
+            self.logger.error('Exception: %s', e)
+            self.logger.error("traceback: %s", top)
             time.sleep(3)
 
