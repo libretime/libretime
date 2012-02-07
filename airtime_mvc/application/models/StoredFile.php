@@ -627,8 +627,8 @@ class Application_Model_StoredFile {
 
             $row['id'] = intval($row['id']);
 
-            $length = new DateTime($row['length']);
-            $row['length'] = self::formatDuration($length);
+            //$length = new DateTime($row['length']);
+            //$row['length'] = self::formatDuration($length);
 
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";

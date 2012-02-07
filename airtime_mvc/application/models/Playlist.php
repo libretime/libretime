@@ -38,10 +38,10 @@ class Application_Model_Playlist {
 
 	//using propel's phpNames.
 	private $categories = array(
-	    "dc:title" => "DbName",
-    	"dc:creator" => "DbCreatorId",
-    	"dc:description" => "DbDescription",
-    	"dcterms:extent" => "DbLength"
+	    "dc:title" => "Name",
+    	"dc:creator" => "Creator",
+    	"dc:description" => "Description",
+    	"dcterms:extent" => "Length"
 	);
 
 
@@ -115,6 +115,18 @@ class Application_Model_Playlist {
         return $this->pl->getDbDescription();
     }
 
+    public function getCreator() {
+
+        return $this->pl->getCcSubjs()->getDbLogin();
+    }
+
+    public function setCreator($p_id) {
+
+        $this->pl->setDbCreatorId($p_id);
+        $this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $this->pl->save($this->con);
+    }
+
     public function getLastModified($format = null) {
         return $this->pl->getDbMtime($format);
     }
@@ -143,16 +155,12 @@ class Application_Model_Playlist {
         $offset = 0;
         foreach ($rows as $row) {
           $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
-          // display only upto 1 decimal place by calling secondsToPlaylistTime
+
+
           $clipSec = Application_Model_Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
           //$files[$i]['cliplength'] = Application_Model_Playlist::secondsToPlaylistTime($clipSec);
           $offset += $clipSec;
           $files[$i]['offset'] = Application_Model_Playlist::secondsToPlaylistTime($offset);
-
-          //Propel has been modified to only return SS.uuuuuu, might want this normalize
-          //feature to instead strip useless zeroes.
-          //$files[$i]['fadein'] = $this->normalizeFade($files[$i]['fadein']);
-          //$files[$i]['fadeout'] = $this->normalizeFade($files[$i]['fadeout']);
 
           $i++;
         }
@@ -184,7 +192,8 @@ class Application_Model_Playlist {
 
     //aggregate column on playlistcontents cliplength column.
     public function getLength() {
-        $this->pl->getDbLength();
+
+        return $this->pl->getDbLength();
     }
 
 
@@ -660,7 +669,7 @@ class Application_Model_Playlist {
 
         foreach($categories as $key => $val) {
             $method = 'get' . $val;
-            $md[$key] = $this->pl->$method();
+            $md[$key] = $this->$method();
         }
 
         return $md;
@@ -670,7 +679,7 @@ class Application_Model_Playlist {
     {
         $cat = $this->categories[$category];
         $method = 'get' . $cat;
-        return $this->pl->$method();
+        return $this->$method();
     }
 
     public function setPLMetaData($category, $value)
@@ -678,16 +687,14 @@ class Application_Model_Playlist {
         $cat = $this->categories[$category];
 
         $method = 'set' . $cat;
-        $this->pl->$method($value);
-        $this->pl->save($this->con);
+        $this->$method($value);
     }
-
 
     /**
 -     * Convert playlist time value to float seconds
 -     *
 -     * @param string $plt
--     *         playlist time value (HH:mm:ss.dddddd)
+-     *         playlist interval value (HH:mm:ss.dddddd)
 -     * @return int
 -     *         seconds
 -     */
@@ -709,13 +716,11 @@ class Application_Model_Playlist {
 -     *
 -     * @param float $seconds
 -     * @return string
--     *         time in playlist time format (HH:mm:ss.d)
+-     *         interval in playlist time format (HH:mm:ss.d)
 -     */
     public static function secondsToPlaylistTime($p_seconds)
     {
-        $seconds = $p_seconds;
-        $rounded = round($seconds, 1);
-        $info = explode('.', $rounded);
+        $info = explode('.', $p_seconds);
         $seconds = $info[0];
         if(!isset($info[1])){
             $milliStr = 0;

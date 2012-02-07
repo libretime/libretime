@@ -2,7 +2,7 @@ var AIRTIME = (function(AIRTIME){
 	var mod;
 	
 	if (AIRTIME.library === undefined) {
-		AIRTIME.library = {}
+		AIRTIME.library = {};
 	}
 	
 	AIRTIME.library.events = {};
@@ -14,7 +14,7 @@ var AIRTIME = (function(AIRTIME){
 		$nRow.attr("id", aData["tr_id"])
 	    	.data("aData", aData)
 	    	.data("screen", "timeline");
-	}
+	};
 	
 	mod.fnDrawCallback = function() {
 		
@@ -23,7 +23,7 @@ var AIRTIME = (function(AIRTIME){
 			cursor: 'pointer',
 			connectToSortable: '#show_builder_table'
 		});	
-	}
+	};
 	
 	mod.setupLibraryToolbar = function(oLibTable) {
 		var aButtons,
@@ -85,7 +85,7 @@ var AIRTIME = (function(AIRTIME){
 		                ["Add", "library_group_add", true, fnAddSelectedItems]];
 		
 		addToolBarButtonsLibrary(aButtons);
-	}
+	};
 	
 	return AIRTIME;
 	

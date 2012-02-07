@@ -15,7 +15,7 @@ class CcFiles extends BaseCcFiles {
 
 	public function getDbLength($format = "H:i:s.u")
     {
-        return parent::getDbCliplength($format);
+        return parent::getDbLength($format);
     }
 
     public function setDbLength($v)
