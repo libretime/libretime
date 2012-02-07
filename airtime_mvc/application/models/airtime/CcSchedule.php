@@ -17,24 +17,7 @@ class CcSchedule extends BaseCcSchedule {
 
     public function getDbClipLength($format = 'H:i:s.u')
     {
-        if ($this->clip_length === null) {
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->clip_length);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->clip_length, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-            return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
-        }
+        return parent::getDbClipLength($format);
     }
 
     /**
@@ -46,26 +29,9 @@ class CcSchedule extends BaseCcSchedule {
      * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      * @throws     PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbStarts($format = 'Y-m-d H:i:s')
+    public function getDbStarts($format = 'Y-m-d H:i:s.u')
     {
-        if ($this->starts === null) {
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->starts, new DateTimeZone("UTC"));
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->starts, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-            return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
-        }
+        return parent::getDbStarts($format);
     }
 
     /**
@@ -77,26 +43,192 @@ class CcSchedule extends BaseCcSchedule {
      * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      * @throws     PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbEnds($format = 'Y-m-d H:i:s')
+    public function getDbEnds($format = 'Y-m-d H:i:s.u')
     {
-        if ($this->ends === null) {
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->ends, new DateTimeZone("UTC"));
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->ends, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-            return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
-        }
+        return parent::getDbEnds($format);
     }
+
+ /**
+     * Get the [optionally formatted] temporal [fadein] column value.
+     *
+     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     * @throws     PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbFadeIn($format = "s.u")
+    {
+        parent::getDbFadein($format);
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [fadein] column value.
+     *
+     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     * @throws     PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbFadeOut($format = "s.u")
+    {
+       parent::getDbFadeout($format);
+    }
+
+    /**
+     * Just changing the default format to return subseconds
+     *
+     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     * @throws     PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbCueIn($format = 'H:i:s.u')
+    {
+       return parent::getDbCuein($format);
+    }
+
+    /**
+     * Just changing the default format to return subseconds
+     *
+     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     * @throws     PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbCueOut($format = 'H:i:s.u')
+    {
+       return parent::getDbCueout($format);
+    }
+
+    /**
+     *
+     * @param String in format SS.uuuuuu, Datetime, or DateTime accepted string.
+     *
+     * @return CcPlaylistcontents The current object (for fluent API support)
+     */
+    public function setDbFadeIn($v)
+    {
+        if ($v instanceof DateTime) {
+            $dt = $v;
+        }
+        else if (preg_match('/^[0-5][0-9](\.\d{1,6})?$/', $v)) {
+            $dt = DateTime::createFromFormat("s.u", $v);
+        }
+        else {
+            try {
+                $dt = new DateTime($v);
+            } catch (Exception $x) {
+                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+            }
+        }
+
+        $this->fade_in = $dt->format('H:i:s.u');
+        $this->modifiedColumns[] = CcSchedulePeer::FADE_IN;
+
+        return $this;
+    } // setDbFadein()
+
+    /**
+    *
+    * @param String in format SS.uuuuuu, Datetime, or DateTime accepted string.
+    *
+    * @return CcPlaylistcontents The current object (for fluent API support)
+    */
+    public function setDbFadeOut($v)
+    {
+        if ($v instanceof DateTime) {
+            $dt = $v;
+        }
+        else if (preg_match('/^[0-5][0-9](\.\d{1,6})?$/', $v)) {
+            $dt = DateTime::createFromFormat("s.u", $v);
+        }
+        else {
+            try {
+                $dt = new DateTime($v);
+            } catch (Exception $x) {
+                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+            }
+        }
+
+        $this->fadeIout = $dt->format('H:i:s.u');
+        $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADE_OUT;
+
+        return $this;
+    } // setDbFadeout()
+
+    /**
+     * Sets the value of [cuein] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+     *                      be treated as NULL for temporal objects.
+     * @return     CcPlaylistcontents The current object (for fluent API support)
+     */
+    public function setDbCueIn($v)
+    {
+        if ($v instanceof DateTime) {
+            $dt = $v;
+        }
+        else {
+            try {
+                $dt = new DateTime($v);
+            }
+            catch (Exception $x) {
+                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+            }
+        }
+
+        $this->cue_in = $dt->format('H:i:s.u');
+        $this->modifiedColumns[] = CcPlaylistcontentsPeer::CUE_IN;
+
+        return $this;
+    } // setDbCuein()
+
+    /**
+     * Sets the value of [cueout] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+     *                      be treated as NULL for temporal objects.
+     * @return     CcPlaylistcontents The current object (for fluent API support)
+     */
+    public function setDbCueout($v)
+    {
+        if ($v instanceof DateTime) {
+            $dt = $v;
+        }
+        else {
+            try {
+                $dt = new DateTime($v);
+            }
+            catch (Exception $x) {
+                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+            }
+        }
+
+        $this->cue_out = $dt->format('H:i:s.u');
+        $this->modifiedColumns[] = CcPlaylistcontentsPeer::CUE_OUT;
+
+        return $this;
+    } // setDbCueout()
+
+    /**
+     * Sets the value of [cliplength] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+     *                      be treated as NULL for temporal objects.
+     * @return     CcPlaylistcontents The current object (for fluent API support)
+     */
+    public function setDbClipLength($v)
+    {
+        if ($v instanceof DateTime) {
+            $dt = $v;
+        }
+        else {
+
+            try {
+
+                $dt = new DateTime($v);
+
+            } catch (Exception $x) {
+                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+            }
+        }
+
+        $this->clip_length = $dt->format('H:i:s.u');
+        $this->modifiedColumns[] = CcPlaylistcontentsPeer::CLIP_LENGTH;
+
+        return $this;
+    } // setDbCliplength()
 
 } // CcSchedule

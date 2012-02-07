@@ -19,19 +19,9 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
      * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      * @throws     PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbFadein()
+    public function getDbFadein($format = "s.u")
     {
-        if ($this->fadein === null) {
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->fadein);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->fadein, true), $x);
-        }
-
-        return $dt->format("s.u");
+        parent::getDbFadein($format);
     }
 
     /**
@@ -40,19 +30,9 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
      * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      * @throws     PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbFadeout()
+    public function getDbFadeout($format = "s.u")
     {
-        if ($this->fadeout === null) {
-            return null;
-        }
-
-        try {
-            $dt = new DateTime($this->fadeout);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->fadein, true), $x);
-        }
-
-        return $dt->format("s.u");
+       parent::getDbFadeout($format);
     }
 
     /**
@@ -110,7 +90,7 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
             }
         }
 
-        $this->fadein = ($dt ? $dt->format('H:i:s.u') : null);
+        $this->fadein = $dt->format('H:i:s.u');
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
 
         return $this;
@@ -138,7 +118,7 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
             }
         }
 
-        $this->fadeout = ($dt ? $dt->format('H:i:s.u') : null);
+        $this->fadeout = $dt->format('H:i:s.u');
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
 
         return $this;
