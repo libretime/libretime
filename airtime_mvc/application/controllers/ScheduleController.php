@@ -44,13 +44,16 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js?'.filemtime($baseDir.'/js/contextmenu/jjmenu.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js?'.filemtime($baseDir.'/js/fullcalendar/fullcalendar.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js?'.filemtime($baseDir.'/js/timepicker/jquery.ui.timepicker.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js?'.filemtime($baseDir.'/js/colorpicker/js/colorpicker.js'),'text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js?'.filemtime($baseDir.'/js/airtime/schedule/full-calendar-functions.js'),'text/javascript');
+
+
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js?'.filemtime($baseDir.'/js/fullcalendar/fullcalendar.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js?'.filemtime($baseDir.'/js/timepicker/jquery.ui.timepicker.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js?'.filemtime($baseDir.'/js/colorpicker/js/colorpicker.js'),'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js?'.filemtime($baseDir.'/js/airtime/schedule/add-show.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js?'.filemtime($baseDir.'/js/airtime/schedule/schedule.js'),'text/javascript');

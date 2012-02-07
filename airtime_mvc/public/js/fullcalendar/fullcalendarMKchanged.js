@@ -1,6 +1,6 @@
 /**
  * @preserve
- * FullCalendar v1.5.1
+ * FullCalendar v1.5.1-CUSTOM (Changes by Martin Konecny -added primitive support for timezones)
  * http://arshaw.com/fullcalendar/
  *
  * Use fullcalendar.css for basic styling.
@@ -227,7 +227,7 @@ function Calendar(element, options, eventSources) {
 	var absoluteViewElement;
 	var resizeUID = 0;
 	var ignoreWindowResize = 0;
-	var date = new Date();
+	var date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
 	var events = [];
 	var _dragElement;
 	
@@ -399,7 +399,9 @@ function Calendar(element, options, eventSources) {
 			elementOuterWidth = element.outerWidth();
 			
 			header.updateTitle(currentView.title);
-			var today = new Date();
+			//adjusting this date ensures that the "today" button is greyed out on the 
+			//correct day.
+			var today = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
 			if (today >= currentView.start && today < currentView.end) {
 				header.disableButton('today');
 			}else{
@@ -581,7 +583,8 @@ function Calendar(element, options, eventSources) {
 	
 	
 	function today() {
-		date = new Date();
+		//adjusting this date ensures that clicking "today" takes us to the correct date.
+		date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
 		renderView();
 	}
 	
@@ -2275,7 +2278,7 @@ function BasicView(element, calendar, viewName) {
 	function updateCells(firstTime) {
 		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
 		var month = t.start.getMonth();
-		var today = clearTime(new Date());
+		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
 		var cell;
 		var date;
 		var row;
@@ -3108,7 +3111,7 @@ function AgendaView(element, calendar, viewName) {
 		var headCell;
 		var bodyCell;
 		var date;
-		var today = clearTime(new Date());
+		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
 		for (i=0; i<colCnt; i++) {
 			date = colDate(i);
 			headCell = dayHeadCells.eq(i);
