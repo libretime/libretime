@@ -62,12 +62,31 @@ class Application_Model_Scheduler {
     }
 
     /*
-     * @param DateTime startDT
+     * @param DateTime startDT in UTC
      * @param string duration
      *      in format H:i:s.u (could be more that 24 hours)
+     *
+     * @return DateTime endDT in UTC
      */
-    private function findEndTime($startDT, $duration) {
+    private function findEndTime($p_startDT, $p_duration) {
 
+        $startEpoch = $p_startDT->format("U.u");
+        $durationSeconds = Application_Model_Playlist::playlistTimeToSeconds($p_duration);
+
+        //add two float numbers to 6 subsecond precision
+        //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+        $endEpoch = bcadd($startEpoch , (string) $durationSeconds, 6);
+
+        Logging::log("end DateTime created {$p_startDT->format("Y-m-d H:i:s.u")}");
+        Logging::log("start epoch is {$startEpoch}");
+        Logging::log("duration in seconds is {$durationSeconds}");
+        Logging::log("end epoch is {$endEpoch}");
+
+        $dt = DateTime::createFromFormat("U.u", $endEpoch, new DateTimeZone("UTC"));
+
+        Logging::log("end DateTime created {$dt->format("Y-m-d H:i:s.u")}");
+
+        return $dt;
     }
 
     /*
@@ -130,9 +149,7 @@ class Application_Model_Scheduler {
 
                     Logging::log("adding file with id: ".$file["id"]);
 
-                    $durationDT = new DateTime("1970-01-01 {$file['cliplength']}", new DateTimeZone("UTC"));
-                    $endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
-                    $endTimeDT = DateTime::createFromFormat("U", $endTimeEpoch, new DateTimeZone("UTC"));
+                    $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
 
                     //item existed previously and is being moved.
                     //need to keep same id for resources if we want REST.
@@ -153,7 +170,7 @@ class Application_Model_Scheduler {
                     $sched->setDbCueOut($file['cueout']);
                     $sched->setDbFadeIn($file['fadein']);
                     $sched->setDbFadeOut($file['fadeout']);
-                    $sched->setDbClipLength($durationDT->format("H:i:s.u"));
+                    $sched->setDbClipLength($file['cliplength']);
                     $sched->setDbInstanceId($instance);
                     $sched->save($this->con);
 
@@ -167,9 +184,7 @@ class Application_Model_Scheduler {
 
                         Logging::log("adjusting iterm {$item->getDbId()}");
 
-                        $durationDT = new DateTime("1970-01-01 {$item->getDbClipLength()}", new DateTimeZone("UTC"));
-                        $endTimeEpoch = $nextStartDT->format("U") + $durationDT->format("U");
-                        $endTimeDT = DateTime::createFromFormat("U", $endTimeEpoch, new DateTimeZone("UTC"));
+                        $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
 
                         $item->setDbStarts($nextStartDT);
                         $item->setDbEnds($endTimeDT);
@@ -325,28 +340,13 @@ class Application_Model_Scheduler {
 
             Logging::log("adjusting item #".$item->getDbId());
 
-            if (!$item->isDeleted()) {
-                Logging::log("item #".$item->getDbId()." is not deleted");
+            $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
 
-                $durationDT = new DateTime("1970-01-01 {$item->getDbClipLength()}", new DateTimeZone("UTC"));
-                $startEpoch = $itemStartDT->format("U");
-                Logging::log("new start time");
-                Logging::log($itemStartDT->format("Y-m-d H:i:s"));
+            $item->setDbStarts($itemStartDT);
+            $item->setDbEnds($itemEndDT);
+            $item->save($this->con);
 
-                Logging::log("duration");
-                Logging::log($durationDT->format("U"). "seconds");
-
-                $endEpoch = $itemStartDT->format("U") + $durationDT->format("U");
-                $itemEndDT = DateTime::createFromFormat("U", $endEpoch, new DateTimeZone("UTC"));
-                Logging::log("new end time");
-                Logging::log($itemEndDT->format("Y-m-d H:i:s"));
-
-                $item->setDbStarts($itemStartDT);
-                $item->setDbEnds($itemEndDT);
-                $item->save($this->con);
-
-                $itemStartDT = $itemEndDT;
-            }
+            $itemStartDT = $itemEndDT;
         }
     }
 }

@@ -31,7 +31,24 @@ class CcSchedule extends BaseCcSchedule {
      */
     public function getDbStarts($format = 'Y-m-d H:i:s.u')
     {
-        return parent::getDbStarts($format);
+        if ($this->starts === null) {
+            return null;
+        }
+
+        try {
+            $dt = new DateTime($this->starts, new DateTimeZone("UTC"));
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->starts, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+            return $dt;
+        } elseif (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        } else {
+            return $dt->format($format);
+        }
     }
 
     /**
@@ -45,7 +62,24 @@ class CcSchedule extends BaseCcSchedule {
      */
     public function getDbEnds($format = 'Y-m-d H:i:s.u')
     {
-        return parent::getDbEnds($format);
+        if ($this->ends === null) {
+            return null;
+        }
+
+        try {
+            $dt = new DateTime($this->ends, new DateTimeZone("UTC"));
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->ends, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+            return $dt;
+        } elseif (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        } else {
+            return $dt->format($format);
+        }
     }
 
  /**
@@ -143,7 +177,7 @@ class CcSchedule extends BaseCcSchedule {
         }
 
         $this->fadeIout = $dt->format('H:i:s.u');
-        $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADE_OUT;
+        $this->modifiedColumns[] = CcSchedulePeer::FADE_OUT;
 
         return $this;
     } // setDbFadeout()
@@ -170,7 +204,7 @@ class CcSchedule extends BaseCcSchedule {
         }
 
         $this->cue_in = $dt->format('H:i:s.u');
-        $this->modifiedColumns[] = CcPlaylistcontentsPeer::CUE_IN;
+        $this->modifiedColumns[] = CcSchedulePeer::CUE_IN;
 
         return $this;
     } // setDbCuein()
@@ -197,7 +231,7 @@ class CcSchedule extends BaseCcSchedule {
         }
 
         $this->cue_out = $dt->format('H:i:s.u');
-        $this->modifiedColumns[] = CcPlaylistcontentsPeer::CUE_OUT;
+        $this->modifiedColumns[] = CcSchedulePeer::CUE_OUT;
 
         return $this;
     } // setDbCueout()
@@ -226,9 +260,78 @@ class CcSchedule extends BaseCcSchedule {
         }
 
         $this->clip_length = $dt->format('H:i:s.u');
-        $this->modifiedColumns[] = CcPlaylistcontentsPeer::CLIP_LENGTH;
+        $this->modifiedColumns[] = CcSchedulePeer::CLIP_LENGTH;
 
         return $this;
     } // setDbCliplength()
+
+    /**
+     * Sets the value of [starts] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+     *                      be treated as NULL for temporal objects.
+     * @return     CcSchedule The current object (for fluent API support)
+     */
+    public function setDbStarts($v)
+    {
+       if ($v instanceof DateTime) {
+            $dt = $v;
+        } else {
+            // some string/numeric value passed; we normalize that so that we can
+            // validate it.
+            try {
+                if (is_numeric($v)) { // if it's a unix timestamp
+                    $dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+                    // We have to explicitly specify and then change the time zone because of a
+                    // DateTime bug: http://bugs.php.net/bug.php?id=43003
+                    $dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+                } else {
+                    $dt = new DateTime($v);
+                }
+            } catch (Exception $x) {
+                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+            }
+        }
+
+        $this->starts = ($dt ? $dt->format('Y-m-d H:i:s.u') : null);
+        $this->modifiedColumns[] = CcSchedulePeer::STARTS;
+
+        return $this;
+    } // setDbStarts()
+
+    /**
+     * Sets the value of [ends] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+     *                      be treated as NULL for temporal objects.
+     * @return     CcSchedule The current object (for fluent API support)
+     */
+    public function setDbEnds($v)
+    {
+
+        if ($v instanceof DateTime) {
+            $dt = $v;
+        } else {
+            // some string/numeric value passed; we normalize that so that we can
+            // validate it.
+            try {
+                if (is_numeric($v)) { // if it's a unix timestamp
+                    $dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+                    // We have to explicitly specify and then change the time zone because of a
+                    // DateTime bug: http://bugs.php.net/bug.php?id=43003
+                    $dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+                } else {
+                    $dt = new DateTime($v);
+                }
+            } catch (Exception $x) {
+                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+            }
+        }
+
+        $this->ends = ($dt ? $dt->format('Y-m-d H:i:s.u') : null);
+        $this->modifiedColumns[] = CcSchedulePeer::ENDS;
+
+        return $this;
+    } // setDbEnds()
 
 } // CcSchedule

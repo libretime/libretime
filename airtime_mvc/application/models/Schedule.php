@@ -330,7 +330,7 @@ class Application_Model_Schedule {
 
         ORDER BY si.starts, sched.starts;";
 
-        Logging::log($sql);
+        //Logging::log($sql);
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;

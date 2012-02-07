@@ -691,13 +691,15 @@ class Application_Model_Playlist {
     }
 
     /**
--     * Convert playlist time value to float seconds
--     *
--     * @param string $plt
--     *         playlist interval value (HH:mm:ss.dddddd)
--     * @return int
--     *         seconds
--     */
+     * This function is used for calculations! Don't modify for display purposes!
+     *
+     * Convert playlist time value to float seconds
+     *
+     * @param string $plt
+     *         playlist interval value (HH:mm:ss.dddddd)
+     * @return int
+     *         seconds
+     */
     public static function playlistTimeToSeconds($plt)
     {
         $arr =  preg_split('/:/', $plt);
@@ -712,12 +714,14 @@ class Application_Model_Playlist {
 
 
     /**
--     * Convert float seconds value to playlist time format
--     *
--     * @param float $seconds
--     * @return string
--     *         interval in playlist time format (HH:mm:ss.d)
--     */
+     *  This function is used for calculations! Don't modify for display purposes!
+     *
+     * Convert float seconds value to playlist time format
+     *
+     * @param float $seconds
+     * @return string
+     *         interval in playlist time format (HH:mm:ss.d)
+     */
     public static function secondsToPlaylistTime($p_seconds)
     {
         $info = explode('.', $p_seconds);
