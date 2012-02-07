@@ -38,8 +38,6 @@ require_once($CC_CONFIG['phpDir'].'/application/models/ShowInstance.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/StreamSetting.php');
 
-//Pear classes.
-set_include_path($CC_CONFIG['phpDir'].'/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once('DB.php');
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
 if (PEAR::isError($CC_DBC)) {

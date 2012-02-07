@@ -21,9 +21,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
 //Propel classes.
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 
-//Pear classes.
-set_include_path(APPLICATION_PATH . '/../library/pear' . PATH_SEPARATOR . get_include_path());
-
 //Controller plugins.
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 

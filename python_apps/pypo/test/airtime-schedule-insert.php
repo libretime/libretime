@@ -10,9 +10,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . realpath(APPLICATION_PATH
 set_include_path(get_include_path() . PATH_SEPARATOR . APPLICATION_PATH . '/models');
 echo get_include_path().PHP_EOL;
 
-//Pear classes.
-set_include_path(APPLICATION_PATH . get_include_path() . PATH_SEPARATOR . '/../library/pear');
-
 //Controller plugins.
 set_include_path(APPLICATION_PATH . get_include_path() . PATH_SEPARATOR . '/controllers/plugins');
 
