@@ -51,8 +51,7 @@ $CC_CONFIG = array(
     'soundcloud-connection-retries' => $values['soundcloud']['connection_retries'],
     'soundcloud-connection-wait' => $values['soundcloud']['time_between_retries'],
 
-    "rootDir" => __DIR__."/../..",
-    'zendPath'      =>  dirname(__FILE__).'/../../library/Zend'
+    "rootDir" => __DIR__."/../.."
 );
 
 AirtimeInstall::DbConnect(true);

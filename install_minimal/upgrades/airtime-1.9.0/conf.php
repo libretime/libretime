@@ -17,8 +17,7 @@ $CC_CONFIG = array(
     'soundcloud-client-id' => '2CLCxcSXYzx7QhhPVHN4A',
     'soundcloud-client-secret' => 'pZ7beWmF06epXLHVUP1ufOg2oEnIt9XhE8l8xt0bBs',
 
-    "rootDir" => __DIR__."/../..",
-    'zendPath'      =>  dirname(__FILE__).'/../../../airtime_mvc/library/Zend'
+    "rootDir" => __DIR__."/../.."
 );
 
 $CC_CONFIG = Config::loadConfig($CC_CONFIG);
@@ -46,11 +45,6 @@ $CC_CONFIG['prefSequence'] = $CC_CONFIG['prefTable'].'_id';
 $CC_CONFIG['permSequence'] = $CC_CONFIG['permTable'].'_id';
 $CC_CONFIG['subjSequence'] = $CC_CONFIG['subjTable'].'_id';
 $CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
-
-// Add libs to the PHP path
-$old_include_path = get_include_path();
-set_include_path('.'.PATH_SEPARATOR.$CC_CONFIG['zendPath']
-					.PATH_SEPARATOR.$old_include_path);
 
 class Config {
     public static function loadConfig($CC_CONFIG) {

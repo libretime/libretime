@@ -45,6 +45,18 @@ libvorbis-ocaml libpulse0 vorbis-tools lsb-release php-db zendframework
 #of Debian, where these packages are unauthorized)
 apt-get -y --force-yes install libmp3lame-dev lame icecast2
 
+
+#Debian Squeeze only has zendframework package. Newer versions of Ubuntu have zend-framework package.
+#Ubuntu Lucid has both zendframework and zend-framework. Difference appears to be that zendframework is for
+#1.10 and zend-framework is 1.11 
+if [ "$dist" = "Debian" ]; then
+    apt-get -y install zendframework
+else
+    apt-get -y install zend-framework
+fi
+
+
+
 if [ "$?" -ne "0" ]; then
    echo ""
    echo "There was a problem with apt-get. Please check the above error and try again."
