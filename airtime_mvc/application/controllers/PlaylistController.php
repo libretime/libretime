@@ -36,7 +36,12 @@ class PlaylistController extends Zend_Controller_Action
 
     private function changePlaylist($pl_id)
     {
-		$this->pl_sess->id = intval($pl_id);
+        if (is_null($pl_id)) {
+            unset($this->pl_sess->id);
+        }
+        else {
+            $this->pl_sess->id = intval($pl_id);
+        }
     }
 
     private function createUpdateResponse($pl)
@@ -143,11 +148,11 @@ class PlaylistController extends Zend_Controller_Action
                 $this->changePlaylist(null);
             }
             else {
-                $pl = $this->getPlaylist();
                 Logging::log("Not deleting currently active playlist");
             }
 
             Application_Model_Playlist::DeletePlaylists($ids);
+            $pl = $this->getPlaylist();
         }
         catch(PlaylistNotFoundException $e) {
             Logging::log("Playlist not found");

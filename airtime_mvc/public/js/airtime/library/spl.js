@@ -593,8 +593,9 @@ var AIRTIME = (function(AIRTIME){
 		$(playlist).delegate("#spl_new", 
 	    		{"click": AIRTIME.playlist.fnNew});
 
-		$(playlist).delegate("#spl_delete", 
-	    		{"click": AIRTIME.playlist.fnDelete});
+		$(playlist).delegate("#spl_delete", {"click": function(ev){
+			AIRTIME.playlist.fnDelete();
+		}});
 		
 		setPlaylistEntryEvents(playlist);
 		setCueEvents(playlist);
