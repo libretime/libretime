@@ -32,16 +32,16 @@ class Application_Model_Playlist {
         "cliplength" => "",
         "cuein" => "00:00:00",
         "cueout" => "00:00:00",
-        "fadein" => "00:00:00",
-        "fadeout" => "00:00:00",
+        "fadein" => "0.0",
+        "fadeout" => "0.0",
     );
 
 	//using propel's phpNames.
 	private $categories = array(
-	    "dc:title" => "DbName",
-    	"dc:creator" => "DbCreatorId",
-    	"dc:description" => "DbDescription",
-    	"dcterms:extent" => "DbLength"
+	    "dc:title" => "Name",
+    	"dc:creator" => "Creator",
+    	"dc:description" => "Description",
+    	"dcterms:extent" => "Length"
 	);
 
 
@@ -50,7 +50,7 @@ class Application_Model_Playlist {
         if (isset($id)) {
             $this->pl = CcPlaylistQuery::create()->findPK($id);
 
-            if (is_null($this->pl)){
+            if (is_null($this->pl)) {
                 throw new PlaylistNotFoundException();
             }
         }
@@ -63,9 +63,9 @@ class Application_Model_Playlist {
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if ($defaultFade !== "") {
             //fade is in format SS.uuuuuu
-            $fade = DateTime::createFromFormat("s.u", $defaultFade, new DateTimeZone("UTC"));
-            $this->plItem["fadein"] = $fade->format("H:i:s.u");
-            $this->plItem["fadeout"] = $fade->format("H:i:s.u");
+
+            $this->plItem["fadein"] = $defaultFade;
+            $this->plItem["fadeout"] = $defaultFade;
         }
 
         $this->con = isset($con) ? $con : Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
@@ -115,6 +115,18 @@ class Application_Model_Playlist {
         return $this->pl->getDbDescription();
     }
 
+    public function getCreator() {
+
+        return $this->pl->getCcSubjs()->getDbLogin();
+    }
+
+    public function setCreator($p_id) {
+
+        $this->pl->setDbCreatorId($p_id);
+        $this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $this->pl->save($this->con);
+    }
+
     public function getLastModified($format = null) {
         return $this->pl->getDbMtime($format);
     }
@@ -143,17 +155,12 @@ class Application_Model_Playlist {
         $offset = 0;
         foreach ($rows as $row) {
           $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
-          // display only upto 1 decimal place by calling secondsToPlaylistTime
+
+
           $clipSec = Application_Model_Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
-          $files[$i]['cliplength'] = Application_Model_Playlist::secondsToPlaylistTime($clipSec);
+          //$files[$i]['cliplength'] = Application_Model_Playlist::secondsToPlaylistTime($clipSec);
           $offset += $clipSec;
           $files[$i]['offset'] = Application_Model_Playlist::secondsToPlaylistTime($offset);
-
-          #For issue CC-2065 - update fade in and out values between playlst elements
-          #modified from the db default format of 00:00:00 to the more practical
-          #00.000000 format which is for only seconds.
-          $files[$i]['fadein'] = $this->normalizeFade($files[$i]['fadein']);
-          $files[$i]['fadeout'] = $this->normalizeFade($files[$i]['fadeout']);
 
           $i++;
         }
@@ -185,7 +192,8 @@ class Application_Model_Playlist {
 
     //aggregate column on playlistcontents cliplength column.
     public function getLength() {
-        $this->pl->getDbLength();
+
+        return $this->pl->getDbLength();
     }
 
 
@@ -429,11 +437,9 @@ class Application_Model_Playlist {
             ->filterByDbPosition($pos)
             ->findOne();
 
-            #For issue CC-2065, fade in and out values are for the Playlist itself and must be
-            #modified from the db default format of 00:00:00 to the more practical
-            #00.000000 format which is for only seconds.
-            $fadeIn = $this->normalizeFade($row->getDbFadein());
-            $fadeOut = $this->normalizeFade($row->getDbFadeout());
+            #Propel returns values in form 00.000000 format which is for only seconds.
+            $fadeIn = $row->getDbFadein();
+            $fadeOut = $row->getDbFadeout();
             return array($fadeIn, $fadeOut);
 	}
 
@@ -489,7 +495,12 @@ class Application_Model_Playlist {
             $row->setDbFadeout($fadeOut);
         }
 
-        $row->save();
+        try {
+            $row->save();
+        }
+        catch (Exception $e) {
+            Logging::log($e->getMessage());
+        }
 
         return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
     }
@@ -658,7 +669,7 @@ class Application_Model_Playlist {
 
         foreach($categories as $key => $val) {
             $method = 'get' . $val;
-            $md[$key] = $this->pl->$method();
+            $md[$key] = $this->$method();
         }
 
         return $md;
@@ -668,7 +679,7 @@ class Application_Model_Playlist {
     {
         $cat = $this->categories[$category];
         $method = 'get' . $cat;
-        return $this->pl->$method();
+        return $this->$method();
     }
 
     public function setPLMetaData($category, $value)
@@ -676,19 +687,19 @@ class Application_Model_Playlist {
         $cat = $this->categories[$category];
 
         $method = 'set' . $cat;
-        $this->pl->$method($value);
-        $this->pl->save($this->con);
+        $this->$method($value);
     }
 
-
     /**
--     * Convert playlist time value to float seconds
--     *
--     * @param string $plt
--     *         playlist time value (HH:mm:ss.dddddd)
--     * @return int
--     *         seconds
--     */
+     * This function is used for calculations! Don't modify for display purposes!
+     *
+     * Convert playlist time value to float seconds
+     *
+     * @param string $plt
+     *         playlist interval value (HH:mm:ss.dddddd)
+     * @return int
+     *         seconds
+     */
     public static function playlistTimeToSeconds($plt)
     {
         $arr =  preg_split('/:/', $plt);
@@ -703,17 +714,17 @@ class Application_Model_Playlist {
 
 
     /**
--     * Convert float seconds value to playlist time format
--     *
--     * @param float $seconds
--     * @return string
--     *         time in playlist time format (HH:mm:ss.d)
--     */
+     *  This function is used for calculations! Don't modify for display purposes!
+     *
+     * Convert float seconds value to playlist time format
+     *
+     * @param float $seconds
+     * @return string
+     *         interval in playlist time format (HH:mm:ss.d)
+     */
     public static function secondsToPlaylistTime($p_seconds)
     {
-        $seconds = $p_seconds;
-        $rounded = round($seconds, 1);
-        $info = explode('.', $rounded);
+        $info = explode('.', $p_seconds);
         $seconds = $info[0];
         if(!isset($info[1])){
             $milliStr = 0;

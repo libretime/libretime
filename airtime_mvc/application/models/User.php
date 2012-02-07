@@ -42,7 +42,7 @@ class Application_Model_User {
             $type === UTYPE_PROGRAM_MANAGER ||
             CcShowHostsQuery::create()->filterByDbShow($p_showId)->filterByDbHost($this->getId())->count() > 0 )
        {
-            return true;
+           return true;
        }
 
        return false;

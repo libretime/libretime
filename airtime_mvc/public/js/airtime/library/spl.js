@@ -14,7 +14,7 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function isFadeValid(fade) {
-        var regExpr = new RegExp("^\\d{2}([.]\\d{1,6})?$");
+        var regExpr = new RegExp("^\\d{1}(\\d{1})?([.]\\d{1,6})?$");
 
         return regExpr.test(fade);
 	}
@@ -248,8 +248,10 @@ var AIRTIME = (function(AIRTIME){
 	}
 		
 	function redrawLib() {
-	    var dt;
-	    dt = $("#library_display").dataTable();
+	    var dt = $("#library_display").dataTable(),
+	    	oLibTT = TableTools.fnGetInstance('library_display');
+	    
+	    oLibTT.fnSelectNone();
 	    dt.fnStandingRedraw();
 	}
 	
@@ -525,7 +527,7 @@ var AIRTIME = (function(AIRTIME){
 			openPlaylist(json);
 			redrawLib();
 		});
-	}
+	};
 	
 	mod.fnEdit = function(id) {
 		var url;
@@ -540,7 +542,7 @@ var AIRTIME = (function(AIRTIME){
 				openPlaylist(json);
 				//redrawLib();
 		});
-	}
+	};
 	
 	mod.fnDelete = function(plid) {
 		var url, id, lastMod;
@@ -556,7 +558,7 @@ var AIRTIME = (function(AIRTIME){
 				openPlaylist(json);
 				redrawLib();
 		});
-	}
+	};
 	
 	mod.fnAddItems = function(aItems, iAfter, sAddType) {
 		
@@ -591,15 +593,16 @@ var AIRTIME = (function(AIRTIME){
 		$(playlist).delegate("#spl_new", 
 	    		{"click": AIRTIME.playlist.fnNew});
 
-		$(playlist).delegate("#spl_delete", 
-	    		{"click": AIRTIME.playlist.fnDelete});
+		$(playlist).delegate("#spl_delete", {"click": function(ev){
+			AIRTIME.playlist.fnDelete();
+		}});
 		
 		setPlaylistEntryEvents(playlist);
 		setCueEvents(playlist);
 		setFadeEvents(playlist);
 		
 		setUpPlaylist(playlist);
-	}
+	};
 	
 	return AIRTIME;
 	

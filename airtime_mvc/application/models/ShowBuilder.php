@@ -73,8 +73,6 @@ class Application_Model_ShowBuilder {
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
 
-        //$diff =
-
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
         $row["ends"] = $showEndDT->format("Y-m-d H:i");
@@ -87,6 +85,10 @@ class Application_Model_ShowBuilder {
 
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
+
+        if ($this->user->canSchedule($item["show_id"]) == true) {
+            $row["checkbox"] = true;
+        }
 
         if (isset($p_item["sched_starts"])) {
 
@@ -105,10 +107,6 @@ class Application_Model_ShowBuilder {
             $row["title"] = $p_item["file_track_title"];
             $row["creator"] = $p_item["file_artist_name"];
             $row["album"] = $p_item["file_album_title"];
-
-            if ($this->user->canSchedule($item["show_id"]) === true) {
-                $row["checkbox"] = true;
-            }
         }
         //show is empty
         else {

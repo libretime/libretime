@@ -1,6 +1,6 @@
 /**
  * @preserve
- * FullCalendar v1.5.1-CUSTOM (Changes by Martin Konecny -added primitive support for timezones)
+ * FullCalendar v1.5.3
  * http://arshaw.com/fullcalendar/
  *
  * Use fullcalendar.css for basic styling.
@@ -11,7 +11,7 @@
  * Dual licensed under the MIT and GPL licenses, located in
  * MIT-LICENSE.txt and GPL-LICENSE.txt respectively.
  *
- * Date: Sat Apr 9 14:09:51 2011 -0700
+ * Date: Mon Feb 6 22:40:40 2012 -0800
  *
  */
  
@@ -111,7 +111,7 @@ var rtlDefaults = {
 
 
 
-var fc = $.fullCalendar = { version: "1.5.1" };
+var fc = $.fullCalendar = { version: "1.5.3" };
 var fcViews = fc.views = {};
 
 
@@ -227,7 +227,7 @@ function Calendar(element, options, eventSources) {
 	var absoluteViewElement;
 	var resizeUID = 0;
 	var ignoreWindowResize = 0;
-	var date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
+	var date = new Date();
 	var events = [];
 	var _dragElement;
 	
@@ -399,9 +399,7 @@ function Calendar(element, options, eventSources) {
 			elementOuterWidth = element.outerWidth();
 			
 			header.updateTitle(currentView.title);
-			//adjusting this date ensures that the "today" button is greyed out on the 
-			//correct day.
-			var today = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
+			var today = new Date();
 			if (today >= currentView.start && today < currentView.end) {
 				header.disableButton('today');
 			}else{
@@ -583,8 +581,7 @@ function Calendar(element, options, eventSources) {
 	
 	
 	function today() {
-		//adjusting this date ensures that clicking "today" takes us to the correct date.
-		date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
+		date = new Date();
 		renderView();
 	}
 	
@@ -1398,7 +1395,7 @@ function parseISO8601(s, ignoreTimezone) { // ignoreTimezone defaults to false
 		return null;
 	}
 	var date = new Date(m[1], 0, 1);
-	if (ignoreTimezone || !m[14]) {
+	if (ignoreTimezone || !m[13]) {
 		var check = new Date(m[1], 0, 1, 9, 0);
 		if (m[3]) {
 			date.setMonth(m[3] - 1);
@@ -1434,9 +1431,11 @@ function parseISO8601(s, ignoreTimezone) { // ignoreTimezone defaults to false
 			m[10] || 0,
 			m[12] ? Number("0." + m[12]) * 1000 : 0
 		);
-		var offset = Number(m[16]) * 60 + (m[18] ? Number(m[18]) : 0);
-		offset *= m[15] == '-' ? 1 : -1;
-		date = new Date(+date + (offset * 60 * 1000));
+		if (m[14]) {
+			var offset = Number(m[16]) * 60 + (m[18] ? Number(m[18]) : 0);
+			offset *= m[15] == '-' ? 1 : -1;
+			date = new Date(+date + (offset * 60 * 1000));
+		}
 	}
 	return date;
 }
@@ -2278,7 +2277,7 @@ function BasicView(element, calendar, viewName) {
 	function updateCells(firstTime) {
 		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
 		var month = t.start.getMonth();
-		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
+		var today = clearTime(new Date());
 		var cell;
 		var date;
 		var row;
@@ -3111,7 +3110,7 @@ function AgendaView(element, calendar, viewName) {
 		var headCell;
 		var bodyCell;
 		var date;
-		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
+		var today = clearTime(new Date());
 		for (i=0; i<colCnt; i++) {
 			date = colDate(i);
 			headCell = dayHeadCells.eq(i);
@@ -5158,6 +5157,7 @@ function HoverListener(coordinateGrid) {
 	
 	
 	function mouse(ev) {
+		_fixUIEvent(ev); // see below
 		var newCell = coordinateGrid.cell(ev.pageX, ev.pageY);
 		if (!newCell != !cell || newCell && (newCell.row != cell.row || newCell.col != cell.col)) {
 			if (newCell) {
@@ -5181,6 +5181,19 @@ function HoverListener(coordinateGrid) {
 	
 }
 
+
+
+// this fix was only necessary for jQuery UI 1.8.16 (and jQuery 1.7 or 1.7.1)
+// upgrading to jQuery UI 1.8.17 (and using either jQuery 1.7 or 1.7.1) fixed the problem
+// but keep this in here for 1.8.16 users
+// and maybe remove it down the line
+
+function _fixUIEvent(event) { // for issue 1168
+	if (event.pageX === undefined) {
+		event.pageX = event.originalEvent.pageX;
+		event.pageY = event.originalEvent.pageY;
+	}
+}
 function HorizontalPositionCache(getElement) {
 
 	var t = this,
