@@ -21,7 +21,7 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
      */
     public function getDbFadein($format = "s.u")
     {
-        parent::getDbFadein($format);
+        return parent::getDbFadein($format);
     }
 
     /**
@@ -32,7 +32,7 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
      */
     public function getDbFadeout($format = "s.u")
     {
-       parent::getDbFadeout($format);
+       return parent::getDbFadeout($format);
     }
 
     /**
