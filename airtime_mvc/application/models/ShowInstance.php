@@ -58,21 +58,19 @@ class Application_Model_ShowInstance {
     /**
      * Return the start time of the Show (UTC time)
      * @return string in format "Y-m-d H:i:s" (PHP time notation)
-     * TODO: make this function return a DateTime object instead.
      */
-    public function getShowInstanceStart()
+    public function getShowInstanceStart($format="Y-m-d H:i:s")
     {
-        return $this->_showInstance->getDbStarts();
+        return $this->_showInstance->getDbStarts($format);
     }
 
     /**
      * Return the end time of the Show (UTC time)
      * @return string in format "Y-m-d H:i:s" (PHP time notation)
-     * TODO: make this function return a DateTime object instead.
      */
-    public function getShowInstanceEnd()
+    public function getShowInstanceEnd($format="Y-m-d H:i:s")
     {
-        return $this->_showInstance->getDbEnds();
+        return $this->_showInstance->getDbEnds($format);
     }
 
     public function getStartDate()
@@ -607,20 +605,26 @@ class Application_Model_ShowInstance {
         return $time;
     }
 
+
+    public function getTimeScheduledSecs()
+    {
+        $time_filled = $this->getTimeScheduled();
+        return Application_Model_Schedule::WallTimeToMillisecs($time_filled) / 1000;
+    }
+
+    public function getDurationSecs()
+    {
+        $ends = $this->getShowInstanceEnd(null);
+        $starts = $this->getShowInstanceStart(null);
+        return $ends->format('U') - $starts->format('U');
+    }
+
     public function getPercentScheduled()
     {
-        $start_timestamp = $this->getShowInstanceStart();
-        $end_timestamp = $this->getShowInstanceEnd();
-        $time_filled = $this->getTimeScheduled();
+        $durationSeconds = $this->getDurationSecs();
+        $timeSeconds = $this->getTimeScheduledSecs();
 
-        $s_epoch = strtotime($start_timestamp);
-        $e_epoch = strtotime($end_timestamp);
-        $i_epoch = Application_Model_Schedule::WallTimeToMillisecs($time_filled) / 1000;
-
-        $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
-
-        if ($percent > 100)
-            $percent = 100;
+        $percent = ceil(($timeSeconds / $durationSeconds) * 100);
 
         return $percent;
     }
