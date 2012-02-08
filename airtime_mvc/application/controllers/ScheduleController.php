@@ -189,7 +189,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         try{
-            $show = new Application_Model_ShowInstance($id);
+            $instance = new Application_Model_ShowInstance($id);
         }catch(Exception $e){
             $this->view->show_error = true;
             return false;
@@ -257,12 +257,31 @@ class ScheduleController extends Zend_Controller_Action
                 //callback window["beginEditShow"] /format/json/id/{$id}
                 $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
 
+                if ($instance->getShow()->isRepeating()) {
+
+                    //create delete sub menu.
+                    $menu["del"] = array("name"=> "Delete", "icon" => "delete", "items" => array());
+
+                    //window["scheduleRefetchEvents"]
+                    $menu["del"]["items"]["single"] = array("name"=> "Delete", "icon" => "delete", "url" => "/schedule/delete-show");
+
+                    //window["scheduleRefetchEvents"]
+                    $menu["del"]["items"]["following"] = array("name"=> "Delete", "icon" => "delete", "url" => "/schedule/cancel-show");
+                }
+                else {
+                    //window["scheduleRefetchEvents"]'
+                   $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/schedule/delete-show");
+                }
+
                 /*
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/edit-show/format/json/id/'.$id,
-                        'callback' => 'window["beginEditShow"]'), 'title' => 'Edit Show');
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params,
                         'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
-                if ($show->getShow()->isRepeating() || $show->getShow()->isRebroadcast()) {
+
+                if ($show->getShow()->isRepeating()) {
+
+                     //create delete sub menu.
+                    //$menu["del"] = array("name"=> "Delete", "icon" => "delete", "items" => array());
+
                     $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
                             'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
                 }

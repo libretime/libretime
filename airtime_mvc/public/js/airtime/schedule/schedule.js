@@ -389,6 +389,17 @@ $(window).load(function() {
 					};
     				oItems.edit.callback = callback;
     			}
+    			
+    			//define a delete callback.
+    			if (oItems.del !== undefined) {
+    				
+    				callback = function() {
+    					$.get(oItems.edit.url, {format: "json", id: data.id}, function(json){
+    						beginEditShow(json);
+    					});
+					};
+    				oItems.del.callback = callback;
+    			}
     		
     			items = oItems;
     		}
