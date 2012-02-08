@@ -6,6 +6,11 @@ $airtimeIni = getAirtimeConf();
 $airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
 set_include_path("$airtime_base_dir/library" . PATH_SEPARATOR . get_include_path());
+//Zend framework
+if (file_exists('/usr/share/php/libzend-framework-php')){
+    set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
+}
+
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
 

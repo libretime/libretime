@@ -46,9 +46,13 @@ class MediaMonitorCommon:
             return False
 
     #check if file is readable by "nobody"
-    def has_correct_permissions(self, filepath):
+    def has_correct_permissions(self, filepath, euid='nobody', egid='nogroup'):
+        uid = pwd.getpwnam(euid)[2]
+        gid = grp.getgrnam(egid)[2]
+        
         #drop root permissions and become "nobody"
-        os.seteuid(65534)
+        os.setegid(gid)
+        os.seteuid(uid)
 
         try:
             open(filepath)
@@ -62,22 +66,25 @@ class MediaMonitorCommon:
         finally:
             #reset effective user to root
             os.seteuid(0)
+            os.setegid(0)
 
         return readable
 
+    # the function only changes the permission if its not readable by www-data
     def set_needed_file_permissions(self, item, is_dir):
         try:
             omask = os.umask(0)
-
-            uid = pwd.getpwnam('www-data')[2]
-            gid = grp.getgrnam('www-data')[2]
-
-            os.chown(item, uid, gid)
-
-            if is_dir is True:
-                os.chmod(item, 02777)
-            else:
-                os.chmod(item, 0666)
+            
+            if not self.has_correct_permissions(item, 'www-data', 'www-data'):
+                uid = pwd.getpwnam('www-data')[2]
+                gid = grp.getgrnam('www-data')[2]
+                
+                os.chown(item, uid, gid)
+    
+                if is_dir is True:
+                    os.chmod(item, 02777)
+                else:
+                    os.chmod(item, 0666)
 
         except Exception, e:
             self.logger.error("Failed to change file's owner/group/permissions. %s", e)
@@ -245,6 +252,9 @@ class MediaMonitorCommon:
         return stdout.splitlines()
 
     def touch_index_file(self):
+        dirname = os.path.dirname(self.timestamp_file)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
         open(self.timestamp_file, "w")
 
     def organize_new_file(self, pathname):
