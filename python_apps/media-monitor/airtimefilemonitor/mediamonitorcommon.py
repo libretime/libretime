@@ -2,6 +2,7 @@ import os
 import grp
 import pwd
 import logging
+import stat
 
 from subprocess import Popen, PIPE
 from airtimemetadata import AirtimeMetadata
@@ -74,17 +75,23 @@ class MediaMonitorCommon:
     def set_needed_file_permissions(self, item, is_dir):
         try:
             omask = os.umask(0)
-            
             if not self.has_correct_permissions(item, 'www-data', 'www-data'):
-                uid = pwd.getpwnam('www-data')[2]
-                gid = grp.getgrnam('www-data')[2]
-                
-                os.chown(item, uid, gid)
-    
-                if is_dir is True:
-                    os.chmod(item, 02777)
-                else:
-                    os.chmod(item, 0666)
+                # stats.st_mode is the original permission
+                # stat.S_IROTH - readable by all permission
+                # stat.S_IXOTH - excutable by all permission
+                # try to set permission 
+                if self.is_parent_directory(item, self.config.storage_directory) or self.is_parent_directory(item, self.config.imported_directory) or (item, self.config.organize_directory):
+                    if is_dir is True:
+                        os.chmod(item, 02777)
+                    else:
+                        os.chmod(item, 0666)
+                else :
+                    # add world readable permission
+                    stats = os.stat(item)
+                    if is_dir is True:
+                        os.chmod(item, stats.st_mode | stat.S_IROTH | stat.S_IXOTH)
+                    else:
+                        os.chmod(item, stats.st_mode | stat.S_IROTH)
 
         except Exception, e:
             self.logger.error("Failed to change file's owner/group/permissions. %s", e)

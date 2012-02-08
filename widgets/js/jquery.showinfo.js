@@ -22,7 +22,7 @@
 
             tableString = "";
             tableString += "<h3>" + options.text.onAirToday + "</h3>";
-            tableString += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget no-playing-list small'>"+
+            tableString += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget now-playing-list small'>"+
                 "<tbody>";
             
             for (var i=0; i<shows.length; i++){
@@ -44,6 +44,7 @@
         }
 
         function processData(data){
+            checkWidgetVersion(data);
             sd = new ScheduleData(data);
             updateWidget();
         }
@@ -117,7 +118,7 @@
 
             obj.empty();
             obj.append("<h4>"+showStatus+" &gt;&gt;</h4>");
-            obj.append("<ul class='widget no-playing-bar'>" +
+            obj.append("<ul class='widget now-playing-bar'>" +
                 "<li class='current'>"+options.text.current+": "+currentShowName+
                 "<span id='time-elapsed' class='time-elapsed'>"+timeElapsed+"</span>" +
                 "<span id='time-remaining' class='time-remaining'>"+timeRemaining+"</span>"+
@@ -127,6 +128,7 @@
         }
 
         function processData(data){
+            checkWidgetVersion(data);
             sd = new ScheduleData(data);
         }
 
@@ -189,7 +191,7 @@
         function updateWidget(data){
             for (var i=0; i<dow.length; i++){
                 var html = 
-                  '<table class="widget widget no-playing-list">'+
+                  '<table class="widget widget now-playing-list">'+
                     '<colgroup>'+
                       '<col width="150" />'+
                       '<col width="350" />'+
@@ -234,6 +236,7 @@
         }
 
         function processData(data){
+            checkWidgetVersion(data);
             updateWidget(data);
         }
 
@@ -392,4 +395,20 @@ function convertDateToPosixTime(s){
         sec = time[2];
 
 	return Date.UTC(year, month-1, day, hour, minute, sec, msec);
+}
+
+/* Checks the incomming data's widget version tag.
+*  The current widget version is 1.
+*     -If the value returned is equal to 1 do nothing.
+*     -If the value doesn't exist or it is great then 1 throw error warning the user they should upgrade their airtime install.
+*     -If the value is less then 1 warn the user that they should upgrade the javascript to a newer version.
+*/
+function checkWidgetVersion(data){
+    var widgetVersion = data['widgetVersion'];
+    
+    if (undefined === widgetVersion || widgetVersion >  1)
+        throw 'The widgets you are using are out of date, please get the latest jquery.showinfo.js file.';
+    else if (widgetVersion < 1)
+        throw 'The version of airtime that you are using should be upgraded to work with this widget.';
+    
 }

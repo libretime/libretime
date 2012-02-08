@@ -15,11 +15,12 @@ class DashboardController extends Zend_Controller_Action
 
     public function streamPlayerAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
         
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.blue.monday.css'));
+        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.blue.monday.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('bare');
 
         $logo = Application_Model_Preference::GetStationLogo();

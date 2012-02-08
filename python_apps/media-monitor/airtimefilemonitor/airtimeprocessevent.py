@@ -141,8 +141,10 @@ class AirtimeProcessEvent(ProcessEvent):
                 self.mmc.set_needed_file_permissions(pathname, dir)
 
     def process_IN_MODIFY(self, event):
-        self.logger.info("process_IN_MODIFY: %s", event)
-        self.handle_modified_file(event.dir, event.pathname, event.name)
+        # if IN_MODIFY is followed by IN_CREATE, it's not true modify event
+        if not event.pathname in self.create_dict:
+            self.logger.info("process_IN_MODIFY: %s", event)
+            self.handle_modified_file(event.dir, event.pathname, event.name)
 
     def handle_modified_file(self, dir, pathname, name):
         # update timestamp on create_dict for the entry with pathname as the key

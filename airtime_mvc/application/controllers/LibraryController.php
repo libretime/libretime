@@ -24,19 +24,20 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js?'.filemtime($baseDir.'/js/contextmenu/jjmenu.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.filemtime($baseDir.'/js/airtime/library/library.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js?'.filemtime($baseDir.'/js/airtime/library/advancedsearch.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/advancedsearch.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.filemtime($baseDir.'/css/media_library.css'));
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css?'.filemtime($baseDir.'/css/contextmenu.css'));
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css?'.$CC_CONFIG['airtime_version']);
 
 
         $this->_helper->layout->setLayout('library');
