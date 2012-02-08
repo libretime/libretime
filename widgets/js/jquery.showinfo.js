@@ -405,10 +405,10 @@ function convertDateToPosixTime(s){
 */
 function checkWidgetVersion(data){
     var widgetVersion = data['widgetVersion'];
-    //console.log(widgetVersion);
+    
     if (undefined === widgetVersion || widgetVersion >  1)
         throw 'The widgets you are using are out of date, please get the latest jquery.showinfo.js file.';
     else if (widgetVersion < 1)
-        throw 'The version of airtime that you are using should be upgraded to work with this widget';
+        throw 'The version of airtime that you are using should be upgraded to work with this widget.';
     
 }
