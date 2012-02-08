@@ -35,7 +35,7 @@ class Application_Form_EditAudioMD extends Zend_Form
 
 		// Add artist field
         $this->addElement('text', 'artist_name', array(
-            'label'      => 'Artist:',
+            'label'      => 'Creator:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
         ));
