@@ -208,21 +208,12 @@ function uploadToSoundCloud(show_instance_id){
     if(span.length == 0){
         span = $(window.triggerElement).find(".soundcloud");
         span.removeClass("soundcloud")
-        .addClass("progress")
+        	.addClass("progress");
     }else{
         span.removeClass("recording")
-        .addClass("progress");
+        	.addClass("progress");
     }
 }
-
-//used by jjmenu
-function getId() { 
-	var tr_id =  $(this.triggerElement).attr("id");
-	tr_id = tr_id.split("_");
-
-	return tr_id[1];
-}
-//end functions used by jjmenu
 
 function buildContentDialog(json){
     if(json.show_error == true){
@@ -380,4 +371,53 @@ function alertShowErrorAndReload(){
 $(window).load(function() {
 	$.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
             , error:function(jqXHR, textStatus, errorThrown){}});
+	
+	
+	$.contextMenu({
+        selector: 'div.fc-event',
+        trigger: "left",
+        ignoreRightClick: true,
+        
+        build: function($el, e) {
+    		var x, request, data, screen, items, callback, $tr;
+    		
+    		$tr = $el.parent();
+    		data = $tr.data("aData");
+    		screen = $tr.data("screen");
+    		
+    		function processMenuItems(oItems) {
+    			
+    			//define a download callback.
+    			if (oItems.download !== undefined) {
+    				
+    				callback = function() {
+    					document.location.href = oItems.download.url;
+					};
+    				oItems.download.callback = callback;
+    			}
+    		
+    			items = oItems;
+    		}
+    		
+    		request = $.ajax({
+			  url: "/library/context-menu",
+			  type: "GET",
+			  data: {id : data.id, type: data.ftype, format: "json", "screen": screen},
+			  dataType: "json",
+			  async: false,
+			  success: function(json){
+				  processMenuItems(json.items);
+			  }
+			});
+
+            return {
+                items: items,
+                determinePosition : function($menu, x, y) {
+                	$menu.css('display', 'block')
+                		.position({ my: "left top", at: "right top", of: this, offset: "-20 10", collision: "fit"})
+                		.css('display', 'none');
+                }
+            };
+        }
+    });
 });

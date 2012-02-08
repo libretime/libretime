@@ -41,14 +41,13 @@ class ScheduleController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js?'.filemtime($baseDir.'/js/contextmenu/jjmenu.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.filemtime($baseDir.'/js/contextmenu/jquery.contextMenu.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js?'.filemtime($baseDir.'/js/airtime/schedule/full-calendar-functions.js'),'text/javascript');
-
 
 
         $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js?'.filemtime($baseDir.'/js/fullcalendar/fullcalendar.js'),'text/javascript');
@@ -63,7 +62,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/fullcalendar.css?'.filemtime($baseDir.'/css/fullcalendar.css'));
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css?'.filemtime($baseDir.'/css/colorpicker/css/colorpicker.css'));
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css?'.filemtime($baseDir.'/css/add-show.css'));
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css?'.filemtime($baseDir.'/css/contextmenu.css'));
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.filemtime($baseDir.'/css/jquery.contextMenu.css'));
 
         Application_Model_Schedule::createNewFormSections($this->view);
 
