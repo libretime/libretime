@@ -859,21 +859,28 @@ class Application_Model_StoredFile {
 
         $storDir = Application_Model_MusicDir::getStorDir();
         $stor = $storDir->getDirectory();
-
-        $stor .= "/organize";
-
-        $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
-
+	
+	//check to see if we have enough space in the /organize directory to copy the file
+	$freeSpace = disk_free_space($stor);
+	$fileSize = filesize($audio_file);
+	if ( $freeSpace < $fileSize ){
+	    $freeSpace = floor($freeSpace/1024/1024);
+	    $fileSize = floor($fileSize/1024/1024);
+	    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "The file was not uploaded, there was '.$freeSpace.'MB disk space left the file you are uploadings size is '.$fileSize.'MB."}}');
+	}
+	
+        $stor .= "/organize";	
+        $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;	
+	
         Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
-
         //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
-
         $r = @rename($audio_file, $audio_stor);
 
         if ($r === false) {
            #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
            #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
-           die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "The file was not uploaded, this error will occur if the computer hard drive does not have enough disk space."}}');
+	   unlink($audio_file);//remove the file from the organize after failed rename
+	   die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "The file was not uploaded, this error will occur if the computer hard drive does not have enough disk space."}}');
         }
 
         //$r = @copy($audio_file, $audio_stor);
