@@ -217,7 +217,8 @@ function audioPreview(filename, elemID){
             $(this).jPlayer("setMedia", media).jPlayer("play");
         },
         swfPath: "/js/jplayer",
-        supplied: supplied
+        supplied: supplied,
+        wmode:"window"
     });
 
     $('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
