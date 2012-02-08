@@ -90,8 +90,8 @@ class LibraryController extends Zend_Controller_Action
             }
 
             $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
-
-            if ($user->isAdmin()) {
+	    
+	    if ($user->isAdmin()) {
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
 
