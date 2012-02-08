@@ -411,6 +411,7 @@ class ScheduleController extends Zend_Controller_Action
 		$formWhen = new Application_Form_AddShowWhen();
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
+		$formLive = new Application_Form_AddShowLiveStream();
 
 		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho->removeDecorator('DtDdWrapper');
@@ -423,6 +424,7 @@ class ScheduleController extends Zend_Controller_Action
 	    $this->view->repeats = $formRepeats;
 	    $this->view->who = $formWho;
 	    $this->view->style = $formStyle;
+	    $this->view->live = $formLive;
         $this->view->addNewShow = false;
 
         $show = new Application_Model_Show($showInstance->getShowId());
@@ -564,12 +566,14 @@ class ScheduleController extends Zend_Controller_Action
 		$formWhen = new Application_Form_AddShowWhen();
 		$formRepeats = new Application_Form_AddShowRepeats();
 		$formStyle = new Application_Form_AddShowStyle();
+		$formLive = new Application_Form_AddShowLiveStream();
 
 		$formWhat->removeDecorator('DtDdWrapper');
 		$formWho->removeDecorator('DtDdWrapper');
 		$formWhen->removeDecorator('DtDdWrapper');
 		$formRepeats->removeDecorator('DtDdWrapper');
 		$formStyle->removeDecorator('DtDdWrapper');
+		$formLive->removeDecorator('DtDdWrapper');
 
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
@@ -686,6 +690,7 @@ class ScheduleController extends Zend_Controller_Action
                     $this->view->rr = $formRecord;
                     $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
                     $this->view->rebroadcast = $formRebroadcast;
+                    $this->view->live = $formLive;
                     $this->view->addNewShow = true;
 
                     //the form still needs to be "update" since
@@ -719,6 +724,8 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->repeats = $formRepeats;
             $this->view->who = $formWho;
             $this->view->style = $formStyle;
+            $this->view->live = $formLive;
+            
             if(!$isSaas){
                 $this->view->rr = $formRecord;
                 $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;

@@ -727,7 +727,7 @@ class Application_Model_Preference
     }
     
     public static function GetLiveSteamMasterPassword(){
-        return self::GetValue("live_stream_master_username");
+        return self::GetValue("live_stream_master_password");
     }
     
     /* User specific preferences end */

@@ -47,6 +47,10 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSoundCloudTags($values["preferences_soundcloud"]["SoundCloudTags"]);
                 Application_Model_Preference::SetSoundCloudGenre($values["preferences_soundcloud"]["SoundCloudGenre"]);
                 Application_Model_Preference::SetSoundCloudTrackType($values["preferences_soundcloud"]["SoundCloudTrackType"]);
+                
+                Application_Model_Preference::SetLiveSteamAutoEnable($values["preferences_livestream"]["auto_enable_live_stream"]);
+                Application_Model_Preference::SetLiveSteamMasterUsername($values["preferences_livestream"]["master_username"]);
+                Application_Model_Preference::SetLiveSteamMasterPassword($values["preferences_livestream"]["master_password"]);
 
                 Application_Model_Preference::SetSoundCloudLicense($values["preferences_soundcloud"]["SoundCloudLicense"]);
 

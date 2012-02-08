@@ -1,0 +1,59 @@
+<fieldset>
+    <dl>
+        <dt id="allow_live_stream_override-label">
+            <label class="optional" for="allow_live_stream_override">
+            <?php echo $this->element->getElement('allow_live_stream_override')->getLabel() ?>
+            </label>
+        </dt>
+        <dd id="allow_live_stream_override-element">
+            <?php echo $this->element->getElement('allow_live_stream_override') ?>
+        </dd>
+        <dt id="security_setting1_override-label">
+            <label class="optional" for="security_setting1">
+            <?php echo $this->element->getElement('security_setting1')->getLabel() ?>
+            </label>
+        </dt>
+        <dd id="security_setting1_override-element">
+            <?php echo $this->element->getElement('security_setting1') ?>
+        </dd>
+        <dt id="security_setting2_override-label">
+            <label class="optional" for="security_setting2">
+            <?php echo $this->element->getElement('security_setting2')->getLabel() ?>
+            </label>
+        </dt>
+        <dd id="security_setting2_override-element">
+            <?php echo $this->element->getElement('security_setting2') ?>
+        </dd>
+        
+    
+        <dt id="custom_username-label" class="block-display">
+            <label class="optional" for="custom_username"><?php echo $this->element->getElement('custom_username')->getLabel() ?> :
+            </label>
+        </dt>
+        <dd id="custom_username-element" class="block-display">
+            <?php echo $this->element->getElement('custom_username') ?>
+            <?php if($this->element->getElement('custom_username')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('custom_username')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <dt id="custom_password-label" class="block-display">
+            <label class="optional" for="custom_password"><?php echo $this->element->getElement('custom_password')->getLabel() ?> :
+            </label>
+        </dt>
+        <dd id="custom_password-element" class="block-display">
+            <?php echo $this->element->getElement('custom_password') ?>
+            <?php if($this->element->getElement('custom_password')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('custom_password')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+     </dl>
+</fieldset>
+
