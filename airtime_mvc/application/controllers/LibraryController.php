@@ -78,6 +78,7 @@ class LibraryController extends Zend_Controller_Action
         $screen = $this->_getParam('screen');
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        $menu = array();
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);

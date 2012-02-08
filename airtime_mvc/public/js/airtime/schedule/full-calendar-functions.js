@@ -212,6 +212,8 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
+	
+	$(element).data("event", event);
 
     //only put progress bar on shows that aren't being recorded.
 	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0) {

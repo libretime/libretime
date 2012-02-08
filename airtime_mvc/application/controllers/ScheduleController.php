@@ -183,6 +183,7 @@ class ScheduleController extends Zend_Controller_Action
     public function makeContextMenuAction()
     {
         $id = $this->_getParam('id');
+        $menu = array();
         $epochNow = time();
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -194,17 +195,15 @@ class ScheduleController extends Zend_Controller_Action
             return false;
         }
 
+        $showStartLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowInstanceStart());
+        $showEndLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowInstanceEnd());
 
-		$params = '/format/json/id/#id#';
-
-        $showStartDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowInstanceStart());
-        $showEndDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowInstanceEnd());
-
-        $menu = array();
-
+        /*
 		if ($epochNow < $showStartDateHelper->getTimestamp()) {
 
             if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()) && !$show->isRecorded() && !$show->isRebroadcast()) {
+
+                //$menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params,
                     'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add / Remove Content');
@@ -249,10 +248,16 @@ class ScheduleController extends Zend_Controller_Action
             }
         }
 
-        if ($epochNow < $showStartDateHelper->getTimestamp()) {
+        */
+
+        if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
             if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 
+                //callback window["beginEditShow"] /format/json/id/{$id}
+                $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+
+                /*
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/edit-show/format/json/id/'.$id,
                         'callback' => 'window["beginEditShow"]'), 'title' => 'Edit Show');
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params,
@@ -261,11 +266,11 @@ class ScheduleController extends Zend_Controller_Action
                     $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
                             'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
                 }
+                */
             }
         }
 
-        //returns format jjmenu is looking for.
-        die(json_encode($menu));
+        $this->view->items = $menu;
     }
 
     public function scheduleShowAction()

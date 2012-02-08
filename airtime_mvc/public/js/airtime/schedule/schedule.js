@@ -268,12 +268,6 @@ function buildContentDialog(json){
 	});
 
 	dialog.dialog('open');
-	
-	$('#show_content_dialog tbody tr')
-	.jjmenu("click", 
-		[{get:"/Schedule/content-context-menu/format/json/id/#id#"}],  
-		{id: getId}, 
-		{xposition: "mouse", yposition: "mouse"});
 }
 
 function buildScheduleDialog(json){
@@ -379,30 +373,30 @@ $(window).load(function() {
         ignoreRightClick: true,
         
         build: function($el, e) {
-    		var x, request, data, screen, items, callback, $tr;
+    		var request, data, items, callback;
     		
-    		$tr = $el.parent();
-    		data = $tr.data("aData");
-    		screen = $tr.data("screen");
+    		data = $el.data("event");
     		
     		function processMenuItems(oItems) {
     			
-    			//define a download callback.
-    			if (oItems.download !== undefined) {
+    			//define an edit callback.
+    			if (oItems.edit !== undefined) {
     				
     				callback = function() {
-    					document.location.href = oItems.download.url;
+    					$.get(oItems.edit.url, {format: "json", id: data.id}, function(json){
+    						beginEditShow(json);
+    					});
 					};
-    				oItems.download.callback = callback;
+    				oItems.edit.callback = callback;
     			}
     		
     			items = oItems;
     		}
     		
     		request = $.ajax({
-			  url: "/library/context-menu",
+			  url: "/schedule/make-context-menu",
 			  type: "GET",
-			  data: {id : data.id, type: data.ftype, format: "json", "screen": screen},
+			  data: {id : data.id, format: "json"},
 			  dataType: "json",
 			  async: false,
 			  success: function(json){
