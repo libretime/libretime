@@ -1,6 +1,5 @@
 <?php
 
-set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once('DB.php');
 
 /* These are helper functions that are common to each upgrade such as

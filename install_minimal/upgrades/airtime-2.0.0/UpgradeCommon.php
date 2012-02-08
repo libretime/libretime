@@ -1,6 +1,5 @@
 <?php
 
-set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once('DB.php');
 
 /* These are helper functions that are common to each upgrade such as
@@ -233,5 +232,17 @@ class UpgradeCommon{
             fwrite($fp, $lines[$i]);
         }
         fclose($fp);
+    }
+    
+    public static function queryDb($p_sql){
+        global $CC_DBC;
+
+        $result = $CC_DBC->query($p_sql);
+        if (PEAR::isError($result)) {
+            echo "Error executing $sql. Exiting.";
+            exit(1);
+        }
+        
+        return $result;
     }
 }

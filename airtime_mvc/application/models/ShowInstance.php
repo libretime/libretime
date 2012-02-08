@@ -788,6 +788,7 @@ class Application_Model_ShowInstance {
         $sql = "SELECT si.id"
         ." FROM $CC_CONFIG[showInstances] si"
         ." WHERE si.ends < TIMESTAMP '$p_timeNow'"
+        ." AND si.modified_instance = 'f'"
         ." ORDER BY si.ends DESC"
         ." LIMIT 1";
 
@@ -802,10 +803,18 @@ class Application_Model_ShowInstance {
     public static function GetCurrentShowInstance($p_timeNow){
         global $CC_CONFIG, $CC_DBC;
 
+        /* Orderby si.starts descending, because in some cases
+         * we can have multiple shows overlapping each other. In
+         * this case, the show that started later is the one that
+         * is actually playing, and so this is the one we want.
+         */
+
         $sql = "SELECT si.id"
         ." FROM $CC_CONFIG[showInstances] si"
         ." WHERE si.starts <= TIMESTAMP '$p_timeNow'"
         ." AND si.ends > TIMESTAMP '$p_timeNow'"
+        ." AND si.modified_instance = 'f'"
+        ." ORDER BY si.starts DESC"
         ." LIMIT 1";
 
         $id = $CC_DBC->GetOne($sql);
@@ -822,6 +831,7 @@ class Application_Model_ShowInstance {
         $sql = "SELECT si.id"
         ." FROM $CC_CONFIG[showInstances] si"
         ." WHERE si.starts > TIMESTAMP '$p_timeNow'"
+        ." AND si.modified_instance = 'f'"
         ." ORDER BY si.starts"
         ." LIMIT 1";
 

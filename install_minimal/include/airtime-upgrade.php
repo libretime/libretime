@@ -6,9 +6,6 @@
  * @license http://www.gnu.org/licenses/gpl.txt
  */
 
-//Pear classes.
-set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
-
 require_once('DB.php');
 require_once(__DIR__.'/airtime-constants.php');
 require_once(dirname(__FILE__).'/AirtimeIni.php');

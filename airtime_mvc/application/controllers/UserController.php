@@ -19,11 +19,15 @@ class UserController extends Zend_Controller_Action
 
     public function addUserAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/user/user.js','text/javascript');    
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
+        
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/user/user.js?'.filemtime($baseDir.'/js/airtime/user/user.js'),'text/javascript');    
 
         $form = new Application_Form_AddUser();
 
@@ -33,7 +37,10 @@ class UserController extends Zend_Controller_Action
             if ($form->isValid($request->getPost())) {  
     
 				$formdata = $form->getValues();
-                if ($form->validateLogin($formdata)){                                                                       
+                if(isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 && $formdata['login'] == 'admin' && $formdata['user_id'] != 0){
+                    $this->view->successMessage = "<div class='errors'>Specific action is not allowed in demo version!</div>";
+                }
+                else if ($form->validateLogin($formdata)){
                     $user = new Application_Model_User($formdata['user_id']);
                     $user->setFirstName($formdata['first_name']);
                     $user->setLastName($formdata['last_name']);
