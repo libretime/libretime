@@ -53,7 +53,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initHeadLink()
     {
         global $CC_CONFIG;
-        
+
         $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
 
@@ -73,7 +73,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
         $view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip2.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version']);
         $view->headScript()->appendScript("var baseUrl='$baseUrl/'");
 
@@ -83,7 +83,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         if (Application_Model_Preference::GetPlanLevel() != "disabled"
                 && $_SERVER['REQUEST_URI'] != '/Dashboard/stream-player') {
             $client_id = Application_Model_Preference::GetClientId();
