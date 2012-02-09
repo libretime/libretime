@@ -52,7 +52,7 @@ apt-get -y --force-yes install libmp3lame-dev lame icecast2
 if [ "$dist" = "Debian" ]; then
     apt-get -y install zendframework
 else
-    apt-get -y install zend-framework
+    apt-get -y install libzend-framework-php
 fi
 
 
