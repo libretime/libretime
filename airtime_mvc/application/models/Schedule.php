@@ -326,7 +326,9 @@ class Application_Model_Schedule {
         JOIN cc_show AS showt ON (showt.id = si.show_id)
         )
 
-        WHERE si.starts >= '{$p_startDateTime}' AND si.starts <= '{$p_endDateTime}'
+        WHERE si.modified_instance = false AND
+
+        si.starts >= '{$p_startDateTime}' AND si.starts <= '{$p_endDateTime}'
 
         ORDER BY si.starts, sched.starts;";
 

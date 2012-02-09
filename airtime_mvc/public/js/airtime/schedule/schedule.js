@@ -390,15 +390,78 @@ $(window).load(function() {
     				oItems.edit.callback = callback;
     			}
     			
+    			//define a content callback.
+    			if (oItems.content !== undefined) {
+    				
+    				//delete a single instance
+					callback = function() {
+    					$.get(oItems.content.url, {format: "json", id: data.id}, function(json){
+    						buildContentDialog(json);
+    					});
+					};
+    				oItems.content.callback = callback;
+    			}
+    			
+    			//define a soundcloud callback.
+    			if (oItems.soundcloud !== undefined) {
+    				
+    				callback = function() {
+    					uploadToSoundCloud(data.id);
+					};
+    				oItems.soundcloud.callback = callback;
+    			}
+    			
+    			//define a cancel recorded show callback.
+    			if (oItems.cancel_recorded !== undefined) {
+    				
+    				callback = function() {
+    					confirmCancelRecordedShow(data.id);
+					};
+    				oItems.cancel_recorded.callback = callback;
+    			}
+    			
+    			//define a cancel callback.
+    			if (oItems.cancel !== undefined) {
+    				
+    				callback = function() {
+    					confirmCancelShow(data.id);
+					};
+    				oItems.cancel.callback = callback;
+    			}
+    			
     			//define a delete callback.
     			if (oItems.del !== undefined) {
     				
-    				callback = function() {
-    					$.get(oItems.edit.url, {format: "json", id: data.id}, function(json){
-    						beginEditShow(json);
-    					});
-					};
-    				oItems.del.callback = callback;
+    				//repeating show multiple delete options
+    				if (oItems.del.items !== undefined) {
+    					var del = oItems.del.items;
+    					
+    					//delete a single instance
+    					callback = function() {
+        					$.post(del.single.url, {format: "json", id: data.id}, function(json){
+        						scheduleRefetchEvents(json);
+        					});
+    					};
+        				del.single.callback = callback;
+        				
+        				//delete this instance and all following instances.
+        				callback = function() {
+        					$.post(del.following.url, {format: "json", id: data.id}, function(json){
+        						scheduleRefetchEvents(json);
+        					});
+    					};
+        				del.following.callback = callback;	
+    					
+    				}
+    				//single show
+    				else {
+    					callback = function() {
+        					$.post(oItems.del.url, {format: "json", id: data.id}, function(json){
+        						scheduleRefetchEvents(json);
+        					});
+    					};
+        				oItems.del.callback = callback;	
+    				}
     			}
     		
     			items = oItems;

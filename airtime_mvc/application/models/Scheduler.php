@@ -223,6 +223,8 @@ class Application_Model_Scheduler {
             $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
 
             $this->con->commit();
+
+            Application_Model_RabbitMq::PushSchedule();
         }
         catch (Exception $e) {
             $this->con->rollback();
@@ -277,6 +279,8 @@ class Application_Model_Scheduler {
             $this->insertAfter($afterItem, array($data), $adjustSched);
 
             $this->con->commit();
+
+            Application_Model_RabbitMq::PushSchedule();
         }
         catch (Exception $e) {
             $this->con->rollback();
@@ -310,6 +314,8 @@ class Application_Model_Scheduler {
             }
 
             $this->con->commit();
+
+            Application_Model_RabbitMq::PushSchedule();
         }
         catch (Exception $e) {
             $this->con->rollback();
