@@ -379,6 +379,26 @@ $(window).load(function() {
     		
     		function processMenuItems(oItems) {
     			
+    			//define a schedule callback.
+    			if (oItems.schedule !== undefined) {
+    				
+    				callback = function() {
+    					document.location = oItems.schedule.url + "from/" + data.startUnix + "/to/" + data.endUnix;
+					};
+    				oItems.schedule.callback = callback;
+    			}
+    			
+    			//define a clear callback.
+    			if (oItems.clear !== undefined) {
+    				
+    				callback = function() {
+    					$.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
+    						scheduleRefetchEvents(json);
+    					});
+					};
+    				oItems.clear.callback = callback;
+    			}
+    			
     			//define an edit callback.
     			if (oItems.edit !== undefined) {
     				

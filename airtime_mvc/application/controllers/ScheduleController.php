@@ -198,20 +198,24 @@ class ScheduleController extends Zend_Controller_Action
         $showStartLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
         $showEndLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
 
-        /*
-		if ($epochNow < $showStartDateHelper->getTimestamp()) {
+		if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
-            if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()) && !$show->isRecorded() && !$show->isRebroadcast()) {
+            if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST), $instance->getShowId())
+                && !$instance->isRecorded()
+                && !$instance->isRebroadcast()) {
 
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params,
-                    'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add / Remove Content');
+                $menu["schedule"] = array("name"=> "Add / Remove Content", "url" => "/showbuilder/index/");
+
+                $menu["clear"] = array("name"=> "Remove All Content", "icon" => "delete", "url" => "/schedule/clear-show");
+
+                /*
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params,
                             'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
+                */
             }
 
         }
-        */
 
         if (!$instance->isRecorded()) {
 

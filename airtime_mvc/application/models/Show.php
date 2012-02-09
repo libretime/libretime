@@ -1527,13 +1527,15 @@ class Application_Model_Show {
         $endDateTime = new DateTime($show["ends"], new DateTimeZone("UTC"));
         $endDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-        $event["id"] = $show["instance_id"];
+        $event["id"] = intval($show["instance_id"]);
         $event["title"] = $show["name"];
         $event["start"] = $startDateTime->format("Y-m-d H:i:s");
+        $event["startUnix"] = $startDateTime->format("U");
         $event["end"] = $endDateTime->format("Y-m-d H:i:s");
+        $event["endUnix"] = $endDateTime->format("U");
         $event["allDay"] = false;
         $event["description"] = $show["description"];
-        $event["showId"] = $show["show_id"];
+        $event["showId"] = intval($show["show_id"]);
         $event["record"] = intval($show["record"]);
         $event["rebroadcast"] = intval($show["rebroadcast"]);
 

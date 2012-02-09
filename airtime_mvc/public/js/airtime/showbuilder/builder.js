@@ -4,7 +4,10 @@ $(document).ready(function() {
 		oBaseDatePickerSettings,
 		oBaseTimePickerSettings,
 		fnAddSelectedItems,
-		fnRemoveSelectedItems;
+		fnRemoveSelectedItems,
+		oRange,
+		fnServerData,
+		fnShowBuilderRowCallback;
 	
 	oBaseDatePickerSettings = {
 		dateFormat: 'yy-mm-dd',
@@ -35,11 +38,9 @@ $(document).ready(function() {
 	 * @return Number iTime
 	 */
 	function fnGetUIPickerUnixTimestamp(sDatePickerId, sTimePickerId) {
-		var oDate, 
-			oTimePicker = $( sTimePickerId ),
+		var date, 
+			time,
 			iTime,
-			iHour,
-			iMin,
 			iServerOffset,
 			iClientOffset;
 	
@@ -47,18 +48,16 @@ $(document).ready(function() {
 			return 0;
 		}
 		
-		oDate = $( sDatePickerId ).datepicker( "getDate" );
+		//string.split(separator, limit)
 		
-		//nothing has been selected from this datepicker.
-		if (oDate === null) {
-			oDate = new Date();
-		}
-		else {
-			iHour = oTimePicker.timepicker('getHour');
-			iMin = oTimePicker.timepicker('getMinute');
-			
-			oDate.setHours(iHour, iMin);
-		}
+		date = $(sDatePickerId).val();
+		time = $(sTimePickerId).val();
+		
+		date = date.split("-");
+		time = time.split(":");
+		
+		//0 based month in js.
+		oDate = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
 		
 		iTime = oDate.getTime(); //value is in millisec.
 		iTime = Math.round(iTime / 1000);
@@ -98,7 +97,7 @@ $(document).ready(function() {
 		};
 	}
 
-	var fnServerData = function ( sSource, aoData, fnCallback ) {
+	fnServerData = function ( sSource, aoData, fnCallback ) {
 		aoData.push( { name: "format", value: "json"} );
 		
 		if (fnServerData.hasOwnProperty("start")) {
@@ -116,8 +115,12 @@ $(document).ready(function() {
 			"success": fnCallback
 		} );
 	};
+	
+	oRange = fnGetScheduleRange();	
+	fnServerData.start = oRange.start;
+	fnServerData.end = oRange.end;
 
-	var fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
+	fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
 		var i,
 			sSeparatorHTML,
 			fnPrepareSeparatorRow,

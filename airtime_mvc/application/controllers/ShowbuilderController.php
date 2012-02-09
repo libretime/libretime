@@ -28,6 +28,20 @@ class ShowbuilderController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
+        $now = time();
+        $from = $request->getParam("from", $now);
+        $to = $request->getParam("to", $now+(24*60*60));
+
+        $start = DateTime::createFromFormat("U", $from, new DateTimeZone("UTC"));
+        $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $end = DateTime::createFromFormat("U", $to, new DateTimeZone("UTC"));
+        $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+        $this->view->start_date = $start->format("Y-m-d");
+        $this->view->start_time = $start->format("H:i");
+        $this->view->end_date = $end->format("Y-m-d");
+        $this->view->end_time = $end->format("H:i");
+
         $this->view->headScript()->appendScript("var serverTimezoneOffset = ".date("Z")."; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js','text/javascript');
