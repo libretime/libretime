@@ -19,11 +19,12 @@ class PreferenceController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js?'.filemtime($baseDir.'/js/airtime/preferences/preferences.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
         $form = new Application_Form_Preferences();
@@ -57,11 +58,12 @@ class PreferenceController extends Zend_Controller_Action
 
     public function supportSettingAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js?'.filemtime($baseDir.'/js/airtime/preferences/support-setting.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
         $isSass = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
@@ -116,13 +118,14 @@ class PreferenceController extends Zend_Controller_Action
 
     public function directoryConfigAction()
     {
+        global $CC_CONFIG;
+        
         if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
             $request = $this->getRequest();
             $baseUrl = $request->getBaseUrl();
-            $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-            $this->view->headScript()->appendFile($baseUrl.'/js/serverbrowse/serverbrowser.js?'.filemtime($baseDir.'/js/serverbrowse/serverbrowser.js'),'text/javascript');
-            $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/musicdirs.js?'.filemtime($baseDir.'/js/airtime/preferences/musicdirs.js'),'text/javascript');
+            $this->view->headScript()->appendFile($baseUrl.'/js/serverbrowse/serverbrowser.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+            $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/musicdirs.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
             $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
 
@@ -132,12 +135,13 @@ class PreferenceController extends Zend_Controller_Action
 
     public function streamSettingAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js?'.filemtime($baseDir.'/js/airtime/preferences/streamsetting.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js?'.filemtime($baseDir.'/js/meioMask/jquery.meio.mask.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();

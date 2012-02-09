@@ -80,7 +80,7 @@ class MediaMonitorCommon:
                 # stat.S_IROTH - readable by all permission
                 # stat.S_IXOTH - excutable by all permission
                 # try to set permission 
-                if self.is_parent_directory(item, self.config.storage_directory) or self.is_parent_directory(item, self.config.imported_directory) or (item, self.config.organize_directory):
+                if self.is_parent_directory(item, self.config.storage_directory) or self.is_parent_directory(item, self.config.imported_directory) or self.is_parent_directory(item, self.config.organize_directory): 
                     if is_dir is True:
                         os.chmod(item, 02777)
                     else:
@@ -89,14 +89,16 @@ class MediaMonitorCommon:
                     # add world readable permission
                     stats = os.stat(item)
                     if is_dir is True:
-                        os.chmod(item, stats.st_mode | stat.S_IROTH | stat.S_IXOTH)
+                        bitor = stats.st_mode | stat.S_IROTH | stat.S_IXOTH
                     else:
-                        os.chmod(item, stats.st_mode | stat.S_IROTH)
-
+                        bitor = stats.st_mode | stat.S_IROTH
+                    os.chmod(item, bitor)
         except Exception, e:
             self.logger.error("Failed to change file's owner/group/permissions. %s", e)
+            return False;
         finally:
             os.umask(omask)
+            return True;
 
 
     #checks if path is a directory, and if it doesnt exist, then creates it.

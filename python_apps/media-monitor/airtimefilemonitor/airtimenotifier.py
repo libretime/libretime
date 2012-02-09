@@ -192,7 +192,7 @@ class AirtimeNotifier(Notifier):
                 full_filepath = path+"/"+filename
 
                 if self.mmc.is_audio_file(full_filepath):
-                    if self.mmc.has_correct_permissions(full_filepath):
+                    if self.mmc.set_needed_file_permissions(full_filepath, False):
                         self.logger.info("importing %s", full_filepath)
                         event = {'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False}
                         mm.multi_queue.put(event)

@@ -6,10 +6,9 @@ class SystemstatusController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
         
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/status/status.js?'.filemtime($baseDir.'/js/airtime/status/status.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/sprintf/sprintf-0.7-beta1.js?'.filemtime($baseDir.'/js/sprintf/sprintf-0.7-beta1.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/status/status.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/sprintf/sprintf-0.7-beta1.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
     }
 
     public function indexAction()
