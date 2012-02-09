@@ -14,17 +14,18 @@ class NowplayingController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.min.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
         //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js?'.filemtime($baseDir.'/js/airtime/nowplaying/nowplayingdatagrid.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowview.js?'.filemtime($baseDir.'/js/airtime/nowplaying/nowview.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowview.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
         $refer_sses = new Zend_Session_Namespace('referrer');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -68,7 +69,7 @@ class NowplayingController extends Zend_Controller_Action
                     $this->view->logoImg = $logo;
                 }
                 $this->view->dialog = $form;
-                $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.filemtime($baseDir.'/js/airtime/nowplaying/register.js'),'text/javascript');
+                $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
             }
         }else{
             //popup if previous page was login
@@ -83,7 +84,7 @@ class NowplayingController extends Zend_Controller_Action
                     $this->view->logoImg = $logo;
                 }
                 $this->view->dialog = $form;
-            	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.filemtime($baseDir.'/js/airtime/nowplaying/register.js'),'text/javascript');
+            	$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
             }
         }
     }
@@ -105,17 +106,18 @@ class NowplayingController extends Zend_Controller_Action
 
     public function dayViewAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.min.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
         //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js?'.filemtime($baseDir.'/js/airtime/nowplaying/nowplayingdatagrid.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/dayview.js?'.filemtime($baseDir.'/js/airtime/nowplaying/dayview.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/dayview.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
     }
 
     public function remindmeAction()

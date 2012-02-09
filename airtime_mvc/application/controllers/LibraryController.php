@@ -35,27 +35,27 @@ class LibraryController extends Zend_Controller_Action
 
     public function libraryAction()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorderResize.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.filemtime($baseDir.'/js/contextmenu/jquery.contextMenu.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.filemtime($baseDir.'/js/datatables/js/jquery.dataTables.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.pluginAPI.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.ColVis.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorderResize.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.ColReorderResize.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.FixedColumns.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.TableTools.js?'.filemtime($baseDir.'/js/datatables/plugin/dataTables.TableTools.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.filemtime($baseDir.'/js/airtime/library/library.js'),'text/javascript');
-
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.filemtime($baseDir.'/css/media_library.css'));
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.filemtime($baseDir.'/css/jquery.contextMenu.css'));
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.filemtime($baseDir.'/css/datatables/css/ColVis.css'));
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.filemtime($baseDir.'/css/datatables/css/ColReorder.css'));
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/TableTools.css?'.filemtime($baseDir.'/css/TableTools.css'));
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
 
         $this->_helper->viewRenderer->setResponseSegment('library');
 

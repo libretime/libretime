@@ -25,6 +25,8 @@ if (PEAR::isError($CC_DBC)) {
 }
 $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
+$CC_CONFIG['airtime_version'] = Application_Model_Preference::GetAirtimeVersion();
+
 require_once __DIR__."/configs/navigation.php";
 
 //DateTime in PHP 5.3.0+ need a default timezone set.
@@ -50,15 +52,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initHeadLink()
     {
+        global $CC_CONFIG;
+
         $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $view->headLink()->appendStylesheet($baseUrl.'/css/redmond/jquery-ui-1.8.8.custom.css?'.filemtime($baseDir.'/css/redmond/jquery-ui-1.8.8.custom.css'));
-        $view->headLink()->appendStylesheet($baseUrl.'/css/pro_dropdown_3.css?'.filemtime($baseDir.'/css/pro_dropdown_3.css'));
-        $view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.css?'.filemtime($baseDir.'/css/qtip/jquery.qtip.min.css'));
-        $view->headLink()->appendStylesheet($baseUrl.'/css/styles.css?'.filemtime($baseDir.'/css/styles.css'));
-
+        $view->headLink()->appendStylesheet($baseUrl.'/css/redmond/jquery-ui-1.8.8.custom.css?'.$CC_CONFIG['airtime_version']);
+        $view->headLink()->appendStylesheet($baseUrl.'/css/pro_dropdown_3.css?'.$CC_CONFIG['airtime_version']);
+        $view->headLink()->appendStylesheet($baseUrl.'/css/qtip/jquery.qtip.min.css?'.$CC_CONFIG['airtime_version']);
+        $view->headLink()->appendStylesheet($baseUrl.'/css/styles.css?'.$CC_CONFIG['airtime_version']);
     }
 
     protected function _initHeadScript()
@@ -67,31 +69,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $view = $this->getResource('view');
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
         $view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js');
         $view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js');
-        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js?'.filemtime($baseDir.'/js/libs/jquery.stickyPanel.js'),'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.min.js?'.filemtime($baseDir.'/js/qtip/jquery.qtip.min.js'),'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.filemtime($baseDir.'/js/jplayer/jquery.jplayer.min.js'));
-
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version']);
         $view->headScript()->appendScript("var baseUrl='$baseUrl/'");
 
         //scripts for now playing bar
-        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js?'.filemtime($baseDir.'/js/airtime/dashboard/helperfunctions.js'),'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js?'.filemtime($baseDir.'/js/airtime/dashboard/playlist.js'),'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js?'.filemtime($baseDir.'/js/airtime/dashboard/versiontooltip.js'),'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js?'.filemtime($baseDir.'/js/airtime/common/common.js'),'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         if (Application_Model_Preference::GetPlanLevel() != "disabled"
                 && $_SERVER['REQUEST_URI'] != '/Dashboard/stream-player') {
             $client_id = Application_Model_Preference::GetClientId();
             $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
-            $view->headScript()->appendFile($baseUrl . '/js/airtime/common/livechat.js?'.filemtime($baseDir.'/js/airtime/common/livechat.js'), 'text/javascript');
+            $view->headScript()->appendFile($baseUrl . '/js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         }
         if(isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1){
-            $view->headScript()->appendFile($baseUrl.'/js/libs/google-analytics.js?'.filemtime($baseDir.'/js/libs/google-analytics.js'),'text/javascript');
+            $view->headScript()->appendFile($baseUrl.'/js/libs/google-analytics.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         }
     }
 
