@@ -1,3 +1,5 @@
+ var AIRTIME_API_VERSION = "1.0";
+
 (function($){
  $.fn.airtimeShowSchedule = function(options) {
 
@@ -6,7 +8,7 @@
         sourceDomain: "http://localhost/", //where to get show status from
         text: {onAirToday:"On air today"}
     };
-    var options = $.extend(true, defaults, options);
+    options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
 
     return this.each(function() {
@@ -158,7 +160,7 @@
         dowText: {monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
         miscText: {time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"}
     };
-    var options = $.extend(true, defaults, options);
+    options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
     
     return this.each(function() {
@@ -404,11 +406,12 @@ function convertDateToPosixTime(s){
 *     -If the value is less then 1 warn the user that they should upgrade the javascript to a newer version.
 */
 function checkWidgetVersion(data){
-    var widgetVersion = data['widgetVersion'];
+   
+    var airtimeServerWidgetVersion = data['AIRTIME_API_VERSION'];
     
-    if (undefined === widgetVersion || widgetVersion >  1)
-        throw 'The widgets you are using are out of date, please get the latest jquery.showinfo.js file.';
-    else if (widgetVersion < 1)
-        throw 'The version of airtime that you are using should be upgraded to work with this widget.';
+    if (undefined === airtimeServerWidgetVersion || airtimeServerWidgetVersion >  AIRTIME_API_VERSION )
+        throw "The version of widgets you are using is out of date with the Airtime installation, please update your widgets javascript file. (Airtime widget API version is "+airtimeServerWidgetVersion+", this widget's API version is "+AIRTIME_API_VERSION+")";
+    else if (airtimeServerWidgetVersion < AIRTIME_API_VERSION )
+        throw "The Airtime server has a different version than this widget supports. Please get the correct widget version for your Airtime installation. (Airtime widget API version is "+airtimeServerWidgetVersion+", this widget's API version is "+AIRTIME_API_VERSION+")";
     
 }

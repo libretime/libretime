@@ -216,7 +216,7 @@ class ApiController extends Zend_Controller_Action
                 "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, $limit, $utcTimeEnd),
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"),
-		"widgetVersion"=>"1.0"); //used by caller to determine if the airtime they are running or widgets in use is out of date.
+		"AIRTIME_API_VERSION"=>AIRTIME_API_VERSION); //used by caller to determine if the airtime they are running or widgets in use is out of date.
                
             //Convert from UTC to localtime for user.
             Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
@@ -255,7 +255,7 @@ class ApiController extends Zend_Controller_Action
                 
                 $result[$dow[$i]] = $shows;
             }
-	    $result['widgetVersion'] = "1.0"; //used by caller to determine if the airtime they are running or widgets in use is out of date.
+	    $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
             header("Content-type: text/javascript");
             echo $_GET['callback'].'('.json_encode($result).')';
         } else {
