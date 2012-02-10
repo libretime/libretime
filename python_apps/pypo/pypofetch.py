@@ -11,7 +11,7 @@ import json
 import telnetlib
 import math
 import socket
-from threading import Thread
+from threading import Thread, Lock
 from subprocess import Popen, PIPE
 from datetime import datetime
 from datetime import timedelta
@@ -44,11 +44,12 @@ except Exception, e:
 class PypoFetch(Thread):
     def __init__(self, q):
         Thread.__init__(self)
-        logger = logging.getLogger('fetch')
+        self.lock = Lock()
         self.api_client = api_client.api_client_factory(config)
         self.set_export_source('scheduler')
         self.queue = q
         self.schedule_data = []
+        logger = logging.getLogger('fetch')
         logger.info("PypoFetch: init complete")
 
     def init_rabbit_mq(self):
@@ -74,6 +75,12 @@ class PypoFetch(Thread):
     """
     def handle_message(self, body, message):
         try:
+        
+            #Acquire Lock because multiple rabbitmq messages can be sent simultaneously 
+            #and therefore we can have multiple threads inside this function. This causes
+            #multiple telnet connections to Liquidsoap which causes problems (refused connections).
+            self.lock.acquire()
+        
             logger = logging.getLogger('fetch')
             logger.info("Received event from RabbitMQ: " + message.body)
             
@@ -87,14 +94,21 @@ class PypoFetch(Thread):
             elif command == 'update_stream_setting':
                 logger.info("Updating stream setting...")
                 self.regenerateLiquidsoapConf(m['setting'])
+            elif command == 'update_stream_format':
+                logger.info("Updating stream format...")
+                self.update_liquidsoap_stream_format(m['stream_format'])
+            elif command == 'update_station_name':
+                logger.info("Updating station name...")
+                self.update_liquidsoap_station_name(m['station_name'])
             elif command == 'cancel_current_show':
                 logger.info("Cancel current show command received...")
                 self.stop_current_show()
         except Exception, e:
             logger.error("Exception in handling RabbitMQ message: %s", e)
         finally:
-            # ACK the message to take it off the queue
+            self.lock.release()
             try:
+                # ACK the message to take it off the queue
                 message.ack()
             except MessageStateError, m:
                 logger.error("Message ACK error: %s", m)
@@ -257,6 +271,39 @@ class PypoFetch(Thread):
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
         logger.info("Creating cache directory at %s", self.cache_dir)
 
+
+    def update_liquidsoap_stream_format(self, stream_format):
+        # Push stream metadata to liquidsoap
+        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
+        try:
+            logger = logging.getLogger('fetch')
+            logger.info(LS_HOST)
+            logger.info(LS_PORT)
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
+            logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            logger.error("Exception %s", e)
+    
+    def update_liquidsoap_station_name(self, station_name):
+        # Push stream metadata to liquidsoap
+        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
+        try:
+            logger = logging.getLogger('fetch')
+            logger.info(LS_HOST)
+            logger.info(LS_PORT)
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            command = ('vars.station_name %s\n' % station_name).encode('utf-8')
+            logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            logger.error("Exception %s", e)
+
     """
     Process the schedule
      - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
@@ -269,22 +316,6 @@ class PypoFetch(Thread):
         logger = logging.getLogger('fetch')
         playlists = schedule_data["playlists"]
 
-        # Push stream metadata to liquidsoap
-        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
-        stream_metadata = schedule_data['stream_metadata']
-        try:
-            logger.info(LS_HOST)
-            logger.info(LS_PORT)
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            #encode in latin-1 due to telnet protocol not supporting utf-8
-            tn.write(('vars.stream_metadata_type %s\n' % stream_metadata['format']).encode('latin-1'))
-            tn.write(('vars.station_name %s\n' % stream_metadata['station_name']).encode('latin-1'))
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            logger.error("Exception %s", e)
-            status = 0
-
         # Download all the media and put playlists in liquidsoap "annotate" format
         try:
              liquidsoap_playlists = self.prepare_playlists(playlists, bootstrapping)
@@ -294,7 +325,6 @@ class PypoFetch(Thread):
         scheduled_data = dict()
         scheduled_data['liquidsoap_playlists'] = liquidsoap_playlists
         scheduled_data['schedule'] = playlists
-        scheduled_data['stream_metadata'] = schedule_data["stream_metadata"]
         self.queue.put(scheduled_data)
 
         # cleanup

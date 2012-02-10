@@ -39,7 +39,6 @@ class PypoPush(Thread):
 
         self.schedule = dict()
         self.playlists = dict()
-        self.stream_metadata = dict()
 
         self.liquidsoap_state_play = True
         self.push_ahead = 10
@@ -58,7 +57,7 @@ class PypoPush(Thread):
     def push(self, export_source):
         logger = logging.getLogger('push')
 
-
+        timenow = time.time()
         # get a new schedule from pypo-fetch
         if not self.queue.empty():
             # make sure we get the latest schedule
@@ -67,16 +66,12 @@ class PypoPush(Thread):
             logger.debug("Received data from pypo-fetch")
             self.schedule = scheduled_data['schedule']
             self.playlists = scheduled_data['liquidsoap_playlists']
-            self.stream_metadata = scheduled_data['stream_metadata']
             
             logger.debug('schedule %s' % json.dumps(self.schedule))
             logger.debug('playlists %s' % json.dumps(self.playlists))
 
         schedule = self.schedule
         playlists = self.playlists
-
-        timenow = time.time()
-        logger.debug('timenow %s' % timenow)
         
         currently_on_air = False
         if schedule:
@@ -169,7 +164,7 @@ class PypoPush(Thread):
 
             #Sending schedule table row id string.
             logger.debug("vars.pypo_data %s\n"%(liquidsoap_data["schedule_id"]))
-            tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('latin-1'))
+            tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('utf-8'))
 
             logger.debug('Preparing to push playlist %s' % pkey)
             for item in playlist:
