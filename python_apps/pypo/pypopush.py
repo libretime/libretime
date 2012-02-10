@@ -69,13 +69,14 @@ class PypoPush(Thread):
             self.playlists = scheduled_data['liquidsoap_playlists']
             self.stream_metadata = scheduled_data['stream_metadata']
             
-            timenow = time.time()
-            logger.debug('timenow %s' % timenow)
             logger.debug('schedule %s' % json.dumps(self.schedule))
             logger.debug('playlists %s' % json.dumps(self.playlists))
 
         schedule = self.schedule
         playlists = self.playlists
+
+        timenow = time.time()
+        logger.debug('timenow %s' % timenow)
         
         currently_on_air = False
         if schedule:
