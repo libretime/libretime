@@ -212,8 +212,7 @@ class PypoFetch(Thread):
             logger.info("Restarting pypo...")
             #p = Popen("/etc/init.d/airtime-playout restart >/dev/null 2>&1", shell=True)
             #sts = os.waitpid(p.pid, 0)[1]
-            sys.exit()
-            self.process_schedule(self.schedule_data, "scheduler", False)
+            sys.exit(0)
         else:
             logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
@@ -490,11 +489,12 @@ class PypoFetch(Thread):
                 # Wait for messages from RabbitMQ.  Timeout if we
                 # dont get any after POLL_INTERVAL.
                 self.connection.drain_events(timeout=POLL_INTERVAL)
-                status = 1
             except socket.timeout, se:
                 # We didnt get a message for a while, so poll the server
                 # to get an updated schedule. 
                 status, self.schedule_data = self.api_client.get_schedule()
+                if status == 1:
+                    self.process_schedule(self.schedule_data, "scheduler", False)
             except Exception, e:
                 """
                 This Generic exception is thrown whenever the RabbitMQ
@@ -506,8 +506,8 @@ class PypoFetch(Thread):
 
             #return based on the exception
             
-            if status == 1:
-                self.process_schedule(self.schedule_data, "scheduler", False)                
+            #if status == 1:
+            #    self.process_schedule(self.schedule_data, "scheduler", False)                
             loops += 1        
 
     """
