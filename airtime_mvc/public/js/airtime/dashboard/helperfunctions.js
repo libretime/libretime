@@ -188,6 +188,51 @@ function audioStream(){
     });
 }
 
+function playlistAudioPreviewEditor(filename, elemIndexString){
+    
+    elemIndex =parseInt(elemIndexString)+1;//increment the index as tags start from 1 not 0
+    console.log("hello world with index "+elemIndex);
+  
+   
+   var cueIn = $("dd[id^=spl_cue_in_"+elemIndex+"]").find('span').html();
+   console.log(cueIn);
+   
+   var cueOut = $("dd[id^=spl_cue_out_"+elemIndex+"]").find('span').html();
+   console.log("The cueOut is "+cueOut);
+   
+   var fadeIn = $("dd[id^=spl_fade_in_"+elemIndex+"]").find('span').html();
+   if (fadeIn == undefined){ console.log("undefined fadein");  fadeIn = $("dd[id^=spl_fade_in_main]").find('span').html();}
+   console.log("The fadeIn is "+fadeIn);
+   
+   var fadeInFileName = "";
+   if (fadeIn != undefined && parseInt(fadeIn) > 0 ){
+      //need to get the previous element in the playlist...but don't support previous playlist fading becuase thats not possible.
+      
+   }   
+   console.log("The fadeInFileName is "+fadeInFileName);
+   
+   var fadeOut = $("dd[id^=spl_fade_out_"+elemIndex+"]").find('span').html();
+   if (fadeOut == undefined){ console.log("undefined fadeout"); fadeOut = $("dd[id^=spl_fade_out_main]").find('span').html();}
+   console.log("The fadeOut is "+fadeOut);
+   
+   var fadeOutFileName = "";
+   if (fadeOut != undefined && parseInt(fadeOut) > 0 ){
+      //need to get the next element in the playlist...but don't support next playlist fading becuase thats not possible.
+      
+   }
+   console.log("The fadeOutFileName is "+fadeOutFileName);
+   
+   //Pop out a play list with cue in and cue out set.
+   console.log(baseUrl+"Dashboard/audio-preview-player");
+   //window.open(baseUrl+"Dashboard/audio-preview-player", "music player", "width=200,height=200");
+   event.preventDefault();
+   
+   //Set the play button to pause.
+   var elemID = "spl_"+elemIndexString;
+   $('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
+
+}
+
 function audioPreview(filename, elemID){
 
     var elems = $('.ui-icon.ui-icon-pause');

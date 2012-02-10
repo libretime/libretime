@@ -655,8 +655,10 @@ class Application_Model_StoredFile {
             //TODO url like this to work on both playlist/showbuilder screens.
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
-            if ($type == "au") {
-                $row['image'] = '<img src="/css/images/icon_audioclip.png">';
+
+            if($type == "au") {
+                $audioFile = $audioResults[$row['id']-1]['gunid'].".".pathinfo($audioResults[$row['id']-1]['filepath'], PATHINFO_EXTENSION);
+                $row['image'] = '<img src="/css/images/big_play_arrow.png" onClick="audioPreview(\''.$audioFile.'\', \'spl_'.$row['id'].'\')">';
             }
             else {
                 $row['image'] = '<img src="/css/images/icon_playlist.png">';
