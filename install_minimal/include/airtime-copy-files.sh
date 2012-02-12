@@ -82,11 +82,6 @@ if [ "$web" = "t" ]; then
     rm -rf "/usr/share/airtime"
     mkdir -p /usr/share/airtime
     cp -R $AIRTIMEROOT/airtime_mvc/* /usr/share/airtime/
-    
-    #Clear stat cache, and remove the script after running it.
-    curl http://localhost/install/clearstatcache.php
-    rm -f /usr/share/airtime/public/install/clearstatcache.php
-    rmdir -f /usr/share/airtime/public/install
 fi
 
 echo "* Creating /var/log/airtime"
