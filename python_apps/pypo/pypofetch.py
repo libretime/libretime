@@ -208,8 +208,6 @@ class PypoFetch(Thread):
             # restarting pypo.
             # we could just restart liquidsoap but it take more time somehow.
             logger.info("Restarting pypo...")
-            #p = Popen("/etc/init.d/airtime-playout restart >/dev/null 2>&1", shell=True)
-            #sts = os.waitpid(p.pid, 0)[1]
             sys.exit(0)
         else:
             logger.info("No change detected in setting...")
