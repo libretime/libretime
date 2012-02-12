@@ -10,8 +10,7 @@ import string
 import json
 import telnetlib
 import math
-import socket
-from threading import Thread, Lock
+from threading import Thread
 from subprocess import Popen, PIPE
 from datetime import datetime
 from datetime import timedelta
@@ -21,6 +20,7 @@ import filecmp
 from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
 from kombu.exceptions import MessageStateError
+from kombu.simple import SimpleQueue
 
 from api_clients import api_client
 
@@ -44,7 +44,6 @@ except Exception, e:
 class PypoFetch(Thread):
     def __init__(self, q):
         Thread.__init__(self)
-        self.lock = Lock()
         self.api_client = api_client.api_client_factory(config)
         self.set_export_source('scheduler')
         self.queue = q
@@ -58,11 +57,9 @@ class PypoFetch(Thread):
         try:
             schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
-            self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], config["rabbitmq_vhost"])
-            channel = self.connection.channel()
-            consumer = Consumer(channel, schedule_queue)
-            consumer.register_callback(self.handle_message)
-            consumer.consume()
+            connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], config["rabbitmq_vhost"])
+            channel = connection.channel()
+            self.simple_queue = SimpleQueue(channel, schedule_queue)
         except Exception, e:
             logger.error(e)
             return False
@@ -73,18 +70,12 @@ class PypoFetch(Thread):
     Handle a message from RabbitMQ, put it into our yucky global var.
     Hopefully there is a better way to do this.
     """
-    def handle_message(self, body, message):
-        try:
-        
-            #Acquire Lock because multiple rabbitmq messages can be sent simultaneously 
-            #and therefore we can have multiple threads inside this function. This causes
-            #multiple telnet connections to Liquidsoap which causes problems (refused connections).
-            self.lock.acquire()
-        
+    def handle_message(self, message):
+        try:        
             logger = logging.getLogger('fetch')
-            logger.info("Received event from RabbitMQ: " + message.body)
+            logger.info("Received event from RabbitMQ: %s" % message)
             
-            m =  json.loads(message.body)
+            m =  json.loads(message)
             command = m['event_type']
             logger.info("Handling command: " + command)
         
@@ -105,13 +96,6 @@ class PypoFetch(Thread):
                 self.stop_current_show()
         except Exception, e:
             logger.error("Exception in handling RabbitMQ message: %s", e)
-        finally:
-            self.lock.release()
-            try:
-                # ACK the message to take it off the queue
-                message.ack()
-            except MessageStateError, m:
-                logger.error("Message ACK error: %s", m)
         
     def stop_current_show(self):
         logger = logging.getLogger('fetch')
@@ -515,29 +499,25 @@ class PypoFetch(Thread):
         loops = 1        
         while True:
             logger.info("Loop #%s", loops)
-            try:
-                # Wait for messages from RabbitMQ.  Timeout if we
-                # dont get any after POLL_INTERVAL.
-                self.connection.drain_events(timeout=POLL_INTERVAL)
-            except socket.timeout, se:
-                # We didnt get a message for a while, so poll the server
-                # to get an updated schedule. 
+            try:               
+                try:
+                    message = self.simple_queue.get(block=True)
+                    self.handle_message(message.payload)
+                    # ACK the message to take it off the queue
+                    message.ack()
+                except MessageStateError, m:
+                    logger.error("Message ACK error: %s", m)
+            except Exception, e:
+                """
+                There is a problem with the RabbitMq messenger service. Let's
+                log the error and get the schedule via HTTP polling
+                """
+                logger.error("Exception, %s", e)
+                
                 status, self.schedule_data = self.api_client.get_schedule()
                 if status == 1:
                     self.process_schedule(self.schedule_data, "scheduler", False)
-            except Exception, e:
-                """
-                This Generic exception is thrown whenever the RabbitMQ
-                Service is stopped. In this case let's check every few
-                seconds to see if it has come back up
-                """
-                logger.info("Exception, %s", e)
-                return
 
-            #return based on the exception
-            
-            #if status == 1:
-            #    self.process_schedule(self.schedule_data, "scheduler", False)                
             loops += 1        
 
     """
