@@ -80,4 +80,6 @@ class AirtimeConfigFileUpgrade{
 
 }
 
+UpgradeCommon::connectToDatabase();
+UpgradeCommon::SetDefaultTimezone();
 AirtimeConfigFileUpgrade::start();

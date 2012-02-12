@@ -18,6 +18,14 @@ class UpgradeCommon{
     const CONF_BACKUP_SUFFIX = "201";
     const VERSION_NUMBER = "2.0.1";
     
+    public static function SetDefaultTimezone()
+    {       
+        $sql = "SELECT valstr from cc_pref WHERE keystr = 'timezone'";
+
+        $timezone = self::queryDb($sql);
+        date_default_timezone_set($timezone);
+    }
+    
     public static function connectToDatabase($p_exitOnError = true)
     {
         global $CC_DBC, $CC_CONFIG;
