@@ -100,11 +100,11 @@ if (strcmp($version, "1.9.5") < 0){
     pause();
 }
 if (strcmp($version, "2.0.0") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-2.0.0/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.0/airtime-upgrade.php");
     pause();
 }
 if (strcmp($version, "2.0.1") < 0){
-    system("php ".__DIR__."/../upgrades/airtime-2.0.1/airtime-upgrade.php");
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.1/airtime-upgrade.php");
     pause();
 }
 
