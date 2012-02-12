@@ -170,6 +170,8 @@ fi
 
 /usr/lib/airtime/utils/rabbitmq-update-pid.sh > /dev/null
 
+curl http://localhost/apc_clear.php
+
 if [ "$python_service" -eq "0" ]; then
     #only run airtime-check-system if all components were installed
     echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
