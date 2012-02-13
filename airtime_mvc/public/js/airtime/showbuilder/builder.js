@@ -129,12 +129,12 @@ $(document).ready(function() {
 		//save some info for reordering purposes.
 		$(nRow).data({"aData": aData});
 		
-		fnPrepareSeparatorRow = function(sRowContent, sClass) {
+		fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
 			
-			node = nRow.children[1];
+			node = nRow.children[iNodeIndex];
 			node.innerHTML = sRowContent;
 			node.setAttribute('colspan',100);
-			for (i = 2; i < nRow.children.length; i = i+1) {
+			for (i = iNodeIndex + 1; i < nRow.children.length; i = i+1) {
 				node = nRow.children[i];
 				node.innerHTML = "";
 				node.setAttribute("style", "display : none");
@@ -144,19 +144,29 @@ $(document).ready(function() {
 		};
 		
 		if (aData.header === true) {
-			node = nRow.children[0];
-			node.innerHTML = '<span class="ui-icon ui-icon-play"></span>';
+			//node = nRow.children[0];
+			//node.innerHTML = '<span class="ui-icon ui-icon-play"></span>';
+			//node.innerHTML = '<span class="ui-icon ui-icon-play"></span>';
 			
 			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "sb-header");
+			fnPrepareSeparatorRow(sSeparatorHTML, "sb-header", 0);
 		}
 		else if (aData.footer === true) {
-			
+			var c,
 			node = nRow.children[0];
-			node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
+			
+			//check the show's content status.
+			if (aData.runtime > 0) {
+				node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
+				cl = 'ui-state-highlight';
+			}
+			else {
+				node.innerHTML = '<span class="ui-icon ui-icon-notice"></span>';
+				cl = 'ui-state-error';
+			}
 				
-			sSeparatorHTML = '<span>Show Footer</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "sb-footer");
+			sSeparatorHTML = '<span>'+aData.fRuntime+'</span>';
+			fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 		}
 		else if (aData.empty === true) {
 			
@@ -164,7 +174,7 @@ $(document).ready(function() {
 			node.innerHTML = '';
 				
 			sSeparatorHTML = '<span>Show Empty</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "sb-empty odd");
+			fnPrepareSeparatorRow(sSeparatorHTML, "sb-empty odd", 1);
 		}
 		else {
 			$(nRow).attr("id", "sched_"+aData.id);
@@ -272,7 +282,7 @@ $(document).ready(function() {
 		},
 		
         // R = ColReorderResize, C = ColVis, T = TableTools
-        "sDom": 'Rr<"H"CT<"#show_builder_toolbar">>t<"F">',
+        "sDom": 'Rr<"H"CT>t<"F">',
         
         "sAjaxDataProp": "schedule",
 		"sAjaxSource": "/showbuilder/builder-feed"	
@@ -383,15 +393,14 @@ $(document).ready(function() {
 			update: fnUpdate,
 			start: function(event, ui) {
 				//ui.placeholder.html("PLACE HOLDER");
-			},
+			}
 		};
 	}());
 	
 	tableDiv.sortable(sortableConf);
 	
-	$("#show_builder_toolbar")
-		.append('<span class="ui-icon ui-icon-trash"></span>')
-		.find(".ui-icon-trash")
-			.click(fnRemoveSelectedItems);
+	$("#show_builder .fg-toolbar")
+		.append('<div class="ColVis TableTools"><button class="ui-button ui-state-default"><span>Delete</span></button></div>')
+		.click(fnRemoveSelectedItems);
 	
 });

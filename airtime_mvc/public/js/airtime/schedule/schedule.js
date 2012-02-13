@@ -362,7 +362,7 @@ function alertShowErrorAndReload(){
     window.location.reload();
 }
 
-$(window).load(function() {
+$(document).ready(function() {
 	$.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
             , error:function(jqXHR, textStatus, errorThrown){}});
 	

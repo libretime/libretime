@@ -68,7 +68,7 @@ class Application_Model_Scheduler {
      *
      * @return DateTime endDT in UTC
      */
-    private function findEndTime($p_startDT, $p_duration) {
+    public static function findEndTime($p_startDT, $p_duration) {
 
         $startEpoch = $p_startDT->format("U.u");
         $durationSeconds = Application_Model_Playlist::playlistTimeToSeconds($p_duration);
@@ -149,7 +149,7 @@ class Application_Model_Scheduler {
 
                     Logging::log("adding file with id: ".$file["id"]);
 
-                    $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
+                    $endTimeDT = self::findEndTime($nextStartDT, $file['cliplength']);
 
                     //item existed previously and is being moved.
                     //need to keep same id for resources if we want REST.
@@ -184,7 +184,7 @@ class Application_Model_Scheduler {
 
                         Logging::log("adjusting iterm {$item->getDbId()}");
 
-                        $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
+                        $endTimeDT = self::findEndTime($nextStartDT, $item->getDbClipLength());
 
                         $item->setDbStarts($nextStartDT);
                         $item->setDbEnds($endTimeDT);
@@ -346,7 +346,7 @@ class Application_Model_Scheduler {
 
             Logging::log("adjusting item #".$item->getDbId());
 
-            $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+            $itemEndDT = self::findEndTime($itemStartDT, $item->getDbClipLength());
 
             $item->setDbStarts($itemStartDT);
             $item->setDbEnds($itemEndDT);
