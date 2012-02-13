@@ -1396,7 +1396,7 @@ class Application_Model_Show {
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
 
-        $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, description,
+        $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, 
                 color, background_color, file_id, cc_show_instances.id AS instance_id
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id
@@ -1536,7 +1536,6 @@ class Application_Model_Show {
         $event["start"] = $startDateTime->format("Y-m-d H:i:s");
         $event["end"] = $endDateTime->format("Y-m-d H:i:s");
         $event["allDay"] = false;
-        $event["description"] = $show["description"];
         $event["showId"] = $show["show_id"];
         $event["record"] = intval($show["record"]);
         $event["rebroadcast"] = intval($show["rebroadcast"]);
