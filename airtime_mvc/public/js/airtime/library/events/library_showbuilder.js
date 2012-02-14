@@ -72,7 +72,6 @@ var AIRTIME = (function(AIRTIME){
 				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
 				function(json){
 					oLibTT.fnSelectNone();
-					oSchedTT.fnSelectNone();
 					oSchedTable.fnDraw();
 				});
 		};

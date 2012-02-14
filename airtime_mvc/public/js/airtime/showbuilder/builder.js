@@ -124,7 +124,8 @@ $(document).ready(function() {
 		var i,
 			sSeparatorHTML,
 			fnPrepareSeparatorRow,
-			node;
+			node,
+			cl="";
 		
 		//save some info for reordering purposes.
 		$(nRow).data({"aData": aData});
@@ -144,40 +145,30 @@ $(document).ready(function() {
 		};
 		
 		if (aData.header === true) {
-			//node = nRow.children[0];
-			//node.innerHTML = '<span class="ui-icon ui-icon-play"></span>';
-			//node.innerHTML = '<span class="ui-icon ui-icon-play"></span>';
+			cl = 'sb-header';
 			
 			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "sb-header", 0);
+			fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
 		}
 		else if (aData.footer === true) {
-			var c,
 			node = nRow.children[0];
+			cl = 'sb-footer';
 			
 			//check the show's content status.
 			if (aData.runtime > 0) {
 				node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
-				cl = 'ui-state-highlight';
+				cl = cl + ' ui-state-highlight';
 			}
 			else {
 				node.innerHTML = '<span class="ui-icon ui-icon-notice"></span>';
-				cl = 'ui-state-error';
+				cl = cl + ' ui-state-error';
 			}
 				
 			sSeparatorHTML = '<span>'+aData.fRuntime+'</span>';
 			fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
-		}
-		else if (aData.empty === true) {
-			
-			node = nRow.children[0];
-			node.innerHTML = '';
-				
-			sSeparatorHTML = '<span>Show Empty</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "sb-empty odd", 1);
-		}
+		}		
 		else {
-			$(nRow).attr("id", "sched_"+aData.id);
+			//$(nRow).attr("id", "sched_"+aData.id);
 			
 			node = nRow.children[0];
 			if (aData.checkbox === true) {
@@ -185,8 +176,15 @@ $(document).ready(function() {
 			}
 			else {
 				node.innerHTML = '';
+				cl = cl + " sb-not-allowed";
+			}
+			
+			if (aData.empty === true) {
 				
-				$(nRow).addClass("sb-not-allowed");
+				sSeparatorHTML = '<span>Show Empty</span>';
+				cl = cl + " sb-empty odd";
+				
+				fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 			}
 		}
 	};
@@ -208,7 +206,6 @@ $(document).ready(function() {
 		$.post( "/showbuilder/schedule-remove",
 			{"ids": ids, "format": "json"},
 			function(data) {
-				oTT.fnSelectNone();
 				oTable.fnDraw();
 			});
 	};
@@ -237,6 +234,11 @@ $(document).ready(function() {
 		"fnHeaderCallback": function(nHead) {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
 		},
+		//remove any selected nodes before the draw.
+		"fnPreDrawCallback": function( oSettings ) {
+			var oTT = TableTools.fnGetInstance('show_builder_table');
+			oTT.fnSelectNone();
+	    },
 		
 		"oColVis": {
 			"aiExclude": [ 0, 1 ]
@@ -270,9 +272,10 @@ $(document).ready(function() {
                 }
             },
             "fnRowDeselected": function ( node ) {
-               
+	
               //seems to happen if everything is deselected
                 if ( node === null) {
+                	var oTable = $("#show_builder_table").dataTable();
                 	oTable.find("input[type=checkbox]").attr("checked", false);
                 }
                 else {
@@ -294,7 +297,7 @@ $(document).ready(function() {
     	if ($(this).is(":checked")) {
     		var allowedNodes;
     		
-    		allowedNodes = oTable.find('tr:not(.sb-header):not(.sb-footer):not(.sb-not-allowed)');
+    		allowedNodes = oTable.find('tr:not(:first):not(.sb-header):not(.sb-footer):not(.sb-not-allowed)');
     		
     		allowedNodes.each(function(i, el){
     			oTT.fnSelect(el);
@@ -333,8 +336,7 @@ $(document).ready(function() {
 			fnAdd,
 			fnMove,
 			fnReceive,
-			fnUpdate,
-			oTT = TableTools.fnGetInstance('show_builder_table');
+			fnUpdate;
 		
 		fnAdd = function() {
 			var aMediaIds = [],
@@ -346,7 +348,6 @@ $(document).ready(function() {
 			$.post("/showbuilder/schedule-add", 
 				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
 				function(json){
-					oTT.fnSelectNone();
 					oTable.fnDraw();
 				});
 		};

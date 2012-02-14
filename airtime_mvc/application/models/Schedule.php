@@ -328,11 +328,11 @@ class Application_Model_Schedule {
 
         WHERE si.modified_instance = false AND
 
-        si.starts >= '{$p_startDateTime}' AND si.starts <= '{$p_endDateTime}'
+        si.starts >= '{$p_startDateTime}' AND si.starts < '{$p_endDateTime}'
 
         ORDER BY si.starts, sched.starts;";
 
-        //Logging::log($sql);
+        Logging::log($sql);
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;

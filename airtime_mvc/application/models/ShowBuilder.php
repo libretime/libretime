@@ -122,7 +122,7 @@ class Application_Model_ShowBuilder {
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
 
-        if ($this->user->canSchedule($item["show_id"]) == true) {
+        if ($this->user->canSchedule($p_item["show_id"]) == true) {
             $row["checkbox"] = true;
         }
 
