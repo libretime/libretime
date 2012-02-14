@@ -121,8 +121,12 @@ class Application_Model_ShowBuilder {
 
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
+        $epoch_now = time();
 
-        if ($this->user->canSchedule($p_item["show_id"]) == true) {
+        $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+
+        //can only schedule the show if it hasn't started and you are allowed.
+        if ($epoch_now < $showStartDT->format('U') && $this->user->canSchedule($p_item["show_id"]) == true) {
             $row["checkbox"] = true;
         }
 
