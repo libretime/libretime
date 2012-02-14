@@ -48,6 +48,7 @@ try:
     remove_file("/etc/monit/conf.d/monit-airtime-playout.cfg")
     remove_file("/etc/monit/conf.d/monit-airtime-liquidsoap.cfg")
     remove_file("/etc/monit/conf.d/monit-airtime-generic.cfg")
+    remove_file("/etc/monit/conf.d/monit-airtime-rabbitmq-server.cfg")
 
 except Exception, e:
     print e

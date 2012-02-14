@@ -2,6 +2,7 @@
 
 define('AIRTIME_COPYRIGHT_DATE', '2010-2011');
 define('AIRTIME_REST_VERSION', '1.1');
+define('AIRTIME_API_VERSION', '1.0');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH', 'filepath');

@@ -11,11 +11,10 @@ function closeDialog(event, ui) {
 	$(this).remove();
 }
 
-function checkShowLength() {
-    var showFilled = $("#show_time_filled").text().split('.')[0];
-    var showLength = $("#show_length").text();
+function checkShowLength(json) {
+    var percent = json.percentFilled;
 
-    if (showFilled > showLength){
+    if (percent > 100){
         $("#show_time_warning")
             .text("Shows longer than their scheduled time will be cut off by a following show.")
             .show();
@@ -41,7 +40,7 @@ function setScheduleDialogHtml(json) {
 	$("#show_time_filled").empty().append(json.timeFilled);
 	$("#show_progressbar").progressbar( "value" , json.percentFilled );
 
-    checkShowLength();
+    checkShowLength(json);
 }
 
 function setScheduleDialogEvents(dialog) {
@@ -297,7 +296,7 @@ function buildScheduleDialog(json){
 	});
 
 	dialog.dialog('open');
-    checkShowLength();
+    checkShowLength(json);
 }
 
 

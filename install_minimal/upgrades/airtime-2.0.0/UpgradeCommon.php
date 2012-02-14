@@ -1,6 +1,5 @@
 <?php
 
-set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once('DB.php');
 
 /* These are helper functions that are common to each upgrade such as
@@ -17,7 +16,7 @@ class UpgradeCommon{
     const CONF_PYPO_GRP = "pypo";
     const CONF_WWW_DATA_GRP = "www-data";
     const CONF_BACKUP_SUFFIX = "200";
-    const VERSION_NUMBER = "2.0";
+    const VERSION_NUMBER = "2.0.0";
     
     public static function connectToDatabase($p_exitOnError = true)
     {
@@ -56,6 +55,8 @@ class UpgradeCommon{
 
     public static function MigrateTablesToVersion($dir, $version)
     {
+        echo "Upgrading database, may take several minutes, please wait".PHP_EOL;
+        
         $appDir = self::GetAirtimeSrcDir();
         $command = "php --php-ini $dir/../../airtime-php.ini ".
                     "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
@@ -231,5 +232,17 @@ class UpgradeCommon{
             fwrite($fp, $lines[$i]);
         }
         fclose($fp);
+    }
+    
+    public static function queryDb($p_sql){
+        global $CC_DBC;
+
+        $result = $CC_DBC->query($p_sql);
+        if (PEAR::isError($result)) {
+            echo "Error executing $sql. Exiting.";
+            exit(1);
+        }
+        
+        return $result;
     }
 }

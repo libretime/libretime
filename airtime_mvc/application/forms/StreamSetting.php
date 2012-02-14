@@ -39,12 +39,14 @@ class Application_Form_StreamSetting extends Zend_Form
         }
 
         # tooltip
-        $description = 'VLC and mplayer have a serious bug when playing an OGG/VORBIS
-                    stream that has metadata information enabled (stream metadata is the
-                    track title, show name, etc displayed in the audio player): they will
-                    disconnect from the stream after every song if this option is enabled.
-                    If your listeners do not require support for these audio players,
-                    then you should enable this option.';
+        $description = 'This option enables metadata for OGG streams (stream
+                    metadata is the track title, artist, and show name that is
+                    displayed in an audio player). VLC and mplayer have a
+                    serious bug when playing an OGG/VORBIS stream that has
+                    metadata information enabled: they will disconnect from the
+                    stream after every song. If you are using an OGG stream and
+                    your listeners do not require support for these audio
+                    players, then feel free to enable this option.';
 
         $icecast_vorbis_metadata = new Zend_Form_Element_Checkbox('icecast_vorbis_metadata');
         $icecast_vorbis_metadata->setLabel('Icecast Vorbis Metadata')

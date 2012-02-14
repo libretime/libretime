@@ -1,3 +1,5 @@
+ var AIRTIME_API_VERSION = "1.0";
+
 (function($){
  $.fn.airtimeShowSchedule = function(options) {
 
@@ -6,7 +8,7 @@
         sourceDomain: "http://localhost/", //where to get show status from
         text: {onAirToday:"On air today"}
     };
-    var options = $.extend(true, defaults, options);
+    options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
 
     return this.each(function() {
@@ -22,7 +24,7 @@
 
             tableString = "";
             tableString += "<h3>" + options.text.onAirToday + "</h3>";
-            tableString += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget no-playing-list small'>"+
+            tableString += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget now-playing-list small'>"+
                 "<tbody>";
             
             for (var i=0; i<shows.length; i++){
@@ -44,6 +46,7 @@
         }
 
         function processData(data){
+            checkWidgetVersion(data);
             sd = new ScheduleData(data);
             updateWidget();
         }
@@ -117,7 +120,7 @@
 
             obj.empty();
             obj.append("<h4>"+showStatus+" &gt;&gt;</h4>");
-            obj.append("<ul class='widget no-playing-bar'>" +
+            obj.append("<ul class='widget now-playing-bar'>" +
                 "<li class='current'>"+options.text.current+": "+currentShowName+
                 "<span id='time-elapsed' class='time-elapsed'>"+timeElapsed+"</span>" +
                 "<span id='time-remaining' class='time-remaining'>"+timeRemaining+"</span>"+
@@ -127,6 +130,7 @@
         }
 
         function processData(data){
+            checkWidgetVersion(data);
             sd = new ScheduleData(data);
         }
 
@@ -156,7 +160,7 @@
         dowText: {monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
         miscText: {time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"}
     };
-    var options = $.extend(true, defaults, options);
+    options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
     
     return this.each(function() {
@@ -189,7 +193,7 @@
         function updateWidget(data){
             for (var i=0; i<dow.length; i++){
                 var html = 
-                  '<table class="widget widget no-playing-list">'+
+                  '<table class="widget widget now-playing-list">'+
                     '<colgroup>'+
                       '<col width="150" />'+
                       '<col width="350" />'+
@@ -234,6 +238,7 @@
         }
 
         function processData(data){
+            checkWidgetVersion(data);
             updateWidget(data);
         }
 
@@ -392,4 +397,21 @@ function convertDateToPosixTime(s){
         sec = time[2];
 
 	return Date.UTC(year, month-1, day, hour, minute, sec, msec);
+}
+
+/* Checks the incomming data's widget version tag.
+*  The current widget version is 1.
+*     -If the value returned is equal to 1 do nothing.
+*     -If the value doesn't exist or it is great then 1 throw error warning the user they should upgrade their airtime install.
+*     -If the value is less then 1 warn the user that they should upgrade the javascript to a newer version.
+*/
+function checkWidgetVersion(data){
+   
+    var airtimeServerWidgetVersion = data['AIRTIME_API_VERSION'];
+    
+    if (undefined === airtimeServerWidgetVersion || airtimeServerWidgetVersion >  AIRTIME_API_VERSION )
+        throw "The version of widgets you are using is out of date with the Airtime installation, please update your widgets javascript file. (Airtime widget API version is "+airtimeServerWidgetVersion+", this widget's API version is "+AIRTIME_API_VERSION+")";
+    else if (airtimeServerWidgetVersion < AIRTIME_API_VERSION )
+        throw "The Airtime server has a different version than this widget supports. Please get the correct widget version for your Airtime installation. (Airtime widget API version is "+airtimeServerWidgetVersion+", this widget's API version is "+AIRTIME_API_VERSION+")";
+    
 }

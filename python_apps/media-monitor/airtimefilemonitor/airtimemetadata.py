@@ -131,6 +131,7 @@ class AirtimeMetadata:
             self.logger.error("Exception %s", e)
             return None
 
+        #check if file has any metadata
         if file_info is None:
             return None
         #check if file has any metadata

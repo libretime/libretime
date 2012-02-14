@@ -83,8 +83,12 @@ class Application_Model_StreamSetting {
                 $CC_DBC->query($sql);
             } else if ($key == "output_sound_device_type") {
                 $sql = "UPDATE cc_stream_setting SET value='$d' WHERE keyname='$key'";
-                $CC_DBC->query($sql);                
-            } else {
+                $CC_DBC->query($sql);
+            } else if ($key == "streamFormat"){
+                // this goes into cc_pref table
+                Logging::log("Insert stream label format $d");
+                Application_Model_Preference::SetStreamLabelFormat($d);
+            } else if (is_array($d)) {
                 $temp = explode('_', $key);
                 $prefix = $temp[0];
                 foreach ($d as $k=>$v) {
@@ -96,6 +100,8 @@ class Application_Model_StreamSetting {
                     $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
                     $CC_DBC->query($sql);
                 }
+            } else {
+                Logging::log("Warning unexpected value: ".$key);
             }
         }
     }

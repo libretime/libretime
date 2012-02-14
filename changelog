@@ -1,4 +1,16 @@
-2.0.0 - January 24, 2011
+2.0.1 - February 14, 2012
+  * Changes:
+    * Widgets should have a version string so users can make sure widgets are up to date
+  * Bug Fixes:
+    * Fixed: Media monitor should not change the ownership of watched files if unnecessary
+    * Fixed: Sometimes the Current Playing Item on the top Panel in the UI incorrectly shows "Nothing Scheduled"
+    * Fixed: Stream settings page does not remember the stream metadata format
+    * Fixed: Airtime is missing Australia and Arctic timezones
+    * Fixed: Shows not recorded after upgrade to 2.0.0 from 1.8.2
+    * Fixed: Don't make it necessary users clear their browser cache when Airtime is upgraded
+    * Fixed: Media-Monitor does not handle corrupt audio metadata gracefully
+
+2.0.0 - January 24, 2012
   * The cool stuff:
     * Stream configuration through the browser
       * You can have up to three streams with different bitrates and point them

@@ -22,7 +22,7 @@ import base64
 from configobj import ConfigObj
 import string
 
-AIRTIME_VERSION = "2.0.0"
+AIRTIME_VERSION = "2.0.1"
 
 def api_client_factory(config):
     logger = logging.getLogger()
