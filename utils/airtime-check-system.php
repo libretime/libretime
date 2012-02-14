@@ -12,9 +12,11 @@ if (substr($sapi_type, 0, 3) == 'cli') {
        
     $airtimeIni = AirtimeCheck::GetAirtimeConf();
     $apiKey = $airtimeIni['general']['api_key'];
+    $baseUrl = $airtimeIni['general']['base_url'];
 
-    $status = AirtimeCheck::GetStatus($apiKey);
-    AirtimeCheck::PrintStatus($status);
+
+    $status = AirtimeCheck::GetStatus($baseUrl, $apiKey);
+    AirtimeCheck::PrintStatus($baseUrl, $status);
 }
 
 class AirtimeCheck {
@@ -88,8 +90,8 @@ class AirtimeCheck {
         return $os_string." ".$machine;
     }
     
-    public static function GetServerType(){
-        $headerInfo = get_headers("http://localhost",1);
+    public static function GetServerType($p_baseUrl){
+        $headerInfo = get_headers("http://$p_baseUrl",1);
         
         if (!isset($headerInfo['Server'][0]))
             return self::UNKNOWN;
@@ -97,9 +99,9 @@ class AirtimeCheck {
             return $headerInfo['Server'][0];
     }
 
-    public static function GetStatus($p_apiKey){
+    public static function GetStatus($p_baseUrl, $p_apiKey){
 
-        $url = "http://localhost/api/status/format/json/api_key/%%api_key%%";
+        $url = "http://$p_baseUrl/api/status/format/json/api_key/%%api_key%%";
         self::output_status("AIRTIME_STATUS_URL", $url);
         $url = str_replace("%%api_key%%", $p_apiKey, $url);
         
@@ -116,7 +118,7 @@ class AirtimeCheck {
         return $data;
     }
 
-    public static function PrintStatus($p_status){
+    public static function PrintStatus($p_baseUrl, $p_status){
         
         if ($p_status === false){
             self::output_status("AIRTIME_SERVER_RESPONDING", "FAILED");
@@ -146,7 +148,7 @@ class AirtimeCheck {
             }
             self::output_status("OS", self::CheckOsTypeVersion());
             self::output_status("CPU", self::GetCpuInfo());
-            self::output_status("WEB_SERVER", self::GetServerType());
+            self::output_status("WEB_SERVER", self::GetServerType($p_baseUrl));
             
             if (isset($data->services)) {
                 $services = $data->services;
