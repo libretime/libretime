@@ -629,9 +629,7 @@ class Application_Model_StoredFile {
 
         $results = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables);
 
-
         foreach ($results['aaData'] as &$row) {
-
             $row['id'] = intval($row['id']);
 
             $formatter = new LengthFormatter($row['length']);

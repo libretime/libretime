@@ -1,15 +1,12 @@
 <?php
 $items = $this->pl->getContents();
 if (count($items)) : ?>
-
 <?php $i = 0; ?>
 <?php foreach($items as $item) : ?>
     <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$item["id"]; ?>">
         <div class="list-item-container">
-            <a href="javascript:void(0);" class="big_play"
-            accesskey=onClick="playlistAudioPreviewEditor(
-                '<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["filepath"],
-                        PATHINFO_EXTENSION);?>', '<?php echo $i ?>');">
+            <a href="javascript:void(0);" class="big_play" onClick="open_audio_preview(
+                '<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["filepath"],PATHINFO_EXTENSION);?>', '<?php echo $i ?>');">
             <span class="ui-icon ui-icon-play"></span></a>
 
             <div class="text-row top">
