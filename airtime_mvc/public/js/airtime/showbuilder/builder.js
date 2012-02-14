@@ -4,7 +4,10 @@ $(document).ready(function() {
 		oBaseDatePickerSettings,
 		oBaseTimePickerSettings,
 		fnAddSelectedItems,
-		fnRemoveSelectedItems;
+		fnRemoveSelectedItems,
+		oRange,
+		fnServerData,
+		fnShowBuilderRowCallback;
 	
 	oBaseDatePickerSettings = {
 		dateFormat: 'yy-mm-dd',
@@ -35,11 +38,9 @@ $(document).ready(function() {
 	 * @return Number iTime
 	 */
 	function fnGetUIPickerUnixTimestamp(sDatePickerId, sTimePickerId) {
-		var oDate, 
-			oTimePicker = $( sTimePickerId ),
+		var date, 
+			time,
 			iTime,
-			iHour,
-			iMin,
 			iServerOffset,
 			iClientOffset;
 	
@@ -47,18 +48,16 @@ $(document).ready(function() {
 			return 0;
 		}
 		
-		oDate = $( sDatePickerId ).datepicker( "getDate" );
+		//string.split(separator, limit)
 		
-		//nothing has been selected from this datepicker.
-		if (oDate === null) {
-			oDate = new Date();
-		}
-		else {
-			iHour = oTimePicker.timepicker('getHour');
-			iMin = oTimePicker.timepicker('getMinute');
-			
-			oDate.setHours(iHour, iMin);
-		}
+		date = $(sDatePickerId).val();
+		time = $(sTimePickerId).val();
+		
+		date = date.split("-");
+		time = time.split(":");
+		
+		//0 based month in js.
+		oDate = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
 		
 		iTime = oDate.getTime(); //value is in millisec.
 		iTime = Math.round(iTime / 1000);
@@ -98,7 +97,7 @@ $(document).ready(function() {
 		};
 	}
 
-	var fnServerData = function ( sSource, aoData, fnCallback ) {
+	fnServerData = function ( sSource, aoData, fnCallback ) {
 		aoData.push( { name: "format", value: "json"} );
 		
 		if (fnServerData.hasOwnProperty("start")) {
@@ -116,22 +115,27 @@ $(document).ready(function() {
 			"success": fnCallback
 		} );
 	};
+	
+	oRange = fnGetScheduleRange();	
+	fnServerData.start = oRange.start;
+	fnServerData.end = oRange.end;
 
-	var fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
+	fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
 		var i,
 			sSeparatorHTML,
 			fnPrepareSeparatorRow,
-			node;
+			node,
+			cl="";
 		
 		//save some info for reordering purposes.
 		$(nRow).data({"aData": aData});
 		
-		fnPrepareSeparatorRow = function(sRowContent, sClass) {
+		fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
 			
-			node = nRow.children[1];
+			node = nRow.children[iNodeIndex];
 			node.innerHTML = sRowContent;
 			node.setAttribute('colspan',100);
-			for (i = 2; i < nRow.children.length; i = i+1) {
+			for (i = iNodeIndex + 1; i < nRow.children.length; i = i+1) {
 				node = nRow.children[i];
 				node.innerHTML = "";
 				node.setAttribute("style", "display : none");
@@ -141,30 +145,30 @@ $(document).ready(function() {
 		};
 		
 		if (aData.header === true) {
-			node = nRow.children[0];
-			node.innerHTML = '<span class="ui-icon ui-icon-play"></span>';
+			cl = 'sb-header';
 			
 			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "sb-header");
+			fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
 		}
 		else if (aData.footer === true) {
-			
 			node = nRow.children[0];
-			node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
-				
-			sSeparatorHTML = '<span>Show Footer</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "sb-footer");
-		}
-		else if (aData.empty === true) {
+			cl = 'sb-footer';
 			
-			node = nRow.children[0];
-			node.innerHTML = '';
+			//check the show's content status.
+			if (aData.runtime > 0) {
+				node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
+				cl = cl + ' ui-state-highlight';
+			}
+			else {
+				node.innerHTML = '<span class="ui-icon ui-icon-notice"></span>';
+				cl = cl + ' ui-state-error';
+			}
 				
-			sSeparatorHTML = '<span>Show Empty</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, "sb-empty odd");
-		}
+			sSeparatorHTML = '<span>'+aData.fRuntime+'</span>';
+			fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
+		}		
 		else {
-			$(nRow).attr("id", "sched_"+aData.id);
+			//$(nRow).attr("id", "sched_"+aData.id);
 			
 			node = nRow.children[0];
 			if (aData.checkbox === true) {
@@ -172,8 +176,15 @@ $(document).ready(function() {
 			}
 			else {
 				node.innerHTML = '';
+				cl = cl + " sb-not-allowed";
+			}
+			
+			if (aData.empty === true) {
 				
-				$(nRow).addClass("sb-not-allowed");
+				sSeparatorHTML = '<span>Show Empty</span>';
+				cl = cl + " sb-empty odd";
+				
+				fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 			}
 		}
 	};
@@ -195,7 +206,6 @@ $(document).ready(function() {
 		$.post( "/showbuilder/schedule-remove",
 			{"ids": ids, "format": "json"},
 			function(data) {
-				oTT.fnSelectNone();
 				oTable.fnDraw();
 			});
 	};
@@ -224,6 +234,11 @@ $(document).ready(function() {
 		"fnHeaderCallback": function(nHead) {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
 		},
+		//remove any selected nodes before the draw.
+		"fnPreDrawCallback": function( oSettings ) {
+			var oTT = TableTools.fnGetInstance('show_builder_table');
+			oTT.fnSelectNone();
+	    },
 		
 		"oColVis": {
 			"aiExclude": [ 0, 1 ]
@@ -257,9 +272,10 @@ $(document).ready(function() {
                 }
             },
             "fnRowDeselected": function ( node ) {
-               
+	
               //seems to happen if everything is deselected
                 if ( node === null) {
+                	var oTable = $("#show_builder_table").dataTable();
                 	oTable.find("input[type=checkbox]").attr("checked", false);
                 }
                 else {
@@ -269,7 +285,7 @@ $(document).ready(function() {
 		},
 		
         // R = ColReorderResize, C = ColVis, T = TableTools
-        "sDom": 'Rr<"H"CT<"#show_builder_toolbar">>t<"F">',
+        "sDom": 'Rr<"H"CT>t<"F">',
         
         "sAjaxDataProp": "schedule",
 		"sAjaxSource": "/showbuilder/builder-feed"	
@@ -281,7 +297,7 @@ $(document).ready(function() {
     	if ($(this).is(":checked")) {
     		var allowedNodes;
     		
-    		allowedNodes = oTable.find('tr:not(.sb-header):not(.sb-footer):not(.sb-not-allowed)');
+    		allowedNodes = oTable.find('tr:not(:first):not(.sb-header):not(.sb-footer):not(.sb-not-allowed)');
     		
     		allowedNodes.each(function(i, el){
     			oTT.fnSelect(el);
@@ -320,8 +336,7 @@ $(document).ready(function() {
 			fnAdd,
 			fnMove,
 			fnReceive,
-			fnUpdate,
-			oTT = TableTools.fnGetInstance('show_builder_table');
+			fnUpdate;
 		
 		fnAdd = function() {
 			var aMediaIds = [],
@@ -333,7 +348,6 @@ $(document).ready(function() {
 			$.post("/showbuilder/schedule-add", 
 				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
 				function(json){
-					oTT.fnSelectNone();
 					oTable.fnDraw();
 				});
 		};
@@ -380,15 +394,14 @@ $(document).ready(function() {
 			update: fnUpdate,
 			start: function(event, ui) {
 				//ui.placeholder.html("PLACE HOLDER");
-			},
+			}
 		};
 	}());
 	
 	tableDiv.sortable(sortableConf);
 	
-	$("#show_builder_toolbar")
-		.append('<span class="ui-icon ui-icon-trash"></span>')
-		.find(".ui-icon-trash")
-			.click(fnRemoveSelectedItems);
+	$("#show_builder .fg-toolbar")
+		.append('<div class="ColVis TableTools"><button class="ui-button ui-state-default"><span>Delete</span></button></div>')
+		.click(fnRemoveSelectedItems);
 	
 });

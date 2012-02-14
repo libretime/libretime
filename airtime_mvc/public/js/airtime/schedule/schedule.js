@@ -11,11 +11,10 @@ function closeDialog(event, ui) {
 	$(this).remove();
 }
 
-function checkShowLength() {
-    var showFilled = $("#show_time_filled").text().split('.')[0];
-    var showLength = $("#show_length").text();
+function checkShowLength(json) {
+    var percent = json.percentFilled;
 
-    if (showFilled > showLength){
+    if (percent > 100){
         $("#show_time_warning")
             .text("Shows longer than their scheduled time will be cut off by a following show.")
             .show();
@@ -41,7 +40,7 @@ function setScheduleDialogHtml(json) {
 	$("#show_time_filled").empty().append(json.timeFilled);
 	$("#show_progressbar").progressbar( "value" , json.percentFilled );
 
-    checkShowLength();
+    checkShowLength(json);
 }
 
 function setScheduleDialogEvents(dialog) {
@@ -208,21 +207,12 @@ function uploadToSoundCloud(show_instance_id){
     if(span.length == 0){
         span = $(window.triggerElement).find(".soundcloud");
         span.removeClass("soundcloud")
-        .addClass("progress")
+        	.addClass("progress");
     }else{
         span.removeClass("recording")
-        .addClass("progress");
+        	.addClass("progress");
     }
 }
-
-//used by jjmenu
-function getId() { 
-	var tr_id =  $(this.triggerElement).attr("id");
-	tr_id = tr_id.split("_");
-
-	return tr_id[1];
-}
-//end functions used by jjmenu
 
 function buildContentDialog(json){
     if(json.show_error == true){
@@ -277,12 +267,6 @@ function buildContentDialog(json){
 	});
 
 	dialog.dialog('open');
-	
-	$('#show_content_dialog tbody tr')
-	.jjmenu("click", 
-		[{get:"/Schedule/content-context-menu/format/json/id/#id#"}],  
-		{id: getId}, 
-		{xposition: "mouse", yposition: "mouse"});
 }
 
 function buildScheduleDialog(json){
@@ -312,7 +296,7 @@ function buildScheduleDialog(json){
 	});
 
 	dialog.dialog('open');
-    checkShowLength();
+    checkShowLength(json);
 }
 
 
@@ -377,7 +361,150 @@ function alertShowErrorAndReload(){
     window.location.reload();
 }
 
-$(window).load(function() {
+$(document).ready(function() {
 	$.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
             , error:function(jqXHR, textStatus, errorThrown){}});
+	
+	
+	$.contextMenu({
+        selector: 'div.fc-event',
+        trigger: "left",
+        ignoreRightClick: true,
+        
+        build: function($el, e) {
+    		var request, data, items, callback;
+    		
+    		data = $el.data("event");
+    		
+    		function processMenuItems(oItems) {
+    			
+    			//define a schedule callback.
+    			if (oItems.schedule !== undefined) {
+    				
+    				callback = function() {
+    					document.location = oItems.schedule.url + "from/" + data.startUnix + "/to/" + data.endUnix;
+					};
+    				oItems.schedule.callback = callback;
+    			}
+    			
+    			//define a clear callback.
+    			if (oItems.clear !== undefined) {
+    				
+    				callback = function() {
+    					$.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
+    						scheduleRefetchEvents(json);
+    					});
+					};
+    				oItems.clear.callback = callback;
+    			}
+    			
+    			//define an edit callback.
+    			if (oItems.edit !== undefined) {
+    				
+    				callback = function() {
+    					$.get(oItems.edit.url, {format: "json", id: data.id}, function(json){
+    						beginEditShow(json);
+    					});
+					};
+    				oItems.edit.callback = callback;
+    			}
+    			
+    			//define a content callback.
+    			if (oItems.content !== undefined) {
+    				
+    				//delete a single instance
+					callback = function() {
+    					$.get(oItems.content.url, {format: "json", id: data.id}, function(json){
+    						buildContentDialog(json);
+    					});
+					};
+    				oItems.content.callback = callback;
+    			}
+    			
+    			//define a soundcloud callback.
+    			if (oItems.soundcloud !== undefined) {
+    				
+    				callback = function() {
+    					uploadToSoundCloud(data.id);
+					};
+    				oItems.soundcloud.callback = callback;
+    			}
+    			
+    			//define a cancel recorded show callback.
+    			if (oItems.cancel_recorded !== undefined) {
+    				
+    				callback = function() {
+    					confirmCancelRecordedShow(data.id);
+					};
+    				oItems.cancel_recorded.callback = callback;
+    			}
+    			
+    			//define a cancel callback.
+    			if (oItems.cancel !== undefined) {
+    				
+    				callback = function() {
+    					confirmCancelShow(data.id);
+					};
+    				oItems.cancel.callback = callback;
+    			}
+    			
+    			//define a delete callback.
+    			if (oItems.del !== undefined) {
+    				
+    				//repeating show multiple delete options
+    				if (oItems.del.items !== undefined) {
+    					var del = oItems.del.items;
+    					
+    					//delete a single instance
+    					callback = function() {
+        					$.post(del.single.url, {format: "json", id: data.id}, function(json){
+        						scheduleRefetchEvents(json);
+        					});
+    					};
+        				del.single.callback = callback;
+        				
+        				//delete this instance and all following instances.
+        				callback = function() {
+        					$.post(del.following.url, {format: "json", id: data.id}, function(json){
+        						scheduleRefetchEvents(json);
+        					});
+    					};
+        				del.following.callback = callback;	
+    					
+    				}
+    				//single show
+    				else {
+    					callback = function() {
+        					$.post(oItems.del.url, {format: "json", id: data.id}, function(json){
+        						scheduleRefetchEvents(json);
+        					});
+    					};
+        				oItems.del.callback = callback;	
+    				}
+    			}
+    		
+    			items = oItems;
+    		}
+    		
+    		request = $.ajax({
+			  url: "/schedule/make-context-menu",
+			  type: "GET",
+			  data: {id : data.id, format: "json"},
+			  dataType: "json",
+			  async: false,
+			  success: function(json){
+				  processMenuItems(json.items);
+			  }
+			});
+
+            return {
+                items: items,
+                determinePosition : function($menu, x, y) {
+                	$menu.css('display', 'block')
+                		.position({ my: "left top", at: "right top", of: this, offset: "-20 10", collision: "fit"})
+                		.css('display', 'none');
+                }
+            };
+        }
+    });
 });

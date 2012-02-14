@@ -1,5 +1,4 @@
 <?php
-$path = dirname(__FILE__).'/../../../library/pear';
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 $WHITE_SCREEN_OF_DEATH = false;
 

@@ -38,11 +38,11 @@ class ScheduleController extends Zend_Controller_Action
     public function indexAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jjmenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
@@ -51,18 +51,18 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker-0.0.6.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery-ui-timepicker.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/fullcalendar.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/contextmenu.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
 
         Application_Model_Schedule::createNewFormSections($this->view);
 
@@ -183,89 +183,89 @@ class ScheduleController extends Zend_Controller_Action
     public function makeContextMenuAction()
     {
         $id = $this->_getParam('id');
+        $menu = array();
         $epochNow = time();
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         try{
-            $show = new Application_Model_ShowInstance($id);
+            $instance = new Application_Model_ShowInstance($id);
         }catch(Exception $e){
             $this->view->show_error = true;
             return false;
         }
 
+        $showStartLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
+        $showEndLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
 
-		$params = '/format/json/id/#id#';
+		if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
-        $showStartDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowInstanceStart());
-        $showEndDateHelper = Application_Model_DateHelper::ConvertToLocalDateTime($show->getShowInstanceEnd());
+            if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST), $instance->getShowId())
+                && !$instance->isRecorded()
+                && !$instance->isRebroadcast()) {
 
-        $menu = array();
+                $menu["schedule"] = array("name"=> "Add / Remove Content", "url" => "/showbuilder/index/");
 
-		if ($epochNow < $showStartDateHelper->getTimestamp()) {
+                $menu["clear"] = array("name"=> "Remove All Content", "icon" => "delete", "url" => "/schedule/clear-show");
 
-            if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()) && !$show->isRecorded() && !$show->isRebroadcast()) {
-
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/schedule-show-dialog'.$params,
-                    'callback' => 'window["buildScheduleDialog"]'), 'title' => 'Add / Remove Content');
+                /*
 
                 $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params,
                             'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
+                */
             }
 
         }
 
-        if(!$show->isRecorded()) {
-            $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/show-content-dialog'.$params,
-                    'callback' => 'window["buildContentDialog"]'), 'title' => 'Show Content');
+        if (!$instance->isRecorded()) {
+
+            $menu["content"] = array("name"=> "Show Content", "url" => "/schedule/show-content-dialog");
         }
 
-        if ($showEndDateHelper->getTimestamp() <= $epochNow
-            && $show->isRecorded()
+        if ($showEndLocalDT->getTimestamp() <= $epochNow
+            && $instance->isRecorded()
             && Application_Model_Preference::GetUploadToSoundcloudOption()) {
-                if(is_null($show->getSoundCloudFileId())){
-                    $menu[] = array('action' => array('type' => 'fn',
-                        'callback' => "window['uploadToSoundCloud']($id)"),
-                        'title' => 'Upload to SoundCloud');
-                }else{
-                    $menu[] = array('action' => array('type' => 'fn',
-                        'callback' => "window['uploadToSoundCloud']($id)"),
-                        'title' => 'Re-upload to SoundCloud');
-                }
+
+                $text = is_null($instance->getSoundCloudFileId()) ? 'Upload to SoundCloud' : 'Re-upload to SoundCloud';
+                $menu["soundcloud"] = array("name"=> $text, "icon" => "soundcloud");
         }
 
-
-        if ($showStartDateHelper->getTimestamp() <= $epochNow &&
-                $epochNow < $showEndDateHelper->getTimestamp() &&
+        if ($showStartLocalDT->getTimestamp() <= $epochNow &&
+                $epochNow < $showEndLocalDT->getTimestamp() &&
                 $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            if ($show->isRecorded()) {
-                $menu[] = array('action' => array('type' => 'fn',
-                    'callback' => "window['confirmCancelRecordedShow']($id)"),
-                    'title' => 'Cancel Current Show');
+
+            if ($instance->isRecorded()) {
+
+                $menu["cancel_recorded"] = array("name"=> "Cancel Current Show", "icon" => "delete");
             } else {
-                $menu[] = array('action' => array('type' => 'fn',
-                    'callback' => "window['confirmCancelShow']($id)"),
-                    'title' => 'Cancel Current Show');
+
+                $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
             }
         }
 
-        if ($epochNow < $showStartDateHelper->getTimestamp()) {
+        if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
             if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/edit-show/format/json/id/'.$id,
-                        'callback' => 'window["beginEditShow"]'), 'title' => 'Edit Show');
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/delete-show'.$params,
-                        'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance');
-                if ($show->getShow()->isRepeating() || $show->getShow()->isRebroadcast()) {
-                    $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/cancel-show'.$params,
-                            'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Delete This Instance and All Following');
+                $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+
+                if ($instance->getShow()->isRepeating()) {
+
+                    //create delete sub menu.
+                    $menu["del"] = array("name"=> "Delete", "icon" => "delete", "items" => array());
+
+                    $menu["del"]["items"]["single"] = array("name"=> "Delete This Instance", "icon" => "delete", "url" => "/schedule/delete-show");
+
+                    $menu["del"]["items"]["following"] = array("name"=> "Delete This Instance and All Following", "icon" => "delete", "url" => "/schedule/cancel-show");
+                }
+                else {
+                    //window["scheduleRefetchEvents"]'
+                   $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/schedule/delete-show");
                 }
             }
         }
 
-        //returns format jjmenu is looking for.
-        die(json_encode($menu));
+        $this->view->items = $menu;
     }
 
     public function scheduleShowAction()

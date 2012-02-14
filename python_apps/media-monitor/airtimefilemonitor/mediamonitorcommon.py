@@ -261,6 +261,9 @@ class MediaMonitorCommon:
         return stdout.splitlines()
 
     def touch_index_file(self):
+        dirname = os.path.dirname(self.timestamp_file)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
         open(self.timestamp_file, "w")
 
     def organize_new_file(self, pathname):

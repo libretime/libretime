@@ -7,6 +7,8 @@ class Application_Model_ShowBuilder {
     private $endDT;
     private $user;
 
+    private $contentDT;
+
     private $defaultRowArray = array(
         "header" => false,
         "footer" => false,
@@ -15,9 +17,7 @@ class Application_Model_ShowBuilder {
         "id" => 0,
         "instance" => "",
         "starts" => "",
-        "startsUnix" => null,
         "ends" => "",
-        "endsUnix" => null,
         "runtime" => "",
         "title" => "",
         "creator" => "",
@@ -56,10 +56,44 @@ class Application_Model_ShowBuilder {
         return $runtime;
     }
 
-    private function makeFooterRow() {
+    private function formatTimeFilled($p_sec) {
+
+        $formatted = "";
+        $sign = ($p_sec < 0) ? "-" : "+";
+
+        $time = Application_Model_Playlist::secondsToPlaylistTime(abs($p_sec));
+        Logging::log("time is: ".$time);
+        $info = explode(":", $time);
+
+        $formatted .= $sign;
+
+        if ($info[0] > 0) {
+            $formatted .= " {$info[0]}h";
+        }
+
+        if ($info[1] > 0) {
+            $formatted .= " {$info[1]}m";
+        }
+
+        if ($info[2] > 0) {
+            $sec = round($info[2], 0);
+            $formatted .= " {$sec}s";
+        }
+
+        return $formatted;
+    }
+
+    private function makeFooterRow($p_item) {
 
         $row = $this->defaultRowArray;
         $row["footer"] = true;
+
+        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+        $contentDT = $this->contentDT;
+
+        $runtime = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
+        $row["runtime"] = $runtime;
+        $row["fRuntime"] = $this->formatTimeFilled($runtime);
 
         return $row;
     }
@@ -80,13 +114,19 @@ class Application_Model_ShowBuilder {
         $row["title"] = $p_item["show_name"];
         $row["instance"] = intval($p_item["si_id"]);
 
+        $this->contentDT = $showStartDT;
+
         return $row;
     }
 
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
+        $epoch_now = time();
 
-        if ($this->user->canSchedule($item["show_id"]) == true) {
+        $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+
+        //can only schedule the show if it hasn't started and you are allowed.
+        if ($epoch_now < $showStartDT->format('U') && $this->user->canSchedule($p_item["show_id"]) == true) {
             $row["checkbox"] = true;
         }
 
@@ -107,6 +147,8 @@ class Application_Model_ShowBuilder {
             $row["title"] = $p_item["file_track_title"];
             $row["creator"] = $p_item["file_artist_name"];
             $row["album"] = $p_item["file_album_title"];
+
+            $this->contentDT = $schedEndDT;
         }
         //show is empty
         else {
@@ -125,14 +167,17 @@ class Application_Model_ShowBuilder {
 
         $scheduled_items = Application_Model_Schedule::GetScheduleDetailItems($this->startDT->format("Y-m-d H:i:s"), $this->endDT->format("Y-m-d H:i:s"));
 
-        foreach ($scheduled_items as $item) {
+        for ($i = 0, $rows = count($scheduled_items); $i < $rows; $i++) {
+
+            $item = $scheduled_items[$i];
 
             //make a header row.
             if ($current_id !== $item["si_id"]) {
 
                 //make a footer row.
                 if ($current_id !== -1) {
-                    $display_items[] = $this->makeFooterRow();
+                    //pass in the previous row as it's the last row for the previous show.
+                    $display_items[] = $this->makeFooterRow($scheduled_items[$i-1]);
                 }
 
                 $display_items[] = $this->makeHeaderRow($item);
@@ -146,7 +191,7 @@ class Application_Model_ShowBuilder {
 
         //make the last footer if there were any scheduled items.
         if (count($scheduled_items) > 0) {
-            $display_items[] = $this->makeFooterRow();
+            $display_items[] = $this->makeFooterRow($scheduled_items[count($scheduled_items)-1]);
         }
 
         return $display_items;

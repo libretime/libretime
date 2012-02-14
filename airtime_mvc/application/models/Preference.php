@@ -102,7 +102,6 @@ class Application_Model_Preference
 
     public static function SetHeadTitle($title, $view=null){
         self::SetValue("station_name", $title);
-        Application_Model_RabbitMq::PushSchedule();
 
         // in case this is called from airtime-saas script
         if($view !== null){
@@ -111,6 +110,11 @@ class Application_Model_Preference
             $view->headTitle()->exchangeArray(array()); //clear headTitle ArrayObject
             $view->headTitle(self::GetHeadTitle());
         }
+				
+        $eventType = "update_station_name";
+        $md = array("station_name"=>$title);
+		
+        Application_Model_RabbitMq::SendMessageToPypo($eventType, $md);
     }
 
     /**
@@ -153,7 +157,11 @@ class Application_Model_Preference
 
     public static function SetStreamLabelFormat($type){
         self::SetValue("stream_label_format", $type);
-        Application_Model_RabbitMq::PushSchedule();
+		
+        $eventType = "update_stream_format";
+        $md = array("stream_format"=>$type);
+		
+        Application_Model_RabbitMq::SendMessageToPypo($eventType, $md);
     }
 
     public static function GetStreamLabelFormat(){

@@ -10,7 +10,6 @@ import string
 import json
 import telnetlib
 import math
-import socket
 from threading import Thread
 from subprocess import Popen, PIPE
 from datetime import datetime
@@ -21,6 +20,7 @@ import filecmp
 from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue, Consumer, Producer
 from kombu.exceptions import MessageStateError
+from kombu.simple import SimpleQueue
 
 from api_clients import api_client
 
@@ -44,11 +44,11 @@ except Exception, e:
 class PypoFetch(Thread):
     def __init__(self, q):
         Thread.__init__(self)
-        logger = logging.getLogger('fetch')
         self.api_client = api_client.api_client_factory(config)
         self.set_export_source('scheduler')
         self.queue = q
         self.schedule_data = []
+        logger = logging.getLogger('fetch')
         logger.info("PypoFetch: init complete")
 
     def init_rabbit_mq(self):
@@ -57,11 +57,9 @@ class PypoFetch(Thread):
         try:
             schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
-            self.connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], config["rabbitmq_vhost"])
-            channel = self.connection.channel()
-            consumer = Consumer(channel, schedule_queue)
-            consumer.register_callback(self.handle_message)
-            consumer.consume()
+            connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], config["rabbitmq_vhost"])
+            channel = connection.channel()
+            self.simple_queue = SimpleQueue(channel, schedule_queue)
         except Exception, e:
             logger.error(e)
             return False
@@ -72,12 +70,12 @@ class PypoFetch(Thread):
     Handle a message from RabbitMQ, put it into our yucky global var.
     Hopefully there is a better way to do this.
     """
-    def handle_message(self, body, message):
-        try:
+    def handle_message(self, message):
+        try:        
             logger = logging.getLogger('fetch')
-            logger.info("Received event from RabbitMQ: " + message.body)
+            logger.info("Received event from RabbitMQ: %s" % message)
             
-            m =  json.loads(message.body)
+            m =  json.loads(message)
             command = m['event_type']
             logger.info("Handling command: " + command)
         
@@ -87,17 +85,17 @@ class PypoFetch(Thread):
             elif command == 'update_stream_setting':
                 logger.info("Updating stream setting...")
                 self.regenerateLiquidsoapConf(m['setting'])
+            elif command == 'update_stream_format':
+                logger.info("Updating stream format...")
+                self.update_liquidsoap_stream_format(m['stream_format'])
+            elif command == 'update_station_name':
+                logger.info("Updating station name...")
+                self.update_liquidsoap_station_name(m['station_name'])
             elif command == 'cancel_current_show':
                 logger.info("Cancel current show command received...")
                 self.stop_current_show()
         except Exception, e:
             logger.error("Exception in handling RabbitMQ message: %s", e)
-        finally:
-            # ACK the message to take it off the queue
-            try:
-                message.ack()
-            except MessageStateError, m:
-                logger.error("Message ACK error: %s", m)
         
     def stop_current_show(self):
         logger = logging.getLogger('fetch')
@@ -210,10 +208,7 @@ class PypoFetch(Thread):
             # restarting pypo.
             # we could just restart liquidsoap but it take more time somehow.
             logger.info("Restarting pypo...")
-            #p = Popen("/etc/init.d/airtime-playout restart >/dev/null 2>&1", shell=True)
-            #sts = os.waitpid(p.pid, 0)[1]
-            sys.exit()
-            self.process_schedule(self.schedule_data, "scheduler", False)
+            sys.exit(0)
         else:
             logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
@@ -258,6 +253,39 @@ class PypoFetch(Thread):
         self.cache_dir = config["cache_dir"] + self.export_source + '/'
         logger.info("Creating cache directory at %s", self.cache_dir)
 
+
+    def update_liquidsoap_stream_format(self, stream_format):
+        # Push stream metadata to liquidsoap
+        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
+        try:
+            logger = logging.getLogger('fetch')
+            logger.info(LS_HOST)
+            logger.info(LS_PORT)
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
+            logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            logger.error("Exception %s", e)
+    
+    def update_liquidsoap_station_name(self, station_name):
+        # Push stream metadata to liquidsoap
+        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
+        try:
+            logger = logging.getLogger('fetch')
+            logger.info(LS_HOST)
+            logger.info(LS_PORT)
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            command = ('vars.station_name %s\n' % station_name).encode('utf-8')
+            logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            logger.error("Exception %s", e)
+
     """
     Process the schedule
      - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
@@ -270,22 +298,6 @@ class PypoFetch(Thread):
         logger = logging.getLogger('fetch')
         playlists = schedule_data["playlists"]
 
-        # Push stream metadata to liquidsoap
-        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
-        stream_metadata = schedule_data['stream_metadata']
-        try:
-            logger.info(LS_HOST)
-            logger.info(LS_PORT)
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            #encode in latin-1 due to telnet protocol not supporting utf-8
-            tn.write(('vars.stream_metadata_type %s\n' % stream_metadata['format']).encode('latin-1'))
-            tn.write(('vars.station_name %s\n' % stream_metadata['station_name']).encode('latin-1'))
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            logger.error("Exception %s", e)
-            status = 0
-
         # Download all the media and put playlists in liquidsoap "annotate" format
         try:
              liquidsoap_playlists = self.prepare_playlists(playlists, bootstrapping)
@@ -295,7 +307,6 @@ class PypoFetch(Thread):
         scheduled_data = dict()
         scheduled_data['liquidsoap_playlists'] = liquidsoap_playlists
         scheduled_data['schedule'] = playlists
-        scheduled_data['stream_metadata'] = schedule_data["stream_metadata"]
         self.queue.put(scheduled_data)
 
         # cleanup
@@ -486,28 +497,25 @@ class PypoFetch(Thread):
         loops = 1        
         while True:
             logger.info("Loop #%s", loops)
-            try:
-                # Wait for messages from RabbitMQ.  Timeout if we
-                # dont get any after POLL_INTERVAL.
-                self.connection.drain_events(timeout=POLL_INTERVAL)
-                status = 1
-            except socket.timeout, se:
-                # We didnt get a message for a while, so poll the server
-                # to get an updated schedule. 
-                status, self.schedule_data = self.api_client.get_schedule()
+            try:               
+                try:
+                    message = self.simple_queue.get(block=True)
+                    self.handle_message(message.payload)
+                    # ACK the message to take it off the queue
+                    message.ack()
+                except MessageStateError, m:
+                    logger.error("Message ACK error: %s", m)
             except Exception, e:
                 """
-                This Generic exception is thrown whenever the RabbitMQ
-                Service is stopped. In this case let's check every few
-                seconds to see if it has come back up
+                There is a problem with the RabbitMq messenger service. Let's
+                log the error and get the schedule via HTTP polling
                 """
-                logger.info("Exception, %s", e)
-                return
+                logger.error("Exception, %s", e)
+                
+                status, self.schedule_data = self.api_client.get_schedule()
+                if status == 1:
+                    self.process_schedule(self.schedule_data, "scheduler", False)
 
-            #return based on the exception
-            
-            if status == 1:
-                self.process_schedule(self.schedule_data, "scheduler", False)                
             loops += 1        
 
     """

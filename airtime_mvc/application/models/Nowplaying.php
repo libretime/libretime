@@ -9,16 +9,16 @@ class Application_Model_Nowplaying
 
 	private static function CreateDatatableRows($p_dbRows){
         $dataTablesRows = array();
-        
+
         $epochNow = time();
-        
+
         foreach ($p_dbRows as $dbRow){
-                    
+
             $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['show_starts']);
             $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['show_ends']);
             $itemStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_starts']);
             $itemEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_ends']);
-        
+
             $showStarts = $showStartDateTime->format("Y-m-d H:i:s");
             $showEnds = $showEndDateTime->format("Y-m-d H:i:s");
             $itemStarts = $itemStartDateTime->format("Y-m-d H:i:s");
@@ -28,29 +28,29 @@ class Application_Model_Nowplaying
             $status = ($showEnds < $itemEnds) ? "x" : "";
             
             $type = "a";
-            $type .= ($itemStartDateTime->getTimestamp() <= $epochNow 
+            $type .= ($itemStartDateTime->getTimestamp() <= $epochNow
                     && $epochNow < $itemEndDateTime->getTimestamp()
                     && $epochNow < $showEndDateTime->getTimestamp()) ? "c" : "";
-            
+
             // remove millisecond from the time format
             $itemStart = explode('.', $dbRow['item_starts']);
             $itemEnd = explode('.', $dbRow['item_ends']);
-            
+
             //format duration
             $duration = explode('.', $dbRow['clip_length']);
             $formatted = self::FormatDuration($duration[0]);
-            $dataTablesRows[] = array($type, $showStarts, $itemStarts, $itemEnds,
+            $dataTablesRows[] = array($type, $itemStarts, $itemStarts, $itemEnds,
                 $formatted, $dbRow['track_title'], $dbRow['artist_name'], $dbRow['album_title'],
                 $dbRow['playlist_name'], $dbRow['show_name'], $status);
         }
 
 		return $dataTablesRows;
 	}
-	
+
 	private static function CreateGapRow($p_gapTime){
 		return array("g", "", "", "", $p_gapTime, "", "", "", "", "", "");
 	}
-	
+
 	private static function CreateRecordingRow($p_showInstance){
 		return array("r", "", "", "", $p_showInstance->getName(), "", "", "", "", "", "");
 	}
@@ -60,7 +60,7 @@ class Application_Model_Nowplaying
         if ($viewType == "now"){
             $dateTime = new DateTime("now", new DateTimeZone("UTC"));
             $timeNow = $dateTime->format("Y-m-d H:i:s");
-            
+
             $startCutoff = 60;
             $endCutoff = 86400; //60*60*24 - seconds in a day
         } else {
@@ -72,30 +72,30 @@ class Application_Model_Nowplaying
             $startCutoff = $date->getNowDayStartDiff();
             $endCutoff = $date->getNowDayEndDiff();
         }
-        
+
         $data = array();
 
         $showIds = Application_Model_ShowInstance::GetShowsInstancesIdsInRange($timeNow, $startCutoff, $endCutoff);
         foreach ($showIds as $showId){
             $instanceId = $showId['id'];
-            
+
             $si = new Application_Model_ShowInstance($instanceId);
-            
+
             $showId = $si->getShowId();
             $show = new Application_Model_Show($showId);
-            
+
             $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowInstanceStart());
             $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowInstanceEnd());
-            
+
             //append show header row
             $data[] = self::CreateHeaderRow($show->getName(), $showStartDateTime->format("Y-m-d H:i:s"), $showEndDateTime->format("Y-m-d H:i:s"));
-            
+
             $scheduledItems = $si->getScheduleItemsInRange($timeNow, $startCutoff, $endCutoff);
             $dataTablesRows = self::CreateDatatableRows($scheduledItems);
-            
+
             //append show audio item rows
             $data = array_merge($data, $dataTablesRows);
-            
+
             //append show gap time row
             $gapTime = self::FormatDuration($si->getShowEndGapTime(), true);
             if ($si->isRecorded())
@@ -118,7 +118,7 @@ class Application_Model_Nowplaying
     }
     /*
      * default $time format should be in format of 00:00:00
-     * if $inSecond = true, then $time should be in seconds  
+     * if $inSecond = true, then $time should be in seconds
      */
     private static function FormatDuration($time, $inSecond=false){
         if($inSecond == false){
@@ -129,13 +129,13 @@ class Application_Model_Nowplaying
             $duration[1] = intval(($time/60)%60);
             $duration[2] = $time%60;
         }
-        
+
         if($duration[2] == 0){
             $duration[2] = '';
         }else{
             $duration[2] = intval($duration[2],10).'s';
         }
-        
+
         if($duration[1] == 0){
             if($duration[2] == ''){
                 $duration[1] = '';
@@ -145,13 +145,13 @@ class Application_Model_Nowplaying
         }else{
             $duration[1] = intval($duration[1],10).'m ';
         }
-        
+
         if($duration[0] == 0){
             $duration[0] = '';
         }else{
             $duration[0] = intval($duration[0],10).'h ';
         }
-        
+
         $out = $duration[0].$duration[1].$duration[2];
         return $out;
     }

@@ -6,7 +6,7 @@
 
 function scheduleRefetchEvents(json) {
     if(json.show_error == true){
-        alert("The show instance doesn't exist anymore!")
+        alert("The show instance doesn't exist anymore!");
     }
     if(json.show_id) {
     	var dialog_id = parseInt($("#add_show_id").val(), 10);
@@ -41,9 +41,9 @@ function openAddShowForm() {
      $.mask.masks = $.extend($.mask.masks,{
          date:{ mask: '9999-19-39', selectCharsOnFocus: true, autoTab: false},
          time:{ mask: '29:69', selectCharsOnFocus: true, autoTab: false}
-     })
+     });
      
-    $('input:text').setMask()
+    $('input:text').setMask();
 }
 
 function makeAddShowButton(){
@@ -212,6 +212,8 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
+	
+	$(element).data("event", event);
 
     //only put progress bar on shows that aren't being recorded.
 	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0) {
@@ -280,14 +282,10 @@ function eventRender(event, element, view) {
 }
 
 function eventAfterRender( event, element, view ) {
-    $(element)
-		.jjmenu("click",
-			[{get:"/Schedule/make-context-menu/format/json/id/#id#"}],
-			{id: event.id},
-			{xposition: "mouse", yposition: "mouse"});
+   
     $(element).find(".small-icon").live('mouseover',function(){
         addQtipToSCIcons($(this));
-    })
+    });
 }
 
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
@@ -354,7 +352,7 @@ function checkSCUploadStatus(){
                 $("span[id="+id+"]").removeClass("progress").addClass("sc-error");
             }
         });
-    })
+    });
 }
 
 function addQtipToSCIcons(ele){
@@ -376,7 +374,7 @@ function addQtipToSCIcons(ele){
             show: {
                 ready: true // Needed to make it show on first mouseover event
             }
-        })
+        });
     }else if($(ele).hasClass("soundcloud")){
         $(ele).qtip({
             content: {
@@ -386,7 +384,7 @@ function addQtipToSCIcons(ele){
                     type: "post",
                     data: ({format: "json", id : id, type: "file"}),
                     success: function(json, status){
-                        this.set('content.text', "The soundcloud id for this file is: "+json.sc_id)
+                        this.set('content.text', "The soundcloud id for this file is: "+json.sc_id);
                     }
                 }
             },
@@ -402,7 +400,7 @@ function addQtipToSCIcons(ele){
             show: {
                 ready: true // Needed to make it show on first mouseover event
             }
-        })
+        });
     }else if($(ele).hasClass("sc-error")){
         $(ele).qtip({
             content: {
@@ -413,7 +411,7 @@ function addQtipToSCIcons(ele){
                     data: ({format: "json", id : id, type: "show"}),
                     success: function(json, status){
                         this.set('content.text', "There was error while uploading to soundcloud.<br>"+"Error code: "+json.error_code+
-                                "<br>"+"Error msg: "+json.error_msg+"<br>")
+                                "<br>"+"Error msg: "+json.error_msg+"<br>");
                     }
                 }
             },
@@ -429,7 +427,7 @@ function addQtipToSCIcons(ele){
             show: {
                 ready: true // Needed to make it show on first mouseover event
             }
-        })
+        });
     }
 }
 
@@ -442,4 +440,4 @@ function alertShowErrorAndReload(){
 
 $(document).ready(function(){
     setInterval( "checkSCUploadStatus()", 5000 );
-})
+});

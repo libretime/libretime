@@ -78,6 +78,31 @@ SCRIPT=`readlink -f $0`
 SCRIPTPATH=`dirname $SCRIPT`
 AIRTIMEROOT=$SCRIPTPATH/../
 
+#Check if required zend mvc and php-db libraries are present. This is a temporary workaround for 2.0.1, 
+#and we should probably create a seperate file that checks whether ALL dependencies are satisfied before 
+#allowing the install to continue. However in that case, we wouldn't check for Debian packages so that we 
+#can become less Debian platform dependent in the future...
+set +e
+dpkg -l | grep php-db > /dev/null 2>&1
+PHP_DB=$?
+
+dpkg -l | grep zendframework > /dev/null 2>&1
+ZENDFRAMEWORK=$?
+
+dpkg -l | grep libzend-framework-php > /dev/null 2>&1
+LIBZEND=$?
+set -e
+
+if [ "$PHP_DB" != "0" ]; then
+    echo "php-db package missing. Please run airtime-full-install"
+    exit 1
+fi
+
+if [ "$ZENDFRAMEWORK" != "0" -a "$LIBZEND" != "0" ]; then
+    echo "zendframework/libzend-framework-php package missing. Please run airtime-full-install"
+    exit 1
+fi
+
 # Check if airtime exists already
 set +e
 php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php
@@ -96,6 +121,18 @@ elif [ "$result" -eq "2" ]; then
 elif [ "$result" -eq "3" ]; then
     echo " * You require at least Airtime 1.8.0 installed for upgrade"
     exit 1
+fi
+
+#We don't want any of our python services running if we are doing an upgrade/reinstall.
+#They will be automatically restarted later on.
+if [ -e /etc/init.d/airtime-media-monitor ]; then
+    /etc/init.d/airtime-media-monitor stop > /dev/null 2>&1
+fi
+if [ -e /etc/init.d/airtime-playout ]; then
+    /etc/init.d/airtime-playout stop > /dev/null 2>&1
+fi
+if [ -e /etc/init.d/airtime-show-recorder ]; then
+    /etc/init.d/airtime-show-recorder stop > /dev/null 2>&1
 fi
 
 
@@ -144,6 +181,8 @@ fi
 
 
 /usr/lib/airtime/utils/rabbitmq-update-pid.sh > /dev/null
+
+touch /usr/share/airtime/public/index.php
 
 if [ "$python_service" -eq "0" ]; then
     #only run airtime-check-system if all components were installed

@@ -38,8 +38,6 @@ require_once($CC_CONFIG['phpDir'].'/application/models/ShowInstance.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/StreamSetting.php');
 
-//Pear classes.
-set_include_path($CC_CONFIG['phpDir'].'/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once('DB.php');
 $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
 if (PEAR::isError($CC_DBC)) {
@@ -48,9 +46,7 @@ if (PEAR::isError($CC_DBC)) {
     echo "Database connection problem.".PHP_EOL;
     echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
         " with corresponding permissions.".PHP_EOL;*/
-    if ($p_exitOnError) {
-        exit(1);
-    }
+    exit(1);
 } else {
     //echo "* Connected to database".PHP_EOL;
     $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
