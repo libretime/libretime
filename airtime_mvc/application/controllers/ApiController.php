@@ -406,7 +406,10 @@ class ApiController extends Zend_Controller_Action
         $tempFileName = basename($tempFilePath);
         
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
+        $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
+	if (isset($result)){
+	    die('{"jsonrpc" : "2.0", "error" : {"code": '.$result[code].', "message" : "'.$result[message].'"}}');
+	}
     }
 
     public function uploadRecordedAction()
