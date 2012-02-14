@@ -6,6 +6,7 @@ class Application_Model_ShowBuilder {
     private $startDT;
     private $endDT;
     private $user;
+    private $opts;
 
     private $contentDT;
 
@@ -28,12 +29,13 @@ class Application_Model_ShowBuilder {
      * @param DateTime $p_startsDT
      * @param DateTime $p_endsDT
      */
-    public function __construct($p_startDT, $p_endDT) {
+    public function __construct($p_startDT, $p_endDT, $p_opts) {
 
         $this->startDT = $p_startDT;
         $this->endDT = $p_endDT;
         $this->timezone = date_default_timezone_get();
         $this->user = Application_Model_User::GetCurrentUser();
+        $this->opts = $p_opts;
     }
 
     /*
@@ -165,7 +167,23 @@ class Application_Model_ShowBuilder {
         $current_id = -1;
         $display_items = array();
 
-        $scheduled_items = Application_Model_Schedule::GetScheduleDetailItems($this->startDT->format("Y-m-d H:i:s"), $this->endDT->format("Y-m-d H:i:s"));
+        $shows = array();
+        if ($this->opts["myShows"] === 1) {
+
+            $host_shows = CcShowHostsQuery::create()
+                ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+                ->filterByDbHost($this->user->getId())
+                ->find();
+
+            foreach ($host_shows as $host_show) {
+                $shows[] = $host_show->getDbShow();
+            }
+        }
+        else if ($this->opts["showFilter"] !== 0) {
+            $shows[] = $this->opts["showFilter"];
+        }
+
+        $scheduled_items = Application_Model_Schedule::GetScheduleDetailItems($this->startDT->format("Y-m-d H:i:s"), $this->endDT->format("Y-m-d H:i:s"), $shows);
 
         for ($i = 0, $rows = count($scheduled_items); $i < $rows; $i++) {
 

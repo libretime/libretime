@@ -25,6 +25,8 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function builderAction() {
 
+        $this->_helper->viewRenderer->setResponseSegment('builder');
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -37,10 +39,15 @@ class ShowbuilderController extends Zend_Controller_Action
         $end = DateTime::createFromFormat("U", $to, new DateTimeZone("UTC"));
         $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-        $this->view->start_date = $start->format("Y-m-d");
-        $this->view->start_time = $start->format("H:i");
-        $this->view->end_date = $end->format("Y-m-d");
-        $this->view->end_time = $end->format("H:i");
+        $form = new Application_Form_ShowBuilder();
+        $form->populate(array(
+            'sb_date_start' => $start->format("Y-m-d"),
+            'sb_time_start' => $start->format("H:i"),
+            'sb_date_end' => $end->format("Y-m-d"),
+            'sb_time_end' => $end->format("H:i")
+        ));
+
+        $this->view->sb_form = $form;
 
         $this->view->headScript()->appendScript("var serverTimezoneOffset = ".date("Z")."; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js','text/javascript');
@@ -48,8 +55,6 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/showbuilder.css');
-
-        $this->_helper->viewRenderer->setResponseSegment('builder');
     }
 
     public function builderFeedAction() {
@@ -60,6 +65,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $starts_epoch = $request->getParam("start", $current_time);
         //default ends is 24 hours after starts.
         $ends_epoch = $request->getParam("end", $current_time + (60*60*24));
+        $show_filter = intval($request->getParam("showFilter", 0));
+        $my_shows = intval($request->getParam("myShows", 0));
 
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
@@ -67,7 +74,8 @@ class ShowbuilderController extends Zend_Controller_Action
         Logging::log("showbuilder starts {$startsDT->format("Y-m-d H:i:s")}");
         Logging::log("showbuilder ends {$endsDT->format("Y-m-d H:i:s")}");
 
-        $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT);
+        $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
+        $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
         $this->view->schedule = $showBuilder->GetItems();
     }

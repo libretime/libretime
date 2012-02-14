@@ -37,7 +37,7 @@ $(document).ready(function() {
 	 * 
 	 * @return Number iTime
 	 */
-	function fnGetUIPickerUnixTimestamp(sDatePickerId, sTimePickerId) {
+	function fnGetTimestamp(sDatePickerId, sTimePickerId) {
 		var date, 
 			time,
 			iTime,
@@ -47,8 +47,6 @@ $(document).ready(function() {
 		if ($(sDatePickerId).val() === "") {
 			return 0;
 		}
-		
-		//string.split(separator, limit)
 		
 		date = $(sDatePickerId).val();
 		time = $(sTimePickerId).val();
@@ -64,7 +62,7 @@ $(document).ready(function() {
 		iServerOffset = serverTimezoneOffset;
 		iClientOffset = oDate.getTimezoneOffset() * 60;//function returns minutes
 		
-		//adjust for the fact the the Date object is
+		//adjust for the fact the the Date object is in clent time.
 		iTime = iTime + iServerOffset + iClientOffset;
 		
 		return iTime;
@@ -80,8 +78,8 @@ $(document).ready(function() {
 			iRange,
 			DEFAULT_RANGE = 60*60*24;
 		
-		iStart = fnGetUIPickerUnixTimestamp("#show_builder_datepicker_start", "#show_builder_timepicker_start");
-		iEnd = fnGetUIPickerUnixTimestamp("#show_builder_datepicker_end", "#show_builder_timepicker_end");
+		iStart = fnGetTimestamp("#sb_date_start", "#sb_time_start");
+		iEnd = fnGetTimestamp("#sb_date_end", "#sb_time_end");
 		
 		iRange = iEnd - iStart;
 		
@@ -105,6 +103,10 @@ $(document).ready(function() {
 		}
 		if (fnServerData.hasOwnProperty("end")) {
 			aoData.push( { name: "end", value: fnServerData.end} );
+		}
+		if (fnServerData.hasOwnProperty("ops")) {
+			aoData.push( { name: "myShows", value: fnServerData.ops.myShows} );
+			aoData.push( { name: "showFilter", value: fnServerData.ops.showFilter} );
 		}
 		
 		$.ajax( {
@@ -212,13 +214,13 @@ $(document).ready(function() {
 	
 	oTable = tableDiv.dataTable( {
 		"aoColumns": [
-		    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
-            /* starts */{"mDataProp": "starts", "sTitle": "Airtime"},
-            /* ends */{"mDataProp": "ends", "sTitle": "Off Air"},
-            /* runtime */{"mDataProp": "runtime", "sTitle": "Runtime"},
-            /* title */{"mDataProp": "title", "sTitle": "Title"},
-            /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
-            /* album */{"mDataProp": "album", "sTitle": "Album"}
+	    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
+        /* starts */{"mDataProp": "starts", "sTitle": "Airtime"},
+        /* ends */{"mDataProp": "ends", "sTitle": "Off Air"},
+        /* runtime */{"mDataProp": "runtime", "sTitle": "Runtime"},
+        /* title */{"mDataProp": "title", "sTitle": "Title"},
+        /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
+        /* album */{"mDataProp": "album", "sTitle": "Album"}
         ],
         
         "bJQueryUI": true,
@@ -308,23 +310,31 @@ $(document).ready(function() {
     	}       
     });
 	
-	$( "#show_builder_datepicker_start" ).datepicker(oBaseDatePickerSettings);
+	$("#sb_date_start").datepicker(oBaseDatePickerSettings);
+	$("#sb_time_start").timepicker(oBaseTimePickerSettings);
+	$("#sb_date_end").datepicker(oBaseDatePickerSettings);
+	$("#sb_time_end").timepicker(oBaseTimePickerSettings);
 	
-	$( "#show_builder_timepicker_start" ).timepicker(oBaseTimePickerSettings);
-	
-	$( "#show_builder_datepicker_end" ).datepicker(oBaseDatePickerSettings);
-	
-	$( "#show_builder_timepicker_end" ).timepicker(oBaseTimePickerSettings);
-	
-	$( "#show_builder_timerange_button" ).click(function(ev){
-		var oSettings,
-			oRange;
+	$("#sb_submit").click(function(ev){
+		var fn,
+			oRange,
+			op;
 		
 		oRange = fnGetScheduleRange();
 		
-	    oSettings = oTable.fnSettings();
-	    oSettings.fnServerData.start = oRange.start;
-	    oSettings.fnServerData.end = oRange.end;
+	    fn = oTable.fnSettings().fnServerData;
+	    fn.start = oRange.start;
+	    fn.end = oRange.end;
+	    
+	    op = $("div.sb-advanced-options");
+	    if (op.is(":visible")) {
+	    	
+	    	if (fn.ops === undefined) {
+	    		fn.ops = {};
+	    	}
+	    	fn.ops.showFilter = op.find("#sb_show_filter").val();
+	    	fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
+	    }
 		
 		oTable.fnDraw();
 	});
