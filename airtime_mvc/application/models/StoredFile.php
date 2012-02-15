@@ -583,7 +583,7 @@ class Application_Model_StoredFile {
     {
         global $CC_CONFIG;
 
-        $displayData = array("track_title", "artist_name", "album_title", "genre", "length", "year", "utime", "mtime", "ftype");
+        $displayData = array("track_title", "artist_name", "album_title", "genre", "length", "year", "utime", "mtime", "ftype", "track_number");
 
         $plSelect = "SELECT ";
         $fileSelect = "SELECT ";
@@ -610,6 +610,9 @@ class Application_Model_StoredFile {
             } else if ($key === "mtime") {
                 $plSelect .= $key.", ";
                 $fileSelect .= $key.", ";
+            } else if ($key === "track_number") {
+		$plSelect .= "NULL AS ".$key.", ";
+                $fileSelect .= $key.", ";
             } else {
                 $plSelect .= "NULL AS ".$key.", ";
                 $fileSelect .= $key.", ";
@@ -621,10 +624,11 @@ class Application_Model_StoredFile {
             UNION
             (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
 
-        $results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+	$results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
 
+	
         foreach($results['aaData'] as &$row){
-
+	
             $row['id'] = intval($row['id']);
 
             //$length = new DateTime($row['length']);
@@ -733,6 +737,7 @@ class Application_Model_StoredFile {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 
+		//display sql executed in airtime log for testing
 		//Logging::log($sql);
 
 		$results = $CC_DBC->getAll($sql);
