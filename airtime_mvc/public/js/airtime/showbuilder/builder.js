@@ -196,17 +196,17 @@ $(document).ready(function() {
 			aData = oTT.fnGetSelectedData(),
 			item,
 			temp,
-			ids = [];
+			aItems = [];
 	
 		for (item in aData) {
 			temp = aData[item];
 			if (temp !== null && temp.hasOwnProperty('id')) {
-				ids.push(temp.id);
+				aItems.push({"id": temp.id, "instance": temp.instance});
 			} 	
 		}
 		
 		$.post( "/showbuilder/schedule-remove",
-			{"ids": ids, "format": "json"},
+			{"items": aItems, "format": "json"},
 			function(data) {
 				oTable.fnDraw();
 			});

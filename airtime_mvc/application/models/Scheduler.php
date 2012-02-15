@@ -288,12 +288,17 @@ class Application_Model_Scheduler {
         }
     }
 
-    public function removeItems($scheduledIds, $adjustSched = true) {
+    public function removeItems($scheduledItems, $adjustSched = true) {
 
         $showInstances = array();
         $this->con->beginTransaction();
 
         try {
+
+            $scheduledIds = array();
+            foreach ($scheduledItems as $item) {
+                $scheduledIds[] = $item["id"];
+            }
 
             $removedItems = CcScheduleQuery::create()->findPks($scheduledIds);
             $removedItems->delete($this->con);

@@ -107,13 +107,13 @@ class ShowbuilderController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
 
-        $ids = $request->getParam("ids", null);
+        $items = $request->getParam("items", null);
 
         $json = array();
 
         try {
             $scheduler = new Application_Model_Scheduler();
-            $scheduler->removeItems($ids);
+            $scheduler->removeItems($items);
 
             $json["message"]="success... maybe";
         }
@@ -146,5 +146,54 @@ class ShowbuilderController extends Zend_Controller_Action
         }
 
         $this->view->data = $json;
+    }
+
+    public function scheduleReorderAction() {
+
+        $request = $this->getRequest();
+
+        $showInstance = $request->getParam("instanceId");
+    }
+
+    /*
+     * make sure any incoming requests for scheduling are ligit.
+     *
+     * @param array $items, an array containing pks of cc_schedule items.
+     */
+    private function filterSelected($items) {
+
+        $allowed = array();
+        $user = Application_Model_User::GetCurrentUser();
+        $type = $user->getType();
+
+        //item must be within the host's show.
+        if ($type === UTYPE_HOST) {
+
+            $hosted = CcShowHostsQuery::create()
+               ->filterByDbHost($user->getId())
+               ->find();
+
+            $allowed_shows = array();
+            foreach ($hosted as $host) {
+               $allowed_shows[] = $host->getDbShow();
+            }
+
+            for ($i = 0; $i < count($items); $i++) {
+
+                $instance = $items[$i]["instance"];
+
+                if (in_array($instance, $allowed_shows)) {
+                    $allowed[] = $items[$i];
+                }
+            }
+
+            $this->view->shows = $res;
+        }
+        //they can schedule anything.
+        else if ($type === UTYPE_ADMIN || $type === UTYPE_PROGRAM_MANAGER) {
+            $allowed = $items;
+        }
+
+        return $allowed;
     }
 }
