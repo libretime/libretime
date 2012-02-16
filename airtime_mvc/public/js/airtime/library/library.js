@@ -309,7 +309,8 @@ function createDataTable(data) {
                 /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sClass": "library_year"},
                 /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sClass": "library_length"},
                 /* Upload Time */   {"sTitle": "Uploaded", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
-                /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"}
+                /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
+		/* Track Number */  {"sTitle": "Track", "sName": "track",  "bSearchable": false, "bVisible": false, "mDataProp": "track_number", "sClass": "library_track"}
             ],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
@@ -358,7 +359,7 @@ function createDataTable(data) {
 		
 		"oColReorder": {
 			"iFixedColumns": 2,
-			"aiOrder": [ 0,1,2,3,4,5,6,7,8,9 ]
+			"aiOrder": [ 0,1,2,3,4,5,6,7,8,9,10 ]
 		}
 		
     });
