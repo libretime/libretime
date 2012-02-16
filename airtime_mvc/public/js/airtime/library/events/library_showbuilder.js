@@ -59,7 +59,7 @@ var AIRTIME = (function(AIRTIME){
 			for (item in aData) {
 				temp = aData[item];
 				if (temp !== null && temp.hasOwnProperty('id')) {
-					aSchedIds.push({"id": temp.id, "instance": temp.instance});
+					aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});
 				} 	
 			}
 			
