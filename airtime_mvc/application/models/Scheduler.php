@@ -297,10 +297,23 @@ class Application_Model_Scheduler {
 
             $scheduledIds = array();
             foreach ($scheduledItems as $item) {
-                $scheduledIds[] = $item["id"];
+                $scheduledIds[$item["id"]] = $item["timestamp"];
             }
 
-            $removedItems = CcScheduleQuery::create()->findPks($scheduledIds);
+            $removedItems = CcScheduleQuery::create()->findPks(array_keys($scheduledIds));
+
+            //check to make sure all items selected are up to date
+            foreach ($removedItems as $removedItem) {
+                $ts = $scheduledIds[$removedItem->getDbId()];
+                $instance = $removedItem->getCcShowInstances($this->con);
+                $currTs = intval($instance->getDbLastScheduled("U")) ? : 0;
+
+                if ($ts !== $currTs) {
+                    $show = $instance->getCcShow($this->con);
+                    throw new OutDatedScheduleException("The show {$show->getDbName()} is outdated!");
+                }
+            }
+
             $removedItems->delete($this->con);
 
             if ($adjustSched === true) {
@@ -338,6 +351,9 @@ class Application_Model_Scheduler {
         Logging::log("removing gaps from show instance #".$showInstance);
 
         $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
+        $instance->setDbLastScheduled(new DateTime("now", new DateTimeZone("UTC")));
+        $instance->save($this->con);
+
         $itemStartDT = $instance->getDbStarts(null);
 
         $schedule = CcScheduleQuery::create()
@@ -361,3 +377,5 @@ class Application_Model_Scheduler {
         }
     }
 }
+
+class OutDatedScheduleException extends Exception {}

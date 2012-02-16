@@ -83,20 +83,19 @@ class ShowbuilderController extends Zend_Controller_Action
     public function scheduleAddAction() {
 
         $request = $this->getRequest();
-
         $mediaItems = $request->getParam("mediaIds", null);
         $scheduledIds = $request->getParam("schedIds", null);
-
-        $json = array();
 
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->scheduleAfter($scheduledIds, $mediaItems);
-
-            $json["message"]="success... maybe";
+        }
+        catch (OutDatedScheduleException $e) {
+            $this->view->error = $e->getMessage();
+            Logging::log($e->getMessage());
         }
         catch (Exception $e) {
-            $json["message"]=$e->getMessage();
+            $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
         }
 
@@ -106,42 +105,38 @@ class ShowbuilderController extends Zend_Controller_Action
     public function scheduleRemoveAction()
     {
         $request = $this->getRequest();
-
         $items = $request->getParam("items", null);
-
-        $json = array();
 
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->removeItems($items);
-
-            $json["message"]="success... maybe";
         }
-        catch (Exception $e) {
-            $json["message"]=$e->getMessage();
+        catch (OutDatedScheduleException $e) {
+            $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
         }
-
-        $this->view->data = $json;
+        catch (Exception $e) {
+            $this->view->error = $e->getMessage();
+            Logging::log($e->getMessage());
+        }
     }
 
     public function scheduleMoveAction() {
 
         $request = $this->getRequest();
-
         $selectedItem = $request->getParam("selectedItem");
         $afterItem = $request->getParam("afterItem");
-
-        $json = array();
 
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->moveItem($selectedItem, $afterItem);
-
-            $json["message"]="success... maybe";
+        }
+        catch (OutDatedScheduleException $e) {
+            $this->view->error = $e->getMessage();
+            Logging::log($e->getMessage());
         }
         catch (Exception $e) {
-            $json["message"]=$e->getMessage();
+            $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
         }
 

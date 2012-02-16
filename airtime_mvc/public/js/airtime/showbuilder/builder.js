@@ -1,3 +1,61 @@
+var AIRTIME = (function(AIRTIME){
+	var mod,
+		oSchedTable;
+	
+	if (AIRTIME.showbuilder === undefined) {
+		AIRTIME.showbuilder = {};
+	}
+	mod = AIRTIME.showbuilder;
+	
+	function checkError(json) {
+		if (json.error !== undefined) {
+			alert(json.error);
+		}
+	}
+	
+	mod.fnAdd = function(aMediaIds, aSchedIds, callback) {
+		
+		$.post("/showbuilder/schedule-add", 
+			{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
+			function(json){
+				checkError(json);
+				oSchedTable.fnDraw();
+				
+				if ($.isFunction(callback)) {
+					callback();
+				}
+			});
+	};
+	
+	mod.fnMove = function(aSelect, aAfter) {
+		
+		$.post("/showbuilder/schedule-move", 
+			{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
+			function(json){
+				checkError(json);
+				oSchedTable.fnDraw();
+			});
+	};
+	
+	mod.fnRemove = function(aItems) {
+		
+		$.post( "/showbuilder/schedule-remove",
+			{"items": aItems, "format": "json"},
+			function(json) {
+				checkError(json);
+				oSchedTable.fnDraw();
+			});
+	};
+	
+	mod.init = function(oTable) {
+		oSchedTable = oTable;
+	};
+	
+	return AIRTIME;
+	
+}(AIRTIME || {}));
+
+
 $(document).ready(function() {
 	var tableDiv = $('#show_builder_table'),
 		oTable,
@@ -201,15 +259,11 @@ $(document).ready(function() {
 		for (item in aData) {
 			temp = aData[item];
 			if (temp !== null && temp.hasOwnProperty('id')) {
-				aItems.push({"id": temp.id, "instance": temp.instance});
+				aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});
 			} 	
 		}
 		
-		$.post( "/showbuilder/schedule-remove",
-			{"items": aItems, "format": "json"},
-			function(data) {
-				oTable.fnDraw();
-			});
+		AIRTIME.showbuilder.fnRemove(aItems);
 	};
 	
 	oTable = tableDiv.dataTable( {
@@ -258,7 +312,7 @@ $(document).ready(function() {
 				//don't select separating rows, or shows without privileges.
 				if ($(node).hasClass("sb-header")
 						|| $(node).hasClass("sb-footer")
-						|| $(node).hasClass("sb-not-allowed")){
+						|| $(node).hasClass("sb-not-allowed")) {
 					return false;
 				}
 				return true;
@@ -352,28 +406,20 @@ $(document).ready(function() {
 			var aMediaIds = [],
 			aSchedIds = [];
 			
-			aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance});
+			aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
 			aMediaIds.push({"id": oItemData.id, "type": oItemData.ftype});
 
-			$.post("/showbuilder/schedule-add", 
-				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
-				function(json){
-					oTable.fnDraw();
-				});
+			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
 		};
 		
 		fnMove = function() {
 			var aSelect = [],
 				aAfter = [];
 		
-			aSelect.push({"id": oItemData.id, "instance": oItemData.instance});
-			aAfter.push({"id": oPrevData.id, "instance": oPrevData.instance});
+			aSelect.push({"id": oItemData.id, "instance": oItemData.instance, "timestamp": oItemData.timestamp});
+			aAfter.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
 	
-			$.post("/showbuilder/schedule-move", 
-				{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
-				function(json){
-					oTable.fnDraw();
-				});
+			AIRTIME.showbuilder.fnMove(aSelect, aAfter);
 		};
 		
 		fnReceive = function(event, ui) {
@@ -413,5 +459,8 @@ $(document).ready(function() {
 	$("#show_builder .fg-toolbar")
 		.append('<div class="ColVis TableTools"><button class="ui-button ui-state-default"><span>Delete</span></button></div>')
 		.click(fnRemoveSelectedItems);
+	
+	//set things like a reference to the table.
+	AIRTIME.showbuilder.init(oTable);
 	
 });

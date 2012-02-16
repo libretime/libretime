@@ -22,7 +22,8 @@ class Application_Model_ShowBuilder {
         "runtime" => "",
         "title" => "",
         "creator" => "",
-        "album" => ""
+        "album" => "",
+        "timestamp" => null
     );
 
     /*
@@ -100,9 +101,22 @@ class Application_Model_ShowBuilder {
         return $row;
     }
 
+    private function getRowTimestamp($p_item, &$row) {
+
+        if (is_null($p_item["si_last_scheduled"])) {
+            $ts = 0;
+        }
+        else {
+            $dt = new DateTime($p_item["si_last_scheduled"], new DateTimeZone("UTC"));
+            $ts = intval($dt->format("U"));
+        }
+        $row["timestamp"] = $ts;
+    }
+
     private function makeHeaderRow($p_item) {
 
         $row = $this->defaultRowArray;
+        $this->getRowTimestamp($p_item, &$row);
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $showStartDT->setTimezone(new DateTimeZone($this->timezone));
@@ -126,6 +140,7 @@ class Application_Model_ShowBuilder {
         $epoch_now = time();
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+        $this->getRowTimestamp($p_item, &$row);
 
         //can only schedule the show if it hasn't started and you are allowed.
         if ($epoch_now < $showStartDT->format('U') && $this->user->canSchedule($p_item["show_id"]) == true) {
