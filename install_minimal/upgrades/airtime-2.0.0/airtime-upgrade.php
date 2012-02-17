@@ -445,9 +445,6 @@ class AirtimeMiscUpgrade{
     }
 }
 
-echo "Pausing Pypo".PHP_EOL;
-exec("/etc/init.d/airtime-playout stop");
-
 while (@ob_end_flush());
 
 UpgradeCommon::connectToDatabase();
@@ -456,6 +453,3 @@ AirtimeDatabaseUpgrade::start();
 AirtimeStorWatchedDirsUpgrade::start();
 AirtimeConfigFileUpgrade::start();
 AirtimeMiscUpgrade::start();
-
-//echo "Resuming Pypo".PHP_EOL;
-//exec("/etc/init.d/airtime-playout start");

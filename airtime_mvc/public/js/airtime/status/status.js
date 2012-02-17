@@ -30,9 +30,11 @@ function generatePartitions(partitions){
         var tr = $(row);
         lastElement.after(tr);
 
-        var watched_dirs_ul = $('#watched-dir-list-'+i);
-        for (var j=0; j<partitions[i].dirs.length; j++){
-            watched_dirs_ul.append('<li>'+partitions[i].dirs[j]+'</li>');
+        if (partitions[i].dirs){
+            var watched_dirs_ul = $('#watched-dir-list-'+i);
+            for (var j=0; j<partitions[i].dirs.length; j++){
+                watched_dirs_ul.append('<li>'+partitions[i].dirs[j]+'</li>');
+            }
         }
         lastElement = tr;
     }

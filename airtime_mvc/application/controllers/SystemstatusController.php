@@ -4,6 +4,8 @@ class SystemstatusController extends Zend_Controller_Action
 {
     public function init()
     {
+        global $CC_CONFIG;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
         
