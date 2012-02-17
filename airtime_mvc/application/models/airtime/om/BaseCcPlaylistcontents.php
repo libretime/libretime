@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_playlistcontents' table.
  *
- *
+ * 
  *
  * @package    propel.generator.airtime.om
  */
@@ -137,7 +137,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [id] column value.
-	 *
+	 * 
 	 * @return     int
 	 */
 	public function getDbId()
@@ -147,7 +147,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [playlist_id] column value.
-	 *
+	 * 
 	 * @return     int
 	 */
 	public function getDbPlaylistId()
@@ -157,7 +157,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [file_id] column value.
-	 *
+	 * 
 	 * @return     int
 	 */
 	public function getDbFileId()
@@ -167,7 +167,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [position] column value.
-	 *
+	 * 
 	 * @return     int
 	 */
 	public function getDbPosition()
@@ -177,7 +177,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [cliplength] column value.
-	 *
+	 * 
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -210,7 +210,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [cuein] column value.
-	 *
+	 * 
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -243,7 +243,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [cueout] column value.
-	 *
+	 * 
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -276,7 +276,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [fadein] column value.
-	 *
+	 * 
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -288,6 +288,8 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		if ($this->fadein === null) {
 			return null;
 		}
+
+
 
 		try {
 			$dt = new DateTime($this->fadein);
@@ -307,7 +309,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [fadeout] column value.
-	 *
+	 * 
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -340,7 +342,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [id] column.
-	 *
+	 * 
 	 * @param      int $v new value
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
 	 */
@@ -360,7 +362,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [playlist_id] column.
-	 *
+	 * 
 	 * @param      int $v new value
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
 	 */
@@ -384,7 +386,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [file_id] column.
-	 *
+	 * 
 	 * @param      int $v new value
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
 	 */
@@ -408,7 +410,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [position] column.
-	 *
+	 * 
 	 * @param      int $v new value
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
 	 */
@@ -428,7 +430,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [cliplength] column to a normalized version of the date/time value specified.
-	 *
+	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
@@ -464,7 +466,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 			$currNorm = ($this->cliplength !== null && $tmpDt = new DateTime($this->cliplength)) ? $tmpDt->format('H:i:s') : null;
 			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
 					|| ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
 					)
 			{
@@ -478,7 +480,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [cuein] column to a normalized version of the date/time value specified.
-	 *
+	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
@@ -514,7 +516,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 			$currNorm = ($this->cuein !== null && $tmpDt = new DateTime($this->cuein)) ? $tmpDt->format('H:i:s') : null;
 			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
 					|| ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
 					)
 			{
@@ -528,7 +530,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [cueout] column to a normalized version of the date/time value specified.
-	 *
+	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
@@ -564,7 +566,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 			$currNorm = ($this->cueout !== null && $tmpDt = new DateTime($this->cueout)) ? $tmpDt->format('H:i:s') : null;
 			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
 					|| ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
 					)
 			{
@@ -578,7 +580,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [fadein] column to a normalized version of the date/time value specified.
-	 *
+	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
@@ -614,7 +616,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 			$currNorm = ($this->fadein !== null && $tmpDt = new DateTime($this->fadein)) ? $tmpDt->format('H:i:s') : null;
 			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
 					|| ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
 					)
 			{
@@ -628,7 +630,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [fadeout] column to a normalized version of the date/time value specified.
-	 *
+	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcPlaylistcontents The current object (for fluent API support)
@@ -664,7 +666,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 			$currNorm = ($this->fadeout !== null && $tmpDt = new DateTime($this->fadeout)) ? $tmpDt->format('H:i:s') : null;
 			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
 					|| ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
 					)
 			{
@@ -836,7 +838,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-
+		
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -878,7 +880,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-
+		
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -1131,7 +1133,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
@@ -1526,7 +1528,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	}
 
 	// aggregate_column_relation behavior
-
+	
 	/**
 	 * Update the aggregate column in the related CcPlaylist object
 	 *

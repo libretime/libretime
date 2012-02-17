@@ -626,9 +626,9 @@ class Application_Model_StoredFile {
 
 	$results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
 
-	
+
         foreach($results['aaData'] as &$row){
-	
+
             $row['id'] = intval($row['id']);
 
             //$length = new DateTime($row['length']);
@@ -852,18 +852,19 @@ class Application_Model_StoredFile {
      * enough space to move the $audio_file into and report back to the user if not.
      **/
     public static function checkForEnoughDiskSpaceToCopy($destination_folder, $audio_file){
-	//check to see if we have enough space in the /organize directory to copy the file
-	$freeSpace = disk_free_space($destination_folder);
-	$fileSize = filesize($audio_file);
-	
-	if ( $freeSpace < $fileSize){
-	    $freeSpace = ceil($freeSpace/1024/1024);
-	    $fileSize = ceil($fileSize/1024/1024);
-	    $result = array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
-	}
-	return $result;
+        //check to see if we have enough space in the /organize directory to copy the file
+        $freeSpace = disk_free_space($destination_folder);
+        $fileSize = filesize($audio_file);
+
+        if ( $freeSpace < $fileSize){
+            $freeSpace = ceil($freeSpace/1024/1024);
+            $fileSize = ceil($fileSize/1024/1024);
+            $result = array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
+
+        }
+        return $result;
     }
-    
+
     public static function copyFileToStor($p_targetDir, $fileName, $tempname){
         $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $tempname;
         Logging::log('copyFileToStor: moving file '.$audio_file);
@@ -878,36 +879,34 @@ class Application_Model_StoredFile {
                 $result = array( "code" => 106, "message" => "An identical audioclip named '$duplicateName' already exists on the server.");
             }
         }
-	
-	if (!isset($result)){//The file has no duplicate, so procceed to copy.
-	    $storDir = Application_Model_MusicDir::getStorDir();
-	    $stor = $storDir->getDirectory();
-	    
-	    //check to see if there is enough space in $stor to continue.
-	    $result = Application_Model_StoredFile::checkForEnoughDiskSpaceToCopy($stor, $audio_file);
-	    if (!isset($result)){//if result not set then there's enough disk space to copy the file over
-		$stor .= "/organize";	
-		$audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;	
-		
-		Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
-		//Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
-		$r = @rename($audio_file, $audio_stor);
-	
-		if ($r === false) {
-		   #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
-		   #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
-		   unlink($audio_file);//remove the file from the organize after failed rename
-		   $result = array("code" => 108, "message" => "The file was not uploaded, this error will occur if the computer hard drive does not have enough disk space.");
-		   
-		}
+
+    	if (!isset($result)){//The file has no duplicate, so procceed to copy.
+    	    $storDir = Application_Model_MusicDir::getStorDir();
+    	    $stor = $storDir->getDirectory();
+
+    	    //check to see if there is enough space in $stor to continue.
+    	    $result = Application_Model_StoredFile::checkForEnoughDiskSpaceToCopy($stor, $audio_file);
+    	    if (!isset($result)){//if result not set then there's enough disk space to copy the file over
+    		$stor .= "/organize";
+    		$audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
+
+    		Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
+    		//Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
+    		$r = @rename($audio_file, $audio_stor);
+
+    		if ($r === false) {
+    		   #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
+    		   #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
+    		   unlink($audio_file);//remove the file from the organize after failed rename
+    		   $result = array("code" => 108, "message" => "The file was not uploaded, this error will occur if the computer hard drive does not have enough disk space.");
+
+    		}
 	    }
 	}
 	return $result;
-        //$r = @copy($audio_file, $audio_stor);
-        //$r = @unlink($audio_file);
     }
 
-    
+
     public static function getFileCount()
     {
 		global $CC_CONFIG, $CC_DBC;
@@ -1038,3 +1037,4 @@ class Application_Model_StoredFile {
 }
 
 class DeleteScheduledFileException extends Exception {}
+class FileDoesNotExistException extends Exception {}

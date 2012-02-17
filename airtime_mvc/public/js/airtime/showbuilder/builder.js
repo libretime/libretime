@@ -1,3 +1,61 @@
+var AIRTIME = (function(AIRTIME){
+	var mod,
+		oSchedTable;
+	
+	if (AIRTIME.showbuilder === undefined) {
+		AIRTIME.showbuilder = {};
+	}
+	mod = AIRTIME.showbuilder;
+	
+	function checkError(json) {
+		if (json.error !== undefined) {
+			alert(json.error);
+		}
+	}
+	
+	mod.fnAdd = function(aMediaIds, aSchedIds, callback) {
+		
+		$.post("/showbuilder/schedule-add", 
+			{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
+			function(json){
+				checkError(json);
+				oSchedTable.fnDraw();
+				
+				if ($.isFunction(callback)) {
+					callback();
+				}
+			});
+	};
+	
+	mod.fnMove = function(aSelect, aAfter) {
+		
+		$.post("/showbuilder/schedule-move", 
+			{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
+			function(json){
+				checkError(json);
+				oSchedTable.fnDraw();
+			});
+	};
+	
+	mod.fnRemove = function(aItems) {
+		
+		$.post( "/showbuilder/schedule-remove",
+			{"items": aItems, "format": "json"},
+			function(json) {
+				checkError(json);
+				oSchedTable.fnDraw();
+			});
+	};
+	
+	mod.init = function(oTable) {
+		oSchedTable = oTable;
+	};
+	
+	return AIRTIME;
+	
+}(AIRTIME || {}));
+
+
 $(document).ready(function() {
 	var tableDiv = $('#show_builder_table'),
 		oTable,
@@ -37,7 +95,7 @@ $(document).ready(function() {
 	 * 
 	 * @return Number iTime
 	 */
-	function fnGetUIPickerUnixTimestamp(sDatePickerId, sTimePickerId) {
+	function fnGetTimestamp(sDatePickerId, sTimePickerId) {
 		var date, 
 			time,
 			iTime,
@@ -47,8 +105,6 @@ $(document).ready(function() {
 		if ($(sDatePickerId).val() === "") {
 			return 0;
 		}
-		
-		//string.split(separator, limit)
 		
 		date = $(sDatePickerId).val();
 		time = $(sTimePickerId).val();
@@ -64,7 +120,7 @@ $(document).ready(function() {
 		iServerOffset = serverTimezoneOffset;
 		iClientOffset = oDate.getTimezoneOffset() * 60;//function returns minutes
 		
-		//adjust for the fact the the Date object is
+		//adjust for the fact the the Date object is in clent time.
 		iTime = iTime + iServerOffset + iClientOffset;
 		
 		return iTime;
@@ -80,8 +136,8 @@ $(document).ready(function() {
 			iRange,
 			DEFAULT_RANGE = 60*60*24;
 		
-		iStart = fnGetUIPickerUnixTimestamp("#show_builder_datepicker_start", "#show_builder_timepicker_start");
-		iEnd = fnGetUIPickerUnixTimestamp("#show_builder_datepicker_end", "#show_builder_timepicker_end");
+		iStart = fnGetTimestamp("#sb_date_start", "#sb_time_start");
+		iEnd = fnGetTimestamp("#sb_date_end", "#sb_time_end");
 		
 		iRange = iEnd - iStart;
 		
@@ -105,6 +161,10 @@ $(document).ready(function() {
 		}
 		if (fnServerData.hasOwnProperty("end")) {
 			aoData.push( { name: "end", value: fnServerData.end} );
+		}
+		if (fnServerData.hasOwnProperty("ops")) {
+			aoData.push( { name: "myShows", value: fnServerData.ops.myShows} );
+			aoData.push( { name: "showFilter", value: fnServerData.ops.showFilter} );
 		}
 		
 		$.ajax( {
@@ -194,31 +254,27 @@ $(document).ready(function() {
 			aData = oTT.fnGetSelectedData(),
 			item,
 			temp,
-			ids = [];
+			aItems = [];
 	
 		for (item in aData) {
 			temp = aData[item];
 			if (temp !== null && temp.hasOwnProperty('id')) {
-				ids.push(temp.id);
+				aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});
 			} 	
 		}
 		
-		$.post( "/showbuilder/schedule-remove",
-			{"ids": ids, "format": "json"},
-			function(data) {
-				oTable.fnDraw();
-			});
+		AIRTIME.showbuilder.fnRemove(aItems);
 	};
 	
 	oTable = tableDiv.dataTable( {
 		"aoColumns": [
-		    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
-            /* starts */{"mDataProp": "starts", "sTitle": "Airtime"},
-            /* ends */{"mDataProp": "ends", "sTitle": "Off Air"},
-            /* runtime */{"mDataProp": "runtime", "sTitle": "Runtime"},
-            /* title */{"mDataProp": "title", "sTitle": "Title"},
-            /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
-            /* album */{"mDataProp": "album", "sTitle": "Album"}
+	    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
+        /* starts */{"mDataProp": "starts", "sTitle": "Airtime"},
+        /* ends */{"mDataProp": "ends", "sTitle": "Off Air"},
+        /* runtime */{"mDataProp": "runtime", "sTitle": "Runtime"},
+        /* title */{"mDataProp": "title", "sTitle": "Title"},
+        /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
+        /* album */{"mDataProp": "album", "sTitle": "Album"}
         ],
         
         "bJQueryUI": true,
@@ -256,7 +312,7 @@ $(document).ready(function() {
 				//don't select separating rows, or shows without privileges.
 				if ($(node).hasClass("sb-header")
 						|| $(node).hasClass("sb-footer")
-						|| $(node).hasClass("sb-not-allowed")){
+						|| $(node).hasClass("sb-not-allowed")) {
 					return false;
 				}
 				return true;
@@ -308,23 +364,31 @@ $(document).ready(function() {
     	}       
     });
 	
-	$( "#show_builder_datepicker_start" ).datepicker(oBaseDatePickerSettings);
+	$("#sb_date_start").datepicker(oBaseDatePickerSettings);
+	$("#sb_time_start").timepicker(oBaseTimePickerSettings);
+	$("#sb_date_end").datepicker(oBaseDatePickerSettings);
+	$("#sb_time_end").timepicker(oBaseTimePickerSettings);
 	
-	$( "#show_builder_timepicker_start" ).timepicker(oBaseTimePickerSettings);
-	
-	$( "#show_builder_datepicker_end" ).datepicker(oBaseDatePickerSettings);
-	
-	$( "#show_builder_timepicker_end" ).timepicker(oBaseTimePickerSettings);
-	
-	$( "#show_builder_timerange_button" ).click(function(ev){
-		var oSettings,
-			oRange;
+	$("#sb_submit").click(function(ev){
+		var fn,
+			oRange,
+			op;
 		
 		oRange = fnGetScheduleRange();
 		
-	    oSettings = oTable.fnSettings();
-	    oSettings.fnServerData.start = oRange.start;
-	    oSettings.fnServerData.end = oRange.end;
+	    fn = oTable.fnSettings().fnServerData;
+	    fn.start = oRange.start;
+	    fn.end = oRange.end;
+	    
+	    op = $("div.sb-advanced-options");
+	    if (op.is(":visible")) {
+	    	
+	    	if (fn.ops === undefined) {
+	    		fn.ops = {};
+	    	}
+	    	fn.ops.showFilter = op.find("#sb_show_filter").val();
+	    	fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
+	    }
 		
 		oTable.fnDraw();
 	});
@@ -342,28 +406,20 @@ $(document).ready(function() {
 			var aMediaIds = [],
 			aSchedIds = [];
 			
-			aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance});
+			aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
 			aMediaIds.push({"id": oItemData.id, "type": oItemData.ftype});
 
-			$.post("/showbuilder/schedule-add", 
-				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
-				function(json){
-					oTable.fnDraw();
-				});
+			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
 		};
 		
 		fnMove = function() {
 			var aSelect = [],
 				aAfter = [];
 		
-			aSelect.push({"id": oItemData.id, "instance": oItemData.instance});
-			aAfter.push({"id": oPrevData.id, "instance": oPrevData.instance});
+			aSelect.push({"id": oItemData.id, "instance": oItemData.instance, "timestamp": oItemData.timestamp});
+			aAfter.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
 	
-			$.post("/showbuilder/schedule-move", 
-				{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
-				function(json){
-					oTable.fnDraw();
-				});
+			AIRTIME.showbuilder.fnMove(aSelect, aAfter);
 		};
 		
 		fnReceive = function(event, ui) {
@@ -403,5 +459,8 @@ $(document).ready(function() {
 	$("#show_builder .fg-toolbar")
 		.append('<div class="ColVis TableTools"><button class="ui-button ui-state-default"><span>Delete</span></button></div>')
 		.click(fnRemoveSelectedItems);
+	
+	//set things like a reference to the table.
+	AIRTIME.showbuilder.init(oTable);
 	
 });

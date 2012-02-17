@@ -31,18 +31,13 @@ var AIRTIME = (function(AIRTIME){
 			fnResetCol,
 			fnAddSelectedItems,
 		
-		fnTest = function() {
-			alert("hi");
-		};
-		
 		fnResetCol = function () {
 			ColReorder.fnReset( oLibTable );
 			return false;
 		};
 		
 		fnAddSelectedItems = function() {
-			var oSchedTable = $("#show_builder_table").dataTable(),
-				oLibTT = TableTools.fnGetInstance('library_display'),
+			var oLibTT = TableTools.fnGetInstance('library_display'),
 				oSchedTT = TableTools.fnGetInstance('show_builder_table'),
 				aData = oLibTT.fnGetSelectedData(),
 				item,
@@ -64,16 +59,14 @@ var AIRTIME = (function(AIRTIME){
 			for (item in aData) {
 				temp = aData[item];
 				if (temp !== null && temp.hasOwnProperty('id')) {
-					aSchedIds.push({"id": temp.id, "instance": temp.instance});
+					aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});
 				} 	
 			}
 			
-			$.post("/showbuilder/schedule-add", 
-				{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
-				function(json){
-					oLibTT.fnSelectNone();
-					oSchedTable.fnDraw();
-				});
+			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds, function(){
+				oLibTT.fnSelectNone();
+			});
+			
 		};
 		//[0] = button text
 		//[1] = id 
