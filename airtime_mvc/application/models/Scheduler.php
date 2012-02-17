@@ -139,7 +139,7 @@ class Application_Model_Scheduler {
                 //selected empty row to add after
                 else {
                     $instance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
-                    $nextStartDT = $showInstance->getDbStarts(null);
+                    $nextStartDT = $instance->getDbStarts(null);
                 }
 
                 $currTs = intval($instance->getDbLastScheduled("U")) ? : 0;
@@ -276,14 +276,22 @@ class Application_Model_Scheduler {
             Logging::log("After {$afterItems[0]["id"]}");
 
             $selected = CcScheduleQuery::create()->findPk($selectedItems[0]["id"], $this->con);
-            $after = CcScheduleQuery::create()->findPk($afterItems[0]["id"], $this->con);
-
-            if (is_null($selected) || is_null($after)) {
+            if (is_null($selected)) {
                 throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
             }
-
             $selectedInstance = $selected->getCcShowInstances($this->con);
-            $afterInstance = $after->getCcShowInstances($this->con);
+
+            if (intval($afterItems[0]["id"]) === 0) {
+
+                $afterInstance = CcShowInstancesQuery::create()->findPK($afterItems[0]["instance"], $this->con);
+            }
+            else {
+                $after = CcScheduleQuery::create()->findPk($afterItems[0]["id"], $this->con);
+                if (is_null($after)) {
+                    throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+                }
+                $afterInstance = $after->getCcShowInstances($this->con);
+            }
 
             if (is_null($selectedInstance) || is_null($afterInstance)) {
                 throw new OutDatedScheduleException("The schedule you're viewing is out of date!");

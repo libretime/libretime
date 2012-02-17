@@ -93,10 +93,14 @@ class ShowbuilderController extends Zend_Controller_Action
         catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
         }
         catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
         }
 
         $this->view->data = $json;
@@ -114,10 +118,14 @@ class ShowbuilderController extends Zend_Controller_Action
         catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
         }
         catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
         }
     }
 
@@ -134,10 +142,14 @@ class ShowbuilderController extends Zend_Controller_Action
         catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
         }
         catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
+            Logging::log("{$e->getFile()}");
+            Logging::log("{$e->getLine()}");
         }
 
         $this->view->data = $json;
