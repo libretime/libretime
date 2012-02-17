@@ -220,7 +220,7 @@ class Application_Model_Scheduler {
 
             //update the last scheduled timestamp.
             CcShowInstancesQuery::create()
-                ->filterByPrimaryKeys($showInstances)
+                ->filterByPrimaryKeys($affectedShowInstances)
                 ->update(array('DbLastScheduled' => new DateTime("now", new DateTimeZone("UTC"))), $this->con);
         }
         catch (Exception $e) {
