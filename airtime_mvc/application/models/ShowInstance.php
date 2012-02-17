@@ -757,6 +757,42 @@ class Application_Model_ShowInstance {
         return $CC_DBC->GetAll($sql);
     }
 
+    
+    public static function getScheduleItemsForAllShowsInRange($timeNow, $start, $end)
+    {
+        global $CC_DBC, $CC_CONFIG;
+
+        $sql = "SELECT"
+        ." si.starts as show_starts,"
+        ." si.ends as show_ends,"
+        ." si.rebroadcast as rebroadcast,"
+        ." st.starts as item_starts,"
+        ." st.ends as item_ends,"
+        ." st.clip_length as clip_length,"
+        ." ft.track_title as track_title,"
+        ." ft.artist_name as artist_name,"
+        ." ft.album_title as album_title,"
+        ." s.name as show_name,"
+        ." si.id as instance_id,"
+        ." pt.name as playlist_name"
+        ." FROM $CC_CONFIG[showInstances] si"
+        ." LEFT JOIN $CC_CONFIG[scheduleTable] st"
+        ." ON st.instance_id = si.id"
+        ." LEFT JOIN $CC_CONFIG[playListTable] pt"
+        ." ON st.playlist_id = pt.id"
+        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." ON st.file_id = ft.id"
+        ." LEFT JOIN $CC_CONFIG[showTable] s"
+        ." ON si.show_id = s.id"
+        ." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
+        ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
+        ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
+        ." AND (st.starts < si.ends)"
+        ." ORDER BY si.id, si.starts, st.starts";
+        
+        return $CC_DBC->GetAll($sql);
+    }
+    
     public function getLastAudioItemEnd(){
 		global $CC_DBC;
 
