@@ -276,24 +276,59 @@ class Application_Model_Schedule {
         ." WHERE st.starts < si.ends";
 
         if ($timePeriod < 0){
-        	$sql .= " AND st.ends < TIMESTAMP '$timeStamp'"
-        	." AND st.ends > (TIMESTAMP '$timeStamp' - INTERVAL '$interval')"
-  	        ." ORDER BY st.starts DESC"
-        	." LIMIT $count";
-		} else if ($timePeriod == 0){
-	        $sql .= " AND st.starts <= TIMESTAMP '$timeStamp'"
-    	    ." AND st.ends >= TIMESTAMP '$timeStamp'";
-		} else if ($timePeriod > 0){
-        	$sql .= " AND st.starts > TIMESTAMP '$timeStamp'"
-        	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"
-        	." ORDER BY st.starts"
-        	." LIMIT $count";
-		}
+            $sql .= " AND st.ends < TIMESTAMP '$timeStamp'"
+            ." AND st.ends > (TIMESTAMP '$timeStamp' - INTERVAL '$interval')"
+            ." ORDER BY st.starts DESC"
+           	." LIMIT $count";
+        } else if ($timePeriod == 0){
+            $sql .= " AND st.starts <= TIMESTAMP '$timeStamp'"
+       	    ." AND st.ends >= TIMESTAMP '$timeStamp'";
+        } else if ($timePeriod > 0){
+           	$sql .= " AND st.starts > TIMESTAMP '$timeStamp'"
+           	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"
+           	." ORDER BY st.starts"
+           	." LIMIT $count";
+        }
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
-	}
+    }
 
+    
+    public static function getScheduleItemsInRange($timeNow, $start, $end)
+    {
+        global $CC_DBC, $CC_CONFIG;
+
+        $sql = "SELECT"
+        ." si.starts as show_starts,"
+        ." si.ends as show_ends,"
+        ." si.rebroadcast as rebroadcast,"
+        ." st.starts as item_starts,"
+        ." st.ends as item_ends,"
+        ." st.clip_length as clip_length,"
+        ." ft.track_title as track_title,"
+        ." ft.artist_name as artist_name,"
+        ." ft.album_title as album_title,"
+        ." s.name as show_name,"
+        ." si.id as instance_id,"
+        ." pt.name as playlist_name"
+        ." FROM ".$CC_CONFIG["showInstances"]." si"
+        ." LEFT JOIN ".$CC_CONFIG[scheduleTable]." st"
+        ." ON st.instance_id = si.id"
+        ." LEFT JOIN ".$CC_CONFIG[playListTable]." pt"
+        ." ON st.playlist_id = pt.id"
+        ." LEFT JOIN ".$CC_CONFIG[filesTable]." ft"
+        ." ON st.file_id = ft.id"
+        ." LEFT JOIN ".$CC_CONFIG[showTable]." s"
+        ." ON si.show_id = s.id"
+        ." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
+        ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
+        ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
+        ." AND (st.starts < si.ends)"
+        ." ORDER BY si.id, si.starts, st.starts";
+        
+        return $CC_DBC->GetAll($sql);
+    }  
     public static function GetShowInstanceItems($instance_id)
     {
         global $CC_CONFIG, $CC_DBC;
@@ -322,7 +357,7 @@ class Application_Model_Schedule {
     }
 
     public static function getSchduledPlaylistCount(){
-    	global $CC_CONFIG, $CC_DBC;
+       	global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['scheduleTable'];
         return $CC_DBC->GetOne($sql);
     }
@@ -535,16 +570,16 @@ class Application_Model_Schedule {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         
         $formWhat = new Application_Form_AddShowWhat();
-		$formWho = new Application_Form_AddShowWho();
-		$formWhen = new Application_Form_AddShowWhen();
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formStyle = new Application_Form_AddShowStyle();
+        $formWho = new Application_Form_AddShowWho();
+        $formWhen = new Application_Form_AddShowWhen();
+        $formRepeats = new Application_Form_AddShowRepeats();
+        $formStyle = new Application_Form_AddShowStyle();
 
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWho->removeDecorator('DtDdWrapper');
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formStyle->removeDecorator('DtDdWrapper');
+        $formWhat->removeDecorator('DtDdWrapper');
+        $formWho->removeDecorator('DtDdWrapper');
+        $formWhen->removeDecorator('DtDdWrapper');
+        $formRepeats->removeDecorator('DtDdWrapper');
+        $formStyle->removeDecorator('DtDdWrapper');
 
         $p_view->what = $formWhat;
         $p_view->when = $formWhen;
@@ -555,12 +590,12 @@ class Application_Model_Schedule {
         $formWhat->populate(array('add_show_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
                                       'add_show_start_time' => '00:00',
-        							  'add_show_end_date_no_repeate' => date("Y-m-d"),
-        							  'add_show_end_time' => '01:00',
+                                      'add_show_end_date_no_repeate' => date("Y-m-d"),
+                                      'add_show_end_time' => '01:00',
                                       'add_show_duration' => '1h'));
 
-		$formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
-		
+        $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
+        
         if(!$isSaas){
             $formRecord = new Application_Form_AddShowRR();
             $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
@@ -577,4 +612,3 @@ class Application_Model_Schedule {
         $p_view->addNewShow = true;
     }
 }
-
