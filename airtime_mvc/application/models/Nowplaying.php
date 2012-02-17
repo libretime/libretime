@@ -12,15 +12,22 @@ class Application_Model_Nowplaying
 
         $epochNow = time();
 
-        foreach ($p_dbRows as $dbRow) {
-
-            $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['show_starts']);
-            $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['show_ends']);
-            $itemStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_starts']);
-            $itemEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_ends']);
-
+        $lastRow = end($p_dbRows);
+        
+        //Information about show is true for all rows in parameter so only check the last row's show
+        //start and end times.
+        if (isset($lastRow)){
+            $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($lastRow['show_starts']);
+            $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($lastRow['show_ends']);
             $showStarts = $showStartDateTime->format("Y-m-d H:i:s");
             $showEnds = $showEndDateTime->format("Y-m-d H:i:s");
+        }
+        
+        foreach ($p_dbRows as $dbRow) {
+
+            $itemStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_starts']);
+            $itemEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_ends']);
+            
             $itemStarts = $itemStartDateTime->format("Y-m-d H:i:s");
             $itemEnds = $itemEndDateTime->format("Y-m-d H:i:s");
 
@@ -43,6 +50,12 @@ class Application_Model_Nowplaying
                 $dbRow['playlist_name'], $dbRow['show_name'], $status);
         }
 
+        //Modify the last entry in the data table to adjust its end time to be equal to the
+        //shows end time if it exceeds it.
+        $lastRow = end($dataTablesRows);
+        if (isset($lastRow) && strtotime($showEnds) < strtotime($lastRow[3])){
+            $dataTablesRows[sizeof($dataTablesRows)-1][3] = $showEnds;
+        }
         return $dataTablesRows;
     }
 
