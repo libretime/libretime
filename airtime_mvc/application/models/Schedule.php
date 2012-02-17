@@ -303,7 +303,7 @@ class Application_Model_Schedule {
 	 * @return array $scheduledItems
 	 *
 	 */
-    public static function GetScheduleDetailItems($p_startDateTime, $p_endDateTime)
+    public static function GetScheduleDetailItems($p_startDateTime, $p_endDateTime, $p_shows)
     {
         global $CC_CONFIG, $CC_DBC;
 
@@ -313,7 +313,7 @@ class Application_Model_Schedule {
         showt.background_color AS show_background_colour, showt.id AS show_id,
 
         si.starts AS si_starts, si.ends AS si_ends, si.time_filled AS si_time_filled,
-        si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.id AS si_id,
+        si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.id AS si_id, si.last_scheduled AS si_last_scheduled,
 
         sched.starts AS sched_starts, sched.ends AS sched_ends, sched.id AS sched_id,
 
@@ -328,11 +328,15 @@ class Application_Model_Schedule {
 
         WHERE si.modified_instance = false AND
 
-        si.starts >= '{$p_startDateTime}' AND si.starts <= '{$p_endDateTime}'
+        si.starts >= '{$p_startDateTime}' AND si.starts < '{$p_endDateTime}'";
 
-        ORDER BY si.starts, sched.starts;";
+        if (count($p_shows) > 0) {
+            $sql .= " AND show_id IN (".implode(",", $p_shows).")";
+        }
 
-        //Logging::log($sql);
+        $sql .= " ORDER BY si.starts, sched.starts;";
+
+        Logging::log($sql);
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;

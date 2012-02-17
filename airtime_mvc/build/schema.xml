@@ -156,7 +156,8 @@
     <column name="rebroadcast" phpName="DbRebroadcast" type="TINYINT" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
-    <column name="time_filled" phpName="DbTimeFilled" type="TIME" />
+    <column name="time_filled" phpName="DbTimeFilled" type="VARCHAR" sqlType="interval" defaultValue="00:00:00" />
+    <column name="last_scheduled" phpName="DbLastScheduled" type="TIMESTAMP" required="false"/>
     <!-- The purpose of the modified_instance column is to mark a show instance that was
      deleted when it was part of repeating show. This is useful because the way shows work,
      instances can be regenerated if we edit the show, which is unwanted behaviour. This column serves

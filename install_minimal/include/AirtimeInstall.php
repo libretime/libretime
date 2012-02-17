@@ -1,9 +1,11 @@
 <?php
 set_include_path(__DIR__.'/../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
+//Zend framework
+if (file_exists('/usr/share/php/libzend-framework-php')){
+    set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
+}
 require_once('Zend/Loader/Autoloader.php');
-//Pear classes.
-set_include_path(__DIR__.'/../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
-require_once('pear/DB.php');
+require_once('DB.php');
 
 class AirtimeInstall
 {

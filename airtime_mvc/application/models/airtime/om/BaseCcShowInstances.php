@@ -76,9 +76,16 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the time_filled field.
+	 * Note: this column has a database default value of: '00:00:00'
 	 * @var        string
 	 */
 	protected $time_filled;
+
+	/**
+	 * The value for the last_scheduled field.
+	 * @var        string
+	 */
+	protected $last_scheduled;
 
 	/**
 	 * The value for the modified_instance field.
@@ -136,6 +143,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	{
 		$this->record = 0;
 		$this->rebroadcast = 0;
+		$this->time_filled = '00:00:00';
 		$this->modified_instance = false;
 	}
 
@@ -276,7 +284,17 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [time_filled] column value.
+	 * Get the [time_filled] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbTimeFilled()
+	{
+		return $this->time_filled;
+	}
+
+	/**
+	 * Get the [optionally formatted] temporal [last_scheduled] column value.
 	 * 
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -284,18 +302,18 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
 	 */
-	public function getDbTimeFilled($format = '%X')
+	public function getDbLastScheduled($format = 'Y-m-d H:i:s')
 	{
-		if ($this->time_filled === null) {
+		if ($this->last_scheduled === null) {
 			return null;
 		}
 
 
 
 		try {
-			$dt = new DateTime($this->time_filled);
+			$dt = new DateTime($this->last_scheduled);
 		} catch (Exception $x) {
-			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->time_filled, true), $x);
+			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->last_scheduled, true), $x);
 		}
 
 		if ($format === null) {
@@ -549,13 +567,33 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	} // setDbRecordedFile()
 
 	/**
-	 * Sets the value of [time_filled] column to a normalized version of the date/time value specified.
+	 * Set the value of [time_filled] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbTimeFilled($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->time_filled !== $v || $this->isNew()) {
+			$this->time_filled = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::TIME_FILLED;
+		}
+
+		return $this;
+	} // setDbTimeFilled()
+
+	/**
+	 * Sets the value of [last_scheduled] column to a normalized version of the date/time value specified.
 	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcShowInstances The current object (for fluent API support)
 	 */
-	public function setDbTimeFilled($v)
+	public function setDbLastScheduled($v)
 	{
 		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
 		// -- which is unexpected, to say the least.
@@ -580,22 +618,22 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			}
 		}
 
-		if ( $this->time_filled !== null || $dt !== null ) {
+		if ( $this->last_scheduled !== null || $dt !== null ) {
 			// (nested ifs are a little easier to read in this case)
 
-			$currNorm = ($this->time_filled !== null && $tmpDt = new DateTime($this->time_filled)) ? $tmpDt->format('H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
+			$currNorm = ($this->last_scheduled !== null && $tmpDt = new DateTime($this->last_scheduled)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
+			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
 
 			if ( ($currNorm !== $newNorm) // normalized values don't match 
 					)
 			{
-				$this->time_filled = ($dt ? $dt->format('H:i:s') : null);
-				$this->modifiedColumns[] = CcShowInstancesPeer::TIME_FILLED;
+				$this->last_scheduled = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
+				$this->modifiedColumns[] = CcShowInstancesPeer::LAST_SCHEDULED;
 			}
 		} // if either are not null
 
 		return $this;
-	} // setDbTimeFilled()
+	} // setDbLastScheduled()
 
 	/**
 	 * Set the value of [modified_instance] column.
@@ -635,6 +673,10 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				return false;
 			}
 
+			if ($this->time_filled !== '00:00:00') {
+				return false;
+			}
+
 			if ($this->modified_instance !== false) {
 				return false;
 			}
@@ -670,7 +712,8 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$this->instance_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
 			$this->file_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
 			$this->time_filled = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-			$this->modified_instance = ($row[$startcol + 9] !== null) ? (boolean) $row[$startcol + 9] : null;
+			$this->last_scheduled = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+			$this->modified_instance = ($row[$startcol + 10] !== null) ? (boolean) $row[$startcol + 10] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -679,7 +722,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 10; // 10 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 11; // 11 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowInstances object", $e);
@@ -1104,6 +1147,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				return $this->getDbTimeFilled();
 				break;
 			case 9:
+				return $this->getDbLastScheduled();
+				break;
+			case 10:
 				return $this->getDbModifiedInstance();
 				break;
 			default:
@@ -1139,7 +1185,8 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$keys[6] => $this->getDbOriginalShow(),
 			$keys[7] => $this->getDbRecordedFile(),
 			$keys[8] => $this->getDbTimeFilled(),
-			$keys[9] => $this->getDbModifiedInstance(),
+			$keys[9] => $this->getDbLastScheduled(),
+			$keys[10] => $this->getDbModifiedInstance(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
@@ -1210,6 +1257,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->setDbTimeFilled($value);
 				break;
 			case 9:
+				$this->setDbLastScheduled($value);
+				break;
+			case 10:
 				$this->setDbModifiedInstance($value);
 				break;
 		} // switch()
@@ -1245,7 +1295,8 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if (array_key_exists($keys[6], $arr)) $this->setDbOriginalShow($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbRecordedFile($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setDbTimeFilled($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setDbModifiedInstance($arr[$keys[9]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbLastScheduled($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbModifiedInstance($arr[$keys[10]]);
 	}
 
 	/**
@@ -1266,6 +1317,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowInstancesPeer::INSTANCE_ID)) $criteria->add(CcShowInstancesPeer::INSTANCE_ID, $this->instance_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::FILE_ID)) $criteria->add(CcShowInstancesPeer::FILE_ID, $this->file_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::TIME_FILLED)) $criteria->add(CcShowInstancesPeer::TIME_FILLED, $this->time_filled);
+		if ($this->isColumnModified(CcShowInstancesPeer::LAST_SCHEDULED)) $criteria->add(CcShowInstancesPeer::LAST_SCHEDULED, $this->last_scheduled);
 		if ($this->isColumnModified(CcShowInstancesPeer::MODIFIED_INSTANCE)) $criteria->add(CcShowInstancesPeer::MODIFIED_INSTANCE, $this->modified_instance);
 
 		return $criteria;
@@ -1336,6 +1388,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$copyObj->setDbOriginalShow($this->instance_id);
 		$copyObj->setDbRecordedFile($this->file_id);
 		$copyObj->setDbTimeFilled($this->time_filled);
+		$copyObj->setDbLastScheduled($this->last_scheduled);
 		$copyObj->setDbModifiedInstance($this->modified_instance);
 
 		if ($deepCopy) {
@@ -1854,6 +1907,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$this->instance_id = null;
 		$this->file_id = null;
 		$this->time_filled = null;
+		$this->last_scheduled = null;
 		$this->modified_instance = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;

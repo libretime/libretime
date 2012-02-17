@@ -768,4 +768,4 @@ class Application_Model_Playlist {
 } // class Playlist
 
 class PlaylistNotFoundException extends Exception {}
-class OutDatedException extends Exception {}
+class PlaylistOutDatedException extends Exception {}

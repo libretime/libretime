@@ -1,0 +1,16 @@
+<div class="sb-timerange">
+    <?php echo $this->element->getElement('sb_date_start') ?>
+    <?php echo $this->element->getElement('sb_time_start') ?>
+    <?php echo $this->element->getElement('sb_date_end') ?>
+    <?php echo $this->element->getElement('sb_time_end') ?>
+    <input type="button" id="sb_submit" class="ui-button ui-state-default" value="GO"></input>
+</div>
+<div class="sb-advanced-options">
+    <label><?php echo $this->element->getElement('sb_show_filter')->getLabel() ?></label>
+    <?php echo $this->element->getElement('sb_show_filter') ?>
+
+    <?php if ($this->element->getElement('sb_my_shows')):?>
+    <label><?php echo $this->element->getElement('sb_my_shows')->getLabel(); ?></label>
+    <?php echo $this->element->getElement('sb_my_shows'); ?>
+    <?php endif;?>
+</div>

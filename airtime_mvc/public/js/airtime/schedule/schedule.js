@@ -11,11 +11,10 @@ function closeDialog(event, ui) {
 	$(this).remove();
 }
 
-function checkShowLength() {
-    var showFilled = $("#show_time_filled").text().split('.')[0];
-    var showLength = $("#show_length").text();
+function checkShowLength(json) {
+    var percent = json.percentFilled;
 
-    if (showFilled > showLength){
+    if (percent > 100){
         $("#show_time_warning")
             .text("Shows longer than their scheduled time will be cut off by a following show.")
             .show();
@@ -41,7 +40,7 @@ function setScheduleDialogHtml(json) {
 	$("#show_time_filled").empty().append(json.timeFilled);
 	$("#show_progressbar").progressbar( "value" , json.percentFilled );
 
-    checkShowLength();
+    checkShowLength(json);
 }
 
 function setScheduleDialogEvents(dialog) {
@@ -297,7 +296,7 @@ function buildScheduleDialog(json){
 	});
 
 	dialog.dialog('open');
-    checkShowLength();
+    checkShowLength(json);
 }
 
 
@@ -362,7 +361,7 @@ function alertShowErrorAndReload(){
     window.location.reload();
 }
 
-$(window).load(function() {
+$(document).ready(function() {
 	$.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
             , error:function(jqXHR, textStatus, errorThrown){}});
 	
@@ -378,6 +377,26 @@ $(window).load(function() {
     		data = $el.data("event");
     		
     		function processMenuItems(oItems) {
+    			
+    			//define a schedule callback.
+    			if (oItems.schedule !== undefined) {
+    				
+    				callback = function() {
+    					document.location = oItems.schedule.url + "from/" + data.startUnix + "/to/" + data.endUnix;
+					};
+    				oItems.schedule.callback = callback;
+    			}
+    			
+    			//define a clear callback.
+    			if (oItems.clear !== undefined) {
+    				
+    				callback = function() {
+    					$.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
+    						scheduleRefetchEvents(json);
+    					});
+					};
+    				oItems.clear.callback = callback;
+    			}
     			
     			//define an edit callback.
     			if (oItems.edit !== undefined) {

@@ -7,7 +7,6 @@
  */
 
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
-set_include_path(__DIR__.'/../../../airtime_mvc/library/pear' . PATH_SEPARATOR . get_include_path());
 require_once 'conf.php';
 require_once 'DB.php';
 
@@ -99,6 +98,8 @@ class AirtimeInstall{
 
     public static function MigrateTablesToVersion($dir, $version)
     {
+        echo "Upgrading database, may take several minutes, please wait".PHP_EOL;
+        
         $appDir = AirtimeInstall::GetAirtimeSrcDir();
         $SCRIPTPATH = __DIR__;
         $command = "php --php-ini $SCRIPTPATH/../../airtime-php.ini ".

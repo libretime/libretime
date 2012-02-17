@@ -58,21 +58,19 @@ class Application_Model_ShowInstance {
     /**
      * Return the start time of the Show (UTC time)
      * @return string in format "Y-m-d H:i:s" (PHP time notation)
-     * TODO: make this function return a DateTime object instead.
      */
-    public function getShowInstanceStart()
+    public function getShowInstanceStart($format="Y-m-d H:i:s")
     {
-        return $this->_showInstance->getDbStarts();
+        return $this->_showInstance->getDbStarts($format);
     }
 
     /**
      * Return the end time of the Show (UTC time)
      * @return string in format "Y-m-d H:i:s" (PHP time notation)
-     * TODO: make this function return a DateTime object instead.
      */
-    public function getShowInstanceEnd()
+    public function getShowInstanceEnd($format="Y-m-d H:i:s")
     {
-        return $this->_showInstance->getDbEnds();
+        return $this->_showInstance->getDbEnds($format);
     }
 
     public function getStartDate()
@@ -444,6 +442,81 @@ class Application_Model_ShowInstance {
         $this->updateScheduledTime();
     }
 
+    private function checkToDeleteShow($showId)
+    {
+        //UTC DateTime object
+        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+        $showDays = CcShowDaysQuery::create()
+            ->filterByDbShowId($showId)
+            ->findOne();
+
+        $showEnd = $showDays->getDbLastShow();
+
+        //there will always be more shows populated.
+        if (is_null($showEnd)) {
+            return false;
+        }
+
+        $lastShowStartDateTime = new DateTime("{$showEnd} {$showDays->getDbStartTime()}", new DateTimeZone($showDays->getDbTimezone()));
+        //end dates were non inclusive.
+        $lastShowStartDateTime = self::addDeltas($lastShowStartDateTime, -1, 0);
+
+        //there's still some shows left to be populated.
+        if ($lastShowStartDateTime->getTimestamp() > $showsPopUntil->getTimestamp()) {
+            return false;
+        }
+
+        // check if there are any non deleted show instances remaining.
+        $showInstances = CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbModifiedInstance(false)
+            ->filterByDbRebroadcast(0)
+            ->find();
+
+        if (is_null($showInstances)){
+            return true;
+        }
+        //only 1 show instance left of the show, make it non repeating.
+        else if (count($showInstances) === 1) {
+            $showInstance = $showInstances[0];
+
+            $showDaysOld = CcShowDaysQuery::create()
+                ->filterByDbShowId($showId)
+                ->find();
+
+            $tz = $showDaysOld[0]->getDbTimezone();
+
+            $startDate = new DateTime($showInstance->getDbStarts(), new DateTimeZone("UTC"));
+            $startDate->setTimeZone(new DateTimeZone($tz));
+            $endDate = self::addDeltas($startDate, 1, 0);
+
+            //make a new rule for a non repeating show.
+            $showDayNew = new CcShowDays();
+            $showDayNew->setDbFirstShow($startDate->format("Y-m-d"));
+            $showDayNew->setDbLastShow($endDate->format("Y-m-d"));
+            $showDayNew->setDbStartTime($startDate->format("H:i:s"));
+            $showDayNew->setDbTimezone($tz);
+            $showDayNew->setDbDay($startDate->format('w'));
+            $showDayNew->setDbDuration($showDaysOld[0]->getDbDuration());
+            $showDayNew->setDbRepeatType(-1);
+            $showDayNew->setDbShowId($showDaysOld[0]->getDbShowId());
+            $showDayNew->setDbRecord($showDaysOld[0]->getDbRecord());
+            $showDayNew->save();
+
+            //delete the old rules for repeating shows
+            $showDaysOld->delete();
+
+            //remove the old repeating deleted instances.
+            $showInstances = CcShowInstancesQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbModifiedInstance(true)
+                ->delete();
+        }
+
+        return false;
+    }
+
     public function delete()
     {
         global $CC_DBC;
@@ -465,6 +538,10 @@ class Application_Model_ShowInstance {
                     ->setDbModifiedInstance(true)
                     ->save();
 
+                if ($this->isRebroadcast()) {
+                    return;
+                }
+
                 //delete the rebroadcasts of the removed recorded show.
                 if ($recording) {
                     CcShowInstancesQuery::create()
@@ -477,17 +554,8 @@ class Application_Model_ShowInstance {
                     ->filterByDbInstanceId($this->_instanceId)
                     ->delete();
 
-                // check if we can safely delete the show
-                $showInstancesRow = CcShowInstancesQuery::create()
-                    ->filterByDbShowId($showId)
-                    ->filterByDbModifiedInstance(false)
-                    ->findOne();
 
-                /* If we didn't find any instances of the show that haven't
-                 * been deleted, then just erase everything related to that show.
-                 * We can just delete, the show and the foreign key-constraint should
-                 * take care of deleting all of its instances. */
-                if(is_null($showInstancesRow)){
+                if ($this->checkToDeleteShow($showId)){
                     CcShowQuery::create()
                         ->filterByDbId($showId)
                         ->delete();
@@ -537,20 +605,26 @@ class Application_Model_ShowInstance {
         return $time;
     }
 
+
+    public function getTimeScheduledSecs()
+    {
+        $time_filled = $this->getTimeScheduled();
+        return Application_Model_Schedule::WallTimeToMillisecs($time_filled) / 1000;
+    }
+
+    public function getDurationSecs()
+    {
+        $ends = $this->getShowInstanceEnd(null);
+        $starts = $this->getShowInstanceStart(null);
+        return $ends->format('U') - $starts->format('U');
+    }
+
     public function getPercentScheduled()
     {
-        $start_timestamp = $this->getShowInstanceStart();
-        $end_timestamp = $this->getShowInstanceEnd();
-        $time_filled = $this->getTimeScheduled();
+        $durationSeconds = $this->getDurationSecs();
+        $timeSeconds = $this->getTimeScheduledSecs();
 
-        $s_epoch = strtotime($start_timestamp);
-        $e_epoch = strtotime($end_timestamp);
-        $i_epoch = Application_Model_Schedule::WallTimeToMillisecs($time_filled) / 1000;
-
-        $percent = ceil(($i_epoch / ($e_epoch - $s_epoch)) * 100);
-
-        if ($percent > 100)
-            $percent = 100;
+        $percent = ceil(($timeSeconds / $durationSeconds) * 100);
 
         return $percent;
     }
@@ -714,6 +788,7 @@ class Application_Model_ShowInstance {
         $sql = "SELECT si.id"
         ." FROM $CC_CONFIG[showInstances] si"
         ." WHERE si.ends < TIMESTAMP '$p_timeNow'"
+        ." AND si.modified_instance = 'f'"
         ." ORDER BY si.ends DESC"
         ." LIMIT 1";
 
@@ -728,10 +803,18 @@ class Application_Model_ShowInstance {
     public static function GetCurrentShowInstance($p_timeNow){
         global $CC_CONFIG, $CC_DBC;
 
+        /* Orderby si.starts descending, because in some cases
+         * we can have multiple shows overlapping each other. In
+         * this case, the show that started later is the one that
+         * is actually playing, and so this is the one we want.
+         */
+
         $sql = "SELECT si.id"
         ." FROM $CC_CONFIG[showInstances] si"
         ." WHERE si.starts <= TIMESTAMP '$p_timeNow'"
         ." AND si.ends > TIMESTAMP '$p_timeNow'"
+        ." AND si.modified_instance = 'f'"
+        ." ORDER BY si.starts DESC"
         ." LIMIT 1";
 
         $id = $CC_DBC->GetOne($sql);
@@ -748,6 +831,7 @@ class Application_Model_ShowInstance {
         $sql = "SELECT si.id"
         ." FROM $CC_CONFIG[showInstances] si"
         ." WHERE si.starts > TIMESTAMP '$p_timeNow'"
+        ." AND si.modified_instance = 'f'"
         ." ORDER BY si.starts"
         ." LIMIT 1";
 

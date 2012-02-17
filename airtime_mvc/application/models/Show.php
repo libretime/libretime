@@ -351,13 +351,15 @@ class Application_Model_Show {
     public function isRepeating()
     {
         $showDaysRow = CcShowDaysQuery::create()
-        ->filterByDbShowId($this->_showId)
-        ->findOne();
+            ->filterByDbShowId($this->_showId)
+            ->findOne();
 
         if (!is_null($showDaysRow)){
             return ($showDaysRow->getDbRepeatType() != -1);
-        } else
+        }
+        else {
             return false;
+        }
     }
 
     /**
@@ -1164,7 +1166,9 @@ class Application_Model_Show {
 
             Logging::log('$start time of non repeating record '.$start);
 
-            self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
+            if ($newInstance){
+                self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
+            }
         }
     }
 
@@ -1392,7 +1396,7 @@ class Application_Model_Show {
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
 
-        $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, description,
+        $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, 
                 color, background_color, file_id, cc_show_instances.id AS instance_id
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id
@@ -1455,17 +1459,17 @@ class Application_Model_Show {
         $endTimeString = $p_endTimestamp->format("Y-m-d H:i:s");
         if (!is_null($p_startTimestamp)) {
             $startTimeString = $p_startTimestamp->format("Y-m-d H:i:s");
-            $sql = "SELECT * FROM cc_show_days
-                    WHERE last_show IS NULL
-                    OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
         }
         else {
             $today_timestamp = new DateTime("now", new DateTimeZone("UTC"));
-            $today_timestamp_string = $today_timestamp->format("Y-m-d H:i:s");
-            $sql = "SELECT * FROM cc_show_days
-                    WHERE last_show IS NULL
-                    OR first_show < '{$endTimeString}' AND last_show > '{$today_timestamp_string}'";
+            $startTimeString = $today_timestamp->format("Y-m-d H:i:s");
         }
+
+        $sql = "SELECT * FROM cc_show_days
+                WHERE last_show IS NULL
+                OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
+
+        Logging::log($sql);
 
         $res = $CC_DBC->GetAll($sql);
 
@@ -1527,13 +1531,15 @@ class Application_Model_Show {
         $endDateTime = new DateTime($show["ends"], new DateTimeZone("UTC"));
         $endDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-        $event["id"] = $show["instance_id"];
+        $event["id"] = intval($show["instance_id"]);
         $event["title"] = $show["name"];
         $event["start"] = $startDateTime->format("Y-m-d H:i:s");
+        $event["startUnix"] = $startDateTime->format("U");
         $event["end"] = $endDateTime->format("Y-m-d H:i:s");
+        $event["endUnix"] = $endDateTime->format("U");
         $event["allDay"] = false;
         $event["description"] = $show["description"];
-        $event["showId"] = $show["show_id"];
+        $event["showId"] = intval($show["show_id"]);
         $event["record"] = intval($show["record"]);
         $event["rebroadcast"] = intval($show["rebroadcast"]);
 

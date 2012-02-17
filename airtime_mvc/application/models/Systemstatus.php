@@ -120,23 +120,31 @@ class Application_Model_Systemstatus
     public static function GetPypoStatus(){
 
         $component = CcServiceRegisterQuery::create()->findOneByDbName("pypo");
-        $ip = $component->getDbIp();
-        
-        $docRoot = self::GetMonitStatus($ip);
-        $data = self::ExtractServiceInformation($docRoot, "airtime-playout");
+        if (is_null($component)){
+            return null;
+        } else {
+            $ip = $component->getDbIp();
+            
+            $docRoot = self::GetMonitStatus($ip);
+            $data = self::ExtractServiceInformation($docRoot, "airtime-playout");
 
-        return $data;
+            return $data;
+        }
     }
     
     public static function GetLiquidsoapStatus(){
 
         $component = CcServiceRegisterQuery::create()->findOneByDbName("pypo");
-        $ip = $component->getDbIp();
-        
-        $docRoot = self::GetMonitStatus($ip);
-        $data = self::ExtractServiceInformation($docRoot, "airtime-liquidsoap");
+        if (is_null($component)){
+            return null;
+        } else {
+            $ip = $component->getDbIp();
+            
+            $docRoot = self::GetMonitStatus($ip);
+            $data = self::ExtractServiceInformation($docRoot, "airtime-liquidsoap");
 
-        return $data;
+            return $data;
+        }
     }
     
     public static function GetShowRecorderStatus(){

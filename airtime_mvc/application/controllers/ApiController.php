@@ -217,7 +217,8 @@ class ApiController extends Zend_Controller_Action
                 "currentShow"=>Application_Model_Show::GetCurrentShow($utcTimeNow),
                 "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, $limit, $utcTimeEnd),
                 "timezone"=> date("T"),
-                "timezoneOffset"=> date("Z"));
+                "timezoneOffset"=> date("Z"),
+		"AIRTIME_API_VERSION"=>AIRTIME_API_VERSION); //used by caller to determine if the airtime they are running or widgets in use is out of date.
                
             //Convert from UTC to localtime for user.
             Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
@@ -256,7 +257,7 @@ class ApiController extends Zend_Controller_Action
                 
                 $result[$dow[$i]] = $shows;
             }
-
+	    $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
             header("Content-type: text/javascript");
             echo $_GET['callback'].'('.json_encode($result).')';
         } else {
@@ -406,7 +407,10 @@ class ApiController extends Zend_Controller_Action
         $tempFileName = basename($tempFilePath);
         
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
+        $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
+	if (isset($result)){
+	    die('{"jsonrpc" : "2.0", "error" : {"code": '.$result[code].', "message" : "'.$result[message].'"}}');
+	}
     }
 
     public function uploadRecordedAction()
