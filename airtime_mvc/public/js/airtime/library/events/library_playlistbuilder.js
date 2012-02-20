@@ -19,20 +19,15 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnDrawCallback = function() {
 		
 		$('#library_display tr[id ^= "au"]').draggable({
-			helper: 'clone',
-			/* customize the helper on dragging to look like a pl item
-			 * 
-			helper: function(ev) {
-				var data, li;
-				
-				data = $(ev.currentTarget).data("aData");
-				
-				li = $("<li></li>");
-				li.append(data.track_title);
-				
-				return li;
-			},
-			*/
+			helper: function(){
+			    var selected = $('#library_display input:checked').parents('tr[id^="au"]');
+			    if (selected.length === 0) {
+			      selected = $(this);
+			    }
+			    var container = $('<div/>').attr('id', 'draggingContainer');
+			    container.append(selected.clone());
+			    return container; 
+		    },
 			cursor: 'pointer',
 			connectToSortable: '#spl_sortable'
 		});

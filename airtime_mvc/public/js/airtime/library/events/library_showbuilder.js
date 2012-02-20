@@ -19,7 +19,6 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnDrawCallback = function() {
 		
 		$('#library_display tr:not(:first)').draggable({
-			//helper: 'clone',
 			helper: function(){
 			    var selected = $('#library_display input:checked').parents('tr');
 			    if (selected.length === 0) {

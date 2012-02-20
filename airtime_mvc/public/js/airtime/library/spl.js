@@ -500,17 +500,19 @@ var AIRTIME = (function(AIRTIME){
 	    });
 		
 		sortableConf = (function(){
-			var origRow,
+			var origTrs,
+				html,
 				fnReceive,
 				fnUpdate;		
 			
 			fnReceive = function(event, ui) {
-				origRow = ui.item;
+				origTrs = ui.helper.find('tr[id^="au"]');
+				html = ui.helper.html();
 			};
 			
 			fnUpdate = function(event, ui) {
 				var prev,
-					aItem = [],
+					aItems = [],
 					iAfter,
 					sAddType;
 				
@@ -525,15 +527,23 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				//item was dragged in from library datatable
-				if (origRow !== undefined) {
-					aItem.push(origRow.data("aData").id);
-					origRow = undefined;
-					AIRTIME.playlist.fnAddItems(aItem, iAfter, sAddType);
+				if (origTrs !== undefined) {
+					
+					playlist.find("tr.ui-draggable")
+						.after(html)
+						.empty();
+					
+					origTrs.each(function(i, el){
+						aItems.push($("#"+$(el).attr("id")).data("aData").id);
+					});
+					
+					origTrs = undefined;
+					AIRTIME.playlist.fnAddItems(aItems, iAfter, sAddType);
 				}
 				//item was reordered.
 				else {
-					aItem.push(parseInt(ui.item.attr("id").split("_").pop(), 10));
-					AIRTIME.playlist.fnMoveItems(aItem, iAfter);
+					aItems.push(parseInt(ui.item.attr("id").split("_").pop(), 10));
+					AIRTIME.playlist.fnMoveItems(aItems, iAfter);
 				}
 			};
 			
