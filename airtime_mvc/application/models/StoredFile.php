@@ -556,7 +556,7 @@ class Application_Model_StoredFile {
      *
      * @return string $runtime
      */
-    private static function formatDuration($dt){
+    private static function formatDuration($dt) {
 
         $hours = $dt->format("H");
         $min = $dt->format("i");
@@ -569,7 +569,7 @@ class Application_Model_StoredFile {
         $hours = $p_interval->format("%h");
         $mins = $p_interval->format("%i");
 
-        if( $hours == 0) {
+        if ( $hours == 0) {
             $runtime = $p_interval->format("%i:%S");
         }
         else {
@@ -579,8 +579,7 @@ class Application_Model_StoredFile {
         return $runtime;
     }
 
-    public static function searchFilesForPlaylistBuilder($datatables)
-    {
+    public static function searchFilesForPlaylistBuilder($datatables) {
         global $CC_CONFIG;
 
         $displayData = array("track_title", "artist_name", "album_title", "genre", "length", "year", "utime", "mtime", "ftype", "track_number");
@@ -610,9 +609,6 @@ class Application_Model_StoredFile {
             } else if ($key === "mtime") {
                 $plSelect .= $key.", ";
                 $fileSelect .= $key.", ";
-            } else if ($key === "track_number") {
-		$plSelect .= "NULL AS ".$key.", ";
-                $fileSelect .= $key.", ";
             } else {
                 $plSelect .= "NULL AS ".$key.", ";
                 $fileSelect .= $key.", ";
@@ -624,10 +620,10 @@ class Application_Model_StoredFile {
             UNION
             (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
 
-	$results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+	   $results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
 
 
-        foreach($results['aaData'] as &$row){
+        foreach ($results['aaData'] as &$row) {
 
             $row['id'] = intval($row['id']);
 
@@ -649,7 +645,7 @@ class Application_Model_StoredFile {
             //TODO url like this to work on both playlist/showbuilder screens.
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
-            if($type == "au") {
+            if ($type == "au") {
                 $row['image'] = '<img src="/css/images/icon_audioclip.png">';
             }
             else {
@@ -738,7 +734,7 @@ class Application_Model_StoredFile {
 		}
 
 		//display sql executed in airtime log for testing
-		//Logging::log($sql);
+		Logging::log($sql);
 
 		$results = $CC_DBC->getAll($sql);
 

@@ -13,17 +13,15 @@ var AIRTIME = (function(AIRTIME){
 		}
 	}
 	
-	mod.fnAdd = function(aMediaIds, aSchedIds, callback) {
+	mod.fnAdd = function(aMediaIds, aSchedIds) {
+		var oLibTT = TableTools.fnGetInstance('library_display');
 		
 		$.post("/showbuilder/schedule-add", 
 			{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
 			function(json){
 				checkError(json);
 				oSchedTable.fnDraw();
-				
-				if ($.isFunction(callback)) {
-					callback();
-				}
+				oLibTT.fnSelectNone();
 			});
 	};
 	
@@ -394,21 +392,26 @@ $(document).ready(function() {
 	});
 	
 	var sortableConf = (function(){
-		var origRow,
-			oItemData,
+		var origTrs,
+			aItemData = [],
 			oPrevData,
 			fnAdd,
 			fnMove,
 			fnReceive,
-			fnUpdate;
+			fnUpdate,
+			i, 
+			html;
 		
 		fnAdd = function() {
 			var aMediaIds = [],
-			aSchedIds = [];
+				aSchedIds = [],
+				oLibTT = TableTools.fnGetInstance('library_display');
 			
+			for(i=0; i < aItemData.length; i++) {
+				aMediaIds.push({"id": aItemData[i].id, "type": aItemData[i].ftype});
+			}
 			aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
-			aMediaIds.push({"id": oItemData.id, "type": oItemData.ftype});
-
+			
 			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
 		};
 		
@@ -416,28 +419,38 @@ $(document).ready(function() {
 			var aSelect = [],
 				aAfter = [];
 		
-			aSelect.push({"id": oItemData.id, "instance": oItemData.instance, "timestamp": oItemData.timestamp});
+			aSelect.push({"id": aItemData[0].id, "instance": aItemData[0].instance, "timestamp": aItemData[0].timestamp});
 			aAfter.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
 	
 			AIRTIME.showbuilder.fnMove(aSelect, aAfter);
 		};
 		
 		fnReceive = function(event, ui) {
-			origRow = ui.item;
+			origTrs = ui.helper.find("tr");
+			html = ui.helper.html();
 		};
 		
 		fnUpdate = function(event, ui) {
+			aItemData = [];
 			oPrevData = ui.item.prev().data("aData");
 			
 			//item was dragged in
-			if (origRow !== undefined) {
-				oItemData = origRow.data("aData");
-				origRow = undefined;
+			if (origTrs !== undefined) {
+				
+				$("#show_builder_table tr.ui-draggable")
+					.empty()
+					.after(html);
+				
+				origTrs.each(function(i, el){
+					aItemData.push($("#"+$(el).attr("id")).data("aData"));
+				});
+				
+				origTrs = undefined;
 				fnAdd();
 			}
 			//item was reordered.
 			else {
-				oItemData = ui.item.data("aData");
+				aItemData.push(ui.item.data("aData"));
 				fnMove();
 			}
 		};

@@ -19,7 +19,16 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnDrawCallback = function() {
 		
 		$('#library_display tr:not(:first)').draggable({
-			helper: 'clone',
+			//helper: 'clone',
+			helper: function(){
+			    var selected = $('#library_display input:checked').parents('tr');
+			    if (selected.length === 0) {
+			      selected = $(this);
+			    }
+			    var container = $('<div/>').attr('id', 'draggingContainer');
+			    container.append(selected.clone());
+			    return container; 
+		    },
 			cursor: 'pointer',
 			connectToSortable: '#show_builder_table'
 		});	
@@ -63,9 +72,7 @@ var AIRTIME = (function(AIRTIME){
 				} 	
 			}
 			
-			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds, function(){
-				oLibTT.fnSelectNone();
-			});
+			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
 			
 		};
 		//[0] = button text
