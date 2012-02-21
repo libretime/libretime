@@ -1762,8 +1762,12 @@ div.errors{
 .medium-icon.finishedplaying {
 	background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
 }
-.preferences, .manage-folders, .stream-config {
+.preferences, .manage-folders {
     width: 500px;
+}
+
+.stream-config {
+    width: 1080px;
 }
 
 .preferences .padded {
@@ -2096,7 +2100,7 @@ dd .info-text-small {
     /*width:98.5%;*/
 	min-width:152px;
 }
-.stream-config .display_field dd input[type="text"], .stream-config .display_field dd textarea {
+.stream-config .display_field dd input[type="text"], .stream-config .display_field dd input[type="password"], .stream-config .display_field dd textarea {
 	min-width:99%;
 	padding: 4px 3px;
 }

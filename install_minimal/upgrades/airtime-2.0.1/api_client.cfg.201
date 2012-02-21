@@ -48,6 +48,12 @@ remove_watched_dir = 'remove-watched-dir/format/json/api_key/%%api_key%%/path/%%
 # URL to tell Airtime we want to add watched directory
 set_storage_dir = 'set-storage-dir/format/json/api_key/%%api_key%%/path/%%path%%'
 
+# URL to tell Airtime about file system mount change
+update_fs_mount = 'update-file-system-mount/format/json/api_key/%%api_key%%'
+
+# URL to tell Airtime about file system mount change
+handle_watched_dir_missing = 'handle-watched-dir-missing/format/json/api_key/%%api_key%%/dir/%%dir%%'
+
 #############################
 ## Config for Recorder
 #############################
@@ -95,3 +101,25 @@ get_stream_setting = 'get-stream-setting/format/json/api_key/%%api_key%%/'
 #URL to update liquidsoap status
 update_liquidsoap_status = 'update-liquidsoap-status/format/json/api_key/%%api_key%%/msg/%%msg%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
 
+#URL to checkl live stream auth
+check_live_stream_auth = 'check-live-stream-auth/format/json/api_key/%%api_key%%/username/%%username%%/password/%%password%%'
+
+##############
+# OBP config #
+##############
+
+# URL to get the version number of the server API
+#version_url = 'api/pypo/status/json'
+
+# Schedule export path.
+# %%from%% - starting date/time in the form YYYY-MM-DD-hh-mm
+# %%to%% - starting date/time in the form YYYY-MM-DD-hh-mm
+
+# Update whether an item has been played.
+#update_item_url = 'api/pypo/update_shedueled_item/$$item_id%%?played=%%played%%' 
+
+# Update whether an item is currently playing.
+#update_start_playing_url = 'api/pypo/mod/medialibrary/?playlist_type=%%playlist_type%%&export_source=%%export_source%%&media_id=%%media_id%%&playlist_id=%%playlist_id%%&transmission_id=%%transmission_id%%'
+
+# ???
+#generate_range_url = 'api/pypo/generate_range_dp/'

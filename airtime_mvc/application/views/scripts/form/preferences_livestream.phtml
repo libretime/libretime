@@ -1,10 +1,12 @@
-<fieldset class="padded">
+<fieldset class="padded stream-setting-global" style="margin-top: 15px">
+    <legend>Input Stream Settings</legend>
     <dl class="zend_form">
-        <dd id="auto_enable_live_stream-element" class="block-display" style=" margin:6px 0 10px 0">
-            <label class="optional" for="auto_enable_live_stream">
-                <?php echo $this->element->getElement('auto_enable_live_stream') ?>
-                <strong><?php echo $this->element->getElement('auto_enable_live_stream')->getLabel() ?></strong>
+        <dt id="auto_enable_live_stream-label">
+            <label class="optional" for="auto_enable_live_stream"><?php echo $this->element->getElement('auto_enable_live_stream')->getLabel() ?> :
             </label>
+        </dt>
+        <dd id="auto_enable_live_stream-element">
+            <?php echo $this->element->getElement('auto_enable_live_stream') ?>
             <?php if($this->element->getElement('auto_enable_live_stream')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('auto_enable_live_stream')->getMessages() as $error): ?>
@@ -13,11 +15,11 @@
                 </ul>
             <?php endif; ?> 
         </dd>
-        <dt id="master_username-label" class="block-display">
+        <dt id="master_username-label">
             <label class="optional" for="master_username"><?php echo $this->element->getElement('master_username')->getLabel() ?> :
             </label>
         </dt>
-        <dd id="master_username-element" class="block-display">
+        <dd id="master_username-element">
             <?php echo $this->element->getElement('master_username') ?>
             <?php if($this->element->getElement('master_username')->hasErrors()) : ?>
                 <ul class='errors'>
@@ -27,11 +29,11 @@
                 </ul>
             <?php endif; ?> 
         </dd>
-        <dt id="master_password-label" class="block-display">
+        <dt id="master_password-label">
             <label class="optional" for="master_password"><?php echo $this->element->getElement('master_password')->getLabel() ?> :
             </label>
         </dt>
-        <dd id="master_password-element" class="block-display">
+        <dd id="master_password-element">
             <?php echo $this->element->getElement('master_password') ?>
             <?php if($this->element->getElement('master_password')->hasErrors()) : ?>
                 <ul class='errors'>

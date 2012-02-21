@@ -19,8 +19,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
         //Master username
         $master_username = new Zend_Form_Element_Text('master_username');
-        $master_username->setAttrib('class', 'input_text')
-                        ->setAttrib('autocomplete', 'off')
+        $master_username->setAttrib('autocomplete', 'off')
                         ->setAllowEmpty(true)
                         ->setLabel('Master Username')
                         ->setFilters(array('StringTrim'))
@@ -30,14 +29,11 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         
         //Master password
         $master_password = new Zend_Form_Element_Password('master_password');
-        $master_password->setAttrib('class', 'input_text')
-                        ->setAttrib('autocomplete', 'off')
+        $master_password->setAttrib('autocomplete', 'off')
                         ->setAttrib('renderPassword','true')
                         ->setAllowEmpty(true)
                         ->setLabel('Master Password')
                         ->setFilters(array('StringTrim'))
-                        ->setValue(Application_Model_Preference::GetLiveSteamMasterPassword())
-
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($master_password);
     }

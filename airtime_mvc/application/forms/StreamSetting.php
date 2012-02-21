@@ -80,6 +80,7 @@ class Application_Form_StreamSetting extends Zend_Form
             $d["streamFormat"] = $data['streamFormat'];
             $this->populate($d);
         }
-        return true;
+        $isValid = parent::isValid($data);
+        return $isValid;
     }
 }

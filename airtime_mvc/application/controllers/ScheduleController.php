@@ -478,6 +478,8 @@ class ScheduleController extends Zend_Controller_Action
         $formWho->populate(array('add_show_hosts' => $hosts));
         $formStyle->populate(array('add_show_background_color' => $show->getBackgroundColor(),
                                     'add_show_color' => $show->getColor()));
+        
+        $formLive->populate($show->getLiveStreamInfo());
 
         if(!$isSaas){
             $formRecord = new Application_Form_AddShowRR();

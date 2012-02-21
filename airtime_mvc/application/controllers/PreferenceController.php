@@ -47,11 +47,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSoundCloudTags($values["preferences_soundcloud"]["SoundCloudTags"]);
                 Application_Model_Preference::SetSoundCloudGenre($values["preferences_soundcloud"]["SoundCloudGenre"]);
                 Application_Model_Preference::SetSoundCloudTrackType($values["preferences_soundcloud"]["SoundCloudTrackType"]);
-                
-                Application_Model_Preference::SetLiveSteamAutoEnable($values["preferences_livestream"]["auto_enable_live_stream"]);
-                Application_Model_Preference::SetLiveSteamMasterUsername($values["preferences_livestream"]["master_username"]);
-                Application_Model_Preference::SetLiveSteamMasterPassword($values["preferences_livestream"]["master_password"]);
-
                 Application_Model_Preference::SetSoundCloudLicense($values["preferences_soundcloud"]["SoundCloudLicense"]);
 
                 $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
@@ -180,6 +175,9 @@ class PreferenceController extends Zend_Controller_Action
 
         $form->setSetting($setting);
         $form->startFrom();
+        
+        $live_stream_subform = new Application_Form_LiveStreamingPreferences();
+        $form->addSubForm($live_stream_subform, "live_stream_subform");
 
         for($i=1; $i<=$num_of_stream; $i++){
             $subform = new Application_Form_StreamSettingSubForm();
@@ -194,17 +192,8 @@ class PreferenceController extends Zend_Controller_Action
             $post_data = $request->getPost();
 
             $error = false;
-            $values = array();
-            for($i=1; $i<=$num_of_stream; $i++){
-                if(!$form->getSubForm("s".$i."_subform")->isValid($post_data["s".$i."_data"])){
-                    $error = true;
-                }else{
-                    // getValues returne array of size 1, so reorganized it
-                    foreach($form->getSubForm("s".$i."_subform")->getValues() as $key => $d){
-                        $values[$key] = $d;
-                    }
-                }
-            }
+            $values = $post_data;
+            
             if($form->isValid($post_data)){
                 if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
@@ -215,8 +204,6 @@ class PreferenceController extends Zend_Controller_Action
                 $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
                 $values['streamFormat'] = $form->getValue('streamFormat');
 
-            }
-            if(!$error){
                 Application_Model_StreamSetting::setStreamSetting($values);
                 $data = array();
                 $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
@@ -225,6 +212,10 @@ class PreferenceController extends Zend_Controller_Action
                 }
                 // this goes into cc_pref table
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
+                Application_Model_Preference::SetLiveSteamAutoEnable($values["auto_enable_live_stream"]);
+                Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
+                Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
+                
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);

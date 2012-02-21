@@ -28,6 +28,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-file-system-mount', 'json')
                 ->addActionContext('handle-watched-dir-missing', 'json')
                 ->addActionContext('rabbitmq-do-push', 'json')
+                ->addActionContext('check-live-stream-auth', 'json')
                 ->initContext();
     }
 
@@ -958,7 +959,6 @@ class ApiController extends Zend_Controller_Action
         Application_Model_MusicDir::removeWatchedDir($dir, false);
     }
     
-    
     /* This action is for use by our dev scripts, that make
      * a change to the database and we want rabbitmq to send
      * out a message to pypo that a potential change has been made. */
@@ -973,10 +973,31 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
         Logging::log("Notifying RabbitMQ to send message to pypo");
         
         Application_Model_RabbitMq::PushSchedule();
+    }
+    public function checkLiveStreamAuthAction(){
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        
+        $username = $request->getParam('username');
+        $password = $request->getParam('password');
+        
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        //check against master
+        if($username == Application_Model_Preference::GetLiveSteamMasterUsername() && $password == Application_Model_Preference::GetLiveSteamMasterPassword()){
+            $this->view->msg = true;
+        }else{
+            $this->view->msg = false;
+        }
     }
 }
 

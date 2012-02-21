@@ -70,6 +70,36 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $background_color;
 
 	/**
+	 * The value for the allow_live_stream field.
+	 * @var        boolean
+	 */
+	protected $allow_live_stream;
+
+	/**
+	 * The value for the live_stream_using_airtime_auth field.
+	 * @var        boolean
+	 */
+	protected $live_stream_using_airtime_auth;
+
+	/**
+	 * The value for the live_stream_using_custom_auth field.
+	 * @var        boolean
+	 */
+	protected $live_stream_using_custom_auth;
+
+	/**
+	 * The value for the live_stream_user field.
+	 * @var        string
+	 */
+	protected $live_stream_user;
+
+	/**
+	 * The value for the live_stream_pass field.
+	 * @var        string
+	 */
+	protected $live_stream_pass;
+
+	/**
 	 * @var        array CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
 	 */
 	protected $collCcShowInstancess;
@@ -194,6 +224,56 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function getDbBackgroundColor()
 	{
 		return $this->background_color;
+	}
+
+	/**
+	 * Get the [allow_live_stream] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbAllowLiveStream()
+	{
+		return $this->allow_live_stream;
+	}
+
+	/**
+	 * Get the [live_stream_using_airtime_auth] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbLiveStreamUsingAirtimeAuth()
+	{
+		return $this->live_stream_using_airtime_auth;
+	}
+
+	/**
+	 * Get the [live_stream_using_custom_auth] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbLiveStreamUsingCustomAuth()
+	{
+		return $this->live_stream_using_custom_auth;
+	}
+
+	/**
+	 * Get the [live_stream_user] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbLiveStreamUser()
+	{
+		return $this->live_stream_user;
+	}
+
+	/**
+	 * Get the [live_stream_pass] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbLiveStreamPass()
+	{
+		return $this->live_stream_pass;
 	}
 
 	/**
@@ -337,6 +417,106 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	} // setDbBackgroundColor()
 
 	/**
+	 * Set the value of [allow_live_stream] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbAllowLiveStream($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->allow_live_stream !== $v) {
+			$this->allow_live_stream = $v;
+			$this->modifiedColumns[] = CcShowPeer::ALLOW_LIVE_STREAM;
+		}
+
+		return $this;
+	} // setDbAllowLiveStream()
+
+	/**
+	 * Set the value of [live_stream_using_airtime_auth] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbLiveStreamUsingAirtimeAuth($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->live_stream_using_airtime_auth !== $v) {
+			$this->live_stream_using_airtime_auth = $v;
+			$this->modifiedColumns[] = CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH;
+		}
+
+		return $this;
+	} // setDbLiveStreamUsingAirtimeAuth()
+
+	/**
+	 * Set the value of [live_stream_using_custom_auth] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbLiveStreamUsingCustomAuth($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->live_stream_using_custom_auth !== $v) {
+			$this->live_stream_using_custom_auth = $v;
+			$this->modifiedColumns[] = CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH;
+		}
+
+		return $this;
+	} // setDbLiveStreamUsingCustomAuth()
+
+	/**
+	 * Set the value of [live_stream_user] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbLiveStreamUser($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->live_stream_user !== $v) {
+			$this->live_stream_user = $v;
+			$this->modifiedColumns[] = CcShowPeer::LIVE_STREAM_USER;
+		}
+
+		return $this;
+	} // setDbLiveStreamUser()
+
+	/**
+	 * Set the value of [live_stream_pass] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbLiveStreamPass($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->live_stream_pass !== $v) {
+			$this->live_stream_pass = $v;
+			$this->modifiedColumns[] = CcShowPeer::LIVE_STREAM_PASS;
+		}
+
+		return $this;
+	} // setDbLiveStreamPass()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -387,6 +567,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
 			$this->color = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
 			$this->background_color = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->allow_live_stream = ($row[$startcol + 7] !== null) ? (boolean) $row[$startcol + 7] : null;
+			$this->live_stream_using_airtime_auth = ($row[$startcol + 8] !== null) ? (boolean) $row[$startcol + 8] : null;
+			$this->live_stream_using_custom_auth = ($row[$startcol + 9] !== null) ? (boolean) $row[$startcol + 9] : null;
+			$this->live_stream_user = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+			$this->live_stream_pass = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -395,7 +580,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 7; // 7 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 12; // 12 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShow object", $e);
@@ -787,6 +972,21 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 6:
 				return $this->getDbBackgroundColor();
 				break;
+			case 7:
+				return $this->getDbAllowLiveStream();
+				break;
+			case 8:
+				return $this->getDbLiveStreamUsingAirtimeAuth();
+				break;
+			case 9:
+				return $this->getDbLiveStreamUsingCustomAuth();
+				break;
+			case 10:
+				return $this->getDbLiveStreamUser();
+				break;
+			case 11:
+				return $this->getDbLiveStreamPass();
+				break;
 			default:
 				return null;
 				break;
@@ -817,6 +1017,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$keys[4] => $this->getDbDescription(),
 			$keys[5] => $this->getDbColor(),
 			$keys[6] => $this->getDbBackgroundColor(),
+			$keys[7] => $this->getDbAllowLiveStream(),
+			$keys[8] => $this->getDbLiveStreamUsingAirtimeAuth(),
+			$keys[9] => $this->getDbLiveStreamUsingCustomAuth(),
+			$keys[10] => $this->getDbLiveStreamUser(),
+			$keys[11] => $this->getDbLiveStreamPass(),
 		);
 		return $result;
 	}
@@ -869,6 +1074,21 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 6:
 				$this->setDbBackgroundColor($value);
 				break;
+			case 7:
+				$this->setDbAllowLiveStream($value);
+				break;
+			case 8:
+				$this->setDbLiveStreamUsingAirtimeAuth($value);
+				break;
+			case 9:
+				$this->setDbLiveStreamUsingCustomAuth($value);
+				break;
+			case 10:
+				$this->setDbLiveStreamUser($value);
+				break;
+			case 11:
+				$this->setDbLiveStreamPass($value);
+				break;
 		} // switch()
 	}
 
@@ -900,6 +1120,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if (array_key_exists($keys[4], $arr)) $this->setDbDescription($arr[$keys[4]]);
 		if (array_key_exists($keys[5], $arr)) $this->setDbColor($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setDbBackgroundColor($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbAllowLiveStream($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbLiveStreamUsingAirtimeAuth($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbLiveStreamUsingCustomAuth($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbLiveStreamUser($arr[$keys[10]]);
+		if (array_key_exists($keys[11], $arr)) $this->setDbLiveStreamPass($arr[$keys[11]]);
 	}
 
 	/**
@@ -918,6 +1143,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowPeer::DESCRIPTION)) $criteria->add(CcShowPeer::DESCRIPTION, $this->description);
 		if ($this->isColumnModified(CcShowPeer::COLOR)) $criteria->add(CcShowPeer::COLOR, $this->color);
 		if ($this->isColumnModified(CcShowPeer::BACKGROUND_COLOR)) $criteria->add(CcShowPeer::BACKGROUND_COLOR, $this->background_color);
+		if ($this->isColumnModified(CcShowPeer::ALLOW_LIVE_STREAM)) $criteria->add(CcShowPeer::ALLOW_LIVE_STREAM, $this->allow_live_stream);
+		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH)) $criteria->add(CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH, $this->live_stream_using_airtime_auth);
+		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH)) $criteria->add(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, $this->live_stream_using_custom_auth);
+		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_USER)) $criteria->add(CcShowPeer::LIVE_STREAM_USER, $this->live_stream_user);
+		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_PASS)) $criteria->add(CcShowPeer::LIVE_STREAM_PASS, $this->live_stream_pass);
 
 		return $criteria;
 	}
@@ -985,6 +1215,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$copyObj->setDbDescription($this->description);
 		$copyObj->setDbColor($this->color);
 		$copyObj->setDbBackgroundColor($this->background_color);
+		$copyObj->setDbAllowLiveStream($this->allow_live_stream);
+		$copyObj->setDbLiveStreamUsingAirtimeAuth($this->live_stream_using_airtime_auth);
+		$copyObj->setDbLiveStreamUsingCustomAuth($this->live_stream_using_custom_auth);
+		$copyObj->setDbLiveStreamUser($this->live_stream_user);
+		$copyObj->setDbLiveStreamPass($this->live_stream_pass);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1583,6 +1818,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->description = null;
 		$this->color = null;
 		$this->background_color = null;
+		$this->allow_live_stream = null;
+		$this->live_stream_using_airtime_auth = null;
+		$this->live_stream_using_custom_auth = null;
+		$this->live_stream_user = null;
+		$this->live_stream_pass = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

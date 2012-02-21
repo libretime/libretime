@@ -60,10 +60,10 @@ class Application_Model_Preference
 
     public static function GetValue($key, $isUserValue = false){
         global $CC_CONFIG, $CC_DBC;
+        
         //Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_pref"
         ." WHERE keystr = '$key'";
-        
     	//For user specific preference, check if id matches as well
         if($isUserValue) {
 	        $auth = Zend_Auth::getInstance();
@@ -72,7 +72,6 @@ class Application_Model_Preference
 	        	$sql .= " AND subjid = '$id'";
 		    }
         }
-        
         $result = $CC_DBC->GetOne($sql);
 
         if ($result == 0)
@@ -723,7 +722,7 @@ class Application_Model_Preference
     }
     
     public static function SetLiveSteamMasterPassword($value){
-        self::SetValue("live_stream_master_password", $value, false);
+        self::SetValue("live_stream_master_password", md5($value), false);
     }
     
     public static function GetLiveSteamMasterPassword(){

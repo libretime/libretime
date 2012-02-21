@@ -146,6 +146,11 @@
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
 	<column name="color" phpName="DbColor" type="VARCHAR" size="6" required="false"/>
 	<column name="background_color" phpName="DbBackgroundColor" type="VARCHAR" size="6" required="false"/>
+	<column name="allow_live_stream" phpName="DbAllowLiveStream" type="BOOLEAN" required="false"/>
+	<column name="live_stream_using_airtime_auth" phpName="DbLiveStreamUsingAirtimeAuth" type="BOOLEAN" required="false"/>
+	<column name="live_stream_using_custom_auth" phpName="DbLiveStreamUsingCustomAuth" type="BOOLEAN" required="false"/>
+	<column name="live_stream_user" phpName="DbLiveStreamUser" type="VARCHAR" size="255" required="false"/>
+	<column name="live_stream_pass" phpName="DbLiveStreamPass" type="VARCHAR" size="255" required="false"/>
   </table>
   <table name="cc_show_instances" phpName="CcShowInstances">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>

@@ -771,6 +771,23 @@ class Application_Model_Show {
 
         return $showInstance;
     }
+    
+    /**
+     *  returns info about live stream override info
+     */
+    public function getLiveStreamInfo(){
+        $info = array();
+        if($this->_showId == null){
+            return $info;
+        }else{
+            $ccShow = CcShowQuery::create()->findPK($this->_showId);
+            $info['custom_username'] = $ccShow->getDbLiveStreamUser();
+            $info['allow_live_stream_override'] = $ccShow->getDbAllowLiveStream();
+            $info['cb_airtime_auth'] = $ccShow->getDbLiveStreamUsingAirtimeAuth();
+            $info['cb_custom_auth'] = $ccShow->getDbLiveStreamUsingCustomAuth();
+            return $info;
+        }
+    }
 
     /* Only used for shows that are repeating. Note that this will return
      * true even for dates that only have a "modified" show instance (does not
@@ -959,6 +976,11 @@ class Application_Model_Show {
         $ccShow->setDbGenre($data['add_show_genre']);
         $ccShow->setDbColor($data['add_show_color']);
         $ccShow->setDbBackgroundColor($data['add_show_background_color']);
+        $ccShow->setDbAllowLiveStream($data['allow_live_stream_override'] == 1?true:false);
+        $ccShow->setDbLiveStreamUsingAirtimeAuth($data['cb_airtime_auth'] == 1?true:false);
+        $ccShow->setDbLiveStreamUsingCustomAuth($data['cb_custom_auth'] == 1?true:false);
+        $ccShow->setDbLiveStreamUser($data['custom_username']);
+        $ccShow->setDbLiveStreamPass($data['custom_password']);
         $ccShow->save();
 
         $showId = $ccShow->getDbId();

@@ -21,6 +21,7 @@ from urlparse import urlparse
 import base64
 from configobj import ConfigObj
 import string
+import hashlib
 
 AIRTIME_VERSION = "2.1.0"
 
@@ -362,6 +363,28 @@ class AirTimeApiClient(ApiClientInterface):
             #wait some time before next retry
             time.sleep(retries_wait)
 
+        return response
+    
+    def check_live_stream_auth(self, username, password):
+        #logger = logging.getLogger()
+        response = ''
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["check_live_stream_auth"])
+    
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%username%%", username)
+            url = url.replace("%%password%%", hashlib.md5(password).hexdigest())
+    
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            import traceback
+            top = traceback.format_exc()
+            print "Exception: %s", e
+            print "traceback: %s", top
+            response = None
+            
         return response
 
     def setup_media_monitor(self):

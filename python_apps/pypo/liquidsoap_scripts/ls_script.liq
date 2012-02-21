@@ -41,15 +41,20 @@ default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 #live stream setup
 set("harbor.bind_addr", "0.0.0.0")
 #auth function for live stream
-def auth(user, password) =
-    if user == 'james' and password == 'james' then
-        true
-    else
-        false
-    end
+def check_client(user,password) =
+        #get the output of the php script
+        ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py #{user} #{password}")
+        #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
+        ret = list.hd(ret)
+        #return true to let the client transmit data, or false to tell harbor to decline
+        if (ret == "True") then
+            true
+        else
+            false
+        end
 end
 
-live = input.harbor("test", port=8080, auth=auth)
+live = input.harbor("test", port=8080, auth=check_client)
 
 s = fallback(track_sensitive=false, [live, queue, default])
 

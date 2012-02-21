@@ -8,21 +8,31 @@
         <dd id="allow_live_stream_override-element">
             <?php echo $this->element->getElement('allow_live_stream_override') ?>
         </dd>
-        <dt id="security_setting1_override-label">
-            <label class="optional" for="security_setting1">
-            <?php echo $this->element->getElement('security_setting1')->getLabel() ?>
+        <dt id="cb_airtime_auth_override-label">
+            <label class="optional" for="cb_airtime_auth">
+            <?php echo $this->element->getElement('cb_airtime_auth')->getLabel() ?>
+            <span class='info-tooltip'>
+                        <span>
+                            <?php echo $this->element->getElement('cb_airtime_auth')->getDescription() ?>
+                        </span>
+                    </span>
             </label>
         </dt>
-        <dd id="security_setting1_override-element">
-            <?php echo $this->element->getElement('security_setting1') ?>
+        <dd id="cb_airtime_auth_override-element">
+            <?php echo $this->element->getElement('cb_airtime_auth') ?>
         </dd>
-        <dt id="security_setting2_override-label">
-            <label class="optional" for="security_setting2">
-            <?php echo $this->element->getElement('security_setting2')->getLabel() ?>
+        <dt id="cb_custom_auth_override-label">
+            <label class="optional" for="cb_custom_auth">
+            <?php echo $this->element->getElement('cb_custom_auth')->getLabel() ?>
+            <span class='info-tooltip'>
+                        <span>
+                            <?php echo $this->element->getElement('cb_custom_auth')->getDescription() ?>
+                        </span>
+                    </span>
             </label>
         </dt>
-        <dd id="security_setting2_override-element">
-            <?php echo $this->element->getElement('security_setting2') ?>
+        <dd id="cb_custom_auth_override-element">
+            <?php echo $this->element->getElement('cb_custom_auth') ?>
         </dd>
         
     
@@ -53,6 +63,12 @@
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?> 
+        </dd>
+        <dt id="Connection_URL-label">
+            <label for="outputStreamURL">Connection URL: </label>
+        </dt>
+        <dd id="Connection_URL-element">
+            <span id="stream_url"><?php echo $this->connection_url; ?></span>
         </dd>
      </dl>
 </fieldset>
