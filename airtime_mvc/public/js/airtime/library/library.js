@@ -221,6 +221,10 @@ $(document).ready(function() {
 		"bServerSide": true,
 		
 		"bStateSave": true,
+		
+		"fnStateSaveParams": function (oSettings, oData) {
+    		oData.oSearch.sSearch = "";
+	    },
         "fnStateSave": function (oSettings, oData) {
            
     		$.ajax({
@@ -228,9 +232,7 @@ $(document).ready(function() {
 			  type: "POST",
 			  data: {settings : oData, format: "json"},
 			  dataType: "json",
-			  success: function(){
-				  var x;
-			  },
+			  success: function(){},
 			  error: function (jqXHR, textStatus, errorThrown) {
 				  var x;
 			  }
@@ -255,16 +257,26 @@ $(document).ready(function() {
         	
         	return o;
         },
+        "fnStateLoadParams": function (oSettings, oData) {
+        	var i,
+				length,
+				a = oData.abVisCols;
+		
+        	//datatables needs boolean type to work properly.
+	        for (i = 0, length = oData.abVisCols.length; i < length; i++) {	
+	        	a[i] = (a[i] === "true") ? true : false;
+	        }
+        },
 		
 		"sAjaxSource": "/Library/contents",
-		"fnServerData": function ( sSource, aoData, testCallback ) {
+		"fnServerData": function ( sSource, aoData, fnCallback ) {
     		aoData.push( { name: "format", value: "json"} );
 			$.ajax( {
 				"dataType": 'json',
 				"type": "GET",
 				"url": sSource,
 				"data": aoData,
-				"success": testCallback
+				"success": fnCallback
 			} );
 		},
 		"fnRowCallback": AIRTIME.library.events.fnRowCallback,
