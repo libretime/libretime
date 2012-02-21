@@ -1,6 +1,6 @@
 /*
  * File:        ColReorder.js
- * Version:     1.0.4
+ * Version:     1.0.5
  * CVS:         $Id$
  * Description: Controls for column visiblity in DataTables
  * Author:      Allan Jardine (www.sprymedia.co.uk)
@@ -163,7 +163,11 @@ $.fn.dataTableExt.oApi.fnColReorder = function ( oSettings, iFrom, iTo )
 	/* Data column sorting (the column which the sort for a given column should take place on) */
 	for ( i=0, iLen=iCols ; i<iLen ; i++ )
 	{
-		oSettings.aoColumns[i].iDataSort = aiInvertMapping[ oSettings.aoColumns[i].iDataSort ];
+		oCol = oSettings.aoColumns[i];
+		for ( j=0, jLen=oCol.aDataSort.length ; j<jLen ; j++ )
+		{
+			oCol.aDataSort[j] = aiInvertMapping[ oCol.aDataSort[j] ];
+		}
 	}
 	
 	/* Update the Get and Set functions for each column */
@@ -464,12 +468,9 @@ ColReorder.prototype = {
 		}
 		
 		/* State saving */
-		this.s.dt.aoStateSave.push( {
-			"fn": function (oS, sVal) {
-				return that._fnStateSave.call( that, sVal );
-			},
-			"sName": "ColReorder_State"
-		} );
+		this.s.dt.oApi._fnCallbackReg( this.s.dt, 'aoStateSaveParams', function (oS, oData) {
+			that._fnStateSave.call( that, oData );
+		}, "ColReorder_State" );
 		
 		/* An initial column order has been specified */
 		var aiOrder = null;
@@ -556,72 +557,41 @@ ColReorder.prototype = {
 	
 	
 	/**
-	 * This function effectively replaces the state saving function in DataTables (this is needed
-	 * because otherwise DataTables would state save the columns in their reordered state, not the
-	 * original which is needed on first draw). This is sensitive to any changes in the DataTables
-	 * state saving method!
+	 * Because we change the indexes of columns in the table, relative to their starting point
+	 * we need to reorder the state columns to what they are at the starting point so we can
+	 * then rearrange them again on state load!
 	 *  @method  _fnStateSave
-	 *  @param   string sCurrentVal 
+	 *  @param   object oState DataTables state 
 	 *  @returns string JSON encoded cookie string for DataTables
 	 *  @private 
 	 */
-	"_fnStateSave": function ( sCurrentVal )
+	"_fnStateSave": function ( oState )
 	{
-		var i, iLen, sTmp;
-		var sValue = sCurrentVal.split('"aaSorting"')[0];
-		var a = [];
+		var i, iLen, aCopy, iOrigColumn;
 		var oSettings = this.s.dt;
-		
+
 		/* Sorting */
-		sValue += '"aaSorting":[ ';
-		for ( i=0 ; i<oSettings.aaSorting.length ; i++ )
+		for ( i=0 ; i<oState.aaSorting.length ; i++ )
 		{
-			sValue += '['+oSettings.aoColumns[ oSettings.aaSorting[i][0] ]._ColReorder_iOrigCol+
-				',"'+oSettings.aaSorting[i][1]+'"],';
+			oState.aaSorting[i][0] = oSettings.aoColumns[ oState.aaSorting[i][0] ]._ColReorder_iOrigCol;
 		}
-		sValue = sValue.substring(0, sValue.length-1);
-		sValue += "],";
-		
-		/* Column filter */
+
+		aSearchCopy = $.extend( true, [], oState.aoSearchCols );
+		oState.ColReorder = [];
+
 		for ( i=0, iLen=oSettings.aoColumns.length ; i<iLen ; i++ )
 		{
-			a[ oSettings.aoColumns[i]._ColReorder_iOrigCol ] = {
-				"sSearch": encodeURIComponent(oSettings.aoPreSearchCols[i].sSearch),
-				"bRegex": !oSettings.aoPreSearchCols[i].bRegex
-			};
-		}
+			iOrigColumn = oSettings.aoColumns[i]._ColReorder_iOrigCol;
+
+			/* Column filter */
+			oState.aoSearchCols[ iOrigColumn ] = aSearchCopy[i];
+
+			/* Visibility */
+			oState.abVisCols[ iOrigColumn ] = oSettings.aoColumns[i].bVisible;
 		
-		sValue += '"aaSearchCols":[ ';
-		for ( i=0 ; i<a.length ; i++ )
-		{
-			sValue += '["'+a[i].sSearch+'",'+a[i].bRegex+'],';
+			/* Column reordering */
+			oState.ColReorder.push( iOrigColumn );
 		}
-		sValue = sValue.substring(0, sValue.length-1);
-		sValue += "],";
-		
-		/* Visibility */
-		a = [];
-		for ( i=0, iLen=oSettings.aoColumns.length ; i<iLen ; i++ )
-		{
-			a[ oSettings.aoColumns[i]._ColReorder_iOrigCol ] = oSettings.aoColumns[i].bVisible;
-		}
-		
-		sValue += '"abVisCols":[ ';
-		for ( i=0 ; i<a.length ; i++ )
-		{
-			sValue += a[i]+",";
-		}
-		sValue = sValue.substring(0, sValue.length-1);
-		sValue += "],";
-		
-		/* Column reordering */
-		a = [];
-		for ( i=0, iLen=oSettings.aoColumns.length ; i<iLen ; i++ ) {
-			a.push( oSettings.aoColumns[i]._ColReorder_iOrigCol );
-		}
-		sValue += '"ColReorder":['+a.join(',')+']';
-		
-		return sValue;
 	},
 	
 	
@@ -944,7 +914,7 @@ ColReorder.prototype.CLASS = "ColReorder";
  *  @type      String
  *  @default   As code
  */
-ColReorder.VERSION = "1.0.4";
+ColReorder.VERSION = "1.0.5";
 ColReorder.prototype.VERSION = ColReorder.VERSION;
 
 
@@ -960,7 +930,7 @@ ColReorder.prototype.VERSION = ColReorder.VERSION;
  */
 if ( typeof $.fn.dataTable == "function" &&
      typeof $.fn.dataTableExt.fnVersionCheck == "function" &&
-     $.fn.dataTableExt.fnVersionCheck('1.8.0') )
+     $.fn.dataTableExt.fnVersionCheck('1.9.0') )
 {
 	$.fn.dataTableExt.aoFeatures.push( {
 		"fnInit": function( oDTSettings ) {
@@ -981,7 +951,7 @@ if ( typeof $.fn.dataTable == "function" &&
 }
 else
 {
-	alert( "Warning: ColReorder requires DataTables 1.8.0 or greater - www.datatables.net/download");
+	alert( "Warning: ColReorder requires DataTables 1.9.0 or greater - www.datatables.net/download");
 }
 
 })(jQuery, window, document);

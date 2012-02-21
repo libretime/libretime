@@ -211,76 +211,51 @@ function addQtipToSCIcons(){
     });
 }
 
-function fnCreatedRow( nRow, aData, iDataIndex ) {
-	
-	//call the context menu so we can prevent the event from propagating.
-	$(nRow).find('td:not(.library_checkbox):not(.library_type)').click(function(e){
-		
-		$(this).contextMenu();
-		
-		return false;
-	});
-
-	//add a tool tip to appear when the user clicks on the type icon.
-	$(nRow.children[1]).qtip({
-		content: {
-			text: "Loading...",
-			title: {
-				text: aData.track_title
-			},
-			ajax: {
-				url: "/Library/get-file-meta-data",
-				type: "get",
-				data: ({format: "html", id : aData.id, type: aData.ftype}),
-				success: function(data, status) {
-					this.set('content.text', data);
-				}
-			}
-		},
-		position: {
-			my: 'left center',
-            at: 'right center', // Position the tooltip above the link 
-            viewport: $(window), // Keep the tooltip on-screen at all times
-            effect: false // Disable positioning animation
-        },
-		style: {
-			classes: "ui-tooltip-dark"
-		},
-		show: {
-		    event: 'click',
-		    solo: true // Only show one tooltip at a time
-		},
-		hide: 'mouseout'
-		
-	}).click(function(event) { 
-		event.preventDefault();
-		event.stopPropagation();
-	});
-}
-
-/**
- * Updates pref db when user changes the # of entries to show
- */
-function saveNumEntriesSetting() {
-    $('select[name=library_display_length]').change(function() {
-        var url = '/Library/set-num-entries/format/json';
-        $.post(url, {numEntries: $(this).val()});
-    });
-}
-
-/**
- * Use user preference for number of entries to show
- */
-function getNumEntriesPreference(data) {
-    return parseInt(data.libraryInit.numEntries, 10);
-}
-
-function createDataTable(data) {
-	var oTable;
+$(document).ready(function() {
+    var oTable;
+    
+    $('.tabs').tabs();
 	
     oTable = $('#library_display').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
+		
+		"bStateSave": true,
+        "fnStateSave": function (oSettings, oData) {
+           
+    		$.ajax({
+			  url: "/preference/set-library-datatable",
+			  type: "POST",
+			  data: {settings : oData, format: "json"},
+			  dataType: "json",
+			  success: function(){
+				  var x;
+			  },
+			  error: function (jqXHR, textStatus, errorThrown) {
+				  var x;
+			  }
+			});
+        },
+        "fnStateLoad": function (oSettings) {
+        	var o;
+
+        	$.ajax({
+  			  url: "/preference/get-library-datatable",
+  			  type: "GET",
+  			  data: {format: "json"},
+  			  dataType: "json",
+  			  async: false,
+  			  success: function(json){
+  				  o = json.settings;
+  			  },
+  			  error: function (jqXHR, textStatus, errorThrown) {
+				  var x;
+			  }
+  			});
+        	
+        	return o;
+        },
+		
 		"sAjaxSource": "/Library/contents",
 		"fnServerData": function ( sSource, aoData, testCallback ) {
     		aoData.push( { name: "format", value: "json"} );
@@ -293,7 +268,52 @@ function createDataTable(data) {
 			} );
 		},
 		"fnRowCallback": AIRTIME.library.events.fnRowCallback,
-		"fnCreatedRow": fnCreatedRow,
+		"fnCreatedRow": function( nRow, aData, iDataIndex ) {
+			
+			//call the context menu so we can prevent the event from propagating.
+			$(nRow).find('td:not(.library_checkbox):not(.library_type)').click(function(e){
+				
+				$(this).contextMenu();
+				
+				return false;
+			});
+
+			//add a tool tip to appear when the user clicks on the type icon.
+			$(nRow.children[1]).qtip({
+				content: {
+					text: "Loading...",
+					title: {
+						text: aData.track_title
+					},
+					ajax: {
+						url: "/Library/get-file-meta-data",
+						type: "get",
+						data: ({format: "html", id : aData.id, type: aData.ftype}),
+						success: function(data, status) {
+							this.set('content.text', data);
+						}
+					}
+				},
+				position: {
+					my: 'left center',
+		            at: 'right center', // Position the tooltip above the link 
+		            viewport: $(window), // Keep the tooltip on-screen at all times
+		            effect: false // Disable positioning animation
+		        },
+				style: {
+					classes: "ui-tooltip-dark"
+				},
+				show: {
+				    event: 'click',
+				    solo: true // Only show one tooltip at a time
+				},
+				hide: 'mouseout'
+				
+			}).click(function(event) { 
+				event.preventDefault();
+				event.stopPropagation();
+			});
+		},
 		"fnDrawCallback": AIRTIME.library.events.fnDrawCallback,
 		"fnHeaderCallback": function(nHead) {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
@@ -319,8 +339,7 @@ function createDataTable(data) {
         "oLanguage": {
             "sSearch": ""
         },
-        "iDisplayLength": getNumEntriesPreference(data),
-
+       
         // R = ColReorder, C = ColVis, T = TableTools
         "sDom": 'Rlfr<"H"T<"library_toolbar"C>>t<"F"ip>',
         
@@ -353,8 +372,7 @@ function createDataTable(data) {
             "buttonText": "Show/Hide Columns",
             "sAlign": "right",
             "aiExclude": [0, 1],
-            "sSize": "css",
-            "bShowAll": true
+            "sSize": "css"
 		},
 		
 		"oColReorder": {
@@ -377,13 +395,6 @@ function createDataTable(data) {
     		oTT.fnSelectNone();
     	}       
     });
-}
-
-$(document).ready(function() {
-    $('.tabs').tabs();
-    
-    $.ajax({url: "/Api/library-init/format/json", dataType:"json", success:createDataTable, 
-        error:function(jqXHR, textStatus, errorThrown){}});
     
     checkImportStatus();
     setInterval( checkImportStatus, 5000 );

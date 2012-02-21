@@ -205,7 +205,7 @@ $(document).ready(function() {
 		if (aData.header === true) {
 			cl = 'sb-header';
 			
-			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
+			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span><span class="ui-icon ui-icon-triangle-1-e"></span>';
 			fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
 		}
 		else if (aData.footer === true) {
@@ -230,7 +230,7 @@ $(document).ready(function() {
 			
 			node = nRow.children[0];
 			if (aData.checkbox === true) {
-				node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input>';
+				node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input><span class="ui-icon ui-icon-triangle-1-e"></span>';
 			}
 			else {
 				node.innerHTML = '';

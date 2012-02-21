@@ -14,13 +14,15 @@ class PreferenceController extends Zend_Controller_Action
                     ->addActionContext('is-import-in-progress', 'json')
                     ->addActionContext('change-stream-setting', 'json')
                     ->addActionContext('get-liquidsoap-status', 'json')
+                    ->addActionContext('get-library-datatable', 'json')
+                    ->addActionContext('set-library-datatable', 'json')
                     ->initContext();
     }
 
     public function indexAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -59,7 +61,7 @@ class PreferenceController extends Zend_Controller_Action
     public function supportSettingAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -119,7 +121,7 @@ class PreferenceController extends Zend_Controller_Action
     public function directoryConfigAction()
     {
         global $CC_CONFIG;
-        
+
         if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
             $request = $this->getRequest();
             $baseUrl = $request->getBaseUrl();
@@ -136,7 +138,7 @@ class PreferenceController extends Zend_Controller_Action
     public function streamSettingAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -206,10 +208,10 @@ class PreferenceController extends Zend_Controller_Action
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
                 }
 
-                
+
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
                 $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
-                $values['streamFormat'] = $form->getValue('streamFormat'); 
+                $values['streamFormat'] = $form->getValue('streamFormat');
 
             }
             if(!$error){
@@ -330,6 +332,26 @@ class PreferenceController extends Zend_Controller_Action
             $out[] = array("id"=>$i, "status"=>$status);
         }
         die(json_encode($out));
+    }
+
+    public function setLibraryDatatableAction() {
+
+        $request = $this->getRequest();
+        $settings = $request->getParam("settings");
+
+        $data = serialize($settings);
+        Logging::log("library datatable");
+        Logging::log($data);
+
+        Application_Model_Preference::SetValue("library_datatable", $data, true);
+
+    }
+
+    public function getLibraryDatatableAction() {
+
+        $data = Application_Model_Preference::GetValue("library_datatable", true);
+
+        $this->view->settings = unserialize($data);
     }
 }
 

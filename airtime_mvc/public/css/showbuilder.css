@@ -3,3 +3,10 @@
 #show_builder input.input_text {
     width:100px;
 }
+
+#show_builder span.ui-icon-triangle-1-e {
+	float: left;
+    position: relative;
+    left: -20px;
+    top: 15px;
+}
