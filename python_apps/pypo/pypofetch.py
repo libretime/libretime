@@ -14,6 +14,7 @@ from threading import Thread
 from subprocess import Popen, PIPE
 from datetime import datetime
 from datetime import timedelta
+from Queue import Empty
 import filecmp
 
 # For RabbitMQ
@@ -494,24 +495,47 @@ class PypoFetch(Thread):
             logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
             time.sleep(5)
 
-        loops = 1        
+        loops = 1
         while True:
             logger.info("Loop #%s", loops)
             try:               
                 try:
-                    message = self.simple_queue.get(block=True)
+                    """
+                    our simple_queue.get() requires a timeout, in which case we
+                    fetch the Airtime schedule manually. It is important to fetch
+                    the schedule periodically because if we didn't, we would only 
+                    get schedule updates via RabbitMq if the user was constantly 
+                    using the Airtime interface. 
+                    
+                    If the user is not using the interface, RabbitMq messages are not
+                    sent, and we will have very stale (or non-existent!) data about the 
+                    schedule.
+                    
+                    Currently we are checking every 3600 seconds (1 hour)
+                    """
+                    message = self.simple_queue.get(block=True, timeout=3600)
                     self.handle_message(message.payload)
                     # ACK the message to take it off the queue
                     message.ack()
+                except Empty, e:
+                    """
+                    Queue timeout. Fetching data manually
+                    """
+                    raise
                 except MessageStateError, m:
                     logger.error("Message ACK error: %s", m)
+                    raise
+                except Exception, e:
+                    """
+                    There is a problem with the RabbitMq messenger service. Let's
+                    log the error and get the schedule via HTTP polling
+                    """
+                    logger.error("Exception, %s", e)
+                    raise
             except Exception, e:
                 """
-                There is a problem with the RabbitMq messenger service. Let's
-                log the error and get the schedule via HTTP polling
+                Fetch Airtime schedule manually
                 """
-                logger.error("Exception, %s", e)
-                
                 status, self.schedule_data = self.api_client.get_schedule()
                 if status == 1:
                     self.process_schedule(self.schedule_data, "scheduler", False)
