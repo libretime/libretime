@@ -267,9 +267,9 @@ $(document).ready(function() {
 	oTable = tableDiv.dataTable( {
 		"aoColumns": [
 	    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
-        /* starts */{"mDataProp": "starts", "sTitle": "Airtime"},
-        /* ends */{"mDataProp": "ends", "sTitle": "Off Air"},
-        /* runtime */{"mDataProp": "runtime", "sTitle": "Runtime"},
+        /* starts */{"mDataProp": "starts", "sTitle": "Start"},
+        /* ends */{"mDataProp": "ends", "sTitle": "End"},
+        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration"},
         /* title */{"mDataProp": "title", "sTitle": "Title"},
         /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
         /* album */{"mDataProp": "album", "sTitle": "Album"}
