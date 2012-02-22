@@ -629,11 +629,6 @@ class Application_Model_StoredFile {
             UNION
             ({$fileSelect} FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
 
-        //TODO see Allan's reply about iDataSort working for serverside processing.
-        //hack to sort on ftype when image "type" col selected for sorting.
-        if ($datatables["iSortCol_0"] == 1) {
-            $datatables["iSortCol_0"] = 2;
-        }
 
 	   $results = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables);
 
