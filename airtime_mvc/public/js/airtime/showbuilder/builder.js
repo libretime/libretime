@@ -282,6 +282,63 @@ $(document).ready(function() {
 		"bServerSide": true,
 		"bInfo": false,
 		"bAutoWidth": false,
+		
+		"bStateSave": true,
+		"fnStateSaveParams": function (oSettings, oData) {
+    		//remove oData components we don't want to save.
+    		delete oData.oSearch;
+    		delete oData.aoSearchCols;
+	    },
+        "fnStateSave": function (oSettings, oData) {
+           
+    		$.ajax({
+			  url: "/preference/set-timeline-datatable",
+			  type: "POST",
+			  data: {settings : oData, format: "json"},
+			  dataType: "json",
+			  success: function(){},
+			  error: function (jqXHR, textStatus, errorThrown) {
+				  var x;
+			  }
+			});
+        },
+        "fnStateLoad": function (oSettings) {
+        	var o;
+
+        	$.ajax({
+  			  url: "/preference/get-timeline-datatable",
+  			  type: "GET",
+  			  data: {format: "json"},
+  			  dataType: "json",
+  			  async: false,
+  			  success: function(json){
+  				  o = json.settings;
+  			  },
+  			  error: function (jqXHR, textStatus, errorThrown) {
+				  var x;
+			  }
+  			});
+        	
+        	return o;
+        },
+        "fnStateLoadParams": function (oSettings, oData) {
+        	var i,
+				length,
+				a = oData.abVisCols;
+		
+        	//putting serialized data back into the correct js type to make
+        	//sure everything works properly.
+	        for (i = 0, length = a.length; i < length; i++) {	
+	        	a[i] = (a[i] === "true") ? true : false;
+	        }
+	        
+	        a = oData.ColReorder;
+	        for (i = 0, length = a.length; i < length; i++) {	
+	        	a[i] = parseInt(a[i], 10);
+	        }
+	       
+	        oData.iCreate = parseInt(oData.iCreate, 10);
+        },
         
 		"fnServerData": fnServerData,
 		"fnRowCallback": fnShowBuilderRowCallback,
