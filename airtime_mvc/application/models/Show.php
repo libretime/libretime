@@ -215,22 +215,22 @@ class Application_Model_Show {
         }
 
         foreach($showDays as $showDay) {
-        	Logging::log("Local show day is: {$showDay->getDbDay()}");
+            Logging::log("Local show day is: {$showDay->getDbDay()}");
             Logging::log("First show day is: {$showDay->getDbFirstShow()}");
             Logging::log("Id show days is: {$showDay->getDbId()}");
 
-	        if (in_array($showDay->getDbDay(), $p_uncheckedDays)) {
-	           $showDay->reload();
-	           //Logging::log("Local show day is: {$showDay->getDbDay()}");
-	           //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
-	           //Logging::log("Id show days is: {$showDay->getDbId()}");
-	           $startDay = new DateTime("{$showDay->getDbFirstShow()} {$showDay->getDbStartTime()}", new DateTimeZone($showDay->getDbTimezone()));
-	           Logging::log("Show start day: {$startDay->format('Y-m-d H:i:s')}");
+            if (in_array($showDay->getDbDay(), $p_uncheckedDays)) {
+               $showDay->reload();
+               //Logging::log("Local show day is: {$showDay->getDbDay()}");
+               //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
+               //Logging::log("Id show days is: {$showDay->getDbId()}");
+               $startDay = new DateTime("{$showDay->getDbFirstShow()} {$showDay->getDbStartTime()}", new DateTimeZone($showDay->getDbTimezone()));
+               Logging::log("Show start day: {$startDay->format('Y-m-d H:i:s')}");
                $startDay->setTimezone(new DateTimeZone("UTC"));
                Logging::log("Show start day UTC: {$startDay->format('Y-m-d H:i:s')}");
                $daysRemovedUTC[] = $startDay->format('w');
                Logging::log("UTC show day is: {$startDay->format('w')}");
-	        }
+            }
         }
 
         $uncheckedDaysImploded = implode(",", $daysRemovedUTC);
@@ -843,18 +843,18 @@ class Application_Model_Show {
                     }
                 }
 
-	            if ($p_data['add_show_start_date'] != $this->getStartDate()
-	                || $p_data['add_show_start_time'] != $this->getStartTime()){
-	                //start date/time has changed
+                if ($p_data['add_show_start_date'] != $this->getStartDate()
+                    || $p_data['add_show_start_time'] != $this->getStartTime()){
+                    //start date/time has changed
 
-	                $newDate = strtotime($p_data['add_show_start_date']);
-	                $oldDate = strtotime($this->getStartDate());
-	                if ($newDate > $oldDate){
-	                    $this->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
-	                }
+                    $newDate = strtotime($p_data['add_show_start_date']);
+                    $oldDate = strtotime($this->getStartDate());
+                    if ($newDate > $oldDate){
+                        $this->removeAllInstancesBeforeDate($p_data['add_show_start_date']);
+                    }
 
-	                $this->updateStartDateTime($p_data, $p_endDate);
-	            }
+                    $this->updateStartDateTime($p_data, $p_endDate);
+                }
             }
 
             //Check if end date for the repeat option has changed. If so, need to take care
@@ -1397,7 +1397,8 @@ class Application_Model_Show {
         }
 
         $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name, 
-                color, background_color, file_id, cc_show_instances.id AS instance_id
+                color, background_color, file_id, cc_show_instances.id AS instance_id,
+                time_filled
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id
             WHERE cc_show_instances.modified_instance = FALSE";
@@ -1486,14 +1487,15 @@ class Application_Model_Show {
      *          -in UTC time
      * @param boolean $editable
      */
-    public static function getFullCalendarEvents($start, $end, $editable=false)
+    public static function getFullCalendarEvents($p_start, $p_end, $p_editable=false)
     {
+        
         $events = array();
 
-        $interval = $start->diff($end);
+        $interval = $p_start->diff($p_end);
         $days =  $interval->format('%a');
 
-        $shows = Application_Model_Show::getShows($start, $end);
+        $shows = Application_Model_Show::getShows($p_start, $p_end);
 
         $today_timestamp = gmdate("Y-m-d H:i:s");
 
@@ -1501,20 +1503,32 @@ class Application_Model_Show {
             $options = array();
 
             //only bother calculating percent for week or day view.
-            if(intval($days) <= 7) {
-                $show_instance = new Application_Model_ShowInstance($show["instance_id"]);
-                $options["percent"] =  $show_instance->getPercentScheduled();
+            
+            if(intval($days) <= 7) {                
+                $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
             }
 
-            if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
+            if ($p_editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
                 $options["editable"] = true;
                 $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
             } else {
                 $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
             }
         }
-
+        
         return $events;
+    }
+    
+    /**
+     * Calculates the percentage of a show scheduled given the start and end times in date/time format
+     * and the time_filled as the total time the schow is scheduled for in time format.
+     **/
+    private static function getPercentScheduled($p_starts, $p_ends, $p_time_filled){
+        $durationSeconds = (strtotime($p_ends) - strtotime($p_starts)); 
+        $time_filled = Application_Model_Schedule::WallTimeToMillisecs($p_time_filled) / 1000; 
+        $percent = ceil(( $time_filled / $durationSeconds) * 100);
+        
+        return $percent;
     }
 
     private static function makeFullCalendarEvent($show, $options=array())
