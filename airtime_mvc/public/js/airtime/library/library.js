@@ -223,7 +223,9 @@ $(document).ready(function() {
 		"bStateSave": true,
 		
 		"fnStateSaveParams": function (oSettings, oData) {
-    		oData.oSearch.sSearch = "";
+    		//remove oData components we don't want to save.
+    		delete oData.oSearch;
+    		delete oData.aoSearchCols;
 	    },
         "fnStateSave": function (oSettings, oData) {
            
@@ -262,10 +264,18 @@ $(document).ready(function() {
 				length,
 				a = oData.abVisCols;
 		
-        	//datatables needs boolean type to work properly.
-	        for (i = 0, length = oData.abVisCols.length; i < length; i++) {	
+        	//putting serialized data back into the correct js type to make
+        	//sure everything works properly.
+	        for (i = 0, length = a.length; i < length; i++) {	
 	        	a[i] = (a[i] === "true") ? true : false;
 	        }
+	        
+	        a = oData.ColReorder;
+	        for (i = 0, length = a.length; i < length; i++) {	
+	        	a[i] = parseInt(a[i], 10);
+	        }
+	       
+	        oData.iCreate = parseInt(oData.iCreate, 10);
         },
 		
 		"sAjaxSource": "/Library/contents",
