@@ -102,8 +102,6 @@ class ShowbuilderController extends Zend_Controller_Action
             Logging::log("{$e->getFile()}");
             Logging::log("{$e->getLine()}");
         }
-
-        $this->view->data = $json;
     }
 
     public function scheduleRemoveAction()
