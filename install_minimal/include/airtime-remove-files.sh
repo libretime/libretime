@@ -46,6 +46,8 @@ rm -f /usr/bin/airtime-import
 rm -f /usr/bin/airtime-update-db-settings
 rm -f /usr/bin/airtime-check-system
 rm -f /usr/bin/airtime-log
+rm -f /usr/bin/airtime-test-soundcard
+rm -f /usr/bin/airtime-test-stream
 
 rm -rf /usr/lib/airtime
 rm -rf /usr/share/airtime

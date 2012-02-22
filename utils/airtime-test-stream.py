@@ -6,6 +6,11 @@ import sys
 
 import getopt
 
+"""
+we need to run the program as non-root because Liquidsoap refuses to run as root.
+It is possible to run change the effective user id (seteuid) before calling Liquidsoap
+but this introduces other problems (fake root user is not part of audio group after calling seteuid)
+"""
 if os.geteuid() == 0:
     print "Please run this program as non-root"
     sys.exit(1)
@@ -20,7 +25,22 @@ def printUsage():
     print "     -u port (default: source) "
     print "     -p password (default: hackme) "
     print "     -m mount (default: test) "
+        
+def find_liquidsoap_binary():
+    """
+    Starting with Airtime 2.0, we don't know the exact location of the Liquidsoap
+    binary because it may have been installed through a debian package. Let's find
+    the location of this binary.
+    """
+    
+    rv = subprocess.call("which liquidsoap > /dev/null", shell=True)
+    if rv == 0:
+        return "liquidsoap"
+    else:
+        if os.path.exists("/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap"):
+            return "/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap"
 
+    return None
 
 optlist, args = getopt.getopt(sys.argv[1:], 'hvo:H:P:u:p:')
 stream_types = set(["shoutcast", "icecast"])
@@ -60,21 +80,39 @@ for o, a in optlist:
 
 try:
     
+    print "Protocol: %s " % stream_type
+    print "Host: %s" % host
+    print "Port: %s" % port
+    print "User: %s" % user
+    print "Password: %s" % password
+    print "Mount: %s\n" % mount
+    
     url = "http://%s:%s/%s" % (host, port, mount)
-    print "Outputting to %s streaming server. You should be able to hear a monotonous tone on %s. Press ctrl-c to quit." % (stream_type, url)
+    print "Outputting to %s streaming server. You should be able to hear a monotonous tone on '%s'. Press ctrl-c to quit." % (stream_type, url)
+    
+    liquidsoap_exe = find_liquidsoap_binary()
+    
+    if liquidsoap_exe is None:
+        raise Exception("Liquidsoap not found!")
         
     if stream_type == "icecast":
-        command = "liquidsoap 'output.icecast(%%vorbis, host = \"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\", sine())'" % (host, port, user, password, mount)
+        command = "%s 'output.icecast(%%vorbis, host = \"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\", sine())'" % (liquidsoap_exe, host, port, user, password, mount)
     else:
-        command = "liquidsoap 'output.shoutcast(%%mp3, host=\"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\",  sine())'" % (host, port, user, password, mount)
+        command = "%s 'output.shoutcast(%%mp3, host=\"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\",  sine())'" % (liquidsoap_exe, host, port, user, password, mount)
         
     if not verbose:
-        command += " > /dev/null"
+        command += " 2>/dev/null | grep \"failed\""
     
     #print command
     rv = subprocess.call(command, shell=True)
     
+    #if we reach this point, it means that our subprocess exited without the user
+    #doing a keyboard interrupt. This means there was a problem outputting to the 
+    #stream server. Print appropriate message.
+    print "There was an error with your stream configuration. Please review your configuration " + \
+        "and run this program again. Use the -h option for help"
+    
 except KeyboardInterrupt, ki:
-    print "Exiting"
+    print "\nExiting"
 except Exception, e:
     raise

@@ -6,18 +6,44 @@ import sys
 
 import getopt
 
+"""
+we need to run the program as non-root because Liquidsoap refuses to run as root.
+It is possible to run change the effective user id (seteuid) before calling Liquidsoap
+but this introduces other problems (fake root user is not part of audio group after calling seteuid)
+"""
 if os.geteuid() == 0:
     print "Please run this program as non-root"
     sys.exit(1)
 
 def printUsage():
-    print "airtime-test-soundcard [-v] [-o alsa | ao | oss | portaudio | pulseaudio ]"
+    print "airtime-test-soundcard [-v] [-o alsa | ao | oss | portaudio | pulseaudio ] [-h]"
     print " Where: "
-    print "     -v verbose mode "
-    print "     -o Linux Sound API "
+    print "     -v verbose mode"
+    print "     -o Linux Sound API (default: alsa)"
+    print "     -h show help menu "
+    
+def find_liquidsoap_binary():
+    """
+    Starting with Airtime 2.0, we don't know the exact location of the Liquidsoap
+    binary because it may have been installed through a debian package. Let's find
+    the location of this binary.
+    """
+    
+    rv = subprocess.call("which liquidsoap > /dev/null", shell=True)
+    if rv == 0:
+        return "liquidsoap"
+    else:
+        if os.path.exists("/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap"):
+            return "/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap"
 
+    return None
 
-optlist, args = getopt.getopt(sys.argv[1:], 'hvo:')
+try:
+    optlist, args = getopt.getopt(sys.argv[1:], 'hvo:')
+except getopt.GetoptError, g:
+    printUsage()
+    sys.exit(1)
+    
 sound_api_types = set(["alsa", "ao", "oss", "portaudio", "pulseaudio"])
 
 verbose = False
@@ -32,14 +58,20 @@ for o, a in optlist:
             print "Unknown sound api type\n"
             printUsage()
             sys.exit(1)
-    if "-h" == o:
+    if "-h" == o and len(optlist) == 1:
         printUsage()
         sys.exit(0)
 
 try:
-    print "Outputting to soundcard with '%s' sound API. You should be able to hear a monotonous tone. Press ctrl-c to quit." % sound_api
+    print "Sound API: %s" % sound_api
+    print "Outputting to soundcard. You should be able to hear a monotonous tone. Press ctrl-c to quit."
         
-    command = "/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap 'output.%s(sine())'" % sound_api
+    liquidsoap_exe = find_liquidsoap_binary()
+    
+    if liquidsoap_exe is None:
+        raise Exception("Liquidsoap not found!")
+        
+    command = "%s 'output.%s(sine())'" % (liquidsoap_exe, sound_api)
     
     if not verbose:
         command += " > /dev/null"
@@ -47,7 +79,13 @@ try:
     #print command
     rv = subprocess.call(command, shell=True)
     
+    #if we reach this point, it means that our subprocess exited without the user
+    #doing a keyboard interrupt. This means there was a problem outputting to the 
+    #soundcard. Print appropriate message.
+    print "There was an error using the selected sound API. Please select a different API " + \
+        "and run this program again. Use the -h option for help"
+    
 except KeyboardInterrupt, ki:
-    print "Exiting"
+    print "\nExiting"
 except Exception, e:
     raise
