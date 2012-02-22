@@ -582,7 +582,8 @@ class Application_Model_StoredFile {
     public static function searchFilesForPlaylistBuilder($datatables) {
         global $CC_CONFIG;
 
-        $displayData = array("track_title", "artist_name", "album_title", "genre", "length", "year", "utime", "mtime", "ftype", "track_number");
+        $displayData = array("track_title", "artist_name", "album_title", "genre", "length",
+            "year", "utime", "mtime", "ftype", "track_number");
 
         $plSelect = "SELECT ";
         $fileSelect = "SELECT ";
@@ -655,15 +656,6 @@ class Application_Model_StoredFile {
 
         return $results;
     }
-
-    public static function searchPlaylistsForSchedule($datatables)
-    {
-		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
-        //$datatables["optWhere"][] = "INTERVAL '{$time_remaining}' > INTERVAL '00:00:00'";
-        $datatables["optWhere"][] = "plt.length > INTERVAL '00:00:00'";
-
-		return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
-	}
 
 	public static function searchFiles($fromTable, $data)
 	{

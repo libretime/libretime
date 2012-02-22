@@ -217,6 +217,21 @@ $(document).ready(function() {
     $('.tabs').tabs();
 	
     oTable = $('#library_display').dataTable( {
+    	
+    	"aoColumns": [
+          /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
+          /* Type */          {"sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "25px", "sClass": "library_type"},
+          /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
+          /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
+          /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
+          /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sClass": "library_genre"},
+          /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sClass": "library_year"},
+          /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sClass": "library_length"},
+          /* Upload Time */   {"sTitle": "Uploaded", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
+          /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
+          /* Track Number */  {"sTitle": "Track", "sName": "track_number",  "bSearchable": false, "bVisible": false, "mDataProp": "track_number", "sClass": "library_track"}
+          ],
+    	              
 		"bProcessing": true,
 		"bServerSide": true,
 		
@@ -341,19 +356,6 @@ $(document).ready(function() {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
 		},
 		
-		"aoColumns": [
-        /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
-        /* Type */          {"sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "25px", "sClass": "library_type"},
-        /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
-        /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
-        /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
-        /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sClass": "library_genre"},
-        /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sClass": "library_year"},
-        /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sClass": "library_length"},
-        /* Upload Time */   {"sTitle": "Uploaded", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
-        /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
-        /* Track Number */  {"sTitle": "Track", "sName": "track_number",  "bSearchable": false, "bVisible": false, "mDataProp": "track_number", "sClass": "library_track"}
-        ],
 		"aaSorting": [[2,'asc']],
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
