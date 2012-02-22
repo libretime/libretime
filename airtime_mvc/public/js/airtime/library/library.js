@@ -219,24 +219,36 @@ $(document).ready(function() {
     oTable = $('#library_display').dataTable( {
     	
     	"aoColumns": [
-          /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
-          /* Type */          {"sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "25px", "sClass": "library_type"},
-          /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
-          /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
-          /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
-          /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sClass": "library_genre"},
-          /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sClass": "library_year"},
-          /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sClass": "library_length"},
-          /* Upload Time */   {"sTitle": "Uploaded", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
-          /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
-          /* Track Number */  {"sTitle": "Track", "sName": "track_number",  "bSearchable": false, "bVisible": false, "mDataProp": "track_number", "sClass": "library_track"}
+          /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
+          /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 2},
+          /* ftype */         {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
+          /* Title */         {"sTitle": "Title", "mDataProp": "track_title", "sClass": "library_title"},
+          /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator"},
+          /* Album */         {"sTitle": "Album", "mDataProp": "album_title", "sClass": "library_album"},
+          /* Genre */         {"sTitle": "Genre", "mDataProp": "genre", "sClass": "library_genre"},
+          /* Year */          {"sTitle": "Year", "mDataProp": "year", "sClass": "library_year"},
+          /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length"},
+          /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time"},
+          /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time"},
+          /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track"},
+          /* Mood */  		  {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood"},
+          /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm"},
+          /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer"},
+          /* Website */  {"sTitle": "Website", "mDataProp": "info_url", "bSearchable": false, "bVisible": false, "sClass": "library_url"},
+          /* Bit Rate */  {"sTitle": "Bit Rate", "mDataProp": "bit_rate", "bSearchable": false, "bVisible": false, "sClass": "library_bitrate"},
+          /* Sameple Rate */  {"sTitle": "Sample Rate", "mDataProp": "sample_rate", "bSearchable": false, "bVisible": false, "sClass": "library_sr"},
+          /* ISRC Number */  {"sTitle": "ISRC", "mDataProp": "isrc_number", "bSearchable": false, "bVisible": false, "sClass": "library_isrc"},
+          /* Encoded */  {"sTitle": "Encoded", "mDataProp": "encoded_by", "bSearchable": false, "bVisible": false, "sClass": "library_encoded"},
+          /* Label */  {"sTitle": "Label", "mDataProp": "label", "bSearchable": false, "bVisible": false, "sClass": "library_label"},
+          /* Copyright */  {"sTitle": "Copyright", "mDataProp": "copyright", "bSearchable": false, "bVisible": false, "sClass": "library_copyright"},
+          /* Mime */  {"sTitle": "Mime", "mDataProp": "mime", "bSearchable": false, "bVisible": false, "sClass": "library_mime"},
+          /* Language */  {"sTitle": "Language", "mDataProp": "language", "bSearchable": false, "bVisible": false, "sClass": "library_language"}
           ],
     	              
 		"bProcessing": true,
 		"bServerSide": true,
 		
 		"bStateSave": true,
-		
 		"fnStateSaveParams": function (oSettings, oData) {
     		//remove oData components we don't want to save.
     		delete oData.oSearch;
@@ -356,7 +368,7 @@ $(document).ready(function() {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
 		},
 		
-		"aaSorting": [[2,'asc']],
+		"aaSorting": [[3, 'asc']],
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
 		"bAutoWidth": false,
@@ -395,13 +407,12 @@ $(document).ready(function() {
         "oColVis": {
             "buttonText": "Show/Hide Columns",
             "sAlign": "right",
-            "aiExclude": [0, 1],
+            "aiExclude": [0, 1, 2],
             "sSize": "css"
 		},
 		
 		"oColReorder": {
-			"iFixedColumns": 2,
-			"aiOrder": [ 0,1,2,3,4,5,6,7,8,9,10 ]
+			"iFixedColumns": 2
 		}
 		
     });

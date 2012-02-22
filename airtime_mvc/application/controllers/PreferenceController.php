@@ -348,7 +348,9 @@ class PreferenceController extends Zend_Controller_Action
     public function getLibraryDatatableAction() {
 
         $data = Application_Model_Preference::GetValue("library_datatable", true);
-        $this->view->settings = unserialize($data);
+        if ($data != "") {
+            $this->view->settings = unserialize($data);
+        }
     }
 
     public function setTimelineDatatableAction() {
@@ -363,7 +365,9 @@ class PreferenceController extends Zend_Controller_Action
     public function getTimelineDatatableAction() {
 
         $data = Application_Model_Preference::GetValue("timeline_datatable", true);
-        $this->view->settings = unserialize($data);
+        if ($data != "") {
+            $this->view->settings = unserialize($data);
+        }
     }
 }
 
