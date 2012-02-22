@@ -83,9 +83,10 @@ function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
         if (data == true){
-            div.css('visibility', 'visible');
-        }else{
-            div.css('visibility', 'hidden');
+            div.show();
+        }
+        else{
+            div.hide();
         }
     });
 }
@@ -214,8 +215,6 @@ function addQtipToSCIcons(){
 $(document).ready(function() {
     var oTable;
     
-    $('.tabs').tabs();
-	
     oTable = $('#library_display').dataTable( {
     	
     	"aoColumns": [
