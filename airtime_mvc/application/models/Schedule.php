@@ -47,87 +47,6 @@ class Application_Model_Schedule {
 
 
     /**
-     * Returns array indexed by:
-     *    "playlistId"/"playlist_id" (aliases to the same thing)
-     *    "start"/"starts" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
-     *    "end"/"ends" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
-     *    "group_id"/"id" (aliases to the same thing)
-     *    "clip_length" (for audio clips this is the length of the audio clip,
-     *                   for playlists this is the length of the entire playlist)
-     *    "name" (playlist only)
-     *    "creator" (playlist only)
-     *    "file_id" (audioclip only)
-     *    "count" (number of items in the playlist, always 1 for audioclips.
-     *      Note that playlists with one item will also have count = 1.
-     *
-     * @param string $p_fromDateTime
-     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-     * @param string $p_toDateTime
-     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-     * @param boolean $p_playlistsOnly
-     *    Retrieve playlists as a single item.
-     * @return array
-     *      Returns empty array if nothing found
-     */
-
-    public static function GetItems($p_currentDateTime, $p_toDateTime, $p_playlistsOnly = true)
-    {
-        global $CC_CONFIG, $CC_DBC;
-        $rows = array();
-        if (!$p_playlistsOnly) {
-            $sql = "SELECT * FROM ".$CC_CONFIG["scheduleTable"]
-            ." WHERE (starts >= TIMESTAMP '$p_currentDateTime') "
-            ." AND (ends <= TIMESTAMP '$p_toDateTime')";
-            $rows = $CC_DBC->GetAll($sql);
-            foreach ($rows as &$row) {
-                $row["count"] = "1";
-                $row["playlistId"] = $row["playlist_id"];
-                $row["start"] = $row["starts"];
-                $row["end"] = $row["ends"];
-                $row["id"] = $row["group_id"];
-            }
-        } else {
-            $sql = "SELECT MIN(pt.creator) AS creator,"
-            ." st.group_id,"
-            ." SUM(st.clip_length) AS clip_length,"
-            ." MIN(st.file_id) AS file_id,"
-            ." COUNT(*) as count,"
-            ." MIN(st.playlist_id) AS playlist_id,"
-            ." MIN(st.starts) AS starts,"
-            ." MAX(st.ends) AS ends,"
-            ." MIN(sh.name) AS show_name,"
-            ." MIN(si.starts) AS show_start,"
-            ." MAX(si.ends) AS show_end"
-            ." FROM $CC_CONFIG[scheduleTable] as st"
-            ." LEFT JOIN $CC_CONFIG[playListTable] as pt"
-            ." ON st.playlist_id = pt.id"
-            ." LEFT JOIN $CC_CONFIG[showInstances] as si"
-            ." ON st.instance_id = si.id"
-            ." LEFT JOIN $CC_CONFIG[showTable] as sh"
-            ." ON si.show_id = sh.id"
-            //The next line ensures we only get songs that haven't ended yet
-            ." WHERE (st.ends >= TIMESTAMP '$p_currentDateTime')"
-            ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
-            //next line makes sure that we aren't returning items that
-            //are past the show's scheduled timeslot.
-            ." AND (st.starts < si.ends)"
-            ." GROUP BY st.group_id"
-            ." ORDER BY starts";
-
-            $rows = $CC_DBC->GetAll($sql);
-            if (!PEAR::isError($rows)) {
-                foreach ($rows as &$row) {
-                    $row["playlistId"] = $row["playlist_id"];
-                    $row["start"] = $row["starts"];
-                    $row["end"] = $row["ends"];
-                    $row["id"] = $row["group_id"];
-                }
-            }
-        }
-        return $rows;
-    }
-
-    /**
      * Returns data related to the scheduled items.
      *
      * @param int $prev
@@ -473,7 +392,108 @@ class Application_Model_Schedule {
         }
         return $diff;
     }
+    
+    /**
+     * Returns array indexed by:
+     *    "playlistId"/"playlist_id" (aliases to the same thing)
+     *    "start"/"starts" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
+     *    "end"/"ends" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
+     *    "group_id"/"id" (aliases to the same thing)
+     *    "clip_length" (for audio clips this is the length of the audio clip,
+     *                   for playlists this is the length of the entire playlist)
+     *    "name" (playlist only)
+     *    "creator" (playlist only)
+     *    "file_id" (audioclip only)
+     *    "count" (number of items in the playlist, always 1 for audioclips.
+     *      Note that playlists with one item will also have count = 1.
+     *
+     * @param string $p_fromDateTime
+     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
+     * @param string $p_toDateTime
+     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
+     * @param boolean $p_playlistsOnly
+     *    Retrieve playlists as a single item.
+     * @return array
+     *      Returns null if nothing found
+     */
 
+    public static function GetItems($p_currentDateTime, $p_toDateTime)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        $rows = array();
+        
+        $sql = "SELECT st.file_id AS file_id,"
+        ." st.starts AS starts,"
+        ." st.ends AS ends,"
+        ." si.starts as show_start,"
+        ." si.ends as show_end"
+        ." FROM $CC_CONFIG[scheduleTable] as st"
+        ." LEFT JOIN $CC_CONFIG[showInstances] as si"
+        ." ON st.instance_id = si.id"
+        ." ORDER BY starts";
+        
+       
+        /*
+        $sql = "SELECT pt.creator as creator"
+        ." st.file_id AS file_id"
+        ." st.starts AS starts"
+        ." st.ends AS ends"
+        ." st.name as show_name"
+        ." si.starts as show_start"
+        ." si.ends as show_end"
+        ." FROM $CC_CONFIG[scheduleTable] as st"
+        ." LEFT JOIN $CC_CONFIG[showInstances] as si"
+        ." ON st.instance_id = si.id"
+        ." LEFT JOIN $CC_CONFIG[showTable] as sh"
+        ." ON si.show_id = sh.id"
+        //The next line ensures we only get songs that haven't ended yet
+        ." WHERE (st.ends >= TIMESTAMP '$p_currentDateTime')"
+        ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
+        //next line makes sure that we aren't returning items that
+        //are past the show's scheduled timeslot.
+        ." AND (st.starts < si.ends)"
+        ." ORDER BY starts";
+        * */
+        
+        $rows = $CC_DBC->GetAll($sql);
+        if (!PEAR::isError($rows)) {
+            foreach ($rows as &$row) {
+                $row["start"] = $row["starts"];
+                $row["end"] = $row["ends"];
+            }
+        }
+            
+        return $rows;
+    }
+
+
+    public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null){
+        
+        global $CC_CONFIG, $CC_DBC;
+
+        /* if $p_fromDateTime and $p_toDateTime function parameters are null, then set range
+         * from "now" to "now + 24 hours". */
+        if (is_null($p_fromDateTime)) {
+            $t1 = new DateTime("@".time());
+            $range_start = $t1->format("Y-m-d H:i:s");
+        } else {
+            $range_start = Application_Model_Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
+        }
+        if (is_null($p_fromDateTime)) {
+            $t2 = new DateTime("@".time());
+            $t2->add(new DateInterval("PT24H"));
+            $range_end = $t2->format("Y-m-d H:i:s");
+        } else {
+            $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);
+        }
+        
+        // Scheduler wants everything in a playlist
+        $data = Application_Model_Schedule::GetItems($range_start, $range_end);
+        
+        Logging::log(print_r($data, true));
+        
+        return $data;
+    }
 
     /**
      * Export the schedule in json formatted for pypo (the liquidsoap scheduler)
@@ -483,7 +503,7 @@ class Application_Model_Schedule {
      * @param string $p_toDateTime
      *      In the format "YYYY-MM-DD-HH-mm-SS"
      */
-    public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null)
+    public static function GetScheduledPlaylistsOld($p_fromDateTime = null, $p_toDateTime = null)
     {
         global $CC_CONFIG, $CC_DBC;
 
