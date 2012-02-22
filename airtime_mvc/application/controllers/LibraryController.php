@@ -37,6 +37,8 @@ class LibraryController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
 
+        $this->_helper->viewRenderer->setResponseSegment('library');
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -56,16 +58,6 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
-
-        $this->_helper->viewRenderer->setResponseSegment('library');
-
-        $form = new Application_Form_AdvancedSearch();
-        $form->addGroup(1, 1);
-
-        $this->search_sess->next_group = 2;
-        $this->search_sess->next_row[1] = 2;
-        $this->view->form = $form;
-        $this->view->md = $this->search_sess->md;
     }
 
     public function contextMenuAction()
@@ -289,15 +281,5 @@ class LibraryController extends Zend_Controller_Action
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
         }
-    }
-
-    /**
-     * Stores the number of entries user chose to show in the Library
-     * to the pref db
-     */
-    public function setNumEntriesAction() {
-    	$request = $this->getRequest();
-    	$numEntries = $request->getParam('numEntries');
-    	Application_Model_Preference::SetLibraryNumEntries($numEntries);
     }
 }

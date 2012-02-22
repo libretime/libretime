@@ -15,6 +15,7 @@
  * @method     CcShowInstancesQuery orderByDbOriginalShow($order = Criteria::ASC) Order by the instance_id column
  * @method     CcShowInstancesQuery orderByDbRecordedFile($order = Criteria::ASC) Order by the file_id column
  * @method     CcShowInstancesQuery orderByDbTimeFilled($order = Criteria::ASC) Order by the time_filled column
+ * @method     CcShowInstancesQuery orderByDbLastScheduled($order = Criteria::ASC) Order by the last_scheduled column
  * @method     CcShowInstancesQuery orderByDbModifiedInstance($order = Criteria::ASC) Order by the modified_instance column
  *
  * @method     CcShowInstancesQuery groupByDbId() Group by the id column
@@ -26,6 +27,7 @@
  * @method     CcShowInstancesQuery groupByDbOriginalShow() Group by the instance_id column
  * @method     CcShowInstancesQuery groupByDbRecordedFile() Group by the file_id column
  * @method     CcShowInstancesQuery groupByDbTimeFilled() Group by the time_filled column
+ * @method     CcShowInstancesQuery groupByDbLastScheduled() Group by the last_scheduled column
  * @method     CcShowInstancesQuery groupByDbModifiedInstance() Group by the modified_instance column
  *
  * @method     CcShowInstancesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -64,6 +66,7 @@
  * @method     CcShowInstances findOneByDbOriginalShow(int $instance_id) Return the first CcShowInstances filtered by the instance_id column
  * @method     CcShowInstances findOneByDbRecordedFile(int $file_id) Return the first CcShowInstances filtered by the file_id column
  * @method     CcShowInstances findOneByDbTimeFilled(string $time_filled) Return the first CcShowInstances filtered by the time_filled column
+ * @method     CcShowInstances findOneByDbLastScheduled(string $last_scheduled) Return the first CcShowInstances filtered by the last_scheduled column
  * @method     CcShowInstances findOneByDbModifiedInstance(boolean $modified_instance) Return the first CcShowInstances filtered by the modified_instance column
  *
  * @method     array findByDbId(int $id) Return CcShowInstances objects filtered by the id column
@@ -75,6 +78,7 @@
  * @method     array findByDbOriginalShow(int $instance_id) Return CcShowInstances objects filtered by the instance_id column
  * @method     array findByDbRecordedFile(int $file_id) Return CcShowInstances objects filtered by the file_id column
  * @method     array findByDbTimeFilled(string $time_filled) Return CcShowInstances objects filtered by the time_filled column
+ * @method     array findByDbLastScheduled(string $last_scheduled) Return CcShowInstances objects filtered by the last_scheduled column
  * @method     array findByDbModifiedInstance(boolean $modified_instance) Return CcShowInstances objects filtered by the modified_instance column
  *
  * @package    propel.generator.airtime.om
@@ -422,22 +426,44 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the time_filled column
 	 * 
-	 * @param     string|array $dbTimeFilled The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbTimeFilled The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcShowInstancesQuery The current query, for fluid interface
 	 */
 	public function filterByDbTimeFilled($dbTimeFilled = null, $comparison = null)
 	{
-		if (is_array($dbTimeFilled)) {
+		if (null === $comparison) {
+			if (is_array($dbTimeFilled)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbTimeFilled)) {
+				$dbTimeFilled = str_replace('*', '%', $dbTimeFilled);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcShowInstancesPeer::TIME_FILLED, $dbTimeFilled, $comparison);
+	}
+
+	/**
+	 * Filter the query on the last_scheduled column
+	 * 
+	 * @param     string|array $dbLastScheduled The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByDbLastScheduled($dbLastScheduled = null, $comparison = null)
+	{
+		if (is_array($dbLastScheduled)) {
 			$useMinMax = false;
-			if (isset($dbTimeFilled['min'])) {
-				$this->addUsingAlias(CcShowInstancesPeer::TIME_FILLED, $dbTimeFilled['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbLastScheduled['min'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::LAST_SCHEDULED, $dbLastScheduled['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($dbTimeFilled['max'])) {
-				$this->addUsingAlias(CcShowInstancesPeer::TIME_FILLED, $dbTimeFilled['max'], Criteria::LESS_EQUAL);
+			if (isset($dbLastScheduled['max'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::LAST_SCHEDULED, $dbLastScheduled['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -447,7 +473,7 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcShowInstancesPeer::TIME_FILLED, $dbTimeFilled, $comparison);
+		return $this->addUsingAlias(CcShowInstancesPeer::LAST_SCHEDULED, $dbLastScheduled, $comparison);
 	}
 
 	/**

@@ -202,7 +202,8 @@ CREATE TABLE "cc_show_instances"
 	"rebroadcast" INT2 default 0,
 	"instance_id" INTEGER,
 	"file_id" INTEGER,
-	"time_filled" TIME,
+	"time_filled" interval default '00:00:00',
+	"last_scheduled" TIMESTAMP,
 	"modified_instance" BOOLEAN default 'f' NOT NULL,
 	PRIMARY KEY ("id")
 );

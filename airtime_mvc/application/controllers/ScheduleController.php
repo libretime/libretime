@@ -204,15 +204,11 @@ class ScheduleController extends Zend_Controller_Action
                 && !$instance->isRecorded()
                 && !$instance->isRebroadcast()) {
 
-                $menu["schedule"] = array("name"=> "Add / Remove Content", "url" => "/showbuilder/index/");
+                $menu["schedule"] = array("name"=> "Add / Remove Content",
+                    "url" => "/showbuilder/index/");
 
-                $menu["clear"] = array("name"=> "Remove All Content", "icon" => "delete", "url" => "/schedule/clear-show");
-
-                /*
-
-                $menu[] = array('action' => array('type' => 'ajax', 'url' => '/Schedule/clear-show'.$params,
-                            'callback' => 'window["scheduleRefetchEvents"]'), 'title' => 'Remove All Content');
-                */
+                $menu["clear"] = array("name"=> "Remove All Content", "icon" => "delete",
+                    "url" => "/schedule/clear-show");
             }
 
         }
