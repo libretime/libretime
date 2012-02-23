@@ -805,8 +805,11 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-
-        $this->view->msg = Application_Model_StreamSetting::getStreamSetting();
+        
+        $info = Application_Model_StreamSetting::getStreamSetting();
+        $info[] = (array("keyname" =>"harbor_input_port", "value"=>Application_Model_Preference::GetLiveSteamPort(), "type"=>"integer"));
+        $info[] = (array("keyname" =>"harbor_input_mount_point", "value"=>Application_Model_Preference::GetLiveSteamMountPoint(), "type"=>"string"));
+        $this->view->msg = $info;
     }
 
     public function statusAction() {

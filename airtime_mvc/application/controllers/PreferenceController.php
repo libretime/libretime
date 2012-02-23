@@ -207,6 +207,8 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_StreamSetting::setStreamSetting($values);
                 $data = array();
                 $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
+                $data['setting']['harbor_input_port'] = $values["harbor_input_port"];
+                $data['setting']['harbor_input_mount_point'] = $values["harbor_input_mount_point"];
                 for($i=1;$i<=$num_of_stream;$i++){
                     Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
                 }
@@ -215,7 +217,8 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetLiveSteamAutoEnable($values["auto_enable_live_stream"]);
                 Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
-                
+                Application_Model_Preference::SetLiveSteamPort($values["harbor_input_port"]);
+                Application_Model_Preference::SetLiveSteamMountPoint($values["harbor_input_mount_point"]);
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);

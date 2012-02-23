@@ -43,5 +43,33 @@
                 </ul>
             <?php endif; ?> 
         </dd>
+        <dt id="harbor_input_port-label">
+            <label class="optional" for="harbor_input_port"><?php echo $this->element->getElement('harbor_input_port')->getLabel() ?> :
+            </label>
+        </dt>
+        <dd id="harbor_input_port-element">
+            <?php echo $this->element->getElement('harbor_input_port') ?>
+            <?php if($this->element->getElement('harbor_input_port')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('harbor_input_port')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <dt id="harbor_input_mount_point-label">
+            <label class="optional" for="harbor_input_mount_point"><?php echo $this->element->getElement('harbor_input_mount_point')->getLabel() ?> :
+            </label>
+        </dt>
+        <dd id="harbor_input_mount_point-element">
+            <?php echo $this->element->getElement('harbor_input_mount_point') ?>
+            <?php if($this->element->getElement('harbor_input_mount_point')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('harbor_input_mount_point')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
     </dl>
 </fieldset>

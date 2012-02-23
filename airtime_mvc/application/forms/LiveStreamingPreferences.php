@@ -36,5 +36,22 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                         ->setFilters(array('StringTrim'))
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($master_password);
+        
+        //liquidsoap harbor.input port
+        $port = new Zend_Form_Element_Text('harbor_input_port');
+        $port->setLabel("Port to Connect")
+                ->setValue(Application_Model_Preference::GetLiveSteamPort())
+                ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
+                ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
+                ->setDecorators(array('ViewHelper'));
+        $this->addElement($port);
+        
+        $mount = new Zend_Form_Element_Text('harbor_input_mount_point');
+        $mount->setLabel("Mount Point to Connect")
+                ->setValue(Application_Model_Preference::GetLiveSteamMountPoint())
+                ->setValidators(array(
+                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
+                ->setDecorators(array('ViewHelper'));
+        $this->addElement($mount);
     }
 }

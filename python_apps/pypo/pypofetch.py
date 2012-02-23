@@ -155,6 +155,10 @@ class PypoFetch(Thread):
                 if (existing[s[u'keyname']] != s[u'value']):
                     self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;
+            elif "harbor_input_mount_point" in s[u'keyname'] or "harbor_input_port" in s[u'keyname']:
+                if (existing[s[u'keyname']] != s[u'value']):
+                    logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                    restart = True;
             else:
                 stream, dump = s[u'keyname'].split('_',1)
                 if "_output" in s[u'keyname']:

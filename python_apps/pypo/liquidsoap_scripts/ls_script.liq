@@ -54,7 +54,7 @@ def check_client(user,password) =
         end
 end
 
-live = input.harbor("test", port=8080, auth=check_client)
+live = input.harbor(harbor_input_mount_point, port=harbor_input_port, auth=check_client)
 
 s = fallback(track_sensitive=false, [live, queue, default])
 

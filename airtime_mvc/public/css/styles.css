@@ -2110,9 +2110,6 @@ dd .info-text-small {
 .simple-formblock .display_field dd {
 	min-width:68%;
 }
-.stream-config dd input[id$=port] {
-    width:152px;
-}
 
 dt.block-display.info-block {
     width: auto;
