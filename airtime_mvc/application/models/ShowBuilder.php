@@ -9,12 +9,13 @@ class Application_Model_ShowBuilder {
     private $opts;
 
     private $contentDT;
+    private $epoch_now;
 
     private $defaultRowArray = array(
         "header" => false,
         "footer" => false,
         "empty" => false,
-        "checkbox" => false,
+        "allowed" => false,
         "id" => 0,
         "instance" => "",
         "starts" => "",
@@ -37,6 +38,7 @@ class Application_Model_ShowBuilder {
         $this->timezone = date_default_timezone_get();
         $this->user = Application_Model_User::GetCurrentUser();
         $this->opts = $p_opts;
+        $this->epoch_now = time();
     }
 
     /*
@@ -89,6 +91,7 @@ class Application_Model_ShowBuilder {
     private function makeFooterRow($p_item) {
 
         $row = $this->defaultRowArray;
+        $this->isAllowed($p_item, $row);
         $row["footer"] = true;
 
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
@@ -99,6 +102,16 @@ class Application_Model_ShowBuilder {
         $row["fRuntime"] = $this->formatTimeFilled($runtime);
 
         return $row;
+    }
+
+    private function isAllowed($p_item, &$row) {
+
+        $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+
+        //can only schedule the show if it hasn't started and you are allowed.
+        if ($this->epoch_now < $showStartDT->format('U') && $this->user->canSchedule($p_item["show_id"]) == true) {
+            $row["allowed"] = true;
+        }
     }
 
     private function getRowTimestamp($p_item, &$row) {
@@ -116,6 +129,8 @@ class Application_Model_ShowBuilder {
     private function makeHeaderRow($p_item) {
 
         $row = $this->defaultRowArray;
+        $this->isAllowed($p_item, $row);
+        Logging::log("making header for show id ".$p_item["show_id"]);
         $this->getRowTimestamp($p_item, $row);
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
@@ -137,15 +152,9 @@ class Application_Model_ShowBuilder {
 
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
-        $epoch_now = time();
 
-        $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+        $this->isAllowed($p_item, $row);
         $this->getRowTimestamp($p_item, $row);
-
-        //can only schedule the show if it hasn't started and you are allowed.
-        if ($epoch_now < $showStartDT->format('U') && $this->user->canSchedule($p_item["show_id"]) == true) {
-            $row["checkbox"] = true;
-        }
 
         if (isset($p_item["sched_starts"])) {
 
@@ -172,6 +181,8 @@ class Application_Model_ShowBuilder {
             $row["empty"] = true;
             $row["id"] = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
+
+            //return null;
         }
 
         return $row;
@@ -219,7 +230,11 @@ class Application_Model_ShowBuilder {
             }
 
             //make a normal data row.
-            $display_items[] = $this->makeScheduledItemRow($item);
+            $row = $this->makeScheduledItemRow($item);
+            //don't display the empty rows.
+            if (isset($row)) {
+                $display_items[] = $row;
+            }
         }
 
         //make the last footer if there were any scheduled items.

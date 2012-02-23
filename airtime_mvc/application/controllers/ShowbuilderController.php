@@ -107,7 +107,7 @@ class ShowbuilderController extends Zend_Controller_Action
     public function scheduleRemoveAction()
     {
         $request = $this->getRequest();
-        $items = $request->getParam("items", null);
+        $items = $request->getParam("items", array());
 
         try {
             $scheduler = new Application_Model_Scheduler();

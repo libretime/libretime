@@ -41,33 +41,31 @@ var AIRTIME = (function(AIRTIME){
 		
 		fnAddSelectedItems = function() {
 			var oLibTT = TableTools.fnGetInstance('library_display'),
-				oSchedTT = TableTools.fnGetInstance('show_builder_table'),
 				aData = oLibTT.fnGetSelectedData(),
-				item,
+				i,
+				length,
 				temp,
 				aMediaIds = [],
 				aSchedIds = [];
 			
 			//process selected files/playlists.
-			for (item in aData) {
-				temp = aData[item];
-				if (temp !== null && temp.hasOwnProperty('id')) {
-					aMediaIds.push({"id": temp.id, "type": temp.ftype});
-				} 	
+			for (i=0, length = aData.length; i < length; i++) {
+				temp = aData[i];
+				aMediaIds.push({"id": temp.id, "type": temp.ftype});	
 			}
+			
+			aData = [];
+			$("#show_builder_table tr.cursor-selected-row").each(function(i, el){
+				aData.push($(el).data("aData"));
+			});
 		
-			aData = oSchedTT.fnGetSelectedData();
-			
 			//process selected schedule rows to add media after.
-			for (item in aData) {
-				temp = aData[item];
-				if (temp !== null && temp.hasOwnProperty('id')) {
-					aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});
-				} 	
+			for (i=0, length = aData.length; i < length; i++) {
+				temp = aData[i];
+				aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
 			}
 			
-			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
-			
+			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);	
 		};
 		//[0] = button text
 		//[1] = id 

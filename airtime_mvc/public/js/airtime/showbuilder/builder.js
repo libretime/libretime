@@ -62,8 +62,7 @@ $(document).ready(function() {
 		fnAddSelectedItems,
 		fnRemoveSelectedItems,
 		oRange,
-		fnServerData,
-		fnShowBuilderRowCallback;
+		fnServerData;
 	
 	oBaseDatePickerSettings = {
 		dateFormat: 'yy-mm-dd',
@@ -178,87 +177,17 @@ $(document).ready(function() {
 	fnServerData.start = oRange.start;
 	fnServerData.end = oRange.end;
 
-	fnShowBuilderRowCallback = function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
-		var i,
-			sSeparatorHTML,
-			fnPrepareSeparatorRow,
-			node,
-			cl="";
-		
-		//save some info for reordering purposes.
-		$(nRow).data({"aData": aData});
-		
-		fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
-			
-			node = nRow.children[iNodeIndex];
-			node.innerHTML = sRowContent;
-			node.setAttribute('colspan',100);
-			for (i = iNodeIndex + 1; i < nRow.children.length; i = i+1) {
-				node = nRow.children[i];
-				node.innerHTML = "";
-				node.setAttribute("style", "display : none");
-			}
-			
-			nRow.className = sClass;
-		};
-		
-		if (aData.header === true) {
-			cl = 'sb-header';
-			
-			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
-		}
-		else if (aData.footer === true) {
-			node = nRow.children[0];
-			cl = 'sb-footer';
-			
-			//check the show's content status.
-			if (aData.runtime > 0) {
-				node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
-				cl = cl + ' ui-state-highlight';
-			}
-			else {
-				node.innerHTML = '<span class="ui-icon ui-icon-notice"></span>';
-				cl = cl + ' ui-state-error';
-			}
-				
-			sSeparatorHTML = '<span>'+aData.fRuntime+'</span>';
-			fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
-		}		
-		else {
-			
-			node = nRow.children[0];
-			if (aData.checkbox === true) {
-				var height = $(node).height();
-				node.innerHTML = '<div class="innerWrapper" height="'+height+'"><input type="checkbox" name="'+aData.id+'"></input><div class="marker"></div></div>';
-			}
-			else {
-				node.innerHTML = '';
-				cl = cl + " sb-not-allowed";
-			}
-			
-			if (aData.empty === true) {
-				
-				sSeparatorHTML = '<span>Show Empty</span>';
-				cl = cl + " sb-empty odd";
-				
-				fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
-			}
-		}
-	};
-
 	fnRemoveSelectedItems = function() {
 		var oTT = TableTools.fnGetInstance('show_builder_table'),
 			aData = oTT.fnGetSelectedData(),
-			item,
+			i,
+			length,
 			temp,
 			aItems = [];
 	
-		for (item in aData) {
-			temp = aData[item];
-			if (temp !== null && temp.hasOwnProperty('id')) {
-				aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});
-			} 	
+		for (i=0, length = aData.length; i < length; i++) {
+			temp = aData[i];
+			aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
 		}
 		
 		AIRTIME.showbuilder.fnRemove(aItems);
@@ -266,7 +195,7 @@ $(document).ready(function() {
 	
 	oTable = tableDiv.dataTable( {
 		"aoColumns": [
-	    /* checkbox */ {"mDataProp": "checkbox", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
+	    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
         /* starts */{"mDataProp": "starts", "sTitle": "Start"},
         /* ends */{"mDataProp": "ends", "sTitle": "End"},
         /* runtime */{"mDataProp": "runtime", "sTitle": "Duration"},
@@ -341,7 +270,100 @@ $(document).ready(function() {
         },
         
 		"fnServerData": fnServerData,
-		"fnRowCallback": fnShowBuilderRowCallback,
+		"fnRowCallback": function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+			var i,
+				sSeparatorHTML,
+				fnPrepareSeparatorRow,
+				node,
+				cl="";
+			
+			//save some info for reordering purposes.
+			$(nRow).data({"aData": aData});
+			
+			if (aData.allowed !== true) {
+				$(nRow).addClass("sb-not-allowed");
+			}
+			
+			fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
+				
+				node = nRow.children[iNodeIndex];
+				node.innerHTML = sRowContent;
+				node.setAttribute('colspan',100);
+				for (i = iNodeIndex + 1; i < nRow.children.length; i = i+1) {
+					node = nRow.children[i];
+					node.innerHTML = "";
+					node.setAttribute("style", "display : none");
+				}
+				
+				$(nRow).addClass(sClass);
+			};
+			
+			if (aData.header === true) {
+				cl = 'sb-header';
+				
+				sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
+				fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
+			}
+			else if (aData.footer === true) {
+				node = nRow.children[0];
+				cl = 'sb-footer';
+				
+				//check the show's content status.
+				if (aData.runtime > 0) {
+					node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
+					cl = cl + ' ui-state-highlight';
+				}
+				else {
+					node.innerHTML = '<span class="ui-icon ui-icon-notice"></span>';
+					cl = cl + ' ui-state-error';
+				}
+					
+				sSeparatorHTML = '<span>'+aData.fRuntime+'</span>';
+				fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
+			}
+			else if (aData.empty === true) {
+				
+				sSeparatorHTML = '<span>Show Empty</span>';
+				cl = cl + " sb-empty odd";
+				
+				fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
+			}
+			else {
+				
+				node = nRow.children[0];
+				if (aData.allowed === true) {
+					node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input>';
+				}
+				else {
+					node.innerHTML = '';
+				}
+			}
+		},
+		"fnDrawCallback": function(oSettings, json) {
+			var wrapperDiv,
+				markerDiv,
+				td;
+			
+			//create cursor arrows.
+			tableDiv.find("tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
+		    	td = $(el).find("td:first");
+		    	if (td.hasClass("dataTables_empty")) {
+		    		return false;
+		    	}
+		    	
+		    	wrapperDiv = $("<div />", {
+		    		"class": "innerWrapper",
+		    		"css": {
+		    			"height": td.height()
+		    		}
+		    	});
+		    	markerDiv = $("<div />", {
+		    		"class": "marker"
+		    	});
+		    	
+	    		td.append(markerDiv).wrapInner(wrapperDiv);
+		    });
+	    },
 		"fnHeaderCallback": function(nHead) {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
 		},
@@ -366,8 +388,8 @@ $(document).ready(function() {
 				var node = e.currentTarget;
 				//don't select separating rows, or shows without privileges.
 				if ($(node).hasClass("sb-header")
-						|| $(node).hasClass("sb-footer")
-						|| $(node).hasClass("sb-not-allowed")) {
+					|| $(node).hasClass("sb-footer")
+					|| $(node).hasClass("sb-not-allowed")) {
 					return false;
 				}
 				return true;
@@ -408,7 +430,7 @@ $(document).ready(function() {
     	if ($(this).is(":checked")) {
     		var allowedNodes;
     		
-    		allowedNodes = oTable.find('tr:not(:first):not(.sb-header):not(.sb-footer):not(.sb-not-allowed)');
+    		allowedNodes = oTable.find('tr:not(:first, .sb-header, .sb-footer, .sb-not-allowed)');
     		
     		allowedNodes.each(function(i, el){
     			oTT.fnSelect(el);
@@ -515,7 +537,7 @@ $(document).ready(function() {
 		return {
 			placeholder: "placeholder show-builder-placeholder ui-state-highlight",
 			forcePlaceholderSize: true,
-			items: 'tr:not(:first):not(.sb-header):not(.sb-footer):not(.sb-not-allowed)',
+			items: 'tr:not(:first, :last, .sb-header, .sb-footer, .sb-not-allowed)',
 			receive: fnReceive,
 			update: fnUpdate,
 			start: function(event, ui) {
@@ -532,5 +554,19 @@ $(document).ready(function() {
 	
 	//set things like a reference to the table.
 	AIRTIME.showbuilder.init(oTable);
+	
+	//add event to cursors.
+	tableDiv.find("tbody").on("click", "div.marker", function(event){
+		var tr = $(this).parents("tr");
+		
+		if (tr.hasClass("cursor-selected-row")) {
+			tr.removeClass("cursor-selected-row");
+		}
+		else {
+			tr.addClass("cursor-selected-row");
+		}
+		
+		return false;
+	});
 	
 });

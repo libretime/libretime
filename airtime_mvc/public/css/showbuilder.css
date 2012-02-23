@@ -4,8 +4,7 @@
     width:100px;
 }
 
-table tr.selected-row td, table tr.selected-row th,
-table.datatable tr.selected-row td, table.datatable tr.selected-row th {
+table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-row th {
     border-bottom: 2px solid #db0000 !important;
 }
 .innerWrapper {
@@ -21,6 +20,6 @@ table.datatable tr.selected-row td, table.datatable tr.selected-row th {
     background:url(images/tl-arrow.png) no-repeat 0 0;
     display:block;
 }
-tr.selected-row .marker {
+tr.cursor-selected-row .marker {
     background-position: 0 -15px;
 }

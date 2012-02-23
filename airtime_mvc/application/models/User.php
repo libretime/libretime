@@ -37,15 +37,16 @@ class Application_Model_User {
 
     public function canSchedule($p_showId) {
        $type = $this->getType();
+       $result = false;
 
        if ( $type === UTYPE_ADMIN ||
             $type === UTYPE_PROGRAM_MANAGER ||
             CcShowHostsQuery::create()->filterByDbShow($p_showId)->filterByDbHost($this->getId())->count() > 0 )
        {
-           return true;
+           $result = true;
        }
 
-       return false;
+       return $result;
     }
 
     public function isUserType($type, $showId=''){
