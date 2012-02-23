@@ -23,3 +23,11 @@ table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-ro
 tr.cursor-selected-row .marker {
     background-position: 0 -15px;
 }
+
+.sb-boundry {
+    background-color:#e66a31;
+}
+
+.sb-over {
+    background-color:#ff3030;
+}

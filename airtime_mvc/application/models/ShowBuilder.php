@@ -114,6 +114,29 @@ class Application_Model_ShowBuilder {
         }
     }
 
+    private function getItemStatus($p_item, &$row) {
+
+        $showEndDT = new DateTime($p_item["si_ends"]);
+        $schedStartDT = new DateTime($p_item["sched_starts"]);
+        $schedEndDT = new DateTime($p_item["sched_ends"]);
+
+        $showEndEpoch = intval($showEndDT->format("U"));
+        $schedStartEpoch = intval($schedStartDT->format("U"));
+        $schedEndEpoch = intval($schedEndDT->format("U"));
+
+        if ($schedEndEpoch < $showEndEpoch) {
+            $status = 0; //item will playout in full
+        }
+        else if ($schedStartEpoch < $showEndEpoch && $schedEndEpoch > $showEndEpoch) {
+            $status = 1; //item is on boundry
+        }
+        else {
+            $status = 2; //item is overscheduled won't play.
+        }
+
+        $row["status"] = $status;
+    }
+
     private function getRowTimestamp($p_item, &$row) {
 
         if (is_null($p_item["si_last_scheduled"])) {
@@ -162,6 +185,8 @@ class Application_Model_ShowBuilder {
             $schedStartDT->setTimezone(new DateTimeZone($this->timezone));
             $schedEndDT = new DateTime($p_item["sched_ends"], new DateTimeZone("UTC"));
             $schedEndDT->setTimezone(new DateTimeZone($this->timezone));
+
+            $this->getItemStatus($p_item, $row);
 
             $runtime = $schedStartDT->diff($schedEndDT);
 
