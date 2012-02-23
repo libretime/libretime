@@ -34,7 +34,6 @@ class PypoPush(Thread):
     def __init__(self, q):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
-        self.set_export_source('scheduler')
         self.queue = q
 
         self.schedule = dict()
@@ -42,11 +41,6 @@ class PypoPush(Thread):
 
         self.liquidsoap_state_play = True
         self.push_ahead = 10
-
-    def set_export_source(self, export_source):
-        self.export_source = export_source
-        self.cache_dir = config["cache_dir"] + self.export_source + '/'
-        self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
         
     """
     The Push Loop - the push loop periodically checks if there is a playlist 
@@ -54,7 +48,7 @@ class PypoPush(Thread):
     If yes, the current liquidsoap playlist gets replaced with the corresponding one,
     then liquidsoap is asked (via telnet) to reload and immediately play it.
     """
-    def push(self, export_source):
+    def push(self):
         logger = logging.getLogger('push')
 
         timenow = time.time()
