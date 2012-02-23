@@ -397,6 +397,7 @@ $(document).ready(function() {
 				//don't select separating rows, or shows without privileges.
 				if ($(node).hasClass("sb-header")
 					|| $(node).hasClass("sb-footer")
+					|| $(node).hasClass("sb-empty")
 					|| $(node).hasClass("sb-not-allowed")) {
 					return false;
 				}
@@ -438,7 +439,7 @@ $(document).ready(function() {
     	if ($(this).is(":checked")) {
     		var allowedNodes;
     		
-    		allowedNodes = oTable.find('tr:not(:first, .sb-header, .sb-footer, .sb-not-allowed)');
+    		allowedNodes = oTable.find('tr:not(:first, .sb-header, .sb-empty, .sb-footer, .sb-not-allowed)');
     		
     		allowedNodes.each(function(i, el){
     			oTT.fnSelect(el);
