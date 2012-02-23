@@ -284,6 +284,14 @@ $(document).ready(function() {
 				$(nRow).addClass("sb-not-allowed");
 			}
 			
+			//status used to colour tracks.
+			if (aData.status === 1) {
+				$(nRow).addClass("sb-boundry");
+			}
+			else if (aData.status === 2) {
+				$(nRow).addClass("sb-over");
+			}
+			
 			fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
 				
 				node = nRow.children[iNodeIndex];
