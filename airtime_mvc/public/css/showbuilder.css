@@ -1,5 +1,9 @@
 @CHARSET "UTF-8";
 
+#show_builder {
+    width:45%;
+}
+
 #show_builder input.input_text {
     width:100px;
 }
