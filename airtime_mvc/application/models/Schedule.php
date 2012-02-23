@@ -514,6 +514,9 @@ class Application_Model_Schedule {
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["ends"], $utcTimeZone);
             
+            /* Note: cue_out and end are always the same. */
+            /* TODO: Not all tracks will have "show_end" */
+            
             if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
                 $diff = $trackEndDateTime->getTimestamp() - $showEndDateTime->getTimestamp();
                 //assuming ends takes cue_out into assumption
