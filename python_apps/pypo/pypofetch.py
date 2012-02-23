@@ -522,10 +522,13 @@ class PypoFetch(Thread):
                     Queue timeout. Fetching data manually
                     """
                     raise
-                except MessageStateError, m:
-                    logger.error("Message ACK error: %s", m)
-                    raise
                 except Exception, e:
+                    """
+                    sleep 5 seconds so that we don't spin inside this
+                    while loop and eat all the CPU
+                    """
+                    time.sleep(5)
+                    
                     """
                     There is a problem with the RabbitMq messenger service. Let's
                     log the error and get the schedule via HTTP polling
