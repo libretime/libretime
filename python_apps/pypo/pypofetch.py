@@ -45,7 +45,10 @@ class PypoFetch(Thread):
     def __init__(self, q):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
-        self.set_export_source('scheduler')
+        
+        self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
+        logger.info("Creating cache directory at %s", self.cache_dir)
+        
         self.queue = q
         self.schedule_data = []
         logger = logging.getLogger('fetch')
@@ -245,15 +248,6 @@ class PypoFetch(Thread):
             if(status == "true"):
                 self.api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
                 
-        
-        
-    def set_export_source(self, export_source):
-        logger = logging.getLogger('fetch')
-        self.export_source = export_source
-        self.cache_dir = config["cache_dir"] + self.export_source + '/'
-        logger.info("Creating cache directory at %s", self.cache_dir)
-
-
     def update_liquidsoap_stream_format(self, stream_format):
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
@@ -294,7 +288,7 @@ class PypoFetch(Thread):
        to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
      - runs the cleanup routine, to get rid of unused cached files
     """
-    def process_schedule(self, schedule_data, export_source, bootstrapping):
+    def process_schedule(self, schedule_data, bootstrapping):
         logger = logging.getLogger('fetch')
         playlists = schedule_data["playlists"]
 
@@ -310,7 +304,7 @@ class PypoFetch(Thread):
         self.queue.put(scheduled_data)
 
         # cleanup
-        try: self.cleanup(self.export_source)
+        try: self.cleanup()
         except Exception, e: logger.error("%s", e)
 
 
@@ -392,7 +386,7 @@ class PypoFetch(Thread):
 
             fileExt = os.path.splitext(media['uri'])[1]
             try:
-                dst = "%s%s/%s%s" % (self.cache_dir, pkey, media['id'], fileExt)
+                dst = os.path.join(self.cache_dir, pkey, media['id']+fileExt)
 
                 # download media file
                 self.handle_remote_file(media, dst)
@@ -406,8 +400,8 @@ class PypoFetch(Thread):
 
                     if fsize > 0:
                         pl_entry = \
-                        'annotate:export_source="%s",media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
-                        % (media['export_source'], media['id'], 0, \
+                        'annotate:media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
+                        % (media['id'], 0, \
                             float(media['fade_in']) / 1000, \
                             float(media['fade_out']) / 1000, \
                             float(media['cue_in']), \
@@ -452,7 +446,7 @@ class PypoFetch(Thread):
     Cleans up folders in cache_dir. Look for modification date older than "now - CACHE_FOR"
     and deletes them.
     """
-    def cleanup(self, export_source):
+    def cleanup(self):
         logger = logging.getLogger('fetch')
 
         offset = 3600 * int(config["cache_for"])

@@ -54,23 +54,16 @@ except Exception, e:
 class Global:
     def __init__(self):
         self.api_client = api_client.api_client_factory(config)
-        self.set_export_source('scheduler')
         
     def selfcheck(self):
         self.api_client = api_client.api_client_factory(config)
         return self.api_client.is_server_compatible()
-
-    def set_export_source(self, export_source):
-        self.export_source = export_source
-        self.cache_dir = config["cache_dir"] + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule.pickle'
-        self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
         
     def test_api(self):
         self.api_client.test()
 
 """
-    def check_schedule(self, export_source):
+    def check_schedule(self):
         logger = logging.getLogger()
 
         try:

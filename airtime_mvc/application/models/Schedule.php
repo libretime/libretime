@@ -466,6 +466,19 @@ class Application_Model_Schedule {
         return $rows;
     }
 
+/*
+    "2012-02-23-01-00-00":{
+       "row_id":"1",
+       "id":"caf951f6d8f087c3a90291a9622073f9",
+       "uri":"http:\/\/localhost:80\/api\/get-media\/file\/caf951f6d8f087c3a90291a9622073f9.mp3",
+       "fade_in":0,
+       "fade_out":0,
+       "cue_in":0,
+       "cue_out":199.798,
+       "start":"2012-02-23-01-00-00",
+       "end":"2012-02-23-01-03-19"
+    }
+    * */
 
     public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null){
         
@@ -488,10 +501,38 @@ class Application_Model_Schedule {
         }
         
         // Scheduler wants everything in a playlist
-        $data = Application_Model_Schedule::GetItems($range_start, $range_end);
+        $items = Application_Model_Schedule::GetItems($range_start, $range_end);
         
-        Logging::log(print_r($data, true));
+        $data = array();
+        $utcTimeZone = new DateTimeZone("UTC");
         
+        foreach ($items as $item){
+            
+            $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
+            $uri = $storedFile->getFileUrlUsingConfigAddress();
+            
+            $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
+            $trackEndDateTime = new DateTime($item["ends"], $utcTimeZone);
+            
+            if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
+                $diff = $trackEndDateTime->getTimestamp() - $showEndDateTime->getTimestamp();
+                //assuming ends takes cue_out into assumption
+                $item["cue_out"] = $item["cue_out"] - $diff;
+            }
+
+            $starts = Application_Model_Schedule::AirtimeTimeToPypoTime($item["starts"]);            
+            $data[$starts] = array(
+                'id' => $storedFile->getGunid(),
+                'uri' => $uri,
+                'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
+                'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
+                'cue_in' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+                'cue_out' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+                'start' => $starts,
+                'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["ends"])
+            );
+        }
+                
         return $data;
     }
 
@@ -564,7 +605,6 @@ class Application_Model_Schedule {
 
                 $starts = Application_Model_Schedule::AirtimeTimeToPypoTime($item["starts"]);
                 $medias[$starts] = array(
-                    'row_id' => $item["id"],
                     'id' => $storedFile->getGunid(),
                     'uri' => $uri,
                     'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
@@ -572,7 +612,6 @@ class Application_Model_Schedule {
                     'fade_cross' => 0,
                     'cue_in' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
                     'cue_out' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
-                    'export_source' => 'scheduler',
                     'start' => $starts,
                     'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["ends"])
                 );
