@@ -206,9 +206,10 @@ class PreferenceController extends Zend_Controller_Action
 
                 Application_Model_StreamSetting::setStreamSetting($values);
                 $data = array();
-                $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
-                $data['setting']['harbor_input_port'] = $values["harbor_input_port"];
-                $data['setting']['harbor_input_mount_point'] = $values["harbor_input_mount_point"];
+                $info = Application_Model_StreamSetting::getStreamSetting();
+                $info[] = (array("keyname" =>"harbor_input_port", "value"=>$values["harbor_input_port"], "type"=>"integer"));
+                $info[] = (array("keyname" =>"harbor_input_mount_point", "value"=>$values["harbor_input_mount_point"], "type"=>"string"));
+                $data['setting'] = $info;
                 for($i=1;$i<=$num_of_stream;$i++){
                     Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
                 }

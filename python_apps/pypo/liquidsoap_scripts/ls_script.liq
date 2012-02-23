@@ -54,10 +54,16 @@ def check_client(user,password) =
         end
 end
 
-live = input.harbor(harbor_input_mount_point, port=harbor_input_port, auth=check_client)
+def configure_live(harbor_input_port, harbor_input_mount_point) =
+    if harbor_input_port != 0 and harbor_input_mount_point != "" then
+        live = input.harbor(harbor_input_mount_point, port=harbor_input_port, auth=check_client)
+        fallback(track_sensitive=false, [live, queue, default])
+    else
+        fallback(track_sensitive=false, [queue, default])
+    end
+end
 
-s = fallback(track_sensitive=false, [live, queue, default])
-
+s = configure_live(harbor_input_port, harbor_input_mount_point)
 s = on_metadata(notify, s)
 s = crossfade(s)
 # Attach a skip command to the source s:

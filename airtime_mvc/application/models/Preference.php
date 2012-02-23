@@ -722,7 +722,7 @@ class Application_Model_Preference
     }
     
     public static function SetLiveSteamMasterPassword($value){
-        self::SetValue("live_stream_master_password", md5($value), false);
+        self::SetValue("live_stream_master_password", $value, false);
     }
     
     public static function GetLiveSteamMasterPassword(){

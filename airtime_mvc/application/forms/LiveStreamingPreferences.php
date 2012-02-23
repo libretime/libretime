@@ -32,6 +32,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $master_password->setAttrib('autocomplete', 'off')
                         ->setAttrib('renderPassword','true')
                         ->setAllowEmpty(true)
+                        ->setValue(Application_Model_Preference::GetLiveSteamMasterPassword())
                         ->setLabel('Master Password')
                         ->setFilters(array('StringTrim'))
                         ->setDecorators(array('ViewHelper'));

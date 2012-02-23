@@ -373,7 +373,7 @@ class AirTimeApiClient(ApiClientInterface):
     
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%username%%", username)
-            url = url.replace("%%password%%", hashlib.md5(password).hexdigest())
+            url = url.replace("%%password%%", password)
     
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
