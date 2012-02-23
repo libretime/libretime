@@ -1,7 +1,7 @@
 /**
  * @summary     DataTables
  * @description Paginate, search and sort HTML tables
- * @version     1.9.0
+ * @version     1.9.1.dev
  * @file        jquery.dataTables.js
  * @author      Allan Jardine (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -1272,6 +1272,7 @@
 			var aPreDraw = _fnCallbackFire( oSettings, 'aoPreDrawCallback', 'preDraw', [oSettings] );
 			if ( $.inArray( false, aPreDraw ) !== -1 )
 			{
+				_fnProcessingDisplay( oSettings, false );
 				return;
 			}
 			
@@ -1787,8 +1788,8 @@
 		function _fnAjaxParameters( oSettings )
 		{
 			var iColumns = oSettings.aoColumns.length;
-			var aoData = [], mDataProp;
-			var i;
+			var aoData = [], mDataProp, aaSort, aDataSort;
+			var i, j;
 			
 			aoData.push( { "name": "sEcho",          "value": oSettings.iDraw } );
 			aoData.push( { "name": "iColumns",       "value": iColumns } );
@@ -1819,20 +1820,24 @@
 			/* Sorting */
 			if ( oSettings.oFeatures.bSort !== false )
 			{
-				var iFixed = oSettings.aaSortingFixed !== null ? oSettings.aaSortingFixed.length : 0;
-				var iUser = oSettings.aaSorting.length;
-				aoData.push( { "name": "iSortingCols",   "value": iFixed+iUser } );
-				for ( i=0 ; i<iFixed ; i++ )
-				{
-					aoData.push( { "name": "iSortCol_"+i,  "value": oSettings.aaSortingFixed[i][0] } );
-					aoData.push( { "name": "sSortDir_"+i,  "value": oSettings.aaSortingFixed[i][1] } );
-				}
+				var iCounter = 0;
+		
+				aaSort = ( oSettings.aaSortingFixed !== null ) ?
+					oSettings.aaSortingFixed.concat( oSettings.aaSorting ) :
+					oSettings.aaSorting.slice();
 				
-				for ( i=0 ; i<iUser ; i++ )
+				for ( i=0 ; i<aaSort.length ; i++ )
 				{
-					aoData.push( { "name": "iSortCol_"+(i+iFixed),  "value": oSettings.aaSorting[i][0] } );
-					aoData.push( { "name": "sSortDir_"+(i+iFixed),  "value": oSettings.aaSorting[i][1] } );
+					aDataSort = oSettings.aoColumns[ aaSort[i][0] ].aDataSort;
+					
+					for ( j=0 ; j<aDataSort.length ; j++ )
+					{
+						aoData.push( { "name": "iSortCol_"+iCounter,  "value": aDataSort[j] } );
+						aoData.push( { "name": "sSortDir_"+iCounter,  "value": aaSort[i][1] } );
+						iCounter++;
+					}
 				}
+				aoData.push( { "name": "iSortingCols",   "value": iCounter } );
 				
 				for ( i=0 ; i<iColumns ; i++ )
 				{
@@ -1953,7 +1958,12 @@
 				nFilter.id = oSettings.sTableId+'_filter';
 			}
 			
-			var jqFilter = $("input", nFilter);
+			var jqFilter = $('input[type="text"]', nFilter);
+		
+			// Store a reference to the input element, so other input elements could be
+			// added to the filter wrapper if needed (submit button for example)
+			nFilter._DT_Input = jqFilter[0];
+		
 			jqFilter.val( oPreviousSearch.sSearch.replace('"','&quot;') );
 			jqFilter.bind( 'keyup.DT', function(e) {
 				/* Update all other filter input elements for the new display */
@@ -1962,7 +1972,7 @@
 				{
 					if ( n[i] != $(this).parents('div.dataTables_filter')[0] )
 					{
-						$('input', n[i]).val( this.value );
+						$(n[i]._DT_Input).val( this.value );
 					}
 				}
 				
@@ -3048,6 +3058,7 @@
 				nScrollHeadTable = nScrollHeadInner.getElementsByTagName('table')[0],
 				nScrollBody = o.nTable.parentNode,
 				i, iLen, j, jLen, anHeadToSize, anHeadSizers, anFootSizers, anFootToSize, oStyle, iVis,
+				nTheadSize, nTfootSize,
 				iWidth, aApplied=[], iSanityWidth,
 				nScrollFootInner = (o.nTFoot !== null) ? o.nScrollFoot.getElementsByTagName('div')[0] : null,
 				nScrollFootTable = (o.nTFoot !== null) ? nScrollFootInner.getElementsByTagName('table')[0] : null,
@@ -3058,22 +3069,7 @@
 			 */
 			
 			/* Remove the old minimised thead and tfoot elements in the inner table */
-			var nTheadSize = o.nTable.getElementsByTagName('thead');
-			if ( nTheadSize.length > 0 )
-			{
-				o.nTable.removeChild( nTheadSize[0] );
-			}
-			
-			var nTfootSize;
-			if ( o.nTFoot !== null )
-			{
-				/* Remove the old minimised footer element in the cloned header */
-				nTfootSize = o.nTable.getElementsByTagName('tfoot');
-				if ( nTfootSize.length > 0 )
-				{
-					o.nTable.removeChild( nTfootSize[0] );
-				}
-			}
+			$(o.nTable).children('thead, tfoot').remove();
 			
 			/* Clone the current header and footer elements and then place it into the inner table */
 			nTheadSize = o.nTHead.cloneNode(true);
@@ -3127,7 +3123,7 @@
 				if ( ie67 && ($('tbody', nScrollBody).height() > nScrollBody.offsetHeight || 
 					$(nScrollBody).css('overflow-y') == "scroll")  )
 				{
-					o.nTable.style.width = _fnStringToCss( $(o.nTable).outerWidth()-o.oScroll.iBarWidth );
+					o.nTable.style.width = _fnStringToCss( $(o.nTable).outerWidth() - o.oScroll.iBarWidth);
 				}
 			}
 			else
@@ -3304,12 +3300,21 @@
 			var iOuterWidth = $(o.nTable).outerWidth();
 			nScrollHeadTable.style.width = _fnStringToCss( iOuterWidth );
 			nScrollHeadInner.style.width = _fnStringToCss( iOuterWidth );
+		
+			// Figure out if there are scrollbar present - if so then we need a the header and footer to
+			// provide a bit more space to allow "overflow" scrolling (i.e. past the scrollbar)
+			var bScrolling = $(o.nTable).height() > nScrollBody.clientHeight || $(nScrollBody).css('overflow-y') == "scroll";
+			nScrollHeadInner.style.paddingRight = bScrolling ? o.oScroll.iBarWidth+"px" : "0px";
 			
 			if ( o.nTFoot !== null )
 			{
-				nScrollFootInner.style.width = _fnStringToCss( o.nTable.offsetWidth );
-				nScrollFootTable.style.width = _fnStringToCss( o.nTable.offsetWidth );
+				nScrollFootTable.style.width = _fnStringToCss( iOuterWidth );
+				nScrollFootInner.style.width = _fnStringToCss( iOuterWidth );
+				nScrollFootInner.style.paddingRight = bScrolling ? o.oScroll.iBarWidth+"px" : "0px";
 			}
+		
+			/* Adjust the position of the header incase we loose the y-scrollbar */
+			$(nScrollBody).scroll();
 			
 			/* If sorting or filtering has occurred, jump the scrolling back to the top */
 			if ( o.bSorted || o.bFiltered )
@@ -3777,14 +3782,9 @@
 			if ( !oSettings.oFeatures.bServerSide && 
 				(oSettings.aaSorting.length !== 0 || oSettings.aaSortingFixed !== null) )
 			{
-				if ( oSettings.aaSortingFixed !== null )
-				{
-					aaSort = oSettings.aaSortingFixed.concat( oSettings.aaSorting );
-				}
-				else
-				{
-					aaSort = oSettings.aaSorting.slice();
-				}
+				aaSort = ( oSettings.aaSortingFixed !== null ) ?
+					oSettings.aaSortingFixed.concat( oSettings.aaSorting ) :
+					oSettings.aaSorting.slice();
 				
 				/* If there is a sorting data type, and a fuction belonging to it, then we need to
 				 * get the data from the developer's function and apply it for this column
@@ -3797,9 +3797,16 @@
 					if ( DataTable.ext.afnSortData[sDataType] )
 					{
 						var aData = DataTable.ext.afnSortData[sDataType]( oSettings, iColumn, iVisColumn );
-						for ( j=0, jLen=aoData.length ; j<jLen ; j++ )
+						if ( aData.length === aoData.length )
 						{
-							_fnSetCellData( oSettings, j, iColumn, aData[j] );
+							for ( j=0, jLen=aoData.length ; j<jLen ; j++ )
+							{
+								_fnSetCellData( oSettings, j, iColumn, aData[j] );
+							}
+						}
+						else
+						{
+							_fnLog( oSettings, 0, "Returned data sort array (col "+iColumn+") is the wrong length" );
 						}
 					}
 				}
@@ -4532,11 +4539,11 @@
 				}
 				else
 				{
-					throw sAlert;
+					throw new Error(sAlert);
 				}
 				return;
 			}
-			else if ( console !== undefined && console.log )
+			else if ( window.console && console.log )
 			{
 				console.log( sAlert );
 			}
@@ -4577,9 +4584,9 @@
 		 */
 		function _fnExtend( oOut, oExtender )
 		{
-			for ( var prop in oOut )
+			for ( var prop in oExtender )
 			{
-				if ( oOut.hasOwnProperty(prop) && oExtender[prop] !== undefined )
+				if ( oExtender.hasOwnProperty(prop) )
 				{
 					if ( typeof oInit[prop] === 'object' && $.isArray(oExtender[prop]) === false )
 					{
@@ -4609,8 +4616,8 @@
 		{
 			$(n)
 				.bind( 'click.DT', oData, function (e) {
-						fn(e);
 						n.blur(); // Remove focus outline for mouse users
+						fn(e);
 					} )
 				.bind( 'keypress.DT', oData, function (e){
 					if ( e.which === 13 ) {
@@ -5384,7 +5391,7 @@
 					var n = oSettings.aanFeatures.f;
 					for ( var i=0, iLen=n.length ; i<iLen ; i++ )
 					{
-						$('input', n[i]).val( sInput );
+						$(n[i]._DT_Input).val( sInput );
 					}
 				}
 			}
@@ -6219,8 +6226,8 @@
 			_fnMap( oSettings.oScroll, oInit, "bScrollInfinite", "bInfinite" );
 			_fnMap( oSettings.oScroll, oInit, "iScrollLoadGap", "iLoadGap" );
 			_fnMap( oSettings.oScroll, oInit, "bScrollAutoCss", "bAutoCss" );
-			_fnMap( oSettings, oInit, "asStripClasses", "asStripeClasses" ); // legacy
 			_fnMap( oSettings, oInit, "asStripeClasses" );
+			_fnMap( oSettings, oInit, "asStripClasses", "asStripeClasses" ); // legacy
 			_fnMap( oSettings, oInit, "fnServerData" );
 			_fnMap( oSettings, oInit, "fnFormatNumber" );
 			_fnMap( oSettings, oInit, "sServerMethod" );
@@ -6542,7 +6549,7 @@
 	 *  @type string
 	 *  @default Version number
 	 */
-	DataTable.version = "1.9.0";
+	DataTable.version = "1.9.1.dev";
 
 	/**
 	 * Private data store, containing all of the settings objects that are created for the
@@ -8446,7 +8453,7 @@
 		 *    $(document).ready(function() {
 		 *      $('#example').dataTable( {
 		 *        "bStateSave": true,
-		 *        "fnStateSave": function (oSettings, oData) {
+		 *        "fnStateLoad": function (oSettings, oData) {
 		 *          var o;
 		 *          
 		 *          // Send an Ajax request to the server to get the data. Note that
@@ -8497,7 +8504,7 @@
 		 *      $('#example').dataTable( {
 		 *        "bStateSave": true,
 		 *        "fnStateLoadParams": function (oSettings, oData) {
-		 *          oData.oFilter.sSearch = "";
+		 *          oData.oSearch.sSearch = "";
 		 *      } );
 		 *    } );
 		 * 
@@ -8528,7 +8535,7 @@
 		 *      $('#example').dataTable( {
 		 *        "bStateSave": true,
 		 *        "fnStateLoaded": function (oSettings, oData) {
-		 *          alert( 'Saved filter was: '+oData.oFilter.sSearch );
+		 *          alert( 'Saved filter was: '+oData.oSearch.sSearch );
 		 *      } );
 		 *    } );
 		 */
@@ -8589,8 +8596,8 @@
 		 *    $(document).ready(function() {
 		 *      $('#example').dataTable( {
 		 *        "bStateSave": true,
-		 *        "fnStateLoadParams": function (oSettings, oData) {
-		 *          oData.oFilter.sSearch = "";
+		 *        "fnStateSaveParams": function (oSettings, oData) {
+		 *          oData.oSearch.sSearch = "";
 		 *      } );
 		 *    } );
 		 */
@@ -9736,9 +9743,10 @@
 		 *     <li>string - read an object property from the data source. Note that you can
 		 *       use Javascript dotted notation to read deep properties/arrays from the
 		 *       data source.</li>
-		 *     <li>null -  the sDafaultContent option will use used for the cell (empty
-		 *       string by default. This can be useful on generated columns such as
-		 *       edit / delete action columns.</li>
+		 *     <li>null - the sDefaultContent option will be used for the cell (null
+		 *       by default, so you will need to specify the default content you want -
+		 *       typically an empty string). This can be useful on generated columns such 
+		 *       as edit / delete action columns.</li>
 		 *     <li>function - the function given will be executed whenever DataTables 
 		 *       needs to set or get the data for a cell in the column. The function 
 		 *       takes three parameters:
@@ -11335,7 +11343,9 @@
 		 */
 		"string-pre": function ( a )
 		{
-			if ( typeof a != 'string' ) { a = ''; }
+			if ( typeof a != 'string' ) {
+				a = (a !== null && a.toString) ? a.toString() : '';
+			}
 			return a.toLowerCase();
 		},
 	

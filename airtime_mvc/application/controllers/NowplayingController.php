@@ -15,25 +15,25 @@ class NowplayingController extends Zend_Controller_Action
     public function indexAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
         //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowview.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         $refer_sses = new Zend_Session_Namespace('referrer');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        
+
         if ($request->isPost()) {
             $form = new Application_Form_RegisterAirtime();
-        
+
             $values = $request->getPost();
             if ($values["Publicise"] != 1 && $form->isValid($values)){
                 Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
@@ -49,10 +49,10 @@ class NowplayingController extends Zend_Controller_Action
                 Application_Model_Preference::SetEmail($values["Email"]);
                 Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
                 Application_Model_Preference::SetPublicise($values["Publicise"]);
-                
+
                 $form->Logo->receive();
                 $imagePath = $form->Logo->getFileName();
-    
+
                 Application_Model_Preference::SetStationCountry($values["Country"]);
                 Application_Model_Preference::SetStationCity($values["City"]);
                 Application_Model_Preference::SetStationDescription($values["Description"]);
@@ -75,10 +75,10 @@ class NowplayingController extends Zend_Controller_Action
             //popup if previous page was login
             if($refer_sses->referrer == 'login' && Application_Model_Nowplaying::ShouldShowPopUp()
                 && !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
-                
+
                 $form = new Application_Form_RegisterAirtime();
-                
-                
+
+
                 $logo = Application_Model_Preference::GetStationLogo();
                 if($logo){
                     $this->view->logoImg = $logo;
@@ -94,7 +94,7 @@ class NowplayingController extends Zend_Controller_Action
         $viewType = $this->_request->getParam('view');
         $dateString = $this->_request->getParam('date');
         $this->view->entries = Application_Model_Nowplaying::GetDataGridData($viewType, $dateString);
-        
+
     }
 /*
     public function livestreamAction()
@@ -107,16 +107,16 @@ class NowplayingController extends Zend_Controller_Action
     public function dayViewAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/nowplayingdatagrid.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/dayview.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
     }
 
@@ -127,7 +127,7 @@ class NowplayingController extends Zend_Controller_Action
     	Application_Model_Preference::SetRemindMeDate();
     	die();
     }
-    
+
     public function donotshowregistrationpopupAction()
     {
     	// unset session

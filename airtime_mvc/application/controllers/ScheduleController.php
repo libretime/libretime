@@ -15,12 +15,9 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('move-show', 'json')
 					->addActionContext('resize-show', 'json')
 					->addActionContext('delete-show', 'json')
-					->addActionContext('schedule-show', 'json')
-					->addActionContext('schedule-show-dialog', 'json')
                     ->addActionContext('show-content-dialog', 'json')
 					->addActionContext('clear-show', 'json')
                     ->addActionContext('get-current-playlist', 'json')
-					->addActionContext('find-playlists', 'json')
 					->addActionContext('remove-group', 'json')
                     ->addActionContext('edit-show', 'json')
                     ->addActionContext('add-show', 'json')
@@ -43,8 +40,6 @@ class ScheduleController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
@@ -264,37 +259,6 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->items = $menu;
     }
 
-    public function scheduleShowAction()
-    {
-        $showInstanceId = $this->sched_sess->showInstanceId;
-		$search = $this->_getParam('search', null);
-		$plId = $this->_getParam('plId');
-
-		if($search == "") {
-			$search = null;
-		}
-
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        try{
-		  $show = new Application_Model_ShowInstance($showInstanceId);
-        }catch(Exception $e){
-            $this->view->show_error = true;
-            return false;
-        }
-
-        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId())) {
-		    $show->scheduleShow(array($plId));
-        }
-
-		$this->view->showContent = $show->getShowContent();
-		$this->view->timeFilled = $show->getTimeScheduled();
-		$this->view->percentFilled = $show->getPercentScheduled();
-
-		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
-		unset($this->view->showContent);
-    }
-
     public function clearShowAction()
     {
         $showInstanceId = $this->_getParam('id');
@@ -336,27 +300,6 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->entries = $range;
     }
 
-    public function findPlaylistsAction()
-    {
-        $post = $this->getRequest()->getPost();
-        try{
-            $show = new Application_Model_ShowInstance($this->sched_sess->showInstanceId);
-        }catch(Exception $e){
-            $this->view->show_error = true;
-            return false;
-        }
-
-        $playlists = $show->searchPlaylistsForShow($post);
-        foreach( $playlists['aaData'] as &$data){
-            // calling two functions to format time to 1 decimal place
-            $sec = Application_Model_Playlist::playlistTimeToSeconds($data['length']);
-            $data['length'] = Application_Model_Playlist::secondsToPlaylistTime($sec);
-        }
-
-        //for datatables
-        die(json_encode($playlists));
-    }
-
     public function removeGroupAction()
     {
         $showInstanceId = $this->sched_sess->showInstanceId;
@@ -380,44 +323,6 @@ class ScheduleController extends Zend_Controller_Action
 		$this->view->timeFilled = $show->getTimeScheduled();
 		$this->view->percentFilled = $show->getPercentScheduled();
 		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
-		unset($this->view->showContent);
-    }
-
-    public function scheduleShowDialogAction()
-    {
-        $showInstanceId = $this->_getParam('id');
-        $this->sched_sess->showInstanceId = $showInstanceId;
-
-        try{
-            $show = new Application_Model_ShowInstance($showInstanceId);
-        }catch(Exception $e){
-            $this->view->show_error = true;
-            return false;
-        }
-
-        $start_timestamp = $show->getShowInstanceStart();
-		$end_timestamp = $show->getShowInstanceEnd();
-
-        $dateInfo_s = getDate(strtotime(Application_Model_DateHelper::ConvertToLocalDateTimeString($start_timestamp)));
-        $dateInfo_e = getDate(strtotime(Application_Model_DateHelper::ConvertToLocalDateTimeString($end_timestamp)));
-
-		$this->view->showContent = $show->getShowContent();
-		$this->view->timeFilled = $show->getTimeScheduled();
-        $this->view->showName = $show->getName();
-		$this->view->showLength = $show->getShowLength();
-		$this->view->percentFilled = $show->getPercentScheduled();
-
-        $this->view->s_wday = $dateInfo_s['weekday'];
-        $this->view->s_month = $dateInfo_s['month'];
-        $this->view->s_day = $dateInfo_s['mday'];
-        $this->view->e_wday = $dateInfo_e['weekday'];
-        $this->view->e_month = $dateInfo_e['month'];
-        $this->view->e_day = $dateInfo_e['mday'];
-        $this->view->startTime = sprintf("%02d:%02d", $dateInfo_s['hours'], $dateInfo_s['minutes']);
-        $this->view->endTime = sprintf("%02d:%02d", $dateInfo_e['hours'], $dateInfo_e['minutes']);
-
-		$this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
-		$this->view->dialog = $this->view->render('schedule/schedule-show-dialog.phtml');
 		unset($this->view->showContent);
     }
 

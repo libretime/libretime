@@ -19,7 +19,15 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnDrawCallback = function() {
 		
 		$('#library_display tr:not(:first)').draggable({
-			helper: 'clone',
+			helper: function(){
+			    var selected = $('#library_display input:checked').parents('tr');
+			    if (selected.length === 0) {
+			      selected = $(this);
+			    }
+			    var container = $('<div/>').attr('id', 'draggingContainer');
+			    container.append(selected.clone());
+			    return container; 
+		    },
 			cursor: 'pointer',
 			connectToSortable: '#show_builder_table'
 		});	
@@ -31,50 +39,40 @@ var AIRTIME = (function(AIRTIME){
 			fnResetCol,
 			fnAddSelectedItems,
 		
-		fnResetCol = function () {
-			ColReorder.fnReset( oLibTable );
-			return false;
-		};
-		
 		fnAddSelectedItems = function() {
 			var oLibTT = TableTools.fnGetInstance('library_display'),
-				oSchedTT = TableTools.fnGetInstance('show_builder_table'),
 				aData = oLibTT.fnGetSelectedData(),
-				item,
+				i,
+				length,
 				temp,
 				aMediaIds = [],
 				aSchedIds = [];
 			
 			//process selected files/playlists.
-			for (item in aData) {
-				temp = aData[item];
-				if (temp !== null && temp.hasOwnProperty('id')) {
-					aMediaIds.push({"id": temp.id, "type": temp.ftype});
-				} 	
-			}
-		
-			aData = oSchedTT.fnGetSelectedData();
-			
-			//process selected schedule rows to add media after.
-			for (item in aData) {
-				temp = aData[item];
-				if (temp !== null && temp.hasOwnProperty('id')) {
-					aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});
-				} 	
+			for (i=0, length = aData.length; i < length; i++) {
+				temp = aData[i];
+				aMediaIds.push({"id": temp.id, "type": temp.ftype});	
 			}
 			
-			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds, function(){
-				oLibTT.fnSelectNone();
+			aData = [];
+			$("#show_builder_table tr.cursor-selected-row").each(function(i, el){
+				aData.push($(el).data("aData"));
 			});
+		
+			//process selected schedule rows to add media after.
+			for (i=0, length = aData.length; i < length; i++) {
+				temp = aData[i];
+				aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
+			}
 			
+			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);	
 		};
 		//[0] = button text
 		//[1] = id 
 		//[2] = enabled
 		//[3] = click event
-		aButtons = [["Reset Order", "library_order_reset", true, fnResetCol], 
-		                ["Delete", "library_group_delete", true, AIRTIME.library.fnDeleteSelectedItems], 
-		                ["Add", "library_group_add", true, fnAddSelectedItems]];
+		aButtons = [["Delete", "library_group_delete", true, AIRTIME.library.fnDeleteSelectedItems], 
+		           ["Add", "library_group_add", true, fnAddSelectedItems]];
 		
 		addToolBarButtonsLibrary(aButtons);
 	};

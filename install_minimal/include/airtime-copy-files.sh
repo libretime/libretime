@@ -77,6 +77,8 @@ ln -sf /usr/lib/airtime/utils/airtime-import/airtime-import /usr/bin/airtime-imp
 ln -sf /usr/lib/airtime/utils/airtime-update-db-settings /usr/bin/airtime-update-db-settings
 ln -sf /usr/lib/airtime/utils/airtime-check-system /usr/bin/airtime-check-system
 ln -sf /usr/lib/airtime/utils/airtime-log /usr/bin/airtime-log
+ln -sf /usr/lib/airtime/utils/airtime-test-soundcard /usr/bin/airtime-test-soundcard
+ln -sf /usr/lib/airtime/utils/airtime-test-stream /usr/bin/airtime-test-stream
 
 if [ "$web" = "t" ]; then
     echo "* Creating /usr/share/airtime"

@@ -24,7 +24,6 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('status', 'json')
                 ->addActionContext('register-component', 'json')
                 ->addActionContext('update-liquidsoap-status', 'json')
-                ->addActionContext('library-init', 'json')
                 ->addActionContext('live-chat', 'json')
                 ->addActionContext('update-file-system-mount', 'json')
                 ->addActionContext('handle-watched-dir-missing', 'json')
@@ -64,7 +63,7 @@ class ApiController extends Zend_Controller_Action
         $jsonStr = json_encode(array("version"=>Application_Model_Preference::GetAirtimeVersion()));
         echo $jsonStr;
     }
-    
+
     /**
      * Sets up and send init values used in the Calendar.
      * This is only being used by schedule.js at the moment.
@@ -72,16 +71,16 @@ class ApiController extends Zend_Controller_Action
     public function calendarInitAction(){
     	$this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        
+
         if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
             return;
         }
-        
+
     	$this->view->calendarInit = array(
-        	"timestamp" => time(), 
-        	"timezoneOffset" => date("Z"), 
+        	"timestamp" => time(),
+        	"timezoneOffset" => date("Z"),
         	"timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
     		"timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
     		"weekStartDay" => Application_Model_Preference::GetWeekStartDay()
@@ -178,9 +177,9 @@ class ApiController extends Zend_Controller_Action
      * Retrieve the currently playing show as well as upcoming shows.
      * Number of shows returned and the time interval in which to
      * get the next shows can be configured as GET parameters.
-     * 
+     *
      * TODO: in the future, make interval length a parameter instead of hardcode to 48
-     * 
+     *
      * Possible parameters:
      * type - Can have values of "endofday" or "interval". If set to "endofday",
      *        the function will retrieve shows from now to end of day.
@@ -199,19 +198,19 @@ class ApiController extends Zend_Controller_Action
             $date = new Application_Model_DateHelper;
             $utcTimeNow = $date->getUtcTimestamp();
             $utcTimeEnd = "";   // if empty, GetNextShows will use interval instead of end of day
-            
+
             $request = $this->getRequest();
             $type = $request->getParam('type');
             if($type == "endofday") {
                 // make GetNextShows use end of day
                 $utcTimeEnd = Application_Model_DateHelper::GetDayEndTimestampInUtc();
             }
-            
+
             $limit = $request->getParam('limit');
             if($limit == "" || !is_numeric($limit)) {
                 $limit = "5";
             }
-            
+
             $result = array("env"=>APPLICATION_ENV,
                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
                 "currentShow"=>Application_Model_Show::GetCurrentShow($utcTimeNow),
@@ -219,7 +218,7 @@ class ApiController extends Zend_Controller_Action
                 "timezone"=> date("T"),
                 "timezoneOffset"=> date("Z"),
 		"AIRTIME_API_VERSION"=>AIRTIME_API_VERSION); //used by caller to determine if the airtime they are running or widgets in use is out of date.
-               
+
             //Convert from UTC to localtime for user.
             Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
             Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
@@ -233,7 +232,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
     }
-    
+
     public function weekInfoAction()
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi()){
@@ -244,7 +243,7 @@ class ApiController extends Zend_Controller_Action
             $date = new Application_Model_DateHelper;
             $dayStart = $date->getWeekStartDate();
             $utcDayStart = Application_Model_DateHelper::ConvertToUtcDateTimeString($dayStart);
-            
+
             $dow = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
 
             $result = array();
@@ -252,9 +251,9 @@ class ApiController extends Zend_Controller_Action
                 $utcDayEnd = Application_Model_DateHelper::GetDayEndTimestamp($utcDayStart);
                 $shows = Application_Model_Show::GetNextShows($utcDayStart, "0", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
-                
+
                 Application_Model_Show::ConvertToLocalTimeZone($shows, array("starts", "ends", "start_timestamp", "end_timestamp"));
-                
+
                 $result[$dow[$i]] = $shows;
             }
 	    $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
@@ -373,8 +372,8 @@ class ApiController extends Zend_Controller_Action
         $now = new DateTime($today_timestamp);
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
-        
-        $this->view->shows = Application_Model_Show::getShows(Application_Model_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()), 
+
+        $this->view->shows = Application_Model_Show::getShows(Application_Model_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()),
                                                                 Application_Model_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
                                                                 $excludeInstance=NULL, $onlyRecord=TRUE);
 
@@ -405,7 +404,7 @@ class ApiController extends Zend_Controller_Action
         $upload_dir = ini_get("upload_tmp_dir");
         $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
         $tempFileName = basename($tempFilePath);
-        
+
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
         $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
 	if (isset($result)){
@@ -456,19 +455,19 @@ class ApiController extends Zend_Controller_Action
         }
 
         if (isset($show_name)) {
-          
+
             $show_name = str_replace(" ", "-", $show_name);
-            
+
             //2011-12-09-19-28-00-ofirrr-256kbps
             $filename = $file->getName();
-            
+
             //replace the showname in the filepath incase it has been edited since the show started recording
             //(some old bug)
             $filename_parts = explode("-", $filename);
             $new_name = array_slice($filename_parts, 0, 6);
             $new_name[] = $show_name;
             $new_name[] = $filename_parts[count($filename_parts)-1];
-            
+
             $tmpTitle = implode("-", $new_name);
         }
         else {
@@ -533,7 +532,7 @@ class ApiController extends Zend_Controller_Action
         }
 
         $this->view->stor = Application_Model_MusicDir::getStorDir()->getDirectory();
-        
+
         $watchedDirs = Application_Model_MusicDir::getWatchedDirs();
         $watchedDirsPath = array();
         foreach($watchedDirs as $wd){
@@ -573,7 +572,7 @@ class ApiController extends Zend_Controller_Action
             $filepath = str_replace("//", "/", $filepath);
 
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-            
+
             if (is_null($file)) {
                 $file = Application_Model_StoredFile::Insert($md);
             }
@@ -737,10 +736,10 @@ class ApiController extends Zend_Controller_Action
 
         $this->view->msg = Application_Model_MusicDir::setStorDir($path);
     }
-    
+
     public function getStreamSettingAction() {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
@@ -752,10 +751,10 @@ class ApiController extends Zend_Controller_Action
 
         $this->view->msg = Application_Model_StreamSetting::getStreamSetting();
     }
-    
+
     public function statusAction() {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         $getDiskInfo = $request->getParam('diskinfo') == "true";
@@ -767,7 +766,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
         */
-        
+
         $status = array(
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
             "airtime_version"=>Application_Model_Preference::GetAirtimeVersion(),
@@ -779,11 +778,11 @@ class ApiController extends Zend_Controller_Action
                 "media_monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
             )
         );
-        
+
         if ($getDiskInfo){
             $status["partitions"] = Application_Model_Systemstatus::GetDiskInfo();
         }
-        
+
         $this->view->status = $status;
     }
 
@@ -796,40 +795,21 @@ class ApiController extends Zend_Controller_Action
 
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
     }
-    
+
     public function updateLiquidsoapStatusAction(){
         $request = $this->getRequest();
-        
+
         $msg = $request->getParam('msg');
         $stream_id = $request->getParam('stream_id');
         $boot_time = $request->getParam('boot_time');
-        
+
         Application_Model_StreamSetting::setLiquidsoapError($stream_id, $msg, $boot_time);
     }
-    
-    /**
-     * Sets up and send init values used in the Library.
-     * This is being used by library.js
-     */
-    public function libraryInitAction(){
-    	$this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-        
-        if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            return;
-        }
-        
-    	$this->view->libraryInit = array(
-        	"numEntries"=>Application_Model_Preference::GetLibraryNumEntries()
-        );
-    }
-    
+
     // handles addition/deletion of mount point which watched dirs reside
     public function updateFileSystemMountAction(){
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
@@ -842,16 +822,16 @@ class ApiController extends Zend_Controller_Action
         $params = $request->getParams();
         $added_list = empty($params['added_dir'])?array():explode(',',$params['added_dir']);
         $removed_list = empty($params['removed_dir'])?array():explode(',',$params['removed_dir']);
-        
+
         // get all watched dirs
         $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null,null);
-        
+
             foreach( $added_list as $ad){
                 foreach( $watched_dirs as $dir ){
                     $dirPath = $dir->getDirectory();
-                    
+
                     $ad .= '/';
-                    
+
                     // if mount path itself was watched
                     if($dirPath == $ad){
                         Application_Model_MusicDir::addWatchedDir($dirPath, false);
@@ -884,7 +864,7 @@ class ApiController extends Zend_Controller_Action
                     // is new mount point within the watched dir?
                     // pyinotify doesn't notify anyhing in this case, so we walk through all files within
                     // this watched dir in DB and mark them deleted.
-                    // In case of h) of use cases, due to pyinotify behaviour of noticing mounted dir, we need to 
+                    // In case of h) of use cases, due to pyinotify behaviour of noticing mounted dir, we need to
                     // compare agaisnt all files in cc_files table
                     else if(substr($rd, 0, strlen($dirPath)) === $dirPath ){
                         $watchDir = Application_Model_MusicDir::getDirByPath($rd);
@@ -903,13 +883,13 @@ class ApiController extends Zend_Controller_Action
                     }
                 }
             }
-            
+
     }
-    
+
     // handles case where watched dir is missing
     public function handleWatchedDirMissingAction(){
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
@@ -918,7 +898,7 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
         $dir = base64_decode($request->getParam('dir'));
         Application_Model_MusicDir::removeWatchedDir($dir, false);
     }

@@ -83,9 +83,10 @@ function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
         if (data == true){
-            div.css('visibility', 'visible');
-        }else{
-            div.css('visibility', 'hidden');
+            div.show();
+        }
+        else{
+            div.hide();
         }
     });
 }
@@ -211,116 +212,169 @@ function addQtipToSCIcons(){
     });
 }
 
-function fnCreatedRow( nRow, aData, iDataIndex ) {
-	
-	//call the context menu so we can prevent the event from propagating.
-	$(nRow).find('td:not(.library_checkbox):not(.library_type)').click(function(e){
-		
-		$(this).contextMenu();
-		
-		return false;
-	});
-
-	//add a tool tip to appear when the user clicks on the type icon.
-	$(nRow.children[1]).qtip({
-		content: {
-			text: "Loading...",
-			title: {
-				text: aData.track_title
-			},
-			ajax: {
-				url: "/Library/get-file-meta-data",
-				type: "get",
-				data: ({format: "html", id : aData.id, type: aData.ftype}),
-				success: function(data, status) {
-					this.set('content.text', data);
-				}
-			}
-		},
-		position: {
-			my: 'left center',
-            at: 'right center', // Position the tooltip above the link 
-            viewport: $(window), // Keep the tooltip on-screen at all times
-            effect: false // Disable positioning animation
-        },
-		style: {
-			classes: "ui-tooltip-dark"
-		},
-		show: {
-		    event: 'click',
-		    solo: true // Only show one tooltip at a time
-		},
-		hide: 'mouseout'
-		
-	}).click(function(event) { 
-		event.preventDefault();
-		event.stopPropagation();
-	});
-}
-
-/**
- * Updates pref db when user changes the # of entries to show
- */
-function saveNumEntriesSetting() {
-    $('select[name=library_display_length]').change(function() {
-        var url = '/Library/set-num-entries/format/json';
-        $.post(url, {numEntries: $(this).val()});
-    });
-}
-
-/**
- * Use user preference for number of entries to show
- */
-function getNumEntriesPreference(data) {
-    return parseInt(data.libraryInit.numEntries, 10);
-}
-
-function createDataTable(data) {
-	var oTable;
-	
+$(document).ready(function() {
+    var oTable;
+    
     oTable = $('#library_display').dataTable( {
+    	
+    	"aoColumns": [
+          /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
+          /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 2},
+          /* ftype */         {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
+          /* Title */         {"sTitle": "Title", "mDataProp": "track_title", "sClass": "library_title"},
+          /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator"},
+          /* Album */         {"sTitle": "Album", "mDataProp": "album_title", "sClass": "library_album"},
+          /* Genre */         {"sTitle": "Genre", "mDataProp": "genre", "sClass": "library_genre"},
+          /* Year */          {"sTitle": "Year", "mDataProp": "year", "sClass": "library_year"},
+          /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length"},
+          /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time"},
+          /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time"},
+          /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track"},
+          /* Mood */  		  {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood"},
+          /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm"},
+          /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer"},
+          /* Website */  {"sTitle": "Website", "mDataProp": "info_url", "bSearchable": false, "bVisible": false, "sClass": "library_url"},
+          /* Bit Rate */  {"sTitle": "Bit Rate", "mDataProp": "bit_rate", "bSearchable": false, "bVisible": false, "sClass": "library_bitrate"},
+          /* Sameple Rate */  {"sTitle": "Sample Rate", "mDataProp": "sample_rate", "bSearchable": false, "bVisible": false, "sClass": "library_sr"},
+          /* ISRC Number */  {"sTitle": "ISRC", "mDataProp": "isrc_number", "bSearchable": false, "bVisible": false, "sClass": "library_isrc"},
+          /* Encoded */  {"sTitle": "Encoded", "mDataProp": "encoded_by", "bSearchable": false, "bVisible": false, "sClass": "library_encoded"},
+          /* Label */  {"sTitle": "Label", "mDataProp": "label", "bSearchable": false, "bVisible": false, "sClass": "library_label"},
+          /* Copyright */  {"sTitle": "Copyright", "mDataProp": "copyright", "bSearchable": false, "bVisible": false, "sClass": "library_copyright"},
+          /* Mime */  {"sTitle": "Mime", "mDataProp": "mime", "bSearchable": false, "bVisible": false, "sClass": "library_mime"},
+          /* Language */  {"sTitle": "Language", "mDataProp": "language", "bSearchable": false, "bVisible": false, "sClass": "library_language"}
+          ],
+    	              
 		"bProcessing": true,
 		"bServerSide": true,
+		
+		"bStateSave": true,
+		"fnStateSaveParams": function (oSettings, oData) {
+    		//remove oData components we don't want to save.
+    		delete oData.oSearch;
+    		delete oData.aoSearchCols;
+	    },
+        "fnStateSave": function (oSettings, oData) {
+           
+    		$.ajax({
+			  url: "/usersettings/set-library-datatable",
+			  type: "POST",
+			  data: {settings : oData, format: "json"},
+			  dataType: "json",
+			  success: function(){},
+			  error: function (jqXHR, textStatus, errorThrown) {
+				  var x;
+			  }
+			});
+        },
+        "fnStateLoad": function (oSettings) {
+        	var o;
+
+        	$.ajax({
+  			  url: "/usersettings/get-library-datatable",
+  			  type: "GET",
+  			  data: {format: "json"},
+  			  dataType: "json",
+  			  async: false,
+  			  success: function(json){
+  				  o = json.settings;
+  			  },
+  			  error: function (jqXHR, textStatus, errorThrown) {
+				  var x;
+			  }
+  			});
+        	
+        	return o;
+        },
+        "fnStateLoadParams": function (oSettings, oData) {
+        	var i,
+				length,
+				a = oData.abVisCols;
+		
+        	//putting serialized data back into the correct js type to make
+        	//sure everything works properly.
+	        for (i = 0, length = a.length; i < length; i++) {	
+	        	a[i] = (a[i] === "true") ? true : false;
+	        }
+	        
+	        a = oData.ColReorder;
+	        for (i = 0, length = a.length; i < length; i++) {	
+	        	a[i] = parseInt(a[i], 10);
+	        }
+	       
+	        oData.iCreate = parseInt(oData.iCreate, 10);
+        },
+		
 		"sAjaxSource": "/Library/contents",
-		"fnServerData": function ( sSource, aoData, testCallback ) {
+		"fnServerData": function ( sSource, aoData, fnCallback ) {
     		aoData.push( { name: "format", value: "json"} );
 			$.ajax( {
 				"dataType": 'json',
 				"type": "GET",
 				"url": sSource,
 				"data": aoData,
-				"success": testCallback
+				"success": fnCallback
 			} );
 		},
 		"fnRowCallback": AIRTIME.library.events.fnRowCallback,
-		"fnCreatedRow": fnCreatedRow,
+		"fnCreatedRow": function( nRow, aData, iDataIndex ) {
+			
+			//call the context menu so we can prevent the event from propagating.
+			$(nRow).find('td:not(.library_checkbox):not(.library_type)').click(function(e){
+				
+				$(this).contextMenu();
+				
+				return false;
+			});
+
+			//add a tool tip to appear when the user clicks on the type icon.
+			$(nRow.children[1]).qtip({
+				content: {
+					text: "Loading...",
+					title: {
+						text: aData.track_title
+					},
+					ajax: {
+						url: "/Library/get-file-meta-data",
+						type: "get",
+						data: ({format: "html", id : aData.id, type: aData.ftype}),
+						success: function(data, status) {
+							this.set('content.text', data);
+						}
+					}
+				},
+				position: {
+					my: 'left center',
+		            at: 'right center', // Position the tooltip above the link 
+		            viewport: $(window), // Keep the tooltip on-screen at all times
+		            effect: false // Disable positioning animation
+		        },
+				style: {
+					classes: "ui-tooltip-dark"
+				},
+				show: {
+				    event: 'click',
+				    solo: true // Only show one tooltip at a time
+				},
+				hide: 'mouseout'
+				
+			}).click(function(event) { 
+				event.preventDefault();
+				event.stopPropagation();
+			});
+		},
 		"fnDrawCallback": AIRTIME.library.events.fnDrawCallback,
 		"fnHeaderCallback": function(nHead) {
 			$(nHead).find("input[type=checkbox]").attr("checked", false);
 		},
 		
-		"aoColumns": [
-                /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "bSortable": false, "bSearchable": false, "mDataProp": "checkbox", "sWidth": "25px", "sClass": "library_checkbox"},
-                /* Type */          {"sName": "ftype", "bSearchable": false, "mDataProp": "image", "sWidth": "25px", "sClass": "library_type"},
-                /* Title */         {"sTitle": "Title", "sName": "track_title", "mDataProp": "track_title", "sClass": "library_title"},
-                /* Creator */       {"sTitle": "Creator", "sName": "artist_name", "mDataProp": "artist_name", "sClass": "library_creator"},
-                /* Album */         {"sTitle": "Album", "sName": "album_title", "mDataProp": "album_title", "sClass": "library_album"},
-                /* Genre */         {"sTitle": "Genre", "sName": "genre", "mDataProp": "genre", "sClass": "library_genre"},
-                /* Year */          {"sTitle": "Year", "sName": "year", "mDataProp": "year", "sClass": "library_year"},
-                /* Length */        {"sTitle": "Length", "sName": "length", "mDataProp": "length", "sClass": "library_length"},
-                /* Upload Time */   {"sTitle": "Uploaded", "sName": "utime", "mDataProp": "utime", "sClass": "library_upload_time"},
-                /* Last Modified */ {"sTitle": "Last Modified", "sName": "mtime", "bVisible": false, "mDataProp": "mtime", "sClass": "library_modified_time"},
-		/* Track Number */  {"sTitle": "Track", "sName": "track",  "bSearchable": false, "bVisible": false, "mDataProp": "track_number", "sClass": "library_track"}
-            ],
-		"aaSorting": [[2,'asc']],
+		"aaSorting": [[3, 'asc']],
 		"sPaginationType": "full_numbers",
 		"bJQueryUI": true,
 		"bAutoWidth": false,
         "oLanguage": {
             "sSearch": ""
         },
-        "iDisplayLength": getNumEntriesPreference(data),
-
+       
         // R = ColReorder, C = ColVis, T = TableTools
         "sDom": 'Rlfr<"H"T<"library_toolbar"C>>t<"F"ip>',
         
@@ -352,14 +406,12 @@ function createDataTable(data) {
         "oColVis": {
             "buttonText": "Show/Hide Columns",
             "sAlign": "right",
-            "aiExclude": [0, 1],
-            "sSize": "css",
-            "bShowAll": true
+            "aiExclude": [0, 1, 2],
+            "sSize": "css"
 		},
 		
 		"oColReorder": {
-			"iFixedColumns": 2,
-			"aiOrder": [ 0,1,2,3,4,5,6,7,8,9,10 ]
+			"iFixedColumns": 2
 		}
 		
     });
@@ -377,13 +429,6 @@ function createDataTable(data) {
     		oTT.fnSelectNone();
     	}       
     });
-}
-
-$(document).ready(function() {
-    $('.tabs').tabs();
-    
-    $.ajax({url: "/Api/library-init/format/json", dataType:"json", success:createDataTable, 
-        error:function(jqXHR, textStatus, errorThrown){}});
     
     checkImportStatus();
     setInterval( checkImportStatus, 5000 );

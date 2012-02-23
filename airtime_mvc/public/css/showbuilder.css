@@ -3,3 +3,23 @@
 #show_builder input.input_text {
     width:100px;
 }
+
+table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-row th {
+    border-bottom: 2px solid #db0000 !important;
+}
+.innerWrapper {
+    position:relative;
+    width:100%;
+    }
+.marker {
+    position:absolute;
+    bottom:-10px;
+    left:-14px;
+    width:9px;
+    height:9px;
+    background:url(images/tl-arrow.png) no-repeat 0 0;
+    display:block;
+}
+tr.cursor-selected-row .marker {
+    background-position: 0 -15px;
+}
