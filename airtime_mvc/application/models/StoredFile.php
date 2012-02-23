@@ -580,7 +580,6 @@ class Application_Model_StoredFile {
     }
 
     public static function searchFilesForPlaylistBuilder($datatables) {
-        global $CC_CONFIG;
 
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
@@ -594,29 +593,42 @@ class Application_Model_StoredFile {
             if ($key === "id") {
                 $plSelect[] = "PL.id AS ".$key;
                 $fileSelect[] = $key;
-            } else if ($key === "track_title") {
+            }
+            else if ($key === "track_title") {
                 $plSelect[] = "name AS ".$key;
                 $fileSelect[] = $key;
-            } else if ($key === "ftype") {
-                $plSelect[] = "'playlist' AS ".$key;
+            }
+            else if ($key === "ftype") {
+                $plSelect[] = "'playlist'::varchar AS ".$key;
                 $fileSelect[] = $key;
-            } else if ($key === "artist_name") {
+            }
+            else if ($key === "artist_name") {
                 $plSelect[] = "login AS ".$key;
                 $fileSelect[] = $key;
-            } else if ($key === "length") {
+            }
+            else if ($key === "length") {
                 $plSelect[] = $key;
                 $fileSelect[] = $key."::interval";
-            } else if ($key === "year") {
+            }
+            else if ($key === "year") {
                 $plSelect[] = "CAST(utime AS varchar) AS ".$key;
                 $fileSelect[] = $key;
-            } else if ($key === "utime") {
+            }
+            else if ($key === "utime") {
                 $plSelect[] = $key;
                 $fileSelect[] = $key;
-            } else if ($key === "mtime") {
+            }
+            else if ($key === "mtime") {
                 $plSelect[] = $key;
                 $fileSelect[] = $key;
-            } else {
-                $plSelect[] = "NULL AS ".$key;
+            }
+            //need to cast certain data as ints for the union to search on.
+            else if (in_array($key, array("track_number"))){
+                $plSelect[] = "NULL::int AS ".$key;
+                $fileSelect[] = $key;
+            }
+            else {
+                $plSelect[] = "NULL::text AS ".$key;
                 $fileSelect[] = $key;
             }
         }
@@ -624,13 +636,28 @@ class Application_Model_StoredFile {
         $plSelect = "SELECT ". join(",", $plSelect);
         $fileSelect = "SELECT ". join(",", $fileSelect);
 
-        $fromTable = " (({$plSelect} FROM cc_playlist AS PL
-            LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))
-            UNION
-            ({$fileSelect} FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
+        $type = intval($datatables["type"]);
 
+        $plTable = "({$plSelect} FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))";
+        $fileTable = "({$fileSelect} FROM cc_files AS FILES WHERE file_exists = 'TRUE')";
+        $unionTable = "({$plTable} UNION {$fileTable} ) AS RESULTS";
 
-	   $results = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables);
+        //choose which table we need to select data from.
+        switch ($type) {
+            case 0:
+                $fromTable = $unionTable;
+                break;
+            case 1:
+                $fromTable = $fileTable." AS File"; //need an alias for the table if it's standalone.
+                break;
+            case 2:
+                $fromTable = $plTable." AS Playlist"; //need an alias for the table if it's standalone.
+                break;
+            default:
+                $fromTable = $unionTable;
+        }
+
+	    $results = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables);
 
 
         foreach ($results['aaData'] as &$row) {
@@ -671,22 +698,12 @@ class Application_Model_StoredFile {
 	    $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
         $where = array();
 
-        /*
-	    $columnsDisplayed = array();
-	    for ($i = 0; $i < $data["iColumns"]; $i++) {
-            if (in_array($data["mDataProp_".$i], $displayColumns)) {
-                $columnsDisplayed[] = $data["mDataProp_".$i];
-            }
-        }
-        */
-
 		if ($data["sSearch"] !== "") {
 			$searchTerms = explode(" ", $data["sSearch"]);
 		}
 
-		$selectorCount = "SELECT COUNT(*)";
-		//$selectorRows = "SELECT ". join(",", $displayColumns);
-		$selectorRows = "SELECT *";
+		$selectorCount = "SELECT COUNT(*) ";
+		$selectorRows = "SELECT ".join(",", $displayColumns)." ";
 
         $sql = $selectorCount." FROM ".$fromTable;
         $sqlTotalRows = $sql;
