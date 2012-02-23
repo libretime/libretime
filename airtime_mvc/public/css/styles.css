@@ -559,6 +559,12 @@ dl.inline-list dd {
     float: left;
 	margin: 0 3px 0 -2px;
 }
+.dataTables_type {
+    float:right;
+    margin:0 8px 0 0;
+    
+}
+
 .dataTables_length {
 	float:right;
 	margin:0 8px 0 0;
@@ -574,7 +580,7 @@ dl.inline-list dd {
 	margin:8px 0 0 8px;
 }
 .dataTables_filter .auto-search {
-	width:60%;
+	width:55%;
 }
 .dataTables_processing {
 	font-size:11px;

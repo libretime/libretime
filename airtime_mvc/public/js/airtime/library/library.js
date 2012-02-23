@@ -306,7 +306,15 @@ $(document).ready(function() {
 		
 		"sAjaxSource": "/Library/contents",
 		"fnServerData": function ( sSource, aoData, fnCallback ) {
+        	var type;
+        	
     		aoData.push( { name: "format", value: "json"} );
+    		
+    		//push whether to search files/playlists or all.
+    		type = $("#library_display_type").find("select").val();
+    		type = (type === undefined) ? 0 : type;
+    		aoData.push( { name: "type", value: type} );
+    		
 			$.ajax( {
 				"dataType": 'json',
 				"type": "GET",
@@ -376,7 +384,7 @@ $(document).ready(function() {
         },
        
         // R = ColReorder, C = ColVis, T = TableTools
-        "sDom": 'Rlfr<"H"T<"library_toolbar"C>>t<"F"ip>',
+        "sDom": 'Rl<"#library_display_type">fr<"H"T<"library_toolbar"C>>t<"F"ip>',
         
         "oTableTools": {
         	"sRowSelect": "multi",
@@ -418,6 +426,18 @@ $(document).ready(function() {
     oTable.fnSetFilteringDelay(350);
     
     AIRTIME.library.events.setupLibraryToolbar(oTable);
+    
+    $("#library_display_type")
+    	.addClass("dataTables_type")
+    	.append('<select name="library_display_type" />')
+    	.find("select")
+    		.append('<option value="0">All</option>')
+    		.append('<option value="1">Files</option>')
+    		.append('<option value="2">Playlists</option>')
+    		.end()
+    	.change(function(ev){
+    		oTable.fnDraw();
+    	});
       
     $('[name="pl_cb_all"]').click(function(){
     	var oTT = TableTools.fnGetInstance('library_display');
