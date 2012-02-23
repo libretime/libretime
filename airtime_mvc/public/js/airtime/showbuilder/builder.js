@@ -205,7 +205,7 @@ $(document).ready(function() {
 		if (aData.header === true) {
 			cl = 'sb-header';
 			
-			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span><span class="ui-icon ui-icon-triangle-1-e"></span>';
+			sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
 			fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
 		}
 		else if (aData.footer === true) {
@@ -226,11 +226,11 @@ $(document).ready(function() {
 			fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 		}		
 		else {
-			//$(nRow).attr("id", "sched_"+aData.id);
 			
 			node = nRow.children[0];
 			if (aData.checkbox === true) {
-				node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input><span class="ui-icon ui-icon-triangle-1-e"></span>';
+				var height = $(node).height();
+				node.innerHTML = '<div class="innerWrapper" height="'+height+'"><input type="checkbox" name="'+aData.id+'"></input><div class="marker"></div></div>';
 			}
 			else {
 				node.innerHTML = '';
@@ -292,7 +292,7 @@ $(document).ready(function() {
         "fnStateSave": function (oSettings, oData) {
            
     		$.ajax({
-			  url: "/preference/set-timeline-datatable",
+			  url: "/usersettings/set-timeline-datatable",
 			  type: "POST",
 			  data: {settings : oData, format: "json"},
 			  dataType: "json",
@@ -306,7 +306,7 @@ $(document).ready(function() {
         	var o;
 
         	$.ajax({
-  			  url: "/preference/get-timeline-datatable",
+  			  url: "/usersettings/get-timeline-datatable",
   			  type: "GET",
   			  data: {format: "json"},
   			  dataType: "json",

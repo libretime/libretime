@@ -4,9 +4,23 @@
     width:100px;
 }
 
-#show_builder span.ui-icon-triangle-1-e {
-	float: left;
-    position: relative;
-    left: -20px;
-    top: 15px;
+table tr.selected-row td, table tr.selected-row th,
+table.datatable tr.selected-row td, table.datatable tr.selected-row th {
+    border-bottom: 2px solid #db0000 !important;
+}
+.innerWrapper {
+    position:relative;
+    width:100%;
+    }
+.marker {
+    position:absolute;
+    bottom:-10px;
+    left:-14px;
+    width:9px;
+    height:9px;
+    background:url(images/tl-arrow.png) no-repeat 0 0;
+    display:block;
+}
+tr.selected-row .marker {
+    background-position: 0 -15px;
 }

@@ -14,10 +14,6 @@ class PreferenceController extends Zend_Controller_Action
                     ->addActionContext('is-import-in-progress', 'json')
                     ->addActionContext('change-stream-setting', 'json')
                     ->addActionContext('get-liquidsoap-status', 'json')
-                    ->addActionContext('get-library-datatable', 'json')
-                    ->addActionContext('set-library-datatable', 'json')
-                    ->addActionContext('get-timeline-datatable', 'json')
-                    ->addActionContext('set-timeline-datatable', 'json')
                     ->initContext();
     }
 
@@ -334,40 +330,6 @@ class PreferenceController extends Zend_Controller_Action
             $out[] = array("id"=>$i, "status"=>$status);
         }
         die(json_encode($out));
-    }
-
-    public function setLibraryDatatableAction() {
-
-        $request = $this->getRequest();
-        $settings = $request->getParam("settings");
-
-        $data = serialize($settings);
-        Application_Model_Preference::SetValue("library_datatable", $data, true);
-    }
-
-    public function getLibraryDatatableAction() {
-
-        $data = Application_Model_Preference::GetValue("library_datatable", true);
-        if ($data != "") {
-            $this->view->settings = unserialize($data);
-        }
-    }
-
-    public function setTimelineDatatableAction() {
-
-        $request = $this->getRequest();
-        $settings = $request->getParam("settings");
-
-        $data = serialize($settings);
-        Application_Model_Preference::SetValue("timeline_datatable", $data, true);
-    }
-
-    public function getTimelineDatatableAction() {
-
-        $data = Application_Model_Preference::GetValue("timeline_datatable", true);
-        if ($data != "") {
-            $this->view->settings = unserialize($data);
-        }
     }
 }
 

@@ -256,7 +256,7 @@ $(document).ready(function() {
         "fnStateSave": function (oSettings, oData) {
            
     		$.ajax({
-			  url: "/preference/set-library-datatable",
+			  url: "/usersettings/set-library-datatable",
 			  type: "POST",
 			  data: {settings : oData, format: "json"},
 			  dataType: "json",
@@ -270,7 +270,7 @@ $(document).ready(function() {
         	var o;
 
         	$.ajax({
-  			  url: "/preference/get-library-datatable",
+  			  url: "/usersettings/get-library-datatable",
   			  type: "GET",
   			  data: {format: "json"},
   			  dataType: "json",
