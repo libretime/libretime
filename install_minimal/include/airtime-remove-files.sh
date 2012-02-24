@@ -38,8 +38,8 @@ echo "* Pypo"
 python $AIRTIMEROOT/python_apps/pypo/install/pypo-remove-files.py
 echo "* Media-Monitor"
 python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-remove-files.py
-echo "* Show-Recorder"
-python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-remove-files.py
+#echo "* Show-Recorder"
+#python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-remove-files.py
 
 #remove symlinks
 rm -f /usr/bin/airtime-import

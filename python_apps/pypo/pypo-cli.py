@@ -15,6 +15,7 @@ from Queue import Queue
 
 from pypopush import PypoPush
 from pypofetch import PypoFetch
+from recorder import Recorder
 
 from configobj import ConfigObj
 
@@ -127,12 +128,18 @@ if __name__ == '__main__':
     api_client.register_component("pypo")
 
     q = Queue()
+    
+    recorder_q = Queue()
 
     pp = PypoPush(q)
     pp.daemon = True
     pp.start()
 
-    pf = PypoFetch(q)
+    recorder = Recorder(recorder_q)
+    recorder.daemon = True
+    recorder.start()
+
+    pf = PypoFetch(q, recorder_q)
     pf.daemon = True
     pf.start()
 

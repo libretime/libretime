@@ -63,9 +63,9 @@ if [ "$python_service" -eq "0" ]; then
     if [ "$pypo" = "t" ]; then
         python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
     fi
-    if [ "$showrecorder" = "t" ]; then
-        python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
-    fi
+    #if [ "$showrecorder" = "t" ]; then
+    #    python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
+    #fi
 fi
 
 mkdir -p /usr/lib/airtime
