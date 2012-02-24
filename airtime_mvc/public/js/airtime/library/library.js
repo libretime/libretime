@@ -327,15 +327,15 @@ $(document).ready(function() {
 		"fnCreatedRow": function( nRow, aData, iDataIndex ) {
 			
 			//call the context menu so we can prevent the event from propagating.
-			$(nRow).find('td:not(.library_checkbox):not(.library_type)').click(function(e){
+			$(nRow).find('td:not(.library_checkbox)').click(function(e){
 				
-				$(this).contextMenu();
+				$(this).contextMenu({x: e.pageX, y: e.pageY});
 				
 				return false;
 			});
 
 			//add a tool tip to appear when the user clicks on the type icon.
-			$(nRow.children[1]).qtip({
+			$(nRow).find("td:not(:first, td>img)").qtip({
 				content: {
 					text: "Loading...",
 					title: {
@@ -351,23 +351,30 @@ $(document).ready(function() {
 					}
 				},
 				position: {
+					target: 'event',
+					adjust: {
+						resize: true,
+						method: "flip flip"
+					},
 					my: 'left center',
-		            at: 'right center', // Position the tooltip above the link 
+		            at: 'right center',
 		            viewport: $(window), // Keep the tooltip on-screen at all times
 		            effect: false // Disable positioning animation
 		        },
 				style: {
 					classes: "ui-tooltip-dark"
 				},
-				show: {
-				    event: 'click',
-				    solo: true // Only show one tooltip at a time
-				},
+				show: 'mousedown',
+			    events: {
+			       show: function(event, api) {
+			         // Only show the tooltip if it was a right-click
+			         if(event.originalEvent.button !== 2) {
+			            event.preventDefault();
+			         }
+			       }
+			   },
 				hide: 'mouseout'
 				
-			}).click(function(event) { 
-				event.preventDefault();
-				event.stopPropagation();
 			});
 		},
 		"fnDrawCallback": AIRTIME.library.events.fnDrawCallback,
@@ -457,7 +464,7 @@ $(document).ready(function() {
     addQtipToSCIcons();
 
     $.contextMenu({
-        selector: '#library_display td:not(.library_checkbox):not(.library_type)',
+        selector: '#library_display td:not(.library_checkbox)',
         trigger: "left",
         ignoreRightClick: true,
         
@@ -581,12 +588,7 @@ $(document).ready(function() {
 			});
 
             return {
-                items: items,
-                determinePosition : function($menu, x, y) {
-                	$menu.css('display', 'block')
-                		.position({ my: "left top", at: "right top", of: this, offset: "-20 10", collision: "fit"})
-                		.css('display', 'none');
-                }
+                items: items
             };
         }
     });
