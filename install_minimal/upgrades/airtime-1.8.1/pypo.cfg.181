@@ -110,30 +110,3 @@ update_start_playing_url = 'notify-media-item-start-play/api_key/%%api_key%%/med
 generate_range_url = 'generate_range_dp.php'
 
 
-##############
-# OBP config #
-##############
-# Value needed to access the API
-#api_key = 'AAA'
-
-#base_url = 'http://localhost/'
-
-# Path to the base of the API
-#api_base = ''
-
-# URL to get the version number of the server API
-#version_url = 'api/pypo/status/json'
-
-# Schedule export path.
-# %%from%% - starting date/time in the form YYYY-MM-DD-hh-mm
-# %%to%% - starting date/time in the form YYYY-MM-DD-hh-mm
-
-# Update whether an item has been played.
-#update_item_url = 'api/pypo/update_shedueled_item/$$item_id%%?played=%%played%%' 
-
-# Update whether an item is currently playing.
-#update_start_playing_url = 'api/pypo/mod/medialibrary/?playlist_type=%%playlist_type%%&export_source=%%export_source%%&media_id=%%media_id%%&playlist_id=%%playlist_id%%&transmission_id=%%transmission_id%%'
-
-# ???
-#generate_range_url = 'api/pypo/generate_range_dp/'
-

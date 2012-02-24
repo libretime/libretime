@@ -19,20 +19,15 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnDrawCallback = function() {
 		
 		$('#library_display tr[id ^= "au"]').draggable({
-			helper: 'clone',
-			/* customize the helper on dragging to look like a pl item
-			 * 
-			helper: function(ev) {
-				var data, li;
-				
-				data = $(ev.currentTarget).data("aData");
-				
-				li = $("<li></li>");
-				li.append(data.track_title);
-				
-				return li;
-			},
-			*/
+			helper: function(){
+			    var selected = $('#library_display tr:not(:first) input:checked').parents('tr[id^="au"]');
+			    if (selected.length === 0) {
+			      selected = $(this);
+			    }
+			    var container = $('<div/>').attr('id', 'draggingContainer');
+			    container.append(selected.clone());
+			    return container; 
+		    },
 			cursor: 'pointer',
 			connectToSortable: '#spl_sortable'
 		});
@@ -45,11 +40,6 @@ var AIRTIME = (function(AIRTIME){
 		var aButtons,
 			fnResetCol,
 			fnAddSelectedItems;
-		
-		fnResetCol = function () {
-			ColReorder.fnReset( oLibTable );
-			return false;
-		};
 		
 		fnAddSelectedItems = function() {
 			var oLibTT = TableTools.fnGetInstance('library_display'),
@@ -73,9 +63,8 @@ var AIRTIME = (function(AIRTIME){
 		//[1] = id 
 		//[2] = enabled
 		//[3] = click event
-		aButtons = [["Reset Order", "library_order_reset", true, fnResetCol], 
-		                ["Delete", "library_group_delete", true, AIRTIME.library.fnDeleteSelectedItems], 
-		                ["Add", "library_group_add", true, fnAddSelectedItems]];
+		aButtons = [["Delete", "library_group_delete", true, AIRTIME.library.fnDeleteSelectedItems], 
+	                ["Add", "library_group_add", true, fnAddSelectedItems]];
 		
 		addToolBarButtonsLibrary(aButtons);
 	};

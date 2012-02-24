@@ -1,5 +1,7 @@
 <?php
 
+require_once 'formatters/LengthFormatter.php';
+
 /**
  *
  * @package Airtime
@@ -89,7 +91,7 @@ class Application_Model_Playlist {
     public function setName($p_newname)
     {
     	$this->pl->setDbName($p_newname);
-    	$this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+    	$this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
     	$this->pl->save($this->con);
     }
 
@@ -106,7 +108,7 @@ class Application_Model_Playlist {
     public function setDescription($p_description)
     {
     	$this->pl->setDbDescription($p_description);
-    	$this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+    	$this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
     	$this->pl->save($this->con);
     }
 
@@ -123,7 +125,7 @@ class Application_Model_Playlist {
     public function setCreator($p_id) {
 
         $this->pl->setDbCreatorId($p_id);
-        $this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->pl->save($this->con);
     }
 
@@ -158,9 +160,15 @@ class Application_Model_Playlist {
 
 
           $clipSec = Application_Model_Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
-          //$files[$i]['cliplength'] = Application_Model_Playlist::secondsToPlaylistTime($clipSec);
           $offset += $clipSec;
-          $files[$i]['offset'] = Application_Model_Playlist::secondsToPlaylistTime($offset);
+          $offset_cliplength = Application_Model_Playlist::secondsToPlaylistTime($offset);
+
+          //format the length for UI.
+          $formatter = new LengthFormatter($files[$i]['cliplength']);
+          $files[$i]['cliplength'] = $formatter->format();
+
+          $formatter = new LengthFormatter($offset_cliplength);
+          $files[$i]['offset'] = $formatter->format();
 
           $i++;
         }
@@ -218,13 +226,18 @@ class Application_Model_Playlist {
     {
         $file = CcFilesQuery::create()->findPK($p_item, $this->con);
 
-        $entry = $this->plItem;
-        $entry["id"] = $file->getDbId();
-        $entry["pos"] = $pos;
-        $entry["cliplength"] = $file->getDbLength();
-        $entry["cueout"] = $file->getDbLength();
+        if (isset($file) && $file->getDbFileExists()) {
+            $entry = $this->plItem;
+            $entry["id"] = $file->getDbId();
+            $entry["pos"] = $pos;
+            $entry["cliplength"] = $file->getDbLength();
+            $entry["cueout"] = $file->getDbLength();
 
-        return $entry;
+            return $entry;
+        }
+        else {
+            throw new Exception("trying to add a file that does not exist.");
+        }
     }
 
     /*
@@ -300,7 +313,7 @@ class Application_Model_Playlist {
                 $pos = $pos + 1;
             }
 
-            $this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+            $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
             $this->pl->save($this->con);
 
             $this->con->commit();
@@ -383,7 +396,7 @@ class Application_Model_Playlist {
 
 
         $this->pl = CcPlaylistQuery::create()->findPK($this->id);
-        $this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->pl->save($this->con);
     }
 
@@ -415,7 +428,7 @@ class Application_Model_Playlist {
                 $contents[$i]->save($this->con);
             }
 
-            $this->pl->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+            $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
             $this->pl->save($this->con);
 
             $this->con->commit();
@@ -462,47 +475,52 @@ class Application_Model_Playlist {
         $fadeIn = $fadeIn?'00:00:'.$fadeIn:$fadeIn;
         $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
 
+        $this->con->beginTransaction();
+
         $errArray= array();
-		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
-
-        $row = CcPlaylistcontentsQuery::create()->findPK($id);
-
-        if (is_null($row)) {
-            $errArray["error"]="Playlist item does not exist.";
-            return $errArray;
-        }
-
-        $clipLength = $row->getDbCliplength();
-
-        if(!is_null($fadeIn)) {
-
-			$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$clipLength}'";
-			$r = $con->query($sql);
-            if($r->fetchColumn(0)) {
-                //"Fade In can't be larger than overall playlength.";
-                $fadeIn = $clipLength;
-            }
-            $row->setDbFadein($fadeIn);
-        }
-        if(!is_null($fadeOut)){
-
-			$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$clipLength}'";
-			$r = $con->query($sql);
-            if($r->fetchColumn(0)) {
-                //Fade Out can't be larger than overall playlength.";
-                $fadeOut = $clipLength;
-            }
-            $row->setDbFadeout($fadeOut);
-        }
 
         try {
-            $row->save();
+            $row = CcPlaylistcontentsQuery::create()->findPK($id);
+
+            if (is_null($row)) {
+                throw new Exception("Playlist item does not exist.");
+            }
+
+            $clipLength = $row->getDbCliplength();
+
+            if (!is_null($fadeIn)) {
+
+    			$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$clipLength}'";
+    			$r = $this->con->query($sql);
+                if ($r->fetchColumn(0)) {
+                    //"Fade In can't be larger than overall playlength.";
+                    $fadeIn = $clipLength;
+                }
+                $row->setDbFadein($fadeIn);
+            }
+            if (!is_null($fadeOut)){
+
+    			$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$clipLength}'";
+    			$r = $this->con->query($sql);
+                if ($r->fetchColumn(0)) {
+                    //Fade Out can't be larger than overall playlength.";
+                    $fadeOut = $clipLength;
+                }
+                $row->setDbFadeout($fadeOut);
+            }
+
+            $row->save($this->con);
+            $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+            $this->pl->save($this->con);
+
+            $this->con->commit();
         }
         catch (Exception $e) {
-            Logging::log($e->getMessage());
+            $this->con->rollback();
+            throw $e;
         }
 
-        return array("fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
+        return array("fadeIn"=> $fadeIn, "fadeOut"=> $fadeOut);
     }
 
     public function setPlaylistfades($fadein, $fadeout) {
@@ -512,7 +530,7 @@ class Application_Model_Playlist {
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition(0)
-                ->findOne();
+                ->findOne($this->con);
 
             $this->changeFadeInfo($row->getDbId(), $fadein, null);
         }
@@ -521,7 +539,7 @@ class Application_Model_Playlist {
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition($this->getSize()-1)
-                ->findOne();
+                ->findOne($this->con);
 
             $this->changeFadeInfo($row->getDbId(), null, $fadeout);
         }
@@ -540,126 +558,135 @@ class Application_Model_Playlist {
      */
     public function changeClipLength($id, $cueIn, $cueOut)
     {
+        $this->con->beginTransaction();
+
         $errArray= array();
-		$con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
 
-        if (is_null($cueIn) && is_null($cueOut)) {
-            $errArray["error"]="Cue in and cue out are null.";
-            return $errArray;
-        }
-
-        $row = CcPlaylistcontentsQuery::create()
-            ->joinWith(CcFilesPeer::OM_CLASS)
-            ->filterByPrimaryKey($id)
-            ->findOne();
-
-        if (is_null($row)) {
-            $errArray["error"]="Playlist item does not exist!.";
-            return $errArray;
-        }
-
-        $oldCueIn = $row->getDBCuein();
-        $oldCueOut = $row->getDbCueout();
-        $fadeIn = $row->getDbFadein();
-        $fadeOut = $row->getDbFadeout();
-
-        $file = $row->getCcFiles();
-        $origLength = $file->getDbLength();
-
-
-        if(!is_null($cueIn) && !is_null($cueOut)){
-
-            if($cueOut === ""){
-                $cueOut = $origLength;
-            }
-
-			$sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$cueOut}'";
-			$r = $con->query($sql);
-            if($r->fetchColumn(0)) {
-                $errArray["error"]= "Can't set cue in to be larger than cue out.";
+        try {
+            if (is_null($cueIn) && is_null($cueOut)) {
+                $errArray["error"] = "Cue in and cue out are null.";
                 return $errArray;
             }
 
-			$sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
-			$r = $con->query($sql);
-            if($r->fetchColumn(0)){
-                $errArray["error"] = "Can't set cue out to be greater than file length.";
-                return $errArray;
+            $row = CcPlaylistcontentsQuery::create()
+                ->joinWith(CcFilesPeer::OM_CLASS)
+                ->filterByPrimaryKey($id)
+                ->findOne($this->con);
+
+            if (is_null($row)) {
+                throw new Exception("Playlist item does not exist.");
             }
 
-			$sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$cueIn}'";
-			$r = $con->query($sql);
-			$cliplength = $r->fetchColumn(0);
+            $oldCueIn = $row->getDBCuein();
+            $oldCueOut = $row->getDbCueout();
+            $fadeIn = $row->getDbFadein();
+            $fadeOut = $row->getDbFadeout();
 
-            $row->setDbCuein($cueIn);
-            $row->setDbCueout($cueOut);
-            $row->setDBCliplength($cliplength);
+            $file = $row->getCcFiles($this->con);
+            $origLength = $file->getDbLength();
 
-        }
-        else if(!is_null($cueIn)) {
+            if (!is_null($cueIn) && !is_null($cueOut)){
 
-			$sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$oldCueOut}'";
-			$r = $con->query($sql);
-            if($r->fetchColumn(0)) {
-                $errArray["error"] = "Can't set cue in to be larger than cue out.";
-                return $errArray;
+                if ($cueOut === ""){
+                    $cueOut = $origLength;
+                }
+
+    			$sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$cueOut}'";
+    			$r = $this->con->query($sql);
+                if ($r->fetchColumn(0)) {
+                    $errArray["error"] = "Can't set cue in to be larger than cue out.";
+                    return $errArray;
+                }
+
+    			$sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
+    			$r = $this->con->query($sql);
+                if ($r->fetchColumn(0)){
+                    $errArray["error"] = "Can't set cue out to be greater than file length.";
+                    return $errArray;
+                }
+
+    			$sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$cueIn}'";
+    			$r = $this->con->query($sql);
+    			$cliplength = $r->fetchColumn(0);
+
+                $row->setDbCuein($cueIn);
+                $row->setDbCueout($cueOut);
+                $row->setDBCliplength($cliplength);
+
+            }
+            else if (!is_null($cueIn)) {
+
+    			$sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$oldCueOut}'";
+    			$r = $this->con->query($sql);
+                if ($r->fetchColumn(0)) {
+                    $errArray["error"] = "Can't set cue in to be larger than cue out.";
+                    return $errArray;
+                }
+
+                $sql = "SELECT INTERVAL '{$oldCueOut}' - INTERVAL '{$cueIn}'";
+    			$r = $this->con->query($sql);
+    			$cliplength = $r->fetchColumn(0);
+
+                $row->setDbCuein($cueIn);
+                $row->setDBCliplength($cliplength);
+            }
+            else if (!is_null($cueOut)) {
+
+                if ($cueOut === ""){
+                    $cueOut = $origLength;
+                }
+
+    			$sql = "SELECT INTERVAL '{$cueOut}' < INTERVAL '{$oldCueIn}'";
+    			$r = $this->con->query($sql);
+                if ($r->fetchColumn(0)) {
+                    $errArray["error"] = "Can't set cue out to be smaller than cue in.";
+                    return $errArray;
+                }
+
+    			$sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
+    			$r = $this->con->query($sql);
+                if ($r->fetchColumn(0)){
+                    $errArray["error"] = "Can't set cue out to be greater than file length.";
+                    return $errArray;
+                }
+
+                $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$oldCueIn}'";
+    			$r = $this->con->query($sql);
+    			$cliplength = $r->fetchColumn(0);
+
+                $row->setDbCueout($cueOut);
+                $row->setDBCliplength($cliplength);
             }
 
-            $sql = "SELECT INTERVAL '{$oldCueOut}' - INTERVAL '{$cueIn}'";
-			$r = $con->query($sql);
-			$cliplength = $r->fetchColumn(0);
+            $cliplength = $row->getDbCliplength();
 
-            $row->setDbCuein($cueIn);
-            $row->setDBCliplength($cliplength);
-        }
-        else if(!is_null($cueOut)) {
-
-            if($cueOut === ""){
-                $cueOut = $origLength;
+    		$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$cliplength}'";
+    		$r = $this->con->query($sql);
+            if ($r->fetchColumn(0)){
+                $fadeIn = $cliplength;
+                $row->setDbFadein($fadeIn);
             }
 
-			$sql = "SELECT INTERVAL '{$cueOut}' < INTERVAL '{$oldCueIn}'";
-			$r = $con->query($sql);
-            if($r->fetchColumn(0)) {
-                $errArray["error"] ="Can't set cue out to be smaller than cue in.";
-                return $errArray;
+    		$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$cliplength}'";
+    		$r = $this->con->query($sql);
+            if ($r->fetchColumn(0)){
+                $fadeOut = $cliplength;
+                $row->setDbFadein($fadeOut);
             }
 
-			$sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
-			$r = $con->query($sql);
-            if($r->fetchColumn(0)){
-                $errArray["error"] ="Can't set cue out to be greater than file length.";
-                return $errArray;
-            }
+            $row->save($this->con);
+            $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+            $this->pl->save($this->con);
 
-            $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$oldCueIn}'";
-			$r = $con->query($sql);
-			$cliplength = $r->fetchColumn(0);
-
-            $row->setDbCueout($cueOut);
-            $row->setDBCliplength($cliplength);
+            $this->con->commit();
+        }
+        catch (Exception $e) {
+            $this->con->rollback();
+            throw $e;
         }
 
-        $cliplength = $row->getDbCliplength();
-
-		$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$cliplength}'";
-		$r = $con->query($sql);
-        if($r->fetchColumn(0)){
-            $fadeIn = $cliplength;
-            $row->setDbFadein($fadeIn);
-        }
-
-		$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$cliplength}'";
-		$r = $con->query($sql);
-        if($r->fetchColumn(0)){
-            $fadeOut = $cliplength;
-            $row->setDbFadein($fadeOut);
-        }
-
-        $row->save();
-
-        return array("cliplength"=>$cliplength, "cueIn"=>$cueIn, "cueOut"=>$cueOut, "length"=>$this->getLength(),
-                        "fadeIn"=>$fadeIn, "fadeOut"=>$fadeOut);
+        return array("cliplength"=> $cliplength, "cueIn"=> $cueIn, "cueOut"=> $cueOut, "length"=> $this->getLength(),
+                        "fadeIn"=> $fadeIn, "fadeOut"=> $fadeOut);
     }
 
     public function getAllPLMetaData()

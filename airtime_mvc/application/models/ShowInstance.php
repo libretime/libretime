@@ -1,5 +1,7 @@
 <?php
 
+require_once 'formatters/LengthFormatter.php';
+
 class Application_Model_ShowInstance {
 
     private $_instanceId;
@@ -599,9 +601,14 @@ class Application_Model_ShowInstance {
     {
         $time = $this->_showInstance->getDbTimeFilled();
 
-        if(is_null($time)) {
+        if (is_null($time)) {
             $time = "00:00:00";
         }
+        else {
+            $formatter = new LengthFormatter($time);
+            $time = $formatter->format();
+        }
+
         return $time;
     }
 
@@ -631,15 +638,11 @@ class Application_Model_ShowInstance {
 
     public function getShowLength()
     {
-        global $CC_DBC;
+        $start = $this->getShowInstanceStart(null);
+        $end = $this->getShowInstanceEnd(null);
 
-        $start_timestamp = $this->getShowInstanceStart();
-        $end_timestamp = $this->getShowInstanceEnd();
-
-        $sql = "SELECT TIMESTAMP '{$end_timestamp}' - TIMESTAMP '{$start_timestamp}' ";
-        $length = $CC_DBC->GetOne($sql);
-
-        return $length;
+        $interval = $start->diff($end);
+        return $interval->format("%h:%I:%S");
     }
 
     public function searchPlaylistsForShow($datatables)
@@ -657,47 +660,22 @@ class Application_Model_ShowInstance {
 
             WHERE s.instance_id = '{$this->_instanceId}' ORDER BY starts";
 
-        return $CC_DBC->GetAll($sql);
-    }
+        Logging::log($sql);
 
-    public function getShowContent()
-    {
-        global $CC_DBC;
+        $results = $CC_DBC->GetAll($sql);
 
-        $res = $this->getShowListContent();
+        foreach ($results as &$row) {
 
-        if(count($res) <= 0) {
-            return $res;
+            $dt = new DateTime($row["starts"], new DateTimeZone("UTC"));
+            $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            $row["starts"] = $dt->format("Y-m-d H:i:s");
+
+            $formatter = new LengthFormatter($row["clip_length"]);
+            $row["clip_length"] = $formatter->format();
         }
 
-        $items = array();
-        $currGroupId = -1;
-        $pl_counter = -1;
-        $f_counter = -1;
-        foreach ($res as $row) {
-            if($currGroupId != $row["group_id"]){
-                $currGroupId = $row["group_id"];
-                $pl_counter = $pl_counter + 1;
-                $f_counter = -1;
 
-                $items[$pl_counter]["pl_name"] = $row["name"];
-                $items[$pl_counter]["pl_creator"] = $row["creator"];
-                $items[$pl_counter]["pl_description"] = $row["description"];
-                $items[$pl_counter]["pl_group"] = $row["group_id"];
-
-                $sql = "SELECT SUM(clip_length) FROM cc_schedule WHERE group_id = '{$currGroupId}'";
-                $length = $CC_DBC->GetOne($sql);
-
-                $items[$pl_counter]["pl_length"] = $length;
-            }
-            $f_counter = $f_counter + 1;
-
-            $items[$pl_counter]["pl_content"][$f_counter]["f_name"] = $row["track_title"];
-            $items[$pl_counter]["pl_content"][$f_counter]["f_artist"] = $row["artist_name"];
-            $items[$pl_counter]["pl_content"][$f_counter]["f_length"] = $row["length"];
-        }
-
-        return $items;
+        return $results;
     }
 
     public static function GetShowsInstancesIdsInRange($p_timeNow, $p_start, $p_end)

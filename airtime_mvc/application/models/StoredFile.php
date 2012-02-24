@@ -1,5 +1,9 @@
 <?php
 
+require_once 'formatters/LengthFormatter.php';
+require_once 'formatters/SamplerateFormatter.php';
+require_once 'formatters/BitrateFormatter.php';
+
 /**
  *  Application_Model_StoredFile class
  *
@@ -551,96 +555,97 @@ class Application_Model_StoredFile {
         return $res;
     }
 
-/*
-     * @param DateInterval $p_interval
-     *
-     * @return string $runtime
-     */
-    private static function formatDuration($dt){
+    public static function searchFilesForPlaylistBuilder($datatables) {
 
-        $hours = $dt->format("H");
-        $min = $dt->format("i");
-        $sec = $dt->format("s");
+        $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
+            "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
+            "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label", "copyright", "mime", "language"
+        );
 
-        $time = "PT{$hours}H{$min}M{$sec}S";
+        $plSelect = array();
+        $fileSelect = array();
+        foreach ($displayColumns as $key) {
 
-        $p_interval = new DateInterval($time);
-
-        $hours = $p_interval->format("%h");
-        $mins = $p_interval->format("%i");
-
-        if( $hours == 0) {
-            $runtime = $p_interval->format("%i:%S");
-        }
-        else {
-            $runtime = $p_interval->format("%h:%I:%S");
-        }
-
-        return $runtime;
-    }
-
-    public static function searchFilesForPlaylistBuilder($datatables)
-    {
-        global $CC_CONFIG;
-
-        $displayData = array("track_title", "artist_name", "album_title", "genre", "length", "year", "utime", "mtime", "ftype", "track_number");
-
-        $plSelect = "SELECT ";
-        $fileSelect = "SELECT ";
-        foreach ($displayData as $key) {
-
-            if ($key === "track_title") {
-                $plSelect .= "name AS ".$key.", ";
-                $fileSelect .= $key.", ";
-            } else if ($key === "ftype") {
-                $plSelect .= "'playlist' AS ".$key.", ";
-                $fileSelect .= $key.", ";
-            } else if ($key === "artist_name") {
-                $plSelect .= "login AS ".$key.", ";
-                $fileSelect .= $key.", ";
-            } else if ($key === "length") {
-                $plSelect .= $key.", ";
-                $fileSelect .= $key."::interval, ";
-            } else if ($key === "year") {
-                $plSelect .= "CAST(utime AS varchar) AS ".$key.", ";
-                $fileSelect .= $key.", ";
-            } else if ($key === "utime") {
-                $plSelect .= $key.", ";
-                $fileSelect .= $key.", ";
-            } else if ($key === "mtime") {
-                $plSelect .= $key.", ";
-                $fileSelect .= $key.", ";
-            } else if ($key === "track_number") {
-		$plSelect .= "NULL AS ".$key.", ";
-                $fileSelect .= $key.", ";
-            } else {
-                $plSelect .= "NULL AS ".$key.", ";
-                $fileSelect .= $key.", ";
+            if ($key === "id") {
+                $plSelect[] = "PL.id AS ".$key;
+                $fileSelect[] = $key;
+            }
+            else if ($key === "track_title") {
+                $plSelect[] = "name AS ".$key;
+                $fileSelect[] = $key;
+            }
+            else if ($key === "ftype") {
+                $plSelect[] = "'playlist'::varchar AS ".$key;
+                $fileSelect[] = $key;
+            }
+            else if ($key === "artist_name") {
+                $plSelect[] = "login AS ".$key;
+                $fileSelect[] = $key;
+            }
+            //same columns in each table.
+            else if(in_array($key, array("length", "utime", "mtime"))) {
+                $plSelect[] = $key;
+                $fileSelect[] = $key;
+            }
+            else if ($key === "year") {
+                $plSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
+                $fileSelect[] = $key;
+            }
+            //need to cast certain data as ints for the union to search on.
+            else if (in_array($key, array("track_number"))){
+                $plSelect[] = "NULL::int AS ".$key;
+                $fileSelect[] = $key;
+            }
+            else {
+                $plSelect[] = "NULL::text AS ".$key;
+                $fileSelect[] = $key;
             }
         }
 
-        $fromTable = " ((".$plSelect."PL.id
-            FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))
-            UNION
-            (".$fileSelect."id FROM ".$CC_CONFIG["filesTable"]." AS FILES WHERE file_exists = 'TRUE')) AS RESULTS";
+        $plSelect = "SELECT ". join(",", $plSelect);
+        $fileSelect = "SELECT ". join(",", $fileSelect);
 
-	$results = Application_Model_StoredFile::searchFiles($fromTable, $datatables);
+        $type = intval($datatables["type"]);
+
+        $plTable = "({$plSelect} FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))";
+        $fileTable = "({$fileSelect} FROM cc_files AS FILES WHERE file_exists = 'TRUE')";
+        $unionTable = "({$plTable} UNION {$fileTable} ) AS RESULTS";
+
+        //choose which table we need to select data from.
+        switch ($type) {
+            case 0:
+                $fromTable = $unionTable;
+                break;
+            case 1:
+                $fromTable = $fileTable." AS File"; //need an alias for the table if it's standalone.
+                break;
+            case 2:
+                $fromTable = $plTable." AS Playlist"; //need an alias for the table if it's standalone.
+                break;
+            default:
+                $fromTable = $unionTable;
+        }
+
+	    $results = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables);
 
 
-        foreach($results['aaData'] as &$row){
+        foreach ($results['aaData'] as &$row) {
 
             $row['id'] = intval($row['id']);
 
-            //$length = new DateTime($row['length']);
-            //$row['length'] = self::formatDuration($length);
+            $formatter = new LengthFormatter($row['length']);
+            $row['length'] = $formatter->format();
+
+            if ($row['ftype'] === "audioclip") {
+                $formatter = new SamplerateFormatter($row['sample_rate']);
+                $row['sample_rate'] = $formatter->format();
+
+                $formatter = new BitrateFormatter($row['bit_rate']);
+                $row['bit_rate'] = $formatter->format();
+            }
 
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
-
-            // a full timestamp is being returned for playlists' year column;
-            // split it and grab only the year info
-            $yearSplit = explode('-', $row['year']);
-            $row['year'] = $yearSplit[0];
 
             $type = substr($row['ftype'], 0, 2);
 
@@ -649,7 +654,7 @@ class Application_Model_StoredFile {
             //TODO url like this to work on both playlist/showbuilder screens.
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
-            if($type == "au") {
+            if ($type == "au") {
                 $row['image'] = '<img src="/css/images/icon_audioclip.png">';
             }
             else {
@@ -660,55 +665,35 @@ class Application_Model_StoredFile {
         return $results;
     }
 
-    public static function searchPlaylistsForSchedule($datatables)
-    {
-		$fromTable = "cc_playlist AS pl LEFT JOIN cc_playlisttimes AS plt USING(id) LEFT JOIN cc_subjs AS sub ON pl.editedby = sub.id";
-        //$datatables["optWhere"][] = "INTERVAL '{$time_remaining}' > INTERVAL '00:00:00'";
-        $datatables["optWhere"][] = "plt.length > INTERVAL '00:00:00'";
-
-		return Application_Model_StoredFile::searchFiles($fromTable, $datatables);
-	}
-
-	public static function searchFiles($fromTable, $data)
+	public static function searchFiles($displayColumns, $fromTable, $data)
 	{
-		global $CC_CONFIG, $CC_DBC;
+	    $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+        $where = array();
 
-		$columnsDisplayed = explode(",", $data["sColumns"]);
-
-		if($data["sSearch"] !== "")
+		if ($data["sSearch"] !== "") {
 			$searchTerms = explode(" ", $data["sSearch"]);
-
-		$selectorCount = "SELECT COUNT(*)";
-		foreach( $columnsDisplayed as $key=>$col){
-		  if($col == ''){
-		      unset($columnsDisplayed[$key]);
-		  }
 		}
-		//$selectorRows = "SELECT " . join(',', $columnsDisplayed );
-		$selectorRows = "SELECT * ";
+
+		$selectorCount = "SELECT COUNT(*) ";
+		$selectorRows = "SELECT ".join(",", $displayColumns)." ";
 
         $sql = $selectorCount." FROM ".$fromTable;
-		$totalRows = $CC_DBC->getOne($sql);
+        $sqlTotalRows = $sql;
 
-		//	Where clause
-		if(isset($data["optWhere"])) {
-			$where[] = join(" AND ", $data["optWhere"]);
-		}
-
-		if(isset($searchTerms)) {
+		if (isset($searchTerms)) {
 			$searchCols = array();
-			for($i=0; $i<$data["iColumns"]; $i++) {
-				if($data["bSearchable_".$i] == "true") {
-					$searchCols[] = $columnsDisplayed[$i];
+			for ($i = 0; $i < $data["iColumns"]; $i++) {
+				if ($data["bSearchable_".$i] == "true") {
+					$searchCols[] = $data["mDataProp_{$i}"];
 				}
 			}
 
 			$outerCond = array();
 
-			foreach($searchTerms as $term) {
+			foreach ($searchTerms as $term) {
 				$innerCond = array();
 
-				foreach($searchCols as $col) {
+				foreach ($searchCols as $col) {
                     $escapedTerm = pg_escape_string($term);
 					$innerCond[] = "{$col}::text ILIKE '%{$escapedTerm}%'";
 				}
@@ -720,31 +705,47 @@ class Application_Model_StoredFile {
 
 		// Order By clause
 		$orderby = array();
-		for($i=0; $i<$data["iSortingCols"]; $i++){
-			$orderby[] = $columnsDisplayed[$data["iSortCol_".$i]]." ".$data["sSortDir_".$i];
+		for ($i = 0; $i < $data["iSortingCols"]; $i++){
+		    $num = $data["iSortCol_".$i];
+			$orderby[] = $data["mDataProp_{$num}"]." ".$data["sSortDir_".$i];
 		}
 		$orderby[] = "id";
 		$orderby = join("," , $orderby);
 		// End Order By clause
 
-		if(isset($where)) {
+		if (count($where) > 0) {
 			$where = join(" AND ", $where);
 			$sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
-			$totalDisplayRows = $CC_DBC->getOne($sql);
+			$sqlTotalDisplayRows = $sql;
+
 			$sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 		else {
 			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
 		}
 
+        try {
+    		$r = $con->query($sqlTotalRows);
+    		$totalRows = $r->fetchColumn(0);
+
+    		if (isset($sqlTotalDisplayRows)) {
+    		    $r = $con->query($sqlTotalDisplayRows);
+    		    $totalDisplayRows = $r->fetchColumn(0);
+    		}
+    		else {
+    		  $totalDisplayRows = $totalRows;
+    		}
+
+            $r = $con->query($sql);
+            $r->setFetchMode(PDO::FETCH_ASSOC);
+            $results = $r->fetchAll();
+        }
+        catch (Exception $e) {
+            Logging::log($e->getMessage());
+        }
+
 		//display sql executed in airtime log for testing
-		//Logging::log($sql);
-
-		$results = $CC_DBC->getAll($sql);
-
-		if(!isset($totalDisplayRows)) {
-			$totalDisplayRows = $totalRows;
-		}
+		Logging::log($sql);
 
 		return array("sEcho" => intval($data["sEcho"]), "iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
 	}

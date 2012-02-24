@@ -38,6 +38,7 @@ class Application_Model_Scheduler {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
                 $data["cliplength"] = $file->getDbLength();
+                $data["cueout"] = $file->getDbLength();
 
                 $files[] = $data;
             }

@@ -20,7 +20,7 @@ class PreferenceController extends Zend_Controller_Action
     public function indexAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -59,7 +59,7 @@ class PreferenceController extends Zend_Controller_Action
     public function supportSettingAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -119,7 +119,7 @@ class PreferenceController extends Zend_Controller_Action
     public function directoryConfigAction()
     {
         global $CC_CONFIG;
-        
+
         if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
             $request = $this->getRequest();
             $baseUrl = $request->getBaseUrl();
@@ -136,7 +136,7 @@ class PreferenceController extends Zend_Controller_Action
     public function streamSettingAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -206,10 +206,10 @@ class PreferenceController extends Zend_Controller_Action
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
                 }
 
-                
+
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
                 $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
-                $values['streamFormat'] = $form->getValue('streamFormat'); 
+                $values['streamFormat'] = $form->getValue('streamFormat');
 
             }
             if(!$error){

@@ -37,15 +37,16 @@ class Application_Model_User {
 
     public function canSchedule($p_showId) {
        $type = $this->getType();
+       $result = false;
 
        if ( $type === UTYPE_ADMIN ||
             $type === UTYPE_PROGRAM_MANAGER ||
             CcShowHostsQuery::create()->filterByDbShow($p_showId)->filterByDbHost($this->getId())->count() > 0 )
        {
-           return true;
+           $result = true;
        }
 
-       return false;
+       return $result;
     }
 
     public function isUserType($type, $showId=''){
@@ -240,6 +241,7 @@ class Application_Model_User {
 
     public static function getUsersDataTablesInfo($datatables_post) {
 
+        $displayColumns = array("id", "login", "first_name", "last_name", "type");
         $fromTable = "cc_subjs";
 
         // get current user
@@ -250,7 +252,7 @@ class Application_Model_User {
             $username = $auth->getIdentity()->login;
         }
 
-        $res = Application_Model_StoredFile::searchFiles($fromTable, $datatables_post);
+        $res = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables_post);
 
         // mark record which is for the current user
         foreach($res['aaData'] as &$record){

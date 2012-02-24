@@ -80,7 +80,7 @@ CREATE TABLE "cc_files"
 	"bit_rate" VARCHAR(32),
 	"sample_rate" VARCHAR(32),
 	"format" VARCHAR(128),
-	"length" TIME,
+	"length" interval default '00:00:00',
 	"album_title" VARCHAR(512),
 	"genre" VARCHAR(64),
 	"comments" TEXT,
@@ -361,17 +361,14 @@ DROP TABLE "cc_schedule" CASCADE;
 CREATE TABLE "cc_schedule"
 (
 	"id" serial  NOT NULL,
-	"playlist_id" INTEGER,
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
-	"group_id" INTEGER,
 	"file_id" INTEGER,
 	"clip_length" TIME default '00:00:00',
 	"fade_in" TIME default '00:00:00',
 	"fade_out" TIME default '00:00:00',
 	"cue_in" TIME default '00:00:00',
 	"cue_out" TIME default '00:00:00',
-	"schedule_group_played" BOOLEAN default 'f',
 	"media_item_played" BOOLEAN default 'f',
 	"instance_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")

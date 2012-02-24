@@ -863,29 +863,20 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the length column
 	 * 
-	 * @param     string|array $dbLength The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbLength The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
 	public function filterByDbLength($dbLength = null, $comparison = null)
 	{
-		if (is_array($dbLength)) {
-			$useMinMax = false;
-			if (isset($dbLength['min'])) {
-				$this->addUsingAlias(CcFilesPeer::LENGTH, $dbLength['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbLength['max'])) {
-				$this->addUsingAlias(CcFilesPeer::LENGTH, $dbLength['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbLength)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbLength)) {
+				$dbLength = str_replace('*', '%', $dbLength);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::LENGTH, $dbLength, $comparison);

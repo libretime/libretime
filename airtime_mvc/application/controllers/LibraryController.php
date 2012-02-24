@@ -47,7 +47,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorderResize.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
@@ -78,6 +78,10 @@ class LibraryController extends Zend_Controller_Action
         if ($type === "audioclip") {
 
             $file = Application_Model_StoredFile::Recall($id);
+
+            if (isset($this->pl_sess->id) && $screen == "playlist") {
+                $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "copy");
+            }
 
             $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
 
@@ -281,15 +285,5 @@ class LibraryController extends Zend_Controller_Action
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
         }
-    }
-
-    /**
-     * Stores the number of entries user chose to show in the Library
-     * to the pref db
-     */
-    public function setNumEntriesAction() {
-    	$request = $this->getRequest();
-    	$numEntries = $request->getParam('numEntries');
-    	Application_Model_Preference::SetLibraryNumEntries($numEntries);
     }
 }
