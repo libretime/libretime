@@ -1,6 +1,8 @@
 <?php
 
 require_once 'formatters/LengthFormatter.php';
+require_once 'formatters/SamplerateFormatter.php';
+require_once 'formatters/BitrateFormatter.php';
 
 /**
  *  Application_Model_StoredFile class
@@ -633,6 +635,14 @@ class Application_Model_StoredFile {
 
             $formatter = new LengthFormatter($row['length']);
             $row['length'] = $formatter->format();
+
+            if ($row['ftype'] === "audioclip") {
+                $formatter = new SamplerateFormatter($row['sample_rate']);
+                $row['sample_rate'] = $formatter->format();
+
+                $formatter = new BitrateFormatter($row['bit_rate']);
+                $row['bit_rate'] = $formatter->format();
+            }
 
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
