@@ -1,5 +1,7 @@
 <?php
 
+require_once 'formatters/LengthFormatter.php';
+
 class Application_Model_ShowBuilder {
 
     private $timezone;
@@ -39,26 +41,6 @@ class Application_Model_ShowBuilder {
         $this->user = Application_Model_User::GetCurrentUser();
         $this->opts = $p_opts;
         $this->epoch_now = time();
-    }
-
-    /*
-     * @param DateInterval $p_interval
-     *
-     * @return string $runtime
-     */
-    private function formatDuration($p_interval){
-
-        $hours = $p_interval->format("%h");
-        $mins = $p_interval->format("%i");
-
-        if( $hours == 0) {
-            $runtime = $p_interval->format("%i:%S");
-        }
-        else {
-            $runtime = $p_interval->format("%h:%I:%S");
-        }
-
-        return $runtime;
     }
 
     private function formatTimeFilled($p_sec) {
@@ -188,13 +170,14 @@ class Application_Model_ShowBuilder {
 
             $this->getItemStatus($p_item, $row);
 
-            $runtime = $schedStartDT->diff($schedEndDT);
-
             $row["id"] = intval($p_item["sched_id"]);
             $row["instance"] = intval($p_item["si_id"]);
             $row["starts"] = $schedStartDT->format("H:i:s");
             $row["ends"] = $schedEndDT->format("H:i:s");
-            $row["runtime"] = $this->formatDuration($runtime);
+
+            $formatter = new LengthFormatter($p_item['file_length']);
+            $row['runtime'] = $formatter->format();
+
             $row["title"] = $p_item["file_track_title"];
             $row["creator"] = $p_item["file_artist_name"];
             $row["album"] = $p_item["file_album_title"];

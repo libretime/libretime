@@ -31,12 +31,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	protected $id;
 
 	/**
-	 * The value for the playlist_id field.
-	 * @var        int
-	 */
-	protected $playlist_id;
-
-	/**
 	 * The value for the starts field.
 	 * @var        string
 	 */
@@ -47,12 +41,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @var        string
 	 */
 	protected $ends;
-
-	/**
-	 * The value for the group_id field.
-	 * @var        int
-	 */
-	protected $group_id;
 
 	/**
 	 * The value for the file_id field.
@@ -94,13 +82,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @var        string
 	 */
 	protected $cue_out;
-
-	/**
-	 * The value for the schedule_group_played field.
-	 * Note: this column has a database default value of: false
-	 * @var        boolean
-	 */
-	protected $schedule_group_played;
 
 	/**
 	 * The value for the media_item_played field.
@@ -155,7 +136,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$this->fade_out = '00:00:00';
 		$this->cue_in = '00:00:00';
 		$this->cue_out = '00:00:00';
-		$this->schedule_group_played = false;
 		$this->media_item_played = false;
 	}
 
@@ -177,16 +157,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	public function getDbId()
 	{
 		return $this->id;
-	}
-
-	/**
-	 * Get the [playlist_id] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getDbPlaylistId()
-	{
-		return $this->playlist_id;
 	}
 
 	/**
@@ -253,16 +223,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		} else {
 			return $dt->format($format);
 		}
-	}
-
-	/**
-	 * Get the [group_id] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getDbGroupId()
-	{
-		return $this->group_id;
 	}
 
 	/**
@@ -441,16 +401,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [schedule_group_played] column value.
-	 * 
-	 * @return     boolean
-	 */
-	public function getDbScheduleGroupPlayed()
-	{
-		return $this->schedule_group_played;
-	}
-
-	/**
 	 * Get the [media_item_played] column value.
 	 * 
 	 * @return     boolean
@@ -489,26 +439,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 		return $this;
 	} // setDbId()
-
-	/**
-	 * Set the value of [playlist_id] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     CcSchedule The current object (for fluent API support)
-	 */
-	public function setDbPlaylistId($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->playlist_id !== $v) {
-			$this->playlist_id = $v;
-			$this->modifiedColumns[] = CcSchedulePeer::PLAYLIST_ID;
-		}
-
-		return $this;
-	} // setDbPlaylistId()
 
 	/**
 	 * Sets the value of [starts] column to a normalized version of the date/time value specified.
@@ -607,26 +537,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 		return $this;
 	} // setDbEnds()
-
-	/**
-	 * Set the value of [group_id] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     CcSchedule The current object (for fluent API support)
-	 */
-	public function setDbGroupId($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->group_id !== $v) {
-			$this->group_id = $v;
-			$this->modifiedColumns[] = CcSchedulePeer::GROUP_ID;
-		}
-
-		return $this;
-	} // setDbGroupId()
 
 	/**
 	 * Set the value of [file_id] column.
@@ -903,26 +813,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	} // setDbCueOut()
 
 	/**
-	 * Set the value of [schedule_group_played] column.
-	 * 
-	 * @param      boolean $v new value
-	 * @return     CcSchedule The current object (for fluent API support)
-	 */
-	public function setDbScheduleGroupPlayed($v)
-	{
-		if ($v !== null) {
-			$v = (boolean) $v;
-		}
-
-		if ($this->schedule_group_played !== $v || $this->isNew()) {
-			$this->schedule_group_played = $v;
-			$this->modifiedColumns[] = CcSchedulePeer::SCHEDULE_GROUP_PLAYED;
-		}
-
-		return $this;
-	} // setDbScheduleGroupPlayed()
-
-	/**
 	 * Set the value of [media_item_played] column.
 	 * 
 	 * @param      boolean $v new value
@@ -996,10 +886,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				return false;
 			}
 
-			if ($this->schedule_group_played !== false) {
-				return false;
-			}
-
 			if ($this->media_item_played !== false) {
 				return false;
 			}
@@ -1027,19 +913,16 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->playlist_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-			$this->starts = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->ends = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->group_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
-			$this->file_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
-			$this->clip_length = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-			$this->fade_in = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-			$this->fade_out = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-			$this->cue_in = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-			$this->cue_out = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-			$this->schedule_group_played = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
-			$this->media_item_played = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
-			$this->instance_id = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
+			$this->starts = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->ends = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->file_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+			$this->clip_length = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->fade_in = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->fade_out = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->cue_in = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->cue_out = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->media_item_played = ($row[$startcol + 9] !== null) ? (boolean) $row[$startcol + 9] : null;
+			$this->instance_id = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -1048,7 +931,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 14; // 14 = CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 11; // 11 = CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcSchedule object", $e);
@@ -1398,42 +1281,33 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getDbPlaylistId();
-				break;
-			case 2:
 				return $this->getDbStarts();
 				break;
-			case 3:
+			case 2:
 				return $this->getDbEnds();
 				break;
-			case 4:
-				return $this->getDbGroupId();
-				break;
-			case 5:
+			case 3:
 				return $this->getDbFileId();
 				break;
-			case 6:
+			case 4:
 				return $this->getDbClipLength();
 				break;
-			case 7:
+			case 5:
 				return $this->getDbFadeIn();
 				break;
-			case 8:
+			case 6:
 				return $this->getDbFadeOut();
 				break;
-			case 9:
+			case 7:
 				return $this->getDbCueIn();
 				break;
-			case 10:
+			case 8:
 				return $this->getDbCueOut();
 				break;
-			case 11:
-				return $this->getDbScheduleGroupPlayed();
-				break;
-			case 12:
+			case 9:
 				return $this->getDbMediaItemPlayed();
 				break;
-			case 13:
+			case 10:
 				return $this->getDbInstanceId();
 				break;
 			default:
@@ -1461,19 +1335,16 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$keys = CcSchedulePeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getDbId(),
-			$keys[1] => $this->getDbPlaylistId(),
-			$keys[2] => $this->getDbStarts(),
-			$keys[3] => $this->getDbEnds(),
-			$keys[4] => $this->getDbGroupId(),
-			$keys[5] => $this->getDbFileId(),
-			$keys[6] => $this->getDbClipLength(),
-			$keys[7] => $this->getDbFadeIn(),
-			$keys[8] => $this->getDbFadeOut(),
-			$keys[9] => $this->getDbCueIn(),
-			$keys[10] => $this->getDbCueOut(),
-			$keys[11] => $this->getDbScheduleGroupPlayed(),
-			$keys[12] => $this->getDbMediaItemPlayed(),
-			$keys[13] => $this->getDbInstanceId(),
+			$keys[1] => $this->getDbStarts(),
+			$keys[2] => $this->getDbEnds(),
+			$keys[3] => $this->getDbFileId(),
+			$keys[4] => $this->getDbClipLength(),
+			$keys[5] => $this->getDbFadeIn(),
+			$keys[6] => $this->getDbFadeOut(),
+			$keys[7] => $this->getDbCueIn(),
+			$keys[8] => $this->getDbCueOut(),
+			$keys[9] => $this->getDbMediaItemPlayed(),
+			$keys[10] => $this->getDbInstanceId(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShowInstances) {
@@ -1517,42 +1388,33 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setDbPlaylistId($value);
-				break;
-			case 2:
 				$this->setDbStarts($value);
 				break;
-			case 3:
+			case 2:
 				$this->setDbEnds($value);
 				break;
-			case 4:
-				$this->setDbGroupId($value);
-				break;
-			case 5:
+			case 3:
 				$this->setDbFileId($value);
 				break;
-			case 6:
+			case 4:
 				$this->setDbClipLength($value);
 				break;
-			case 7:
+			case 5:
 				$this->setDbFadeIn($value);
 				break;
-			case 8:
+			case 6:
 				$this->setDbFadeOut($value);
 				break;
-			case 9:
+			case 7:
 				$this->setDbCueIn($value);
 				break;
-			case 10:
+			case 8:
 				$this->setDbCueOut($value);
 				break;
-			case 11:
-				$this->setDbScheduleGroupPlayed($value);
-				break;
-			case 12:
+			case 9:
 				$this->setDbMediaItemPlayed($value);
 				break;
-			case 13:
+			case 10:
 				$this->setDbInstanceId($value);
 				break;
 		} // switch()
@@ -1580,19 +1442,16 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$keys = CcSchedulePeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setDbPlaylistId($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setDbStarts($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setDbEnds($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbGroupId($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbFileId($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setDbClipLength($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDbFadeIn($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setDbFadeOut($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setDbCueIn($arr[$keys[9]]);
-		if (array_key_exists($keys[10], $arr)) $this->setDbCueOut($arr[$keys[10]]);
-		if (array_key_exists($keys[11], $arr)) $this->setDbScheduleGroupPlayed($arr[$keys[11]]);
-		if (array_key_exists($keys[12], $arr)) $this->setDbMediaItemPlayed($arr[$keys[12]]);
-		if (array_key_exists($keys[13], $arr)) $this->setDbInstanceId($arr[$keys[13]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbStarts($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbEnds($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbFileId($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbClipLength($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbFadeIn($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbFadeOut($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbCueIn($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbCueOut($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbMediaItemPlayed($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbInstanceId($arr[$keys[10]]);
 	}
 
 	/**
@@ -1605,17 +1464,14 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$criteria = new Criteria(CcSchedulePeer::DATABASE_NAME);
 
 		if ($this->isColumnModified(CcSchedulePeer::ID)) $criteria->add(CcSchedulePeer::ID, $this->id);
-		if ($this->isColumnModified(CcSchedulePeer::PLAYLIST_ID)) $criteria->add(CcSchedulePeer::PLAYLIST_ID, $this->playlist_id);
 		if ($this->isColumnModified(CcSchedulePeer::STARTS)) $criteria->add(CcSchedulePeer::STARTS, $this->starts);
 		if ($this->isColumnModified(CcSchedulePeer::ENDS)) $criteria->add(CcSchedulePeer::ENDS, $this->ends);
-		if ($this->isColumnModified(CcSchedulePeer::GROUP_ID)) $criteria->add(CcSchedulePeer::GROUP_ID, $this->group_id);
 		if ($this->isColumnModified(CcSchedulePeer::FILE_ID)) $criteria->add(CcSchedulePeer::FILE_ID, $this->file_id);
 		if ($this->isColumnModified(CcSchedulePeer::CLIP_LENGTH)) $criteria->add(CcSchedulePeer::CLIP_LENGTH, $this->clip_length);
 		if ($this->isColumnModified(CcSchedulePeer::FADE_IN)) $criteria->add(CcSchedulePeer::FADE_IN, $this->fade_in);
 		if ($this->isColumnModified(CcSchedulePeer::FADE_OUT)) $criteria->add(CcSchedulePeer::FADE_OUT, $this->fade_out);
 		if ($this->isColumnModified(CcSchedulePeer::CUE_IN)) $criteria->add(CcSchedulePeer::CUE_IN, $this->cue_in);
 		if ($this->isColumnModified(CcSchedulePeer::CUE_OUT)) $criteria->add(CcSchedulePeer::CUE_OUT, $this->cue_out);
-		if ($this->isColumnModified(CcSchedulePeer::SCHEDULE_GROUP_PLAYED)) $criteria->add(CcSchedulePeer::SCHEDULE_GROUP_PLAYED, $this->schedule_group_played);
 		if ($this->isColumnModified(CcSchedulePeer::MEDIA_ITEM_PLAYED)) $criteria->add(CcSchedulePeer::MEDIA_ITEM_PLAYED, $this->media_item_played);
 		if ($this->isColumnModified(CcSchedulePeer::INSTANCE_ID)) $criteria->add(CcSchedulePeer::INSTANCE_ID, $this->instance_id);
 
@@ -1679,17 +1535,14 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setDbPlaylistId($this->playlist_id);
 		$copyObj->setDbStarts($this->starts);
 		$copyObj->setDbEnds($this->ends);
-		$copyObj->setDbGroupId($this->group_id);
 		$copyObj->setDbFileId($this->file_id);
 		$copyObj->setDbClipLength($this->clip_length);
 		$copyObj->setDbFadeIn($this->fade_in);
 		$copyObj->setDbFadeOut($this->fade_out);
 		$copyObj->setDbCueIn($this->cue_in);
 		$copyObj->setDbCueOut($this->cue_out);
-		$copyObj->setDbScheduleGroupPlayed($this->schedule_group_played);
 		$copyObj->setDbMediaItemPlayed($this->media_item_played);
 		$copyObj->setDbInstanceId($this->instance_id);
 
@@ -1843,17 +1696,14 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	public function clear()
 	{
 		$this->id = null;
-		$this->playlist_id = null;
 		$this->starts = null;
 		$this->ends = null;
-		$this->group_id = null;
 		$this->file_id = null;
 		$this->clip_length = null;
 		$this->fade_in = null;
 		$this->fade_out = null;
 		$this->cue_in = null;
 		$this->cue_out = null;
-		$this->schedule_group_played = null;
 		$this->media_item_played = null;
 		$this->instance_id = null;
 		$this->alreadyInSave = false;
