@@ -135,7 +135,7 @@ class PypoFetch(Thread):
             # if empty line
             if not line:
                 continue
-            key, value = line.split('=')
+            key, value = line.split(' = ')
             key = key.strip()
             value = value.strip()
             value = value.replace('"', '')
