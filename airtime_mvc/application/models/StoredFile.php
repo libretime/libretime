@@ -580,20 +580,13 @@ class Application_Model_StoredFile {
                 $plSelect[] = "login AS ".$key;
                 $fileSelect[] = $key;
             }
-            else if ($key === "length") {
+            //same columns in each table.
+            else if(in_array($key, array("length", "utime", "mtime"))) {
                 $plSelect[] = $key;
-                $fileSelect[] = $key."::interval";
+                $fileSelect[] = $key;
             }
             else if ($key === "year") {
-                $plSelect[] = "CAST(utime AS varchar) AS ".$key;
-                $fileSelect[] = $key;
-            }
-            else if ($key === "utime") {
-                $plSelect[] = $key;
-                $fileSelect[] = $key;
-            }
-            else if ($key === "mtime") {
-                $plSelect[] = $key;
+                $plSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
                 $fileSelect[] = $key;
             }
             //need to cast certain data as ints for the union to search on.
@@ -643,11 +636,6 @@ class Application_Model_StoredFile {
 
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
-
-            // a full timestamp is being returned for playlists' year column;
-            // split it and grab only the year info
-            $yearSplit = explode('-', $row['year']);
-            $row['year'] = $yearSplit[0];
 
             $type = substr($row['ftype'], 0, 2);
 

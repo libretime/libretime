@@ -39,17 +39,14 @@ class CcScheduleTableMap extends TableMap {
 		$this->setPrimaryKeyMethodInfo('cc_schedule_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', false, null, null);
 		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
 		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
-		$this->addColumn('GROUP_ID', 'DbGroupId', 'INTEGER', false, null, null);
 		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
 		$this->addColumn('CLIP_LENGTH', 'DbClipLength', 'TIME', false, null, '00:00:00');
 		$this->addColumn('FADE_IN', 'DbFadeIn', 'TIME', false, null, '00:00:00');
 		$this->addColumn('FADE_OUT', 'DbFadeOut', 'TIME', false, null, '00:00:00');
 		$this->addColumn('CUE_IN', 'DbCueIn', 'TIME', false, null, '00:00:00');
 		$this->addColumn('CUE_OUT', 'DbCueOut', 'TIME', false, null, '00:00:00');
-		$this->addColumn('SCHEDULE_GROUP_PLAYED', 'DbScheduleGroupPlayed', 'BOOLEAN', false, null, false);
 		$this->addColumn('MEDIA_ITEM_PLAYED', 'DbMediaItemPlayed', 'BOOLEAN', false, null, false);
 		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', true, null, null);
 		// validators

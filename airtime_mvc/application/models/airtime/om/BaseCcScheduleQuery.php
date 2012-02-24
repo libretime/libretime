@@ -7,32 +7,26 @@
  * 
  *
  * @method     CcScheduleQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method     CcScheduleQuery orderByDbPlaylistId($order = Criteria::ASC) Order by the playlist_id column
  * @method     CcScheduleQuery orderByDbStarts($order = Criteria::ASC) Order by the starts column
  * @method     CcScheduleQuery orderByDbEnds($order = Criteria::ASC) Order by the ends column
- * @method     CcScheduleQuery orderByDbGroupId($order = Criteria::ASC) Order by the group_id column
  * @method     CcScheduleQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
  * @method     CcScheduleQuery orderByDbClipLength($order = Criteria::ASC) Order by the clip_length column
  * @method     CcScheduleQuery orderByDbFadeIn($order = Criteria::ASC) Order by the fade_in column
  * @method     CcScheduleQuery orderByDbFadeOut($order = Criteria::ASC) Order by the fade_out column
  * @method     CcScheduleQuery orderByDbCueIn($order = Criteria::ASC) Order by the cue_in column
  * @method     CcScheduleQuery orderByDbCueOut($order = Criteria::ASC) Order by the cue_out column
- * @method     CcScheduleQuery orderByDbScheduleGroupPlayed($order = Criteria::ASC) Order by the schedule_group_played column
  * @method     CcScheduleQuery orderByDbMediaItemPlayed($order = Criteria::ASC) Order by the media_item_played column
  * @method     CcScheduleQuery orderByDbInstanceId($order = Criteria::ASC) Order by the instance_id column
  *
  * @method     CcScheduleQuery groupByDbId() Group by the id column
- * @method     CcScheduleQuery groupByDbPlaylistId() Group by the playlist_id column
  * @method     CcScheduleQuery groupByDbStarts() Group by the starts column
  * @method     CcScheduleQuery groupByDbEnds() Group by the ends column
- * @method     CcScheduleQuery groupByDbGroupId() Group by the group_id column
  * @method     CcScheduleQuery groupByDbFileId() Group by the file_id column
  * @method     CcScheduleQuery groupByDbClipLength() Group by the clip_length column
  * @method     CcScheduleQuery groupByDbFadeIn() Group by the fade_in column
  * @method     CcScheduleQuery groupByDbFadeOut() Group by the fade_out column
  * @method     CcScheduleQuery groupByDbCueIn() Group by the cue_in column
  * @method     CcScheduleQuery groupByDbCueOut() Group by the cue_out column
- * @method     CcScheduleQuery groupByDbScheduleGroupPlayed() Group by the schedule_group_played column
  * @method     CcScheduleQuery groupByDbMediaItemPlayed() Group by the media_item_played column
  * @method     CcScheduleQuery groupByDbInstanceId() Group by the instance_id column
  *
@@ -52,32 +46,26 @@
  * @method     CcSchedule findOneOrCreate(PropelPDO $con = null) Return the first CcSchedule matching the query, or a new CcSchedule object populated from the query conditions when no match is found
  *
  * @method     CcSchedule findOneByDbId(int $id) Return the first CcSchedule filtered by the id column
- * @method     CcSchedule findOneByDbPlaylistId(int $playlist_id) Return the first CcSchedule filtered by the playlist_id column
  * @method     CcSchedule findOneByDbStarts(string $starts) Return the first CcSchedule filtered by the starts column
  * @method     CcSchedule findOneByDbEnds(string $ends) Return the first CcSchedule filtered by the ends column
- * @method     CcSchedule findOneByDbGroupId(int $group_id) Return the first CcSchedule filtered by the group_id column
  * @method     CcSchedule findOneByDbFileId(int $file_id) Return the first CcSchedule filtered by the file_id column
  * @method     CcSchedule findOneByDbClipLength(string $clip_length) Return the first CcSchedule filtered by the clip_length column
  * @method     CcSchedule findOneByDbFadeIn(string $fade_in) Return the first CcSchedule filtered by the fade_in column
  * @method     CcSchedule findOneByDbFadeOut(string $fade_out) Return the first CcSchedule filtered by the fade_out column
  * @method     CcSchedule findOneByDbCueIn(string $cue_in) Return the first CcSchedule filtered by the cue_in column
  * @method     CcSchedule findOneByDbCueOut(string $cue_out) Return the first CcSchedule filtered by the cue_out column
- * @method     CcSchedule findOneByDbScheduleGroupPlayed(boolean $schedule_group_played) Return the first CcSchedule filtered by the schedule_group_played column
  * @method     CcSchedule findOneByDbMediaItemPlayed(boolean $media_item_played) Return the first CcSchedule filtered by the media_item_played column
  * @method     CcSchedule findOneByDbInstanceId(int $instance_id) Return the first CcSchedule filtered by the instance_id column
  *
  * @method     array findByDbId(int $id) Return CcSchedule objects filtered by the id column
- * @method     array findByDbPlaylistId(int $playlist_id) Return CcSchedule objects filtered by the playlist_id column
  * @method     array findByDbStarts(string $starts) Return CcSchedule objects filtered by the starts column
  * @method     array findByDbEnds(string $ends) Return CcSchedule objects filtered by the ends column
- * @method     array findByDbGroupId(int $group_id) Return CcSchedule objects filtered by the group_id column
  * @method     array findByDbFileId(int $file_id) Return CcSchedule objects filtered by the file_id column
  * @method     array findByDbClipLength(string $clip_length) Return CcSchedule objects filtered by the clip_length column
  * @method     array findByDbFadeIn(string $fade_in) Return CcSchedule objects filtered by the fade_in column
  * @method     array findByDbFadeOut(string $fade_out) Return CcSchedule objects filtered by the fade_out column
  * @method     array findByDbCueIn(string $cue_in) Return CcSchedule objects filtered by the cue_in column
  * @method     array findByDbCueOut(string $cue_out) Return CcSchedule objects filtered by the cue_out column
- * @method     array findByDbScheduleGroupPlayed(boolean $schedule_group_played) Return CcSchedule objects filtered by the schedule_group_played column
  * @method     array findByDbMediaItemPlayed(boolean $media_item_played) Return CcSchedule objects filtered by the media_item_played column
  * @method     array findByDbInstanceId(int $instance_id) Return CcSchedule objects filtered by the instance_id column
  *
@@ -207,37 +195,6 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the playlist_id column
-	 * 
-	 * @param     int|array $dbPlaylistId The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcScheduleQuery The current query, for fluid interface
-	 */
-	public function filterByDbPlaylistId($dbPlaylistId = null, $comparison = null)
-	{
-		if (is_array($dbPlaylistId)) {
-			$useMinMax = false;
-			if (isset($dbPlaylistId['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $dbPlaylistId['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbPlaylistId['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $dbPlaylistId['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcSchedulePeer::PLAYLIST_ID, $dbPlaylistId, $comparison);
-	}
-
-	/**
 	 * Filter the query on the starts column
 	 * 
 	 * @param     string|array $dbStarts The value to use as filter.
@@ -297,37 +254,6 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcSchedulePeer::ENDS, $dbEnds, $comparison);
-	}
-
-	/**
-	 * Filter the query on the group_id column
-	 * 
-	 * @param     int|array $dbGroupId The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcScheduleQuery The current query, for fluid interface
-	 */
-	public function filterByDbGroupId($dbGroupId = null, $comparison = null)
-	{
-		if (is_array($dbGroupId)) {
-			$useMinMax = false;
-			if (isset($dbGroupId['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::GROUP_ID, $dbGroupId['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbGroupId['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::GROUP_ID, $dbGroupId['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcSchedulePeer::GROUP_ID, $dbGroupId, $comparison);
 	}
 
 	/**
@@ -514,23 +440,6 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcSchedulePeer::CUE_OUT, $dbCueOut, $comparison);
-	}
-
-	/**
-	 * Filter the query on the schedule_group_played column
-	 * 
-	 * @param     boolean|string $dbScheduleGroupPlayed The value to use as filter.
-	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcScheduleQuery The current query, for fluid interface
-	 */
-	public function filterByDbScheduleGroupPlayed($dbScheduleGroupPlayed = null, $comparison = null)
-	{
-		if (is_string($dbScheduleGroupPlayed)) {
-			$schedule_group_played = in_array(strtolower($dbScheduleGroupPlayed), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
-		}
-		return $this->addUsingAlias(CcSchedulePeer::SCHEDULE_GROUP_PLAYED, $dbScheduleGroupPlayed, $comparison);
 	}
 
 	/**

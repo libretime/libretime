@@ -198,7 +198,7 @@ $(document).ready(function() {
 	    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
         /* starts */{"mDataProp": "starts", "sTitle": "Start"},
         /* ends */{"mDataProp": "ends", "sTitle": "End"},
-        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration"},
+        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length"},
         /* title */{"mDataProp": "title", "sTitle": "Title"},
         /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
         /* album */{"mDataProp": "album", "sTitle": "Album"}

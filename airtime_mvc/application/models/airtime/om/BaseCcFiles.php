@@ -146,6 +146,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the length field.
+	 * Note: this column has a database default value of: '00:00:00'
 	 * @var        string
 	 */
 	protected $length;
@@ -456,6 +457,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->filepath = '';
 		$this->state = 'empty';
 		$this->currentlyaccessing = 0;
+		$this->length = '00:00:00';
 		$this->file_exists = true;
 	}
 
@@ -729,36 +731,13 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [length] column value.
+	 * Get the [length] column value.
 	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 * @return     string
 	 */
-	public function getDbLength($format = '%X')
+	public function getDbLength()
 	{
-		if ($this->length === null) {
-			return null;
-		}
-
-
-
-		try {
-			$dt = new DateTime($this->length);
-		} catch (Exception $x) {
-			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->length, true), $x);
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
+		return $this->length;
 	}
 
 	/**
@@ -1657,50 +1636,21 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbFormat()
 
 	/**
-	 * Sets the value of [length] column to a normalized version of the date/time value specified.
+	 * Set the value of [length] column.
 	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
+	 * @param      string $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
 	public function setDbLength($v)
 	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
+		if ($v !== null) {
+			$v = (string) $v;
 		}
 
-		if ( $this->length !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->length !== null && $tmpDt = new DateTime($this->length)) ? $tmpDt->format('H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					)
-			{
-				$this->length = ($dt ? $dt->format('H:i:s') : null);
-				$this->modifiedColumns[] = CcFilesPeer::LENGTH;
-			}
-		} // if either are not null
+		if ($this->length !== $v || $this->isNew()) {
+			$this->length = $v;
+			$this->modifiedColumns[] = CcFilesPeer::LENGTH;
+		}
 
 		return $this;
 	} // setDbLength()
@@ -2576,6 +2526,10 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			}
 
 			if ($this->currentlyaccessing !== 0) {
+				return false;
+			}
+
+			if ($this->length !== '00:00:00') {
 				return false;
 			}
 

@@ -54,7 +54,7 @@
     <column name="bit_rate" phpName="DbBitRate" type="VARCHAR" size="32" required="false"/>
     <column name="sample_rate" phpName="DbSampleRate" type="VARCHAR" size="32" required="false"/>
     <column name="format" phpName="DbFormat" type="VARCHAR" size="128" required="false"/>
-    <column name="length" phpName="DbLength" type="TIME" required="false"/>
+    <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00" required="false"/>
     <column name="album_title" phpName="DbAlbumTitle" type="VARCHAR" size="512" required="false"/>
     <column name="genre" phpName="DbGenre" type="VARCHAR" size="64" required="false"/>
     <column name="comments" phpName="DbComments" type="LONGVARCHAR" required="false"/>
@@ -270,17 +270,14 @@
   </table>
   <table name="cc_schedule" phpName="CcSchedule">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false"/>
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
-    <column name="group_id" phpName="DbGroupId" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
     <column name="clip_length" phpName="DbClipLength" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="fade_in" phpName="DbFadeIn" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="fade_out" phpName="DbFadeOut" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="cue_in" phpName="DbCueIn" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="cue_out" phpName="DbCueOut" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="schedule_group_played" phpName="DbScheduleGroupPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
     <column name="media_item_played" phpName="DbMediaItemPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
     <!-- This foreign key is still useful even though it may seem we don't ever delete cc_show_instances anymore.
