@@ -20,7 +20,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		$('#library_display tr[id ^= "au"]').draggable({
 			helper: function(){
-			    var selected = $('#library_display input:checked').parents('tr[id^="au"]');
+			    var selected = $('#library_display tr:not(:first) input:checked').parents('tr[id^="au"]');
 			    if (selected.length === 0) {
 			      selected = $(this);
 			    }
