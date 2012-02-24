@@ -395,6 +395,7 @@ class Application_Model_StoredFile {
     }
 
     private function constructGetFileUrl($p_serverName, $p_serverPort){
+Logging::log("getting media! - 2");        
         return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
@@ -404,6 +405,7 @@ class Application_Model_StoredFile {
      */
     public function getRelativeFileUrl($baseUrl)
     {
+        Logging::log("getting media!");
         return $baseUrl."/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
@@ -656,7 +658,8 @@ class Application_Model_StoredFile {
 
             if($type == "au") {
                 $audioFile = $audioResults[$row['id']-1]['gunid'].".".pathinfo($audioResults[$row['id']-1]['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img src="/css/images/big_play_arrow.png" onClick="audioPreview(\''.$audioFile.'\', \'spl_'.$row['id'].'\')">';
+                $row['image'] = '<img src="/css/images/big_play_arrow.png" onClick="open_audio_preview(\''.$audioFile.'\', \'spl_'.$row['id'].'\')">';
+
             }
             else {
                 $row['image'] = '<img src="/css/images/icon_playlist.png">';
