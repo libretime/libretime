@@ -79,6 +79,10 @@ class LibraryController extends Zend_Controller_Action
 
             $file = Application_Model_StoredFile::Recall($id);
 
+            if (isset($this->pl_sess->id) && $screen == "playlist") {
+                $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "copy");
+            }
+
             $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
 
             if ($user->isAdmin()) {

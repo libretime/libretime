@@ -1,5 +1,7 @@
 <?php
 
+require_once 'formatters/LengthFormatter.php';
+
 /**
  *
  * @package Airtime
@@ -158,9 +160,15 @@ class Application_Model_Playlist {
 
 
           $clipSec = Application_Model_Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
-          //$files[$i]['cliplength'] = Application_Model_Playlist::secondsToPlaylistTime($clipSec);
           $offset += $clipSec;
-          $files[$i]['offset'] = Application_Model_Playlist::secondsToPlaylistTime($offset);
+          $offset_cliplength = Application_Model_Playlist::secondsToPlaylistTime($offset);
+
+          //format the length for UI.
+          $formatter = new LengthFormatter($files[$i]['cliplength']);
+          $files[$i]['cliplength'] = $formatter->format();
+
+          $formatter = new LengthFormatter($offset_cliplength);
+          $files[$i]['offset'] = $formatter->format();
 
           $i++;
         }

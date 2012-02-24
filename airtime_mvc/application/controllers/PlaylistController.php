@@ -52,10 +52,12 @@ class PlaylistController extends Zend_Controller_Action
 
     private function createUpdateResponse($pl)
     {
+        $formatter = new LengthFormatter($pl->getLength());
+        $this->view->length = $formatter->format();
+
         $this->view->pl = $pl;
         $this->view->html = $this->view->render('playlist/update.phtml');
         $this->view->name = $pl->getName();
-        $this->view->length = $pl->getLength();
         $this->view->description = $pl->getDescription();
         $this->view->modified = $pl->getLastModified("U");
 
@@ -65,6 +67,9 @@ class PlaylistController extends Zend_Controller_Action
     private function createFullResponse($pl = null)
     {
         if (isset($pl)) {
+            $formatter = new LengthFormatter($pl->getLength());
+            $this->view->length = $formatter->format();
+
             $this->view->pl = $pl;
             $this->view->id = $pl->getId();
             $this->view->html = $this->view->render('playlist/index.phtml');
@@ -114,6 +119,9 @@ class PlaylistController extends Zend_Controller_Action
             if (isset($this->pl_sess->id)) {
                 $pl = new Application_Model_Playlist($this->pl_sess->id);
                 $this->view->pl = $pl;
+
+                $formatter = new LengthFormatter($pl->getLength());
+                $this->view->length = $formatter->format();
             }
         }
         catch (PlaylistNotFoundException $e) {

@@ -1,5 +1,7 @@
 <?php
 
+require_once 'formatters/LengthFormatter.php';
+
 /**
  *  Application_Model_StoredFile class
  *
@@ -551,34 +553,6 @@ class Application_Model_StoredFile {
         return $res;
     }
 
-/*
-     * @param DateInterval $p_interval
-     *
-     * @return string $runtime
-     */
-    private static function formatDuration($dt) {
-
-        $hours = $dt->format("H");
-        $min = $dt->format("i");
-        $sec = $dt->format("s");
-
-        $time = "PT{$hours}H{$min}M{$sec}S";
-
-        $p_interval = new DateInterval($time);
-
-        $hours = $p_interval->format("%h");
-        $mins = $p_interval->format("%i");
-
-        if ( $hours == 0) {
-            $runtime = $p_interval->format("%i:%S");
-        }
-        else {
-            $runtime = $p_interval->format("%h:%I:%S");
-        }
-
-        return $runtime;
-    }
-
     public static function searchFilesForPlaylistBuilder($datatables) {
 
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
@@ -664,8 +638,8 @@ class Application_Model_StoredFile {
 
             $row['id'] = intval($row['id']);
 
-            //$length = new DateTime($row['length']);
-            //$row['length'] = self::formatDuration($length);
+            $formatter = new LengthFormatter($row['length']);
+            $row['length'] = $formatter->format();
 
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";

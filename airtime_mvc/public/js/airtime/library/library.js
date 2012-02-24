@@ -225,8 +225,8 @@ $(document).ready(function() {
           /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator"},
           /* Album */         {"sTitle": "Album", "mDataProp": "album_title", "sClass": "library_album"},
           /* Genre */         {"sTitle": "Genre", "mDataProp": "genre", "sClass": "library_genre"},
-          /* Year */          {"sTitle": "Year", "mDataProp": "year", "sClass": "library_year"},
-          /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length"},
+          /* Year */          {"sTitle": "Year", "mDataProp": "year", "sClass": "library_year", "sWidth": "60px"},
+          /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length", "sWidth": "80px"},
           /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time"},
           /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time"},
           /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track"},
@@ -469,6 +469,16 @@ $(document).ready(function() {
     		screen = $tr.data("screen");
     		
     		function processMenuItems(oItems) {
+    			
+    			//define an add to playlist callback.
+    			if (oItems.pl_add !== undefined) {
+    				
+    				callback = function() {
+    					AIRTIME.playlist.fnAddItems([data.id], undefined, 'after');
+					};
+	    			
+    				oItems.pl_add.callback = callback;
+    			}
     			
     			//define an edit callback.
     			if (oItems.edit !== undefined) {
