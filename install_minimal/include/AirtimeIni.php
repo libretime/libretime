@@ -91,14 +91,6 @@ class AirtimeIni
                 exit(1);
             }
             
-            if (!copy(__DIR__."/../../python_apps/show-recorder/recorder.cfg", AirtimeIni::CONF_FILE_RECORDER)){
-                echo "Could not copy recorder.cfg to /etc/airtime/. Exiting.";
-                exit(1);
-            } else if (!self::ChangeFileOwnerGroupMod(AirtimeIni::CONF_FILE_RECORDER, self::CONF_PYPO_GRP)){
-                echo "Could not set ownership of recorder.cfg to 'pypo'. Exiting.";
-                exit(1);
-            }
-            
             if (!copy(__DIR__."/../../python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
                 echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
                 exit(1);

@@ -42,11 +42,12 @@ except Exception, e:
     sys.exit()
 
 class PypoFetch(Thread):
-    def __init__(self, q):
+    def __init__(self, q, recorder_q):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.set_export_source('scheduler')
         self.queue = q
+        self.recorder_queue = recorder_q
         self.schedule_data = []
         logger = logging.getLogger('fetch')
         logger.info("PypoFetch: init complete")
@@ -94,6 +95,12 @@ class PypoFetch(Thread):
             elif command == 'cancel_current_show':
                 logger.info("Cancel current show command received...")
                 self.stop_current_show()
+            elif command == 'update_recorder_schedule':
+                temp = m
+                if temp is not None:
+                    self.parse_shows(temp)
+            elif command == 'cancel_recording':
+                self.recorder_queue.put('cancel_recording')
         except Exception, e:
             logger.error("Exception in handling RabbitMQ message: %s", e)
         
@@ -312,6 +319,30 @@ class PypoFetch(Thread):
         # cleanup
         try: self.cleanup(self.export_source)
         except Exception, e: logger.error("%s", e)
+    
+    def getDateTimeObj(self,time):
+        timeinfo = time.split(" ")
+        date = timeinfo[0].split("-")
+        time = timeinfo[1].split(":")
+    
+        date = map(int, date)
+        time = map(int, time)
+    
+        return datetime(date[0], date[1], date[2], time[0], time[1], time[2], 0, None)
+
+    def parse_shows(self, m):
+        logger = logging.getLogger('fetch')
+        logger.info("Parsing recording show schedules...")
+        shows_to_record = {}
+        shows = m['shows']
+        for show in shows:
+            show_starts = self.getDateTimeObj(show[u'starts'])
+            show_end = self.getDateTimeObj(show[u'ends'])
+            time_delta = show_end - show_starts
+
+            shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name'], m['server_timezone']]
+        self.recorder_queue.put(shows_to_record)
+        logger.info(shows_to_record)
 
 
     """
@@ -487,6 +518,17 @@ class PypoFetch(Thread):
         if status == 1:
             logger.info("Bootstrap schedule received: %s", self.schedule_data)
             self.process_schedule(self.schedule_data, "scheduler", True)
+        
+        # Bootstrap: since we are just starting up, we need to grab the
+        # most recent schedule.  After that we can just wait for updates.
+        try:
+            temp = self.api_client.get_shows_to_record()
+            if temp is not None:
+                self.parse_shows(temp)
+            logger.info("Bootstrap recorder schedule received: %s", temp)
+        except Exception, e:
+            logger.error(e)
+            
         logger.info("Bootstrap complete: got initial copy of the schedule")
 
 
@@ -515,8 +557,18 @@ class PypoFetch(Thread):
                 status, self.schedule_data = self.api_client.get_schedule()
                 if status == 1:
                     self.process_schedule(self.schedule_data, "scheduler", False)
+                """
+                Fetch recorder schedule
+                """
+                try:
+                    temp = self.api_client.get_shows_to_record()
+                    if temp is not None:
+                        self.parse_shows(temp)
+                    logger.info("updated recorder schedule received: %s", temp)
+                except Exception, e:
+                    logger.error(e)
 
-            loops += 1        
+            loops += 1
 
     """
     Main loop of the thread:

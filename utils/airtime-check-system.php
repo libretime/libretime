@@ -189,17 +189,6 @@ class AirtimeCheck {
                 self::output_status("MEDIA_MONITOR_MEM_PERC", "0%");
                 self::output_status("MEDIA_MONITOR_CPU_PERC", "0%");
             }
-            if (isset($services->show_recorder)) {
-                self::output_status("SHOW_RECORDER_PROCESS_ID", $data->services->show_recorder->process_id);
-                self::output_status("SHOW_RECORDER_RUNNING_SECONDS", $data->services->show_recorder->uptime_seconds);
-                self::output_status("SHOW_RECORDER_MEM_PERC", $data->services->show_recorder->memory_perc);
-                self::output_status("SHOW_RECORDER_CPU_PERC", $data->services->show_recorder->cpu_perc);
-            } else {
-                self::output_status("SHOW_RECORDER_PROCESS_ID", "FAILED");
-                self::output_status("SHOW_RECORDER_RUNNING_SECONDS", "0");
-                self::output_status("SHOW_RECORDER_MEM_PERC", "0%");
-                self::output_status("SHOW_RECORDER_CPU_PERC", "0%");
-            }
             if (isset($services->rabbitmq)) {
                 self::output_status("RABBITMQ_PROCESS_ID", $data->services->rabbitmq->process_id);
                 self::output_status("RABBITMQ_RUNNING_SECONDS", $data->services->rabbitmq->uptime_seconds);

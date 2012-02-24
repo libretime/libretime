@@ -147,21 +147,6 @@ class Application_Model_Systemstatus
         }
     }
     
-    public static function GetShowRecorderStatus(){
-
-        $component = CcServiceRegisterQuery::create()->findOneByDbName("show-recorder");
-        if (is_null($component)){
-            return null;
-        } else {
-            $ip = $component->getDbIp();
-            
-            $docRoot = self::GetMonitStatus($ip);
-            $data = self::ExtractServiceInformation($docRoot, "airtime-show-recorder");
-
-            return $data;
-        }
-    }
-    
     public static function GetMediaMonitorStatus(){
 
         $component = CcServiceRegisterQuery::create()->findOneByDbName("media-monitor");

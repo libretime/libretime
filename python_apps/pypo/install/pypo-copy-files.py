@@ -60,6 +60,8 @@ try:
     create_dir(config['cache_dir'])
     create_dir(config['file_dir'])
     create_dir(config['tmp_dir'])
+    
+    create_dir(config["base_recorded_files"])
 
     #copy files to bin dir
     copy_dir("%s/.."%current_script_dir, config["bin_dir"]+"/bin/")
@@ -72,6 +74,7 @@ try:
     os.system("chmod 755 "+os.path.join(config["bin_dir"], "bin/liquidsoap_scripts/notify.sh"))
     os.system("chown -R pypo:pypo "+config["bin_dir"])
     os.system("chown -R pypo:pypo "+config["cache_base_dir"])
+    os.system("chown -R pypo:pypo "+config["base_recorded_files"])
 
     #copy init.d script
     shutil.copy(config["bin_dir"]+"/bin/airtime-playout-init-d", "/etc/init.d/airtime-playout")

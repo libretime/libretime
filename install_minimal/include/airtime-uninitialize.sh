@@ -19,8 +19,8 @@ set +e
 monit unmonitor airtime-media-monitor >/dev/null 2>&1
 monit unmonitor airtime-liquidsoap >/dev/null 2>&1
 monit unmonitor airtime-playout >/dev/null 2>&1
-monit unmonitor airtime-show-recorder >/dev/null 2>&1
-#monit unmonitor rabbitmq-server
+#monit unmonitor airtime-show-recorder >/dev/null 2>&1
+monit unmonitor rabbitmq-server
 set -e
 
 #virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
@@ -29,7 +29,7 @@ set -e
 #uninitialize Airtime services
 python $AIRTIMEROOT/python_apps/pypo/install/pypo-uninitialize.py
 python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-uninitialize.py
-python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-uninitialize.py
+#python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-uninitialize.py
 
 #call Airtime uninstall script
 php --php-ini ${SCRIPTPATH}/../airtime-php.ini ${SCRIPTPATH}/airtime-uninstall.php
