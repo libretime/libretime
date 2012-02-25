@@ -15,6 +15,7 @@ from subprocess import Popen, PIPE
 from datetime import datetime
 from datetime import timedelta
 import filecmp
+import thread
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
@@ -82,7 +83,7 @@ class PypoFetch(Thread):
         
             if command == 'update_schedule':
                 self.schedule_data  = m['schedule']
-                self.process_schedule(self.schedule_data, "scheduler", False)
+                thread.start_new_thread(self.process_schedule, (self.schedule_data, "scheduler", False))
             elif command == 'update_stream_setting':
                 logger.info("Updating stream setting...")
                 self.regenerateLiquidsoapConf(m['setting'])
@@ -98,7 +99,7 @@ class PypoFetch(Thread):
             elif command == 'update_recorder_schedule':
                 temp = m
                 if temp is not None:
-                    self.parse_shows(temp)
+                    self.process_recorder_schedule(temp)
             elif command == 'cancel_recording':
                 self.recorder_queue.put('cancel_recording')
         except Exception, e:
@@ -330,7 +331,7 @@ class PypoFetch(Thread):
     
         return datetime(date[0], date[1], date[2], time[0], time[1], time[2], 0, None)
 
-    def parse_shows(self, m):
+    def process_recorder_schedule(self, m):
         logger = logging.getLogger('fetch')
         logger.info("Parsing recording show schedules...")
         shows_to_record = {}
@@ -517,14 +518,14 @@ class PypoFetch(Thread):
         status, self.schedule_data = self.api_client.get_schedule()
         if status == 1:
             logger.info("Bootstrap schedule received: %s", self.schedule_data)
-            self.process_schedule(self.schedule_data, "scheduler", True)
+            thread.start_new_thread(self.process_schedule, (self.schedule_data, "scheduler", True))
         
         # Bootstrap: since we are just starting up, we need to grab the
         # most recent schedule.  After that we can just wait for updates.
         try:
             temp = self.api_client.get_shows_to_record()
             if temp is not None:
-                self.parse_shows(temp)
+                self.process_recorder_schedule(temp)
             logger.info("Bootstrap recorder schedule received: %s", temp)
         except Exception, e:
             logger.error(e)
@@ -556,14 +557,14 @@ class PypoFetch(Thread):
                 
                 status, self.schedule_data = self.api_client.get_schedule()
                 if status == 1:
-                    self.process_schedule(self.schedule_data, "scheduler", False)
+                    thread.start_new_thread(self.process_schedule, (self.schedule_data, "scheduler", False))
                 """
                 Fetch recorder schedule
                 """
                 try:
                     temp = self.api_client.get_shows_to_record()
                     if temp is not None:
-                        self.parse_shows(temp)
+                        self.process_recorder_schedule(temp)
                     logger.info("updated recorder schedule received: %s", temp)
                 except Exception, e:
                     logger.error(e)
