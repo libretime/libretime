@@ -155,9 +155,8 @@ export python_service=$?
 set -e
 
 echo -e "\n******************************** Install Begin *********************************"
-
+rm -rf "/usr/lib/airtime"
 if [ "$python_service" -eq "0" ]; then
-    rm -rf "/usr/lib/airtime"
     $AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
 
     virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
