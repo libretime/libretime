@@ -175,8 +175,8 @@
  * @method     CcFiles findOneByDbMd5(string $md5) Return the first CcFiles filtered by the md5 column
  * @method     CcFiles findOneByDbTrackTitle(string $track_title) Return the first CcFiles filtered by the track_title column
  * @method     CcFiles findOneByDbArtistName(string $artist_name) Return the first CcFiles filtered by the artist_name column
- * @method     CcFiles findOneByDbBitRate(string $bit_rate) Return the first CcFiles filtered by the bit_rate column
- * @method     CcFiles findOneByDbSampleRate(string $sample_rate) Return the first CcFiles filtered by the sample_rate column
+ * @method     CcFiles findOneByDbBitRate(int $bit_rate) Return the first CcFiles filtered by the bit_rate column
+ * @method     CcFiles findOneByDbSampleRate(int $sample_rate) Return the first CcFiles filtered by the sample_rate column
  * @method     CcFiles findOneByDbFormat(string $format) Return the first CcFiles filtered by the format column
  * @method     CcFiles findOneByDbLength(string $length) Return the first CcFiles filtered by the length column
  * @method     CcFiles findOneByDbAlbumTitle(string $album_title) Return the first CcFiles filtered by the album_title column
@@ -238,8 +238,8 @@
  * @method     array findByDbMd5(string $md5) Return CcFiles objects filtered by the md5 column
  * @method     array findByDbTrackTitle(string $track_title) Return CcFiles objects filtered by the track_title column
  * @method     array findByDbArtistName(string $artist_name) Return CcFiles objects filtered by the artist_name column
- * @method     array findByDbBitRate(string $bit_rate) Return CcFiles objects filtered by the bit_rate column
- * @method     array findByDbSampleRate(string $sample_rate) Return CcFiles objects filtered by the sample_rate column
+ * @method     array findByDbBitRate(int $bit_rate) Return CcFiles objects filtered by the bit_rate column
+ * @method     array findByDbSampleRate(int $sample_rate) Return CcFiles objects filtered by the sample_rate column
  * @method     array findByDbFormat(string $format) Return CcFiles objects filtered by the format column
  * @method     array findByDbLength(string $length) Return CcFiles objects filtered by the length column
  * @method     array findByDbAlbumTitle(string $album_title) Return CcFiles objects filtered by the album_title column
@@ -797,20 +797,29 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the bit_rate column
 	 * 
-	 * @param     string $dbBitRate The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     int|array $dbBitRate The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
 	public function filterByDbBitRate($dbBitRate = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($dbBitRate)) {
+		if (is_array($dbBitRate)) {
+			$useMinMax = false;
+			if (isset($dbBitRate['min'])) {
+				$this->addUsingAlias(CcFilesPeer::BIT_RATE, $dbBitRate['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbBitRate['max'])) {
+				$this->addUsingAlias(CcFilesPeer::BIT_RATE, $dbBitRate['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbBitRate)) {
-				$dbBitRate = str_replace('*', '%', $dbBitRate);
-				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::BIT_RATE, $dbBitRate, $comparison);
@@ -819,20 +828,29 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the sample_rate column
 	 * 
-	 * @param     string $dbSampleRate The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     int|array $dbSampleRate The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
 	public function filterByDbSampleRate($dbSampleRate = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($dbSampleRate)) {
+		if (is_array($dbSampleRate)) {
+			$useMinMax = false;
+			if (isset($dbSampleRate['min'])) {
+				$this->addUsingAlias(CcFilesPeer::SAMPLE_RATE, $dbSampleRate['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbSampleRate['max'])) {
+				$this->addUsingAlias(CcFilesPeer::SAMPLE_RATE, $dbSampleRate['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbSampleRate)) {
-				$dbSampleRate = str_replace('*', '%', $dbSampleRate);
-				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::SAMPLE_RATE, $dbSampleRate, $comparison);

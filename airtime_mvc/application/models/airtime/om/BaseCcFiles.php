@@ -128,13 +128,13 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the bit_rate field.
-	 * @var        string
+	 * @var        int
 	 */
 	protected $bit_rate;
 
 	/**
 	 * The value for the sample_rate field.
-	 * @var        string
+	 * @var        int
 	 */
 	protected $sample_rate;
 
@@ -703,7 +703,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	/**
 	 * Get the [bit_rate] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
 	public function getDbBitRate()
 	{
@@ -713,7 +713,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	/**
 	 * Get the [sample_rate] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
 	public function getDbSampleRate()
 	{
@@ -1578,13 +1578,13 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	/**
 	 * Set the value of [bit_rate] column.
 	 * 
-	 * @param      string $v new value
+	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
 	public function setDbBitRate($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
 		if ($this->bit_rate !== $v) {
@@ -1598,13 +1598,13 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	/**
 	 * Set the value of [sample_rate] column.
 	 * 
-	 * @param      string $v new value
+	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
 	public function setDbSampleRate($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
 		if ($this->sample_rate !== $v) {
@@ -2575,8 +2575,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->md5 = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
 			$this->track_title = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
 			$this->artist_name = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
-			$this->bit_rate = ($row[$startcol + 16] !== null) ? (string) $row[$startcol + 16] : null;
-			$this->sample_rate = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
+			$this->bit_rate = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
+			$this->sample_rate = ($row[$startcol + 17] !== null) ? (int) $row[$startcol + 17] : null;
 			$this->format = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
 			$this->length = ($row[$startcol + 19] !== null) ? (string) $row[$startcol + 19] : null;
 			$this->album_title = ($row[$startcol + 20] !== null) ? (string) $row[$startcol + 20] : null;

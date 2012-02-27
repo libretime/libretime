@@ -592,7 +592,7 @@ class Application_Model_StoredFile {
                 $fileSelect[] = $key;
             }
             //need to cast certain data as ints for the union to search on.
-            else if (in_array($key, array("track_number"))){
+            else if (in_array($key, array("track_number", "bit_rate", "sample_rate"))){
                 $plSelect[] = "NULL::int AS ".$key;
                 $fileSelect[] = $key;
             }

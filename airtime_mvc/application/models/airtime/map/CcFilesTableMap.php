@@ -54,8 +54,8 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('MD5', 'DbMd5', 'CHAR', false, 32, null);
 		$this->addColumn('TRACK_TITLE', 'DbTrackTitle', 'VARCHAR', false, 512, null);
 		$this->addColumn('ARTIST_NAME', 'DbArtistName', 'VARCHAR', false, 512, null);
-		$this->addColumn('BIT_RATE', 'DbBitRate', 'VARCHAR', false, 32, null);
-		$this->addColumn('SAMPLE_RATE', 'DbSampleRate', 'VARCHAR', false, 32, null);
+		$this->addColumn('BIT_RATE', 'DbBitRate', 'INTEGER', false, null, null);
+		$this->addColumn('SAMPLE_RATE', 'DbSampleRate', 'INTEGER', false, null, null);
 		$this->addColumn('FORMAT', 'DbFormat', 'VARCHAR', false, 128, null);
 		$this->addColumn('LENGTH', 'DbLength', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('ALBUM_TITLE', 'DbAlbumTitle', 'VARCHAR', false, 512, null);

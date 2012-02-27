@@ -51,8 +51,8 @@
     <column name="md5" phpName="DbMd5" type="CHAR" size="32" required="false"/>
     <column name="track_title" phpName="DbTrackTitle" type="VARCHAR" size="512" required="false"/>
     <column name="artist_name" phpName="DbArtistName" type="VARCHAR" size="512" required="false"/>
-    <column name="bit_rate" phpName="DbBitRate" type="VARCHAR" size="32" required="false"/>
-    <column name="sample_rate" phpName="DbSampleRate" type="VARCHAR" size="32" required="false"/>
+    <column name="bit_rate" phpName="DbBitRate" type="INTEGER" required="false"/>
+    <column name="sample_rate" phpName="DbSampleRate" type="INTEGER" required="false"/>
     <column name="format" phpName="DbFormat" type="VARCHAR" size="128" required="false"/>
     <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00" required="false"/>
     <column name="album_title" phpName="DbAlbumTitle" type="VARCHAR" size="512" required="false"/>
