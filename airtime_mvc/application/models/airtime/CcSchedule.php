@@ -90,7 +90,7 @@ class CcSchedule extends BaseCcSchedule {
      */
     public function getDbFadeIn($format = "s.u")
     {
-        parent::getDbFadein($format);
+        return parent::getDbFadein($format);
     }
 
     /**
@@ -101,7 +101,7 @@ class CcSchedule extends BaseCcSchedule {
      */
     public function getDbFadeOut($format = "s.u")
     {
-       parent::getDbFadeout($format);
+        return parent::getDbFadeout($format);
     }
 
     /**

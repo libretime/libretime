@@ -98,7 +98,7 @@ class Application_Model_Scheduler {
         //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
         $endEpoch = bcadd($startEpoch , (string) $durationSeconds, 6);
 
-        Logging::log("end DateTime created {$p_startDT->format("Y-m-d H:i:s.u")}");
+        Logging::log("start DateTime created {$p_startDT->format("Y-m-d H:i:s.u")}");
         Logging::log("start epoch is {$startEpoch}");
         Logging::log("duration in seconds is {$durationSeconds}");
         Logging::log("end epoch is {$endEpoch}");
