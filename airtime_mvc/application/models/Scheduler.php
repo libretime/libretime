@@ -40,6 +40,13 @@ class Application_Model_Scheduler {
                 $data["cliplength"] = $file->getDbLength();
                 $data["cueout"] = $file->getDbLength();
 
+                $defaultFade = Application_Model_Preference::GetDefaultFade();
+                if ($defaultFade !== "") {
+                    //fade is in format SS.uuuuuu
+                    $data["fadein"] = $defaultFade;
+                    $data["fadeout"] = $defaultFade;
+                }
+
                 $files[] = $data;
             }
         }

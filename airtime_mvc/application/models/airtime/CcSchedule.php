@@ -176,7 +176,7 @@ class CcSchedule extends BaseCcSchedule {
             }
         }
 
-        $this->fadeIout = $dt->format('H:i:s.u');
+        $this->fade_out = $dt->format('H:i:s.u');
         $this->modifiedColumns[] = CcSchedulePeer::FADE_OUT;
 
         return $this;

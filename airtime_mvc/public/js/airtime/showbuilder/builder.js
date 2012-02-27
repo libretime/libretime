@@ -201,7 +201,11 @@ $(document).ready(function() {
         /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length"},
         /* title */{"mDataProp": "title", "sTitle": "Title"},
         /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
-        /* album */{"mDataProp": "album", "sTitle": "Album"}
+        /* album */{"mDataProp": "album", "sTitle": "Album"},
+        /* cue in */{"mDataProp": "cuein", "sTitle": "Cue In", "bVisible": false},
+        /* cue out */{"mDataProp": "cueout", "sTitle": "Cue Out", "bVisible": false},
+        /* fade in */{"mDataProp": "fadein", "sTitle": "Fade In", "bVisible": false},
+        /* fade out */{"mDataProp": "fadeout", "sTitle": "Fade Out", "bVisible": false}
         ],
         
         "bJQueryUI": true,

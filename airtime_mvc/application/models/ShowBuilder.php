@@ -26,7 +26,11 @@ class Application_Model_ShowBuilder {
         "title" => "",
         "creator" => "",
         "album" => "",
-        "timestamp" => null
+        "timestamp" => null,
+        "cuein" => "",
+        "cueout" => "",
+        "fadein" => "",
+        "fadeout" => ""
     );
 
     /*
@@ -183,6 +187,11 @@ class Application_Model_ShowBuilder {
             $row["title"] = $p_item["file_track_title"];
             $row["creator"] = $p_item["file_artist_name"];
             $row["album"] = $p_item["file_album_title"];
+
+            $row["cuein"] = $p_item["cue_in"];
+            $row["cueout"] = $p_item["cue_out"];
+            $row["fadein"] = $p_item["fade_in"];
+            $row["fadeout"] = $p_item["fade_out"];
 
             $this->contentDT = $schedEndDT;
         }

@@ -11,7 +11,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if($defaultFade == ""){
-            $defaultFade = '00.500000';
+            $defaultFade = '00.000000';
         }
 
         //Station name
@@ -29,7 +29,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         //Default station fade
         $this->addElement('text', 'stationDefaultFade', array(
             'class'      => 'input_text',
-            'label'      => 'Default Fade:',
+            'label'      => 'Default Fade (s):',
             'required'   => false,
             'filters'    => array('StringTrim'),
             'validators' => array(array('regex', false,
