@@ -27,7 +27,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract{
         }
         
         // Calculate the version difference;
-        // Example: if current = 1.9.5 and latest = 3.0.0, diff = 115
+        // Example: if current = 1.9.5 and latest = 3.0.0, diff = 105
         // Note: algorithm assumes the number after 1st dot never goes above 9
         $versionDifference = (intval($latestExploded[0]) * 100 + intval($latestExploded[1]) *10 + intval($latestExploded[2])) 
             - (intval($currentExploded[0]) * 100 + intval($currentExploded[1] *10 + intval($currentExploded[2])));
@@ -36,10 +36,10 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract{
         if($versionDifference <= 0) {
             // current version is up to date or newer
             $class = "uptodate";
-        } else if($versionDifference <= 20) {
+        } else if($versionDifference < 20) {
             // 2 or less major versions back
             $class = "update";
-        } else if($versionDifference == 30) {
+        } else if($versionDifference < 30) {
             // 3 major versions back
             $class = "update2";
         } else {
