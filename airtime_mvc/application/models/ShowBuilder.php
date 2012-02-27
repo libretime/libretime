@@ -54,15 +54,17 @@ class Application_Model_ShowBuilder {
 
         $formatted .= $sign;
 
-        if ($info[0] > 0) {
+        if (intval($info[0]) > 0) {
+            $info[0] = ltrim($info[0], "0");
             $formatted .= " {$info[0]}h";
         }
 
-        if ($info[1] > 0) {
+        if (intval($info[1]) > 0) {
+            $info[1] = ltrim($info[1], "0");
             $formatted .= " {$info[1]}m";
         }
 
-        if ($info[2] > 0) {
+        if (intval($info[2]) > 0) {
             $sec = round($info[2], 0);
             $formatted .= " {$sec}s";
         }
