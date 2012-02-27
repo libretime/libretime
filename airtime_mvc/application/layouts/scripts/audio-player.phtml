@@ -1,0 +1,13 @@
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Audio Player</title>
+    <?php echo $this->headScript() ?>
+    <?php echo $this->headLink() ?>
+    <?php echo isset($this->google_analytics)?$this->google_analytics:"" ?>
+</head>
+<body>
+<div id="content"><?php echo $this->layout()->content ?></div>
+</body>
+</html>

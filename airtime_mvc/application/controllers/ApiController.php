@@ -96,6 +96,37 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
+        //Logging::log(print_r($_SERVER, true));
+        Logging::log($_SERVER['HTTP_RANGE']);
+        if (isset($_SERVER['HTTP_RANGE'])) {
+/**            
+            if (!preg_match('^bytes=\d*-\d*(,\d*-\d*)*$', $_SERVER['HTTP_RANGE'])) {
+                header('HTTP/1.1 416 Requested Range Not Satisfiable');
+                header('Content-Range: bytes /' . filelength); // Required in 416.
+                exit;
+            }
+**/        
+            $ranges = explode(',', substr($_SERVER['HTTP_RANGE'], 6));
+            foreach ($ranges as $range) {
+                $parts = explode('-', $range);
+                $start = $parts[0]; // If this is empty, this should be 0.
+                $end = $parts[1]; // If this is empty or greater than than filelength - 1, this should be filelength - 1.
+        
+                //the $end shouldn't be specified.
+                
+                //if ($start > $end) {
+                //    header('HTTP/1.1 416 Requested Range Not Satisfiable');
+                //    header('Content-Range: bytes */' );//. filelength); // Required in 416.
+                //    exit;
+                //}
+        
+                // ...
+            }
+            Logging::log("the starting point for the download is $start");
+        }
+        
+        //Logging::log(print_r($_REQUEST, true));
+		//Logging::log("in the get media action!");
         global $CC_CONFIG;
 
         // disable the view and the layout
@@ -146,10 +177,16 @@ class ApiController extends Zend_Controller_Action
                 }
                 $logger->info("Sending $filepath");
                 header("Content-Length: " . filesize($filepath));
-
+                header('Accept-Ranges: bytes');
+                
                 // !! binary mode !!
                 $fp = fopen($filepath, 'rb');
-
+                if (isset($start) && $start != 0){
+                    Logging::log("updating the start of the file to be sent.");
+                    fseek($fp, $start);
+                    header("Content-Range: bytes $start-".(filesize($filepath)-1).'/'. filesize($filepath));
+                    Logging::log("done");
+                }
                 //We can have multiple levels of output buffering. Need to
                 //keep looping until all have been disabled!!!
                 //http://www.php.net/manual/en/function.ob-end-flush.php
@@ -157,7 +194,7 @@ class ApiController extends Zend_Controller_Action
 
                 fpassthru($fp);
                 fclose($fp);
-
+Logging::log(print_r($this->getResponse(), true));
                 //make sure to exit here so that no other output is sent.
                 exit;
             } else {
@@ -171,6 +208,8 @@ class ApiController extends Zend_Controller_Action
       }
       header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
       $logger->info("404 Not Found");
+      
+      Logging::log(print_r($this->getResponse()));
       return;
     }
 
