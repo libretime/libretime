@@ -423,46 +423,22 @@ class Application_Model_Schedule {
         $rows = array();
         
         $sql = "SELECT st.file_id AS file_id,"
-        ." st.starts AS starts,"
-        ." st.ends AS ends,"
+        ." st.starts AS start,"
+        ." st.ends AS end,"
         ." si.starts as show_start,"
         ." si.ends as show_end"
         ." FROM $CC_CONFIG[scheduleTable] as st"
         ." LEFT JOIN $CC_CONFIG[showInstances] as si"
         ." ON st.instance_id = si.id"
-        ." ORDER BY starts";
+        ." ORDER BY start";
         
-       
-        /*
-        $sql = "SELECT pt.creator as creator"
-        ." st.file_id AS file_id"
-        ." st.starts AS starts"
-        ." st.ends AS ends"
-        ." st.name as show_name"
-        ." si.starts as show_start"
-        ." si.ends as show_end"
-        ." FROM $CC_CONFIG[scheduleTable] as st"
-        ." LEFT JOIN $CC_CONFIG[showInstances] as si"
-        ." ON st.instance_id = si.id"
-        ." LEFT JOIN $CC_CONFIG[showTable] as sh"
-        ." ON si.show_id = sh.id"
-        //The next line ensures we only get songs that haven't ended yet
-        ." WHERE (st.ends >= TIMESTAMP '$p_currentDateTime')"
-        ." AND (st.ends <= TIMESTAMP '$p_toDateTime')"
-        //next line makes sure that we aren't returning items that
-        //are past the show's scheduled timeslot.
-        ." AND (st.starts < si.ends)"
-        ." ORDER BY starts";
-        * */
-        
+        Logging::log($sql);
+                
         $rows = $CC_DBC->GetAll($sql);
-        if (!PEAR::isError($rows)) {
-            foreach ($rows as &$row) {
-                $row["start"] = $row["starts"];
-                $row["end"] = $row["ends"];
-            }
+        if (PEAR::isError($rows)) {
+            return null;
         }
-            
+        
         return $rows;
     }
 
@@ -506,13 +482,16 @@ class Application_Model_Schedule {
         $data = array();
         $utcTimeZone = new DateTimeZone("UTC");
         
+        $data["status"] = array();
+        $data["media"] = array();
+        
         foreach ($items as $item){
             
             $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
             $uri = $storedFile->getFileUrlUsingConfigAddress();
             
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
-            $trackEndDateTime = new DateTime($item["ends"], $utcTimeZone);
+            $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
             
             /* Note: cue_out and end are always the same. */
             /* TODO: Not all tracks will have "show_end" */
@@ -523,16 +502,16 @@ class Application_Model_Schedule {
                 $item["cue_out"] = $item["cue_out"] - $diff;
             }
 
-            $starts = Application_Model_Schedule::AirtimeTimeToPypoTime($item["starts"]);            
-            $data[$starts] = array(
+            $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);            
+            $data["media"][$start] = array(
                 'id' => $storedFile->getGunid(),
                 'uri' => $uri,
                 'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
                 'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
                 'cue_in' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
                 'cue_out' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
-                'start' => $starts,
-                'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["ends"])
+                'start' => $start,
+                'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"])
             );
         }
                 
