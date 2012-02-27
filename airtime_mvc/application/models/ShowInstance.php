@@ -714,16 +714,13 @@ class Application_Model_ShowInstance {
         ." ft.artist_name as artist_name,"
         ." ft.album_title as album_title,"
         ." s.name as show_name,"
-        ." si.id as instance_id,"
-        ." pt.name as playlist_name"
-        ." FROM $CC_CONFIG[showInstances] si"
-        ." LEFT JOIN $CC_CONFIG[scheduleTable] st"
+        ." si.id as instance_id"
+        ." FROM {$CC_CONFIG['showInstances']} si"
+        ." LEFT JOIN {$CC_CONFIG['scheduleTable']} st"
         ." ON st.instance_id = si.id"
-        ." LEFT JOIN $CC_CONFIG[playListTable] pt"
-        ." ON st.playlist_id = pt.id"
-        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." LEFT JOIN {$CC_CONFIG['filesTable']} ft"
         ." ON st.file_id = ft.id"
-        ." LEFT JOIN $CC_CONFIG[showTable] s"
+        ." LEFT JOIN {$CC_CONFIG['showTable']} s"
         ." ON si.show_id = s.id"
         ." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
         ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
@@ -731,6 +728,8 @@ class Application_Model_ShowInstance {
         ." AND (st.starts < si.ends)"
         ." AND si.id = $instanceId"
         ." ORDER BY si.starts, st.starts";
+
+        Logging::log($sql);
 
         return $CC_DBC->GetAll($sql);
     }
