@@ -36,11 +36,10 @@ class PypoPush(Thread):
         self.api_client = api_client.api_client_factory(config)
         self.queue = q
 
-        self.schedule = dict()
-        self.playlists = dict()
+        self.media = dict()
 
         self.liquidsoap_state_play = True
-        self.push_ahead = 10
+        self.push_ahead = 30
         
     """
     The Push Loop - the push loop periodically checks if there is a playlist 
@@ -56,35 +55,30 @@ class PypoPush(Thread):
         if not self.queue.empty():
             # make sure we get the latest schedule
             while not self.queue.empty():
-                scheduled_data = self.queue.get()
-            logger.debug("Received data from pypo-fetch")
-            self.schedule = scheduled_data['schedule']
-            self.playlists = scheduled_data['liquidsoap_playlists']
-            
-            logger.debug('schedule %s' % json.dumps(self.schedule))
-            logger.debug('playlists %s' % json.dumps(self.playlists))
+                self.media = self.queue.get()
+            logger.debug("Received data from pypo-fetch")          
+            logger.debug('media %s' % json.dumps(self.media))
 
-        schedule = self.schedule
-        playlists = self.playlists
+        media = self.media
         
         currently_on_air = False
-        if schedule:
+        if media:
             tnow = time.gmtime(timenow)
             tcoming = time.gmtime(timenow + self.push_ahead)
             str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
             str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
                         
-            for pkey in schedule:
-                plstart = schedule[pkey]['start'][0:19]
-         
-                if str_tnow_s <= plstart and plstart < str_tcoming_s:
-                    logger.debug('Preparing to push playlist scheduled at: %s', pkey)
-                    playlist = schedule[pkey]
-                                       
-                    
-                    # We have a match, replace the current playlist and
-                    # force liquidsoap to refresh.
-                    if (self.push_liquidsoap(pkey, schedule, playlists) == 1):
+            
+            for media_item in media:
+                item_start = media_item['start'][0:19]
+                
+                if str_tnow_s <= item_start and item_start < str_tcoming_s:
+                    """
+                    If the media item starts in the next 30 seconds, push it to the queue.
+                    """
+                    logger.debug('Preparing to push media item scheduled at: %s', pkey)
+                              
+                    if self.push_to_liquidsoap(media_item):
                         logger.debug("Pushed to liquidsoap, updating 'played' status.")
                         
                         currently_on_air = True
@@ -93,33 +87,31 @@ class PypoPush(Thread):
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
                         self.api_client.notify_scheduled_item_start_playing(pkey, schedule)
+                     
 
-                show_start = schedule[pkey]['show_start']
-                show_end = schedule[pkey]['show_end']
-                
-                if show_start <= str_tnow_s and str_tnow_s < show_end:
-                    currently_on_air = True
+    def push_to_liquidsoap(self, media_item):
+        if media_item["starts"] == self.last_end_time:
             """
-            If currently_on_air = False but liquidsoap_state_play = True then it means that Liquidsoap may
-            still be playing audio even though the show has ended ('currently_on_air = False' means no show is scheduled)
-            See CC-3231.
-            This is a temporary solution for Airtime 2.0
-            """                
-            if not currently_on_air and self.liquidsoap_state_play:
-                logger.debug('Notifying Liquidsoap to stop playback.')
-                try:
-                    tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-                    tn.write('source.skip\n')
-                    tn.write('exit\n')
-                    tn.read_all()
-                except Exception, e:
-                    logger.debug(e)
-                    logger.debug('Could not connect to liquidsoap')
+            this media item is attached to the end of the last
+            track, so let's push it now so that Liquidsoap can start playing
+            it immediately after (and prepare crossfades if need be).
+            """
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn.write(str('queue.push %s\n' % media_item["annotation"].encode('utf-8')))
+            #TODO: vars.pypo_data
+            #TODO: vars.show_name
+            tn.write("exit\n")
+            
+            self.last_end_time = media_item["end"]
+        else:
+            """
+            this media item does not start right after a current playing track.
+            We need to sleep, and then wake up when this track starts.
+            """
+    
+        return False
 
-                self.liquidsoap_state_play = False
-
-
-    def push_liquidsoap(self, pkey, schedule, playlists):
+    def push_liquidsoap_old(self, pkey, schedule, playlists):
         logger = logging.getLogger('push')
 
         try:
@@ -127,10 +119,6 @@ class PypoPush(Thread):
             plstart = schedule[pkey]['start'][0:19]
 
             #strptime returns struct_time in local time
-            #mktime takes a time_struct and returns a floating point
-            #gmtime Convert a time expressed in seconds since the epoch to a struct_time in UTC
-            #mktime: expresses the time in local time, not UTC. It returns a floating point number, for compatibility with time().
-
             epoch_start = calendar.timegm(time.strptime(plstart, '%Y-%m-%d-%H-%M-%S'))
             
             #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
@@ -186,7 +174,7 @@ class PypoPush(Thread):
             if loops % heartbeat_period == 0:
                 logger.info("heartbeat")
                 loops = 0
-            try: self.push('scheduler')
+            try: self.push()
             except Exception, e:
                 logger.error('Pypo Push Exception: %s', e)
             time.sleep(PUSH_INTERVAL)

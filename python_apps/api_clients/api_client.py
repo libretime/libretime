@@ -261,15 +261,15 @@ class AirTimeApiClient(ApiClientInterface):
         export_url = export_url.replace('%%api_key%%', self.config["api_key"])
 
         response = ""
-        status = 0
         try:
             response_json = self.get_response_from_server(export_url)
             response = json.loads(response_json)
-            status = response['check']
+            success = True
         except Exception, e:
             logger.error(e)
+            success = False
 
-        return status, response
+        return success, response
 
 
     def get_media(self, uri, dst):
