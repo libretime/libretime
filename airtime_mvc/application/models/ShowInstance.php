@@ -364,19 +364,16 @@ class Application_Model_ShowInstance {
      * @param int $plId
      *         Playlist ID.
      */
-    public function addPlaylistToShow($plId)
+    public function addPlaylistToShow($pl_id)
     {
-        $sched = new Application_Model_ScheduleGroup();
-        $lastGroupId = $this->getLastGroupId();
+        $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
+        $id = $this->_showInstance->getDbId();
 
-        if (is_null($lastGroupId)) {
-            $groupId = $sched->add($this->_instanceId, $this->getShowInstanceStart(), null, $plId);
-        }
-        else {
-            $groupId = $sched->addPlaylistAfter($this->_instanceId, $lastGroupId, $plId);
-        }
-        Application_Model_RabbitMq::PushSchedule();
-        $this->updateScheduledTime();
+        $scheduler = new Application_Model_Scheduler();
+        $scheduler->scheduleAfter(
+            array(array("id" => 0, "instance" => $id, "timestamp" => $ts)),
+            array(array("id" => $pl_id, "type" => "playlist"))
+        );
     }
 
     /**
@@ -386,17 +383,14 @@ class Application_Model_ShowInstance {
      */
     public function addFileToShow($file_id)
     {
-        $sched = new Application_Model_ScheduleGroup();
-        $lastGroupId = $this->getLastGroupId();
+        $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
+        $id = $this->_showInstance->getDbId();
 
-        if (is_null($lastGroupId)) {
-            $groupId = $sched->add($this->_instanceId, $this->getShowInstanceStart(), $file_id);
-        }
-        else {
-            $groupId = $sched->addFileAfter($this->_instanceId, $lastGroupId, $file_id);
-        }
-        Application_Model_RabbitMq::PushSchedule();
-        $this->updateScheduledTime();
+        $scheduler = new Application_Model_Scheduler();
+        $scheduler->scheduleAfter(
+            array(array("id" => 0, "instance" => $id, "timestamp" => $ts)),
+            array(array("id" => $file_id, "type" => "audioclip"))
+        );
     }
 
     /**
@@ -592,8 +586,15 @@ class Application_Model_ShowInstance {
 
         foreach ($rebroadcasts as $rebroadcast) {
 
-            $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
-            $rebroad->addFileToShow($file_id);
+            try {
+                $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
+                $rebroad->addFileToShow($file_id);
+            }
+            catch (Exception $e) {
+                Logging::log("{$e->getFile()}");
+                Logging::log("{$e->getLine()}");
+                Logging::log("{$e->getMessage()}");
+            }
         }
     }
 
@@ -655,9 +656,7 @@ class Application_Model_ShowInstance {
         global $CC_DBC;
 
         $sql = "SELECT *
-            FROM (cc_schedule AS s LEFT JOIN cc_files AS f ON f.id = s.file_id
-                LEFT JOIN cc_playlist AS p ON p.id = s.playlist_id )
-
+            FROM (cc_schedule AS s LEFT JOIN cc_files AS f ON f.id = s.file_id)
             WHERE s.instance_id = '{$this->_instanceId}' ORDER BY starts";
 
         Logging::log($sql);

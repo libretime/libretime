@@ -230,9 +230,8 @@ class Application_Model_Scheduler {
     }
 
     /*
-     * @param array $scheduledIds
-     * @param array $fileIds
-     * @param array $playlistIds
+     * @param array $scheduleItems
+     * @param array $mediaItems
      */
     public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true) {
 
