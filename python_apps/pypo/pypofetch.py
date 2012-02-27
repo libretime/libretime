@@ -16,13 +16,6 @@ from datetime import datetime
 from datetime import timedelta
 from Queue import Empty
 import filecmp
-import thread
-
-# For RabbitMQ
-from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
-from kombu.exceptions import MessageStateError
-from kombu.simple import SimpleQueue
 
 from api_clients import api_client
 
@@ -44,30 +37,15 @@ except Exception, e:
     sys.exit()
 
 class PypoFetch(Thread):
-    def __init__(self, q, recorder_q):
+    def __init__(self, pypoFetch_q, pypoPush_q):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.set_export_source('scheduler')
-        self.queue = q
-        self.recorder_queue = recorder_q
+        self.fetch_queue = pypoFetch_q
+        self.push_queue = pypoPush_q
         self.schedule_data = []
         logger = logging.getLogger('fetch')
         logger.info("PypoFetch: init complete")
-
-    def init_rabbit_mq(self):
-        logger = logging.getLogger('fetch')
-        logger.info("Initializing RabbitMQ stuff")
-        try:
-            schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
-            schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
-            connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], config["rabbitmq_vhost"])
-            channel = connection.channel()
-            self.simple_queue = SimpleQueue(channel, schedule_queue)
-        except Exception, e:
-            logger.error(e)
-            return False
-            
-        return True
     
     """
     Handle a message from RabbitMQ, put it into our yucky global var.
@@ -84,7 +62,7 @@ class PypoFetch(Thread):
         
             if command == 'update_schedule':
                 self.schedule_data  = m['schedule']
-                thread.start_new_thread(self.process_schedule, (self.schedule_data, "scheduler", False))
+                self.process_schedule(self.schedule_data, "scheduler", False)
             elif command == 'update_stream_setting':
                 logger.info("Updating stream setting...")
                 self.regenerateLiquidsoapConf(m['setting'])
@@ -97,13 +75,11 @@ class PypoFetch(Thread):
             elif command == 'cancel_current_show':
                 logger.info("Cancel current show command received...")
                 self.stop_current_show()
-            elif command == 'update_recorder_schedule':
-                temp = m
-                if temp is not None:
-                    self.process_recorder_schedule(temp)
-            elif command == 'cancel_recording':
-                self.recorder_queue.put('cancel_recording')
         except Exception, e:
+            import traceback
+            top = traceback.format_exc()
+            logger.error('Exception: %s', e)
+            logger.error("traceback: %s", top)
             logger.error("Exception in handling RabbitMQ message: %s", e)
         
     def stop_current_show(self):
@@ -316,36 +292,11 @@ class PypoFetch(Thread):
         scheduled_data = dict()
         scheduled_data['liquidsoap_playlists'] = liquidsoap_playlists
         scheduled_data['schedule'] = playlists
-        self.queue.put(scheduled_data)
+        self.push_queue.put(scheduled_data)
 
         # cleanup
         try: self.cleanup(self.export_source)
         except Exception, e: logger.error("%s", e)
-    
-    def getDateTimeObj(self,time):
-        timeinfo = time.split(" ")
-        date = timeinfo[0].split("-")
-        time = timeinfo[1].split(":")
-    
-        date = map(int, date)
-        time = map(int, time)
-    
-        return datetime(date[0], date[1], date[2], time[0], time[1], time[2], 0, None)
-
-    def process_recorder_schedule(self, m):
-        logger = logging.getLogger('fetch')
-        logger.info("Parsing recording show schedules...")
-        shows_to_record = {}
-        shows = m['shows']
-        for show in shows:
-            show_starts = self.getDateTimeObj(show[u'starts'])
-            show_end = self.getDateTimeObj(show[u'ends'])
-            time_delta = show_end - show_starts
-
-            shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name'], m['server_timezone']]
-        self.recorder_queue.put(shows_to_record)
-        logger.info(shows_to_record)
-
 
     """
     In this function every audio file is cut as necessary (cue_in/cue_out != 0) 
@@ -519,24 +470,7 @@ class PypoFetch(Thread):
         status, self.schedule_data = self.api_client.get_schedule()
         if status == 1:
             logger.info("Bootstrap schedule received: %s", self.schedule_data)
-            thread.start_new_thread(self.process_schedule, (self.schedule_data, "scheduler", True))
-        
-        # Bootstrap: since we are just starting up, we need to grab the
-        # most recent schedule.  After that we can just wait for updates.
-        try:
-            temp = self.api_client.get_shows_to_record()
-            if temp is not None:
-                self.process_recorder_schedule(temp)
-            logger.info("Bootstrap recorder schedule received: %s", temp)
-        except Exception, e:
-            logger.error(e)
-            
-        logger.info("Bootstrap complete: got initial copy of the schedule")
-
-
-        while not self.init_rabbit_mq():
-            logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
-            time.sleep(5)
+            self.process_schedule(self.schedule_data, "scheduler", True)
 
         loops = 1
         while True:
@@ -556,10 +490,8 @@ class PypoFetch(Thread):
                     
                     Currently we are checking every 3600 seconds (1 hour)
                     """
-                    message = self.simple_queue.get(block=True, timeout=3600)
-                    self.handle_message(message.payload)
-                    # ACK the message to take it off the queue
-                    message.ack()
+                    message = self.fetch_queue.get(block=True, timeout=3600)
+                    self.handle_message(message)
                 except Empty, e:
                     """
                     Queue timeout. Fetching data manually
@@ -584,17 +516,7 @@ class PypoFetch(Thread):
                 """
                 status, self.schedule_data = self.api_client.get_schedule()
                 if status == 1:
-                    thread.start_new_thread(self.process_schedule, (self.schedule_data, "scheduler", False))
-                """
-                Fetch recorder schedule
-                """
-                try:
-                    temp = self.api_client.get_shows_to_record()
-                    if temp is not None:
-                        self.process_recorder_schedule(temp)
-                    logger.info("updated recorder schedule received: %s", temp)
-                except Exception, e:
-                    logger.error(e)
+                    self.process_schedule(self.schedule_data, "scheduler", False)
 
             loops += 1
 
