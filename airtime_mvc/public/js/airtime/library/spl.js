@@ -549,13 +549,20 @@ var AIRTIME = (function(AIRTIME){
 			
 			return {
 				items: 'li',
-				placeholder: "placeholder ui-state-highlight",
+				//hack taken from
+				//http://stackoverflow.com/questions/2150002/jquery-ui-sortable-how-can-i-change-the-appearance-of-the-placeholder-object
+				placeholder: {
+			        element: function(currentItem) {
+			            return $('<li class="placeholder ui-state-highlight"></li>')[0];
+			        },
+			        update: function(container, p) {
+			            return;
+			        }
+			    },
 				forcePlaceholderSize: true,
 				handle: 'div.list-item-container',
 				start: function(event, ui) {
-					ui.placeholder.html("PLACE HOLDER")
-						.width("99.5%")
-						.height(56);
+					ui.placeholder.height(56);
 				},
 				receive: fnReceive,
 				update: fnUpdate
