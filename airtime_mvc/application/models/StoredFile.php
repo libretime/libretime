@@ -590,7 +590,7 @@ class Application_Model_StoredFile {
             else if ($key === "year") {
 
                 $plSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
-                $fileSelect[] = "EXTRACT(YEAR FROM to_date(year, 'YYYY-MM-DD'))::varchar AS ".$key;;
+                $fileSelect[] = "EXTRACT(YEAR FROM to_date(year, 'YYYY-MM-DD'))::varchar AS ".$key;
             }
             //need to cast certain data as ints for the union to search on.
             else if (in_array($key, array("track_number", "bit_rate", "sample_rate"))){
