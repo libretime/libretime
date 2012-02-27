@@ -1,5 +1,9 @@
 <?php
 
+require_once 'formatters/LengthFormatter.php';
+require_once 'formatters/SamplerateFormatter.php';
+require_once 'formatters/BitrateFormatter.php';
+
 class LibraryController extends Zend_Controller_Action
 {
 
@@ -246,13 +250,30 @@ class LibraryController extends Zend_Controller_Action
             if ($type == "audioclip") {
                 $file = Application_Model_StoredFile::Recall($id);
                 $this->view->type = $type;
-                $this->view->md = $file->getMetadata();
+                $md = $file->getMetadata();
+
+                $formatter = new SamplerateFormatter($md["MDATA_KEY_SAMPLERATE"]);
+                $md["MDATA_KEY_SAMPLERATE"] = $formatter->format();
+
+                $formatter = new BitrateFormatter($md["MDATA_KEY_BITRATE"]);
+                $md["MDATA_KEY_BITRATE"] = $formatter->format();
+
+                $formatter = new LengthFormatter($md["MDATA_KEY_DURATION"]);
+                $md["MDATA_KEY_DURATION"] = $formatter->format();
+
+                $this->view->md = $md;
+
             }
             else if ($type == "playlist") {
 
                 $file = new Application_Model_Playlist($id);
                 $this->view->type = $type;
-                $this->view->md = $file->getAllPLMetaData();
+                $md = $file->getAllPLMetaData();
+
+                $formatter = new LengthFormatter($md["dcterms:extent"]);
+                $md["dcterms:extent"] = $formatter->format();
+
+                $this->view->md = $md;
                 $this->view->contents = $file->getContents();
             }
         }

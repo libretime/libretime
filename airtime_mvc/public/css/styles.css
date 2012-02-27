@@ -2523,4 +2523,8 @@ dd .stream-status {
 .stream-setting-global dd{
     width: auto;
 }
+
+.qtip div > span {
+    padding: 5px;
+}
 	
