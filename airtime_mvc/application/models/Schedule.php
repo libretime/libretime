@@ -177,7 +177,7 @@ class Application_Model_Schedule {
         
         $sql = "Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played
                 FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id LEFT JOIN cc_show_instances sit ON st.instance_id = sit.id
-                WHERE st.starts > (TIMESTAMP '$p_timeNow'-INTERVAL '1 hours') AND st.starts < (TIMESTAMP '$p_timeNow'+INTERVAL '1 hours') AND st.starts < sit.ends
+                WHERE st.starts > (TIMESTAMP '$p_timeNow'-INTERVAL '24 hours') AND st.starts < (TIMESTAMP '$p_timeNow'+INTERVAL '24 hours') AND st.starts < sit.ends
                 ORDER BY st.starts";
         $row = $CC_DBC->GetAll($sql);
         
