@@ -190,8 +190,8 @@ class Application_Model_ShowBuilder {
 
             $row["cuein"] = $p_item["cue_in"];
             $row["cueout"] = $p_item["cue_out"];
-            $row["fadein"] = $p_item["fade_in"];
-            $row["fadeout"] = $p_item["fade_out"];
+            $row["fadein"] = round(substr($p_item["fade_in"], 6), 6);
+            $row["fadeout"] = round(substr($p_item["fade_out"], 6), 6);
 
             $this->contentDT = $schedEndDT;
         }
