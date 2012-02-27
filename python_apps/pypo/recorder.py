@@ -183,7 +183,7 @@ class Recorder(Thread):
             message = self.queue.get()
             msg =  json.loads(message)
             command = msg["event_type"]
-            self.logger.info("Received msg from Pypo Fetch: %s", msg)
+            self.logger.info("Received msg from Pypo Message Handler: %s", msg)
             if command == 'cancel_recording':
                 if self.sr is not None and self.sr.is_recording():
                     self.sr.cancel_recording()

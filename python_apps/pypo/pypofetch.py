@@ -54,7 +54,7 @@ class PypoFetch(Thread):
     def handle_message(self, message):
         try:        
             logger = logging.getLogger('fetch')
-            logger.info("Received event from RabbitMQ: %s" % message)
+            logger.info("Received event from Pypo Message Handler: %s" % message)
             
             m =  json.loads(message)
             command = m['event_type']
@@ -80,7 +80,7 @@ class PypoFetch(Thread):
             top = traceback.format_exc()
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", top)
-            logger.error("Exception in handling RabbitMQ message: %s", e)
+            logger.error("Exception in handling Message Handler message: %s", e)
         
     def stop_current_show(self):
         logger = logging.getLogger('fetch')
