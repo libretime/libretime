@@ -111,7 +111,7 @@ class NowplayingController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         //nowplayingdatagrid.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
