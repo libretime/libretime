@@ -49,7 +49,8 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->sb_form = $form;
 
-        $this->view->headScript()->appendScript("var serverTimezoneOffset = ".date("Z")."; //in seconds");
+        $offset = date("Z") * -1;
+        $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js','text/javascript');
 

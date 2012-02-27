@@ -115,10 +115,10 @@ $(document).ready(function() {
 		iTime = oDate.getTime(); //value is in millisec.
 		iTime = Math.round(iTime / 1000);
 		iServerOffset = serverTimezoneOffset;
-		iClientOffset = oDate.getTimezoneOffset() * 60;//function returns minutes
+		iClientOffset = oDate.getTimezoneOffset() * -60;//function returns minutes
 		
-		//adjust for the fact the the Date object is in clent time.
-		iTime = iTime + iServerOffset + iClientOffset;
+		//adjust for the fact the the Date object is in client time.
+		iTime = iTime + iClientOffset + iServerOffset;
 		
 		return iTime;
 	}

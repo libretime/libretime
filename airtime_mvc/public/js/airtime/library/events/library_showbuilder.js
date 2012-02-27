@@ -25,11 +25,19 @@ var AIRTIME = (function(AIRTIME){
 			    	container,
 			    	thead = $("#show_builder_table thead"),
 			    	colspan = thead.find("th").length,
-			    	width = thead.find("tr:first").width();
+			    	width = thead.find("tr:first").width(),
+			    	message;
 			    
 			    //if nothing is checked select the dragged item.
 			    if (selected.length === 0) {
 			    	selected = $(this);
+			    }
+			    
+			    if (selected.length === 1) {
+			    	message = "Moving "+selected.length+" Item."
+			    }
+			    else {
+			    	message = "Moving "+selected.length+" Items."
 			    }
 			    
 			    container = $('<div/>').attr('id', 'draggingContainer')
@@ -40,7 +48,7 @@ var AIRTIME = (function(AIRTIME){
 				    		.attr("colspan", colspan)
 				    		.width(width)
 				    		.addClass("ui-state-highlight")
-				    		.append("Moving "+selected.length+" Items.")
+				    		.append(message)
 				    		.end()
 				    	.end();
 			    
