@@ -20,12 +20,30 @@ var AIRTIME = (function(AIRTIME){
 		
 		$('#library_display tr:not(:first)').draggable({
 			helper: function(){
-			    var selected = $('#library_display tr:not(:first) input:checked').parents('tr');
+			    var selected = $('#library_display tr:not(:first) input:checked').parents('tr'),
+			    	aItems = [],
+			    	container,
+			    	thead = $("#show_builder_table thead"),
+			    	colspan = thead.find("th").length,
+			    	width = thead.find("tr:first").width();
+			    
+			    //if nothing is checked select the dragged item.
 			    if (selected.length === 0) {
-			      selected = $(this);
+			    	selected = $(this);
 			    }
-			    var container = $('<div/>').attr('id', 'draggingContainer');
-			    container.append(selected.clone());
+			    
+			    container = $('<div/>').attr('id', 'draggingContainer')
+			    	.append('<tr/>')
+			    	.find("tr")
+				    	.append('<td/>')
+				    	.find("td")
+				    		.attr("colspan", colspan)
+				    		.width(width)
+				    		.addClass("ui-state-highlight")
+				    		.append("Moving "+selected.length+" Items.")
+				    		.end()
+				    	.end();
+			    
 			    return container; 
 		    },
 			cursor: 'pointer',

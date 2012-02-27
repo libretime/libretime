@@ -514,7 +514,19 @@ $(document).ready(function() {
 		};
 		
 		fnReceive = function(event, ui) {
-			origTrs = ui.helper.find("tr");
+			var selected = $('#library_display tr:not(:first) input:checked').parents('tr'),
+				aItems = [];
+			
+			//if nothing is checked select the dragged item.
+		    if (selected.length === 0) {
+		    	selected = ui.item;
+		    }
+		    
+		    selected.each(function(i, el) { 
+		    	aItems.push($(el).data("aData"));
+		    });
+			
+			origTrs = aItems;
 			html = ui.helper.html();
 		};
 		
@@ -529,10 +541,7 @@ $(document).ready(function() {
 					.empty()
 					.after(html);
 				
-				origTrs.each(function(i, el){
-					aItemData.push($("#"+$(el).attr("id")).data("aData"));
-				});
-				
+				aItemData = origTrs;
 				origTrs = undefined;
 				fnAdd();
 			}
