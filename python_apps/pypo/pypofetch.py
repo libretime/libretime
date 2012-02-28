@@ -48,11 +48,16 @@ class PypoFetch(Thread):
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
         logger.debug("Cache dir %s", self.cache_dir)
         try:
-            if not os.path.exists(dir):
+            if not os.path.isdir(dir):
+                """
+                We get here if path does not exist, or path does exist but
+                is a file. We are not handling the second case, but don't 
+                think we actually care about handling it.
+                """
                 logger.debug("Cache dir does not exist. Creating...")
                 os.makedirs(dir)
         except Exception, e:
-            logger.error(e)
+            pass
         
         self.schedule_data = []
         self.logger.info("PypoFetch: init complete")
@@ -276,6 +281,9 @@ class PypoFetch(Thread):
      - runs the cleanup routine, to get rid of unused cached files
     """
     def process_schedule(self, schedule_data, bootstrapping):
+        
+        self.logger.debug(schedule_data)
+        
         media = schedule_data["media"]
 
         # Download all the media and put playlists in liquidsoap "annotate" format
@@ -284,12 +292,12 @@ class PypoFetch(Thread):
         except Exception, e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
-        scheduled_data = dict()
-
-        scheduled_data['liquidsoap_annotation_queue'] = liquidsoap_annotation_queue
+ 
+        self.logger.debug("Pushing to pypo-push: "+ str(media))
         self.push_queue.put(media)
 
         """
+        TODO
         # cleanup
         try: self.cleanup()
         except Exception, e: self.logger.error("%s", e)
@@ -309,7 +317,7 @@ class PypoFetch(Thread):
                 media_item = media[mkey]
                 
                 if bootstrapping:            
-                    check_for_crash(media_item)
+                    check_for_previous_crash(media_item)
 
                 # create playlist directory
                 try:
@@ -356,7 +364,7 @@ class PypoFetch(Thread):
         entry['annotate'] = pl_entry        
         return entry
         
-    def check_for_crash(media_item):
+    def check_for_previous_crash(media_item):
         start = media_item['start']
         end = media_item['end']
         
@@ -453,9 +461,6 @@ class PypoFetch(Thread):
 
 
     def main(self):
-        try: os.mkdir(self.cache_dir)
-        except Exception, e: pass
-
         # Bootstrap: since we are just starting up, we need to grab the
         # most recent schedule.  After that we can just wait for updates. 
         success, self.schedule_data = self.api_client.get_schedule()
@@ -470,23 +475,16 @@ class PypoFetch(Thread):
                 message = self.fetch_queue.get(block=True, timeout=3600)
                 self.handle_message(message)
             except Exception, e:
-                """
-                There is a problem with the RabbitMq messenger service. Let's
-                log the error and get the schedule via HTTP polling
-                """
                 self.logger.error("Exception, %s", e)
                 
-                status, self.schedule_data = self.api_client.get_schedule()
-                if status == 1:
+                success, self.schedule_data = self.api_client.get_schedule()
+                if success:
                     self.process_schedule(self.schedule_data, False)
 
             loops += 1
 
-    """
-    Main loop of the thread:
-    Wait for schedule updates from RabbitMQ, but in case there arent any,
-    poll the server to get the upcoming schedule.
-    """
     def run(self):
-        while True:
-            self.main()
+        """
+        Entry point of the thread
+        """
+        self.main()

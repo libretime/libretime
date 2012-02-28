@@ -287,8 +287,8 @@ class ApiController extends Zend_Controller_Action
 
         PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
-        $result = Application_Model_Schedule::GetScheduledPlaylists();
-        echo json_encode($result);
+        $data = Application_Model_Schedule::GetScheduledPlaylists();
+        echo json_encode($data, JSON_FORCE_OBJECT);
     }
 
     public function notifyMediaItemStartPlayAction()
