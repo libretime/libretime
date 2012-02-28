@@ -76,9 +76,12 @@ class Application_Model_Nowplaying
             $startCutoff = 60;
             $endCutoff = 86400; //60*60*24 - seconds in a day
         } else {
+            $time = date("H:i:s");
+            $utcDate = Application_Model_DateHelper::ConvertToUtcDateTimeString($dateString." ".$time);
+            
             $date = new Application_Model_DateHelper;
-            $time = $date->getTime();
-            $date->setDate($dateString." ".$time);
+            $date->setDate($utcDate);
+            
             $timeNow = $date->getUtcTimestamp();
 
             $startCutoff = $date->getNowDayStartDiff();
@@ -88,6 +91,7 @@ class Application_Model_Nowplaying
         $data = array();
 
         $showIds = Application_Model_ShowInstance::GetShowsInstancesIdsInRange($timeNow, $startCutoff, $endCutoff);
+        
     
         //get all the pieces to be played between the start cut off and the end cut off.
         $scheduledItems = Application_Model_Schedule::getScheduleItemsInRange($timeNow, $startCutoff, $endCutoff);
