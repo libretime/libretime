@@ -287,6 +287,9 @@ $(document).ready(function() {
 			if (aData.allowed !== true) {
 				$(nRow).addClass("sb-not-allowed");
 			}
+			else {
+				$(nRow).addClass("sb-allowed");
+			}
 			
 			//status used to colour tracks.
 			if (aData.status === 1) {
@@ -538,8 +541,8 @@ $(document).ready(function() {
 			var prev = ui.item.prev();
 			
 			//can't add items outside of shows.
-			if (prev.hasClass("sb-footer")) {
-				alert("Cannot add an item outside a show.");
+			if (!prev.hasClass("sb-allowed")) {
+				alert("Cannot schedule outside a show.");
 				ui.item.remove();
 				return;
 			}

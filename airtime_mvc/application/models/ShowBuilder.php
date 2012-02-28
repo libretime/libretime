@@ -193,7 +193,7 @@ class Application_Model_ShowBuilder {
     private function makeFooterRow($p_item) {
 
         $row = $this->defaultRowArray;
-        $this->isAllowed($p_item, $row);
+        //$this->isAllowed($p_item, $row);
         $row["footer"] = true;
 
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
