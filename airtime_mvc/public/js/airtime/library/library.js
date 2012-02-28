@@ -301,6 +301,9 @@ $(document).ready(function() {
 	        	a[i] = parseInt(a[i], 10);
 	        }
 	       
+	        oData.iEnd = parseInt(oData.iEnd, 10);
+	        oData.iLength = parseInt(oData.iLength, 10);
+	        oData.iStart = parseInt(oData.iStart, 10);
 	        oData.iCreate = parseInt(oData.iCreate, 10);
         },
 		
