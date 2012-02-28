@@ -212,11 +212,12 @@ class PypoFetch(Thread):
         else:
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
-    """
+    def update_liquidsoap_connection_status(self):
+        """
         updates the status of liquidsoap connection to the streaming server
         This fucntion updates the bootup time variable in liquidsoap script
-    """
-    def update_liquidsoap_connection_status(self):
+        """
+
         tn = telnetlib.Telnet(LS_HOST, LS_PORT)
         # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
         # we are manually adjusting the bootup time variable so the status msg will get

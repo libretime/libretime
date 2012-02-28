@@ -417,8 +417,7 @@ class Application_Model_Schedule {
      *      Returns null if nothing found
      */
 
-    public static function GetItems($p_currentDateTime, $p_toDateTime)
-    {
+    public static function GetItems($p_currentDateTime, $p_toDateTime) {
         global $CC_CONFIG, $CC_DBC;
         $rows = array();
         
@@ -501,6 +500,7 @@ class Application_Model_Schedule {
                 //assuming ends takes cue_out into assumption
                 $item["cue_out"] = $item["cue_out"] - $diff;
             }
+
 
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);            
             $data["media"][$start] = array(
