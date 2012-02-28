@@ -87,84 +87,65 @@ class PypoPush(Thread):
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
                         self.api_client.notify_scheduled_item_start_playing(pkey, schedule)
-                     
-
+                        
     def push_to_liquidsoap(self, media_item):
-        if media_item["starts"] == self.last_end_time:
-            """
-            this media item is attached to the end of the last
-            track, so let's push it now so that Liquidsoap can start playing
-            it immediately after (and prepare crossfades if need be).
-            """
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            tn.write(str('queue.push %s\n' % media_item["annotation"].encode('utf-8')))
-            #TODO: vars.pypo_data
-            #TODO: vars.show_name
-            tn.write("exit\n")
-            
-            self.last_end_time = media_item["end"]
-        else:
-            """
-            this media item does not start right after a current playing track.
-            We need to sleep, and then wake up when this track starts.
-            """
-    
-        return False
-
-    def push_liquidsoap_old(self, pkey, schedule, playlists):
-        logger = logging.getLogger('push')
-
         try:
-            playlist = playlists[pkey]
-            plstart = schedule[pkey]['start'][0:19]
-
-            #strptime returns struct_time in local time
-            epoch_start = calendar.timegm(time.strptime(plstart, '%Y-%m-%d-%H-%M-%S'))
-            
-            #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
-            epoch_now = time.time()
-
-            logger.debug("Epoch start: %s" % epoch_start)
-            logger.debug("Epoch now: %s" % epoch_now)
-
-            sleep_time = epoch_start - epoch_now;
-
-            if sleep_time < 0:
-                sleep_time = 0
-
-            logger.debug('sleeping for %s s' % (sleep_time))
-            time.sleep(sleep_time)
-
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-
-            #skip the currently playing song if any.
-            logger.debug("source.skip\n")
-            tn.write("source.skip\n")
-
-            # Get any extra information for liquidsoap (which will be sent back to us)
-            liquidsoap_data = self.api_client.get_liquidsoap_data(pkey, schedule)
-
-            #Sending schedule table row id string.
-            logger.debug("vars.pypo_data %s\n"%(liquidsoap_data["schedule_id"]))
-            tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('utf-8'))
-
-            logger.debug('Preparing to push playlist %s' % pkey)
-            for item in playlist:
-                annotate = item['annotate']
-                tn.write(str('queue.push %s\n' % annotate.encode('utf-8')))
-
-                show_name = item['show_name']
-                tn.write(str('vars.show_name %s\n' % show_name.encode('utf-8')))
-
-            tn.write("exit\n")
-            logger.debug(tn.read_all())
-
-            status = 1
+            if media_item["starts"] == self.last_end_time:
+                """
+                this media item is attached to the end of the last
+                track, so let's push it now so that Liquidsoap can start playing
+                it immediately after (and prepare crossfades if need be).
+                """
+                telnet_to_liquidsoap(media_item)
+                self.last_end_time = media_item["end"]
+            else:
+                """
+                this media item does not start right after a current playing track.
+                We need to sleep, and then wake up when this track starts.
+                """
+                sleep_until_start(media_item)
+                
+                telnet_to_liquidsoap(media_item)
+                self.last_end_time = media_item["end"]
         except Exception, e:
-            logger.error('%s', e)
-            status = 0
-        return status
+            return False
+            
+        return True
 
+    def sleep_until_start(media_item):
+        mi_start = media_item['start'][0:19]
+        
+        #strptime returns struct_time in local time
+        epoch_start = calendar.timegm(time.strptime(mi_start, '%Y-%m-%d-%H-%M-%S'))
+        
+        #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
+        epoch_now = time.time()
+        
+        logger.debug("Epoch start: %s" % epoch_start)
+        logger.debug("Epoch now: %s" % epoch_now)
+
+        sleep_time = epoch_start - epoch_now
+
+        if sleep_time < 0:
+            sleep_time = 0
+
+        logger.debug('sleeping for %s s' % (sleep_time))
+        time.sleep(sleep_time)
+
+    def telnet_to_liquidsoap(media_item):
+        tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+        
+        #tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('utf-8'))
+        
+        annotation = media_item['annotation']
+        tn.write('queue.push %s\n' % annotation.encode('utf-8'))
+        
+        show_name = media_item['show_name']
+        tn.write('vars.show_name %s\n' % show_name.encode('utf-8'))
+        
+        tn.write("exit\n")
+        logger.debug(tn.read_all())
+                     
     def run(self):
         loops = 0
         heartbeat_period = math.floor(30/PUSH_INTERVAL)
