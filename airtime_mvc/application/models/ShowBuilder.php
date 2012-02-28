@@ -76,22 +76,6 @@ class Application_Model_ShowBuilder {
         return $formatted;
     }
 
-    private function makeFooterRow($p_item) {
-
-        $row = $this->defaultRowArray;
-        $this->isAllowed($p_item, $row);
-        $row["footer"] = true;
-
-        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
-        $contentDT = $this->contentDT;
-
-        $runtime = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
-        $row["runtime"] = $runtime;
-        $row["fRuntime"] = $this->formatTimeFilled($runtime);
-
-        return $row;
-    }
-
     private function isAllowed($p_item, &$row) {
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
@@ -197,12 +181,27 @@ class Application_Model_ShowBuilder {
         }
         //show is empty
         else {
+
             $row["empty"] = true;
             $row["id"] = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
-
-            //return null;
         }
+
+        return $row;
+    }
+
+    private function makeFooterRow($p_item) {
+
+        $row = $this->defaultRowArray;
+        $this->isAllowed($p_item, $row);
+        $row["footer"] = true;
+
+        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+        $contentDT = $this->contentDT;
+
+        $runtime = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
+        $row["runtime"] = $runtime;
+        $row["fRuntime"] = $this->formatTimeFilled($runtime);
 
         return $row;
     }

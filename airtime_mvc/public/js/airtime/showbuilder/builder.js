@@ -535,8 +535,17 @@ $(document).ready(function() {
 		};
 		
 		fnUpdate = function(event, ui) {
+			var prev = ui.item.prev();
+			
+			//can't add items outside of shows.
+			if (prev.hasClass("sb-footer")) {
+				alert("Cannot add an item outside a show.");
+				ui.item.remove();
+				return;
+			}
+			
 			aItemData = [];
-			oPrevData = ui.item.prev().data("aData");
+			oPrevData = prev.data("aData");
 			
 			//item was dragged in
 			if (origTrs !== undefined) {
@@ -561,10 +570,7 @@ $(document).ready(function() {
 			forcePlaceholderSize: true,
 			items: 'tr:not(:first, :last, .sb-header, .sb-footer, .sb-not-allowed)',
 			receive: fnReceive,
-			update: fnUpdate,
-			start: function(event, ui) {
-				//ui.placeholder.html("PLACE HOLDER");
-			}
+			update: fnUpdate
 		};
 	}());
 	
