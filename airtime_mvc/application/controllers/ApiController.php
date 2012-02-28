@@ -763,7 +763,6 @@ class ApiController extends Zend_Controller_Action
                 "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
                 "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
                 "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
-                "show_recorder"=>Application_Model_Systemstatus::GetShowRecorderStatus(),
                 "media_monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
             )
         );

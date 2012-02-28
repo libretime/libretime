@@ -21,16 +21,19 @@ from urlparse import urlparse
 import base64
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.0.1"
+AIRTIME_VERSION = "2.0.2"
 
-def api_client_factory(config):
-    logger = logging.getLogger()
+def api_client_factory(config, logger=None):
+    if logger != None:
+        temp_logger = logger
+    else:
+        temp_logger = logging.getLogger()
     if config["api_client"] == "airtime":
-        return AirTimeApiClient()
+        return AirTimeApiClient(temp_logger)
     elif config["api_client"] == "obp":
         return ObpApiClient()
     else:
-        logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
+        temp_logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
         sys.exit()
         
 def to_unicode(obj, encoding='utf-8'):
@@ -160,17 +163,20 @@ class ApiClientInterface:
 
 class AirTimeApiClient(ApiClientInterface):
 
-    def __init__(self):
+    def __init__(self, logger=None):
+        if logger != None:
+            self.logger = logger
+        else:
+            self.logger = logging.getLogger()
         # loading config file
         try:
             self.config = ConfigObj('/etc/airtime/api_client.cfg')
         except Exception, e:
-            logger = logging.getLogger()
-            logger.error('Error loading config file: %s', e)
+            self.logger.error('Error loading config file: %s', e)
             sys.exit(1)
             
     def get_response_from_server(self, url):
-        logger = logging.getLogger()
+        logger = self.logger
         successful_response = False
         
         while not successful_response:
@@ -190,7 +196,7 @@ class AirTimeApiClient(ApiClientInterface):
         
 
     def __get_airtime_version(self, verbose = True):
-        logger = logging.getLogger()
+        logger = self.logger
         url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["version_url"])
         logger.debug("Trying to contact %s", url)
         url = url.replace("%%api_key%%", self.config["api_key"])
@@ -210,7 +216,7 @@ class AirTimeApiClient(ApiClientInterface):
         return version
 
     def test(self):
-        logger = logging.getLogger()
+        logger = self.logger
         status, items = self.get_schedule('2010-01-01-00-00-00', '2011-01-01-00-00-00')
         schedule = items["playlists"]
         logger.debug("Number of playlists found: %s", str(len(schedule)))
@@ -226,7 +232,7 @@ class AirTimeApiClient(ApiClientInterface):
 
 
     def is_server_compatible(self, verbose = True):
-        logger = logging.getLogger()
+        logger = self.logger
         version = self.__get_airtime_version(verbose)
         if (version == -1):
             if (verbose):
@@ -245,7 +251,7 @@ class AirTimeApiClient(ApiClientInterface):
 
 
     def get_schedule(self, start=None, end=None):
-        logger = logging.getLogger()
+        logger = self.logger
 
         # Construct the URL
         export_url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["export_url"])
@@ -266,7 +272,7 @@ class AirTimeApiClient(ApiClientInterface):
 
 
     def get_media(self, uri, dst):
-        logger = logging.getLogger()
+        logger = self.logger
 
         try:
             src = uri + "/api_key/%%api_key%%"
@@ -283,7 +289,7 @@ class AirTimeApiClient(ApiClientInterface):
     Tell server that the scheduled *playlist* has started.
     """
     def notify_scheduled_item_start_playing(self, pkey, schedule):
-        logger = logging.getLogger()
+        logger = self.logger
         playlist = schedule[pkey]
         schedule_id = playlist["schedule_id"]
         url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_item_url"])
@@ -310,7 +316,7 @@ class AirTimeApiClient(ApiClientInterface):
     liquidsoap in get_liquidsoap_data().
     """
     def notify_media_item_start_playing(self, data, media_id):
-        logger = logging.getLogger()
+        logger = self.logger
         response = ''
         try:
             schedule_id = data
@@ -330,7 +336,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
 
     def get_liquidsoap_data(self, pkey, schedule):
-        logger = logging.getLogger()
+        logger = self.logger
         playlist = schedule[pkey]
         data = dict()
         try:
@@ -340,13 +346,12 @@ class AirTimeApiClient(ApiClientInterface):
         return data
 
     def get_shows_to_record(self):
-        logger = logging.getLogger()
+        logger = self.logger
         response = None
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["show_schedule_url"])
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
-            
             response = self.get_response_from_server(url)
 
             response = json.loads(response)
@@ -359,7 +364,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
 
     def upload_recorded_show(self, data, headers):
-        logger = logging.getLogger()
+        logger = self.logger
         response = ''
 
         retries = int(self.config["upload_retries"])
@@ -393,7 +398,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
 
     def setup_media_monitor(self):
-        logger = logging.getLogger()
+        logger = self.logger
 
         response = None
         try:
@@ -410,7 +415,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
 
     def update_media_metadata(self, md, mode, is_record=False):
-        logger = logging.getLogger()
+        logger = self.logger
         response = None
         try:
 
@@ -455,7 +460,7 @@ class AirTimeApiClient(ApiClientInterface):
     #Note that these are relative paths to the given directory. The full
     #path is not returned.
     def list_all_db_files(self, dir_id):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_db_files"])
 
@@ -472,7 +477,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
 
     def list_all_watched_dirs(self):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_watched_dirs"])
 
@@ -488,7 +493,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
 
     def add_watched_dir(self, path):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["add_watched_dir"])
 
@@ -505,7 +510,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
 
     def remove_watched_dir(self, path):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["remove_watched_dir"])
 
@@ -522,7 +527,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
 
     def set_storage_dir(self, path):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["set_storage_dir"])
 
@@ -539,7 +544,7 @@ class AirTimeApiClient(ApiClientInterface):
         return response
     
     def get_stream_setting(self):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_stream_setting"])
             
@@ -560,7 +565,7 @@ class AirTimeApiClient(ApiClientInterface):
     via a http server.
     """
     def register_component(self, component):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["register_component"])
             
@@ -572,7 +577,7 @@ class AirTimeApiClient(ApiClientInterface):
             logger.error("Exception: %s", e)
     
     def notify_liquidsoap_status(self, msg, stream_id, time):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_liquidsoap_status"])
             

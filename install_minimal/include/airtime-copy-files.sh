@@ -53,7 +53,6 @@ MIN=$(($RANDOM%60))
 echo "$MIN $HOUR * * * root /usr/lib/airtime/utils/phone_home_stat" > /etc/cron.d/airtime-crons
 
 echo "* Creating /usr/lib/airtime"
-
 if [ "$python_service" -eq "0" ]; then
     python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
     
@@ -63,9 +62,9 @@ if [ "$python_service" -eq "0" ]; then
     if [ "$pypo" = "t" ]; then
         python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
     fi
-    if [ "$showrecorder" = "t" ]; then
-        python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
-    fi
+    #if [ "$showrecorder" = "t" ]; then
+    #    python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
+    #fi
 fi
 
 mkdir -p /usr/lib/airtime
