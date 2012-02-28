@@ -506,18 +506,25 @@ var AIRTIME = (function(AIRTIME){
 				fnUpdate;		
 			
 			fnReceive = function(event, ui) {
-				var selected = $('#library_display tr[id^="au"] input:checked').parents('tr'),
-					aItems = [];
-			
+				var aItems = [],
+					aSelected,
+					oLibTT = TableTools.fnGetInstance('library_display'),
+					i,
+					length;
+				
+				//filter out anything that isn't an audiofile.
+				aSelected = oLibTT.fnGetSelectedData();
 				//if nothing is checked select the dragged item.
-			    if (selected.length === 0) {
-			    	selected = ui.item;
+			    if (aSelected.length === 0) {
+			    	aSelected.push(ui.item.data("aData"));
 			    }
 			    
-			    selected.each(function(i, el) { 
-			    	aItems.push($(el).data("aData").id);
-			    });
-				
+				for (i = 0, length = aSelected.length; i < length; i++) {
+					if (aSelected[i].ftype === "audioclip") {
+						aItems.push(aSelected[i].id);
+					}
+				}
+	
 			    aReceiveItems = aItems;
 				html = ui.helper.html();
 			};

@@ -499,8 +499,7 @@ $(document).ready(function() {
 		
 		fnAdd = function() {
 			var aMediaIds = [],
-				aSchedIds = [],
-				oLibTT = TableTools.fnGetInstance('library_display');
+				aSchedIds = [];
 			
 			for(i=0; i < aItemData.length; i++) {
 				aMediaIds.push({"id": aItemData[i].id, "type": aItemData[i].ftype});
@@ -521,18 +520,18 @@ $(document).ready(function() {
 		};
 		
 		fnReceive = function(event, ui) {
-			var selected = $('#library_display tr:not(:first) input:checked').parents('tr'),
-				aItems = [];
+			var aItems = [],
+				oLibTT = TableTools.fnGetInstance('library_display'),
+				i,
+				length;
+		
+			aItems = oLibTT.fnGetSelectedData();
 			
 			//if nothing is checked select the dragged item.
-		    if (selected.length === 0) {
-		    	selected = ui.item;
+		    if (aItems.length === 0) {
+		    	aItems.push(ui.item.data("aData"));
 		    }
 		    
-		    selected.each(function(i, el) { 
-		    	aItems.push($(el).data("aData"));
-		    });
-			
 			origTrs = aItems;
 			html = ui.helper.html();
 		};

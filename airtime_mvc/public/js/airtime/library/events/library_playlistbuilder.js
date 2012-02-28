@@ -69,16 +69,17 @@ var AIRTIME = (function(AIRTIME){
 		fnAddSelectedItems = function() {
 			var oLibTT = TableTools.fnGetInstance('library_display'),
 				aData = oLibTT.fnGetSelectedData(),
-				item,
+				i,
 				temp,
+				length,
 				aMediaIds = [];
 			
 			//process selected files/playlists.
-			for (item in aData) {
-				temp = aData[item];
-				if (temp !== null && temp.hasOwnProperty('id') && temp.ftype === "audioclip") {
+			for (i = 0, length = aData.length; i < length; i++) {
+				temp = aData[i];
+				if (temp.ftype === "audioclip") {
 					aMediaIds.push(temp.id);
-				} 	
+				}
 			}
 		
 			AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');

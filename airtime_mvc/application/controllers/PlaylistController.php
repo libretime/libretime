@@ -197,7 +197,7 @@ class PlaylistController extends Zend_Controller_Action
 
     public function addItemsAction()
     {
-        $ids = $this->_getParam('ids');
+        $ids = $this->_getParam('ids', array());
         $ids = (!is_array($ids)) ? array($ids) : $ids;
     	$afterItem = $this->_getParam('afterItem', null);
     	$addType = $this->_getParam('type', 'after');
