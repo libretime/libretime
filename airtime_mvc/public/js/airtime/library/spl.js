@@ -500,13 +500,25 @@ var AIRTIME = (function(AIRTIME){
 	    });
 		
 		sortableConf = (function(){
-			var origTrs,
+			var aReceiveItems,
 				html,
 				fnReceive,
 				fnUpdate;		
 			
 			fnReceive = function(event, ui) {
-				origTrs = ui.helper.find('tr[id^="au"]');
+				var selected = $('#library_display tr[id^="au"] input:checked').parents('tr'),
+					aItems = [];
+			
+				//if nothing is checked select the dragged item.
+			    if (selected.length === 0) {
+			    	selected = ui.item;
+			    }
+			    
+			    selected.each(function(i, el) { 
+			    	aItems.push($(el).data("aData").id);
+			    });
+				
+			    aReceiveItems = aItems;
 				html = ui.helper.html();
 			};
 			
@@ -527,17 +539,15 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				//item was dragged in from library datatable
-				if (origTrs !== undefined) {
+				if (aReceiveItems !== undefined) {
 					
 					playlist.find("tr.ui-draggable")
 						.after(html)
 						.empty();
 					
-					origTrs.each(function(i, el){
-						aItems.push($("#"+$(el).attr("id")).data("aData").id);
-					});
+					aItems = aReceiveItems;
+					aReceiveItems = undefined;
 					
-					origTrs = undefined;
 					AIRTIME.playlist.fnAddItems(aItems, iAfter, sAddType);
 				}
 				//item was reordered.
@@ -553,6 +563,7 @@ var AIRTIME = (function(AIRTIME){
 				//http://stackoverflow.com/questions/2150002/jquery-ui-sortable-how-can-i-change-the-appearance-of-the-placeholder-object
 				placeholder: {
 			        element: function(currentItem) {
+						
 			            return $('<li class="placeholder ui-state-highlight"></li>')[0];
 			        },
 			        update: function(container, p) {

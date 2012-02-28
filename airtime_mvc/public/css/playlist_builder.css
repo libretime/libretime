@@ -451,3 +451,13 @@ fieldset > legend {
 #fieldset-metadate_change {
 	clear:both;
 }
+
+div.helper li {
+    list-style: none;
+}
+
+li.spl_empty {
+    text-align: center;
+    height: 56px;
+    border:2px dashed black;
+}

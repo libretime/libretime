@@ -20,12 +20,37 @@ var AIRTIME = (function(AIRTIME){
 		
 		$('#library_display tr[id ^= "au"]').draggable({
 			helper: function(){
-			    var selected = $('#library_display tr:not(:first) input:checked').parents('tr[id^="au"]');
+			    var selected = $('#library_display tr:not(:first) input:checked').parents('tr[id^="au"]'),
+			    	container,
+			    	message,
+			    	li = $("#side_playlist ul li:first"),
+			    	width = li.width(),
+			    	height = li.height();
+			    
 			    if (selected.length === 0) {
-			      selected = $(this);
+			    	selected = $(this);
 			    }
-			    var container = $('<div/>').attr('id', 'draggingContainer');
-			    container.append(selected.clone());
+			    
+			    if (selected.length === 1) {
+			    	message = "Moving "+selected.length+" Item."
+			    }
+			    else {
+			    	message = "Moving "+selected.length+" Items."
+			    }
+			    
+			    container = $('<div class="helper"/>')
+			    	.append("<li/>")
+			    	.find("li")
+				    	.addClass("ui-state-default")
+			    		.append("<div/>")
+			    		.find("div")
+			    			.addClass("list-item-container")
+			    			.append(message)
+			    			.end()
+				    	.width(width)
+				    	.height(height)
+				    	.end();
+			        
 			    return container; 
 		    },
 			cursor: 'pointer',

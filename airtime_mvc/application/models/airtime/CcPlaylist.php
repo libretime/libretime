@@ -77,4 +77,26 @@ class CcPlaylist extends BaseCcPlaylist {
         }
     }
 
+    /**
+     * Computes the value of the aggregate column length
+     * Overridden to provide a default of 00:00:00 if the playlist is empty.
+     *
+     * @param PropelPDO $con A connection object
+     *
+     * @return mixed The scalar result from the aggregate query
+     */
+    public function computeDbLength(PropelPDO $con)
+    {
+        $stmt = $con->prepare('SELECT SUM(cliplength) FROM "cc_playlistcontents" WHERE cc_playlistcontents.PLAYLIST_ID = :p1');
+        $stmt->bindValue(':p1', $this->getDbId());
+        $stmt->execute();
+        $length = $stmt->fetchColumn();
+
+        if (is_null($length)) {
+            $length = "00:00:00";
+        }
+
+        return $length;
+    }
+
 } // CcPlaylist
