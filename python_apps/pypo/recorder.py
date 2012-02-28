@@ -176,19 +176,35 @@ class Recorder(Thread):
         self.server_timezone = ''
         self.queue = q
         self.logger.info("RecorderFetch: init complete")
+        self.loops = 0
 
     def handle_message(self):
         if not self.queue.empty():
-            msg = self.queue.get()
-            self.logger.info("Receivied msg from Pypo Fetch: %s", msg)
-            if msg == 'cancel_recording':
+            message = self.queue.get()
+            msg =  json.loads(message)
+            command = msg["event_type"]
+            self.logger.info("Received msg from Pypo Fetch: %s", msg)
+            if command == 'cancel_recording':
                 if self.sr is not None and self.sr.is_recording():
                     self.sr.cancel_recording()
             else:
-                self.shows_to_record = msg
+                self.process_recorder_schedule(msg)
+                self.loops = 0
         
         if self.shows_to_record:
             self.start_record()
+    
+    def process_recorder_schedule(self, m):
+        self.logger.info("Parsing recording show schedules...")
+        temp_shows_to_record = {}
+        shows = m['shows']
+        for show in shows:
+            show_starts = getDateTimeObj(show[u'starts'])
+            show_end = getDateTimeObj(show[u'ends'])
+            time_delta = show_end - show_starts
+
+            temp_shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name'], m['server_timezone']]
+        self.shows_to_record = temp_shows_to_record
 
     def get_time_till_next_show(self):
         if len(self.shows_to_record) != 0:
@@ -247,21 +263,43 @@ class Recorder(Thread):
     def run(self):
         try:
             self.logger.info("Started...")
-    
+            # Bootstrap: since we are just starting up, we need to grab the
+            # most recent schedule.  After that we can just wait for updates.
+            try:
+                temp = self.api_client.get_shows_to_record()
+                if temp is not None:
+                    self.process_recorder_schedule(temp)
+                self.logger.info("Bootstrap recorder schedule received: %s", temp)
+            except Exception, e:
+                self.logger.error(e)
+                
+            self.logger.info("Bootstrap complete: got initial copy of the schedule")
+            
             recording = False
             
-            loops = 0
+            self.loops = 0
             heartbeat_period = math.floor(30/PUSH_INTERVAL)
             
             while True:
-                if loops % heartbeat_period == 0:
+                if self.loops % heartbeat_period == 0:
                     self.logger.info("heartbeat")
-                    loops = 0
+                if self.loops * PUSH_INTERVAL > 3600:
+                    self.loops = 0
+                    """
+                    Fetch recorder schedule
+                    """
+                    try:
+                        temp = self.api_client.get_shows_to_record()
+                        if temp is not None:
+                            self.process_recorder_schedule(temp)
+                        self.logger.info("updated recorder schedule received: %s", temp)
+                    except Exception, e:
+                        self.logger.error(e)
                 try: self.handle_message()
                 except Exception, e:
                     self.logger.error('Pypo Recorder Exception: %s', e)
                 time.sleep(PUSH_INTERVAL)
-                loops += 1
+                self.loops += 1
         except Exception,e :
             import traceback
             top = traceback.format_exc()
