@@ -138,6 +138,9 @@ class Application_Model_Scheduler {
 
                 if ($id !== 0) {
                     $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
+                    if (is_null($schedItem)) {
+                        throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+                    }
                     $instance = $schedItem->getCcShowInstances($this->con);
                     if (intval($schedule["instance"]) !== $instance->getDbId()) {
                         throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
@@ -248,7 +251,7 @@ class Application_Model_Scheduler {
 
         try {
 
-            foreach($mediaItems as $media) {
+            foreach ($mediaItems as $media) {
                 Logging::log("Media Id ".$media["id"]);
                 Logging::log("Type ".$media["type"]);
 
