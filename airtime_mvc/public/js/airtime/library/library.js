@@ -13,6 +13,10 @@ var AIRTIME = (function(AIRTIME){
 		$.post("/library/delete", 
 			{"format": "json", "media": aMedia}, 
 			function(json){
+				if (json.message !== undefined) {
+					alert(json.message);
+				}
+				
 				oLibTT.fnSelectNone();
 				oLibTable.fnDraw();
 			});
