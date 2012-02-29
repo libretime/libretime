@@ -169,7 +169,7 @@ class Recorder(Thread):
     def __init__(self, q):
         Thread.__init__(self)
         self.logger = logging.getLogger('recorder')
-        self.api_client = api_client.api_client_factory(config)
+        self.api_client = api_client.api_client_factory(config, self.logger)
         self.api_client.register_component("show-recorder")
         self.sr = None
         self.shows_to_record = {}
@@ -183,7 +183,7 @@ class Recorder(Thread):
             message = self.queue.get()
             msg =  json.loads(message)
             command = msg["event_type"]
-            self.logger.info("Received msg from Pypo Fetch: %s", msg)
+            self.logger.info("Received msg from Pypo Message Handler: %s", msg)
             if command == 'cancel_recording':
                 if self.sr is not None and self.sr.is_recording():
                     self.sr.cancel_recording()

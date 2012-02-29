@@ -617,7 +617,18 @@ class Airtime190Upgrade{
 
         echo "Save DbMd to File".PHP_EOL;
 
-        $stor_dir = realpath($values['general']['base_files_dir']."/stor");
+
+        /* Do not use realpath. It expands a symlinked path into its real path
+         * which then causes us problems for string comparisons later on. */
+        //$stor_dir = realpath($values['general']['base_files_dir']."/stor");
+
+        $baseDir = $values['general']['base_files_dir'];
+        if ($baseDir[strlen($baseDir)-1] != '/'){
+            $baseDir.='/';
+        }
+        
+        $stor_dir = $baseDir.'stor';
+
 
         $files = CcFilesQuery::create()
            ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)

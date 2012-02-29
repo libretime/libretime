@@ -1,3 +1,13 @@
+2.0.2 - February 28, 2012
+  * Bug Fixes:
+    * Fixed Airtime could stop automatically playing after 24 hours if the web interface isn't used (regression in 2.0.1).
+    * Fixed Airtime could stop automatically recording after 2 hours if the web interface isn't used.
+    * Fixed upgrading from 1.8.2 when the stor directory was a symlink would cause filenames to not be preserved.
+    * Fixed Day View in the Now Playing tab showed some items on incorrect days.
+    * Fixed problems with having an equal '=' sign as an icecast password 
+  * Other
+    * Various optimizations to make Airtime feel snappier in the browser. Various views should
+      load much quicker.
 2.0.1 - February 14, 2012
   * Changes:
     * Widgets should have a version string so users can make sure widgets are up to date
