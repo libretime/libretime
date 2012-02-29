@@ -35,3 +35,12 @@ tr.cursor-selected-row .marker {
 .sb-over {
     background-color:#ff3030;
 }
+
+.ui-dialog .wrapper {
+    margin: 0;
+    padding: 10px 0 0 0;
+}
+
+.ui-dialog .ui-buttonset {
+    margin-right: 0 !important;
+}
