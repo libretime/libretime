@@ -197,7 +197,7 @@ class Application_Model_Schedule {
                             "ends"=>$row[$i]["ends"],
                             "media_item_played"=>$row[0]["media_item_played"],
                             "record"=>0);
-                if ( $i +1 <= $numberOfRows){
+                if ( isset($row[$i+1])){
                     $results['next'] =  array("name"=>$row[$i+1]["artist_name"]." - ".$row[$i+1]["track_title"],
                             "starts"=>$row[$i+1]["starts"],
                             "ends"=>$row[$i+1]["ends"]);
