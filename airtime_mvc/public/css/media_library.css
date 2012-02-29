@@ -79,3 +79,8 @@
 .library_year {
     text-align: center;
 }
+
+.library_sr,
+.library_bitrate {
+	text-align: right;
+}
