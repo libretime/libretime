@@ -141,8 +141,11 @@ if __name__ == '__main__':
     recorder.daemon = True
     recorder.start()
 
-    #pp.join()
+    pmh.join()
+    pp.join()
     pf.join()
+    recorder.join()
+    
     logger.info("pypo fetch exit")
     sys.exit()
 """

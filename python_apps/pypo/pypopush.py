@@ -40,6 +40,7 @@ class PypoPush(Thread):
 
         self.liquidsoap_state_play = True
         self.push_ahead = 30
+        self.last_end_time = 0
         
     def push(self):
         """
@@ -68,15 +69,15 @@ class PypoPush(Thread):
             str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
             str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
                         
-            
-            for media_item in media:
+            for key in media:
+                media_item = media[key]
                 item_start = media_item['start'][0:19]
                 
                 if str_tnow_s <= item_start and item_start < str_tcoming_s:
                     """
                     If the media item starts in the next 30 seconds, push it to the queue.
                     """
-                    logger.debug('Preparing to push media item scheduled at: %s', pkey)
+                    logger.debug('Preparing to push media item scheduled at: %s', key)
                               
                     if self.push_to_liquidsoap(media_item):
                         logger.debug("Pushed to liquidsoap, updating 'played' status.")
@@ -86,7 +87,7 @@ class PypoPush(Thread):
 
                         # Call API to update schedule states
                         logger.debug("Doing callback to server to update 'played' status.")
-                        self.api_client.notify_scheduled_item_start_playing(pkey, schedule)
+                        self.api_client.notify_scheduled_item_start_playing(key, schedule)
                         
     def push_to_liquidsoap(self, media_item):
         """
@@ -95,7 +96,7 @@ class PypoPush(Thread):
         media item before pushing it. 
         """        
         try:
-            if media_item["starts"] == self.last_end_time:
+            if media_item["start"] == self.last_end_time:
                 """
                 this media item is attached to the end of the last
                 track, so let's push it now so that Liquidsoap can start playing
@@ -108,16 +109,16 @@ class PypoPush(Thread):
                 this media item does not start right after a current playing track.
                 We need to sleep, and then wake up when this track starts.
                 """
-                sleep_until_start(media_item)
+                self.sleep_until_start(media_item)
                 
-                telnet_to_liquidsoap(media_item)
+                self.telnet_to_liquidsoap(media_item)
                 self.last_end_time = media_item["end"]
         except Exception, e:
             return False
             
         return True
 
-    def sleep_until_start(media_item):
+    def sleep_until_start(self, media_item):
         """
         The purpose of this function is to look at the difference between
         "now" and when the media_item starts, and sleep for that period of time.
@@ -143,7 +144,7 @@ class PypoPush(Thread):
         logger.debug('sleeping for %s s' % (sleep_time))
         time.sleep(sleep_time)
 
-    def telnet_to_liquidsoap(media_item):
+    def telnet_to_liquidsoap(self, media_item):
         """
         telnets to liquidsoap and pushes the media_item to its queue. Push the
         show name of every media_item as well, just to keep Liquidsoap up-to-date

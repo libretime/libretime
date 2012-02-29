@@ -45,7 +45,7 @@ class PypoFetch(Thread):
         self.logger = logging.getLogger();
         
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
-        logger.debug("Cache dir %s", self.cache_dir)
+        self.logger.debug("Cache dir %s", self.cache_dir)
 
         try:
             if not os.path.isdir(dir):
@@ -54,7 +54,7 @@ class PypoFetch(Thread):
                 is a file. We are not handling the second case, but don't 
                 think we actually care about handling it.
                 """
-                logger.debug("Cache dir does not exist. Creating...")
+                self.logger.debug("Cache dir does not exist. Creating...")
                 os.makedirs(dir)
         except Exception, e:
             pass
@@ -210,6 +210,7 @@ class PypoFetch(Thread):
         else:
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
+
     def update_liquidsoap_connection_status(self):
         """
         updates the status of liquidsoap connection to the streaming server
@@ -315,7 +316,7 @@ class PypoFetch(Thread):
                 media_item = media[mkey]
                 
                 if bootstrapping:            
-                    check_for_previous_crash(media_item)
+                    self.check_for_previous_crash(media_item)
 
                 # create playlist directory
                 try:
@@ -323,15 +324,18 @@ class PypoFetch(Thread):
                     Extract year, month, date from mkey
                     """
                     y_m_d = mkey[0:10]
-                    download_dir = os.mkdir(os.path.join(self.cache_dir, y_m_d))
+                    download_dir = os.path.join(self.cache_dir, y_m_d)
+                    try:
+                        os.makedirs(os.path.join(self.cache_dir, y_m_d))
+                    except Exception, e:
+                        pass
                     fileExt = os.path.splitext(media_item['uri'])[1]
                     dst = os.path.join(download_dir, media_item['id']+fileExt)
                 except Exception, e:
                     self.logger.warning(e)
                 
                 if self.handle_media_file(media_item, dst):
-                    entry = create_liquidsoap_annotation(media_item, dst)
-                    #entry['show_name'] = playlist['show_name']
+                    entry = self.create_liquidsoap_annotation(media_item, dst)
                     entry['show_name'] = "TODO"
                     media_item["annotation"] = entry
                 
@@ -341,7 +345,7 @@ class PypoFetch(Thread):
         return media
     
 
-    def create_liquidsoap_annotation(media, dst):
+    def create_liquidsoap_annotation(self, media, dst):
         pl_entry = \
             'annotate:media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
             % (media['id'], 0, \
@@ -362,7 +366,7 @@ class PypoFetch(Thread):
         entry['annotate'] = pl_entry        
         return entry
         
-    def check_for_previous_crash(media_item):
+    def check_for_previous_crash(self, media_item):
         start = media_item['start']
         end = media_item['end']
         

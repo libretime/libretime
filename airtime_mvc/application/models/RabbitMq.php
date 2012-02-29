@@ -29,7 +29,7 @@ class Application_Model_RabbitMq
         $EXCHANGE = 'airtime-pypo';
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
 
-        $data = json_encode($md);
+        $data = json_encode($md, JSON_FORCE_OBJECT);
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
 
         $channel->basic_publish($msg, $EXCHANGE);

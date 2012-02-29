@@ -423,8 +423,13 @@ class Application_Model_Schedule {
         $rows = array();
         
         $sql = "SELECT st.file_id AS file_id,"
+        ." st.id as id,"
         ." st.starts AS start,"
         ." st.ends AS end,"
+        ." st.cue_in AS cue_in,"
+        ." st.cue_out AS cue_out,"
+        ." st.fade_in AS fade_in,"
+        ." st.fade_out AS fade_out,"
         ." si.starts as show_start,"
         ." si.ends as show_end"
         ." FROM $CC_CONFIG[scheduleTable] as st"
@@ -491,6 +496,7 @@ class Application_Model_Schedule {
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);            
             $data["media"][$start] = array(
                 'id' => $storedFile->getGunid(),
+                'row_id' => $item["id"],
                 'uri' => $uri,
                 'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
                 'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
