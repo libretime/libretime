@@ -43,40 +43,43 @@ var AIRTIME = (function(AIRTIME){
 function addToolBarButtonsLibrary(aButtons) {
 	var i,
 		length = aButtons.length,
-		libToolBar,
+		libToolBar = $(".library_toolbar"),
 		html,
 		buttonClass = '',
 		DEFAULT_CLASS = 'ui-button ui-state-default',
-		DISABLED_CLASS = 'ui-state-disabled';
+		DISABLED_CLASS = 'ui-state-disabled',
+		fn;
 	
-	libToolBar = $(".library_toolbar");
-	
-	for ( i=0; i < length; i+=1 ) {
+	for ( i = 0; i < length; i += 1 ) {
 		buttonClass = '';
 		
 		//add disabled class if not enabled.
 		if (aButtons[i][2] === false) {
-			buttonClass+=DISABLED_CLASS;
+			buttonClass += DISABLED_CLASS;
 		}
 		
-		html = '<div id="'+aButtons[i][1]+'" class="ColVis TableTools"><button class="'+DEFAULT_CLASS+' '+buttonClass+'"><span>'+aButtons[i][0]+'</span></button></div>';	
+		html = '<div class="ColVis TableTools '+aButtons[i][1]+'"><button class="'+DEFAULT_CLASS+' '+buttonClass+'"><span>'+aButtons[i][0]+'</span></button></div>';
 		libToolBar.append(html);
-		libToolBar.find("#"+aButtons[i][1]).click(aButtons[i][3]);
+		
+		//create a closure to preserve the state of i.
+		(function(index){
+			
+			libToolBar.find("."+aButtons[index][1]).click(function(){
+				fn = function() {
+					var $button = $(this).find("button");
+					
+					//only call the passed function if the button is enabled.
+					if (!$button.hasClass(DISABLED_CLASS)) {
+						aButtons[index][3]();
+					}	
+				};
+				
+				fn.call(this);
+			});
+			
+		}(i));
+			
 	}
-}
-
-function enableGroupBtn(btnId, func) {
-    btnId = '#' + btnId;
-    if ($(btnId).hasClass('ui-state-disabled')) {
-        $(btnId).removeClass('ui-state-disabled');
-    }
-}
-
-function disableGroupBtn(btnId) {
-    btnId = '#' + btnId;
-    if (!$(btnId).hasClass('ui-state-disabled')) {
-        $(btnId).addClass('ui-state-disabled');
-    }
 }
 
 function checkImportStatus(){
@@ -400,24 +403,40 @@ $(document).ready(function() {
         	"sRowSelect": "multi",
 			"aButtons": [],
 			"fnRowSelected": function ( node ) {
+				var selected;
                     
                 //seems to happen if everything is selected
                 if ( node === null) {
-                	oTable.find("input[type=checkbox]").attr("checked", true);
+                	selected = oTable.find("input[type=checkbox]");
+                	selected.attr("checked", true);
                 }
                 else {
                 	$(node).find("input[type=checkbox]").attr("checked", true);
+                	selected = oTable.find("input[type=checkbox]").filter(":checked");
                 }
+                
+                //checking to enable buttons
+                AIRTIME.button.enableButton("library_group_delete");
+                AIRTIME.library.events.enableAddButtonCheck();
             },
             "fnRowDeselected": function ( node ) {
+            	var selected;
              
               //seems to happen if everything is deselected
                 if ( node === null) {
                 	oTable.find("input[type=checkbox]").attr("checked", false);
+                	selected = [];
                 }
                 else {
                 	$(node).find("input[type=checkbox]").attr("checked", false);
+                	selected = oTable.find("input[type=checkbox]").filter(":checked");
                 }
+                
+                //checking to disable buttons
+                if (selected.length === 0) {
+                	AIRTIME.button.disableButton("library_group_delete");
+                }
+                AIRTIME.library.events.enableAddButtonCheck();
             }
 		},
 		
@@ -472,7 +491,7 @@ $(document).ready(function() {
         ignoreRightClick: true,
         
         build: function($el, e) {
-    		var x, request, data, screen, items, callback, $tr;
+    		var data, screen, items, callback, $tr;
     		
     		$tr = $el.parent();
     		data = $tr.data("aData");
@@ -527,7 +546,7 @@ $(document).ready(function() {
         						
         						media.push({"id": data.id, "type": data.ftype});
         						$.post(oItems.del.url, {format: "json", media: media }, function(json){
-        							var oTable, tr;
+        							var oTable;
         							
         							if (json.message) {
         								alert(json.message);

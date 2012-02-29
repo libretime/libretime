@@ -419,16 +419,26 @@ $(document).ready(function() {
                 else {
                 	$(node).find("input[type=checkbox]").attr("checked", true);
                 }
+                
+                //checking to enable buttons
+                AIRTIME.button.enableButton("sb_delete");
             },
             "fnRowDeselected": function ( node ) {
-	
+            	var selected;
+            		       	
               //seems to happen if everything is deselected
                 if ( node === null) {
-                	var oTable = $("#show_builder_table").dataTable();
-                	oTable.find("input[type=checkbox]").attr("checked", false);
+                	tableDiv.find("input[type=checkbox]").attr("checked", false);
+                	selected = [];
                 }
                 else {
                 	$(node).find("input[type=checkbox]").attr("checked", false);
+                	selected = tableDiv.find("input[type=checkbox]").filter(":checked");
+                }
+                
+                //checking to disable buttons
+                if (selected.length === 0) {
+                	AIRTIME.button.disableButton("sb_delete");
                 }
             }
 		},
@@ -501,7 +511,7 @@ $(document).ready(function() {
 			var aMediaIds = [],
 				aSchedIds = [];
 			
-			for(i=0; i < aItemData.length; i++) {
+			for(i = 0; i < aItemData.length; i++) {
 				aMediaIds.push({"id": aItemData[i].id, "type": aItemData[i].ftype});
 			}
 			aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
@@ -521,9 +531,7 @@ $(document).ready(function() {
 		
 		fnReceive = function(event, ui) {
 			var aItems = [],
-				oLibTT = TableTools.fnGetInstance('library_display'),
-				i,
-				length;
+				oLibTT = TableTools.fnGetInstance('library_display');
 		
 			aItems = oLibTT.fnGetSelectedData();
 			
@@ -579,7 +587,7 @@ $(document).ready(function() {
 	tableDiv.sortable(sortableConf);
 	
 	$("#show_builder .fg-toolbar")
-		.append('<div class="ColVis TableTools"><button class="ui-button ui-state-default"><span>Delete</span></button></div>')
+		.append('<div class="ColVis TableTools sb_delete"><button class="ui-button ui-state-default ui-state-disabled"><span>Delete</span></button></div>')
 		.click(fnRemoveSelectedItems);
 	
 	//set things like a reference to the table.
@@ -587,14 +595,18 @@ $(document).ready(function() {
 	
 	//add event to cursors.
 	tableDiv.find("tbody").on("click", "div.marker", function(event){
-		var tr = $(this).parents("tr");
+		var tr = $(this).parents("tr"),
+			cursorSelClass = "cursor-selected-row";
 		
-		if (tr.hasClass("cursor-selected-row")) {
-			tr.removeClass("cursor-selected-row");
+		if (tr.hasClass(cursorSelClass)) {
+			tr.removeClass(cursorSelClass);
 		}
 		else {
-			tr.addClass("cursor-selected-row");
+			tr.addClass(cursorSelClass);
 		}
+		
+		//check if add button can still be enabled.
+		AIRTIME.library.events.enableAddButtonCheck();
 		
 		return false;
 	});
