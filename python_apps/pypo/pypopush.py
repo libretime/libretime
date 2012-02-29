@@ -41,13 +41,13 @@ class PypoPush(Thread):
         self.liquidsoap_state_play = True
         self.push_ahead = 30
         
-    """
-    The Push Loop - the push loop periodically checks if there is a playlist 
-    that should be scheduled at the current time.
-    If yes, the current liquidsoap playlist gets replaced with the corresponding one,
-    then liquidsoap is asked (via telnet) to reload and immediately play it.
-    """
     def push(self):
+        """
+        The Push Loop - the push loop periodically checks if there is a playlist 
+        that should be scheduled at the current time.
+        If yes, the current liquidsoap playlist gets replaced with the corresponding one,
+        then liquidsoap is asked (via telnet) to reload and immediately play it.
+        """
         logger = logging.getLogger('push')
 
         timenow = time.time()
@@ -89,6 +89,11 @@ class PypoPush(Thread):
                         self.api_client.notify_scheduled_item_start_playing(pkey, schedule)
                         
     def push_to_liquidsoap(self, media_item):
+        """
+        This function looks at the media item, and either pushes it to the Liquidsoap
+        queue immediately, or if the queue is empty - waits until the start time of the
+        media item before pushing it. 
+        """        
         try:
             if media_item["starts"] == self.last_end_time:
                 """
@@ -113,6 +118,12 @@ class PypoPush(Thread):
         return True
 
     def sleep_until_start(media_item):
+        """
+        The purpose of this function is to look at the difference between
+        "now" and when the media_item starts, and sleep for that period of time.
+        After waking from sleep, this function returns.
+        """
+        
         mi_start = media_item['start'][0:19]
         
         #strptime returns struct_time in local time
@@ -133,6 +144,12 @@ class PypoPush(Thread):
         time.sleep(sleep_time)
 
     def telnet_to_liquidsoap(media_item):
+        """
+        telnets to liquidsoap and pushes the media_item to its queue. Push the
+        show name of every media_item as well, just to keep Liquidsoap up-to-date
+        about which show is playing.
+        """
+        
         tn = telnetlib.Telnet(LS_HOST, LS_PORT)
         
         #tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('utf-8'))

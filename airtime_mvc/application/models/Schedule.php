@@ -418,9 +418,7 @@ class Application_Model_Schedule {
      * @return array
      *      Returns null if nothing found
      */
-
-    public static function GetItems($p_currentDateTime, $p_toDateTime)
-    {
+    public static function GetItems($p_currentDateTime, $p_toDateTime) {
         global $CC_CONFIG, $CC_DBC;
         $rows = array();
         
@@ -443,20 +441,6 @@ class Application_Model_Schedule {
         
         return $rows;
     }
-
-/*
-    "2012-02-23-01-00-00":{
-       "row_id":"1",
-       "id":"caf951f6d8f087c3a90291a9622073f9",
-       "uri":"http:\/\/localhost:80\/api\/get-media\/file\/caf951f6d8f087c3a90291a9622073f9.mp3",
-       "fade_in":0,
-       "fade_out":0,
-       "cue_in":0,
-       "cue_out":199.798,
-       "start":"2012-02-23-01-00-00",
-       "end":"2012-02-23-01-03-19"
-    }
-    * */
 
     public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null){
         

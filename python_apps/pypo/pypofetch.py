@@ -39,7 +39,6 @@ class PypoFetch(Thread):
     def __init__(self, pypoFetch_q, pypoPush_q):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
-
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         
@@ -47,6 +46,7 @@ class PypoFetch(Thread):
         
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
         logger.debug("Cache dir %s", self.cache_dir)
+
         try:
             if not os.path.isdir(dir):
                 """
@@ -210,7 +210,8 @@ class PypoFetch(Thread):
         else:
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
-    """
+    def update_liquidsoap_connection_status(self):
+        """
         updates the status of liquidsoap connection to the streaming server
         This fucntion updates the bootup time variable in liquidsoap script
     """
@@ -280,10 +281,8 @@ class PypoFetch(Thread):
        to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
      - runs the cleanup routine, to get rid of unused cached files
     """
-    def process_schedule(self, schedule_data, bootstrapping):
-        
+    def process_schedule(self, schedule_data, bootstrapping):      
         self.logger.debug(schedule_data)
-        
         media = schedule_data["media"]
 
         # Download all the media and put playlists in liquidsoap "annotate" format
@@ -292,7 +291,6 @@ class PypoFetch(Thread):
         except Exception, e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
- 
         self.logger.debug("Pushing to pypo-push: "+ str(media))
         self.push_queue.put(media)
 
