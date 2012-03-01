@@ -44,22 +44,12 @@ function playlistAudioPreviewEditor(filename, elemIndexString){
 function open_audio_preview(filename, index) {
    console.log("hello world 2 "+filename+" help?");
    url = 'Playlist/audio-preview-player/filename/'+filename+'/index/'+index;
-   
+   //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
    if (audio_preview_window == null || audio_preview_window.closed){
       console.log("opening : "+baseUrl+url);
       
       audio_preview_window = window.open(url, 'Audio Player', 'width=400,height=95');
-      //audio_preview_window.setTitle('Audio Player');
-      //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
-/**      
-      $.post(url, 
-         {format: "json", elementFilename: filename, elementIndex: elemIndexString}, 
-         function(json){
-            audio_preview_window.document.open();
-            audio_preview_window.document.write(json);
-            audio_preview_window.document.close();
-         });
-**/
+
    } else if (!audio_preview_window.closed) {
       console.log("refreshing : "+baseUrl+url);      
       audio_preview_window.play(filename);

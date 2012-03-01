@@ -96,37 +96,6 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
-        //Logging::log(print_r($_SERVER, true));
-        Logging::log($_SERVER['HTTP_RANGE']);
-        if (isset($_SERVER['HTTP_RANGE'])) {
-/**            
-            if (!preg_match('^bytes=\d*-\d*(,\d*-\d*)*$', $_SERVER['HTTP_RANGE'])) {
-                header('HTTP/1.1 416 Requested Range Not Satisfiable');
-                header('Content-Range: bytes /' . filelength); // Required in 416.
-                exit;
-            }
-**/        
-            $ranges = explode(',', substr($_SERVER['HTTP_RANGE'], 6));
-            foreach ($ranges as $range) {
-                $parts = explode('-', $range);
-                $start = $parts[0]; // If this is empty, this should be 0.
-                $end = $parts[1]; // If this is empty or greater than than filelength - 1, this should be filelength - 1.
-        
-                //the $end shouldn't be specified.
-                
-                //if ($start > $end) {
-                //    header('HTTP/1.1 416 Requested Range Not Satisfiable');
-                //    header('Content-Range: bytes */' );//. filelength); // Required in 416.
-                //    exit;
-                //}
-        
-                // ...
-            }
-            Logging::log("the starting point for the download is $start");
-        }
-        
-        //Logging::log(print_r($_REQUEST, true));
-		//Logging::log("in the get media action!");
         global $CC_CONFIG;
 
         // disable the view and the layout
@@ -134,7 +103,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        $download = ("true" == $this->_getParam('download'));
+
 
         $logger = Logging::getLogger();
 
@@ -149,70 +118,121 @@ class ApiController extends Zend_Controller_Action
 
         $filename = $this->_getParam("file");
         $file_id = substr($filename, 0, strpos($filename, "."));
-        if (ctype_alnum($file_id) && strlen($file_id) == 32) {
-          $media = Application_Model_StoredFile::RecallByGunid($file_id);
-          if ($media != null && !PEAR::isError($media)) {
-            $filepath = $media->getFilePath();
-            if(is_file($filepath)){
-                // possibly use fileinfo module here in the future.
-                // http://www.php.net/manual/en/book.fileinfo.php
-                $ext = pathinfo($filename, PATHINFO_EXTENSION);
-                if ($ext == "ogg")
-                    header("Content-Type: audio/ogg");
-                else if ($ext == "mp3")
-                    header("Content-Type: audio/mpeg");
-                if ($download){
-                    //path_info breaks up a file path into seperate pieces of informaiton.
-                    //We just want the basename which is the file name with the path
-                    //information stripped away. We are using Content-Disposition to specify
-                    //to the browser what name the file should be saved as.
-                    //
-                    // By james.moon:
-                    // I'm removing pathinfo() since it strips away UTF-8 characters.
-                    // Using manualy parsing
+        if (ctype_alnum($file_id) && strlen($file_id) == 32)
+        {
+            $media = Application_Model_StoredFile::RecallByGunid($file_id);
+            if ( $media != null && !PEAR::isError($media))
+            {
+                $filepath = $media->getFilePath();
+                
+                if(is_file($filepath)){
                     $full_path = $media->getPropelOrm()->getDbFilepath();
                     $file_base_name = strrchr($full_path, '/');
                     $file_base_name = substr($file_base_name, 1);
-                    header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
-                }
-                $logger->info("Sending $filepath");
-                header("Content-Length: " . filesize($filepath));
-                header('Accept-Ranges: bytes');
+                    // possibly use fileinfo module here in the future.
+                    // http://www.php.net/manual/en/book.fileinfo.php
+                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                    //Download user left clicks a track and selects Download.
+                    if ("true" == $this->_getParam('download')){
+                        //path_info breaks up a file path into seperate pieces of informaiton.
+                        //We just want the basename which is the file name with the path
+                        //information stripped away. We are using Content-Disposition to specify
+                        //to the browser what name the file should be saved as.
+                        //
+                        // By james.moon:
+                        // I'm removing pathinfo() since it strips away UTF-8 characters.
+                        // Using manualy parsing
+                        header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
+                    }else{
+                        //user clicks play button for track and downloads it.
+                        header("Content-Disposition: inline; filename=$file_base_name");
+                    }
                 
-                // !! binary mode !!
-                $fp = fopen($filepath, 'rb');
-                if (isset($start) && $start != 0){
-                    Logging::log("updating the start of the file to be sent.");
-                    fseek($fp, $start);
-                    header("Content-Range: bytes $start-".(filesize($filepath)-1).'/'. filesize($filepath));
-                    Logging::log("done");
+                    //ini_set('memory_limit', '512M');
+                    $this->smartReadFile($filepath, $ext);
+                    exit;
+                }else{
+                    header ("HTTP/1.1 404 Not Found");
                 }
-                //We can have multiple levels of output buffering. Need to
-                //keep looping until all have been disabled!!!
-                //http://www.php.net/manual/en/function.ob-end-flush.php
-                while (@ob_end_flush());
-
-                fpassthru($fp);
-                fclose($fp);
-Logging::log(print_r($this->getResponse(), true));
-                //make sure to exit here so that no other output is sent.
-                exit;
-            } else {
-                $logger->err('Resource in database, but not in storage: "'.$filepath.'"');
             }
-          } else {
-            $logger->err('$media != null && !PEAR::isError($media)');
-          }
-      } else {
-        $logger->err('ctype_alnum($file_id) && strlen($file_id) == 32');
-      }
-      header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-      $logger->info("404 Not Found");
-      
-      Logging::log(print_r($this->getResponse()));
-      return;
+        }
+        return;
     }
 
+    /**
+    * Reads the requested portion of a file and sends its contents to the client with the appropriate headers.
+    * 
+    * This HTTP_RANGE compatible read file function is necessary for allowing streaming media to be skipped around in.
+    * 
+    * @param string $location
+    * @param string $mimeType
+    * @return void
+    * 
+    * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
+    * @link http://php.net/manual/en/function.readfile.php#86244
+    */
+    function smartReadFile($location, $mimeType = 'audio/mpeg')
+    {
+        $size= filesize($location);
+        $time= date('r', filemtime($location));
+        
+        $fm = @fopen($location, 'rb');
+        if (!$fm)
+        {
+            header ("HTTP/1.1 505 Internal server error");
+            return;
+        }
+        
+        $begin= 0;
+        $end= $size - 1;
+        
+        if (isset($_SERVER['HTTP_RANGE']))
+        {
+            if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches))
+            {
+                $begin = intval($matches[1]);
+                if (!empty($matches[2]))
+                {
+                    $end = intval($matches[2]);
+                }
+            }
+        }
+    
+        if (isset($_SERVER['HTTP_RANGE']))
+        {
+            header('HTTP/1.1 206 Partial Content');
+        }
+        else
+        {
+            header('HTTP/1.1 200 OK');
+        }
+        header("Content-Type: $mimeType"); 
+        header('Cache-Control: public, must-revalidate, max-age=0');
+        header('Pragma: no-cache');  
+        header('Accept-Ranges: bytes');
+        header('Content-Length:' . (($end - $begin) + 1));
+        if (isset($_SERVER['HTTP_RANGE']))
+        {
+            header("Content-Range: bytes $begin-$end/$size");
+        }
+       
+        header("Content-Transfer-Encoding: binary");
+        header("Last-Modified: $time");
+
+        //We can have multiple levels of output buffering. Need to
+        //keep looping until all have been disabled!!!
+        //http://www.php.net/manual/en/function.ob-end-flush.php
+        while (@ob_end_flush());
+        
+        $cur = $begin;
+        fseek($fm, $begin, 0);        
+        while(!feof($fm) && $cur <= $end && (connection_status() == 0))
+        {
+            echo  fread($fm, min(1024 * 16, ($end - $cur) + 1));
+            $cur += 1024 * 16;
+        }
+    }
+    
     /**
      * Retrieve the currently playing show as well as upcoming shows.
      * Number of shows returned and the time interval in which to

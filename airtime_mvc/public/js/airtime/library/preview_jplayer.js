@@ -37,16 +37,13 @@ function audioPreview(filename, elemID){
 
 $(document).ready(function(){
     var filename = $(".filename").text();
-    //var filename = $(".jp_audio_0").attr("src");
     play(filename);
-    
-    
 });
 
 function play(filename){
    console.log("in the play function! "+filename);
     
-    var uri = "/api/get-media/file/" + filename+"/api_key/H7CSH1RH1YH2W3KFAKCZ";
+    var uri = "/api/get-media/file/" + filename;
     var ext = getFileExt(filename);
     
     
@@ -72,53 +69,5 @@ function play(filename){
         cssSelectorAncestor: '#jp_container_1',
         wmode: "window"
     });
-    /**
-    $("#jquery_jplayer_1").jPlayer().bind($.jPlayer.event.play, function(event){
-        console.log("playing xxx");
-        //console.log(this.htmlElement.media.currentTime)
-        //$("#jquery_jplayer_1").jPlayer("playHead", event.jPlayer.status.seekPercent);
-    });
-    $("#jquery_jplayer_1").jPlayer().bind($.jPlayer.event.seeking, function(event){
-        console.log("hello 123");
-        //console.log(this.htmlElement.media.currentTime)
-        //$("#jquery_jplayer_1").jPlayer("playHead", event.jPlayer.status.seekPercent);
-    });
-    $("#jquery_jplayer_1").jPlayer().bind($.jPlayer.event.seeked, function(event){
-        console.log("hello 456");
-        //console.log(this.htmlElement.media.currentTime)
-        //$("#jquery_jplayer_1").jPlayer("playHead", event.jPlayer.status.seekPercent);
-    });
-    $("#jquery_jplayer_1").jPlayer().bind($.jPlayer.event.volumechange, function(event){
-        console.log("hello 666");
-        //console.log(this.htmlElement.media.currentTime)
-        //$("#jquery_jplayer_1").jPlayer("playHead", event.jPlayer.status.seekPercent);
-    });
-    $(".jp-seek-bar").click(function(){
-        console.log("seek bar clicked");
-        console.log($("#currentTime"));
-        //console.log(this.htmlElement.media.seekable)
-        //console.log($(".jp-play-bar").attr("style"));
-        //$("#jquery_jplayer_1").jPlayer("play", 40);
-    });
-    
-     $(".jp-seek-bar").click(function(){
-        console.log("hi");
-        //console.log(this.htmlElement.media.seekable)
-        //console.log($(".jp-play-bar").attr("style"));
-        //$("#jquery_jplayer_1").jPlayer("playHead", "50%");
-    });
-    $(".jp-play-bar").click(function(){
-        console.log("bye");
-    });
-    $(".jp-progres").click(function(){
-        console.log("no");
-    });
-    $("#combo-box").change(function(eventObject){
-        var elem = $("#combo-box option:selected");
-        setjPlayer(elem.attr("data-url"), elem.attr("data-type"), elem.attr("server-type"));
-    });
-    **/
-    
-    
 }
 

@@ -210,8 +210,7 @@ class PlaylistController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/preview_jplayer.js?'.filemtime($baseDir.'/js/airtime/library/preview_jplayer.js'),'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.filemtime($baseDir.'/js/jplayer/jquery.jplayer.min.js'),'text/javascript');
-        //$this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.inspector.js?'.filemtime($baseDir.'/js/jplayer/jquery.jplayer.inspector.js'),'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.blue.monday.css'));
+        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css'));
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
