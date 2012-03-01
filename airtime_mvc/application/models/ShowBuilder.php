@@ -86,27 +86,10 @@ class Application_Model_ShowBuilder {
         }
     }
 
+    //information about whether a track is inside|boundary|outside a show.
     private function getItemStatus($p_item, &$row) {
 
-        $showEndDT = new DateTime($p_item["si_ends"]);
-        $schedStartDT = new DateTime($p_item["sched_starts"]);
-        $schedEndDT = new DateTime($p_item["sched_ends"]);
-
-        $showEndEpoch = intval($showEndDT->format("U"));
-        $schedStartEpoch = intval($schedStartDT->format("U"));
-        $schedEndEpoch = intval($schedEndDT->format("U"));
-
-        if ($schedEndEpoch < $showEndEpoch) {
-            $status = 0; //item will playout in full
-        }
-        else if ($schedStartEpoch < $showEndEpoch && $schedEndEpoch > $showEndEpoch) {
-            $status = 1; //item is on boundry
-        }
-        else {
-            $status = 2; //item is overscheduled won't play.
-        }
-
-        $row["status"] = $status;
+        $row["status"] = intval($p_item["sched_status"]);
     }
 
     private function getRowTimestamp($p_item, &$row) {

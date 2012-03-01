@@ -191,10 +191,10 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				//status used to colour tracks.
-				if (aData.status === 1) {
+				if (aData.status === 2) {
 					$(nRow).addClass("sb-boundry");
 				}
-				else if (aData.status === 2) {
+				else if (aData.status === 0) {
 					$(nRow).addClass("sb-over");
 				}
 				
