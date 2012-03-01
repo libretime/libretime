@@ -52,6 +52,11 @@ class Application_Model_ShowBuilder {
     //check to see if this row should be editable.
     private function isAllowed($p_item, &$row) {
 
+        //cannot schedule in a recorded show.
+        if (intval($p_item["si_record"]) === 1) {
+            return;
+        }
+
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
 
         //can only schedule the show if it hasn't started and you are allowed.
@@ -115,8 +120,8 @@ class Application_Model_ShowBuilder {
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
 
-        $this->isAllowed($p_item, $row);
         $this->getRowTimestamp($p_item, $row);
+        $this->isAllowed($p_item, $row);
 
         if (isset($p_item["sched_starts"])) {
 
@@ -156,7 +161,10 @@ class Application_Model_ShowBuilder {
 
             $this->contentDT = $schedEndDT;
         }
-        //show is empty
+        //show is empty or is a special kind of show (recording etc)
+        else if (intval($p_item["si_record"]) === 1) {
+            $row["record"] = true;
+        }
         else {
 
             $row["empty"] = true;
@@ -170,7 +178,6 @@ class Application_Model_ShowBuilder {
     private function makeFooterRow($p_item) {
 
         $row = $this->defaultRowArray;
-        //$this->isAllowed($p_item, $row);
         $row["footer"] = true;
 
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));

@@ -246,6 +246,13 @@ var AIRTIME = (function(AIRTIME){
 					
 					fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
 				}
+				else if (aData.record === true) {
+					
+					sSeparatorHTML = '<span>Recording From Line In</span>';
+					cl = cl + " sb-record odd";
+					
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
+				}
 				else {
 					
 					node = nRow.children[0];
