@@ -107,4 +107,33 @@ class CcShowInstances extends BaseCcShowInstances {
             return $dt->format($format);
         }
     }
+
+    //post save hook to update the cc_schedule status column for the tracks in the show.
+    public function updateScheduleStatus(PropelPDO $con) {
+
+        Logging::log("in post save for showinstances");
+
+        //scheduled track is in the show
+        CcScheduleQuery::create()
+            ->filterByDbInstanceId($this->id)
+            ->filterByDbEnds($this->ends, Criteria::LESS_EQUAL)
+            ->update(array('DbStatus' => 1), $con);
+
+        Logging::log("updating status for in show items.");
+
+        //scheduled track is a boundary track
+        CcScheduleQuery::create()
+            ->filterByDbInstanceId($this->id)
+            ->filterByDbStarts($this->ends, Criteria::LESS_THAN)
+            ->filterByDbEnds($this->ends, Criteria::GREATER_THAN)
+            ->update(array('DbStatus' => 2), $con);
+
+        //scheduled track is overbooked.
+        CcScheduleQuery::create()
+            ->filterByDbInstanceId($this->id)
+            ->filterByDbStarts($this->ends, Criteria::GREATER_THAN)
+            ->update(array('DbStatus' => 0), $con);
+
+    }
+
 } // CcShowInstances

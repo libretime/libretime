@@ -229,6 +229,15 @@ class Application_Model_Scheduler {
                 }
             }
 
+            //update the status flag in cc_schedule.
+            $instances = CcShowInstancesQuery::create()
+                ->filterByPrimaryKeys($affectedShowInstances)
+                ->find($this->con);
+
+            foreach ($instances as $instance) {
+                $instance->updateScheduleStatus($this->con);
+            }
+
             //update the last scheduled timestamp.
             CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($affectedShowInstances)
@@ -383,9 +392,18 @@ class Application_Model_Scheduler {
                     }
                 }
 
-                foreach($showInstances as $instance) {
+                foreach ($showInstances as $instance) {
                     $this->removeGaps($instance);
                 }
+            }
+
+            //update the status flag in cc_schedule.
+            $instances = CcShowInstancesQuery::create()
+                ->filterByPrimaryKeys($showInstances)
+                ->find($this->con);
+
+            foreach ($instances as $instance) {
+                $instance->updateScheduleStatus($this->con);
             }
 
             //update the last scheduled timestamp.

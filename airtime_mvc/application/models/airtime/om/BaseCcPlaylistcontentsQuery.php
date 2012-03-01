@@ -282,29 +282,20 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 	/**
 	 * Filter the query on the cliplength column
 	 * 
-	 * @param     string|array $dbCliplength The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbCliplength The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
 	public function filterByDbCliplength($dbCliplength = null, $comparison = null)
 	{
-		if (is_array($dbCliplength)) {
-			$useMinMax = false;
-			if (isset($dbCliplength['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $dbCliplength['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbCliplength['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $dbCliplength['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbCliplength)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbCliplength)) {
+				$dbCliplength = str_replace('*', '%', $dbCliplength);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistcontentsPeer::CLIPLENGTH, $dbCliplength, $comparison);
@@ -313,29 +304,20 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 	/**
 	 * Filter the query on the cuein column
 	 * 
-	 * @param     string|array $dbCuein The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbCuein The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
 	public function filterByDbCuein($dbCuein = null, $comparison = null)
 	{
-		if (is_array($dbCuein)) {
-			$useMinMax = false;
-			if (isset($dbCuein['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $dbCuein['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbCuein['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $dbCuein['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbCuein)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbCuein)) {
+				$dbCuein = str_replace('*', '%', $dbCuein);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistcontentsPeer::CUEIN, $dbCuein, $comparison);
@@ -344,29 +326,20 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 	/**
 	 * Filter the query on the cueout column
 	 * 
-	 * @param     string|array $dbCueout The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbCueout The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
 	 */
 	public function filterByDbCueout($dbCueout = null, $comparison = null)
 	{
-		if (is_array($dbCueout)) {
-			$useMinMax = false;
-			if (isset($dbCueout['min'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $dbCueout['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbCueout['max'])) {
-				$this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $dbCueout['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbCueout)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbCueout)) {
+				$dbCueout = str_replace('*', '%', $dbCueout);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistcontentsPeer::CUEOUT, $dbCueout, $comparison);

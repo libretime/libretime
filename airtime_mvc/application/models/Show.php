@@ -125,10 +125,12 @@ class Application_Model_Show {
         }
 
         $hours = $deltaMin/60;
-        if($hours > 0)
+        if ($hours > 0) {
             $hours = floor($hours);
-        else
+        }
+        else {
             $hours = ceil($hours);
+        }
 
         $mins = abs($deltaMin%60);
 
@@ -148,6 +150,28 @@ class Application_Model_Show {
 
         //do both the queries at once.
         $CC_DBC->query($sql);
+
+        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $con->beginTransaction();
+
+        try {
+            //update the status flag in cc_schedule.
+            $instances = CcShowInstancesQuery::create()
+                ->filterByDbStarts($current_timestamp, Criteria::GREATER_EQUAL)
+                ->filterByDbShowId($this->_showId)
+                ->find($con);
+
+            foreach ($instances as $instance) {
+                $instance->updateScheduleStatus();
+            }
+
+            $con->commit();
+        }
+        catch (Exception $e) {
+            $con->rollback();
+            Logging::log("Couldn't update schedule status.");
+            Logging::log($e->getMessage());
+        }
 
         Application_Model_RabbitMq::PushSchedule();
     }
@@ -1040,6 +1064,33 @@ class Application_Model_Show {
                 $showHost->setDbShow($showId);
                 $showHost->setDbHost($host);
                 $showHost->save();
+            }
+        }
+
+        if ($data['add_show_id'] != -1) {
+            $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+            $con->beginTransaction();
+
+            //current timesamp in UTC.
+            $current_timestamp = gmdate("Y-m-d H:i:s");
+
+            try {
+                //update the status flag in cc_schedule.
+                $instances = CcShowInstancesQuery::create()
+                    ->filterByDbStarts($current_timestamp, Criteria::GREATER_EQUAL)
+                    ->filterByDbShowId($data['add_show_id'])
+                    ->find($con);
+
+                foreach ($instances as $instance) {
+                    $instance->updateScheduleStatus();
+                }
+
+                $con->commit();
+            }
+            catch (Exception $e) {
+                $con->rollback();
+                Logging::log("Couldn't update schedule status.");
+                Logging::log($e->getMessage());
             }
         }
 

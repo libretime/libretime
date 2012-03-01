@@ -1,6 +1,7 @@
 <?php
 
 require_once 'formatters/LengthFormatter.php';
+require_once 'formatters/TimeFilledFormatter.php';
 
 class Application_Model_ShowBuilder {
 
@@ -30,7 +31,8 @@ class Application_Model_ShowBuilder {
         "cuein" => "",
         "cueout" => "",
         "fadein" => "",
-        "fadeout" => ""
+        "fadeout" => "",
+        "current" => false,
     );
 
     /*
@@ -47,36 +49,13 @@ class Application_Model_ShowBuilder {
         $this->epoch_now = time();
     }
 
-    private function formatTimeFilled($p_sec) {
-
-        $formatted = "";
-        $sign = ($p_sec < 0) ? "-" : "+";
-
-        $time = Application_Model_Playlist::secondsToPlaylistTime(abs($p_sec));
-        Logging::log("time is: ".$time);
-        $info = explode(":", $time);
-
-        $formatted .= $sign;
-
-        if (intval($info[0]) > 0) {
-            $info[0] = ltrim($info[0], "0");
-            $formatted .= " {$info[0]}h";
-        }
-
-        if (intval($info[1]) > 0) {
-            $info[1] = ltrim($info[1], "0");
-            $formatted .= " {$info[1]}m";
-        }
-
-        if (intval($info[2]) > 0) {
-            $sec = round($info[2], 0);
-            $formatted .= " {$sec}s";
-        }
-
-        return $formatted;
-    }
-
+    //check to see if this row should be editable.
     private function isAllowed($p_item, &$row) {
+
+        //cannot schedule in a recorded show.
+        if (intval($p_item["si_record"]) === 1) {
+            return;
+        }
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
 
@@ -86,27 +65,10 @@ class Application_Model_ShowBuilder {
         }
     }
 
+    //information about whether a track is inside|boundary|outside a show.
     private function getItemStatus($p_item, &$row) {
 
-        $showEndDT = new DateTime($p_item["si_ends"]);
-        $schedStartDT = new DateTime($p_item["sched_starts"]);
-        $schedEndDT = new DateTime($p_item["sched_ends"]);
-
-        $showEndEpoch = intval($showEndDT->format("U"));
-        $schedStartEpoch = intval($schedStartDT->format("U"));
-        $schedEndEpoch = intval($schedEndDT->format("U"));
-
-        if ($schedEndEpoch < $showEndEpoch) {
-            $status = 0; //item will playout in full
-        }
-        else if ($schedStartEpoch < $showEndEpoch && $schedEndEpoch > $showEndEpoch) {
-            $status = 1; //item is on boundry
-        }
-        else {
-            $status = 2; //item is overscheduled won't play.
-        }
-
-        $row["status"] = $status;
+        $row["status"] = intval($p_item["sched_status"]);
     }
 
     private function getRowTimestamp($p_item, &$row) {
@@ -119,6 +81,16 @@ class Application_Model_ShowBuilder {
             $ts = intval($dt->format("U"));
         }
         $row["timestamp"] = $ts;
+    }
+
+    private function isCurrent($p_epochItemStart, $p_epochItemEnd) {
+        $current = false;
+
+        if ($this->epoch_now >= $p_epochItemStart && $this->epoch_now < $p_epochItemEnd) {
+            $current = true;
+        }
+
+        return $current;
     }
 
     private function makeHeaderRow($p_item) {
@@ -148,8 +120,8 @@ class Application_Model_ShowBuilder {
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
 
-        $this->isAllowed($p_item, $row);
         $this->getRowTimestamp($p_item, $row);
+        $this->isAllowed($p_item, $row);
 
         if (isset($p_item["sched_starts"])) {
 
@@ -157,8 +129,18 @@ class Application_Model_ShowBuilder {
             $schedStartDT->setTimezone(new DateTimeZone($this->timezone));
             $schedEndDT = new DateTime($p_item["sched_ends"], new DateTimeZone("UTC"));
             $schedEndDT->setTimezone(new DateTimeZone($this->timezone));
+            $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
 
             $this->getItemStatus($p_item, $row);
+
+            $startsEpoch = intval($schedStartDT->format("U"));
+            $endsEpoch = intval($schedEndDT->format("U"));
+            $showEndEpoch = intval($showEndDT->format("U"));
+
+            //don't want an overbooked item to stay marked as current.
+            if ($this->isCurrent($startsEpoch, min($endsEpoch, $showEndEpoch))) {
+                $row["current"] = true;
+            }
 
             $row["id"] = intval($p_item["sched_id"]);
             $row["instance"] = intval($p_item["si_id"]);
@@ -179,7 +161,10 @@ class Application_Model_ShowBuilder {
 
             $this->contentDT = $schedEndDT;
         }
-        //show is empty
+        //show is empty or is a special kind of show (recording etc)
+        else if (intval($p_item["si_record"]) === 1) {
+            $row["record"] = true;
+        }
         else {
 
             $row["empty"] = true;
@@ -193,7 +178,6 @@ class Application_Model_ShowBuilder {
     private function makeFooterRow($p_item) {
 
         $row = $this->defaultRowArray;
-        //$this->isAllowed($p_item, $row);
         $row["footer"] = true;
 
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
@@ -201,7 +185,9 @@ class Application_Model_ShowBuilder {
 
         $runtime = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
         $row["runtime"] = $runtime;
-        $row["fRuntime"] = $this->formatTimeFilled($runtime);
+
+        $timeFilled = new TimeFilledFormatter($runtime);
+        $row["fRuntime"] = $timeFilled->format();
 
         return $row;
     }

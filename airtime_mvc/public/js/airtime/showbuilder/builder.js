@@ -183,6 +183,10 @@ var AIRTIME = (function(AIRTIME){
 				//save some info for reordering purposes.
 				$(nRow).data({"aData": aData});
 				
+				if (aData.current === true) {
+					$(nRow).addClass("sb-now-playing");
+				}
+				
 				if (aData.allowed !== true) {
 					$(nRow).addClass("sb-not-allowed");
 				}
@@ -191,10 +195,10 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				//status used to colour tracks.
-				if (aData.status === 1) {
+				if (aData.status === 2) {
 					$(nRow).addClass("sb-boundry");
 				}
-				else if (aData.status === 2) {
+				else if (aData.status === 0) {
 					$(nRow).addClass("sb-over");
 				}
 				
@@ -239,6 +243,13 @@ var AIRTIME = (function(AIRTIME){
 					
 					sSeparatorHTML = '<span>Show Empty</span>';
 					cl = cl + " sb-empty odd";
+					
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
+				}
+				else if (aData.record === true) {
+					
+					sSeparatorHTML = '<span>Recording From Line In</span>';
+					cl = cl + " sb-record odd";
 					
 					fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
 				}

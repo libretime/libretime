@@ -237,6 +237,7 @@ class Application_Model_Schedule {
         sched.starts AS sched_starts, sched.ends AS sched_ends, sched.id AS sched_id,
         sched.cue_in AS cue_in, sched.cue_out AS cue_out,
         sched.fade_in AS fade_in, sched.fade_out AS fade_out,
+        sched.status AS sched_status,
 
         ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
         ft.album_title AS file_album_title, ft.length AS file_length
@@ -394,7 +395,7 @@ class Application_Model_Schedule {
         }
         return $diff;
     }
-    
+
     /**
      * Returns array indexed by:
      *    "playlistId"/"playlist_id" (aliases to the same thing)
@@ -421,7 +422,7 @@ class Application_Model_Schedule {
     public static function GetItems($p_currentDateTime, $p_toDateTime) {
         global $CC_CONFIG, $CC_DBC;
         $rows = array();
-        
+
         $sql = "SELECT st.file_id AS file_id,"
         ." st.id as id,"
         ." st.starts AS start,"
@@ -436,19 +437,19 @@ class Application_Model_Schedule {
         ." LEFT JOIN $CC_CONFIG[showInstances] as si"
         ." ON st.instance_id = si.id"
         ." ORDER BY start";
-        
+
         Logging::log($sql);
-                
+
         $rows = $CC_DBC->GetAll($sql);
         if (PEAR::isError($rows)) {
             return null;
         }
-        
+
         return $rows;
     }
 
     public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null){
-        
+
         global $CC_CONFIG, $CC_DBC;
 
         /* if $p_fromDateTime and $p_toDateTime function parameters are null, then set range
@@ -466,34 +467,34 @@ class Application_Model_Schedule {
         } else {
             $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);
         }
-        
+
         // Scheduler wants everything in a playlist
         $items = Application_Model_Schedule::GetItems($range_start, $range_end);
-        
+
         $data = array();
         $utcTimeZone = new DateTimeZone("UTC");
-        
+
         $data["status"] = array();
         $data["media"] = array();
-        
+
         foreach ($items as $item){
-            
+
             $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
             $uri = $storedFile->getFileUrlUsingConfigAddress();
-            
+
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
-            
+
             /* Note: cue_out and end are always the same. */
             /* TODO: Not all tracks will have "show_end" */
-            
+
             if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
                 $diff = $trackEndDateTime->getTimestamp() - $showEndDateTime->getTimestamp();
                 //assuming ends takes cue_out into assumption
                 $item["cue_out"] = $item["cue_out"] - $diff;
             }
 
-            $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);            
+            $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
             $data["media"][$start] = array(
                 'id' => $storedFile->getGunid(),
                 'row_id' => $item["id"],
@@ -506,7 +507,7 @@ class Application_Model_Schedule {
                 'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"])
             );
         }
-                
+
         return $data;
     }
 
