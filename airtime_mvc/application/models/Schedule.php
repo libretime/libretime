@@ -421,30 +421,52 @@ class Application_Model_Schedule {
      */
     public static function GetItems($p_currentDateTime, $p_toDateTime) {
         global $CC_CONFIG, $CC_DBC;
-        $rows = array();
+        
+        $baseQuery = "SELECT st.file_id AS file_id,"
+            ." st.id as id,"
+            ." st.starts AS start,"
+            ." st.ends AS end,"
+            ." st.cue_in AS cue_in,"
+            ." st.cue_out AS cue_out,"
+            ." st.fade_in AS fade_in,"
+            ." st.fade_out AS fade_out,"
+            ." si.starts as show_start,"
+            ." si.ends as show_end"
+            ." FROM $CC_CONFIG[scheduleTable] as st"
+            ." LEFT JOIN $CC_CONFIG[showInstances] as si"
+            ." ON st.instance_id = si.id";
+   
 
-        $sql = "SELECT st.file_id AS file_id,"
-        ." st.id as id,"
-        ." st.starts AS start,"
-        ." st.ends AS end,"
-        ." st.cue_in AS cue_in,"
-        ." st.cue_out AS cue_out,"
-        ." st.fade_in AS fade_in,"
-        ." st.fade_out AS fade_out,"
-        ." si.starts as show_start,"
-        ." si.ends as show_end"
-        ." FROM $CC_CONFIG[scheduleTable] as st"
-        ." LEFT JOIN $CC_CONFIG[showInstances] as si"
-        ." ON st.instance_id = si.id"
-        ." ORDER BY start";
-
-        Logging::log($sql);
+        $predicates = " WHERE st.ends > '$p_currentDateTime'"
+        ." AND st.starts < '$p_toDateTime'"
+        ." ORDER BY st.starts";
+        
+        $sql = $baseQuery.$predicates;
 
         $rows = $CC_DBC->GetAll($sql);
         if (PEAR::isError($rows)) {
             return null;
         }
-
+        
+        if (count($rows) < 3){
+            Logging::debug("Get Schedule: Less than 3 results returned. Doing another query since we need a minimum of 3 results.");
+            
+            $dt = new DateTime("@".time());
+            $dt->add(new DateInterval("PT30M"));
+            $range_end = $dt->format("Y-m-d H:i:s");
+                      
+            $predicates = " WHERE st.ends > '$p_currentDateTime'"
+            ." AND st.starts < '$range_end'"
+            ." ORDER BY st.starts"
+            ." LIMIT 3";
+            
+            $sql = $baseQuery.$predicates;
+            $rows = $CC_DBC->GetAll($sql);
+            if (PEAR::isError($rows)) {
+                return null;
+            }
+        }
+        
         return $rows;
     }
 
@@ -462,7 +484,7 @@ class Application_Model_Schedule {
         }
         if (is_null($p_fromDateTime)) {
             $t2 = new DateTime("@".time());
-            $t2->add(new DateInterval("PT24H"));
+            $t2->add(new DateInterval("PT30M"));
             $range_end = $t2->format("Y-m-d H:i:s");
         } else {
             $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);
@@ -480,8 +502,8 @@ class Application_Model_Schedule {
         foreach ($items as $item){
 
             $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
-            $uri = $storedFile->getFileUrlUsingConfigAddress();
-
+            $uri = $storedFile->getFilePath();
+            
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
 

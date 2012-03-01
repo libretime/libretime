@@ -37,7 +37,7 @@ Zend_Validate::setDefaultNamespaces("Zend");
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
 
-Logging::debug($_SERVER['REQUEST_URI']);
+//Logging::debug($_SERVER['REQUEST_URI']);
 
 /* The bootstrap class should only be used to initialize actions that return a view.
    Actions that return JSON will not use the bootstrap class! */
