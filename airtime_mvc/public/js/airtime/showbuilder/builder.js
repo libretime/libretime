@@ -183,6 +183,10 @@ var AIRTIME = (function(AIRTIME){
 				//save some info for reordering purposes.
 				$(nRow).data({"aData": aData});
 				
+				if (aData.current === true) {
+					$(nRow).addClass("sb-now-playing");
+				}
+				
 				if (aData.allowed !== true) {
 					$(nRow).addClass("sb-not-allowed");
 				}

@@ -30,7 +30,8 @@ class Application_Model_ShowBuilder {
         "cuein" => "",
         "cueout" => "",
         "fadein" => "",
-        "fadeout" => ""
+        "fadeout" => "",
+        "current" => false,
     );
 
     /*
@@ -76,6 +77,7 @@ class Application_Model_ShowBuilder {
         return $formatted;
     }
 
+    //check to see if this row should be editable.
     private function isAllowed($p_item, &$row) {
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
@@ -102,6 +104,16 @@ class Application_Model_ShowBuilder {
             $ts = intval($dt->format("U"));
         }
         $row["timestamp"] = $ts;
+    }
+
+    private function isCurrent($p_epochItemStart, $p_epochItemEnd) {
+        $current = false;
+
+        if ($this->epoch_now >= $p_epochItemStart && $this->epoch_now < $p_epochItemEnd) {
+            $current = true;
+        }
+
+        return $current;
     }
 
     private function makeHeaderRow($p_item) {
@@ -140,8 +152,18 @@ class Application_Model_ShowBuilder {
             $schedStartDT->setTimezone(new DateTimeZone($this->timezone));
             $schedEndDT = new DateTime($p_item["sched_ends"], new DateTimeZone("UTC"));
             $schedEndDT->setTimezone(new DateTimeZone($this->timezone));
+            $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
 
             $this->getItemStatus($p_item, $row);
+
+            $startsEpoch = intval($schedStartDT->format("U"));
+            $endsEpoch = intval($schedEndDT->format("U"));
+            $showEndEpoch = intval($showEndDT->format("U"));
+
+            //don't want an overbooked item to stay marked as current.
+            if ($this->isCurrent($startsEpoch, min($endsEpoch, $showEndEpoch))) {
+                $row["current"] = true;
+            }
 
             $row["id"] = intval($p_item["sched_id"]);
             $row["instance"] = intval($p_item["si_id"]);
