@@ -110,6 +110,16 @@ function insertIntoCcSchedule($conn, $file, $show_instance_id, $starts, $ends){
     $result = query($conn, $query);
 }
 
+function rabbitMqNotify(){
+    $ini_file = parse_ini_file("/etc/airtime/airtime.conf", true);
+    $url = "http://localhost/api/rabbitmq-do-push/format/json/api_key/".$ini_file["general"]["api_key"];
+
+    echo "Contacting $url".PHP_EOL;
+    $ch = curl_init($url);
+    curl_exec($ch);
+    curl_close($ch);    
+}
+
 $conn = pg_connect("host=localhost port=5432 dbname=airtime user=airtime password=airtime");
 if (!$conn) {
     echo "Couldn't connect to Airtime DB.\n";
@@ -125,11 +135,11 @@ if (count($argv) > 1){
             echo $query.PHP_EOL;
             query($conn, $query);
         }
-        
+        rabbitMqNotify();
         exit(0);
     } else { 
         $str = <<<EOD
-This script schedules a file to play 15 seconds in the future. It 
+This script schedules a file to play 30 seconds in the future. It 
 modifies the database tables cc_schedule, cc_show_instances and cc_show.
 You can clean up these tables using the --clean option.
 EOD;
@@ -138,8 +148,8 @@ EOD;
     }
 }
 
-$startDateTime = new DateTime("now + 15sec", new DateTimeZone("UTC"));
-$endDateTime = new DateTime("now + 1min 15sec", new DateTimeZone("UTC"));
+$startDateTime = new DateTime("now + 30sec", new DateTimeZone("UTC"));
+$endDateTime = new DateTime("now + 1min 30sec", new DateTimeZone("UTC"));
 $starts = $startDateTime->format("Y-m-d H:i:s");
 $ends = $endDateTime->format("Y-m-d H:i:s");
 
@@ -147,3 +157,7 @@ $file = getFileFromCcFiles($conn);
 $show_id = insertIntoCcShow($conn);
 $show_instance_id = insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $file);
 insertIntoCcSchedule($conn, $file, $show_instance_id, $starts, $ends);
+
+rabbitMqNotify();
+
+echo PHP_EOL."Show scheduled for $starts (UTC)".PHP_EOL;
