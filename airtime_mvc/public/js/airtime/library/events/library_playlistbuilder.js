@@ -7,6 +7,24 @@ var AIRTIME = (function(AIRTIME){
 	
 	AIRTIME.library.events = {};
 	mod = AIRTIME.library.events;
+
+    mod.enableAddButtonCheck = function() {
+    	var selected = $('#library_display tr[id ^= "au"] input[type=checkbox]').filter(":checked"),
+    		sortable = $('#spl_sortable'),
+    		check = false;
+    	
+    	//make sure audioclips are selected and a playlist is currently open.
+    	if (selected.length !== 0 && sortable.length !== 0) {
+    		check = true;
+    	}
+    	
+    	if (check === true) {
+	    	AIRTIME.button.enableButton("library_group_add");
+	    }
+	    else {
+	    	AIRTIME.button.disableButton("library_group_add");
+	    }
+    };
 	
 	mod.fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 		var $nRow = $(nRow);
@@ -63,22 +81,22 @@ var AIRTIME = (function(AIRTIME){
 	 */
 	mod.setupLibraryToolbar = function( oLibTable ) {
 		var aButtons,
-			fnResetCol,
 			fnAddSelectedItems;
 		
 		fnAddSelectedItems = function() {
 			var oLibTT = TableTools.fnGetInstance('library_display'),
 				aData = oLibTT.fnGetSelectedData(),
-				item,
+				i,
 				temp,
+				length,
 				aMediaIds = [];
 			
 			//process selected files/playlists.
-			for (item in aData) {
-				temp = aData[item];
-				if (temp !== null && temp.hasOwnProperty('id') && temp.ftype === "audioclip") {
+			for (i = 0, length = aData.length; i < length; i++) {
+				temp = aData[i];
+				if (temp.ftype === "audioclip") {
 					aMediaIds.push(temp.id);
-				} 	
+				}
 			}
 		
 			AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
@@ -88,8 +106,8 @@ var AIRTIME = (function(AIRTIME){
 		//[1] = id 
 		//[2] = enabled
 		//[3] = click event
-		aButtons = [["Delete", "library_group_delete", true, AIRTIME.library.fnDeleteSelectedItems], 
-	                ["Add", "library_group_add", true, fnAddSelectedItems]];
+		aButtons = [["Delete", "library_group_delete", false, AIRTIME.library.fnDeleteSelectedItems], 
+	                ["Add", "library_group_add", false, fnAddSelectedItems]];
 		
 		addToolBarButtonsLibrary(aButtons);
 	};

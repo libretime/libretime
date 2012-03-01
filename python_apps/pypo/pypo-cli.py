@@ -16,6 +16,7 @@ from Queue import Queue
 from pypopush import PypoPush
 from pypofetch import PypoFetch
 from recorder import Recorder
+from pypomessagehandler import PypoMessageHandler
 
 from configobj import ConfigObj
 
@@ -55,23 +56,16 @@ except Exception, e:
 class Global:
     def __init__(self):
         self.api_client = api_client.api_client_factory(config)
-        self.set_export_source('scheduler')
         
     def selfcheck(self):
         self.api_client = api_client.api_client_factory(config)
         return self.api_client.is_server_compatible()
-
-    def set_export_source(self, export_source):
-        self.export_source = export_source
-        self.cache_dir = config["cache_dir"] + self.export_source + '/'
-        self.schedule_file = self.cache_dir + 'schedule.pickle'
-        self.schedule_tracker_file = self.cache_dir + "schedule_tracker.pickle"
         
     def test_api(self):
         self.api_client.test()
 
 """
-    def check_schedule(self, export_source):
+    def check_schedule(self):
         logger = logging.getLogger()
 
         try:
@@ -127,11 +121,19 @@ if __name__ == '__main__':
     api_client = api_client.api_client_factory(config)
     api_client.register_component("pypo")
 
-    q = Queue()
-    
+    pypoFetch_q = Queue()
     recorder_q = Queue()
-
-    pp = PypoPush(q)
+    pypoPush_q = Queue()
+    
+    pmh = PypoMessageHandler(pypoFetch_q, recorder_q)
+    pmh.daemon = True
+    pmh.start()
+    
+    pf = PypoFetch(pypoFetch_q, pypoPush_q)
+    pf.daemon = True
+    pf.start()
+    
+    pp = PypoPush(pypoPush_q)
     pp.daemon = True
     pp.start()
 
@@ -139,12 +141,11 @@ if __name__ == '__main__':
     recorder.daemon = True
     recorder.start()
 
-    pf = PypoFetch(q, recorder_q)
-    pf.daemon = True
-    pf.start()
-
-    #pp.join()
+    pmh.join()
+    pp.join()
     pf.join()
+    recorder.join()
+    
     logger.info("pypo fetch exit")
     sys.exit()
 """

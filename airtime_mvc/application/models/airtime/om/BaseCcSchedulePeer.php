@@ -26,7 +26,7 @@ abstract class BaseCcSchedulePeer {
 	const TM_CLASS = 'CcScheduleTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 11;
+	const NUM_COLUMNS = 12;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -64,6 +64,9 @@ abstract class BaseCcSchedulePeer {
 	/** the column name for the INSTANCE_ID field */
 	const INSTANCE_ID = 'cc_schedule.INSTANCE_ID';
 
+	/** the column name for the STATUS field */
+	const STATUS = 'cc_schedule.STATUS';
+
 	/**
 	 * An identiy map to hold any loaded instances of CcSchedule objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
@@ -80,12 +83,12 @@ abstract class BaseCcSchedulePeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbStarts', 'DbEnds', 'DbFileId', 'DbClipLength', 'DbFadeIn', 'DbFadeOut', 'DbCueIn', 'DbCueOut', 'DbMediaItemPlayed', 'DbInstanceId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbStarts', 'dbEnds', 'dbFileId', 'dbClipLength', 'dbFadeIn', 'dbFadeOut', 'dbCueIn', 'dbCueOut', 'dbMediaItemPlayed', 'dbInstanceId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::STARTS, self::ENDS, self::FILE_ID, self::CLIP_LENGTH, self::FADE_IN, self::FADE_OUT, self::CUE_IN, self::CUE_OUT, self::MEDIA_ITEM_PLAYED, self::INSTANCE_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STARTS', 'ENDS', 'FILE_ID', 'CLIP_LENGTH', 'FADE_IN', 'FADE_OUT', 'CUE_IN', 'CUE_OUT', 'MEDIA_ITEM_PLAYED', 'INSTANCE_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'starts', 'ends', 'file_id', 'clip_length', 'fade_in', 'fade_out', 'cue_in', 'cue_out', 'media_item_played', 'instance_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbStarts', 'DbEnds', 'DbFileId', 'DbClipLength', 'DbFadeIn', 'DbFadeOut', 'DbCueIn', 'DbCueOut', 'DbMediaItemPlayed', 'DbInstanceId', 'DbStatus', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbStarts', 'dbEnds', 'dbFileId', 'dbClipLength', 'dbFadeIn', 'dbFadeOut', 'dbCueIn', 'dbCueOut', 'dbMediaItemPlayed', 'dbInstanceId', 'dbStatus', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::STARTS, self::ENDS, self::FILE_ID, self::CLIP_LENGTH, self::FADE_IN, self::FADE_OUT, self::CUE_IN, self::CUE_OUT, self::MEDIA_ITEM_PLAYED, self::INSTANCE_ID, self::STATUS, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STARTS', 'ENDS', 'FILE_ID', 'CLIP_LENGTH', 'FADE_IN', 'FADE_OUT', 'CUE_IN', 'CUE_OUT', 'MEDIA_ITEM_PLAYED', 'INSTANCE_ID', 'STATUS', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'starts', 'ends', 'file_id', 'clip_length', 'fade_in', 'fade_out', 'cue_in', 'cue_out', 'media_item_played', 'instance_id', 'status', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
 	);
 
 	/**
@@ -95,12 +98,12 @@ abstract class BaseCcSchedulePeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbStarts' => 1, 'DbEnds' => 2, 'DbFileId' => 3, 'DbClipLength' => 4, 'DbFadeIn' => 5, 'DbFadeOut' => 6, 'DbCueIn' => 7, 'DbCueOut' => 8, 'DbMediaItemPlayed' => 9, 'DbInstanceId' => 10, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbStarts' => 1, 'dbEnds' => 2, 'dbFileId' => 3, 'dbClipLength' => 4, 'dbFadeIn' => 5, 'dbFadeOut' => 6, 'dbCueIn' => 7, 'dbCueOut' => 8, 'dbMediaItemPlayed' => 9, 'dbInstanceId' => 10, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::STARTS => 1, self::ENDS => 2, self::FILE_ID => 3, self::CLIP_LENGTH => 4, self::FADE_IN => 5, self::FADE_OUT => 6, self::CUE_IN => 7, self::CUE_OUT => 8, self::MEDIA_ITEM_PLAYED => 9, self::INSTANCE_ID => 10, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STARTS' => 1, 'ENDS' => 2, 'FILE_ID' => 3, 'CLIP_LENGTH' => 4, 'FADE_IN' => 5, 'FADE_OUT' => 6, 'CUE_IN' => 7, 'CUE_OUT' => 8, 'MEDIA_ITEM_PLAYED' => 9, 'INSTANCE_ID' => 10, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'starts' => 1, 'ends' => 2, 'file_id' => 3, 'clip_length' => 4, 'fade_in' => 5, 'fade_out' => 6, 'cue_in' => 7, 'cue_out' => 8, 'media_item_played' => 9, 'instance_id' => 10, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbStarts' => 1, 'DbEnds' => 2, 'DbFileId' => 3, 'DbClipLength' => 4, 'DbFadeIn' => 5, 'DbFadeOut' => 6, 'DbCueIn' => 7, 'DbCueOut' => 8, 'DbMediaItemPlayed' => 9, 'DbInstanceId' => 10, 'DbStatus' => 11, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbStarts' => 1, 'dbEnds' => 2, 'dbFileId' => 3, 'dbClipLength' => 4, 'dbFadeIn' => 5, 'dbFadeOut' => 6, 'dbCueIn' => 7, 'dbCueOut' => 8, 'dbMediaItemPlayed' => 9, 'dbInstanceId' => 10, 'dbStatus' => 11, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::STARTS => 1, self::ENDS => 2, self::FILE_ID => 3, self::CLIP_LENGTH => 4, self::FADE_IN => 5, self::FADE_OUT => 6, self::CUE_IN => 7, self::CUE_OUT => 8, self::MEDIA_ITEM_PLAYED => 9, self::INSTANCE_ID => 10, self::STATUS => 11, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STARTS' => 1, 'ENDS' => 2, 'FILE_ID' => 3, 'CLIP_LENGTH' => 4, 'FADE_IN' => 5, 'FADE_OUT' => 6, 'CUE_IN' => 7, 'CUE_OUT' => 8, 'MEDIA_ITEM_PLAYED' => 9, 'INSTANCE_ID' => 10, 'STATUS' => 11, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'starts' => 1, 'ends' => 2, 'file_id' => 3, 'clip_length' => 4, 'fade_in' => 5, 'fade_out' => 6, 'cue_in' => 7, 'cue_out' => 8, 'media_item_played' => 9, 'instance_id' => 10, 'status' => 11, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
 	);
 
 	/**
@@ -183,6 +186,7 @@ abstract class BaseCcSchedulePeer {
 			$criteria->addSelectColumn(CcSchedulePeer::CUE_OUT);
 			$criteria->addSelectColumn(CcSchedulePeer::MEDIA_ITEM_PLAYED);
 			$criteria->addSelectColumn(CcSchedulePeer::INSTANCE_ID);
+			$criteria->addSelectColumn(CcSchedulePeer::STATUS);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.STARTS');
@@ -195,6 +199,7 @@ abstract class BaseCcSchedulePeer {
 			$criteria->addSelectColumn($alias . '.CUE_OUT');
 			$criteria->addSelectColumn($alias . '.MEDIA_ITEM_PLAYED');
 			$criteria->addSelectColumn($alias . '.INSTANCE_ID');
+			$criteria->addSelectColumn($alias . '.STATUS');
 		}
 	}
 

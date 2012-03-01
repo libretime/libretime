@@ -1,0 +1,1 @@
+$(document).ready(AIRTIME.library.libraryInit);

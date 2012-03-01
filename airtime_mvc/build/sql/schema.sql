@@ -315,9 +315,9 @@ CREATE TABLE "cc_playlistcontents"
 	"playlist_id" INTEGER,
 	"file_id" INTEGER,
 	"position" INTEGER,
-	"cliplength" TIME default '00:00:00',
-	"cuein" TIME default '00:00:00',
-	"cueout" TIME default '00:00:00',
+	"cliplength" interval default '00:00:00',
+	"cuein" interval default '00:00:00',
+	"cueout" interval default '00:00:00',
 	"fadein" TIME default '00:00:00',
 	"fadeout" TIME default '00:00:00',
 	PRIMARY KEY ("id")
@@ -364,13 +364,14 @@ CREATE TABLE "cc_schedule"
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
 	"file_id" INTEGER,
-	"clip_length" TIME default '00:00:00',
+	"clip_length" interval default '00:00:00',
 	"fade_in" TIME default '00:00:00',
 	"fade_out" TIME default '00:00:00',
-	"cue_in" TIME default '00:00:00',
-	"cue_out" TIME default '00:00:00',
+	"cue_in" interval default '00:00:00',
+	"cue_out" interval default '00:00:00',
 	"media_item_played" BOOLEAN default 'f',
 	"instance_id" INTEGER  NOT NULL,
+	"status" INT2 default 1 NOT NULL,
 	PRIMARY KEY ("id")
 );
 

@@ -27,6 +27,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('live-chat', 'json')
                 ->addActionContext('update-file-system-mount', 'json')
                 ->addActionContext('handle-watched-dir-missing', 'json')
+                ->addActionContext('rabbitmq-do-push', 'json')
                 ->initContext();
     }
 
@@ -276,17 +277,19 @@ class ApiController extends Zend_Controller_Action
 
         $api_key = $this->_getParam('api_key');
 
+        /*
         if(!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource. ';
             exit;
         }
+        * */
 
         PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
-        $result = Application_Model_Schedule::GetScheduledPlaylists();
-        echo json_encode($result);
+        $data = Application_Model_Schedule::GetScheduledPlaylists();
+        echo json_encode($data, JSON_FORCE_OBJECT);
     }
 
     public function notifyMediaItemStartPlayAction()
@@ -316,6 +319,7 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
+/*
     public function notifyScheduleGroupPlayAction()
     {
         global $CC_CONFIG;
@@ -355,6 +359,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
     }
+    */
 
     public function recordedShowsAction()
     {
@@ -900,6 +905,27 @@ class ApiController extends Zend_Controller_Action
 
         $dir = base64_decode($request->getParam('dir'));
         Application_Model_MusicDir::removeWatchedDir($dir, false);
+    }
+    
+    
+    /* This action is for use by our dev scripts, that make
+     * a change to the database and we want rabbitmq to send
+     * out a message to pypo that a potential change has been made. */
+    public function rabbitmqDoPushAction(){
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        Logging::log("Notifying RabbitMQ to send message to pypo");
+        
+        Application_Model_RabbitMq::PushSchedule();
     }
 }
 

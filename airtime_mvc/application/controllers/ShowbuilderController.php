@@ -9,6 +9,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $ajaxContext->addActionContext('schedule-move', 'json')
                     ->addActionContext('schedule-add', 'json')
                     ->addActionContext('schedule-remove', 'json')
+                    ->addActionContext('builder-dialog', 'json')
                     ->addActionContext('builder-feed', 'json')
                     ->initContext();
     }
@@ -53,9 +54,38 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/main_builder.js','text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/showbuilder.css');
+    }
+
+    public function builderDialogAction() {
+
+        $request = $this->getRequest();
+        $id = $request->getParam("id");
+
+        $instance = CcShowInstancesQuery::create()->findPK($id);
+
+        if (is_null($instance)) {
+            $this->view->error = "show does not exist";
+            return;
+        }
+
+        $start = $instance->getDbStarts(null);
+        $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $end = $instance->getDbEnds(null);
+        $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+        $show_name = $instance->getCcShow()->getDbName();
+        $start_time = $start->format("Y-m-d H:i:s");
+        $end_time = $end->format("Y-m-d H:i:s");
+
+        $this->view->title = "{$show_name}:    {$start_time} - {$end_time}";
+        $this->view->start = $instance->getDbStarts("U");
+        $this->view->end = $instance->getDbEnds("U");
+
+        $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
     }
 
     public function builderFeedAction() {

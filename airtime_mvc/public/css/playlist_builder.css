@@ -457,7 +457,5 @@ div.helper li {
 }
 
 li.spl_empty {
-    text-align: center;
     height: 56px;
-    border:2px dashed black;
 }
