@@ -236,36 +236,13 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [clip_length] column value.
+	 * Get the [clip_length] column value.
 	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 * @return     string
 	 */
-	public function getDbClipLength($format = '%X')
+	public function getDbClipLength()
 	{
-		if ($this->clip_length === null) {
-			return null;
-		}
-
-
-
-		try {
-			$dt = new DateTime($this->clip_length);
-		} catch (Exception $x) {
-			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->clip_length, true), $x);
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
+		return $this->clip_length;
 	}
 
 	/**
@@ -335,69 +312,23 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [cue_in] column value.
+	 * Get the [cue_in] column value.
 	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 * @return     string
 	 */
-	public function getDbCueIn($format = '%X')
+	public function getDbCueIn()
 	{
-		if ($this->cue_in === null) {
-			return null;
-		}
-
-
-
-		try {
-			$dt = new DateTime($this->cue_in);
-		} catch (Exception $x) {
-			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->cue_in, true), $x);
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
+		return $this->cue_in;
 	}
 
 	/**
-	 * Get the [optionally formatted] temporal [cue_out] column value.
+	 * Get the [cue_out] column value.
 	 * 
-	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
-	 *							If format is NULL, then the raw DateTime object will be returned.
-	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 * @return     string
 	 */
-	public function getDbCueOut($format = '%X')
+	public function getDbCueOut()
 	{
-		if ($this->cue_out === null) {
-			return null;
-		}
-
-
-
-		try {
-			$dt = new DateTime($this->cue_out);
-		} catch (Exception $x) {
-			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->cue_out, true), $x);
-		}
-
-		if ($format === null) {
-			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
-			return $dt;
-		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
-		} else {
-			return $dt->format($format);
-		}
+		return $this->cue_out;
 	}
 
 	/**
@@ -563,51 +494,21 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	} // setDbFileId()
 
 	/**
-	 * Sets the value of [clip_length] column to a normalized version of the date/time value specified.
+	 * Set the value of [clip_length] column.
 	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
+	 * @param      string $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
 	public function setDbClipLength($v)
 	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
+		if ($v !== null) {
+			$v = (string) $v;
 		}
 
-		if ( $this->clip_length !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->clip_length !== null && $tmpDt = new DateTime($this->clip_length)) ? $tmpDt->format('H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					|| ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
-					)
-			{
-				$this->clip_length = ($dt ? $dt->format('H:i:s') : null);
-				$this->modifiedColumns[] = CcSchedulePeer::CLIP_LENGTH;
-			}
-		} // if either are not null
+		if ($this->clip_length !== $v || $this->isNew()) {
+			$this->clip_length = $v;
+			$this->modifiedColumns[] = CcSchedulePeer::CLIP_LENGTH;
+		}
 
 		return $this;
 	} // setDbClipLength()
@@ -713,101 +614,41 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	} // setDbFadeOut()
 
 	/**
-	 * Sets the value of [cue_in] column to a normalized version of the date/time value specified.
+	 * Set the value of [cue_in] column.
 	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
+	 * @param      string $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
 	public function setDbCueIn($v)
 	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
+		if ($v !== null) {
+			$v = (string) $v;
 		}
 
-		if ( $this->cue_in !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->cue_in !== null && $tmpDt = new DateTime($this->cue_in)) ? $tmpDt->format('H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					|| ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
-					)
-			{
-				$this->cue_in = ($dt ? $dt->format('H:i:s') : null);
-				$this->modifiedColumns[] = CcSchedulePeer::CUE_IN;
-			}
-		} // if either are not null
+		if ($this->cue_in !== $v || $this->isNew()) {
+			$this->cue_in = $v;
+			$this->modifiedColumns[] = CcSchedulePeer::CUE_IN;
+		}
 
 		return $this;
 	} // setDbCueIn()
 
 	/**
-	 * Sets the value of [cue_out] column to a normalized version of the date/time value specified.
+	 * Set the value of [cue_out] column.
 	 * 
-	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
-	 *						be treated as NULL for temporal objects.
+	 * @param      string $v new value
 	 * @return     CcSchedule The current object (for fluent API support)
 	 */
 	public function setDbCueOut($v)
 	{
-		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
-		// -- which is unexpected, to say the least.
-		if ($v === null || $v === '') {
-			$dt = null;
-		} elseif ($v instanceof DateTime) {
-			$dt = $v;
-		} else {
-			// some string/numeric value passed; we normalize that so that we can
-			// validate it.
-			try {
-				if (is_numeric($v)) { // if it's a unix timestamp
-					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-					// We have to explicitly specify and then change the time zone because of a
-					// DateTime bug: http://bugs.php.net/bug.php?id=43003
-					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
-				} else {
-					$dt = new DateTime($v);
-				}
-			} catch (Exception $x) {
-				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-			}
+		if ($v !== null) {
+			$v = (string) $v;
 		}
 
-		if ( $this->cue_out !== null || $dt !== null ) {
-			// (nested ifs are a little easier to read in this case)
-
-			$currNorm = ($this->cue_out !== null && $tmpDt = new DateTime($this->cue_out)) ? $tmpDt->format('H:i:s') : null;
-			$newNorm = ($dt !== null) ? $dt->format('H:i:s') : null;
-
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
-					|| ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
-					)
-			{
-				$this->cue_out = ($dt ? $dt->format('H:i:s') : null);
-				$this->modifiedColumns[] = CcSchedulePeer::CUE_OUT;
-			}
-		} // if either are not null
+		if ($this->cue_out !== $v || $this->isNew()) {
+			$this->cue_out = $v;
+			$this->modifiedColumns[] = CcSchedulePeer::CUE_OUT;
+		}
 
 		return $this;
 	} // setDbCueOut()

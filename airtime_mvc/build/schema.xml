@@ -237,9 +237,9 @@
     <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
     <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
-    <column name="cliplength" phpName="DbCliplength" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cuein" phpName="DbCuein" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cueout" phpName="DbCueout" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="cliplength" phpName="DbCliplength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
+    <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
+    <column name="cueout" phpName="DbCueout" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="fadein" phpName="DbFadein" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="fadeout" phpName="DbFadeout" type="TIME" required="false" defaultValue="00:00:00"/>
     <foreign-key foreignTable="cc_files" name="cc_playlistcontents_file_id_fkey" onDelete="CASCADE">
@@ -273,11 +273,11 @@
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
-    <column name="clip_length" phpName="DbClipLength" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="clip_length" phpName="DbClipLength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="fade_in" phpName="DbFadeIn" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="fade_out" phpName="DbFadeOut" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cue_in" phpName="DbCueIn" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cue_out" phpName="DbCueOut" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="cue_in" phpName="DbCueIn" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
+    <column name="cue_out" phpName="DbCueOut" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="media_item_played" phpName="DbMediaItemPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
     <!-- This foreign key is still useful even though it may seem we don't ever delete cc_show_instances anymore.

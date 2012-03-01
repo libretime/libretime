@@ -42,11 +42,11 @@ class CcScheduleTableMap extends TableMap {
 		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
 		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
 		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
-		$this->addColumn('CLIP_LENGTH', 'DbClipLength', 'TIME', false, null, '00:00:00');
+		$this->addColumn('CLIP_LENGTH', 'DbClipLength', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('FADE_IN', 'DbFadeIn', 'TIME', false, null, '00:00:00');
 		$this->addColumn('FADE_OUT', 'DbFadeOut', 'TIME', false, null, '00:00:00');
-		$this->addColumn('CUE_IN', 'DbCueIn', 'TIME', false, null, '00:00:00');
-		$this->addColumn('CUE_OUT', 'DbCueOut', 'TIME', false, null, '00:00:00');
+		$this->addColumn('CUE_IN', 'DbCueIn', 'VARCHAR', false, null, '00:00:00');
+		$this->addColumn('CUE_OUT', 'DbCueOut', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('MEDIA_ITEM_PLAYED', 'DbMediaItemPlayed', 'BOOLEAN', false, null, false);
 		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', true, null, null);
 		// validators

@@ -290,29 +290,20 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	/**
 	 * Filter the query on the clip_length column
 	 * 
-	 * @param     string|array $dbClipLength The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbClipLength The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
 	public function filterByDbClipLength($dbClipLength = null, $comparison = null)
 	{
-		if (is_array($dbClipLength)) {
-			$useMinMax = false;
-			if (isset($dbClipLength['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $dbClipLength['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbClipLength['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $dbClipLength['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbClipLength)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbClipLength)) {
+				$dbClipLength = str_replace('*', '%', $dbClipLength);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcSchedulePeer::CLIP_LENGTH, $dbClipLength, $comparison);
@@ -383,29 +374,20 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	/**
 	 * Filter the query on the cue_in column
 	 * 
-	 * @param     string|array $dbCueIn The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbCueIn The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
 	public function filterByDbCueIn($dbCueIn = null, $comparison = null)
 	{
-		if (is_array($dbCueIn)) {
-			$useMinMax = false;
-			if (isset($dbCueIn['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::CUE_IN, $dbCueIn['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbCueIn['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::CUE_IN, $dbCueIn['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbCueIn)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbCueIn)) {
+				$dbCueIn = str_replace('*', '%', $dbCueIn);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcSchedulePeer::CUE_IN, $dbCueIn, $comparison);
@@ -414,29 +396,20 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	/**
 	 * Filter the query on the cue_out column
 	 * 
-	 * @param     string|array $dbCueOut The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbCueOut The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
 	public function filterByDbCueOut($dbCueOut = null, $comparison = null)
 	{
-		if (is_array($dbCueOut)) {
-			$useMinMax = false;
-			if (isset($dbCueOut['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::CUE_OUT, $dbCueOut['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbCueOut['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::CUE_OUT, $dbCueOut['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbCueOut)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbCueOut)) {
+				$dbCueOut = str_replace('*', '%', $dbCueOut);
+				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcSchedulePeer::CUE_OUT, $dbCueOut, $comparison);
