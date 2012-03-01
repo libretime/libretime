@@ -617,14 +617,14 @@ class Application_Model_ShowInstance {
     public function getTimeScheduledSecs()
     {
         $time_filled = $this->getTimeScheduled();
-        return Application_Model_Schedule::WallTimeToMillisecs($time_filled) / 1000;
+        return Application_Model_Playlist::playlistTimeToSeconds($time_filled);
     }
 
     public function getDurationSecs()
     {
         $ends = $this->getShowInstanceEnd(null);
         $starts = $this->getShowInstanceStart(null);
-        return $ends->format('U') - $starts->format('U');
+        return intval($ends->format('U')) - intval($starts->format('U'));
     }
 
     public function getPercentScheduled()
