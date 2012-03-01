@@ -631,6 +631,9 @@ Logging::log("getting media! - 2");
 
         $results = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables);
 
+        //Used by the audio preview functionality in the library.
+        $audioResults =  Application_Model_StoredFile::getAllAudioFilePaths();
+    
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
@@ -656,7 +659,7 @@ Logging::log("getting media! - 2");
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
 
-            if($type == "au") {
+            if($type == "au" && isset( $audioResults )) {
                 $audioFile = $audioResults[$row['id']-1]['gunid'].".".pathinfo($audioResults[$row['id']-1]['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img src="/css/images/big_play_arrow.png" onClick="open_audio_preview(\''.$audioFile.'\', \'spl_'.$row['id'].'\')">';
 
@@ -669,6 +672,19 @@ Logging::log("getting media! - 2");
         return $results;
     }
 
+    public static function getAllAudioFilePaths(){
+        try {
+            $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+            $r = $con->query("SELECT id, gunid, filepath FROM cc_files");
+            $r->setFetchMode(PDO::FETCH_ASSOC);
+            $results = $r->fetchAll();
+            
+            return $results;
+        }catch (Exception $e) {
+            Logging::log($e->getMessage());
+        }
+    }
+    
     public static function searchFiles($displayColumns, $fromTable, $data)
     {
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
