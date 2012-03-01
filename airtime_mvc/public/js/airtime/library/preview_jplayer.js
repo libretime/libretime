@@ -41,8 +41,6 @@ $(document).ready(function(){
 });
 
 function play(filename){
-   console.log("in the play function! "+filename);
-    
     var uri = "/api/get-media/file/" + filename;
     var ext = getFileExt(filename);
     
@@ -69,5 +67,6 @@ function play(filename){
         cssSelectorAncestor: '#jp_container_1',
         wmode: "window"
     });
+    $this.focus();
 }
 
