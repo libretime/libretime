@@ -39,8 +39,10 @@ class PypoPush(Thread):
         self.media = dict()
 
         self.liquidsoap_state_play = True
-        self.push_ahead = 30
+        self.push_ahead = 10
         self.last_end_time = 0
+        
+        self.logger = logging.getLogger('push')
         
     def push(self):
         """
@@ -49,7 +51,6 @@ class PypoPush(Thread):
         If yes, the current liquidsoap playlist gets replaced with the corresponding one,
         then liquidsoap is asked (via telnet) to reload and immediately play it.
         """
-        logger = logging.getLogger('push')
 
         timenow = time.time()
         # get a new schedule from pypo-fetch
@@ -57,8 +58,8 @@ class PypoPush(Thread):
             # make sure we get the latest schedule
             while not self.queue.empty():
                 self.media = self.queue.get()
-            logger.debug("Received data from pypo-fetch")          
-            logger.debug('media %s' % json.dumps(self.media))
+            self.logger.debug("Received data from pypo-fetch")          
+            self.logger.debug('media %s' % json.dumps(self.media))
 
         media = self.media
         
@@ -77,17 +78,13 @@ class PypoPush(Thread):
                     """
                     If the media item starts in the next 30 seconds, push it to the queue.
                     """
-                    logger.debug('Preparing to push media item scheduled at: %s', key)
+                    self.logger.debug('Preparing to push media item scheduled at: %s', key)
                               
                     if self.push_to_liquidsoap(media_item):
-                        logger.debug("Pushed to liquidsoap, updating 'played' status.")
+                        self.logger.debug("Pushed to liquidsoap, updating 'played' status.")
                         
                         currently_on_air = True
                         self.liquidsoap_state_play = True
-
-                        # Call API to update schedule states
-                        logger.debug("Doing callback to server to update 'played' status.")
-                        self.api_client.notify_scheduled_item_start_playing(key, schedule)
                         
     def push_to_liquidsoap(self, media_item):
         """
@@ -133,15 +130,15 @@ class PypoPush(Thread):
         #Return the time as a floating point number expressed in seconds since the epoch, in UTC.
         epoch_now = time.time()
         
-        logger.debug("Epoch start: %s" % epoch_start)
-        logger.debug("Epoch now: %s" % epoch_now)
+        self.logger.debug("Epoch start: %s" % epoch_start)
+        self.logger.debug("Epoch now: %s" % epoch_now)
 
         sleep_time = epoch_start - epoch_now
 
         if sleep_time < 0:
             sleep_time = 0
 
-        logger.debug('sleeping for %s s' % (sleep_time))
+        self.logger.debug('sleeping for %s s' % (sleep_time))
         time.sleep(sleep_time)
 
     def telnet_to_liquidsoap(self, media_item):
@@ -156,25 +153,28 @@ class PypoPush(Thread):
         #tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('utf-8'))
         
         annotation = media_item['annotation']
-        tn.write('queue.push %s\n' % annotation.encode('utf-8'))
+        msg = 'queue.push %s\n' % annotation.encode('utf-8')
+        tn.write(msg)
+        self.logger.debug(msg)
         
         show_name = media_item['show_name']
-        tn.write('vars.show_name %s\n' % show_name.encode('utf-8'))
+        msg = 'vars.show_name %s\n' % show_name.encode('utf-8')
+        tn.write(msg)
+        self.logger.debug(msg)
         
         tn.write("exit\n")
-        logger.debug(tn.read_all())
+        self.logger.debug(tn.read_all())
                      
     def run(self):
         loops = 0
         heartbeat_period = math.floor(30/PUSH_INTERVAL)
-        logger = logging.getLogger('push')
         
         while True:
             if loops % heartbeat_period == 0:
-                logger.info("heartbeat")
+                self.logger.info("heartbeat")
                 loops = 0
             try: self.push()
             except Exception, e:
-                logger.error('Pypo Push Exception: %s', e)
+                self.logger.error('Pypo Push Exception: %s', e)
             time.sleep(PUSH_INTERVAL)
             loops += 1

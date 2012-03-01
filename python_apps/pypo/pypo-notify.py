@@ -34,7 +34,7 @@ import json
 from configobj import ConfigObj
 
 # custom imports
-from util import *
+#from util import *
 from api_clients import *
 
 # Set up command-line options

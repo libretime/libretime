@@ -336,7 +336,7 @@ class PypoFetch(Thread):
                 
                 if self.handle_media_file(media_item, dst):
                     entry = self.create_liquidsoap_annotation(media_item, dst)
-                    entry['show_name'] = "TODO"
+                    media_item['show_name'] = "TODO"
                     media_item["annotation"] = entry
                 
         except Exception, e:
@@ -346,7 +346,7 @@ class PypoFetch(Thread):
     
 
     def create_liquidsoap_annotation(self, media, dst):
-        pl_entry = \
+        entry = \
             'annotate:media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
             % (media['id'], 0, \
             float(media['fade_in']) / 1000, \
@@ -355,15 +355,6 @@ class PypoFetch(Thread):
             float(media['cue_out']), \
             media['row_id'], dst)
 
-        """
-        Tracks are only added to the playlist if they are accessible
-        on the file system and larger than 0 bytes.
-        So this can lead to playlists shorter than expectet.
-        (there is a hardware silence detector for this cases...)
-        """
-        entry = dict()
-        entry['type'] = 'file'
-        entry['annotate'] = pl_entry        
         return entry
         
     def check_for_previous_crash(self, media_item):
