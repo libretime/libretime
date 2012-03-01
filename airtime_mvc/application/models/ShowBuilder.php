@@ -1,6 +1,7 @@
 <?php
 
 require_once 'formatters/LengthFormatter.php';
+require_once 'formatters/TimeFilledFormatter.php';
 
 class Application_Model_ShowBuilder {
 
@@ -46,35 +47,6 @@ class Application_Model_ShowBuilder {
         $this->user = Application_Model_User::GetCurrentUser();
         $this->opts = $p_opts;
         $this->epoch_now = time();
-    }
-
-    private function formatTimeFilled($p_sec) {
-
-        $formatted = "";
-        $sign = ($p_sec < 0) ? "-" : "+";
-
-        $time = Application_Model_Playlist::secondsToPlaylistTime(abs($p_sec));
-        Logging::log("time is: ".$time);
-        $info = explode(":", $time);
-
-        $formatted .= $sign;
-
-        if (intval($info[0]) > 0) {
-            $info[0] = ltrim($info[0], "0");
-            $formatted .= " {$info[0]}h";
-        }
-
-        if (intval($info[1]) > 0) {
-            $info[1] = ltrim($info[1], "0");
-            $formatted .= " {$info[1]}m";
-        }
-
-        if (intval($info[2]) > 0) {
-            $sec = round($info[2], 0);
-            $formatted .= " {$sec}s";
-        }
-
-        return $formatted;
     }
 
     //check to see if this row should be editable.
@@ -206,7 +178,9 @@ class Application_Model_ShowBuilder {
 
         $runtime = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
         $row["runtime"] = $runtime;
-        $row["fRuntime"] = $this->formatTimeFilled($runtime);
+
+        $timeFilled = new TimeFilledFormatter($runtime);
+        $row["fRuntime"] = $timeFilled->format();
 
         return $row;
     }
