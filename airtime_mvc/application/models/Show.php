@@ -1491,7 +1491,7 @@ class Application_Model_Show {
         $events = array();
 
         $interval = $start->diff($end);
-        $days =  $interval->format('%a');
+        $days = $interval->format('%a');
 
         $shows = Application_Model_Show::getShows($start, $end);
 
@@ -1508,10 +1508,9 @@ class Application_Model_Show {
 
             if ($editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
                 $options["editable"] = true;
-                $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
-            } else {
-                $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
             }
+
+            $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
         }
 
         return $events;
@@ -1520,10 +1519,6 @@ class Application_Model_Show {
     private static function makeFullCalendarEvent($show, $options=array())
     {
         $event = array();
-
-        if($show["rebroadcast"]) {
-            $event["disableResizing"] = true;
-        }
 
         $startDateTime = new DateTime($show["starts"], new DateTimeZone("UTC"));
         $startDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
@@ -1538,29 +1533,27 @@ class Application_Model_Show {
         $event["end"] = $endDateTime->format("Y-m-d H:i:s");
         $event["endUnix"] = $endDateTime->format("U");
         $event["allDay"] = false;
-        //$event["description"] = $show["description"];
         $event["showId"] = intval($show["show_id"]);
         $event["record"] = intval($show["record"]);
         $event["rebroadcast"] = intval($show["rebroadcast"]);
 
         // get soundcloud_id
-        if(!is_null($show["file_id"])){
+        if (!is_null($show["file_id"])){
             $file = Application_Model_StoredFile::Recall($show["file_id"]);
             $soundcloud_id = $file->getSoundCloudId();
-        }else{
-            $soundcloud_id = null;
         }
-        $event["soundcloud_id"] = (is_null($soundcloud_id) ? -1 : $soundcloud_id);
+
+        $event["soundcloud_id"] = isset($soundcloud_id) ? $soundcloud_id : -1;
 
         //event colouring
-        if($show["color"] != "") {
+        if ($show["color"] != "") {
             $event["textColor"] = "#".$show["color"];
         }
-        if($show["background_color"] != "") {
+        if ($show["background_color"] != "") {
             $event["color"] = "#".$show["background_color"];
         }
 
-        foreach($options as $key=>$value) {
+        foreach ($options as $key => $value) {
             $event[$key] = $value;
         }
 

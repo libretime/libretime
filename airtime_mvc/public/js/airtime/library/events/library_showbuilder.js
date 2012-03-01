@@ -8,6 +8,24 @@ var AIRTIME = (function(AIRTIME){
 	AIRTIME.library.events = {};
 	mod = AIRTIME.library.events;
 	
+	mod.enableAddButtonCheck = function() {
+    	var selected = $('#library_display tr input[type=checkbox]').filter(":checked"),
+    		cursor = $('tr.cursor-selected-row'),
+    		check = false;
+    	
+    	//make sure library items are selected and a cursor is selected.
+    	if (selected.length !== 0 && cursor.length !== 0) {
+    		check = true;
+    	}
+    	
+    	if (check === true) {
+	    	AIRTIME.button.enableButton("library_group_add");
+	    }
+	    else {
+	    	AIRTIME.button.disableButton("library_group_add");
+	    }
+    };
+	
 	mod.fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 		var $nRow = $(nRow);
 		
@@ -21,7 +39,6 @@ var AIRTIME = (function(AIRTIME){
 		$('#library_display tr:not(:first)').draggable({
 			helper: function(){
 			    var selected = $('#library_display tr:not(:first) input:checked').parents('tr'),
-			    	aItems = [],
 			    	container,
 			    	thead = $("#show_builder_table thead"),
 			    	colspan = thead.find("th").length,
@@ -34,10 +51,10 @@ var AIRTIME = (function(AIRTIME){
 			    }
 			    
 			    if (selected.length === 1) {
-			    	message = "Moving "+selected.length+" Item."
+			    	message = "Moving "+selected.length+" Item.";
 			    }
 			    else {
-			    	message = "Moving "+selected.length+" Items."
+			    	message = "Moving "+selected.length+" Items.";
 			    }
 			    
 			    container = $('<div/>').attr('id', 'draggingContainer')
@@ -61,8 +78,6 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.setupLibraryToolbar = function(oLibTable) {
 		var aButtons,
-			fnTest,
-			fnResetCol,
 			fnAddSelectedItems,
 		
 		fnAddSelectedItems = function() {
@@ -75,7 +90,7 @@ var AIRTIME = (function(AIRTIME){
 				aSchedIds = [];
 			
 			//process selected files/playlists.
-			for (i=0, length = aData.length; i < length; i++) {
+			for (i = 0, length = aData.length; i < length; i++) {
 				temp = aData[i];
 				aMediaIds.push({"id": temp.id, "type": temp.ftype});	
 			}
@@ -93,12 +108,13 @@ var AIRTIME = (function(AIRTIME){
 			
 			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);	
 		};
+		
 		//[0] = button text
 		//[1] = id 
 		//[2] = enabled
 		//[3] = click event
-		aButtons = [["Delete", "library_group_delete", true, AIRTIME.library.fnDeleteSelectedItems], 
-		           ["Add", "library_group_add", true, fnAddSelectedItems]];
+		aButtons = [["Delete", "library_group_delete", false, AIRTIME.library.fnDeleteSelectedItems], 
+		           ["Add", "library_group_add", false, fnAddSelectedItems]];
 		
 		addToolBarButtonsLibrary(aButtons);
 	};

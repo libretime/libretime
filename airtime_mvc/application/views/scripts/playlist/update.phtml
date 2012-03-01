@@ -4,11 +4,11 @@ if (count($items)) : ?>
 
 <?php $i = 0; ?>
 <?php foreach($items as $item) : ?>
-    <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$i; ?>">
+    <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$item["id"]; ?>">
         <div class="list-item-container">
             <a href="javascript:void(0);" class="big_play"
             onclick="audioPreview('<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]["filepath"], PATHINFO_EXTENSION);?>',
-            'spl_<?php echo $i ?>')"><span class="ui-icon ui-icon-play"></span></a>
+            'spl_<?php echo $item["id"] ?>')"><span class="ui-icon ui-icon-play"></span></a>
 
             <div class="text-row top">
                 <span class="spl_playlength"><?php echo $item["cliplength"] ?></span>

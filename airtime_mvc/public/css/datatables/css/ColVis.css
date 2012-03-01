@@ -30,7 +30,7 @@ button.ColVis_Button::-moz-focus-inner {
 
 div.ColVis_collectionBackground {
 	background-color: black;
-	z-index: 996;
+	z-index: 1003;
 }
 
 div.ColVis_collection {
@@ -39,7 +39,7 @@ div.ColVis_collection {
 	background-color: #999;
 	padding: 3px;
 	border: 1px solid #ccc;
-	z-index: 998;
+	z-index: 1005;
 }
 
 div.ColVis_collection button.ColVis_Button {
@@ -51,7 +51,7 @@ div.ColVis_collection button.ColVis_Button {
 
 div.ColVis_catcher {
 	position: absolute;
-	z-index: 997;
+	z-index: 1004;
 }
 
 .disabled {

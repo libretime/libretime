@@ -601,6 +601,7 @@ dl.inline-list dd {
 }
 
 .dataTables_info {
+	float: left;
 	padding: 8px 0 0 8px;
 	font-size:12px;
 	color:#555555;
@@ -608,6 +609,7 @@ dl.inline-list dd {
 }
 
 .dataTables_paginate {
+	float: right;
 	padding: 8px 0 8px 8px;
 }
 .dataTables_paginate .ui-button {
@@ -618,7 +620,7 @@ dl.inline-list dd {
 }
 .dataTables_filter input {
     background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;
-    width: 60%;
+    width: 55%;
     border: 1px solid #5B5B5B;
     margin-left: -8px;
     padding: 4px 3px 4px 25px;

@@ -67,21 +67,10 @@ function uploadToSoundCloud(show_instance_id){
     }
 }
 
-function buildContentDialog (json){
-	var dialog = $(json.dialog),
-		viewportwidth,
-		viewportheight,
-		height,
-		width;
+function findViewportDimensions() {
+	var viewportwidth,
+		viewportheight;
 	
-    if (json.show_error == true){
-        alertShowErrorAndReload();
-    }
-	      
-	dialog.find("#show_progressbar").progressbar({
-		value: json.percentFilled
-	});
-        
 	// the more standards compliant browsers (mozilla/netscape/opera/IE7) use
 	// window.innerWidth and window.innerHeight
 	if (typeof window.innerWidth != 'undefined') {
@@ -101,9 +90,57 @@ function buildContentDialog (json){
 		viewportheight = document.getElementsByTagName('body')[0].clientHeight;
 	}
 	
-	height = viewportheight * 2/3;
-	width = viewportwidth * 4/5;
+	return {
+		width: viewportwidth,
+		height: viewportheight
+	};
+}
+
+function buildScheduleDialog (json) {
 	
+	var dialog = $(json.dialog),
+		viewport = findViewportDimensions(),
+		height = viewport.height * 0.96,
+		width = viewport.width * 0.96,
+		fnServer = AIRTIME.showbuilder.fnServerData;
+    
+	dialog.dialog({
+		autoOpen: false,
+		title: json.title,
+		width: width,
+		height: height,
+		modal: true,
+		close: closeDialog,
+		buttons: {"Ok": function() {
+			dialog.remove();
+			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
+		}}
+	});
+	
+	//set the start end times so the builder datatables knows its time range.
+	fnServer.start = json.start;
+	fnServer.end = json.end;
+	
+	AIRTIME.library.libraryInit();
+	AIRTIME.showbuilder.builderDataTable();
+	
+	dialog.dialog('open');
+}
+
+function buildContentDialog (json){
+	var dialog = $(json.dialog),
+		viewport = findViewportDimensions(),
+		height = viewport.height * 2/3,
+		width = viewport.width * 4/5;
+	
+    if (json.show_error == true){
+        alertShowErrorAndReload();
+    }
+	      
+	dialog.find("#show_progressbar").progressbar({
+		value: json.percentFilled
+	});
+     
 	dialog.dialog({
 		autoOpen: false,
 		title: 'Show Contents',
@@ -201,8 +238,12 @@ $(document).ready(function() {
     			if (oItems.schedule !== undefined) {
     				
     				callback = function() {
-    					document.location = oItems.schedule.url + "from/" + data.startUnix + "/to/" + data.endUnix;
-					};
+    					
+    					$.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
+    						buildScheduleDialog(json);
+    					});
+    				};
+    				
     				oItems.schedule.callback = callback;
     			}
     			
