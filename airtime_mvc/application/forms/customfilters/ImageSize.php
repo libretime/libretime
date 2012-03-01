@@ -6,7 +6,7 @@ class Zend_Filter_ImageSize implements Zend_Filter_Interface {
             throw new Zend_Filter_Exception('Image does not exist: ' . $value);
         }
 
-        $image = imageCreateFromString(file_get_contents($value));
+        $image = imagecreatefromstring(file_get_contents($value));
         if (false === $image) {
             throw new Zend_Filter_Exception('Can\'t load image: ' . $value);
         }
