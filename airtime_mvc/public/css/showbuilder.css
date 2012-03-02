@@ -49,6 +49,10 @@ tr.cursor-selected-row .marker {
     padding: 10px 0 0 0;
 }
 
+.ui-dialog #show_builder {
+    width:45%;
+}
+
 .ui-dialog .ui-buttonset {
     margin-right: 0 !important;
 }
