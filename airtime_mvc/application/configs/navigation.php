@@ -54,28 +54,27 @@ $pages = array(
                 'controller' => 'Preference'
             ),
             array(
-                'label'      => 'Manage Users',
+                'label'      => 'Users',
                 'module'     => 'default',
                 'controller' => 'user',
                 'action'     => 'add-user',
                 'resource'	=>	'user'
             ),
             array(
-                'label'      => 'Manage Media Folders',
+                'label'      => 'Media Folders',
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'directory-config',
                 'id'		 => 'manage_folder'
             ),
             array(
-                'label'      => 'Stream Settings',
+                'label'      => 'Streams',
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'stream-setting'
             ),
             array(
-                'label'      =>
-                Application_Model_Preference::GetPlanLevel() == 'disabled'?'Support Settings':'Station Information Settings',
+                'label'      => 'Support Feedback',
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'support-setting'
