@@ -267,27 +267,32 @@ var AIRTIME = (function(AIRTIME){
 			"fnDrawCallback": function(oSettings, json) {
 				var wrapperDiv,
 					markerDiv,
-					td;
+					td,
+					$lib = $("#library_content");
 				
-				//create cursor arrows.
-				tableDiv.find("tr.sb-now-playing, tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
-			    	td = $(el).find("td:first");
-			    	if (td.hasClass("dataTables_empty")) {
-			    		return false;
-			    	}
-			    	
-			    	wrapperDiv = $("<div />", {
-			    		"class": "innerWrapper",
-			    		"css": {
-			    			"height": td.height()
-			    		}
-			    	});
-			    	markerDiv = $("<div />", {
-			    		"class": "marker"
-			    	});
-			    	
-		    		td.append(markerDiv).wrapInner(wrapperDiv);
-			    });
+				//only create the cursor arrows if the library is on the page.
+				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
+					
+					//create cursor arrows.
+					tableDiv.find("tr.sb-now-playing, tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
+				    	td = $(el).find("td:first");
+				    	if (td.hasClass("dataTables_empty")) {
+				    		return false;
+				    	}
+				    	
+				    	wrapperDiv = $("<div />", {
+				    		"class": "innerWrapper",
+				    		"css": {
+				    			"height": td.height()
+				    		}
+				    	});
+				    	markerDiv = $("<div />", {
+				    		"class": "marker"
+				    	});
+				    	
+			    		td.append(markerDiv).wrapInner(wrapperDiv);
+				    });
+				}
 		    },
 			"fnHeaderCallback": function(nHead) {
 				$(nHead).find("input[type=checkbox]").attr("checked", false);
