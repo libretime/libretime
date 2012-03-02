@@ -296,6 +296,7 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				//if the now playing song is visible set a timeout to redraw the table at the start of the next song.
+				/*
 				tr = tableDiv.find("tr.sb-now-playing");
 				if (tr.length > 0) {
 					var oTable = $('#show_builder_table').dataTable(),
@@ -305,6 +306,7 @@ var AIRTIME = (function(AIRTIME){
 						oTable.fnDraw();
 					}, aData.refresh * 1000); //need refresh in milliseconds
 				}
+				*/
 					
 		    },
 			"fnHeaderCallback": function(nHead) {

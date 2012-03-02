@@ -151,4 +151,9 @@ $(document).ready(function(){
 	AIRTIME.showbuilder.fnServerData.end = oRange.end;
 		
 	AIRTIME.showbuilder.builderDataTable();
+	
+	setInterval(function(){
+		var oTable = $('#show_builder_table').dataTable();
+		oTable.fnDraw();
+	}, 10 * 1000); //need refresh in milliseconds
 });
