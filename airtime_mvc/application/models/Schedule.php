@@ -222,7 +222,7 @@ class Application_Model_Schedule {
 	 * @return array $scheduledItems
 	 *
 	 */
-    public static function GetScheduleDetailItems($p_startDateTime, $p_endDateTime, $p_shows)
+    public static function GetScheduleDetailItems($p_start, $p_end, $p_shows)
     {
         global $CC_CONFIG, $CC_DBC;
 
@@ -250,8 +250,11 @@ class Application_Model_Schedule {
 
         WHERE si.modified_instance = false AND
 
-        si.starts >= '{$p_startDateTime}' AND si.starts < '{$p_endDateTime}'";
-
+        ((si.starts >= '{$p_start}' AND si.starts < '{$p_end}')
+        OR (si.ends > '{$p_start}' AND si.ends <= '{$p_end}')
+        OR (si.starts <= '{$p_start}' AND si.ends >= '{$p_end}'))";
+        
+        
         if (count($p_shows) > 0) {
             $sql .= " AND show_id IN (".implode(",", $p_shows).")";
         }

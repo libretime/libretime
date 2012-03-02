@@ -58,9 +58,14 @@ class Application_Model_ShowBuilder {
         }
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+        $schedStartDT = new DateTime($p_item["sched_starts"], new DateTimeZone("UTC"));
+        
+        $showStartEpoch = intval($showStartDT->format('U'));
+        $schedStartEpoch = intval($schedStartDT->format('U'));
 
-        //can only schedule the show if it hasn't started and you are allowed.
-        if ($this->epoch_now < $showStartDT->format('U') && $this->user->canSchedule($p_item["show_id"]) == true) {
+        //can only schedule the show if item hasn't started and you are allowed.
+        if ($this->epoch_now < max($showStartEpoch, $schedStartEpoch) 
+        		&& $this->user->canSchedule($p_item["show_id"]) == true) {
             $row["allowed"] = true;
         }
     }

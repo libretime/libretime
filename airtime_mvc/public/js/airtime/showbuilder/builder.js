@@ -270,7 +270,7 @@ var AIRTIME = (function(AIRTIME){
 					td;
 				
 				//create cursor arrows.
-				tableDiv.find("tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
+				tableDiv.find("tr.sb-now-playing, tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
 			    	td = $(el).find("td:first");
 			    	if (td.hasClass("dataTables_empty")) {
 			    		return false;
@@ -429,7 +429,7 @@ var AIRTIME = (function(AIRTIME){
 				var prev = ui.item.prev();
 				
 				//can't add items outside of shows.
-				if (!prev.hasClass("sb-allowed")) {
+				if (prev.hasClass("sb-footer") || prev.find("td:first").hasClass("dataTables_empty")) {
 					alert("Cannot schedule outside a show.");
 					ui.item.remove();
 					return;
