@@ -660,10 +660,8 @@ Logging::log("getting media! - 2");
             //access to zend view methods to access url helpers is needed.
 
             if($type == "au" && isset( $audioResults )) {
-                $audioFile = $audioResults[$row['id']-1]['gunid'].".".pathinfo($audioResults[$row['id']-1]['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<a href="javascript:void(0);" class="big_play"
-                            onclick="open_audio_preview(\''.$audioFile.'\', \'spl_'.$row['id'].'\');">
-                                <span class="ui-icon ui-icon-play"></span></a>';
+                $row['audioFile'] = $audioResults[$row['id']-1]['gunid'].".".pathinfo($audioResults[$row['id']-1]['filepath'], PATHINFO_EXTENSION);
+                $row['image'] = '<span class="ui-icon ui-icon-play"></span>';
 
             }
             else {

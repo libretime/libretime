@@ -68,7 +68,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function contextMenuAction()
     {
-    	global $CC_CONFIG;
+        global $CC_CONFIG;
 
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
@@ -88,15 +88,17 @@ class LibraryController extends Zend_Controller_Action
             if (isset($this->pl_sess->id) && $screen == "playlist") {
                 $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "copy");
             }
-
+            //Open a jPlayer window and play the audio clip.
+            $menu["play"] = array("name"=> "Play", "icon" => "big_play");
+            
             $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
-	    
-	    if ($user->isAdmin()) {
+    
+            if ($user->isAdmin()) {
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
 
-	        $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
-	        $menu["download"] = array("name" => "Download", "url" => $url);
+            $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
+            $menu["download"] = array("name" => "Download", "url" => $url);
 
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
 

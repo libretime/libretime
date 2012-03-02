@@ -67,6 +67,6 @@ function play(filename){
         cssSelectorAncestor: '#jp_container_1',
         wmode: "window"
     });
-    $this.focus();
+    
 }
 

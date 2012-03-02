@@ -1,4 +1,4 @@
-var audio_preview_window = null;
+var audio_preview_window_p = null;
 
 function playlistAudioPreviewEditor(filename, elemIndexString){
     
@@ -41,7 +41,7 @@ function playlistAudioPreviewEditor(filename, elemIndexString){
 
 }
 
-function open_audio_preview(filename, index) {
+function open_audio_preview_old(filename, index) {
    console.log("hello world 2 "+filename+" help?");
    url = 'Playlist/audio-preview-player/filename/'+filename+'/index/'+index;
    //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
@@ -57,6 +57,13 @@ function open_audio_preview(filename, index) {
       console.log("something else : "+baseUrl+url);
     }
     
-    audio_preview_window.focus();
+   //Set the play button to pause.
+   var elemID = "spl_"+elemIndexString;
+   $('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
+   
     return false;
 }
+
+$('#library_type').bind('click', function(){
+   console.log(data);
+});
