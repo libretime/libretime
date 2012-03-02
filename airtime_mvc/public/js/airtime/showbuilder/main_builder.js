@@ -130,7 +130,7 @@ $(document).ready(function(){
 			
 			$button.removeClass("sb-edit");
 			$button.addClass("sb-finish-edit");
-			$button.val("Close");
+			$button.val("Close Library");
 		}
 		else if($button.hasClass("sb-finish-edit")) {
 			
@@ -139,7 +139,7 @@ $(document).ready(function(){
 			
 			$button.removeClass("sb-finish-edit");
 			$button.addClass("sb-edit");
-			$button.val("Edit");
+			$button.val("Add Files");
 		}
 		
 		oTable.fnDraw();
