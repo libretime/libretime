@@ -155,5 +155,5 @@ $(document).ready(function(){
 	setInterval(function(){
 		var oTable = $('#show_builder_table').dataTable();
 		oTable.fnDraw();
-	}, 10 * 1000); //need refresh in milliseconds
+	}, 20 * 1000); //need refresh in milliseconds
 });
