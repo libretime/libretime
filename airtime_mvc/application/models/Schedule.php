@@ -237,7 +237,7 @@ class Application_Model_Schedule {
         sched.starts AS sched_starts, sched.ends AS sched_ends, sched.id AS sched_id,
         sched.cue_in AS cue_in, sched.cue_out AS cue_out,
         sched.fade_in AS fade_in, sched.fade_out AS fade_out,
-        sched.status AS sched_status,
+        sched.playout_status AS playout_status,
 
         ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
         ft.album_title AS file_album_title, ft.length AS file_length

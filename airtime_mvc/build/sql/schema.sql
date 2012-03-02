@@ -371,7 +371,7 @@ CREATE TABLE "cc_schedule"
 	"cue_out" interval default '00:00:00',
 	"media_item_played" BOOLEAN default 'f',
 	"instance_id" INTEGER  NOT NULL,
-	"status" INT2 default 1 NOT NULL,
+	"playout_status" INT2 default 1 NOT NULL,
 	PRIMARY KEY ("id")
 );
 

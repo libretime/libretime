@@ -17,7 +17,7 @@
  * @method     CcScheduleQuery orderByDbCueOut($order = Criteria::ASC) Order by the cue_out column
  * @method     CcScheduleQuery orderByDbMediaItemPlayed($order = Criteria::ASC) Order by the media_item_played column
  * @method     CcScheduleQuery orderByDbInstanceId($order = Criteria::ASC) Order by the instance_id column
- * @method     CcScheduleQuery orderByDbStatus($order = Criteria::ASC) Order by the status column
+ * @method     CcScheduleQuery orderByDbPlayoutStatus($order = Criteria::ASC) Order by the playout_status column
  *
  * @method     CcScheduleQuery groupByDbId() Group by the id column
  * @method     CcScheduleQuery groupByDbStarts() Group by the starts column
@@ -30,7 +30,7 @@
  * @method     CcScheduleQuery groupByDbCueOut() Group by the cue_out column
  * @method     CcScheduleQuery groupByDbMediaItemPlayed() Group by the media_item_played column
  * @method     CcScheduleQuery groupByDbInstanceId() Group by the instance_id column
- * @method     CcScheduleQuery groupByDbStatus() Group by the status column
+ * @method     CcScheduleQuery groupByDbPlayoutStatus() Group by the playout_status column
  *
  * @method     CcScheduleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcScheduleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -58,7 +58,7 @@
  * @method     CcSchedule findOneByDbCueOut(string $cue_out) Return the first CcSchedule filtered by the cue_out column
  * @method     CcSchedule findOneByDbMediaItemPlayed(boolean $media_item_played) Return the first CcSchedule filtered by the media_item_played column
  * @method     CcSchedule findOneByDbInstanceId(int $instance_id) Return the first CcSchedule filtered by the instance_id column
- * @method     CcSchedule findOneByDbStatus(int $status) Return the first CcSchedule filtered by the status column
+ * @method     CcSchedule findOneByDbPlayoutStatus(int $playout_status) Return the first CcSchedule filtered by the playout_status column
  *
  * @method     array findByDbId(int $id) Return CcSchedule objects filtered by the id column
  * @method     array findByDbStarts(string $starts) Return CcSchedule objects filtered by the starts column
@@ -71,7 +71,7 @@
  * @method     array findByDbCueOut(string $cue_out) Return CcSchedule objects filtered by the cue_out column
  * @method     array findByDbMediaItemPlayed(boolean $media_item_played) Return CcSchedule objects filtered by the media_item_played column
  * @method     array findByDbInstanceId(int $instance_id) Return CcSchedule objects filtered by the instance_id column
- * @method     array findByDbStatus(int $status) Return CcSchedule objects filtered by the status column
+ * @method     array findByDbPlayoutStatus(int $playout_status) Return CcSchedule objects filtered by the playout_status column
  *
  * @package    propel.generator.airtime.om
  */
@@ -468,24 +468,24 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the status column
+	 * Filter the query on the playout_status column
 	 * 
-	 * @param     int|array $dbStatus The value to use as filter.
+	 * @param     int|array $dbPlayoutStatus The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcScheduleQuery The current query, for fluid interface
 	 */
-	public function filterByDbStatus($dbStatus = null, $comparison = null)
+	public function filterByDbPlayoutStatus($dbPlayoutStatus = null, $comparison = null)
 	{
-		if (is_array($dbStatus)) {
+		if (is_array($dbPlayoutStatus)) {
 			$useMinMax = false;
-			if (isset($dbStatus['min'])) {
-				$this->addUsingAlias(CcSchedulePeer::STATUS, $dbStatus['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbPlayoutStatus['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::PLAYOUT_STATUS, $dbPlayoutStatus['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($dbStatus['max'])) {
-				$this->addUsingAlias(CcSchedulePeer::STATUS, $dbStatus['max'], Criteria::LESS_EQUAL);
+			if (isset($dbPlayoutStatus['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::PLAYOUT_STATUS, $dbPlayoutStatus['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -495,7 +495,7 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcSchedulePeer::STATUS, $dbStatus, $comparison);
+		return $this->addUsingAlias(CcSchedulePeer::PLAYOUT_STATUS, $dbPlayoutStatus, $comparison);
 	}
 
 	/**

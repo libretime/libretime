@@ -68,7 +68,7 @@ class Application_Model_ShowBuilder {
     //information about whether a track is inside|boundary|outside a show.
     private function getItemStatus($p_item, &$row) {
 
-        $row["status"] = intval($p_item["sched_status"]);
+        $row["status"] = intval($p_item["playout_status"]);
     }
 
     private function getRowTimestamp($p_item, &$row) {

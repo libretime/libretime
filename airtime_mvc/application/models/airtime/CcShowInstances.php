@@ -117,7 +117,7 @@ class CcShowInstances extends BaseCcShowInstances {
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->id)
             ->filterByDbEnds($this->ends, Criteria::LESS_EQUAL)
-            ->update(array('DbStatus' => 1), $con);
+            ->update(array('DbPlayoutStatus' => 1), $con);
 
         Logging::log("updating status for in show items.");
 
@@ -126,13 +126,13 @@ class CcShowInstances extends BaseCcShowInstances {
             ->filterByDbInstanceId($this->id)
             ->filterByDbStarts($this->ends, Criteria::LESS_THAN)
             ->filterByDbEnds($this->ends, Criteria::GREATER_THAN)
-            ->update(array('DbStatus' => 2), $con);
+            ->update(array('DbPlayoutStatus' => 2), $con);
 
         //scheduled track is overbooked.
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->id)
             ->filterByDbStarts($this->ends, Criteria::GREATER_THAN)
-            ->update(array('DbStatus' => 0), $con);
+            ->update(array('DbPlayoutStatus' => 0), $con);
 
     }
 
