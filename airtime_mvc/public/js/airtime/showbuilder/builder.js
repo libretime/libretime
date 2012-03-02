@@ -429,7 +429,9 @@ var AIRTIME = (function(AIRTIME){
 				var prev = ui.item.prev();
 				
 				//can't add items outside of shows.
-				if (prev.hasClass("sb-footer") || prev.find("td:first").hasClass("dataTables_empty")) {
+				if (prev.hasClass("sb-footer") 
+						|| prev.find("td:first").hasClass("dataTables_empty")
+						|| prev.length === 0) {
 					alert("Cannot schedule outside a show.");
 					ui.item.remove();
 					return;
