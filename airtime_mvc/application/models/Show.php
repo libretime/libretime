@@ -104,6 +104,19 @@ class Application_Model_Show {
 
         return $res;
     }
+    
+    public function getHostsIds()
+    {
+        global $CC_DBC;
+
+        $sql = "SELECT subjs_id
+                FROM cc_show_hosts
+                WHERE show_id = {$this->_showId}";
+
+        $hosts = $CC_DBC->GetAll($sql);
+
+        return $hosts;
+    }
 
     //remove everything about this show.
     public function delete()
@@ -785,6 +798,8 @@ class Application_Model_Show {
             $info['allow_live_stream_override'] = $ccShow->getDbAllowLiveStream();
             $info['cb_airtime_auth'] = $ccShow->getDbLiveStreamUsingAirtimeAuth();
             $info['cb_custom_auth'] = $ccShow->getDbLiveStreamUsingCustomAuth();
+            $info['custom_username'] = $ccShow->getDbLiveStreamUser();
+            $info['custom_password'] = $ccShow->getDbLiveStreamPass();
             return $info;
         }
     }
@@ -1698,9 +1713,13 @@ class Application_Model_Show {
      * @param String $timeNow - current time (in UTC)
      * @return array - show being played right now
      */
-    public static function GetCurrentShow($timeNow)
+    public static function GetCurrentShow($timeNow=null)
     {
         global $CC_CONFIG, $CC_DBC;
+        if($timeNow == null){
+            $date = new Application_Model_DateHelper;
+            $timeNow = $date->getUtcTimestamp(); 
+        }
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"

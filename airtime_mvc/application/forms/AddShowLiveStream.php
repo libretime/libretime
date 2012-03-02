@@ -37,7 +37,6 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
                         ->setFilters(array('StringTrim'))
                         ->setValidators(array(
                             new ConditionalNotEmpty(array("cb_custom_auth"=>"1"))))
-                        ->setValue(Application_Model_Preference::GetLiveSteamMasterUsername())
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($custom_username);
         
@@ -51,7 +50,6 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
                         ->setFilters(array('StringTrim'))
                         ->setValidators(array(
                             new ConditionalNotEmpty(array("cb_custom_auth"=>"1"))))
-                        //fix//->setValue(Application_Model_Preference::GetLiveSteamMasterUsername())
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($custom_password);
         

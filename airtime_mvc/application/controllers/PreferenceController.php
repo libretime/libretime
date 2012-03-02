@@ -205,23 +205,29 @@ class PreferenceController extends Zend_Controller_Action
                 $values['streamFormat'] = $form->getValue('streamFormat');
 
                 Application_Model_StreamSetting::setStreamSetting($values);
-                $data = array();
-                $info = Application_Model_StreamSetting::getStreamSetting();
-                $info[] = (array("keyname" =>"harbor_input_port", "value"=>$values["harbor_input_port"], "type"=>"integer"));
-                $info[] = (array("keyname" =>"harbor_input_mount_point", "value"=>$values["harbor_input_mount_point"], "type"=>"string"));
-                $data['setting'] = $info;
-                for($i=1;$i<=$num_of_stream;$i++){
-                    Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
-                }
+                
                 // this goes into cc_pref table
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
                 Application_Model_Preference::SetLiveSteamAutoEnable($values["auto_enable_live_stream"]);
                 Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
-                Application_Model_Preference::SetLiveSteamPort($values["harbor_input_port"]);
-                Application_Model_Preference::SetLiveSteamMountPoint($values["harbor_input_mount_point"]);
+                
+                // extra info that goes into cc_stream_setting
+                Application_Model_StreamSetting::SetMasterLiveSteamPort($values["master_harbor_input_port"]);
+                Application_Model_StreamSetting::SetMasterLiveSteamMountPoint($values["master_harbor_input_mount_point"]);
+                Application_Model_StreamSetting::SetDJLiveSteamPort($values["dj_harbor_input_port"]);
+                Application_Model_StreamSetting::SetDJLiveSteamMountPoint($values["dj_harbor_input_mount_point"]);
+                
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
+                
+                $data = array();
+                $info = Application_Model_StreamSetting::getStreamSetting();
+                $data['setting'] = $info;
+                for($i=1;$i<=$num_of_stream;$i++){
+                    Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
+                }
+                
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
                 $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
             }

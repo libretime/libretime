@@ -728,22 +728,6 @@ class Application_Model_Preference
     public static function GetLiveSteamMasterPassword(){
         return self::GetValue("live_stream_master_password");
     }
-    
-    public static function SetLiveSteamPort($value){
-        self::SetValue("live_stream_port", $value, false);
-    }
-    
-    public static function GetLiveSteamPort(){
-        return self::GetValue("live_stream_port");
-    }
-    
-    public static function SetLiveSteamMountPoint($value){
-        self::SetValue("live_stream_mp", $value, false);
-    }
-    
-    public static function GetLiveSteamMountPoint(){
-        return self::GetValue("live_stream_mp");
-    }
     /* User specific preferences end */
 }
 

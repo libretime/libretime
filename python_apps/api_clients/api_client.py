@@ -365,7 +365,7 @@ class AirTimeApiClient(ApiClientInterface):
 
         return response
     
-    def check_live_stream_auth(self, username, password):
+    def check_live_stream_auth(self, username, password, dj_type):
         #logger = logging.getLogger()
         response = ''
         try:
@@ -373,6 +373,7 @@ class AirTimeApiClient(ApiClientInterface):
     
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%username%%", username)
+            url = url.replace("%%djtype%%", dj_type)
             url = url.replace("%%password%%", password)
     
             req = urllib2.Request(url)

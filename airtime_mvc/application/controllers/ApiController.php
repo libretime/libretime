@@ -807,8 +807,6 @@ class ApiController extends Zend_Controller_Action
         }
         
         $info = Application_Model_StreamSetting::getStreamSetting();
-        $info[] = (array("keyname" =>"harbor_input_port", "value"=>Application_Model_Preference::GetLiveSteamPort(), "type"=>"integer"));
-        $info[] = (array("keyname" =>"harbor_input_mount_point", "value"=>Application_Model_Preference::GetLiveSteamMountPoint(), "type"=>"string"));
         $this->view->msg = $info;
     }
 
@@ -988,6 +986,7 @@ class ApiController extends Zend_Controller_Action
         
         $username = $request->getParam('username');
         $password = $request->getParam('password');
+        $djtype = $request->getParam('djtype');
         
         if (!in_array($api_key, $CC_CONFIG["apiKey"]))
         {
@@ -995,11 +994,57 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        //check against master
-        if($username == Application_Model_Preference::GetLiveSteamMasterUsername() && $password == Application_Model_Preference::GetLiveSteamMasterPassword()){
-            $this->view->msg = true;
-        }else{
-            $this->view->msg = false;
+        
+        Logging::log("user:".$username." pass:".$password." type:".$djtype);
+        
+        if($djtype == 'master'){
+            //check against master
+            if($username == Application_Model_Preference::GetLiveSteamMasterUsername() && $password == Application_Model_Preference::GetLiveSteamMasterPassword()){
+                Logging::log("master true");
+                $this->view->msg = true;
+            }else{
+                Logging::log("master false");
+                $this->view->msg = false;
+            }
+        }elseif($djtype == "dj"){
+            Logging::log("djtype...");
+            //check against show dj auth
+            $showInfo = Application_Model_Show::GetCurrentShow();
+            if(isset($showInfo[0]['id'])){
+                $current_show_id = $showInfo[0]['id'];
+                $CcShow = CcShowQuery::create()->findPK($current_show_id);
+                
+                // get custom pass info from the show
+                $custom_user = $CcShow->getDbLiveStreamUser();
+                $custom_pass = $CcShow->getDbLiveStreamPass();
+    
+                Logging::log("user:".$username." pass:".$password);
+                Logging::log("c_user:".$custom_user." c_pass:".$custom_pass);
+                
+                // get hosts ids
+                $show = new Application_Model_Show($current_show_id);
+                $hosts_ids = $show->getHostsIds();
+                
+                // check against hosts auth
+                foreach( $hosts_ids as $host){
+                    $h = new Application_Model_User($host['subjs_id']);
+                    if($username == $h->getLogin() && md5($password) == $h->getPassword()){
+                        $this->view->msg = true;
+                        return;
+                    }
+                }
+                
+                // check against custom auth
+                if($username == $custom_user && $password == $custom_pass){
+                    Logging::log("custom true");
+                    $this->view->msg = true;
+                }else{
+                    Logging::log("custom false");
+                    $this->view->msg = false;
+                }
+            }else{
+                $this->view->msg = false;
+            }
         }
     }
 }

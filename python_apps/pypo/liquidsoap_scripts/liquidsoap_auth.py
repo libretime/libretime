@@ -12,8 +12,16 @@ except Exception, e:
 
 api_clients = api_client.api_client_factory(config)
 
-username = sys.argv[1]
-password = sys.argv[2]
-response = api_clients.check_live_stream_auth(username, password)
+dj_type = sys.argv[1]
+username = sys.argv[2]
+password = sys.argv[3]
+
+type = ''
+if dj_type == '--master':
+    type = 'master'
+elif dj_type == '--dj':
+    type = 'dj'
+    
+response = api_clients.check_live_stream_auth(username, password, type)
 
 print response['msg']

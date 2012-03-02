@@ -101,6 +101,4 @@ get_stream_setting = 'get-stream-setting/format/json/api_key/%%api_key%%/'
 #URL to update liquidsoap status
 update_liquidsoap_status = 'update-liquidsoap-status/format/json/api_key/%%api_key%%/msg/%%msg%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
 
-#URL to check live stream auth
-check_live_stream_auth = 'check-live-stream-auth/format/json/api_key/%%api_key%%/username/%%username%%/password/%%password%%'
 

@@ -39,17 +39,34 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($master_password);
         
         //liquidsoap harbor.input port
-        $port = new Zend_Form_Element_Text('harbor_input_port');
-        $port->setLabel("Port to Connect")
-                ->setValue(Application_Model_Preference::GetLiveSteamPort())
+        $port = new Zend_Form_Element_Text('master_harbor_input_port');
+        $port->setLabel("Master DJ Port")
+                ->setValue(Application_Model_StreamSetting::GetMasterLiveSteamPort())
                 ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
                 ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($port);
         
-        $mount = new Zend_Form_Element_Text('harbor_input_mount_point');
-        $mount->setLabel("Mount Point to Connect")
-                ->setValue(Application_Model_Preference::GetLiveSteamMountPoint())
+        $mount = new Zend_Form_Element_Text('master_harbor_input_mount_point');
+        $mount->setLabel("Master DJ Mount Point")
+                ->setValue(Application_Model_StreamSetting::GetMasterLiveSteamMountPoint())
+                ->setValidators(array(
+                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
+                ->setDecorators(array('ViewHelper'));
+        $this->addElement($mount);
+        
+        //liquidsoap harbor.input port
+        $port = new Zend_Form_Element_Text('dj_harbor_input_port');
+        $port->setLabel("DJ Port")
+                ->setValue(Application_Model_StreamSetting::GetDJLiveSteamPort())
+                ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
+                ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
+                ->setDecorators(array('ViewHelper'));
+        $this->addElement($port);
+        
+        $mount = new Zend_Form_Element_Text('dj_harbor_input_mount_point');
+        $mount->setLabel("DJ Mount Point")
+                ->setValue(Application_Model_StreamSetting::GetDJLiveSteamMountPoint())
                 ->setValidators(array(
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));

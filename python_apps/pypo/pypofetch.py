@@ -111,7 +111,7 @@ class PypoFetch(Thread):
             self.logger.debug(e)
             self.logger.debug('Could not connect to liquidsoap')
     
-    def regenerateLiquidsoapConf(self, setting):
+    def regenerateLiquidsoapConf(self, setting_p):
         existing = {}
         # create a temp file
         fh = open('/etc/airtime/liquidsoap.cfg', 'r')
@@ -146,8 +146,9 @@ class PypoFetch(Thread):
         restart = False
         
         self.logger.info("Looking for changes...")
+        setting = sorted(setting_p.items())
         # look for changes
-        for s in setting:
+        for k, s in setting:
             if "output_sound_device" in s[u'keyname'] or "icecast_vorbis_metadata" in s[u'keyname']:
                 dump, stream = s[u'keyname'].split('_', 1)
                 state_change_restart[stream] = False
@@ -155,9 +156,9 @@ class PypoFetch(Thread):
                 if (existing[s[u'keyname']] != s[u'value']):
                     self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;
-            elif "harbor_input_mount_point" in s[u'keyname'] or "harbor_input_port" in s[u'keyname']:
+            elif "master_live_stream_port" in s[u'keyname'] or "master_live_stream_mp" in s[u'keyname'] or "dj_live_stream_port" in s[u'keyname'] or "dj_live_stream_mp" in s[u'keyname']:
                 if (existing[s[u'keyname']] != s[u'value']):
-                    logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                    self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;
             else:
                 stream, dump = s[u'keyname'].split('_',1)
@@ -194,7 +195,7 @@ class PypoFetch(Thread):
             fh.write("################################################\n")
             fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
             fh.write("################################################\n")
-            for d in setting:
+            for k, d in setting:
                 buffer = d[u'keyname'] + " = "
                 if(d[u'type'] == 'string'):
                     temp = d[u'value']

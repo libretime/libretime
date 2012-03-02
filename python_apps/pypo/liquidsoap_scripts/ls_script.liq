@@ -40,10 +40,11 @@ default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 
 #live stream setup
 set("harbor.bind_addr", "0.0.0.0")
+
 #auth function for live stream
-def check_client(user,password) =
+def check_master_dj_client(user,password) =
         #get the output of the php script
-        ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py #{user} #{password}")
+        ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --master #{user} #{password}")
         #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
         ret = list.hd(ret)
         #return true to let the client transmit data, or false to tell harbor to decline
@@ -54,17 +55,47 @@ def check_client(user,password) =
         end
 end
 
-def configure_live(harbor_input_port, harbor_input_mount_point) =
-    if harbor_input_port != 0 and harbor_input_mount_point != "" then
-        live = input.harbor(harbor_input_mount_point, port=harbor_input_port, auth=check_client)
-        fallback(track_sensitive=false, [live, queue, default])
+def check_dj_client(user,password) =
+        #get the output of the php script
+        ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --dj #{user} #{password}")
+        #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
+        ret = list.hd(ret)
+        #return true to let the client transmit data, or false to tell harbor to decline
+        if (ret == "True") then
+            true
+        else
+            false
+        end
+end
+
+master_dj = ref default
+dj_live = ref default
+
+def append_master_dj_input(master_harbor_input_port, master_harbor_input_mount_point, s) =
+    if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
+        master_dj := input.harbor(master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, buffer=7.,max=15.)
+        fallback(track_sensitive=false, [!master_dj, s])
     else
-        fallback(track_sensitive=false, [queue, default])
+        s
     end
 end
 
-s = configure_live(harbor_input_port, harbor_input_mount_point)
+def append_dj_input(dj_harbor_input_port, dj_harbor_input_mount_point, s) =
+    if dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
+        dj_live := input.harbor(dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client, buffer=7.,max=15.)
+        fallback(track_sensitive=false, [!dj_live, s])
+    else
+        s
+    end
+end
+
+s = fallback(track_sensitive=false, [queue, default])
 s = on_metadata(notify, s)
+s = map_metadata(append_title, s)
+s = append_dj_input(dj_live_stream_port, dj_live_stream_mp, s)
+s = append_master_dj_input(master_live_stream_port, master_live_stream_mp, s)
+
+
 s = crossfade(s)
 # Attach a skip command to the source s:
 
@@ -83,7 +114,6 @@ s = crossfade(s)
 #)
 
 add_skip_command(s)
-s = map_metadata(append_title, s)
 
 if output_sound_device then
 	
@@ -163,4 +193,6 @@ if s3_enable == true then
     output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3", s3_connected)
 end
 
+output.dummy(fallible=true, !master_dj)
+output.dummy(fallible=true, !dj_live)
 ignore(output.dummy(blank()))
