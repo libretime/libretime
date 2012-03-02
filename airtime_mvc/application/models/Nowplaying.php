@@ -67,40 +67,51 @@ class Application_Model_Nowplaying
         return array("r", "", "", "", $p_showInstance->getName(), "", "", "", "", "", "");
     }
 
-    public static function GetDataGridData($viewType,  $dateString){
 
-        if ($viewType == "now"){
-            $dateTime = new DateTime("now", new DateTimeZone("UTC"));
-            $timeNow = $dateTime->format("Y-m-d H:i:s");
+    /*
+     * The purpose of this function is to return an array of scheduled
+     * items. There are two parameters. $p_viewType can be either "now"
+     * or "day". If "now", we show all scheduled items in the near future.
+     * 
+     * If "day" we need to find what day was requested by the user, and return
+     * scheduled items for that day.
+     * 
+     * $p_dateString is only used when $p_viewType is "day" it is in the format
+     * "2012-12-31". In this case it tells us which day to use. 
+     */
+    public static function GetDataGridData($p_viewType,  $p_dateString){
+
+        if ($p_viewType == "now"){
+            $start_dt = new DateTime("now", new DateTimeZone("UTC"));
+            $end_dt = clone $start_dt;
             
-            $startCutoff = 60;
-            $endCutoff = 86400; //60*60*24 - seconds in a day
+            $start_dt->sub(new DateInterval("PT60S"));
+            $end_dt->add(new DateInterval("PT24H"));
         } else {
-            $time = date("H:i:s");
-            $utcDate = Application_Model_DateHelper::ConvertToUtcDateTimeString($dateString." ".$time);
+            Logging::log("HIII");
             
-            $date = new Application_Model_DateHelper;
-            $date->setDate($utcDate);
+            //convert to UTC
+            $utc_dt = Application_Model_DateHelper::ConvertToUtcDateTime($p_dateString);
+            $start_dt = $utc_dt;
             
-            $timeNow = $date->getUtcTimestamp();
-
-            $startCutoff = $date->getNowDayStartDiff();
-            $endCutoff = $date->getNowDayEndDiff();
+            $end_dt = clone $utc_dt;
+            $end_dt->add(new DateInterval("PT24H"));
         }
-
-        $data = array();
-
-        $showIds = Application_Model_ShowInstance::GetShowsInstancesIdsInRange($timeNow, $startCutoff, $endCutoff);
         
-    
+        $starts = $start_dt->format("Y-m-d H:i:s");
+        $ends = $end_dt->format("Y-m-d H:i:s");
+
+        $showIds = Application_Model_ShowInstance::GetShowsInstancesIdsInRange($starts, $ends);
+            
         //get all the pieces to be played between the start cut off and the end cut off.
-        $scheduledItems = Application_Model_Schedule::getScheduleItemsInRange($timeNow, $startCutoff, $endCutoff);
+        $scheduledItems = Application_Model_Schedule::getScheduleItemsInRange($starts, $ends);
 
         $orderedScheduledItems;
         foreach ($scheduledItems as $scheduledItem){
             $orderedScheduledItems[$scheduledItem['instance_id']][] = $scheduledItem;
         }
 
+        $data = array();
         foreach ($showIds as $showId){
             $instanceId = $showId['id'];
 

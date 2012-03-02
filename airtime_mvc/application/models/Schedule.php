@@ -354,7 +354,7 @@ class Application_Model_Schedule {
     }
 
     
-    public static function getScheduleItemsInRange($timeNow, $start, $end)
+    public static function getScheduleItemsInRange($starts, $ends)
     {
         global $CC_DBC, $CC_CONFIG;
 
@@ -380,9 +380,9 @@ class Application_Model_Schedule {
         ." ON st.file_id = ft.id"
         ." LEFT JOIN ".$CC_CONFIG["showTable"]." s"
         ." ON si.show_id = s.id"
-        ." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
-        ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
-        ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
+        ." WHERE ((si.starts < TIMESTAMP '$starts' AND si.ends > TIMESTAMP '$starts')"
+        ." OR (si.starts > TIMESTAMP '$starts' AND si.ends < TIMESTAMP '$ends')"
+        ." OR (si.starts < TIMESTAMP '$ends' AND si.ends > TIMESTAMP '$ends'))"
         ." AND (st.starts < si.ends)"
         ." ORDER BY si.id, si.starts, st.starts";
         
