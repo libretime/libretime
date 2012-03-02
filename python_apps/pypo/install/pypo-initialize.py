@@ -85,7 +85,7 @@ try:
     binary_path = os.path.join(PATH_LIQUIDSOAP_BIN, "liquidsoap_%s_%s" % (codename, arch))
     
     try:
-        shutil.copy("%s/liquidsoap_%s_%s"%(PATH_LIQUIDSOAP_BIN, codename, arch), "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
+        shutil.copy(binary_path, "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
     except IOError, e:
         """
         shutil.copy can throw this exception for two reasons. First reason is that it cannot open the source file.
