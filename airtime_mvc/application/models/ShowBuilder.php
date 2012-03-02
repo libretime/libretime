@@ -88,14 +88,13 @@ class Application_Model_ShowBuilder {
         $row["timestamp"] = $ts;
     }
 
-    private function isCurrent($p_epochItemStart, $p_epochItemEnd) {
-        $current = false;
-
+    private function isCurrent($p_epochItemStart, $p_epochItemEnd, &$row) {
+       
         if ($this->epoch_now >= $p_epochItemStart && $this->epoch_now < $p_epochItemEnd) {
-            $current = true;
+            $row["current"] = true;
+            //how many seconds the view should wait to redraw itself.
+            $row["refresh"] = $p_epochItemEnd - $this->epoch_now;
         }
-
-        return $current;
     }
 
     private function makeHeaderRow($p_item) {
@@ -143,9 +142,7 @@ class Application_Model_ShowBuilder {
             $showEndEpoch = intval($showEndDT->format("U"));
 
             //don't want an overbooked item to stay marked as current.
-            if ($this->isCurrent($startsEpoch, min($endsEpoch, $showEndEpoch))) {
-                $row["current"] = true;
-            }
+            $this->isCurrent($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
             $row["id"] = intval($p_item["sched_id"]);
             $row["instance"] = intval($p_item["si_id"]);

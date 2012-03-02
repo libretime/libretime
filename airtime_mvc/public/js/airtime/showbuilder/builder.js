@@ -268,7 +268,8 @@ var AIRTIME = (function(AIRTIME){
 				var wrapperDiv,
 					markerDiv,
 					td,
-					$lib = $("#library_content");
+					$lib = $("#library_content"),
+					tr;
 				
 				//only create the cursor arrows if the library is on the page.
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
@@ -293,6 +294,18 @@ var AIRTIME = (function(AIRTIME){
 			    		td.append(markerDiv).wrapInner(wrapperDiv);
 				    });
 				}
+				
+				//if the now playing song is visible set a timeout to redraw the table at the start of the next song.
+				tr = tableDiv.find("tr.sb-now-playing");
+				if (tr.length > 0) {
+					var oTable = $('#show_builder_table').dataTable(),
+						aData = tr.data("aData");
+					
+					setTimeout(function(){
+						oTable.fnDraw();
+					}, aData.refresh * 1000); //need refresh in milliseconds
+				}
+					
 		    },
 			"fnHeaderCallback": function(nHead) {
 				$(nHead).find("input[type=checkbox]").attr("checked", false);
