@@ -68,13 +68,15 @@ def check_dj_client(user,password) =
         end
 end
 
-master_dj = ref default
-dj_live = ref default
+#master_dj = ref default
+#dj_live = ref default
 
 def append_master_dj_input(master_harbor_input_port, master_harbor_input_mount_point, s) =
     if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
-        master_dj := input.harbor(master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, buffer=7.,max=15.)
-        fallback(track_sensitive=false, [!master_dj, s])
+        master_dj = input.harbor(master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, buffer=0.5,max=15.)
+        
+        ignore(output.dummy(master_dj, fallible=true))
+        fallback(track_sensitive=false, [master_dj, s])
     else
         s
     end
@@ -82,8 +84,10 @@ end
 
 def append_dj_input(dj_harbor_input_port, dj_harbor_input_mount_point, s) =
     if dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
-        dj_live := input.harbor(dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client, buffer=7.,max=15.)
-        fallback(track_sensitive=false, [!dj_live, s])
+        dj_live = input.harbor(dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client, buffer=0.5,max=15.)
+        
+        ignore(output.dummy(dj_live, fallible=true))
+        fallback(track_sensitive=false, [dj_live, s])
     else
         s
     end
@@ -193,6 +197,6 @@ if s3_enable == true then
     output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3", s3_connected)
 end
 
-output.dummy(fallible=true, !master_dj)
-output.dummy(fallible=true, !dj_live)
+#output.dummy(fallible=true, !master_dj)
+#output.dummy(fallible=true, !dj_live)
 ignore(output.dummy(blank()))

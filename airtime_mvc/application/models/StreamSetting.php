@@ -106,18 +106,36 @@ class Application_Model_StreamSetting {
                 ." WHERE keyname not like '%_error'";
 
         $rows = $CC_DBC->getAll($sql);
-        if(isset($rows["master_harbor_input_port"])){
-            $rows[] = (array("keyname" =>"master_harbor_input_port", "value"=>self::GetMasterLiveSteamPort(), "type"=>"integer"));
+        
+        $exists = array();
+        
+        foreach($rows as $r){
+            if($r['keyname'] == 'master_live_stream_port'){
+                $exists['master_live_stream_port'] = true;
+            }elseif($r['keyname'] == 'master_live_stream_mp'){
+                $exists['master_live_stream_mp'] = true;
+            }elseif($r['keyname'] == 'dj_live_stream_port'){
+                $exists['dj_live_stream_port'] = true;
+            }elseif($r['keyname'] == 'dj_live_stream_mp'){
+                $exists['dj_live_stream_mp'] = true;
+            }
         }
-        if(isset($rows["master_harbor_input_mount_point"])){
-            $rows[] = (array("keyname" =>"master_harbor_input_mount_point", "value"=>self::GetMasterLiveSteamMountPoint(), "type"=>"string"));
+        
+        Logging::log(print_r($exits, true));
+        
+        if(!isset($exists["master_live_stream_port"])){
+            $rows[] = (array("keyname" =>"master_live_stream_port", "value"=>self::GetMasterLiveSteamPort(), "type"=>"integer"));
         }
-        if(isset($rows["dj_harbor_input_port"])){
-            $rows[] = (array("keyname" =>"dj_harbor_input_port", "value"=>self::GetDJLiveSteamPort(), "type"=>"integer"));
+        if(!isset($exists["master_live_stream_mp"])){
+            $rows[] = (array("keyname" =>"master_live_stream_mp", "value"=>self::GetMasterLiveSteamMountPoint(), "type"=>"string"));
         }
-        if(isset($rows["dj_harbor_input_mount_point"])){
-            $rows[] = (array("keyname" =>"dj_harbor_input_mount_point", "value"=>self::GetDJLiveSteamMountPoint(), "type"=>"string"));
+        if(!isset($exists["dj_live_stream_port"])){
+            $rows[] = (array("keyname" =>"dj_live_stream_port", "value"=>self::GetDJLiveSteamPort(), "type"=>"integer"));
         }
+        if(!isset($exists["dj_live_stream_mp"])){
+            $rows[] = (array("keyname" =>"dj_live_stream_mp", "value"=>self::GetDJLiveSteamMountPoint(), "type"=>"string"));
+        }
+        Logging::log(print_r($rows, true));
         return $rows;
     }
     
