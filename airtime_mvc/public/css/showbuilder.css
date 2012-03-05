@@ -1,7 +1,11 @@
 @CHARSET "UTF-8";
 
 #show_builder {
-    width:45%;
+    width:95%;
+}
+
+#show_builder_table th {
+	text-align: left;
 }
 
 #show_builder input.input_text {
@@ -43,6 +47,10 @@ tr.cursor-selected-row .marker {
 .ui-dialog .wrapper {
     margin: 0;
     padding: 10px 0 0 0;
+}
+
+.ui-dialog #show_builder {
+    width:45%;
 }
 
 .ui-dialog .ui-buttonset {

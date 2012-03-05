@@ -58,9 +58,14 @@ class Application_Model_ShowBuilder {
         }
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+        $schedStartDT = new DateTime($p_item["sched_starts"], new DateTimeZone("UTC"));
+        
+        $showStartEpoch = intval($showStartDT->format('U'));
+        $schedStartEpoch = intval($schedStartDT->format('U'));
 
-        //can only schedule the show if it hasn't started and you are allowed.
-        if ($this->epoch_now < $showStartDT->format('U') && $this->user->canSchedule($p_item["show_id"]) == true) {
+        //can only schedule the show if item hasn't started and you are allowed.
+        if ($this->epoch_now < max($showStartEpoch, $schedStartEpoch) 
+        		&& $this->user->canSchedule($p_item["show_id"]) == true) {
             $row["allowed"] = true;
         }
     }
@@ -68,7 +73,7 @@ class Application_Model_ShowBuilder {
     //information about whether a track is inside|boundary|outside a show.
     private function getItemStatus($p_item, &$row) {
 
-        $row["status"] = intval($p_item["sched_status"]);
+        $row["status"] = intval($p_item["playout_status"]);
     }
 
     private function getRowTimestamp($p_item, &$row) {
@@ -83,14 +88,13 @@ class Application_Model_ShowBuilder {
         $row["timestamp"] = $ts;
     }
 
-    private function isCurrent($p_epochItemStart, $p_epochItemEnd) {
-        $current = false;
-
+    private function isCurrent($p_epochItemStart, $p_epochItemEnd, &$row) {
+       
         if ($this->epoch_now >= $p_epochItemStart && $this->epoch_now < $p_epochItemEnd) {
-            $current = true;
+            $row["current"] = true;
+            //how many seconds the view should wait to redraw itself.
+            $row["refresh"] = $p_epochItemEnd - $this->epoch_now;
         }
-
-        return $current;
     }
 
     private function makeHeaderRow($p_item) {
@@ -138,9 +142,7 @@ class Application_Model_ShowBuilder {
             $showEndEpoch = intval($showEndDT->format("U"));
 
             //don't want an overbooked item to stay marked as current.
-            if ($this->isCurrent($startsEpoch, min($endsEpoch, $showEndEpoch))) {
-                $row["current"] = true;
-            }
+            $this->isCurrent($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
             $row["id"] = intval($p_item["sched_id"]);
             $row["instance"] = intval($p_item["si_id"]);

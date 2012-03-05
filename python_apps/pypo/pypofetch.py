@@ -10,6 +10,7 @@ import string
 import json
 import telnetlib
 import math
+import copy
 from threading import Thread
 from subprocess import Popen, PIPE
 from datetime import datetime
@@ -36,11 +37,12 @@ except Exception, e:
     sys.exit()
 
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q):
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
+        self.media_prepare_queue = media_q
         
         self.logger = logging.getLogger();
         
@@ -288,11 +290,29 @@ class PypoFetch(Thread):
 
         # Download all the media and put playlists in liquidsoap "annotate" format
         try:
-             media = self.prepare_media(media, bootstrapping)
+            
+            """
+            Make sure cache_dir exists
+            """
+            download_dir = self.cache_dir
+            try:
+                os.makedirs(download_dir)
+            except Exception, e:
+                pass
+            
+            for key in media:
+                media_item = media[key]
+                
+                fileExt = os.path.splitext(media_item['uri'])[1]
+                dst = os.path.join(download_dir, media_item['id']+fileExt)
+                media_item['dst'] = dst
+             
+            self.media_prepare_queue.put(copy.copy(media))
+            self.prepare_media(media, bootstrapping)
         except Exception, e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
-        self.logger.debug("Pushing to pypo-push: "+ str(media))
+        self.logger.debug("Pushing to pypo-push")
         self.push_queue.put(media)
 
         """
@@ -317,27 +337,10 @@ class PypoFetch(Thread):
                 
                 if bootstrapping:            
                     self.check_for_previous_crash(media_item)
-
-                # create playlist directory
-                try:
-                    """
-                    Extract year, month, date from mkey
-                    """
-                    y_m_d = mkey[0:10]
-                    download_dir = os.path.join(self.cache_dir, y_m_d)
-                    try:
-                        os.makedirs(os.path.join(self.cache_dir, y_m_d))
-                    except Exception, e:
-                        pass
-                    fileExt = os.path.splitext(media_item['uri'])[1]
-                    dst = os.path.join(download_dir, media_item['id']+fileExt)
-                except Exception, e:
-                    self.logger.warning(e)
-                
-                if self.handle_media_file(media_item, dst):
-                    entry = self.create_liquidsoap_annotation(media_item, dst)
-                    media_item['show_name'] = "TODO"
-                    media_item["annotation"] = entry
+               
+                entry = self.create_liquidsoap_annotation(media_item)
+                media_item['show_name'] = "TODO"
+                media_item["annotation"] = entry
                 
         except Exception, e:
             self.logger.error("%s", e)
@@ -345,7 +348,7 @@ class PypoFetch(Thread):
         return media
     
 
-    def create_liquidsoap_annotation(self, media, dst):
+    def create_liquidsoap_annotation(self, media):
         entry = \
             'annotate:media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
             % (media['id'], 0, \
@@ -353,7 +356,7 @@ class PypoFetch(Thread):
             float(media['fade_out']) / 1000, \
             float(media['cue_in']), \
             float(media['cue_out']), \
-            media['row_id'], dst)
+            media['row_id'], media['dst'])
 
         return entry
         
@@ -397,7 +400,8 @@ class PypoFetch(Thread):
 
         try:
             #blocking function to download the media item
-            self.download_file(media_item, dst)
+            #self.download_file(media_item, dst)
+            self.copy_file(media_item, dst)
             
             if os.access(dst, os.R_OK):
                 # check filesize (avoid zero-byte files)
@@ -417,10 +421,25 @@ class PypoFetch(Thread):
         return False
 
 
-    """
-    Download a file from a remote server and store it in the cache.
-    """
+    def copy_file(self, media_item, dst):
+        """
+        Copy the file from local library directory.
+        """
+        if not os.path.isfile(dst):
+            self.logger.debug("copying from %s to local cache %s" % (media_item['uri'], dst))
+            try:
+                shutil.copy(media_item['uri'], dst)
+            except:
+                self.logger.error("Could not copy from %s to %s" % (media_item['uri'], dst))
+        else:
+            #file already exists
+            pass
+
+
     def download_file(self, media_item, dst):
+        """
+        Download a file from a remote server and store it in the cache.
+        """
         if os.path.isfile(dst):
             pass
             #self.logger.debug("file already in cache: %s", dst)

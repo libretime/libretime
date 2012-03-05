@@ -6,12 +6,8 @@ $(document).ready(function(){
 	
 	oBaseDatePickerSettings = {
 		dateFormat: 'yy-mm-dd',
-		onSelect: function(sDate, oDatePicker) {
-			var oDate,
-				dInput;
-			
-			dInput = $(this);			
-			oDate = dInput.datepicker( "setDate", sDate );
+		onSelect: function(sDate, oDatePicker) {		
+			$(this).datepicker( "setDate", sDate );
 		}
 	};
 	
@@ -120,9 +116,44 @@ $(document).ready(function(){
 		oTable.fnDraw();
 	});
 	
+	$("#sb_edit").click(function(ev){
+		var $button = $(this),
+			$lib = $("#library_content"),
+			$builder = $("#show_builder"),
+			oTable = $("#show_builder_table").dataTable();
+		
+		if ($button.hasClass("sb-edit")) {
+			
+			$lib.show();
+			$lib.width("45%");
+			$builder.width("50%");
+			
+			$button.removeClass("sb-edit");
+			$button.addClass("sb-finish-edit");
+			$button.val("Close Library");
+		}
+		else if($button.hasClass("sb-finish-edit")) {
+			
+			$lib.hide();
+			$builder.width("95%");
+			
+			$button.removeClass("sb-finish-edit");
+			$button.addClass("sb-edit");
+			$button.val("Add Files");
+		}
+		
+		oTable.fnDraw();
+		
+	});
+	
 	oRange = fnGetScheduleRange();	
 	AIRTIME.showbuilder.fnServerData.start = oRange.start;
 	AIRTIME.showbuilder.fnServerData.end = oRange.end;
 		
 	AIRTIME.showbuilder.builderDataTable();
+	
+	setInterval(function(){
+		var oTable = $('#show_builder_table').dataTable();
+		oTable.fnDraw();
+	}, 20 * 1000); //need refresh in milliseconds
 });

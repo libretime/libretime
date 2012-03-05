@@ -111,7 +111,7 @@ class PreferenceController extends Zend_Controller_Action
             $privacyChecked = true;
         }
         $this->view->privacyChecked = $privacyChecked;
-        $this->view->section_title = Application_Model_Preference::GetPlanLevel() == 'disabled'?'Support Settings':'Station Information Settings';
+        $this->view->section_title = 'Support Feedback';
         $this->view->form = $form;
         //$form->render($this->view);
     }

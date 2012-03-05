@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 Python part of radio playout (pypo)
 """
+
 import time
 from optparse import *
 import sys
@@ -15,6 +14,7 @@ from Queue import Queue
 
 from pypopush import PypoPush
 from pypofetch import PypoFetch
+from pypofile import PypoFile
 from recorder import Recorder
 from pypomessagehandler import PypoMessageHandler
 
@@ -125,11 +125,23 @@ if __name__ == '__main__':
     recorder_q = Queue()
     pypoPush_q = Queue()
     
+    """
+    This queue is shared between pypo-fetch and pypo-file, where pypo-file
+    is the receiver. Pypo-fetch will send every schedule it gets to pypo-file
+    and pypo will parse this schedule to determine which file has the highest
+    priority, and will retrieve it.
+    """
+    media_q = Queue()
+    
     pmh = PypoMessageHandler(pypoFetch_q, recorder_q)
     pmh.daemon = True
     pmh.start()
     
-    pf = PypoFetch(pypoFetch_q, pypoPush_q)
+    pfile = PypoFile(media_q)
+    pfile.daemon = True
+    pfile.start()
+    
+    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q)
     pf.daemon = True
     pf.start()
     
@@ -142,8 +154,9 @@ if __name__ == '__main__':
     recorder.start()
 
     pmh.join()
-    pp.join()
+    pfile.join()
     pf.join()
+    pp.join()
     recorder.join()
     
     logger.info("pypo fetch exit")
