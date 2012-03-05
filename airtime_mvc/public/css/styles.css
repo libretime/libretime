@@ -623,7 +623,7 @@ dl.inline-list dd {
     width: 55%;
     border: 1px solid #5B5B5B;
     margin-left: -8px;
-    padding: 4px 3px 4px 25px;
+    padding: 5px 3px 4px 25px;
 }
 .dataTables_length select {
     background-color: #DDDDDD;

@@ -106,16 +106,17 @@ function buildScheduleDialog (json) {
 		//subtract padding in pixels
 		widgetWidth = width - 50,
 		libWidth = Math.floor(widgetWidth * 0.5),
-		builderWidth = Math.floor(widgetWidth * 0.5);
-	
-	
+		builderWidth = Math.floor(widgetWidth * 0.5),
+		libLength,
+		libType,
+		libFilter;
 	
 	dialog.find("#library_content")
-		.height(height - 125)
+		.height(height - 110)
 		.width(libWidth);
 	
 	dialog.find("#show_builder")
-		.height(height - 125)
+		.height(height - 110)
 		.width(builderWidth);
 	
 	dialog.dialog({
@@ -132,7 +133,7 @@ function buildScheduleDialog (json) {
 			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
 		}}
 	});
-	
+		
 	//set the start end times so the builder datatables knows its time range.
 	fnServer.start = json.start;
 	fnServer.end = json.end;
@@ -141,6 +142,13 @@ function buildScheduleDialog (json) {
 	AIRTIME.showbuilder.builderDataTable();
 	
 	dialog.dialog('open');
+	
+	//calculate dynamically width fo the library search input.
+	libLength = dialog.find("#library_display_length");
+	libType = dialog.find("#library_display_type");
+	libFilter = dialog.find("#library_display_filter");
+	
+	libFilter.find("input").width(libFilter.width() - libType.width() - libLength.width() - 80);
 }
 
 function buildContentDialog (json){
