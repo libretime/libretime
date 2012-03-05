@@ -100,15 +100,31 @@ function buildScheduleDialog (json) {
 	
 	var dialog = $(json.dialog),
 		viewport = findViewportDimensions(),
-		height = viewport.height * 0.96,
-		width = viewport.width * 0.96,
-		fnServer = AIRTIME.showbuilder.fnServerData;
-    
+		height = Math.floor(viewport.height * 0.96),
+		width = Math.floor(viewport.width * 0.96),
+		fnServer = AIRTIME.showbuilder.fnServerData,
+		//subtract padding in pixels
+		widgetWidth = width - 50,
+		libWidth = Math.floor(widgetWidth * 0.5),
+		builderWidth = Math.floor(widgetWidth * 0.5);
+	
+	
+	
+	dialog.find("#library_content")
+		.height(height - 125)
+		.width(libWidth);
+	
+	dialog.find("#show_builder")
+		.height(height - 125)
+		.width(builderWidth);
+	
 	dialog.dialog({
 		autoOpen: false,
 		title: json.title,
 		width: width,
 		height: height,
+		resizable: false,
+		draggable: false,
 		modal: true,
 		close: closeDialog,
 		buttons: {"Ok": function() {

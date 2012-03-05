@@ -47,10 +47,22 @@ tr.cursor-selected-row .marker {
 .ui-dialog .wrapper {
     margin: 0;
     padding: 10px 0 0 0;
+    overflow: hidden;
+}
+
+.ui-dialog #library_content {
+    margin: 0 10px 10px 0;
+    overflow: auto;
+    min-height: 0;
 }
 
 .ui-dialog #show_builder {
-    width:45%;
+    margin: 0 0 10px 0;
+    overflow: auto;   
+}
+
+.ui-dialog .padded {
+    padding: 8px 10px 8px 8px;
 }
 
 .ui-dialog .ui-buttonset {
