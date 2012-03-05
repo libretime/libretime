@@ -83,6 +83,11 @@ class PypoPush(Thread):
                     if self.push_to_liquidsoap(media_item):
                         self.logger.debug("Pushed to liquidsoap, updating 'played' status.")
                         
+                        """
+                        Temporary solution to make sure we don't push the same track multiple times.
+                        """
+                        del media[key]
+                        
                         currently_on_air = True
                         self.liquidsoap_state_play = True
                         
