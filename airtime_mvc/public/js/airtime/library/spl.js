@@ -245,6 +245,16 @@ var AIRTIME = (function(AIRTIME){
 		}
 	}
 
+    function openAudioPreview(event) {
+        event.stopPropagation();
+        
+        var name = $(this).parent().find('.spl_title').text();
+        var audioFile = $(this).attr('audioFile');
+        var id = "";
+        
+        open_audio_preview(name, audioFile, id);
+    }      
+    
 	function editName() {
 	    var nameElement = $(this),
 	    	playlistName = nameElement.text(),
@@ -343,6 +353,9 @@ var AIRTIME = (function(AIRTIME){
 		$(el).delegate(".spl_cue", 
 				{"click": openCueEditor});
 
+        //add the play function to the play icon
+        $(el).delegate(".big_play",
+            {"click": openAudioPreview});
 	}
 	
 	//sets events dynamically for the cue editor.

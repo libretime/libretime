@@ -92,7 +92,9 @@ div.jp-video div.jp-interface {
 span.filename {
     display:none; 
 }
-
+span.name {
+    display:none; 
+}
 /* @group CONTROLS */
 
 div.jp-controls-holder {

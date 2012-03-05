@@ -116,7 +116,9 @@ class ApiController extends Zend_Controller_Action
             return;
         }
 
-        $filename = $this->_getParam("file");
+        $name = $this->_getParam("name");
+        $filename = $this->_getParam("filename");
+    
         $file_id = substr($filename, 0, strpos($filename, "."));
         if (ctype_alnum($file_id) && strlen($file_id) == 32)
         {
@@ -124,7 +126,6 @@ class ApiController extends Zend_Controller_Action
             if ( $media != null && !PEAR::isError($media))
             {
                 $filepath = $media->getFilePath();
-                
                 if(is_file($filepath)){
                     $full_path = $media->getPropelOrm()->getDbFilepath();
                     $file_base_name = strrchr($full_path, '/');
@@ -148,7 +149,6 @@ class ApiController extends Zend_Controller_Action
                         header("Content-Disposition: inline; filename=$file_base_name");
                     }
                 
-                    //ini_set('memory_limit', '512M');
                     $this->smartReadFile($filepath, $ext);
                     exit;
                 }else{
@@ -197,7 +197,7 @@ class ApiController extends Zend_Controller_Action
                 }
             }
         }
-    
+   
         if (isset($_SERVER['HTTP_RANGE']))
         {
             header('HTTP/1.1 206 Partial Content');
@@ -215,7 +215,6 @@ class ApiController extends Zend_Controller_Action
         {
             header("Content-Range: bytes $begin-$end/$size");
         }
-       
         header("Content-Transfer-Encoding: binary");
         header("Last-Modified: $time");
 
@@ -225,7 +224,8 @@ class ApiController extends Zend_Controller_Action
         while (@ob_end_flush());
         
         $cur = $begin;
-        fseek($fm, $begin, 0);        
+        fseek($fm, $begin, 0);
+
         while(!feof($fm) && $cur <= $end && (connection_status() == 0))
         {
             echo  fread($fm, min(1024 * 16, ($end - $cur) + 1));

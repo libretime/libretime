@@ -37,11 +37,12 @@ function audioPreview(filename, elemID){
 
 $(document).ready(function(){
     var filename = $(".filename").text();
-    play(filename);
+    var name = $(".name").text();
+    play(name, filename);
 });
 
-function play(filename){
-    var uri = "/api/get-media/file/" + filename;
+function play(name, filename){
+    var uri = "/api/get-media/name/"+name+"/filename/" + filename;
     var ext = getFileExt(filename);
     
     
