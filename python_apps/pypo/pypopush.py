@@ -83,6 +83,11 @@ class PypoPush(Thread):
                     if self.push_to_liquidsoap(media_item):
                         self.logger.debug("Pushed to liquidsoap, updating 'played' status.")
                         
+                        """
+                        Temporary solution to make sure we don't push the same track multiple times.
+                        """
+                        del media[key]
+                        
                         currently_on_air = True
                         self.liquidsoap_state_play = True
                         
@@ -99,7 +104,7 @@ class PypoPush(Thread):
                 track, so let's push it now so that Liquidsoap can start playing
                 it immediately after (and prepare crossfades if need be).
                 """
-                telnet_to_liquidsoap(media_item)
+                self.telnet_to_liquidsoap(media_item)
                 self.last_end_time = media_item["end"]
             else:
                 """
