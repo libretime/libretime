@@ -99,7 +99,7 @@ class PypoPush(Thread):
                 track, so let's push it now so that Liquidsoap can start playing
                 it immediately after (and prepare crossfades if need be).
                 """
-                telnet_to_liquidsoap(media_item)
+                self.telnet_to_liquidsoap(media_item)
                 self.last_end_time = media_item["end"]
             else:
                 """
