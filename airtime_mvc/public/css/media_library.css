@@ -1,7 +1,7 @@
 #library_content {
 	float: left;
 	width: 50%;
-	min-height: 475px;
+	overflow: auto;
 }
 
 #library_display {
@@ -10,7 +10,7 @@
 }
 
 #library_display th {
-        text-align: left;
+    text-align: left;
 }
 
 #library_content #library_display {
@@ -80,7 +80,9 @@
     text-align: center;
 }
 
-.library_sr,
-.library_bitrate {
-	text-align: right;
+td.library_track,
+td.library_sr,
+td.library_bitrate {
+    text-align: right;
+    padding-right: 1em !important;
 }

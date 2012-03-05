@@ -58,7 +58,7 @@ var AIRTIME = (function(AIRTIME){
 	          /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length", "sWidth": "80px"},
 	          /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time"},
 	          /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time"},
-	          /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track"},
+	          /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track", "sWidth": "65px"},
 	          /* Mood */  		  {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood"},
 	          /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm"},
 	          /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer"},
