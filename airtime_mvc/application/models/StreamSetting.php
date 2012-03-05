@@ -121,8 +121,6 @@ class Application_Model_StreamSetting {
             }
         }
         
-        Logging::log(print_r($exits, true));
-        
         if(!isset($exists["master_live_stream_port"])){
             $rows[] = (array("keyname" =>"master_live_stream_port", "value"=>self::GetMasterLiveSteamPort(), "type"=>"integer"));
         }

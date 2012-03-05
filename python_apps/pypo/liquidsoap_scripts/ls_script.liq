@@ -38,6 +38,25 @@ server.register(namespace="streams", "connection_status", fun (s) -> begin "1:#{
 default = amplify(0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 
+master_dj_enabled = ref false;
+live_dj_enabled = ref false;
+
+def make_master_dj_available()
+        master_dj_enabled := true
+end
+
+def make_master_dj_unavailable()
+        master_dj_enabled := false
+end
+
+def make_live_dj_available()
+        live_dj_enabled := true
+end
+
+def make_live_dj_unavailable()
+        live_dj_enabled := false
+end
+
 #live stream setup
 set("harbor.bind_addr", "0.0.0.0")
 
@@ -68,15 +87,12 @@ def check_dj_client(user,password) =
         end
 end
 
-#master_dj = ref default
-#dj_live = ref default
-
 def append_master_dj_input(master_harbor_input_port, master_harbor_input_mount_point, s) =
     if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
         master_dj = input.harbor(master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, buffer=0.5,max=15.)
-        
         ignore(output.dummy(master_dj, fallible=true))
-        fallback(track_sensitive=false, [master_dj, s])
+        stopable_master_dj = switch(track_sensitive=false, [({!master_dj_enabled},master_dj)])
+        fallback(track_sensitive=false, [stopable_master_dj, s])
     else
         s
     end
@@ -85,9 +101,9 @@ end
 def append_dj_input(dj_harbor_input_port, dj_harbor_input_mount_point, s) =
     if dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
         dj_live = input.harbor(dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client, buffer=0.5,max=15.)
-        
         ignore(output.dummy(dj_live, fallible=true))
-        fallback(track_sensitive=false, [dj_live, s])
+        stopable_live_dj = switch(track_sensitive=false, [({!live_dj_enabled},dj_live)])
+        fallback(track_sensitive=false, [stopable_live_dj, s])
     else
         s
     end
@@ -118,6 +134,27 @@ s = crossfade(s)
 #)
 
 add_skip_command(s)
+
+server.register(namespace="streams",
+                description="Stop Master DJ source.",
+                usage="master_dj_stop",
+                "master_dj_stop",
+                fun (s) -> begin make_master_dj_unavailable() "Done." end)
+server.register(namespace="streams",
+                description="Start Master DJ source.",
+                usage="master_dj_start",
+                "master_dj_start",
+                fun (s) -> begin make_master_dj_available() "Done." end)
+server.register(namespace="streams",
+                description="Stop Live DJ source.",
+                usage="live_dj_stop",
+                "live_dj_stop",
+                fun (s) -> begin make_live_dj_unavailable() "Done." end)
+server.register(namespace="streams",
+                description="Start Live DJ source.",
+                usage="live_dj_start",
+                "live_dj_start",
+                fun (s) -> begin make_live_dj_available() "Done." end)
 
 if output_sound_device then
 	
