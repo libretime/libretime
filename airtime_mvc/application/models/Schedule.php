@@ -400,29 +400,22 @@ class Application_Model_Schedule {
     }
 
     /**
-     * Returns array indexed by:
-     *    "playlistId"/"playlist_id" (aliases to the same thing)
-     *    "start"/"starts" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
-     *    "end"/"ends" (aliases to the same thing) as YYYY-MM-DD HH:MM:SS.nnnnnn
-     *    "group_id"/"id" (aliases to the same thing)
-     *    "clip_length" (for audio clips this is the length of the audio clip,
-     *                   for playlists this is the length of the entire playlist)
-     *    "name" (playlist only)
-     *    "creator" (playlist only)
-     *    "file_id" (audioclip only)
-     *    "count" (number of items in the playlist, always 1 for audioclips.
-     *      Note that playlists with one item will also have count = 1.
+     * Returns an array of schedule items from cc_schedule table. Tries
+     * to return at least 3 items (if they are available). The parameters
+     * $p_startTime and $p_endTime specify the range. Schedule items returned
+     * do not have to be entirely within this range. It is enough that the end
+     * or beginning of the scheduled item is in the range.
+     * 
      *
-     * @param string $p_fromDateTime
+     * @param string $p_startTime
      *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-     * @param string $p_toDateTime
+     * @param string $p_endTime
      *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-     * @param boolean $p_playlistsOnly
-     *    Retrieve playlists as a single item.
      * @return array
-     *      Returns null if nothing found
+     *    Returns null if nothing found, else an array of associative
+     *    arrays representing each row.
      */
-    public static function GetItems($p_currentDateTime, $p_toDateTime) {
+    public static function GetItems($p_startTime, $p_endTime) {
         global $CC_CONFIG, $CC_DBC;
         
         $baseQuery = "SELECT st.file_id AS file_id,"
@@ -440,8 +433,8 @@ class Application_Model_Schedule {
             ." ON st.instance_id = si.id";
    
 
-        $predicates = " WHERE st.ends > '$p_currentDateTime'"
-        ." AND st.starts < '$p_toDateTime'"
+        $predicates = " WHERE st.ends > '$p_startTime'"
+        ." AND st.starts < '$p_endTime'"
         ." ORDER BY st.starts";
         
         $sql = $baseQuery.$predicates;
@@ -458,7 +451,7 @@ class Application_Model_Schedule {
             $dt->add(new DateInterval("PT30M"));
             $range_end = $dt->format("Y-m-d H:i:s");
                       
-            $predicates = " WHERE st.ends > '$p_currentDateTime'"
+            $predicates = " WHERE st.ends > '$p_startTime'"
             ." AND st.starts < '$range_end'"
             ." ORDER BY st.starts"
             ." LIMIT 3";

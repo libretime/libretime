@@ -315,12 +315,10 @@ class PypoFetch(Thread):
         self.logger.debug("Pushing to pypo-push")
         self.push_queue.put(media)
 
-        """
-        TODO
+
         # cleanup
-        try: self.cleanup()
+        try: self.cleanup(media)
         except Exception, e: self.logger.error("%s", e)
-        """
 
         
 
@@ -446,31 +444,27 @@ class PypoFetch(Thread):
         else:
             self.logger.debug("try to download %s", media_item['uri'])
             self.api_client.get_media(media_item['uri'], dst)
-    
-    """
-    Cleans up folders in cache_dir. Look for modification date older than "now - CACHE_FOR"
-    and deletes them.
-    """
-    def cleanup(self):
-        offset = 3600 * int(config["cache_for"])
-        now = time.time()
-
-        for r, d, f in os.walk(self.cache_dir):
-            for dir in d:
-                try:
-                    timestamp = calendar.timegm(time.strptime(dir, "%Y-%m-%d-%H-%M-%S"))
-                    if (now - timestamp) > offset:
-                        try:
-                            self.logger.debug('trying to remove  %s - timestamp: %s', os.path.join(r, dir), timestamp)
-                            shutil.rmtree(os.path.join(r, dir))
-                        except Exception, e:
-                            self.logger.error("%s", e)
-                            pass
-                        else:
-                            self.logger.info('sucessfully removed %s', os.path.join(r, dir))
-                except Exception, e:
-                    self.logger.error(e)
-
+            
+    def cleanup(self, media):
+        """
+        Get list of all files in the cache dir and remove them if they aren't being used anymore.
+        Input dict() media, lists all files that are scheduled or currently playing. Not being in this
+        dict() means the file is safe to remove. 
+        """
+        cached_file_set = set(os.listdir(self.cache_dir))
+        scheduled_file_set = set()
+        
+        for mkey in media:
+            media_item = media[mkey]
+            fileExt = os.path.splitext(media_item['uri'])[1]
+            scheduled_file_set.add(media_item["id"] + fileExt)
+        
+        unneeded_files = cached_file_set - scheduled_file_set
+        
+        self.logger.debug("Files to remove " + str(unneeded_files))
+        for file in unneeded_files:
+            self.logger.debug("Removing %s" % os.path.join(self.cache_dir, file))
+            os.remove(os.path.join(self.cache_dir, file))
 
     def main(self):
         # Bootstrap: since we are just starting up, we need to grab the

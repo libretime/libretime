@@ -70,7 +70,7 @@ class PypoPush(Thread):
             str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
             str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
                         
-            for key in media:
+            for key in media.keys():
                 media_item = media[key]
                 item_start = media_item['start'][0:19]
                 
