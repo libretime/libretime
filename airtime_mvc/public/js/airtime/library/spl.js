@@ -248,11 +248,10 @@ var AIRTIME = (function(AIRTIME){
     function openAudioPreview(event) {
         event.stopPropagation();
         
-        var name = $(this).parent().find('.spl_title').text();
         var audioFile = $(this).attr('audioFile');
         var id = "";
         
-        open_audio_preview(name, audioFile, id);
+        open_audio_preview(audioFile, id);
     }      
     
 	function editName() {
