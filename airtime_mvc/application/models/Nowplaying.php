@@ -88,8 +88,6 @@ class Application_Model_Nowplaying
             $start_dt->sub(new DateInterval("PT60S"));
             $end_dt->add(new DateInterval("PT24H"));
         } else {
-            Logging::log("HIII");
-            
             //convert to UTC
             $utc_dt = Application_Model_DateHelper::ConvertToUtcDateTime($p_dateString);
             $start_dt = $utc_dt;
@@ -140,6 +138,7 @@ class Application_Model_Nowplaying
                	$data[] = self::CreateGapRow($gapTime);
         }
 
+        $timeNow = gmdate("Y-m-d H:i:s");
         $rows = Application_Model_Show::GetCurrentShow($timeNow);
         Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
         return array("currentShow"=>$rows, "rows"=>$data);
