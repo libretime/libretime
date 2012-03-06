@@ -195,7 +195,7 @@ class Application_Model_Schedule {
                 $results['current'] =  array("name"=>$row[$i]["artist_name"]." - ".$row[$i]["track_title"],
                             "starts"=>$row[$i]["starts"],
                             "ends"=>$row[$i]["ends"],
-                            "media_item_played"=>$row[0]["media_item_played"],
+                            "media_item_played"=>$row[$i]["media_item_played"],
                             "record"=>0);
                 if ( isset($row[$i+1])){
                     $results['next'] =  array("name"=>$row[$i+1]["artist_name"]." - ".$row[$i+1]["track_title"],
