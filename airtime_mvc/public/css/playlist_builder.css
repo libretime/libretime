@@ -143,7 +143,7 @@
 #side_playlist h3 + h4 {
 	margin:0 0 11px 0;
 }
-#spl_sortable a.big_play {
+#spl_sortable div.big_play {
 	display:block;
 	width:20px;
 	height:50px;
@@ -155,21 +155,21 @@
     background: -moz-linear-gradient(top, #707070 0, #666666 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #707070), color-stop(100%, #666666));
 }
-#spl_sortable a.big_play:hover {
+#spl_sortable div.big_play:hover {
 	border:1px solid #282828;
 	background-color: #3b3b3b;
     background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
 }
-#spl_sortable a.big_play .ui-icon-play {
+#spl_sortable div.big_play .ui-icon-play {
 	margin: 17px 0 0 1px;
 }
 
-#spl_sortable a.big_play .ui-icon-pause {
+#spl_sortable div.big_play .ui-icon-pause {
  margin: 17px 0 0 1px;
 }
 
-#spl_sortable a.big_play:hover .ui-icon-play, #spl_sortable a.big_play:hover .ui-icon-pause {
+#spl_sortable div.big_play:hover .ui-icon-play, #spl_sortable div.big_play:hover .ui-icon-pause {
 	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
 }
 #spl_sortable .ui-icon-closethick {

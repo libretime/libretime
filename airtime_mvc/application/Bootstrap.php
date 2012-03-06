@@ -84,10 +84,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/playlist.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
+
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         if (Application_Model_Preference::GetPlanLevel() != "disabled"
-                && $_SERVER['REQUEST_URI'] != '/Dashboard/stream-player') {
+                && ($_SERVER['REQUEST_URI'] != '/Dashboard/stream-player' || $_SERVER['REQUEST_URI'] != '/Playlist/audio-preview-player')) {
             $client_id = Application_Model_Preference::GetClientId();
             $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
             $view->headScript()->appendFile($baseUrl . '/js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');

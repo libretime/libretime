@@ -19,7 +19,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('builder');
 
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js'),'text/javascript');
-
+        
         $this->_helper->actionStack('library', 'library');
         $this->_helper->actionStack('builder', 'showbuilder');
     }

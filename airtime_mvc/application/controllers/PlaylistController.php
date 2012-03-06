@@ -15,6 +15,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('new', 'json')
                     ->addActionContext('edit', 'json')
                     ->addActionContext('delete', 'json')
+                    ->addActionContext('play', 'json')
                     ->addActionContext('set-playlist-fades', 'json')
                     ->addActionContext('get-playlist-fades', 'json')
                     ->addActionContext('set-playlist-name', 'json')
@@ -28,7 +29,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         $pl = null;
 
-    	if (isset($this->pl_sess->id)) {
+    if (isset($this->pl_sess->id)) {
             $pl = new Application_Model_Playlist($this->pl_sess->id);
 
             $modified = $this->_getParam('modified', null);
@@ -111,9 +112,9 @@ class PlaylistController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-		$this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
-		$this->_helper->viewRenderer->setResponseSegment('spl');
+        $this->_helper->viewRenderer->setResponseSegment('spl');
 
         try {
             if (isset($this->pl_sess->id)) {
@@ -193,6 +194,33 @@ class PlaylistController extends Zend_Controller_Action
         catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
+    }
+    
+    public function audioPreviewPlayerAction()
+    {
+        $name = $this->_getParam('name');
+        $fileName = $this->_getParam('filename');
+        $playlistIndex = $this->_getParam('index');
+
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/preview_jplayer.js?'.filemtime($baseDir.'/js/airtime/library/preview_jplayer.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.filemtime($baseDir.'/js/jplayer/jquery.jplayer.min.js'),'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css'));
+        $this->_helper->layout->setLayout('audioPlayer');
+
+        $logo = Application_Model_Preference::GetStationLogo();
+        if($logo){
+            $this->view->logo = "data:image/png;base64,$logo";
+        } else {
+            $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
+        }
+        
+        $this->view->name = $name;
+        $this->view->fileName = $fileName;
+        $this->view->playlistIndex= $playlistIndex;
     }
 
     public function addItemsAction()
