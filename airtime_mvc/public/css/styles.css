@@ -9,7 +9,7 @@ body {
     padding: 0;
 }
 html, body {
-height: 100%;
+    height: 100%;
 }
 
 #login-page {
@@ -366,7 +366,7 @@ select {
 
 .wrapper {
 	margin: 0 20px 0 20px;
-	padding:20px 0 0 0;
+	padding:10px 0 0 0;
 }
 
 .alpha-block {
@@ -577,7 +577,7 @@ dl.inline-list dd {
 	line-height:22px;
 }
 .dataTables_filter {
-	margin:8px 0 0 8px;
+	margin:0 0 0 8px;
 }
 .dataTables_filter .auto-search {
 	width:55%;
@@ -623,7 +623,7 @@ dl.inline-list dd {
     width: 55%;
     border: 1px solid #5B5B5B;
     margin-left: -8px;
-    padding: 4px 3px 4px 25px;
+    padding: 5px 3px 4px 25px;
 }
 .dataTables_length select {
     background-color: #DDDDDD;

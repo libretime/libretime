@@ -1,8 +1,20 @@
 $(document).ready(function(){
 	
-	var oBaseDatePickerSettings,
+	var viewport = AIRTIME.utilities.findViewportDimensions(),
+		lib = $("#library_content"),
+		builder = $("#show_builder"),
+		widgetHeight = viewport.height - 185,
+		screenWidth = Math.floor(viewport.width - 110),
+		oBaseDatePickerSettings,
 		oBaseTimePickerSettings,
 		oRange;
+	
+	//set the heights of the main widgets.
+	lib.height(widgetHeight);
+	
+	//builder takes all the screen on first load
+	builder.height(widgetHeight)
+		.width(screenWidth);
 	
 	oBaseDatePickerSettings = {
 		dateFormat: 'yy-mm-dd',
@@ -125,17 +137,17 @@ $(document).ready(function(){
 		if ($button.hasClass("sb-edit")) {
 			
 			$lib.show();
-			$lib.width("45%");
-			$builder.width("50%");
+			$lib.width(Math.floor(screenWidth * 0.5));
+			$builder.width(Math.floor(screenWidth * 0.5));
 			
 			$button.removeClass("sb-edit");
 			$button.addClass("sb-finish-edit");
 			$button.val("Close Library");
 		}
-		else if($button.hasClass("sb-finish-edit")) {
+		else if ($button.hasClass("sb-finish-edit")) {
 			
 			$lib.hide();
-			$builder.width("95%");
+			$builder.width(screenWidth);
 			
 			$button.removeClass("sb-finish-edit");
 			$button.addClass("sb-edit");
@@ -149,7 +161,8 @@ $(document).ready(function(){
 	oRange = fnGetScheduleRange();	
 	AIRTIME.showbuilder.fnServerData.start = oRange.start;
 	AIRTIME.showbuilder.fnServerData.end = oRange.end;
-		
+	
+	AIRTIME.library.libraryInit();
 	AIRTIME.showbuilder.builderDataTable();
 	
 	setInterval(function(){
