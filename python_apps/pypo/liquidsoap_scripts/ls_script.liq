@@ -8,7 +8,7 @@ set("server.telnet.port", 1234)
 
 time = ref string_of(gettimeofday())
 
-queue = audio_to_stereo(request.queue(id="queue", length=0.5))
+queue = audio_to_stereo(request.equeue(id="queue", length=0.5))
 queue = cue_cut(queue)
 
 pypo_data = ref '0'
