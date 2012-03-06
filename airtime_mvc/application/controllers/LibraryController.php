@@ -29,9 +29,15 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction() {
 
+        global $CC_CONFIG;
+
         $this->_helper->layout->setLayout('library');
 
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_playlistbuilder.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/main_library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->_helper->actionStack('library', 'library');
         $this->_helper->actionStack('index', 'playlist');
@@ -58,7 +64,6 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/main_library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);

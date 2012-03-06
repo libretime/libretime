@@ -2,6 +2,7 @@
 
 #show_builder {
     width:95%;
+    overflow: auto;
 }
 
 #show_builder_table th {
