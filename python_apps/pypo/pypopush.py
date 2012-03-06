@@ -9,10 +9,16 @@ import telnetlib
 import calendar
 import json
 import math
+
+"""
+It is possible to use a list as a queue, where the first element added is the first element 
+retrieved ("first-in, first-out"); however, lists are not efficient for this purpose. Let's use
+"deque"
+"""
+from collections import deque
+
 from threading import Thread
-
 from api_clients import api_client
-
 from configobj import ConfigObj
 
 
@@ -25,6 +31,7 @@ try:
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
     PUSH_INTERVAL = 2
+    MAX_LIQUIDSOAP_QUEUE_LENGTH = 2
 except Exception, e:
     logger = logging.getLogger()
     logger.error('Error loading config file %s', e)
@@ -42,6 +49,8 @@ class PypoPush(Thread):
         self.push_ahead = 10
         self.last_end_time = 0
         
+        self.liquidsoap_queue = deque()
+        
         self.logger = logging.getLogger('push')
         
     def push(self):
@@ -51,6 +60,8 @@ class PypoPush(Thread):
         If yes, the current liquidsoap playlist gets replaced with the corresponding one,
         then liquidsoap is asked (via telnet) to reload and immediately play it.
         """
+        
+        self.update_liquidsoap_queue()
 
         timenow = time.time()
         # get a new schedule from pypo-fetch
@@ -58,38 +69,46 @@ class PypoPush(Thread):
             # make sure we get the latest schedule
             while not self.queue.empty():
                 self.media = self.queue.get()
+                
             self.logger.debug("Received data from pypo-fetch")          
             self.logger.debug('media %s' % json.dumps(self.media))
+            self.handle_new_media(self.media)
+                
 
         media = self.media
         
-        currently_on_air = False
-        if media:
-            tnow = time.gmtime(timenow)
-            tcoming = time.gmtime(timenow + self.push_ahead)
-            str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-            str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
-                        
-            for key in media.keys():
-                media_item = media[key]
-                item_start = media_item['start'][0:19]
-                
-                if str_tnow_s <= item_start and item_start < str_tcoming_s:
-                    """
-                    If the media item starts in the next 30 seconds, push it to the queue.
-                    """
-                    self.logger.debug('Preparing to push media item scheduled at: %s', key)
-                              
-                    if self.push_to_liquidsoap(media_item):
-                        self.logger.debug("Pushed to liquidsoap, updating 'played' status.")
-                        
+        if len(self.liquidsoap_queue) < MAX_LIQUIDSOAP_QUEUE_LENGTH:
+            """
+            We only care about what's scheduled if the number of items in the queue is less
+            than our max queue limit.
+            """
+            currently_on_air = False
+            if media:
+                tnow = time.gmtime(timenow)
+                tcoming = time.gmtime(timenow + self.push_ahead)
+                str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
+                str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
+                            
+                for key in media.keys():
+                    media_item = media[key]
+                    item_start = media_item['start'][0:19]
+                    
+                    if str_tnow_s <= item_start and item_start < str_tcoming_s:
                         """
-                        Temporary solution to make sure we don't push the same track multiple times.
+                        If the media item starts in the next 30 seconds, push it to the queue.
                         """
-                        del media[key]
-                        
-                        currently_on_air = True
-                        self.liquidsoap_state_play = True
+                        self.logger.debug('Preparing to push media item scheduled at: %s', key)
+                                  
+                        if self.push_to_liquidsoap(media_item):
+                            self.logger.debug("Pushed to liquidsoap, updating 'played' status.")
+                            
+                            """
+                            Temporary solution to make sure we don't push the same track multiple times.
+                            """
+                            del media[key]
+                            
+                            currently_on_air = True
+                            self.liquidsoap_state_play = True
                         
     def push_to_liquidsoap(self, media_item):
         """
@@ -122,6 +141,60 @@ class PypoPush(Thread):
             return False
             
         return True
+    
+    def update_liquidsoap_queue(self):
+        """
+        the queue variable liquidsoap_queue is our attempt to mirror
+        what liquidsoap actually has in its own queue. Liquidsoap automatically
+        updates its own queue when an item finishes playing, we have to do this
+        manually. 
+        
+        This function will iterate through the liquidsoap_queue and remove items
+        whose end time are in the past.
+        """
+        
+        tnow = time.gmtime(timenow)
+        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
+        
+        while len(self.liquidsoap_queue) > 0:
+            if self.liquidsoap_queue[0]["end"] < str_tnow_s:
+                self.liquidsoap_queue.popleft()
+    
+    def handle_new_media(self, media):
+        """
+        This function's purpose is to gracefully handle situations where
+        Liquidsoap already has a track in its queue, but the schedule 
+        has changed. 
+
+        If the media_item is already being played, then we can't
+        do anything about it. If it is in the Liquidsoap queue, but not
+        yet playing then we can remove it. Note that currently
+        there can only ever be one media_item in the queue that isn't 
+        being played (for a max of two items in the queue).
+        """
+        
+        """
+        TODO: What happens if we remove the second item in the queue when 
+        it just became the primary item?
+        """
+        if len(self.liquidsoap_queue) > 1:
+            media_item = self.liquidsoap_queue[1]   
+            
+            if media["id"] != liquidsoap_queue["id"]:
+                """
+                The md5s are the not same, so a different
+                item has been scheduled!
+                """
+                #remove from actual liquidsoap queue
+                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                msg = 'queue.remove %s\n' % media_item["queue_id"]
+                tn.write(msg)
+                tn.write("exit\n")
+                self.logger.debug(tn.read_all())
+                
+                #remove from our liquidsoap queue
+                self.liquidsoap_queue.remove(media_item)
+        
 
     def sleep_until_start(self, media_item):
         """
@@ -162,8 +235,14 @@ class PypoPush(Thread):
         
         annotation = media_item['annotation']
         msg = 'queue.push %s\n' % annotation.encode('utf-8')
-        tn.write(msg)
         self.logger.debug(msg)
+        tn.write(msg)
+        queue_id = tn.read_until("\r\n").strip("\r\n")
+        
+        media_item['queue_id'] = queue_id
+        
+        #add media_item to the end of our queue
+        self.liquidsoap_queue.append(media_item)
         
         show_name = media_item['show_name']
         msg = 'vars.show_name %s\n' % show_name.encode('utf-8')
