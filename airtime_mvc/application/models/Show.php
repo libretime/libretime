@@ -1448,7 +1448,8 @@ class Application_Model_Show {
         }
 
         $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name,
-                color, background_color, file_id, cc_show_instances.id AS instance_id
+                color, background_color, file_id, cc_show_instances.id AS instance_id,
+                last_scheduled
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id
             WHERE cc_show_instances.modified_instance = FALSE";
@@ -1478,6 +1479,9 @@ class Application_Model_Show {
 
             $sql = $sql." AND ({$exclude})";
         }
+
+        Logging::log("getShows");
+        Logging::log($sql);
 
         return $CC_DBC->GetAll($sql);
     }

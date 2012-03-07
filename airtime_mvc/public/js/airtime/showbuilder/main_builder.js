@@ -109,6 +109,9 @@ $(document).ready(function(){
 			op,
 			oTable = $('#show_builder_table').dataTable();
 		
+		//reset timestamp value since input values could have changed.
+		AIRTIME.showbuilder.resetTimestamp();
+		
 		oRange = fnGetScheduleRange();
 		
 	    fn = oTable.fnSettings().fnServerData;
@@ -136,6 +139,9 @@ $(document).ready(function(){
 		
 		if ($button.hasClass("sb-edit")) {
 			
+			//reset timestamp to redraw the cursors.
+			AIRTIME.showbuilder.resetTimestamp();
+			
 			$lib.show();
 			$lib.width(Math.floor(screenWidth * 0.5));
 			$builder.width(Math.floor(screenWidth * 0.5));
@@ -154,8 +160,7 @@ $(document).ready(function(){
 			$button.val("Add Files");
 		}
 		
-		oTable.fnDraw();
-		
+		oTable.fnDraw();	
 	});
 	
 	oRange = fnGetScheduleRange();	
@@ -165,8 +170,35 @@ $(document).ready(function(){
 	AIRTIME.library.libraryInit();
 	AIRTIME.showbuilder.builderDataTable();
 	
+	//check if the timeline viewed needs updating.
 	setInterval(function(){
-		var oTable = $('#show_builder_table').dataTable();
-		oTable.fnDraw();
-	}, 20 * 1000); //need refresh in milliseconds
+		var data = {},
+			oTable = $('#show_builder_table').dataTable(),
+			fn = oTable.fnSettings().fnServerData,
+	    	start = fn.start,
+	    	end = fn.end;
+		
+		data["format"] = "json";
+		data["start"] = start;
+		data["end"] = end;
+		data["timestamp"] = AIRTIME.showbuilder.getTimestamp();
+		
+		if (fn.hasOwnProperty("ops")) {
+			data["myShows"] = fn.ops.myShows;
+			data["showFilter"] = fn.ops.showFilter;
+		}
+		
+		$.ajax( {
+			"dataType": "json",
+			"type": "GET",
+			"url": "/showbuilder/check-builder-feed",
+			"data": data,
+			"success": function(json) {
+				if (json.update === true) {
+					oTable.fnDraw();
+				}
+			}
+		} );
+		
+	}, 5 * 1000); //need refresh in milliseconds
 });

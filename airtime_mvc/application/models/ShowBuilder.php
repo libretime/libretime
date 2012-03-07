@@ -6,8 +6,12 @@ require_once 'formatters/TimeFilledFormatter.php';
 class Application_Model_ShowBuilder {
 
     private $timezone;
+
+    //in UTC timezone
     private $startDT;
+    //in UTC timezone
     private $endDT;
+
     private $user;
     private $opts;
 
@@ -59,12 +63,12 @@ class Application_Model_ShowBuilder {
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $schedStartDT = new DateTime($p_item["sched_starts"], new DateTimeZone("UTC"));
-        
+
         $showStartEpoch = intval($showStartDT->format('U'));
         $schedStartEpoch = intval($schedStartDT->format('U'));
 
         //can only schedule the show if item hasn't started and you are allowed.
-        if ($this->epoch_now < max($showStartEpoch, $schedStartEpoch) 
+        if ($this->epoch_now < max($showStartEpoch, $schedStartEpoch)
         		&& $this->user->canSchedule($p_item["show_id"]) == true) {
             $row["allowed"] = true;
         }
@@ -89,7 +93,7 @@ class Application_Model_ShowBuilder {
     }
 
     private function isCurrent($p_epochItemStart, $p_epochItemEnd, &$row) {
-       
+
         if ($this->epoch_now >= $p_epochItemStart && $this->epoch_now < $p_epochItemEnd) {
             $row["current"] = true;
             //how many seconds the view should wait to redraw itself.
@@ -192,6 +196,39 @@ class Application_Model_ShowBuilder {
         $row["fRuntime"] = $timeFilled->format();
 
         return $row;
+    }
+
+    /*
+     * @param int $timestamp Unix timestamp in seconds.
+     *
+     * @return boolean whether the schedule in the show builder's range has been updated.
+     *
+     */
+    public function hasBeenUpdatedSince($timestamp) {
+        $outdated = false;
+
+        Logging::log("checking if show builder has been updated since {$timestamp}");
+
+        $shows = Application_Model_Show::getShows($this->startDT, $this->endDT);
+
+        foreach ($shows as $show) {
+
+            if (isset($show["last_scheduled"])) {
+                $dt = new DateTime($show["last_scheduled"], new DateTimeZone("UTC"));
+
+                //check if any of the shows have a more recent timestamp.
+                if ($timestamp < intval($dt->format("U"))) {
+                    $outdated = true;
+                    break;
+                }
+            }
+        }
+
+        if (count($shows) == 0) {
+            $outdated = true;
+        }
+
+        return $outdated;
     }
 
     public function GetItems() {

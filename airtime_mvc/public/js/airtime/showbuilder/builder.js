@@ -14,6 +14,32 @@ var AIRTIME = (function(AIRTIME){
 		}
 	}
 	
+	mod.resetTimestamp = function() {
+		var timestamp = $("#sb_timestamp");
+		//reset timestamp value since input values could have changed.
+		timestamp.val(-1);
+	};
+	
+	mod.setTimestamp = function(timestamp) {
+		$("#sb_timestamp").val(timestamp);
+	};
+	
+	mod.getTimestamp = function() {
+		var timestamp = $("#sb_timestamp"),
+			val;
+		
+		//if the timestamp field is on the page return it, or give the default of -1
+		//to ensure a page refresh.
+		if (timestamp.length === 1) {
+			val = timestamp.val();
+		}
+		else {
+			val = -1;
+		}
+		
+		return val;
+	};
+	
 	mod.fnAdd = function(aMediaIds, aSchedIds) {
 		var oLibTT = TableTools.fnGetInstance('library_display');
 		
@@ -47,6 +73,8 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	fnServerData = function ( sSource, aoData, fnCallback ) {
+		
+		aoData.push( { name: "timestamp", value: AIRTIME.showbuilder.getTimestamp()} );
 		aoData.push( { name: "format", value: "json"} );
 		
 		if (fnServerData.hasOwnProperty("start")) {
@@ -65,7 +93,10 @@ var AIRTIME = (function(AIRTIME){
 			"type": "GET",
 			"url": sSource,
 			"data": aoData,
-			"success": fnCallback
+			"success": function(json) {
+				AIRTIME.showbuilder.setTimestamp(json.timestamp);
+				fnCallback(json);
+			}
 		} );
 	};
 	
@@ -302,6 +333,7 @@ var AIRTIME = (function(AIRTIME){
 						aData = tr.data("aData");
 					
 					setTimeout(function(){
+						AIRTIME.showbuilder.resetTimestamp();
 						oTable.fnDraw();
 					}, aData.refresh * 1000); //need refresh in milliseconds
 				}
@@ -311,7 +343,9 @@ var AIRTIME = (function(AIRTIME){
 			},
 			//remove any selected nodes before the draw.
 			"fnPreDrawCallback": function( oSettings ) {
-				var oTT = TableTools.fnGetInstance('show_builder_table');
+				var oTT;
+				
+				oTT = TableTools.fnGetInstance('show_builder_table');
 				oTT.fnSelectNone();
 		    },
 			

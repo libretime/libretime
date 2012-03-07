@@ -11,6 +11,12 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/showbuilder.phtml'))
         ));
 
+        //set value to -1 originally to ensure we grab the schedule on first call.
+        $timestamp = new Zend_Form_Element_Hidden('sb_timestamp');
+        $timestamp->setValue(-1)
+                  ->setDecorators(array('ViewHelper'));
+        $this->addElement($timestamp);
+
         // Add start date element
         $startDate = new Zend_Form_Element_Text('sb_date_start');
         $startDate->class = 'input_text';

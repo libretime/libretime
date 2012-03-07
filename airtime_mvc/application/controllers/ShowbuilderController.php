@@ -10,6 +10,7 @@ class ShowbuilderController extends Zend_Controller_Action
                     ->addActionContext('schedule-add', 'json')
                     ->addActionContext('schedule-remove', 'json')
                     ->addActionContext('builder-dialog', 'json')
+                    ->addActionContext('check-builder-feed', 'json')
                     ->addActionContext('builder-feed', 'json')
                     ->initContext();
     }
@@ -19,7 +20,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('builder');
 
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js'),'text/javascript');
-        
+
         $this->_helper->actionStack('library', 'library');
         $this->_helper->actionStack('builder', 'showbuilder');
     }
@@ -88,6 +89,37 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
     }
 
+    public function checkBuilderFeedAction() {
+
+        $request = $this->getRequest();
+        $current_time = time();
+
+        $starts_epoch = $request->getParam("start", $current_time);
+        //default ends is 24 hours after starts.
+        $ends_epoch = $request->getParam("end", $current_time + (60*60*24));
+        $show_filter = intval($request->getParam("showFilter", 0));
+        $my_shows = intval($request->getParam("myShows", 0));
+        $timestamp = intval($request->getParam("timestamp", -1));
+
+        $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
+        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
+
+        Logging::log("showbuilder starts {$startsDT->format("Y-m-d H:i:s")}");
+        Logging::log("showbuilder ends {$endsDT->format("Y-m-d H:i:s")}");
+
+        $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
+        $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
+
+        //only send the schedule back if updates have been made.
+        // -1 default will always call the schedule to be sent back if no timestamp is defined.
+        if ($showBuilder->hasBeenUpdatedSince($timestamp)) {
+            $this->view->update = true;
+        }
+        else {
+            $this->view->update = false;
+        }
+    }
+
     public function builderFeedAction() {
 
         $request = $this->getRequest();
@@ -98,6 +130,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $ends_epoch = $request->getParam("end", $current_time + (60*60*24));
         $show_filter = intval($request->getParam("showFilter", 0));
         $my_shows = intval($request->getParam("myShows", 0));
+        $timestamp = intval($request->getParam("timestamp", -1));
 
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
@@ -109,6 +142,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
         $this->view->schedule = $showBuilder->GetItems();
+        $this->view->timestamp = $current_time;
     }
 
     public function scheduleAddAction() {
