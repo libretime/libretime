@@ -42,14 +42,17 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     libraryInit = function() {
-        var oTable;
+        var oTable,
+        	libContentDiv = $("#library_content");
+        	tableHeight = libContentDiv.height() - 140;
         
         oTable = $('#library_display').dataTable( {
             
+        	//put hidden columns at the top to insure they can never be visible on the table through column reordering.
             "aoColumns": [
-              /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
-              /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 2},
               /* ftype */         {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
+              /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
+              /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 0},
               /* Title */         {"sTitle": "Title", "mDataProp": "track_title", "sClass": "library_title"},
               /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator"},
               /* Album */         {"sTitle": "Album", "mDataProp": "album_title", "sClass": "library_album"},
@@ -227,9 +230,9 @@ var AIRTIME = (function(AIRTIME) {
             "oLanguage": {
                 "sSearch": ""
             },
-           
+            
             // R = ColReorder, C = ColVis, T = TableTools
-            "sDom": 'Rl<"#library_display_type">fr<"H"T<"library_toolbar"C>>t<"F"ip>',
+            "sDom": 'Rl<"#library_display_type">fr<"H"T<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
                 "sRowSelect": "multi",
@@ -285,6 +288,8 @@ var AIRTIME = (function(AIRTIME) {
             
         });
         oTable.fnSetFilteringDelay(350);
+       
+        libContentDiv.find(".dataTables_scrolling").css("max-height", tableHeight);
         
         AIRTIME.library.events.setupLibraryToolbar(oTable);
         

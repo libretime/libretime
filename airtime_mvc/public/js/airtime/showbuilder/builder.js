@@ -105,7 +105,8 @@ var AIRTIME = (function(AIRTIME){
 	mod.builderDataTable = function() {
 		var tableDiv = $('#show_builder_table'),
 			oTable,
-			fnRemoveSelectedItems;
+			fnRemoveSelectedItems,
+			tableHeight;
 
 		fnRemoveSelectedItems = function() {
 			var oTT = TableTools.fnGetInstance('show_builder_table'),
@@ -405,7 +406,7 @@ var AIRTIME = (function(AIRTIME){
 			},
 			
 	        // R = ColReorderResize, C = ColVis, T = TableTools
-	        "sDom": 'Rr<"H"CT>t<"F">',
+	        "sDom": 'Rr<"H"CT>t',
 	        
 	        "sAjaxDataProp": "schedule",
 			"sAjaxSource": "/showbuilder/builder-feed"	

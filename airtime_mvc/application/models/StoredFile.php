@@ -395,7 +395,7 @@ class Application_Model_StoredFile {
     }
 
     private function constructGetFileUrl($p_serverName, $p_serverPort){
-Logging::log("getting media! - 2");        
+Logging::log("getting media! - 2");
         return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
@@ -660,7 +660,7 @@ Logging::log("getting media! - 2");
 
             if($type == "au"){//&& isset( $audioResults )) {
                 $row['audioFile'] = $row['gunid'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<div class="big_play"><img src="/css/images/icon_audioclip.png"></div>';
+                $row['image'] = '<img src="/css/images/icon_audioclip.png">';
             }
             else {
                 $row['image'] = '<img src="/css/images/icon_playlist.png">';
@@ -669,22 +669,22 @@ Logging::log("getting media! - 2");
 
         return $results;
     }
-    
+
     public static function searchFiles($displayColumns, $fromTable, $data)
     {
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
         $where = array();
-    
+
         if ($data["sSearch"] !== "") {
             $searchTerms = explode(" ", $data["sSearch"]);
         }
-    
+
         $selectorCount = "SELECT COUNT(*) ";
         $selectorRows = "SELECT ".join(",", $displayColumns)." ";
-    
+
         $sql = $selectorCount." FROM ".$fromTable;
         $sqlTotalRows = $sql;
-    
+
         if (isset($searchTerms)) {
             $searchCols = array();
             for ($i = 0; $i < $data["iColumns"]; $i++) {
@@ -692,12 +692,12 @@ Logging::log("getting media! - 2");
                     $searchCols[] = $data["mDataProp_{$i}"];
                 }
             }
-    
+
             $outerCond = array();
-    
+
             foreach ($searchTerms as $term) {
                 $innerCond = array();
-    
+
                 foreach ($searchCols as $col) {
                     $escapedTerm = pg_escape_string($term);
                     $innerCond[] = "{$col}::text ILIKE '%{$escapedTerm}%'";
@@ -707,7 +707,7 @@ Logging::log("getting media! - 2");
             $where[] = "(".join(" AND ", $outerCond).")";
         }
         // End Where clause
-    
+
         // Order By clause
         $orderby = array();
         for ($i = 0; $i < $data["iSortingCols"]; $i++){
@@ -717,22 +717,22 @@ Logging::log("getting media! - 2");
         $orderby[] = "id";
         $orderby = join("," , $orderby);
         // End Order By clause
-    
+
         if (count($where) > 0) {
             $where = join(" AND ", $where);
             $sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
             $sqlTotalDisplayRows = $sql;
-    
+
             $sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
         }
         else {
             $sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
         }
-    
+
         try {
             $r = $con->query($sqlTotalRows);
             $totalRows = $r->fetchColumn(0);
-    
+
             if (isset($sqlTotalDisplayRows)) {
                 $r = $con->query($sqlTotalDisplayRows);
                 $totalDisplayRows = $r->fetchColumn(0);
@@ -740,7 +740,7 @@ Logging::log("getting media! - 2");
             else {
               $totalDisplayRows = $totalRows;
             }
-    
+
             $r = $con->query($sql);
             $r->setFetchMode(PDO::FETCH_ASSOC);
             $results = $r->fetchAll();
@@ -748,10 +748,10 @@ Logging::log("getting media! - 2");
         catch (Exception $e) {
             Logging::log($e->getMessage());
         }
-    
+
         //display sql executed in airtime log for testing
         Logging::log($sql);
-    
+
         return array("sEcho" => intval($data["sEcho"]), "iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
     }
 
@@ -764,15 +764,15 @@ Logging::log("getting media! - 2");
         header("Cache-Control: no-store, no-cache, must-revalidate");
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
-    
+
         // Settings
         $cleanupTargetDir = false; // Remove old files
         $maxFileAge = 60 * 60; // Temp file age in seconds
-    
+
         // 5 minutes execution time
         @set_time_limit(5 * 60);
         // usleep(5000);
-    
+
         // Get parameters
         $chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
         $chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
@@ -781,29 +781,29 @@ Logging::log("getting media! - 2");
         // Clean the fileName for security reasons
         //this needs fixing for songs not in ascii.
         //$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
-    
+
         // Create target dir
         if (!file_exists($p_targetDir))
             @mkdir($p_targetDir);
-    
+
         // Remove old temp files
         if (is_dir($p_targetDir) && ($dir = opendir($p_targetDir))) {
             while (($file = readdir($dir)) !== false) {
                 $filePath = $p_targetDir . DIRECTORY_SEPARATOR . $file;
-    
+
                 // Remove temp files if they are older than the max age
                 if (preg_match('/\.tmp$/', $file) && (filemtime($filePath) < time() - $maxFileAge))
                     @unlink($filePath);
             }
-    
+
             closedir($dir);
         } else
             die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
-    
+
         // Look for the content type header
         if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
             $contentType = $_SERVER["HTTP_CONTENT_TYPE"];
-    
+
         if (isset($_SERVER["CONTENT_TYPE"]))
             $contentType = $_SERVER["CONTENT_TYPE"];
 
@@ -819,13 +819,13 @@ Logging::log("getting media! - 2");
                 if ($out) {
                     // Read binary input stream and append it to temp file
                     $in = fopen($_FILES['file']['tmp_name'], "rb");
-    
+
                     if ($in) {
                         while ($buff = fread($in, 4096))
                             fwrite($out, $buff);
                     } else
                         die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
-    
+
                     fclose($out);
                     unlink($_FILES['file']['tmp_name']);
                 } else
@@ -838,18 +838,18 @@ Logging::log("getting media! - 2");
             if ($out) {
                 // Read binary input stream and append it to temp file
                 $in = fopen("php://input", "rb");
-    
+
                 if ($in) {
                     while ($buff = fread($in, 4096))
                         fwrite($out, $buff);
                 } else
                     die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
-    
+
                 fclose($out);
             } else
                 die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
         }
-    
+
         return $tempFilePath;
     }
 
@@ -899,7 +899,7 @@ Logging::log("getting media! - 2");
                 Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
                 //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
                 $r = @rename($audio_file, $audio_stor);
-    
+
                 if ($r === false) {
                    #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
                    #warn the user that the file wasn't uploaded and they should check if there is enough disk space.

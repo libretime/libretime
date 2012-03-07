@@ -1,7 +1,7 @@
 #library_content {
 	float: left;
 	width: 50%;
-	overflow: auto;
+	overflow: hidden;
 }
 
 #library_display {
@@ -84,5 +84,4 @@ td.library_track,
 td.library_sr,
 td.library_bitrate {
     text-align: right;
-    padding-right: 1em !important;
 }

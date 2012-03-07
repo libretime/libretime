@@ -135,7 +135,8 @@ $(document).ready(function(){
 		var $button = $(this),
 			$lib = $("#library_content"),
 			$builder = $("#show_builder"),
-			oTable = $("#show_builder_table").dataTable();
+			schedTable = $("#show_builder_table").dataTable(),
+			libTable = $lib.find("#library_display").dataTable();
 		
 		if ($button.hasClass("sb-edit")) {
 			
@@ -160,7 +161,7 @@ $(document).ready(function(){
 			$button.val("Add Files");
 		}
 		
-		oTable.fnDraw();	
+		schedTable.fnDraw();	
 	});
 	
 	oRange = fnGetScheduleRange();	
