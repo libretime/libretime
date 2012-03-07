@@ -89,12 +89,10 @@ div.jp-video div.jp-interface {
 }
 
 /* Used to hide the filename field **/
-span.filename {
+span.fileID {
     display:none; 
 }
-span.name {
-    display:none; 
-}
+
 /* @group CONTROLS */
 
 div.jp-controls-holder {

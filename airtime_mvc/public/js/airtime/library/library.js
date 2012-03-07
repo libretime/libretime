@@ -160,7 +160,7 @@ var AIRTIME = (function(AIRTIME) {
                 
                 //add the play function to the library_type td
                 $(nRow).find('td.library_type').click(function(){
-                    open_audio_preview(aData.track_title, aData.audioFile, aData.id);
+                    open_audio_preview(aData.audioFile, aData.id);
                     return false;
                 });
                 
@@ -360,7 +360,7 @@ var AIRTIME = (function(AIRTIME) {
                     //define a play callback.
                     if (oItems.play !== undefined) {
                         callback = function() {
-                            open_audio_preview(data.track_title, data.audioFile, data.id);
+                            open_audio_preview(data.audioFile, data.id);
                         };
                         oItems.play.callback = callback;
                     }
@@ -638,20 +638,16 @@ function addQtipToSCIcons(){
     
 var audio_preview_window = null;
 
-function open_audio_preview(name, filename, index) {
-    url = 'Playlist/audio-preview-player/name/'+name+'/filename/'+filename+'/index/'+index;
+function open_audio_preview(fileID, index) {
+    url = 'Playlist/audio-preview-player/fileID/'+fileID+'/index/'+index;
     //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
     if (audio_preview_window == null || audio_preview_window.closed){
         audio_preview_window = window.open(url, 'Audio Player', 'width=400,height=95');
     } else if (!audio_preview_window.closed) {
-        audio_preview_window.play(name, filename);
+        audio_preview_window.play(fileID);
     } else {
         console.log("something else : "+baseUrl+url);
     }
 
-    //Set the play button to pause.
-    //var elemID = "spl_"+elemIndexString;
-    //$('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
-    
-     return false;
+    return false;
 }

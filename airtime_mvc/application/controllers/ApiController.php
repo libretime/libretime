@@ -116,10 +116,9 @@ class ApiController extends Zend_Controller_Action
             return;
         }
 
-        $name = $this->_getParam("name");
-        $filename = $this->_getParam("filename");
-    
-        $file_id = substr($filename, 0, strpos($filename, "."));
+        $fileID = $this->_getParam("fileID");
+        $file_id = substr($fileID, 0, strpos($fileID, "."));
+
         if (ctype_alnum($file_id) && strlen($file_id) == 32)
         {
             $media = Application_Model_StoredFile::RecallByGunid($file_id);
@@ -132,7 +131,7 @@ class ApiController extends Zend_Controller_Action
                     $file_base_name = substr($file_base_name, 1);
                     // possibly use fileinfo module here in the future.
                     // http://www.php.net/manual/en/book.fileinfo.php
-                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                    $ext = pathinfo($fileID, PATHINFO_EXTENSION);
                     //Download user left clicks a track and selects Download.
                     if ("true" == $this->_getParam('download')){
                         //path_info breaks up a file path into seperate pieces of informaiton.
@@ -146,7 +145,7 @@ class ApiController extends Zend_Controller_Action
                         header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
                     }else{
                         //user clicks play button for track and downloads it.
-                        header("Content-Disposition: inline; filename=$file_base_name");
+                        header('Content-Disposition: inline; filename="'.$file_base_name.'"');
                     }
                 
                     $this->smartReadFile($filepath, $ext);

@@ -198,8 +198,7 @@ class PlaylistController extends Zend_Controller_Action
     
     public function audioPreviewPlayerAction()
     {
-        $name = $this->_getParam('name');
-        $fileName = $this->_getParam('filename');
+        $fileID = $this->_getParam('fileID');
         $playlistIndex = $this->_getParam('index');
 
         $request = $this->getRequest();
@@ -218,8 +217,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
         }
         
-        $this->view->name = $name;
-        $this->view->fileName = $fileName;
+        $this->view->fileName = $fileID;
         $this->view->playlistIndex= $playlistIndex;
     }
 
