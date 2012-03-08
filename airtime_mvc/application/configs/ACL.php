@@ -26,6 +26,7 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('recorder'))
       ->add(new Zend_Acl_Resource('showbuilder'))
       ->add(new Zend_Acl_Resource('auth'))
+      ->add(new Zend_Acl_Resource('playouthistory'))
       ->add(new Zend_Acl_Resource('usersettings'));
 
 /** Creating permissions */
@@ -44,6 +45,7 @@ $ccAcl->allow('G', 'index')
       ->allow('H', 'search')
 	  ->allow('H', 'playlist')
 	  ->allow('H', 'showbuilder')
+	  ->allow('A', 'playouthistory')
 	  ->allow('A', 'user')
 	  ->allow('A', 'systemstatus')
       ->allow('A', 'preference');

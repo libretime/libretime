@@ -85,7 +85,14 @@ $pages = array(
                 'controller' => 'systemstatus',
                 'action'     => 'index',
                 'resource'	=>	'systemstatus'
-            )
+            ),
+        	array(
+        		'label'      => 'Playout History',
+        		'module'     => 'default',
+        		'controller' => 'playouthistory',
+        		'action'     => 'index',
+        		'resource'	=>	'playouthistory'
+        	)
         )
     ),
 	array(

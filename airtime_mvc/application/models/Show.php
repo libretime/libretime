@@ -1480,8 +1480,8 @@ class Application_Model_Show {
             $sql = $sql." AND ({$exclude})";
         }
 
-        Logging::log("getShows");
-        Logging::log($sql);
+        //Logging::log("getShows");
+        //Logging::log($sql);
 
         return $CC_DBC->GetAll($sql);
     }
