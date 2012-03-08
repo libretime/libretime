@@ -141,9 +141,12 @@ function buildScheduleDialog (json) {
 	AIRTIME.library.libraryInit();
 	AIRTIME.showbuilder.builderDataTable();
 	
+	dialog.find(".dataTables_scrolling")
+		.css("max-height", height - 110 - 155);
+	
 	dialog.dialog('open');
 	
-	//calculate dynamically width fo the library search input.
+	//calculate dynamically width for the library search input.
 	libLength = dialog.find("#library_display_length");
 	libType = dialog.find("#library_display_type");
 	libFilter = dialog.find("#library_display_filter");
