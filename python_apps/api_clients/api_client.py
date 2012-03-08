@@ -583,6 +583,20 @@ class AirTimeApiClient(ApiClientInterface):
             response = urllib2.urlopen(req).read()
         except Exception, e:
             logger.error("Exception: %s", e)
+            
+    def notify_source_status(self, sourcename, status):
+        logger = self.logger
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_source_status"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%sourcename%%", sourcename)
+            url = url.replace("%%status%%", status)
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            logger.error("Exception: %s", e)
     
     """
     This function updates status of mounted file system information on airtime

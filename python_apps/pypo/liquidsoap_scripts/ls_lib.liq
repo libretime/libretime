@@ -15,6 +15,31 @@ def append_title(m) =
   end
 end
 
+default_dj_fade_in = ref 5.
+default_dj_fade_out = ref 5.
+
+def transition(a,b) =
+  log("transition called...")
+  add(normalize=false,
+     [ sequence([ blank(duration=2.),
+                   fade.initial(duration=!default_dj_fade_in, b) ]),
+        fade.final(duration=!default_dj_fade_out, a) ])
+end
+
+def transition_to_live(a,b) =
+  log("transition called...")
+  #add(normalize=false,
+  #   [fade.initial(duration=5.,type="log", b),fade.final(duration=5.,type="log",a)])
+  smooth_add(delay=10., normal=a, special=b)
+end
+
+def transition_from_live(a,b) =
+  log("transition called...")
+  #add(normalize=false,
+  #   [fade.initial(duration=5.,type="log", b),fade.final(duration=5.,type="log",a)])
+  smooth_add(delay=10., normal=b, special=a)
+end
+
 def crossfade(s)
   #duration is automatically overwritten by metadata fields passed in
   #with audio

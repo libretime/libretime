@@ -31,6 +31,14 @@
       <li class="time-zone"><span id="time-zone"></span></li>
     </ul>
   </div>
+  <div class="source-info-block">
+    <ul>
+      <li>Source Streams</li>
+      <li><div id="airtime_connection" class="source-connection off"></div>Airtime</li>
+      <li><div id="live_dj_connection" class="source-connection off"></div>Live DJ<a href="#" id="live_dj" class="source-switch-button"><span><?php echo $this->live_dj_switch?></span></a></li>
+      <li><div id="master_dj_connection" class="source-connection off"></div>Master DJ<a href="#" id="master_dj" class="source-switch-button"><span><?php echo $this->master_dj_switch?></span></a></li>
+    </ul>
+  </div>
   <div class="personal-block">
     <ul>
       <li><span class="name"><?php echo $this->user ?></span> | <a href="/Login/logout">Logout</a></li>

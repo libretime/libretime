@@ -29,6 +29,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('handle-watched-dir-missing', 'json')
                 ->addActionContext('rabbitmq-do-push', 'json')
                 ->addActionContext('check-live-stream-auth', 'json')
+                ->addActionContext('update-source-status', 'json')
                 ->initContext();
     }
 
@@ -861,6 +862,16 @@ class ApiController extends Zend_Controller_Action
         $boot_time = $request->getParam('boot_time');
 
         Application_Model_StreamSetting::setLiquidsoapError($stream_id, $msg, $boot_time);
+    }
+    
+    public function updateSourceStatusAction(){
+        $request = $this->getRequest();
+
+        $msg = $request->getParam('msg');
+        $sourcename = $request->getParam('sourcename');
+        $status = $request->getParam('status');
+
+        Application_Model_Preference::SetSourceStatus($sourcename, $status);
     }
 
     // handles addition/deletion of mount point which watched dirs reside

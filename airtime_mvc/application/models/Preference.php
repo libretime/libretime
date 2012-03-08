@@ -728,6 +728,32 @@ class Application_Model_Preference
     public static function GetLiveSteamMasterPassword(){
         return self::GetValue("live_stream_master_password");
     }
+    
+    public static function SetSourceStatus($sourcename, $status){
+        self::SetValue($sourcename, $status, false);
+    }
+    
+    public static function GetSourceStatus($sourcename){
+        $value = self::GetValue($sourcename);
+        if($value == null || $value == "false"){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    public static function SetSourceSwitchStatus($sourcename, $status){
+        self::SetValue($sourcename."_switch", $status, false);
+    }
+    
+    public static function GetSourceSwitchStatus($sourcename){
+        $value = self::GetValue($sourcename."_switch");
+        if($value == null || $value == "off"){
+            return "off";
+        }else{
+            return "on";
+        }
+    }
     /* User specific preferences end */
 }
 

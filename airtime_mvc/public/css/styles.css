@@ -152,7 +152,7 @@ select {
 	position:relative;
 }
 
-.now-playing-block, .show-block, .on-air-block, .time-info-block, .personal-block, .listen-control-block, .trial-info-block {
+.now-playing-block, .show-block, .on-air-block, .time-info-block, .personal-block, .listen-control-block, .trial-info-block, .source-info-block {
 	height:100px;
 	float:left;
 	margin-right:10px;
@@ -263,7 +263,7 @@ select {
 	padding:0 12px 0 0;
 	background:url(images/masterpanel_spacer.png) no-repeat right 0;
 }
-.time-info-block  {
+.time-info-block {
 	padding:0 14px 0 2px;
 	background:url(images/masterpanel_spacer.png) no-repeat right 0;
 	min-width:105px;
@@ -288,6 +288,25 @@ select {
 	font-size:17px;
 	margin-bottom:0;
 }
+
+.source-info-block {
+    padding:0 14px 0 2px;
+    background:url(images/masterpanel_spacer.png) no-repeat right 0;
+    min-width:150px;
+}
+
+.source-info-block li {
+    list-style-type:none;
+    font-size:14px;
+    color:#bdbdbd;
+    margin:0 0 6px;
+}
+
+.source-info-block ul {
+    margin:0;
+    padding:6px 0 0;
+}
+	
 .on-air-info {
 	height:26px;
 	border:1px solid #242424;
@@ -359,6 +378,59 @@ select {
 }
 .listen-control-block a:active span {
 	color:#fff;
+}
+
+.source-switch-button {
+	font-size:11px;
+    text-transform:uppercase;
+    padding:0;
+    border:1px solid #242424;
+    color:#fff;
+    text-decoration:none;
+    font-weight:bold;
+    display:block;
+    text-align:center;
+    width: 40px;
+    float: right;
+}
+
+.source-switch-button span {
+    background-color: #6e6e6e;
+    background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
+    border:1px solid #a1a1a1;
+    border-width:1px 0;
+    border-bottom-color:#646464;
+    color:#dcdcdc;
+    text-shadow: #555555 0px -1px;
+    display:block;
+}
+
+.source-switch-button:hover {
+    border:1px solid #000;
+}
+
+.source-switch-button:hover span {
+    background-color: #292929;
+    background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
+    border:1px solid #555555;
+    border-width:1px 0;
+    border-bottom-color:#1e1e1e;
+    color:#fff;
+    color:#0C0;
+    text-shadow: #000 0px -1px;
+    display:block;
+}
+
+.source-connection {
+    border:1px solid #242424;
+    color:#fff;
+    min-height:14px;
+    min-width:14px;
+    background-color:#464646;
+    margin-right: 2px;
+    float: left;
 }
 
 /* END Master Panel */

@@ -321,8 +321,18 @@ class ScheduleController extends Zend_Controller_Action
 
         Application_Model_Show::ConvertToLocalTimeZone($range["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
         Application_Model_Show::ConvertToLocalTimeZone($range["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
-
+        
+        $source_status = array();
+        $live_dj = Application_Model_Preference::GetSourceStatus("live_dj");
+        $master_dj = Application_Model_Preference::GetSourceStatus("master_dj");
+        
+        //might not be the correct place to implement this but for now let's just do it here
+        $source_status['live_dj_source'] = $live_dj;
+        $source_status['master_dj_source'] = $master_dj;
+        $this->view->source_status = $source_status;
+        
         $this->view->entries = $range;
+        
     }
 
     public function removeGroupAction()

@@ -74,14 +74,19 @@ function updateProgressBarValue(){
             songPercentDone = 0;        
             currentSong = null;
         } else {
-            if (currentSong.media_item_played == "t" && currentShow.length > 0)
+            if (currentSong.media_item_played == "t" && currentShow.length > 0){
                 $('#on-air-info').attr("class", "on-air-info on");
-            else
+                $("#airtime_connection").attr("class", "source-connection on");
+            }
+            else{
                 $('#on-air-info').attr("class", "on-air-info off");
+                $("#airtime_connection").attr("class", "source-connection off");
+            }
             $('#progress-show').attr("class", "progress-show");
         }
     } else {
         $('#on-air-info').attr("class", "on-air-info off");
+        $("#airtime_connection").attr("class", "source-connection off");
         $('#progress-show').attr("class", "progress-show-error");
     }
     $('#progress-bar').attr("style", "width:"+songPercentDone+"%");
@@ -218,10 +223,24 @@ function parseItems(obj){
     localRemoteTimeOffset = date.getTime() - schedulePosixTime;
 }
 
+function parseSourceStatus(obj){
+    if(obj.live_dj_source == false){
+        $("#live_dj_connection").attr("class", "source-connection off");
+    }else{
+        $("#live_dj_connection").attr("class", "source-connection on");
+    }
+    
+    if(obj.master_dj_source == false){
+        $("#master_dj_connection").attr("class", "source-connection off");
+    }else{
+        $("#master_dj_connection").attr("class", "source-connection on");
+    }
+}
 
 function getScheduleFromServer(){
     $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                 parseItems(data.entries);
+                parseSourceStatus(data.source_status);
           }, error:function(jqXHR, textStatus, errorThrown){}});
     setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
@@ -251,6 +270,30 @@ function setupQtip(){
     }
 }
 
+function setSwitchListener(){
+    $(".source-switch-button").click(function(){
+        var sourcename = $(this).attr('id')
+        var status_span = $(this).find("span")
+        var status = status_span.html()
+        var _class = $(this).parent().find("div.source-connection").attr("class")
+        var source_connection_status = false
+        
+        if(_class.indexOf("off") > 0){
+            source_connection_status = false
+        }else{
+            source_connection_status = true
+        }
+        
+        if(source_connection_status){
+            $.get("/Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
+                status_span.html(data.status)
+            });
+        }else{
+            alert("The source is not connected to Airtime!")
+        }
+    })
+}
+
 var stream_window = null;
 
 function init() {
@@ -261,6 +304,8 @@ function init() {
     secondsTimer();
 
     setupQtip();
+    
+    setSwitchListener();
     
     $('.listen-control-button').click(function() {
         if (stream_window == null || stream_window.closed)

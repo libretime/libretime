@@ -5,14 +5,42 @@ class DashboardController extends Zend_Controller_Action
 
     public function init()
     {
-
+        $ajaxContext = $this->_helper->getHelper('AjaxContext');
+        $ajaxContext->addActionContext('switch-source', 'json')
+                    ->initContext();
     }
 
     public function indexAction()
     {
         // action body
     }
-
+    
+    public function switchSourceAction(){
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+        $sourcename = $this->_getParam('sourcename');
+        $current_status = $this->_getParam('status');
+        $change_status_to = "on";
+        
+        if(strtolower($current_status) == "on"){
+            $change_status_to = "off";
+        }
+        
+        $data = array("sourcename"=>$sourcename, "status"=>$change_status_to);
+        Application_Model_RabbitMq::SendMessageToPypo("switch_source", $data);
+        if(strtolower($current_status) == "on"){
+            Application_Model_Preference::SetSourceSwitchStatus($sourcename, "off");
+            $this->view->status = "OFF";
+        }else{
+            Application_Model_Preference::SetSourceSwitchStatus($sourcename, "on");
+            $this->view->status = "ON";
+        }
+    }
+    
+    public function switchOffSource(){
+        
+    }
+    
     public function streamPlayerAction()
     {
         global $CC_CONFIG;
