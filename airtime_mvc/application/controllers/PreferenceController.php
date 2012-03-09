@@ -14,6 +14,7 @@ class PreferenceController extends Zend_Controller_Action
                     ->addActionContext('is-import-in-progress', 'json')
                     ->addActionContext('change-stream-setting', 'json')
                     ->addActionContext('get-liquidsoap-status', 'json')
+                    ->addActionContext('set-source-connection-url', 'json')
                     ->initContext();
     }
 
@@ -334,6 +335,19 @@ class PreferenceController extends Zend_Controller_Action
             $out[] = array("id"=>$i, "status"=>$status);
         }
         die(json_encode($out));
+    }
+    
+    public function setSourceConnectionUrlAction(){
+        $request = $this->getRequest();
+        $type = $request->getParam("type", null);
+        $url = urldecode($request->getParam("url", null));
+        
+        if($type == 'masterdj'){
+            Application_Model_Preference::SetMasterDJSourceConnectionURL($url);
+        }elseif($type == 'livedj'){
+            Application_Model_Preference::SetLiveDJSourceConnectionURL($url);
+        }
+        die();
     }
 }
 

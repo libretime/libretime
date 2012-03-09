@@ -740,6 +740,22 @@ class Application_Model_Preference
             return "on";
         }
     }
+    
+    public static function SetMasterDJSourceConnectionURL($value){
+        self::SetValue("master_dj_source_connection_url", $value, false);
+    }
+    
+    public static function GetMasterDJSourceConnectionURL(){
+        return self::GetValue("master_dj_source_connection_url");
+    }
+    
+    public static function SetLiveDJSourceConnectionURL($value){
+        self::SetValue("live_dj_source_connection_url", $value, false);
+    }
+    
+    public static function GetLiveDJSourceConnectionURL(){
+        return self::GetValue("live_dj_source_connection_url");
+    }
     /* User specific preferences end */
 }
 

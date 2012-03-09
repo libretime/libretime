@@ -57,6 +57,14 @@
                 </ul>
             <?php endif; ?> 
         </dd>
+        <dt id="master_dj_connection_url-label">
+            <label class="optional" for="master_dj_connection_url">Master DJ Connection URL:
+            </label>
+        </dt>
+        <dd id="master_dj_connection_url-element">
+            <span id="stream_url"><?php echo $this->master_dj_connection_url ?></span>  <a href=# id="connection_url_override" style="font-size: 12px;">override</a><br>
+            <div id="master_dj_connection_url_tb" style="display:none"><input type="text"><a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a></div>
+        </dd>
         <dt id="dj_harbor_input_port-label">
             <label class="optional" for="dj_harbor_input_port"><?php echo $this->element->getElement('dj_harbor_input_port')->getLabel() ?> :
             </label>
@@ -84,6 +92,14 @@
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?> 
+        </dd>
+        <dt id="live_dj_connection_url-label">
+            <label class="optional" for="live_dj_connection_url">Live DJ Connection URL:
+            </label>
+        </dt>
+        <dd id="live_dj_connection_url-element">
+            <span id="stream_url"><?php echo $this->live_dj_connection_url ?></span>  <a href=# id="connection_url_override" style="font-size: 12px;">override</a>
+            <div id="live_dj_connection_url_tb" style="display:none"><input type="text"><a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a></div>
         </dd>
     </dl>
 </fieldset>

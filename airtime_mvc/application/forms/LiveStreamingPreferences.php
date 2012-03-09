@@ -5,10 +5,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
     public function init()
     {
-        $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml'))
-        ));
-
         //Master username
         $master_username = new Zend_Form_Element_Text('master_username');
         $master_username->setAttrib('autocomplete', 'off')
@@ -31,37 +27,51 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($master_password);
         
         //liquidsoap harbor.input port
-        $port = new Zend_Form_Element_Text('master_harbor_input_port');
-        $port->setLabel("Master DJ Port")
-                ->setValue(Application_Model_StreamSetting::GetMasterLiveSteamPort())
+        $m_port = Application_Model_StreamSetting::GetMasterLiveSteamPort();
+        $master_dj_port = new Zend_Form_Element_Text('master_harbor_input_port');
+        $master_dj_port->setLabel("Master DJ Port")
+                ->setValue($m_port)
                 ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
                 ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
                 ->setDecorators(array('ViewHelper'));
-        $this->addElement($port);
+        $this->addElement($master_dj_port);
         
-        $mount = new Zend_Form_Element_Text('master_harbor_input_mount_point');
-        $mount->setLabel("Master DJ Mount Point")
-                ->setValue(Application_Model_StreamSetting::GetMasterLiveSteamMountPoint())
+        $m_mount = Application_Model_StreamSetting::GetMasterLiveSteamMountPoint();
+        $master_dj_mount = new Zend_Form_Element_Text('master_harbor_input_mount_point');
+        $master_dj_mount->setLabel("Master DJ Mount Point")
+                ->setValue($m_mount)
                 ->setValidators(array(
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
-        $this->addElement($mount);
+        $this->addElement($master_dj_mount);
         
         //liquidsoap harbor.input port
-        $port = new Zend_Form_Element_Text('dj_harbor_input_port');
-        $port->setLabel("DJ Port")
-                ->setValue(Application_Model_StreamSetting::GetDJLiveSteamPort())
+        $l_port = Application_Model_StreamSetting::GetDJLiveSteamPort();
+        $live_dj_port = new Zend_Form_Element_Text('dj_harbor_input_port');
+        $live_dj_port->setLabel("DJ Port")
+                ->setValue($l_port)
                 ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
                 ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
                 ->setDecorators(array('ViewHelper'));
-        $this->addElement($port);
+        $this->addElement($live_dj_port);
         
-        $mount = new Zend_Form_Element_Text('dj_harbor_input_mount_point');
-        $mount->setLabel("DJ Mount Point")
-                ->setValue(Application_Model_StreamSetting::GetDJLiveSteamMountPoint())
+        $l_mount = Application_Model_StreamSetting::GetDJLiveSteamMountPoint();
+        $live_dj_mount = new Zend_Form_Element_Text('dj_harbor_input_mount_point');
+        $live_dj_mount->setLabel("DJ Mount Point")
+                ->setValue($l_mount)
                 ->setValidators(array(
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
-        $this->addElement($mount);
+        $this->addElement($live_dj_mount);
+        
+        $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();
+        $live_dj_connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
+        
+        $master_dj_connection_url = ($master_dj_connection_url == "")?("http://".$_SERVER['SERVER_NAME'].":".$m_port."/".$m_mount):$master_dj_connection_url;
+        $live_dj_connection_url = ($live_dj_connection_url == "")?"http://".$_SERVER['SERVER_NAME'].":".$l_port."/".$l_mount:$live_dj_connection_url;
+        
+        $this->setDecorators(array(
+            array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url,))
+        ));
     }
 }

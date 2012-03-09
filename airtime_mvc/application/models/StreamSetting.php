@@ -133,7 +133,6 @@ class Application_Model_StreamSetting {
         if(!isset($exists["dj_live_stream_mp"])){
             $rows[] = (array("keyname" =>"dj_live_stream_mp", "value"=>self::GetDJLiveSteamMountPoint(), "type"=>"string"));
         }
-        Logging::log(print_r($rows, true));
         return $rows;
     }
     

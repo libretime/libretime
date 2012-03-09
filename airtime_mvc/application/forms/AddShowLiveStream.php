@@ -47,13 +47,8 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($custom_password);
         
-        // hardcoded for now
-        $liquidsoap_host = 'localhost';
-        $liquidsoap_port = "8080";
-        $liquidsoap_mount_point = "test";
-        
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/add-show-live-stream.phtml', "connection_url"=>"http://$liquidsoap_host:$liquidsoap_port/$liquidsoap_mount_point"))
+            array('ViewScript', array('viewScript' => 'form/add-show-live-stream.phtml', "connection_url"=>Application_Model_Preference::GetLiveDJSourceConnectionURL()))
         ));
     }
 }
