@@ -871,6 +871,12 @@ class ApiController extends Zend_Controller_Action
         $sourcename = $request->getParam('sourcename');
         $status = $request->getParam('status');
 
+        // on source disconnection sent msg to pypo to turn off the switch
+        if($status == "false"){
+            $data = array("sourcename"=>$sourcename, "status"=>"off");
+            Application_Model_RabbitMq::SendMessageToPypo("switch_source", $data);
+            Application_Model_Preference::SetSourceSwitchStatus($sourcename, "off");
+        }
         Application_Model_Preference::SetSourceStatus($sourcename, $status);
     }
 
@@ -1006,19 +1012,14 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
         
-        Logging::log("user:".$username." pass:".$password." type:".$djtype);
-        
         if($djtype == 'master'){
             //check against master
             if($username == Application_Model_Preference::GetLiveSteamMasterUsername() && $password == Application_Model_Preference::GetLiveSteamMasterPassword()){
-                Logging::log("master true");
                 $this->view->msg = true;
             }else{
-                Logging::log("master false");
                 $this->view->msg = false;
             }
         }elseif($djtype == "dj"){
-            Logging::log("djtype...");
             //check against show dj auth
             $showInfo = Application_Model_Show::GetCurrentShow();
             if(isset($showInfo[0]['id'])){
@@ -1028,9 +1029,6 @@ class ApiController extends Zend_Controller_Action
                 // get custom pass info from the show
                 $custom_user = $CcShow->getDbLiveStreamUser();
                 $custom_pass = $CcShow->getDbLiveStreamPass();
-    
-                Logging::log("user:".$username." pass:".$password);
-                Logging::log("c_user:".$custom_user." c_pass:".$custom_pass);
                 
                 // get hosts ids
                 $show = new Application_Model_Show($current_show_id);
@@ -1047,10 +1045,8 @@ class ApiController extends Zend_Controller_Action
                 
                 // check against custom auth
                 if($username == $custom_user && $password == $custom_pass){
-                    Logging::log("custom true");
                     $this->view->msg = true;
                 }else{
-                    Logging::log("custom false");
                     $this->view->msg = false;
                 }
             }else{

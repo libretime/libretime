@@ -323,13 +323,20 @@ class ScheduleController extends Zend_Controller_Action
         Application_Model_Show::ConvertToLocalTimeZone($range["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
         
         $source_status = array();
+        $switch_status = array();
         $live_dj = Application_Model_Preference::GetSourceStatus("live_dj");
         $master_dj = Application_Model_Preference::GetSourceStatus("master_dj");
+        $live_dj_switch = Application_Model_Preference::GetSourceSwitchStatus("live_dj");
+        $master_dj_switch = Application_Model_Preference::GetSourceSwitchStatus("master_dj");
         
         //might not be the correct place to implement this but for now let's just do it here
         $source_status['live_dj_source'] = $live_dj;
         $source_status['master_dj_source'] = $master_dj;
         $this->view->source_status = $source_status;
+        
+        $switch_status['live_dj_source'] = $live_dj_switch;
+        $switch_status['master_dj_source'] = $master_dj_switch;
+        $this->view->switch_status = $switch_status;
         
         $this->view->entries = $range;
         

@@ -237,10 +237,16 @@ function parseSourceStatus(obj){
     }
 }
 
+function parseSwitchStatus(obj){
+    $("#live_dj.source-switch-button").find("span").html(obj.live_dj_source)
+    $("#master_dj.source-switch-button").find("span").html(obj.master_dj_source)
+}
+
 function getScheduleFromServer(){
     $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                 parseItems(data.entries);
                 parseSourceStatus(data.source_status);
+                parseSwitchStatus(data.switch_status);
           }, error:function(jqXHR, textStatus, errorThrown){}});
     setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
