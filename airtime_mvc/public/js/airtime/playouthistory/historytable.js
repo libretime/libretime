@@ -49,7 +49,11 @@ var AIRTIME = (function(AIRTIME) {
             "bJQueryUI": true,
             "bAutoWidth": false,
            
-            "sDom": 'lfr<"H"><"dataTables_scrolling"t><"F"ip>', 
+            "sDom": 'lfr<"H"T><"dataTables_scrolling"t><"F"ip>', 
+            
+            "oTableTools": {
+                "sSwfPath": "/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf"
+            }
         });
         oTable.fnSetFilteringDelay(350);
     };
