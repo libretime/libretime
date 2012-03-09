@@ -510,6 +510,11 @@ dl.inline-list dd {
     border-width: 1px 1px 1px 1px;
 	width:100%;
 }
+
+.datatable th {
+    text-align: left;
+}
+
 .datatable tr td, .datatable tr th {
     border-color: #b1b1b1;
     border-style: solid;
@@ -671,7 +676,6 @@ button.ColVis_Button.ColVis_ShowAll {
 
 .library_length {
     text-align: right;
-    padding-right: 1em !important;
 }
 
 /*----END Data Table----*/

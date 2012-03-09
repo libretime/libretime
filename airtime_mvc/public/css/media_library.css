@@ -9,10 +9,6 @@
     table-layout:fixed;
 }
 
-#library_display th {
-    text-align: left;
-}
-
 #library_content #library_display {
 	width:100%;
 }

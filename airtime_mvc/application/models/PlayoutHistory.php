@@ -15,6 +15,15 @@ class Application_Model_PlayoutHistory {
 	private $epoch_now;
 	private $opts;
 	
+	private $mDataPropMap = array(
+		"artist" => "file.artist_name",
+		"title" => "file.track_title",
+		"played" => "playout.played",
+		"length" => "file.length",
+		"composer" => "file.composer",
+		"copyright" => "file.copyright",		
+	);
+	
 	public function __construct($p_startDT, $p_endDT, $p_opts) {
 		
 		$this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
@@ -25,7 +34,20 @@ class Application_Model_PlayoutHistory {
 		$this->opts = $p_opts;
 	}
 	
+	/*
+	 * map front end mDataProp labels to proper column names for searching etc.
+	 */
+	private function translateColumns() {
+		
+		for ($i = 0; $i < $this->opts["iColumns"]; $i++){
+			
+			$this->opts["mDataProp_{$i}"] = $this->mDataPropMap[$this->opts["mDataProp_{$i}"]];
+		}
+	}
+	
 	public function getItems() {
+		
+		$this->translateColumns();
 		
 		$select = array( 
 			"file.track_title as title",

@@ -18,7 +18,7 @@ var AIRTIME = (function(AIRTIME) {
                {"sTitle": "Title", "mDataProp": "title", "sClass": "his_title"}, /* Title */
                {"sTitle": "Artist", "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
                {"sTitle": "Played", "mDataProp": "played", "sClass": "his_artist"}, /* times played */
-               {"sTitle": "Length", "mDataProp": "length", "sClass": "his_length"}, /* Length */
+               {"sTitle": "Length", "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
                {"sTitle": "Composer", "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
                {"sTitle": "Copyright", "mDataProp": "copyright", "sClass": "his_copyright"} /* Copyright */
             ],
@@ -51,6 +51,7 @@ var AIRTIME = (function(AIRTIME) {
            
             "sDom": 'lfr<"H"><"dataTables_scrolling"t><"F"ip>', 
         });
+        oTable.fnSetFilteringDelay(350);
     };
     
 return AIRTIME;
