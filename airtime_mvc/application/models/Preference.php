@@ -699,20 +699,6 @@ class Application_Model_Preference
         return $val;
     }
     
-    /*
-     * $value should be 1 or 0
-     */
-    public static function SetLiveSteamAutoEnable($value){
-        self::SetValue("live_stream_auto_enable", $value, false);
-    }
-    
-    public static function GetLiveSteamAutoEnable(){
-        if(self::GetValue("live_stream_auto_enable") == Null){
-            return 0;
-        }
-        return self::GetValue("live_stream_auto_enable");
-    }
-    
     public static function SetLiveSteamMasterUsername($value){
         self::SetValue("live_stream_master_username", $value, false);
     }

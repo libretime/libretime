@@ -6,12 +6,6 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
 
     public function init()
     {
-        $allow_live_stream = new Zend_Form_Element_Checkbox("allow_live_stream_override");
-        $allow_live_stream->setLabel("Allow Live Stream Override")
-                          ->setRequired(false)
-                          ->setDecorators(array('ViewHelper'));
-        $this->addElement($allow_live_stream);
-         
         $description1 = "This follows the same security pattern for the shows: if no users are explicitly set for the show, then anyone with a valid airtime login can connect to the stream, otherwise if there are users assigned to the show, then only those users can connect.";
         $cb_airtime_auth = new Zend_Form_Element_Checkbox("cb_airtime_auth");
         $cb_airtime_auth->setLabel("Connect using Airtime username & password")

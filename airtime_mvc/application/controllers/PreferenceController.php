@@ -208,7 +208,6 @@ class PreferenceController extends Zend_Controller_Action
                 
                 // this goes into cc_pref table
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
-                Application_Model_Preference::SetLiveSteamAutoEnable($values["auto_enable_live_stream"]);
                 Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
                 

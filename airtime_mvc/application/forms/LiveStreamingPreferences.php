@@ -9,14 +9,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml'))
         ));
 
-        //enable Auto-enable for all shows
-        $auto_enable = new Zend_Form_Element_Checkbox('auto_enable_live_stream');
-        $auto_enable->setLabel('Auto-enable for all shows')
-                    ->setRequired(false)
-                    ->setValue(Application_Model_Preference::GetLiveSteamAutoEnable())
-                    ->setDecorators(array('ViewHelper'));
-        $this->addElement($auto_enable);
-
         //Master username
         $master_username = new Zend_Form_Element_Text('master_username');
         $master_username->setAttrib('autocomplete', 'off')

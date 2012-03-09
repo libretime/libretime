@@ -13,7 +13,6 @@
  * @method     CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method     CcShowQuery orderByDbColor($order = Criteria::ASC) Order by the color column
  * @method     CcShowQuery orderByDbBackgroundColor($order = Criteria::ASC) Order by the background_color column
- * @method     CcShowQuery orderByDbAllowLiveStream($order = Criteria::ASC) Order by the allow_live_stream column
  * @method     CcShowQuery orderByDbLiveStreamUsingAirtimeAuth($order = Criteria::ASC) Order by the live_stream_using_airtime_auth column
  * @method     CcShowQuery orderByDbLiveStreamUsingCustomAuth($order = Criteria::ASC) Order by the live_stream_using_custom_auth column
  * @method     CcShowQuery orderByDbLiveStreamUser($order = Criteria::ASC) Order by the live_stream_user column
@@ -26,7 +25,6 @@
  * @method     CcShowQuery groupByDbDescription() Group by the description column
  * @method     CcShowQuery groupByDbColor() Group by the color column
  * @method     CcShowQuery groupByDbBackgroundColor() Group by the background_color column
- * @method     CcShowQuery groupByDbAllowLiveStream() Group by the allow_live_stream column
  * @method     CcShowQuery groupByDbLiveStreamUsingAirtimeAuth() Group by the live_stream_using_airtime_auth column
  * @method     CcShowQuery groupByDbLiveStreamUsingCustomAuth() Group by the live_stream_using_custom_auth column
  * @method     CcShowQuery groupByDbLiveStreamUser() Group by the live_stream_user column
@@ -62,7 +60,6 @@
  * @method     CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
  * @method     CcShow findOneByDbColor(string $color) Return the first CcShow filtered by the color column
  * @method     CcShow findOneByDbBackgroundColor(string $background_color) Return the first CcShow filtered by the background_color column
- * @method     CcShow findOneByDbAllowLiveStream(boolean $allow_live_stream) Return the first CcShow filtered by the allow_live_stream column
  * @method     CcShow findOneByDbLiveStreamUsingAirtimeAuth(boolean $live_stream_using_airtime_auth) Return the first CcShow filtered by the live_stream_using_airtime_auth column
  * @method     CcShow findOneByDbLiveStreamUsingCustomAuth(boolean $live_stream_using_custom_auth) Return the first CcShow filtered by the live_stream_using_custom_auth column
  * @method     CcShow findOneByDbLiveStreamUser(string $live_stream_user) Return the first CcShow filtered by the live_stream_user column
@@ -75,7 +72,6 @@
  * @method     array findByDbDescription(string $description) Return CcShow objects filtered by the description column
  * @method     array findByDbColor(string $color) Return CcShow objects filtered by the color column
  * @method     array findByDbBackgroundColor(string $background_color) Return CcShow objects filtered by the background_color column
- * @method     array findByDbAllowLiveStream(boolean $allow_live_stream) Return CcShow objects filtered by the allow_live_stream column
  * @method     array findByDbLiveStreamUsingAirtimeAuth(boolean $live_stream_using_airtime_auth) Return CcShow objects filtered by the live_stream_using_airtime_auth column
  * @method     array findByDbLiveStreamUsingCustomAuth(boolean $live_stream_using_custom_auth) Return CcShow objects filtered by the live_stream_using_custom_auth column
  * @method     array findByDbLiveStreamUser(string $live_stream_user) Return CcShow objects filtered by the live_stream_user column
@@ -336,23 +332,6 @@ abstract class BaseCcShowQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowPeer::BACKGROUND_COLOR, $dbBackgroundColor, $comparison);
-	}
-
-	/**
-	 * Filter the query on the allow_live_stream column
-	 * 
-	 * @param     boolean|string $dbAllowLiveStream The value to use as filter.
-	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbAllowLiveStream($dbAllowLiveStream = null, $comparison = null)
-	{
-		if (is_string($dbAllowLiveStream)) {
-			$allow_live_stream = in_array(strtolower($dbAllowLiveStream), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
-		}
-		return $this->addUsingAlias(CcShowPeer::ALLOW_LIVE_STREAM, $dbAllowLiveStream, $comparison);
 	}
 
 	/**

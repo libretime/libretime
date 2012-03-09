@@ -1022,6 +1022,7 @@ class ApiController extends Zend_Controller_Action
         }elseif($djtype == "dj"){
             //check against show dj auth
             $showInfo = Application_Model_Show::GetCurrentShow();
+            // there is current playing show
             if(isset($showInfo[0]['id'])){
                 $current_show_id = $showInfo[0]['id'];
                 $CcShow = CcShowQuery::create()->findPK($current_show_id);
@@ -1035,21 +1036,28 @@ class ApiController extends Zend_Controller_Action
                 $hosts_ids = $show->getHostsIds();
                 
                 // check against hosts auth
-                foreach( $hosts_ids as $host){
-                    $h = new Application_Model_User($host['subjs_id']);
-                    if($username == $h->getLogin() && md5($password) == $h->getPassword()){
-                        $this->view->msg = true;
-                        return;
+                if($CcShow->getDbLiveStreamUsingAirtimeAuth()){
+                    foreach( $hosts_ids as $host){
+                        $h = new Application_Model_User($host['subjs_id']);
+                        if($username == $h->getLogin() && md5($password) == $h->getPassword()){
+                            $this->view->msg = true;
+                            return;
+                        }
                     }
                 }
-                
                 // check against custom auth
-                if($username == $custom_user && $password == $custom_pass){
-                    $this->view->msg = true;
-                }else{
+                if($CcShow->getDbLiveStreamUsingCustomAuth()){
+                    if($username == $custom_user && $password == $custom_pass){
+                        $this->view->msg = true;
+                    }else{
+                        $this->view->msg = false;
+                    }
+                }
+                else{
                     $this->view->msg = false;
                 }
             }else{
+                // no show is currently playing
                 $this->view->msg = false;
             }
         }
