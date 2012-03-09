@@ -244,15 +244,6 @@ var AIRTIME = (function(AIRTIME){
 			highlightActive(icon);
 		}
 	}
-
-    function openAudioPreview(event) {
-        event.stopPropagation();
-        
-        var audioFile = $(this).attr('audioFile');
-        var id = "";
-        
-        open_audio_preview(audioFile, id);
-    }      
     
 	function editName() {
 	    var nameElement = $(this),

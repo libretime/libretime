@@ -58,7 +58,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/main_library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
+        
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
@@ -88,8 +88,7 @@ class LibraryController extends Zend_Controller_Action
             if (isset($this->pl_sess->id) && $screen == "playlist") {
                 $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "copy");
             }
-            //Open a jPlayer window and play the audio clip.
-            $menu["play"] = array("name"=> "Play", "icon" => "big_play");
+            
             
             $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
     
@@ -134,6 +133,9 @@ class LibraryController extends Zend_Controller_Action
             $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
         }
 
+        //Open a jPlayer window and play the audio clip.
+        $menu["play"] = array("name"=> "Play", "icon" => "big_play");
+            
         $this->view->items = $menu;
     }
 

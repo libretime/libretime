@@ -30,6 +30,7 @@ div.jp-video {
 	background-color:#eee;
 	position:relative;
 }
+
 div.jp-audio {
 	width:420px;
 }
@@ -88,8 +89,20 @@ div.jp-video div.jp-interface {
 	border-top:1px solid #009be3;
 }
 
-/* Used to hide the filename field **/
-span.fileID {
+/* Used to hide non-ui fields **/
+span.audioFileID {
+    display:none; 
+}
+span.audioFileTitle {
+    display:none; 
+}
+span.audioFileArtist {
+    display:none; 
+}
+span.playlistID {
+    display:none; 
+}
+span.playlistIndex {
     display:none; 
 }
 

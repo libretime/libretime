@@ -20,6 +20,8 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('get-playlist-fades', 'json')
                     ->addActionContext('set-playlist-name', 'json')
                     ->addActionContext('set-playlist-description', 'json')
+                    ->addActionContext('playlist-preview', 'json')
+                    ->addActionContext('get-playlist', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -196,17 +198,25 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
     
-    public function audioPreviewPlayerAction()
+    public function playlistPreviewAction()
     {
-        $fileID = $this->_getParam('fileID');
-        $playlistIndex = $this->_getParam('index');
-
+        $audioFileID = $this->_getParam('audioFileID');
+        $audioFileArtist = $this->_getParam('audioFileArtist');
+        $audioFileTitle = $this->_getParam('audioFileTitle');
+        $playlistIndex = $this->_getParam('playlistIndex');
+        $playlistID = $this->_getParam('playlistID');
+        Logging::log($audioFileID);
+        Logging::log($audioFileArtist);
+        Logging::log($audioFileTitle);
+        Logging::log($playlistIndex);
+        Logging::log($playlistID);
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/preview_jplayer.js?'.filemtime($baseDir.'/js/airtime/library/preview_jplayer.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.filemtime($baseDir.'/js/jplayer/jquery.jplayer.min.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/preview_jplayer.js?'.filemtime($baseDir.'/js/jplayer/preview_jplayer.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.filemtime($baseDir.'/js/jplayer/jplayer.playlist.min.js'),'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css'));
         $this->_helper->layout->setLayout('audioPlayer');
 
@@ -216,11 +226,43 @@ class PlaylistController extends Zend_Controller_Action
         } else {
             $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
         }
-        
-        $this->view->fileName = $fileID;
+        Logging::log("The play list index is $playlistIndex");
+        $this->view->audioFileID = $audioFileID;
+        $this->view->audioFileArtist = $audioFileArtist;
+        $this->view->audioFileTitle = $audioFileTitle;
         $this->view->playlistIndex= $playlistIndex;
+        $this->view->playlistID = $playlistID;
+
     }
 
+    public function getPlaylistAction(){
+        
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $playlistID = $this->_getParam('playlistID');
+        
+        if (!isset($playlistID)){
+            return;
+        }
+        
+        $pl = new Application_Model_Playlist($playlistID);
+        $result = Array();
+        
+        foreach ( $pl->getContents() as $track ){
+            $trackMap = array( 'title' => isset($track['CcFiles']['track_title'])?$track['CcFiles']['track_title']:"",
+                              'artist' => isset($track['CcFiles']['artist_name'])?$track['CcFiles']['artist_name']:"",
+                              'mp3' => '/api/get-media/fileID/'.$track['CcFiles']['gunid'].'.'.pathinfo($track['CcFiles']['filepath'], PATHINFO_EXTENSION),
+                              'id' => isset($track['id'])?$track['id']:"",
+                              'position' => isset($track['position'])?$track['position']:"",
+                            );
+            $result[] = $trackMap;
+        }
+
+        $this->_helper->json($result);
+    }
+    
     public function addItemsAction()
     {
         $ids = $this->_getParam('ids', array());

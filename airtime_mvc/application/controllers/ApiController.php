@@ -148,7 +148,7 @@ class ApiController extends Zend_Controller_Action
                         header('Content-Disposition: inline; filename="'.$file_base_name.'"');
                     }
                 
-                    $this->smartReadFile($filepath, $ext);
+                    $this->smartReadFile($filepath, 'audio/'.$ext);
                     exit;
                 }else{
                     header ("HTTP/1.1 404 Not Found");
@@ -170,7 +170,7 @@ class ApiController extends Zend_Controller_Action
     * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
     * @link http://php.net/manual/en/function.readfile.php#86244
     */
-    function smartReadFile($location, $mimeType = 'audio/mpeg')
+    function smartReadFile($location, $mimeType = 'audio/mp3')
     {
         $size= filesize($location);
         $time= date('r', filemtime($location));

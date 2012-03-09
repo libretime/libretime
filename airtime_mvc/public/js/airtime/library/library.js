@@ -160,7 +160,12 @@
                 
                 //add the play function to the library_type td
                 $(nRow).find('td.library_type').click(function(){
-                    open_audio_preview(aData.audioFile, aData.id);
+                    if (aData.ftype === 'playlist' && aData.length !== '0.0'){
+                        playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
+                        open_playlist_preview(aData.audioFile, "", "", playlistIndex, 0);
+                    } else if (aData.ftype === 'audioclip') {
+                        open_playlist_preview(aData.audioFile, aData.track_title, aData.artist_name);
+                    }
                     return false;
                 });
                 
@@ -360,7 +365,12 @@
                     //define a play callback.
                     if (oItems.play !== undefined) {
                         callback = function() {
-                            open_audio_preview(data.audioFile, data.id);
+                           if (data.ftype === 'playlist' && data.length !== '0.0'){
+                                playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
+                                open_playlist_preview(data.audioFile, "", "", playlistIndex, 0);
+                            } else if (data.ftype === 'audioclip') {
+                                open_playlist_preview(data.audioFile, data.track_title, data.artist_name);
+                            }
                         };
                         oItems.play.callback = callback;
                     }
@@ -634,24 +644,37 @@
             });
         }
     });
+    
     }
     
-    var audio_preview_window = null;
+    var preview_window = null;
     
-    function open_audio_preview(fileID, index) {
-        url = 'Playlist/audio-preview-player/fileID/'+fileID+'/index/'+index;
+    function openAudioPreview(event) {
+        event.stopPropagation();
+        
+        var audioFileID = $(this).attr('audioFile');
+        var playlistID = $('#pl_id:first').attr('value');
+        var playlistIndex = $(this).parent().parent().attr('id');
+        playlistIndex = playlistIndex.substring(4); //remove the spl_
+        
+        open_playlist_preview(audioFileID, "", "", playlistID, playlistIndex);
+    }
+    
+    function open_playlist_preview(audioFileID, audioFileTitle, audioFileArtist, playlistID, playlistIndex) {
+        if (playlistIndex != undefined)
+            url = 'Playlist/playlist-preview/audioFileID/'+audioFileID+'/playlistIndex/'+playlistIndex+'/playlistID/'+playlistID;
+        else
+            url = 'Playlist/playlist-preview/audioFileID/'+audioFileID+'/audioFileArtist/'+audioFileArtist+'/audioFileTitle/'+audioFileTitle;
         //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
-        if (audio_preview_window == null || audio_preview_window.closed){
-            audio_preview_window = window.open(url, 'Audio Player', 'width=400,height=95');
-        } else if (!audio_preview_window.closed) {
-            audio_preview_window.play(fileID);
-        } else {
-            console.log("something else : "+baseUrl+url);
+        if (preview_window == null || preview_window.closed || playlistIndex === undefined){
+            preview_window = window.open(url, 'Audio Player', 'width=450,height=800');
+        } else if (!preview_window.closed) {
+            preview_window.playAll(playlistID, playlistIndex);
         }
-    
         //Set the play button to pause.
         //var elemID = "spl_"+elemIndexString;
         //$('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
         
-         return false;
+        return false;
     }
+    
