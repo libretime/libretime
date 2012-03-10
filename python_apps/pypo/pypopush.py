@@ -161,37 +161,94 @@ class PypoPush(Thread):
         """
         This function's purpose is to gracefully handle situations where
         Liquidsoap already has a track in its queue, but the schedule 
-        has changed. 
-
-        If the media_item is already being played, then we can't
-        do anything about it. If it is in the Liquidsoap queue, but not
-        yet playing then we can remove it. Note that currently
-        there can only ever be one media_item in the queue that isn't 
-        being played (for a max of two items in the queue).
+        has changed.
         """
         
         """
-        TODO: What happens if we remove the second item in the queue when 
-        it just became the primary item?
+        First let's connect to Liquidsoap and find what media items are in its queue.
+        
+        We will compare these items to the schedule we've received and decide if any
+        action needs to take place.  
         """
-        if len(self.liquidsoap_queue) > 1:
-            media_item = self.liquidsoap_queue[1]   
-            
-            if media["id"] != liquidsoap_queue["id"]:
+        tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+        
+        msg = 'queue.queue %s\n' % media_item["queue_id"]
+        tn.write(msg)
+        response = tn.read_until("\r\n").strip("\r\n")
+        tn.write('exit\n')
+        tn.read_all()
+        
+        list = response.split(" ")
+        
+        liquidsoap_queue_mirror = []
+        
+        for l in list:
+            if l in self.pushed_objects:
+                liquidsoap_queue_mirror.append(self.pushed_objects[l])
+            else:
+                self.logger.error("ID exists in liquidsoap queue that does not exist in our pushed_objects queue")
+        
+        #TODO: Keys should already be sorted. Verify this. 
+        sorted_keys = sort(media.keys())
+        
+        if len(liquidsoap_queue_mirror) == 0:
+            """
+            liquidsoap doesn't have anything in its queue, so we have nothing 
+            to worry about.
+            """
+            pass
+        
+        if len(liquidsoap_queue_mirror) == 1:
+            if liquidsoap_queue_mirror[0]['id'] != media_item[sorted_keys[0]]['id']:
                 """
-                The md5s are the not same, so a different
-                item has been scheduled!
+                liquidsoap queue does not match the newest schedule. The queue is only of
+                length 1, and so that means the item in the queue is playing. Need to do source.skip
                 """
-                #remove from actual liquidsoap queue
-                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-                msg = 'queue.remove %s\n' % media_item["queue_id"]
-                tn.write(msg)
-                tn.write("exit\n")
-                self.logger.debug(tn.read_all())
+                self.remove_from_liquidsoap_queue(liquidsoap_queue_mirror[0])
                 
-                #remove from our liquidsoap queue
-                self.liquidsoap_queue.remove(media_item)
         
+        if len(liquidsoap_queue_mirror) == 2:
+            if liquidsoap_queue_mirror[0]['id'] == media_item[sorted_keys[0]]['id'] \
+                and liquidsoap_queue_mirror[1]['id'] == media_item[sorted_keys[1]]['id']:
+                """
+                What's in the queue matches what's in the schedule. Nothing to do.
+                """
+                pass
+            elif liquidsoap_queue_mirror[0]['id'] == media_item[sorted_keys[0]]['id'] \
+                and liquidsoap_queue_mirror[1]['id'] != media_item[sorted_keys[1]]['id']:
+                """
+                instruct liquidsoap to remove the second item from the queue
+                """
+                self.remove_from_liquidsoap_queue(liquidsoap_queue_mirror[1])
+            elif liquidsoap_queue_mirror[0]['id'] != media_item[sorted_keys[0]]['id']:
+                """
+                remove both items from the queue. Remove in reverse order so that source.skip
+                doesn't skip to the second song which we also plan on removing.
+                """
+                self.remove_from_liquidsoap_queue(liquidsoap_queue_mirror[1])
+                self.remove_from_liquidsoap_queue(liquidsoap_queue_mirror[0])
+                
+    def remove_from_liquidsoap_queue(self, media_item):
+        if 'queue_id' in media_item:
+            queue_id = media_item['queue_id']
+            
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            msg = "queue.remove %s\n" % queue_id
+            tn.write(msg)
+            response = tn.read_until("\r\n").strip("\r\n")
+            
+            if "No such request in my queue" in response:
+                """
+                Cannot remove because Liquidsoap started playing the item. Need
+                to use source.skip instead
+                """
+                msg = "source.skip"
+                tn.write("source.skip")
+                
+            tn.write("exit\n")
+            tn.read_all()
+        else:
+            self.logger.error("'queue_id' key doesn't exist in media_item dict()")
 
     def sleep_until_start(self, media_item):
         """
@@ -236,10 +293,12 @@ class PypoPush(Thread):
         tn.write(msg)
         queue_id = tn.read_until("\r\n").strip("\r\n")
         
+        #remember the media_item's queue id which we may use
+        #later if we need to remove it from the queue.
         media_item['queue_id'] = queue_id
         
         #add media_item to the end of our queue
-        self.liquidsoap_queue.append(media_item)
+        self.pushed_objects[queue_id] = media_item
         
         show_name = media_item['show_name']
         msg = 'vars.show_name %s\n' % show_name.encode('utf-8')
