@@ -68,7 +68,7 @@ class LoginController extends Zend_Controller_Action
                         $tempSess = new Zend_Session_Namespace("referrer");
                         $tempSess->referrer = 'login';
                         
-                        $this->_redirect('Nowplaying');
+                        $this->_redirect('Showbuilder');
                     }
                     else
                     {
@@ -95,7 +95,7 @@ class LoginController extends Zend_Controller_Action
     public function logoutAction()
     {
         Zend_Auth::getInstance()->clearIdentity();
-        $this->_redirect('login/index');
+        $this->_redirect('showbuilder/index');
     }
 }
 

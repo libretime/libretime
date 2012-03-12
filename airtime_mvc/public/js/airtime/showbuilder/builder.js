@@ -346,13 +346,16 @@ var AIRTIME = (function(AIRTIME){
 				}
 				//current song is not set, set a timeout to refresh when the first item on the timeline starts.
 				else {
-					tr = tableDiv.find("tbody tr:first");
-					aData = tr.data("aData");
+					tr = tableDiv.find("tbody tr.sb-allowed.sb-header:first");
 					
-					AIRTIME.showbuilder.timeout = setTimeout(function(){
-						AIRTIME.showbuilder.resetTimestamp();
-						oTable.fnDraw();
-					}, aData.timeUntil * 1000); //need refresh in milliseconds
+					if (tr.length > 0) {
+						aData = tr.data("aData");
+						
+						AIRTIME.showbuilder.timeout = setTimeout(function(){
+							AIRTIME.showbuilder.resetTimestamp();
+							oTable.fnDraw();
+						}, aData.timeUntil * 1000); //need refresh in milliseconds
+					}	
 				}
 		    },
 			"fnHeaderCallback": function(nHead) {
