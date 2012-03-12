@@ -647,34 +647,19 @@
     
     }
     
-    var preview_window = null;
-    
-    function openAudioPreview(event) {
-        event.stopPropagation();
-        
-        var audioFileID = $(this).attr('audioFile');
-        var playlistID = $('#pl_id:first').attr('value');
-        var playlistIndex = $(this).parent().parent().attr('id');
-        playlistIndex = playlistIndex.substring(4); //remove the spl_
-        
-        open_playlist_preview(audioFileID, "", "", playlistID, playlistIndex);
+var audio_preview_window = null;
+
+function open_audio_preview(fileID, index) {
+    url = 'Playlist/audio-preview-player/fileID/'+fileID+'/index/'+index;
+    //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
+    if (audio_preview_window == null || audio_preview_window.closed){
+        audio_preview_window = window.open(url, 'Audio Player', 'width=400,height=95');
+    } else if (!audio_preview_window.closed) {
+        audio_preview_window.play(fileID);
+    } else {
+        console.log("something else : "+baseUrl+url);
     }
-    
-    function open_playlist_preview(audioFileID, audioFileTitle, audioFileArtist, playlistID, playlistIndex) {
-        if (playlistIndex != undefined)
-            url = 'Playlist/playlist-preview/audioFileID/'+audioFileID+'/playlistIndex/'+playlistIndex+'/playlistID/'+playlistID;
-        else
-            url = 'Playlist/playlist-preview/audioFileID/'+audioFileID+'/audioFileArtist/'+audioFileArtist+'/audioFileTitle/'+audioFileTitle;
-        //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
-        if (preview_window == null || preview_window.closed || playlistIndex === undefined){
-            preview_window = window.open(url, 'Audio Player', 'width=450,height=800');
-        } else if (!preview_window.closed) {
-            preview_window.playAll(playlistID, playlistIndex);
-        }
-        //Set the play button to pause.
-        //var elemID = "spl_"+elemIndexString;
-        //$('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
-        
-        return false;
-    }
+
+    return false;
+}
     
