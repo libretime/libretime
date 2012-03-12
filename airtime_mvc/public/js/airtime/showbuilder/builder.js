@@ -14,6 +14,8 @@ var AIRTIME = (function(AIRTIME){
 		}
 	}
 	
+	mod.timeout = undefined;
+	
 	mod.resetTimestamp = function() {
 		var timestamp = $("#sb_timestamp");
 		//reset timestamp value since input values could have changed.
@@ -301,7 +303,11 @@ var AIRTIME = (function(AIRTIME){
 					markerDiv,
 					td,
 					$lib = $("#library_content"),
-					tr;
+					tr,
+					oTable = $('#show_builder_table').dataTable(),
+					aData;
+				
+				clearTimeout(AIRTIME.showbuilder.timeout);
 				
 				//only create the cursor arrows if the library is on the page.
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
@@ -329,14 +335,24 @@ var AIRTIME = (function(AIRTIME){
 				
 				//if the now playing song is visible set a timeout to redraw the table at the start of the next song.
 				tr = tableDiv.find("tr.sb-now-playing");
+				
 				if (tr.length > 0) {
-					var oTable = $('#show_builder_table').dataTable(),
-						aData = tr.data("aData");
+					aData = tr.data("aData");
 					
 					setTimeout(function(){
 						AIRTIME.showbuilder.resetTimestamp();
 						oTable.fnDraw();
 					}, aData.refresh * 1000); //need refresh in milliseconds
+				}
+				//current song is not set, set a timeout to refresh when the first item on the timeline starts.
+				else {
+					tr = tableDiv.find("tbody tr:first");
+					aData = tr.data("aData");
+					
+					AIRTIME.showbuilder.timeout = setTimeout(function(){
+						AIRTIME.showbuilder.resetTimestamp();
+						oTable.fnDraw();
+					}, aData.timeUntil * 1000); //need refresh in milliseconds
 				}
 		    },
 			"fnHeaderCallback": function(nHead) {

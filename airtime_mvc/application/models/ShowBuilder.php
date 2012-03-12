@@ -17,6 +17,8 @@ class Application_Model_ShowBuilder {
 
     private $contentDT;
     private $epoch_now;
+    
+    private $hasCurrent;
 
     private $defaultRowArray = array(
         "header" => false,
@@ -51,6 +53,8 @@ class Application_Model_ShowBuilder {
         $this->user = Application_Model_User::GetCurrentUser();
         $this->opts = $p_opts;
         $this->epoch_now = time();
+        
+        $this->hasCurrent = false;
     }
 
     //check to see if this row should be editable.
@@ -98,6 +102,8 @@ class Application_Model_ShowBuilder {
             $row["current"] = true;
             //how many seconds the view should wait to redraw itself.
             $row["refresh"] = $p_epochItemEnd - $this->epoch_now;
+            
+            $this->hasCurrent = true;
         }
     }
 
@@ -115,6 +121,7 @@ class Application_Model_ShowBuilder {
 
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
+        $row["timeUntil"] = intval($showStartDT->format("U")) - $this->epoch_now;
         $row["ends"] = $showEndDT->format("Y-m-d H:i");
         $row["duration"] = $showEndDT->format("U") - $showStartDT->format("U");
         $row["title"] = $p_item["show_name"];
@@ -266,7 +273,7 @@ class Application_Model_ShowBuilder {
                     //pass in the previous row as it's the last row for the previous show.
                     $display_items[] = $this->makeFooterRow($scheduled_items[$i-1]);
                 }
-
+                
                 $display_items[] = $this->makeHeaderRow($item);
 
                 $current_id = $item["si_id"];
@@ -283,6 +290,10 @@ class Application_Model_ShowBuilder {
         //make the last footer if there were any scheduled items.
         if (count($scheduled_items) > 0) {
             $display_items[] = $this->makeFooterRow($scheduled_items[count($scheduled_items)-1]);
+        }
+        
+        if (!$this->hasCurrent) {
+        	
         }
 
         return $display_items;
