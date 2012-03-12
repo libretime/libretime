@@ -10,6 +10,7 @@ class ShowbuilderController extends Zend_Controller_Action
                     ->addActionContext('schedule-add', 'json')
                     ->addActionContext('schedule-remove', 'json')
                     ->addActionContext('builder-dialog', 'json')
+                    ->addActionContext('check-builder-feed', 'json')
                     ->addActionContext('builder-feed', 'json')
                     ->initContext();
     }
@@ -17,8 +18,78 @@ class ShowbuilderController extends Zend_Controller_Action
     public function indexAction() {
 
         $this->_helper->layout->setLayout('builder');
+        $this->_helper->viewRenderer->setResponseSegment('dialog');
+        
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
 
-        $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js'),'text/javascript');
+        $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version']),'text/javascript');
+        
+        $refer_sses = new Zend_Session_Namespace('referrer');
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        
+        if ($request->isPost()) {
+        	$form = new Application_Form_RegisterAirtime();
+        
+        	$values = $request->getPost();
+        	if ($values["Publicise"] != 1 && $form->isValid($values)) {
+        		Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+        		
+        		if (isset($values["Privacy"])) {
+        			Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
+        		}
+        		// unset session
+        		Zend_Session::namespaceUnset('referrer');
+        	}
+        	else if ($values["Publicise"] == '1' && $form->isValid($values)) {
+        		Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
+        		Application_Model_Preference::SetPhone($values["Phone"]);
+        		Application_Model_Preference::SetEmail($values["Email"]);
+        		Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
+        		Application_Model_Preference::SetPublicise($values["Publicise"]);
+        
+        		$form->Logo->receive();
+        		$imagePath = $form->Logo->getFileName();
+        
+        		Application_Model_Preference::SetStationCountry($values["Country"]);
+        		Application_Model_Preference::SetStationCity($values["City"]);
+        		Application_Model_Preference::SetStationDescription($values["Description"]);
+        		Application_Model_Preference::SetStationLogo($imagePath);
+        		Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+        		
+        		if (isset($values["Privacy"])){
+        			Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
+        		}
+        		// unset session
+        		Zend_Session::namespaceUnset('referrer');
+        	}
+        	else {
+        		$logo = Application_Model_Preference::GetStationLogo();
+        		if ($logo) {
+        			$this->view->logoImg = $logo;
+        		}
+        		$this->view->dialog = $form;
+        		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        	}
+        }
+        else {
+        	//popup if previous page was login
+        	if ($refer_sses->referrer == 'login' && Application_Model_Nowplaying::ShouldShowPopUp()
+        			&& !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
+        
+        		$form = new Application_Form_RegisterAirtime();
+        
+        		$logo = Application_Model_Preference::GetStationLogo();
+        		if ($logo) {
+        			$this->view->logoImg = $logo;
+        		}
+        		$this->view->dialog = $form;
+        		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        	}
+        }
         
         $this->_helper->actionStack('library', 'library');
         $this->_helper->actionStack('builder', 'showbuilder');
@@ -33,7 +104,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $now = time();
         $from = $request->getParam("from", $now);
-        $to = $request->getParam("to", $now+(24*60*60));
+        $to = $request->getParam("to", $now + (24*60*60));
 
         $start = DateTime::createFromFormat("U", $from, new DateTimeZone("UTC"));
         $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
@@ -52,12 +123,12 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $offset = date("Z") * -1;
         $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
-        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js','text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/main_builder.js','text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/main_builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/showbuilder.css');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
     }
 
     public function builderDialogAction() {
@@ -88,6 +159,37 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
     }
 
+    public function checkBuilderFeedAction() {
+
+        $request = $this->getRequest();
+        $current_time = time();
+
+        $starts_epoch = $request->getParam("start", $current_time);
+        //default ends is 24 hours after starts.
+        $ends_epoch = $request->getParam("end", $current_time + (60*60*24));
+        $show_filter = intval($request->getParam("showFilter", 0));
+        $my_shows = intval($request->getParam("myShows", 0));
+        $timestamp = intval($request->getParam("timestamp", -1));
+
+        $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
+        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
+
+        Logging::log("showbuilder starts {$startsDT->format("Y-m-d H:i:s")}");
+        Logging::log("showbuilder ends {$endsDT->format("Y-m-d H:i:s")}");
+
+        $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
+        $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
+
+        //only send the schedule back if updates have been made.
+        // -1 default will always call the schedule to be sent back if no timestamp is defined.
+        if ($showBuilder->hasBeenUpdatedSince($timestamp)) {
+            $this->view->update = true;
+        }
+        else {
+            $this->view->update = false;
+        }
+    }
+
     public function builderFeedAction() {
 
         $request = $this->getRequest();
@@ -98,6 +200,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $ends_epoch = $request->getParam("end", $current_time + (60*60*24));
         $show_filter = intval($request->getParam("showFilter", 0));
         $my_shows = intval($request->getParam("myShows", 0));
+        $timestamp = intval($request->getParam("timestamp", -1));
 
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
@@ -109,6 +212,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
         $this->view->schedule = $showBuilder->GetItems();
+        $this->view->timestamp = $current_time;
     }
 
     public function scheduleAddAction() {

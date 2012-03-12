@@ -1,16 +1,12 @@
 #library_content {
 	float: left;
 	width: 50%;
-	min-height: 475px;
+	overflow: hidden;
 }
 
 #library_display {
     /* for breaking up long strings that don't have delimiters */
     table-layout:fixed;
-}
-
-#library_display th {
-        text-align: left;
 }
 
 #library_content #library_display {
@@ -80,7 +76,8 @@
     text-align: center;
 }
 
-.library_sr,
-.library_bitrate {
-	text-align: right;
+td.library_track,
+td.library_sr,
+td.library_bitrate {
+    text-align: right;
 }

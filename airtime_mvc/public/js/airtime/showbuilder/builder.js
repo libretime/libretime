@@ -14,6 +14,34 @@ var AIRTIME = (function(AIRTIME){
 		}
 	}
 	
+	mod.timeout = undefined;
+	
+	mod.resetTimestamp = function() {
+		var timestamp = $("#sb_timestamp");
+		//reset timestamp value since input values could have changed.
+		timestamp.val(-1);
+	};
+	
+	mod.setTimestamp = function(timestamp) {
+		$("#sb_timestamp").val(timestamp);
+	};
+	
+	mod.getTimestamp = function() {
+		var timestamp = $("#sb_timestamp"),
+			val;
+		
+		//if the timestamp field is on the page return it, or give the default of -1
+		//to ensure a page refresh.
+		if (timestamp.length === 1) {
+			val = timestamp.val();
+		}
+		else {
+			val = -1;
+		}
+		
+		return val;
+	};
+	
 	mod.fnAdd = function(aMediaIds, aSchedIds) {
 		var oLibTT = TableTools.fnGetInstance('library_display');
 		
@@ -47,6 +75,8 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	fnServerData = function ( sSource, aoData, fnCallback ) {
+		
+		aoData.push( { name: "timestamp", value: AIRTIME.showbuilder.getTimestamp()} );
 		aoData.push( { name: "format", value: "json"} );
 		
 		if (fnServerData.hasOwnProperty("start")) {
@@ -65,7 +95,10 @@ var AIRTIME = (function(AIRTIME){
 			"type": "GET",
 			"url": sSource,
 			"data": aoData,
-			"success": fnCallback
+			"success": function(json) {
+				AIRTIME.showbuilder.setTimestamp(json.timestamp);
+				fnCallback(json);
+			}
 		} );
 	};
 	
@@ -74,7 +107,8 @@ var AIRTIME = (function(AIRTIME){
 	mod.builderDataTable = function() {
 		var tableDiv = $('#show_builder_table'),
 			oTable,
-			fnRemoveSelectedItems;
+			fnRemoveSelectedItems,
+			tableHeight;
 
 		fnRemoveSelectedItems = function() {
 			var oTT = TableTools.fnGetInstance('show_builder_table'),
@@ -269,7 +303,11 @@ var AIRTIME = (function(AIRTIME){
 					markerDiv,
 					td,
 					$lib = $("#library_content"),
-					tr;
+					tr,
+					oTable = $('#show_builder_table').dataTable(),
+					aData;
+				
+				clearTimeout(AIRTIME.showbuilder.timeout);
 				
 				//only create the cursor arrows if the library is on the page.
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
@@ -297,13 +335,27 @@ var AIRTIME = (function(AIRTIME){
 				
 				//if the now playing song is visible set a timeout to redraw the table at the start of the next song.
 				tr = tableDiv.find("tr.sb-now-playing");
+				
 				if (tr.length > 0) {
-					var oTable = $('#show_builder_table').dataTable(),
-						aData = tr.data("aData");
+					aData = tr.data("aData");
 					
 					setTimeout(function(){
+						AIRTIME.showbuilder.resetTimestamp();
 						oTable.fnDraw();
 					}, aData.refresh * 1000); //need refresh in milliseconds
+				}
+				//current song is not set, set a timeout to refresh when the first item on the timeline starts.
+				else {
+					tr = tableDiv.find("tbody tr.sb-allowed.sb-header:first");
+					
+					if (tr.length > 0) {
+						aData = tr.data("aData");
+						
+						AIRTIME.showbuilder.timeout = setTimeout(function(){
+							AIRTIME.showbuilder.resetTimestamp();
+							oTable.fnDraw();
+						}, aData.timeUntil * 1000); //need refresh in milliseconds
+					}	
 				}
 		    },
 			"fnHeaderCallback": function(nHead) {
@@ -311,7 +363,9 @@ var AIRTIME = (function(AIRTIME){
 			},
 			//remove any selected nodes before the draw.
 			"fnPreDrawCallback": function( oSettings ) {
-				var oTT = TableTools.fnGetInstance('show_builder_table');
+				var oTT;
+				
+				oTT = TableTools.fnGetInstance('show_builder_table');
 				oTT.fnSelectNone();
 		    },
 			
@@ -371,7 +425,7 @@ var AIRTIME = (function(AIRTIME){
 			},
 			
 	        // R = ColReorderResize, C = ColVis, T = TableTools
-	        "sDom": 'Rr<"H"CT>t<"F">',
+	        "sDom": 'Rr<"H"CT>t',
 	        
 	        "sAjaxDataProp": "schedule",
 			"sAjaxSource": "/showbuilder/builder-feed"	

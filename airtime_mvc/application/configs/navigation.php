@@ -11,9 +11,9 @@ $pages = array(
 	array(
         'label'      => 'Now Playing',
         'module'     => 'default',
-        'controller' => 'Nowplaying',
+        'controller' => 'Showbuilder',
         'action'     => 'index',
-        'resource'	=>	'nowplaying'
+        'resource'	=>	'showbuilder'
 	),
 	array(
 		'label'      => 'Add Media',
@@ -29,13 +29,6 @@ $pages = array(
 		'action'     => 'index',
 		'resource'	=>	'library'
 	),
-	array(
-        'label'      => 'Airtimeline',
-        'module'     => 'default',
-        'controller' => 'Showbuilder',
-        'action'     => 'index',
-        'resource'  =>  'showbuilder'
-    ),
 	array(
 		'label'      => 'Calendar',
         'module'     => 'default',
@@ -85,7 +78,14 @@ $pages = array(
                 'controller' => 'systemstatus',
                 'action'     => 'index',
                 'resource'	=>	'systemstatus'
-            )
+            ),
+        	array(
+        		'label'      => 'Playout History',
+        		'module'     => 'default',
+        		'controller' => 'playouthistory',
+        		'action'     => 'index',
+        		'resource'	=>	'playouthistory'
+        	)
         )
     ),
 	array(

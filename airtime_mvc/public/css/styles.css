@@ -9,7 +9,7 @@ body {
     padding: 0;
 }
 html, body {
-height: 100%;
+    height: 100%;
 }
 
 #login-page {
@@ -366,7 +366,7 @@ select {
 
 .wrapper {
 	margin: 0 20px 0 20px;
-	padding:20px 0 0 0;
+	padding:10px 0 0 0;
 }
 
 .alpha-block {
@@ -510,6 +510,11 @@ dl.inline-list dd {
     border-width: 1px 1px 1px 1px;
 	width:100%;
 }
+
+.datatable th {
+    text-align: left;
+}
+
 .datatable tr td, .datatable tr th {
     border-color: #b1b1b1;
     border-style: solid;
@@ -554,6 +559,14 @@ dl.inline-list dd {
     border-width: 0px 1px 0 1px;
 }
 
+.dataTables_scrolling {
+    overflow: auto;
+}
+
+.dataTables_scrolling table{
+    border-width: 0px 1px 0 1px;
+}
+
 .DataTables_sort_wrapper .ui-icon {
     display: block;
     float: left;
@@ -577,7 +590,7 @@ dl.inline-list dd {
 	line-height:22px;
 }
 .dataTables_filter {
-	margin:8px 0 0 8px;
+	margin:0 0 0 8px;
 }
 .dataTables_filter .auto-search {
 	width:55%;
@@ -611,6 +624,7 @@ dl.inline-list dd {
 .dataTables_paginate {
 	float: right;
 	padding: 8px 0 8px 8px;
+	clear: left;
 }
 .dataTables_paginate .ui-button {
 	font-size:12px;
@@ -623,7 +637,7 @@ dl.inline-list dd {
     width: 55%;
     border: 1px solid #5B5B5B;
     margin-left: -8px;
-    padding: 4px 3px 4px 25px;
+    padding: 5px 3px 4px 25px;
 }
 .dataTables_length select {
     background-color: #DDDDDD;
@@ -662,7 +676,6 @@ button.ColVis_Button.ColVis_ShowAll {
 
 .library_length {
     text-align: right;
-    padding-right: 1em !important;
 }
 
 /*----END Data Table----*/

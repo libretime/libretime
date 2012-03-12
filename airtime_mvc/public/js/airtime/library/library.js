@@ -1,4 +1,4 @@
-    var AIRTIME = (function(AIRTIME){
+var AIRTIME = (function(AIRTIME) {
     var mod,
         libraryInit;
     
@@ -42,14 +42,17 @@
     };
     
     libraryInit = function() {
-        var oTable;
+        var oTable,
+        	libContentDiv = $("#library_content");
+        	tableHeight = libContentDiv.height() - 140;
         
         oTable = $('#library_display').dataTable( {
             
+        	//put hidden columns at the top to insure they can never be visible on the table through column reordering.
             "aoColumns": [
-              /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
-              /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 2},
               /* ftype */         {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
+              /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
+              /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 0},
               /* Title */         {"sTitle": "Title", "mDataProp": "track_title", "sClass": "library_title"},
               /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator"},
               /* Album */         {"sTitle": "Album", "mDataProp": "album_title", "sClass": "library_album"},
@@ -58,7 +61,7 @@
               /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length", "sWidth": "80px"},
               /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time"},
               /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time"},
-              /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track"},
+              /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track", "sWidth": "65px"},
               /* Mood */  		  {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood"},
               /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm"},
               /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer"},
@@ -232,9 +235,9 @@
             "oLanguage": {
                 "sSearch": ""
             },
-           
+            
             // R = ColReorder, C = ColVis, T = TableTools
-            "sDom": 'Rl<"#library_display_type">fr<"H"T<"library_toolbar"C>>t<"F"ip>',
+            "sDom": 'Rl<"#library_display_type">fr<"H"T<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
                 "sRowSelect": "multi",
@@ -290,6 +293,8 @@
             
         });
         oTable.fnSetFilteringDelay(350);
+       
+        libContentDiv.find(".dataTables_scrolling").css("max-height", tableHeight);
         
         AIRTIME.library.events.setupLibraryToolbar(oTable);
         
@@ -469,9 +474,9 @@
     
     return AIRTIME;
     
-    }(AIRTIME || {}));
+}(AIRTIME || {}));
     
-    function addToolBarButtonsLibrary(aButtons) {
+function addToolBarButtonsLibrary(aButtons) {
     var i,
         length = aButtons.length,
         libToolBar = $(".library_toolbar"),
@@ -511,9 +516,9 @@
         }(i));
             
     }
-    }
+}
     
-    function checkImportStatus(){
+function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
         if (data == true){
@@ -523,9 +528,9 @@
             div.hide();
         }
     });
-    }
+}
     
-    function addProgressIcon(id) {
+function addProgressIcon(id) {
     var tr = $("#au_"+id),
         span;
     
@@ -539,9 +544,9 @@
         tr.find("td.library_title")
             .append('<span class="small-icon progress"></span>');
     }
-    }
+}
     
-    function checkSCUploadStatus(){
+function checkSCUploadStatus(){
     
     var url = '/Library/get-upload-to-soundcloud-status';
     
@@ -563,9 +568,9 @@
             }
         });
     });
-    }
+}
     
-    function addQtipToSCIcons(){
+function addQtipToSCIcons(){
     $(".progress, .soundcloud, .sc-error").live('mouseover', function(){
         
         var id = $(this).parent().parent().data("aData").id;
@@ -644,8 +649,7 @@
             });
         }
     });
-    
-    }
+}
     
 var audio_preview_window = null;
 
@@ -662,4 +666,3 @@ function open_audio_preview(fileID, index) {
 
     return false;
 }
-    
