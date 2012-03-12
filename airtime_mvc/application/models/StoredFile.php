@@ -557,7 +557,9 @@ Logging::log("getting media! - 2");
         return $res;
     }
 
-    public static function searchFilesForPlaylistBuilder($datatables) {
+    public static function searchLibraryFiles($datatables) {
+    	
+    	$con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
@@ -629,8 +631,8 @@ Logging::log("getting media! - 2");
             default:
                 $fromTable = $unionTable;
         }
-
-        $results = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables);
+        
+        $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
         //Used by the audio preview functionality in the library.
         foreach ($results['aaData'] as &$row) {
@@ -668,91 +670,6 @@ Logging::log("getting media! - 2");
         }
 
         return $results;
-    }
-
-    public static function searchFiles($displayColumns, $fromTable, $data)
-    {
-        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
-        $where = array();
-
-        if ($data["sSearch"] !== "") {
-            $searchTerms = explode(" ", $data["sSearch"]);
-        }
-
-        $selectorCount = "SELECT COUNT(*) ";
-        $selectorRows = "SELECT ".join(",", $displayColumns)." ";
-
-        $sql = $selectorCount." FROM ".$fromTable;
-        $sqlTotalRows = $sql;
-
-        if (isset($searchTerms)) {
-            $searchCols = array();
-            for ($i = 0; $i < $data["iColumns"]; $i++) {
-                if ($data["bSearchable_".$i] == "true") {
-                    $searchCols[] = $data["mDataProp_{$i}"];
-                }
-            }
-
-            $outerCond = array();
-
-            foreach ($searchTerms as $term) {
-                $innerCond = array();
-
-                foreach ($searchCols as $col) {
-                    $escapedTerm = pg_escape_string($term);
-                    $innerCond[] = "{$col}::text ILIKE '%{$escapedTerm}%'";
-                }
-                $outerCond[] = "(".join(" OR ", $innerCond).")";
-            }
-            $where[] = "(".join(" AND ", $outerCond).")";
-        }
-        // End Where clause
-
-        // Order By clause
-        $orderby = array();
-        for ($i = 0; $i < $data["iSortingCols"]; $i++){
-            $num = $data["iSortCol_".$i];
-            $orderby[] = $data["mDataProp_{$num}"]." ".$data["sSortDir_".$i];
-        }
-        $orderby[] = "id";
-        $orderby = join("," , $orderby);
-        // End Order By clause
-
-        if (count($where) > 0) {
-            $where = join(" AND ", $where);
-            $sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
-            $sqlTotalDisplayRows = $sql;
-
-            $sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
-        }
-        else {
-            $sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
-        }
-
-        try {
-            $r = $con->query($sqlTotalRows);
-            $totalRows = $r->fetchColumn(0);
-
-            if (isset($sqlTotalDisplayRows)) {
-                $r = $con->query($sqlTotalDisplayRows);
-                $totalDisplayRows = $r->fetchColumn(0);
-            }
-            else {
-              $totalDisplayRows = $totalRows;
-            }
-
-            $r = $con->query($sql);
-            $r->setFetchMode(PDO::FETCH_ASSOC);
-            $results = $r->fetchAll();
-        }
-        catch (Exception $e) {
-            Logging::log($e->getMessage());
-        }
-
-        //display sql executed in airtime log for testing
-        Logging::log($sql);
-
-        return array("sEcho" => intval($data["sEcho"]), "iTotalDisplayRecords" => $totalDisplayRows, "iTotalRecords" => $totalRows, "aaData" => $results);
     }
 
     public static function uploadFile($p_targetDir)
