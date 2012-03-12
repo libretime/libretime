@@ -13,7 +13,7 @@ class LibraryController extends Zend_Controller_Action
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('contents', 'json')
+        $ajaxContext->addActionContext('contents-feed', 'json')
                     ->addActionContext('delete', 'json')
                     ->addActionContext('delete-group', 'json')
                     ->addActionContext('context-menu', 'json')
@@ -194,13 +194,13 @@ class LibraryController extends Zend_Controller_Action
         }
     }
 
-    public function contentsAction()
+    public function contentsFeedAction()
     {
         $params = $this->getRequest()->getParams();
-        $datatables = Application_Model_StoredFile::searchFilesForPlaylistBuilder($params);
+        $r = Application_Model_StoredFile::searchLibraryFiles($params);
 
         //TODO move this to the datatables row callback.
-        foreach ($datatables["aaData"] as &$data) {
+        foreach ($r["aaData"] as &$data) {
 
             if ($data['ftype'] == 'audioclip'){
                 $file = Application_Model_StoredFile::Recall($data['id']);
@@ -217,8 +217,11 @@ class LibraryController extends Zend_Controller_Action
                 }
             }
         }
-
-        die(json_encode($datatables));
+        
+        $this->view->sEcho = $r["sEcho"];
+        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
+        $this->view->iTotalRecords = $r["iTotalRecords"];
+        $this->view->files = $r["aaData"];
     }
 
     public function editFileMdAction()

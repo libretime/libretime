@@ -139,7 +139,9 @@ var AIRTIME = (function(AIRTIME) {
                 oData.iCreate = parseInt(oData.iCreate, 10);
             },
             
-            "sAjaxSource": "/Library/contents",
+            "sAjaxSource": "/Library/contents-feed",
+            "sAjaxDataProp": "files",
+            
             "fnServerData": function ( sSource, aoData, fnCallback ) {
                 var type;
                 

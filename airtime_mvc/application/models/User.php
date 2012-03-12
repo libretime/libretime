@@ -239,7 +239,9 @@ class Application_Model_User {
         return Application_Model_User::getUsers(array('H'), $search);
     }
 
-    public static function getUsersDataTablesInfo($datatables_post) {
+    public static function getUsersDataTablesInfo($datatables) {
+    	
+    	$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME);
 
         $displayColumns = array("id", "login", "first_name", "last_name", "type");
         $fromTable = "cc_subjs";
@@ -252,8 +254,8 @@ class Application_Model_User {
             $username = $auth->getIdentity()->login;
         }
 
-        $res = Application_Model_StoredFile::searchFiles($displayColumns, $fromTable, $datatables_post);
-
+        $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
+        
         // mark record which is for the current user
         foreach($res['aaData'] as &$record){
             if($record['login'] == $username){
