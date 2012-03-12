@@ -9,8 +9,29 @@ var AIRTIME = (function(AIRTIME) {
     mod.historyTable = function() {
         var oTable,
         	historyContentDiv = $("#history_content"),
-        	historyTableDiv = historyContentDiv.find("#history_table");
-        	tableHeight = historyContentDiv.height() - 140;
+        	historyTableDiv = historyContentDiv.find("#history_table"),
+        	tableHeight = historyContentDiv.height() - 140,
+        	fnServerData;
+        	
+        fnServerData = function ( sSource, aoData, fnCallback ) {
+        	
+        	if (fnServerData.hasOwnProperty("start")) {
+    			aoData.push( { name: "start", value: fnServerData.start} );
+    		}
+    		if (fnServerData.hasOwnProperty("end")) {
+    			aoData.push( { name: "end", value: fnServerData.end} );
+    		}
+           
+            aoData.push( { name: "format", value: "json"} );
+            
+            $.ajax( {
+                "dataType": 'json',
+                "type": "GET",
+                "url": sSource,
+                "data": aoData,
+                "success": fnCallback
+            } );
+        };
         
         oTable = historyTableDiv.dataTable( {
             
@@ -28,26 +49,18 @@ var AIRTIME = (function(AIRTIME) {
             "sAjaxSource": "/Playouthistory/playout-history-feed",
             "sAjaxDataProp": "history",
             
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-               
-                aoData.push( { name: "format", value: "json"} );
-                
-                $.ajax( {
-                    "dataType": 'json',
-                    "type": "GET",
-                    "url": sSource,
-                    "data": aoData,
-                    "success": fnCallback
-                } );
-            },
+            "fnServerData": fnServerData,
             
             "oLanguage": {
                 "sSearch": ""
             },
             
+            "aLengthMenu": [[50, 100, 500, -1], [50, 100, 500, "All"]],
+            "iDisplayLength": 50,
+            
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
-            "bAutoWidth": false,
+            "bAutoWidth": true,
            
             "sDom": 'lfr<"H"T><"dataTables_scrolling"t><"F"ip>', 
             
@@ -56,6 +69,8 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
         oTable.fnSetFilteringDelay(350);
+        
+        return oTable;
     };
     
 return AIRTIME;
@@ -67,12 +82,52 @@ $(document).ready(function(){
 	var viewport = AIRTIME.utilities.findViewportDimensions(),
 		history_content = $("#history_content"),
 		widgetHeight = viewport.height - 185,
-		screenWidth = Math.floor(viewport.width - 110);
+		screenWidth = Math.floor(viewport.width - 110),
+		oBaseDatePickerSettings,
+		oBaseTimePickerSettings,
+		oTable,
+		dateStartId = "#his_date_start",
+		timeStartId = "#his_time_start",
+		dateEndId = "#his_date_end",
+		timeEndId = "#his_time_end";
 	
 	history_content
 		.height(widgetHeight)
 		.width(screenWidth);
 	
-	AIRTIME.history.historyTable();
+	oBaseDatePickerSettings = {
+		dateFormat: 'yy-mm-dd',
+		onSelect: function(sDate, oDatePicker) {		
+			$(this).datepicker( "setDate", sDate );
+		}
+	};
+	
+	oBaseTimePickerSettings = {
+		showPeriodLabels: false,
+		showCloseButton: true,
+		showLeadingZero: false,
+		defaultTime: '0:00'
+	};
+	
+	oTable = AIRTIME.history.historyTable();
+	
+	history_content.find(dateStartId).datepicker(oBaseDatePickerSettings);
+	history_content.find(timeStartId).timepicker(oBaseTimePickerSettings);
+	history_content.find(dateEndId).datepicker(oBaseDatePickerSettings);
+	history_content.find(timeEndId).timepicker(oBaseTimePickerSettings);
+	
+	
+	history_content.find("#his_submit").click(function(ev){
+		var fn,
+			oRange;
+		
+		oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+		
+	    fn = oTable.fnSettings().fnServerData;
+	    fn.start = oRange.start;
+	    fn.end = oRange.end;
+	    
+		oTable.fnDraw();
+	});
 	
 });

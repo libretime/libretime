@@ -52,15 +52,26 @@ class Application_Model_Datatables {
 		$orderby = join("," , $orderby);
 		// End Order By clause
 	
+		$displayLength = intval($data["iDisplayLength"]);
 		if (count($where) > 0) {
 			$where = join(" AND ", $where);
 			$sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
 			$sqlTotalDisplayRows = $sql;
 	
-			$sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
+			$sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby;
+			
+			//limit the results returned.
+			if ($displayLength !== -1) {
+				$sql .= " OFFSET ".$data["iDisplayStart"]." LIMIT ".$displayLength;
+			}	
 		}
 		else {
-			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby." OFFSET ".$data["iDisplayStart"]." LIMIT ".$data["iDisplayLength"];
+			$sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby;
+			
+			//limit the results returned.
+			if ($displayLength !== -1) {
+				$sql .= " OFFSET ".$data["iDisplayStart"]." LIMIT ".$displayLength;
+			}
 		}
 	
 		try {

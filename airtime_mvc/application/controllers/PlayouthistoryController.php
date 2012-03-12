@@ -17,7 +17,27 @@ class PlayoutHistoryController extends Zend_Controller_Action
 		$this->_helper->layout->setLayout('playouthistory');
 		
 		$request = $this->getRequest();
-		$baseUrl = $request->getBaseUrl();
+        $baseUrl = $request->getBaseUrl();
+
+        //default time is the last 24 hours.
+        $now = time();
+        $from = $request->getParam("from", $now - (24*60*60));
+        $to = $request->getParam("to", $now);
+
+        $start = DateTime::createFromFormat("U", $from, new DateTimeZone("UTC"));
+        $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $end = DateTime::createFromFormat("U", $to, new DateTimeZone("UTC"));
+        $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+        $form = new Application_Form_DateRange();
+        $form->populate(array(
+            'his_date_start' => $start->format("Y-m-d"),
+            'his_time_start' => $start->format("H:i"),
+            'his_date_end' => $end->format("Y-m-d"),
+            'his_time_end' => $end->format("H:i")
+        ));
+
+        $this->view->date_form = $form;
 		
 		$this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -26,12 +46,17 @@ class PlayoutHistoryController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/TableTools/js/ZeroClipboard.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/TableTools/js/TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 		
+		$offset = date("Z") * -1;
+		$this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
+		$this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js','text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/playouthistory/historytable.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 		
 		$this->view->headLink()->appendStylesheet($baseUrl.'/js/datatables/plugin/TableTools/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
 		//$this->view->headLink()->appendStylesheet($baseUrl.'/js/datatables/plugin/TableTools/css/TableTools_JUI.css?'.$CC_CONFIG['airtime_version']);	
+		
+		$this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css');
 	}
 	
 	public function playoutHistoryFeedAction()
