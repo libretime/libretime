@@ -81,12 +81,25 @@ try:
     print " Found %s (%s) on %s architecture" % (fullname, codename, arch) 
     
     print " * Installing Liquidsoap binary"
-    if (os.path.exists("%s/liquidsoap_%s_%s"%(PATH_LIQUIDSOAP_BIN, codename, arch))):
-        shutil.copy("%s/liquidsoap_%s_%s"%(PATH_LIQUIDSOAP_BIN, codename, arch), "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
-    else:
-        print "Unsupported system architecture."
-        sys.exit(1)
+    
+    binary_path = os.path.join(PATH_LIQUIDSOAP_BIN, "liquidsoap_%s_%s" % (codename, arch))
+    
+    try:
+        shutil.copy(binary_path, "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
+    except IOError, e:
+        """
+        shutil.copy can throw this exception for two reasons. First reason is that it cannot open the source file.
+        This is when the liquidsoap file we requested does not exist, and therefore tells the user we don't support
+        their OS/System architecture. The second reason for this exception is the shutil.copy cannot open the target file.
+        Since this script is being run as root (and we cannot install to a read-only device), this should never happen. So
+        it is safe to assume this exception is a result of the first case. 
         
+        Note: We cannot simply use os.path.exists before this, since it sometimes gives us "false" incorrectly
+        """
+        print "Unsupported OS/system architecture."
+        sys.exit(1)
+    
+            
     #generate liquidsoap config file
     #access the DB and generate liquidsoap.cfg under /etc/airtime/
     ac = api_client.api_client_factory(config)

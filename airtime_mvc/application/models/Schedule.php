@@ -65,17 +65,75 @@ class Application_Model_Schedule {
         $date = new Application_Model_DateHelper;
         $timeNow = $date->getTimestamp();
         $utcTimeNow = $date->getUtcTimestamp();
+        $currentShow = Application_Model_Show::GetCurrentShow($utcTimeNow);
+        $results = Application_Model_Schedule::GetPrevCurrentNext($utcTimeNow);
+        
         $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
-            "previous"=>Application_Model_Dashboard::GetPreviousItem($utcTimeNow),
-            "current"=>Application_Model_Dashboard::GetCurrentItem($utcTimeNow),
-            "next"=>Application_Model_Dashboard::GetNextItem($utcTimeNow),
-            "currentShow"=>Application_Model_Show::GetCurrentShow($utcTimeNow),
-            "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 1),
+            "previous"=>$results['previous'],
+            "current"=>$results['current'],
+            "next"=>$results['next'],
+            "currentShow"=>$currentShow,
+            "nextShow"=>"",//Application_Model_Show::GetNextShows($utcTimeNow, 1),
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
-
         return $range;
+    }
+    
+    /**
+     * Queries the database for the set of schedules one hour before and after the given time.
+     * If a show starts and ends within that time that is considered the current show. Then the
+     * scheduled item before it is the previous show, and the scheduled item after it is the next
+     * show. This way the dashboard getCurrentPlaylist is very fast. But if any one of the three
+     * show types are not found through this mechanism a call is made to the old way of querying
+     * the database to find the track info.
+    **/
+    public static function GetPrevCurrentNext($p_timeNow)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        
+        
+        $sql = "Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played
+                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id LEFT JOIN cc_show_instances sit ON st.instance_id = sit.id
+                WHERE st.starts > (TIMESTAMP '$p_timeNow'-INTERVAL '24 hours') AND st.starts < (TIMESTAMP '$p_timeNow'+INTERVAL '24 hours') AND st.starts < sit.ends
+                ORDER BY st.starts";
+        $row = $CC_DBC->GetAll($sql);
+        
+        $numberOfRows = count($row);
+        $results;
+        
+        $timeNowAsMillis = strtotime($p_timeNow);
+        for( $i = 0; $i < $numberOfRows && !isset($results); ++$i ){
+            if ((strtotime($row[$i]['starts']) <= $timeNowAsMillis) && (strtotime($row[$i]['ends']) >= $timeNowAsMillis)){
+                if ( $i - 1 >= 0){
+                    $results['previous'] = array("name"=>$row[$i-1]["artist_name"]." - ".$row[$i-1]["track_title"],
+                            "starts"=>$row[$i-1]["starts"],
+                            "ends"=>$row[$i-1]["ends"]);
+                }
+                $results['current'] =  array("name"=>$row[$i]["artist_name"]." - ".$row[$i]["track_title"],
+                            "starts"=>$row[$i]["starts"],
+                            "ends"=>$row[$i]["ends"],
+                            "media_item_played"=>$row[$i]["media_item_played"],
+                            "record"=>0);
+                if ( isset($row[$i+1])){
+                    $results['next'] =  array("name"=>$row[$i+1]["artist_name"]." - ".$row[$i+1]["track_title"],
+                            "starts"=>$row[$i+1]["starts"],
+                            "ends"=>$row[$i+1]["ends"]);
+                }
+                break;
+            }
+        }
+        
+        if (!isset($results['previous'])){
+            $results['previous'] = Application_Model_Dashboard::GetPreviousItem($p_timeNow);
+        }
+        if (!isset($results['current'])){
+            $results['current'] = Application_Model_Dashboard::GetCurrentItem($p_timeNow);
+        }
+        if (!isset($results['next'])) {
+            $results['next'] = Application_Model_Dashboard::GetNextItem($p_timeNow);
+        }
+        return $results;
     }
 
     public static function GetLastScheduleItem($p_timeNow){
@@ -195,23 +253,59 @@ class Application_Model_Schedule {
         ." WHERE st.starts < si.ends";
 
         if ($timePeriod < 0){
-        	$sql .= " AND st.ends < TIMESTAMP '$timeStamp'"
-        	." AND st.ends > (TIMESTAMP '$timeStamp' - INTERVAL '$interval')"
-  	        ." ORDER BY st.starts DESC"
-        	." LIMIT $count";
-		} else if ($timePeriod == 0){
-	        $sql .= " AND st.starts <= TIMESTAMP '$timeStamp'"
-    	    ." AND st.ends >= TIMESTAMP '$timeStamp'";
-		} else if ($timePeriod > 0){
-        	$sql .= " AND st.starts > TIMESTAMP '$timeStamp'"
-        	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"
-        	." ORDER BY st.starts"
-        	." LIMIT $count";
-		}
+            $sql .= " AND st.ends < TIMESTAMP '$timeStamp'"
+            ." AND st.ends > (TIMESTAMP '$timeStamp' - INTERVAL '$interval')"
+            ." ORDER BY st.starts DESC"
+           	." LIMIT $count";
+        } else if ($timePeriod == 0){
+            $sql .= " AND st.starts <= TIMESTAMP '$timeStamp'"
+       	    ." AND st.ends >= TIMESTAMP '$timeStamp'";
+        } else if ($timePeriod > 0){
+           	$sql .= " AND st.starts > TIMESTAMP '$timeStamp'"
+           	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"
+           	." ORDER BY st.starts"
+           	." LIMIT $count";
+        }
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
-	}
+    }
+
+    
+    public static function getScheduleItemsInRange($starts, $ends)
+    {
+        global $CC_DBC, $CC_CONFIG;
+
+        $sql = "SELECT"
+        ." si.starts as show_starts,"
+        ." si.ends as show_ends,"
+        ." si.rebroadcast as rebroadcast,"
+        ." st.starts as item_starts,"
+        ." st.ends as item_ends,"
+        ." st.clip_length as clip_length,"
+        ." ft.track_title as track_title,"
+        ." ft.artist_name as artist_name,"
+        ." ft.album_title as album_title,"
+        ." s.name as show_name,"
+        ." si.id as instance_id,"
+        ." pt.name as playlist_name"
+        ." FROM ".$CC_CONFIG["showInstances"]." si"
+        ." LEFT JOIN ".$CC_CONFIG["scheduleTable"]." st"
+        ." ON st.instance_id = si.id"
+        ." LEFT JOIN ".$CC_CONFIG["playListTable"]." pt"
+        ." ON st.playlist_id = pt.id"
+        ." LEFT JOIN ".$CC_CONFIG["filesTable"]." ft"
+        ." ON st.file_id = ft.id"
+        ." LEFT JOIN ".$CC_CONFIG["showTable"]." s"
+        ." ON si.show_id = s.id"
+        ." WHERE ((si.starts < TIMESTAMP '$starts' AND si.ends > TIMESTAMP '$starts')"
+        ." OR (si.starts > TIMESTAMP '$starts' AND si.ends < TIMESTAMP '$ends')"
+        ." OR (si.starts < TIMESTAMP '$ends' AND si.ends > TIMESTAMP '$ends'))"
+        ." AND (st.starts < si.ends)"
+        ." ORDER BY si.id, si.starts, st.starts";
+        
+        return $CC_DBC->GetAll($sql);
+    }
 
 	/*
 	 *
@@ -295,7 +389,7 @@ class Application_Model_Schedule {
     }
 
     public static function getSchduledPlaylistCount(){
-    	global $CC_CONFIG, $CC_DBC;
+       	global $CC_CONFIG, $CC_DBC;
         $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['scheduleTable'];
         return $CC_DBC->GetOne($sql);
     }
@@ -635,16 +729,16 @@ class Application_Model_Schedule {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $formWhat = new Application_Form_AddShowWhat();
-		$formWho = new Application_Form_AddShowWho();
-		$formWhen = new Application_Form_AddShowWhen();
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formStyle = new Application_Form_AddShowStyle();
+        $formWho = new Application_Form_AddShowWho();
+        $formWhen = new Application_Form_AddShowWhen();
+        $formRepeats = new Application_Form_AddShowRepeats();
+        $formStyle = new Application_Form_AddShowStyle();
 
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWho->removeDecorator('DtDdWrapper');
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formStyle->removeDecorator('DtDdWrapper');
+        $formWhat->removeDecorator('DtDdWrapper');
+        $formWho->removeDecorator('DtDdWrapper');
+        $formWhen->removeDecorator('DtDdWrapper');
+        $formRepeats->removeDecorator('DtDdWrapper');
+        $formStyle->removeDecorator('DtDdWrapper');
 
         $p_view->what = $formWhat;
         $p_view->when = $formWhen;
@@ -655,11 +749,11 @@ class Application_Model_Schedule {
         $formWhat->populate(array('add_show_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
                                       'add_show_start_time' => '00:00',
-        							  'add_show_end_date_no_repeate' => date("Y-m-d"),
-        							  'add_show_end_time' => '01:00',
+                                      'add_show_end_date_no_repeate' => date("Y-m-d"),
+                                      'add_show_end_time' => '01:00',
                                       'add_show_duration' => '1h'));
 
-		$formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
+        $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
 
         if(!$isSaas){
             $formRecord = new Application_Form_AddShowRR();
@@ -677,4 +771,3 @@ class Application_Model_Schedule {
         $p_view->addNewShow = true;
     }
 }
-

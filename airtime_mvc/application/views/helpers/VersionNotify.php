@@ -20,27 +20,26 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract{
         $current = Application_Model_Preference::GetAirtimeVersion();
         $latest = Application_Model_Preference::GetLatestVersion();
         $link = Application_Model_Preference::GetLatestLink();
-        $pattern = "/^([0-9]+)\.([0-9]+)\.[0-9]+/";
-        preg_match($pattern, $current, $curMatch);
-        preg_match($pattern, $latest, $latestMatch);
-        if(count($curMatch) == 0 || count($latestMatch) == 0) {
+        $currentExploded = explode('.', $current);
+        $latestExploded = explode('.', $latest);
+        if(count($currentExploded) != 3 || count($latestExploded) != 3) {
             return "";
         }
         
-        // Calculate major version diff;
-        // Example: if current = 1.9.5 and latest = 3.0.0, major diff = 11
+        // Calculate the version difference;
+        // Example: if current = 1.9.5 and latest = 3.0.0, diff = 105
         // Note: algorithm assumes the number after 1st dot never goes above 9
-        $diff = (intval($latestMatch[1]) * 10 + intval($latestMatch[2])) 
-                - (intval($curMatch[1]) * 10 + intval($curMatch[2]));
+        $versionDifference = (intval($latestExploded[0]) * 100 + intval($latestExploded[1]) *10 + intval($latestExploded[2])) 
+            - (intval($currentExploded[0]) * 100 + intval($currentExploded[1] *10 + intval($currentExploded[2])));
         
-        // Pick icon
-        if(($diff == 0 && $current == $latest) || $diff < 0) {
-            // current version is up to date
+        // Pick icon based on distance this version is to the latest version available
+        if($versionDifference <= 0) {
+            // current version is up to date or newer
             $class = "uptodate";
-        } else if($diff <= 2) {
+        } else if($versionDifference < 20) {
             // 2 or less major versions back
             $class = "update";
-        } else if($diff == 3) {
+        } else if($versionDifference < 30) {
             // 3 major versions back
             $class = "update2";
         } else {
@@ -48,7 +47,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract{
             $class = "outdated";
         }
         
-        $result = "<div id='version-diff' style='display:none'>" . $diff . "</div>"
+        $result = "<div id='version-diff' style='display:none'>" . $versionDifference . "</div>"
                 . "<div id='version-current' style='display:none'>" . $current . "</div>"
                 . "<div id='version-latest' style='display:none'>" . $latest . "</div>"
                 . "<div id='version-link' style='display:none'>" . $link . "</div>"

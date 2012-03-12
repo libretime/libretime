@@ -3,24 +3,31 @@
 class Application_Model_Nowplaying
 {
 
-	private static function CreateHeaderRow($p_showName, $p_showStart, $p_showEnd){
-		return array("h", "", $p_showStart, $p_showEnd, $p_showName, "", "", "", "", "", "");
-	}
+    private static function CreateHeaderRow($p_showName, $p_showStart, $p_showEnd){
+        return array("h", "", $p_showStart, $p_showEnd, $p_showName, "", "", "", "", "", "");
+    }
 
-	private static function CreateDatatableRows($p_dbRows){
+    private static function CreateDatatableRows($p_dbRows){
         $dataTablesRows = array();
 
         $epochNow = time();
 
-        foreach ($p_dbRows as $dbRow){
-
-            $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['show_starts']);
-            $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['show_ends']);
-            $itemStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_starts']);
-            $itemEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_ends']);
-
+        $lastRow = end($p_dbRows);
+        
+        //Information about show is true for all rows in parameter so only check the last row's show
+        //start and end times.
+        if (isset($lastRow)){
+            $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($lastRow['show_starts']);
+            $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($lastRow['show_ends']);
             $showStarts = $showStartDateTime->format("Y-m-d H:i:s");
             $showEnds = $showEndDateTime->format("Y-m-d H:i:s");
+        }
+        
+        foreach ($p_dbRows as $dbRow) {
+
+            $itemStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_starts']);
+            $itemEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($dbRow['item_ends']);
+            
             $itemStarts = $itemStartDateTime->format("Y-m-d H:i:s");
             $itemEnds = $itemEndDateTime->format("Y-m-d H:i:s");
             
@@ -44,54 +51,82 @@ class Application_Model_Nowplaying
                 $dbRow['playlist_name'], $dbRow['show_name'], $status);
         }
 
-		return $dataTablesRows;
-	}
+        //Modify the last entry in the data table to adjust its end time to be equal to the
+        //shows end time if it exceeds it.
+        $lastRow = end($dataTablesRows);
+        if (isset($lastRow) && strtotime($showEnds) < strtotime($lastRow[3])){
+            $dataTablesRows[sizeof($dataTablesRows)-1][3] = $showEnds;
+        }
+        return $dataTablesRows;
+    }
 
-	private static function CreateGapRow($p_gapTime){
-		return array("g", "", "", "", $p_gapTime, "", "", "", "", "", "");
-	}
+    private static function CreateGapRow($p_gapTime){
+        return array("g", "", "", "", $p_gapTime, "", "", "", "", "", "");
+    }
 
-	private static function CreateRecordingRow($p_showInstance){
-		return array("r", "", "", "", $p_showInstance->getName(), "", "", "", "", "", "");
-	}
+    private static function CreateRecordingRow($p_showInstance){
+        return array("r", "", "", "", $p_showInstance->getName(), "", "", "", "", "", "");
+    }
 
-	public static function GetDataGridData($viewType, $dateString){
 
-        if ($viewType == "now"){
-            $dateTime = new DateTime("now", new DateTimeZone("UTC"));
-            $timeNow = $dateTime->format("Y-m-d H:i:s");
+    /*
+     * The purpose of this function is to return an array of scheduled
+     * items. There are two parameters. $p_viewType can be either "now"
+     * or "day". If "now", we show all scheduled items in the near future.
+     * 
+     * If "day" we need to find what day was requested by the user, and return
+     * scheduled items for that day.
+     * 
+     * $p_dateString is only used when $p_viewType is "day" it is in the format
+     * "2012-12-31". In this case it tells us which day to use. 
+     */
+    public static function GetDataGridData($p_viewType,  $p_dateString){
 
-            $startCutoff = 60;
-            $endCutoff = 86400; //60*60*24 - seconds in a day
+        if ($p_viewType == "now"){
+            $start_dt = new DateTime("now", new DateTimeZone("UTC"));
+            $end_dt = clone $start_dt;
+            
+            $start_dt->sub(new DateInterval("PT60S"));
+            $end_dt->add(new DateInterval("PT24H"));
         } else {
-            $date = new Application_Model_DateHelper;
-            $time = $date->getTime();
-            $date->setDate($dateString." ".$time);
-            $timeNow = $date->getUtcTimestamp();
+            //convert to UTC
+            $utc_dt = Application_Model_DateHelper::ConvertToUtcDateTime($p_dateString);
+            $start_dt = $utc_dt;
+            
+            $end_dt = clone $utc_dt;
+            $end_dt->add(new DateInterval("PT24H"));
+        }
+        
+        $starts = $start_dt->format("Y-m-d H:i:s");
+        $ends = $end_dt->format("Y-m-d H:i:s");
 
-            $startCutoff = $date->getNowDayStartDiff();
-            $endCutoff = $date->getNowDayEndDiff();
+        $showIds = Application_Model_ShowInstance::GetShowsInstancesIdsInRange($starts, $ends);
+            
+        //get all the pieces to be played between the start cut off and the end cut off.
+        $scheduledItems = Application_Model_Schedule::getScheduleItemsInRange($starts, $ends);
+
+        $orderedScheduledItems;
+        foreach ($scheduledItems as $scheduledItem){
+            $orderedScheduledItems[$scheduledItem['instance_id']][] = $scheduledItem;
         }
 
         $data = array();
-
-        $showIds = Application_Model_ShowInstance::GetShowsInstancesIdsInRange($timeNow, $startCutoff, $endCutoff);
         foreach ($showIds as $showId){
             $instanceId = $showId['id'];
 
+            //gets the show information
             $si = new Application_Model_ShowInstance($instanceId);
 
             $showId = $si->getShowId();
             $show = new Application_Model_Show($showId);
-
+            
             $showStartDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowInstanceStart());
             $showEndDateTime = Application_Model_DateHelper::ConvertToLocalDateTime($si->getShowInstanceEnd());
 
             //append show header row
             $data[] = self::CreateHeaderRow($show->getName(), $showStartDateTime->format("Y-m-d H:i:s"), $showEndDateTime->format("Y-m-d H:i:s"));
 
-            $scheduledItems = $si->getScheduleItemsInRange($timeNow, $startCutoff, $endCutoff);
-            $dataTablesRows = self::CreateDatatableRows($scheduledItems);
+            $dataTablesRows = self::CreateDatatableRows($orderedScheduledItems[$instanceId]);
 
             //append show audio item rows
             $data = array_merge($data, $dataTablesRows);
@@ -99,11 +134,12 @@ class Application_Model_Nowplaying
             //append show gap time row
             $gapTime = self::FormatDuration($si->getShowEndGapTime(), true);
             if ($si->isRecorded())
-            	$data[] = self::CreateRecordingRow($si);
+               	$data[] = self::CreateRecordingRow($si);
             else if ($gapTime > 0)
-            	$data[] = self::CreateGapRow($gapTime);
+               	$data[] = self::CreateGapRow($gapTime);
         }
 
+        $timeNow = gmdate("Y-m-d H:i:s");
         $rows = Application_Model_Show::GetCurrentShow($timeNow);
         Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
         return array("currentShow"=>$rows, "rows"=>$data);

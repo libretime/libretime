@@ -677,20 +677,22 @@ class Application_Model_ShowInstance {
         return $results;
     }
 
-    public static function GetShowsInstancesIdsInRange($p_timeNow, $p_start, $p_end)
+    public static function GetShowsInstancesIdsInRange($p_start, $p_end)
     {
 		global $CC_DBC;
 
 		$sql = "SELECT id FROM cc_show_instances AS si "
 			."WHERE modified_instance != TRUE AND ("
-			."(si.starts < TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
-			."AND si.ends > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds') "
-			."OR (si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '$p_start seconds' "
-			."AND si.ends < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
-			."OR (si.starts < TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds' "
-			."AND si.ends > TIMESTAMP '$p_timeNow' + INTERVAL '$p_end seconds') "
+			."(si.starts < TIMESTAMP '$p_start'"
+			."AND si.ends > TIMESTAMP '$p_start') "
+			."OR (si.starts > TIMESTAMP '$p_start' "
+			."AND si.ends < TIMESTAMP '$p_end') "
+			."OR (si.starts < TIMESTAMP '$p_end' "
+			."AND si.ends > TIMESTAMP '$p_end') "
 			.") "
 			." ORDER BY si.starts";
+            
+        Logging::debug($sql);
 
 		$rows = $CC_DBC->GetAll($sql);
 		return $rows;
@@ -732,7 +734,7 @@ class Application_Model_ShowInstance {
 
         return $CC_DBC->GetAll($sql);
     }
-
+    
     public function getLastAudioItemEnd(){
 		global $CC_DBC;
 

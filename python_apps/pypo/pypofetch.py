@@ -15,6 +15,7 @@ from threading import Thread
 from subprocess import Popen, PIPE
 from datetime import datetime
 from datetime import timedelta
+from Queue import Empty
 import filecmp
 
 from api_clients import api_client
@@ -478,6 +479,19 @@ class PypoFetch(Thread):
         while True:
             self.logger.info("Loop #%s", loops)
             try:               
+                """
+                our simple_queue.get() requires a timeout, in which case we
+                fetch the Airtime schedule manually. It is important to fetch
+                the schedule periodically because if we didn't, we would only 
+                get schedule updates via RabbitMq if the user was constantly 
+                using the Airtime interface. 
+                
+                If the user is not using the interface, RabbitMq messages are not
+                sent, and we will have very stale (or non-existent!) data about the 
+                schedule.
+                
+                Currently we are checking every 3600 seconds (1 hour)
+                """
                 message = self.fetch_queue.get(block=True, timeout=3600)
                 self.handle_message(message)
             except Exception, e:
