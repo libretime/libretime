@@ -65,6 +65,27 @@ end
 #live stream setup
 set("harbor.bind_addr", "0.0.0.0")
 
+def update_source_status(sourcename, status) =
+    system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
+    log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
+end
+
+def live_dj_connect() =
+    update_source_status("live_dj", true)
+end
+
+def live_dj_disconnect() = 
+    update_source_status("live_dj", false)
+end
+
+def master_dj_connect() =
+    update_source_status("master_dj", true)
+end
+
+def master_dj_disconnect() = 
+    update_source_status("master_dj", false)
+end
+
 #auth function for live stream
 def check_master_dj_client(user,password) =
         #get the output of the php script
@@ -73,6 +94,7 @@ def check_master_dj_client(user,password) =
         ret = list.hd(ret)
         #return true to let the client transmit data, or false to tell harbor to decline
         if (ret == "True") then
+            master_dj_connect()
             true
         else
             false
@@ -86,50 +108,30 @@ def check_dj_client(user,password) =
         ret = list.hd(ret)
         #return true to let the client transmit data, or false to tell harbor to decline
         if (ret == "True") then
+            live_dj_connect()
             true
         else
             false
         end
 end
 
-def update_source_status(sourcename, status) =
-    system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
-    log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
-end
-
-def live_dj_connect(header) =
-    update_source_status("live_dj", true)
-end
-
-def live_dj_disconnect() = 
-    update_source_status("live_dj", false)
-end
-
-def master_dj_connect(header) =
-    update_source_status("master_dj", true)
-end
-
-def master_dj_disconnect() = 
-    update_source_status("master_dj", false)
-end
-
 def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, dj_harbor_input_port, dj_harbor_input_mount_point, s) =
     if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" and dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
         master_dj = input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, 
-                    max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)
+                    max=40., on_disconnect=master_dj_disconnect)
         dj_live = input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)
+                    max=40., on_disconnect=live_dj_disconnect)
         ignore(output.dummy(master_dj, fallible=true))
         ignore(output.dummy(dj_live, fallible=true))
         switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition, transition], [({!master_dj_enabled},master_dj), ({!live_dj_enabled},dj_live), ({true}, s)])
     elsif master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
         master_dj = input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client,
-                     max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)
+                     max=40., on_disconnect=master_dj_disconnect)
         ignore(output.dummy(master_dj, fallible=true))
         switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!master_dj_enabled},master_dj), ({true}, s)])
     elsif dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
         dj_live = input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)
+                    max=40., on_disconnect=live_dj_disconnect)
         ignore(output.dummy(dj_live, fallible=true))
         switch(id="live_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!live_dj_enabled},dj_live), ({true}, s)])
     else
@@ -140,8 +142,8 @@ end
 s = fallback(id="default_fallback", track_sensitive=false, [queue, default])
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp, dj_live_stream_port, dj_live_stream_mp, s)
 
-
 s = crossfade(s)
+
 # Attach a skip command to the source s:
 
 #web_stream_source = input.http(id="web_stream", autostart = false, buffer=0.5, max=20., "")
@@ -259,6 +261,4 @@ if s3_enable == true then
     output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3", s3_connected)
 end
 
-#output.dummy(fallible=true, !master_dj)
-#output.dummy(fallible=true, !dj_live)
 ignore(output.dummy(blank()))
