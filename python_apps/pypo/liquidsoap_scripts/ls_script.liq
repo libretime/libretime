@@ -70,7 +70,7 @@ def update_source_status(sourcename, status) =
     log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
 end
 
-def live_dj_connect() =
+def live_dj_connect(header) =
     update_source_status("live_dj", true)
 end
 
@@ -78,7 +78,7 @@ def live_dj_disconnect() =
     update_source_status("live_dj", false)
 end
 
-def master_dj_connect() =
+def master_dj_connect(header) =
     update_source_status("master_dj", true)
 end
 
@@ -94,7 +94,7 @@ def check_master_dj_client(user,password) =
         ret = list.hd(ret)
         #return true to let the client transmit data, or false to tell harbor to decline
         if (ret == "True") then
-            master_dj_connect()
+            #master_dj_connect()
             true
         else
             false
@@ -108,7 +108,7 @@ def check_dj_client(user,password) =
         ret = list.hd(ret)
         #return true to let the client transmit data, or false to tell harbor to decline
         if (ret == "True") then
-            live_dj_connect()
+            #live_dj_connect()
             true
         else
             false
@@ -118,20 +118,20 @@ end
 def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, dj_harbor_input_port, dj_harbor_input_mount_point, s) =
     if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" and dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
         master_dj = input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, 
-                    max=40., on_disconnect=master_dj_disconnect)
+                    max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)
         dj_live = input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_disconnect=live_dj_disconnect)
+                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)
         ignore(output.dummy(master_dj, fallible=true))
         ignore(output.dummy(dj_live, fallible=true))
         switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition, transition], [({!master_dj_enabled},master_dj), ({!live_dj_enabled},dj_live), ({true}, s)])
     elsif master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
         master_dj = input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client,
-                     max=40., on_disconnect=master_dj_disconnect)
+                     max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)
         ignore(output.dummy(master_dj, fallible=true))
         switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!master_dj_enabled},master_dj), ({true}, s)])
     elsif dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
         dj_live = input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_disconnect=live_dj_disconnect)
+                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)
         ignore(output.dummy(dj_live, fallible=true))
         switch(id="live_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!live_dj_enabled},dj_live), ({true}, s)])
     else

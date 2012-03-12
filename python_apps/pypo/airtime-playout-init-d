@@ -65,6 +65,7 @@ monit_restart() {
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE0
         rm -f $PIDFILE0
         
+        python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
         rm -f $PIDFILE1
         
