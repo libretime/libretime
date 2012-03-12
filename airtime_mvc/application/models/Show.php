@@ -162,7 +162,7 @@ class Application_Model_Show {
                 ->find($con);
 
             foreach ($instances as $instance) {
-                $instance->updateScheduleStatus();
+                $instance->updateScheduleStatus($con);
             }
 
             $con->commit();
