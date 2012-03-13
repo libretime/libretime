@@ -291,7 +291,6 @@ select {
 
 .source-info-block {
     padding:0 14px 0 2px;
-    background:url(images/masterpanel_spacer.png) no-repeat right 0;
     min-width:150px;
 }
 
@@ -431,6 +430,24 @@ select {
     background-color:#464646;
     margin-right: 2px;
     float: left;
+}
+
+.line-to-switch {
+	float: right;
+	width: 10px;
+	height:6px;
+    border:1px solid #242424;
+    border-width:1px 1px 0 1px;
+	background:#FFFFFF
+}
+
+.line-to-on-air {
+    float: right;
+    height:6px;
+    border:1px solid #242424;
+    border-width:1px 1px 0 1px;
+    width: 10px;
+    background:#FFFFFF
 }
 
 /* END Master Panel */

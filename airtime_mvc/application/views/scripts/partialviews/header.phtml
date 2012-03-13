@@ -20,6 +20,14 @@
         <div class="progress-show" id='progress-show' style="width:0%;"></div>
       </div>
     </div>
+  <div class="source-info-block">
+    <ul>
+      <li>Source Streams</li>
+      <li><div id="airtime_connection" class="source-connection off"></div>Airtime<div class="line-to-on-air"></div></li>
+      <li><div id="live_dj_connection" class="source-connection off"></div>Live DJ<div class="line-to-on-air"></div><a href="#" id="live_dj" class="source-switch-button"><span><?php echo $this->live_dj_switch?></span></a><div class="line-to-switch"></div></li>
+      <li><div id="master_dj_connection" class="source-connection off"></div>Master DJ<div class="line-to-on-air"></div><a href="#" id="master_dj" class="source-switch-button"><span><?php echo $this->master_dj_switch?></span></a><div class="line-to-switch"></div></li>
+    </ul>
+  </div>
   <div class="on-air-block">
     <div class="on-air-info off" id="on-air-info">ON AIR</div>
     <a href="#" class="listen-control-button"><span>Listen</span></a>
@@ -29,14 +37,6 @@
       <li>Station time</li>
       <li class="time" id="time"></li>
       <li class="time-zone"><span id="time-zone"></span></li>
-    </ul>
-  </div>
-  <div class="source-info-block">
-    <ul>
-      <li>Source Streams</li>
-      <li><div id="airtime_connection" class="source-connection off"></div>Airtime</li>
-      <li><div id="live_dj_connection" class="source-connection off"></div>Live DJ<a href="#" id="live_dj" class="source-switch-button"><span><?php echo $this->live_dj_switch?></span></a></li>
-      <li><div id="master_dj_connection" class="source-connection off"></div>Master DJ<a href="#" id="master_dj" class="source-switch-button"><span><?php echo $this->master_dj_switch?></span></a></li>
     </ul>
   </div>
   <div class="personal-block">
