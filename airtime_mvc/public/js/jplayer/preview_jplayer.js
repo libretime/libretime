@@ -5,7 +5,6 @@ $(document).ready(function(){
     var audioFileID = $('.audioFileID').text();
     var playlistID = $('.playlistID').text();
     var playlistIndex = $('.playlistIndex').text();
-    console.log('in the ready');
     playlist_jplayer = new jPlayerPlaylist({
         jPlayer: "#jquery_jplayer_1",
         cssSelectorAncestor: "#jp_container_1"
@@ -42,18 +41,21 @@ function playAll(playlistID, playlistIndex) {
             var myPlaylist = new Array();
             var media;
             var index;
+            
             for(index in data){
-                if (data[index]['mp3'] != 'undefined'){
+                console.log(data[index]);
+                if (data[index]['mp3'] != undefined){
                     media = {title: data[index]['title'],
                             artist: data[index]['artist'],
-                            mp3:data[index]['mp3']
+                            mp3:"/api/get-media/fileID/"+data[index]['mp3']
                     };
-                }else if (data[index]['ogg'] != 'undefined') {
+                }else if (data[index]['oga'] != undefined) {
                     media = {title: data[index]['title'],
                             artist: data[index]['artist'],
-                            oga:data[index]['ogg']
+                            oga:"/api/get-media/fileID/"+data[index]['oga']
                     };
                 }
+                console.log(media);
                 myPlaylist[index] = media;
                 
                 idToPostionLookUp[data[index]['id']] = data[index]['position'];
@@ -85,9 +87,10 @@ function playOne(audioFileID) {
             oga:"/api/get-media/fileID/"+audioFileID
         };
     }
-    playlist[0] = media;
-
-    playlist_jplayer.setPlaylist(playlist);
     playlist_jplayer.option("autoPlay", true);
+    
+    playlist[0] = media;
+    //playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready
+    playlist_jplayer._initPlaylist(playlist);
     playlist_jplayer.play(0);
 }

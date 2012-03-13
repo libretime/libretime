@@ -31,7 +31,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         $pl = null;
 
-    if (isset($this->pl_sess->id)) {
+        if (isset($this->pl_sess->id)) {
             $pl = new Application_Model_Playlist($this->pl_sess->id);
 
             $modified = $this->_getParam('modified', null);
@@ -205,11 +205,7 @@ class PlaylistController extends Zend_Controller_Action
         $audioFileTitle = $this->_getParam('audioFileTitle');
         $playlistIndex = $this->_getParam('playlistIndex');
         $playlistID = $this->_getParam('playlistID');
-        Logging::log($audioFileID);
-        Logging::log($audioFileArtist);
-        Logging::log($audioFileTitle);
-        Logging::log($playlistIndex);
-        Logging::log($playlistID);
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
         
@@ -226,7 +222,7 @@ class PlaylistController extends Zend_Controller_Action
         } else {
             $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
         }
-        Logging::log("The play list index is $playlistIndex");
+        
         $this->view->audioFileID = $audioFileID;
         $this->view->audioFileArtist = $audioFileArtist;
         $this->view->audioFileTitle = $audioFileTitle;
@@ -251,12 +247,20 @@ class PlaylistController extends Zend_Controller_Action
         $result = Array();
         
         foreach ( $pl->getContents() as $track ){
+            
             $trackMap = array( 'title' => isset($track['CcFiles']['track_title'])?$track['CcFiles']['track_title']:"",
                               'artist' => isset($track['CcFiles']['artist_name'])?$track['CcFiles']['artist_name']:"",
-                              'mp3' => '/api/get-media/fileID/'.$track['CcFiles']['gunid'].'.'.pathinfo($track['CcFiles']['filepath'], PATHINFO_EXTENSION),
                               'id' => isset($track['id'])?$track['id']:"",
                               'position' => isset($track['position'])?$track['position']:"",
                             );
+            $fileExtension = pathinfo($track['CcFiles']['filepath'], PATHINFO_EXTENSION);
+            if ($fileExtension === 'mp3'){
+                $trackMap['mp3'] = $track['CcFiles']['gunid'].'.'.$fileExtension;
+            } else if( $fileExtension === 'ogg') {
+                $trackMap['oga'] = $track['CcFiles']['gunid'].'.'.$fileExtension;
+            } else {
+                //the media was neither mp3 or ogg
+            }
             $result[] = $trackMap;
         }
 

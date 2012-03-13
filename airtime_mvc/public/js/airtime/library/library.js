@@ -652,9 +652,15 @@ function addQtipToSCIcons(){
         }
     });
 }
-     
+
+/**
+ *handle to the jplayer window
+ */
 var preview_window = null;
 
+/**
+ *Gets the info from the view when menu action play choosen and opens the jplayer window.
+ */
 function openAudioPreview(event) {
     event.stopPropagation();
     
@@ -665,12 +671,21 @@ function openAudioPreview(event) {
     
     open_playlist_preview(audioFileID, "", "", playlistID, playlistIndex);
 }
-    
+
+/**
+ *Opens a jPlayer window for the specified info, for either an audio file or playlist.
+ *If audioFile, audioFileTitle, audioFileArtist is supplied the jplayer opens for one file
+ *Otherwise the playlistID and playlistIndex was supplied and a playlist is played starting with the
+ *given index.
+ */
 function open_playlist_preview(audioFileID, audioFileTitle, audioFileArtist, playlistID, playlistIndex) {
-    if (playlistIndex != undefined)
+    if (playlistIndex != undefined) {
+        if (playlistIndex == undefined) //Use a resonable default.
+            playlistIndex = 0;
         url = 'Playlist/playlist-preview/audioFileID/'+audioFileID+'/playlistIndex/'+playlistIndex+'/playlistID/'+playlistID;
-    else
+    } else {
         url = 'Playlist/playlist-preview/audioFileID/'+audioFileID+'/audioFileArtist/'+audioFileArtist+'/audioFileTitle/'+audioFileTitle;
+    }
     //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
     if (preview_window == null || preview_window.closed || playlistIndex === undefined){
         preview_window = window.open(url, 'Audio Player', 'width=450,height=800');
@@ -681,5 +696,6 @@ function open_playlist_preview(audioFileID, audioFileTitle, audioFileArtist, pla
     //var elemID = "spl_"+elemIndexString;
     //$('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
 
+    preview_window.focus();
     return false;
 }
