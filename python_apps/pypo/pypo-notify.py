@@ -72,7 +72,7 @@ class Notify:
         self.api_client = api_client.api_client_factory(config)
     
     def notify_media_start_playing(self, data, media_id):
-        logger = logging.getLogger()
+        logger = logging.getLogger("notify")
         
         logger.debug('#################################################')
         logger.debug('# Calling server to update about what\'s playing #')
@@ -83,7 +83,7 @@ class Notify:
     
     # @pram time: time that LS started
     def notify_liquidsoap_status(self, msg, stream_id, time):
-        logger = logging.getLogger()
+        logger = logging.getLogger("notify")
         
         logger.debug('#################################################')
         logger.debug('# Calling server to update liquidsoap status    #')
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     print '#########################################'
     
     # initialize
-    logger = logging.getLogger()
+    logger = logging.getLogger("notify")
     
     if options.error and options.stream_id:
         try:
