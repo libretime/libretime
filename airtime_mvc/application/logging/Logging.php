@@ -23,7 +23,7 @@ class Logging {
     }
     
     public static function debug($p_msg){
-        if (APPLICATION_ENV == "development"){
+        if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development"){
             $logger = self::getLogger();
             $logger->debug($p_msg);            
         }

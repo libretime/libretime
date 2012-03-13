@@ -1694,6 +1694,71 @@ class Application_Model_Show {
     }
 
     /**
+     * Gets the current show, previous and next with an 2day window from the given timeNow, so timeNow-2days and timeNow+2days.
+     */
+    public static function getPrevCurrentNext($timeNow)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
+        ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
+        ." WHERE si.show_id = s.id"
+        ." AND si.starts > TIMESTAMP '$timeNow' - INTERVAL '2 days'"
+        ." AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '2 days'"
+        ." AND modified_instance != TRUE";
+
+        //Logging::log($sql);
+        // Convert back to local timezone
+        $rows = $CC_DBC->GetAll($sql);
+        $numberOfRows = count($rows);
+        $results;
+        $results['previousShow'] = array();
+        $results['currentShow'] =  array();
+        $results['nextShow'] =  array();
+        
+        $timeNowAsMillis = strtotime($timeNow);
+        for( $i = 0; $i < $numberOfRows; ++$i ){
+           if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
+                if ( $i - 1 >= 0){
+                    $results['previousShow'][0] = array("name"=>$rows[$i-1]['name'],
+                                "start_timestamp"=>$rows[$i-1]['start_timestamp'],
+                                "end_timestamp"=>$rows[$i-1]['end_timestamp'],
+                                "starts"=>$rows[$i-1]['starts'],
+                                "ends"=>$rows[$i-1]['ends']);
+                }
+                
+                $results['currentShow'][0] =  $rows[$i];
+                
+                if ( isset($rows[$i+1])){
+                    $results['nextShow'][0] =  array("name"=>$rows[$i+1]['name'],
+                                "start_timestamp"=>$rows[$i+1]['start_timestamp'],
+                                "end_timestamp"=>$rows[$i+1]['end_timestamp'],
+                                "starts"=>$rows[$i+1]['starts'],
+                                "ends"=>$rows[$i+1]['ends']);
+                   
+                }
+                break;
+            }
+            if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
+                $results['previousShow'][0] = array("name"=>$rows[$i]['name'],
+                                "start_timestamp"=>$rows[$i]['start_timestamp'],
+                                "end_timestamp"=>$rows[$i]['end_timestamp'],
+                                "starts"=>$rows[$i]['starts'],
+                                "ends"=>$rows[$i]['ends']);
+            }
+            if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
+                $results['nextShow'][0] = array("name"=>$rows[$i]['name'],
+                                "start_timestamp"=>$rows[$i]['start_timestamp'],
+                                "end_timestamp"=>$rows[$i]['end_timestamp'],
+                                "starts"=>$rows[$i]['starts'],
+                                "ends"=>$rows[$i]['ends']);
+                break;
+            }
+        }
+        
+        return $results;
+    }
+    /**
      * Given a start time $timeStart and end time $timeEnd, returns the next $limit
      * number of shows within the time interval;
      * If $timeEnd not given, shows within next 48 hours from $timeStart are returned;
