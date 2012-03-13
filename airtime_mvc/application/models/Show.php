@@ -1082,7 +1082,7 @@ class Application_Model_Show {
                     ->find($con);
 
                 foreach ($instances as $instance) {
-                    $instance->updateScheduleStatus();
+                    $instance->updateScheduleStatus($con);
                 }
 
                 $con->commit();
@@ -1696,29 +1696,32 @@ class Application_Model_Show {
     /**
      * Gets the current show, previous and next with an 2day window from the given timeNow, so timeNow-2days and timeNow+2days.
      */
-    public static function getPrevCurrentNext($timeNow)
+    public static function getPrevCurrentNext($p_timeNow)
     {
         global $CC_CONFIG, $CC_DBC;
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
-        ." AND si.starts > TIMESTAMP '$timeNow' - INTERVAL '2 days'"
-        ." AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '2 days'"
-        ." AND modified_instance != TRUE";
+        ." AND si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '2 days'"
+        ." AND si.ends < TIMESTAMP '$p_timeNow' + INTERVAL '2 days'"
+        ." AND modified_instance != TRUE"
+        ." ORDER BY si.starts";
 
         //Logging::log($sql);
         // Convert back to local timezone
         $rows = $CC_DBC->GetAll($sql);
         $numberOfRows = count($rows);
-        $results;
+        
         $results['previousShow'] = array();
         $results['currentShow'] =  array();
         $results['nextShow'] =  array();
         
-        $timeNowAsMillis = strtotime($timeNow);
+        $timeNowAsMillis = strtotime($p_timeNow);
+        
         for( $i = 0; $i < $numberOfRows; ++$i ){
-           if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
+            //Find the show that is within the current time.
+            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
                 if ( $i - 1 >= 0){
                     $results['previousShow'][0] = array("name"=>$rows[$i-1]['name'],
                                 "start_timestamp"=>$rows[$i-1]['start_timestamp'],
@@ -1739,13 +1742,11 @@ class Application_Model_Show {
                 }
                 break;
             }
+            //Previous is any row that ends after time now capture it in case we need it later.
             if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
-                $results['previousShow'][0] = array("name"=>$rows[$i]['name'],
-                                "start_timestamp"=>$rows[$i]['start_timestamp'],
-                                "end_timestamp"=>$rows[$i]['end_timestamp'],
-                                "starts"=>$rows[$i]['starts'],
-                                "ends"=>$rows[$i]['ends']);
+                $previousShowIndex = $i;
             }
+            //if we hit this we know we've gone to far and can stop looping.
             if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
                 $results['nextShow'][0] = array("name"=>$rows[$i]['name'],
                                 "start_timestamp"=>$rows[$i]['start_timestamp'],
@@ -1755,7 +1756,15 @@ class Application_Model_Show {
                 break;
             }
         }
-        
+        //If we didn't find a a current show because the time didn't fit we may still have
+        //found a previous show so use it.
+        if (count($results['previousShow']) == 0 && isset($previousShowIndex)) {
+                $results['previousShow'][0] = array("name"=>$rows[$previousShowIndex]['name'],
+                    "start_timestamp"=>$rows[$previousShowIndex]['start_timestamp'],
+                    "end_timestamp"=>$rows[$previousShowIndex]['end_timestamp'],
+                    "starts"=>$rows[$previousShowIndex]['starts'],
+                    "ends"=>$rows[$previousShowIndex]['ends']);
+        }
         return $results;
     }
     /**

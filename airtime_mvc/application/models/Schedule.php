@@ -48,13 +48,13 @@ class Application_Model_Schedule {
     /**
      * Returns data related to the scheduled items.
      *
-     * @param int $prev
-     * @param int $next
+     * @param int $p_prev
+     * @param int $p_next
      * @return date
      */
-    public static function GetPlayOrderRange($prev = 1, $next = 1)
+    public static function GetPlayOrderRange($p_prev = 1, $p_next = 1)
     {
-        if (!is_int($prev) || !is_int($next)){
+        if (!is_int($p_prev) || !is_int($p_next)){
             //must enter integers to specify ranges
             return array();
         }
@@ -88,22 +88,22 @@ class Application_Model_Schedule {
      * show types are not found through this mechanism a call is made to the old way of querying
      * the database to find the track info.
     **/
-    public static function GetPrevCurrentNext($currentShowID, $p_timeNow)
+    public static function GetPrevCurrentNext($p_currentShowID, $p_timeNow)
     {
         global $CC_CONFIG, $CC_DBC;
         
-        if (!isset($currentShowID)) {
+        if (!isset($p_currentShowID)) {
             return array();
         }
         $sql = "Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played
                 FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id 
-                WHERE st.instance_id = '$currentShowID' AND st.playout_status > 0 
+                WHERE st.instance_id = '$p_currentShowID' AND st.playout_status > 0 
                 ORDER BY st.starts";
         
         //Logging::log($sql);        
         $rows = $CC_DBC->GetAll($sql);
         $numberOfRows = count($rows);
-        $results;
+
         $results['previous'] = null;
         $results['current'] = null;
         $results['next'] = null;
@@ -130,9 +130,7 @@ class Application_Model_Schedule {
                 break;
             }
             if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
-                $results['previous'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
-                            "starts"=>$rows[$i]["starts"],
-                            "ends"=>$rows[$i]["ends"]);;
+                $previousIndex = $i;
             }
             if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
                 $results['next'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
@@ -140,6 +138,13 @@ class Application_Model_Schedule {
                             "ends"=>$rows[$i]["ends"]);
                 break;
             }
+        }
+        //If we didn't find a a current show because the time didn't fit we may still have
+        //found a previous show so use it.
+        if ($results['previous'] === null && isset($previousIndex)) {
+                $results['previous'] = array("name"=>$rows[$previousIndex]["artist_name"]." - ".$rows[$previousIndex]["track_title"],
+                            "starts"=>$rows[$previousIndex]["starts"],
+                            "ends"=>$rows[$previousIndex]["ends"]);;
         }
         return $results;
     }
