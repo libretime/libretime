@@ -49,8 +49,8 @@ class PypoPush(Thread):
         self.push_ahead = 10
         self.last_end_time = 0
         
-        self.liquidsoap_queue = deque()
-        
+        self.pushed_objects = {}
+                
         self.logger = logging.getLogger('push')
         
     def push(self):
@@ -61,7 +61,8 @@ class PypoPush(Thread):
         then liquidsoap is asked (via telnet) to reload and immediately play it.
         """
         
-        self.update_liquidsoap_queue()
+        liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
+        self.logger.debug('liquidsoap_queue_approx %s', liquidsoap_queue_approx)
 
         timenow = time.time()
         # get a new schedule from pypo-fetch
@@ -72,16 +73,12 @@ class PypoPush(Thread):
                 
             self.logger.debug("Received data from pypo-fetch")          
             self.logger.debug('media %s' % json.dumps(self.media))
-            self.handle_new_media(self.media)
+            self.handle_new_media(self.media, liquidsoap_queue_approx)
                 
 
         media = self.media
         
-        if len(self.liquidsoap_queue) < MAX_LIQUIDSOAP_QUEUE_LENGTH:
-            """
-            We only care about what's scheduled if the number of items in the queue is less
-            than our max queue limit.
-            """
+        if len(liquidsoap_queue_approx) < MAX_LIQUIDSOAP_QUEUE_LENGTH:
             currently_on_air = False
             if media:
                 tnow = time.gmtime(timenow)
@@ -142,16 +139,15 @@ class PypoPush(Thread):
             
         return True
     
+    """
     def update_liquidsoap_queue(self):
-        """
-        the queue variable liquidsoap_queue is our attempt to mirror
-        what liquidsoap actually has in its own queue. Liquidsoap automatically
-        updates its own queue when an item finishes playing, we have to do this
-        manually. 
-        
-        This function will iterate through the liquidsoap_queue and remove items
-        whose end time are in the past.
-        """
+#        the queue variable liquidsoap_queue is our attempt to mirror
+#        what liquidsoap actually has in its own queue. Liquidsoap automatically
+#        updates its own queue when an item finishes playing, we have to do this
+#        manually. 
+#        
+#        This function will iterate through the liquidsoap_queue and remove items
+#        whose end time are in the past.
         
         tnow = time.gmtime(timenow)
         str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
@@ -159,79 +155,92 @@ class PypoPush(Thread):
         while len(self.liquidsoap_queue) > 0:
             if self.liquidsoap_queue[0]["end"] < str_tnow_s:
                 self.liquidsoap_queue.popleft()
+    """
     
-    def handle_new_media(self, media):
+    def get_queue_items_from_liquidsoap(self):
         """
-        This function's purpose is to gracefully handle situations where
-        Liquidsoap already has a track in its queue, but the schedule 
-        has changed.
+        This function connects to Liquidsoap to find what media items are in its queue.
         """
         
-        """
-        First let's connect to Liquidsoap and find what media items are in its queue.
-        
-        We will compare these items to the schedule we've received and decide if any
-        action needs to take place.  
-        """
         tn = telnetlib.Telnet(LS_HOST, LS_PORT)
         
-        msg = 'queue.queue %s\n' % media_item["queue_id"]
+        msg = 'queue.queue\n'
         tn.write(msg)
-        response = tn.read_until("\r\n").strip("\r\n")
+        response = tn.read_until("\r\n").strip(" \r\n")
         tn.write('exit\n')
         tn.read_all()
         
-        list = response.split(" ")
+        liquidsoap_queue_approx = []
         
-        liquidsoap_queue_mirror = []
-        
-        for l in list:
-            if l in self.pushed_objects:
-                liquidsoap_queue_mirror.append(self.pushed_objects[l])
-            else:
-                self.logger.error("ID exists in liquidsoap queue that does not exist in our pushed_objects queue")
-        
+        if len(response) > 0:
+            items_in_queue = response.split(" ")
+            
+            self.logger.debug("items_in_queue: %s", items_in_queue)
+            
+            for item in items_in_queue:
+                if item in self.pushed_objects:
+                    liquidsoap_queue_approx.append(self.pushed_objects[item])
+                else:
+                    self.logger.error("ID exists in liquidsoap queue that does not exist in our pushed_objects queue: " + item)
+                
+        return liquidsoap_queue_approx
+                        
+    
+    def handle_new_media(self, media, liquidsoap_queue_approx):
+        """
+        This function's purpose is to gracefully handle situations where
+        Liquidsoap already has a track in its queue, but the schedule 
+        has changed. If the schedule has changed, this function's job is to
+        call other functions that will connect to Liquidsoap and alter its
+        queue.
+        """
+                
         #TODO: Keys should already be sorted. Verify this. 
-        sorted_keys = sort(media.keys())
+        sorted_keys = sorted(media.keys())
         
-        if len(liquidsoap_queue_mirror) == 0:
+        if len(liquidsoap_queue_approx) == 0:
             """
             liquidsoap doesn't have anything in its queue, so we have nothing 
-            to worry about.
+            to worry about. Life is good.
             """
             pass
-        
-        if len(liquidsoap_queue_mirror) == 1:
-            if liquidsoap_queue_mirror[0]['id'] != media_item[sorted_keys[0]]['id']:
-                """
-                liquidsoap queue does not match the newest schedule. The queue is only of
-                length 1, and so that means the item in the queue is playing. Need to do source.skip
-                """
-                self.remove_from_liquidsoap_queue(liquidsoap_queue_mirror[0])
+        elif len(liquidsoap_queue_approx) == 1:
+            queue_item_0_start = liquidsoap_queue_approx[0]['start']
+            try:
+                if liquidsoap_queue_approx[0]['id'] != media[queue_item_0_start]['id']:            
+                    """
+                    liquidsoap's queue does not match the schedule we just received from the Airtime server. 
+                    The queue is only of length 1 which means the item in the queue is playing. 
+                    Need to do source.skip.
+                    
+                    Since only one item, we don't have to worry about the current item ending and us calling
+                    source.skip unintentionally on the next item (there is no next item).
+                    """
+                    
+                    self.logger.debug("%s from ls does not exist in queue new schedule. Removing" % liquidsoap_queue_approx[0]['id'], media)
+                    self.remove_from_liquidsoap_queue(liquidsoap_queue_approx[0])
+            except KeyError, k:
+                self.logger.debug("%s from ls does not exist in queue schedule: %s Removing" % (queue_item_0_start, media))
+                self.remove_from_liquidsoap_queue(liquidsoap_queue_approx[0])
+                    
+                    
+        elif len(liquidsoap_queue_approx) == 2:
+            queue_item_0_start = liquidsoap_queue_approx[0]['start']
+            queue_item_1_start = liquidsoap_queue_approx[1]['start']
+            
+            if queue_item_1_start in media.keys():
+                if liquidsoap_queue_approx[1]['id'] != media[queue_item_1_start]['id']:
+                    self.remove_from_liquidsoap_queue(liquidsoap_queue_approx[1])
+            else:
+                self.remove_from_liquidsoap_queue(liquidsoap_queue_approx[1])
                 
-        
-        if len(liquidsoap_queue_mirror) == 2:
-            if liquidsoap_queue_mirror[0]['id'] == media_item[sorted_keys[0]]['id'] \
-                and liquidsoap_queue_mirror[1]['id'] == media_item[sorted_keys[1]]['id']:
-                """
-                What's in the queue matches what's in the schedule. Nothing to do.
-                """
-                pass
-            elif liquidsoap_queue_mirror[0]['id'] == media_item[sorted_keys[0]]['id'] \
-                and liquidsoap_queue_mirror[1]['id'] != media_item[sorted_keys[1]]['id']:
-                """
-                instruct liquidsoap to remove the second item from the queue
-                """
-                self.remove_from_liquidsoap_queue(liquidsoap_queue_mirror[1])
-            elif liquidsoap_queue_mirror[0]['id'] != media_item[sorted_keys[0]]['id']:
-                """
-                remove both items from the queue. Remove in reverse order so that source.skip
-                doesn't skip to the second song which we also plan on removing.
-                """
-                self.remove_from_liquidsoap_queue(liquidsoap_queue_mirror[1])
-                self.remove_from_liquidsoap_queue(liquidsoap_queue_mirror[0])
+            if queue_item_0_start in media.keys():
+                if liquidsoap_queue_approx[0]['id'] != media[queue_item_0_start]['id']:
+                    self.remove_from_liquidsoap_queue(liquidsoap_queue_approx[0])
+            else:
+                self.remove_from_liquidsoap_queue(liquidsoap_queue_approx[0])
                 
-    def remove_from_liquidsoap_queue(self, media_item):
+    def remove_from_liquidsoap_queue(self, media_item, do_only_source_skip=False):
         if 'queue_id' in media_item:
             queue_id = media_item['queue_id']
             
