@@ -45,6 +45,7 @@ ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false;
 live_dj_enabled = ref false;
+scheduled_play_enabled = ref true;
 
 def make_master_dj_available()
         master_dj_enabled := true
@@ -60,6 +61,14 @@ end
 
 def make_live_dj_unavailable()
         live_dj_enabled := false
+end
+
+def make_scheduled_play_available()
+        scheduled_play_enabled := true
+end
+
+def make_scheduled_play_unavailable()
+        scheduled_play_enabled := false
 end
 
 #live stream setup
@@ -94,7 +103,6 @@ def check_master_dj_client(user,password) =
         ret = list.hd(ret)
         #return true to let the client transmit data, or false to tell harbor to decline
         if (ret == "True") then
-            #master_dj_connect()
             true
         else
             false
@@ -108,7 +116,6 @@ def check_dj_client(user,password) =
         ret = list.hd(ret)
         #return true to let the client transmit data, or false to tell harbor to decline
         if (ret == "True") then
-            #live_dj_connect()
             true
         else
             false
@@ -139,7 +146,7 @@ def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, 
     end
 end
 
-s = fallback(id="default_fallback", track_sensitive=false, [queue, default])
+s = switch(id="default_switch", track_sensitive=false, transitions=[transition, transition], [({!scheduled_play_enabled},queue),({true},default)])
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp, dj_live_stream_port, dj_live_stream_mp, s)
 
 s = crossfade(s)
@@ -182,6 +189,16 @@ server.register(namespace="streams",
                 usage="live_dj_start",
                 "live_dj_start",
                 fun (s) -> begin make_live_dj_available() "Done." end)
+server.register(namespace="streams",
+                description="Stop Scheduled Play source.",
+                usage="scheduled_play_stop",
+                "scheduled_play_stop",
+                fun (s) -> begin make_scheduled_play_unavailable() "Done." end)
+server.register(namespace="streams",
+                description="Start Scheduled Play source.",
+                usage="scheduled_play_start",
+                "scheduled_play_start",
+                fun (s) -> begin make_scheduled_play_available() "Done." end)
 
 if output_sound_device then
 	

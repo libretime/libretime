@@ -107,9 +107,11 @@ class PypoFetch(Thread):
         command = "streams."
         if(sourcename == "master_dj"):
             command += "master_dj_"
-        else:
+        elif(sourcename == "live_dj"):
             command += "live_dj_"
-        
+        elif(sourcename == "scheduled_play"):
+            command += "scheduled_play_"
+            
         if(status == "on"):
             command += "start\n"
         else:

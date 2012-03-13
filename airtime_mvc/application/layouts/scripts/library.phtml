@@ -15,7 +15,8 @@
             $sss = $this->SourceSwitchStatus();
             $scs = $this->SourceConnectionStatus(); ?>
     <?php echo $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs(), "is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining(),
-                    "live_dj_switch"=>$sss['live_dj'], "live_dj_connection"=>$scs['live_dj'], "master_dj_switch"=>$sss['master_dj'], "master_dj_connection"=>$scs['master_dj'])) ?>
+                    "live_dj_switch"=>$sss['live_dj'], "live_dj_connection"=>$scs['live_dj'], "master_dj_switch"=>$sss['master_dj'], "master_dj_connection"=>$scs['master_dj'],
+                    "scheduled_play_switch"=>$sss['scheduled_play'])) ?>
 
 <?php 	$partial = array('menu.phtml', 'default');
 		$this->navigation()->menu()->setPartial($partial); ?>

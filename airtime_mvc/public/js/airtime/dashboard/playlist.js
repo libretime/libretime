@@ -15,7 +15,7 @@ var uiUpdateInterval = 200;
 
 var master_dj_on_air = false;
 var live_dj_on_air = false;
-var airtime_on_air = false;
+var scheduled_play_on_air = false;
 
 //var timezoneOffset = 0;
 
@@ -80,22 +80,20 @@ function updateProgressBarValue(){
             songPercentDone = 0;        
             currentSong = null;
         } else {
-            var airtime_connection = $("#airtime_connection") 
+            var scheduled_play_connection = $("#scheduled_play_connection").parent().find(".line-to-switch") 
             if (currentSong.media_item_played == "t" && currentShow.length > 0){
-                //$('#on-air-info').attr("class", "on-air-info on");
-                airtime_connection.attr("class", "source-connection on");
-                airtime_on_air = true;
+                scheduled_play_connection.attr("class", "line-to-switch on");
+                //scheduled_play_on_air = true;
             }
             else{
-                //$('#on-air-info').attr("class", "on-air-info off");
-                airtime_on_air = false;
-                airtime_connection.attr("class", "source-connection off");
+                //scheduled_play_on_air = false;
+                scheduled_play_connection.attr("class", "line-to-switch off");
             }
             $('#progress-show').attr("class", "progress-show");
         }
     } else {
         $('#on-air-info').attr("class", "on-air-info off");
-        $("#airtime_connection").attr("class", "source-connection off");
+        $("#scheduled_play_connection").parent().find(".line-to-switch").attr("class", "line-to-switch off");
         $('#progress-show').attr("class", "progress-show-error");
     }
     $('#progress-bar').attr("style", "width:"+songPercentDone+"%");
@@ -232,38 +230,20 @@ function parseItems(obj){
     localRemoteTimeOffset = date.getTime() - schedulePosixTime;
 }
 
-function changeLineToWhite(div){
-    div.css("background", "#FFFFFF")
-}
-
-function changeLineToRed(div){
-    div.css("background", "#D40000")
-}
-
-function ColorOnSourceConnection(div){
-    div.attr("class", "source-connection on");
-    changeLineToRed(div.parent().find(".line-to-switch"))
-}
-
-function ColorOnSourceDisconnection(div){
-    div.attr("class", "source-connection off");
-    changeLineToWhite(div.parent().find(".line-to-switch"))
-}
-
 function parseSourceStatus(obj){
-    var live_div = $("#live_dj_connection")
-    var master_div = $("#master_dj_connection")
+    var live_div = $("#live_dj_connection").parent().find(".line-to-switch")
+    var master_div = $("#master_dj_connection").parent().find(".line-to-switch")
     
     if(obj.live_dj_source == false){
-        ColorOnSourceDisconnection(live_div)
+        live_div.attr("class", "line-to-switch off")
     }else{
-        ColorOnSourceConnection(live_div)
+        live_div.attr("class", "line-to-switch on")
     }
     
     if(obj.master_dj_source == false){
-        ColorOnSourceDisconnection(master_div)
+        master_div.attr("class", "line-to-switch off")
     }else{
-        ColorOnSourceConnection(master_div)
+        master_div.attr("class", "line-to-switch on")
     }
 }
 
@@ -272,26 +252,30 @@ function parseSwitchStatus(obj){
     var master_div = $("#master_dj_connection")
     
     if(obj.live_dj_source == "on" && obj.master_dj_source == "off"){
-        //changeLineToRed(live_div.parent().find(".line-to-on-air"))
         live_dj_on_air = true;
     }else{
-        //changeLineToWhite(live_div.parent().find(".line-to-on-air"))
         live_dj_on_air = false;
     }
     
     if(obj.master_dj_source == "on"){
-        //changeLineToRed(master_div.parent().find(".line-to-on-air"))
         master_dj_on_air = true;
     }else{
         master_dj_on_air = false;
-        //changeLineToWhite(master_div.parent().find(".line-to-on-air"))
     }
+    
+    if(obj.scheduled_play == "on"){
+        scheduled_play_on_air = true;
+    }else{
+        scheduled_play_on_air = false;
+    }
+    
+    $("#scheduled_play.source-switch-button").find("span").html(obj.scheduled_play)
     $("#live_dj.source-switch-button").find("span").html(obj.live_dj_source)
     $("#master_dj.source-switch-button").find("span").html(obj.master_dj_source)
 }
 
 function controlOnAirLight(){
-    if(airtime_on_air || live_dj_on_air || master_dj_on_air){
+    if(scheduled_play_on_air || live_dj_on_air || master_dj_on_air){
         $('#on-air-info').attr("class", "on-air-info on");
     }else{
         $('#on-air-info').attr("class", "on-air-info off");
@@ -301,24 +285,24 @@ function controlOnAirLight(){
 function controlSwitchLight(){
     var live_div = $("#live_dj_connection")
     var master_div = $("#master_dj_connection")
-    var airtime_div = $("#airtime_connection")
+    var scheduled_play_div = $("#scheduled_play_connection")
     
-    if(airtime_on_air && !live_dj_on_air && !master_dj_on_air){
-        changeLineToRed(airtime_div.parent().find(".line-to-on-air"))
-        changeLineToWhite(live_div.parent().find(".line-to-on-air"))
-        changeLineToWhite(master_div.parent().find(".line-to-on-air"))
+    if(scheduled_play_on_air && !live_dj_on_air && !master_dj_on_air){
+        scheduled_play_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air on")
+        live_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
+        master_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
     }else if(live_dj_on_air && !master_dj_on_air){
-        changeLineToWhite(airtime_div.parent().find(".line-to-on-air"))
-        changeLineToRed(live_div.parent().find(".line-to-on-air"))
-        changeLineToWhite(master_div.parent().find(".line-to-on-air"))
+        scheduled_play_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
+        live_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air on")
+        master_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
     }else if(master_dj_on_air){
-        changeLineToWhite(airtime_div.parent().find(".line-to-on-air"))
-        changeLineToWhite(live_div.parent().find(".line-to-on-air"))
-        changeLineToRed(master_div.parent().find(".line-to-on-air"))
+        scheduled_play_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
+        live_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
+        master_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air on")
     }else{
-        changeLineToWhite(airtime_div.parent().find(".line-to-on-air"))
-        changeLineToWhite(live_div.parent().find(".line-to-on-air"))
-        changeLineToWhite(master_div.parent().find(".line-to-on-air"))
+        scheduled_play_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
+        live_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
+        master_div.parent().find(".line-to-on-air").attr("class", "line-to-on-air off")
     }
 }
 
@@ -361,7 +345,7 @@ function setSwitchListener(){
         var sourcename = $(this).attr('id')
         var status_span = $(this).find("span")
         var status = status_span.html()
-        var _class = $(this).parent().find("div.source-connection").attr("class")
+        var _class = $(this).parent().find("div.line-to-switch").attr("class")
         var source_connection_status = false
         
         if(_class.indexOf("off") > 0){

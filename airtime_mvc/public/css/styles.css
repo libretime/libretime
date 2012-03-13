@@ -438,7 +438,15 @@ select {
 	height:6px;
     border:1px solid #242424;
     border-width:1px 1px 0 1px;
+    margin-left: 5px;
+}
+
+.line-to-switch.off{
 	background:#FFFFFF
+}
+
+.line-to-switch.on{
+    background:#D40000
 }
 
 .line-to-on-air {
@@ -447,7 +455,14 @@ select {
     border:1px solid #242424;
     border-width:1px 1px 0 1px;
     width: 10px;
+}
+
+.line-to-on-air.off{
     background:#FFFFFF
+}
+
+.line-to-on-air.on{
+    background:#D$0000
 }
 
 /* END Master Panel */
