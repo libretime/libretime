@@ -10,7 +10,7 @@ var AIRTIME = (function(AIRTIME) {
         var oTable,
         	historyContentDiv = $("#history_content"),
         	historyTableDiv = historyContentDiv.find("#history_table"),
-        	tableHeight = historyContentDiv.height() - 140,
+        	tableHeight = historyContentDiv.height() - 200,
         	fnServerData;
         	
         fnServerData = function ( sSource, aoData, fnCallback ) {
@@ -69,6 +69,8 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
         oTable.fnSetFilteringDelay(350);
+        
+        historyContentDiv.find(".dataTables_scrolling").css("max-height", tableHeight);
         
         return oTable;
     };
