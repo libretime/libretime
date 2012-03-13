@@ -69,7 +69,7 @@ class Application_Model_Schedule {
         
         $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
-            "previous"=>isset($results['previous'])?$results['previous']:count($shows['previousShow'])>0?$shows['previousShow'][0]:null,
+            "previous"=>isset($results['previous'])?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
             "current"=>isset($results['current'])?$results['current']:null,
             "next"=> isset($results['next'])?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
             "currentShow"=>$shows['currentShow'],
