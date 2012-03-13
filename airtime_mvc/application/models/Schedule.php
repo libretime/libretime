@@ -45,7 +45,6 @@ class Application_Model_Schedule {
         }
     }
 
-
     /**
      * Returns data related to the scheduled items.
      *
@@ -60,24 +59,91 @@ class Application_Model_Schedule {
             return array();
         }
 
-        global $CC_CONFIG;
-
         $date = new Application_Model_DateHelper;
         $timeNow = $date->getTimestamp();
         $utcTimeNow = $date->getUtcTimestamp();
+        
+        $shows = Application_Model_Show::getPrevCurrentNext($utcTimeNow);
+        $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['id']:null;
+        $results = Application_Model_Schedule::GetPrevCurrentNext($currentShowID, $utcTimeNow);
+        
         $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
-            "previous"=>Application_Model_Dashboard::GetPreviousItem($utcTimeNow),
-            "current"=>Application_Model_Dashboard::GetCurrentItem($utcTimeNow),
-            "next"=>Application_Model_Dashboard::GetNextItem($utcTimeNow),
-            "currentShow"=>Application_Model_Show::GetCurrentShow($utcTimeNow),
-            "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 1),
+            "previous"=>isset($results['previous'])?$results['previous']:count($shows['previousShow'])>0?$shows['previousShow'][0]:null,
+            "current"=>isset($results['current'])?$results['current']:null,
+            "next"=> isset($results['next'])?$results['next']:count($shows['nextShow'])>0?$shows['nextShow'][0]:null,
+            "currentShow"=>$shows['currentShow'],
+            "nextShow"=>$shows['nextShow'],
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
 
         return $range;
     }
-
+    
+    /**
+     * Queries the database for the set of schedules one hour before and after the given time.
+     * If a show starts and ends within that time that is considered the current show. Then the
+     * scheduled item before it is the previous show, and the scheduled item after it is the next
+     * show. This way the dashboard getCurrentPlaylist is very fast. But if any one of the three
+     * show types are not found through this mechanism a call is made to the old way of querying
+     * the database to find the track info.
+    **/
+    public static function GetPrevCurrentNext($currentShowID, $p_timeNow)
+    {
+        global $CC_CONFIG, $CC_DBC;
+        
+        if (!isset($currentShowID)) {
+            return array();
+        }
+        $sql = "Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played
+                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id 
+                WHERE st.instance_id = '$currentShowID' AND st.playout_status > 0 
+                ORDER BY st.starts";
+        
+        //Logging::log($sql);        
+        $rows = $CC_DBC->GetAll($sql);
+        $numberOfRows = count($rows);
+        $results;
+        $results['previous'] = null;
+        $results['current'] = null;
+        $results['next'] = null;
+        
+        $timeNowAsMillis = strtotime($p_timeNow);
+        for( $i = 0; $i < $numberOfRows; ++$i ){
+           if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
+                if ( $i - 1 >= 0){
+                    $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
+                            "starts"=>$rows[$i-1]["starts"],
+                            "ends"=>$rows[$i-1]["ends"]);
+                }
+                $results['current'] =  array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
+                            "starts"=>$rows[$i]["starts"],
+                            "ends"=>$rows[$i]["ends"],
+                            "media_item_played"=>$rows[$i]["media_item_played"],
+                            "record"=>0);
+                if ( isset($rows[$i+1])){
+                    $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
+                            "starts"=>$rows[$i+1]["starts"],
+                            "ends"=>$rows[$i+1]["ends"]);
+                }
+                break;
+            }
+            if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
+                $results['previous'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
+                            "starts"=>$rows[$i]["starts"],
+                            "ends"=>$rows[$i]["ends"]);;
+            }
+            if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
+                $results['next'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
+                            "starts"=>$rows[$i]["starts"],
+                            "ends"=>$rows[$i]["ends"]);
+                break;
+            }
+        }
+                
+        return $results;
+    }
+    
     public static function GetLastScheduleItem($p_timeNow){
         global $CC_CONFIG, $CC_DBC;
 
