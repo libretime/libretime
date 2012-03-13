@@ -270,13 +270,8 @@ class ApiController extends Zend_Controller_Action
                 $limit = "5";
             }
 
-            $result = array("env"=>APPLICATION_ENV,
-                "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                "currentShow"=>Application_Model_Show::GetCurrentShow($utcTimeNow),
-                "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, $limit, $utcTimeEnd),
-                "timezone"=> date("T"),
-                "timezoneOffset"=> date("Z"),
-		"AIRTIME_API_VERSION"=>AIRTIME_API_VERSION); //used by caller to determine if the airtime they are running or widgets in use is out of date.
+            $result = Application_Model_Schedule::GetPlayOrderRange();
+            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
 
             //Convert from UTC to localtime for user.
             Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
