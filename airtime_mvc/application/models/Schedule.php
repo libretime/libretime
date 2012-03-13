@@ -71,11 +71,12 @@ class Application_Model_Schedule {
             "schedulerTime"=>$timeNow,
             "previous"=>isset($results['previous'])?$results['previous']:count($shows['previousShow'])>0?$shows['previousShow'][0]:null,
             "current"=>isset($results['current'])?$results['current']:null,
-            "next"=> isset($results['next'])?$results['next']:count($shows['nextShow'])>0?$shows['nextShow'][0]:null,
+            "next"=> isset($results['next'])?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
             "currentShow"=>$shows['currentShow'],
             "nextShow"=>$shows['nextShow'],
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
+        
         return $range;
     }
     
@@ -120,6 +121,7 @@ class Application_Model_Schedule {
                             "ends"=>$rows[$i]["ends"],
                             "media_item_played"=>$rows[$i]["media_item_played"],
                             "record"=>0);
+                
                 if ( isset($rows[$i+1])){
                     $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
                             "starts"=>$rows[$i+1]["starts"],
@@ -139,7 +141,6 @@ class Application_Model_Schedule {
                 break;
             }
         }
-                
         return $results;
     }
     
