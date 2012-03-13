@@ -96,6 +96,8 @@ class ShowbuilderController extends Zend_Controller_Action
     }
 
     public function builderAction() {
+    	
+    	global $CC_CONFIG;
 
         $this->_helper->viewRenderer->setResponseSegment('builder');
 
