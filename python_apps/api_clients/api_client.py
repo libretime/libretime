@@ -602,7 +602,7 @@ class AirTimeApiClient(ApiClientInterface):
     This function updates status of mounted file system information on airtime
     """
     def update_file_system_mount(self, added_dir, removed_dir):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_fs_mount"])
             
@@ -629,7 +629,7 @@ class AirTimeApiClient(ApiClientInterface):
         and will call appropriate function on Airtime.
     """
     def handle_watched_dir_missing(self, dir):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["handle_watched_dir_missing"])
             
@@ -644,4 +644,25 @@ class AirTimeApiClient(ApiClientInterface):
             top = traceback.format_exc()
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", top)
+            
+    """
+        Retrive current switch status of streams sources
+    """
+    def get_switch_status(self):
+        logger = self.logger
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_switch_status"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+            logger.info("Switch status retrieved %s", response)
+        except Exception, e:
+            import traceback
+            top = traceback.format_exc()
+            logger.error('Exception: %s', e)
+            logger.error("traceback: %s", top)
+        return response
         

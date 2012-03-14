@@ -125,6 +125,16 @@ class PypoFetch(Thread):
         except Exception, e:
             self.logger.debug(e)
             self.logger.debug('Could not connect to liquidsoap')
+            
+    """
+        This check current switch status from Airtime and update the status
+    """
+    def check_switch_status(self):
+        self.logger.debug('Checking current switch status with Airtime')
+        switch_status = self.api_client.get_switch_status()
+        self.logger.debug('switch_status:%s',switch_status)
+        for k, v in switch_status['status'].iteritems():
+            self.switch_source(k, v)
         
     def stop_current_show(self):
         self.logger.debug('Notifying Liquidsoap to stop playback.')
@@ -249,8 +259,7 @@ class PypoFetch(Thread):
         """
         updates the status of liquidsoap connection to the streaming server
         This fucntion updates the bootup time variable in liquidsoap script
-    """
-    def update_liquidsoap_connection_status(self):
+        """
         tn = telnetlib.Telnet(LS_HOST, LS_PORT)
         # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
         # we are manually adjusting the bootup time variable so the status msg will get
@@ -512,6 +521,7 @@ class PypoFetch(Thread):
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
             self.process_schedule(self.schedule_data, True)
+            self.check_switch_status()
 
         loops = 1        
         while True:
