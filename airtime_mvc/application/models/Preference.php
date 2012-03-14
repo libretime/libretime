@@ -60,10 +60,10 @@ class Application_Model_Preference
 
     public static function GetValue($key, $isUserValue = false){
         global $CC_CONFIG, $CC_DBC;
+        
         //Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_pref"
         ." WHERE keystr = '$key'";
-        
     	//For user specific preference, check if id matches as well
         if($isUserValue) {
 	        $auth = Zend_Auth::getInstance();
@@ -72,7 +72,6 @@ class Application_Model_Preference
 	        	$sql .= " AND subjid = '$id'";
 		    }
         }
-        
         $result = $CC_DBC->GetOne($sql);
 
         if ($result == 0)
@@ -700,6 +699,63 @@ class Application_Model_Preference
         return $val;
     }
     
+    public static function SetLiveSteamMasterUsername($value){
+        self::SetValue("live_stream_master_username", $value, false);
+    }
+    
+    public static function GetLiveSteamMasterUsername(){
+        return self::GetValue("live_stream_master_username");
+    }
+    
+    public static function SetLiveSteamMasterPassword($value){
+        self::SetValue("live_stream_master_password", $value, false);
+    }
+    
+    public static function GetLiveSteamMasterPassword(){
+        return self::GetValue("live_stream_master_password");
+    }
+    
+    public static function SetSourceStatus($sourcename, $status){
+        self::SetValue($sourcename, $status, false);
+    }
+    
+    public static function GetSourceStatus($sourcename){
+        $value = self::GetValue($sourcename);
+        if($value == null || $value == "false"){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    public static function SetSourceSwitchStatus($sourcename, $status){
+        self::SetValue($sourcename."_switch", $status, false);
+    }
+    
+    public static function GetSourceSwitchStatus($sourcename){
+        $value = self::GetValue($sourcename."_switch");
+        if($value == null || $value == "off"){
+            return "off";
+        }else{
+            return "on";
+        }
+    }
+    
+    public static function SetMasterDJSourceConnectionURL($value){
+        self::SetValue("master_dj_source_connection_url", $value, false);
+    }
+    
+    public static function GetMasterDJSourceConnectionURL(){
+        return self::GetValue("master_dj_source_connection_url");
+    }
+    
+    public static function SetLiveDJSourceConnectionURL($value){
+        self::SetValue("live_dj_source_connection_url", $value, false);
+    }
+    
+    public static function GetLiveDJSourceConnectionURL(){
+        return self::GetValue("live_dj_source_connection_url");
+    }
     /* User specific preferences end */
 }
 

@@ -106,6 +106,52 @@ function checkLiquidsoapStatus(){
     });
 }
 
+function setLiveSourceConnectionOverrideListener(){
+    $("[id=connection_url_override]").click(function(){
+        var div_ele = $(this).parent().find("div[id$='_dj_connection_url_tb']")
+        div_ele.find(":input").val("")
+        div_ele.show()
+    })
+    
+    // set action for "OK" and "X"
+    var live_dj_input = $("#live_dj_connection_url_tb")
+    var live_dj_label = live_dj_input.parent().find("span")
+    var master_dj_input = $("#master_dj_connection_url_tb")
+    var master_dj_label = master_dj_input.parent().find("span")
+    
+    live_dj_input.find("#ok").click(function(){
+        var url = $(this).parent().find(":input").val()
+        live_dj_label.html(url)
+        live_dj_input.hide()
+        $.get("/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url)});
+    })
+    
+    live_dj_input.find("#reset").click(function(){
+        var port = $("#dj_harbor_input_port").val()
+        var mount = $("#dj_harbor_input_mount_point").val()
+        var url = "http://"+location.hostname+":"+port+"/"+mount
+        live_dj_label.html(url)
+        live_dj_input.hide()
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url)});
+    })
+    
+    master_dj_input.find("#ok").click(function(){
+        var url = $(this).parent().find(":input").val()
+        master_dj_label.html(url)
+        master_dj_input.hide()
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url)})
+    })
+    
+    master_dj_input.find("#reset").click(function(){
+        var port = $("#master_harbor_input_port").val()
+        var mount = $("#master_harbor_input_mount_point").val()
+        var url = "http://"+location.hostname+":"+port+"/"+mount
+        master_dj_label.html(url)
+        master_dj_input.hide()
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url)})
+    })
+}
+
 
 $(document).ready(function() {
     // initial stream url
@@ -177,6 +223,8 @@ $(document).ready(function() {
         $(this).toggleClass("close");
         return false;
     })
+    
+    setLiveSourceConnectionOverrideListener()
     
     showErrorSections()
     setInterval('checkLiquidsoapStatus()', 1000)

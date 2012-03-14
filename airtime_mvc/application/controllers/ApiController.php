@@ -28,6 +28,9 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-file-system-mount', 'json')
                 ->addActionContext('handle-watched-dir-missing', 'json')
                 ->addActionContext('rabbitmq-do-push', 'json')
+                ->addActionContext('check-live-stream-auth', 'json')
+                ->addActionContext('update-source-status', 'json')
+                ->addActionContext('get-switch-status', 'json')
                 ->initContext();
     }
 
@@ -804,8 +807,9 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-
-        $this->view->msg = Application_Model_StreamSetting::getStreamSetting();
+        
+        $info = Application_Model_StreamSetting::getStreamSetting();
+        $this->view->msg = $info;
     }
 
     public function statusAction() {
@@ -859,6 +863,22 @@ class ApiController extends Zend_Controller_Action
         $boot_time = $request->getParam('boot_time');
 
         Application_Model_StreamSetting::setLiquidsoapError($stream_id, $msg, $boot_time);
+    }
+    
+    public function updateSourceStatusAction(){
+        $request = $this->getRequest();
+
+        $msg = $request->getParam('msg');
+        $sourcename = $request->getParam('sourcename');
+        $status = $request->getParam('status');
+
+        // on source disconnection sent msg to pypo to turn off the switch
+        if($status == "false"){
+            $data = array("sourcename"=>$sourcename, "status"=>"off");
+            Application_Model_RabbitMq::SendMessageToPypo("switch_source", $data);
+            Application_Model_Preference::SetSourceSwitchStatus($sourcename, "off");
+        }
+        Application_Model_Preference::SetSourceStatus($sourcename, $status);
     }
 
     // handles addition/deletion of mount point which watched dirs reside
@@ -958,7 +978,6 @@ class ApiController extends Zend_Controller_Action
         Application_Model_MusicDir::removeWatchedDir($dir, false);
     }
     
-    
     /* This action is for use by our dev scripts, that make
      * a change to the database and we want rabbitmq to send
      * out a message to pypo that a potential change has been made. */
@@ -973,10 +992,87 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
         Logging::log("Notifying RabbitMQ to send message to pypo");
         
         Application_Model_RabbitMq::PushSchedule();
+    }
+    
+    public function getSwitchStatusAction(){
+        $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj');
+        $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj');
+        $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
+
+        $res = array("live_dj"=>$live_dj, "master_dj"=>$master_dj, "scheduled_play"=>$scheduled_play);
+        $this->view->status = $res;
+    }
+    
+    /* This is used but Liquidsoap to check authentication of live streams*/
+    public function checkLiveStreamAuthAction(){
+        global $CC_CONFIG;
+        
+        $request = $this->getRequest();
+        $api_key = $request->getParam('api_key');
+        
+        $username = $request->getParam('username');
+        $password = $request->getParam('password');
+        $djtype = $request->getParam('djtype');
+        
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }
+        
+        if($djtype == 'master'){
+            //check against master
+            if($username == Application_Model_Preference::GetLiveSteamMasterUsername() && $password == Application_Model_Preference::GetLiveSteamMasterPassword()){
+                $this->view->msg = true;
+            }else{
+                $this->view->msg = false;
+            }
+        }elseif($djtype == "dj"){
+            //check against show dj auth
+            $showInfo = Application_Model_Show::GetCurrentShow();
+            // there is current playing show
+            if(isset($showInfo[0]['id'])){
+                $current_show_id = $showInfo[0]['id'];
+                $CcShow = CcShowQuery::create()->findPK($current_show_id);
+                
+                // get custom pass info from the show
+                $custom_user = $CcShow->getDbLiveStreamUser();
+                $custom_pass = $CcShow->getDbLiveStreamPass();
+                
+                // get hosts ids
+                $show = new Application_Model_Show($current_show_id);
+                $hosts_ids = $show->getHostsIds();
+                
+                // check against hosts auth
+                if($CcShow->getDbLiveStreamUsingAirtimeAuth()){
+                    foreach( $hosts_ids as $host){
+                        $h = new Application_Model_User($host['subjs_id']);
+                        if($username == $h->getLogin() && md5($password) == $h->getPassword()){
+                            $this->view->msg = true;
+                            return;
+                        }
+                    }
+                }
+                // check against custom auth
+                if($CcShow->getDbLiveStreamUsingCustomAuth()){
+                    if($username == $custom_user && $password == $custom_pass){
+                        $this->view->msg = true;
+                    }else{
+                        $this->view->msg = false;
+                    }
+                }
+                else{
+                    $this->view->msg = false;
+                }
+            }else{
+                // no show is currently playing
+                $this->view->msg = false;
+            }
+        }
     }
 }
 

@@ -8,7 +8,7 @@ set("server.telnet.port", 1234)
 
 time = ref string_of(gettimeofday())
 
-queue = audio_to_stereo(request.queue(id="queue", length=0.5))
+queue = audio_to_stereo(id="queue_src", request.queue(id="queue", length=0.5))
 queue = cue_cut(queue)
 
 pypo_data = ref '0'
@@ -26,6 +26,10 @@ s3_namespace = ref ''
 
 %include "ls_lib.liq"
 
+queue = on_metadata(notify, queue)
+queue = map_metadata(append_title, queue)
+ignore(output.dummy(queue, fallible=true))
+
 server.register(namespace="vars", "pypo_data", fun (s) -> begin pypo_data := s "Done" end)
 server.register(namespace="vars", "web_stream_enabled", fun (s) -> begin web_stream_enabled := (s == "true") string_of(!web_stream_enabled) end)
 server.register(namespace="vars", "stream_metadata_type", fun (s) -> begin stream_metadata_type := int_of_string(s) s end)
@@ -35,13 +39,118 @@ server.register(namespace="vars", "bootup_time", fun (s) -> begin time := s s en
 server.register(namespace="streams", "connection_status", fun (s) -> begin "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
 
 
-default = amplify(0.00001, noise())
+default = amplify(id="silence_src", 0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
+ignore(output.dummy(default, fallible=true))
 
-s = fallback(track_sensitive=false, [queue, default])
+master_dj_enabled = ref false;
+live_dj_enabled = ref false;
+scheduled_play_enabled = ref false;
 
-s = on_metadata(notify, s)
+def make_master_dj_available()
+        master_dj_enabled := true
+end
+
+def make_master_dj_unavailable()
+        master_dj_enabled := false
+end
+
+def make_live_dj_available()
+        live_dj_enabled := true
+end
+
+def make_live_dj_unavailable()
+        live_dj_enabled := false
+end
+
+def make_scheduled_play_available()
+        scheduled_play_enabled := true
+end
+
+def make_scheduled_play_unavailable()
+        scheduled_play_enabled := false
+end
+
+#live stream setup
+set("harbor.bind_addr", "0.0.0.0")
+
+def update_source_status(sourcename, status) =
+    system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
+    log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
+end
+
+def live_dj_connect(header) =
+    update_source_status("live_dj", true)
+end
+
+def live_dj_disconnect() = 
+    update_source_status("live_dj", false)
+end
+
+def master_dj_connect(header) =
+    update_source_status("master_dj", true)
+end
+
+def master_dj_disconnect() = 
+    update_source_status("master_dj", false)
+end
+
+#auth function for live stream
+def check_master_dj_client(user,password) =
+        #get the output of the php script
+        ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --master #{user} #{password}")
+        #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
+        ret = list.hd(ret)
+        #return true to let the client transmit data, or false to tell harbor to decline
+        if (ret == "True") then
+            true
+        else
+            false
+        end
+end
+
+def check_dj_client(user,password) =
+        #get the output of the php script
+        ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --dj #{user} #{password}")
+        #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
+        ret = list.hd(ret)
+        #return true to let the client transmit data, or false to tell harbor to decline
+        if (ret == "True") then
+            true
+        else
+            false
+        end
+end
+
+def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, dj_harbor_input_port, dj_harbor_input_mount_point, s) =
+    if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" and dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
+        master_dj = input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, 
+                    max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)
+        dj_live = input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
+                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)
+        ignore(output.dummy(master_dj, fallible=true))
+        ignore(output.dummy(dj_live, fallible=true))
+        switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition, transition], [({!master_dj_enabled},master_dj), ({!live_dj_enabled},dj_live), ({true}, s)])
+    elsif master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
+        master_dj = input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client,
+                     max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)
+        ignore(output.dummy(master_dj, fallible=true))
+        switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!master_dj_enabled},master_dj), ({true}, s)])
+    elsif dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
+        dj_live = input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
+                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)
+        ignore(output.dummy(dj_live, fallible=true))
+        switch(id="live_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!live_dj_enabled},dj_live), ({true}, s)])
+    else
+        s
+    end
+end
+
+s = switch(id="default_switch", track_sensitive=false, transitions=[transition, transition], [({!scheduled_play_enabled},queue),({true},default)])
+s = append_dj_inputs(master_live_stream_port, master_live_stream_mp, dj_live_stream_port, dj_live_stream_mp, s)
+
 s = crossfade(s)
+
 # Attach a skip command to the source s:
 
 #web_stream_source = input.http(id="web_stream", autostart = false, buffer=0.5, max=20., "")
@@ -59,7 +168,37 @@ s = crossfade(s)
 #)
 
 add_skip_command(s)
-s = map_metadata(append_title, s)
+
+server.register(namespace="streams",
+                description="Stop Master DJ source.",
+                usage="master_dj_stop",
+                "master_dj_stop",
+                fun (s) -> begin make_master_dj_unavailable() "Done." end)
+server.register(namespace="streams",
+                description="Start Master DJ source.",
+                usage="master_dj_start",
+                "master_dj_start",
+                fun (s) -> begin make_master_dj_available() "Done." end)
+server.register(namespace="streams",
+                description="Stop Live DJ source.",
+                usage="live_dj_stop",
+                "live_dj_stop",
+                fun (s) -> begin make_live_dj_unavailable() "Done." end)
+server.register(namespace="streams",
+                description="Start Live DJ source.",
+                usage="live_dj_start",
+                "live_dj_start",
+                fun (s) -> begin make_live_dj_available() "Done." end)
+server.register(namespace="streams",
+                description="Stop Scheduled Play source.",
+                usage="scheduled_play_stop",
+                "scheduled_play_stop",
+                fun (s) -> begin make_scheduled_play_unavailable() "Done." end)
+server.register(namespace="streams",
+                description="Start Scheduled Play source.",
+                usage="scheduled_play_start",
+                "scheduled_play_start",
+                fun (s) -> begin make_scheduled_play_available() "Done." end)
 
 if output_sound_device then
 	

@@ -153,11 +153,12 @@ if __name__ == '__main__':
     recorder.daemon = True
     recorder.start()
 
-    pmh.join()
-    pfile.join()
+    # all join() are commented out becase we want to exit entire pypo
+    # if pypofetch is exiting 
+    #pmh.join()
+    #recorder.join()
+    #pp.join()
     pf.join()
-    pp.join()
-    recorder.join()
     
     logger.info("pypo fetch exit")
     sys.exit()

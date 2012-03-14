@@ -16,6 +16,10 @@
         <?php echo $this->when; ?>
         <?php echo $this->repeats; ?>
     </div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span>Live Stream</h3>
+    <div id="live-stream-override" class="collapsible-content">
+        <?php echo $this->live; ?>
+    </div>
     <?php if(!$this->isSaas()){?>
     <h3 class="collapsible-header"><span class="arrow-icon"></span>Record & Rebroadcast</h3>  
     <div id="schedule-record-rebroadcast" class="collapsible-content">

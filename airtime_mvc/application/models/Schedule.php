@@ -742,22 +742,25 @@ class Application_Model_Schedule {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $formWhat = new Application_Form_AddShowWhat();
-        $formWho = new Application_Form_AddShowWho();
-        $formWhen = new Application_Form_AddShowWhen();
-        $formRepeats = new Application_Form_AddShowRepeats();
-        $formStyle = new Application_Form_AddShowStyle();
+		$formWho = new Application_Form_AddShowWho();
+		$formWhen = new Application_Form_AddShowWhen();
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formStyle = new Application_Form_AddShowStyle();
+		$formLive = new Application_Form_AddShowLiveStream();
 
-        $formWhat->removeDecorator('DtDdWrapper');
-        $formWho->removeDecorator('DtDdWrapper');
-        $formWhen->removeDecorator('DtDdWrapper');
-        $formRepeats->removeDecorator('DtDdWrapper');
-        $formStyle->removeDecorator('DtDdWrapper');
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle->removeDecorator('DtDdWrapper');
+		$formLive->removeDecorator('DtDdWrapper');
 
         $p_view->what = $formWhat;
         $p_view->when = $formWhen;
         $p_view->repeats = $formRepeats;
         $p_view->who = $formWho;
         $p_view->style = $formStyle;
+        $p_view->live = $formLive;
 
         $formWhat->populate(array('add_show_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),

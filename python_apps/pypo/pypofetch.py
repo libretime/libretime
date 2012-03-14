@@ -92,13 +92,69 @@ class PypoFetch(Thread):
             elif command == 'cancel_current_show':
                 self.logger.info("Cancel current show command received...")
                 self.stop_current_show()
+            elif command == 'switch_source':
+                self.logger.info("switch_on_source show command received...")
+                self.switch_source(m['sourcename'], m['status'])
+            elif command == 'disconnect_source':
+                self.logger.info("disconnect_on_source show command received...")
+                self.disconnect_source(m['sourcename'])
         except Exception, e:
             import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
             self.logger.error("Exception in handling Message Handler message: %s", e)
-
+    
+    def disconnect_source(self,sourcename):
+        self.logger.debug('Disconnecting source: %s', sourcename)
+        command = ""
+        if(sourcename == "master_dj"):
+            command += "master_harbor.kick\n"
+        elif(sourcename == "live_dj"):
+            command += "live_dj_harbor.kick\n"
+            
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.debug(e)
+            self.logger.debug('Could not connect to liquidsoap')
+       
+    def switch_source(self, sourcename, status):
+        self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
+        command = "streams."
+        if(sourcename == "master_dj"):
+            command += "master_dj_"
+        elif(sourcename == "live_dj"):
+            command += "live_dj_"
+        elif(sourcename == "scheduled_play"):
+            command += "scheduled_play_"
+            
+        if(status == "on"):
+            command += "start\n"
+        else:
+            command += "stop\n"
+            
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.debug(e)
+            self.logger.debug('Could not connect to liquidsoap')
+            
+    """
+        This check current switch status from Airtime and update the status
+    """
+    def check_switch_status(self):
+        self.logger.debug('Checking current switch status with Airtime')
+        switch_status = self.api_client.get_switch_status()
+        self.logger.debug('switch_status:%s',switch_status)
+        for k, v in switch_status['status'].iteritems():
+            self.switch_source(k, v)
         
     def stop_current_show(self):
         self.logger.debug('Notifying Liquidsoap to stop playback.')
@@ -111,7 +167,7 @@ class PypoFetch(Thread):
             self.logger.debug(e)
             self.logger.debug('Could not connect to liquidsoap')
     
-    def regenerateLiquidsoapConf(self, setting):
+    def regenerateLiquidsoapConf(self, setting_p):
         existing = {}
         # create a temp file
         fh = open('/etc/airtime/liquidsoap.cfg', 'r')
@@ -146,12 +202,17 @@ class PypoFetch(Thread):
         restart = False
         
         self.logger.info("Looking for changes...")
+        setting = sorted(setting_p.items())
         # look for changes
-        for s in setting:
+        for k, s in setting:
             if "output_sound_device" in s[u'keyname'] or "icecast_vorbis_metadata" in s[u'keyname']:
                 dump, stream = s[u'keyname'].split('_', 1)
                 state_change_restart[stream] = False
                 # This is the case where restart is required no matter what
+                if (existing[s[u'keyname']] != s[u'value']):
+                    self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                    restart = True;
+            elif "master_live_stream_port" in s[u'keyname'] or "master_live_stream_mp" in s[u'keyname'] or "dj_live_stream_port" in s[u'keyname'] or "dj_live_stream_mp" in s[u'keyname']:
                 if (existing[s[u'keyname']] != s[u'value']):
                     self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;
@@ -190,7 +251,7 @@ class PypoFetch(Thread):
             fh.write("################################################\n")
             fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
             fh.write("################################################\n")
-            for d in setting:
+            for k, d in setting:
                 buffer = d[u'keyname'] + " = "
                 if(d[u'type'] == 'string'):
                     temp = d[u'value']
@@ -218,8 +279,7 @@ class PypoFetch(Thread):
         """
         updates the status of liquidsoap connection to the streaming server
         This fucntion updates the bootup time variable in liquidsoap script
-    """
-    def update_liquidsoap_connection_status(self):
+        """
         tn = telnetlib.Telnet(LS_HOST, LS_PORT)
         # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
         # we are manually adjusting the bootup time variable so the status msg will get
@@ -348,15 +408,22 @@ class PypoFetch(Thread):
     
 
     def create_liquidsoap_annotation(self, media):
-        entry = \
+        """entry = \
             'annotate:media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
             % (media['id'], 0, \
             float(media['fade_in']) / 1000, \
             float(media['fade_out']) / 1000, \
             float(media['cue_in']), \
             float(media['cue_out']), \
+            media['row_id'], media['dst'])"""
+        
+        entry = \
+            'annotate:media_id="%s",liq_start_next="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
+            % (media['id'], 0, \
+            float(media['cue_in']), \
+            float(media['cue_out']), \
             media['row_id'], media['dst'])
-
+        
         return entry
         
     def check_for_previous_crash(self, media_item):
@@ -474,6 +541,7 @@ class PypoFetch(Thread):
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
             self.process_schedule(self.schedule_data, True)
+            self.check_switch_status()
 
         loops = 1        
         while True:

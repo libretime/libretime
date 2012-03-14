@@ -13,6 +13,11 @@ var currentElem;
 var serverUpdateInterval = 5000;
 var uiUpdateInterval = 200;
 
+var master_dj_on_air = false;
+var live_dj_on_air = false;
+var scheduled_play_on_air = false;
+var scheduled_play_source = false;
+
 //var timezoneOffset = 0;
 
 //set to "development" if we are developing :). Useful to disable alerts
@@ -31,6 +36,8 @@ function secondsTimer(){
         estimatedSchedulePosixTime = date.getTime() - localRemoteTimeOffset;
         updateProgressBarValue();
         updatePlaybar();
+        controlOnAirLight();
+        controlSwitchLight();
     }
     setTimeout(secondsTimer, uiUpdateInterval);
 }
@@ -74,14 +81,20 @@ function updateProgressBarValue(){
             songPercentDone = 0;        
             currentSong = null;
         } else {
-            if (currentSong.media_item_played == "t" && currentShow.length > 0)
-                $('#on-air-info').attr("class", "on-air-info on");
-            else
-                $('#on-air-info').attr("class", "on-air-info off");
+            var scheduled_play_line_to_switch = $("#scheduled_play_div").find(".line-to-switch") 
+            if (currentSong.media_item_played == "t" && currentShow.length > 0){
+                scheduled_play_line_to_switch.attr("class", "line-to-switch on");
+                scheduled_play_source = true;
+            }
+            else{
+                scheduled_play_source = false;
+                scheduled_play_line_to_switch.attr("class", "line-to-switch off");
+            }
             $('#progress-show').attr("class", "progress-show");
         }
     } else {
-        $('#on-air-info').attr("class", "on-air-info off");
+        scheduled_play_source = false;
+        $("#scheduled_play_div").find(".line-to-switch").attr("class", "line-to-switch off");
         $('#progress-show').attr("class", "progress-show-error");
     }
     $('#progress-bar').attr("style", "width:"+songPercentDone+"%");
@@ -218,10 +231,85 @@ function parseItems(obj){
     localRemoteTimeOffset = date.getTime() - schedulePosixTime;
 }
 
+function parseSourceStatus(obj){
+    var live_div = $("#live_dj_div").find(".line-to-switch")
+    var master_div = $("#master_dj_div").find(".line-to-switch")
+    
+    if(obj.live_dj_source == false){
+        live_div.attr("class", "line-to-switch off")
+    }else{
+        live_div.attr("class", "line-to-switch on")
+    }
+    
+    if(obj.master_dj_source == false){
+        master_div.attr("class", "line-to-switch off")
+    }else{
+        master_div.attr("class", "line-to-switch on")
+    }
+}
+
+function parseSwitchStatus(obj){
+    
+    if(obj.live_dj_source == "on" && obj.master_dj_source == "off"){
+        live_dj_on_air = true;
+    }else{
+        live_dj_on_air = false;
+    }
+    
+    if(obj.master_dj_source == "on"){
+        master_dj_on_air = true;
+    }else{
+        master_dj_on_air = false;
+    }
+    
+    if(obj.scheduled_play == "on"){
+        scheduled_play_on_air = true;
+    }else{
+        scheduled_play_on_air = false;
+    }
+    
+    $("#scheduled_play.source-switch-button").find("span").html(obj.scheduled_play)
+    $("#live_dj.source-switch-button").find("span").html(obj.live_dj_source)
+    $("#master_dj.source-switch-button").find("span").html(obj.master_dj_source)
+}
+
+function controlOnAirLight(){
+    if((scheduled_play_on_air && scheduled_play_source)|| live_dj_on_air || master_dj_on_air){
+        $('#on-air-info').attr("class", "on-air-info on");
+    }else{
+        $('#on-air-info').attr("class", "on-air-info off");
+    }
+}
+
+function controlSwitchLight(){
+    var live_div = $("#live_dj_div")
+    var master_div = $("#master_dj_div")
+    var scheduled_play_div = $("#scheduled_play_div")
+    
+    if((scheduled_play_on_air && scheduled_play_source) && !live_dj_on_air && !master_dj_on_air){
+        scheduled_play_div.find(".line-to-on-air").attr("class", "line-to-on-air on")
+        live_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        master_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+    }else if(live_dj_on_air && !master_dj_on_air){
+        scheduled_play_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        live_div.find(".line-to-on-air").attr("class", "line-to-on-air on")
+        master_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+    }else if(master_dj_on_air){
+        scheduled_play_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        live_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        master_div.find(".line-to-on-air").attr("class", "line-to-on-air on")
+    }else{
+        scheduled_play_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        live_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        master_div.find(".line-to-on-air").attr("class", "line-to-on-air off")
+    }
+}
 
 function getScheduleFromServer(){
     $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                 parseItems(data.entries);
+                parseSourceStatus(data.source_status);
+                parseSwitchStatus(data.switch_status);
           }, error:function(jqXHR, textStatus, errorThrown){}});
     setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
@@ -248,6 +336,40 @@ function setupQtip(){
                 name: 'light' // Use the default light style
              }
         });
+    }
+}
+
+function setSwitchListener(ele){
+    var sourcename = $(ele).attr('id')
+    var status_span = $(ele).find("span")
+    var status = status_span.html()
+    var _class = $(ele).parent().find("div.line-to-switch").attr("class")
+    var source_connection_status = false
+    
+    // user should be able to turn on/off scheduled_play switch anytime.
+    if(sourcename.indexOf("scheduled_play") > 0 && _class.indexOf("off") > 0){
+        source_connection_status = false
+    }else{
+        source_connection_status = true
+    }
+    
+    if(source_connection_status){
+        $.get("/Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
+            status_span.html(data.status)
+        });
+    }else{
+        alert("The source is not connected to Airtime!")
+    }
+}
+
+function kickSource(ele){
+    var sourcename = $(ele).attr('id')
+    var source_connection = $(ele).parent().find(".line-to-switch").attr("class")
+    if(source_connection.indexOf("off") > 0){
+        alert("No source is connected to this input.")
+        return false
+    }else{
+        $.get("/Dashboard/disconnect-source/format/json/sourcename/"+sourcename)
     }
 }
 
