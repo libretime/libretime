@@ -154,7 +154,7 @@ var AIRTIME = (function(AIRTIME) {
                 
                 $.ajax( {
                     "dataType": 'json',
-                    "type": "GET",
+                    "type": "POST",
                     "url": sSource,
                     "data": aoData,
                     "success": fnCallback
