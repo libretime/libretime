@@ -291,7 +291,7 @@ select {
 
 .source-info-block {
     padding:0 14px 0 2px;
-    min-width:150px;
+    min-width:180px;
 }
 
 .source-info-block li {
@@ -467,7 +467,7 @@ select {
 }
 
 .line-to-on-air.on{
-    background:#D$0000
+    background:#D40000
 }
 
 /* END Master Panel */
