@@ -457,3 +457,13 @@ div.helper li {
 li.spl_empty {
     height: 56px;
 }
+
+.pl-overlay {
+	z-index:100;
+	opacity: 0.7;
+}
+
+.pl-loading {
+	z-index:101;
+	background: transparent url(images/loader.gif) no-repeat 0 0;
+}

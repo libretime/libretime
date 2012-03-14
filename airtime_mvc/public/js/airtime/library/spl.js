@@ -5,6 +5,7 @@
 var AIRTIME = (function(AIRTIME){
 	
 	AIRTIME.playlist = {};
+	
 	var mod = AIRTIME.playlist;
 	
 	function isTimeValid(time) {
@@ -287,7 +288,7 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function setPlaylistContent(json) {
-
+		
 		$('#spl_name > a')
 			.empty()
 			.append(json.name);
@@ -302,7 +303,6 @@ var AIRTIME = (function(AIRTIME){
 			.append(json.html);
 		
 		setModified(json.modified);
-		
 		redrawLib();
 	}
 	
@@ -634,49 +634,84 @@ var AIRTIME = (function(AIRTIME){
 			});
 	};
 	
-	mod.fnAddItems = function(aItems, iAfter, sAddType) {
-		var lastMod = getModified();
+	function playlistRequest(sUrl, oData) {
+		var lastMod = getModified(),
+			plContent = $("#side_playlist"),
+			offset = plContent.offset(),
+			plHeight = plContent.height(),
+			plWidth = plContent.width(),
+			overlay,
+			loading;
 		
-		$.post("/playlist/add-items", 
-			{format: "json", "ids": aItems, "afterItem": iAfter, "type": sAddType, "modified": lastMod}, 
-			function(json){
+		oData["modified"] = lastMod;
+		oData["format"] = "json";
+		
+
+		overlay = $("<div />", {
+    		"class": "pl-overlay ui-widget-content",
+    		"css": {
+    			"position": "absolute",
+    			"top": offset.top,
+    			"left": offset.left,
+    			"height": plHeight + 16,
+    			"width": plWidth + 16
+    		}
+    	}).click(function(){
+    		return false;
+    	});
+		
+		loading = $("<div />", {
+    		"class": "pl-loading",
+    		"css": {
+    			"position": "absolute",
+    			"top": offset.top + plHeight/2 - 120,
+    			"left": offset.left + plWidth/2 - 120,
+    			"height": 128,
+    			"width": 128
+    		}
+    	});
+		
+		$("body")
+			.append(overlay)
+			.append(loading);
+
+		$.post(
+			sUrl, 
+			oData, 
+			function(json){	
+					
 				if (json.error !== undefined) {
 					playlistError(json);
 				}
 				else {
 					setPlaylistContent(json);
 				}
-			});
+				
+				loading.remove();
+				overlay.remove();
+			}
+		);
+	}
+	
+	mod.fnAddItems = function(aItems, iAfter, sAddType) {
+		var sUrl = "/playlist/add-items";
+			oData = {"ids": aItems, "afterItem": iAfter, "type": sAddType};
+		
+		playlistRequest(sUrl, oData);
 	};
 	
 	mod.fnMoveItems = function(aIds, iAfter) {
-		var lastMod = getModified();
+		var sUrl = "/playlist/move-items",
+			oData = {"ids": aIds, "afterItem": iAfter};
 		
-		$.post("/playlist/move-items", 
-			{format: "json", "ids": aIds, "afterItem": iAfter, "modified": lastMod}, 
-			function(json){
-				if (json.error !== undefined) {
-					playlistError(json);
-				}
-				else {
-					setPlaylistContent(json);
-				}
-			});
+		playlistRequest(sUrl, oData);
 	};
 	
 	mod.fnDeleteItems = function(aItems) {
-		var lastMod = getModified();
+		var sUrl = "/playlist/delete-items",
+			oData = {"ids": aItems};
 		
-		$.post("/playlist/delete-items", 
-			{format: "json", "ids": aItems, "modified": lastMod}, 
-			function(json){
-				if (json.error !== undefined) {
-					playlistError(json);
-				}
-				else {
-					setPlaylistContent(json);
-				}
-			});
+		playlistRequest(sUrl, oData);
 	};
 	
 	mod.init = function() {
