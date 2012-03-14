@@ -363,7 +363,14 @@ function setSwitchListener(ele){
 }
 
 function kickSource(ele){
-    
+    var sourcename = $(ele).attr('id')
+    var source_connection = $(ele).parent().find(".line-to-switch").attr("class")
+    if(source_connection.indexOf("off") > 0){
+        alert("No source is connected to this input.")
+        return false
+    }else{
+        $.get("/Dashboard/disconnect-source/format/json/sourcename/"+sourcename)
+    }
 }
 
 var stream_window = null;

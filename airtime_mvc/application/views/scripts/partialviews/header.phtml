@@ -33,7 +33,7 @@
       </li>
       <li>
         <div id="live_dj_div">
-          <?php if($this->isAdmin){?><a id="live_dj_connection" class="source-kick-button" onclick="kickSource(this)"></a><?php }?>
+          <?php if($this->isAdmin){?><a id="live_dj" class="source-kick-button" onclick="kickSource(this)"></a><?php }?>
           Live DJ
           <div class="line-to-on-air off"></div>
           <a href="#" id="live_dj" class="source-switch-button" onclick="<?php echo ($this->isAdmin)?"setSwitchListener(this);":"return false"?>"><span><?php echo $this->live_dj_switch?></span></a>
@@ -42,7 +42,7 @@
       </li>
       <li>
         <div id="master_dj_div">
-          <?php if($this->isAdmin){?><a id="master_dj_connection" class="source-kick-button" onclick="kickSource(this)"></a><?php }?>
+          <?php if($this->isAdmin){?><a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a><?php }?>
           Master DJ
           <div class="line-to-on-air off"></div>
           <a href="#" id="master_dj" class="source-switch-button" onclick="<?php echo ($this->isAdmin)?"setSwitchListener(this);":"return false"?>"><span><?php echo $this->master_dj_switch?></span></a>

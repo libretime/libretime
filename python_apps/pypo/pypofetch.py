@@ -95,13 +95,33 @@ class PypoFetch(Thread):
             elif command == 'switch_source':
                 self.logger.info("switch_on_source show command received...")
                 self.switch_source(m['sourcename'], m['status'])
+            elif command == 'disconnect_source':
+                self.logger.info("disconnect_on_source show command received...")
+                self.disconnect_source(m['sourcename'])
         except Exception, e:
             import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
             self.logger.error("Exception in handling Message Handler message: %s", e)
-
+    
+    def disconnect_source(self,sourcename):
+        self.logger.debug('Disconnecting source: %s', sourcename)
+        command = ""
+        if(sourcename == "master_dj"):
+            command += "master_harbor.kick\n"
+        elif(sourcename == "live_dj"):
+            command += "live_dj_harbor.kick\n"
+            
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.debug(e)
+            self.logger.debug('Could not connect to liquidsoap')
+       
     def switch_source(self, sourcename, status):
         self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
         command = "streams."

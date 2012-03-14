@@ -7,6 +7,7 @@ class DashboardController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('switch-source', 'json')
+                    ->addActionContext('disconnect-source', 'json')
                     ->initContext();
     }
 
@@ -15,9 +16,17 @@ class DashboardController extends Zend_Controller_Action
         // action body
     }
     
+    public function disconnectSourceAction(){
+        $request = $this->getRequest();
+        
+        $sourcename = $request->getParam('sourcename');
+        $data = array("sourcename"=>$sourcename);
+        Application_Model_RabbitMq::SendMessageToPypo("disconnect_source", $data);
+    }
+    
     public function switchSourceAction(){
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        
         $sourcename = $this->_getParam('sourcename');
         $current_status = $this->_getParam('status');
         $change_status_to = "on";

@@ -422,7 +422,7 @@ select {
     display:block;
 }
 
-.source-connection {
+.source-kick-button {
     border:1px solid #242424;
     color:#fff;
     min-height:14px;
@@ -430,6 +430,11 @@ select {
     background-color:#464646;
     margin-right: 2px;
     float: left;
+}
+
+.source-kick-button:hover{
+	cursor:pointer;
+	background-color:#FFFFFF;
 }
 
 .line-to-switch {

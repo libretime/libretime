@@ -77,6 +77,9 @@ class PypoMessageHandler(Thread):
             elif command == 'switch_source':
                 self.logger.info("switch_source command received...")
                 self.pypo_queue.put(message)
+            elif command == 'disconnect_source':
+                self.logger.info("disconnect_source command received...")
+                self.pypo_queue.put(message)
             elif command == 'update_recorder_schedule':
                 self.recorder_queue.put(message)
             elif command == 'cancel_recording':
