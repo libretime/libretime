@@ -30,6 +30,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('rabbitmq-do-push', 'json')
                 ->addActionContext('check-live-stream-auth', 'json')
                 ->addActionContext('update-source-status', 'json')
+                ->addActionContext('get-switch-status', 'json')
                 ->initContext();
     }
 
@@ -995,6 +996,17 @@ class ApiController extends Zend_Controller_Action
         
         Application_Model_RabbitMq::PushSchedule();
     }
+    
+    public function getSwitchStatusAction(){
+        $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj');
+        $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj');
+        $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
+
+        $res = array("live_dj"=>$live_dj, "master_dj"=>$master_dj, "scheduled_play"=>$scheduled_play);
+        $this->view->status = $res;
+    }
+    
+    /* This is used but Liquidsoap to check authentication of live streams*/
     public function checkLiveStreamAuthAction(){
         global $CC_CONFIG;
         
