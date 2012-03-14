@@ -45,7 +45,7 @@ ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false;
 live_dj_enabled = ref false;
-scheduled_play_enabled = ref true;
+scheduled_play_enabled = ref false;
 
 def make_master_dj_available()
         master_dj_enabled := true
