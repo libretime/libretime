@@ -778,14 +778,13 @@ Logging::log("getting media! - 2");
         //check to see if we have enough space in the /organize directory to copy the file
         $freeSpace = disk_free_space($destination_folder);
         $fileSize = filesize($audio_file);
-
+        
         if ( $freeSpace < $fileSize){
             $freeSpace = ceil($freeSpace/1024/1024);
             $fileSize = ceil($fileSize/1024/1024);
-            $result = array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
+            return array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
 
         }
-        return $result;
     }
 
     public static function copyFileToStor($p_targetDir, $fileName, $tempname){
