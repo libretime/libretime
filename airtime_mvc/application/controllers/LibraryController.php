@@ -73,8 +73,6 @@ class LibraryController extends Zend_Controller_Action
 
     public function contextMenuAction()
     {
-        global $CC_CONFIG;
-
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
         //playlist||timeline

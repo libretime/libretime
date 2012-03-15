@@ -12,6 +12,7 @@ class ShowbuilderController extends Zend_Controller_Action
                     ->addActionContext('builder-dialog', 'json')
                     ->addActionContext('check-builder-feed', 'json')
                     ->addActionContext('builder-feed', 'json')
+                    ->addActionContext('context-menu', 'json')
                     ->initContext();
     }
 
@@ -93,6 +94,28 @@ class ShowbuilderController extends Zend_Controller_Action
         
         $this->_helper->actionStack('library', 'library');
         $this->_helper->actionStack('builder', 'showbuilder');
+    }
+    
+    public function contextMenuAction()
+    {
+        $id = $this->_getParam('id');
+        $now = time();
+        
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+        $menu = array();
+    
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        
+        $item = CcScheduleQuery::create()->findPK($id);
+        $instance = $item->getCcShowInstances();
+        
+        if ($now < intval($item->getDbStarts("U")) && $user->canSchedule($instance->getDbShowId())) {
+            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/showbuilder/schedule-remove");
+        }
+        
+        $this->view->items = $menu;
     }
 
     public function builderAction() {
