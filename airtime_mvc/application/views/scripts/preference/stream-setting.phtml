@@ -8,6 +8,7 @@
     <div style="clear:both"></div>
     <?php }?>
 <?php echo $this->statusMsg;?>
+<div style="float: left">
     <fieldset class="padded stream-setting-global">
         <legend>Global Settings</legend>
         <dl class="zend_form">
@@ -67,6 +68,9 @@
             </dd>
         </dl>
     </fieldset>
+    <?php echo $this->form->getSubform('live_stream_subform'); ?>
+</div>
+<div style="float: left; margin-left: 20px; width: 600px;">
     <?php
         for($i=1;$i<=$this->num_stream;$i++){
             echo $this->form->getSubform("s".$i."_subform");
@@ -77,5 +81,6 @@
         <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
     </div>
     <?php }?>
-</form>
+</div>
+    </form>
 </div>

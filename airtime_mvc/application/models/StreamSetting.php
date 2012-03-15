@@ -1,5 +1,48 @@
 <?php
 class Application_Model_StreamSetting {
+    
+    public static function SetValue($key, $value, $type){
+        global $CC_CONFIG, $CC_DBC;
+
+        $key = pg_escape_string($key);
+        $value = pg_escape_string($value);
+
+        //Check if key already exists
+        $sql = "SELECT COUNT(*) FROM cc_stream_setting"
+        ." WHERE keyname = '$key'";
+        
+        $result = $CC_DBC->GetOne($sql);
+
+        if($result == 1) {
+            $sql = "UPDATE cc_stream_setting"
+            ." SET value = '$value', type='$type'"
+            ." WHERE keyname = '$key'";
+        } else {
+            $sql = "INSERT INTO cc_stream_setting (keyname, value, type)"
+            ." VALUES ('$key', '$value', '$type')";
+        }
+        
+        return $CC_DBC->query($sql);
+    }
+    
+    public static function GetValue($key){
+        global $CC_CONFIG, $CC_DBC;
+        
+        //Check if key already exists
+        $sql = "SELECT COUNT(*) FROM cc_stream_setting"
+        ." WHERE keyname = '$key'";
+        $result = $CC_DBC->GetOne($sql);
+
+        if ($result == 0)
+            return "";
+        else {
+            $sql = "SELECT value FROM cc_stream_setting"
+            ." WHERE keyname = '$key'";
+            
+            $result = $CC_DBC->GetOne($sql);
+            return $result;
+        }
+    }
 
     /* Returns the id's of all streams that are enabled in an array. An
      * example of the array returned in JSON notation is ["s1", "s2", "s3"] */
@@ -63,6 +106,33 @@ class Application_Model_StreamSetting {
                 ." WHERE keyname not like '%_error'";
 
         $rows = $CC_DBC->getAll($sql);
+        
+        $exists = array();
+        
+        foreach($rows as $r){
+            if($r['keyname'] == 'master_live_stream_port'){
+                $exists['master_live_stream_port'] = true;
+            }elseif($r['keyname'] == 'master_live_stream_mp'){
+                $exists['master_live_stream_mp'] = true;
+            }elseif($r['keyname'] == 'dj_live_stream_port'){
+                $exists['dj_live_stream_port'] = true;
+            }elseif($r['keyname'] == 'dj_live_stream_mp'){
+                $exists['dj_live_stream_mp'] = true;
+            }
+        }
+        
+        if(!isset($exists["master_live_stream_port"])){
+            $rows[] = (array("keyname" =>"master_live_stream_port", "value"=>self::GetMasterLiveSteamPort(), "type"=>"integer"));
+        }
+        if(!isset($exists["master_live_stream_mp"])){
+            $rows[] = (array("keyname" =>"master_live_stream_mp", "value"=>self::GetMasterLiveSteamMountPoint(), "type"=>"string"));
+        }
+        if(!isset($exists["dj_live_stream_port"])){
+            $rows[] = (array("keyname" =>"dj_live_stream_port", "value"=>self::GetDJLiveSteamPort(), "type"=>"integer"));
+        }
+        if(!isset($exists["dj_live_stream_mp"])){
+            $rows[] = (array("keyname" =>"dj_live_stream_mp", "value"=>self::GetDJLiveSteamMountPoint(), "type"=>"string"));
+        }
         return $rows;
     }
     
@@ -196,5 +266,37 @@ class Application_Model_StreamSetting {
             }
         }
         return $out;
+    }
+    
+    public static function SetMasterLiveSteamPort($value){
+        self::SetValue("master_live_stream_port", $value, "integer");
+    }
+    
+    public static function GetMasterLiveSteamPort(){
+        return self::GetValue("master_live_stream_port");
+    }
+    
+    public static function SetMasterLiveSteamMountPoint($value){
+        self::SetValue("master_live_stream_mp", $value, "string");
+    }
+    
+    public static function GetMasterLiveSteamMountPoint(){
+        return self::GetValue("master_live_stream_mp");
+    }
+    
+    public static function SetDJLiveSteamPort($value){
+        self::SetValue("dj_live_stream_port", $value, "integer");
+    }
+    
+    public static function GetDJLiveSteamPort(){
+        return self::GetValue("dj_live_stream_port");
+    }
+    
+    public static function SetDJLiveSteamMountPoint($value){
+        self::SetValue("dj_live_stream_mp", $value, "string");
+    }
+    
+    public static function GetDJLiveSteamMountPoint(){
+        return self::GetValue("dj_live_stream_mp");
     }
 }

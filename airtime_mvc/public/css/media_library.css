@@ -81,3 +81,12 @@ td.library_sr,
 td.library_bitrate {
     text-align: right;
 }
+
+.library_import {  
+    padding-bottom: 5px;
+}
+
+.library_import img {
+	vertical-align: middle;
+	padding-left: 5px;
+}

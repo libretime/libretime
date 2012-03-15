@@ -177,20 +177,21 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
     }
 
     public function isValid ($data){
-        $isValid = parent::isValid($data);
-        if($data['enable'] == 1){
-            if($data['host'] == ''){
+        $f_data = $data['s'.$this->prefix."_data"];
+        $isValid = parent::isValid($f_data);
+        if($f_data['enable'] == 1){
+            if($f_data['host'] == ''){
                 $element = $this->getElement("host");
                 $element->addError("Server cannot be empty.");
                 $isValid = false;
             }
-            if($data['port'] == ''){
+            if($f_data['port'] == ''){
                 $element = $this->getElement("port");
                 $element->addError("Port cannot be empty.");
                 $isValid = false;
             }
-            if($data['output'] == 'icecast'){
-                if($data['mount'] == ''){
+            if($f_data['output'] == 'icecast'){
+                if($f_data['mount'] == ''){
                     $element = $this->getElement("mount");
                     $element->addError("Mount cannot be empty with Icecast server.");
                     $isValid = false;

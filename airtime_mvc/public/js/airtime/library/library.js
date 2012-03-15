@@ -154,7 +154,7 @@ var AIRTIME = (function(AIRTIME) {
                 
                 $.ajax( {
                     "dataType": 'json',
-                    "type": "GET",
+                    "type": "POST",
                     "url": sSource,
                     "data": aoData,
                     "success": fnCallback
@@ -329,6 +329,8 @@ var AIRTIME = (function(AIRTIME) {
         
         addQtipToSCIcons();
     
+        
+        //begin context menu initialization.
         $.contextMenu({
             selector: '#library_display td:not(.library_checkbox)',
             trigger: "left",

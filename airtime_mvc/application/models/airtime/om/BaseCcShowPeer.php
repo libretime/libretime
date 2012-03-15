@@ -26,7 +26,7 @@ abstract class BaseCcShowPeer {
 	const TM_CLASS = 'CcShowTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 7;
+	const NUM_COLUMNS = 11;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -52,6 +52,18 @@ abstract class BaseCcShowPeer {
 	/** the column name for the BACKGROUND_COLOR field */
 	const BACKGROUND_COLOR = 'cc_show.BACKGROUND_COLOR';
 
+	/** the column name for the LIVE_STREAM_USING_AIRTIME_AUTH field */
+	const LIVE_STREAM_USING_AIRTIME_AUTH = 'cc_show.LIVE_STREAM_USING_AIRTIME_AUTH';
+
+	/** the column name for the LIVE_STREAM_USING_CUSTOM_AUTH field */
+	const LIVE_STREAM_USING_CUSTOM_AUTH = 'cc_show.LIVE_STREAM_USING_CUSTOM_AUTH';
+
+	/** the column name for the LIVE_STREAM_USER field */
+	const LIVE_STREAM_USER = 'cc_show.LIVE_STREAM_USER';
+
+	/** the column name for the LIVE_STREAM_PASS field */
+	const LIVE_STREAM_PASS = 'cc_show.LIVE_STREAM_PASS';
+
 	/**
 	 * An identiy map to hold any loaded instances of CcShow objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
@@ -68,12 +80,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::URL, self::GENRE, self::DESCRIPTION, self::COLOR, self::BACKGROUND_COLOR, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', 'DbLiveStreamUsingAirtimeAuth', 'DbLiveStreamUsingCustomAuth', 'DbLiveStreamUser', 'DbLiveStreamPass', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', 'dbLiveStreamUsingAirtimeAuth', 'dbLiveStreamUsingCustomAuth', 'dbLiveStreamUser', 'dbLiveStreamPass', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::URL, self::GENRE, self::DESCRIPTION, self::COLOR, self::BACKGROUND_COLOR, self::LIVE_STREAM_USING_AIRTIME_AUTH, self::LIVE_STREAM_USING_CUSTOM_AUTH, self::LIVE_STREAM_USER, self::LIVE_STREAM_PASS, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', 'LIVE_STREAM_USING_AIRTIME_AUTH', 'LIVE_STREAM_USING_CUSTOM_AUTH', 'LIVE_STREAM_USER', 'LIVE_STREAM_PASS', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', 'live_stream_using_airtime_auth', 'live_stream_using_custom_auth', 'live_stream_user', 'live_stream_pass', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
 	);
 
 	/**
@@ -83,12 +95,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbGenre' => 3, 'DbDescription' => 4, 'DbColor' => 5, 'DbBackgroundColor' => 6, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbGenre' => 3, 'dbDescription' => 4, 'dbColor' => 5, 'dbBackgroundColor' => 6, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::URL => 2, self::GENRE => 3, self::DESCRIPTION => 4, self::COLOR => 5, self::BACKGROUND_COLOR => 6, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbGenre' => 3, 'DbDescription' => 4, 'DbColor' => 5, 'DbBackgroundColor' => 6, 'DbLiveStreamUsingAirtimeAuth' => 7, 'DbLiveStreamUsingCustomAuth' => 8, 'DbLiveStreamUser' => 9, 'DbLiveStreamPass' => 10, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbGenre' => 3, 'dbDescription' => 4, 'dbColor' => 5, 'dbBackgroundColor' => 6, 'dbLiveStreamUsingAirtimeAuth' => 7, 'dbLiveStreamUsingCustomAuth' => 8, 'dbLiveStreamUser' => 9, 'dbLiveStreamPass' => 10, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::URL => 2, self::GENRE => 3, self::DESCRIPTION => 4, self::COLOR => 5, self::BACKGROUND_COLOR => 6, self::LIVE_STREAM_USING_AIRTIME_AUTH => 7, self::LIVE_STREAM_USING_CUSTOM_AUTH => 8, self::LIVE_STREAM_USER => 9, self::LIVE_STREAM_PASS => 10, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, 'LIVE_STREAM_USING_AIRTIME_AUTH' => 7, 'LIVE_STREAM_USING_CUSTOM_AUTH' => 8, 'LIVE_STREAM_USER' => 9, 'LIVE_STREAM_PASS' => 10, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, 'live_stream_using_airtime_auth' => 7, 'live_stream_using_custom_auth' => 8, 'live_stream_user' => 9, 'live_stream_pass' => 10, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
 	);
 
 	/**
@@ -167,6 +179,10 @@ abstract class BaseCcShowPeer {
 			$criteria->addSelectColumn(CcShowPeer::DESCRIPTION);
 			$criteria->addSelectColumn(CcShowPeer::COLOR);
 			$criteria->addSelectColumn(CcShowPeer::BACKGROUND_COLOR);
+			$criteria->addSelectColumn(CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH);
+			$criteria->addSelectColumn(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH);
+			$criteria->addSelectColumn(CcShowPeer::LIVE_STREAM_USER);
+			$criteria->addSelectColumn(CcShowPeer::LIVE_STREAM_PASS);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.NAME');
@@ -175,6 +191,10 @@ abstract class BaseCcShowPeer {
 			$criteria->addSelectColumn($alias . '.DESCRIPTION');
 			$criteria->addSelectColumn($alias . '.COLOR');
 			$criteria->addSelectColumn($alias . '.BACKGROUND_COLOR');
+			$criteria->addSelectColumn($alias . '.LIVE_STREAM_USING_AIRTIME_AUTH');
+			$criteria->addSelectColumn($alias . '.LIVE_STREAM_USING_CUSTOM_AUTH');
+			$criteria->addSelectColumn($alias . '.LIVE_STREAM_USER');
+			$criteria->addSelectColumn($alias . '.LIVE_STREAM_PASS');
 		}
 	}
 

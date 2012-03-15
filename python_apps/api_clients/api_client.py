@@ -21,6 +21,7 @@ from urlparse import urlparse
 import base64
 from configobj import ConfigObj
 import string
+import hashlib
 
 AIRTIME_VERSION = "2.1.0"
 
@@ -363,6 +364,29 @@ class AirTimeApiClient(ApiClientInterface):
             time.sleep(retries_wait)
 
         return response
+    
+    def check_live_stream_auth(self, username, password, dj_type):
+        #logger = logging.getLogger()
+        response = ''
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["check_live_stream_auth"])
+    
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%username%%", username)
+            url = url.replace("%%djtype%%", dj_type)
+            url = url.replace("%%password%%", password)
+    
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+        except Exception, e:
+            import traceback
+            top = traceback.format_exc()
+            print "Exception: %s", e
+            print "traceback: %s", top
+            response = None
+            
+        return response
 
     def setup_media_monitor(self):
         logger = self.logger
@@ -559,12 +583,26 @@ class AirTimeApiClient(ApiClientInterface):
             response = urllib2.urlopen(req).read()
         except Exception, e:
             logger.error("Exception: %s", e)
+            
+    def notify_source_status(self, sourcename, status):
+        logger = self.logger
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_source_status"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%sourcename%%", sourcename)
+            url = url.replace("%%status%%", status)
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+        except Exception, e:
+            logger.error("Exception: %s", e)
     
     """
     This function updates status of mounted file system information on airtime
     """
     def update_file_system_mount(self, added_dir, removed_dir):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_fs_mount"])
             
@@ -591,7 +629,7 @@ class AirTimeApiClient(ApiClientInterface):
         and will call appropriate function on Airtime.
     """
     def handle_watched_dir_missing(self, dir):
-        logger = logging.getLogger()
+        logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["handle_watched_dir_missing"])
             
@@ -606,4 +644,25 @@ class AirTimeApiClient(ApiClientInterface):
             top = traceback.format_exc()
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", top)
+            
+    """
+        Retrive current switch status of streams sources
+    """
+    def get_switch_status(self):
+        logger = self.logger
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_switch_status"])
+            
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            
+            req = urllib2.Request(url)
+            response = urllib2.urlopen(req).read()
+            response = json.loads(response)
+            logger.info("Switch status retrieved %s", response)
+        except Exception, e:
+            import traceback
+            top = traceback.format_exc()
+            logger.error('Exception: %s', e)
+            logger.error("traceback: %s", top)
+        return response
         

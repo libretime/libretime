@@ -51,6 +51,8 @@ parser.add_option("-e", "--error", action="store", dest="error", type="string", 
 parser.add_option("-s", "--stream-id", help="ID stream", metavar="stream_id")
 parser.add_option("-c", "--connect", help="liquidsoap connected", action="store_true", metavar="connect")
 parser.add_option("-t", "--time", help="liquidsoap boot up time", action="store", dest="time", metavar="time", type="string")
+parser.add_option("-x", "--source-name", help="source connection name", metavar="source_name")
+parser.add_option("-y", "--source-status", help="source connection stauts", metavar="source_status")
 
 # parse options
 (options, args) = parser.parse_args()
@@ -91,6 +93,16 @@ class Notify:
         logger.debug('msg = '+ str(msg))
         response = self.api_client.notify_liquidsoap_status(msg, stream_id, time) 
         logger.debug("Response: "+json.dumps(response))
+    
+    def notify_source_status(self, source_name, status):
+        logger = logging.getLogger()
+        
+        logger.debug('#################################################')
+        logger.debug('# Calling server to update source status        #')
+        logger.debug('#################################################')
+        logger.debug('msg = '+ str(source_name) + ' : ' + str(status))
+        response = self.api_client.notify_source_status(source_name, status) 
+        logger.debug("Response: "+json.dumps(response))
         
 if __name__ == '__main__':
     print
@@ -101,7 +113,6 @@ if __name__ == '__main__':
     
     # initialize
     logger = logging.getLogger("notify")
-    
     if options.error and options.stream_id:
         try:
             n = Notify()
@@ -112,6 +123,12 @@ if __name__ == '__main__':
         try:
             n = Notify()
             n.notify_liquidsoap_status("OK", options.stream_id, options.time)
+        except Exception, e:
+            print e
+    elif options.source_name and options.source_status:
+        try:
+            n = Notify()
+            n.notify_source_status(options.source_name, options.source_status)
         except Exception, e:
             print e
     else:

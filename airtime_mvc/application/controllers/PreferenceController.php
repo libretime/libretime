@@ -14,6 +14,7 @@ class PreferenceController extends Zend_Controller_Action
                     ->addActionContext('is-import-in-progress', 'json')
                     ->addActionContext('change-stream-setting', 'json')
                     ->addActionContext('get-liquidsoap-status', 'json')
+                    ->addActionContext('set-source-connection-url', 'json')
                     ->initContext();
     }
 
@@ -47,7 +48,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSoundCloudTags($values["preferences_soundcloud"]["SoundCloudTags"]);
                 Application_Model_Preference::SetSoundCloudGenre($values["preferences_soundcloud"]["SoundCloudGenre"]);
                 Application_Model_Preference::SetSoundCloudTrackType($values["preferences_soundcloud"]["SoundCloudTrackType"]);
-
                 Application_Model_Preference::SetSoundCloudLicense($values["preferences_soundcloud"]["SoundCloudLicense"]);
 
                 $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
@@ -176,6 +176,9 @@ class PreferenceController extends Zend_Controller_Action
 
         $form->setSetting($setting);
         $form->startFrom();
+        
+        $live_stream_subform = new Application_Form_LiveStreamingPreferences();
+        $form->addSubForm($live_stream_subform, "live_stream_subform");
 
         for($i=1; $i<=$num_of_stream; $i++){
             $subform = new Application_Form_StreamSettingSubForm();
@@ -190,17 +193,8 @@ class PreferenceController extends Zend_Controller_Action
             $post_data = $request->getPost();
 
             $error = false;
-            $values = array();
-            for($i=1; $i<=$num_of_stream; $i++){
-                if(!$form->getSubForm("s".$i."_subform")->isValid($post_data["s".$i."_data"])){
-                    $error = true;
-                }else{
-                    // getValues returne array of size 1, so reorganized it
-                    foreach($form->getSubForm("s".$i."_subform")->getValues() as $key => $d){
-                        $values[$key] = $d;
-                    }
-                }
-            }
+            $values = $post_data;
+            
             if($form->isValid($post_data)){
                 if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
@@ -211,18 +205,29 @@ class PreferenceController extends Zend_Controller_Action
                 $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
                 $values['streamFormat'] = $form->getValue('streamFormat');
 
-            }
-            if(!$error){
                 Application_Model_StreamSetting::setStreamSetting($values);
+                
+                // this goes into cc_pref table
+                Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
+                Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
+                Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
+                
+                // extra info that goes into cc_stream_setting
+                Application_Model_StreamSetting::SetMasterLiveSteamPort($values["master_harbor_input_port"]);
+                Application_Model_StreamSetting::SetMasterLiveSteamMountPoint($values["master_harbor_input_mount_point"]);
+                Application_Model_StreamSetting::SetDJLiveSteamPort($values["dj_harbor_input_port"]);
+                Application_Model_StreamSetting::SetDJLiveSteamMountPoint($values["dj_harbor_input_mount_point"]);
+                
+                // store stream update timestamp
+                Application_Model_Preference::SetStreamUpdateTimestamp();
+                
                 $data = array();
-                $data['setting'] = Application_Model_StreamSetting::getStreamSetting();
+                $info = Application_Model_StreamSetting::getStreamSetting();
+                $data['setting'] = $info;
                 for($i=1;$i<=$num_of_stream;$i++){
                     Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
                 }
-                // this goes into cc_pref table
-                Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
-                // store stream update timestamp
-                Application_Model_Preference::SetStreamUpdateTimestamp();
+                
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
                 $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
             }
@@ -330,6 +335,19 @@ class PreferenceController extends Zend_Controller_Action
             $out[] = array("id"=>$i, "status"=>$status);
         }
         die(json_encode($out));
+    }
+    
+    public function setSourceConnectionUrlAction(){
+        $request = $this->getRequest();
+        $type = $request->getParam("type", null);
+        $url = urldecode($request->getParam("url", null));
+        
+        if($type == 'masterdj'){
+            Application_Model_Preference::SetMasterDJSourceConnectionURL($url);
+        }elseif($type == 'livedj'){
+            Application_Model_Preference::SetLiveDJSourceConnectionURL($url);
+        }
+        die();
     }
 }
 
