@@ -664,10 +664,10 @@ var AIRTIME = (function(AIRTIME){
     		"class": "pl-loading",
     		"css": {
     			"position": "absolute",
-    			"top": offset.top + plHeight/2 - 120,
-    			"left": offset.left + plWidth/2 - 120,
-    			"height": 128,
-    			"width": 128
+    			"top": offset.top + plHeight/2 - 32 - 8,
+    			"left": offset.left + plWidth/2 - 32 -8,
+    			"height": 64,
+    			"width": 64
     		}
     	});
 		
