@@ -1,27 +1,38 @@
-var playlist_jplayer;
-var idToPostionLookUp;
+var _playlist_jplayer;
+var _idToPostionLookUp;
 
+/**
+ *When the page loads the ready function will get all the data it can from the hidden span elements
+ *and call one of three functions depending on weather the window was open to play an audio file,
+ *or a playlist or a show.
+ */
 $(document).ready(function(){
-    var audioFileID = $('.audioFileID').text();
-    var playlistID = $('.playlistID').text();
-    var playlistIndex = $('.playlistIndex').text();
-    playlist_jplayer = new jPlayerPlaylist({
+
+    _playlist_jplayer = new jPlayerPlaylist({
         jPlayer: "#jquery_jplayer_1",
         cssSelectorAncestor: "#jp_container_1"
     },[], //array of songs will be filled with below's json call
     {
         swfPath: "/js/jplayer",
-        supplied: "mp3, oga",
+        //supplied: "mp3,oga",
         wmode: "window"
     });
     
     $.jPlayer.timeFormat.showHour = true;
     
-    if (playlistID != undefined && playlistID !== "")
-        playAll(playlistID, playlistIndex);
-    else
+    var audioFileID = $('.audioFileID').text();
+    var playlistID = $('.playlistID').text();
+    var playlistIndex = $('.playlistIndex').text();
+    var showID = $('.showID').text();
+    var showIndex = $('.showIndex').text();
+
+    if (playlistID != "" && playlistID !== ""){
+        playAllPlaylist(playlistID, playlistIndex);
+    }else if (audioFileID != "") {
         playOne(audioFileID);
-    
+    }else if (showID != "") {
+        playAllShow(showID, showIndex);
+    }
 });
 
 /**
@@ -30,67 +41,103 @@ $(document).ready(function(){
  *  - Update the playlistIndex to the position in the pllist to start playing.
  *  - Select the element played from and start playing. If playlist is null then start at index 0.
 **/
-function playAll(playlistID, playlistIndex) {
+function playAllPlaylist(p_playlistID, p_playlistIndex) {
     var viewsPlaylistID = $('.playlistID').text();
     
-    if ( idToPostionLookUp !== undefined && viewsPlaylistID == playlistID ) {
-        play(playlistIndex);
+    if ( _idToPostionLookUp !== undefined && viewsPlaylistID == p_playlistID ) {
+        play(p_playlistIndex);
     }else {
-        idToPostionLookUp = Array();
-        $.getJSON("/playlist/get-playlist/playlistID/"+playlistID, function(data){  // get the JSON array produced by my PHP
-            var myPlaylist = new Array();
-            var media;
-            var index;
-            
-            for(index in data){
-                console.log(data[index]);
-                if (data[index]['mp3'] != undefined){
-                    media = {title: data[index]['title'],
-                            artist: data[index]['artist'],
-                            mp3:"/api/get-media/fileID/"+data[index]['mp3']
-                    };
-                }else if (data[index]['oga'] != undefined) {
-                    media = {title: data[index]['title'],
-                            artist: data[index]['artist'],
-                            oga:"/api/get-media/fileID/"+data[index]['oga']
-                    };
-                }
-                console.log(media);
-                myPlaylist[index] = media;
-                
-                idToPostionLookUp[data[index]['id']] = data[index]['position'];
-            }
-            playlist_jplayer.setPlaylist(myPlaylist);
-            playlist_jplayer.option("autoPlay", true);
-            play(playlistIndex);
-        });
+        buildplaylist("/audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
     }
 }
 
-function play(playlistIndex){
-    playlistIndex = idToPostionLookUp[playlistIndex];
-    playlist_jplayer.play(playlistIndex);
+/**
+ * Sets up the show to play.
+ *  checks with the show id given to the show id on the page/view
+ *      if the show id and the page or views show id are the same it means the user clicked another
+ *          file in the same show, so don't refresh the show content tust play the track from the preloaded show.
+ *      if the the ids are different they we'll need to get the show's context so create the uri
+ *      and call the controller.
+**/
+function playAllShow(p_showID, p_index) {
+    
+    var viewsShowID = $('.showID').text();
+    if ( _idToPostionLookUp !== undefined && viewsShowID == p_showID ) {
+        play(p_index);
+    }else {
+        buildplaylist("/audiopreview/get-show/showID/"+p_showID, p_index);
+    }
 }
 
-function playOne(audioFileID) {
+/**
+ * This function will call the AudiopreviewController to get the contents of either a show or playlist
+ * Looping throught the returned contents and creating media for each track.
+ *
+ * Then trigger the jplayer to play the list.
+ */
+function buildplaylist(p_url, p_playIndex) {
+    _idToPostionLookUp = Array();
+    $.getJSON(p_url, function(data){  // get the JSON array produced by my PHP
+        var myPlaylist = new Array();
+        var media;
+        var index;
+        for(index in data){
+            
+            if (data[index]['element_mp3'] != undefined){
+                media = {title: data[index]['element_title'],
+                        artist: data[index]['element_artist'],
+                        mp3:"/api/get-media/fileID/"+data[index]['element_mp3']
+                };
+            }else if (data[index]['element_oga'] != undefined) {
+                media = {title: data[index]['element_title'],
+                        artist: data[index]['element_artist'],
+                        oga:"/api/get-media/fileID/"+data[index]['element_oga']
+                };
+            }
+            myPlaylist[index] = media;
+            
+            _idToPostionLookUp[data[index]['element_id']] = data[index]['element_position'];
+        }
+        
+        _playlist_jplayer.setPlaylist(myPlaylist);
+        _playlist_jplayer.option("autoPlay", true);
+        play(p_playIndex);
+    });
+}
+
+/**
+ *Function simply plays the given index, for playlists index can be different so need to look up the
+ *right index.
+ */
+function play(p_playlistIndex){
+    playlistIndex = _idToPostionLookUp[p_playlistIndex];
+    //_playlist_jplayer.select(playlistIndex);
+    _playlist_jplayer.play(playlistIndex);
+}
+
+/**
+ * Playing one audio track occurs from the library. This function will create the media, setup
+ * jplayer and play the track.
+ */
+function playOne(p_audioFileID) {
     var playlist = new Array();
-    var fileExtensioin = audioFileID.split('.').pop();
+    var fileExtensioin = p_audioFileID.split('.').pop();
     
     if (fileExtensioin === 'mp3') {
         media = {title: $('.audioFileTitle').text() !== 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() !== 'null' ?$('.audioFileArtist').text():"",
-            mp3:"/api/get-media/fileID/"+audioFileID
+            mp3:"/api/get-media/fileID/"+p_audioFileID
         };
     }else if (fileExtensioin === 'ogg' ) {
         media = {title: $('.audioFileTitle').text() != 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():"",
-            oga:"/api/get-media/fileID/"+audioFileID
+            oga:"/api/get-media/fileID/"+p_audioFileID
         };
     }
-    playlist_jplayer.option("autoPlay", true);
+    _playlist_jplayer.option("autoPlay", true);
     
     playlist[0] = media;
-    //playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready
-    playlist_jplayer._initPlaylist(playlist);
-    playlist_jplayer.play(0);
+    //_playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready
+    _playlist_jplayer._initPlaylist(playlist);
+    _playlist_jplayer.play(0);
 }

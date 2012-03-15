@@ -43,12 +43,12 @@ var AIRTIME = (function(AIRTIME) {
     
     libraryInit = function() {
         var oTable,
-        	libContentDiv = $("#library_content");
-        	tableHeight = libContentDiv.height() - 140;
+            libContentDiv = $("#library_content");
+            tableHeight = libContentDiv.height() - 140;
         
         oTable = $('#library_display').dataTable( {
             
-        	//put hidden columns at the top to insure they can never be visible on the table through column reordering.
+            //put hidden columns at the top to insure they can never be visible on the table through column reordering.
             "aoColumns": [
               /* ftype */         {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
               /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
@@ -62,7 +62,7 @@ var AIRTIME = (function(AIRTIME) {
               /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time"},
               /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time"},
               /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track", "sWidth": "65px"},
-              /* Mood */  		  {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood"},
+              /* Mood */          {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood"},
               /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm"},
               /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer"},
               /* Website */  {"sTitle": "Website", "mDataProp": "info_url", "bSearchable": false, "bVisible": false, "sClass": "library_url"},
@@ -167,9 +167,9 @@ var AIRTIME = (function(AIRTIME) {
                 $(nRow).find('td.library_type').click(function(){
                     if (aData.ftype === 'playlist' && aData.length !== '0.0'){
                         playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
-                        open_playlist_preview(aData.audioFile, "", "", playlistIndex, 0);
+                        open_playlist_preview(playlistIndex, 0);
                     } else if (aData.ftype === 'audioclip') {
-                        open_playlist_preview(aData.audioFile, aData.track_title, aData.artist_name);
+                        open_audio_preview(aData.audioFile, aData.track_title, aData.artist_name);
                     }
                     return false;
                 });
@@ -374,9 +374,9 @@ var AIRTIME = (function(AIRTIME) {
                         callback = function() {
                            if (data.ftype === 'playlist' && data.length !== '0.0'){
                                 playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
-                                open_playlist_preview(data.audioFile, "", "", playlistIndex, 0);
+                                open_playlist_preview(playlistIndex, 0);
                             } else if (data.ftype === 'audioclip') {
-                                open_playlist_preview(data.audioFile, data.track_title, data.artist_name);
+                                open_audio_preview(data.audioFile, data.track_title, data.artist_name);
                             }
                         };
                         oItems.play.callback = callback;
@@ -651,51 +651,4 @@ function addQtipToSCIcons(){
             });
         }
     });
-}
-
-/**
- *handle to the jplayer window
- */
-var preview_window = null;
-
-/**
- *Gets the info from the view when menu action play choosen and opens the jplayer window.
- */
-function openAudioPreview(event) {
-    event.stopPropagation();
-    
-    var audioFileID = $(this).attr('audioFile');
-    var playlistID = $('#pl_id:first').attr('value');
-    var playlistIndex = $(this).parent().parent().attr('id');
-    playlistIndex = playlistIndex.substring(4); //remove the spl_
-    
-    open_playlist_preview(audioFileID, "", "", playlistID, playlistIndex);
-}
-
-/**
- *Opens a jPlayer window for the specified info, for either an audio file or playlist.
- *If audioFile, audioFileTitle, audioFileArtist is supplied the jplayer opens for one file
- *Otherwise the playlistID and playlistIndex was supplied and a playlist is played starting with the
- *given index.
- */
-function open_playlist_preview(audioFileID, audioFileTitle, audioFileArtist, playlistID, playlistIndex) {
-    if (playlistIndex != undefined) {
-        if (playlistIndex == undefined) //Use a resonable default.
-            playlistIndex = 0;
-        url = 'Playlist/playlist-preview/audioFileID/'+audioFileID+'/playlistIndex/'+playlistIndex+'/playlistID/'+playlistID;
-    } else {
-        url = 'Playlist/playlist-preview/audioFileID/'+audioFileID+'/audioFileArtist/'+audioFileArtist+'/audioFileTitle/'+audioFileTitle;
-    }
-    //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
-    if (preview_window == null || preview_window.closed || playlistIndex === undefined){
-        preview_window = window.open(url, 'Audio Player', 'width=450,height=800');
-    } else if (!preview_window.closed) {
-        preview_window.playAll(playlistID, playlistIndex);
-    }
-    //Set the play button to pause.
-    //var elemID = "spl_"+elemIndexString;
-    //$('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
-
-    preview_window.focus();
-    return false;
 }

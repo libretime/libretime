@@ -1,11 +1,17 @@
 <div id="jquery_jplayer_1" class="jp-jplayer"></div>
 <div id="jp_container_1" class="jp-audio">
+<span class='testing'></span>
+<?php if (isset($this->playlistID)) { ?>
+    <span class='playlistID'><?php echo "$this->playlistID" ?></span>
+    <span class='playlistIndex'><?php echo "$this->playlistIndex" ?></span>
+<?php } elseif (isset($this->audioFileID)) { ?>
     <span class='audioFileID'><?php echo "$this->audioFileID" ?></span>
     <span class='audioFileTitle'><?php echo "$this->audioFileTitle" ?></span>
     <span class='audioFileArtist'><?php echo "$this->audioFileArtist" ?></span>
-    <span class='playlistID'><?php echo "$this->playlistID" ?></span>
-    <span class='playlistIndex'><?php echo "$this->playlistIndex" ?></span>
-    
+<?php } elseif (isset($this->showID)) { ?>
+    <span class='showID'><?php echo "$this->showID" ?></span>
+    <span class='showIndex'><?php echo "$this->showIndex" ?></span>
+<?php } ?>
     <div class="jp-type-playlist">
         <div class="jp-gui jp-interface">
             <ul class="jp-controls">

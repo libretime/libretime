@@ -27,7 +27,8 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('showbuilder'))
       ->add(new Zend_Acl_Resource('auth'))
       ->add(new Zend_Acl_Resource('playouthistory'))
-      ->add(new Zend_Acl_Resource('usersettings'));
+      ->add(new Zend_Acl_Resource('usersettings'))
+      ->add(new Zend_Acl_Resource('audiopreview'));
 
 /** Creating permissions */
 $ccAcl->allow('G', 'index')
@@ -48,7 +49,8 @@ $ccAcl->allow('G', 'index')
 	  ->allow('A', 'playouthistory')
 	  ->allow('A', 'user')
 	  ->allow('A', 'systemstatus')
-      ->allow('A', 'preference');
+      ->allow('A', 'preference')
+      ->allow('A', 'audiopreview');
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
 
