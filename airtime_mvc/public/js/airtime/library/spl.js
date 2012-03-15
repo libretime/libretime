@@ -752,4 +752,24 @@ $(document).ready(function() {
 
 	AIRTIME.library.libraryInit();
 	AIRTIME.playlist.init();
+	
+	pl.find(".ui-icon-alert").qtip({
+        content: {
+            text: "File does not exist on disk..."
+        },
+        position:{
+            adjust: {
+            resize: true,
+            method: "flip flip"
+            },
+            at: "right center",
+            my: "left top",
+            viewport: $(window)
+        },
+        style: {
+            classes: "ui-tooltip-dark"
+        },
+        show: 'mouseover',
+        hide: 'mouseout'
+    });
 });

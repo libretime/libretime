@@ -329,6 +329,8 @@ var AIRTIME = (function(AIRTIME) {
         
         addQtipToSCIcons();
     
+        
+        //begin context menu initialization.
         $.contextMenu({
             selector: '#library_display td:not(.library_checkbox)',
             trigger: "left",
