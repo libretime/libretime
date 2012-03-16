@@ -105,7 +105,12 @@ span.playlistID {
 span.playlistIndex {
     display:none; 
 }
-
+span.showID {
+    display:none; 
+}
+span.showIndex {
+    display:none; 
+}
 /* @group CONTROLS */
 
 div.jp-controls-holder {

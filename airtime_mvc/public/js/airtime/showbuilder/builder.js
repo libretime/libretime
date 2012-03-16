@@ -128,7 +128,8 @@ var AIRTIME = (function(AIRTIME){
 		
 		oTable = tableDiv.dataTable( {
 			"aoColumns": [
-		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px"},
+		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px", "sClass": "sb_checkbox"},
+            /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image", "sWidth": "25px", "bVisible": true},
 	        /* starts */{"mDataProp": "starts", "sTitle": "Start"},
 	        /* ends */{"mDataProp": "ends", "sTitle": "End"},
 	        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length"},
@@ -214,6 +215,14 @@ var AIRTIME = (function(AIRTIME){
 					node,
 					cl="";
 				
+                //call the context menu so we can prevent the event from propagating.
+                $(nRow).find('td:not(.sb_checkbox)').click(function(e){
+                    
+                    $(this).contextMenu({x: e.pageX, y: e.pageY});
+                    
+                    return false;
+                });
+				
 				//save some info for reordering purposes.
 				$(nRow).data({"aData": aData});
 				
@@ -250,6 +259,12 @@ var AIRTIME = (function(AIRTIME){
 					$(nRow).addClass(sClass);
 				};
 				
+                //add the play function to the library_type td or the speaker
+                $(nRow).find('td.library_image').click(function(){
+                    open_show_preview(aData.instance, iDisplayIndex);
+                    return false;
+                });
+            
 				if (aData.header === true) {
 					cl = 'sb-header';
 					
@@ -565,6 +580,53 @@ var AIRTIME = (function(AIRTIME){
 			return false;
 		});
 		
+		//begin context menu initialization.
+        $.contextMenu({
+            selector: '#show_builder_table td:not(.sb_checkbox)',
+            trigger: "left",
+            ignoreRightClick: true,
+            
+            build: function($el, e) {
+                var data, items, callback, $tr;
+                
+                $tr = $el.parent();
+                data = $tr.data("aData");
+                
+                function processMenuItems(oItems) {
+                    
+                    //define a delete callback.
+                    if (oItems.del !== undefined) {
+                        
+                        callback = function() {
+                            AIRTIME.showbuilder.fnRemove([{
+                            	id: data.id,
+                            	timestamp: data.timestamp,
+                            	instance: data.instance
+                            }]);
+                        };
+                        
+                        oItems.del.callback = callback;
+                    }
+                           
+                    items = oItems;
+                }
+                
+                request = $.ajax({
+                  url: "/showbuilder/context-menu",
+                  type: "GET",
+                  data: {id : data.id, format: "json"},
+                  dataType: "json",
+                  async: false,
+                  success: function(json){
+                      processMenuItems(json.items);
+                  }
+                });
+    
+                return {
+                    items: items
+                };
+            }
+        });	
 	};
 	
 	mod.init = function(oTable) {

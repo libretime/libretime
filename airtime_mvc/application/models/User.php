@@ -30,6 +30,10 @@ class Application_Model_User {
     public function isHost($showId) {
     	return $this->isUserType(UTYPE_HOST, $showId);
     }
+    
+    public function isPM() {
+        return $this->isUserType(UTYPE_PROGRAM_MANAGER);
+    }
 
     public function isAdmin() {
         return $this->isUserType(UTYPE_ADMIN);

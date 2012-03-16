@@ -126,6 +126,7 @@ class Application_Model_ShowBuilder {
         $row["duration"] = $showEndDT->format("U") - $showStartDT->format("U");
         $row["title"] = $p_item["show_name"];
         $row["instance"] = intval($p_item["si_id"]);
+        $row["image"] = '';
 
         $this->contentDT = $showStartDT;
 
@@ -156,10 +157,11 @@ class Application_Model_ShowBuilder {
             $this->isCurrent($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
             $row["id"] = intval($p_item["sched_id"]);
+            $row["image"] = '<img src="/css/images/icon_audioclip.png">';
             $row["instance"] = intval($p_item["si_id"]);
             $row["starts"] = $schedStartDT->format("H:i:s");
             $row["ends"] = $schedEndDT->format("H:i:s");
-
+        
             $formatter = new LengthFormatter($p_item['file_length']);
             $row['runtime'] = $formatter->format();
 
@@ -177,12 +179,14 @@ class Application_Model_ShowBuilder {
         //show is empty or is a special kind of show (recording etc)
         else if (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
+            $row["image"] = '';
         }
         else {
 
             $row["empty"] = true;
             $row["id"] = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
+            $row["image"] = '';
         }
 
         return $row;
@@ -201,7 +205,7 @@ class Application_Model_ShowBuilder {
 
         $timeFilled = new TimeFilledFormatter($runtime);
         $row["fRuntime"] = $timeFilled->format();
-
+        $row["image"] = '';
         return $row;
     }
 
@@ -293,7 +297,6 @@ class Application_Model_ShowBuilder {
         }
         
         if (!$this->hasCurrent) {
-        	
         }
 
         return $display_items;

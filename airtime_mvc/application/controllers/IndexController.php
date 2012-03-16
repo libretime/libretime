@@ -10,7 +10,7 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $this->_forward('index', 'login');
+        $this->_forward('index', 'showbuilder');
     }
 
     public function mainAction()

@@ -664,10 +664,10 @@ var AIRTIME = (function(AIRTIME){
     		"class": "pl-loading",
     		"css": {
     			"position": "absolute",
-    			"top": offset.top + plHeight/2 - 120,
-    			"left": offset.left + plWidth/2 - 120,
-    			"height": 128,
-    			"width": 128
+    			"top": offset.top + plHeight/2 - 32 - 8,
+    			"left": offset.left + plWidth/2 - 32 -8,
+    			"height": 64,
+    			"width": 64
     		}
     	});
 		
@@ -752,4 +752,24 @@ $(document).ready(function() {
 
 	AIRTIME.library.libraryInit();
 	AIRTIME.playlist.init();
+	
+	pl.find(".ui-icon-alert").qtip({
+        content: {
+            text: "File does not exist on disk..."
+        },
+        position:{
+            adjust: {
+            resize: true,
+            method: "flip flip"
+            },
+            at: "right center",
+            my: "left top",
+            viewport: $(window)
+        },
+        style: {
+            classes: "ui-tooltip-dark"
+        },
+        show: 'mouseover',
+        hide: 'mouseout'
+    });
 });

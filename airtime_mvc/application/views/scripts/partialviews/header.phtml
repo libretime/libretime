@@ -27,25 +27,25 @@
         <div id="scheduled_play_div">
             Scheduled Play
             <div class="line-to-on-air off"></div>
-            <a href="#" id="scheduled_play" class="source-switch-button" onclick="<?php echo ($this->isAdmin)?"setSwitchListener(this);":"return false"?>"><span><?php echo $this->scheduled_play_switch?></span></a>
+            <a href="#" id="scheduled_play" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->scheduled_play_switch?></span></a>
             <div class="line-to-switch off"></div>
         </div>
       </li>
       <li>
         <div id="live_dj_div">
-          <?php if($this->isAdmin){?><a id="live_dj" class="source-kick-button" onclick="kickSource(this)"></a><?php }?>
+          <a id="live_dj" class="source-kick-button" onclick="kickSource(this)"></a>
           Live DJ
           <div class="line-to-on-air off"></div>
-          <a href="#" id="live_dj" class="source-switch-button" onclick="<?php echo ($this->isAdmin)?"setSwitchListener(this);":"return false"?>"><span><?php echo $this->live_dj_switch?></span></a>
+          <a href="#" id="live_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->live_dj_switch?></span></a>
           <div class="line-to-switch off"></div>
         </div>
       </li>
       <li>
         <div id="master_dj_div">
-          <?php if($this->isAdmin){?><a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a><?php }?>
+          <a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a>
           Master DJ
           <div class="line-to-on-air off"></div>
-          <a href="#" id="master_dj" class="source-switch-button" onclick="<?php echo ($this->isAdmin)?"setSwitchListener(this);":"return false"?>"><span><?php echo $this->master_dj_switch?></span></a>
+          <a href="#" id="master_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->master_dj_switch?></span></a>
           <div class="line-to-switch off"></div>
           </div>
       </li>
