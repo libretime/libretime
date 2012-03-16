@@ -489,17 +489,44 @@ class PypoFetch(Thread):
 
     def copy_file(self, media_item, dst):
         """
-        Copy the file from local library directory.
+        Copy the file from local library directory. Note that we are not using os.path.exists
+        since this can lie to us! It seems the best way to get whether a file exists is to actually
+        do an operation on the file (such as query its size). Getting the file size of a non-existent
+        file will throw an exception, so we can look for this exception instead of os.path.exists.
         """
-        if not os.path.isfile(dst):
-            self.logger.debug("copying from %s to local cache %s" % (media_item['uri'], dst))
-            try:
-                shutil.copy(media_item['uri'], dst)
-            except:
-                self.logger.error("Could not copy from %s to %s" % (media_item['uri'], dst))
+        
+        src = media_item['uri']
+        
+        try:
+            src_size = os.path.getsize(src)
+        except Exception, e:
+            self.logger.error("Could not get size of source file: %s", src)
+            return
+
+        
+        dst_exists = True
+        try:
+            dst_size = os.path.getsize(dst)
+        except Exception, e:
+            dst_exists = False
+            
+        do_copy = False
+        if dst_exists:
+            if src_size != dst_size:
+                do_copy = True
         else:
-            #file already exists
-            pass
+            do_copy = True
+            
+        
+        if do_copy:
+            self.logger.debug("copying from %s to local cache %s" % (src, dst))
+            try:
+                """
+                copy will overwrite dst if it already exists
+                """
+                shutil.copy(src, dst)
+            except:
+                self.logger.error("Could not copy from %s to %s" % (src, dst))
 
 
     def download_file(self, media_item, dst):
