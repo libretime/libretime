@@ -12,6 +12,8 @@ import logging.config
 import logging.handlers
 from Queue import Queue
 
+from threading import Lock
+
 from pypopush import PypoPush
 from pypofetch import PypoFetch
 from pypofile import PypoFile
@@ -125,6 +127,8 @@ if __name__ == '__main__':
     recorder_q = Queue()
     pypoPush_q = Queue()
     
+    telnet_lock = Lock()
+    
     """
     This queue is shared between pypo-fetch and pypo-file, where pypo-file
     is the receiver. Pypo-fetch will send every schedule it gets to pypo-file
@@ -141,11 +145,11 @@ if __name__ == '__main__':
     pfile.daemon = True
     pfile.start()
     
-    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q)
+    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q, telnet_lock)
     pf.daemon = True
     pf.start()
     
-    pp = PypoPush(pypoPush_q)
+    pp = PypoPush(pypoPush_q, telnet_lock)
     pp.daemon = True
     pp.start()
 

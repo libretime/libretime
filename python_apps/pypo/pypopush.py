@@ -18,6 +18,8 @@ retrieved ("first-in, first-out"); however, lists are not efficient for this pur
 from collections import deque
 
 from threading import Thread
+from threading import Lock
+
 from api_clients import api_client
 from configobj import ConfigObj
 
@@ -38,12 +40,14 @@ except Exception, e:
     sys.exit()
 
 class PypoPush(Thread):
-    def __init__(self, q):
+    def __init__(self, q, telnet_lock):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.queue = q
 
         self.media = dict()
+        
+        self.telnet_lock = telnet_lock
 
         self.liquidsoap_state_play = True
         self.push_ahead = 10
@@ -161,13 +165,20 @@ class PypoPush(Thread):
         This function connects to Liquidsoap to find what media items are in its queue.
         """
         
-        tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+        self.telnet_lock.acquire()
         
-        msg = 'queue.queue\n'
-        tn.write(msg)
-        response = tn.read_until("\r\n").strip(" \r\n")
-        tn.write('exit\n')
-        tn.read_all()
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            
+            msg = 'queue.queue\n'
+            tn.write(msg)
+            response = tn.read_until("\r\n").strip(" \r\n")
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
         
         liquidsoap_queue_approx = []
         
@@ -243,21 +254,28 @@ class PypoPush(Thread):
         if 'queue_id' in media_item:
             queue_id = media_item['queue_id']
             
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            msg = "queue.remove %s\n" % queue_id
-            tn.write(msg)
-            response = tn.read_until("\r\n").strip("\r\n")
-            
-            if "No such request in my queue" in response:
-                """
-                Cannot remove because Liquidsoap started playing the item. Need
-                to use source.skip instead
-                """
-                msg = "source.skip"
-                tn.write("source.skip")
+            self.telnet_lock.acquire()
+            try:
+                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                msg = "queue.remove %s\n" % queue_id
+                tn.write(msg)
+                response = tn.read_until("\r\n").strip("\r\n")
                 
-            tn.write("exit\n")
-            tn.read_all()
+                if "No such request in my queue" in response:
+                    """
+                    Cannot remove because Liquidsoap started playing the item. Need
+                    to use source.skip instead
+                    """
+                    msg = "source.skip"
+                    tn.write("source.skip")
+                    
+                tn.write("exit\n")
+                tn.read_all()
+            except Exception, e:
+                self.logger.error(str(e))
+            finally:
+                self.telnet_lock.release()
+                
         else:
             self.logger.error("'queue_id' key doesn't exist in media_item dict()")
 
@@ -294,30 +312,36 @@ class PypoPush(Thread):
         about which show is playing.
         """
         
-        tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-        
-        #tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('utf-8'))
-        
-        annotation = media_item['annotation']
-        msg = 'queue.push %s\n' % annotation.encode('utf-8')
-        self.logger.debug(msg)
-        tn.write(msg)
-        queue_id = tn.read_until("\r\n").strip("\r\n")
-        
-        #remember the media_item's queue id which we may use
-        #later if we need to remove it from the queue.
-        media_item['queue_id'] = queue_id
-        
-        #add media_item to the end of our queue
-        self.pushed_objects[queue_id] = media_item
-        
-        show_name = media_item['show_name']
-        msg = 'vars.show_name %s\n' % show_name.encode('utf-8')
-        tn.write(msg)
-        self.logger.debug(msg)
-        
-        tn.write("exit\n")
-        self.logger.debug(tn.read_all())
+        self.telnet_lock.acquire()
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            
+            #tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('utf-8'))
+            
+            annotation = media_item['annotation']
+            msg = 'queue.push %s\n' % annotation.encode('utf-8')
+            self.logger.debug(msg)
+            tn.write(msg)
+            queue_id = tn.read_until("\r\n").strip("\r\n")
+            
+            #remember the media_item's queue id which we may use
+            #later if we need to remove it from the queue.
+            media_item['queue_id'] = queue_id
+            
+            #add media_item to the end of our queue
+            self.pushed_objects[queue_id] = media_item
+            
+            show_name = media_item['show_name']
+            msg = 'vars.show_name %s\n' % show_name.encode('utf-8')
+            tn.write(msg)
+            self.logger.debug(msg)
+            
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
                      
     def run(self):
         loops = 0

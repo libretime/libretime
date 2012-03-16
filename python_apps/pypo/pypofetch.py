@@ -12,6 +12,8 @@ import telnetlib
 import math
 import copy
 from threading import Thread
+from threading import Lock
+
 from subprocess import Popen, PIPE
 from datetime import datetime
 from datetime import timedelta
@@ -38,12 +40,14 @@ except Exception, e:
     sys.exit()
 
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q, media_q):
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
+        
+        self.telnet_lock = telnet_lock
         
         self.logger = logging.getLogger();
         
@@ -113,14 +117,16 @@ class PypoFetch(Thread):
         elif(sourcename == "live_dj"):
             command += "live_dj_harbor.kick\n"
             
+        self.telnet_lock.acquire()
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            self.logger.debug(e)
-            self.logger.debug('Could not connect to liquidsoap')
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
        
     def switch_source(self, sourcename, status):
         self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
@@ -137,14 +143,16 @@ class PypoFetch(Thread):
         else:
             command += "stop\n"
             
+        self.telnet_lock.acquire()
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            self.logger.debug(e)
-            self.logger.debug('Could not connect to liquidsoap')
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
             
     """
         This check current switch status from Airtime and update the status
@@ -280,17 +288,25 @@ class PypoFetch(Thread):
         updates the status of liquidsoap connection to the streaming server
         This fucntion updates the bootup time variable in liquidsoap script
         """
-        tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-        # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
-        # we are manually adjusting the bootup time variable so the status msg will get
-        # updated.
-        current_time = time.time()
-        boot_up_time_command = "vars.bootup_time "+str(current_time)+"\n"
-        tn.write(boot_up_time_command)
-        tn.write("streams.connection_status\n")
-        tn.write('exit\n')
         
-        output = tn.read_all()
+        self.telnet_lock.acquire()
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
+            # we are manually adjusting the bootup time variable so the status msg will get
+            # updated.
+            current_time = time.time()
+            boot_up_time_command = "vars.bootup_time "+str(current_time)+"\n"
+            tn.write(boot_up_time_command)
+            tn.write("streams.connection_status\n")
+            tn.write('exit\n')
+            
+            output = tn.read_all()
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+        
         output_list = output.split("\r\n")
         stream_info = output_list[2]
         
@@ -313,12 +329,19 @@ class PypoFetch(Thread):
         try:
             self.logger.info(LS_HOST)
             self.logger.info(LS_PORT)
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
-            self.logger.info(command)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
+            
+            self.telnet_lock.acquire()
+            try:
+                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
+                self.logger.info(command)
+                tn.write(command)
+                tn.write('exit\n')
+                tn.read_all()    
+            except Exception, e:
+                self.logger.error(str(e))
+            finally:
+                self.telnet_lock.release()
         except Exception, e:
             self.logger.error("Exception %s", e)
     
@@ -328,12 +351,19 @@ class PypoFetch(Thread):
         try:
             self.logger.info(LS_HOST)
             self.logger.info(LS_PORT)
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            command = ('vars.station_name %s\n' % station_name).encode('utf-8')
-            self.logger.info(command)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
+            
+            self.telnet_lock.acquire()
+            try:
+                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                command = ('vars.station_name %s\n' % station_name).encode('utf-8')
+                self.logger.info(command)
+                tn.write(command)
+                tn.write('exit\n')
+                tn.read_all()    
+            except Exception, e:
+                self.logger.error(str(e))
+            finally:
+                self.telnet_lock.release()
         except Exception, e:
             self.logger.error("Exception %s", e)
 
