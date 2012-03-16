@@ -92,6 +92,9 @@ class Application_Model_Schedule {
     **/
     public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $p_timeNow)
     {
+        if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null)
+            return;
+        
         global $CC_CONFIG, $CC_DBC;
         $sql = 'Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played
                 FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id 
