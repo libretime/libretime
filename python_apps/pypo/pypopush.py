@@ -62,7 +62,6 @@ class PypoPush(Thread):
         """
         
         liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
-        self.logger.debug('liquidsoap_queue_approx %s', liquidsoap_queue_approx)
 
         timenow = time.time()
         # get a new schedule from pypo-fetch
