@@ -251,12 +251,29 @@ class MediaMonitorCommon:
         if p.returncode != 0:
             self.logger.warn("command \n%s\n return with a non-zero return value", command)
             self.logger.error(stderr)
+            
+        try:
+            """
+            File name charset encoding is UTF-8.  
+            """
+            stdout = stdout.decode("UTF-8")
+        except Exception, e:
+            self.logger.error("Could not decode %s using UTF-8" % stdout)
+            
         return stdout
 
     def scan_dir_for_new_files(self, dir):
         command = 'find "%s" -type f -iname "*.ogg" -o -iname "*.mp3" -readable' % dir.replace('"', '\\"')
         self.logger.debug(command)
-        stdout = self.exec_command(command)
+        stdout = self.exec_command(command).decode("UTF-8")
+        
+        try:
+            """
+            File name charset encoding is UTF-8.  
+            """
+            stdout = stdout.decode("UTF-8")
+        except Exception, e:
+            self.logger.error("Could not decode %s using UTF-8" % stdout)
 
         return stdout.splitlines()
 
