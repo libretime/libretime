@@ -343,34 +343,25 @@ function setSwitchListener(ele){
     var sourcename = $(ele).attr('id')
     var status_span = $(ele).find("span")
     var status = status_span.html()
-    var _class = $(ele).parent().find("div.line-to-switch").attr("class")
     var source_connection_status = false
     
-    // user should be able to turn on/off scheduled_play switch anytime.
-    if(sourcename.indexOf("scheduled_play") > 0 && _class.indexOf("off") > 0){
-        source_connection_status = false
-    }else{
-        source_connection_status = true
-    }
-    
-    if(source_connection_status){
-        $.get("/Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
+    $.get("/Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
+        if(data.error){
+            alert(data.error);
+        }else{
             status_span.html(data.status)
-        });
-    }else{
-        alert("The source is not connected to Airtime!")
-    }
+        }
+    });
 }
 
 function kickSource(ele){
     var sourcename = $(ele).attr('id')
-    var source_connection = $(ele).parent().find(".line-to-switch").attr("class")
-    if(source_connection.indexOf("off") > 0){
-        alert("No source is connected to this input.")
-        return false
-    }else{
-        $.get("/Dashboard/disconnect-source/format/json/sourcename/"+sourcename)
-    }
+    
+    $.get("/Dashboard/disconnect-source/format/json/sourcename/"+sourcename, function(data){
+        if(data.error){
+            alert(data.error);
+        }
+    });
 }
 
 var stream_window = null;

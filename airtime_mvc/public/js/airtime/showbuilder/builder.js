@@ -129,6 +129,7 @@ var AIRTIME = (function(AIRTIME){
 		oTable = tableDiv.dataTable( {
 			"aoColumns": [
 		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px", "sClass": "sb_checkbox"},
+            /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image", "sWidth": "25px", "bVisible": true},
 	        /* starts */{"mDataProp": "starts", "sTitle": "Start"},
 	        /* ends */{"mDataProp": "ends", "sTitle": "End"},
 	        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length"},
@@ -258,6 +259,12 @@ var AIRTIME = (function(AIRTIME){
 					$(nRow).addClass(sClass);
 				};
 				
+                //add the play function to the library_type td or the speaker
+                $(nRow).find('td.library_image').click(function(){
+                    open_show_preview(aData.instance, iDisplayIndex);
+                    return false;
+                });
+            
 				if (aData.header === true) {
 					cl = 'sb-header';
 					
