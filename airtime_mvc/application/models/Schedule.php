@@ -609,7 +609,17 @@ class Application_Model_Schedule {
         }
         if (is_null($p_fromDateTime)) {
             $t2 = new DateTime("@".time());
-            $t2->add(new DateInterval("PT30M"));
+            
+            $cache_ahead_hours = $CC_CONFIG["cache_ahead_hours"];
+            
+            if (is_numeric($cache_ahead_hours)){
+                //make sure we are not dealing with a float
+                $cache_ahead_hours = intval($cache_ahead_hours);
+            } else {
+                $cache_ahead_hours = 1;
+            }
+                        
+            $t2->add(new DateInterval("PT".$cache_ahead_hours."H"));
             $range_end = $t2->format("Y-m-d H:i:s");
         } else {
             $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);
