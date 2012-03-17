@@ -166,6 +166,8 @@ class PypoFetch(Thread):
         
     def stop_current_show(self):
         self.logger.debug('Notifying Liquidsoap to stop playback.')
+        
+        self.telnet_lock.acquire()
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write('source.skip\n')
@@ -174,6 +176,8 @@ class PypoFetch(Thread):
         except Exception, e:
             self.logger.debug(e)
             self.logger.debug('Could not connect to liquidsoap')
+        finally:
+            self.telnet_lock.release()
     
     def regenerateLiquidsoapConf(self, setting_p):
         existing = {}
@@ -327,23 +331,17 @@ class PypoFetch(Thread):
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
-            self.logger.info(LS_HOST)
-            self.logger.info(LS_PORT)
-            
             self.telnet_lock.acquire()
-            try:
-                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-                command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
-                self.logger.info(command)
-                tn.write(command)
-                tn.write('exit\n')
-                tn.read_all()    
-            except Exception, e:
-                self.logger.error(str(e))
-            finally:
-                self.telnet_lock.release()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
+            self.logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
         except Exception, e:
             self.logger.error("Exception %s", e)
+        finally:
+            self.telnet_lock.release()
     
     def update_liquidsoap_station_name(self, station_name):
         # Push stream metadata to liquidsoap

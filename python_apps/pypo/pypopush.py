@@ -166,7 +166,6 @@ class PypoPush(Thread):
         """
         
         self.telnet_lock.acquire()
-        
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             
