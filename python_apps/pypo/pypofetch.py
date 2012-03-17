@@ -83,7 +83,7 @@ class PypoFetch(Thread):
         
             if command == 'update_schedule':
                 self.schedule_data  = m['schedule']
-                self.process_schedule(self.schedule_data, False)
+                self.process_schedule(self.schedule_data)
             elif command == 'update_stream_setting':
                 self.logger.info("Updating stream setting...")
                 self.regenerateLiquidsoapConf(m['setting'])
@@ -373,7 +373,7 @@ class PypoFetch(Thread):
        to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
      - runs the cleanup routine, to get rid of unused cached files
     """
-    def process_schedule(self, schedule_data, bootstrapping):      
+    def process_schedule(self, schedule_data):      
         self.logger.debug(schedule_data)
         media = schedule_data["media"]
 
@@ -397,7 +397,7 @@ class PypoFetch(Thread):
                 media_item['dst'] = dst
              
             self.media_prepare_queue.put(copy.copy(media))
-            self.prepare_media(media, bootstrapping)
+            self.prepare_media(media)
         except Exception, e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
@@ -406,12 +406,12 @@ class PypoFetch(Thread):
 
 
         # cleanup
-        try: self.cleanup(media)
+        try: self.cache_cleanup(media)
         except Exception, e: self.logger.error("%s", e)
 
         
 
-    def prepare_media(self, media, bootstrapping):
+    def prepare_media(self, media):
         """
         Iterate through the list of media items in "media" and 
         download them.
@@ -421,70 +421,14 @@ class PypoFetch(Thread):
             for mkey in mediaKeys:
                 self.logger.debug("Media item starting at %s", mkey)
                 media_item = media[mkey]
-                
-                if bootstrapping:            
-                    self.check_for_previous_crash(media_item)
-               
-                entry = self.create_liquidsoap_annotation(media_item)
-                media_item['show_name'] = "TODO"
-                media_item["annotation"] = entry
-                
+                               
+                media_item['show_name'] = "TODO"                
         except Exception, e:
             self.logger.error("%s", e)
                 
         return media
-    
 
-    def create_liquidsoap_annotation(self, media):
-        """entry = \
-            'annotate:media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
-            % (media['id'], 0, \
-            float(media['fade_in']) / 1000, \
-            float(media['fade_out']) / 1000, \
-            float(media['cue_in']), \
-            float(media['cue_out']), \
-            media['row_id'], media['dst'])"""
-        
-        entry = \
-            'annotate:media_id="%s",liq_start_next="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
-            % (media['id'], 0, \
-            float(media['cue_in']), \
-            float(media['cue_out']), \
-            media['row_id'], media['dst'])
-        
-        return entry
-        
-    def check_for_previous_crash(self, media_item):
-        start = media_item['start']
-        end = media_item['end']
-        
-        dtnow = datetime.utcnow()
-        str_tnow_s = dtnow.strftime('%Y-%m-%d-%H-%M-%S')
-                        
-        if start <= str_tnow_s and str_tnow_s < end:
-            #song is currently playing and we just started pypo. Maybe there
-            #was a power outage? Let's restart playback of this song.
-            start_split = map(int, start.split('-'))
-            media_start = datetime(start_split[0], start_split[1], start_split[2], start_split[3], start_split[4], start_split[5], 0, None)
-            self.logger.debug("Found media item that started at %s.", media_start)
-            
-            delta = dtnow - media_start #we get a TimeDelta object from this operation
-            self.logger.info("Starting media item  at %d second point", delta.seconds)
-            
-            """
-            Set the cue_in. This is used by Liquidsoap to determine at what point in the media
-            item it should start playing. If the cue_in happens to be > cue_out, then make cue_in = cue_out
-            """
-            media_item['cue_in'] = delta.seconds + 10 if delta.seconds + 10 < media_item['cue_out'] else media_item['cue_out']
-            
-            """
-            Set the start time, which is used by pypo-push to determine when a media item is scheduled.
-            Pushing the start time into the future will ensure pypo-push will push this to Liquidsoap.
-            """
-            td = timedelta(seconds=10)
-            media_item['start'] = (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S')
-            self.logger.info("Crash detected, setting playlist to restart at %s", (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S'))
-    
+  
     def handle_media_file(self, media_item, dst):
         """
         Download and cache the media item.
@@ -568,7 +512,7 @@ class PypoFetch(Thread):
             self.api_client.get_media(media_item['uri'], dst)
     """
             
-    def cleanup(self, media):
+    def cache_cleanup(self, media):
         """
         Get list of all files in the cache dir and remove them if they aren't being used anymore.
         Input dict() media, lists all files that are scheduled or currently playing. Not being in this
@@ -595,7 +539,7 @@ class PypoFetch(Thread):
         success, self.schedule_data = self.api_client.get_schedule()
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
-            self.process_schedule(self.schedule_data, True)
+            self.process_schedule(self.schedule_data)
             self.check_switch_status()
 
         loops = 1        
@@ -622,7 +566,7 @@ class PypoFetch(Thread):
                 
                 success, self.schedule_data = self.api_client.get_schedule()
                 if success:
-                    self.process_schedule(self.schedule_data, False)
+                    self.process_schedule(self.schedule_data)
 
             loops += 1
 
