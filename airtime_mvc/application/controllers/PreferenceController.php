@@ -232,6 +232,9 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
             }
         }
+        
+        $this->view->confirm_pypo_restart_text = "Updating settings will temporarily interrupt any currently playing shows. Click \'OK\' to continue.";
+        
         $this->view->num_stream = $num_of_stream;
         $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
         $this->view->form = $form;

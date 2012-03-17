@@ -1,7 +1,7 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong stream-config">
     <h2 <?php if($this->enable_stream_conf == "true"){?>style="float:left"<?php }?>>Stream Settings</h2>
     <?php if($this->enable_stream_conf == "true"){?>
-    <form method="post" action="/Preference/stream-setting" enctype="application/x-www-form-urlencoded">
+    <form method="post" action="/Preference/stream-setting" enctype="application/x-www-form-urlencoded" onsubmit="return confirm('<?php echo $this->confirm_pypo_restart_text ?>');">
     <div class="button-bar bottom" id="submit-element" style="float:right">
         <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
     </div>
