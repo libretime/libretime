@@ -1,24 +1,13 @@
 import os
 import sys
 import time
-import calendar
 import logging
 import logging.config
 import shutil
-import random
-import string
 import json
 import telnetlib
-import math
 import copy
 from threading import Thread
-from threading import Lock
-
-from subprocess import Popen, PIPE
-from datetime import datetime
-from datetime import timedelta
-from Queue import Empty
-import filecmp
 
 from api_clients import api_client
 
@@ -264,19 +253,19 @@ class PypoFetch(Thread):
             fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
             fh.write("################################################\n")
             for k, d in setting:
-                buffer = d[u'keyname'] + " = "
+                buffer_str = d[u'keyname'] + " = "
                 if(d[u'type'] == 'string'):
                     temp = d[u'value']
                     if(temp == ""):
                         temp = ""
-                    buffer += "\"" + temp + "\""
+                    buffer_str += "\"" + temp + "\""
                 else:
                     temp = d[u'value']
                     if(temp == ""):
                         temp = "0"
-                    buffer += temp
-                buffer += "\n"
-                fh.write(api_client.encode_to(buffer))
+                    buffer_str += temp
+                buffer_str += "\n"
+                fh.write(api_client.encode_to(buffer_str))
             fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
             fh.close()
             # restarting pypo.

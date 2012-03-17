@@ -5,7 +5,6 @@ Python part of radio playout (pypo)
 import time
 from optparse import *
 import sys
-import os
 import signal
 import logging
 import logging.config

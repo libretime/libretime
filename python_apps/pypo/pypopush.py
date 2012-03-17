@@ -1,27 +1,16 @@
 from datetime import datetime
 from datetime import timedelta
 
-import os
 import sys
 import time
 import logging
 import logging.config
-import logging.handlers
-import pickle
 import telnetlib
 import calendar
 import json
 import math
 
-"""
-It is possible to use a list as a queue, where the first element added is the first element 
-retrieved ("first-in, first-out"); however, lists are not efficient for this purpose. Let's use
-"deque"
-"""
-from collections import deque
-
 from threading import Thread
-from threading import Lock
 
 from api_clients import api_client
 from configobj import ConfigObj
@@ -69,7 +58,6 @@ class PypoPush(Thread):
         
         liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
 
-        timenow = time.time()
         # get a new schedule from pypo-fetch
         if not self.queue.empty():
             # make sure we get the latest schedule
@@ -82,22 +70,13 @@ class PypoPush(Thread):
                 
 
         media = self.media
-        
-        self.logger.debug(liquidsoap_queue_approx)
-        
+                
         if len(liquidsoap_queue_approx) < MAX_LIQUIDSOAP_QUEUE_LENGTH:
             if media:
                 
                 tnow = datetime.utcnow()
                 tcoming = tnow + timedelta(seconds=self.push_ahead)
-                
-                """
-                tnow = time.gmtime(timenow)
-                tcoming = time.gmtime(timenow + self.push_ahead)
-                str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-                str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
-                """
-                         
+                     
                 for key in media.keys():
                     media_item = media[key]
                     
@@ -130,6 +109,7 @@ class PypoPush(Thread):
                             Temporary solution to make sure we don't push the same track multiple times. Not a full solution because if we 
                             get a new schedule, the key becomes available again.
                             """
+                            #TODO
                             del media[key]
                             
     def date_interval_to_seconds(self, interval):
@@ -172,24 +152,7 @@ class PypoPush(Thread):
             
         return True
     
-    """
-    def update_liquidsoap_queue(self):
-#        the queue variable liquidsoap_queue is our attempt to mirror
-#        what liquidsoap actually has in its own queue. Liquidsoap automatically
-#        updates its own queue when an item finishes playing, we have to do this
-#        manually. 
-#        
-#        This function will iterate through the liquidsoap_queue and remove items
-#        whose end time are in the past.
         
-        tnow = time.gmtime(timenow)
-        str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
-        
-        while len(self.liquidsoap_queue) > 0:
-            if self.liquidsoap_queue[0]["end"] < str_tnow_s:
-                self.liquidsoap_queue.popleft()
-    """
-    
     def get_queue_items_from_liquidsoap(self):
         """
         This function connects to Liquidsoap to find what media items are in its queue.
@@ -241,10 +204,7 @@ class PypoPush(Thread):
         call other functions that will connect to Liquidsoap and alter its
         queue.
         """
-                
-        #TODO: Keys should already be sorted. Verify this. 
-        sorted_keys = sorted(media.keys())
-        
+                        
         if len(liquidsoap_queue_approx) == 0:
             """
             liquidsoap doesn't have anything in its queue, so we have nothing 
@@ -363,8 +323,6 @@ class PypoPush(Thread):
         show name of every media_item as well, just to keep Liquidsoap up-to-date
         about which show is playing.
         """
-        
-        
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)

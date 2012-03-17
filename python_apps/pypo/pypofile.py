@@ -6,7 +6,7 @@ import logging
 import logging.config
 import shutil
 import os
-import time
+import sys
 
 # configure logging
 logging.config.fileConfig("logging.cfg")
@@ -21,7 +21,7 @@ try:
 except Exception, e:
     logger = logging.getLogger()
     logger.error('Error loading config file: %s', e)
-    sys.exit()
+    sys.exit(1)
 
 
 class PypoFile(Thread):

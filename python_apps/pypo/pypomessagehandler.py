@@ -6,8 +6,7 @@ from threading import Thread
 import time
 # For RabbitMQ
 from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
-from kombu.exceptions import MessageStateError
+from kombu.messaging import Exchange, Queue
 from kombu.simple import SimpleQueue
 import json
 
