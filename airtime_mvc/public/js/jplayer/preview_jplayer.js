@@ -8,15 +8,21 @@ var _idToPostionLookUp;
  */
 $(document).ready(function(){
 
+    if (useFlash())
+        mySupplied = "oga, mp3, m4v";
+    else
+        mySupplied = "oga, mp3";
+        
     _playlist_jplayer = new jPlayerPlaylist({
         jPlayer: "#jquery_jplayer_1",
         cssSelectorAncestor: "#jp_container_1"
     },[], //array of songs will be filled with below's json call
     {
         swfPath: "/js/jplayer",
-        //supplied: "mp3,oga",
+        supplied:mySupplied,
         wmode: "window"
     });
+    
     
     $.jPlayer.timeFormat.showHour = true;
     
@@ -35,6 +41,10 @@ $(document).ready(function(){
     }
 });
 
+function useFlash() {
+    console.log(navigator.userAgent);
+  return navigator.userAgent.toLowerCase().match('firefox');
+}
 /**
  * Sets up the jPlayerPlaylist to play.
  *  - Get the playlist info based on the playlistID give.
@@ -122,7 +132,7 @@ function play(p_playlistIndex){
 function playOne(p_audioFileID) {
     var playlist = new Array();
     var fileExtensioin = p_audioFileID.split('.').pop();
-    
+    console.log(p_audioFileID);
     if (fileExtensioin === 'mp3') {
         media = {title: $('.audioFileTitle').text() !== 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() !== 'null' ?$('.audioFileArtist').text():"",
@@ -135,7 +145,7 @@ function playOne(p_audioFileID) {
         };
     }
     _playlist_jplayer.option("autoPlay", true);
-    
+    console.log(media);
     playlist[0] = media;
     //_playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready
     _playlist_jplayer._initPlaylist(playlist);

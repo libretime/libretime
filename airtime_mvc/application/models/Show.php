@@ -1762,7 +1762,9 @@ class Application_Model_Show {
             //Find the show that is within the current time.
             if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
                 if ( $i - 1 >= 0){
-                    $results['previousShow'][0] = array("name"=>$rows[$i-1]['name'],
+                    $results['previousShow'][0] = array(
+                                "id"=>$rows[$i-1]['id'],
+                                "name"=>$rows[$i-1]['name'],
                                 "start_timestamp"=>$rows[$i-1]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i-1]['end_timestamp'],
                                 "starts"=>$rows[$i-1]['starts'],
@@ -1772,7 +1774,9 @@ class Application_Model_Show {
                 $results['currentShow'][0] =  $rows[$i];
                 
                 if ( isset($rows[$i+1])){
-                    $results['nextShow'][0] =  array("name"=>$rows[$i+1]['name'],
+                    $results['nextShow'][0] =  array(
+                                "id"=>$rows[$i+1]['id'],
+                                "name"=>$rows[$i+1]['name'],
                                 "start_timestamp"=>$rows[$i+1]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i+1]['end_timestamp'],
                                 "starts"=>$rows[$i+1]['starts'],
@@ -1787,7 +1791,9 @@ class Application_Model_Show {
             }
             //if we hit this we know we've gone to far and can stop looping.
             if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
-                $results['nextShow'][0] = array("name"=>$rows[$i]['name'],
+                $results['nextShow'][0] = array(
+                                "id"=>$rows[$i]['id'],
+                                "name"=>$rows[$i]['name'],
                                 "start_timestamp"=>$rows[$i]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i]['end_timestamp'],
                                 "starts"=>$rows[$i]['starts'],
@@ -1798,7 +1804,9 @@ class Application_Model_Show {
         //If we didn't find a a current show because the time didn't fit we may still have
         //found a previous show so use it.
         if (count($results['previousShow']) == 0 && isset($previousShowIndex)) {
-                $results['previousShow'][0] = array("name"=>$rows[$previousShowIndex]['name'],
+                $results['previousShow'][0] = array(
+                    "id"=>$rows[$previousShowIndex]['id'],
+                    "name"=>$rows[$previousShowIndex]['name'],
                     "start_timestamp"=>$rows[$previousShowIndex]['start_timestamp'],
                     "end_timestamp"=>$rows[$previousShowIndex]['end_timestamp'],
                     "starts"=>$rows[$previousShowIndex]['starts'],

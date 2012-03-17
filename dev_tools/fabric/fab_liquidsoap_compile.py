@@ -10,6 +10,8 @@ import sys
 from fabric.api import *
 from fabric.contrib.files import comment, sed, append
 
+from ConfigParser import ConfigParser
+
 from xml.dom.minidom import parse
 from xml.dom.minidom import Node
 from xml.dom.minidom import Element
@@ -157,7 +159,13 @@ def debian_squeeze_64(fresh_os=True):
 
 
 def compile_liquidsoap(filename="liquidsoap"):
-
+    
+    config = ConfigParser()
+    config.readfp(open('fab_liquidsoap_compile.cfg'))
+    url = config.get('main', 'liquidsoap_tar_url')
+    
+    print "Will get liquidsoap from " + url
+    
     do_sudo('apt-get update')
     do_sudo('apt-get upgrade -y --force-yes')
     do_sudo('apt-get install -y --force-yes ocaml-findlib libao-ocaml-dev libportaudio-ocaml-dev ' + \
@@ -171,14 +179,15 @@ def compile_liquidsoap(filename="liquidsoap"):
     do_run('mkdir -p %s' % root)
     
     tmpPath = do_local("mktemp", capture=True)
-    do_run('wget %s -O %s' % ('https://downloads.sourceforge.net/project/savonet/liquidsoap/1.0.0/liquidsoap-1.0.0-full.tar.bz2', tmpPath))
-    do_run('mv %s %s/liquidsoap-1.0.0-full.tar.bz2' % (tmpPath, root))
-    do_run('cd %s &&  bunzip2 liquidsoap-1.0.0-full.tar.bz2 && tar xf liquidsoap-1.0.0-full.tar' % root)
+    do_run('wget %s -O %s' % (url, tmpPath))
+    do_run('mv %s %s/liquidsoap.tar.gz' % (tmpPath, root))
+    do_run('cd %s && tar xzf liquidsoap.tar.gz' % root)
     
-    do_run('cd %s/liquidsoap-1.0.0-full && cp PACKAGES.minimal PACKAGES' % root)
-    sed('%s/liquidsoap-1.0.0-full/PACKAGES' % root, '#ocaml-portaudio', 'ocaml-portaudio')
-    sed('%s/liquidsoap-1.0.0-full/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
-    sed('%s/liquidsoap-1.0.0-full/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
-    do_run('cd %s/liquidsoap-1.0.0-full && ./configure' % root)
-    do_run('cd %s/liquidsoap-1.0.0-full && make' % root)
-    get('%s/liquidsoap-1.0.0-full/liquidsoap-1.0.0/src/liquidsoap' % root, filename)
+    do_run('cd %s/savonet && cp PACKAGES.minimal PACKAGES' % root)
+    sed('%s/savonet/PACKAGES' % root, '#ocaml-portaudio', 'ocaml-portaudio')
+    sed('%s/savonet/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
+    sed('%s/savonet/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
+    do_run('cd %s/savonet && ./bootstrap' % root)
+    do_run('cd %s/savonet && ./configure' % root)
+    do_run('cd %s/savonet && make' % root)
+    get('%s/savonet/liquidsoap/src/liquidsoap' % root, filename)
