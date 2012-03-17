@@ -529,16 +529,16 @@ class PypoFetch(Thread):
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
 
 
+    """
     def download_file(self, media_item, dst):
-        """
-        Download a file from a remote server and store it in the cache.
-        """
+        #Download a file from a remote server and store it in the cache.
         if os.path.isfile(dst):
             pass
             #self.logger.debug("file already in cache: %s", dst)
         else:
             self.logger.debug("try to download %s", media_item['uri'])
             self.api_client.get_media(media_item['uri'], dst)
+    """
             
     def cleanup(self, media):
         """
