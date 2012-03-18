@@ -199,9 +199,6 @@ class Application_Model_Show {
             ->filterByDbShowId($this->_showId)
             ->update(array('DbLastShow' => $timeinfo[0]));
 
-        //$sql = "DELETE FROM cc_show_instances
-        //            WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
-
         $sql = "UPDATE cc_show_instances
                 SET modified_instance = TRUE
                     WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";

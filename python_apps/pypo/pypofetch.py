@@ -82,9 +82,6 @@ class PypoFetch(Thread):
             elif command == 'update_station_name':
                 self.logger.info("Updating station name...")
                 self.update_liquidsoap_station_name(m['station_name'])
-            elif command == 'cancel_current_show':
-                self.logger.info("Cancel current show command received...")
-                self.stop_current_show()
             elif command == 'switch_source':
                 self.logger.info("switch_on_source show command received...")
                 self.switch_source(m['sourcename'], m['status'])
@@ -152,22 +149,7 @@ class PypoFetch(Thread):
         self.logger.debug('switch_status:%s',switch_status)
         for k, v in switch_status['status'].iteritems():
             self.switch_source(k, v)
-        
-    def stop_current_show(self):
-        self.logger.debug('Notifying Liquidsoap to stop playback.')
-        
-        self.telnet_lock.acquire()
-        try:
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            tn.write('source.skip\n')
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            self.logger.debug(e)
-            self.logger.debug('Could not connect to liquidsoap')
-        finally:
-            self.telnet_lock.release()
-    
+            
     def regenerateLiquidsoapConf(self, setting_p):
         existing = {}
         # create a temp file

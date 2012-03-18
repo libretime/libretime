@@ -270,6 +270,7 @@ class PypoPush(Thread):
                 self.telnet_lock.acquire()
                 tn = telnetlib.Telnet(LS_HOST, LS_PORT)
                 msg = "queue.remove %s\n" % queue_id
+                self.logger.debug(msg)
                 tn.write(msg)
                 response = tn.read_until("\r\n").strip("\r\n")
                 
@@ -278,8 +279,9 @@ class PypoPush(Thread):
                     Cannot remove because Liquidsoap started playing the item. Need
                     to use source.skip instead
                     """
-                    msg = "source.skip"
-                    tn.write("source.skip")
+                    msg = "source.skip\n"
+                    self.logger.debug(msg)
+                    tn.write(msg)
                     
                 tn.write("exit\n")
                 tn.read_all()

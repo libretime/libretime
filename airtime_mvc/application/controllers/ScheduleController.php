@@ -778,15 +778,13 @@ class ScheduleController extends Zend_Controller_Action
 
 		    try {
                 $showInstance = new Application_Model_ShowInstance($showInstanceId);
-		    }
-		    catch(Exception $e){
+		    } catch(Exception $e) {
                 $this->view->show_error = true;
                 return false;
             }
             $show = new Application_Model_Show($showInstance->getShowId());
 
             $show->cancelShow($showInstance->getShowInstanceStart());
-
             $this->view->show_id = $showInstance->getShowId();
         }
     }
@@ -806,8 +804,8 @@ class ScheduleController extends Zend_Controller_Action
             }
             $showInstance->clearShow();
             $showInstance->delete();
-            // send 'cancel-current-show' command to pypo
-            Application_Model_RabbitMq::SendMessageToPypo("cancel_current_show", array());
+
+            Application_Model_RabbitMq::PushSchedule();
         }
     }
 

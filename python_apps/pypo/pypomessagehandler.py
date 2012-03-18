@@ -70,9 +70,6 @@ class PypoMessageHandler(Thread):
             elif command == 'update_station_name':
                 self.logger.info("Updating station name...")
                 self.pypo_queue.put(message)
-            elif command == 'cancel_current_show':
-                self.logger.info("Cancel current show command received...")
-                self.pypo_queue.put(message)
             elif command == 'switch_source':
                 self.logger.info("switch_source command received...")
                 self.pypo_queue.put(message)
