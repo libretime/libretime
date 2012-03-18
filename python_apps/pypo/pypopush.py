@@ -10,6 +10,8 @@ import calendar
 import json
 import math
 
+from Queue import Empty
+
 from threading import Thread
 
 from api_clients import api_client
@@ -41,7 +43,7 @@ class PypoPush(Thread):
         
         self.telnet_lock = telnet_lock
 
-        self.push_ahead = 10
+        self.push_ahead = 5
         self.last_end_time = 0
         
         self.pushed_objects = {}
@@ -57,17 +59,17 @@ class PypoPush(Thread):
         """
         
         liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
-
-        # get a new schedule from pypo-fetch
-        if not self.queue.empty():
-            # make sure we get the latest schedule
-            while not self.queue.empty():
-                self.media = self.queue.get()
-                
+        
+        try:
+            self.media = self.queue.get(block=True, timeout=PUSH_INTERVAL)
+            if not self.queue.empty():
+                while not self.queue.empty():
+                    self.media = self.queue.get()
             self.logger.debug("Received data from pypo-fetch")          
             self.logger.debug('media %s' % json.dumps(self.media))
             self.handle_new_media(self.media, liquidsoap_queue_approx)
-                
+        except Empty, e:
+            pass
 
         media = self.media
                 
@@ -371,5 +373,4 @@ class PypoPush(Thread):
             try: self.push()
             except Exception, e:
                 self.logger.error('Pypo Push Exception: %s', e)
-            time.sleep(PUSH_INTERVAL)
             loops += 1
