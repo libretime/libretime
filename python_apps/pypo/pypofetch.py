@@ -384,15 +384,13 @@ class PypoFetch(Thread):
 
     def prepare_media(self, media):
         """
-        Iterate through the list of media items in "media" and 
-        download them.
+        Iterate through the list of media items in "media" append some
+        attributes such as show_name
         """
         try:
             mediaKeys = sorted(media.iterkeys())
             for mkey in mediaKeys:
-                self.logger.debug("Media item starting at %s", mkey)
                 media_item = media[mkey]
-                               
                 media_item['show_name'] = "TODO"                
         except Exception, e:
             self.logger.error("%s", e)
