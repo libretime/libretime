@@ -1,7 +1,7 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong stream-config">
     <h2 <?php if($this->enable_stream_conf == "true"){?>style="float:left"<?php }?>>Stream Settings</h2>
     <?php if($this->enable_stream_conf == "true"){?>
-    <form method="post" action="/Preference/stream-setting" enctype="application/x-www-form-urlencoded">
+    <form method="post" action="/Preference/stream-setting" enctype="application/x-www-form-urlencoded" onsubmit="return confirm('<?php echo $this->confirm_pypo_restart_text ?>');">
     <div class="button-bar bottom" id="submit-element" style="float:right">
         <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
     </div>
@@ -43,10 +43,11 @@
             <dd id="vorbisMetadata-element">
                 <?php echo $this->form->getElement('icecast_vorbis_metadata') ?>
             </dd>
-            <dt id="streamFormat-label" class="block-display">
+            <dt id="streamFormat-label">
                 <label class="optional"><?php echo $this->form->getElement('streamFormat')->getLabel() ?></label>
             </dt>
-            <dd id="streamFormat-element" class="block-display radio-inline-list">
+            <br>
+            <dd id="streamFormat-element" class="radio-inline-list">
                 <?php $i=0;
                       $value = $this->form->getElement('streamFormat')->getValue();
                 ?>

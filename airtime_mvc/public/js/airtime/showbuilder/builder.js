@@ -515,12 +515,16 @@ var AIRTIME = (function(AIRTIME){
 				var prev = ui.item.prev();
 				
 				//can't add items outside of shows.
-				if (prev.hasClass("sb-footer") 
-						|| prev.find("td:first").hasClass("dataTables_empty")
+				if (prev.find("td:first").hasClass("dataTables_empty")
 						|| prev.length === 0) {
 					alert("Cannot schedule outside a show.");
 					ui.item.remove();
 					return;
+				}
+				
+				//if item is added after a footer, add the item after the last item in the show.
+				if (prev.hasClass("sb-footer")) {
+					prev = prev.prev();
 				}
 				
 				aItemData = [];

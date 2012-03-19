@@ -348,7 +348,7 @@ class PlaylistController extends Zend_Controller_Action
     /**
      * The playlist fades are stored in the elements themselves.
      * The fade in is set to the first elements fade in and
-     * the fade out is set to the last elments fade out.
+     * the fade out is set to the last elements fade out.
      **/
     public function setPlaylistFadesAction()
     {
@@ -358,6 +358,7 @@ class PlaylistController extends Zend_Controller_Action
         try {
             $pl = $this->getPlaylist();
             $pl->setPlaylistfades($fadeIn, $fadeOut);
+            $this->view->modified = $pl->getLastModified("U");
         }
         catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);

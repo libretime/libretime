@@ -62,6 +62,8 @@ class Config {
         $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
         
+        $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
+        
 	    // Database config
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
         $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];

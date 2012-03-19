@@ -42,7 +42,7 @@ class AirtimeMediaMonitorBootstrap():
 
         for id, dir in directories.iteritems():
             self.logger.debug("%s, %s", id, dir)
-            self.sync_database_to_filesystem(id, api_client.encode_to(dir, "utf-8"))
+            self.sync_database_to_filesystem(id, dir)
 
     """Gets a list of files that the Airtime database knows for a specific directory.
     You need to provide the directory's row ID, which is obtained when calling
@@ -82,7 +82,7 @@ class AirtimeMediaMonitorBootstrap():
         db_known_files_set = set()
         files = self.list_db_files(dir_id)
         for file in files['files']:
-            db_known_files_set.add(api_client.encode_to(file, 'utf-8'))
+            db_known_files_set.add(file)
 
         new_files = self.mmc.scan_dir_for_new_files(dir)
 
@@ -123,9 +123,6 @@ class AirtimeMediaMonitorBootstrap():
         new_files_set = all_files_set - db_known_files_set
         modified_files_set = new_and_modified_files - new_files_set
 
-        #NAOMI: Please comment out the "Known files" line, if you find the bug.
-        #it is for debugging purposes only (Too much data will be written to log). -mk
-        #self.logger.info("Known files: \n%s\n\n"%db_known_files_set)
         self.logger.info("Deleted files: \n%s\n\n"%deleted_files_set)
         self.logger.info("New files: \n%s\n\n"%new_files_set)
         self.logger.info("Modified files: \n%s\n\n"%modified_files_set)

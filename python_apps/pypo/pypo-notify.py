@@ -95,7 +95,7 @@ class Notify:
         logger.debug("Response: "+json.dumps(response))
     
     def notify_source_status(self, source_name, status):
-        logger = logging.getLogger()
+        logger = logging.getLogger("notify")
         
         logger.debug('#################################################')
         logger.debug('# Calling server to update source status        #')
