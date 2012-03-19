@@ -196,6 +196,8 @@ class Application_Model_ShowBuilder {
 
         $row = $this->defaultRowArray;
         $row["footer"] = true;
+        $row["instance"] = intval($p_item["si_id"]);
+        $this->getRowTimestamp($p_item, $row);
 
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $contentDT = $this->contentDT;
