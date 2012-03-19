@@ -11,8 +11,7 @@
     <input id="pl_lastMod" type="hidden" value="<?php echo $this->pl->getLastModified('U'); ?>"></input>
     <div class="playlist_title">
         <h3 id="spl_name">
-            <a id="playlist_name_display"><?php echo $this->pl->getName(); ?></a>
-            <input type="text" maxlength="255" size="40" class="element_hidden" id="playlist_name_input" />
+            <a id="playlist_name_display" contenteditable="true"><?php echo $this->pl->getName(); ?></a>
         </h3>
         <h4 id="spl_length"><?php echo $this->length; ?></h4>
     </div>
@@ -36,10 +35,10 @@
       	<span class="ui-icon ui-icon-closethick"></span>
 	    <dl id="spl_editor-main" class="inline-list">
             <dt>Fade in (s):</dt>
-            <dd id="spl_fade_in_main"><span contenteditable="true" class="spl_text_input">00</span></dd>
+            <dd><span contenteditable="true" class="spl_text_input spl_main_fade_in">00</span></dd>
             <dd class="edit-error"></dd>
             <dt>Fade out (s):</dt>
-            <dd id="spl_fade_out_main"><span contenteditable="true" class="spl_text_input">00/span></dd>
+            <dd><span contenteditable="true" class="spl_text_input spl_main_fade_out">00/span></dd>
             <dd class="edit-error"></dd>
         </dl>
     </div>

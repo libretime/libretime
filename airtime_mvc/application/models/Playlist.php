@@ -520,7 +520,7 @@ class Application_Model_Playlist {
             throw $e;
         }
 
-        return array("fadeIn"=> $fadeIn, "fadeOut"=> $fadeOut);
+        return array("fadeIn" => $fadeIn, "fadeOut" => $fadeOut);
     }
 
     public function setPlaylistfades($fadein, $fadeout) {
@@ -536,11 +536,12 @@ class Application_Model_Playlist {
         }
 
         if (isset($fadeout)) {
+            Logging::log("Setting playlist fade out {$fadeout}");
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition($this->getSize()-1)
                 ->findOne($this->con);
-
+          
             $this->changeFadeInfo($row->getDbId(), null, $fadeout);
         }
     }

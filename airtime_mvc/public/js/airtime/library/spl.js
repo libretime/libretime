@@ -212,14 +212,14 @@ var AIRTIME = (function(AIRTIME){
 	}
 
 	function openFadeEditor(event) {
-		var pos, url, li;
+		var li;
 		
 		event.stopPropagation();  
 
-	    li = $(this).parent().parent();
+	    li = $(this).parents("li");
 	    li.find(".crossfade").toggle();
 
-		if($(this).hasClass("ui-state-active")) {
+		if ($(this).hasClass("ui-state-active")) {
 			unHighlightActive(this);
 		}
 		else {
@@ -228,12 +228,12 @@ var AIRTIME = (function(AIRTIME){
 	}
 
 	function openCueEditor(event) {
-		var pos, url, li, icon;
+		var li, icon;
 		
 		event.stopPropagation();
 
 		icon = $(this);
-		li = $(this).parent().parent().parent(); 
+		li = $(this).parents("li"); 
 	    li.find(".cue-edit").toggle();
 
 		if (li.hasClass("ui-state-active")) {
@@ -248,35 +248,23 @@ var AIRTIME = (function(AIRTIME){
     
 	function editName() {
 	    var nameElement = $(this),
-	    	playlistName = nameElement.text(),
 	    	lastMod = getModified();
 
-	    $("#playlist_name_input")
-	        .removeClass('element_hidden')
-	        .val(playlistName)
-	        .keydown(function(event){
-	        	if (event.keyCode === 13) {
-	                event.preventDefault();
-	                var input = $(this),
-	    	        	url = '/Playlist/set-playlist-name';
+    	url = '/Playlist/set-playlist-name';
 
-	    	        $.post(url, 
-	    	        	{format: "json", name: input.val(), modified: lastMod}, 
-	    	        	function(json){
-	    	        	
-		    	            if (json.error !== undefined) {
-		    	            	playlistError(json);
-		    	            }
-		    	            else {
-		    	            	setModified(json.modified);
-			                    input.addClass('element_hidden');
-			                    nameElement.text(json.playlistName);
-			                    redrawLib();
-		    	            }
-		    	        });
-	        	}
-	        })
-	        .focus();
+	    $.post(url, 
+	    	{format: "json", name: nameElement.text(), modified: lastMod}, 
+	    	function(json){
+	    	
+	            if (json.error !== undefined) {
+	            	playlistError(json);
+	            }
+	            else {
+	            	setModified(json.modified);
+	                nameElement.text(json.playlistName);
+	                redrawLib();
+	            }
+	        });
 	}
 		
 	function redrawLib() {
@@ -372,13 +360,13 @@ var AIRTIME = (function(AIRTIME){
 	    		"keydown": submitOnEnter});
 	}
 	
-	function setUpPlaylist(playlist) {
-		
+	function initialEvents() {	
 		var playlist = $("#side_playlist"),
-			sortableConf,
 			cachedDescription;
-
-	    playlist.find("#spl_crossfade").on("click", function() {
+		
+		
+		//main playlist fades events
+		playlist.on("click", "#spl_crossfade", function() {
 	    	var lastMod = getModified();
 
 	        if ($(this).hasClass("ui-state-active")) {
@@ -397,10 +385,11 @@ var AIRTIME = (function(AIRTIME){
 			            	playlistError(json);
 		                }
 			            else {
-				            playlist.find("#spl_fade_in_main").find("span")
+				            playlist.find("span.spl_main_fade_in")
 			                    .empty()
 			                    .append(json.fadeIn);
-				            playlist.find("#spl_fade_out_main").find("span")
+				            
+				            playlist.find("span.spl_main_fade_out")
 			                    .empty()
 			                    .append(json.fadeOut);
 		
@@ -409,22 +398,79 @@ var AIRTIME = (function(AIRTIME){
 		            });
 	        }
 	    });
+		
+		playlist.on("blur", "span.spl_main_fade_in", function(event){
+	        event.stopPropagation();
 
-		playlist.find("#playlist_name_display").on("click", editName);
-	    
-		playlist.find("#fieldset-metadate_change > legend").on("click", function(){
-	        var descriptionElement = $(this).parent();
+		    var url = "/Playlist/set-playlist-fades",
+			    span = $(this),
+			    fadeIn = $.trim(span.text()), 
+			    lastMod = getModified();
+		    
+		    if (!isFadeValid(fadeIn)){
+	            showError(span, "please put in a time in seconds '00 (.000000)'");
+			    return;
+		    }
 
-	        if (descriptionElement.hasClass("closed")) {
-	        	cachedDescription = playlist.find("#fieldset-metadate_change textarea").val();
-	            descriptionElement.removeClass("closed");
-	        }
-	        else {
-	            descriptionElement.addClass("closed");
-	        }
+		    $.post(url, 
+	    		{format: "json", fadeIn: fadeIn, modified: lastMod}, 
+	    		function(json){       
+		            hideError(span);
+		            if (json.modified !== undefined) {
+		            	setModified(json.modified);
+		            }
+			    });
 	    });
 
-		playlist.find("#description_save").on("click", function(){
+		playlist.on("blur", "span.spl_main_fade_out", function(event){
+	        event.stopPropagation();
+
+		    var url = "/Playlist/set-playlist-fades",
+		    	span = $(this),
+		    	fadeOut = $.trim(span.text()), 
+		    	lastMod = getModified();
+
+		    if (!isFadeValid(fadeOut)){
+	            showError(span, "please put in a time in seconds '00 (.000000)'");
+			    return;
+		    }
+
+		    $.post(url, 
+		    	{format: "json", fadeOut: fadeOut, modified: lastMod}, 
+		    	function(json){
+		            hideError(span);
+		            if (json.modified !== undefined) {
+		            	setModified(json.modified);
+		            }
+			    });
+	    });
+
+		playlist.on("keydown", "span.spl_main_fade_in, span.spl_main_fade_out", submitOnEnter);
+
+		playlist.on("click", "#crossfade_main > .ui-icon-closethick", function(){
+			playlist.find("#spl_crossfade").removeClass("ui-state-active");
+			playlist.find("#crossfade_main").hide();
+	    });
+		//end main playlist fades.
+
+		//edit playlist name event
+		playlist.on("keydown", "#playlist_name_display", submitOnEnter);
+		playlist.on("blur", "#playlist_name_display", editName);
+		
+		//edit playlist description events
+		playlist.on("click", "fieldset", function(){
+	        var $fs = $(this);
+
+	        if ($fs.hasClass("closed")) {
+	        	cachedDescription = $fs.find("textarea").val();
+	        	$fs.removeClass("closed");
+	        }
+	        else {
+	        	$fs.addClass("closed");
+	        }
+	    });
+		
+		playlist.on("click", "#description_save", function(){
 	        var textarea = playlist.find("#fieldset-metadate_change textarea"),
 	        	description = textarea.val(),
 	        	url,
@@ -447,60 +493,19 @@ var AIRTIME = (function(AIRTIME){
 		        });
 	    });
 
-		playlist.find("#description_cancel").on("click", function(){
+		playlist.on("click", "#description_cancel", function(){
 	        var textarea = playlist.find("#fieldset-metadate_change textarea");
 	        
 	        textarea.val(cachedDescription);   
 	        playlist.find("#fieldset-metadate_change").addClass("closed");
 	    });
-
-		playlist.find("#spl_fade_in_main span:first").on("blur", function(event){
-	        event.stopPropagation();
-
-		    var url = "/Playlist/set-playlist-fades",
-			    span = $(this),
-			    fadeIn = $.trim(span.text()), 
-			    lastMod = getModified();
-		    
-		    if (!isFadeValid(fadeIn)){
-	            showError(span, "please put in a time in seconds '00 (.000000)'");
-			    return;
-		    }
-
-		    $.post(url, 
-	    		{format: "json", fadeIn: fadeIn, modified: lastMod}, 
-	    		function(json){       
-		            hideError(span);
-			    });
-	    });
-
-		playlist.find("#spl_fade_out_main span:last").on("blur", function(event){
-	        event.stopPropagation();
-
-		    var url = "/Playlist/set-playlist-fades",
-		    	span = $(this),
-		    	fadeOut = $.trim(span.text()), 
-		    	lastMod = getModified();
-
-		    if(!isFadeValid(fadeOut)){
-	            showError(span, "please put in a time in seconds '00 (.000000)'");
-			    return;
-		    }
-
-		    $.post(url, 
-		    	{format: "json", fadeOut: fadeOut, modified: lastMod}, 
-		    	function(json){
-		            hideError(span);
-			    });
-	    });
-
-		playlist.find("#spl_fade_in_main span:first, #spl_fade_out_main span:first")
-	        .on("keydown", submitOnEnter);
-
-		playlist.find("#crossfade_main > .ui-icon-closethick").on("click", function(){
-			playlist.find("#spl_crossfade").removeClass("ui-state-active");
-			playlist.find("#crossfade_main").hide();
-	    });
+		//end edit playlist description events.
+		
+	}
+	
+	function setUpPlaylist(playlist) {
+		var playlist = $("#side_playlist"),
+			sortableConf;
 		
 		sortableConf = (function(){
 			var aReceiveItems,
@@ -728,6 +733,7 @@ var AIRTIME = (function(AIRTIME){
 		setCueEvents(playlist);
 		setFadeEvents(playlist);
 		
+		initialEvents();
 		setUpPlaylist(playlist);
 	};
 	
