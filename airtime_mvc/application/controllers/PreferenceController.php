@@ -231,6 +231,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
                 $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
             }
+            $live_stream_subform->updateConnectionURLs();
         }
         
         $this->view->confirm_pypo_restart_text = "Updating settings will temporarily interrupt any currently playing shows. Click \'OK\' to continue.";

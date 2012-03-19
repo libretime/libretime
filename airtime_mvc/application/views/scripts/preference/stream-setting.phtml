@@ -43,10 +43,11 @@
             <dd id="vorbisMetadata-element">
                 <?php echo $this->form->getElement('icecast_vorbis_metadata') ?>
             </dd>
-            <dt id="streamFormat-label" class="block-display">
+            <dt id="streamFormat-label">
                 <label class="optional"><?php echo $this->form->getElement('streamFormat')->getLabel() ?></label>
             </dt>
-            <dd id="streamFormat-element" class="block-display radio-inline-list">
+            <br>
+            <dd id="streamFormat-element" class="radio-inline-list">
                 <?php $i=0;
                       $value = $this->form->getElement('streamFormat')->getValue();
                 ?>
