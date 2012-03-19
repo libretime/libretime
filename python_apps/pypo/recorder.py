@@ -1,4 +1,3 @@
-import urllib
 import logging
 import logging.config
 import json
@@ -6,8 +5,6 @@ import time
 import datetime
 import os
 import sys
-import shutil
-import socket
 import pytz
 import signal
 import math
@@ -16,7 +13,6 @@ from configobj import ConfigObj
 
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
-import urllib2
 
 from subprocess import Popen
 from threading import Thread
@@ -25,15 +21,11 @@ import mutagen
 
 from api_clients import api_client
 
-# For RabbitMQ
-from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
-
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
 except Exception, e:
-    self.logger.error('Error loading config file: %s', e)
+    print ('Error loading config file: %s', e)
     sys.exit()
 
 def getDateTimeObj(time):
@@ -89,7 +81,7 @@ class ShowRecorder(Thread):
 
         #blocks at the following line until the child process
         #quits
-        code = self.p.wait()
+        self.p.wait()
 
         self.logger.info("finishing record, return code %s", self.p.returncode)
         code = self.p.returncode
@@ -274,9 +266,7 @@ class Recorder(Thread):
                 self.logger.error(e)
                 
             self.logger.info("Bootstrap complete: got initial copy of the schedule")
-            
-            recording = False
-            
+                        
             self.loops = 0
             heartbeat_period = math.floor(30/PUSH_INTERVAL)
             

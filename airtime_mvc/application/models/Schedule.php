@@ -64,14 +64,16 @@ class Application_Model_Schedule {
         $utcTimeNow = $date->getUtcTimestamp();
         
         $shows = Application_Model_Show::getPrevCurrentNext($utcTimeNow);
+        $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['id']:null;
-        $results = Application_Model_Schedule::GetPrevCurrentNext($currentShowID, $utcTimeNow);
+        $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['id']:null;
+        $results = Application_Model_Schedule::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcTimeNow);
         
         $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
-            "previous"=>isset($results['previous'])?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
-            "current"=>isset($results['current'])?$results['current']:null,
-            "next"=> isset($results['next'])?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
+            "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
+            "current"=>$results['current'] !=null?$results['current']:null,
+            "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
             "currentShow"=>$shows['currentShow'],
             "nextShow"=>$shows['nextShow'],
             "timezone"=> date("T"),
@@ -88,19 +90,39 @@ class Application_Model_Schedule {
      * show types are not found through this mechanism a call is made to the old way of querying
      * the database to find the track info.
     **/
-    public static function GetPrevCurrentNext($p_currentShowID, $p_timeNow)
+    public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $p_timeNow)
     {
+        if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null)
+            return;
+        
         global $CC_CONFIG, $CC_DBC;
-        
-        if (!isset($p_currentShowID)) {
-            return array();
-        }
-        $sql = "Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played
+        $sql = 'Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played
                 FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id 
-                WHERE st.instance_id = '$p_currentShowID' AND st.playout_status > 0 
-                ORDER BY st.starts";
+                WHERE ';
+                
+         if (isset($p_previousShowID)){
+            if (isset($p_nextShowID) || isset($p_currentShowID))
+                $sql .= '(';
+            $sql .= 'st.instance_id = '.$p_previousShowID;
+        }
+        if ($p_currentShowID != null){
+            if ($p_previousShowID != null)
+                $sql .= ' OR ';
+            else if($p_nextShowID != null)
+                $sql .= '(';
+            $sql .= 'st.instance_id = '.$p_currentShowID;
+        }
+        if ($p_nextShowID != null) {
+            if ($p_previousShowID != null || $p_currentShowID != null)
+                $sql .= ' OR ';
+            $sql .= 'st.instance_id = '.$p_nextShowID;
+            if($p_previousShowID != null || $p_currentShowID != null)
+                $sql .= ')';
+        } else if($p_previousShowID != null && $p_currentShowID != null)
+            $sql .= ')';
         
-        //Logging::log($sql);        
+        $sql .= ' AND st.playout_status > 0 ORDER BY st.starts';
+        
         $rows = $CC_DBC->GetAll($sql);
         $numberOfRows = count($rows);
 
@@ -587,7 +609,17 @@ class Application_Model_Schedule {
         }
         if (is_null($p_fromDateTime)) {
             $t2 = new DateTime("@".time());
-            $t2->add(new DateInterval("PT30M"));
+            
+            $cache_ahead_hours = $CC_CONFIG["cache_ahead_hours"];
+            
+            if (is_numeric($cache_ahead_hours)){
+                //make sure we are not dealing with a float
+                $cache_ahead_hours = intval($cache_ahead_hours);
+            } else {
+                $cache_ahead_hours = 1;
+            }
+                        
+            $t2->add(new DateInterval("PT".$cache_ahead_hours."H"));
             $range_end = $t2->format("Y-m-d H:i:s");
         } else {
             $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);

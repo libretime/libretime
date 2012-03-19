@@ -150,8 +150,11 @@ class ApiController extends Zend_Controller_Action
                         //user clicks play button for track and downloads it.
                         header('Content-Disposition: inline; filename="'.$file_base_name.'"');
                     }
-                
-                    $this->smartReadFile($filepath, 'audio/'.$ext);
+                    if ($ext === 'mp3'){
+                        $this->smartReadFile($filepath, 'audio/mpeg');
+                    } else {
+                        $this->smartReadFile($filepath, 'audio/'.$ext);
+                    }
                     exit;
                 }else{
                     header ("HTTP/1.1 404 Not Found");

@@ -1,22 +1,13 @@
 import os
 import sys
 import time
-import calendar
 import logging
 import logging.config
 import shutil
-import random
-import string
 import json
 import telnetlib
-import math
 import copy
 from threading import Thread
-from subprocess import Popen, PIPE
-from datetime import datetime
-from datetime import timedelta
-from Queue import Empty
-import filecmp
 
 from api_clients import api_client
 
@@ -38,12 +29,14 @@ except Exception, e:
     sys.exit()
 
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q, media_q):
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock):
         Thread.__init__(self)
         self.api_client = api_client.api_client_factory(config)
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
+        
+        self.telnet_lock = telnet_lock
         
         self.logger = logging.getLogger();
         
@@ -79,7 +72,7 @@ class PypoFetch(Thread):
         
             if command == 'update_schedule':
                 self.schedule_data  = m['schedule']
-                self.process_schedule(self.schedule_data, False)
+                self.process_schedule(self.schedule_data)
             elif command == 'update_stream_setting':
                 self.logger.info("Updating stream setting...")
                 self.regenerateLiquidsoapConf(m['setting'])
@@ -89,9 +82,6 @@ class PypoFetch(Thread):
             elif command == 'update_station_name':
                 self.logger.info("Updating station name...")
                 self.update_liquidsoap_station_name(m['station_name'])
-            elif command == 'cancel_current_show':
-                self.logger.info("Cancel current show command received...")
-                self.stop_current_show()
             elif command == 'switch_source':
                 self.logger.info("switch_on_source show command received...")
                 self.switch_source(m['sourcename'], m['status'])
@@ -113,14 +103,16 @@ class PypoFetch(Thread):
         elif(sourcename == "live_dj"):
             command += "live_dj_harbor.kick\n"
             
+        self.telnet_lock.acquire()
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            self.logger.debug(e)
-            self.logger.debug('Could not connect to liquidsoap')
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
        
     def switch_source(self, sourcename, status):
         self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
@@ -137,14 +129,16 @@ class PypoFetch(Thread):
         else:
             command += "stop\n"
             
+        self.telnet_lock.acquire()
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            self.logger.debug(e)
-            self.logger.debug('Could not connect to liquidsoap')
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
             
     """
         This check current switch status from Airtime and update the status
@@ -155,18 +149,7 @@ class PypoFetch(Thread):
         self.logger.debug('switch_status:%s',switch_status)
         for k, v in switch_status['status'].iteritems():
             self.switch_source(k, v)
-        
-    def stop_current_show(self):
-        self.logger.debug('Notifying Liquidsoap to stop playback.')
-        try:
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            tn.write('source.skip\n')
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            self.logger.debug(e)
-            self.logger.debug('Could not connect to liquidsoap')
-    
+            
     def regenerateLiquidsoapConf(self, setting_p):
         existing = {}
         # create a temp file
@@ -252,19 +235,19 @@ class PypoFetch(Thread):
             fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
             fh.write("################################################\n")
             for k, d in setting:
-                buffer = d[u'keyname'] + " = "
+                buffer_str = d[u'keyname'] + " = "
                 if(d[u'type'] == 'string'):
                     temp = d[u'value']
                     if(temp == ""):
                         temp = ""
-                    buffer += "\"" + temp + "\""
+                    buffer_str += "\"" + temp + "\""
                 else:
                     temp = d[u'value']
                     if(temp == ""):
                         temp = "0"
-                    buffer += temp
-                buffer += "\n"
-                fh.write(api_client.encode_to(buffer))
+                    buffer_str += temp
+                buffer_str += "\n"
+                fh.write(api_client.encode_to(buffer_str))
             fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
             fh.close()
             # restarting pypo.
@@ -280,17 +263,25 @@ class PypoFetch(Thread):
         updates the status of liquidsoap connection to the streaming server
         This fucntion updates the bootup time variable in liquidsoap script
         """
-        tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-        # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
-        # we are manually adjusting the bootup time variable so the status msg will get
-        # updated.
-        current_time = time.time()
-        boot_up_time_command = "vars.bootup_time "+str(current_time)+"\n"
-        tn.write(boot_up_time_command)
-        tn.write("streams.connection_status\n")
-        tn.write('exit\n')
         
-        output = tn.read_all()
+        self.telnet_lock.acquire()
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
+            # we are manually adjusting the bootup time variable so the status msg will get
+            # updated.
+            current_time = time.time()
+            boot_up_time_command = "vars.bootup_time "+str(current_time)+"\n"
+            tn.write(boot_up_time_command)
+            tn.write("streams.connection_status\n")
+            tn.write('exit\n')
+            
+            output = tn.read_all()
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+        
         output_list = output.split("\r\n")
         stream_info = output_list[2]
         
@@ -311,8 +302,7 @@ class PypoFetch(Thread):
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
-            self.logger.info(LS_HOST)
-            self.logger.info(LS_PORT)
+            self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
             self.logger.info(command)
@@ -321,6 +311,8 @@ class PypoFetch(Thread):
             tn.read_all()
         except Exception, e:
             self.logger.error("Exception %s", e)
+        finally:
+            self.telnet_lock.release()
     
     def update_liquidsoap_station_name(self, station_name):
         # Push stream metadata to liquidsoap
@@ -328,12 +320,19 @@ class PypoFetch(Thread):
         try:
             self.logger.info(LS_HOST)
             self.logger.info(LS_PORT)
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            command = ('vars.station_name %s\n' % station_name).encode('utf-8')
-            self.logger.info(command)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
+            
+            self.telnet_lock.acquire()
+            try:
+                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                command = ('vars.station_name %s\n' % station_name).encode('utf-8')
+                self.logger.info(command)
+                tn.write(command)
+                tn.write('exit\n')
+                tn.read_all()    
+            except Exception, e:
+                self.logger.error(str(e))
+            finally:
+                self.telnet_lock.release()
         except Exception, e:
             self.logger.error("Exception %s", e)
 
@@ -345,7 +344,7 @@ class PypoFetch(Thread):
        to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
      - runs the cleanup routine, to get rid of unused cached files
     """
-    def process_schedule(self, schedule_data, bootstrapping):      
+    def process_schedule(self, schedule_data):      
         self.logger.debug(schedule_data)
         media = schedule_data["media"]
 
@@ -369,7 +368,7 @@ class PypoFetch(Thread):
                 media_item['dst'] = dst
              
             self.media_prepare_queue.put(copy.copy(media))
-            self.prepare_media(media, bootstrapping)
+            self.prepare_media(media)
         except Exception, e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
@@ -378,85 +377,27 @@ class PypoFetch(Thread):
 
 
         # cleanup
-        try: self.cleanup(media)
+        try: self.cache_cleanup(media)
         except Exception, e: self.logger.error("%s", e)
 
         
 
-    def prepare_media(self, media, bootstrapping):
+    def prepare_media(self, media):
         """
-        Iterate through the list of media items in "media" and 
-        download them.
+        Iterate through the list of media items in "media" append some
+        attributes such as show_name
         """
         try:
             mediaKeys = sorted(media.iterkeys())
             for mkey in mediaKeys:
-                self.logger.debug("Media item starting at %s", mkey)
                 media_item = media[mkey]
-                
-                if bootstrapping:            
-                    self.check_for_previous_crash(media_item)
-               
-                entry = self.create_liquidsoap_annotation(media_item)
-                media_item['show_name'] = "TODO"
-                media_item["annotation"] = entry
-                
+                media_item['show_name'] = "TODO"                
         except Exception, e:
             self.logger.error("%s", e)
                 
         return media
-    
 
-    def create_liquidsoap_annotation(self, media):
-        """entry = \
-            'annotate:media_id="%s",liq_start_next="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
-            % (media['id'], 0, \
-            float(media['fade_in']) / 1000, \
-            float(media['fade_out']) / 1000, \
-            float(media['cue_in']), \
-            float(media['cue_out']), \
-            media['row_id'], media['dst'])"""
-        
-        entry = \
-            'annotate:media_id="%s",liq_start_next="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
-            % (media['id'], 0, \
-            float(media['cue_in']), \
-            float(media['cue_out']), \
-            media['row_id'], media['dst'])
-        
-        return entry
-        
-    def check_for_previous_crash(self, media_item):
-        start = media_item['start']
-        end = media_item['end']
-        
-        dtnow = datetime.utcnow()
-        str_tnow_s = dtnow.strftime('%Y-%m-%d-%H-%M-%S')
-                        
-        if start <= str_tnow_s and str_tnow_s < end:
-            #song is currently playing and we just started pypo. Maybe there
-            #was a power outage? Let's restart playback of this song.
-            start_split = map(int, start.split('-'))
-            media_start = datetime(start_split[0], start_split[1], start_split[2], start_split[3], start_split[4], start_split[5], 0, None)
-            self.logger.debug("Found media item that started at %s.", media_start)
-            
-            delta = dtnow - media_start #we get a TimeDelta object from this operation
-            self.logger.info("Starting media item  at %d second point", delta.seconds)
-            
-            """
-            Set the cue_in. This is used by Liquidsoap to determine at what point in the media
-            item it should start playing. If the cue_in happens to be > cue_out, then make cue_in = cue_out
-            """
-            media_item['cue_in'] = delta.seconds + 10 if delta.seconds + 10 < media_item['cue_out'] else media_item['cue_out']
-            
-            """
-            Set the start time, which is used by pypo-push to determine when a media item is scheduled.
-            Pushing the start time into the future will ensure pypo-push will push this to Liquidsoap.
-            """
-            td = timedelta(seconds=10)
-            media_item['start'] = (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S')
-            self.logger.info("Crash detected, setting playlist to restart at %s", (dtnow + td).strftime('%Y-%m-%d-%H-%M-%S'))
-    
+  
     def handle_media_file(self, media_item, dst):
         """
         Download and cache the media item.
@@ -489,31 +430,58 @@ class PypoFetch(Thread):
 
     def copy_file(self, media_item, dst):
         """
-        Copy the file from local library directory.
+        Copy the file from local library directory. Note that we are not using os.path.exists
+        since this can lie to us! It seems the best way to get whether a file exists is to actually
+        do an operation on the file (such as query its size). Getting the file size of a non-existent
+        file will throw an exception, so we can look for this exception instead of os.path.exists.
         """
-        if not os.path.isfile(dst):
-            self.logger.debug("copying from %s to local cache %s" % (media_item['uri'], dst))
-            try:
-                shutil.copy(media_item['uri'], dst)
-            except:
-                self.logger.error("Could not copy from %s to %s" % (media_item['uri'], dst))
+        
+        src = media_item['uri']
+        
+        try:
+            src_size = os.path.getsize(src)
+        except Exception, e:
+            self.logger.error("Could not get size of source file: %s", src)
+            return
+
+        
+        dst_exists = True
+        try:
+            dst_size = os.path.getsize(dst)
+        except Exception, e:
+            dst_exists = False
+            
+        do_copy = False
+        if dst_exists:
+            if src_size != dst_size:
+                do_copy = True
         else:
-            #file already exists
-            pass
+            do_copy = True
+            
+        
+        if do_copy:
+            self.logger.debug("copying from %s to local cache %s" % (src, dst))
+            try:
+                """
+                copy will overwrite dst if it already exists
+                """
+                shutil.copy(src, dst)
+            except:
+                self.logger.error("Could not copy from %s to %s" % (src, dst))
 
 
+    """
     def download_file(self, media_item, dst):
-        """
-        Download a file from a remote server and store it in the cache.
-        """
+        #Download a file from a remote server and store it in the cache.
         if os.path.isfile(dst):
             pass
             #self.logger.debug("file already in cache: %s", dst)
         else:
             self.logger.debug("try to download %s", media_item['uri'])
             self.api_client.get_media(media_item['uri'], dst)
+    """
             
-    def cleanup(self, media):
+    def cache_cleanup(self, media):
         """
         Get list of all files in the cache dir and remove them if they aren't being used anymore.
         Input dict() media, lists all files that are scheduled or currently playing. Not being in this
@@ -540,7 +508,7 @@ class PypoFetch(Thread):
         success, self.schedule_data = self.api_client.get_schedule()
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
-            self.process_schedule(self.schedule_data, True)
+            self.process_schedule(self.schedule_data)
             self.check_switch_status()
 
         loops = 1        
@@ -567,7 +535,7 @@ class PypoFetch(Thread):
                 
                 success, self.schedule_data = self.api_client.get_schedule()
                 if success:
-                    self.process_schedule(self.schedule_data, False)
+                    self.process_schedule(self.schedule_data)
 
             loops += 1
 

@@ -6,8 +6,7 @@ from threading import Thread
 import time
 # For RabbitMQ
 from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
-from kombu.exceptions import MessageStateError
+from kombu.messaging import Exchange, Queue
 from kombu.simple import SimpleQueue
 import json
 
@@ -70,9 +69,6 @@ class PypoMessageHandler(Thread):
                 self.pypo_queue.put(message)
             elif command == 'update_station_name':
                 self.logger.info("Updating station name...")
-                self.pypo_queue.put(message)
-            elif command == 'cancel_current_show':
-                self.logger.info("Cancel current show command received...")
                 self.pypo_queue.put(message)
             elif command == 'switch_source':
                 self.logger.info("switch_source command received...")
