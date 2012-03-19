@@ -458,8 +458,8 @@ var AIRTIME = (function(AIRTIME){
 		playlist.on("blur", "#playlist_name_display", editName);
 		
 		//edit playlist description events
-		playlist.on("click", "fieldset", function(){
-	        var $fs = $(this);
+		playlist.on("click", "legend", function(){
+	        var $fs = $(this).parents("fieldset");
 
 	        if ($fs.hasClass("closed")) {
 	        	cachedDescription = $fs.find("textarea").val();
