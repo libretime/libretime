@@ -646,19 +646,19 @@ class AirTimeApiClient(ApiClientInterface):
             logger.error("traceback: %s", top)
             
     """
-        Retrive current switch status of streams sources
+        Retrive infomations needed on bootstrap time
     """
-    def get_switch_status(self):
+    def get_bootstrap_info(self):
         logger = self.logger
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_switch_status"])
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_bootstrap_info"])
             
             url = url.replace("%%api_key%%", self.config["api_key"])
             
             req = urllib2.Request(url)
             response = urllib2.urlopen(req).read()
             response = json.loads(response)
-            logger.info("Switch status retrieved %s", response)
+            logger.info("Bootstrap info retrieved %s", response)
         except Exception, e:
             import traceback
             top = traceback.format_exc()

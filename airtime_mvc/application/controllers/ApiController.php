@@ -30,7 +30,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('rabbitmq-do-push', 'json')
                 ->addActionContext('check-live-stream-auth', 'json')
                 ->addActionContext('update-source-status', 'json')
-                ->addActionContext('get-switch-status', 'json')
+                ->addActionContext('get-bootstrap-info', 'json')
                 ->initContext();
     }
 
@@ -1000,13 +1000,15 @@ class ApiController extends Zend_Controller_Action
         Application_Model_RabbitMq::PushSchedule();
     }
     
-    public function getSwitchStatusAction(){
+    public function getBootstrapInfoAction(){
         $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj');
         $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj');
         $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
 
         $res = array("live_dj"=>$live_dj, "master_dj"=>$master_dj, "scheduled_play"=>$scheduled_play);
-        $this->view->status = $res;
+        $this->view->switch_status = $res;
+        $this->view->station_name = Application_Model_Preference::GetStationName();
+        $this->view->stream_label = Application_Model_Preference::GetStreamLabelFormat();
     }
     
     /* This is used but Liquidsoap to check authentication of live streams*/

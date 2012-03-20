@@ -139,16 +139,19 @@ class PypoFetch(Thread):
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
-            
+        
     """
-        This check current switch status from Airtime and update the status
+        grabs some information that are needed to be set on bootstrap time
+        and configures them
     """
-    def check_switch_status(self):
-        self.logger.debug('Checking current switch status with Airtime')
-        switch_status = self.api_client.get_switch_status()
-        self.logger.debug('switch_status:%s',switch_status)
-        for k, v in switch_status['status'].iteritems():
+    def set_bootstrap_variables(self):
+        self.logger.debug('Getting information needed on bootstrap from Airtime')
+        info = self.api_client.get_bootstrap_info()
+        self.logger.debug('info:%s',info)
+        for k, v in info['switch_status'].iteritems():
             self.switch_source(k, v)
+        self.update_liquidsoap_stream_format(info['stream_label'])
+        self.update_liquidsoap_station_name(info['station_name'])
             
     def regenerateLiquidsoapConf(self, setting_p):
         existing = {}
@@ -509,7 +512,7 @@ class PypoFetch(Thread):
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
             self.process_schedule(self.schedule_data)
-            self.check_switch_status()
+            self.set_bootstrap_variables()
 
         loops = 1        
         while True:
