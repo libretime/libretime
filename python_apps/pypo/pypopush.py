@@ -46,11 +46,46 @@ class PypoPush(Thread):
         self.push_ahead = 5
         self.last_end_time = 0
         
+        self.time_until_next_play = None
+        
         self.pushed_objects = {}
                 
         self.logger = logging.getLogger('push')
         
+        
     def push(self):
+        
+        next_media_item = None
+        media_schedule = None
+        
+        while True:
+            try:
+                if self.time_until_next_play is None:
+                    media_schedule = self.queue.get(block=True)
+                else:
+                    media_schedule = self.queue.get(block=True, timeout=self.time_until_next_play)
+                    
+                        
+                liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
+                self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx)
+                next_media_item = self.get_next_schedule_item(media_schedule, liquidsoap_queue_approx)
+                
+                tnow = datetime.utcnow()
+                self.time_until_next_play = self.date_interval_to_seconds(next_media_item['starts'] - tnow)
+            except Empty, e:
+                
+                liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
+                
+                while len(liquidsoap_queue_approx) < 2:
+                    self.push_to_liquidsoap(next_media_item, None)        
+                    liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
+                    next_media_item = self.get_next_schedule_item(media_schedule, liquidsoap_queue_approx)
+            
+                tnow = datetime.utcnow()
+                self.time_until_next_play = self.date_interval_to_seconds(next_media_item['starts'] - tnow)
+            
+        
+    def push_old(self):
         """
         The Push Loop - the push loop periodically checks if there is a playlist 
         that should be scheduled at the current time.
@@ -61,58 +96,92 @@ class PypoPush(Thread):
         liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
         
         try:
-            self.media = self.queue.get(block=True, timeout=PUSH_INTERVAL)
-            if not self.queue.empty():
-                while not self.queue.empty():
-                    self.media = self.queue.get()
+            if self.time_until_next_play is None:
+                self.media = self.queue.get(block=True)
+            else:
+                self.media = self.queue.get(block=True, timeout=self.time_until_next_play)
+                                
+            """
+            If we get to this line, it means we've received a new schedule. Iterate over it to 
+            detect the start time of the next media item and update the "time_until_next_play"
+            """
+            media_item = self.get_next_schedule_item()
+            next_media_item = media_item
+            
+            tnow = datetime.utcnow()
+            self.time_until_next_play = self.date_interval_to_seconds(next_media_item['starts'] - tnow)
+        except Empty, e:
+            
+            
+            
+            """
             self.logger.debug("Received data from pypo-fetch")          
             self.logger.debug('media %s' % json.dumps(self.media))
-            self.handle_new_media(self.media, liquidsoap_queue_approx)
+            self.handle_new_media_schedule(self.media, liquidsoap_queue_approx)
+            
+            media = self.media
+            
+            tnow = datetime.utcnow()
+            tcoming = tnow + timedelta(seconds=self.push_ahead)
+            
+            next_media_item_start_time = None
+            
+            for key in media.keys():
+                media_item = media[key]
+            
+                item_start = datetime.strptime(media_item['start'][0:19], "%Y-%m-%d-%H-%M-%S")
+                item_end = datetime.strptime(media_item['end'][0:19], "%Y-%m-%d-%H-%M-%S")
+                
+                if len(liquidsoap_queue_approx) == 0 and item_start <= tnow and tnow < item_end:
+                    #Something is scheduled now, but Liquidsoap is not playing anything! Let's play the current media_item
+                                        
+                    self.logger.debug("Found media_item that should be playing! Starting...")
+                    
+                    adjusted_cue_in = tnow - item_start
+                    adjusted_cue_in_seconds = self.date_interval_to_seconds(adjusted_cue_in)
+                    
+                    self.logger.debug("Found media_item that should be playing! Adjust cue point by %ss" % adjusted_cue_in_seconds)
+                    self.push_to_liquidsoap(media_item, adjusted_cue_in_seconds)
+                    
+                elif len(liquidsoap_queue_approx) == 0 and tnow <= item_start:
+                    if next_media_item_start_time is None:
+                        next_media_item_start_time = item_start
+                    elif item_start < next_media_item_start_time:
+                        next_media_item_start_time = item_start
+                elif len(liquidsoap_queue_approx) == 0 and tnow <= item_start and item_start < tcoming:
+                    self.logger.debug('Preparing to push media item scheduled at: %s', key)
+                              
+                    if self.push_to_liquidsoap(media_item, None):
+                        self.logger.debug("Pushed to liquidsoap, updating 'played' status.")
+            
+            
+            if self.time_until_next_play < 1:                
+                self.time_until_next_play = self.date_interval_to_seconds(next_media_item_start_time - tnow)
+            else:
+                self.time_until_next_play = self.date_interval_to_seconds(next_media_item_start_time - tnow)/2
+            """
+            
+                
+            
+            self.logger.debug("Got a schedule, and next item occurs in")
         except Empty, e:
-            pass
+            """
+            Timeout occurred, meaning the schedule is ready to start!
+            """
+            self.logger.debug('Preparing to push media item scheduled at: %s', key)
+            
+            liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
+            if len(liquidsoap_queue_approx) < 2:
+                if self.push_to_liquidsoap(media_item, None):
+                    self.logger.debug("Pushed to liquidsoap, updating 'played' status.")
+                    
+                media_item = self.get_next_schedule_item()
+                next_media_item_start_time = media_item['starts']
+                self.time_until_next_play = self.date_interval_to_seconds(next_media_item_start_time - tnow)
+                
+        except Exception, e:
+            self.logger.error(e)
 
-        media = self.media
-                
-        if len(liquidsoap_queue_approx) < MAX_LIQUIDSOAP_QUEUE_LENGTH:
-            if media:
-                
-                tnow = datetime.utcnow()
-                tcoming = tnow + timedelta(seconds=self.push_ahead)
-                     
-                for key in media.keys():
-                    media_item = media[key]
-                    
-                    item_start = datetime.strptime(media_item['start'][0:19], "%Y-%m-%d-%H-%M-%S")
-                    item_end = datetime.strptime(media_item['end'][0:19], "%Y-%m-%d-%H-%M-%S")
-                    
-                    if len(liquidsoap_queue_approx) == 0 and item_start <= tnow and tnow < item_end:
-                        """
-                        Something is scheduled now, but Liquidsoap is not playing anything! Let's play the current media_item
-                        """
-                        
-                        self.logger.debug("Found media_item that should be playing! Starting...")
-                        
-                        adjusted_cue_in = tnow - item_start
-                        adjusted_cue_in_seconds = self.date_interval_to_seconds(adjusted_cue_in)
-                        
-                        self.logger.debug("Found media_item that should be playing! Adjust cue point by %ss" % adjusted_cue_in_seconds)
-                        self.push_to_liquidsoap(media_item, adjusted_cue_in_seconds)
-                        
-                    elif tnow <= item_start and item_start < tcoming:
-                        """
-                        If the media item starts in the next 10 seconds, push it to the queue.
-                        """
-                        self.logger.debug('Preparing to push media item scheduled at: %s', key)
-                                  
-                        if self.push_to_liquidsoap(media_item, None):
-                            self.logger.debug("Pushed to liquidsoap, updating 'played' status.")
-                            
-                            """
-                            Temporary solution to make sure we don't push the same track multiple times. Not a full solution because if we 
-                            get a new schedule, the key becomes available again.
-                            """
-                            #TODO
-                            del media[key]
                             
     def date_interval_to_seconds(self, interval):
         return (interval.microseconds + (interval.seconds + interval.days * 24 * 3600) * 10**6) / 10**6
@@ -198,7 +267,7 @@ class PypoPush(Thread):
         return liquidsoap_queue_approx
                         
     
-    def handle_new_media(self, media, liquidsoap_queue_approx):
+    def handle_new_media_schedule(self, media, liquidsoap_queue_approx):
         """
         This function's purpose is to gracefully handle situations where
         Liquidsoap already has a track in its queue, but the schedule 
