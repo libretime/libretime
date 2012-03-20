@@ -152,8 +152,6 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function getShowAction()
     {
-        Logging::log("in audio previews getShowAction");
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
