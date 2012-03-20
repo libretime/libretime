@@ -7,11 +7,6 @@ var _idToPostionLookUp;
  *or a playlist or a show.
  */
 $(document).ready(function(){
-
-    if (useFlash())
-        mySupplied = "oga, mp3, m4v";
-    else
-        mySupplied = "oga, mp3";
         
     _playlist_jplayer = new jPlayerPlaylist({
         jPlayer: "#jquery_jplayer_1",
@@ -19,7 +14,12 @@ $(document).ready(function(){
     },[], //array of songs will be filled with below's json call
     {
         swfPath: "/js/jplayer",
-        supplied:mySupplied,
+        supplied:"oga, mp3, m4v",
+        size: {
+            width: "0px",
+            height: "0px",
+            cssClass: "jp-video-270p"
+        },
         wmode: "window"
     });
     
@@ -41,10 +41,6 @@ $(document).ready(function(){
     }
 });
 
-function useFlash() {
-    console.log(navigator.userAgent);
-  return navigator.userAgent.toLowerCase().match('firefox');
-}
 /**
  * Sets up the jPlayerPlaylist to play.
  *  - Get the playlist info based on the playlistID give.
