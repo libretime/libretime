@@ -50,10 +50,10 @@ var AIRTIME = (function(AIRTIME){
 			    }
 			    
 			    if (selected.length === 1) {
-			    	message = "Moving "+selected.length+" Item."
+			    	message = "Moving "+selected.length+" Item.";
 			    }
 			    else {
-			    	message = "Moving "+selected.length+" Items."
+			    	message = "Moving "+selected.length+" Items.";
 			    }
 			    
 			    container = $('<div class="helper"/>')
