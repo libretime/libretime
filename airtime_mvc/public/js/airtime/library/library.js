@@ -222,14 +222,20 @@ var AIRTIME = (function(AIRTIME) {
                             event.preventDefault();
                          }
                        }
-                   },
-                    hide: 'mouseout'
-                    
+                    },
+                    hide: 'mouseout'  
                 });
             },
             "fnDrawCallback": AIRTIME.library.events.fnDrawCallback,
             "fnHeaderCallback": function(nHead) {
-                $(nHead).find("input[type=checkbox]").attr("checked", false);
+            	var oTT,
+            		checked = $(nHead).find("input[type=checkbox]").filter(":checked");
+            	
+            	if (checked.length > 0) {
+            		oTT = TableTools.fnGetInstance('library_display');
+            		checked.attr("checked", false);
+            		oTT.fnSelectNone();
+            	}	
             },
             
             "aaSorting": [[3, 'asc']],

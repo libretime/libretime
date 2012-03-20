@@ -285,23 +285,14 @@ class Application_Model_Scheduler {
     public function moveItem($selectedItems, $afterItems, $adjustSched = true) {
 
         $this->con->beginTransaction();
-
+      
         try {
-
-            $origSelTs = intval($selectedItems[0]["timestamp"]);
+            
+            //checks on whether the item to move after is ok.
+            Logging::log("Moving after item: {$afterItems[0]["id"]}");
             $origAfterTs = intval($afterItems[0]["timestamp"]);
-
-            Logging::log("Moving item {$selectedItems[0]["id"]}");
-            Logging::log("After {$afterItems[0]["id"]}");
-
-            $selected = CcScheduleQuery::create()->findPk($selectedItems[0]["id"], $this->con);
-            if (is_null($selected)) {
-                throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
-            }
-            $selectedInstance = $selected->getCcShowInstances($this->con);
-
+            
             if (intval($afterItems[0]["id"]) === 0) {
-
                 $afterInstance = CcShowInstancesQuery::create()->findPK($afterItems[0]["instance"], $this->con);
             }
             else {
@@ -311,36 +302,67 @@ class Application_Model_Scheduler {
                 }
                 $afterInstance = $after->getCcShowInstances($this->con);
             }
-
-            if (is_null($selectedInstance) || is_null($afterInstance)) {
-                throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
-            }
-
-            $currTs = intval($selectedInstance->getDbLastScheduled("U")) ? : 0;
-            if ($origSelTs !== $currTs) {
-                $show = $selectedInstance->getCcShow($this->con);
-                throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
-            }
-
+            
             $currTs = intval($afterInstance->getDbLastScheduled("U")) ? : 0;
             if ($origAfterTs !== $currTs) {
                 $show = $afterInstance->getCcShow($this->con);
                 throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
             }
+            
+            //map show instances to cc_schedule primary keys.
+            $modifiedMap = array();
+            $movedData = array();
+            
+            //prepare each of the selected items.
+            for ($i = 0; $i < count($selectedItems); $i++) {
+                
+                Logging::log("Moving item {$selectedItems[$i]["id"]}");
+                
+                $origSelTs = intval($selectedItems[$i]["timestamp"]);
+                $selected = CcScheduleQuery::create()->findPk($selectedItems[$i]["id"], $this->con);
+                if (is_null($selected)) {
+                    throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+                }
+                $selectedInstance = $selected->getCcShowInstances($this->con);
+                
+                if (is_null($selectedInstance) || is_null($afterInstance)) {
+                    throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+                }
+                
+                $currTs = intval($selectedInstance->getDbLastScheduled("U")) ? : 0;
+                if ($origSelTs !== $currTs) {
+                    $show = $selectedInstance->getCcShow($this->con);
+                    throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
+                }
+                
+                $data = $this->fileInfo;
+                $data["id"] = $selected->getDbFileId();
+                $data["cliplength"] = $selected->getDbClipLength();
+                $data["cuein"] = $selected->getDbCueIn();
+                $data["cueout"] = $selected->getDbCueOut();
+                $data["fadein"] = $selected->getDbFadeIn();
+                $data["fadeout"] = $selected->getDbFadeOut();
+                $data["sched_id"] = $selected->getDbId();
+                
+                $movedData[] = $data;
+                
+                //figure out which items must be removed from calculated show times.
+                $showInstanceId = $selectedInstance->getDbId();
+                $schedId = $selected->getDbId();
+                if (isset($modifiedMap[$showInstanceId])) {
+                    array_push($modifiedMap[$showInstanceId], $schedId);   
+                }
+                else {
+                    $modifiedMap[$showInstanceId] = array($schedId);
+                }
+            } 
 
-            $this->removeGaps($selectedInstance->getDbId(), $selected->getDbId());
-
-            $data = $this->fileInfo;
-            $data["id"] = $selected->getDbFileId();
-            $data["cliplength"] = $selected->getDbClipLength();
-            $data["cuein"] = $selected->getDbCueIn();
-            $data["cueout"] = $selected->getDbCueOut();
-            $data["fadein"] = $selected->getDbFadeIn();
-            $data["fadeout"] = $selected->getDbFadeOut();
-            $data["sched_id"] = $selected->getDbId();
-
-            $this->insertAfter($afterItems, array($data), $adjustSched);
-
+            //calculate times excluding the to be moved items.
+            foreach ($modifiedMap as $instance => $schedIds) {
+                $this->removeGaps($instance, $schedIds);
+            }
+  
+            $this->insertAfter($afterItems, $movedData, $adjustSched);
             $this->con->commit();
 
             Application_Model_RabbitMq::PushSchedule();

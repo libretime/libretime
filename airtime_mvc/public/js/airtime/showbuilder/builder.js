@@ -472,7 +472,9 @@ var AIRTIME = (function(AIRTIME){
 				fnReceive,
 				fnUpdate,
 				i, 
-				html;
+				html,
+				helperData,
+				draggingContainer;
 			
 			fnAdd = function() {
 				var aMediaIds = [],
@@ -489,8 +491,11 @@ var AIRTIME = (function(AIRTIME){
 			fnMove = function() {
 				var aSelect = [],
 					aAfter = [];
+				
+				for(i = 0; i < helperData.length; i++) {
+					aSelect.push({"id": helperData[i].id, "instance": helperData[i].instance, "timestamp": helperData[i].timestamp});
+				}
 			
-				aSelect.push({"id": aItemData[0].id, "instance": aItemData[0].instance, "timestamp": aItemData[0].timestamp});
 				aAfter.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
 		
 				AIRTIME.showbuilder.fnMove(aSelect, aAfter);
@@ -533,7 +538,7 @@ var AIRTIME = (function(AIRTIME){
 				//item was dragged in
 				if (origTrs !== undefined) {
 					
-					$("#show_builder_table tr.ui-draggable")
+					tableDiv.find("tr.ui-draggable")
 						.empty()
 						.after(html);
 					
@@ -543,6 +548,11 @@ var AIRTIME = (function(AIRTIME){
 				}
 				//item was reordered.
 				else {
+					
+					ui.item
+						.empty()
+						.after(draggingContainer.html());
+					
 					aItemData.push(ui.item.data("aData"));
 					fnMove();
 				}
@@ -551,9 +561,54 @@ var AIRTIME = (function(AIRTIME){
 			return {
 				placeholder: "placeholder show-builder-placeholder ui-state-highlight",
 				forcePlaceholderSize: true,
+				helper: function(event, item) {
+					var oTT = TableTools.fnGetInstance('show_builder_table'),
+				    	selected = oTT.fnGetSelectedData(),
+				    	elements = tableDiv.find('tr:not(:first) input:checked').parents('tr'),				    	
+				    	thead = $("#show_builder_table thead"),
+				    	colspan = thead.find("th").length,
+				    	trfirst = thead.find("tr:first"),
+				    	width = trfirst.width(),
+				    	height = trfirst.height(),
+				    	message;
+					
+					//elements.hide();
+				    
+				    //if nothing is checked select the dragged item.
+				    if (selected.length === 0) {
+				    	selected = [item.data("aData")];
+				    }
+				    
+				    if (selected.length === 1) {
+				    	message = "Moving "+selected.length+" Item.";
+				    }
+				    else {
+				    	message = "Moving "+selected.length+" Items.";
+				    }
+				    
+				    draggingContainer = $('<tr/>')
+				    	.addClass('sb-helper')
+				    	.append('<td/>')
+				    	.find("td")
+				    		.attr("colspan", colspan)
+				    		.width(width)
+				    		.height(height)
+				    		.addClass("ui-state-highlight")
+				    		.append(message)
+				    		.end();
+  
+				    helperData = selected;
+				    
+				    return draggingContainer; 
+			    },
 				items: 'tr:not(:first, :last, .sb-header, .sb-footer, .sb-not-allowed)',
 				receive: fnReceive,
-				update: fnUpdate
+				update: fnUpdate,
+				start: function(event, ui) {
+					var elements = tableDiv.find('tr:not(:first) input:checked').parents('tr');
+					
+					elements.hide();
+				}
 			};
 		}());
 		

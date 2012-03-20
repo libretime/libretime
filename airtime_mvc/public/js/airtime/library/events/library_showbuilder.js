@@ -51,10 +51,10 @@ var AIRTIME = (function(AIRTIME){
 			    }
 			    
 			    if (selected.length === 1) {
-			    	message = "Moving "+selected.length+" Item.";
+			    	message = "Adding "+selected.length+" Item.";
 			    }
 			    else {
-			    	message = "Moving "+selected.length+" Items.";
+			    	message = "Adding "+selected.length+" Items.";
 			    }
 			    
 			    container = $('<div/>').attr('id', 'draggingContainer')
