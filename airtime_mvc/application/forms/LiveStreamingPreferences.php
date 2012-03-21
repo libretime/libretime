@@ -5,6 +5,21 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
     public function init()
     {
+        $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
+        if($defaultFade == ""){
+            $defaultFade = '00.000000';
+        }
+        
+        //Default transition fade
+        $transition_fade = new Zend_Form_Element_Text("transition_fade");
+        $transition_fade->setLabel("Switch Transition Fade (s)")
+                        ->setFilters(array('StringTrim'))
+                        ->addValidator('regex', false, array('/^[0-5][0-9](\.\d{1,6})?$/',
+                        'messages' => 'enter a time in seconds 00{.000000}'))
+                        ->setValue($defaultFade)
+                        ->setDecorators(array('ViewHelper'));
+        $this->addElement($transition_fade);
+        
         //Master username
         $master_username = new Zend_Form_Element_Text('master_username');
         $master_username->setAttrib('autocomplete', 'off')

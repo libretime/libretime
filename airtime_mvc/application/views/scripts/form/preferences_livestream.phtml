@@ -1,6 +1,20 @@
 <fieldset class="padded stream-setting-global" style="margin-top: 15px">
     <legend>Input Stream Settings</legend>
     <dl class="zend_form">
+    	<dt id="transition_fade-label">
+            <label class="optional" for="transition_fade"><?php echo $this->element->getElement('transition_fade')->getLabel() ?> :
+            </label>
+        </dt>
+        <dd id="transition_fade-element">
+            <?php echo $this->element->getElement('transition_fade') ?>
+            <?php if($this->element->getElement('transition_fade')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('transition_fade')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
         <dt id="master_username-label">
             <label class="optional" for="master_username"><?php echo $this->element->getElement('master_username')->getLabel() ?> :
             </label>

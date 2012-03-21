@@ -82,6 +82,9 @@ class PypoFetch(Thread):
             elif command == 'update_station_name':
                 self.logger.info("Updating station name...")
                 self.update_liquidsoap_station_name(m['station_name'])
+            elif command == 'update_transition_fade':
+                self.logger.info("Updating transition_fade...")
+                self.update_liquidsoap_transition_fade(m['transition_fade'])
             elif command == 'switch_source':
                 self.logger.info("switch_on_source show command received...")
                 self.switch_source(m['sourcename'], m['status'])
@@ -308,6 +311,22 @@ class PypoFetch(Thread):
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
+            self.logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.error("Exception %s", e)
+        finally:
+            self.telnet_lock.release()
+    
+    def update_liquidsoap_transition_fade(self, fade):
+        # Push stream metadata to liquidsoap
+        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            command = ('vars.default_dj_fade %s\n' % fade).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
             tn.write('exit\n')

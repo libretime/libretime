@@ -211,6 +211,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
                 Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
+                Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 
                 // extra info that goes into cc_stream_setting
                 Application_Model_StreamSetting::SetMasterLiveSteamPort($values["master_harbor_input_port"]);

@@ -14,6 +14,7 @@ queue = cue_cut(queue)
 pypo_data = ref '0'
 web_stream_enabled = ref false
 stream_metadata_type = ref 0
+default_dj_fade = ref 0.
 station_name = ref ''
 show_name = ref ''
 
@@ -37,6 +38,7 @@ server.register(namespace="vars", "show_name", fun (s) -> begin show_name := s s
 server.register(namespace="vars", "station_name", fun (s) -> begin station_name := s s end)
 server.register(namespace="vars", "bootup_time", fun (s) -> begin time := s s end)
 server.register(namespace="streams", "connection_status", fun (s) -> begin "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
+server.register(namespace="vars", "default_dj_fade", fun (s) -> begin default_dj_fade := float_of_string(s) s end)
 
 
 default = amplify(id="silence_src", 0.00001, noise())

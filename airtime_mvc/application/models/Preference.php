@@ -153,6 +153,18 @@ class Application_Model_Preference
     public static function GetDefaultFade() {
         return self::GetValue("default_fade");
     }
+    
+    public static function SetDefaultTransitionFade($fade) {
+        self::SetValue("default_transition_fade", $fade);
+        
+        $eventType = "update_transition_fade";
+        $md = array("transition_fade"=>$fade);
+        Application_Model_RabbitMq::SendMessageToPypo($eventType, $md);
+    }
+    
+    public static function GetDefaultTransitionFade() {
+        return self::GetValue("default_transition_fade");
+    }
 
     public static function SetStreamLabelFormat($type){
         self::SetValue("stream_label_format", $type);
