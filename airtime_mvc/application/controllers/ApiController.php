@@ -1009,6 +1009,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->switch_status = $res;
         $this->view->station_name = Application_Model_Preference::GetStationName();
         $this->view->stream_label = Application_Model_Preference::GetStreamLabelFormat();
+        $this->view->transition_fade = Application_Model_Preference::GetDefaultTransitionFade();
     }
     
     /* This is used but Liquidsoap to check authentication of live streams*/

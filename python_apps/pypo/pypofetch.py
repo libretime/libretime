@@ -155,6 +155,7 @@ class PypoFetch(Thread):
             self.switch_source(k, v)
         self.update_liquidsoap_stream_format(info['stream_label'])
         self.update_liquidsoap_station_name(info['station_name'])
+        self.update_liquidsoap_transition_fade(info['transition_fade'])
             
     def regenerateLiquidsoapConf(self, setting_p):
         existing = {}
