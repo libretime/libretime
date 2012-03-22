@@ -120,4 +120,38 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url,))
         ));
     }
+    
+    public function isValid($data){
+        $isValid = parent::isValid($data);
+        
+        $master_harbor_input_port = $data['master_harbor_input_port'];
+        $dj_harbor_input_port = $data['dj_harbor_input_port'];
+        
+        if($master_harbor_input_port == $dj_harbor_input_port){
+            $element = $this->getElement("dj_harbor_input_port");
+            $element->addError("You cannot use same port as Master DJ port.");
+        }
+        if($master_harbor_input_port != ""){
+            $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+            $res = socket_bind($sock, 0, $master_harbor_input_port);
+            if(!$res){
+                $element = $this->getElement("master_harbor_input_port");
+                $element->addError("Port '$master_harbor_input_port' is not available.");
+                $isValid = false;
+            }
+            socket_close($sock);
+        }
+        if($dj_harbor_input_port != ""){
+            $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+            $res = socket_bind($sock, 0, $dj_harbor_input_port);
+            if(!$res){
+                $element = $this->getElement("dj_harbor_input_port");
+                $element->addError("Port '$dj_harbor_input_port' is not available.");
+                $isValid = false;
+            }
+            socket_close($sock);
+        }
+        return $isValid;
+    }
+    
 }
