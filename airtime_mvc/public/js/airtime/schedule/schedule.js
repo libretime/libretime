@@ -106,10 +106,7 @@ function buildScheduleDialog (json) {
 		//subtract padding in pixels
 		widgetWidth = width - 60,
 		libWidth = Math.floor(widgetWidth * 0.5),
-		builderWidth = Math.floor(widgetWidth * 0.5),
-		libLength,
-		libType,
-		libFilter;
+		builderWidth = Math.floor(widgetWidth * 0.5);
 	
 	dialog.find("#library_content")
 		.height(height - 115)
@@ -149,13 +146,6 @@ function buildScheduleDialog (json) {
 		.css("max-height", height - 110 - 60);
 	
 	dialog.dialog('open');
-	
-	//calculate dynamically width for the library search input.
-	libLength = dialog.find("#library_display_length");
-	libType = dialog.find("#library_display_type");
-	libFilter = dialog.find("#library_display_filter");
-	
-	libFilter.find("input").width(libFilter.width() - libType.width() - libLength.width() - 80);
 }
 
 function buildContentDialog (json){

@@ -43,8 +43,11 @@ var AIRTIME = (function(AIRTIME) {
     
     libraryInit = function() {
         var oTable,
-            libContentDiv = $("#library_content");
-            tableHeight = libContentDiv.height() - 140;
+            libContentDiv = $("#library_content"),
+            tableHeight = libContentDiv.height() - 140,
+            libLength,
+    		libType,
+    		libFilter;
         
         oTable = $('#library_display').dataTable( {
             
@@ -330,6 +333,12 @@ var AIRTIME = (function(AIRTIME) {
                 oTT.fnSelectNone();
             }       
         });
+        
+        //calculate dynamically width for the library search input.
+    	libLength = libContentDiv.find("#library_display_length");
+    	libType = libContentDiv.find("#library_display_type");
+    	libFilter = libContentDiv.find("#library_display_filter");
+    	libFilter.find("input").width(libFilter.width() - libType.width() - libLength.width() - 80);
         
         checkImportStatus();
         setInterval( checkImportStatus, 5000 );
