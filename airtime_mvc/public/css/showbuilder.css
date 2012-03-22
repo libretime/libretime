@@ -219,7 +219,3 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 .ui-dialog .sb_content .padded {
     padding: 5px 10px 5px 16px;
 }
-
-.ui-dialog .ui-buttonset {
-    margin-right: 0 !important;
-}

@@ -335,10 +335,10 @@ var AIRTIME = (function(AIRTIME) {
         });
         
         //calculate dynamically width for the library search input.
-    	libLength = libContentDiv.find("#library_display_length");
-    	libType = libContentDiv.find("#library_display_type");
-    	libFilter = libContentDiv.find("#library_display_filter");
-    	libFilter.find("input").width(libFilter.width() - libType.width() - libLength.width() - 80);
+    	//libLength = libContentDiv.find("#library_display_length");
+    	//libType = libContentDiv.find("#library_display_type");
+    	//libFilter = libContentDiv.find("#library_display_filter");
+    	//libFilter.find("input").width(libFilter.width() - libType.width() - libLength.width() - 80);
         
         checkImportStatus();
         setInterval( checkImportStatus, 5000 );
