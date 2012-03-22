@@ -358,7 +358,7 @@ class Application_Model_Schedule {
         $sql = "SELECT DISTINCT
 
         showt.name AS show_name, showt.color AS show_color,
-        showt.background_color AS show_background_colour, showt.id AS show_id,
+        showt.background_color AS show_background_color, showt.id AS show_id,
 
         si.starts AS si_starts, si.ends AS si_ends, si.time_filled AS si_time_filled,
         si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.id AS si_id, si.last_scheduled AS si_last_scheduled,

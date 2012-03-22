@@ -8,11 +8,20 @@
     <input type="button" id="sb_edit" class="ui-button ui-state-default sb-edit" value="Add Files"></input>
 </div>
 <div class="sb-advanced-options">
-    <label><?php echo $this->element->getElement('sb_show_filter')->getLabel() ?></label>
-    <?php echo $this->element->getElement('sb_show_filter') ?>
-
-    <?php if ($this->element->getElement('sb_my_shows')):?>
-    <label><?php echo $this->element->getElement('sb_my_shows')->getLabel(); ?></label>
-    <?php echo $this->element->getElement('sb_my_shows'); ?>
-    <?php endif;?>
+    <fieldset class="padded display_field toggle push-down-8 closed">
+        <legend style="cursor: pointer;">
+        	<span class="ui-icon ui-icon-triangle-2-n-s"></span>
+        Filter By Show:
+        </legend>
+        
+        <div class="sb-options-form">
+            <label><?php echo $this->element->getElement('sb_show_filter')->getLabel() ?></label>
+            <?php echo $this->element->getElement('sb_show_filter') ?>
+        
+            <?php if ($this->element->getElement('sb_my_shows')):?>
+            <label><?php echo $this->element->getElement('sb_my_shows')->getLabel(); ?></label>
+            <?php echo $this->element->getElement('sb_my_shows'); ?>
+            <?php endif;?>
+        </div>
+    </fieldset>   
 </div>

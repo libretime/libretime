@@ -104,7 +104,7 @@ function buildScheduleDialog (json) {
 		width = Math.floor(viewport.width * 0.96),
 		fnServer = AIRTIME.showbuilder.fnServerData,
 		//subtract padding in pixels
-		widgetWidth = width - 50,
+		widgetWidth = width - 60,
 		libWidth = Math.floor(widgetWidth * 0.5),
 		builderWidth = Math.floor(widgetWidth * 0.5),
 		libLength,
@@ -112,11 +112,11 @@ function buildScheduleDialog (json) {
 		libFilter;
 	
 	dialog.find("#library_content")
-		.height(height - 110)
+		.height(height - 115)
 		.width(libWidth);
 	
 	dialog.find("#show_builder")
-		.height(height - 110)
+		.height(height - 115)
 		.width(builderWidth);
 	
 	dialog.dialog({
@@ -141,8 +141,12 @@ function buildScheduleDialog (json) {
 	AIRTIME.library.libraryInit();
 	AIRTIME.showbuilder.builderDataTable();
 	
-	dialog.find(".dataTables_scrolling")
+	//set max heights of datatables.
+	dialog.find(".lib-content .dataTables_scrolling")
 		.css("max-height", height - 110 - 155);
+	
+	dialog.find(".sb-content .dataTables_scrolling")
+		.css("max-height", height - 110 - 60);
 	
 	dialog.dialog('open');
 	

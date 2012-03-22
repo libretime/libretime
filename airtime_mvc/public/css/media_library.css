@@ -9,6 +9,10 @@
     table-layout:fixed;
 }
 
+#library_display th {
+        text-align: left;
+}
+
 #library_content #library_display {
 	width:100%;
 }
@@ -90,3 +94,26 @@ td.library_bitrate {
 	vertical-align: middle;
 	padding-left: 5px;
 }
+
+
+.file_type {
+	width:16px;
+	height:13px;
+	display:block;
+	background-image: url(images/filetype_icons.png);
+	background-repeat:no-repeat;
+	}
+	.file_type.audioclip {
+		background-position: 0 0;
+		}
+		a.file_type.audioclip:hover {
+			background-position: 0 -15px;
+			}
+	.file_type.playlist {
+		background-position: -20px 0;
+		}
+		a.file_type.playlist:hover {
+			background-position: -20px -15px;
+			}
+
+

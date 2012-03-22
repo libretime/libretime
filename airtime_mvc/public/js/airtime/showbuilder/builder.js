@@ -128,18 +128,18 @@ var AIRTIME = (function(AIRTIME){
 		
 		oTable = tableDiv.dataTable( {
 			"aoColumns": [
-		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px", "sClass": "sb_checkbox"},
-            /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image", "sWidth": "25px", "bVisible": true},
-	        /* starts */{"mDataProp": "starts", "sTitle": "Start"},
-	        /* ends */{"mDataProp": "ends", "sTitle": "End"},
-	        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length"},
-	        /* title */{"mDataProp": "title", "sTitle": "Title"},
-	        /* creator */{"mDataProp": "creator", "sTitle": "Creator"},
-	        /* album */{"mDataProp": "album", "sTitle": "Album"},
-	        /* cue in */{"mDataProp": "cuein", "sTitle": "Cue In", "bVisible": false},
-	        /* cue out */{"mDataProp": "cueout", "sTitle": "Cue Out", "bVisible": false},
-	        /* fade in */{"mDataProp": "fadein", "sTitle": "Fade In", "bVisible": false},
-	        /* fade out */{"mDataProp": "fadeout", "sTitle": "Fade Out", "bVisible": false}
+		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px", "sClass": "sb-checkbox"},
+            /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "25px", "bVisible": true},
+	        /* starts */{"mDataProp": "starts", "sTitle": "Start", "sClass": "sb-starts"},
+	        /* ends */{"mDataProp": "ends", "sTitle": "End", "sClass": "sb-ends"},
+	        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length sb-length"},
+	        /* title */{"mDataProp": "title", "sTitle": "Title", "sClass": "sb-title"},
+	        /* creator */{"mDataProp": "creator", "sTitle": "Creator", "sClass": "sb-creator"},
+	        /* album */{"mDataProp": "album", "sTitle": "Album", "sClass": "sb-album"},
+	        /* cue in */{"mDataProp": "cuein", "sTitle": "Cue In", "bVisible": false, "sClass": "sb-cue-in"},
+	        /* cue out */{"mDataProp": "cueout", "sTitle": "Cue Out", "bVisible": false, "sClass": "sb-cue-out"},
+	        /* fade in */{"mDataProp": "fadein", "sTitle": "Fade In", "bVisible": false, "sClass": "sb-fade-in"},
+	        /* fade out */{"mDataProp": "fadeout", "sTitle": "Fade Out", "bVisible": false, "sClass": "sb-fade-out"}
 	        ],
 	        
 	        "bJQueryUI": true,
@@ -213,10 +213,13 @@ var AIRTIME = (function(AIRTIME){
 					sSeparatorHTML,
 					fnPrepareSeparatorRow,
 					node,
-					cl="";
+					cl="",
+					//background-color to imitate calendar color.
+					r,g,b,a,
+					$nRow = $(nRow);
 				
                 //call the context menu so we can prevent the event from propagating.
-                $(nRow).find('td:not(.sb_checkbox)').click(function(e){
+                $(nRow).find('td:not(.sb-checkbox)').click(function(e){
                     
                     $(this).contextMenu({x: e.pageX, y: e.pageY});
                     
@@ -226,8 +229,11 @@ var AIRTIME = (function(AIRTIME){
 				//save some info for reordering purposes.
 				$(nRow).data({"aData": aData});
 				
-				if (aData.current === true) {
+				if (aData.scheduled === 1) {
 					$(nRow).addClass("sb-now-playing");
+				}
+				else if (aData.scheduled === 0) {
+					$(nRow).addClass("sb-past");
 				}
 				
 				if (aData.allowed !== true) {
@@ -266,10 +272,13 @@ var AIRTIME = (function(AIRTIME){
                 });
             
 				if (aData.header === true) {
+					node = nRow.children[0];
+					node.innerHTML = '';
 					cl = 'sb-header';
 					
-					sSeparatorHTML = '<span>'+aData.title+'</span><span>'+aData.starts+'</span><span>'+aData.ends+'</span>';
-					fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
+					sSeparatorHTML = '<span class="show-title">'+aData.title+'</span>';
+					sSeparatorHTML += '<span class="push-right"><span class="show-time">'+aData.starts+'</span>-<span class="show-time">'+aData.ends+'</span></span>';
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 				}
 				else if (aData.footer === true) {
 					node = nRow.children[0];
@@ -289,18 +298,22 @@ var AIRTIME = (function(AIRTIME){
 					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 				}
 				else if (aData.empty === true) {
+					node = nRow.children[0];
+					node.innerHTML = '';
 					
 					sSeparatorHTML = '<span>Show Empty</span>';
 					cl = cl + " sb-empty odd";
 					
-					fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 				}
 				else if (aData.record === true) {
+					node = nRow.children[0];
+					node.innerHTML = '';
 					
 					sSeparatorHTML = '<span>Recording From Line In</span>';
 					cl = cl + " sb-record odd";
 					
-					fnPrepareSeparatorRow(sSeparatorHTML, cl, 0);
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 				}
 				else {
 					
@@ -312,6 +325,27 @@ var AIRTIME = (function(AIRTIME){
 						node.innerHTML = '';
 					}
 				}
+				
+				//add the show colour to the leftmost td
+                if (aData.footer !== true) {
+                	
+                	if ($nRow.hasClass('sb-header')) {
+                		a = 1;
+                	}
+                	else if ($nRow.hasClass('odd')) {
+                		a = 0.3;
+                	}
+                	else if ($nRow.hasClass('even')) {
+                		a = 0.4;
+                	}
+                	
+                	//convert from hex to rgb.
+                	r = parseInt((aData.backgroundColor).substring(0,2), 16);
+                	g = parseInt((aData.backgroundColor).substring(2,4), 16);
+                	b = parseInt((aData.backgroundColor).substring(4,6), 16);
+                	
+                	$nRow.find('td.sb-checkbox').css('background', 'rgba('+r+', '+g+', '+b+', '+a+')');
+                }
 			},
 			"fnDrawCallback": function(oSettings, json) {
 				var wrapperDiv,
@@ -440,7 +474,7 @@ var AIRTIME = (function(AIRTIME){
 			},
 			
 	        // R = ColReorderResize, C = ColVis, T = TableTools
-	        "sDom": 'Rr<"H"CT>t',
+	        "sDom": 'Rr<"sb-padded"<"H"CT>><"dataTables_scrolling sb-padded"t>',
 	        
 	        "sAjaxDataProp": "schedule",
 			"sAjaxSource": "/showbuilder/builder-feed"	
@@ -641,7 +675,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		//begin context menu initialization.
         $.contextMenu({
-            selector: '#show_builder_table td:not(.sb_checkbox)',
+            selector: '#show_builder_table td:not(.sb-checkbox)',
             trigger: "left",
             ignoreRightClick: true,
             
