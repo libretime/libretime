@@ -163,7 +163,11 @@ class Application_Model_Preference
     }
     
     public static function GetDefaultTransitionFade() {
-        return self::GetValue("default_transition_fade");
+        $transition_fade = self::GetValue("default_transition_fade");
+        if($transition_fade == ""){
+            $transition_fade = "00.000000";
+        }
+        return $transition_fade;
     }
 
     public static function SetStreamLabelFormat($type){

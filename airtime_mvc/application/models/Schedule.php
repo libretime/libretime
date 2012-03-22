@@ -633,6 +633,11 @@ class Application_Model_Schedule {
 
         $data["status"] = array();
         $data["media"] = array();
+        $data["harbor"] = array();
+        
+        
+        $data["harbor"]['next_live_dj_show_end'] = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ();
+        $data["harbor"]['transition_fade'] = Application_Model_Preference::GetDefaultTransitionFade();
 
         foreach ($items as $item){
 
