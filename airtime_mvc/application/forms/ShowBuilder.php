@@ -76,7 +76,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
 
         // add a select to choose a show.
         $showSelect = new Zend_Form_Element_Select("sb_show_filter");
-        $showSelect->setLabel("Filter By Show:");
+        $showSelect->setLabel("Show:");
         $showSelect->setMultiOptions($this->getShowNames());
         $showSelect->setValue(null);
         $showSelect->setDecorators(array('ViewHelper'));
@@ -84,7 +84,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
 
         if ($user->getType() === 'H') {
             $myShows = new Zend_Form_Element_Checkbox('sb_my_shows');
-            $myShows->setLabel('All My Shows')
+            $myShows->setLabel('All My Shows:')
                     ->setDecorators(array('ViewHelper'));
             $this->addElement($myShows);
         }

@@ -17,9 +17,7 @@ class Application_Model_ShowBuilder {
 
     private $contentDT;
     private $epoch_now;
-    
-    private $hasCurrent;
-
+   
     private $defaultRowArray = array(
         "header" => false,
         "footer" => false,
@@ -38,7 +36,8 @@ class Application_Model_ShowBuilder {
         "cueout" => "",
         "fadein" => "",
         "fadeout" => "",
-        "current" => false,
+        "color" => "", //in hex without the '#' sign.
+        "backgroundColor"=> "", //in hex without the '#' sign.
     );
 
     /*
@@ -53,8 +52,6 @@ class Application_Model_ShowBuilder {
         $this->user = Application_Model_User::GetCurrentUser();
         $this->opts = $p_opts;
         $this->epoch_now = time();
-        
-        $this->hasCurrent = false;
     }
 
     //check to see if this row should be editable.
@@ -77,6 +74,23 @@ class Application_Model_ShowBuilder {
             $row["allowed"] = true;
         }
     }
+    
+    private function getItemColor($p_item, &$row) {
+        $defaultColor = "ffffff";
+        $defaultBackground = "3366cc";
+        
+        $color = $p_item["show_color"];
+        if ($color === '') {
+            $color = $defaultColor;
+        }
+        $backgroundColor = $p_item["show_background_color"];
+        if ($backgroundColor === '') {
+            $backgroundColor = $defaultBackground;
+        }
+        
+        $row["color"] = $color;
+        $row["backgroundColor"] = $backgroundColor;
+    }
 
     //information about whether a track is inside|boundary|outside a show.
     private function getItemStatus($p_item, &$row) {
@@ -95,15 +109,43 @@ class Application_Model_ShowBuilder {
         }
         $row["timestamp"] = $ts;
     }
-
-    private function isCurrent($p_epochItemStart, $p_epochItemEnd, &$row) {
-
-        if ($this->epoch_now >= $p_epochItemStart && $this->epoch_now < $p_epochItemEnd) {
-            $row["current"] = true;
+    
+    /*
+     * marks a row's status.
+     * 0 = past
+     * 1 = current
+     * 2 = future
+     */
+    private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row) {
+        
+        if ($row["footer"] === true && $this->epoch_now > $p_epochItemStart && $this->epoch_now > $p_epochItemEnd) {
+            $row["scheduled"] = 0;
+        }
+        else if ($row["footer"] === true && $this->epoch_now < $p_epochItemEnd) {
+            $row["scheduled"] = 2;
+        }
+        else if ($row["header"] === true && $this->epoch_now > $p_epochItemStart) {
+            $row["scheduled"] = 0;
+        }
+        else if ($row["header"] === true && $this->epoch_now < $p_epochItemEnd) {
+            $row["scheduled"] = 2;
+        }
+        
+        //item is in the past.
+        else if ($this->epoch_now > $p_epochItemEnd) {
+            $row["scheduled"] = 0;
+        }
+        
+        //item is the currently scheduled item.
+        else if ($this->epoch_now >= $p_epochItemStart && $this->epoch_now < $p_epochItemEnd) {
+            $row["scheduled"] = 1;
             //how many seconds the view should wait to redraw itself.
             $row["refresh"] = $p_epochItemEnd - $this->epoch_now;
-            
-            $this->hasCurrent = true;
+        }
+        
+        //item is in the future.
+        else if ($this->epoch_now < $p_epochItemStart) {
+            $row["scheduled"] = 2;
         }
     }
 
@@ -111,13 +153,15 @@ class Application_Model_ShowBuilder {
 
         $row = $this->defaultRowArray;
         $this->isAllowed($p_item, $row);
-        Logging::log("making header for show id ".$p_item["show_id"]);
         $this->getRowTimestamp($p_item, $row);
+        $this->getItemColor($p_item, &$row);
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $showStartDT->setTimezone(new DateTimeZone($this->timezone));
+        $startsEpoch = intval($showStartDT->format("U"));
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
+        $endsEpoch = intval($showEndDT->format("U"));
 
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
@@ -127,6 +171,8 @@ class Application_Model_ShowBuilder {
         $row["title"] = $p_item["show_name"];
         $row["instance"] = intval($p_item["si_id"]);
         $row["image"] = '';
+        
+        $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
 
         $this->contentDT = $showStartDT;
 
@@ -136,6 +182,7 @@ class Application_Model_ShowBuilder {
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
 
+        $this->getItemColor($p_item, &$row);
         $this->getRowTimestamp($p_item, $row);
         $this->isAllowed($p_item, $row);
 
@@ -154,7 +201,7 @@ class Application_Model_ShowBuilder {
             $showEndEpoch = intval($showEndDT->format("U"));
 
             //don't want an overbooked item to stay marked as current.
-            $this->isCurrent($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
+            $this->getScheduledStatus($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
             $row["id"] = intval($p_item["sched_id"]);
             $row["image"] = '<img src="/css/images/icon_audioclip.png">';
@@ -208,6 +255,16 @@ class Application_Model_ShowBuilder {
         $timeFilled = new TimeFilledFormatter($runtime);
         $row["fRuntime"] = $timeFilled->format();
         $row["image"] = '';
+        
+        $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+        $showStartDT->setTimezone(new DateTimeZone($this->timezone));
+        $startsEpoch = intval($showStartDT->format("U"));
+        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+        $showEndDT->setTimezone(new DateTimeZone($this->timezone));
+        $endsEpoch = intval($showEndDT->format("U"));
+        
+        $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
+        
         return $row;
     }
 
@@ -298,9 +355,6 @@ class Application_Model_ShowBuilder {
             $display_items[] = $this->makeFooterRow($scheduled_items[count($scheduled_items)-1]);
         }
         
-        if (!$this->hasCurrent) {
-        }
-
         return $display_items;
     }
 }

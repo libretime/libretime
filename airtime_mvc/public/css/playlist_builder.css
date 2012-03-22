@@ -93,9 +93,6 @@
 .ui-state-active .spl_artist, .ui-state-active .spl_offset {
     color: #606060 !important;
 }
-/*#spl_editor {
-	height: 50px;
-}*/
 
 #spl_editor > div > span {
 /*	display: inline-block;
@@ -422,7 +419,7 @@
     margin: 0 0 8px 0;
     padding: 8px;
 }
-#side_playlist fieldset.closed .zend_form{
+#side_playlist fieldset.closed .zend_form {
 	display:none;
 }
 #side_playlist fieldset.closed {

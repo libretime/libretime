@@ -263,7 +263,7 @@ select {
 	padding:0 12px 0 0;
 	background:url(images/masterpanel_spacer.png) no-repeat right 0;
 }
-.time-info-block {
+.time-info-block  {
 	padding:0 14px 0 2px;
 	background:url(images/masterpanel_spacer.png) no-repeat right 0;
 	min-width:105px;
@@ -305,7 +305,6 @@ select {
     margin:0;
     padding:6px 0 0;
 }
-	
 .on-air-info {
 	height:26px;
 	border:1px solid #242424;
@@ -2205,7 +2204,7 @@ dd .info-text-small {
 	line-height:140%;
 }
 
-.stream-config dd input[type="text"] {
+.stream-config input[type="text"] {
     /*width:98.5%;*/
 	min-width:152px;
 }
@@ -2218,6 +2217,9 @@ dd .info-text-small {
 }
 .simple-formblock .display_field dd {
 	min-width:68%;
+}
+.stream-config dd input[id$=port] {
+    width:152px;
 }
 
 dt.block-display.info-block {
@@ -2412,6 +2414,7 @@ tfoot tr th	{
 .statustable ul	{
 	margin:4px 0;
 	padding:0;
+	list-style-type: none;
 }
 .statustable ul li	{
 	background:#bbb;
@@ -2653,3 +2656,35 @@ dd .stream-status {
     padding: 5px;
 }
 	
+.pull-left {
+	float:left;
+}
+.pull-right {
+	float:right;
+}
+.push-down-8 {
+	margin-top:8px !important
+}
+.push-down-12 {
+	margin-top:12px !important
+}
+.push-down-16 {
+	margin-top:16px !important
+}
+.close-round {
+	display:block;
+	float:right;
+	height:18px;
+	width:18px;
+	background:url(images/round_delete.png) no-repeat 0 0;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	margin: 3px 0 0 10px;
+	}
+	.close-round:hover {
+		background-position:0 -18px;
+		}
+	.close-round:active {
+		background-position:0 -36px;
+		}

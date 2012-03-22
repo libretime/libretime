@@ -1,23 +1,36 @@
 $(document).ready(function(){
 	
 	var viewport = AIRTIME.utilities.findViewportDimensions(),
-		lib = $("#library_content"),
-		builder = $("#show_builder"),
+		$lib = $("#library_content"),
+		$libWrapper,
+		$builder = $("#show_builder"),
 		widgetHeight = viewport.height - 185,
-		screenWidth = Math.floor(viewport.width - 110),
+		screenWidth = Math.floor(viewport.width - 120),
 		oBaseDatePickerSettings,
 		oBaseTimePickerSettings,
 		oRange,
 		dateStartId = "#sb_date_start",
 		timeStartId = "#sb_time_start",
 		dateEndId = "#sb_date_end",
-		timeEndId = "#sb_time_end";
+		timeEndId = "#sb_time_end",
+		$toggleLib = $('<input />', {
+			"class": "ui-button ui-state-default sb-edit",
+			"id": "sb_edit",
+			"type": "button",
+			"value": "Add Files"
+		}),
+		$libClose = $('<a />', {
+			"class": "close-round",
+			"href": "#",
+			"id": "sb_lib_close"
+		});
 	
 	//set the heights of the main widgets.
-	lib.height(widgetHeight);
+	$lib.height(widgetHeight);
 	
 	//builder takes all the screen on first load
-	builder.height(widgetHeight)
+	$builder
+		.height(widgetHeight)
 		.width(screenWidth);
 	
 	oBaseDatePickerSettings = {
@@ -34,12 +47,24 @@ $(document).ready(function(){
 		defaultTime: '0:00'
 	};
 	
-	builder.find(dateStartId).datepicker(oBaseDatePickerSettings);
-	builder.find(timeStartId).timepicker(oBaseTimePickerSettings);
-	builder.find(dateEndId).datepicker(oBaseDatePickerSettings);
-	builder.find(timeEndId).timepicker(oBaseTimePickerSettings);
+	$builder.find(dateStartId).datepicker(oBaseDatePickerSettings);
+	$builder.find(timeStartId).timepicker(oBaseTimePickerSettings);
+	$builder.find(dateEndId).datepicker(oBaseDatePickerSettings);
+	$builder.find(timeEndId).timepicker(oBaseTimePickerSettings);
 	
-	$("#sb_submit").click(function(ev){
+	oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);	
+	AIRTIME.showbuilder.fnServerData.start = oRange.start;
+	AIRTIME.showbuilder.fnServerData.end = oRange.end;
+	
+	AIRTIME.library.libraryInit();
+	AIRTIME.showbuilder.builderDataTable();
+	
+	$libWrapper = $lib.find("#library_display_wrapper");
+	$libWrapper.prepend($libClose);
+	
+	$builder.find('.dataTables_scrolling').css("max-height", widgetHeight - 110);
+	
+	$builder.on("click", "#sb_submit", function(ev){
 		var fn,
 			oRange,
 			op,
@@ -67,44 +92,69 @@ $(document).ready(function(){
 		oTable.fnDraw();
 	});
 	
-	$("#sb_edit").click(function(ev){
-		var $button = $(this),
-			$lib = $("#library_content"),
-			$builder = $("#show_builder"),
-			schedTable = $("#show_builder_table").dataTable();
+	$builder.on("click","#sb_edit", function(ev){
+		var schedTable = $("#show_builder_table").dataTable();
 		
-		if ($button.hasClass("sb-edit")) {
-			
-			//reset timestamp to redraw the cursors.
-			AIRTIME.showbuilder.resetTimestamp();
-			
-			$lib.show();
-			$lib.width(Math.floor(screenWidth * 0.5));
-			$builder.width(Math.floor(screenWidth * 0.5));
-			
-			$button.removeClass("sb-edit");
-			$button.addClass("sb-finish-edit");
-			$button.val("Close Library");
-		}
-		else if ($button.hasClass("sb-finish-edit")) {
-			
-			$lib.hide();
-			$builder.width(screenWidth);
-			
-			$button.removeClass("sb-finish-edit");
-			$button.addClass("sb-edit");
-			$button.val("Add Files");
-		}
+		//reset timestamp to redraw the cursors.
+		AIRTIME.showbuilder.resetTimestamp();
+		
+		$lib.show()
+			.width(Math.floor(screenWidth * 0.5));
+		
+		$builder.width(Math.floor(screenWidth * 0.5))
+			.find("#sb_edit")
+				.remove()
+				.end();
 		
 		schedTable.fnDraw();	
 	});
 	
-	oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);	
-	AIRTIME.showbuilder.fnServerData.start = oRange.start;
-	AIRTIME.showbuilder.fnServerData.end = oRange.end;
+	$lib.on("click", "#sb_lib_close", function(ev) {
+		var schedTable = $("#show_builder_table").dataTable();
+
+		$lib.hide();
+		$builder.width(screenWidth)
+			.find(".sb-timerange")
+				.append($toggleLib)
+				.end();
+		
+		schedTable.fnDraw();
+	});
 	
-	AIRTIME.library.libraryInit();
-	AIRTIME.showbuilder.builderDataTable();
+	$builder.find('legend').click(function(ev, item){
+		
+		$fs = $(this).parents('fieldset');
+		
+		if ($fs.hasClass("closed")) {
+    
+        	$fs.removeClass("closed");
+        	$builder.find('.dataTables_scrolling').css("max-height", widgetHeight - 150);
+        }
+        else {
+        	$fs.addClass("closed");
+        	
+        	//set defaults for the options.
+        	$fs.find('select').val(0);
+        	$fs.find('input[type="checkbox"]').attr("checked", false);
+        	$builder.find('.dataTables_scrolling').css("max-height", widgetHeight - 110);
+        }
+	});
+	
+	//set click event for all my shows checkbox.
+	$builder.on("click", "#sb_my_shows", function(ev) {
+		
+		if ($(this).is(':checked')) {
+			$(ev.delegateTarget).find('#sb_show_filter').val(0);
+		}	
+	});
+	
+	//set select event for choosing a show.
+	$builder.on("change", '#sb_show_filter', function(ev) {
+		
+		if ($(this).val() !== 0) {
+			$(ev.delegateTarget).find('#sb_my_shows').attr("checked", false);
+		}
+	});
 	
 	//check if the timeline viewed needs updating.
 	setInterval(function(){
