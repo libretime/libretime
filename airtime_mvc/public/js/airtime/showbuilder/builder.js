@@ -650,7 +650,16 @@ var AIRTIME = (function(AIRTIME){
 		
 		$("#show_builder .fg-toolbar")
 			.append('<div class="ColVis TableTools sb_delete"><button class="ui-button ui-state-default ui-state-disabled"><span>Delete</span></button></div>')
-			.click(fnRemoveSelectedItems);
+			.find('sb_delete')
+				.click(fnRemoveSelectedItems)
+				.end();
+		
+		$("#show_builder .fg-toolbar")
+		.append("<ul />")
+		.find('ul')
+			.append('<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowstop-1-s"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
+			.append('<li class="ui-state-default ui-corner-all" title=".ui-icon-trash"><span class="ui-icon ui-icon-trash"></span></li>')
+			.end();
 		
 		//set things like a reference to the table.
 		AIRTIME.showbuilder.init(oTable);
