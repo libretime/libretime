@@ -292,5 +292,17 @@ class Application_Model_DateHelper
             return $p_dateString;
         return self::ConvertToUtcDateTime($p_dateString)->format($p_format);
     }
+    
+    /*
+     * Example input: "00:02:32.746562". Output is a DateInterval object
+     * representing that 2 minute, 32.746562 second interval.
+     * 
+     */
+    public static function getDateIntervalFromString($p_interval){
+        list($hour_min_sec, $subsec) = explode(".", $p_interval);
+        list($hour, $min, $sec) = explode(":", $hour_min_sec);
+        
+        return new DateInterval("PT{$hour}H{$min}M{$sec}S");
+    }
 }
 

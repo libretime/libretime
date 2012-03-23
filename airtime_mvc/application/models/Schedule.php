@@ -645,16 +645,19 @@ class Application_Model_Schedule {
             $uri = $storedFile->getFilePath();
             
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
+            $trackStartDateTime = new DateTime($item["start"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
 
             /* Note: cue_out and end are always the same. */
             /* TODO: Not all tracks will have "show_end" */
 
             if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
-                $diff = $trackEndDateTime->getTimestamp() - $showEndDateTime->getTimestamp();
-                //assuming ends takes cue_out into assumption
-                $item["cue_out"] = $item["cue_out"] - $diff;
+                $di = $trackStartDateTime->diff($showEndDateTime);
+                
+                $item["cue_out"] = $di->format("%H:%i:%s").".000";
             }
+            
+            
 
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
             $data["media"][$start] = array(

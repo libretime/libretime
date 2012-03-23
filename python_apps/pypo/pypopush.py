@@ -161,11 +161,14 @@ class PypoPush(Thread):
                     #Everything OK for this iteration.
                     pass
                 else:
-                    #A different item has been scheduled at the same time!
+                    #A different item has been scheduled at the same time! Need to remove
+                    #all tracks from the Liquidsoap queue starting at this point, and re-add
+                    #them. 
                     problem_at_iteration = iteration
                     break
             else:
-                #There are no more items scheduled for this time!
+                #There are no more items scheduled for this time! The user has shortened
+                #the playlist, so we simply need to remove tracks from the queue. 
                 problem_at_iteration = iteration
                 break
             iteration+=1
