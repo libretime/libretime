@@ -4,7 +4,7 @@ $(document).ready(function(){
 		$lib = $("#library_content"),
 		$libWrapper,
 		$builder = $("#show_builder"),
-		widgetHeight = viewport.height - 185,
+		widgetHeight = viewport.height - 180,
 		screenWidth = Math.floor(viewport.width - 120),
 		oBaseDatePickerSettings,
 		oBaseTimePickerSettings,
@@ -62,7 +62,7 @@ $(document).ready(function(){
 	$libWrapper = $lib.find("#library_display_wrapper");
 	$libWrapper.prepend($libClose);
 	
-	$builder.find('.dataTables_scrolling').css("max-height", widgetHeight - 110);
+	$builder.find('.dataTables_scrolling').css("max-height", widgetHeight - 95);
 	
 	$builder.on("click", "#sb_submit", function(ev){
 		var fn,

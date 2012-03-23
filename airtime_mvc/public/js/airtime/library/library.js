@@ -44,7 +44,7 @@ var AIRTIME = (function(AIRTIME) {
     libraryInit = function() {
         var oTable,
             libContentDiv = $("#library_content"),
-            tableHeight = libContentDiv.height() - 140,
+            tableHeight = libContentDiv.height() - 130,
             libLength,
     		libType,
     		libFilter;
@@ -250,7 +250,7 @@ var AIRTIME = (function(AIRTIME) {
             },
             
             // R = ColReorder, C = ColVis, T = TableTools
-            "sDom": 'Rl<"#library_display_type">fr<"H"T<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>', 
+            "sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"T<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
                 "sRowSelect": "multi",

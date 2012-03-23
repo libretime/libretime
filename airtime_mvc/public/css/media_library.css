@@ -1,3 +1,7 @@
+.lib-content {
+
+}
+
 #library_content {
 	float: left;
 	width: 50%;
@@ -32,12 +36,12 @@
 	padding-top:16px;
 }
 
-#library_display th.ui-state-default {
-	border: 1px solid #8f8f8f;
-	background-color: #a2a2a2;
+.lib-content table th.ui-state-default {
     background: -moz-linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b2b2b2), color-stop(100%, #a2a2a2));
-	color: #363636;
+    background: linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
+    border: 1px solid #8F8F8F;
+    color: #363636;
 }
 
 .paginationControl {

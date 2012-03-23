@@ -474,7 +474,7 @@ var AIRTIME = (function(AIRTIME){
 			},
 			
 	        // R = ColReorderResize, C = ColVis, T = TableTools
-	        "sDom": 'Rr<"sb-padded"<"H"CT>><"dataTables_scrolling sb-padded"t>',
+	        "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"CT>><"dataTables_scrolling sb-padded"t>',
 	        
 	        "sAjaxDataProp": "schedule",
 			"sAjaxSource": "/showbuilder/builder-feed"	
@@ -593,8 +593,9 @@ var AIRTIME = (function(AIRTIME){
 			};
 			
 			return {
-				placeholder: "placeholder show-builder-placeholder ui-state-highlight",
+				placeholder: "sb-placeholder ui-state-highlight",
 				forcePlaceholderSize: true,
+				distance: 10,
 				helper: function(event, item) {
 					var oTT = TableTools.fnGetInstance('show_builder_table'),
 				    	selected = oTT.fnGetSelectedData(),

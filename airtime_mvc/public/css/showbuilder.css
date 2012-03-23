@@ -103,6 +103,11 @@ tr.cursor-selected-row .marker {
 	opacity: .6;
 }
 
+.sb-placeholder {
+    height: 35px;
+    padding: 5px;
+}
+
 .sb-boundry td.sb-image, 
 .sb-boundry td.sb-starts, 
 .sb-boundry td.sb-ends,
