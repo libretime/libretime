@@ -269,7 +269,7 @@ var AIRTIME = (function(AIRTIME) {
                     }
                     
                     //checking to enable buttons
-                    AIRTIME.button.enableButton("library_group_delete");
+                    AIRTIME.button.enableButton("lib-button-delete");
                     AIRTIME.library.events.enableAddButtonCheck();
                 },
                 "fnRowDeselected": function ( node ) {
@@ -287,14 +287,13 @@ var AIRTIME = (function(AIRTIME) {
                     
                     //checking to disable buttons
                     if (selected.length === 0) {
-                        AIRTIME.button.disableButton("library_group_delete");
+                        AIRTIME.button.disableButton("lib-button-delete");
                     }
                     AIRTIME.library.events.enableAddButtonCheck();
                 }
             },
             
             "oColVis": {
-                "buttonText": "Show/Hide Columns",
                 "sAlign": "right",
                 "aiExclude": [0, 1, 2],
                 "sSize": "css"
@@ -496,48 +495,6 @@ var AIRTIME = (function(AIRTIME) {
     return AIRTIME;
     
 }(AIRTIME || {}));
-    
-function addToolBarButtonsLibrary(aButtons) {
-    var i,
-        length = aButtons.length,
-        libToolBar = $(".library_toolbar"),
-        html,
-        buttonClass = '',
-        DEFAULT_CLASS = 'ui-button ui-state-default',
-        DISABLED_CLASS = 'ui-state-disabled',
-        fn;
-    
-    for ( i = 0; i < length; i += 1 ) {
-        buttonClass = '';
-        
-        //add disabled class if not enabled.
-        if (aButtons[i][2] === false) {
-            buttonClass += DISABLED_CLASS;
-        }
-        
-        html = '<div class="ColVis TableTools '+aButtons[i][1]+'"><button class="'+DEFAULT_CLASS+' '+buttonClass+'"><span>'+aButtons[i][0]+'</span></button></div>';
-        libToolBar.append(html);
-        
-        //create a closure to preserve the state of i.
-        (function(index){
-            
-            libToolBar.find("."+aButtons[index][1]).click(function(){
-                fn = function() {
-                    var $button = $(this).find("button");
-                    
-                    //only call the passed function if the button is enabled.
-                    if (!$button.hasClass(DISABLED_CLASS)) {
-                        aButtons[index][3]();
-                    }	
-                };
-                
-                fn.call(this);
-            });
-            
-        }(i));
-            
-    }
-}
     
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){

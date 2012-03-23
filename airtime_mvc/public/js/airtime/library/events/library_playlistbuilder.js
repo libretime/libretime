@@ -19,10 +19,10 @@ var AIRTIME = (function(AIRTIME){
     	}
     	
     	if (check === true) {
-	    	AIRTIME.button.enableButton("library_group_add");
+	    	AIRTIME.button.enableButton("lib-button-add");
 	    }
 	    else {
-	    	AIRTIME.button.disableButton("library_group_add");
+	    	AIRTIME.button.disableButton("lib-button-add");
 	    }
     };
 	
@@ -76,43 +76,53 @@ var AIRTIME = (function(AIRTIME){
 		});
 	};
 	
-	/*
-	 * @param oTable the datatables instance for the library.
-	 */
-	mod.setupLibraryToolbar = function( oLibTable ) {
-		var aButtons,
-			fnAddSelectedItems;
+	mod.setupLibraryToolbar = function() {
+		var $toolbar = $(".lib-content .fg-toolbar:first");
 		
-		fnAddSelectedItems = function() {
-			var oLibTT = TableTools.fnGetInstance('library_display'),
-				aData = oLibTT.fnGetSelectedData(),
-				i,
-				temp,
-				length,
-				aMediaIds = [];
-			
-			//process selected files/playlists.
-			for (i = 0, length = aData.length; i < length; i++) {
-				temp = aData[i];
-				if (temp.ftype === "audioclip") {
-					aMediaIds.push(temp.id);
+		$toolbar
+			.append("<ul />")
+			.find('ul')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add selected items to playlist"><span class="ui-icon ui-icon-plusthick"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');
+		
+		//add to playlist button
+		$toolbar.find('.lib-button-add')
+			.click(function() {
+				
+				if (AIRTIME.button.isDisabled('lib-button-add') === true) {
+					return;
 				}
-			}
-		
-			AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
-		};
+				
+				var oLibTT = TableTools.fnGetInstance('library_display'),
+					aData = oLibTT.fnGetSelectedData(),
+					i,
+					temp,
+					length,
+					aMediaIds = [];
+				
+				//process selected files/playlists.
+				for (i = 0, length = aData.length; i < length; i++) {
+					temp = aData[i];
+					if (temp.ftype === "audioclip") {
+						aMediaIds.push(temp.id);
+					}
+				}
 			
-		//[0] = button text
-		//[1] = id 
-		//[2] = enabled
-		//[3] = click event
-		aButtons = [["Delete", "library_group_delete", false, AIRTIME.library.fnDeleteSelectedItems], 
-	                ["Add", "library_group_add", false, fnAddSelectedItems]];
+				AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+			});
 		
-		addToolBarButtonsLibrary(aButtons);
+		//delete from library.
+		$toolbar.find('.lib-button-delete')
+			.click(function() {
+				
+				if (AIRTIME.button.isDisabled('lib-button-delete') === true) {
+					return;
+				}
+				
+				AIRTIME.library.fnDeleteSelectedItems();
+			});
 	};
 	
-
 	return AIRTIME;
 	
 }(AIRTIME || {}));

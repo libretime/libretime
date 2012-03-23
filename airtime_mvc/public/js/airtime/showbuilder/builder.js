@@ -105,10 +105,12 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnServerData = fnServerData;
 	
 	mod.builderDataTable = function() {
-		var tableDiv = $('#show_builder_table'),
+		var $sbContent = $('#show_builder'),
+			$sbTable = $sbContent.find('table'),
 			oTable,
 			fnRemoveSelectedItems,
-			tableHeight;
+			tableHeight,
+			$toolbar;
 
 		fnRemoveSelectedItems = function() {
 			var oTT = TableTools.fnGetInstance('show_builder_table'),
@@ -126,7 +128,7 @@ var AIRTIME = (function(AIRTIME){
 			AIRTIME.showbuilder.fnRemove(aItems);
 		};
 		
-		oTable = tableDiv.dataTable( {
+		oTable = $sbTable.dataTable( {
 			"aoColumns": [
 		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px", "sClass": "sb-checkbox"},
             /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "25px", "bVisible": true},
@@ -234,6 +236,9 @@ var AIRTIME = (function(AIRTIME){
 				}
 				else if (aData.scheduled === 0) {
 					$(nRow).addClass("sb-past");
+				}
+				else {
+					$(nRow).addClass("sb-future");
 				}
 				
 				if (aData.allowed !== true) {
@@ -362,7 +367,7 @@ var AIRTIME = (function(AIRTIME){
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
 					
 					//create cursor arrows.
-					tableDiv.find("tr.sb-now-playing, tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
+					$sbTable.find("tr.sb-now-playing, tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
 				    	td = $(el).find("td:first");
 				    	if (td.hasClass("dataTables_empty")) {
 				    		return false;
@@ -383,19 +388,25 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				//if the now playing song is visible set a timeout to redraw the table at the start of the next song.
-				tr = tableDiv.find("tr.sb-now-playing");
+				tr = $sbTable.find("tr.sb-now-playing");
 				
 				if (tr.length > 0) {
+					//enable jump to current button.
+					AIRTIME.button.enableButton("sb-button-current");
+					
 					aData = tr.data("aData");
 					
 					setTimeout(function(){
 						AIRTIME.showbuilder.resetTimestamp();
 						oTable.fnDraw();
 					}, aData.refresh * 1000); //need refresh in milliseconds
+					
+					//scroll now playing item to top.
+					$sbContent.find(".sb-button-current").click();
 				}
 				//current song is not set, set a timeout to refresh when the first item on the timeline starts.
 				else {
-					tr = tableDiv.find("tbody tr.sb-allowed.sb-header:first");
+					tr = $sbTable.find("tbody tr.sb-allowed.sb-header:first");
 					
 					if (tr.length > 0) {
 						aData = tr.data("aData");
@@ -406,6 +417,14 @@ var AIRTIME = (function(AIRTIME){
 						}, aData.timeUntil * 1000); //need refresh in milliseconds
 					}	
 				}
+				
+				//check if there are any overbooked tracks on screen to enable the trim button.
+				tr = $sbTable.find("tr.sb-over");
+				
+				if (tr.length > 0) {
+					//enable deleting of overbooked tracks.
+					AIRTIME.button.enableButton("sb-button-trim");
+				}	
 		    },
 			"fnHeaderCallback": function(nHead) {
 				$(nHead).find("input[type=checkbox]").attr("checked", false);
@@ -416,6 +435,11 @@ var AIRTIME = (function(AIRTIME){
 				
 				oTT = TableTools.fnGetInstance('show_builder_table');
 				oTT.fnSelectNone();
+				
+				//disable jump to current button.
+				AIRTIME.button.disableButton("sb-button-current");
+				//disable deleting of overbooked tracks.
+				AIRTIME.button.disableButton("sb-button-trim");
 		    },
 			
 			"oColVis": {
@@ -451,24 +475,24 @@ var AIRTIME = (function(AIRTIME){
 	                }
 	                
 	                //checking to enable buttons
-	                AIRTIME.button.enableButton("sb_delete");
+	                AIRTIME.button.enableButton("sb-button-delete");
 	            },
 	            "fnRowDeselected": function ( node ) {
 	            	var selected;
 	            		       	
 	              //seems to happen if everything is deselected
 	                if ( node === null) {
-	                	tableDiv.find("input[type=checkbox]").attr("checked", false);
+	                	$sbTable.find("input[type=checkbox]").attr("checked", false);
 	                	selected = [];
 	                }
 	                else {
 	                	$(node).find("input[type=checkbox]").attr("checked", false);
-	                	selected = tableDiv.find("input[type=checkbox]").filter(":checked");
+	                	selected = $sbTable.find("input[type=checkbox]").filter(":checked");
 	                }
 	                
 	                //checking to disable buttons
 	                if (selected.length === 0) {
-	                	AIRTIME.button.disableButton("sb_delete");
+	                	AIRTIME.button.disableButton("sb-button-delete");
 	                }
 	            }
 			},
@@ -572,7 +596,7 @@ var AIRTIME = (function(AIRTIME){
 				//item was dragged in
 				if (origTrs !== undefined) {
 					
-					tableDiv.find("tr.ui-draggable")
+					$sbTable.find("tr.ui-draggable")
 						.empty()
 						.after(html);
 					
@@ -599,7 +623,7 @@ var AIRTIME = (function(AIRTIME){
 				helper: function(event, item) {
 					var oTT = TableTools.fnGetInstance('show_builder_table'),
 				    	selected = oTT.fnGetSelectedData(),
-				    	elements = tableDiv.find('tr:not(:first) input:checked').parents('tr'),				    	
+				    	elements = $sbTable.find('tr:not(:first) input:checked').parents('tr'),				    	
 				    	thead = $("#show_builder_table thead"),
 				    	colspan = thead.find("th").length,
 				    	trfirst = thead.find("tr:first"),
@@ -640,33 +664,78 @@ var AIRTIME = (function(AIRTIME){
 				receive: fnReceive,
 				update: fnUpdate,
 				start: function(event, ui) {
-					var elements = tableDiv.find('tr:not(:first) input:checked').parents('tr');
+					var elements = $sbTable.find('tr:not(:first) input:checked').parents('tr');
 					
 					elements.hide();
 				}
 			};
 		}());
 		
-		tableDiv.sortable(sortableConf);
+		$sbTable.sortable(sortableConf);
 		
-		$("#show_builder .fg-toolbar")
-			.append('<div class="ColVis TableTools sb_delete"><button class="ui-button ui-state-default ui-state-disabled"><span>Delete</span></button></div>')
-			.find('.sb_delete')
-				.click(fnRemoveSelectedItems)
-				.end();
+		//start setup of the builder toolbar.
+		$toolbar = $(".sb-content .fg-toolbar");
 		
-		$("#show_builder .fg-toolbar")
-		.append("<ul />")
-		.find('ul')
-			.append('<li class="ui-state-default ui-corner-all" title=".ui-icon-arrowstop-1-s"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
-			.append('<li class="ui-state-default ui-corner-all" title=".ui-icon-trash"><span class="ui-icon ui-icon-trash"></span></li>')
-			.end();
+		$toolbar
+			.append("<ul />")
+			.find('ul')
+				.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="jump to current item"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');
+		
+		//jump to current
+		$toolbar.find('.sb-button-current')
+			.click(function() {
+				
+				if (AIRTIME.button.isDisabled('sb-button-current') === true) {
+					return;
+				}
+				
+				var $scroll = $sbContent.find(".dataTables_scrolling"),
+					scrolled = $scroll.scrollTop(),
+					scrollingTop = $scroll.offset().top,
+					current = $sbTable.find(".sb-now-playing"),
+					currentTop = current.offset().top;
+		
+				$scroll.scrollTop(currentTop - scrollingTop + scrolled);
+			});
+		
+		//delete overbooked tracks.
+		$toolbar.find('.sb-button-trim')
+			.click(function() {
+				
+				if (AIRTIME.button.isDisabled('sb-button-trim') === true) {
+					return;
+				}
+				
+				var temp,
+					aItems = [],
+					trs = $sbTable.find(".sb-over.sb-future");
+		
+				trs.each(function(){
+					temp = $(this).data("aData");
+					aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
+				});
+				
+				AIRTIME.showbuilder.fnRemove(aItems);
+			});
+		
+		//delete selected tracks
+		$toolbar.find('.sb-button-delete')
+			.click(function() {
+				
+				if (AIRTIME.button.isDisabled('sb-button-delete') === true) {
+					return;
+				}
+				
+				fnRemoveSelectedItems();
+			});
 		
 		//set things like a reference to the table.
 		AIRTIME.showbuilder.init(oTable);
 		
 		//add event to cursors.
-		tableDiv.find("tbody").on("click", "div.marker", function(event){
+		$sbTable.find("tbody").on("click", "div.marker", function(event){
 			var tr = $(this).parents("tr"),
 				cursorSelClass = "cursor-selected-row";
 			

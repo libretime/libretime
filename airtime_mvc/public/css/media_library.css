@@ -1,5 +1,15 @@
-.lib-content {
+.lib-content .fg-toolbar ul {
+    float: left;
+    padding: 0;
+    margin: 0.5em 0 0 0;
+    cursor: pointer;
+}
 
+.lib-content .fg-toolbar ul li {
+    list-style-type: none;
+    float: left;
+    padding: 1px 2px;
+    margin-right: 5px;
 }
 
 #library_content {

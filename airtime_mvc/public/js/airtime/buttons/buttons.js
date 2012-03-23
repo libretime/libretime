@@ -8,8 +8,18 @@ var AIRTIME = (function(AIRTIME){
 	}
 	mod = AIRTIME.button;
 	
+	mod.isDisabled = function(c) {
+		var button = $("."+c);
+		
+	    if (button.hasClass(DISABLED_CLASS)) {
+	        return true;
+	    }
+	    
+	    return false;
+	};
+	
 	mod.enableButton = function(c) {
-		var button = $("."+c).find("button");
+		var button = $("."+c);
 		
 	    if (button.hasClass(DISABLED_CLASS)) {
 	        button.removeClass(DISABLED_CLASS);
@@ -17,7 +27,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 
 	mod.disableButton = function(c) {
-		var button = $("."+c).find("button");
+		var button = $("."+c);
 		
 	    if (!button.hasClass(DISABLED_CLASS)) {
 	        button.addClass(DISABLED_CLASS);

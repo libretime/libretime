@@ -53,6 +53,10 @@
 	top: 3px;
 }
 
+.sb-content fieldset {
+    margin-bottom: 8px;
+}
+
 .sb-content fieldset.closed {
 	border-width: 1px 0 0;
     margin-bottom: -16px;

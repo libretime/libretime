@@ -19,10 +19,10 @@ var AIRTIME = (function(AIRTIME){
     	}
     	
     	if (check === true) {
-	    	AIRTIME.button.enableButton("library_group_add");
+	    	AIRTIME.button.enableButton("lib-button-add");
 	    }
 	    else {
-	    	AIRTIME.button.disableButton("library_group_add");
+	    	AIRTIME.button.disableButton("lib-button-add");
 	    }
     };
 	
@@ -76,47 +76,61 @@ var AIRTIME = (function(AIRTIME){
 		});	
 	};
 	
-	mod.setupLibraryToolbar = function(oLibTable) {
-		var aButtons,
-			fnAddSelectedItems,
+	mod.setupLibraryToolbar = function() {
+		var $toolbar = $(".lib-content .fg-toolbar:first");
 		
-		fnAddSelectedItems = function() {
-			var oLibTT = TableTools.fnGetInstance('library_display'),
-				aData = oLibTT.fnGetSelectedData(),
-				i,
-				length,
-				temp,
-				aMediaIds = [],
-				aSchedIds = [];
+		$toolbar
+			.append("<ul />")
+			.find('ul')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add selected items to playlist"><span class="ui-icon ui-icon-plusthick"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');
+		
+		//add to timeline button
+		$toolbar.find('.lib-button-add')
+			.click(function() {
+				
+				if (AIRTIME.button.isDisabled('lib-button-add') === true) {
+					return;
+				}
+				
+				var oLibTT = TableTools.fnGetInstance('library_display'),
+					aData = oLibTT.fnGetSelectedData(),
+					i,
+					length,
+					temp,
+					aMediaIds = [],
+					aSchedIds = [];
+				
+				//process selected files/playlists.
+				for (i = 0, length = aData.length; i < length; i++) {
+					temp = aData[i];
+					aMediaIds.push({"id": temp.id, "type": temp.ftype});	
+				}
+				
+				aData = [];
+				$("#show_builder_table tr.cursor-selected-row").each(function(i, el){
+					aData.push($(el).data("aData"));
+				});
 			
-			//process selected files/playlists.
-			for (i = 0, length = aData.length; i < length; i++) {
-				temp = aData[i];
-				aMediaIds.push({"id": temp.id, "type": temp.ftype});	
-			}
-			
-			aData = [];
-			$("#show_builder_table tr.cursor-selected-row").each(function(i, el){
-				aData.push($(el).data("aData"));
+				//process selected schedule rows to add media after.
+				for (i=0, length = aData.length; i < length; i++) {
+					temp = aData[i];
+					aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
+				}
+				
+				AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);	
 			});
 		
-			//process selected schedule rows to add media after.
-			for (i=0, length = aData.length; i < length; i++) {
-				temp = aData[i];
-				aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
-			}
-			
-			AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);	
-		};
-		
-		//[0] = button text
-		//[1] = id 
-		//[2] = enabled
-		//[3] = click event
-		aButtons = [["Delete", "library_group_delete", false, AIRTIME.library.fnDeleteSelectedItems], 
-		           ["Add", "library_group_add", false, fnAddSelectedItems]];
-		
-		addToolBarButtonsLibrary(aButtons);
+		//delete from library.
+		$toolbar.find('.lib-button-delete')
+			.click(function() {
+				
+				if (AIRTIME.button.isDisabled('lib-button-delete') === true) {
+					return;
+				}
+				
+				AIRTIME.library.fnDeleteSelectedItems();
+			});	
 	};
 	
 	return AIRTIME;

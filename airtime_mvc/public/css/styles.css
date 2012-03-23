@@ -776,7 +776,6 @@ dl.inline-list dd {
 #library_display thead th.library_title {
     cursor: default;
 }
-
 .ColVis.TableTools .ui-button {
     height: 21px;
 }
@@ -790,7 +789,7 @@ button.ColVis_Button.ColVis_ShowAll {
     font-size:12px;
     font-weight:normal;
     padding: 0.2em 1em;
-    margin: 0.5em 0.2em -0.5em 0.2em;
+    margin: 0.5em 7px -0.5em -2px;
 }
 
 .library_length {
