@@ -43,8 +43,11 @@ var AIRTIME = (function(AIRTIME) {
     
     libraryInit = function() {
         var oTable,
-            libContentDiv = $("#library_content");
-            tableHeight = libContentDiv.height() - 140;
+            libContentDiv = $("#library_content"),
+            tableHeight = libContentDiv.height() - 130,
+            libLength,
+    		libType,
+    		libFilter;
         
         oTable = $('#library_display').dataTable( {
             
@@ -247,7 +250,7 @@ var AIRTIME = (function(AIRTIME) {
             },
             
             // R = ColReorder, C = ColVis, T = TableTools
-            "sDom": 'Rl<"#library_display_type">fr<"H"T<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>', 
+            "sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"T<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
                 "sRowSelect": "multi",
@@ -266,7 +269,7 @@ var AIRTIME = (function(AIRTIME) {
                     }
                     
                     //checking to enable buttons
-                    AIRTIME.button.enableButton("library_group_delete");
+                    AIRTIME.button.enableButton("lib-button-delete");
                     AIRTIME.library.events.enableAddButtonCheck();
                 },
                 "fnRowDeselected": function ( node ) {
@@ -284,14 +287,13 @@ var AIRTIME = (function(AIRTIME) {
                     
                     //checking to disable buttons
                     if (selected.length === 0) {
-                        AIRTIME.button.disableButton("library_group_delete");
+                        AIRTIME.button.disableButton("lib-button-delete");
                     }
                     AIRTIME.library.events.enableAddButtonCheck();
                 }
             },
             
             "oColVis": {
-                "buttonText": "Show/Hide Columns",
                 "sAlign": "right",
                 "aiExclude": [0, 1, 2],
                 "sSize": "css"
@@ -330,6 +332,12 @@ var AIRTIME = (function(AIRTIME) {
                 oTT.fnSelectNone();
             }       
         });
+        
+        //calculate dynamically width for the library search input.
+    	//libLength = libContentDiv.find("#library_display_length");
+    	//libType = libContentDiv.find("#library_display_type");
+    	//libFilter = libContentDiv.find("#library_display_filter");
+    	//libFilter.find("input").width(libFilter.width() - libType.width() - libLength.width() - 80);
         
         checkImportStatus();
         setInterval( checkImportStatus, 5000 );
@@ -487,48 +495,6 @@ var AIRTIME = (function(AIRTIME) {
     return AIRTIME;
     
 }(AIRTIME || {}));
-    
-function addToolBarButtonsLibrary(aButtons) {
-    var i,
-        length = aButtons.length,
-        libToolBar = $(".library_toolbar"),
-        html,
-        buttonClass = '',
-        DEFAULT_CLASS = 'ui-button ui-state-default',
-        DISABLED_CLASS = 'ui-state-disabled',
-        fn;
-    
-    for ( i = 0; i < length; i += 1 ) {
-        buttonClass = '';
-        
-        //add disabled class if not enabled.
-        if (aButtons[i][2] === false) {
-            buttonClass += DISABLED_CLASS;
-        }
-        
-        html = '<div class="ColVis TableTools '+aButtons[i][1]+'"><button class="'+DEFAULT_CLASS+' '+buttonClass+'"><span>'+aButtons[i][0]+'</span></button></div>';
-        libToolBar.append(html);
-        
-        //create a closure to preserve the state of i.
-        (function(index){
-            
-            libToolBar.find("."+aButtons[index][1]).click(function(){
-                fn = function() {
-                    var $button = $(this).find("button");
-                    
-                    //only call the passed function if the button is enabled.
-                    if (!$button.hasClass(DISABLED_CLASS)) {
-                        aButtons[index][3]();
-                    }	
-                };
-                
-                fn.call(this);
-            });
-            
-        }(i));
-            
-    }
-}
     
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){

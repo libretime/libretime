@@ -637,10 +637,6 @@ dl.inline-list dd {
     background-color:#c7c7c7;
 }
 	
-.datatable .show-builder-placeholder {
-	height: 30px;
-}
-
 .datatable tr.even.selected td {
     background-color: #abcfe2;
 }
@@ -698,15 +694,30 @@ dl.inline-list dd {
 	line-height:22px;
 }
 .dataTables_filter {
-	margin:0 0 0 8px;
+	margin:0 0 8px 8px;
 }
 .dataTables_filter .auto-search {
 	width:55%;
 }
+.dt-process-rel {
+	position: relative;
+}
 .dataTables_processing {
-	font-size:11px;
-	font-weight:normal;
-	margin:2px 0 3px 8px;
+	opacity: 1 !important;
+	position: absolute;
+	top: 100px;
+	left: 10%;
+	width: 80%;
+	height: 50px;
+	text-align: center;
+	font-size:14px;
+	font-weight:bold;
+	padding-top: 40px;
+	background: -moz-linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b2b2b2), color-stop(100%, #a2a2a2));
+    background: linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
+    border: 1px solid #8F8F8F;
+    color: #ffffff;
 }
 #library_display_wrapper .ui-widget-header:first-child {
 	background:none;
@@ -742,7 +753,7 @@ dl.inline-list dd {
 }
 .dataTables_filter input {
     background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;
-    width: 55%;
+    width: 50%;
     border: 1px solid #5B5B5B;
     margin-left: -8px;
     padding: 5px 3px 4px 25px;
@@ -765,7 +776,6 @@ dl.inline-list dd {
 #library_display thead th.library_title {
     cursor: default;
 }
-
 .ColVis.TableTools .ui-button {
     height: 21px;
 }
@@ -779,7 +789,7 @@ button.ColVis_Button.ColVis_ShowAll {
     font-size:12px;
     font-weight:normal;
     padding: 0.2em 1em;
-    margin: 0.5em 0.2em -0.5em 0.2em;
+    margin: 0.5em 7px -0.5em -2px;
 }
 
 .library_length {
