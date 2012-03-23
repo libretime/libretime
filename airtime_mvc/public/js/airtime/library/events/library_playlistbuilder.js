@@ -82,8 +82,8 @@ var AIRTIME = (function(AIRTIME){
 		$toolbar
 			.append("<ul />")
 			.find('ul')
-				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add selected items to playlist"><span class="ui-icon ui-icon-plusthick"></span></li>')
-				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');
+				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add selected files to playlist"><span class="ui-icon ui-icon-plusthick"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected files"><span class="ui-icon ui-icon-trash"></span></li>');
 		
 		//add to playlist button
 		$toolbar.find('.lib-button-add')
