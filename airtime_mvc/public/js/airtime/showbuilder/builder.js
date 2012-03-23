@@ -401,8 +401,6 @@ var AIRTIME = (function(AIRTIME){
 						oTable.fnDraw();
 					}, aData.refresh * 1000); //need refresh in milliseconds
 					
-					//scroll now playing item to top.
-					$sbContent.find(".sb-button-current").click();
 				}
 				//current song is not set, set a timeout to refresh when the first item on the timeline starts.
 				else {
