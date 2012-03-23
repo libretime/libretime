@@ -65,21 +65,31 @@ class PypoPush(Thread):
                     media_schedule = self.queue.get(block=True)
                 else:
                     media_schedule = self.queue.get(block=True, timeout=time_until_next_play)
-                    
+                                        
                 #We get to the following lines only if a schedule was received.
                 liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
-                self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx)
-                next_media_item_chain = self.get_next_schedule_chain(media_schedule)
-                self.logger.debug("Next schedule chain: %s", next_media_item_chain)
+
                 
-                if next_media_item_chain is not None:
-                    tnow = datetime.utcnow()
-                    chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
-                    time_until_next_play = self.date_interval_to_seconds(chain_start - tnow)
-                    self.logger.debug("Blocking %s seconds until show start", time_until_next_play)
+                chains = self.get_all_chains(media_schedule) 
+                current_chain = self.get_current_chain(chains)                
+                if len(current_chain) > 0 and len(liquidsoap_queue_approx) == 0:
+                    #Something is scheduled but Liquidsoap is not playing anything!
+                    #Need to schedule it immediately
+                    modify_cue_point_of_first_link(current_chain)
+                    next_media_item_chain = current_chain
+                    time_until_next_play = 0
                 else:
-                    self.logger.debug("Blocking indefinitely since no show scheduled next")
-                    time_until_next_play = None
+                    self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx)
+                    next_media_item_chain = self.get_next_schedule_chain(media_schedule)
+                    self.logger.debug("Next schedule chain: %s", next_media_item_chain)                
+                    if next_media_item_chain is not None:
+                        tnow = datetime.utcnow()
+                        chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
+                        time_until_next_play = self.date_interval_to_seconds(chain_start - tnow)
+                        self.logger.debug("Blocking %s seconds until show start", time_until_next_play)
+                    else:
+                        self.logger.debug("Blocking indefinitely since no show scheduled")
+                        time_until_next_play = None
             except Empty, e:
                 #We only get here when a new chain of tracks are ready to be played.
                 self.push_to_liquidsoap(next_media_item_chain)
@@ -87,7 +97,8 @@ class PypoPush(Thread):
                 #TODO
                 time.sleep(2)
                 
-                next_media_item_chain = self.get_next_schedule_chain(media_schedule)
+                chains = self.get_all_chains(media_schedule)                
+                next_media_item_chain = self.get_next_schedule_chain(chains)
                 if next_media_item_chain is not None:
                     tnow = datetime.utcnow()
                     chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
@@ -142,7 +153,7 @@ class PypoPush(Thread):
                 
         return liquidsoap_queue_approx
             
-    def handle_new_media_schedule(self, media, liquidsoap_queue_approx):
+    def handle_new_media_schedule(self, media_schedule, liquidsoap_queue_approx):
         """
         This function's purpose is to gracefully handle situations where
         Liquidsoap already has a track in its queue, but the schedule 
@@ -156,8 +167,9 @@ class PypoPush(Thread):
         iteration = 0
         problem_at_iteration = None
         for queue_item in liquidsoap_queue_approx:
-            if queue_item['start'] in media.keys():
-                if queue_item['id'] == media['start']['id']:
+                       
+            if queue_item['start'] in media_schedule.keys():
+                if queue_item['id'] == media_schedule[queue_item['start']]['id']:
                     #Everything OK for this iteration.
                     pass
                 else:
@@ -178,21 +190,18 @@ class PypoPush(Thread):
             #The first item in the Liquidsoap queue (the one that is currently playing)
             #has changed or been removed from the schedule. We need to clear the entire
             #queue, and push the new schedule
+            self.logger.debug("Problem at iteration %s", problem_at_iteration)
             self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx)
         
         
-                
-    """
-    The purpose of this function is to take a look at the last received schedule from
-    pypo-fetch and return the next chain of media_items. A chain is defined as a sequence 
-    of media_items where the end time of media_item 'n' is the start time of media_item
-    'n+1'
-    """
-    def get_next_schedule_chain(self, media_schedule):
+    def get_all_chains(self, media_schedule):
         chains = []
         
         current_chain = []
-        for mkey in media_schedule:
+        
+        sorted_keys = sorted(media_schedule.keys())
+        
+        for mkey in sorted_keys:
             media_item = media_schedule[mkey]
             if len(current_chain) == 0:
                 current_chain.append(media_item)
@@ -206,10 +215,49 @@ class PypoPush(Thread):
                 
         if len(current_chain) > 0:
             chains.append(current_chain)
-                
-        self.logger.debug('media_schedule %s', media_schedule)
-        self.logger.debug("chains %s", chains)
+            
+        return chains
+    
+    def modify_cue_point_of_first_link(self, chain):
+        tnow = datetime.utcnow()
+        link = chain[0]
         
+        link_start = datetime.strptime(link['start'], "%Y-%m-%d-%H-%M-%S")
+        
+        diff = tnow - link_start
+        
+        self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff)
+        link['cue_in'] = link['cue_in'] + diff
+        
+        
+        
+    
+    def get_current_chain(self, chains):
+        tnow = datetime.utcnow()
+        current_chain = []
+
+        
+        for chain in chains:
+            iteration = 0
+            for link in chain:
+                link_start = datetime.strptime(link['start'], "%Y-%m-%d-%H-%M-%S")
+                link_end = datetime.strptime(link['end'], "%Y-%m-%d-%H-%M-%S")
+                
+                self.logger.debug("tnow %s, chain_start %s", tnow, link_start)
+                if link_start <= tnow and tnow < link_end:
+                    current_chain = chain[iteration:]
+                    break
+                iteration += 1
+                
+        return current_chain
+                
+    """
+    The purpose of this function is to take a look at the last received schedule from
+    pypo-fetch and return the next chain of media_items. A chain is defined as a sequence 
+    of media_items where the end time of media_item 'n' is the start time of media_item
+    'n+1'
+    """
+    def get_next_schedule_chain(self, chains):                
         #all media_items are now divided into chains. Let's find the one that
         #starts closest in the future.
         
