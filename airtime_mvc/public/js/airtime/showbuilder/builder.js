@@ -734,18 +734,20 @@ var AIRTIME = (function(AIRTIME){
 		
 		//add events to cursors.
 		$sbTable.find("tbody").on("click", "div.marker", function(event) {
-			var tr = $(this).parents("tr"),
+			var $tr = $(this).parents("tr"),
 				cursorSelClass = "cursor-selected-row";
 			
-			if (event.ctrlKey === false) {
-				$sbTable.find('.'+cursorSelClass).removeClass(cursorSelClass);
-			}
-			
-			if (tr.hasClass(cursorSelClass)) {
-				tr.removeClass(cursorSelClass);
+			if ($tr.hasClass(cursorSelClass)) {
+				$tr.removeClass(cursorSelClass);
 			}
 			else {
-				tr.addClass(cursorSelClass);
+				$tr.addClass(cursorSelClass);
+			}
+			
+			if (event.ctrlKey === false) {
+				$sbTable.find('.'+cursorSelClass)
+					.not($tr)
+					.removeClass(cursorSelClass);
 			}
 			
 			//check if add button can still be enabled.
