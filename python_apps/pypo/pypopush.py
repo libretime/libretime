@@ -75,12 +75,13 @@ class PypoPush(Thread):
                 if len(current_chain) > 0 and len(liquidsoap_queue_approx) == 0:
                     #Something is scheduled but Liquidsoap is not playing anything!
                     #Need to schedule it immediately
-                    modify_cue_point_of_first_link(current_chain)
+                    self.modify_cue_point_of_first_link(current_chain)
                     next_media_item_chain = current_chain
                     time_until_next_play = 0
                 else:
                     self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx)
-                    next_media_item_chain = self.get_next_schedule_chain(media_schedule)
+                    chains = self.get_all_chains(media_schedule) 
+                    next_media_item_chain = self.get_next_schedule_chain(chains)
                     self.logger.debug("Next schedule chain: %s", next_media_item_chain)                
                     if next_media_item_chain is not None:
                         tnow = datetime.utcnow()
@@ -224,12 +225,15 @@ class PypoPush(Thread):
         
         link_start = datetime.strptime(link['start'], "%Y-%m-%d-%H-%M-%S")
         
-        diff = tnow - link_start
+        diff_td = tnow - link_start
         
-        self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff)
-        link['cue_in'] = link['cue_in'] + diff
+        self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff_td)
+        original_cue_in_td = timedelta(seconds=float(link['cue_in']))
+        link['cue_in'] = self.convert_timedelta_to_seconds(original_cue_in_td + diff_td)
         
         
+    def convert_timedelta_to_seconds(self, td):
+        return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
         
     
     def get_current_chain(self, chains):
@@ -260,7 +264,6 @@ class PypoPush(Thread):
     def get_next_schedule_chain(self, chains):                
         #all media_items are now divided into chains. Let's find the one that
         #starts closest in the future.
-        
         tnow = datetime.utcnow()
         closest_start = None
         closest_chain = None
@@ -401,5 +404,7 @@ class PypoPush(Thread):
     def run(self):
         try: self.main()
         except Exception, e:
-            self.logger.error('Pypo Push Exception: %s', e)
+            import traceback
+            top = traceback.format_exc()
+            self.logger.error('Pypo Push Exception: %s', top)
             
