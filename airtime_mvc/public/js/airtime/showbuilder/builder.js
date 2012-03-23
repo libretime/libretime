@@ -422,7 +422,7 @@ var AIRTIME = (function(AIRTIME){
 				if (tr.length > 0) {
 					//enable deleting of overbooked tracks.
 					AIRTIME.button.enableButton("sb-button-trim");
-				}	
+				}
 		    },
 			"fnHeaderCallback": function(nHead) {
 				$(nHead).find("input[type=checkbox]").attr("checked", false);
@@ -732,21 +732,27 @@ var AIRTIME = (function(AIRTIME){
 		//set things like a reference to the table.
 		AIRTIME.showbuilder.init(oTable);
 		
-		//add event to cursors.
-		$sbTable.find("tbody").on("click", "div.marker", function(event){
-			var tr = $(this).parents("tr"),
+		//add events to cursors.
+		$sbTable.find("tbody").on("click", "div.marker", function(event) {
+			var $tr = $(this).parents("tr"),
 				cursorSelClass = "cursor-selected-row";
 			
-			if (tr.hasClass(cursorSelClass)) {
-				tr.removeClass(cursorSelClass);
+			if ($tr.hasClass(cursorSelClass)) {
+				$tr.removeClass(cursorSelClass);
 			}
 			else {
-				tr.addClass(cursorSelClass);
+				$tr.addClass(cursorSelClass);
+			}
+			
+			if (event.ctrlKey === false) {
+				$sbTable.find('.'+cursorSelClass)
+					.not($tr)
+					.removeClass(cursorSelClass);
 			}
 			
 			//check if add button can still be enabled.
 			AIRTIME.library.events.enableAddButtonCheck();
-			
+
 			return false;
 		});
 		
