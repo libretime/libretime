@@ -651,7 +651,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		$("#show_builder .fg-toolbar")
 			.append('<div class="ColVis TableTools sb_delete"><button class="ui-button ui-state-default ui-state-disabled"><span>Delete</span></button></div>')
-			.find('sb_delete')
+			.find('.sb_delete')
 				.click(fnRemoveSelectedItems)
 				.end();
 		
