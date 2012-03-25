@@ -638,7 +638,7 @@ class Application_Model_ShowInstance {
             WHERE s.instance_id = '{$this->_instanceId}' AND s.playout_status >= 0
             ORDER BY starts";
 
-        Logging::log($sql);
+        //Logging::log($sql);
 
         $results = $CC_DBC->GetAll($sql);
 

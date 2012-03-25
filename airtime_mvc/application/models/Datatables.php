@@ -93,10 +93,7 @@ class Application_Model_Datatables {
 		catch (Exception $e) {
 			Logging::debug($e->getMessage());
 		}
-	
-		//display sql executed in airtime log for testing
-		Logging::debug($sql);
-	
+        
 		return array(
 			"sEcho" => intval($data["sEcho"]), 
 			"iTotalDisplayRecords" => intval($totalDisplayRows), 

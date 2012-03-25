@@ -273,9 +273,9 @@ class Application_Model_Show {
         }
 
         foreach($showDays as $showDay) {
-            Logging::log("Local show day is: {$showDay->getDbDay()}");
-            Logging::log("First show day is: {$showDay->getDbFirstShow()}");
-            Logging::log("Id show days is: {$showDay->getDbId()}");
+            //Logging::log("Local show day is: {$showDay->getDbDay()}");
+            //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
+            //Logging::log("Id show days is: {$showDay->getDbId()}");
 
             if (in_array($showDay->getDbDay(), $p_uncheckedDays)) {
                $showDay->reload();
@@ -283,11 +283,11 @@ class Application_Model_Show {
                //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
                //Logging::log("Id show days is: {$showDay->getDbId()}");
                $startDay = new DateTime("{$showDay->getDbFirstShow()} {$showDay->getDbStartTime()}", new DateTimeZone($showDay->getDbTimezone()));
-               Logging::log("Show start day: {$startDay->format('Y-m-d H:i:s')}");
+               //Logging::log("Show start day: {$startDay->format('Y-m-d H:i:s')}");
                $startDay->setTimezone(new DateTimeZone("UTC"));
-               Logging::log("Show start day UTC: {$startDay->format('Y-m-d H:i:s')}");
+               //Logging::log("Show start day UTC: {$startDay->format('Y-m-d H:i:s')}");
                $daysRemovedUTC[] = $startDay->format('w');
-               Logging::log("UTC show day is: {$startDay->format('w')}");
+               //Logging::log("UTC show day is: {$startDay->format('w')}");
             }
         }
 
@@ -301,7 +301,7 @@ class Application_Model_Show {
             ." AND starts > TIMESTAMP '$timestamp'"
             ." AND show_id = $showId";
 
-        Logging::log($sql);
+        //Logging::log($sql);
 
         $CC_DBC->query($sql);
     }
@@ -359,7 +359,7 @@ class Application_Model_Show {
             ."WHERE instance_id = (SELECT id FROM cc_show_instances WHERE show_id = $showId ORDER BY starts LIMIT 1) AND rebroadcast = 1 "
             ."ORDER BY starts";
 
-        Logging::log($sql);
+        //Logging::log($sql);
 
         $rebroadcasts = $CC_DBC->GetAll($sql);
 
@@ -1263,7 +1263,7 @@ class Application_Model_Show {
             $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
             $rebroadcasts = $CC_DBC->GetAll($sql);
 
-            Logging::log('$start time of non repeating record '.$start);
+            //Logging::log('$start time of non repeating record '.$start);
 
             self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
         }
@@ -1569,7 +1569,7 @@ class Application_Model_Show {
                 WHERE last_show IS NULL
                 OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
 
-        Logging::log($sql);
+        //Logging::log($sql);
 
         $res = $CC_DBC->GetAll($sql);
 
@@ -1689,7 +1689,7 @@ class Application_Model_Show {
         $showDay->setDbFirstShow($dt)->setDbStartTime($dt)
         ->save();
 
-        Logging::log("setting show's first show.");
+        //Logging::log("setting show's first show.");
     }
 
     /* Takes in a UTC DateTime object
