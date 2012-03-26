@@ -1,6 +1,9 @@
 import os
 import shutil
 import sys
+import subprocess
+import random
+import string
 from configobj import ConfigObj
 
 if os.geteuid() != 0:
@@ -25,6 +28,9 @@ def create_dir(path):
     except Exception, e:
         pass
         
+def get_rand_string(length=10):
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(length))
+        
 PATH_INI_FILE = '/etc/airtime/media-monitor.cfg'
 
 try:
@@ -43,6 +49,7 @@ try:
     
     #copy monit files
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    subprocess.call('sed -i "s/\$admin_pass/%s/g" /etc/monit/conf.d/monit-airtime-generic.cfg' % get_rand_string(), shell=True)
     if os.environ["disable_auto_start_services"] == "f":
         shutil.copy('%s/../monit-airtime-media-monitor.cfg'%current_script_dir, '/etc/monit/conf.d/')
     
