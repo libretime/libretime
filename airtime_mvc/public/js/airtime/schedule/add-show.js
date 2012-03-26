@@ -288,12 +288,14 @@ function setAddShowEvents() {
 	form.find(".add-show-submit")
 		.click(function(event){
             var addShowButton = $(this);
+            /*
             if (!addShowButton.hasClass("disabled")){
                 addShowButton.addClass("disabled");
             }
             else {
                 return;
             }
+            */
 
             event.preventDefault();
 
@@ -314,8 +316,13 @@ function setAddShowEvents() {
             var start_date = $("#add_show_start_date").val();
             var end_date = $("#add_show_end_date").val();
 
+            $('#schedule-add-show').block({ 
+                message: null
+            });
+            
             $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts, days: days}, function(json){
-                addShowButton.removeClass("disabled");
+                //addShowButton.removeClass("disabled");
+                $('#schedule-add-show').unblock();
                 if(json.form) {
                     $("#add-show-form")
                         .empty()
@@ -331,6 +338,7 @@ function setAddShowEvents() {
                      $("#add-show-form")
                         .empty()
                         .append(json.newForm);
+                        
 
                     setAddShowEvents();
                     scheduleRefetchEvents(json);
