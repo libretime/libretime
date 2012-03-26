@@ -660,6 +660,7 @@ class AirTimeApiClient(ApiClientInterface):
             response = json.loads(response)
             logger.info("Bootstrap info retrieved %s", response)
         except Exception, e:
+            response = None
             import traceback
             top = traceback.format_exc()
             logger.error('Exception: %s', e)

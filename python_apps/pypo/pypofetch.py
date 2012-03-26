@@ -150,12 +150,16 @@ class PypoFetch(Thread):
     def set_bootstrap_variables(self):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
         info = self.api_client.get_bootstrap_info()
-        self.logger.debug('info:%s',info)
-        for k, v in info['switch_status'].iteritems():
-            self.switch_source(k, v)
-        self.update_liquidsoap_stream_format(info['stream_label'])
-        self.update_liquidsoap_station_name(info['station_name'])
-        self.update_liquidsoap_transition_fade(info['transition_fade'])
+        if info == None:
+            self.logger.error('Unable to get bootstrap info.. Existing pypo...')
+            sys.exit(0)
+        else:
+            self.logger.debug('info:%s',info)
+            for k, v in info['switch_status'].iteritems():
+                self.switch_source(k, v)
+            self.update_liquidsoap_stream_format(info['stream_label'])
+            self.update_liquidsoap_station_name(info['station_name'])
+            self.update_liquidsoap_transition_fade(info['transition_fade'])
             
     def regenerateLiquidsoapConf(self, setting_p):
         existing = {}
