@@ -18,7 +18,7 @@ end
 def transition(a,b) =
   log("transition called...")
   add(normalize=false,
-     [ sequence([ blank(duration=2.),
+     [ sequence([ blank(duration=0.1),
                    fade.initial(duration=!default_dj_fade, b) ]),
         fade.final(duration=!default_dj_fade, a) ])
 end
