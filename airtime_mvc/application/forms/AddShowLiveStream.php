@@ -47,8 +47,31 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($custom_password);
         
+        $connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
+        if(trim($connection_url) == ""){
+            $connection_url = "N/A";
+        }
+        
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/add-show-live-stream.phtml', "connection_url"=>Application_Model_Preference::GetLiveDJSourceConnectionURL()))
+            array('ViewScript', array('viewScript' => 'form/add-show-live-stream.phtml', "connection_url"=>$connection_url))
         ));
+    }
+    
+    public function isValid($data){
+        $isValid = parent::isValid($data);
+        
+        if($data['cb_custom_auth'] == 1){
+            if(trim($data['custom_username']) == ''){
+                $element = $this->getElement("custom_username");
+                $element->addError("Username field cannot be empty.");
+                $isValid = false;
+            }
+            if(trim($data['custom_password']) == ''){
+                $element = $this->getElement("custom_password");
+                $element->addError("Password field cannot be empty.");
+                $isValid = false;
+            }
+        }
+        return $isValid;
     }
 }

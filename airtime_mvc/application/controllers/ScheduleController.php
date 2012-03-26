@@ -600,6 +600,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$what = $formWhat->isValid($data);
 		$when = $formWhen->isValid($data);
+		$live = $formLive->isValid($data);
         if($when) {
             $when = $formWhen->checkReliantFields($data, $startDateModified);
         }
@@ -691,7 +692,7 @@ class ScheduleController extends Zend_Controller_Action
 
 		$who = $formWho->isValid($data);
 		$style = $formStyle->isValid($data);
-        if ($what && $when && $repeats && $who && $style) {
+        if ($what && $when && $repeats && $who && $style && $live) {
             if(!$isSaas){
                 if($record && $rebroadAb && $rebroad){
                     $userInfo = Zend_Auth::getInstance()->getStorage()->read();
