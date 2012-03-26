@@ -323,7 +323,7 @@ var AIRTIME = (function(AIRTIME){
 				else {
 					
 					node = nRow.children[0];
-					if (aData.allowed === true) {
+					if (aData.allowed === true && aData.scheduled === 2) {
 						node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input>';
 					}
 					else {
@@ -367,7 +367,7 @@ var AIRTIME = (function(AIRTIME){
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
 					
 					//create cursor arrows.
-					$sbTable.find("tr.sb-now-playing, tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
+					$sbTable.find("tr:not(:first, .sb-header, .sb-empty, .sb-now-playing, .sb-past, .sb-not-allowed)").each(function(i, el) {
 				    	td = $(el).find("td:first");
 				    	if (td.hasClass("dataTables_empty")) {
 				    		return false;
@@ -404,7 +404,7 @@ var AIRTIME = (function(AIRTIME){
 				}
 				//current song is not set, set a timeout to refresh when the first item on the timeline starts.
 				else {
-					tr = $sbTable.find("tbody tr.sb-allowed.sb-header:first");
+					tr = $sbTable.find("tbody tr.sb-future.sb-header:first");
 					
 					if (tr.length > 0) {
 						aData = tr.data("aData");
@@ -417,7 +417,7 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				//check if there are any overbooked tracks on screen to enable the trim button.
-				tr = $sbTable.find("tr.sb-over");
+				tr = $sbTable.find("tr.sb-over.sb-future");
 				
 				if (tr.length > 0) {
 					//enable deleting of overbooked tracks.
@@ -457,7 +457,8 @@ var AIRTIME = (function(AIRTIME){
 					if ($(node).hasClass("sb-header")
 						|| $(node).hasClass("sb-footer")
 						|| $(node).hasClass("sb-empty")
-						|| $(node).hasClass("sb-not-allowed")) {
+						|| $(node).hasClass("sb-not-allowed")
+						|| $(node).hasClass("sb-past")) {
 						return false;
 					}
 					return true;
@@ -466,7 +467,7 @@ var AIRTIME = (function(AIRTIME){
 
 	                //seems to happen if everything is selected
 	                if ( node === null) {
-	                	oTable.find("input[type=checkbox]").attr("checked", true);
+	                	$sbTable.find("tbody input[type=checkbox]").attr("checked", true);
 	                }
 	                else {
 	                	$(node).find("input[type=checkbox]").attr("checked", true);
@@ -508,7 +509,7 @@ var AIRTIME = (function(AIRTIME){
 	    	if ($(this).is(":checked")) {
 	    		var allowedNodes;
 	    		
-	    		allowedNodes = oTable.find('tr:not(:first, .sb-header, .sb-empty, .sb-footer, .sb-not-allowed)');
+	    		allowedNodes = oTable.find('tr:not(:first, .sb-header, .sb-empty, .sb-footer, .sb-not-allowed, .sb-past)');
 	    		
 	    		allowedNodes.each(function(i, el){
 	    			oTT.fnSelect(el);
@@ -658,7 +659,7 @@ var AIRTIME = (function(AIRTIME){
 				    
 				    return draggingContainer; 
 			    },
-				items: 'tr:not(:first, :last, .sb-header, .sb-footer, .sb-not-allowed)',
+				items: 'tr:not(:first, :last, .sb-header, .sb-footer, .sb-not-allowed, .sb-past, .sb-now-playing)',
 				receive: fnReceive,
 				update: fnUpdate,
 				start: function(event, ui) {

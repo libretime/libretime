@@ -54,7 +54,7 @@ class Application_Model_ShowBuilder {
         $this->epoch_now = time();
     }
 
-    //check to see if this row should be editable.
+    //check to see if this row should be editable by the user.
     private function isAllowed($p_item, &$row) {
 
         //cannot schedule in a recorded show.
@@ -62,17 +62,20 @@ class Application_Model_ShowBuilder {
             return;
         }
 
+        /*
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $schedStartDT = new DateTime($p_item["sched_starts"], new DateTimeZone("UTC"));
 
         $showStartEpoch = intval($showStartDT->format('U'));
+        $showEndEpoch = intval($showEndDT->format('U'));
         $schedStartEpoch = intval($schedStartDT->format('U'));
+        */
 
-        //can only schedule the show if item hasn't started and you are allowed.
-        if ($this->epoch_now < max($showStartEpoch, $schedStartEpoch)
-        		&& $this->user->canSchedule($p_item["show_id"]) == true) {
+        if ($this->user->canSchedule($p_item["show_id"]) == true) {  
             $row["allowed"] = true;
         }
+        
     }
     
     private function getItemColor($p_item, &$row) {
@@ -154,7 +157,7 @@ class Application_Model_ShowBuilder {
         $row = $this->defaultRowArray;
         $this->isAllowed($p_item, $row);
         $this->getRowTimestamp($p_item, $row);
-        $this->getItemColor($p_item, &$row);
+        $this->getItemColor($p_item, $row);
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $showStartDT->setTimezone(new DateTimeZone($this->timezone));
@@ -181,10 +184,6 @@ class Application_Model_ShowBuilder {
 
     private function makeScheduledItemRow($p_item) {
         $row = $this->defaultRowArray;
-
-        $this->getItemColor($p_item, &$row);
-        $this->getRowTimestamp($p_item, $row);
-        $this->isAllowed($p_item, $row);
 
         if (isset($p_item["sched_starts"])) {
 
@@ -235,6 +234,10 @@ class Application_Model_ShowBuilder {
             $row["instance"] = intval($p_item["si_id"]);
             $row["image"] = '';
         }
+           
+        $this->getItemColor($p_item, $row);
+        $this->getRowTimestamp($p_item, $row);
+        $this->isAllowed($p_item, $row);
 
         return $row;
     }
@@ -264,6 +267,7 @@ class Application_Model_ShowBuilder {
         $endsEpoch = intval($showEndDT->format("U"));
         
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
+        $this->isAllowed($p_item, $row);
         
         return $row;
     }
@@ -327,6 +331,11 @@ class Application_Model_ShowBuilder {
         for ($i = 0, $rows = count($scheduled_items); $i < $rows; $i++) {
 
             $item = $scheduled_items[$i];
+            
+            //don't send back data for filler rows.
+            if (isset($item["playout_status"]) && $item["playout_status"] < 0) {
+                continue;
+            }
 
             //make a header row.
             if ($current_id !== $item["si_id"]) {

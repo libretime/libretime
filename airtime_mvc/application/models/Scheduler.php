@@ -89,7 +89,7 @@ class Application_Model_Scheduler {
      *
      * @return DateTime endDT in UTC
      */
-    public static function findEndTime($p_startDT, $p_duration) {
+    private static function findEndTime($p_startDT, $p_duration) {
 
         $startEpoch = $p_startDT->format("U.u");
         $durationSeconds = Application_Model_Playlist::playlistTimeToSeconds($p_duration);
@@ -108,6 +108,39 @@ class Application_Model_Scheduler {
         Logging::log("end DateTime created {$dt->format("Y-m-d H:i:s.u")}");
 
         return $dt;
+    }
+    
+    private function findNextStartTime($DT, $instance) {
+        
+        //check to see if the show has started.
+        $nowDT = new DateTime("now", new DateTimeZone("UTC"));
+        
+        $sEpoch = intval($DT->format("U"));
+        $nEpoch = intval($nowDT->format("U"));
+        
+        //check for if the show has started.
+        if ($nEpoch > $sEpoch) {
+            //need some kind of placeholder for cc_schedule.
+            //playout_status will be -1.
+            $nextDT = $nowDT;
+        
+            $length = $nEpoch - $sEpoch;
+            $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
+        
+            //fillers are for only storing a chunk of time space that has already passed.
+            $filler = new CcSchedule();
+            $filler->setDbStarts($DT)
+            ->setDbEnds($nowDT)
+            ->setDbClipLength($cliplength)
+            ->setDbPlayoutStatus(-1)
+            ->setDbInstanceId($instance->getDbId())
+            ->save($this->con);
+        }
+        else {
+            $nextDT = $DT;
+        }
+        
+        return $nextDT;
     }
 
     /*
@@ -145,12 +178,16 @@ class Application_Model_Scheduler {
                     if (intval($schedule["instance"]) !== $instance->getDbId()) {
                         throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
                     }
-                    $nextStartDT = $schedItem->getDbEnds(null);
+                    $schedItemEndDT = $schedItem->getDbEnds(null);
+                    $nextStartDT = $this->findNextStartTime($schedItemEndDT, $instance);
                 }
                 //selected empty row to add after
                 else {
                     $instance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
-                    $nextStartDT = $instance->getDbStarts(null);
+                    
+                    //check to see if the show has started.
+                    $showStartDT = $instance->getDbStarts(null);
+                    $nextStartDT = $this->findNextStartTime($showStartDT, $instance);
                 }
 
                 $currTs = intval($instance->getDbLastScheduled("U")) ? : 0;
@@ -244,6 +281,7 @@ class Application_Model_Scheduler {
                 ->update(array('DbLastScheduled' => new DateTime("now", new DateTimeZone("UTC"))), $this->con);
         }
         catch (Exception $e) {
+            Logging::debug($e->getMessage());
             throw $e;
         }
     }

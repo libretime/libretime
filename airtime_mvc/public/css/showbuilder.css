@@ -75,10 +75,6 @@
     width:100px;
 }
 
-table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-row th {
-    border-bottom: 1px solid rgba(215, 0, 0, 1) !important;
-}
-
 .sb-starts,
 .sb-ends {
 	text-align: center;
@@ -90,7 +86,7 @@ table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-ro
 }
 .marker {
     background: url(images/tl-arrow.png) no-repeat scroll 3px 4px;
-    bottom: -14px;
+    top: -14px;
     display: block;
     height: 9px;
     left: -17px;
@@ -107,6 +103,10 @@ table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-ro
 }
 tr.cursor-selected-row .marker {
     background-color: rgba(215, 0, 0, 1);
+}
+
+table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-row th {
+    border-top: 1px solid rgba(215, 0, 0, 1) !important;
 }
 
 .sb-content .sb-past {
