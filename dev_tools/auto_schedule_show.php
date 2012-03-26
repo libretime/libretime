@@ -24,21 +24,21 @@ function query($conn, $query){
 }
 
 function getFileFromCcFiles($conn){
-    $query = "SELECT * from cc_files LIMIT 1";
+    $query = "SELECT * from cc_files LIMIT 2";
     
     $result = query($conn, $query);
     
-    $file = null;
+    $files = array();
     while ($row = pg_fetch_array($result)) {
-        $file = $row;
+        $files[] = $row;
     }
     
-    if (is_null($file)){
+    if (count($files) == 0){
         echo "Library is empty. Could not choose random file.";
         exit(1);
     }
     
-    return $file;
+    return $files;
 }
 
 function insertIntoCcShow($conn){
@@ -64,7 +64,7 @@ function insertIntoCcShow($conn){
     return $show_id;
 }
 
-function insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $file){
+function insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $files){
     /* Step 2:
      * Create a show instance.
      * Column values:
@@ -75,9 +75,8 @@ function insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $file){
 
     $now = $nowDateTime->format("Y-m-d H:i:s");
 
-
     $columns = "(starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance)";
-    $values = "('$starts', '$ends', $show_id, 0, 0, NULL, NULL, '$file[length]', '$now', 'f')";
+    $values = "('$starts', '$ends', $show_id, 0, 0, NULL, NULL, TIMESTAMP '$ends' - TIMESTAMP '$starts', '$now', 'f')";
     $query = "INSERT INTO cc_show_instances $columns values $values ";
     echo $query.PHP_EOL;
      
@@ -101,13 +100,39 @@ function insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $file){
  * id | starts | ends | file_id | clip_length| fade_in | fade_out | cue_in | cue_out | media_item_played | instance_id
  * 1 | 2012-02-29 23:25:00 | 2012-02-29 23:30:05.037166 | 1 | 00:05:05.037166 | 00:00:00 | 00:00:00 | 00:00:00 | 00:05:05.037166 | f | 5
  */
-function insertIntoCcSchedule($conn, $file, $show_instance_id, $starts, $ends){
+function insertIntoCcSchedule($conn, $files, $show_instance_id, $p_starts, $p_ends){
     $columns = "(starts, ends, file_id, clip_length, fade_in, fade_out, cue_in, cue_out, media_item_played, instance_id)";
-    $values = "('$starts', '$ends', $file[id], '$file[length]', '00:00:00', '00:00:00', '00:00:00', '$file[length]', 'f', $show_instance_id)";
-    $query = "INSERT INTO cc_schedule $columns VALUES $values";
-    echo $query.PHP_EOL;
     
-    $result = query($conn, $query);
+    $starts = $p_starts;
+    
+    foreach($files as $file){
+
+        $endsDateTime = new DateTime($starts, new DateTimeZone("UTC"));
+        $lengthDateInterval = getDateInterval($file["length"]);
+        $endsDateTime->add($lengthDateInterval);
+        $ends = $endsDateTime->format("Y-m-d H:i:s");
+
+        $values = "('$starts', '$ends', $file[id], '$file[length]', '00:00:00', '00:00:00', '00:00:00', '$file[length]', 'f', $show_instance_id)";
+        $query = "INSERT INTO cc_schedule $columns VALUES $values";
+        echo $query.PHP_EOL;
+        
+        $starts = $ends;
+        $result = query($conn, $query);        
+    }
+}
+
+function getDateInterval($interval){
+    list($length,) = explode(".", $interval);
+    list($hour, $min, $sec) = explode(":", $length);
+    return new DateInterval("PT{$hour}H{$min}M{$sec}S");
+}
+
+function getEndTime($startDateTime, $p_files){
+    foreach ($p_files as $file){
+        $startDateTime->add(getDateInterval($file['length']));
+    }
+    
+    return $startDateTime;
 }
 
 function rabbitMqNotify(){
@@ -149,14 +174,18 @@ EOD;
 }
 
 $startDateTime = new DateTime("now + 30sec", new DateTimeZone("UTC"));
-$endDateTime = new DateTime("now + 1min 30sec", new DateTimeZone("UTC"));
+//$endDateTime = new DateTime("now + 1min 30sec", new DateTimeZone("UTC"));
 $starts = $startDateTime->format("Y-m-d H:i:s");
+//$ends = $endDateTime->format("Y-m-d H:i:s");
+
+$files = getFileFromCcFiles($conn); 
+$show_id = insertIntoCcShow($conn);
+
+$endDateTime = getEndTime(clone $startDateTime, $files);
 $ends = $endDateTime->format("Y-m-d H:i:s");
 
-$file = getFileFromCcFiles($conn); 
-$show_id = insertIntoCcShow($conn);
-$show_instance_id = insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $file);
-insertIntoCcSchedule($conn, $file, $show_instance_id, $starts, $ends);
+$show_instance_id = insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $files);
+insertIntoCcSchedule($conn, $files, $show_instance_id, $starts, $ends);
 
 rabbitMqNotify();
 
