@@ -78,6 +78,12 @@
 table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-row th {
     border-bottom: 1px solid rgba(215, 0, 0, 1) !important;
 }
+
+.sb-starts,
+.sb-ends {
+	text-align: center;
+}
+
 .innerWrapper {
     position:relative;
     width:100%;
