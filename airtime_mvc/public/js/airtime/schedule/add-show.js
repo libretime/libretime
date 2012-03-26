@@ -401,6 +401,21 @@ function setAddShowEvents() {
 		// calculate duration
 		calculateDuration(endDateTime, startDateTime);
 	});
+	
+	
+	if($('#cb_custom_auth').attr('checked')){
+        $('#custom_auth_div').show()
+    }else{
+        $('#custom_auth_div').hide()
+    }
+	
+	$('#cb_custom_auth').change(function(){
+	    if($(this).attr('checked')){
+	        $('#custom_auth_div').show()
+	    }else{
+	        $('#custom_auth_div').hide()
+	    }
+	})
 
 	function calculateDuration(endDateTime, startDateTime){
 		var duration;
@@ -445,6 +460,9 @@ function showErrorSections() {
     if($("#add_show_rebroadcast_absolute .errors").length > 0) {
         $("#schedule-record-rebroadcast").show();
         $("#add_show_rebroadcast_absolute").show();
+    }
+    if($("#live-stream-override .errors").length > 0) {
+        $("#live-stream-override").show();
     }
     if($("#add_show_rebroadcast_relative .errors").length > 0) {
         $("#schedule-record-rebroadcast").show();

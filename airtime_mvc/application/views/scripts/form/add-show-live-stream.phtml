@@ -26,36 +26,36 @@
         <dd id="cb_custom_auth_override-element">
             <?php echo $this->element->getElement('cb_custom_auth') ?>
         </dd>
-        
-    
-        <dt id="custom_username-label" class="block-display">
-            <label class="optional" for="custom_username"><?php echo $this->element->getElement('custom_username')->getLabel() ?> :
-            </label>
-        </dt>
-        <dd id="custom_username-element" class="block-display">
-            <?php echo $this->element->getElement('custom_username') ?>
-            <?php if($this->element->getElement('custom_username')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('custom_username')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-        <dt id="custom_password-label" class="block-display">
-            <label class="optional" for="custom_password"><?php echo $this->element->getElement('custom_password')->getLabel() ?> :
-            </label>
-        </dt>
-        <dd id="custom_password-element" class="block-display">
-            <?php echo $this->element->getElement('custom_password') ?>
-            <?php if($this->element->getElement('custom_password')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('custom_password')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
+        <div id="custom_auth_div">
+            <dt id="custom_username-label" class="block-display">
+                <label class="optional" for="custom_username"><?php echo $this->element->getElement('custom_username')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="custom_username-element" class="block-display">
+                <?php echo $this->element->getElement('custom_username') ?>
+                <?php if($this->element->getElement('custom_username')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->element->getElement('custom_username')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?> 
+            </dd>
+            <dt id="custom_password-label" class="block-display">
+                <label class="optional" for="custom_password"><?php echo $this->element->getElement('custom_password')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="custom_password-element" class="block-display">
+                <?php echo $this->element->getElement('custom_password') ?>
+                <?php if($this->element->getElement('custom_password')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->element->getElement('custom_password')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?> 
+            </dd>
+        </div>
         <dt id="Connection_URL-label">
             <label for="outputStreamURL">Connection URL: </label>
         </dt>
