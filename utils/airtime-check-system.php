@@ -13,9 +13,10 @@ if (substr($sapi_type, 0, 3) == 'cli') {
     $airtimeIni = AirtimeCheck::GetAirtimeConf();
     $apiKey = $airtimeIni['general']['api_key'];
     $baseUrl = $airtimeIni['general']['base_url'];
+    $base_port = $airtimeIni['general']['base_port'];
 
 
-    $status = AirtimeCheck::GetStatus($baseUrl, $apiKey);
+    $status = AirtimeCheck::GetStatus($baseUrl, $base_port, $apiKey);
     AirtimeCheck::PrintStatus($baseUrl, $status);
 }
 
@@ -99,9 +100,9 @@ class AirtimeCheck {
             return $headerInfo['Server'][0];
     }
 
-    public static function GetStatus($p_baseUrl, $p_apiKey){
+    public static function GetStatus($p_baseUrl, $p_basePort, $p_apiKey){
 
-        $url = "http://$p_baseUrl/api/status/format/json/api_key/%%api_key%%";
+        $url = "http://$p_baseUrl:$p_basePort/api/status/format/json/api_key/%%api_key%%";
         self::output_status("AIRTIME_STATUS_URL", $url);
         $url = str_replace("%%api_key%%", $p_apiKey, $url);
         
