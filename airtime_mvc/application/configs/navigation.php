@@ -30,7 +30,7 @@ $pages = array(
 		'resource'	=>	'library'
 	),
 	array(
-		'label'      => 'Calendar',
+        'label'      => 'Calendar',
         'module'     => 'default',
         'controller' => 'Schedule',
         'action'     => 'index',
