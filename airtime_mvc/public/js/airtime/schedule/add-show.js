@@ -401,21 +401,20 @@ function setAddShowEvents() {
 		// calculate duration
 		calculateDuration(endDateTime, startDateTime);
 	});
-	
-	
-	if($('#cb_custom_auth').attr('checked')){
+
+    if($('#cb_custom_auth').attr('checked')){
         $('#custom_auth_div').show()
     }else{
         $('#custom_auth_div').hide()
     }
-	
-	$('#cb_custom_auth').change(function(){
-	    if($(this).attr('checked')){
-	        $('#custom_auth_div').show()
-	    }else{
-	        $('#custom_auth_div').hide()
-	    }
-	})
+    
+    $('#cb_custom_auth').change(function(){
+        if($(this).attr('checked')){
+            $('#custom_auth_div').show()
+        }else{
+            $('#custom_auth_div').hide()
+        }
+    })
 
 	function calculateDuration(endDateTime, startDateTime){
 		var duration;
