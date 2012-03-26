@@ -131,7 +131,7 @@ var AIRTIME = (function(AIRTIME){
 		oTable = $sbTable.dataTable( {
 			"aoColumns": [
 		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px", "sClass": "sb-checkbox"},
-            /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "25px"},
+            /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "16px"},
 	        /* starts */{"mDataProp": "starts", "sTitle": "Start", "sClass": "sb-starts", "sWidth": "60px"},
 	        /* ends */{"mDataProp": "ends", "sTitle": "End", "sClass": "sb-ends", "sWidth": "60px"},
 	        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length sb-length", "sWidth": "65px"},
