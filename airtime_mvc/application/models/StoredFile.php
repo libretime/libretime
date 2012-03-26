@@ -783,7 +783,9 @@ Logging::log("getting media! - 2");
             $freeSpace = ceil($freeSpace/1024/1024);
             $fileSize = ceil($fileSize/1024/1024);
             return array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
-
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -792,6 +794,8 @@ Logging::log("getting media! - 2");
         Logging::log('copyFileToStor: moving file '.$audio_file);
         $md5 = md5_file($audio_file);
         $duplicate = Application_Model_StoredFile::RecallByMd5($md5);
+        
+        $result = null;
         if ($duplicate) {
             if (PEAR::isError($duplicate)) {
                 $result = array("code" => 105, "message" => $duplicate->getMessage());
@@ -802,13 +806,13 @@ Logging::log("getting media! - 2");
             }
         }
 
-        if (!isset($result)){//The file has no duplicate, so procceed to copy.
+        if (!isset($result)){//The file has no duplicate, so proceed to copy.
             $storDir = Application_Model_MusicDir::getStorDir();
             $stor = $storDir->getDirectory();
 
             //check to see if there is enough space in $stor to continue.
-            $result = Application_Model_StoredFile::checkForEnoughDiskSpaceToCopy($stor, $audio_file);
-            if (!isset($result)){//if result not set then there's enough disk space to copy the file over
+            $enough_space = Application_Model_StoredFile::checkForEnoughDiskSpaceToCopy($stor, $audio_file);
+            if ($enough_space){
                 $stor .= "/organize";
                 $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
 
@@ -822,9 +826,9 @@ Logging::log("getting media! - 2");
                     unlink($audio_file);//remove the file from the organize after failed rename
                     $result = array("code" => 108, "message" => "The file was not uploaded, this error will occur if the computer hard drive does not have enough disk space.");
                 }
+            }
         }
-    }
-    return $result;
+        return $result;
     }
 
 
