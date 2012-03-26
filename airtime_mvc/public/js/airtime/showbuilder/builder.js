@@ -131,10 +131,10 @@ var AIRTIME = (function(AIRTIME){
 		oTable = $sbTable.dataTable( {
 			"aoColumns": [
 		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px", "sClass": "sb-checkbox"},
-            /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "25px", "bVisible": true},
-	        /* starts */{"mDataProp": "starts", "sTitle": "Start", "sClass": "sb-starts"},
-	        /* ends */{"mDataProp": "ends", "sTitle": "End", "sClass": "sb-ends"},
-	        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length sb-length"},
+            /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "25px"},
+	        /* starts */{"mDataProp": "starts", "sTitle": "Start", "sClass": "sb-starts", "sWidth": "60px"},
+	        /* ends */{"mDataProp": "ends", "sTitle": "End", "sClass": "sb-ends", "sWidth": "60px"},
+	        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length sb-length", "sWidth": "65px"},
 	        /* title */{"mDataProp": "title", "sTitle": "Title", "sClass": "sb-title"},
 	        /* creator */{"mDataProp": "creator", "sTitle": "Creator", "sClass": "sb-creator"},
 	        /* album */{"mDataProp": "album", "sTitle": "Album", "sClass": "sb-album"},
