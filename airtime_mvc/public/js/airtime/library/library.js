@@ -300,7 +300,7 @@ var AIRTIME = (function(AIRTIME) {
             },
             
             "oColReorder": {
-                "iFixedColumns": 2
+                "iFixedColumns": 3
             }
             
         });
