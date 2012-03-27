@@ -657,7 +657,8 @@ class Application_Model_ShowInstance {
 
         $sql = "SELECT *
             FROM (cc_schedule AS s LEFT JOIN cc_files AS f ON f.id = s.file_id)
-            WHERE s.instance_id = '{$this->_instanceId}' ORDER BY starts";
+            WHERE s.instance_id = '{$this->_instanceId}' AND s.playout_status >= 0
+            ORDER BY starts";
 
         Logging::log($sql);
 

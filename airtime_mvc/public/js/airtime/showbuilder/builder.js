@@ -299,7 +299,7 @@ var AIRTIME = (function(AIRTIME){
 					if (aData.image === true) {
 						$image.html('<img src="/css/images/icon_audioclip.png"></img>')
 							.click(function() {
-			                    open_show_preview(aData.instance, iDisplayIndex);
+			                    open_show_preview(aData.instance, aData.pos);
 			                    return false;
 			                });
 					}

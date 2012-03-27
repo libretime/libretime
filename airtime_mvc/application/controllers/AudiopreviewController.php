@@ -135,7 +135,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
-        if($logo){
+        if ($logo){
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
             $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
@@ -163,16 +163,17 @@ class AudiopreviewController extends Zend_Controller_Action
         }
         
         $showInstance = new Application_Model_ShowInstance($showID);
-        $result = Array();
+        $result = array();
         $position = 0;
-        foreach ( $showInstance->getShowListContent() as $track ){
+        foreach ($showInstance->getShowListContent() as $track){
             
-            $elementMap = array( 'element_title' => isset($track['track_title'])?$track['track_title']:"",
-                              'element_artist' => isset($track['artist_name'])?$track['artist_name']:"",
-                              'element_position' => $position,
-                              'element_id' => ++$position,
-                            );
-            
+            $elementMap = array( 
+                'element_title' => isset($track['track_title']) ? $track['track_title'] : "",
+                'element_artist' => isset($track['artist_name']) ? $track['artist_name'] : "",
+                'element_position' => $position,
+                'element_id' => ++$position,
+            );
+           
             $fileExtension = pathinfo($track['filepath'], PATHINFO_EXTENSION);
             if ($fileExtension === 'mp3'){
                 $elementMap['element_mp3'] = $track['gunid'].'.'.$fileExtension;

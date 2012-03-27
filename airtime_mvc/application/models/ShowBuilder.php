@@ -14,7 +14,8 @@ class Application_Model_ShowBuilder {
 
     private $user;
     private $opts;
-
+    
+    private $pos;
     private $contentDT;
     private $epoch_now;
    
@@ -209,6 +210,8 @@ class Application_Model_ShowBuilder {
             $row["cueout"] = $p_item["cue_out"];
             $row["fadein"] = round(substr($p_item["fade_in"], 6), 6);
             $row["fadeout"] = round(substr($p_item["fade_out"], 6), 6);
+            
+            $row["pos"] = $this->pos++;
 
             $this->contentDT = $schedEndDT;
         }
@@ -332,6 +335,8 @@ class Application_Model_ShowBuilder {
                 $display_items[] = $this->makeHeaderRow($item);
 
                 $current_id = $item["si_id"];
+                
+                $this->pos = 1;
             }
 
             //make a normal data row.
