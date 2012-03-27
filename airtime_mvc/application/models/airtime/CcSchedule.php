@@ -223,5 +223,18 @@ class CcSchedule extends BaseCcSchedule {
 
         return $this;
     } // setDbEnds()
+    
+    public function isCurrentItem() {
+        
+        $epochNow = time();
+        $epochStart = intval($this->getDbStarts('U'));
+        $epochEnd = intval($this->getDbEnds('U'));
+        
+        if ($epochStart < $epochNow && $epochEnd > $epochNow) {
+            return true;
+        }
+        
+        return false;
+    }
 
 } // CcSchedule

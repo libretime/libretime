@@ -109,7 +109,7 @@ var AIRTIME = (function(AIRTIME){
 				
 				aData = [];
 				$("#show_builder_table tr.cursor-selected-row").each(function(i, el){
-					aData.push($(el).data("aData"));
+					aData.push($(el).prev().data("aData"));
 				});
 			
 				//process selected schedule rows to add media after.

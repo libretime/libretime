@@ -726,7 +726,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if ($v !== null) {
 			$v = (int) $v;
 		}
-
+		
+		Logging::log('$v status is '.$v);
+		
 		if ($this->playout_status !== $v || $this->isNew()) {
 			$this->playout_status = $v;
 			$this->modifiedColumns[] = CcSchedulePeer::PLAYOUT_STATUS;

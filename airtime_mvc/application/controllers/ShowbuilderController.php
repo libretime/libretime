@@ -111,7 +111,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $item = CcScheduleQuery::create()->findPK($id);
         $instance = $item->getCcShowInstances();
         
-        if ($now < intval($item->getDbStarts("U")) && $user->canSchedule($instance->getDbShowId())) {
+        if ($now < intval($item->getDbEnds("U")) && $user->canSchedule($instance->getDbShowId())) {
             $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/showbuilder/schedule-remove");
         }
         

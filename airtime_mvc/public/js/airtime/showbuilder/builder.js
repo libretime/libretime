@@ -220,15 +220,109 @@ var AIRTIME = (function(AIRTIME){
 					r,g,b,a,
 					$nRow = $(nRow);
 				
-                //call the context menu so we can prevent the event from propagating.
-                $(nRow).find('td:not(.sb-checkbox)').click(function(e){
-                    
-                    $(this).contextMenu({x: e.pageX, y: e.pageY});
-                    
-                    return false;
-                });
+				fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
+					
+					node = nRow.children[iNodeIndex];
+					node.innerHTML = sRowContent;
+					node.setAttribute('colspan',100);
+					for (i = iNodeIndex + 1; i < nRow.children.length; i = i+1) {
+						node = nRow.children[i];
+						node.innerHTML = "";
+						node.setAttribute("style", "display : none");
+					}
+					
+					$(nRow).addClass(sClass);
+				};
+				         
+				if (aData.header === true) {
+					//remove the column classes from all tds.
+					$(nRow).find('td').removeClass();
+					
+					node = nRow.children[0];
+					node.innerHTML = '';
+					cl = 'sb-header';
+					
+					sSeparatorHTML = '<span class="show-title">'+aData.title+'</span>';
+					sSeparatorHTML += '<span class="push-right"><span class="show-time">'+aData.starts+'</span>-<span class="show-time">'+aData.ends+'</span></span>';
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
+				}
+				else if (aData.footer === true) {
+					//remove the column classes from all tds.
+					$(nRow).find('td').removeClass();
+					
+					node = nRow.children[0];
+					cl = 'sb-footer';
+					
+					//check the show's content status.
+					if (aData.runtime > 0) {
+						node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
+						cl = cl + ' ui-state-highlight';
+					}
+					else {
+						node.innerHTML = '<span class="ui-icon ui-icon-notice"></span>';
+						cl = cl + ' ui-state-error';
+					}
+						
+					sSeparatorHTML = '<span>'+aData.fRuntime+'</span>';
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
+				}
+				else if (aData.empty === true) {
+					//remove the column classes from all tds.
+					$(nRow).find('td').removeClass();
+					
+					node = nRow.children[0];
+					node.innerHTML = '';
+					
+					sSeparatorHTML = '<span>Show Empty</span>';
+					cl = cl + " sb-empty odd";
+					
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
+				}
+				else if (aData.record === true) {
+					//remove the column classes from all tds.
+					$(nRow).find('td').removeClass();
+					
+					node = nRow.children[0];
+					node.innerHTML = '';
+					
+					sSeparatorHTML = '<span>Recording From Line In</span>';
+					cl = cl + " sb-record odd";
+					
+					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
+				}
+				else {
+					
+					node = nRow.children[0];
+					if (aData.allowed === true && aData.scheduled >= 1) {
+						node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input>';
+					}
+					else {
+						node.innerHTML = '';
+					}
+				}
 				
-				//save some info for reordering purposes.
+				//add the show colour to the leftmost td
+                if (aData.footer !== true) {
+                	
+                	if ($nRow.hasClass('sb-header')) {
+                		a = 1;
+                	}
+                	else if ($nRow.hasClass('odd')) {
+                		a = 0.3;
+                	}
+                	else if ($nRow.hasClass('even')) {
+                		a = 0.4;
+                	}
+                	
+                	//convert from hex to rgb.
+                	r = parseInt((aData.backgroundColor).substring(0,2), 16);
+                	g = parseInt((aData.backgroundColor).substring(2,4), 16);
+                	b = parseInt((aData.backgroundColor).substring(4,6), 16);
+                	
+                	$nRow.find('td:first').css('background', 'rgba('+r+', '+g+', '+b+', '+a+')');
+                }
+                
+                //save some info for reordering purposes.
 				$(nRow).data({"aData": aData});
 				
 				if (aData.scheduled === 1) {
@@ -256,101 +350,19 @@ var AIRTIME = (function(AIRTIME){
 					$(nRow).addClass("sb-over");
 				}
 				
-				fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
-					
-					node = nRow.children[iNodeIndex];
-					node.innerHTML = sRowContent;
-					node.setAttribute('colspan',100);
-					for (i = iNodeIndex + 1; i < nRow.children.length; i = i+1) {
-						node = nRow.children[i];
-						node.innerHTML = "";
-						node.setAttribute("style", "display : none");
-					}
-					
-					$(nRow).addClass(sClass);
-				};
-				
-                //add the play function to the library_type td or the speaker
-                $(nRow).find('td.library_image').click(function(){
+				 //add the play function
+                $(nRow).find('td.sb-image').click(function(){
                     open_show_preview(aData.instance, iDisplayIndex);
                     return false;
                 });
-            
-				if (aData.header === true) {
-					node = nRow.children[0];
-					node.innerHTML = '';
-					cl = 'sb-header';
-					
-					sSeparatorHTML = '<span class="show-title">'+aData.title+'</span>';
-					sSeparatorHTML += '<span class="push-right"><span class="show-time">'+aData.starts+'</span>-<span class="show-time">'+aData.ends+'</span></span>';
-					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
-				}
-				else if (aData.footer === true) {
-					node = nRow.children[0];
-					cl = 'sb-footer';
-					
-					//check the show's content status.
-					if (aData.runtime > 0) {
-						node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
-						cl = cl + ' ui-state-highlight';
-					}
-					else {
-						node.innerHTML = '<span class="ui-icon ui-icon-notice"></span>';
-						cl = cl + ' ui-state-error';
-					}
-						
-					sSeparatorHTML = '<span>'+aData.fRuntime+'</span>';
-					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
-				}
-				else if (aData.empty === true) {
-					node = nRow.children[0];
-					node.innerHTML = '';
-					
-					sSeparatorHTML = '<span>Show Empty</span>';
-					cl = cl + " sb-empty odd";
-					
-					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
-				}
-				else if (aData.record === true) {
-					node = nRow.children[0];
-					node.innerHTML = '';
-					
-					sSeparatorHTML = '<span>Recording From Line In</span>';
-					cl = cl + " sb-record odd";
-					
-					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
-				}
-				else {
-					
-					node = nRow.children[0];
-					if (aData.allowed === true) {
-						node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input>';
-					}
-					else {
-						node.innerHTML = '';
-					}
-				}
-				
-				//add the show colour to the leftmost td
-                if (aData.footer !== true) {
-                	
-                	if ($nRow.hasClass('sb-header')) {
-                		a = 1;
-                	}
-                	else if ($nRow.hasClass('odd')) {
-                		a = 0.3;
-                	}
-                	else if ($nRow.hasClass('even')) {
-                		a = 0.4;
-                	}
-                	
-                	//convert from hex to rgb.
-                	r = parseInt((aData.backgroundColor).substring(0,2), 16);
-                	g = parseInt((aData.backgroundColor).substring(2,4), 16);
-                	b = parseInt((aData.backgroundColor).substring(4,6), 16);
-                	
-                	$nRow.find('td.sb-checkbox').css('background', 'rgba('+r+', '+g+', '+b+', '+a+')');
-                }
+                
+                //call the context menu so we can prevent the event from propagating.
+                $(nRow).find('td:gt(1)').click(function(e){
+                    
+                    $(this).contextMenu({x: e.pageX, y: e.pageY});
+                    
+                    return false;
+                });
 			},
 			"fnDrawCallback": function(oSettings, json) {
 				var wrapperDiv,
@@ -367,7 +379,7 @@ var AIRTIME = (function(AIRTIME){
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
 					
 					//create cursor arrows.
-					$sbTable.find("tr.sb-now-playing, tr:not(:first, .sb-footer, .sb-empty, .sb-not-allowed)").each(function(i, el) {
+					$sbTable.find("tr:not(:first, .sb-header, .sb-empty, .sb-now-playing, .sb-past, .sb-not-allowed)").each(function(i, el) {
 				    	td = $(el).find("td:first");
 				    	if (td.hasClass("dataTables_empty")) {
 				    		return false;
@@ -404,7 +416,7 @@ var AIRTIME = (function(AIRTIME){
 				}
 				//current song is not set, set a timeout to refresh when the first item on the timeline starts.
 				else {
-					tr = $sbTable.find("tbody tr.sb-allowed.sb-header:first");
+					tr = $sbTable.find("tbody tr.sb-future.sb-header:first");
 					
 					if (tr.length > 0) {
 						aData = tr.data("aData");
@@ -417,7 +429,7 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				//check if there are any overbooked tracks on screen to enable the trim button.
-				tr = $sbTable.find("tr.sb-over");
+				tr = $sbTable.find("tr.sb-over.sb-future");
 				
 				if (tr.length > 0) {
 					//enable deleting of overbooked tracks.
@@ -457,7 +469,8 @@ var AIRTIME = (function(AIRTIME){
 					if ($(node).hasClass("sb-header")
 						|| $(node).hasClass("sb-footer")
 						|| $(node).hasClass("sb-empty")
-						|| $(node).hasClass("sb-not-allowed")) {
+						|| $(node).hasClass("sb-not-allowed")
+						|| $(node).hasClass("sb-past")) {
 						return false;
 					}
 					return true;
@@ -466,7 +479,7 @@ var AIRTIME = (function(AIRTIME){
 
 	                //seems to happen if everything is selected
 	                if ( node === null) {
-	                	oTable.find("input[type=checkbox]").attr("checked", true);
+	                	$sbTable.find("tbody input[type=checkbox]").attr("checked", true);
 	                }
 	                else {
 	                	$(node).find("input[type=checkbox]").attr("checked", true);
@@ -508,7 +521,7 @@ var AIRTIME = (function(AIRTIME){
 	    	if ($(this).is(":checked")) {
 	    		var allowedNodes;
 	    		
-	    		allowedNodes = oTable.find('tr:not(:first, .sb-header, .sb-empty, .sb-footer, .sb-not-allowed)');
+	    		allowedNodes = oTable.find('tr:not(:first, .sb-header, .sb-empty, .sb-footer, .sb-not-allowed, .sb-past)');
 	    		
 	    		allowedNodes.each(function(i, el){
 	    			oTT.fnSelect(el);
@@ -658,7 +671,8 @@ var AIRTIME = (function(AIRTIME){
 				    
 				    return draggingContainer; 
 			    },
-				items: 'tr:not(:first, :last, .sb-header, .sb-footer, .sb-not-allowed)',
+				items: 'tr:not(:first, :last, .sb-header, .sb-not-allowed, .sb-past, .sb-now-playing)',
+				cancel: '.sb-footer',
 				receive: fnReceive,
 				update: fnUpdate,
 				start: function(event, ui) {
@@ -758,7 +772,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		//begin context menu initialization.
         $.contextMenu({
-            selector: '#show_builder_table td:not(.sb-checkbox)',
+            selector: '.sb-content table tbody tr:not(.sb-empty, .sb-footer, .sb-header) td:not(.sb-checkbox, .sb-image)',
             trigger: "left",
             ignoreRightClick: true,
             
