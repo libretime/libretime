@@ -36,6 +36,7 @@ class Application_Model_ShowBuilder {
         "cueout" => "",
         "fadein" => "",
         "fadeout" => "",
+        "image" => false,
         "color" => "", //in hex without the '#' sign.
         "backgroundColor"=> "", //in hex without the '#' sign.
     );
@@ -192,7 +193,7 @@ class Application_Model_ShowBuilder {
             $this->getScheduledStatus($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
             $row["id"] = intval($p_item["sched_id"]);
-            $row["image"] = '<img src="/css/images/icon_audioclip.png">';
+            $row["image"] = $p_item["file_exists"] ? true : false;
             $row["instance"] = intval($p_item["si_id"]);
             $row["starts"] = $schedStartDT->format("H:i:s");
             $row["ends"] = $schedEndDT->format("H:i:s");
@@ -214,14 +215,11 @@ class Application_Model_ShowBuilder {
         //show is empty or is a special kind of show (recording etc)
         else if (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
-            $row["image"] = '';
         }
         else {
-
             $row["empty"] = true;
             $row["id"] = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
-            $row["image"] = '';
         }
            
         $this->getItemColor($p_item, $row);
@@ -246,7 +244,6 @@ class Application_Model_ShowBuilder {
 
         $timeFilled = new TimeFilledFormatter($runtime);
         $row["fRuntime"] = $timeFilled->format();
-        $row["image"] = '';
         
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $showStartDT->setTimezone(new DateTimeZone($this->timezone));

@@ -218,7 +218,8 @@ var AIRTIME = (function(AIRTIME){
 					cl="",
 					//background-color to imitate calendar color.
 					r,g,b,a,
-					$nRow = $(nRow);
+					$nRow = $(nRow),
+					$image;
 				
 				fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
 					
@@ -292,6 +293,20 @@ var AIRTIME = (function(AIRTIME){
 				}
 				else {
 					
+					 //add the play function if the file exists on disk.
+					$image = $(nRow).find('td.sb-image');
+					//check if the file exists.
+					if (aData.image === true) {
+						$image.html('<img src="/css/images/icon_audioclip.png"></img>')
+							.click(function() {
+			                    open_show_preview(aData.instance, iDisplayIndex);
+			                    return false;
+			                });
+					}
+					else {
+						$image.html('<span class="ui-icon ui-icon-alert"></span>');
+					}
+					
 					node = nRow.children[0];
 					if (aData.allowed === true && aData.scheduled >= 1) {
 						node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input>';
@@ -349,13 +364,7 @@ var AIRTIME = (function(AIRTIME){
 				else if (aData.status === 0) {
 					$(nRow).addClass("sb-over");
 				}
-				
-				 //add the play function
-                $(nRow).find('td.sb-image').click(function(){
-                    open_show_preview(aData.instance, iDisplayIndex);
-                    return false;
-                });
-                
+                 
                 //call the context menu so we can prevent the event from propagating.
                 $(nRow).find('td:gt(1)').click(function(e){
                     

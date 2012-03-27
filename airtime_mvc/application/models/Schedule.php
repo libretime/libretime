@@ -369,7 +369,7 @@ class Application_Model_Schedule {
         sched.playout_status AS playout_status,
 
         ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
-        ft.album_title AS file_album_title, ft.length AS file_length
+        ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists
 
         FROM
         ((cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
