@@ -130,11 +130,11 @@ class Application_Model_Scheduler {
             //fillers are for only storing a chunk of time space that has already passed.
             $filler = new CcSchedule();
             $filler->setDbStarts($DT)
-            ->setDbEnds($nowDT)
-            ->setDbClipLength($cliplength)
-            ->setDbPlayoutStatus(-1)
-            ->setDbInstanceId($instance->getDbId())
-            ->save($this->con);
+                ->setDbEnds($nowDT)
+                ->setDbClipLength($cliplength)
+                ->setDbPlayoutStatus(-1)
+                ->setDbInstanceId($instance->getDbId())
+                ->save($this->con);
         }
         else {
             $nextDT = $DT;
@@ -425,6 +425,8 @@ class Application_Model_Scheduler {
 
             $removedItems = CcScheduleQuery::create()->findPks(array_keys($scheduledIds));
 
+            //check to see if the current item is being deleted so we can truncate the record.
+            $currentItem = null;
             //check to make sure all items selected are up to date
             foreach ($removedItems as $removedItem) {
                 $ts = $scheduledIds[$removedItem->getDbId()];
@@ -438,9 +440,24 @@ class Application_Model_Scheduler {
                     $show = $instance->getCcShow($this->con);
                     throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
                 }
+                
+                //check to truncate the currently playing item instead of deleting it.
+                if ($removedItem->isCurrentItem()) {
+                    $now = new DateTime("now", new DateTimeZone("UTC"));
+                    
+                    $nEpoch = $now->format('U');
+                    $sEpoch = $removedItem->getDbStarts('U');
+                    $length = $nEpoch - $sEpoch;
+                    $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
+                    
+                    $removedItem->setDbClipLength($cliplength);
+                    $removedItem->setDbEnds($now);   
+                    $removedItem->save($this->con);
+                }
+                else {
+                    $removedItem->delete($this->con);
+                }
             }
-
-            $removedItems->delete($this->con);
 
             if ($adjustSched === true) {
                 //get the show instances of the shows we must adjust times for.

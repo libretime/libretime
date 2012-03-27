@@ -62,20 +62,9 @@ class Application_Model_ShowBuilder {
             return;
         }
 
-        /*
-        $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
-        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
-        $schedStartDT = new DateTime($p_item["sched_starts"], new DateTimeZone("UTC"));
-
-        $showStartEpoch = intval($showStartDT->format('U'));
-        $showEndEpoch = intval($showEndDT->format('U'));
-        $schedStartEpoch = intval($schedStartDT->format('U'));
-        */
-
         if ($this->user->canSchedule($p_item["show_id"]) == true) {  
             $row["allowed"] = true;
-        }
-        
+        }    
     }
     
     private function getItemColor($p_item, &$row) {
