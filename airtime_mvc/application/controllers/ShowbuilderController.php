@@ -111,7 +111,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $item = CcScheduleQuery::create()->findPK($id);
         $instance = $item->getCcShowInstances();
         
-        $menu["preview"] = array("name"=> "Play");
+        $menu["preview"] = array("name"=> "Preview");
         //select the cursor
         $menu["selCurs"] = array("name"=> "Select Cursor");
         $menu["delCurs"] = array("name"=> "Remove Cursor");
