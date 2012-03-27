@@ -23,15 +23,6 @@ def transition(a,b) =
         fade.final(duration=!default_dj_fade, a) ])
 end
 
-def crossfade(s)
-  #duration is automatically overwritten by metadata fields passed in
-  #with audio
-  s = fade.in(type="log", duration=0., s)
-  s = fade.out(type="log", duration=0., s)
-  fader = fun (a,b) -> add(normalize=false,[b,a])
-  cross(fader,s)
-end
-
 # Define a transition that fades out the
 # old source, adds a single, and then 
 # plays the new source
