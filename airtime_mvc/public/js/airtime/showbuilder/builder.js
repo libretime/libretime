@@ -786,18 +786,21 @@ var AIRTIME = (function(AIRTIME){
             ignoreRightClick: true,
             
             build: function($el, e) {
-                var data, items, callback, $tr;
-                
-                $tr = $el.parent();
-                data = $tr.data("aData");
-                
+                var items,  
+	                $tr = $el.parent(),
+	                data = $tr.data("aData"), 
+	                cursorClass = "cursor-selected-row",
+	                callback;
+
                 function processMenuItems(oItems) {
+                	
+                	$lib = $("#library_content");
                 	
                 	//define a select cursor.
                     if (oItems.selCurs !== undefined) {
                         
                         callback = function() {
-                            $(this).parents('tr').next().addClass("cursor-selected-row");
+                            $(this).parents('tr').next().addClass(cursorClass);
                         };
                         
                         oItems.selCurs.callback = callback;
@@ -807,7 +810,7 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.delCurs !== undefined) {
                         
                         callback = function() {
-                            $(this).parents('tr').next().removeClass("cursor-selected-row");
+                            $(this).parents('tr').next().removeClass(cursorClass);
                         };
                         
                         oItems.delCurs.callback = callback;
@@ -825,6 +828,21 @@ var AIRTIME = (function(AIRTIME){
                         };
                         
                         oItems.del.callback = callback;
+                    }
+                    
+                    //only show the cursor selecting options if the library is visible on the page.
+                    if ($lib.filter(":visible").length === 0) {
+                    	delete oItems.selCurs;
+                    	delete oItems.delCurs;
+                    }
+                    else {
+                    	//check to include either select or remove cursor.
+                    	if ($tr.next().hasClass(cursorClass)) {
+                    		delete oItems.selCurs;
+                    	}
+                    	else {
+                    		delete oItems.delCurs;
+                    	}
                     }
                            
                     items = oItems;
