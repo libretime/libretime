@@ -792,6 +792,26 @@ var AIRTIME = (function(AIRTIME){
                 data = $tr.data("aData");
                 
                 function processMenuItems(oItems) {
+                	
+                	//define a select cursor.
+                    if (oItems.selCurs !== undefined) {
+                        
+                        callback = function() {
+                            $(this).parents('tr').next().addClass("cursor-selected-row");
+                        };
+                        
+                        oItems.selCurs.callback = callback;
+                    }
+                    
+                   //define a remove cursor.
+                    if (oItems.delCurs !== undefined) {
+                        
+                        callback = function() {
+                            $(this).parents('tr').next().removeClass("cursor-selected-row");
+                        };
+                        
+                        oItems.delCurs.callback = callback;
+                    }
                     
                     //define a delete callback.
                     if (oItems.del !== undefined) {
