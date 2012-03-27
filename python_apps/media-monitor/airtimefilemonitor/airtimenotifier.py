@@ -187,9 +187,14 @@ class AirtimeNotifier(Notifier):
 
         mm = self.proc_fun()
 
+        self.mmc.set_needed_file_permissions(directory, True)
         for (path, dirs, files) in os.walk(directory):
+            
+            for d in dirs:
+                self.mmc.set_needed_file_permissions(os.path.join(path, d), True)
+            
             for filename in files:
-                full_filepath = path+"/"+filename
+                full_filepath = os.path.join(path, filename)
 
                 if self.mmc.is_audio_file(full_filepath):
                     if self.mmc.set_needed_file_permissions(full_filepath, False):

@@ -75,7 +75,7 @@ class MediaMonitorCommon:
     def set_needed_file_permissions(self, item, is_dir):
         try:
             omask = os.umask(0)
-            if not self.has_correct_permissions(item, 'www-data', 'www-data'):
+            if not self.has_correct_permissions(item, 'www-data', 'www-data') or not self.has_correct_permissions(item, 'pypo', 'pypo'):
                 # stats.st_mode is the original permission
                 # stat.S_IROTH - readable by all permission
                 # stat.S_IXOTH - excutable by all permission

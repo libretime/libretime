@@ -18,18 +18,9 @@ end
 def transition(a,b) =
   log("transition called...")
   add(normalize=false,
-     [ sequence([ blank(duration=0.1),
+     [ sequence([ blank(duration=0.01),
                    fade.initial(duration=!default_dj_fade, b) ]),
         fade.final(duration=!default_dj_fade, a) ])
-end
-
-def crossfade(s)
-  #duration is automatically overwritten by metadata fields passed in
-  #with audio
-  s = fade.in(type="log", duration=0., s)
-  s = fade.out(type="log", duration=0., s)
-  fader = fun (a,b) -> add(normalize=false,[b,a])
-  cross(fader,s)
 end
 
 # Define a transition that fades out the
@@ -102,27 +93,27 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                 source := add(normalize=false, [amplify(0.00001, noise()),s])
             end
             if bitrate == 24 then 
-                ignore(output(%vorbis.cbr(bitrate = 24),!source))
+                ignore(output(%vorbis(quality=-0.1),!source))
             elsif bitrate == 32 then
-                ignore(output(%vorbis.cbr(bitrate = 32),!source))
+                ignore(output(%vorbis(quality=-0.1),!source))
             elsif bitrate == 48 then
-                ignore(output(%vorbis.cbr(bitrate = 48),!source))
+                ignore(output(%vorbis(quality=-0.1),!source))
             elsif bitrate == 64 then
-                ignore(output(%vorbis.cbr(bitrate = 64),!source))
+                ignore(output(%vorbis(quality=0),!source))
             elsif bitrate == 96 then
-                ignore(output(%vorbis.cbr(bitrate = 96),!source))
+                ignore(output(%vorbis(quality=0.2),!source))
             elsif bitrate == 128 then
-                ignore(output(%vorbis.cbr(bitrate = 128),!source))
+                ignore(output(%vorbis(quality=0.4),!source))
             elsif bitrate == 160 then
-                ignore(output(%vorbis.cbr(bitrate = 160),!source))
+                ignore(output(%vorbis(quality=0.5),!source))
             elsif bitrate == 192 then
-                ignore(output(%vorbis.cbr(bitrate = 192),!source))
+                ignore(output(%vorbis(quality=0.6),!source))
             elsif bitrate == 224 then
-                ignore(output(%vorbis.cbr(bitrate = 224),!source))
+                ignore(output(%vorbis(quality=0.7),!source))
             elsif bitrate == 256 then
-                ignore(output(%vorbis.cbr(bitrate = 256),!source))
+                ignore(output(%vorbis(quality=0.8),!source))
             elsif bitrate == 320 then
-                ignore(output(%vorbis.cbr(bitrate = 320),!source))
+                ignore(output(%vorbis(quality=0.9),!source))
             end
         end
     else

@@ -151,8 +151,6 @@ end
 s = switch(id="default_switch", track_sensitive=false, transitions=[transition, transition], [({!scheduled_play_enabled},queue),({true},default)])
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp, dj_live_stream_port, dj_live_stream_mp, s)
 
-s = crossfade(s)
-
 # Attach a skip command to the source s:
 
 #web_stream_source = input.http(id="web_stream", autostart = false, buffer=0.5, max=20., "")
