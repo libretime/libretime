@@ -794,9 +794,17 @@ var AIRTIME = (function(AIRTIME){
 
                 function processMenuItems(oItems) {
                 	
-                	$lib = $("#library_content");
-                	
-                	//define a select cursor.
+                	//define a preview callback.
+                    if (oItems.preview !== undefined) {
+                        
+                        callback = function() {
+                        	open_show_preview(data.instance, data.pos);
+                        };
+                        
+                        oItems.preview.callback = callback;
+                    }
+                    
+                	//define a select cursor callback.
                     if (oItems.selCurs !== undefined) {
                         
                         callback = function() {
@@ -806,7 +814,7 @@ var AIRTIME = (function(AIRTIME){
                         oItems.selCurs.callback = callback;
                     }
                     
-                   //define a remove cursor.
+                   //define a remove cursor callback.
                     if (oItems.delCurs !== undefined) {
                         
                         callback = function() {
@@ -820,30 +828,32 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.del !== undefined) {
                         
                         callback = function() {
-                            AIRTIME.showbuilder.fnRemove([{
-                            	id: data.id,
-                            	timestamp: data.timestamp,
-                            	instance: data.instance
-                            }]);
+                        	if (confirm("")) {
+                        		AIRTIME.showbuilder.fnRemove([{
+                                	id: data.id,
+                                	timestamp: data.timestamp,
+                                	instance: data.instance
+                                }]);
+                        	} 
                         };
                         
                         oItems.del.callback = callback;
                     }
                     
                     //only show the cursor selecting options if the library is visible on the page.
-                    if ($lib.filter(":visible").length === 0) {
+                    if ($tr.next().find('.marker').length === 0) {
                     	delete oItems.selCurs;
                     	delete oItems.delCurs;
                     }
+                	//check to include either select or remove cursor.
                     else {
-                    	//check to include either select or remove cursor.
-                    	if ($tr.next().hasClass(cursorClass)) {
+                		if ($tr.next().hasClass(cursorClass)) {
                     		delete oItems.selCurs;
                     	}
                     	else {
                     		delete oItems.delCurs;
                     	}
-                    }
+                	}     	
                            
                     items = oItems;
                 }
