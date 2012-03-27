@@ -786,28 +786,39 @@ var AIRTIME = (function(AIRTIME){
             ignoreRightClick: true,
             
             build: function($el, e) {
-                var data, items, callback, $tr;
-                
-                $tr = $el.parent();
-                data = $tr.data("aData");
-                
+                var items,  
+	                $tr = $el.parent(),
+	                data = $tr.data("aData"), 
+	                cursorClass = "cursor-selected-row",
+	                callback;
+
                 function processMenuItems(oItems) {
                 	
-                	//define a select cursor.
+                	//define a preview callback.
+                    if (oItems.preview !== undefined) {
+                        
+                        callback = function() {
+                        	open_show_preview(data.instance, data.pos);
+                        };
+                        
+                        oItems.preview.callback = callback;
+                    }
+                    
+                	//define a select cursor callback.
                     if (oItems.selCurs !== undefined) {
                         
                         callback = function() {
-                            $(this).parents('tr').next().addClass("cursor-selected-row");
+                            $(this).parents('tr').next().addClass(cursorClass);
                         };
                         
                         oItems.selCurs.callback = callback;
                     }
                     
-                   //define a remove cursor.
+                   //define a remove cursor callback.
                     if (oItems.delCurs !== undefined) {
                         
                         callback = function() {
-                            $(this).parents('tr').next().removeClass("cursor-selected-row");
+                            $(this).parents('tr').next().removeClass(cursorClass);
                         };
                         
                         oItems.delCurs.callback = callback;
@@ -817,15 +828,32 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.del !== undefined) {
                         
                         callback = function() {
-                            AIRTIME.showbuilder.fnRemove([{
-                            	id: data.id,
-                            	timestamp: data.timestamp,
-                            	instance: data.instance
-                            }]);
+                        	if (confirm("")) {
+                        		AIRTIME.showbuilder.fnRemove([{
+                                	id: data.id,
+                                	timestamp: data.timestamp,
+                                	instance: data.instance
+                                }]);
+                        	} 
                         };
                         
                         oItems.del.callback = callback;
                     }
+                    
+                    //only show the cursor selecting options if the library is visible on the page.
+                    if ($tr.next().find('.marker').length === 0) {
+                    	delete oItems.selCurs;
+                    	delete oItems.delCurs;
+                    }
+                	//check to include either select or remove cursor.
+                    else {
+                		if ($tr.next().hasClass(cursorClass)) {
+                    		delete oItems.selCurs;
+                    	}
+                    	else {
+                    		delete oItems.delCurs;
+                    	}
+                	}     	
                            
                     items = oItems;
                 }
