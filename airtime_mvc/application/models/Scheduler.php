@@ -445,8 +445,8 @@ class Application_Model_Scheduler {
                 if ($removedItem->isCurrentItem()) {
                     $now = new DateTime("now", new DateTimeZone("UTC"));
                     
-                    $nEpoch = $now->format('U');
-                    $sEpoch = $removedItem->getDbStarts('U');
+                    $nEpoch = floatval($now->format('U.u'));
+                    $sEpoch = floatval($removedItem->getDbStarts('U.u'));
                     $length = $nEpoch - $sEpoch;
                     $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
                     

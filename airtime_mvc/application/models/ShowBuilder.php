@@ -51,7 +51,7 @@ class Application_Model_ShowBuilder {
         $this->timezone = date_default_timezone_get();
         $this->user = Application_Model_User::GetCurrentUser();
         $this->opts = $p_opts;
-        $this->epoch_now = time();
+        $this->epoch_now = floatval(microtime(true));
     }
 
     //check to see if this row should be editable by the user.
@@ -109,7 +109,7 @@ class Application_Model_ShowBuilder {
      * 2 = future
      */
     private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row) {
-        
+       
         if ($row["footer"] === true && $this->epoch_now > $p_epochItemStart && $this->epoch_now > $p_epochItemEnd) {
             $row["scheduled"] = 0;
         }
@@ -150,16 +150,16 @@ class Application_Model_ShowBuilder {
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $showStartDT->setTimezone(new DateTimeZone($this->timezone));
-        $startsEpoch = intval($showStartDT->format("U"));
+        $startsEpoch = floatval($showStartDT->format("U.u"));
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
-        $endsEpoch = intval($showEndDT->format("U"));
+        $endsEpoch = floatval($showEndDT->format("U.u"));
 
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
-        $row["timeUntil"] = intval($showStartDT->format("U")) - $this->epoch_now;
+        $row["timeUntil"] = floatval($showStartDT->format("U.u")) - $this->epoch_now;
         $row["ends"] = $showEndDT->format("Y-m-d H:i");
-        $row["duration"] = $showEndDT->format("U") - $showStartDT->format("U");
+        $row["duration"] = floatval($showEndDT->format("U.u")) - floatval($showStartDT->format("U.u"));
         $row["title"] = $p_item["show_name"];
         $row["instance"] = intval($p_item["si_id"]);
         $row["image"] = '';
@@ -184,9 +184,9 @@ class Application_Model_ShowBuilder {
 
             $this->getItemStatus($p_item, $row);
 
-            $startsEpoch = intval($schedStartDT->format("U"));
-            $endsEpoch = intval($schedEndDT->format("U"));
-            $showEndEpoch = intval($showEndDT->format("U"));
+            $startsEpoch = floatval($schedStartDT->format("U.u"));
+            $endsEpoch = floatval($schedEndDT->format("U.u"));
+            $showEndEpoch = floatval($showEndDT->format("U.u"));
 
             //don't want an overbooked item to stay marked as current.
             $this->getScheduledStatus($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
@@ -250,10 +250,10 @@ class Application_Model_ShowBuilder {
         
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $showStartDT->setTimezone(new DateTimeZone($this->timezone));
-        $startsEpoch = intval($showStartDT->format("U"));
+        $startsEpoch = floatval($showStartDT->format("U.u"));
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
-        $endsEpoch = intval($showEndDT->format("U"));
+        $endsEpoch = floatval($showEndDT->format("U.u"));
         
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         $this->isAllowed($p_item, $row);
@@ -269,9 +269,6 @@ class Application_Model_ShowBuilder {
      */
     public function hasBeenUpdatedSince($timestamp) {
         $outdated = false;
-
-        Logging::log("checking if show builder has been updated since {$timestamp}");
-
         $shows = Application_Model_Show::getShows($this->startDT, $this->endDT);
 
         foreach ($shows as $show) {
