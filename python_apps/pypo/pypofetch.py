@@ -87,10 +87,10 @@ class PypoFetch(Thread):
                 self.update_liquidsoap_transition_fade(m['transition_fade'])
             elif command == 'switch_source':
                 self.logger.info("switch_on_source show command received...")
-                self.switch_source(m['sourcename'], m['status'])
+                self.switch_source(self.logger, self.telnet_lock, m['sourcename'], m['status'])
             elif command == 'disconnect_source':
                 self.logger.info("disconnect_on_source show command received...")
-                self.disconnect_source(m['sourcename'])
+                self.disconnect_source(self.logger, self.telnet.lock, m['sourcename'])
         except Exception, e:
             import traceback
             top = traceback.format_exc()
@@ -98,27 +98,29 @@ class PypoFetch(Thread):
             self.logger.error("traceback: %s", top)
             self.logger.error("Exception in handling Message Handler message: %s", e)
     
-    def disconnect_source(self,sourcename):
-        self.logger.debug('Disconnecting source: %s', sourcename)
+    @staticmethod
+    def disconnect_source(logger, lock, sourcename):
+        logger.debug('Disconnecting source: %s', sourcename)
         command = ""
         if(sourcename == "master_dj"):
             command += "master_harbor.kick\n"
         elif(sourcename == "live_dj"):
             command += "live_dj_harbor.kick\n"
             
-        self.telnet_lock.acquire()
+        lock.acquire()
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            self.logger.error(str(e))
+            logger.error(str(e))
         finally:
-            self.telnet_lock.release()
-       
-    def switch_source(self, sourcename, status):
-        self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
+            lock.release()
+    
+    @staticmethod
+    def switch_source(logger, lock, sourcename, status):
+        logger.debug('Switching source: %s to "%s" status', sourcename, status)
         command = "streams."
         if(sourcename == "master_dj"):
             command += "master_dj_"
@@ -132,16 +134,16 @@ class PypoFetch(Thread):
         else:
             command += "stop\n"
             
-        self.telnet_lock.acquire()
+        lock.acquire()
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            self.logger.error(str(e))
+            logger.error(str(e))
         finally:
-            self.telnet_lock.release()
+            lock.release()
         
     """
         grabs some information that are needed to be set on bootstrap time
@@ -156,7 +158,7 @@ class PypoFetch(Thread):
         else:
             self.logger.debug('info:%s',info)
             for k, v in info['switch_status'].iteritems():
-                self.switch_source(k, v)
+                self.switch_source(self.logger, self.telnet_lock, k, v)
             self.update_liquidsoap_stream_format(info['stream_label'])
             self.update_liquidsoap_station_name(info['station_name'])
             self.update_liquidsoap_transition_fade(info['transition_fade'])
