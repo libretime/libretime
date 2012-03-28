@@ -82,6 +82,12 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	protected $time_filled;
 
 	/**
+	 * The value for the created field.
+	 * @var        string
+	 */
+	protected $created;
+
+	/**
 	 * The value for the last_scheduled field.
 	 * @var        string
 	 */
@@ -291,6 +297,39 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	public function getDbTimeFilled()
 	{
 		return $this->time_filled;
+	}
+
+	/**
+	 * Get the [optionally formatted] temporal [created] column value.
+	 * 
+	 *
+	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 *							If format is NULL, then the raw DateTime object will be returned.
+	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 */
+	public function getDbCreated($format = 'Y-m-d H:i:s')
+	{
+		if ($this->created === null) {
+			return null;
+		}
+
+
+
+		try {
+			$dt = new DateTime($this->created);
+		} catch (Exception $x) {
+			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created, true), $x);
+		}
+
+		if ($format === null) {
+			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+			return $dt;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $dt->format('U'));
+		} else {
+			return $dt->format($format);
+		}
 	}
 
 	/**
@@ -587,6 +626,55 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	} // setDbTimeFilled()
 
 	/**
+	 * Sets the value of [created] column to a normalized version of the date/time value specified.
+	 * 
+	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+	 *						be treated as NULL for temporal objects.
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbCreated($v)
+	{
+		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
+		// -- which is unexpected, to say the least.
+		if ($v === null || $v === '') {
+			$dt = null;
+		} elseif ($v instanceof DateTime) {
+			$dt = $v;
+		} else {
+			// some string/numeric value passed; we normalize that so that we can
+			// validate it.
+			try {
+				if (is_numeric($v)) { // if it's a unix timestamp
+					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+					// We have to explicitly specify and then change the time zone because of a
+					// DateTime bug: http://bugs.php.net/bug.php?id=43003
+					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+				} else {
+					$dt = new DateTime($v);
+				}
+			} catch (Exception $x) {
+				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+			}
+		}
+
+		if ( $this->created !== null || $dt !== null ) {
+			// (nested ifs are a little easier to read in this case)
+
+			$currNorm = ($this->created !== null && $tmpDt = new DateTime($this->created)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
+			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
+
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
+					)
+			{
+				$this->created = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
+				$this->modifiedColumns[] = CcShowInstancesPeer::CREATED;
+			}
+		} // if either are not null
+
+		return $this;
+	} // setDbCreated()
+
+	/**
 	 * Sets the value of [last_scheduled] column to a normalized version of the date/time value specified.
 	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
@@ -712,8 +800,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$this->instance_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
 			$this->file_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
 			$this->time_filled = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-			$this->last_scheduled = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-			$this->modified_instance = ($row[$startcol + 10] !== null) ? (boolean) $row[$startcol + 10] : null;
+			$this->created = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+			$this->last_scheduled = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+			$this->modified_instance = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -722,7 +811,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 11; // 11 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 12; // 12 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowInstances object", $e);
@@ -1147,9 +1236,12 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				return $this->getDbTimeFilled();
 				break;
 			case 9:
-				return $this->getDbLastScheduled();
+				return $this->getDbCreated();
 				break;
 			case 10:
+				return $this->getDbLastScheduled();
+				break;
+			case 11:
 				return $this->getDbModifiedInstance();
 				break;
 			default:
@@ -1185,8 +1277,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 			$keys[6] => $this->getDbOriginalShow(),
 			$keys[7] => $this->getDbRecordedFile(),
 			$keys[8] => $this->getDbTimeFilled(),
-			$keys[9] => $this->getDbLastScheduled(),
-			$keys[10] => $this->getDbModifiedInstance(),
+			$keys[9] => $this->getDbCreated(),
+			$keys[10] => $this->getDbLastScheduled(),
+			$keys[11] => $this->getDbModifiedInstance(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
@@ -1257,9 +1350,12 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->setDbTimeFilled($value);
 				break;
 			case 9:
-				$this->setDbLastScheduled($value);
+				$this->setDbCreated($value);
 				break;
 			case 10:
+				$this->setDbLastScheduled($value);
+				break;
+			case 11:
 				$this->setDbModifiedInstance($value);
 				break;
 		} // switch()
@@ -1295,8 +1391,9 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if (array_key_exists($keys[6], $arr)) $this->setDbOriginalShow($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbRecordedFile($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setDbTimeFilled($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setDbLastScheduled($arr[$keys[9]]);
-		if (array_key_exists($keys[10], $arr)) $this->setDbModifiedInstance($arr[$keys[10]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbCreated($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbLastScheduled($arr[$keys[10]]);
+		if (array_key_exists($keys[11], $arr)) $this->setDbModifiedInstance($arr[$keys[11]]);
 	}
 
 	/**
@@ -1317,6 +1414,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowInstancesPeer::INSTANCE_ID)) $criteria->add(CcShowInstancesPeer::INSTANCE_ID, $this->instance_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::FILE_ID)) $criteria->add(CcShowInstancesPeer::FILE_ID, $this->file_id);
 		if ($this->isColumnModified(CcShowInstancesPeer::TIME_FILLED)) $criteria->add(CcShowInstancesPeer::TIME_FILLED, $this->time_filled);
+		if ($this->isColumnModified(CcShowInstancesPeer::CREATED)) $criteria->add(CcShowInstancesPeer::CREATED, $this->created);
 		if ($this->isColumnModified(CcShowInstancesPeer::LAST_SCHEDULED)) $criteria->add(CcShowInstancesPeer::LAST_SCHEDULED, $this->last_scheduled);
 		if ($this->isColumnModified(CcShowInstancesPeer::MODIFIED_INSTANCE)) $criteria->add(CcShowInstancesPeer::MODIFIED_INSTANCE, $this->modified_instance);
 
@@ -1388,6 +1486,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$copyObj->setDbOriginalShow($this->instance_id);
 		$copyObj->setDbRecordedFile($this->file_id);
 		$copyObj->setDbTimeFilled($this->time_filled);
+		$copyObj->setDbCreated($this->created);
 		$copyObj->setDbLastScheduled($this->last_scheduled);
 		$copyObj->setDbModifiedInstance($this->modified_instance);
 
@@ -1907,6 +2006,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$this->instance_id = null;
 		$this->file_id = null;
 		$this->time_filled = null;
+		$this->created = null;
 		$this->last_scheduled = null;
 		$this->modified_instance = null;
 		$this->alreadyInSave = false;

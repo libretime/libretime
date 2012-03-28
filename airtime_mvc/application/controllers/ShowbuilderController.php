@@ -206,9 +206,6 @@ class ShowbuilderController extends Zend_Controller_Action
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
-        Logging::log("showbuilder starts {$startsDT->format("Y-m-d H:i:s")}");
-        Logging::log("showbuilder ends {$endsDT->format("Y-m-d H:i:s")}");
-
         $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
@@ -251,11 +248,11 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $mediaItems = $request->getParam("mediaIds", array());
-        $scheduledIds = $request->getParam("schedIds", array());
+        $scheduledItems = $request->getParam("schedIds", array());
 
         try {
             $scheduler = new Application_Model_Scheduler();
-            $scheduler->scheduleAfter($scheduledIds, $mediaItems);
+            $scheduler->scheduleAfter($scheduledItems, $mediaItems);
         }
         catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
@@ -297,12 +294,12 @@ class ShowbuilderController extends Zend_Controller_Action
     public function scheduleMoveAction() {
 
         $request = $this->getRequest();
-        $selectedItem = $request->getParam("selectedItem");
+        $selectedItems = $request->getParam("selectedItem");
         $afterItem = $request->getParam("afterItem");
 
         try {
             $scheduler = new Application_Model_Scheduler();
-            $scheduler->moveItem($selectedItem, $afterItem);
+            $scheduler->moveItem($selectedItems, $afterItem);
         }
         catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
@@ -323,47 +320,5 @@ class ShowbuilderController extends Zend_Controller_Action
         $request = $this->getRequest();
 
         $showInstance = $request->getParam("instanceId");
-    }
-
-    /*
-     * make sure any incoming requests for scheduling are ligit.
-     *
-     * @param array $items, an array containing pks of cc_schedule items.
-     */
-    private function filterSelected($items) {
-
-        $allowed = array();
-        $user = Application_Model_User::GetCurrentUser();
-        $type = $user->getType();
-
-        //item must be within the host's show.
-        if ($type === UTYPE_HOST) {
-
-            $hosted = CcShowHostsQuery::create()
-               ->filterByDbHost($user->getId())
-               ->find();
-
-            $allowed_shows = array();
-            foreach ($hosted as $host) {
-               $allowed_shows[] = $host->getDbShow();
-            }
-
-            for ($i = 0; $i < count($items); $i++) {
-
-                $instance = $items[$i]["instance"];
-
-                if (in_array($instance, $allowed_shows)) {
-                    $allowed[] = $items[$i];
-                }
-            }
-
-            $this->view->shows = $res;
-        }
-        //they can schedule anything.
-        else if ($type === UTYPE_ADMIN || $type === UTYPE_PROGRAM_MANAGER) {
-            $allowed = $items;
-        }
-
-        return $allowed;
     }
 }

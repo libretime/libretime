@@ -161,6 +161,7 @@
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
     <column name="time_filled" phpName="DbTimeFilled" type="VARCHAR" sqlType="interval" defaultValue="00:00:00" />
+    <column name="created" phpName="DbCreated" type="TIMESTAMP" required="true"/>
     <column name="last_scheduled" phpName="DbLastScheduled" type="TIMESTAMP" required="false"/>
     <!-- The purpose of the modified_instance column is to mark a show instance that was
      deleted when it was part of repeating show. This is useful because the way shows work,

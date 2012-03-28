@@ -15,6 +15,7 @@
  * @method     CcShowInstancesQuery orderByDbOriginalShow($order = Criteria::ASC) Order by the instance_id column
  * @method     CcShowInstancesQuery orderByDbRecordedFile($order = Criteria::ASC) Order by the file_id column
  * @method     CcShowInstancesQuery orderByDbTimeFilled($order = Criteria::ASC) Order by the time_filled column
+ * @method     CcShowInstancesQuery orderByDbCreated($order = Criteria::ASC) Order by the created column
  * @method     CcShowInstancesQuery orderByDbLastScheduled($order = Criteria::ASC) Order by the last_scheduled column
  * @method     CcShowInstancesQuery orderByDbModifiedInstance($order = Criteria::ASC) Order by the modified_instance column
  *
@@ -27,6 +28,7 @@
  * @method     CcShowInstancesQuery groupByDbOriginalShow() Group by the instance_id column
  * @method     CcShowInstancesQuery groupByDbRecordedFile() Group by the file_id column
  * @method     CcShowInstancesQuery groupByDbTimeFilled() Group by the time_filled column
+ * @method     CcShowInstancesQuery groupByDbCreated() Group by the created column
  * @method     CcShowInstancesQuery groupByDbLastScheduled() Group by the last_scheduled column
  * @method     CcShowInstancesQuery groupByDbModifiedInstance() Group by the modified_instance column
  *
@@ -66,6 +68,7 @@
  * @method     CcShowInstances findOneByDbOriginalShow(int $instance_id) Return the first CcShowInstances filtered by the instance_id column
  * @method     CcShowInstances findOneByDbRecordedFile(int $file_id) Return the first CcShowInstances filtered by the file_id column
  * @method     CcShowInstances findOneByDbTimeFilled(string $time_filled) Return the first CcShowInstances filtered by the time_filled column
+ * @method     CcShowInstances findOneByDbCreated(string $created) Return the first CcShowInstances filtered by the created column
  * @method     CcShowInstances findOneByDbLastScheduled(string $last_scheduled) Return the first CcShowInstances filtered by the last_scheduled column
  * @method     CcShowInstances findOneByDbModifiedInstance(boolean $modified_instance) Return the first CcShowInstances filtered by the modified_instance column
  *
@@ -78,6 +81,7 @@
  * @method     array findByDbOriginalShow(int $instance_id) Return CcShowInstances objects filtered by the instance_id column
  * @method     array findByDbRecordedFile(int $file_id) Return CcShowInstances objects filtered by the file_id column
  * @method     array findByDbTimeFilled(string $time_filled) Return CcShowInstances objects filtered by the time_filled column
+ * @method     array findByDbCreated(string $created) Return CcShowInstances objects filtered by the created column
  * @method     array findByDbLastScheduled(string $last_scheduled) Return CcShowInstances objects filtered by the last_scheduled column
  * @method     array findByDbModifiedInstance(boolean $modified_instance) Return CcShowInstances objects filtered by the modified_instance column
  *
@@ -443,6 +447,37 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcShowInstancesPeer::TIME_FILLED, $dbTimeFilled, $comparison);
+	}
+
+	/**
+	 * Filter the query on the created column
+	 * 
+	 * @param     string|array $dbCreated The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowInstancesQuery The current query, for fluid interface
+	 */
+	public function filterByDbCreated($dbCreated = null, $comparison = null)
+	{
+		if (is_array($dbCreated)) {
+			$useMinMax = false;
+			if (isset($dbCreated['min'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::CREATED, $dbCreated['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbCreated['max'])) {
+				$this->addUsingAlias(CcShowInstancesPeer::CREATED, $dbCreated['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcShowInstancesPeer::CREATED, $dbCreated, $comparison);
 	}
 
 	/**

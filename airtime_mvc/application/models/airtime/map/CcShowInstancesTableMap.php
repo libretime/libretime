@@ -47,6 +47,7 @@ class CcShowInstancesTableMap extends TableMap {
 		$this->addForeignKey('INSTANCE_ID', 'DbOriginalShow', 'INTEGER', 'cc_show_instances', 'ID', false, null, null);
 		$this->addForeignKey('FILE_ID', 'DbRecordedFile', 'INTEGER', 'cc_files', 'ID', false, null, null);
 		$this->addColumn('TIME_FILLED', 'DbTimeFilled', 'VARCHAR', false, null, '00:00:00');
+		$this->addColumn('CREATED', 'DbCreated', 'TIMESTAMP', true, null, null);
 		$this->addColumn('LAST_SCHEDULED', 'DbLastScheduled', 'TIMESTAMP', false, null, null);
 		$this->addColumn('MODIFIED_INSTANCE', 'DbModifiedInstance', 'BOOLEAN', true, null, false);
 		// validators
