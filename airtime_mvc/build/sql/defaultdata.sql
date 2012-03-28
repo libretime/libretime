@@ -1,5 +1,9 @@
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 
+-- added in 2.1
+INSERT INTO cc_pref("keystr", "valstr") VALUES('scheduled_play_switch', 'on');
+-- end of added in 2.1
+
 -- added in 2.0.0
 INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_type', 'ogg, mp3');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
