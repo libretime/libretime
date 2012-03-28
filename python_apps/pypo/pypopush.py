@@ -398,8 +398,8 @@ class PypoPush(Thread):
             self.telnet_lock.release()
             
     def create_liquidsoap_annotation(self, media):        
-        return 'annotate:media_id="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
-            % (media['id'], float(media['cue_in']), float(media['cue_out']), media['row_id'], media['dst'])
+        return 'annotate:media_id="%s",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
+            % (media['id'], float(media['fade_in'])/1000, float(media['fade_out'])/1000, float(media['cue_in']), float(media['cue_out']), media['row_id'], media['dst'])
                      
     def run(self):
         try: self.main()
