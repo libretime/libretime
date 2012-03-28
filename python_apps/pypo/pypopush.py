@@ -9,6 +9,7 @@ import telnetlib
 import calendar
 import json
 import math
+from pypofetch import PypoFetch
 
 from Queue import Empty
 
@@ -204,7 +205,9 @@ class PypoPush(Thread):
         
         for mkey in sorted_keys:
             media_item = media_schedule[mkey]
-            if len(current_chain) == 0:
+            if media_item['type'] == "event":
+                chains.append([media_item])
+            elif len(current_chain) == 0:
                 current_chain.append(media_item)
             elif media_item['start'] == current_chain[-1]['end']:
                 current_chain.append(media_item)
@@ -240,7 +243,6 @@ class PypoPush(Thread):
         tnow = datetime.utcnow()
         current_chain = []
 
-        
         for chain in chains:
             iteration = 0
             for link in chain:
@@ -284,7 +286,13 @@ class PypoPush(Thread):
         
         try:
             for media_item in media_item_chain:
-                self.telnet_to_liquidsoap(media_item)
+                if media_item['type'] == "file":
+                    self.telnet_to_liquidsoap(media_item)
+                elif media_item['type'] == "event":
+                    if media_item['event_type'] == "kick_out":
+                        PypoFetch.disconnect_source(self.logger, self.telnet_lock, "live_dj")
+                    elif media_item['event_type'] == "switch_off":
+                        PypoFetch.switch_source(self.logger, self.telnet_lock, "live_dj", "off")
         except Exception, e:
             self.logger.error('Pypo Push Exception: %s', e)
                                             
@@ -400,7 +408,7 @@ class PypoPush(Thread):
     def create_liquidsoap_annotation(self, media):        
         return 'annotate:media_id="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
             % (media['id'], float(media['cue_in']), float(media['cue_out']), media['row_id'], media['dst'])
-                     
+    
     def run(self):
         try: self.main()
         except Exception, e:

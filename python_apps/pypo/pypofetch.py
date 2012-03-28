@@ -376,6 +376,7 @@ class PypoFetch(Thread):
     def process_schedule(self, schedule_data):      
         self.logger.debug(schedule_data)
         media = schedule_data["media"]
+        media_filtered = {}
 
         # Download all the media and put playlists in liquidsoap "annotate" format
         try:
@@ -391,13 +392,14 @@ class PypoFetch(Thread):
             
             for key in media:
                 media_item = media[key]
-                
-                fileExt = os.path.splitext(media_item['uri'])[1]
-                dst = os.path.join(download_dir, media_item['id']+fileExt)
-                media_item['dst'] = dst
+                if(media_item['type'] == 'file'):
+                    fileExt = os.path.splitext(media_item['uri'])[1]
+                    dst = os.path.join(download_dir, media_item['id']+fileExt)
+                    media_item['dst'] = dst
+                    media_filtered[key] = media_item
              
-            self.media_prepare_queue.put(copy.copy(media))
-            self.prepare_media(media)
+            self.media_prepare_queue.put(copy.copy(media_filtered))
+            self.prepare_media(media_filtered)
         except Exception, e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
