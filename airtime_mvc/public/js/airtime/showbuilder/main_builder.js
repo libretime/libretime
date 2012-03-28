@@ -13,12 +13,7 @@ $(document).ready(function(){
 		timeStartId = "#sb_time_start",
 		dateEndId = "#sb_date_end",
 		timeEndId = "#sb_time_end",
-		$toggleLib = $('<input />', {
-			"class": "ui-button ui-state-default sb-edit",
-			"id": "sb_edit",
-			"type": "button",
-			"value": "Add Files"
-		}),
+		$toggleLib = $('<div id="sb_edit" class="ui-state-default" title="open the library to schedule files."><span class="ui-icon ui-icon-arrowthick-1-nw"></span></div>'),
 		$libClose = $('<a />', {
 			"class": "close-round",
 			"href": "#",
