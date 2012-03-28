@@ -26,6 +26,10 @@ class Application_Model_User {
     public function getId() {
         return $this->_userInstance->getDbId();
     }
+    
+    public function isGuest() {
+        return $this->getType() == UTYPE_GUEST;
+    }
 
     public function isHost($showId) {
     	return $this->isUserType(UTYPE_HOST, $showId);

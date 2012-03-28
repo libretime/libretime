@@ -47,7 +47,10 @@ class Application_Model_Scheduler {
             throw new Exception("Invalid Request.");
         }
         
-        $schedIds = array_keys($schedInfo);
+        $schedIds = array();
+        if (isset($schedInfo)) {
+            $schedIds = array_keys($schedInfo);
+        }
         $schedItems = CcScheduleQuery::create()->findPKs($schedIds, $this->con);
         $instanceIds = array_keys($instanceInfo);
         $showInstances = CcShowInstancesQuery::create()->findPKs($instanceIds, $this->con);
