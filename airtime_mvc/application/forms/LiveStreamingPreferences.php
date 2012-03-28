@@ -127,7 +127,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $master_harbor_input_port = $data['master_harbor_input_port'];
         $dj_harbor_input_port = $data['dj_harbor_input_port'];
         
-        if($master_harbor_input_port == $dj_harbor_input_port){
+        if($master_harbor_input_port == $dj_harbor_input_port && $master_harbor_input_port != ""){
             $element = $this->getElement("dj_harbor_input_port");
             $element->addError("You cannot use same port as Master DJ port.");
         }
