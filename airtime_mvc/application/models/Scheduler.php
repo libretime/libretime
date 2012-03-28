@@ -12,10 +12,13 @@ class Application_Model_Scheduler {
             "fadeout" => "00:00:00",
             "sched_id" => null,
         );
+    
+    private $nowDT;
 
     public function __construct($id = null) {
 
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $this->nowDT = new DateTime("now", new DateTimeZone("UTC"));
     }
 
     /*
@@ -112,19 +115,23 @@ class Application_Model_Scheduler {
     
     private function findNextStartTime($DT, $instance) {
         
-        //check to see if the show has started.
-        $nowDT = new DateTime("now", new DateTimeZone("UTC"));
-        
         $sEpoch = intval($DT->format("U"));
-        $nEpoch = intval($nowDT->format("U"));
+        $nowEpoch = intval($this->nowDT->format("U"));
         
+        $showEndEpoch = intval($instance->getDbEnds("U"));
+        
+        if ($showEndEpoch < $nowEpoch) {
+            $show = $instance->getCcShow($this->con);
+            throw new OutDatedScheduleException("The show {$show->getDbName()} is over and cannot be scheduled.");
+        }
+
         //check for if the show has started.
-        if ($nEpoch > $sEpoch) {
+        if ($nowEpoch > $sEpoch) {
             //need some kind of placeholder for cc_schedule.
             //playout_status will be -1.
             $nextDT = $nowDT;
         
-            $length = $nEpoch - $sEpoch;
+            $length = $nowEpoch - $sEpoch;
             $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
         
             //fillers are for only storing a chunk of time space that has already passed.
