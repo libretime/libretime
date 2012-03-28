@@ -55,30 +55,16 @@ $(document).ready(function(){
 	oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);	
 	AIRTIME.showbuilder.fnServerData.start = oRange.start;
 	AIRTIME.showbuilder.fnServerData.end = oRange.end;
+		    
+    if (AIRTIME.showLib === true) {
+    	$lib.show()
+			.width(Math.floor(screenWidth * 0.5));
 	
-	$.ajax({
-		url: "/usersettings/get-now-playing-screen-settings",
-		type: "GET",
-		data: {format: "json"},
-		dataType: "json",
-		success: function(json){
-		    var o = json.settings;
-		    
-		    if (o === undefined) {
-		    	return;
-		    }
-		    
-		    if (o.library === "true") {
-		    	$lib.show()
-					.width(Math.floor(screenWidth * 0.5));
-			
-		    	$builder.width(Math.floor(screenWidth * 0.5))
-					.find("#sb_edit")
-						.remove()
-						.end();
-		    }
-		}
-    });
+    	$builder.width(Math.floor(screenWidth * 0.5))
+			.find("#sb_edit")
+				.remove()
+				.end();
+    }
 	
 	AIRTIME.library.libraryInit();
 	AIRTIME.showbuilder.builderDataTable();

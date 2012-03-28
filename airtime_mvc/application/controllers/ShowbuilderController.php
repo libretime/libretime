@@ -92,6 +92,15 @@ class ShowbuilderController extends Zend_Controller_Action
         	}
         }
         
+        $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
+        if ($data != "") {
+            $settings = unserialize($data);
+            
+            if ($settings["library"] == "true") {
+               $this->view->headScript()->appendScript("AIRTIME.showLib = true;"); 
+            }
+        }
+        
         $this->_helper->actionStack('library', 'library');
         $this->_helper->actionStack('builder', 'showbuilder');
     }
