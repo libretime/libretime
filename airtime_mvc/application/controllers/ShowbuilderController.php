@@ -109,7 +109,7 @@ class ShowbuilderController extends Zend_Controller_Action
     	//determine whether to remove/hide/display the library.
     	$showLib = false;
     	if (!$user->isGuest()) {
-    	    $hideLib = false;
+    	    $disableLib = false;
             $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
             if ($data != "") {
                 $settings = unserialize($data);
@@ -120,9 +120,9 @@ class ShowbuilderController extends Zend_Controller_Action
             }
     	}
     	else {
-    	    $hideLib = true;
+    	    $disableLib = true;
     	}
-    	$this->view->hideLib = $hideLib;
+    	$this->view->disableLib = $disableLib;
     	$this->view->showLib = $showLib;
        
         //populate date range form for show builder.

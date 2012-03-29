@@ -1,4 +1,4 @@
-<?php if (!$this->hideLib): ?>
+<?php if (!$this->disableLib): ?>
 <div id="library_content" class="lib-content tabs ui-widget ui-widget-content block-shadow alpha-block padded" 
     <?php if (!$this->showLib): ?>
     style="display:none"
@@ -9,7 +9,7 @@
 <?php endif; ?>
 
 <div id="show_builder" class="sb-content ui-widget ui-widget-content block-shadow omega-block padded">
-    <?php if (!$this->hideLib && !$this->showLib): ?>
+    <?php if (!$this->disableLib && !$this->showLib): ?>
     <div id="sb_edit" class="ui-state-default" title="open the library to schedule files.">
         <span class="ui-icon ui-icon-arrowthick-1-nw"></span>
     </div>
