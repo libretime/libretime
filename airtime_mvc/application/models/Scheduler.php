@@ -13,13 +13,17 @@ class Application_Model_Scheduler {
             "sched_id" => null,
         );
     
+    private $epochNow;
     private $nowDT;
     private $user;
 
     public function __construct($id = null) {
 
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-        $this->nowDT = new DateTime("now", new DateTimeZone("UTC"));
+        
+        $this->epochNow = floatval(microtime(true));
+        $this->nowDT = DateTime::createFromFormat("U.u", $this->epochNow, new DateTimeZone("UTC"));
+         
         $this->user = Application_Model_User::GetCurrentUser();
     }
     
@@ -30,7 +34,7 @@ class Application_Model_Scheduler {
     */
     private function validateRequest($items) {
     
-        $nowEpoch = intval($this->nowDT->format("U"));
+        $nowEpoch = floatval($this->nowDT->format("U.u"));
         
         for ($i = 0; $i < count($items); $i++) {
             $id = $items[$i]["id"];
@@ -83,7 +87,7 @@ class Application_Model_Scheduler {
                 throw new Exception("You are not allowed to schedule show {$show->getDbName()}.");
             }
             
-            $showEndEpoch = intval($instance->getDbEnds("U"));
+            $showEndEpoch = floatval($instance->getDbEnds("U.u"));
             
             if ($showEndEpoch < $nowEpoch) {   
                 throw new OutDatedScheduleException("The show {$show->getDbName()} is over and cannot be scheduled.");
@@ -169,7 +173,7 @@ class Application_Model_Scheduler {
      *
      * @return DateTime endDT in UTC
      */
-    private static function findEndTime($p_startDT, $p_duration) {
+    private function findEndTime($p_startDT, $p_duration) {
 
         $startEpoch = $p_startDT->format("U.u");
         $durationSeconds = Application_Model_Playlist::playlistTimeToSeconds($p_duration);
@@ -178,22 +182,14 @@ class Application_Model_Scheduler {
         //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
         $endEpoch = bcadd($startEpoch , (string) $durationSeconds, 6);
 
-        Logging::log("start DateTime created {$p_startDT->format("Y-m-d H:i:s.u")}");
-        Logging::log("start epoch is {$startEpoch}");
-        Logging::log("duration in seconds is {$durationSeconds}");
-        Logging::log("end epoch is {$endEpoch}");
-
         $dt = DateTime::createFromFormat("U.u", $endEpoch, new DateTimeZone("UTC"));
-
-        Logging::log("end DateTime created {$dt->format("Y-m-d H:i:s.u")}");
-
         return $dt;
     }
     
     private function findNextStartTime($DT, $instance) {
         
-        $sEpoch = intval($DT->format("U"));
-        $nowEpoch = intval($this->nowDT->format("U"));
+        $sEpoch = floatval($DT->format("U.u"));
+        $nowEpoch = $this->epochNow;
         
         //check for if the show has started.
         if ($nowEpoch > $sEpoch) {
@@ -273,7 +269,7 @@ class Application_Model_Scheduler {
 
                 foreach($schedFiles as $file) {
 
-                    $endTimeDT = self::findEndTime($nextStartDT, $file['cliplength']);
+                    $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
 
                     //item existed previously and is being moved.
                     //need to keep same id for resources if we want REST.
@@ -303,7 +299,7 @@ class Application_Model_Scheduler {
                     //recalculate the start/end times after the inserted items.
                     foreach ($followingSchedItems as $item) {
 
-                        $endTimeDT = self::findEndTime($nextStartDT, $item->getDbClipLength());
+                        $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
 
                         $item->setDbStarts($nextStartDT);
                         $item->setDbEnds($endTimeDT);
@@ -448,17 +444,26 @@ class Application_Model_Scheduler {
                 $instance = $removedItem->getCcShowInstances($this->con);
                 
                 //check to truncate the currently playing item instead of deleting it.
-                if ($removedItem->isCurrentItem()) {
-                    $now = new DateTime("now", new DateTimeZone("UTC"));
+                if ($removedItem->isCurrentItem($this->epochNow)) {
                     
-                    $nEpoch = floatval($now->format('U.u'));
+                    $nEpoch = $this->epochNow;
                     $sEpoch = floatval($removedItem->getDbStarts('U.u'));
                     $length = $nEpoch - $sEpoch;
                     $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
                     
-                    $removedItem->setDbClipLength($cliplength);
-                    $removedItem->setDbEnds($now);   
-                    $removedItem->save($this->con);
+                    $cueinSec = Application_Model_Playlist::playlistTimeToSeconds($removedItem->getDbCueIn());
+                    $cueOutSec = $cueinSec + $length;
+                    $cueout = Application_Model_Playlist::secondsToPlaylistTime($length);
+                    
+                    Logging::log('$nEpoch: '. $nEpoch);
+                    Logging::log('$sEpoch: '. $sEpoch);
+                    Logging::log('$length: '. $length);
+                    Logging::log('$cliplength: '. $cliplength);
+                    
+                    $removedItem->setDbCueOut($cueout)
+                        ->setDbClipLength($cliplength)
+                        ->setDbEnds($now)  
+                        ->save($this->con);
                 }
                 else {
                     $removedItem->delete($this->con);
@@ -529,9 +534,7 @@ class Application_Model_Scheduler {
 
         foreach ($schedule as $item) {
 
-            Logging::log("adjusting item #".$item->getDbId());
-
-            $itemEndDT = self::findEndTime($itemStartDT, $item->getDbClipLength());
+            $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
 
             $item->setDbStarts($itemStartDT);
             $item->setDbEnds($itemEndDT);
