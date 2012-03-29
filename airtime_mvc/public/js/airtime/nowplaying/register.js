@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
     function doNotShowPopup(){
-        $.get("/Nowplaying/donotshowregistrationpopup");
+        $.get("/Usersettings/donotshowregistrationpopup", {format:"json"});
     }
 
     var dialog = $("#register_popup");
@@ -18,9 +18,10 @@ $(document).ready(function(){
             	id: "remind_me",
             	text: "Remind me in 1 week",
             	click: function() {
-                    var url = '/Nowplaying/remindme';
+                    var url = '/Usersettings/remindme';
                     $.ajax({
                         url: url,
+                        data: {format:"json"}
                     });
                     $(this).dialog("close");
             	}

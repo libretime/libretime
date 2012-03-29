@@ -51,9 +51,9 @@ $(document).ready(function(){
 	AIRTIME.showbuilder.fnServerData.start = oRange.start;
 	AIRTIME.showbuilder.fnServerData.end = oRange.end;
 		    
-    if (AIRTIME.showLib === true) {
-    	$lib.show()
-			.width(Math.floor(screenWidth * 0.5));
+    if ($lib.filter(':visible').length > 0) {
+    	
+    	$lib.width(Math.floor(screenWidth * 0.5));
 	
     	$builder.width(Math.floor(screenWidth * 0.5))
 			.find("#sb_edit")
