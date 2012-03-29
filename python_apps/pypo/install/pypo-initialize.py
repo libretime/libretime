@@ -97,6 +97,7 @@ try:
         Note: We cannot simply use os.path.exists before this, since it sometimes gives us "false" incorrectly
         """
         print "Unsupported OS/system architecture."
+        print e
         sys.exit(1)
     
             
