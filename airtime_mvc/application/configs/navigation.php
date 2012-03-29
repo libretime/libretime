@@ -25,9 +25,9 @@ $pages = array(
 	array(
 		'label'      => 'Playlist Builder',
 		'module'     => 'default',
-		'controller' => 'Library',
+		'controller' => 'Playlist',
 		'action'     => 'index',
-		'resource'	=>	'library'
+		'resource'	=>	'playlist'
 	),
 	array(
         'label'      => 'Calendar',

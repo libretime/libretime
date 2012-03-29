@@ -7,7 +7,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 
     public function init()
     {
-        $this->setAction('/Nowplaying');
+        $this->setAction('/Showbuilder');
         $this->setMethod('post');
         
         $country_list = Application_Model_Preference::GetCountryList();

@@ -29,16 +29,6 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction() {
 
-        $this->_helper->layout->setLayout('library');
-
-        $this->_helper->actionStack('library', 'library');
-        $this->_helper->actionStack('index', 'playlist');
-    }
-
-    public function libraryAction()
-    {
-      
-        $this->_helper->viewRenderer->setResponseSegment('library');   
     }
 
     public function contextMenuAction()
@@ -143,7 +133,6 @@ class LibraryController extends Zend_Controller_Action
         }
 
         foreach ($files as $id) {
-            Logging::log("deleting file {$id}");
 
             $file = Application_Model_StoredFile::Recall($id);
 

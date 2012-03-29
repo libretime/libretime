@@ -1,0 +1,55 @@
+<button id="spl_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
+<?php if (isset($this->pl)) : ?>
+    <button id="spl_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
+    <a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button">
+        <span class="ui-icon crossfade-main-icon"></span><span class="ui-button-text">Playlist crossfade</span>
+    </a>
+<?php endif; ?>
+
+<?php if (isset($this->pl)) : ?>
+    <input id="pl_id" type="hidden" value="<?php echo $this->pl->getId(); ?>"></input>
+    <input id="pl_lastMod" type="hidden" value="<?php echo $this->pl->getLastModified('U'); ?>"></input>
+    <div class="playlist_title">
+        <h3 id="spl_name">
+            <a id="playlist_name_display" contenteditable="true"><?php echo $this->pl->getName(); ?></a>
+        </h3>
+        <h4 id="spl_length"><?php echo $this->length; ?></h4>
+    </div>
+
+    <fieldset class="toggle closed" id="fieldset-metadate_change">
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>View / edit description</legend>
+        <dl class="zend_form">
+            <dt id="description-label"><label for="description">Description</label></dt>
+            <dd id="description-element">
+                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->pl->getDescription(); ?></textarea>
+            </dd>
+            <dt id="submit-label" style="display: none;">&nbsp;</dt>
+            <dd id="submit-element" class="buttons">
+                <input class="ui-button ui-state-default" type="submit" value="Cancel" id="description_cancel" name="cancel">
+                <input class="ui-button ui-state-default" type="submit" value="Save" id="description_save" name="submit">
+            </dd>
+        </dl>
+    </fieldset>
+
+    <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
+      	<span class="ui-icon ui-icon-closethick"></span>
+	    <dl id="spl_editor-main" class="inline-list">
+            <dt>Fade in (s):</dt>
+            <dd><span contenteditable="true" class="spl_text_input spl_main_fade_in">00</span></dd>
+            <dd class="edit-error"></dd>
+            <dt>Fade out (s):</dt>
+            <dd><span contenteditable="true" class="spl_text_input spl_main_fade_out">00/span></dd>
+            <dd class="edit-error"></dd>
+        </dl>
+    </div>
+
+    <div class="clear"></div>
+    <div class="" style="clear:both; float:none; width:100%;">
+	    <ul id="spl_sortable">
+            <?php echo $this->render('playlist/update.phtml') ?>
+	    </ul>
+    </div>
+
+<?php else : ?>
+    <div>No open playlist</div>
+<?php endif; ?>

@@ -12,6 +12,8 @@ class UsersettingsController extends Zend_Controller_Action
                     ->addActionContext('set-library-datatable', 'json')
                     ->addActionContext('get-timeline-datatable', 'json')
                     ->addActionContext('set-timeline-datatable', 'json')
+                    ->addActionContext('register', 'json')
+                    ->addActionContext('remindme', 'json')
                     ->initContext();
     }
     
@@ -64,5 +66,18 @@ class UsersettingsController extends Zend_Controller_Action
         if ($data != "") {
             $this->view->settings = unserialize($data);
         }
+    }
+    
+    public function remindmeAction()
+    {
+        // unset session
+        Zend_Session::namespaceUnset('referrer');
+        Application_Model_Preference::SetRemindMeDate();
+    }
+    
+    public function donotshowregistrationpopupAction()
+    {
+        // unset session
+        Zend_Session::namespaceUnset('referrer');
     }
 }

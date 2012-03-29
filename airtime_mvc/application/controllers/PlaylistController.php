@@ -75,11 +75,11 @@ class PlaylistController extends Zend_Controller_Action
 
             $this->view->pl = $pl;
             $this->view->id = $pl->getId();
-            $this->view->html = $this->view->render('playlist/index.phtml');
+            $this->view->html = $this->view->render('playlist/playlist.phtml');
             unset($this->view->pl);
         }
         else {
-            $this->view->html = $this->view->render('playlist/index.phtml');
+            $this->view->html = $this->view->render('playlist/playlist.phtml');
         }
     }
 
@@ -135,8 +135,6 @@ class PlaylistController extends Zend_Controller_Action
         
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
-
-        $this->_helper->viewRenderer->setResponseSegment('spl');
 
         try {
             if (isset($this->pl_sess->id)) {

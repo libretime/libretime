@@ -44,9 +44,6 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version']),'text/javascript');
         
-        $this->_helper->layout->setLayout('builder');
-        $this->_helper->viewRenderer->setResponseSegment('dialog');
-        
         $user = Application_Model_User::GetCurrentUser();
         
         $refer_sses = new Zend_Session_Namespace('referrer');
@@ -97,76 +94,42 @@ class ShowbuilderController extends Zend_Controller_Action
         		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         	}
         }
-        else {
-        	//popup if previous page was login
-        	if ($refer_sses->referrer == 'login' && Application_Model_Nowplaying::ShouldShowPopUp()
-        			&& !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
-        
-        		$form = new Application_Form_RegisterAirtime();
-        
-        		$logo = Application_Model_Preference::GetStationLogo();
-        		if ($logo) {
-        			$this->view->logoImg = $logo;
-        		}
-        		$this->view->dialog = $form;
-        		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        	}
-        }
-        
-        $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
-        if ($data != "") {
-            $settings = unserialize($data);
-            
-            if ($settings["library"] == "true") {
-               $this->view->headScript()->appendScript("AIRTIME.showLib = true;"); 
+
+    	//popup if previous page was login
+    	if ($refer_sses->referrer == 'login' && Application_Model_Nowplaying::ShouldShowPopUp()
+    			&& !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
+    
+    		$form = new Application_Form_RegisterAirtime();
+    
+    		$logo = Application_Model_Preference::GetStationLogo();
+    		if ($logo) {
+    			$this->view->logoImg = $logo;
+    		}
+    		$this->view->dialog = $form;
+    		$this->view->headScript()->appendFile($baseUrl.'/js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+    	}
+   
+    	//determine whether to remove/hide/display the library.
+    	$showLib = false;
+    	$user = Application_Model_User::GetCurrentUser();
+    	if (!$user->isGuest()) {
+    	    $hideLib = false;
+            $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
+            if ($data != "") {
+                $settings = unserialize($data);
+                
+                if ($settings["library"] == "true") {
+                    $showLib = true;
+                }
             }
-        }
-        
-        if (!$user->isGuest()) {
-            $this->_helper->actionStack('library', 'library');
-        }
-        
-        $this->_helper->actionStack('builder', 'showbuilder');
-    }
-    
-    public function contextMenuAction()
-    {
-        $id = $this->_getParam('id');
-        $now = floatval(microtime(true));
-        
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
-        $menu = array();
-    
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        
-        $item = CcScheduleQuery::create()->findPK($id);
-        $instance = $item->getCcShowInstances();
-        
-        $menu["preview"] = array("name"=> "Preview");
-        //select the cursor
-        $menu["selCurs"] = array("name"=> "Select Cursor");
-        $menu["delCurs"] = array("name"=> "Remove Cursor");
-        
-        if ($now < floatval($item->getDbEnds("U.u")) && $user->canSchedule($instance->getDbShowId())) {
-            
-            //remove/truncate the item from the schedule
-            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/showbuilder/schedule-remove");
-        }
-        
-        $this->view->items = $menu;
-    }
-
-    public function builderAction() {
-    	
-    	global $CC_CONFIG;
-
-        $this->_helper->viewRenderer->setResponseSegment('builder');
-
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
-
+    	}
+    	else {
+    	    $hideLib = true;
+    	}
+    	$this->view->hideLib = $hideLib;
+    	$this->view->showLib = $showLib;
+       
+        //populate date range form for show builder.
         $now = time();
         $from = $request->getParam("from", $now);
         $to = $request->getParam("to", $now + (24*60*60));
@@ -194,14 +157,35 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
-        
-        $user = Application_Model_User::GetCurrentUser();
-        if (!$user->isGuest()) {
-            $this->view->toggleLib = true;
+    }
+    
+    public function contextMenuAction()
+    {
+        $id = $this->_getParam('id');
+        $now = floatval(microtime(true));
+    
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+        $menu = array();
+    
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+    
+        $item = CcScheduleQuery::create()->findPK($id);
+        $instance = $item->getCcShowInstances();
+    
+        $menu["preview"] = array("name"=> "Preview");
+        //select the cursor
+        $menu["selCurs"] = array("name"=> "Select Cursor");
+        $menu["delCurs"] = array("name"=> "Remove Cursor");
+    
+        if ($now < floatval($item->getDbEnds("U.u")) && $user->canSchedule($instance->getDbShowId())) {
+    
+            //remove/truncate the item from the schedule
+            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/showbuilder/schedule-remove");
         }
-        else {
-            $this->view->toggleLib = false;
-        }
+    
+        $this->view->items = $menu;
     }
 
     public function builderDialogAction() {
