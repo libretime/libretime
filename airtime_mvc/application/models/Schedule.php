@@ -634,26 +634,29 @@ class Application_Model_Schedule {
         $data["status"] = array();
         $data["media"] = array();
         
-        $kick_time = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ();
-        $temp = explode('.', Application_Model_Preference::GetDefaultTransitionFade());
-        // we round down transition time since PHP cannot handle millisecond. We need to
-        // handle this better in the future
-        $transition_time = intval($temp[0]);
-        $switchOffDataTime = new DateTime($kick_time, $utcTimeZone);
-        $switch_off_time = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
-        $switch_off_time = $switch_off_time->format("Y-m-d H:i:s");
-        
-        $kick_start = Application_Model_Schedule::AirtimeTimeToPypoTime($kick_time);
-        $data["media"][$kick_start]['start'] = $kick_start;
-        $data["media"][$kick_start]['end'] = $kick_start;
-        $data["media"][$kick_start]['event_type'] = "kick_out";
-        $data["media"][$kick_start]['type'] = "event";
-        
-        if($kick_time !== $switch_off_time){
-            $data["media"][$switch_start]['start'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
-            $data["media"][$switch_start]['end'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
-            $data["media"][$switch_start]['event_type'] = "switch_off";
-            $data["media"][$switch_start]['type'] = "event";
+        $kick_times = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ($range_start, $range_end);
+        foreach($kick_times as $kick_time_info){
+            $kick_time = $kick_time_info['ends'];
+            $temp = explode('.', Application_Model_Preference::GetDefaultTransitionFade());
+            // we round down transition time since PHP cannot handle millisecond. We need to
+            // handle this better in the future
+            $transition_time = intval($temp[0]);
+            $switchOffDataTime = new DateTime($kick_time, $utcTimeZone);
+            $switch_off_time = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
+            $switch_off_time = $switch_off_time->format("Y-m-d H:i:s");
+            
+            $kick_start = Application_Model_Schedule::AirtimeTimeToPypoTime($kick_time);
+            $data["media"][$kick_start]['start'] = $kick_start;
+            $data["media"][$kick_start]['end'] = $kick_start;
+            $data["media"][$kick_start]['event_type'] = "kick_out";
+            $data["media"][$kick_start]['type'] = "event";
+            
+            if($kick_time !== $switch_off_time){
+                $data["media"][$switch_start]['start'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
+                $data["media"][$switch_start]['end'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
+                $data["media"][$switch_start]['event_type'] = "switch_off";
+                $data["media"][$switch_start]['type'] = "event";
+            }
         }
 
         foreach ($items as $item){

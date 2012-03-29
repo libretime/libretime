@@ -829,19 +829,16 @@ class Application_Model_ShowInstance {
         return $CC_DBC->GetOne($sql);
     }
     
-    // this returns end timestamp of next show that has live DJ set up
-    public static function GetEndTimeOfNextShowWithLiveDJ(){
+    // this returns end timestamp of all shows that are in the range and has live DJ set up
+    public static function GetEndTimeOfNextShowWithLiveDJ($p_startTime, $p_endTime){
         global $CC_CONFIG, $CC_DBC;
-        
-        $date = new Application_Model_DateHelper;
-        $utcTimeNow = $date->getUtcTimestamp();
         
         $sql = "SELECT ends
 				FROM cc_show_instances as si
                 JOIN cc_show as sh ON si.show_id = sh.id
-        		WHERE si.ends > '$utcTimeNow' and (sh.live_stream_using_airtime_auth or live_stream_using_custom_auth)
+        		WHERE si.ends > '$p_startTime' and si.ends < '$p_endTime' and (sh.live_stream_using_airtime_auth or live_stream_using_custom_auth)
         		ORDER BY si.ends";
         
-        return $CC_DBC->GetOne($sql);
+        return $CC_DBC->GetAll($sql);
     }
 }

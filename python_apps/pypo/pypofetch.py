@@ -562,7 +562,10 @@ class PypoFetch(Thread):
                 message = self.fetch_queue.get(block=True, timeout=3600)
                 self.handle_message(message)
             except Exception, e:
-                self.logger.error("Exception, %s", e)
+                import traceback
+                top = traceback.format_exc()
+                self.logger.error('Exception: %s', e)
+                self.logger.error("traceback: %s", top)
                 
                 success, self.schedule_data = self.api_client.get_schedule()
                 if success:
