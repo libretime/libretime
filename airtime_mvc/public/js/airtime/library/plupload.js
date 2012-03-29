@@ -55,9 +55,7 @@ $(document).ready(function() {
 	
 	$(window).bind('beforeunload', function(){
 		if(uploadProgress){
-			if(!confirm("You are currently uploading files.\nGoing to another screen will cancel the upload process.\nAre you sure you want to cancel the upload process and go to the screen you clicked on?")){
-				return false;
-			}
+            return "You are currently uploading files.\nGoing to another screen will cancel the upload process.\nAre you sure you want to leave the page?";
 		}
 	});
 
