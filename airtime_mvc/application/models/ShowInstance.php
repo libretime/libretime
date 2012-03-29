@@ -347,18 +347,6 @@ class Application_Model_ShowInstance {
     }
 
     /**
-     * Get the group ID for this show.
-     *
-     */
-    private function getLastGroupId()
-    {
-        global $CC_DBC;
-        $sql = "SELECT group_id FROM cc_schedule WHERE instance_id = '{$this->_instanceId}' ORDER BY ends DESC LIMIT 1";
-        $res = $CC_DBC->GetOne($sql);
-        return $res;
-    }
-
-    /**
      * Add a playlist as the last item of the current show.
      *
      * @param int $plId
@@ -404,29 +392,6 @@ class Application_Model_ShowInstance {
         foreach ($plIds as $plId) {
             $this->addPlaylistToShow($plId);
         }
-    }
-
-    public function removeGroupFromShow($group_id)
-    {
-        global $CC_DBC;
-
-        $sql = "SELECT MAX(ends) as end_timestamp, (MAX(ends) - MIN(starts)) as length
-                    FROM cc_schedule
-                    WHERE group_id = '{$group_id}'";
-
-        $groupBoundry = $CC_DBC->GetRow($sql);
-
-        $group = CcScheduleQuery::create()
-            ->filterByDbGroupId($group_id)
-            ->delete();
-
-        $sql = "UPDATE cc_schedule
-                    SET starts = (starts - INTERVAL '{$groupBoundry["length"]}'), ends = (ends - INTERVAL '{$groupBoundry["length"]}')
-                    WHERE starts >= '{$groupBoundry["end_timestamp"]}' AND instance_id = {$this->_instanceId}";
-
-        $CC_DBC->query($sql);
-        Application_Model_RabbitMq::PushSchedule();
-        $this->updateScheduledTime();
     }
 
     public function clearShow()
@@ -646,11 +611,6 @@ class Application_Model_ShowInstance {
         return $interval->format("%h:%I:%S");
     }
 
-    public function searchPlaylistsForShow($datatables)
-    {
-        return Application_Model_StoredFile::searchPlaylistsForSchedule($datatables);
-    }
-
     public function getShowListContent()
     {
         global $CC_DBC;
@@ -676,64 +636,6 @@ class Application_Model_ShowInstance {
 
 
         return $results;
-    }
-
-    public static function GetShowsInstancesIdsInRange($p_start, $p_end)
-    {
-		global $CC_DBC;
-
-		$sql = "SELECT id FROM cc_show_instances AS si "
-			."WHERE modified_instance != TRUE AND ("
-			."(si.starts < TIMESTAMP '$p_start'"
-			."AND si.ends > TIMESTAMP '$p_start') "
-			."OR (si.starts > TIMESTAMP '$p_start' "
-			."AND si.ends < TIMESTAMP '$p_end') "
-			."OR (si.starts < TIMESTAMP '$p_end' "
-			."AND si.ends > TIMESTAMP '$p_end') "
-			.") "
-			." ORDER BY si.starts";
-            
-        Logging::debug($sql);
-
-		$rows = $CC_DBC->GetAll($sql);
-		return $rows;
-	}
-
-    public function getScheduleItemsInRange($timeNow, $start, $end)
-    {
-        global $CC_DBC, $CC_CONFIG;
-
-        $instanceId = $this->_instanceId;
-
-        $sql = "SELECT"
-        ." si.starts as show_starts,"
-        ." si.ends as show_ends,"
-        ." si.rebroadcast as rebroadcast,"
-        ." st.starts as item_starts,"
-        ." st.ends as item_ends,"
-        ." st.clip_length as clip_length,"
-        ." ft.track_title as track_title,"
-        ." ft.artist_name as artist_name,"
-        ." ft.album_title as album_title,"
-        ." s.name as show_name,"
-        ." si.id as instance_id"
-        ." FROM {$CC_CONFIG['showInstances']} si"
-        ." LEFT JOIN {$CC_CONFIG['scheduleTable']} st"
-        ." ON st.instance_id = si.id"
-        ." LEFT JOIN {$CC_CONFIG['filesTable']} ft"
-        ." ON st.file_id = ft.id"
-        ." LEFT JOIN {$CC_CONFIG['showTable']} s"
-        ." ON si.show_id = s.id"
-        ." WHERE ((si.starts < TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends > TIMESTAMP '$timeNow' - INTERVAL '$start seconds')"
-        ." OR (si.starts > TIMESTAMP '$timeNow' - INTERVAL '$start seconds' AND si.ends < TIMESTAMP '$timeNow' + INTERVAL '$end seconds')"
-        ." OR (si.starts < TIMESTAMP '$timeNow' + INTERVAL '$end seconds' AND si.ends > TIMESTAMP '$timeNow' + INTERVAL '$end seconds'))"
-        ." AND (st.starts < si.ends)"
-        ." AND si.id = $instanceId"
-        ." ORDER BY si.starts, st.starts";
-
-        Logging::log($sql);
-
-        return $CC_DBC->GetAll($sql);
     }
     
     public function getLastAudioItemEnd(){

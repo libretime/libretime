@@ -376,48 +376,6 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-/*
-    public function notifyScheduleGroupPlayAction()
-    {
-        global $CC_CONFIG;
-
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $api_key = $this->_getParam('api_key');
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
-
-        PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-
-        $schedule_group_id = $this->_getParam("schedule_id");
-        if (is_numeric($schedule_group_id)) {
-            $sg = new Application_Model_ScheduleGroup($schedule_group_id);
-            if ($sg->exists()) {
-                $result = $sg->notifyGroupStartPlay();
-                if (!PEAR::isError($result)) {
-                    echo json_encode(array("status"=>1, "message"=>""));
-                    exit;
-                } else {
-                    echo json_encode(array("status"=>0, "message"=>"DB Error:".$result->getMessage()));
-                    exit;
-                }
-            } else {
-                echo json_encode(array("status"=>0, "message"=>"Schedule group does not exist: ".$schedule_group_id));
-                exit;
-            }
-        } else {
-            echo json_encode(array("status"=>0, "message"=>"Incorrect or non-numeric arguments given."));
-            exit;
-        }
-    }
-    */
-
     public function recordedShowsAction()
     {
         global $CC_CONFIG;
