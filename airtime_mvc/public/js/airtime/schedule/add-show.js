@@ -317,7 +317,8 @@ function setAddShowEvents() {
             var end_date = $("#add_show_end_date").val();
 
             $('#schedule-add-show').block({ 
-                message: null
+                message: null,
+                applyPlatformOpacityRules: false
             });
             
             $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts, days: days}, function(json){
