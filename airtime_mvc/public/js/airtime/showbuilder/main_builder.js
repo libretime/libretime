@@ -144,7 +144,7 @@ $(document).ready(function(){
 	
 	$builder.find('legend').click(function(ev, item){
 		
-		$fs = $(this).parents('fieldset');
+		var $fs = $(this).parents('fieldset');
 		
 		if ($fs.hasClass("closed")) {
     
