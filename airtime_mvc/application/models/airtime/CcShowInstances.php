@@ -140,5 +140,11 @@ class CcShowInstances extends BaseCcShowInstances {
             ->update(array('DbPlayoutStatus' => 0), $con);
 
     }
+    
+    public function preInsert(PropelPDO $con = null) {
+        $now = new DateTime("now", new DateTimeZone("UTC"));
+        $this->setDbCreated($now);
+        return true;
+    }
 
 } // CcShowInstances

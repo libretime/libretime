@@ -12,10 +12,90 @@ class Application_Model_Scheduler {
             "fadeout" => "00:00:00",
             "sched_id" => null,
         );
+    
+    private $nowDT;
+    private $user;
 
     public function __construct($id = null) {
 
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $this->nowDT = new DateTime("now", new DateTimeZone("UTC"));
+        $this->user = Application_Model_User::GetCurrentUser();
+    }
+    
+    /*
+     * make sure any incoming requests for scheduling are ligit.
+    *
+    * @param array $items, an array containing pks of cc_schedule items.
+    */
+    private function validateRequest($items) {
+    
+        $nowEpoch = intval($this->nowDT->format("U"));
+        
+        for ($i = 0; $i < count($items); $i++) {
+            $id = $items[$i]["id"];
+            
+            //could be added to the beginning of a show, which sends id = 0;
+            if ($id > 0) {
+                $schedInfo[$id] = $items[$i]["instance"];
+            }
+
+            $instanceInfo[$items[$i]["instance"]] = $items[$i]["timestamp"];
+        }
+        
+        if (count($instanceInfo) === 0) {
+            throw new Exception("Invalid Request.");
+        }
+        
+        $schedIds = array();
+        if (isset($schedInfo)) {
+            $schedIds = array_keys($schedInfo);
+        }
+        $schedItems = CcScheduleQuery::create()->findPKs($schedIds, $this->con);
+        $instanceIds = array_keys($instanceInfo);
+        $showInstances = CcShowInstancesQuery::create()->findPKs($instanceIds, $this->con);
+        
+        //an item has been deleted
+        if (count($schedIds) !== count($schedItems)) {
+            throw new OutDatedScheduleException("The schedule you're viewing is out of date! (sched mismatch)");
+        }
+        
+        //a show has been deleted
+        if (count($instanceIds) !== count($showInstances)) {
+            throw new OutDatedScheduleException("The schedule you're viewing is out of date! (instance mismatch)");
+        }
+        
+        foreach ($schedItems as $schedItem) {
+            $id = $schedItem->getDbId();
+            $instance = $schedItem->getCcShowInstances($this->con);
+            
+            if (intval($schedInfo[$id]["instance"]) !== $instance->getDbId()) {
+                throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+            }
+        }
+        
+        foreach ($showInstances as $instance) {
+           
+            $id = $instance->getDbId();
+            $show = $instance->getCcShow($this->con);
+            
+            if ($this->user->canSchedule($show->getDbId()) === false) {
+                throw new Exception("You are not allowed to schedule show {$show->getDbName()}.");
+            }
+            
+            $showEndEpoch = intval($instance->getDbEnds("U"));
+            
+            if ($showEndEpoch < $nowEpoch) {   
+                throw new OutDatedScheduleException("The show {$show->getDbName()} is over and cannot be scheduled.");
+            }
+            
+            $origTs = intval($instanceInfo[$id]);
+            $currTs = intval($instance->getDbLastScheduled("U")) ? : 0;
+            if ($origTs !== $currTs) {
+                Logging::log("orig {$origTs} current {$currTs}");
+                throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
+            }
+        }
     }
 
     /*
@@ -112,25 +192,22 @@ class Application_Model_Scheduler {
     
     private function findNextStartTime($DT, $instance) {
         
-        //check to see if the show has started.
-        $nowDT = new DateTime("now", new DateTimeZone("UTC"));
-        
         $sEpoch = intval($DT->format("U"));
-        $nEpoch = intval($nowDT->format("U"));
+        $nowEpoch = intval($this->nowDT->format("U"));
         
         //check for if the show has started.
-        if ($nEpoch > $sEpoch) {
+        if ($nowEpoch > $sEpoch) {
             //need some kind of placeholder for cc_schedule.
             //playout_status will be -1.
-            $nextDT = $nowDT;
+            $nextDT = $this->nowDT;
         
-            $length = $nEpoch - $sEpoch;
+            $length = $nowEpoch - $sEpoch;
             $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
         
             //fillers are for only storing a chunk of time space that has already passed.
             $filler = new CcSchedule();
             $filler->setDbStarts($DT)
-                ->setDbEnds($nowDT)
+                ->setDbEnds($this->nowDT)
                 ->setDbClipLength($cliplength)
                 ->setDbPlayoutStatus(-1)
                 ->setDbInstanceId($instance->getDbId())
@@ -164,45 +241,27 @@ class Application_Model_Scheduler {
 
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
-                $ts = intval($schedule["timestamp"]);
-
-                Logging::log("scheduling after scheduled item: ".$id);
-                Logging::log("in show: ".intval($schedule["instance"]));
-
+               
                 if ($id !== 0) {
                     $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
-                    if (is_null($schedItem)) {
-                        throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
-                    }
                     $instance = $schedItem->getCcShowInstances($this->con);
-                    if (intval($schedule["instance"]) !== $instance->getDbId()) {
-                        throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
-                    }
+                    
                     $schedItemEndDT = $schedItem->getDbEnds(null);
                     $nextStartDT = $this->findNextStartTime($schedItemEndDT, $instance);
                 }
                 //selected empty row to add after
                 else {
-                    $instance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
                     
-                    //check to see if the show has started.
+                    $instance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
+
                     $showStartDT = $instance->getDbStarts(null);
                     $nextStartDT = $this->findNextStartTime($showStartDT, $instance);
-                }
-
-                $currTs = intval($instance->getDbLastScheduled("U")) ? : 0;
-                //user has an old copy of the time line opened.
-                if ($ts !== $currTs) {
-                    Logging::log("currTs {$currTs}, ts {$ts}");
-                    $show = $instance->getCcShow($this->con);
-                    throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
                 }
 
                 if (!in_array($instance->getDbId(), $affectedShowInstances)) {
                     $affectedShowInstances[] = $instance->getDbId();
                 }
 
-                Logging::log("finding items >= {$nextStartDT->format("Y-m-d H:i:s.u")}");
                 if ($adjustSched === true) {
                     $followingSchedItems = CcScheduleQuery::create()
                         ->filterByDBStarts($nextStartDT->format("Y-m-d H:i:s.u"), Criteria::GREATER_EQUAL)
@@ -210,15 +269,9 @@ class Application_Model_Scheduler {
                         ->filterByDbId($excludeIds, Criteria::NOT_IN)
                         ->orderByDbStarts()
                         ->find($this->con);
-
-                     foreach ($excludeIds as $id) {
-                        Logging::log("Excluding id {$id}");
-                     }
                 }
 
                 foreach($schedFiles as $file) {
-
-                    Logging::log("adding file with id: ".$file["id"]);
 
                     $endTimeDT = self::findEndTime($nextStartDT, $file['cliplength']);
 
@@ -230,10 +283,7 @@ class Application_Model_Scheduler {
                     else {
                         $sched = new CcSchedule();
                     }
-                    Logging::log("id {$sched->getDbId()}");
-                    Logging::log("start time {$nextStartDT->format("Y-m-d H:i:s.u")}");
-                    Logging::log("end time {$endTimeDT->format("Y-m-d H:i:s.u")}");
-
+                   
                     $sched->setDbStarts($nextStartDT);
                     $sched->setDbEnds($endTimeDT);
                     $sched->setDbFileId($file['id']);
@@ -251,9 +301,7 @@ class Application_Model_Scheduler {
                 if ($adjustSched === true) {
 
                     //recalculate the start/end times after the inserted items.
-                    foreach($followingSchedItems as $item) {
-
-                        Logging::log("adjusting iterm {$item->getDbId()}");
+                    foreach ($followingSchedItems as $item) {
 
                         $endTimeDT = self::findEndTime($nextStartDT, $item->getDbClipLength());
 
@@ -297,11 +345,10 @@ class Application_Model_Scheduler {
         $schedFiles = array();
 
         try {
+            
+            $this->validateRequest($scheduleItems);
 
             foreach ($mediaItems as $media) {
-                Logging::log("Media Id ".$media["id"]);
-                Logging::log("Type ".$media["type"]);
-
                 $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
             }
             $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
@@ -326,27 +373,11 @@ class Application_Model_Scheduler {
       
         try {
             
-            //checks on whether the item to move after is ok.
-            Logging::log("Moving after item: {$afterItems[0]["id"]}");
-            $origAfterTs = intval($afterItems[0]["timestamp"]);
-            
-            if (intval($afterItems[0]["id"]) === 0) {
-                $afterInstance = CcShowInstancesQuery::create()->findPK($afterItems[0]["instance"], $this->con);
-            }
-            else {
-                $after = CcScheduleQuery::create()->findPk($afterItems[0]["id"], $this->con);
-                if (is_null($after)) {
-                    throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
-                }
-                $afterInstance = $after->getCcShowInstances($this->con);
-            }
-            
-            $currTs = intval($afterInstance->getDbLastScheduled("U")) ? : 0;
-            if ($origAfterTs !== $currTs) {
-                $show = $afterInstance->getCcShow($this->con);
-                throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
-            }
-            
+            $this->validateRequest($selectedItems);
+            $this->validateRequest($afterItems);
+ 
+            $afterInstance = CcShowInstancesQuery::create()->findPK($afterItems[0]["instance"], $this->con);
+           
             //map show instances to cc_schedule primary keys.
             $modifiedMap = array();
             $movedData = array();
@@ -354,24 +385,8 @@ class Application_Model_Scheduler {
             //prepare each of the selected items.
             for ($i = 0; $i < count($selectedItems); $i++) {
                 
-                Logging::log("Moving item {$selectedItems[$i]["id"]}");
-                
-                $origSelTs = intval($selectedItems[$i]["timestamp"]);
                 $selected = CcScheduleQuery::create()->findPk($selectedItems[$i]["id"], $this->con);
-                if (is_null($selected)) {
-                    throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
-                }
                 $selectedInstance = $selected->getCcShowInstances($this->con);
-                
-                if (is_null($selectedInstance) || is_null($afterInstance)) {
-                    throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
-                }
-                
-                $currTs = intval($selectedInstance->getDbLastScheduled("U")) ? : 0;
-                if ($origSelTs !== $currTs) {
-                    $show = $selectedInstance->getCcShow($this->con);
-                    throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
-                }
                 
                 $data = $this->fileInfo;
                 $data["id"] = $selected->getDbFileId();
@@ -417,29 +432,20 @@ class Application_Model_Scheduler {
         $this->con->beginTransaction();
 
         try {
-
+            
+            $this->validateRequest($scheduledItems);
+            
             $scheduledIds = array();
             foreach ($scheduledItems as $item) {
-                $scheduledIds[$item["id"]] = intval($item["timestamp"]);
+                $scheduledIds[] = $item["id"];
             }
 
-            $removedItems = CcScheduleQuery::create()->findPks(array_keys($scheduledIds));
+            $removedItems = CcScheduleQuery::create()->findPks($scheduledIds);
 
-            //check to see if the current item is being deleted so we can truncate the record.
-            $currentItem = null;
             //check to make sure all items selected are up to date
             foreach ($removedItems as $removedItem) {
-                $ts = $scheduledIds[$removedItem->getDbId()];
+                
                 $instance = $removedItem->getCcShowInstances($this->con);
-                if (is_null($instance)) {
-                    throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
-                }
-                $currTs = intval($instance->getDbLastScheduled("U")) ? : 0;
-
-                if ($ts !== $currTs) {
-                    $show = $instance->getCcShow($this->con);
-                    throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
-                }
                 
                 //check to truncate the currently playing item instead of deleting it.
                 if ($removedItem->isCurrentItem()) {

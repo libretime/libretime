@@ -6,11 +6,30 @@ class UsersettingsController extends Zend_Controller_Action
     {
         /* Initialize action controller here */
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('get-library-datatable', 'json')
+        $ajaxContext->addActionContext('get-now-playing-screen-settings', 'json')
+                    ->addActionContext('set-now-playing-screen-settings', 'json')
+                    ->addActionContext('get-library-datatable', 'json')
                     ->addActionContext('set-library-datatable', 'json')
                     ->addActionContext('get-timeline-datatable', 'json')
                     ->addActionContext('set-timeline-datatable', 'json')
                     ->initContext();
+    }
+    
+    public function setNowPlayingScreenSettingsAction() {
+        
+        $request = $this->getRequest();
+        $settings = $request->getParam("settings");
+        
+        $data = serialize($settings);
+        Application_Model_Preference::SetValue("nowplaying_screen", $data, true);
+    }
+    
+    public function getNowPlayingScreenSettingsAction() {
+    
+        $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
+        if ($data != "") {
+            $this->view->settings = unserialize($data);
+        }
     }
 
     public function setLibraryDatatableAction() {

@@ -275,12 +275,15 @@ class Application_Model_ShowBuilder {
 
             if (isset($show["last_scheduled"])) {
                 $dt = new DateTime($show["last_scheduled"], new DateTimeZone("UTC"));
-
-                //check if any of the shows have a more recent timestamp.
-                if ($timestamp < intval($dt->format("U"))) {
-                    $outdated = true;
-                    break;
-                }
+            }
+            else {
+                $dt = new DateTime($show["created"], new DateTimeZone("UTC"));
+            }
+            
+            //check if any of the shows have a more recent timestamp.
+            if ($timestamp < intval($dt->format("U"))) {
+                $outdated = true;
+                break;
             }
         }
 

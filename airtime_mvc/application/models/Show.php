@@ -1481,7 +1481,7 @@ class Application_Model_Show {
 
         $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name,
                 color, background_color, file_id, cc_show_instances.id AS instance_id,
-                last_scheduled, time_filled
+                created, last_scheduled, time_filled
             FROM cc_show_instances
             LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id
             WHERE cc_show_instances.modified_instance = FALSE";

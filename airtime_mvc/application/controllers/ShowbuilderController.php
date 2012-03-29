@@ -17,16 +17,37 @@ class ShowbuilderController extends Zend_Controller_Action
     }
 
     public function indexAction() {
-
-        $this->_helper->layout->setLayout('builder');
-        $this->_helper->viewRenderer->setResponseSegment('dialog');
         
         global $CC_CONFIG;
         
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
 
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version']),'text/javascript');
+        
+        $this->_helper->layout->setLayout('builder');
+        $this->_helper->viewRenderer->setResponseSegment('dialog');
+        
+        $user = Application_Model_User::GetCurrentUser();
         
         $refer_sses = new Zend_Session_Namespace('referrer');
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -92,7 +113,19 @@ class ShowbuilderController extends Zend_Controller_Action
         	}
         }
         
-        $this->_helper->actionStack('library', 'library');
+        $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
+        if ($data != "") {
+            $settings = unserialize($data);
+            
+            if ($settings["library"] == "true") {
+               $this->view->headScript()->appendScript("AIRTIME.showLib = true;"); 
+            }
+        }
+        
+        if (!$user->isGuest()) {
+            $this->_helper->actionStack('library', 'library');
+        }
+        
         $this->_helper->actionStack('builder', 'showbuilder');
     }
     
@@ -161,6 +194,14 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
+        
+        $user = Application_Model_User::GetCurrentUser();
+        if (!$user->isGuest()) {
+            $this->view->toggleLib = true;
+        }
+        else {
+            $this->view->toggleLib = false;
+        }
     }
 
     public function builderDialogAction() {
@@ -206,9 +247,6 @@ class ShowbuilderController extends Zend_Controller_Action
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
-        Logging::log("showbuilder starts {$startsDT->format("Y-m-d H:i:s")}");
-        Logging::log("showbuilder ends {$endsDT->format("Y-m-d H:i:s")}");
-
         $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
@@ -251,11 +289,11 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $mediaItems = $request->getParam("mediaIds", array());
-        $scheduledIds = $request->getParam("schedIds", array());
+        $scheduledItems = $request->getParam("schedIds", array());
 
         try {
             $scheduler = new Application_Model_Scheduler();
-            $scheduler->scheduleAfter($scheduledIds, $mediaItems);
+            $scheduler->scheduleAfter($scheduledItems, $mediaItems);
         }
         catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
@@ -297,12 +335,12 @@ class ShowbuilderController extends Zend_Controller_Action
     public function scheduleMoveAction() {
 
         $request = $this->getRequest();
-        $selectedItem = $request->getParam("selectedItem");
+        $selectedItems = $request->getParam("selectedItem");
         $afterItem = $request->getParam("afterItem");
 
         try {
             $scheduler = new Application_Model_Scheduler();
-            $scheduler->moveItem($selectedItem, $afterItem);
+            $scheduler->moveItem($selectedItems, $afterItem);
         }
         catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
@@ -323,47 +361,5 @@ class ShowbuilderController extends Zend_Controller_Action
         $request = $this->getRequest();
 
         $showInstance = $request->getParam("instanceId");
-    }
-
-    /*
-     * make sure any incoming requests for scheduling are ligit.
-     *
-     * @param array $items, an array containing pks of cc_schedule items.
-     */
-    private function filterSelected($items) {
-
-        $allowed = array();
-        $user = Application_Model_User::GetCurrentUser();
-        $type = $user->getType();
-
-        //item must be within the host's show.
-        if ($type === UTYPE_HOST) {
-
-            $hosted = CcShowHostsQuery::create()
-               ->filterByDbHost($user->getId())
-               ->find();
-
-            $allowed_shows = array();
-            foreach ($hosted as $host) {
-               $allowed_shows[] = $host->getDbShow();
-            }
-
-            for ($i = 0; $i < count($items); $i++) {
-
-                $instance = $items[$i]["instance"];
-
-                if (in_array($instance, $allowed_shows)) {
-                    $allowed[] = $items[$i];
-                }
-            }
-
-            $this->view->shows = $res;
-        }
-        //they can schedule anything.
-        else if ($type === UTYPE_ADMIN || $type === UTYPE_PROGRAM_MANAGER) {
-            $allowed = $items;
-        }
-
-        return $allowed;
     }
 }

@@ -12,6 +12,15 @@
 	margin-left: -16px;
 }
 
+#sb_edit {
+	position: relative;
+	top: 2px;
+	float: left;
+	margin-right: 5px;
+	padding: 1px 2px;
+	cursor: pointer;
+}
+
 .sb-content .fg-toolbar ul {
 	float: left;
 	padding: 0;

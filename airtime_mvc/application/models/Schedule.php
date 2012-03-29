@@ -633,11 +633,28 @@ class Application_Model_Schedule {
 
         $data["status"] = array();
         $data["media"] = array();
-        $data["harbor"] = array();
         
+        $kick_time = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ();
+        $temp = explode('.', Application_Model_Preference::GetDefaultTransitionFade());
+        // we round down transition time since PHP cannot handle millisecond. We need to
+        // handle this better in the future
+        $transition_time = intval($temp[0]);
+        $switchOffDataTime = new DateTime($kick_time, $utcTimeZone);
+        $switch_off_time = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
+        $switch_off_time = $switch_off_time->format("Y-m-d H:i:s");
         
-        $data["harbor"]['next_live_dj_show_end'] = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ();
-        $data["harbor"]['transition_fade'] = Application_Model_Preference::GetDefaultTransitionFade();
+        $kick_start = Application_Model_Schedule::AirtimeTimeToPypoTime($kick_time);
+        $data["media"][$kick_start]['start'] = $kick_start;
+        $data["media"][$kick_start]['end'] = $kick_start;
+        $data["media"][$kick_start]['event_type'] = "kick_out";
+        $data["media"][$kick_start]['type'] = "event";
+        
+        if($kick_time !== $switch_off_time){
+            $data["media"][$switch_start]['start'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
+            $data["media"][$switch_start]['end'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
+            $data["media"][$switch_start]['event_type'] = "switch_off";
+            $data["media"][$switch_start]['type'] = "event";
+        }
 
         foreach ($items as $item){
 
@@ -662,6 +679,7 @@ class Application_Model_Schedule {
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
             $data["media"][$start] = array(
                 'id' => $storedFile->getGunid(),
+                'type' => "file",
                 'row_id' => $item["id"],
                 'uri' => $uri,
                 'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),

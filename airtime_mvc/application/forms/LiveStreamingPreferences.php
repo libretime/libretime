@@ -44,7 +44,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         //liquidsoap harbor.input port
         $m_port = Application_Model_StreamSetting::GetMasterLiveSteamPort();
         $master_dj_port = new Zend_Form_Element_Text('master_harbor_input_port');
-        $master_dj_port->setLabel("Master DJ Port")
+        $master_dj_port->setLabel("Master Source Port")
                 ->setValue($m_port)
                 ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
                 ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
@@ -53,7 +53,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         
         $m_mount = Application_Model_StreamSetting::GetMasterLiveSteamMountPoint();
         $master_dj_mount = new Zend_Form_Element_Text('master_harbor_input_mount_point');
-        $master_dj_mount->setLabel("Master DJ Mount Point")
+        $master_dj_mount->setLabel("Master Source Mount Point")
                 ->setValue($m_mount)
                 ->setValidators(array(
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
@@ -63,7 +63,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         //liquidsoap harbor.input port
         $l_port = Application_Model_StreamSetting::GetDJLiveSteamPort();
         $live_dj_port = new Zend_Form_Element_Text('dj_harbor_input_port');
-        $live_dj_port->setLabel("DJ Port")
+        $live_dj_port->setLabel("Show Source Port")
                 ->setValue($l_port)
                 ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
                 ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
@@ -72,7 +72,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         
         $l_mount = Application_Model_StreamSetting::GetDJLiveSteamMountPoint();
         $live_dj_mount = new Zend_Form_Element_Text('dj_harbor_input_mount_point');
-        $live_dj_mount->setLabel("DJ Mount Point")
+        $live_dj_mount->setLabel("Show Source Mount Point")
                 ->setValue($l_mount)
                 ->setValidators(array(
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
@@ -127,7 +127,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $master_harbor_input_port = $data['master_harbor_input_port'];
         $dj_harbor_input_port = $data['dj_harbor_input_port'];
         
-        if($master_harbor_input_port == $dj_harbor_input_port){
+        if($master_harbor_input_port == $dj_harbor_input_port && $master_harbor_input_port != ""){
             $element = $this->getElement("dj_harbor_input_port");
             $element->addError("You cannot use same port as Master DJ port.");
         }

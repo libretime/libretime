@@ -13,12 +13,7 @@ $(document).ready(function(){
 		timeStartId = "#sb_time_start",
 		dateEndId = "#sb_date_end",
 		timeEndId = "#sb_time_end",
-		$toggleLib = $('<input />', {
-			"class": "ui-button ui-state-default sb-edit",
-			"id": "sb_edit",
-			"type": "button",
-			"value": "Add Files"
-		}),
+		$toggleLib = $('<div id="sb_edit" class="ui-state-default" title="open the library to schedule files."><span class="ui-icon ui-icon-arrowthick-1-nw"></span></div>'),
 		$libClose = $('<a />', {
 			"class": "close-round",
 			"href": "#",
@@ -55,6 +50,16 @@ $(document).ready(function(){
 	oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);	
 	AIRTIME.showbuilder.fnServerData.start = oRange.start;
 	AIRTIME.showbuilder.fnServerData.end = oRange.end;
+		    
+    if (AIRTIME.showLib === true) {
+    	$lib.show()
+			.width(Math.floor(screenWidth * 0.5));
+	
+    	$builder.width(Math.floor(screenWidth * 0.5))
+			.find("#sb_edit")
+				.remove()
+				.end();
+    }
 	
 	AIRTIME.library.libraryInit();
 	AIRTIME.showbuilder.builderDataTable();
@@ -91,8 +96,8 @@ $(document).ready(function(){
 		
 		oTable.fnDraw();
 	});
-	
-	$builder.on("click","#sb_edit", function(ev){
+
+	$builder.on("click","#sb_edit", function () {
 		var schedTable = $("#show_builder_table").dataTable();
 		
 		//reset timestamp to redraw the cursors.
@@ -106,10 +111,18 @@ $(document).ready(function(){
 				.remove()
 				.end();
 		
-		schedTable.fnDraw();	
+		schedTable.fnDraw();
+		
+		$.ajax({
+            url: "/usersettings/set-now-playing-screen-settings",
+            type: "POST",
+            data: {settings : {library : true}, format: "json"},
+            dataType: "json",
+            success: function(){}
+          });
 	});
 	
-	$lib.on("click", "#sb_lib_close", function(ev) {
+	$lib.on("click", "#sb_lib_close", function() {
 		var schedTable = $("#show_builder_table").dataTable();
 
 		$lib.hide();
@@ -119,6 +132,14 @@ $(document).ready(function(){
 				.end();
 		
 		schedTable.fnDraw();
+		
+		$.ajax({
+            url: "/usersettings/set-now-playing-screen-settings",
+            type: "POST",
+            data: {settings : {library : false}, format: "json"},
+            dataType: "json",
+            success: function(){}
+          });
 	});
 	
 	$builder.find('legend').click(function(ev, item){
