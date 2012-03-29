@@ -772,10 +772,9 @@ class ScheduleController extends Zend_Controller_Action
 
     public function cancelShowAction()
     {
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
+        $user = Application_Model_User::GetCurrentUser();
 
-        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $showInstanceId = $this->_getParam('id');
 
 		    try {

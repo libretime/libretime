@@ -773,5 +773,13 @@ class Application_Model_Preference
         return self::GetValue("live_dj_source_connection_url");
     }
     /* User specific preferences end */
+    
+    public static function ShouldShowPopUp(){
+        $today = mktime(0, 0, 0, gmdate("m"), gmdate("d"), gmdate("Y"));
+        $remindDate = Application_Model_Preference::GetRemindMeDate();
+        if($remindDate == NULL || $today >= $remindDate){
+            return true;
+        }
+    }
 }
 

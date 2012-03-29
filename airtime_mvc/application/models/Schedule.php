@@ -3,31 +3,6 @@
 class Application_Model_Schedule {
 
     /**
-     * Return true if there is nothing in the schedule for the given start time
-     * up to the length of time after that.
-     *
-     * @param string $p_datetime
-     *    In the format YYYY-MM-DD HH:MM:SS.mmmmmm
-     * @param string $p_length
-     *    In the format HH:MM:SS.mmmmmm
-     * @return boolean|PEAR_Error
-     */
-    public static function isScheduleEmptyInRange($p_datetime, $p_length) {
-        global $CC_CONFIG, $CC_DBC;
-        if (empty($p_length)) {
-            return new PEAR_Error("Application_Model_Schedule::isSchedulerEmptyInRange: param p_length is empty.");
-        }
-        $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE (starts >= '$p_datetime') "
-        ." AND (ends <= (TIMESTAMP '$p_datetime' + INTERVAL '$p_length'))";
-        //$_SESSION["debug"] = $sql;
-        //echo $sql;
-        $count = $CC_DBC->GetOne($sql);
-        //var_dump($count);
-        return ($count == '0');
-    }
-
-    /**
      * Return TRUE if file is going to be played in the future.
      *
      * @param string $p_fileId
@@ -238,110 +213,6 @@ class Application_Model_Schedule {
         return $row;
     }
 
-    /**
-     * Builds an SQL Query for accessing scheduled item information from
-     * the database.
-     *
-     * @param int $timeNow
-     * @param int $timePeriod
-     * @param int $count
-     * @param String $interval
-     * @return date
-     *
-     * $timeNow is the the currentTime in the format "Y-m-d H:i:s".
-     * For example: 2011-02-02 22:00:54
-     *
-     * $timePeriod can be either negative, zero or positive. This is used
-     * to indicate whether we want items from the past, present or future.
-     *
-     * $count indicates how many results we want to limit ourselves to.
-     *
-     * $interval is used to indicate how far into the past or future we
-     * want to search the database. For example "5 days", "18 hours", "60 minutes",
-     * "30 seconds" etc.
-     */
-    public static function GetScheduledItemData($timeStamp, $timePeriod=0, $count = 0, $interval="0 hours")
-    {
-        global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT DISTINCT"
-        ." pt.name,"
-        ." ft.track_title,"
-        ." ft.artist_name,"
-        ." ft.album_title,"
-        ." st.starts,"
-        ." st.ends,"
-        ." st.clip_length,"
-        ." st.media_item_played,"
-        ." st.group_id,"
-        ." show.name as show_name,"
-        ." st.instance_id"
-        ." FROM $CC_CONFIG[scheduleTable] st"
-        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
-        ." ON st.file_id = ft.id"
-        ." LEFT JOIN $CC_CONFIG[playListTable] pt"
-        ." ON st.playlist_id = pt.id"
-        ." LEFT JOIN $CC_CONFIG[showInstances] si"
-        ." ON st.instance_id = si.id"
-        ." LEFT JOIN $CC_CONFIG[showTable] show"
-        ." ON si.show_id = show.id"
-        ." WHERE st.starts < si.ends";
-
-        if ($timePeriod < 0){
-            $sql .= " AND st.ends < TIMESTAMP '$timeStamp'"
-            ." AND st.ends > (TIMESTAMP '$timeStamp' - INTERVAL '$interval')"
-            ." ORDER BY st.starts DESC"
-           	." LIMIT $count";
-        } else if ($timePeriod == 0){
-            $sql .= " AND st.starts <= TIMESTAMP '$timeStamp'"
-       	    ." AND st.ends >= TIMESTAMP '$timeStamp'";
-        } else if ($timePeriod > 0){
-           	$sql .= " AND st.starts > TIMESTAMP '$timeStamp'"
-           	." AND st.starts < (TIMESTAMP '$timeStamp' + INTERVAL '$interval')"
-           	." ORDER BY st.starts"
-           	." LIMIT $count";
-        }
-
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-
-    
-    public static function getScheduleItemsInRange($starts, $ends)
-    {
-        global $CC_DBC, $CC_CONFIG;
-
-        $sql = "SELECT"
-        ." si.starts as show_starts,"
-        ." si.ends as show_ends,"
-        ." si.rebroadcast as rebroadcast,"
-        ." st.starts as item_starts,"
-        ." st.ends as item_ends,"
-        ." st.clip_length as clip_length,"
-        ." ft.track_title as track_title,"
-        ." ft.artist_name as artist_name,"
-        ." ft.album_title as album_title,"
-        ." s.name as show_name,"
-        ." si.id as instance_id,"
-        ." pt.name as playlist_name"
-        ." FROM ".$CC_CONFIG["showInstances"]." si"
-        ." LEFT JOIN ".$CC_CONFIG["scheduleTable"]." st"
-        ." ON st.instance_id = si.id"
-        ." LEFT JOIN ".$CC_CONFIG["playListTable"]." pt"
-        ." ON st.playlist_id = pt.id"
-        ." LEFT JOIN ".$CC_CONFIG["filesTable"]." ft"
-        ." ON st.file_id = ft.id"
-        ." LEFT JOIN ".$CC_CONFIG["showTable"]." s"
-        ." ON si.show_id = s.id"
-        ." WHERE ((si.starts < TIMESTAMP '$starts' AND si.ends > TIMESTAMP '$starts')"
-        ." OR (si.starts > TIMESTAMP '$starts' AND si.ends < TIMESTAMP '$ends')"
-        ." OR (si.starts < TIMESTAMP '$ends' AND si.ends > TIMESTAMP '$ends'))"
-        ." AND (st.starts < si.ends)"
-        ." ORDER BY si.id, si.starts, st.starts";
-        
-        return $CC_DBC->GetAll($sql);
-    }
-
 	/*
 	 *
 	 * @param DateTime $p_startDateTime
@@ -389,25 +260,6 @@ class Application_Model_Schedule {
         }
 
         $sql .= " ORDER BY si.starts, sched.starts;";
-
-        Logging::log($sql);
-
-        $rows = $CC_DBC->GetAll($sql);
-        return $rows;
-    }
-
-    public static function GetShowInstanceItems($instance_id)
-    {
-        global $CC_CONFIG, $CC_DBC;
-
-        $sql = "SELECT DISTINCT pt.name, ft.track_title, ft.artist_name, ft.album_title, st.starts, st.ends, st.clip_length, st.media_item_played, st.group_id, show.name as show_name, st.instance_id"
-        ." FROM $CC_CONFIG[scheduleTable] st, $CC_CONFIG[filesTable] ft, $CC_CONFIG[playListTable] pt, $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] show"
-        ." WHERE st.playlist_id = pt.id"
-        ." AND st.file_id = ft.id"
-        ." AND st.instance_id = si.id"
-        ." AND si.show_id = show.id"
-        ." AND instance_id = $instance_id"
-        ." ORDER BY st.starts";
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;
