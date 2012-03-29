@@ -44,11 +44,8 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version']),'text/javascript');
         
-        $user = Application_Model_User::GetCurrentUser();
-        
+        $user = Application_Model_User::GetCurrentUser(); 
         $refer_sses = new Zend_Session_Namespace('referrer');
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
         
         if ($request->isPost()) {
         	$form = new Application_Form_RegisterAirtime();
@@ -96,7 +93,7 @@ class ShowbuilderController extends Zend_Controller_Action
         }
 
     	//popup if previous page was login
-    	if ($refer_sses->referrer == 'login' && Application_Model_Nowplaying::ShouldShowPopUp()
+    	if ($refer_sses->referrer == 'login' && Application_Model_Preference::ShouldShowPopUp()
     			&& !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
     
     		$form = new Application_Form_RegisterAirtime();
@@ -111,7 +108,6 @@ class ShowbuilderController extends Zend_Controller_Action
    
     	//determine whether to remove/hide/display the library.
     	$showLib = false;
-    	$user = Application_Model_User::GetCurrentUser();
     	if (!$user->isGuest()) {
     	    $hideLib = false;
             $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
@@ -168,8 +164,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
         $menu = array();
     
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
+        $user = Application_Model_User::GetCurrentUser();
     
         $item = CcScheduleQuery::create()->findPK($id);
         $instance = $item->getCcShowInstances();
