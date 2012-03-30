@@ -416,6 +416,7 @@ class Application_Model_Schedule {
 
         $predicates = " WHERE st.ends > '$p_startTime'"
         ." AND st.starts < '$p_endTime'"
+        ." AND st.playout_status > 0"
         ." ORDER BY st.starts";
         
         $sql = $baseQuery.$predicates;
@@ -434,6 +435,7 @@ class Application_Model_Schedule {
                       
             $predicates = " WHERE st.ends > '$p_startTime'"
             ." AND st.starts < '$range_end'"
+            ." AND st.playout_status > 0"
             ." ORDER BY st.starts"
             ." LIMIT 3";
             

@@ -21,7 +21,7 @@ class Application_Model_Scheduler {
 
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         
-        $this->epochNow = floatval(microtime(true));
+        $this->epochNow = microtime(true);
         $this->nowDT = DateTime::createFromFormat("U.u", $this->epochNow, new DateTimeZone("UTC"));
          
         $this->user = Application_Model_User::GetCurrentUser();
@@ -188,16 +188,16 @@ class Application_Model_Scheduler {
     
     private function findNextStartTime($DT, $instance) {
         
-        $sEpoch = floatval($DT->format("U.u"));
-        $nowEpoch = $this->epochNow;
+        $sEpoch = $DT->format("U.u");
+        $nEpoch = $this->epochNow;
         
         //check for if the show has started.
-        if ($nowEpoch > $sEpoch) {
+        if (bccomp( $nEpoch , $sEpoch , 6) === 1) {
             //need some kind of placeholder for cc_schedule.
             //playout_status will be -1.
             $nextDT = $this->nowDT;
-        
-            $length = $nowEpoch - $sEpoch;
+            
+            $length = bcsub($nEpoch , $sEpoch , 6);
             $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
         
             //fillers are for only storing a chunk of time space that has already passed.
@@ -447,13 +447,14 @@ class Application_Model_Scheduler {
                 if ($removedItem->isCurrentItem($this->epochNow)) {
                     
                     $nEpoch = $this->epochNow;
-                    $sEpoch = floatval($removedItem->getDbStarts('U.u'));
-                    $length = $nEpoch - $sEpoch;
+                    $sEpoch = $removedItem->getDbStarts('U.u');
+                    
+                    $length = bcsub($nEpoch , $sEpoch , 6);
                     $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
                     
                     $cueinSec = Application_Model_Playlist::playlistTimeToSeconds($removedItem->getDbCueIn());
-                    $cueOutSec = $cueinSec + $length;
-                    $cueout = Application_Model_Playlist::secondsToPlaylistTime($length);
+                    $cueOutSec = bcadd($cueinSec , $length, 6);
+                    $cueout = Application_Model_Playlist::secondsToPlaylistTime($cueOutSec);
                     
                     Logging::log('$nEpoch: '. $nEpoch);
                     Logging::log('$sEpoch: '. $sEpoch);
@@ -462,7 +463,7 @@ class Application_Model_Scheduler {
                     
                     $removedItem->setDbCueOut($cueout)
                         ->setDbClipLength($cliplength)
-                        ->setDbEnds($now)  
+                        ->setDbEnds($this->nowDT)  
                         ->save($this->con);
                 }
                 else {
