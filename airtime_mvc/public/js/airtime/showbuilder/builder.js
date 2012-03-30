@@ -376,71 +376,80 @@ var AIRTIME = (function(AIRTIME){
 			"fnDrawCallback": function(oSettings, json) {
 				var wrapperDiv,
 					markerDiv,
-					td,
+					$td,
+					$tr,
 					$lib = $("#library_content"),
-					tr,
 					oTable = $('#show_builder_table').dataTable(),
-					aData;
+					aData,
+					elements,
+					i, length, temp,
+					$cursorRows;
 				
 				clearTimeout(AIRTIME.showbuilder.timeout);
 				
 				//only create the cursor arrows if the library is on the page.
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
 					
+					$cursorRows = $sbTable.find("tbody tr:not(.sb-header, .sb-empty, .sb-now-playing, .sb-past, .sb-not-allowed)");
+					
 					//create cursor arrows.
-					$sbTable.find("tr:not(:first, .sb-header, .sb-empty, .sb-now-playing, .sb-past, .sb-not-allowed)").each(function(i, el) {
-				    	td = $(el).find("td:first");
-				    	if (td.hasClass("dataTables_empty")) {
+					$cursorRows.each(function(i, el) {
+				    	$td = $(el).find("td:first");
+				    	if ($td.hasClass("dataTables_empty")) {
 				    		return false;
 				    	}
 				    	
 				    	wrapperDiv = $("<div />", {
 				    		"class": "innerWrapper",
 				    		"css": {
-				    			"height": td.height()
+				    			"height": $td.height()
 				    		}
 				    	});
 				    	markerDiv = $("<div />", {
 				    		"class": "marker"
 				    	});
 				    	
-			    		td.append(markerDiv).wrapInner(wrapperDiv);
+			    		$td.append(markerDiv).wrapInner(wrapperDiv);
 				    });
+					
+					//if there is only 1 cursor on the page highlight it by default.
+					if ($cursorRows.length === 1) {
+						$cursorRows.addClass("cursor-selected-row");
+					}
 				}
 				
-				//if the now playing song is visible set a timeout to redraw the table at the start of the next song.
-				tr = $sbTable.find("tr.sb-now-playing");
+				//order of importance of elements for setting the next timeout.
+				elements = [
+				    $sbTable.find("tr.sb-now-playing"),
+				    $sbTable.find("tbody tr.sb-future.sb-header:first"),
+				    $sbTable.find("tbody tr.sb-future.sb-footer:first")
+				];
 				
-				if (tr.length > 0) {
-					//enable jump to current button.
-					AIRTIME.button.enableButton("sb-button-current");
+				//check which element we should set a timeout relative to.
+				for (i = 0, length = elements.length; i < length; i++) {
+					temp = elements[i];
 					
-					aData = tr.data("aData");
-					
-					setTimeout(function(){
-						AIRTIME.showbuilder.resetTimestamp();
-						oTable.fnDraw();
-					}, aData.refresh * 1000); //need refresh in milliseconds
-					
-				}
-				//current song is not set, set a timeout to refresh when the first item on the timeline starts.
-				else {
-					tr = $sbTable.find("tbody tr.sb-future.sb-header:first");
-					
-					if (tr.length > 0) {
-						aData = tr.data("aData");
+					if (temp.length > 0) {
+						aData = temp.data("aData");
 						
-						AIRTIME.showbuilder.timeout = setTimeout(function(){
+						setTimeout(function(){
 							AIRTIME.showbuilder.resetTimestamp();
 							oTable.fnDraw();
-						}, aData.timeUntil * 1000); //need refresh in milliseconds
-					}	
+						}, aData.refresh * 1000); //need refresh in milliseconds
+						
+						break;
+					}
+				}
+				
+				//now playing item exists.
+				if (elements[0].length > 0) {
+					//enable jump to current button.
+					AIRTIME.button.enableButton("sb-button-current");
 				}
 				
 				//check if there are any overbooked tracks on screen to enable the trim button.
-				tr = $sbTable.find("tr.sb-over.sb-future");
-				
-				if (tr.length > 0) {
+				$tr = $sbTable.find("tr.sb-over.sb-future");
+				if ($tr.length > 0) {
 					//enable deleting of overbooked tracks.
 					AIRTIME.button.enableButton("sb-button-trim");
 				}

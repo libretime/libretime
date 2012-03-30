@@ -455,12 +455,7 @@ class Application_Model_Scheduler {
                     $cueinSec = Application_Model_Playlist::playlistTimeToSeconds($removedItem->getDbCueIn());
                     $cueOutSec = bcadd($cueinSec , $length, 6);
                     $cueout = Application_Model_Playlist::secondsToPlaylistTime($cueOutSec);
-                    
-                    Logging::log('$nEpoch: '. $nEpoch);
-                    Logging::log('$sEpoch: '. $sEpoch);
-                    Logging::log('$length: '. $length);
-                    Logging::log('$cliplength: '. $cliplength);
-                    
+                   
                     $removedItem->setDbCueOut($cueout)
                         ->setDbClipLength($cliplength)
                         ->setDbEnds($this->nowDT)  
