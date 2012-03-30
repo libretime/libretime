@@ -417,6 +417,7 @@ class Application_Model_Schedule {
         $predicates = " WHERE st.ends > '$p_startTime'"
         ." AND st.starts < '$p_endTime'"
         ." AND st.playout_status > 0"
+        ." AND si.ends > '$p_startTime'"
         ." ORDER BY st.starts";
         
         $sql = $baseQuery.$predicates;
@@ -427,7 +428,7 @@ class Application_Model_Schedule {
         }
         
         if (count($rows) < 3){
-            Logging::debug("Get Schedule: Less than 3 results returned. Doing another query since we need a minimum of 3 results.");
+            Logging::debug("Get Schedule: Less than 3 results returned. Do another query in an attempt to get 3.");
             
             $dt = new DateTime("@".time());
             $dt->add(new DateInterval("PT30M"));
@@ -436,6 +437,7 @@ class Application_Model_Schedule {
             $predicates = " WHERE st.ends > '$p_startTime'"
             ." AND st.starts < '$range_end'"
             ." AND st.playout_status > 0"
+            ." AND si.ends > '$p_startTime'"
             ." ORDER BY st.starts"
             ." LIMIT 3";
             
@@ -524,15 +526,12 @@ class Application_Model_Schedule {
 
             /* Note: cue_out and end are always the same. */
             /* TODO: Not all tracks will have "show_end" */
-
             if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
                 $di = $trackStartDateTime->diff($showEndDateTime);
                 
                 $item["cue_out"] = $di->format("%H:%i:%s").".000";
             }
             
-            
-
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
             $data["media"][$start] = array(
                 'id' => $storedFile->getGunid(),
