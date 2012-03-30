@@ -109,7 +109,6 @@ var AIRTIME = (function(AIRTIME){
 			$sbTable = $sbContent.find('table'),
 			oTable,
 			fnRemoveSelectedItems,
-			tableHeight,
 			$toolbar;
 
 		fnRemoveSelectedItems = function() {
@@ -709,7 +708,7 @@ var AIRTIME = (function(AIRTIME){
 		$toolbar
 			.append("<ul />")
 			.find('ul')
-				.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="jump to current item"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="jump to the currently playing track"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
 				.append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
 				.append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');
 		
