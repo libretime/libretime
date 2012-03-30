@@ -420,8 +420,7 @@ var AIRTIME = (function(AIRTIME){
 				//order of importance of elements for setting the next timeout.
 				elements = [
 				    $sbTable.find("tr.sb-now-playing"),
-				    $sbTable.find("tbody tr.sb-future.sb-footer:first"),
-				    $sbTable.find("tbody tr.sb-future.sb-header:first")
+				    $sbTable.find("tbody").find("tr.sb-future.sb-footer, tr.sb-future.sb-header").filter(":first")
 				];
 				
 				//check which element we should set a timeout relative to.
