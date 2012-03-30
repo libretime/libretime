@@ -34,6 +34,18 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             $this->addElement($text);
         }
     }
+    
+    public function disable(){
+        $elements = $this->getElements();
+        foreach ($elements as $element)
+        {
+            if ($element->getType() != 'Zend_Form_Element_Hidden')
+            {
+                $element->setAttrib('readonly',true);
+                $element->setAttribs(array('style' => 'color: #B1B1B1; '));
+            }
+        }
+    }
 
     public function checkReliantFields($formData) {
 

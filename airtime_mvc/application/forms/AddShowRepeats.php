@@ -55,6 +55,18 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             'checked' => true,
 		));
     }
+    
+    public function disable(){
+        $elements = $this->getElements();
+        foreach ($elements as $element)
+        {
+            if ($element->getType() != 'Zend_Form_Element_Hidden')
+            {
+                $element->setAttrib('readonly',true);
+                $element->setAttribs(array('style' => 'color: #B1B1B1; '));
+            }
+        }
+    }
 
     public function checkReliantFields($formData) {
 

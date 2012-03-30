@@ -27,6 +27,16 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
 		$this->addElement($hosts);
     }
 
-
+    public function disable(){
+        $elements = $this->getElements();
+        foreach ($elements as $element)
+        {
+            if ($element->getType() != 'Zend_Form_Element_Hidden')
+            {
+                $element->setAttrib('readonly',true);
+                $element->setAttribs(array('style' => 'color: #B1B1B1; '));
+            }
+        }
+    }
 }
 
