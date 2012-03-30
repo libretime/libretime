@@ -75,12 +75,12 @@ class PypoPush(Thread):
                 current_chain = self.get_current_chain(chains)                
                 if len(current_chain) > 0 and len(liquidsoap_queue_approx) == 0:
                     #Something is scheduled but Liquidsoap is not playing anything!
-                    #Need to schedule it immediately
+                    #Need to schedule it immediately..this might happen if Liquidsoap crashed.
                     self.modify_cue_point_of_first_link(current_chain)
                     next_media_item_chain = current_chain
                     time_until_next_play = 0
                 else:
-                    self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx)
+                    self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx, current_chain)
                     chains = self.get_all_chains(media_schedule) 
                     next_media_item_chain = self.get_next_schedule_chain(chains)
                     self.logger.debug("Next schedule chain: %s", next_media_item_chain)                
@@ -155,7 +155,7 @@ class PypoPush(Thread):
                 
         return liquidsoap_queue_approx
             
-    def handle_new_media_schedule(self, media_schedule, liquidsoap_queue_approx):
+    def handle_new_media_schedule(self, media_schedule, liquidsoap_queue_approx, current_chain):
         """
         This function's purpose is to gracefully handle situations where
         Liquidsoap already has a track in its queue, but the schedule 
@@ -164,12 +164,24 @@ class PypoPush(Thread):
         queue.
         """
         
+        problem_at_iteration = self.find_removed_items(media_schedule, liquidsoap_queue_approx)
+        
+        if problem_at_iteration is None and len(current_chain) > len(liquidsoap_queue_approx):
+            self.logger.debug("New schedule has longer current chain.")
+            problem_at_iteration = len(liquidsoap_queue_approx)
+            
+        
+        if problem_at_iteration is not None:
+            self.logger.debug("Change in chain at link %s", problem_at_iteration)
+            self.push_to_liquidsoap(current_chain[problem_at_iteration:])
+        
+            
+    def find_removed_items(self, media_schedule, liquidsoap_queue_approx):
         #iterate through the items we got from the liquidsoap queue and 
         #see if they are the same as the newly received schedule
         iteration = 0
         problem_at_iteration = None
         for queue_item in liquidsoap_queue_approx:
-                       
             if queue_item['start'] in media_schedule.keys():
                 if queue_item['id'] == media_schedule[queue_item['start']]['id']:
                     #Everything OK for this iteration.
@@ -194,6 +206,9 @@ class PypoPush(Thread):
             #queue, and push the new schedule
             self.logger.debug("Problem at iteration %s", problem_at_iteration)
             self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx)
+            
+        return problem_at_iteration
+        
         
         
     def get_all_chains(self, media_schedule):
