@@ -743,8 +743,13 @@ var AIRTIME = (function(AIRTIME){
 		viewport = AIRTIME.utilities.findViewportDimensions();
 		widgetHeight = viewport.height - 185;
 		width = Math.floor(viewport.width - 110);
+		
+		var libTableHeight = widgetHeight - 130;
 
 		$lib.height(widgetHeight)
+			.find(".dataTables_scrolling")
+    			.css("max-height", libTableHeight)
+    			.end()
 			.width(Math.floor(width * 0.55));
 			
 		$pl.height(widgetHeight)

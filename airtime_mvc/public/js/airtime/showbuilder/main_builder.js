@@ -45,19 +45,29 @@ AIRTIME = (function(AIRTIME) {
 		widgetHeight = viewport.height - 180;
 		screenWidth = Math.floor(viewport.width - 120);
 		
+		var libTableHeight = widgetHeight - 130,
+			builderTableHeight = widgetHeight - 95;
+		
 		//set the heights of the main widgets.
-		$lib.height(widgetHeight);
-		$builder.height(widgetHeight);
+		$builder.height(widgetHeight)
+			.find(".dataTables_scrolling")
+	    			.css("max-height", builderTableHeight)
+	    			.end()
+			.width(screenWidth);
 		
 		if ($lib.filter(':visible').length > 0) {
 	    	
-	    	$lib.width(Math.floor(screenWidth * 0.5));
-		
+	    	$lib.width(Math.floor(screenWidth * 0.5))
+	    		.height(widgetHeight)
+	    		.find(".dataTables_scrolling")
+	    			.css("max-height", libTableHeight)
+	    			.end();
+	    	    
 	    	$builder.width(Math.floor(screenWidth * 0.5))
 				.find("#sb_edit")
 					.remove()
 					.end();
-	    }
+	    }	
 	}
 
 	mod.onReady = function() {
