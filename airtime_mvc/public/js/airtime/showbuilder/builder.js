@@ -109,7 +109,6 @@ var AIRTIME = (function(AIRTIME){
 			$sbTable = $sbContent.find('table'),
 			oTable,
 			fnRemoveSelectedItems,
-			tableHeight,
 			$toolbar;
 
 		fnRemoveSelectedItems = function() {
@@ -421,8 +420,7 @@ var AIRTIME = (function(AIRTIME){
 				//order of importance of elements for setting the next timeout.
 				elements = [
 				    $sbTable.find("tr.sb-now-playing"),
-				    $sbTable.find("tbody tr.sb-future.sb-header:first"),
-				    $sbTable.find("tbody tr.sb-future.sb-footer:first")
+				    $sbTable.find("tbody").find("tr.sb-future.sb-footer, tr.sb-future.sb-header").filter(":first")
 				];
 				
 				//check which element we should set a timeout relative to.
@@ -709,7 +707,7 @@ var AIRTIME = (function(AIRTIME){
 		$toolbar
 			.append("<ul />")
 			.find('ul')
-				.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="jump to current item"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="jump to the currently playing track"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
 				.append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
 				.append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');
 		
