@@ -4,6 +4,7 @@ AIRTIME = (function(AIRTIME) {
 		$lib,
 		$libWrapper,
 		$builder,
+		$fs,
 		widgetHeight,
 		screenWidth,
 		oBaseDatePickerSettings,
@@ -40,13 +41,17 @@ AIRTIME = (function(AIRTIME) {
 		defaultTime: '0:00'
 	};
 	
-	function setWidgetHeights() {
+	function setWidgetSize() {
 		viewport = AIRTIME.utilities.findViewportDimensions();
 		widgetHeight = viewport.height - 180;
 		screenWidth = Math.floor(viewport.width - 120);
 		
 		var libTableHeight = widgetHeight - 130,
 			builderTableHeight = widgetHeight - 95;
+		
+		if ($fs.is(':visible')) {
+			builderTableHeight = builderTableHeight - 40;
+		}
 		
 		//set the heights of the main widgets.
 		$builder.height(widgetHeight)
@@ -55,13 +60,14 @@ AIRTIME = (function(AIRTIME) {
 	    			.end()
 			.width(screenWidth);
 		
+		$lib.height(widgetHeight)
+			.find(".dataTables_scrolling")
+				.css("max-height", libTableHeight)
+				.end();
+		
 		if ($lib.filter(':visible').length > 0) {
 	    	
-	    	$lib.width(Math.floor(screenWidth * 0.5))
-	    		.height(widgetHeight)
-	    		.find(".dataTables_scrolling")
-	    			.css("max-height", libTableHeight)
-	    			.end();
+	    	$lib.width(Math.floor(screenWidth * 0.5));
 	    	    
 	    	$builder.width(Math.floor(screenWidth * 0.5))
 				.find("#sb_edit")
@@ -74,6 +80,7 @@ AIRTIME = (function(AIRTIME) {
 		//define module vars.
 		$lib = $("#library_content");
 		$builder = $("#show_builder");
+		$fs = $builder.find('fieldset');
 		
 		$builder.find(dateStartId).datepicker(oBaseDatePickerSettings);
 		$builder.find(timeStartId).timepicker(oBaseTimePickerSettings);
@@ -84,7 +91,7 @@ AIRTIME = (function(AIRTIME) {
 		AIRTIME.showbuilder.fnServerData.start = oRange.start;
 		AIRTIME.showbuilder.fnServerData.end = oRange.end;
 
-		setWidgetHeights();
+		setWidgetSize();
 		AIRTIME.library.libraryInit();
 		AIRTIME.showbuilder.builderDataTable();
 		
@@ -168,8 +175,6 @@ AIRTIME = (function(AIRTIME) {
 		
 		$builder.find('legend').click(function(ev, item){
 			
-			var $fs = $(this).parents('fieldset');
-			
 			if ($fs.hasClass("closed")) {
 	    
 	        	$fs.removeClass("closed");
@@ -235,7 +240,7 @@ AIRTIME = (function(AIRTIME) {
 	};
 	
 	mod.onResize = function() {
-		setWidgetHeights();
+		setWidgetSize();
 	};
 	
 	return AIRTIME;
