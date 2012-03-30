@@ -126,21 +126,21 @@ end
 
 def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, dj_harbor_input_port, dj_harbor_input_mount_point, s) =
     if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" and dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
-        master_dj = input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, 
-                    max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)
-        dj_live = input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)
+        master_dj = mksafe(input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, 
+                    max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect))
+        dj_live = mksafe(input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
+                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect))
         ignore(output.dummy(master_dj, fallible=true))
         ignore(output.dummy(dj_live, fallible=true))
         switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition, transition], [({!master_dj_enabled},master_dj), ({!live_dj_enabled},dj_live), ({true}, s)])
     elsif master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
-        master_dj = input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client,
-                     max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)
+        master_dj = mksafe(input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client,
+                     max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect))
         ignore(output.dummy(master_dj, fallible=true))
         switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!master_dj_enabled},master_dj), ({true}, s)])
     elsif dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
-        dj_live = input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)
+        dj_live = mksafe(input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
+                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect))
         ignore(output.dummy(dj_live, fallible=true))
         switch(id="live_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!live_dj_enabled},dj_live), ({true}, s)])
     else
