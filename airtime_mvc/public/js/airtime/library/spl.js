@@ -4,9 +4,16 @@
 
 var AIRTIME = (function(AIRTIME){
 	
-	AIRTIME.playlist = {};
+	if (AIRTIME.playlist === undefined) {
+		AIRTIME.playlist = {};
+	}
 	
-	var mod = AIRTIME.playlist;
+	var mod = AIRTIME.playlist,
+		viewport,
+		$lib,
+		$pl,
+		widgetHeight,
+		width;
 	
 	function isTimeValid(time) {
 		var regExpr = new RegExp("^\\d{2}[:]\\d{2}[:]\\d{2}([.]\\d{1,6})?$");
@@ -316,62 +323,60 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	//sets events dynamically for playlist entries (each row in the playlist)
-	function setPlaylistEntryEvents(el) {
+	function setPlaylistEntryEvents() {
 		
-		$(el).delegate("#spl_sortable .ui-icon-closethick", 
+		$pl.delegate("#spl_sortable .ui-icon-closethick", 
 				{"click": function(ev){
 					var id;
 					id = parseInt($(this).attr("id").split("_").pop(), 10);
 					AIRTIME.playlist.fnDeleteItems([id]);
 				}});
 
-		$(el).delegate(".spl_fade_control", 
+		$pl.delegate(".spl_fade_control", 
 	    		{"click": openFadeEditor});
 		
-		$(el).delegate(".spl_cue", 
+		$pl.delegate(".spl_cue", 
 				{"click": openCueEditor});
 
         //add the play function to the play icon
-        $(el).delegate(".big_play",
+		$pl.delegate(".big_play",
             {"click": openAudioPreview});
 	}
 	
 	//sets events dynamically for the cue editor.
-	function setCueEvents(el) {
+	function setCueEvents() {
 	
-	    $(el).delegate(".spl_cue_in span", 
+		$pl.delegate(".spl_cue_in span", 
 	    		{"focusout": changeCueIn, 
 	    		"keydown": submitOnEnter});
 	    
-	    $(el).delegate(".spl_cue_out span", 
+		$pl.delegate(".spl_cue_out span", 
 	    		{"focusout": changeCueOut, 
 	    		"keydown": submitOnEnter});
 	}
 	
 	//sets events dynamically for the fade editor.
-	function setFadeEvents(el) {
+	function setFadeEvents() {
 	
-	    $(el).delegate(".spl_fade_in span", 
+		$pl.delegate(".spl_fade_in span", 
 	    		{"focusout": changeFadeIn, 
 	    		"keydown": submitOnEnter});
 	    
-	    $(el).delegate(".spl_fade_out span", 
+		$pl.delegate(".spl_fade_out span", 
 	    		{"focusout": changeFadeOut, 
 	    		"keydown": submitOnEnter});
 	}
 	
 	function initialEvents() {	
-		var playlist = $("#side_playlist"),
-			cachedDescription;
-		
+		var cachedDescription;
 		
 		//main playlist fades events
-		playlist.on("click", "#spl_crossfade", function() {
+		$pl.on("click", "#spl_crossfade", function() {
 	    	var lastMod = getModified();
 
 	        if ($(this).hasClass("ui-state-active")) {
 	            $(this).removeClass("ui-state-active");
-	            playlist.find("#crossfade_main").hide();
+	            $pl.find("#crossfade_main").hide();
 	        }
 	        else {
 	            $(this).addClass("ui-state-active");
@@ -385,21 +390,21 @@ var AIRTIME = (function(AIRTIME){
 			            	playlistError(json);
 		                }
 			            else {
-				            playlist.find("span.spl_main_fade_in")
+			            	$pl.find("span.spl_main_fade_in")
 			                    .empty()
 			                    .append(json.fadeIn);
 				            
-				            playlist.find("span.spl_main_fade_out")
+			            	$pl.find("span.spl_main_fade_out")
 			                    .empty()
 			                    .append(json.fadeOut);
 		
-				            playlist.find("#crossfade_main").show();
+			            	$pl.find("#crossfade_main").show();
 			            }
 		            });
 	        }
 	    });
 		
-		playlist.on("blur", "span.spl_main_fade_in", function(event){
+		$pl.on("blur", "span.spl_main_fade_in", function(event){
 	        event.stopPropagation();
 
 		    var url = "/Playlist/set-playlist-fades",
@@ -422,7 +427,7 @@ var AIRTIME = (function(AIRTIME){
 			    });
 	    });
 
-		playlist.on("blur", "span.spl_main_fade_out", function(event){
+		$pl.on("blur", "span.spl_main_fade_out", function(event){
 	        event.stopPropagation();
 
 		    var url = "/Playlist/set-playlist-fades",
@@ -445,20 +450,20 @@ var AIRTIME = (function(AIRTIME){
 			    });
 	    });
 
-		playlist.on("keydown", "span.spl_main_fade_in, span.spl_main_fade_out", submitOnEnter);
+		$pl.on("keydown", "span.spl_main_fade_in, span.spl_main_fade_out", submitOnEnter);
 
-		playlist.on("click", "#crossfade_main > .ui-icon-closethick", function(){
-			playlist.find("#spl_crossfade").removeClass("ui-state-active");
-			playlist.find("#crossfade_main").hide();
+		$pl.on("click", "#crossfade_main > .ui-icon-closethick", function(){
+			$pl.find("#spl_crossfade").removeClass("ui-state-active");
+			$pl.find("#crossfade_main").hide();
 	    });
 		//end main playlist fades.
 
 		//edit playlist name event
-		playlist.on("keydown", "#playlist_name_display", submitOnEnter);
-		playlist.on("blur", "#playlist_name_display", editName);
+		$pl.on("keydown", "#playlist_name_display", submitOnEnter);
+		$pl.on("blur", "#playlist_name_display", editName);
 		
 		//edit playlist description events
-		playlist.on("click", "legend", function(){
+		$pl.on("click", "legend", function(){
 	        var $fs = $(this).parents("fieldset");
 
 	        if ($fs.hasClass("closed")) {
@@ -470,8 +475,8 @@ var AIRTIME = (function(AIRTIME){
 	        }
 	    });
 		
-		playlist.on("click", "#description_save", function(){
-	        var textarea = playlist.find("#fieldset-metadate_change textarea"),
+		$pl.on("click", "#description_save", function(){
+	        var textarea = $pl.find("#fieldset-metadate_change textarea"),
 	        	description = textarea.val(),
 	        	url,
 	        	lastMod = getModified();;
@@ -487,25 +492,23 @@ var AIRTIME = (function(AIRTIME){
 		            else{
 		            	setModified(json.modified);
 		                textarea.val(json.description);
-		                playlist.find("#fieldset-metadate_change").addClass("closed");
+		                $pl.find("#fieldset-metadate_change").addClass("closed");
 			            redrawLib();
 		            }      
 		        });
 	    });
 
-		playlist.on("click", "#description_cancel", function(){
-	        var textarea = playlist.find("#fieldset-metadate_change textarea");
+		$pl.on("click", "#description_cancel", function(){
+	        var textarea = $pl.find("#fieldset-metadate_change textarea");
 	        
 	        textarea.val(cachedDescription);   
-	        playlist.find("#fieldset-metadate_change").addClass("closed");
+	        $pl.find("#fieldset-metadate_change").addClass("closed");
 	    });
-		//end edit playlist description events.
-		
+		//end edit playlist description events.	
 	}
 	
-	function setUpPlaylist(playlist) {
-		var playlist = $("#side_playlist"),
-			sortableConf;
+	function setUpPlaylist() {
+		var sortableConf;
 		
 		sortableConf = (function(){
 			var aReceiveItems,
@@ -556,7 +559,7 @@ var AIRTIME = (function(AIRTIME){
 				//item was dragged in from library datatable
 				if (aReceiveItems !== undefined) {
 					
-					playlist.find("tr.ui-draggable")
+					$pl.find("tr.ui-draggable")
 						.after(html)
 						.empty();
 					
@@ -595,7 +598,7 @@ var AIRTIME = (function(AIRTIME){
 			};
 		}());
 
-	    playlist.find("#spl_sortable").sortable(sortableConf);
+		$pl.find("#spl_sortable").sortable(sortableConf);
 	}
 	
 	mod.fnNew = function() {
@@ -720,21 +723,66 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.init = function() {
-		var playlist = $("#side_playlist");
 		
-		$(playlist).delegate("#spl_new", 
+		$pl.delegate("#spl_new", 
 	    		{"click": AIRTIME.playlist.fnNew});
 
-		$(playlist).delegate("#spl_delete", {"click": function(ev){
+		$pl.delegate("#spl_delete", {"click": function(ev){
 			AIRTIME.playlist.fnDelete();
 		}});
 		
-		setPlaylistEntryEvents(playlist);
-		setCueEvents(playlist);
-		setFadeEvents(playlist);
+		setPlaylistEntryEvents();
+		setCueEvents();
+		setFadeEvents();
 		
 		initialEvents();
-		setUpPlaylist(playlist);
+		setUpPlaylist();
+	};
+	
+	function setWidgetSize() {
+		viewport = AIRTIME.utilities.findViewportDimensions();
+		widgetHeight = viewport.height - 185;
+		width = Math.floor(viewport.width - 110);
+
+		$lib.height(widgetHeight)
+			.width(Math.floor(width * 0.55));
+			
+		$pl.height(widgetHeight)
+			.width(Math.floor(width * 0.45));	
+	}
+	
+	mod.onReady = function() {
+		$lib = $("#library_content");
+		$pl = $("#side_playlist");
+		
+		setWidgetSize();
+		
+		AIRTIME.library.libraryInit();
+		AIRTIME.playlist.init();
+		
+		$pl.find(".ui-icon-alert").qtip({
+	        content: {
+	            text: "File does not exist on disk..."
+	        },
+	        position:{
+	            adjust: {
+	            resize: true,
+	            method: "flip flip"
+	            },
+	            at: "right center",
+	            my: "left top",
+	            viewport: $(window)
+	        },
+	        style: {
+	            classes: "ui-tooltip-dark"
+	        },
+	        show: 'mouseover',
+	        hide: 'mouseout'
+	    });
+	};
+	
+	mod.onResize = function() {
+		setWidgetSize();
 	};
 	
 	return AIRTIME;
@@ -742,40 +790,5 @@ var AIRTIME = (function(AIRTIME){
 }(AIRTIME || {}));
 
 
-$(document).ready(function() {
-	
-	var viewport = AIRTIME.utilities.findViewportDimensions(),
-		lib = $("#library_content"),
-		pl = $("#side_playlist"),
-		widgetHeight = viewport.height - 185,
-		width = Math.floor(viewport.width - 110);
-
-	lib.height(widgetHeight)
-		.width(Math.floor(width * 0.55));
-		
-	pl.height(widgetHeight)
-		.width(Math.floor(width * 0.45));
-
-	AIRTIME.library.libraryInit();
-	AIRTIME.playlist.init();
-	
-	pl.find(".ui-icon-alert").qtip({
-        content: {
-            text: "File does not exist on disk..."
-        },
-        position:{
-            adjust: {
-            resize: true,
-            method: "flip flip"
-            },
-            at: "right center",
-            my: "left top",
-            viewport: $(window)
-        },
-        style: {
-            classes: "ui-tooltip-dark"
-        },
-        show: 'mouseover',
-        hide: 'mouseout'
-    });
-});
+$(document).ready(AIRTIME.playlist.onReady);
+$(window).resize(AIRTIME.playlist.onResize);

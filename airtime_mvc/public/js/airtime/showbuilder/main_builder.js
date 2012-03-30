@@ -41,6 +41,9 @@ AIRTIME = (function(AIRTIME) {
 	};
 	
 	function setWidgetHeights() {
+		viewport = AIRTIME.utilities.findViewportDimensions();
+		widgetHeight = viewport.height - 180;
+		screenWidth = Math.floor(viewport.width - 120);
 		
 		//set the heights of the main widgets.
 		$lib.height(widgetHeight);
@@ -59,11 +62,8 @@ AIRTIME = (function(AIRTIME) {
 
 	mod.onReady = function() {
 		//define module vars.
-		viewport = AIRTIME.utilities.findViewportDimensions(),
-		$lib = $("#library_content"),
-		$builder = $("#show_builder"),
-		widgetHeight = viewport.height - 180,
-		screenWidth = Math.floor(viewport.width - 120);
+		$lib = $("#library_content");
+		$builder = $("#show_builder");
 		
 		$builder.find(dateStartId).datepicker(oBaseDatePickerSettings);
 		$builder.find(timeStartId).timepicker(oBaseTimePickerSettings);
@@ -225,10 +225,6 @@ AIRTIME = (function(AIRTIME) {
 	};
 	
 	mod.onResize = function() {
-		viewport = AIRTIME.utilities.findViewportDimensions(),
-		widgetHeight = viewport.height - 180,
-		screenWidth = Math.floor(viewport.width - 120);
-		
 		setWidgetHeights();
 	};
 	
