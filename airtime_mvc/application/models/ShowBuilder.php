@@ -159,7 +159,7 @@ class Application_Model_ShowBuilder {
 
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
-        $row["timeUntil"] = floatval($showStartDT->format("U.u")) - $this->epoch_now;
+        $row["refresh"] = floatval($showStartDT->format("U.u")) - $this->epoch_now;
         $row["ends"] = $showEndDT->format("Y-m-d H:i");
         $row["duration"] = floatval($showEndDT->format("U.u")) - floatval($showStartDT->format("U.u"));
         $row["title"] = $p_item["show_name"];
@@ -254,6 +254,8 @@ class Application_Model_ShowBuilder {
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
         $endsEpoch = floatval($showEndDT->format("U.u"));
+        
+        $row["refresh"] = floatval($showEndDT->format("U.u")) - $this->epoch_now;
         
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         $this->isAllowed($p_item, $row);

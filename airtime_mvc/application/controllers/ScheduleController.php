@@ -87,8 +87,6 @@ class ScheduleController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        $this->view->isAdmin = $user->isAdmin();
-        $this->view->isProgramManager = $user->isUserType('P');
 
         $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
     }
@@ -215,13 +213,16 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->show_error = true;
             return false;
         }
+        
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isDJ = $user->isHost($instance->getShowId());
 
         $showStartLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
         $showEndLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
 
 		if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
-            if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST), $instance->getShowId())
+            if ( ($isAdminOrPM || $isDJ) 
                 && !$instance->isRecorded()
                 && !$instance->isRebroadcast()) {
 
@@ -249,24 +250,27 @@ class ScheduleController extends Zend_Controller_Action
 
         if ($showStartLocalDT->getTimestamp() <= $epochNow &&
                 $epochNow < $showEndLocalDT->getTimestamp() &&
-                $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+                ($isAdminOrPM || $isDJ)) {
 
             if ($instance->isRecorded()) {
-
-                $menu["cancel_recorded"] = array("name"=> "Cancel Current Show", "icon" => "delete");
+                if($isAdminOrPM){
+                    $menu["cancel_recorded"] = array("name"=> "Cancel Current Show", "icon" => "delete");
+                }
             } else {
-
-                $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
+                $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                if($isAdminOrPM){
+                    $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
+                }
             }
         }
 
         if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
-            if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+            if ($isAdminOrPM || $isDJ) {
 
                 $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
 
-                if ($instance->getShow()->isRepeating()) {
+                if ($instance->getShow()->isRepeating() && $isAdminOrPM) {
 
                     //create delete sub menu.
                     $menu["del"] = array("name"=> "Delete", "icon" => "delete", "items" => array());
@@ -275,7 +279,7 @@ class ScheduleController extends Zend_Controller_Action
 
                     $menu["del"]["items"]["following"] = array("name"=> "Delete This Instance and All Following", "icon" => "delete", "url" => "/schedule/cancel-show");
                 }
-                else {
+                else if($isAdminOrPM){
                     //window["scheduleRefetchEvents"]'
                    $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/schedule/delete-show");
                 }
@@ -413,18 +417,23 @@ class ScheduleController extends Zend_Controller_Action
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        if(!$user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            return;
-        }
 
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $showInstanceId = $this->_getParam('id');
+        
         try{
             $showInstance = new Application_Model_ShowInstance($showInstanceId);
         }catch(Exception $e){
             $this->view->show_error = true;
             return false;
+        }
+        
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isDJ = $user->isHost($showInstance->getShowId());
+        
+        if(!($isAdminOrPM || $isDJ)) {
+            return;
         }
 
         $formWhat = new Application_Form_AddShowWhat();
@@ -541,6 +550,19 @@ class ScheduleController extends Zend_Controller_Action
                 $i++;
             }
             $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
+            if(!$isAdminOrPM){
+                $formRecord->disable();
+                $formAbsoluteRebroadcast->disable();
+                $formRebroadcast->disable();
+            }
+        }
+        
+        if(!$isAdminOrPM){
+            $formWhat->disable();
+            $formWho->disable();
+            $formWhen->disable();
+            $formRepeats->disable();
+            $formStyle->disable();
         }
 
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
@@ -563,6 +585,12 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $show = new Application_Model_Show($data['add_show_id']);
+        
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isDJ = $user->isHost($show->getId());
 
         $startDateModified = true;
         if ($data['add_show_id'] != -1 && !array_key_exists('add_show_start_date', $data)){
@@ -695,9 +723,7 @@ class ScheduleController extends Zend_Controller_Action
         if ($what && $when && $repeats && $who && $style && $live) {
             if(!$isSaas){
                 if($record && $rebroadAb && $rebroad){
-                    $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                    $user = new Application_Model_User($userInfo->id);
-                    if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+                    if ($isAdminOrPM || $isDJ) {
                         Application_Model_Show::create($data);
                     }
 
@@ -730,9 +756,7 @@ class ScheduleController extends Zend_Controller_Action
 
                 }
             }else{
-                $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                $user = new Application_Model_User($userInfo->id);
-                if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+                if ($isAdminOrPM || $isDJ) {
                     Application_Model_Show::create($data);
                 }
 
