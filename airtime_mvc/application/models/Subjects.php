@@ -28,16 +28,15 @@ class Application_Model_Subjects {
      */
     public static function Authenticate($login, $pass='')
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $cpass = md5($pass);
         $sql = "SELECT id FROM ".$CC_CONFIG['subjTable']
-            ." WHERE login='$login' AND pass='$cpass' AND type='U'";
-        $id = $CC_DBC->getOne($sql);
-        if (PEAR::isError($id)) {
-            return $id;
-        }
-        return (is_null($id) ? FALSE : $id);
-    } // fn authenticate
+            ." WHERE login='$login' AND pass='$cpass' AND type='U'"
+            ." LIMIT 1";
+        $query = $con->query($sql)->fetchColumn(0);
+        return $query;
+    }
 
 
     /**
@@ -54,7 +53,8 @@ class Application_Model_Subjects {
      */
     public static function Passwd($login, $oldpass=null, $pass='', $passenc=FALSE)
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         if (!$passenc) {
             $cpass = md5($pass);
         } else {
@@ -68,12 +68,9 @@ class Application_Model_Subjects {
         }
         $sql = "UPDATE ".$CC_CONFIG['subjTable']." SET pass='$cpass'"
             ." WHERE login='$login' $oldpCond AND type='U'";
-        $r = $CC_DBC->query($sql);
-        if (PEAR::isError($r)) {
-            return $r;
-        }
+        $con->exec($sql);
         return TRUE;
-    } // fn passwd
+    }
 
 
     /* --------------------------------------------------------------- groups */
@@ -84,20 +81,21 @@ class Application_Model_Subjects {
      * Get subject id from login
      *
      * @param string $login
-     * @return int|PEAR_Error
+     * @return int|false
      */
     public static function GetSubjId($login)
     {
         global $CC_CONFIG;
-        global $CC_DBC;
+        $con = Propel::getConnection();
         $sql = "SELECT id FROM ".$CC_CONFIG['subjTable']
             ." WHERE login='$login'";
-        return $CC_DBC->getOne($sql);
-    } // fn getSubjId
+        $query = $con->query($sql)->fetchColumn(0);
+        return $query ? $query : NULL;
+    }
 
 
     /**
-     * Return true if uid is [id]direct member of gid
+     * Return true if uid is direct member of gid
      *
      * @param int $uid
      * 		local user id
@@ -107,47 +105,42 @@ class Application_Model_Subjects {
      */
     public static function IsMemberOf($uid, $gid)
     {
-        global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT count(*)as cnt"
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+        $sql = "SELECT count(*) as cnt"
             ." FROM ".$CC_CONFIG['smembTable']
             ." WHERE uid='$uid' AND gid='$gid'";
-        $res = $CC_DBC->getOne($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+        $res = $con->query($sql)->fetchColumn(0);
         return (intval($res) > 0);
-    } // fn isMemberOf
+    }
 
-    public static function increaseLoginAttempts($login){
-        global $CC_CONFIG, $CC_DBC;
+    public static function increaseLoginAttempts($login)
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "UPDATE ".$CC_CONFIG['subjTable']." SET login_attempts = login_attempts+1"
             ." WHERE login='$login'";
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+        $res = $con->exec($sql);
         return (intval($res) > 0);
     }
-    
-    public static function resetLoginAttempts($login){
-        global $CC_CONFIG, $CC_DBC;
+
+    public static function resetLoginAttempts($login)
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "UPDATE ".$CC_CONFIG['subjTable']." SET login_attempts = '0'"
             ." WHERE login='$login'";
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        return (intval($res) > 0);
+        $res = $con->exec($sql);
+        return TRUE;
     }
-    
-    public static function getLoginAttempts($login){
-        global $CC_CONFIG, $CC_DBC;
+
+    public static function getLoginAttempts($login)
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "SELECT login_attempts FROM ".$CC_CONFIG['subjTable']." WHERE login='$login'";
-        $res = $CC_DBC->getOne($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        return $res;
+        $res = $con->query($sql)->fetchColumn(0);
+        return $res ? $res : 0;
     }
 
 } // class Subjects

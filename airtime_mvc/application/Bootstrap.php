@@ -10,7 +10,7 @@ require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/configs/airtime-conf-production.php");
 
 require_once __DIR__."/configs/constants.php";
-require_once 'DB.php';
+// require_once 'DB.php';
 
 require_once 'Preference.php';
 require_once "DateHelper.php";
@@ -20,12 +20,34 @@ require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 global $CC_CONFIG, $CC_DBC;
 $dsn = $CC_CONFIG['dsn'];
 
-$CC_DBC = DB::connect($dsn, FALSE);
-if (PEAR::isError($CC_DBC)) {
-    echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-    exit(1);
-}
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+// ******************************************************************
+// Differences between PEAR DB & Propel/PDO:
+// When selecting a single value from a null return set,
+// PEAR returns NULL
+// PDO returns false
+// ******************************************************************
+
+// $CC_DBC = DB::connect($dsn, FALSE);
+// if (PEAR::isError($CC_DBC)) {
+//     echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
+//     exit(1);
+// }
+// $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+
+// $sql = "SELECT column_name, character_maximum_length FROM information_schema.columns"
+// ." WHERE table_name = 'cc_show' AND character_maximum_length > 0 and table_name=''";
+// // $sql = "SELECT * FROM cc_files WHERE id=1";
+// // $result = $CC_DBC->GetAll($sql);
+// $result = $CC_DBC->GetOne($sql);
+// var_dump($result);
+
+// $con = Propel::getConnection();
+// $q = $con->query($sql);
+// //var_dump($q);
+// //var_dump($q->fetchAll());
+// var_dump($q->fetchColumn(0));
+
+// exit;
 
 $CC_CONFIG['airtime_version'] = Application_Model_Preference::GetAirtimeVersion();
 

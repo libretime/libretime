@@ -541,7 +541,7 @@ class Application_Model_Playlist {
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition($this->getSize()-1)
                 ->findOne($this->con);
-          
+
             $this->changeFadeInfo($row->getDbId(), null, $fadeout);
         }
     }
@@ -769,10 +769,12 @@ class Application_Model_Playlist {
        return $res;
     }
 
-    public static function getPlaylistCount(){
-        global $CC_CONFIG, $CC_DBC;
+    public static function getPlaylistCount()
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = 'SELECT count(*) as cnt FROM '.$CC_CONFIG["playListTable"];
-        return $CC_DBC->GetOne($sql);
+        return $con->query($sql)->fetchColumn(0);
     }
 
     /**

@@ -1,45 +1,36 @@
 <?php
 class Application_Model_LoginAttempts {
     public function __construct(){
-    
+
     }
-    
+
     public static function increaseAttempts($ip){
-        global $CC_DBC;
+        $con = Propel::getConnection();
         $sql = "select count(*) from cc_login_attempts WHERE ip='$ip'";
-        $res = $CC_DBC->GetOne($sql);
-        if($res){
+        $res = $con->query($sql)->fetchColumn(0);
+        if ($res) {
             $sql = "UPDATE cc_login_attempts SET attempts=attempts+1 WHERE ip='$ip'";
-            $res = $CC_DBC->query($sql);
-            if (PEAR::isError($res)) {
-                return $res;
-            }
-        }else{
+            $con->exec($sql);
+        } else {
             $sql = "INSERT INTO cc_login_attempts (ip, attempts) values ('$ip', '1')";
-            $res = $CC_DBC->query($sql);
-            if (PEAR::isError($res)) {
-                return $res;
-            }
+            $con->exec($sql);
         }
     }
-    
+
     public static function getAttempts($ip){
-        global $CC_DBC;
+        $con = Propel::getConnection();
         $sql = "select attempts from cc_login_attempts WHERE ip='$ip'";
-        $res = $CC_DBC->GetOne($sql);
-        return $res;
+        $res = $con->query($sql)->fetchColumn(0);
+        return $res ? $res : 0;
     }
-    
+
     public static function resetAttempts($ip){
-        global $CC_DBC;
+        $con = Propel::getConnection();
         $sql = "select count(*) from cc_login_attempts WHERE ip='$ip'";
-        $res = $CC_DBC->GetOne($sql);
-        if($res){
+        $res = $con->query($sql)->fetchColumn(0);
+        if ($res > 0) {
             $sql = "DELETE FROM cc_login_attempts WHERE ip='$ip'";
-            $res = $CC_DBC->query($sql);
-            if (PEAR::isError($res)) {
-                return $res;
-            }
+            $con->exec($sql);
         }
     }
 }

@@ -26,7 +26,7 @@ class Application_Model_User {
     public function getId() {
         return $this->_userInstance->getDbId();
     }
-    
+
     public function isGuest() {
         return $this->getType() == UTYPE_GUEST;
     }
@@ -34,7 +34,7 @@ class Application_Model_User {
     public function isHost($showId) {
     	return $this->isUserType(UTYPE_HOST, $showId);
     }
-    
+
     public function isPM() {
         return $this->isUserType(UTYPE_PROGRAM_MANAGER);
     }
@@ -185,15 +185,14 @@ class Application_Model_User {
         return $user;
     }
 
-    public static function getUsers($type, $search=NULL) {
-        global $CC_DBC;
-
-        $sql;
+    public static function getUsers($type, $search=NULL)
+    {
+        $con = Propel::getConnection();
 
         $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
         $sql = $sql_gen;
 
-        if(is_array($type)) {
+        if (is_array($type)) {
             for($i=0; $i<count($type); $i++) {
                 $type[$i] = "type = '{$type[$i]}'";
             }
@@ -205,7 +204,7 @@ class Application_Model_User {
 
         $sql = $sql_gen ." WHERE (". $sql_type.") ";
 
-        if(!is_null($search)) {
+        if (!is_null($search)) {
             $like = "login ILIKE '%{$search}%'";
 
             $sql = $sql . " AND ".$like;
@@ -213,22 +212,20 @@ class Application_Model_User {
 
         $sql = $sql ." ORDER BY login";
 
-        return  $CC_DBC->GetAll($sql);
+        return $con->query($sql)->fetchAll();;
     }
 
     public static function getUserCount($type=NULL){
-    	global $CC_DBC;
-
-        $sql;
-
+        $con = Propel::getConnection();
+        $sql = '';
         $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs ";
 
-        if(!isset($type)){
+        if (!isset($type)) {
         	$sql = $sql_gen;
         }
         else{
-	        if(is_array($type)) {
-	            for($i=0; $i<count($type); $i++) {
+	        if (is_array($type)) {
+	            for ($i=0; $i<count($type); $i++) {
 	                $type[$i] = "type = '{$type[$i]}'";
 	            }
 	            $sql_type = join(" OR ", $type);
@@ -240,7 +237,8 @@ class Application_Model_User {
 	        $sql = $sql_gen ." WHERE (". $sql_type.") ";
         }
 
-        return  $CC_DBC->GetOne($sql);
+        $query = $con->query($sql)->fetchColumn(0);
+        return $query ? $query : NULL;
     }
 
     public static function getHosts($search=NULL) {
@@ -248,7 +246,7 @@ class Application_Model_User {
     }
 
     public static function getUsersDataTablesInfo($datatables) {
-    	
+
     	$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME);
 
         $displayColumns = array("id", "login", "first_name", "last_name", "type");
@@ -263,7 +261,7 @@ class Application_Model_User {
         }
 
         $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
-        
+
         // mark record which is for the current user
         foreach($res['aaData'] as &$record){
             if($record['login'] == $username){
@@ -277,13 +275,13 @@ class Application_Model_User {
     }
 
     public static function getUserData($id){
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $sql = "SELECT login, first_name, last_name, type, id, email, skype_contact, jabber_contact"
         ." FROM cc_subjs"
         ." WHERE id = $id";
 
-        return $CC_DBC->GetRow($sql);
+        return $con->query($sql)->fetch();
     }
 
     public static function GetUserID($login){

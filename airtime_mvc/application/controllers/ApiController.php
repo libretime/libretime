@@ -342,7 +342,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        PEAR::setErrorHandling(PEAR_ERROR_RETURN);
+        //PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
         $data = Application_Model_Schedule::GetScheduledPlaylists();
         echo json_encode($data, JSON_FORCE_OBJECT);

@@ -4,7 +4,8 @@ class Application_Model_Preference
 {
 
     public static function SetValue($key, $value, $isUserValue = false){
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
 
         //called from a daemon process
         if(!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
@@ -21,13 +22,13 @@ class Application_Model_Preference
         //Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_pref"
         ." WHERE keystr = '$key'";
-        
+
         //For user specific preference, check if id matches as well
         if($isUserValue) {
         	$sql .= " AND subjid = '$id'";
         }
-        
-        $result = $CC_DBC->GetOne($sql);
+
+        $result = $con->query($sql)->fetchColumn(0);
 
         if($result == 1) {
         	// result found
@@ -38,8 +39,8 @@ class Application_Model_Preference
 	            ." WHERE keystr = '$key'";
 	        } else {
 	        	// user pref
-	            $sql = "UPDATE cc_pref" 
-	            . " SET valstr = '$value'" 
+	            $sql = "UPDATE cc_pref"
+	            . " SET valstr = '$value'"
 	            . " WHERE keystr = '$key' AND subjid = $id";
 	        }
         } else {
@@ -54,39 +55,39 @@ class Application_Model_Preference
 	            ." VALUES ($id, '$key', '$value')";
 	        }
         }
-        
-        return $CC_DBC->query($sql);
+
+        return $con->exec($sql);
     }
 
     public static function GetValue($key, $isUserValue = false){
-        global $CC_CONFIG, $CC_DBC;
-        
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+
         //Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_pref"
         ." WHERE keystr = '$key'";
     	//For user specific preference, check if id matches as well
-        if($isUserValue) {
+        if ($isUserValue) {
 	        $auth = Zend_Auth::getInstance();
 	        if($auth->hasIdentity()) {
 		        $id = $auth->getIdentity()->id;
 	        	$sql .= " AND subjid = '$id'";
 		    }
         }
-        $result = $CC_DBC->GetOne($sql);
-
+        $result = $con->query($sql)->fetchColumn(0);
         if ($result == 0)
             return "";
         else {
             $sql = "SELECT valstr FROM cc_pref"
             ." WHERE keystr = '$key'";
-            
+
 	        //For user specific preference, check if id matches as well
 	        if($isUserValue && $auth->hasIdentity()) {
 	        	$sql .= " AND subjid = '$id'";
 	        }
-	        
-            $result = $CC_DBC->GetOne($sql);
-            return $result;
+
+            $result = $con->query($sql)->fetchColumn(0);
+            return $result ? $result : "";
         }
     }
 
@@ -109,36 +110,36 @@ class Application_Model_Preference
             $view->headTitle()->exchangeArray(array()); //clear headTitle ArrayObject
             $view->headTitle(self::GetHeadTitle());
         }
-				
+
         $eventType = "update_station_name";
         $md = array("station_name"=>$title);
-		
+
         Application_Model_RabbitMq::SendMessageToPypo($eventType, $md);
     }
 
     /**
-     * Set the furthest date that a never-ending show 
+     * Set the furthest date that a never-ending show
      * should be populated until.
-     * 
+     *
      * @param DateTime $dateTime
      *        A row from cc_show_days table
-     */ 
+     */
     public static function SetShowsPopulatedUntil($dateTime) {
         self::SetValue("shows_populated_until", $dateTime->format("Y-m-d H:i:s"));
     }
 
     /**
-     * Get the furthest date that a never-ending show 
+     * Get the furthest date that a never-ending show
      * should be populated until.
      *
      * Returns null if the value hasn't been set, otherwise returns
-     * a DateTime object representing the date. 
-     * 
+     * a DateTime object representing the date.
+     *
      * @return DateTime (in UTC Timezone)
      */
     public static function GetShowsPopulatedUntil() {
         $date = self::GetValue("shows_populated_until");
-        
+
         if ($date == ""){
             return null;
         } else {
@@ -163,15 +164,15 @@ class Application_Model_Preference
         $fade = str_pad($fade, 9, "0", STR_PAD_LEFT);
         return $fade;
     }
-    
+
     public static function SetDefaultTransitionFade($fade) {
         self::SetValue("default_transition_fade", $fade);
-        
+
         $eventType = "update_transition_fade";
         $md = array("transition_fade"=>$fade);
         Application_Model_RabbitMq::SendMessageToPypo($eventType, $md);
     }
-    
+
     public static function GetDefaultTransitionFade() {
         $transition_fade = self::GetValue("default_transition_fade");
         if($transition_fade == ""){
@@ -182,10 +183,10 @@ class Application_Model_Preference
 
     public static function SetStreamLabelFormat($type){
         self::SetValue("stream_label_format", $type);
-		
+
         $eventType = "update_stream_format";
         $md = array("stream_format"=>$type);
-		
+
         Application_Model_RabbitMq::SendMessageToPypo($eventType, $md);
     }
 
@@ -365,10 +366,11 @@ class Application_Model_Preference
     	return self::GetValue("uniqueId");
     }
 
-    public static function GetCountryList(){
-    	global $CC_DBC;
+    public static function GetCountryList()
+    {
+    	$con = Propel::getConnection();
     	$sql = "SELECT * FROM cc_country";
-    	$res =  $CC_DBC->GetAll($sql);
+    	$res =  $con->query($sql)->fetchAll();
     	$out = array();
     	$out[""] = "Select Country";
     	foreach($res as $r){
@@ -401,7 +403,7 @@ class Application_Model_Preference
     	$outputArray['STATION_COUNTRY'] = self::GetStationCountry();
     	$outputArray['STATION_CITY'] = self::GetStationCity();
     	$outputArray['STATION_DESCRIPTION'] = self::GetStationDescription();
-    	
+
 
     	// get web server info
     	if(isset($systemInfoArray["AIRTIME_VERSION_URL"])){
@@ -438,7 +440,7 @@ class Application_Model_Preference
     	                foreach($s_info as $k => $v){
     	                    $outputString .= "\t".strtoupper($k)." : ".$v."\n";
     	                }
-    	            }    
+    	            }
     	        }else{
     		        $outputString .= $key.' : '.$out."\n";
     	        }
@@ -452,7 +454,7 @@ class Application_Model_Preference
     	    return $outputString;
     	}
     }
-    
+
     public static function GetInstallMethod(){
         $easy_install = file_exists('/usr/bin/airtime-easy-setup');
         $debian_install = file_exists('/var/lib/dpkg/info/airtime.config');
@@ -559,7 +561,7 @@ class Application_Model_Preference
             return self::GetValue("system_version");
         }
     }
-    
+
     public static function GetLatestVersion(){
         $latest = self::GetValue("latest_version");
         if($latest == null || strlen($latest) == 0) {
@@ -568,14 +570,14 @@ class Application_Model_Preference
             return $latest;
         }
     }
-    
+
     public static function SetLatestVersion($version){
         $pattern = "/^[0-9]+\.[0-9]+\.[0-9]+/";
         if(preg_match($pattern, $version)) {
             self::SetValue("latest_version", $version);
         }
     }
-    
+
     public static function GetLatestLink(){
         $link = self::GetValue("latest_link");
         if($link == null || strlen($link) == 0) {
@@ -584,7 +586,7 @@ class Application_Model_Preference
             return $link;
         }
     }
-    
+
     public static function SetLatestLink($link){
         $pattern = "#^(http|https|ftp)://" .
                     "([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+" .
@@ -609,7 +611,7 @@ class Application_Model_Preference
     public static function GetSoundCloudDownloadbleOption() {
         return self::GetValue("soundcloud_downloadable");
     }
-    
+
     public static function SetWeekStartDay($day) {
         self::SetValue("week_start_day", $day);
     }
@@ -622,7 +624,7 @@ class Application_Model_Preference
             return $val;
         }
     }
-    
+
     /**
     * Stores the last timestamp of user updating stream setting
     */
@@ -630,7 +632,7 @@ class Application_Model_Preference
         $now = time();
         self::SetValue("stream_update_timestamp", $now);
     }
-    
+
     /**
      * Gets the last timestamp of user updating stream setting
      */
@@ -641,22 +643,22 @@ class Application_Model_Preference
         }
         return $update_time;
     }
-    
+
     public static function GetClientId() {
         return self::GetValue("client_id");
     }
-    
+
     public static function SetClientId($id) {
         if (is_numeric($id)) {
             self::SetValue("client_id", $id);
         }
     }
-    
+
     /* User specific preferences start */
 
     /**
      * Sets the time scale preference (agendaDay/agendaWeek/month) in Calendar.
-     * 
+     *
      * @param $timeScale	new time scale
      */
     public static function SetCalendarTimeScale($timeScale) {
@@ -674,16 +676,16 @@ class Application_Model_Preference
         }
     	return $val;
     }
-    
+
     /**
      * Sets the number of entries to show preference in library under Playlist Builder.
-     * 
+     *
      * @param $numEntries	new number of entries to show
      */
     public static function SetLibraryNumEntries($numEntries) {
     	self::SetValue("library_num_entries", $numEntries, true /* user specific */);
     }
-    
+
     /**
      * Retrieves the number of entries to show preference in library under Playlist Builder.
      * Defaults to 10 if no entry exists
@@ -695,10 +697,10 @@ class Application_Model_Preference
         }
         return $val;
     }
-    
+
     /**
      * Sets the time interval preference in Calendar.
-     * 
+     *
      * @param $timeInterval		new time interval
      */
     public static function SetCalendarTimeInterval($timeInterval) {
@@ -716,11 +718,11 @@ class Application_Model_Preference
         }
         return $val;
     }
-    
+
     public static function SetDiskQuota($value){
         self::SetValue("disk_quota", $value, false);
     }
-    
+
     public static function GetDiskQuota(){
         $val = self::GetValue("disk_quota");
         if(strlen($val) == 0) {
@@ -728,27 +730,27 @@ class Application_Model_Preference
         }
         return $val;
     }
-    
+
     public static function SetLiveSteamMasterUsername($value){
         self::SetValue("live_stream_master_username", $value, false);
     }
-    
+
     public static function GetLiveSteamMasterUsername(){
         return self::GetValue("live_stream_master_username");
     }
-    
+
     public static function SetLiveSteamMasterPassword($value){
         self::SetValue("live_stream_master_password", $value, false);
     }
-    
+
     public static function GetLiveSteamMasterPassword(){
         return self::GetValue("live_stream_master_password");
     }
-    
+
     public static function SetSourceStatus($sourcename, $status){
         self::SetValue($sourcename, $status, false);
     }
-    
+
     public static function GetSourceStatus($sourcename){
         $value = self::GetValue($sourcename);
         if($value == null || $value == "false"){
@@ -757,11 +759,11 @@ class Application_Model_Preference
             return true;
         }
     }
-    
+
     public static function SetSourceSwitchStatus($sourcename, $status){
         self::SetValue($sourcename."_switch", $status, false);
     }
-    
+
     public static function GetSourceSwitchStatus($sourcename){
         $value = self::GetValue($sourcename."_switch");
         if($value == null || $value == "off"){
@@ -770,19 +772,19 @@ class Application_Model_Preference
             return "on";
         }
     }
-    
+
     public static function SetMasterDJSourceConnectionURL($value){
         self::SetValue("master_dj_source_connection_url", $value, false);
     }
-    
+
     public static function GetMasterDJSourceConnectionURL(){
         return self::GetValue("master_dj_source_connection_url");
     }
-    
+
     public static function SetLiveDJSourceConnectionURL($value){
         self::SetValue("live_dj_source_connection_url", $value, false);
     }
-    
+
     public static function GetLiveDJSourceConnectionURL(){
         return self::GetValue("live_dj_source_connection_url");
     }
@@ -795,7 +797,7 @@ class Application_Model_Preference
         return self::GetValue("system_email");
     }
     /* User specific preferences end */
-    
+
     public static function ShouldShowPopUp(){
         $today = mktime(0, 0, 0, gmdate("m"), gmdate("d"), gmdate("Y"));
         $remindDate = Application_Model_Preference::GetRemindMeDate();
