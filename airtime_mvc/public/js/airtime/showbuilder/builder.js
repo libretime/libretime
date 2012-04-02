@@ -413,7 +413,10 @@ var AIRTIME = (function(AIRTIME){
 					
 					//if there is only 1 cursor on the page highlight it by default.
 					if ($cursorRows.length === 1) {
-						$cursorRows.addClass("cursor-selected-row");
+						$td = $cursorRows.find("td:first");
+				    	if (!$td.hasClass("dataTables_empty")) {
+				    		$cursorRows.addClass("cursor-selected-row");
+				    	}
 					}
 				}
 				
