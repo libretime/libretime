@@ -17,7 +17,7 @@ require_once "DateHelper.php";
 require_once "OsPath.php";
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 
-global $CC_CONFIG, $CC_DBC;
+global $CC_CONFIG; //, $CC_DBC;
 $dsn = $CC_CONFIG['dsn'];
 
 // ******************************************************************
@@ -26,6 +26,7 @@ $dsn = $CC_CONFIG['dsn'];
 // PEAR returns NULL
 // PDO returns false
 // ******************************************************************
+
 
 // $CC_DBC = DB::connect($dsn, FALSE);
 // if (PEAR::isError($CC_DBC)) {
@@ -41,9 +42,14 @@ $dsn = $CC_CONFIG['dsn'];
 // $result = $CC_DBC->GetOne($sql);
 // var_dump($result);
 
-// $con = Propel::getConnection();
-// $q = $con->query($sql);
-// //var_dump($q);
+// $sql = "SELECT 1";
+// try {
+//     $con = Propel::getConnection();
+//     //$q = $con->query($sql);
+// } catch (Exception $e) {
+//     var_dump($e);
+// }
+// var_dump($q);
 // //var_dump($q->fetchAll());
 // var_dump($q->fetchColumn(0));
 

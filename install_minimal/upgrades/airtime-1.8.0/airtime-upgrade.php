@@ -55,6 +55,7 @@ $CC_CONFIG = array(
 );
 
 AirtimeInstall::DbConnect(true);
+$con = Propel::getConnection();
 
 echo PHP_EOL."*** Updating Database Tables ***".PHP_EOL;
 
@@ -68,11 +69,11 @@ AirtimeInstall::MigrateTablesToVersion(__DIR__, '20110406182005');
 
 //setting data for new aggregate show length column.
 $sql = "SELECT id FROM cc_show_instances";
-$show_instances = $CC_DBC->GetAll($sql);
+$show_instances = $con->query($sql)->fetchAll();
 
 foreach ($show_instances as $show_instance) {
     $sql = "UPDATE cc_show_instances SET time_filled = (SELECT SUM(clip_length) FROM cc_schedule WHERE instance_id = {$show_instance["id"]}) WHERE id = {$show_instance["id"]}";
-    $CC_DBC->query($sql);
+    $con->exec($sql);
 }
 //end setting data for new aggregate show length column.
 

@@ -7,8 +7,8 @@
  * Checks if a previous version of Airtime is currently installed and upgrades Airtime if so.
  * Performs a new install (new configs, database install) otherwise.
  */
-require_once(dirname(__FILE__).'/AirtimeIni.php');
-require_once(dirname(__FILE__).'/AirtimeInstall.php');
+require_once(__DIR__.'/AirtimeIni.php');
+require_once(__DIR__.'/AirtimeInstall.php');
 require_once(__DIR__.'/airtime-constants.php');
 
 $version = AirtimeInstall::GetVersionInstalled();
@@ -18,7 +18,7 @@ $version = AirtimeInstall::GetVersionInstalled();
 // -------------------------------------------------------------------------
 
 $newInstall = false;
-if(is_null($version)) {
+if (is_null($version)) {
     $newInstall = true;
 }
 
