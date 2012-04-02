@@ -204,8 +204,7 @@ class LibraryController extends Zend_Controller_Action
                 Logging::log($data['MDATA_KEY_FILEPATH']);
                 Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
-
-                $this->_helper->redirector('index');
+                $this->_redirect('playlist/index');
             }
         }
 
