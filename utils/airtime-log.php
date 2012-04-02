@@ -15,7 +15,7 @@ require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 $log_files = array("media-monitor" => "/var/log/airtime/media-monitor/media-monitor.log",
-                    "recorder" => "/var/log/airtime/show-recorder/show-recorder.log",
+                    "recorder" => "/var/log/airtime/pypo/show-recorder.log",
                     "playout" => "/var/log/airtime/pypo/pypo.log",
                     "liquidsoap" => "/var/log/airtime/pypo-liquidsoap/ls_script.log",
                     "web" => "/var/log/airtime/zendphp.log");
