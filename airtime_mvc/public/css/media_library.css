@@ -1,7 +1,7 @@
 .lib-content .fg-toolbar ul {
     float: left;
     padding: 0;
-    margin: 0.5em 0 0 0;
+    margin: 0.5em 0 0 10px;
     cursor: pointer;
 }
 
@@ -10,6 +10,13 @@
     float: left;
     padding: 1px 2px;
     margin-right: 5px;
+}
+
+.lib-selected.even {
+	background-color: rgba(240, 109, 53, 1);
+}
+.lib-selected.odd {
+    background-color: rgba(255, 136, 56, 1);
 }
 
 #library_content {

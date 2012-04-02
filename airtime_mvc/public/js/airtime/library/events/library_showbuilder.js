@@ -77,7 +77,8 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.setupLibraryToolbar = function() {
-		var $toolbar = $(".lib-content .fg-toolbar:first");
+		var $toolbar = $(".lib-content .fg-toolbar:first"),
+			$libTable = $("#library_display");
 		
 		$toolbar
 			.append("<ul />")
@@ -93,8 +94,8 @@ var AIRTIME = (function(AIRTIME){
 					return;
 				}
 				
-				var oLibTT = TableTools.fnGetInstance('library_display'),
-					aData = oLibTT.fnGetSelectedData(),
+				var selected = AIRTIME.library.getSelectedData(),
+					data,
 					i,
 					length,
 					temp,
@@ -102,9 +103,9 @@ var AIRTIME = (function(AIRTIME){
 					aSchedIds = [];
 				
 				//process selected files/playlists.
-				for (i = 0, length = aData.length; i < length; i++) {
-					temp = aData[i];
-					aMediaIds.push({"id": temp.id, "type": temp.ftype});	
+				for (i = 0, length = selected.length; i < length; i++) {
+					data = selected[i];
+					aMediaIds.push({"id": data.id, "type": data.ftype});	
 				}
 				
 				aData = [];

@@ -1,7 +1,11 @@
 var AIRTIME = (function(AIRTIME){
 	var mod,
 		oSchedTable,
-		fnServerData;
+		SB_SELECTED_CLASS = "sb-selected",
+		$sbContent,
+		$sbTable,
+		$toolbar,
+		$lib;
 	
 	if (AIRTIME.showbuilder === undefined) {
 		AIRTIME.showbuilder = {};
@@ -42,15 +46,36 @@ var AIRTIME = (function(AIRTIME){
 		return val;
 	};
 	
+	mod.getSelectedData = function() {
+    	var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked").parents("tr"),
+    		aData = [],
+    		i, length,
+    		$item;
+    	
+    	for (i = 0, length = $selected.length; i < length; i++) {
+    		$item = $($selected.get(i));
+    		aData.push($item.data('aData'));
+    	}
+    	
+    	return aData.reverse();
+    };
+    
+    mod.selectAll = function () {
+    	$sbTable.find("input:checkbox").attr("checked", true);
+    };
+    
+    mod.selectNone = function () {
+    	$sbTable.find("input:checkbox").attr("checked", false);
+    };
+	
 	mod.fnAdd = function(aMediaIds, aSchedIds) {
-		var oLibTT = TableTools.fnGetInstance('library_display');
 		
 		$.post("/showbuilder/schedule-add", 
 			{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
 			function(json){
 				checkError(json);
 				oSchedTable.fnDraw();
-				oLibTT.fnSelectNone();
+				AIRTIME.library.selectNone();
 			});
 	};
 	
@@ -74,20 +99,35 @@ var AIRTIME = (function(AIRTIME){
 			});
 	};
 	
-	fnServerData = function ( sSource, aoData, fnCallback ) {
+	mod.fnRemoveSelectedItems = function() {
+		var aData = mod.getSelectedData(),
+			i,
+			length,
+			temp,
+			aItems = [];
+
+		for (i=0, length = aData.length; i < length; i++) {
+			temp = aData[i];
+			aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
+		}
+		
+		mod.fnRemove(aItems);
+	};
+	
+	mod.fnServerData = function ( sSource, aoData, fnCallback ) {
 		
 		aoData.push( { name: "timestamp", value: AIRTIME.showbuilder.getTimestamp()} );
 		aoData.push( { name: "format", value: "json"} );
 		
-		if (fnServerData.hasOwnProperty("start")) {
-			aoData.push( { name: "start", value: fnServerData.start} );
+		if (mod.fnServerData.hasOwnProperty("start")) {
+			aoData.push( { name: "start", value: mod.fnServerData.start} );
 		}
-		if (fnServerData.hasOwnProperty("end")) {
-			aoData.push( { name: "end", value: fnServerData.end} );
+		if (mod.fnServerData.hasOwnProperty("end")) {
+			aoData.push( { name: "end", value: mod.fnServerData.end} );
 		}
-		if (fnServerData.hasOwnProperty("ops")) {
-			aoData.push( { name: "myShows", value: fnServerData.ops.myShows} );
-			aoData.push( { name: "showFilter", value: fnServerData.ops.showFilter} );
+		if (mod.fnServerData.hasOwnProperty("ops")) {
+			aoData.push( { name: "myShows", value: mod.fnServerData.ops.myShows} );
+			aoData.push( { name: "showFilter", value: mod.fnServerData.ops.showFilter} );
 		}
 		
 		$.ajax( {
@@ -102,45 +142,25 @@ var AIRTIME = (function(AIRTIME){
 		} );
 	};
 	
-	mod.fnServerData = fnServerData;
-	
 	mod.builderDataTable = function() {
-		var $sbContent = $('#show_builder'),
-			$sbTable = $sbContent.find('table'),
-			oTable,
-			fnRemoveSelectedItems,
-			$toolbar;
-
-		fnRemoveSelectedItems = function() {
-			var oTT = TableTools.fnGetInstance('show_builder_table'),
-				aData = oTT.fnGetSelectedData(),
-				i,
-				length,
-				temp,
-				aItems = [];
+		$sbContent = $('#show_builder');
+		$lib = $("#library_content"),
+		$sbTable = $sbContent.find('table');
 		
-			for (i=0, length = aData.length; i < length; i++) {
-				temp = aData[i];
-				aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
-			}
-			
-			AIRTIME.showbuilder.fnRemove(aItems);
-		};
-		
-		oTable = $sbTable.dataTable( {
+		oSchedTable = $sbTable.dataTable( {
 			"aoColumns": [
 		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "<input type='checkbox' name='sb_cb_all'>", "sWidth": "15px", "sClass": "sb-checkbox"},
             /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "16px"},
-	        /* starts */{"mDataProp": "starts", "sTitle": "Start", "sClass": "sb-starts", "sWidth": "60px"},
-	        /* ends */{"mDataProp": "ends", "sTitle": "End", "sClass": "sb-ends", "sWidth": "60px"},
-	        /* runtime */{"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length sb-length", "sWidth": "65px"},
-	        /* title */{"mDataProp": "title", "sTitle": "Title", "sClass": "sb-title"},
-	        /* creator */{"mDataProp": "creator", "sTitle": "Creator", "sClass": "sb-creator"},
-	        /* album */{"mDataProp": "album", "sTitle": "Album", "sClass": "sb-album"},
-	        /* cue in */{"mDataProp": "cuein", "sTitle": "Cue In", "bVisible": false, "sClass": "sb-cue-in"},
-	        /* cue out */{"mDataProp": "cueout", "sTitle": "Cue Out", "bVisible": false, "sClass": "sb-cue-out"},
-	        /* fade in */{"mDataProp": "fadein", "sTitle": "Fade In", "bVisible": false, "sClass": "sb-fade-in"},
-	        /* fade out */{"mDataProp": "fadeout", "sTitle": "Fade Out", "bVisible": false, "sClass": "sb-fade-out"}
+	        /* starts */ {"mDataProp": "starts", "sTitle": "Start", "sClass": "sb-starts", "sWidth": "60px"},
+	        /* ends */ {"mDataProp": "ends", "sTitle": "End", "sClass": "sb-ends", "sWidth": "60px"},
+	        /* runtime */ {"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length sb-length", "sWidth": "65px"},
+	        /* title */ {"mDataProp": "title", "sTitle": "Title", "sClass": "sb-title"},
+	        /* creator */ {"mDataProp": "creator", "sTitle": "Creator", "sClass": "sb-creator"},
+	        /* album */ {"mDataProp": "album", "sTitle": "Album", "sClass": "sb-album"},
+	        /* cue in */ {"mDataProp": "cuein", "sTitle": "Cue In", "bVisible": false, "sClass": "sb-cue-in"},
+	        /* cue out */ {"mDataProp": "cueout", "sTitle": "Cue Out", "bVisible": false, "sClass": "sb-cue-out"},
+	        /* fade in */ {"mDataProp": "fadein", "sTitle": "Fade In", "bVisible": false, "sClass": "sb-fade-in"},
+	        /* fade out */ {"mDataProp": "fadeout", "sTitle": "Fade Out", "bVisible": false, "sClass": "sb-fade-out"}
 	        ],
 	        
 	        "bJQueryUI": true,
@@ -163,11 +183,7 @@ var AIRTIME = (function(AIRTIME){
 				  url: "/usersettings/set-timeline-datatable",
 				  type: "POST",
 				  data: {settings : oData, format: "json"},
-				  dataType: "json",
-				  success: function(){},
-				  error: function (jqXHR, textStatus, errorThrown) {
-					  var x;
-				  }
+				  dataType: "json"
 				});
 	        },
 	        "fnStateLoad": function (oSettings) {
@@ -181,10 +197,7 @@ var AIRTIME = (function(AIRTIME){
 	  			  async: false,
 	  			  success: function(json){
 	  				  o = json.settings;
-	  			  },
-	  			  error: function (jqXHR, textStatus, errorThrown) {
-					  var x;
-				  }
+	  			  }
 	  			});
 	        	
 	        	return o;
@@ -378,10 +391,7 @@ var AIRTIME = (function(AIRTIME){
 			},
 			//remove any selected nodes before the draw.
 			"fnPreDrawCallback": function( oSettings ) {
-				var oTT;
-				
-				oTT = TableTools.fnGetInstance('show_builder_table');
-				oTT.fnSelectNone();
+				mod.selectNone();
 				
 				//disable jump to current button.
 				AIRTIME.button.disableButton("sb-button-current");
@@ -395,8 +405,6 @@ var AIRTIME = (function(AIRTIME){
 					markerDiv,
 					$td,
 					$tr,
-					$lib = $("#library_content"),
-					oTable = $('#show_builder_table').dataTable(),
 					aData,
 					elements,
 					i, length, temp,
@@ -453,7 +461,7 @@ var AIRTIME = (function(AIRTIME){
 						
 						setTimeout(function(){
 							AIRTIME.showbuilder.resetTimestamp();
-							oTable.fnDraw();
+							oSchedTable.fnDraw();
 						}, aData.refresh * 1000); //need refresh in milliseconds
 						
 						break;
@@ -491,77 +499,62 @@ var AIRTIME = (function(AIRTIME){
 				"iFixedColumns": 2
 			},
 			
-			"oTableTools": {
-	        	"sRowSelect": "multi",
-				"aButtons": [],
-				"fnPreRowSelect": function ( e ) {
-					var node = e.currentTarget;
-					//don't select separating rows, or shows without privileges.
-					if ($(node).hasClass("sb-header")
-						|| $(node).hasClass("sb-footer")
-						|| $(node).hasClass("sb-empty")
-						|| $(node).hasClass("sb-not-allowed")
-						|| $(node).hasClass("sb-past")) {
-						return false;
-					}
-					return true;
-	            },
-				"fnRowSelected": function ( node ) {
-
-	                //seems to happen if everything is selected
-	                if ( node === null) {
-	                	$sbTable.find("tbody input[type=checkbox]").attr("checked", true);
-	                }
-	                else {
-	                	$(node).find("input[type=checkbox]").attr("checked", true);
-	                }
-	                
-	                //checking to enable buttons
-	                AIRTIME.button.enableButton("sb-button-delete");
-	            },
-	            "fnRowDeselected": function ( node ) {
-	            	var selected;
-	            		       	
-	              //seems to happen if everything is deselected
-	                if ( node === null) {
-	                	$sbTable.find("input[type=checkbox]").attr("checked", false);
-	                	selected = [];
-	                }
-	                else {
-	                	$(node).find("input[type=checkbox]").attr("checked", false);
-	                	selected = $sbTable.find("input[type=checkbox]").filter(":checked");
-	                }
-	                
-	                //checking to disable buttons
-	                if (selected.length === 0) {
-	                	AIRTIME.button.disableButton("sb-button-delete");
-	                }
-	            }
-			},
-			
-	        // R = ColReorderResize, C = ColVis, T = TableTools
-	        "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"CT>><"dataTables_scrolling sb-padded"t>',
+	        // R = ColReorderResize, C = ColVis
+	        "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"C>><"dataTables_scrolling sb-padded"t>',
 	        
 	        "sAjaxDataProp": "schedule",
 			"sAjaxSource": "/showbuilder/builder-feed"	
 		});
 		
-		$('[name="sb_cb_all"]').click(function(){
-	    	var oTT = TableTools.fnGetInstance('show_builder_table');
-	    	
-	    	if ($(this).is(":checked")) {
-	    		var allowedNodes;
-	    		
-	    		allowedNodes = oTable.find('tr:not(:first, .sb-header, .sb-empty, .sb-footer, .sb-not-allowed, .sb-past)');
-	    		
-	    		allowedNodes.each(function(i, el){
-	    			oTT.fnSelect(el);
-	    		});	
-	    	}
-	    	else {
-	    		oTT.fnSelectNone();
-	    	}       
+		//adding checkbox events.
+		$sbTable.find('[name="sb_cb_all"]').click(function() {
+			 var $cbs = $sbTable.find("input:checkbox"),
+	         	$trs;
+	         
+	         if ($(this).is(":checked")) {
+	         	$cbs.attr("checked", true);
+	         	//checking to enable buttons
+	         	
+	         	$trs = $cbs.parents("tr");
+	     		$trs.addClass(SB_SELECTED_CLASS);
+	     		
+	             AIRTIME.button.enableButton("sb-button-delete");
+	         }
+	         else {
+	         	$cbs.attr("checked", false);
+	         	
+	         	$trs = $cbs.parents("tr");
+	     		$trs.removeClass(SB_SELECTED_CLASS);
+	     		
+	         	AIRTIME.button.disableButton("sb-button-delete");
+	         }       
 	    });
+		
+		$sbTable.find("tbody").on("click", "input:checkbox", function() {
+        	
+        	var $cb = $(this),
+        		$selectedCb,
+        		$tr;
+        	
+        	if ($cb.is(":checked")) {
+        		
+        		$tr = $cb.parents("tr");
+        		$tr.addClass(SB_SELECTED_CLASS);
+        		//checking to enable buttons
+                AIRTIME.button.enableButton("sb-button-delete");
+        	}
+        	else {
+        		$selectedCb = $libTable.find("tbody input:checkbox").filter(":checked");
+        		
+        		$tr = $cb.parents("tr");
+        		$tr.removeClass(SB_SELECTED_CLASS);
+        		
+        		//checking to disable buttons
+                if ($selectedCb.length === 0) {
+                    AIRTIME.button.disableButton("sb-button-delete");
+                }
+        	}
+        });
 		
 		var sortableConf = (function(){
 			var origTrs,
@@ -602,10 +595,9 @@ var AIRTIME = (function(AIRTIME){
 			};
 			
 			fnReceive = function(event, ui) {
-				var aItems = [],
-					oLibTT = TableTools.fnGetInstance('library_display');
+				var aItems = [];
 			
-				aItems = oLibTT.fnGetSelectedData();
+				aItems = AIRTIME.library.getSelectedData();
 				
 				//if nothing is checked select the dragged item.
 			    if (aItems.length === 0) {
@@ -663,9 +655,7 @@ var AIRTIME = (function(AIRTIME){
 				forcePlaceholderSize: true,
 				distance: 10,
 				helper: function(event, item) {
-					var oTT = TableTools.fnGetInstance('show_builder_table'),
-				    	selected = oTT.fnGetSelectedData(),
-				    	elements = $sbTable.find('tr:not(:first) input:checked').parents('tr'),				    	
+					var selected = mod.getSelectedData(),	    	
 				    	thead = $("#show_builder_table thead"),
 				    	colspan = thead.find("th").length,
 				    	trfirst = thead.find("tr:first"),
@@ -673,8 +663,6 @@ var AIRTIME = (function(AIRTIME){
 				    	height = trfirst.height(),
 				    	message;
 					
-					//elements.hide();
-				    
 				    //if nothing is checked select the dragged item.
 				    if (selected.length === 0) {
 				    	selected = [item.data("aData")];
@@ -803,11 +791,8 @@ var AIRTIME = (function(AIRTIME){
 					return;
 				}
 				
-				fnRemoveSelectedItems();
+				mod.fnRemoveSelectedItems();
 			});
-		
-		//set things like a reference to the table.
-		AIRTIME.showbuilder.init(oTable);
 		
 		//add events to cursors.
 		$sbTable.find("tbody").on("click", "div.marker", function(event) {
@@ -928,10 +913,6 @@ var AIRTIME = (function(AIRTIME){
                 };
             }
         });	
-	};
-	
-	mod.init = function(oTable) {
-		oSchedTable = oTable;
 	};
 	
 	return AIRTIME;

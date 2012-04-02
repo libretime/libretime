@@ -93,8 +93,7 @@ var AIRTIME = (function(AIRTIME){
 					return;
 				}
 				
-				var oLibTT = TableTools.fnGetInstance('library_display'),
-					aData = oLibTT.fnGetSelectedData(),
+				var aData = AIRTIME.library.getSelectedData(),
 					i,
 					temp,
 					length,
