@@ -5,8 +5,6 @@
  * cannot be created.  So this script is run after all DEB packages have been installed.
  */
 
-//set_include_path(__DIR__.'/../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
-
 require_once(__DIR__.'/AirtimeIni.php');
 require_once(__DIR__.'/AirtimeInstall.php');
 require_once(__DIR__.'/airtime-constants.php');
@@ -21,7 +19,7 @@ AirtimeInstall::CreateDatabaseUser();
 
 $databaseExisted = AirtimeInstall::CreateDatabase();
 
-//AirtimeInstall::DbConnect(true);
+AirtimeInstall::DbConnect(true);
 
 AirtimeInstall::InstallPostgresScriptingLanguage();
 
