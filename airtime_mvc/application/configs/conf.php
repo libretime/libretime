@@ -73,7 +73,7 @@ class Config {
 
         $CC_CONFIG['apiKey'] = array($values['general']['api_key']);
         
-        if (APPLICATION_ENV == "development"){
+        if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development"){
             $CC_CONFIG['apiKey'][] = "";
         }
 
