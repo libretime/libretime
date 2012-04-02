@@ -33,7 +33,7 @@ class AirtimeInstall
     public static function ExitIfNotRoot()
     {
         // Need to check that we are superuser before running this.
-        if(exec("whoami") != "root"){
+        if(posix_geteuid() != 0){
             echo "Must be root user.\n";
             exit(1);
         }

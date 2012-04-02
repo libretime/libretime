@@ -32,7 +32,7 @@ class AirtimeCheck {
     public static function ExitIfNotRoot()
     {
         // Need to check that we are superuser before running this.
-        $user = exec("whoami");
+        $user = posix_getlogin();
         if($user != "root" && $user != "www-data"){
             echo "Must be root user.\n";
             exit(1);

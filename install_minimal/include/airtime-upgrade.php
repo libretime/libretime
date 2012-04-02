@@ -11,7 +11,7 @@ require_once(__DIR__.'/airtime-constants.php');
 require_once(dirname(__FILE__).'/AirtimeIni.php');
 require_once(dirname(__FILE__).'/AirtimeInstall.php');
 
-if(exec("whoami") != "root"){
+if(posix_geteuid() != 0){
     echo "Must be root user.\n";
     exit(1);
 }
