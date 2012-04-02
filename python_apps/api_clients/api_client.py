@@ -21,7 +21,7 @@ from urlparse import urlparse
 import base64
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.0.2"
+AIRTIME_VERSION = "2.0.3"
 
 def api_client_factory(config, logger=None):
     if logger != None:

@@ -111,6 +111,10 @@ if (strcmp($version, "2.0.2") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.2/airtime-upgrade.php");
     pause();
 }
+if (strcmp($version, "2.0.3") < 0){
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.3/airtime-upgrade.php");
+    pause();
+}
 
 //set the new version in the database.
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
