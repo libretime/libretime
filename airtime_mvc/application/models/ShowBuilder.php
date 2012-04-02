@@ -18,6 +18,7 @@ class Application_Model_ShowBuilder {
     private $pos;
     private $contentDT;
     private $epoch_now;
+    private $currentShow;
    
     private $defaultRowArray = array(
         "header" => false,
@@ -54,6 +55,7 @@ class Application_Model_ShowBuilder {
         $this->user = Application_Model_User::GetCurrentUser();
         $this->opts = $p_opts;
         $this->epoch_now = floatval(microtime(true));
+        $this->currentShow = false;
     }
 
     //check to see if this row should be editable by the user.
@@ -118,7 +120,7 @@ class Application_Model_ShowBuilder {
         else if ($row["footer"] === true && $this->epoch_now < $p_epochItemEnd) {
             $row["scheduled"] = 2;
         }
-        else if ($row["header"] === true && $this->epoch_now > $p_epochItemStart) {
+        else if ($row["header"] === true && $this->epoch_now >= $p_epochItemStart) {
             $row["scheduled"] = 0;
         }
         else if ($row["header"] === true && $this->epoch_now < $p_epochItemEnd) {
@@ -156,6 +158,14 @@ class Application_Model_ShowBuilder {
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
         $endsEpoch = floatval($showEndDT->format("U.u"));
+        
+        if ($startsEpoch < $this->epoch_now && $endsEpoch > $this->epoch_now) {
+            $row["currentShow"] = true;
+            $this->currentShow = true;
+        }
+        else {
+            $this->currentShow = false;
+        }
 
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
@@ -224,6 +234,10 @@ class Application_Model_ShowBuilder {
             $row["id"] = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
         }
+              
+        if ($this->currentShow = true) {
+            $row["currentShow"] = true;
+        }
            
         $this->getItemColor($p_item, $row);
         $this->getRowTimestamp($p_item, $row);
@@ -256,6 +270,10 @@ class Application_Model_ShowBuilder {
         $endsEpoch = floatval($showEndDT->format("U.u"));
         
         $row["refresh"] = floatval($showEndDT->format("U.u")) - $this->epoch_now;
+        
+        if ($this->currentShow = true) {
+            $row["currentShow"] = true;
+        }
         
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         $this->isAllowed($p_item, $row);
