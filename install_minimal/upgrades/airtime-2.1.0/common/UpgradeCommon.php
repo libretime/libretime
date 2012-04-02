@@ -59,7 +59,7 @@ class UpgradeCommon{
 
     private static function GetAirtimeSrcDir()
     {
-        return __DIR__."/../../../airtime_mvc";
+        return __DIR__."/../../../../airtime_mvc";
     }
 
     public static function MigrateTablesToVersion($dir, $version)
@@ -69,7 +69,7 @@ class UpgradeCommon{
         $appDir = self::GetAirtimeSrcDir();
         $command = "php --php-ini $dir/../../airtime-php.ini ".
                     "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
-                    "--configuration=$dir/migrations.xml ".
+                    "--configuration=$dir/common/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction migrations:migrate $version";
         system($command);
@@ -80,7 +80,7 @@ class UpgradeCommon{
         $appDir = self::GetAirtimeSrcDir();
         $command = "php --php-ini $dir/../../airtime-php.ini ".
                     "$appDir/library/doctrine/migrations/doctrine-migrations.phar ".
-                    "--configuration=$dir/migrations.xml ".
+                    "--configuration=$dir/common/migrations.xml ".
                     "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
                     "--no-interaction --add migrations:version $version";
         system($command);
@@ -122,19 +122,19 @@ class UpgradeCommon{
             }
         }
 
-        if (!copy(__DIR__."../etc/airtime.conf.$suffix", self::CONF_FILE_AIRTIME)){
+        if (!copy(__DIR__."/../etc/airtime.conf.$suffix", self::CONF_FILE_AIRTIME)){
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."../etc/pypo.cfg.$suffix", self::CONF_FILE_PYPO)){
+        if (!copy(__DIR__."/../etc/pypo.cfg.$suffix", self::CONF_FILE_PYPO)){
             echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."../etc/media-monitor.cfg.$suffix", self::CONF_FILE_MEDIAMONITOR)){
+        if (!copy(__DIR__."/../etc/media-monitor.cfg.$suffix", self::CONF_FILE_MEDIAMONITOR)){
             echo "Could not copy meadia-monitor.cfg to /etc/airtime/. Exiting.";
             exit(1);
         }
-        if (!copy(__DIR__."../etc/api_client.cfg.$suffix", self::CONF_FILE_API_CLIENT)){
+        if (!copy(__DIR__."/../etc/api_client.cfg.$suffix", self::CONF_FILE_API_CLIENT)){
             echo "Could not copy api_client.cfg to /etc/monit/conf.d/. Exiting.";
             exit(1);
         }
