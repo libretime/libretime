@@ -93,10 +93,10 @@ class Application_Model_Scheduler {
                 throw new OutDatedScheduleException("The show {$show->getDbName()} is over and cannot be scheduled.");
             }
             
-            $origTs = intval($instanceInfo[$id]);
-            $currTs = intval($instance->getDbLastScheduled("U")) ? : 0;
-            if ($origTs !== $currTs) {
-                Logging::log("orig {$origTs} current {$currTs}");
+            $ts = intval($instanceInfo[$id]);
+            $lastSchedTs = intval($instance->getDbLastScheduled("U")) ? : 0;
+            if ($ts < $lastSchedTs) {
+                Logging::log("ts {$ts} last sched {$lastSchedTs}");
                 throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
             }
         }
@@ -215,6 +215,41 @@ class Application_Model_Scheduler {
         
         return $nextDT;
     }
+    
+    /*
+     * @param int $showInstance
+    * @param array $exclude
+    *   ids of sched items to remove from the calulation.
+    */
+    private function removeGaps($showInstance, $exclude=null) {
+    
+        Logging::log("removing gaps from show instance #".$showInstance);
+    
+        $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
+        if (is_null($instance)) {
+            throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+        }
+    
+        $itemStartDT = $instance->getDbStarts(null);
+    
+        $schedule = CcScheduleQuery::create()
+            ->filterByDbInstanceId($showInstance)
+            ->filterByDbId($exclude, Criteria::NOT_IN)
+            ->orderByDbStarts()
+            ->find($this->con);
+    
+    
+        foreach ($schedule as $item) {
+    
+            $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+    
+            $item->setDbStarts($itemStartDT)
+                ->setDbEnds($itemEndDT)
+                ->save($this->con);
+    
+            $itemStartDT = $itemEndDT;
+        }
+    }
 
     /*
      * @param array $scheduledIds
@@ -280,16 +315,16 @@ class Application_Model_Scheduler {
                         $sched = new CcSchedule();
                     }
                    
-                    $sched->setDbStarts($nextStartDT);
-                    $sched->setDbEnds($endTimeDT);
-                    $sched->setDbFileId($file['id']);
-                    $sched->setDbCueIn($file['cuein']);
-                    $sched->setDbCueOut($file['cueout']);
-                    $sched->setDbFadeIn($file['fadein']);
-                    $sched->setDbFadeOut($file['fadeout']);
-                    $sched->setDbClipLength($file['cliplength']);
-                    $sched->setDbInstanceId($instance->getDbId());
-                    $sched->save($this->con);
+                    $sched->setDbStarts($nextStartDT)
+                        ->setDbEnds($endTimeDT)
+                        ->setDbFileId($file['id'])
+                        ->setDbCueIn($file['cuein'])
+                        ->setDbCueOut($file['cueout'])
+                        ->setDbFadeIn($file['fadein'])
+                        ->setDbFadeOut($file['fadeout'])
+                        ->setDbClipLength($file['cliplength'])
+                        ->setDbInstanceId($instance->getDbId())
+                        ->save($this->con);
 
                     $nextStartDT = $endTimeDT;
                 }
@@ -504,40 +539,45 @@ class Application_Model_Scheduler {
             throw $e;
         }
     }
-
+    
     /*
-     * @param int $showInstance
-     * @param array $exclude
-     *   ids of sched items to remove from the calulation.
+     * Used for cancelling the current show instance.
+     * 
+     * @param $p_id id of the show instance to cancel.
      */
-    private function removeGaps($showInstance, $exclude=null) {
-
-        Logging::log("removing gaps from show instance #".$showInstance);
-
-        $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
-        if (is_null($instance)) {
-            throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+    public function cancelShow($p_id) {
+        
+        $this->con->beginTransaction();
+        
+        try {
+           
+            $instance = CcShowInstancesQuery::create()->findPK($p_id);
+            
+            $items = CcScheduleQuery::create()
+                ->filterByDbInstanceId($p_id)
+                ->filterByDbEnds($this->nowDT, Criteria::GREATER_THAN)
+                ->find($this->con);
+            
+            $remove = array();
+            $ts = $this->nowDT->format('U');
+            
+            for($i = 0; $i < count($items); $i++) {
+                $remove[$i]["instance"] = $p_id;
+                $remove[$i]["timestamp"] = $ts;
+                $remove[$i]["id"] = $items[$i]->getDbId();
+            }
+            
+            $this->removeItems($remove, false);
+            
+            $instance->setDbEnds($this->nowDT);
+            $instance->save($this->con);
+            
+            $this->con->commit();
         }
-
-        $itemStartDT = $instance->getDbStarts(null);
-
-        $schedule = CcScheduleQuery::create()
-            ->filterByDbInstanceId($showInstance)
-            ->filterByDbId($exclude, Criteria::NOT_IN)
-            ->orderByDbStarts()
-            ->find($this->con);
-
-
-        foreach ($schedule as $item) {
-
-            $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
-
-            $item->setDbStarts($itemStartDT);
-            $item->setDbEnds($itemEndDT);
-            $item->save($this->con);
-
-            $itemStartDT = $itemEndDT;
-        }
+        catch (Exception $e) {
+            $this->con->rollback();
+            throw $e;
+        }  
     }
 }
 

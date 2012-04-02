@@ -363,6 +363,10 @@ var AIRTIME = (function(AIRTIME){
 				else if (aData.status === 0) {
 					$(nRow).addClass("sb-over");
 				}
+				
+				if (aData.currentShow === true) {
+					$(nRow).addClass("sb-current-show");
+				}
                  
                 //call the context menu so we can prevent the event from propagating.
                 $(nRow).find('td:gt(1)').click(function(e){
@@ -372,6 +376,20 @@ var AIRTIME = (function(AIRTIME){
                     return false;
                 });
 			},
+			//remove any selected nodes before the draw.
+			"fnPreDrawCallback": function( oSettings ) {
+				var oTT;
+				
+				oTT = TableTools.fnGetInstance('show_builder_table');
+				oTT.fnSelectNone();
+				
+				//disable jump to current button.
+				AIRTIME.button.disableButton("sb-button-current");
+				//disable deleting of overbooked tracks.
+				AIRTIME.button.disableButton("sb-button-trim");
+				//disable cancelling current show.
+				AIRTIME.button.disableButton("sb-button-cancel");
+		    },
 			"fnDrawCallback": function(oSettings, json) {
 				var wrapperDiv,
 					markerDiv,
@@ -454,22 +472,16 @@ var AIRTIME = (function(AIRTIME){
 					//enable deleting of overbooked tracks.
 					AIRTIME.button.enableButton("sb-button-trim");
 				}
+				
+				$tr = $sbTable.find('tr.sb-future:first');
+				if ($tr.hasClass('sb-current-show')) {
+					//enable cancelling current show.
+					AIRTIME.button.enableButton("sb-button-cancel");
+				}
 		    },
 			"fnHeaderCallback": function(nHead) {
 				$(nHead).find("input[type=checkbox]").attr("checked", false);
 			},
-			//remove any selected nodes before the draw.
-			"fnPreDrawCallback": function( oSettings ) {
-				var oTT;
-				
-				oTT = TableTools.fnGetInstance('show_builder_table');
-				oTT.fnSelectNone();
-				
-				//disable jump to current button.
-				AIRTIME.button.disableButton("sb-button-current");
-				//disable deleting of overbooked tracks.
-				AIRTIME.button.disableButton("sb-button-trim");
-		    },
 			
 			"oColVis": {
 				"aiExclude": [ 0, 1 ]
@@ -707,12 +719,44 @@ var AIRTIME = (function(AIRTIME){
 		//start setup of the builder toolbar.
 		$toolbar = $(".sb-content .fg-toolbar");
 		
-		$toolbar
-			.append("<ul />")
-			.find('ul')
-				.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="jump to the currently playing track"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
-				.append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
-				.append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');
+		$ul = $("<ul/>");
+		$ul.append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
+			.append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');	
+		$toolbar.append($ul);
+		
+		$ul = $("<ul/>");
+		$ul.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="jump to the currently playing track"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
+			.append('<li class="ui-state-default ui-state-disabled sb-button-cancel" title="cancel current show"><span class="ui-icon ui-icon-eject"></span></li>');
+		$toolbar.append($ul);
+		
+		//jump to current
+		$toolbar.find('.sb-button-cancel')
+			.click(function() {
+				var $tr,
+					data;
+				
+				if (AIRTIME.button.isDisabled('sb-button-cancel') === true) {
+					return;
+				}
+				
+				$tr = $sbTable.find('tr.sb-future:first');
+				
+				if ($tr.hasClass('sb-current-show')) {
+					data = $tr.data("aData");
+					
+					if (confirm('Cancel Current Show?')) {
+				        var url = "/Schedule/cancel-current-show";
+				        $.ajax({
+				        	url: url,
+				        	data: {format: "json", id: data.instance},
+				        	success: function(data){
+				        		var oTable = $sbTable.dataTable();
+				        		oTable.fnDraw();
+				        	}
+				        });
+				    }
+				}	
+			});
 		
 		//jump to current
 		$toolbar.find('.sb-button-current')

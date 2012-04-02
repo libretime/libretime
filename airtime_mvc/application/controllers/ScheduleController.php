@@ -22,6 +22,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('edit-show', 'json')
                     ->addActionContext('add-show', 'json')
                     ->addActionContext('cancel-show', 'json')
+                    ->addActionContext('cancel-current-show', 'json')
                     ->addActionContext('get-form', 'json')
                     ->addActionContext('upload-to-sound-cloud', 'json')
                     ->addActionContext('content-context-menu', 'json')
@@ -816,21 +817,21 @@ class ScheduleController extends Zend_Controller_Action
 
     public function cancelCurrentShowAction()
     {
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
+        $user = Application_Model_User::GetCurrentUser();
 
-        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            $showInstanceId = $this->_getParam('id');
-            try{
-                $showInstance = new Application_Model_ShowInstance($showInstanceId);
-            }catch(Exception $e){
-                $this->view->show_error = true;
-                return false;
+        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+            $id = $this->_getParam('id');
+           
+            try {
+                $scheduler = new Application_Model_Scheduler();
+                $scheduler->cancelShow($id);
             }
-            $showInstance->clearShow();
-            $showInstance->delete();
-
-            Application_Model_RabbitMq::PushSchedule();
+            catch (Exception $e) {
+                $this->view->error = $e->getMessage();
+                Logging::log($e->getMessage());
+                Logging::log("{$e->getFile()}");
+                Logging::log("{$e->getLine()}");
+            }
         }
     }
 

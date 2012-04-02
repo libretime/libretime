@@ -1,8 +1,14 @@
-/**
-*
-*	Schedule Dialog creation methods.
-*
-*/
+var AIRTIME = (function(AIRTIME){
+	var mod;
+	
+	if (AIRTIME.schedule === undefined) {
+		AIRTIME.schedule = {};
+	}
+	mod = AIRTIME.schedule;
+	
+	return AIRTIME;
+	
+}(AIRTIME || {}));
 
 var serverTimezoneOffset = 0;
 
@@ -27,21 +33,27 @@ function checkShowLength(json) {
 }
 
 function confirmCancelShow(show_instance_id){
-    if (confirm('Erase current show and stop playback?')){
-        var url = "/Schedule/cancel-current-show/id/"+show_instance_id;
+    if (confirm('Cancel Current Show?')) {
+        var url = "/Schedule/cancel-current-show";
         $.ajax({
-          url: url,
-          success: function(data){scheduleRefetchEvents(data);}
+        	url: url,
+        	data: {format: "json", id: show_instance_id},
+        	success: function(data){
+        		scheduleRefetchEvents(data);
+        	}
         });
     }
 }
 
 function confirmCancelRecordedShow(show_instance_id){
-    if (confirm('Erase current show and stop recording?')){
-        var url = "/Schedule/cancel-current-show/id/"+show_instance_id;
+    if (confirm('Erase current show and stop recording?')) {
+        var url = "/Schedule/cancel-current-show";
         $.ajax({
-          url: url,
-          success: function(data){scheduleRefetchEvents(data);}
+	        url: url,
+	        data: {format: "json", id: show_instance_id},
+	        success: function(data){
+	        	scheduleRefetchEvents(data);
+	        }
         });
     }
 }
