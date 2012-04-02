@@ -11,5 +11,6 @@ class AirtimeConfigFileUpgrade{
     }
     
     private static function task0(){
+        UpgradeCommon::upgradeConfigFiles();
     }
 }

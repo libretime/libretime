@@ -11,7 +11,7 @@ class AirtimeDatabaseUpgrade{
     }
 
     private static function task0(){
-        
+        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20120402103944');
     }
 
 }
