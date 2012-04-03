@@ -534,19 +534,16 @@ var AIRTIME = (function(AIRTIME){
         	
         	var $cb = $(this),
         		$selectedCb,
-        		$tr;
+        		$tr = $cb.parents("tr");
         	
         	if ($cb.is(":checked")) {
         		
-        		$tr = $cb.parents("tr");
         		$tr.addClass(SB_SELECTED_CLASS);
         		//checking to enable buttons
                 AIRTIME.button.enableButton("sb-button-delete");
         	}
         	else {
-        		$selectedCb = $libTable.find("tbody input:checkbox").filter(":checked");
-        		
-        		$tr = $cb.parents("tr");
+        		$selectedCb = $sbTable.find("tbody input:checkbox").filter(":checked");
         		$tr.removeClass(SB_SELECTED_CLASS);
         		
         		//checking to disable buttons

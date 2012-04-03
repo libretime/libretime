@@ -319,11 +319,9 @@ var AIRTIME = (function(AIRTIME) {
         	var $cb = $(this),
         		$selectedCb,
         		$prev,
-        		$tr;
+        		$tr = $cb.parents("tr");
         	
         	if ($cb.is(":checked")) {
-        		
-        		$tr = $cb.parents("tr");
         		
         		if (ev.shiftKey) {
         			$prev = $libTable.find("tbody").find("tr."+LIB_SELECTED_CLASS).eq(-1);
@@ -342,8 +340,6 @@ var AIRTIME = (function(AIRTIME) {
         	}
         	else {
         		$selectedCb = $libTable.find("tbody input:checkbox").filter(":checked");
-        		
-        		$tr = $cb.parents("tr");
         		$tr.removeClass(LIB_SELECTED_CLASS);
         		
         		//checking to disable buttons
