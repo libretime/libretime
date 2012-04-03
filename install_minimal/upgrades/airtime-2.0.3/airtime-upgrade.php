@@ -37,6 +37,7 @@ class AirtimeMiscUpgrade{
 
     public static function start(){
         self::modifyPypo();
+        self::modifyMonitPassword();
     }
     
     public static function modifyPypo(){
@@ -44,8 +45,25 @@ class AirtimeMiscUpgrade{
         exec("usermod -s /bin/false pypo");
         exec("passwd --delete pypo");
     }
+    
+    public static function modifyMonitPassword(){
+        echo "* Generating Monit password".PHP_EOL;
+        copy(__DIR__."/monit-airtime-generic.cfg", "/etc/monit/conf.d/monit-airtime-generic.cfg");
+        $pass = self::GenerateRandomString(10);
+        exec("sed -i 's/\$admin_pass/$pass/g' /etc/monit/conf.d/monit-airtime-generic.cfg");
+    }
+    
+    public static function GenerateRandomString($p_len=20, $p_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+    {
+        $string = '';
+        for ($i = 0; $i < $p_len; $i++)
+        {
+            $pos = mt_rand(0, strlen($p_chars)-1);
+            $string .= $p_chars{$pos};
+        }
+        return $string;
+    }
 }
-
 
 AirtimeConfigFileUpgrade::start();
 AirtimeMiscUpgrade::start();
