@@ -275,10 +275,8 @@ var AIRTIME = (function(AIRTIME){
 	}
 		
 	function redrawLib() {
-	    var dt = $("#library_display").dataTable(),
-	    	oLibTT = TableTools.fnGetInstance('library_display');
+	    var dt = $("#library_display").dataTable();
 	    
-	    oLibTT.fnSelectNone();
 	    dt.fnStandingRedraw();
 	}
 	
@@ -519,12 +517,11 @@ var AIRTIME = (function(AIRTIME){
 			fnReceive = function(event, ui) {
 				var aItems = [],
 					aSelected,
-					oLibTT = TableTools.fnGetInstance('library_display'),
 					i,
 					length;
 				
 				//filter out anything that isn't an audiofile.
-				aSelected = oLibTT.fnGetSelectedData();
+				aSelected = AIRTIME.library.getSelectedData();
 				//if nothing is checked select the dragged item.
 			    if (aSelected.length === 0) {
 			    	aSelected.push(ui.item.data("aData"));

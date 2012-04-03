@@ -12,6 +12,13 @@
 	margin-left: -16px;
 }
 
+.sb-selected.even {
+    background-color: rgba(240, 109, 53, 1);
+}
+.sb-selected.odd {
+    background-color: rgba(255, 136, 56, 1);
+}
+
 #sb_edit {
 	position: relative;
 	top: 2px;
@@ -24,7 +31,7 @@
 .sb-content .fg-toolbar ul {
 	float: left;
 	padding: 0;
-	margin: 0.5em 10px 0 0;
+	margin: 0.5em 0 0 10px;
 	cursor: pointer;
 }
 

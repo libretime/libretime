@@ -1,31 +1,54 @@
 var AIRTIME = (function(AIRTIME) {
     var mod,
-        libraryInit;
+        libraryInit,
+	    oTable,
+	    $libContent,
+	    $libTable,
+	    LIB_SELECTED_CLASS = "lib-selected";
     
     if (AIRTIME.library === undefined) {
         AIRTIME.library = {};
     }
     mod = AIRTIME.library;
     
+    mod.getSelectedData = function() {
+    	var $selected = $libTable.find("tbody").find("input:checkbox").filter(":checked").parents("tr"),
+    		aData = [],
+    		i, length,
+    		$item;
+    	
+    	for (i = 0, length = $selected.length; i < length; i++) {
+    		$item = $($selected.get(i));
+    		aData.push($item.data('aData'));
+    	}
+    	
+    	return aData.reverse();
+    };
+    
+    mod.selectAll = function () {
+    	$libTable.find("input:checkbox").attr("checked", true);
+    };
+    
+    mod.selectNone = function () {
+    	$libTable.find("input:checkbox").attr("checked", false);
+    	$libTable.find("tr").removeClass(LIB_SELECTED_CLASS);
+    };
+    
     mod.fnDeleteItems = function(aMedia) {
-        var oLibTT = TableTools.fnGetInstance('library_display'),
-            oLibTable = $("#library_display").dataTable();
-        
+       
         $.post("/library/delete", 
             {"format": "json", "media": aMedia}, 
             function(json){
                 if (json.message !== undefined) {
                     alert(json.message);
                 }
-                
-                oLibTT.fnSelectNone();
-                oLibTable.fnDraw();
+               
+                oTable.fnDraw();
             });
     };
     
     mod.fnDeleteSelectedItems = function() {
-        var oLibTT = TableTools.fnGetInstance('library_display'),
-            aData = oLibTT.fnGetSelectedData(),
+        var aData = AIRTIME.library.getSelectedData(),
             item,
             temp,
             aMedia = [];
@@ -42,14 +65,13 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     libraryInit = function() {
-        var oTable,
-            libContentDiv = $("#library_content"),
-            tableHeight = libContentDiv.height() - 130,
-            libLength,
-    		libType,
-    		libFilter;
+        oTable,
+        $libContent = $("#library_content"),
+        $libTable = $libContent.find("table");
         
-        oTable = $('#library_display').dataTable( {
+        var tableHeight = $libContent.height() - 130;
+        
+        oTable = $libTable.dataTable( {
             
             //put hidden columns at the top to insure they can never be visible on the table through column reordering.
             "aoColumns": [
@@ -231,14 +253,7 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnDrawCallback": AIRTIME.library.events.fnDrawCallback,
             "fnHeaderCallback": function(nHead) {
-            	var oTT,
-            		checked = $(nHead).find("input[type=checkbox]").filter(":checked");
-            	
-            	if (checked.length > 0) {
-            		oTT = TableTools.fnGetInstance('library_display');
-            		checked.attr("checked", false);
-            		oTT.fnSelectNone();
-            	}	
+            	$(nHead).find("input[type=checkbox]").attr("checked", false);	
             },
             
             "aaSorting": [[3, 'asc']],
@@ -249,49 +264,8 @@ var AIRTIME = (function(AIRTIME) {
                 "sSearch": ""
             },
             
-            // R = ColReorder, C = ColVis, T = TableTools
-            "sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"T<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>', 
-            
-            "oTableTools": {
-                "sRowSelect": "multi",
-                "aButtons": [],
-                "fnRowSelected": function ( node ) {
-                    var selected;
-                        
-                    //seems to happen if everything is selected
-                    if ( node === null) {
-                        selected = oTable.find("input[type=checkbox]");
-                        selected.attr("checked", true);
-                    }
-                    else {
-                        $(node).find("input[type=checkbox]").attr("checked", true);
-                        selected = oTable.find("input[type=checkbox]").filter(":checked");
-                    }
-                    
-                    //checking to enable buttons
-                    AIRTIME.button.enableButton("lib-button-delete");
-                    AIRTIME.library.events.enableAddButtonCheck();
-                },
-                "fnRowDeselected": function ( node ) {
-                    var selected;
-                 
-                  //seems to happen if everything is deselected
-                    if ( node === null) {
-                        oTable.find("input[type=checkbox]").attr("checked", false);
-                        selected = [];
-                    }
-                    else {
-                        $(node).find("input[type=checkbox]").attr("checked", false);
-                        selected = oTable.find("input[type=checkbox]").filter(":checked");
-                    }
-                    
-                    //checking to disable buttons
-                    if (selected.length === 0) {
-                        AIRTIME.button.disableButton("lib-button-delete");
-                    }
-                    AIRTIME.library.events.enableAddButtonCheck();
-                }
-            },
+            // R = ColReorder, C = ColVis
+            "sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',
             
             "oColVis": {
                 "sAlign": "right",
@@ -306,7 +280,7 @@ var AIRTIME = (function(AIRTIME) {
         });
         oTable.fnSetFilteringDelay(350);
        
-        libContentDiv.find(".dataTables_scrolling").css("max-height", tableHeight);
+        $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
         
         AIRTIME.library.events.setupLibraryToolbar(oTable);
         
@@ -322,30 +296,65 @@ var AIRTIME = (function(AIRTIME) {
                 oTable.fnDraw();
             });
           
-        $('[name="pl_cb_all"]').click(function(){
-            var oTT = TableTools.fnGetInstance('library_display');
+        $libTable.find('[name="pl_cb_all"]').click(function() {
+            var $cbs = $libTable.find("input:checkbox"),
+            	$trs;
             
             if ($(this).is(":checked")) {
-                oTT.fnSelectAll();
+            	$cbs.attr("checked", true);
+            	//checking to enable buttons
+            	
+            	$trs = $cbs.parents("tr");
+        		$trs.addClass(LIB_SELECTED_CLASS);
+        		
+                AIRTIME.button.enableButton("lib-button-delete");
+                AIRTIME.library.events.enableAddButtonCheck();
             }
             else {
-                oTT.fnSelectNone();
+            	$cbs.attr("checked", false);
+            	
+            	$trs = $cbs.parents("tr");
+        		$trs.removeClass(LIB_SELECTED_CLASS);
+        		
+            	AIRTIME.button.disableButton("lib-button-delete");
+            	AIRTIME.button.disableButton("lib-button-add");
             }       
         });
         
-        //calculate dynamically width for the library search input.
-    	//libLength = libContentDiv.find("#library_display_length");
-    	//libType = libContentDiv.find("#library_display_type");
-    	//libFilter = libContentDiv.find("#library_display_filter");
-    	//libFilter.find("input").width(libFilter.width() - libType.width() - libLength.width() - 80);
-        
+        $libTable.find("tbody").on("click", "input[type=checkbox]", function() {
+        	
+        	var $cb = $(this),
+        		$selectedCb,
+        		$tr;
+        	
+        	if ($cb.is(":checked")) {
+        		
+        		$tr = $cb.parents("tr");
+        		$tr.addClass(LIB_SELECTED_CLASS);
+        		//checking to enable buttons
+                AIRTIME.button.enableButton("lib-button-delete");
+                AIRTIME.library.events.enableAddButtonCheck();
+        	}
+        	else {
+        		$selectedCb = $libTable.find("tbody input:checkbox").filter(":checked");
+        		
+        		$tr = $cb.parents("tr");
+        		$tr.removeClass(LIB_SELECTED_CLASS);
+        		
+        		//checking to disable buttons
+                if ($selectedCb.length === 0) {
+                    AIRTIME.button.disableButton("lib-button-delete");
+                }
+                AIRTIME.library.events.enableAddButtonCheck();
+        	}
+        });
+       
         checkImportStatus();
         setInterval( checkImportStatus, 5000 );
         setInterval( checkSCUploadStatus, 5000 );
         
         addQtipToSCIcons();
-    
-        
+       
         //begin context menu initialization.
         $.contextMenu({
             selector: '#library_display td:not(.library_checkbox)',
