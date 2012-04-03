@@ -308,7 +308,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentPlaylistAction()
     {
-
         $range = Application_Model_Schedule::GetPlayOrderRange();
 
         /* Convert all UTC times to localtime before sending back to user. */
@@ -348,7 +347,6 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->switch_status = $switch_status;
         
         $this->view->entries = $range;
-        
     }
 
     public function removeGroupAction()

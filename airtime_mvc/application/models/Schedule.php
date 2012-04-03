@@ -71,8 +71,15 @@ class Application_Model_Schedule {
             return;
         
         global $CC_CONFIG, $CC_DBC;
-        $sql = 'Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played
-                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id 
+        $sql = 'Select ft.artist_name, 
+                ft.track_title, 
+                st.starts as starts, 
+                st.ends as ends, 
+                st.media_item_played as media_item_played,
+                si.ends as show_ends
+                FROM cc_schedule st 
+                LEFT JOIN cc_files ft ON st.file_id = ft.id
+                LEFT JOIN cc_show_instances si on st.instance_id = si.id
                 WHERE ';
                 
          if (isset($p_previousShowID)){
@@ -115,10 +122,10 @@ class Application_Model_Schedule {
                 }
                 $results['current'] =  array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
                             "starts"=>$rows[$i]["starts"],
-                            "ends"=>$rows[$i]["ends"],
+                            "ends"=> (($rows[$i]["ends"] > $rows[$i]["show_ends"]) ? $rows[$i]["show_ends"]: $rows[$i]["ends"]),
                             "media_item_played"=>$rows[$i]["media_item_played"],
                             "record"=>0);
-                
+                            
                 if ( isset($rows[$i+1])){
                     $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
                             "starts"=>$rows[$i+1]["starts"],
