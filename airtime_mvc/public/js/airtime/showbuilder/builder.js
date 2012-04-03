@@ -530,13 +530,24 @@ var AIRTIME = (function(AIRTIME){
 	         }       
 	    });
 		
-		$sbTable.find("tbody").on("click", "input:checkbox", function() {
+		$sbTable.find("tbody").on("click", "input:checkbox", function(ev) {
         	
         	var $cb = $(this),
         		$selectedCb,
-        		$tr = $cb.parents("tr");
+        		$tr = $cb.parents("tr"),
+        		$prev;
         	
         	if ($cb.is(":checked")) {
+        		
+        		if (ev.shiftKey) {
+        			$prev = $sbTable.find("tbody").find("tr."+SB_SELECTED_CLASS).eq(-1);
+        			
+        			$prev.nextUntil($tr)
+        				.addClass(SB_SELECTED_CLASS)
+        				.find("input:checkbox")
+        					.attr("checked", true)
+        					.end();
+        		}
         		
         		$tr.addClass(SB_SELECTED_CLASS);
         		//checking to enable buttons
