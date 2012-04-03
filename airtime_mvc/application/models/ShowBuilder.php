@@ -169,8 +169,12 @@ class Application_Model_ShowBuilder {
 
         $row["header"] = true;
         $row["starts"] = $showStartDT->format("Y-m-d H:i");
+        $row["startDate"] = $showStartDT->format("Y-m-d");
+        $row["startTime"] = $showStartDT->format("H:i");
         $row["refresh"] = floatval($showStartDT->format("U.u")) - $this->epoch_now;
         $row["ends"] = $showEndDT->format("Y-m-d H:i");
+        $row["endDate"] = $showEndDT->format("Y-m-d");
+        $row["endTime"] = $showEndDT->format("H:i");
         $row["duration"] = floatval($showEndDT->format("U.u")) - floatval($showStartDT->format("U.u"));
         $row["title"] = $p_item["show_name"];
         $row["instance"] = intval($p_item["si_id"]);

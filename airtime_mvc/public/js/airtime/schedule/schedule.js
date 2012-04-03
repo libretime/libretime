@@ -261,7 +261,9 @@ $(document).ready(function() {
         ignoreRightClick: true,
         
         build: function($el, e) {
-    		var request, data, items, callback;
+    		var data, 
+	    		items, 
+	    		callback;
     		
     		data = $el.data("event");
     		
@@ -284,9 +286,11 @@ $(document).ready(function() {
     			if (oItems.clear !== undefined) {
     				
     				callback = function() {
-    					$.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
-    						scheduleRefetchEvents(json);
-    					});
+    					if (confirm("Remove all content?")) {
+    						$.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
+        						scheduleRefetchEvents(json);
+        					});
+    					}
 					};
     				oItems.clear.callback = callback;
     			}
@@ -378,7 +382,7 @@ $(document).ready(function() {
     			items = oItems;
     		}
     		
-    		request = $.ajax({
+    		$.ajax({
 			  url: "/schedule/make-context-menu",
 			  type: "GET",
 			  data: {id : data.id, format: "json"},

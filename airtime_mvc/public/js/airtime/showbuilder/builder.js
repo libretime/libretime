@@ -256,7 +256,19 @@ var AIRTIME = (function(AIRTIME){
 					cl = 'sb-header';
 					
 					sSeparatorHTML = '<span class="show-title">'+aData.title+'</span>';
-					sSeparatorHTML += '<span class="push-right"><span class="show-time">'+aData.starts+'</span>-<span class="show-time">'+aData.ends+'</span></span>';
+					sSeparatorHTML += '<span class="push-right">';
+					
+					if (aData.startDate === aData.endDate) {
+						sSeparatorHTML += '<span class="show-date">'+aData.startDate+'</span><span class="show-time">'+aData.startTime+'</span>';
+						sSeparatorHTML +='-<span class="show-time">'+aData.endTime+'</span>';
+					}
+					else {
+						sSeparatorHTML += '<span class="show-date">'+aData.startDate+'</span><span class="show-time">'+aData.startTime+'</span>';
+						sSeparatorHTML +='-<span class="show-date">'+aData.endDate+'</span><span class="show-time">'+aData.endTime+'</span>';
+					}
+					
+					sSeparatorHTML += '</span>';
+					
 					fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
 				}
 				else if (aData.footer === true) {

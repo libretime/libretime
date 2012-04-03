@@ -219,6 +219,13 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 	font-weight: bold;
 	margin: 0 8px;
 }
+
+.show-date {
+    font-size:12px;
+    color: #363636;
+    margin-left: 5px;
+}
+
 .show-time {
 	font-size:12px;
 	color: #363636;
