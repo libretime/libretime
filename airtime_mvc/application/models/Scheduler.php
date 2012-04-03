@@ -581,6 +581,10 @@ class Application_Model_Scheduler {
             }
                
             $this->con->commit();
+            
+            if ($instance->getDbRecord()) {
+                Application_Model_RabbitMq::SendMessageToShowRecorder("cancel_recording");
+            }
         }
         catch (Exception $e) {
             $this->con->rollback();
