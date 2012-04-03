@@ -21,48 +21,47 @@
       </div>
     </div>
   <div class="source-info-block">
+ 	<h3>Source Streams</h3>
     <ul>
-      <li>Source Streams</li>
       <li>
-        <div id="scheduled_play_div">
-            Scheduled Play
-            <div class="line-to-on-air off"></div>
-            <a href="#" id="scheduled_play" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->scheduled_play_switch?></span></a>
-            <div class="line-to-switch off"></div>
-        </div>
+        <div id="scheduled_play_div" class="source-label"> Scheduled Play</div>
+        <div class="line-to-switch"></div>
+        <a href="#" id="scheduled_play" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->scheduled_play_switch?></span></a>
+        <div class="line-to-on-air"></div>
       </li>
       <li>
-        <div id="live_dj_div">
-          <a id="live_dj" class="source-kick-button" onclick="kickSource(this)"></a>
+        <div id="live_dj_div" class="source-label">
+        <a id="live_dj" class="source-kick-button" onclick="kickSource(this)"></a>
           Show Source
-          <div class="line-to-on-air off"></div>
-          <a href="#" id="live_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->live_dj_switch?></span></a>
-          <div class="line-to-switch off"></div>
         </div>
+        <div class="line-to-switch"></div>
+        <a href="#" id="live_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->live_dj_switch?></span></a>
+        <div class="line-to-on-air"></div>
       </li>
       <li>
-        <div id="master_dj_div">
+        <div id="master_dj_div" class="source-label">
           <a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a>
           Master Source
-          <div class="line-to-on-air off"></div>
-          <a href="#" id="master_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->master_dj_switch?></span></a>
-          <div class="line-to-switch off"></div>
-          </div>
+        </div>
+        <div class="line-to-switch"></div>
+        <a href="#" id="master_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->master_dj_switch?></span></a>
+        <div class="line-to-on-air"></div>
       </li>
     </ul>
   </div>
   <div class="on-air-block">
+  <h3>&nbsp;</h3>
     <div class="on-air-info off" id="on-air-info">ON AIR</div>
     <a href="#" class="listen-control-button"><span>Listen</span></a>
   </div>
-  <div class="time-info-block">
+  <div class="time-info-block pull-right">
     <ul>
       <li>Station time</li>
       <li class="time" id="time"></li>
       <li class="time-zone"><span id="time-zone"></span></li>
     </ul>
   </div>
-  <div class="personal-block">
+  <div class="personal-block solo">
     <ul>
       <li><span class="name"><?php echo $this->user ?></span> | <a href="/Login/logout">Logout</a></li>
     </ul>
