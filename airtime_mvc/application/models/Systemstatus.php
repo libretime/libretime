@@ -11,14 +11,18 @@ class Application_Model_Systemstatus
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
         curl_setopt($ch, CURLOPT_URL, $url);  
         curl_setopt($ch, CURLOPT_USERPWD, "guest:airtime");
+        //wait a max of 3 seconds before aborting connection attempt
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
         $result = curl_exec($ch);
         curl_close($ch);
 
         $docRoot = null;
-        if ($result != ""){
-            $xmlDoc = new DOMDocument();
-            $xmlDoc->loadXML($result);
-            $docRoot = $xmlDoc->documentElement;
+        if ($result != FALSE){
+            if ($result != ""){
+                $xmlDoc = new DOMDocument();
+                $xmlDoc->loadXML($result);
+                $docRoot = $xmlDoc->documentElement;
+            }
         }
 
         return $docRoot;
