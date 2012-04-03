@@ -87,6 +87,13 @@ class Application_Form_EditAudioMD extends Zend_Form
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
+        
+        // Add conductor field
+        $this->addElement('text', 'conductor', array(
+            'label'      => 'Conductor:',
+            'class'      => 'input_text',
+            'filters'    => array('StringTrim')
+        ));
 
 		// Add mood field
         $this->addElement('text', 'mood', array(
