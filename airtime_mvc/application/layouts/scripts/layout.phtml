@@ -15,11 +15,16 @@
             $sss = $this->SourceSwitchStatus();
             $scs = $this->SourceConnectionStatus();
     ?>
-    <?php echo $this->partial('partialviews/header.phtml', array("user" => $this->loggedInAs(), "is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining(), 
+    <?php echo $this->partial('partialviews/header.phtml', array("is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining(), 
                 "live_dj_switch"=>$sss['live_dj'], "live_dj_connection"=>$scs['live_dj'], "master_dj_switch"=>$sss['master_dj'], "master_dj_connection"=>$scs['master_dj'],
                 "scheduled_play_switch"=>$sss['scheduled_play'])) ?>
 <?php 	$partial = array('menu.phtml', 'default');
-		$this->navigation()->menu()->setPartial($partial); ?>
+    $this->navigation()->menu()->setPartial($partial); ?>
+    <div class="personal-block solo">
+        <ul>
+          <li><span class="name"><?php echo $this->loggedInAs()?></span> | <a href="/Login/logout">Logout</a></li>
+        </ul>
+    </div>
 
 <?php echo $this->navigation()->menu() ?>
 </div>
