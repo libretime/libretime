@@ -394,6 +394,8 @@ var AIRTIME = (function(AIRTIME){
 				mod.selectNone();
 				
 				//disable jump to current button.
+				AIRTIME.button.disableButton("sb-button-delete");
+				//disable jump to current button.
 				AIRTIME.button.disableButton("sb-button-current");
 				//disable deleting of overbooked tracks.
 				AIRTIME.button.disableButton("sb-button-trim");
