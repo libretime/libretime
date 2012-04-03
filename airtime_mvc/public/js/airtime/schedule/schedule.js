@@ -134,7 +134,7 @@ function buildScheduleDialog (json) {
 		width: width,
 		height: height,
 		resizable: false,
-		draggable: false,
+		draggable: true,
 		modal: true,
 		close: closeDialog,
 		buttons: {"Ok": function() {
