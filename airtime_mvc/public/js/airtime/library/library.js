@@ -32,6 +32,10 @@ var AIRTIME = (function(AIRTIME) {
     mod.selectNone = function () {
     	$libTable.find("input:checkbox").attr("checked", false);
     	$libTable.find("tr").removeClass(LIB_SELECTED_CLASS);
+    	
+    	//disable all lib buttons.
+		AIRTIME.button.disableButton("lib-button-delete");
+		AIRTIME.button.disableButton("lib-button-add");
     };
     
     mod.fnDeleteItems = function(aMedia) {
@@ -104,7 +108,7 @@ var AIRTIME = (function(AIRTIME) {
             "bProcessing": true,
             "bServerSide": true,
             
-            "aLengthMenu": [[10, 15, 20, 25, 50, 100], [10, 15, 20, 25, 50, 100]],
+            "aLengthMenu": [[5, 10, 15, 20, 25, 50, 100], [5, 10, 15, 20, 25, 50, 100]],
             
             "bStateSave": true,
             "fnStateSaveParams": function (oSettings, oData) {
@@ -244,6 +248,12 @@ var AIRTIME = (function(AIRTIME) {
                     hide: 'mouseout'  
                 });
             },
+           //remove any selected nodes before the draw.
+			"fnPreDrawCallback": function( oSettings ) {
+				
+				AIRTIME.button.disableButton("lib-button-delete");
+				AIRTIME.button.disableButton("lib-button-add");
+		    },
             "fnDrawCallback": AIRTIME.library.events.fnDrawCallback,
             "fnHeaderCallback": function(nHead) {
             	$(nHead).find("input[type=checkbox]").attr("checked", false);	

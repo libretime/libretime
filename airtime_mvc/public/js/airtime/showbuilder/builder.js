@@ -75,7 +75,7 @@ var AIRTIME = (function(AIRTIME){
 			function(json){
 				checkError(json);
 				oSchedTable.fnDraw();
-				AIRTIME.library.selectNone();
+				AIRTIME.library.selectNone();	
 			});
 	};
 	
@@ -391,7 +391,6 @@ var AIRTIME = (function(AIRTIME){
 			},
 			//remove any selected nodes before the draw.
 			"fnPreDrawCallback": function( oSettings ) {
-				mod.selectNone();
 				
 				//disable jump to current button.
 				AIRTIME.button.disableButton("sb-button-delete");
@@ -488,6 +487,8 @@ var AIRTIME = (function(AIRTIME){
 					//enable cancelling current show.
 					AIRTIME.button.enableButton("sb-button-cancel");
 				}
+				
+				AIRTIME.library.events.enableAddButtonCheck();
 		    },
 			"fnHeaderCallback": function(nHead) {
 				$(nHead).find("input[type=checkbox]").attr("checked", false);
@@ -790,7 +791,7 @@ var AIRTIME = (function(AIRTIME){
 					aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp}); 	
 				});
 				
-				AIRTIME.showbuilder.fnRemove(aItems);
+				mod.fnRemove(aItems);
 			});
 		
 		//delete selected tracks
