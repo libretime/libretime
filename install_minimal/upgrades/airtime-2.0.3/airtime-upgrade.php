@@ -53,6 +53,11 @@ class AirtimeMiscUpgrade{
         exec("sed -i 's/\$admin_pass/$pass/g' /etc/monit/conf.d/monit-airtime-generic.cfg");
     }
     
+    public static function updateMonitConfFiles(){
+        echo "* Updating Monit Conf Files".PHP_EOL;
+        @unlink("/etc/monit/conf.d/monit-airtime-show-recorder.cfg");
+    }
+    
     public static function GenerateRandomString($p_len=20, $p_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
     {
         $string = '';
