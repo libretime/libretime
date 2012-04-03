@@ -73,7 +73,7 @@ class Application_Model_Scheduler {
             $id = $schedItem->getDbId();
             $instance = $schedItem->getCcShowInstances($this->con);
             
-            if (intval($schedInfo[$id]["instance"]) !== $instance->getDbId()) {
+            if (intval($schedInfo[$id]) !== $instance->getDbId()) {
                 throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
             }
         }
