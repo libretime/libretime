@@ -11,7 +11,9 @@ class AirtimeDatabaseUpgrade{
     }
 
     private static function task0(){
-        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20120402103944');
+        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20120403143635');
+        $sql = "INSERT INTO cc_pref(\"keystr\", \"valstr\") VALUES('scheduled_play_switch', 'on')";
+        UpgradeCommon::nonSelectQueryDb($sql);
     }
 
 }

@@ -21,7 +21,7 @@ class UpgradeCommon{
     {       
         $sql = "SELECT valstr from cc_pref WHERE keystr = 'timezone'";
 
-        $result = self::queryDb($sql);
+        $result = self::selectQueryDb($sql);
         $timezone = $result['valstr'];
                 
         date_default_timezone_set($timezone);
@@ -238,10 +238,22 @@ class UpgradeCommon{
         fclose($fp);
     }
     
-    public static function queryDb($p_sql){
+    public static function selectQueryDb($p_sql){
         global $CC_DBC;
 
         $result = $CC_DBC->getRow($p_sql, $fetchmode=DB_FETCHMODE_ASSOC);
+        if (PEAR::isError($result)) {
+            echo "Error executing $sql. Exiting.";
+            exit(1);
+        }
+        
+        return $result;
+    }
+    
+    public static function nonSelectQueryDb($p_sql){
+        global $CC_DBC;
+
+        $result = $CC_DBC->query($p_sql);
         if (PEAR::isError($result)) {
             echo "Error executing $sql. Exiting.";
             exit(1);
