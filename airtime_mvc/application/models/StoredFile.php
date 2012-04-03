@@ -835,7 +835,7 @@ Logging::log("getting media! - 2");
     public static function getFileCount()
     {
         global $CC_CONFIG, $CC_DBC;
-        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"];
+        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"]." WHERE file_exists";
         return $CC_DBC->GetOne($sql);
     }
 
