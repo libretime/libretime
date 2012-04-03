@@ -38,6 +38,7 @@ class AirtimeMiscUpgrade{
     public static function start(){
         self::modifyPypo();
         self::modifyMonitPassword();
+        self::updateMonitConfFiles();
     }
     
     public static function modifyPypo(){
