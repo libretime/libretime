@@ -65,8 +65,8 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     libraryInit = function() {
-        oTable,
-        $libContent = $("#library_content"),
+    	
+        $libContent = $("#library_content");
         $libTable = $libContent.find("table");
         
         var tableHeight = $libContent.height() - 130;
@@ -118,11 +118,7 @@ var AIRTIME = (function(AIRTIME) {
                   url: "/usersettings/set-library-datatable",
                   type: "POST",
                   data: {settings : oData, format: "json"},
-                  dataType: "json",
-                  success: function(){},
-                  error: function (jqXHR, textStatus, errorThrown) {
-                      var x;
-                  }
+                  dataType: "json"
                 });
             },
             "fnStateLoad": function (oSettings) {
@@ -136,9 +132,6 @@ var AIRTIME = (function(AIRTIME) {
                   async: false,
                   success: function(json){
                       o = json.settings;
-                  },
-                  error: function (jqXHR, textStatus, errorThrown) {
-                      var x;
                   }
                 });
                 
@@ -321,15 +314,27 @@ var AIRTIME = (function(AIRTIME) {
             }       
         });
         
-        $libTable.find("tbody").on("click", "input[type=checkbox]", function() {
+        $libTable.find("tbody").on("click", "input[type=checkbox]", function(ev) {
         	
         	var $cb = $(this),
         		$selectedCb,
+        		$prev,
         		$tr;
         	
         	if ($cb.is(":checked")) {
         		
         		$tr = $cb.parents("tr");
+        		
+        		if (ev.shiftKey) {
+        			$prev = $libTable.find("tbody").find("tr."+LIB_SELECTED_CLASS).eq(-1);
+        			
+        			$prev.nextUntil($tr)
+        				.addClass(LIB_SELECTED_CLASS)
+        				.find("input:checkbox")
+        					.attr("checked", true)
+        					.end();
+        		}
+
         		$tr.addClass(LIB_SELECTED_CLASS);
         		//checking to enable buttons
                 AIRTIME.button.enableButton("lib-button-delete");
@@ -350,8 +355,8 @@ var AIRTIME = (function(AIRTIME) {
         });
        
         checkImportStatus();
-        setInterval( checkImportStatus, 5000 );
-        setInterval( checkSCUploadStatus, 5000 );
+        setInterval(checkImportStatus, 5000);
+        setInterval(checkSCUploadStatus, 5000);
         
         addQtipToSCIcons();
        
