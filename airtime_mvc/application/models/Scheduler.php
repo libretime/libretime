@@ -560,16 +560,19 @@ class Application_Model_Scheduler {
                     ->filterByDbEnds($this->nowDT, Criteria::GREATER_THAN)
                     ->find($this->con);
                 
-                $remove = array();
-                $ts = $this->nowDT->format('U');
-                
-                for($i = 0; $i < count($items); $i++) {
-                    $remove[$i]["instance"] = $p_id;
-                    $remove[$i]["timestamp"] = $ts;
-                    $remove[$i]["id"] = $items[$i]->getDbId();
+                if (count($items) > 0) {
+                    $remove = array();
+                    $ts = $this->nowDT->format('U');
+                    
+                    for($i = 0; $i < count($items); $i++) {
+                        $remove[$i]["instance"] = $p_id;
+                        $remove[$i]["timestamp"] = $ts;
+                        $remove[$i]["id"] = $items[$i]->getDbId();
+                    }
+                    
+                    $this->removeItems($remove, false);
                 }
                 
-                $this->removeItems($remove, false);
                 $instance->setDbEnds($this->nowDT);
                 $instance->save($this->con);
             }
@@ -578,6 +581,10 @@ class Application_Model_Scheduler {
             }
                
             $this->con->commit();
+            
+            if ($instance->getDbRecord()) {
+                Application_Model_RabbitMq::SendMessageToShowRecorder("cancel_recording");
+            }
         }
         catch (Exception $e) {
             $this->con->rollback();
