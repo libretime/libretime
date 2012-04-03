@@ -254,7 +254,8 @@ var AIRTIME = (function(AIRTIME) {
             "bJQueryUI": true,
             "bAutoWidth": false,
             "oLanguage": {
-                "sSearch": ""
+                "sSearch": "",
+                "sLengthMenu": "Show _MENU_"
             },
             
             // R = ColReorder, C = ColVis

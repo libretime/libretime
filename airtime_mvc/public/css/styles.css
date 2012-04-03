@@ -342,7 +342,7 @@ select {
 
 
 .wrapper {
-	margin: 0 20px 0 20px;
+	margin: 0 5px 0 5px;
 	padding:10px 0 0 0;
 }
 
@@ -622,7 +622,7 @@ dl.inline-list dd {
 }
 .dataTables_filter input {
     background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;
-    width: 50%;
+    width: 40%;
     border: 1px solid #5B5B5B;
     margin-left: -8px;
     padding: 5px 3px 4px 25px;

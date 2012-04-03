@@ -87,8 +87,12 @@
 	text-align: left;
 }
 
-.sb-content input.input_text {
-    width:100px;
+.sb-content input.input_text.hasDatepicker {
+    width:95px;
+}
+
+.sb-content input.input_text.hasTimepicker {
+    width:60px;
 }
 
 .sb-starts,

@@ -44,7 +44,7 @@ AIRTIME = (function(AIRTIME) {
 	function setWidgetSize() {
 		viewport = AIRTIME.utilities.findViewportDimensions();
 		widgetHeight = viewport.height - 180;
-		screenWidth = Math.floor(viewport.width - 120);
+		screenWidth = Math.floor(viewport.width - 90);
 		
 		var libTableHeight = widgetHeight - 130,
 			builderTableHeight = widgetHeight - 95;

@@ -817,8 +817,7 @@ var AIRTIME = (function(AIRTIME){
 			}
 			
 			if (event.ctrlKey === false) {
-				$sbTable.find('.'+cursorSelClass)
-					.not($tr)
+				$sbTable.find('.'+cursorSelClass).not($tr)
 					.removeClass(cursorSelClass);
 			}
 			
