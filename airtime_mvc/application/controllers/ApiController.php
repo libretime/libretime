@@ -107,21 +107,18 @@ class ApiController extends Zend_Controller_Action
 
         $api_key = $this->_getParam('api_key');
 
-
-        $logger = Logging::getLogger();
-
         if(!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
-            $logger->info("401 Unauthorized");
+            Logging::log("401 Unauthorized");
             return;
         }
-
-        $fileID = $this->_getParam("fileID");
+        
+        $fileID = $this->_getParam("file");
         $file_id = substr($fileID, 0, strpos($fileID, "."));
-
+        
         if (ctype_alnum($file_id) && strlen($file_id) == 32)
         {
             $media = Application_Model_StoredFile::RecallByGunid($file_id);
