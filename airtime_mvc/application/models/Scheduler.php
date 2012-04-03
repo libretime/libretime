@@ -570,11 +570,13 @@ class Application_Model_Scheduler {
                 }
                 
                 $this->removeItems($remove, false);
+                $instance->setDbEnds($this->nowDT);
+                $instance->save($this->con);
             }
- 
-            $instance->setDbEnds($this->nowDT);
-            $instance->save($this->con);
-            
+            else {
+                $instance->delete($this->con);
+            }
+               
             $this->con->commit();
         }
         catch (Exception $e) {
