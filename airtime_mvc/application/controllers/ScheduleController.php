@@ -258,7 +258,13 @@ class ScheduleController extends Zend_Controller_Action
                     $menu["cancel_recorded"] = array("name"=> "Cancel Current Show", "icon" => "delete");
                 }
             } else {
-                $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                if($instance->isRepeating()){
+                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
+                    $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/edit-show");
+                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                }else{
+                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                }
                 if($isAdminOrPM){
                     $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
                 }
@@ -269,7 +275,13 @@ class ScheduleController extends Zend_Controller_Action
 
             if ($isAdminOrPM || $isDJ) {
 
-                $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                if($instance->isRepeating()){
+                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
+                    $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/edit-show");
+                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                }else{
+                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                }
 
                 if ($instance->getShow()->isRepeating() && $isAdminOrPM) {
 
@@ -420,6 +432,9 @@ class ScheduleController extends Zend_Controller_Action
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $showInstanceId = $this->_getParam('id');
+        // $type is used to determine if this edit is for the specific instance or for all
+        // repeating shows. It's value is either "instance" or "all"
+        $type = $this->_getParam('type');
         
         try{
             $showInstance = new Application_Model_ShowInstance($showInstanceId);
@@ -549,7 +564,7 @@ class ScheduleController extends Zend_Controller_Action
                 $i++;
             }
             $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
-            if(!$isAdminOrPM){
+            if(!$isAdminOrPM || $type == "instance"){
                 $formRecord->disable();
                 $formAbsoluteRebroadcast->disable();
                 $formRebroadcast->disable();
@@ -560,6 +575,14 @@ class ScheduleController extends Zend_Controller_Action
             $formWhat->disable();
             $formWho->disable();
             $formWhen->disable();
+            $formRepeats->disable();
+            $formStyle->disable();
+        }
+        
+        if($type == "instance"){
+            $formWhat->disable();
+            $formWho->disable();
+            $formWhen->disableRepeatCheckbox();
             $formRepeats->disable();
             $formStyle->disable();
         }

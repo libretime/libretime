@@ -743,4 +743,12 @@ class Application_Model_ShowInstance {
         
         return $CC_DBC->GetAll($sql);
     }
+    
+    function isRepeating(){
+        if ($this->getShow()->isRepeating()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

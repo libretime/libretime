@@ -297,13 +297,32 @@ $(document).ready(function() {
     			
     			//define an edit callback.
     			if (oItems.edit !== undefined) {
-    				
-    				callback = function() {
-    					$.get(oItems.edit.url, {format: "json", id: data.id}, function(json){
-    						beginEditShow(json);
-    					});
-					};
-    				oItems.edit.callback = callback;
+    			    if(oItems.edit.items !== undefined){
+    			        var edit = oItems.edit.items;
+                        
+                        //edit a single instance
+                        callback = function() {
+                            $.get(edit.instance.url, {format: "json", id: data.id, type: "instance"}, function(json){
+                                beginEditShow(json);
+                            });
+                        };
+                        edit.instance.callback = callback;
+                        
+                        //edit this instance and all
+                        callback = function() {
+                            $.get(edit.all.url, {format: "json", id: data.id, type: "all"}, function(json){
+                                beginEditShow(json);
+                            });
+                        };
+                        edit.all.callback = callback;
+    			    }else{
+    			        callback = function() {
+                            $.get(oItems.edit.url, {format: "json", id: data.id, type: "all"}, function(json){
+                                beginEditShow(json);
+                            });
+                        };
+                        oItems.edit.callback = callback;
+    			    }
     			}
     			
     			//define a content callback.
