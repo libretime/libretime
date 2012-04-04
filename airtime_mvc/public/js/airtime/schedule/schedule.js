@@ -317,7 +317,7 @@ $(document).ready(function() {
                         edit.all.callback = callback;
     			    }else{
     			        callback = function() {
-                            $.get(oItems.edit.url, {format: "json", id: data.id, type: "all"}, function(json){
+                            $.get(oItems.edit.url, {format: "json", id: data.id, type: oItems.edit._type}, function(json){
                                 beginEditShow(json);
                             });
                         };

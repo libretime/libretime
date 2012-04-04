@@ -263,7 +263,11 @@ class ScheduleController extends Zend_Controller_Action
                     $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/edit-show");
                     $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
                 }else{
-                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                    if($instance->isRebroadcast()){
+                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/edit-show");
+                    }else{
+                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/edit-show");
+                    }
                 }
                 if($isAdminOrPM){
                     $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
@@ -280,7 +284,11 @@ class ScheduleController extends Zend_Controller_Action
                     $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/edit-show");
                     $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
                 }else{
-                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                    if($instance->isRebroadcast()){
+                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/edit-show");
+                    }else{
+                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/edit-show");
+                    }
                 }
 
                 if ($instance->getShow()->isRepeating() && $isAdminOrPM) {
@@ -433,7 +441,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $showInstanceId = $this->_getParam('id');
         // $type is used to determine if this edit is for the specific instance or for all
-        // repeating shows. It's value is either "instance" or "all"
+        // repeating shows. It's value is either "instance","rebroadcast", or "all"
         $type = $this->_getParam('type');
         
         try{
@@ -585,6 +593,10 @@ class ScheduleController extends Zend_Controller_Action
             $formWhen->disableRepeatCheckbox();
             $formRepeats->disable();
             $formStyle->disable();
+        }
+        
+        if($type == "rebroadcast"){
+            $formWhen->disable();
         }
 
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
