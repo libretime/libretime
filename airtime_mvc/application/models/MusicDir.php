@@ -368,6 +368,7 @@ class Application_Model_MusicDir {
         $dirs = CcMusicDirsQuery::create()
                     ->filterByType(array("watched", "stor"))
                     ->filterByExists(true)
+                    ->filterByWatched(true)
                     ->find();
 
         foreach($dirs as $dir) {
