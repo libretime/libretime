@@ -79,8 +79,9 @@ class PypoPush(Thread):
             tcoming = time.gmtime(timenow + self.push_ahead)
             str_tnow_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tnow[0], tnow[1], tnow[2], tnow[3], tnow[4], tnow[5])
             str_tcoming_s = "%04d-%02d-%02d-%02d-%02d-%02d" % (tcoming[0], tcoming[1], tcoming[2], tcoming[3], tcoming[4], tcoming[5])
-                        
-            for pkey in schedule:
+            
+            sorted_schedule = sorted(schedule.keys())
+            for pkey in sorted_schedule:
                 plstart = schedule[pkey]['start'][0:19]
          
                 if str_tnow_s <= plstart and plstart < str_tcoming_s:
