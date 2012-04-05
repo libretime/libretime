@@ -26,8 +26,7 @@ showhelp () {
 --pypo|-p                         Install only pypo and liquidsoap
 --show-recorder|-s                Install only show-recorder
 --web|-w                          Install only files for web-server
---liquidsoap-keep-alive|-l        Keep Liquidsoap alive when upgrading
---disable-auto-start-services|-d  Disable auto-starting Airtime services"
+--liquidsoap-keep-alive|-l        Keep Liquidsoap alive when upgrading"
 }
 
 overwrite="f"
@@ -39,9 +38,8 @@ pypo="f"
 showrecorder="f"
 web="f"
 liquidsoap_keep_alive="f"
-disable_auto_start_services="f"
 
-set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,show-recorder,web,liquidsoap-keep-alive,disable-auto-start-services "hopnrmyswld" "$@")
+set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,show-recorder,web,liquidsoap-keep-alive "hopnrmyswl" "$@")
 while [ $# -gt 0 ]
 do
     case "$1" in
@@ -55,7 +53,6 @@ do
     (-s|--show-recorder) showrecorder="t";;
     (-w|--web) web="t";;
     (-l|--liquidsoap-keep-alive) liquidsoap_keep_alive="t";;
-    (-d|--disable-auto-start-services) disable_auto_start_services="t";;
     
     (--) shift; break;;
     (-*) echo "$0: error - unrecognized option $1" 1>&2; exit 1;;
@@ -125,14 +122,15 @@ fi
 
 #We don't want any of our python services running if we are doing an upgrade/reinstall.
 #They will be automatically restarted later on.
+echo "* Temporarily stopping any previous running services"
 if [ -e /etc/init.d/airtime-media-monitor ]; then
-    /etc/init.d/airtime-media-monitor stop > /dev/null 2>&1
+    invoke-rc.d airtime-media-monitor stop > /dev/null 2>&1
 fi
 if [ -e /etc/init.d/airtime-playout ]; then
-    /etc/init.d/airtime-playout stop > /dev/null 2>&1
+    invoke-rc.d airtime-playout stop > /dev/null 2>&1
 fi
 if [ -e /etc/init.d/airtime-show-recorder ]; then
-    /etc/init.d/airtime-show-recorder stop > /dev/null 2>&1
+    invoke-rc.d airtime-show-recorder stop > /dev/null 2>&1
 fi
 
 
@@ -147,7 +145,6 @@ export nodb
 export overwrite
 export preserve
 export liquidsoap_keep_alive
-export disable_auto_start_services
 
 set +e
 test "$mediamonitor" = "t" -o "$pypo" = "t" -o "$showrecorder" = "t"

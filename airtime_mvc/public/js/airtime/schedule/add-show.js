@@ -321,7 +321,7 @@ function setAddShowEvents() {
                 applyPlatformOpacityRules: false
             });
 
-            var action = "/Schedule/"+addShowButton.attr("data-action");
+            var action = "/Schedule/"+String(addShowButton.attr("data-action"));
             
             $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 //addShowButton.removeClass("disabled");

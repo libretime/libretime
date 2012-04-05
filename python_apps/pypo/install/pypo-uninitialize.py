@@ -10,7 +10,7 @@ try:
     #stop pypo and liquidsoap processes
     print "Waiting for pypo processes to stop...",
     if (os.path.exists('/etc/init.d/airtime-playout')):
-        p = Popen("/etc/init.d/airtime-playout stop", shell=True)
+        p = Popen("invoke-rc.d airtime-playout stop", shell=True)
         sts = os.waitpid(p.pid, 0)[1]
         print "OK"
     else:
