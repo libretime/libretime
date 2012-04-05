@@ -24,6 +24,19 @@ class Version20120405114454 extends AbstractMigration
         $cc_subjs_token->addNamedForeignKeyConstraint('cc_subjs_token_userid_fkey', $cc_subjs, array('user_id'), array('id'));
         $cc_subjs_token->addUniqueIndex(array('token'), 'uniq_token');
         //end create cc_subjs_token table
+        
+        // change 'soundcloud_upload' -> 'soundcloud_auto_upload_recorded_show' CC-2928
+        //$this->_addSql("UPDATE cc_pref SET keystr = 'soundcloud_auto_upload_recorded_show'
+                //WHERE keystr = 'soundcloud_upload'");
+
+        //start changes to cc_files
+        //$cc_files = $schema->getTable('cc_files');
+        
+        $con = Doctrine_Manager::getInstance()->connection();
+        $con->execute("ALTER TABLE cc_files ALTER COLUMN bit_rate TYPE integer");
+        $con->execute("ALTER TABLE cc_files ALTER COLUMN sample_rate TYPE integer");
+        
+        //end changes to cc_files
     }
 
     public function down(Schema $schema)
