@@ -53,17 +53,12 @@ sleep 1
 
 set +e
 
-if [ "$disable_auto_start_services" = "f" ]; then
-    if [ "$mediamonitor" = "t" ]; then
-        monit monitor airtime-media-monitor
-    fi
-    if [ "$pypo" = "t" ]; then
-        monit monitor airtime-playout
-        monit monitor airtime-liquidsoap
-    fi
-#    if [ "$showrecorder" = "t" ]; then
-#        monit monitor airtime-show-recorder
-#    fi
+if [ "$mediamonitor" = "t" ]; then
+    monit monitor airtime-media-monitor
+fi
+if [ "$pypo" = "t" ]; then
+    monit monitor airtime-playout
+    monit monitor airtime-liquidsoap
 fi
 
 monit monitor rabbitmq-server
