@@ -176,7 +176,7 @@ function buildContentDialog (json){
      
 	dialog.dialog({
 		autoOpen: false,
-		title: 'Show Contents',
+		title: "Contents of Show \"" + json.showTitle + "\"",
 		width: width,
 		height: height,
 		modal: true,
