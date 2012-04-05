@@ -38,10 +38,20 @@ class AirtimeInstall
         }
     }
 
+    /**
+     * Return the version of Airtime currently installed.
+     * If not installed, return null.
+     *
+     * @return NULL|string
+     */
     public static function GetVersionInstalled()
     {
         global $CC_CONFIG;
-        $con = Propel::getConnection();
+        try {
+            $con = Propel::getConnection();
+        } catch (PropelException $e) {
+            return null;
+        }
 
         if (file_exists('/etc/airtime/airtime.conf')) {
             $values = parse_ini_file('/etc/airtime/airtime.conf', true);
@@ -66,7 +76,7 @@ class AirtimeInstall
                 //echo "Airtime Version: ".$version." ".PHP_EOL;
             }
             else {
-                $version = false;
+                $version = null;
             }
         }
 

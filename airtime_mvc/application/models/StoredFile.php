@@ -822,9 +822,6 @@ Logging::log("getting media! - 2");
 
         $result = null;
         if ($duplicate) {
-            if (PEAR::isError($duplicate)) {
-                $result = array("code" => 105, "message" => $duplicate->getMessage());
-            }
             if (file_exists($duplicate->getFilePath())) {
                 $duplicateName = $duplicate->getMetadataValue('MDATA_KEY_TITLE');
                 $result = array( "code" => 106, "message" => "An identical audioclip named '$duplicateName' already exists on the server.");

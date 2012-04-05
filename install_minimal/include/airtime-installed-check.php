@@ -23,7 +23,7 @@ $version = AirtimeInstall::GetVersionInstalled();
 // The current version is already installed.
 echo "* Checking for existing Airtime installation...".PHP_EOL;
 if (isset($version)){
-    if ($version === false){
+    if (is_null($version)){
         //version of Airtime older than 1.7.0 detected
         exit(3);
     } else {

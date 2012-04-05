@@ -46,9 +46,6 @@ class SchedulerTests extends PHPUnit_TestCase {
     function testAddAndRemoveAudioFile() {
         $i = new Application_Model_ScheduleGroup();
         $this->groupIdCreated = $i->add('2010-10-10 01:30:23', $this->storedFile->getId());
-        if (PEAR::isError($this->groupIdCreated)) {
-            $this->fail("Failed to create scheduled item: ". $this->groupIdCreated->getMessage());
-        }
 
         $i = new Application_Model_ScheduleGroup($this->groupIdCreated);
         $result = $i->remove();
@@ -67,9 +64,6 @@ class SchedulerTests extends PHPUnit_TestCase {
 
         $i = new Application_Model_ScheduleGroup();
         $this->groupIdCreated = $i->add('2010-11-11 01:30:23', null, $playlist->getId());
-        if (PEAR::isError($this->groupIdCreated)) {
-            $this->fail("Failed to create scheduled item: ". $this->groupIdCreated->getMessage());
-        }
         $group = new Application_Model_ScheduleGroup($this->groupIdCreated);
         if ($group->count() != 3) {
             $this->fail("Wrong number of items added.");
@@ -90,10 +84,6 @@ class SchedulerTests extends PHPUnit_TestCase {
     function testIsScheduleEmptyInRange() {
         $i = new Application_Model_ScheduleGroup();
         $this->groupIdCreated = $i->add('2011-10-10 01:30:23', $this->storedFile->getId());
-        if (PEAR::isError($this->groupIdCreated)) {
-            $this->fail($this->groupIdCreated->getMessage());
-            return;
-        }
         if (Application_Model_Schedule::isScheduleEmptyInRange('2011-10-10 01:30:23', '00:00:12.555')) {
             $this->fail("Reporting empty schedule when it isnt.");
             return;
