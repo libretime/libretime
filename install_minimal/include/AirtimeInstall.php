@@ -69,13 +69,12 @@ class AirtimeInstall
         }
 
         if ($version == '') {
-            $sql = "SELECT * FROM cc_show_rebroadcast LIMIT 1";
-            $result = $con->query($sql)->fetchColumn(0);
-            if (!PEAR::isError($result)) {
+            try {
+                // If this table exists, then it's 1.7.0
+                $sql = "SELECT * FROM cc_show_rebroadcast LIMIT 1";
+                $result = $con->query($sql)->fetchColumn(0);
                 $version = "1.7.0";
-                //echo "Airtime Version: ".$version." ".PHP_EOL;
-            }
-            else {
+            } catch (Exception $e) {
                 $version = null;
             }
         }

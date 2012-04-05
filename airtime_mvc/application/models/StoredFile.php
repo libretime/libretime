@@ -238,7 +238,7 @@ class Application_Model_StoredFile {
      * 		'empty'|'incomplete'|'ready'|'edited'
      * @param int $p_editedby
      * 		 user id | 'NULL' for clear editedBy field
-     * @return TRUE|PEAR_Error
+     * @return TRUE
      */
     public function setState($p_state, $p_editedby=NULL)
     {
