@@ -8,11 +8,10 @@ class SchedulerTests extends PHPUnit_TestCase {
     private $storedFile2;
 
     function setup() {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
 
         // Clear the files table
         //$sql = "DELETE FROM ".$CC_CONFIG["filesTable"];
-        //$CC_DBC->query($sql);
 
         // Add a file
         $values = array("filepath" => dirname(__FILE__)."/test10001.mp3");
@@ -24,7 +23,6 @@ class SchedulerTests extends PHPUnit_TestCase {
 
         // Clear the schedule table
         //$sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"];
-        //$CC_DBC->query($sql);
     }
 
     function testDateToId() {

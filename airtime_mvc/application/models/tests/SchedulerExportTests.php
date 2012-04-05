@@ -4,11 +4,12 @@ require_once(dirname(__FILE__)."/../Schedule.php");
 
 class SchedulerExportTests extends PHPUnit_TestCase {
   function setup() {
-    global $CC_CONFIG, $CC_DBC;
+    global $CC_CONFIG;
+    $con = Propel::getConnection();
 
     // Clear the files table
     $sql = "DELETE FROM ".$CC_CONFIG["filesTable"];
-    $CC_DBC->query($sql);
+    $con->exec($sql);
 
     // Add a file
     $values = array("filepath" => dirname(__FILE__)."/test10001.mp3");
@@ -20,7 +21,7 @@ class SchedulerExportTests extends PHPUnit_TestCase {
 
     // Clear the schedule table
     $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"];
-    $CC_DBC->query($sql);
+    $con->exec($sql);
 
     // Create a playlist
     $playlist = new Application_Model_Playlist();

@@ -102,8 +102,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initZFDebug()
     {
         if (APPLICATION_ENV == "development"){
-            global $CC_DBC;
-
             $autoloader = Zend_Loader_Autoloader::getInstance();
             $autoloader->registerNamespace('ZFDebug');
 
