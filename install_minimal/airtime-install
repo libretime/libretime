@@ -123,13 +123,13 @@ fi
 #We don't want any of our python services running if we are doing an upgrade/reinstall.
 #They will be automatically restarted later on.
 if [ -e /etc/init.d/airtime-media-monitor ]; then
-    /etc/init.d/airtime-media-monitor stop > /dev/null 2>&1
+    invoke-rc.d airtime-media-monitor stop > /dev/null 2>&1
 fi
 if [ -e /etc/init.d/airtime-playout ]; then
-    /etc/init.d/airtime-playout stop > /dev/null 2>&1
+    invoke-rc.d airtime-playout stop > /dev/null 2>&1
 fi
 if [ -e /etc/init.d/airtime-show-recorder ]; then
-    /etc/init.d/airtime-show-recorder stop > /dev/null 2>&1
+    invoke-rc.d airtime-show-recorder stop > /dev/null 2>&1
 fi
 
 

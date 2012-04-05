@@ -30,7 +30,7 @@ try:
         print 'Error loading config file: ', e
         sys.exit(1)
         
-    os.system("/etc/init.d/airtime-playout stop")
+    os.system("invoke-rc.d airtime-playout stop")
     os.system("rm -f /etc/init.d/airtime-playout")
     os.system("update-rc.d -f airtime-playout remove >/dev/null 2>&1")
 
