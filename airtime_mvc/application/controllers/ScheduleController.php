@@ -444,6 +444,10 @@ class ScheduleController extends Zend_Controller_Action
         // repeating shows. It's value is either "instance","rebroadcast", or "all"
         $type = $this->_getParam('type');
         
+        if ($type == "instance"){
+            $this->view->action = "edit-show-instance";
+        }
+        
         try{
             $showInstance = new Application_Model_ShowInstance($showInstanceId);
         }catch(Exception $e){
@@ -607,7 +611,26 @@ class ScheduleController extends Zend_Controller_Action
         Application_Model_Schedule::createNewFormSections($this->view);
         $this->view->form = $this->view->render('schedule/add-show-form.phtml');
     }
+    
+    public function editShowInstanceAction(){
+        $js = $this->_getParam('data');
+        $data = array();
 
+        //need to convert from serialized jQuery array.
+        foreach($js as $j){
+            $data[$j["name"]] = $j["value"];
+        }
+
+        
+    }
+    
+    //for 2.2
+    /*
+    public function editShowAction(){
+    
+    }
+    */
+    
     public function addShowAction()
     {
         $js = $this->_getParam('data');
@@ -619,13 +642,6 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $show = new Application_Model_Show($data['add_show_id']);
-        
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        $isDJ = $user->isHost($show->getId());
-
         $startDateModified = true;
         if ($data['add_show_id'] != -1 && !array_key_exists('add_show_start_date', $data)){
             //show is being updated and changing the start date was disabled, since the
@@ -642,6 +658,11 @@ class ScheduleController extends Zend_Controller_Action
         if($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
+        
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isDJ = $user->isHost($show->getId());
 
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $record = false;
@@ -785,7 +806,7 @@ class ScheduleController extends Zend_Controller_Action
                     if (!$startDateModified){
                         $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
                     }
-
+                    
                     $this->view->form = $this->view->render('schedule/add-show-form.phtml');
 
                 }

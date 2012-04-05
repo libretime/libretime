@@ -320,8 +320,10 @@ function setAddShowEvents() {
                 message: null,
                 applyPlatformOpacityRules: false
             });
+
+            var action = "/Schedule/"+addShowButton.attr("data-type");
             
-            $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts, days: days}, function(json){
+            $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 //addShowButton.removeClass("disabled");
                 $('#schedule-add-show').unblock();
                 if(json.form) {
