@@ -133,7 +133,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             'ignore'   => true,
             'class'    => 'ui-button ui-state-default ui-button-text-only md-cancel',
             'label'    => 'Cancel',
-            'onclick' => 'javascript:document.location="/Playlist"',
+            'onclick' => 'javascript:document.location = document.referrer',
             'decorators' => array(
                 'ViewHelper'
             )
