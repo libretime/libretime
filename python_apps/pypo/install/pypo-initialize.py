@@ -115,18 +115,12 @@ try:
     p = Popen("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
     sts = os.waitpid(p.pid, 0)[1]
 
-    #restart airtime-playout
-    print "* Waiting for pypo processes to start..."
-    """
-    if os.environ["liquidsoap_keep_alive"] == "f":
-        print " * Restarting any previous Liquidsoap instances"
-        p = Popen("invoke-rc.d airtime-playout stop > /dev/null 2>&1", shell=True)
-        sts = os.waitpid(p.pid, 0)[1]
-    else:
-        print " * Keeping any previous Liquidsoap instances running"
-        p = Popen("invoke-rc.d airtime-playout pypo-stop  > /dev/null 2>&1", shell=True)
-        sts = os.waitpid(p.pid, 0)[1]
-    """
+    #clear out an previous pypo cache
+    print "* Clearing previous pypo cache"  
+    p = Popen("rm -rf '/var/tmp/airtime/pypo/cache/scheduler/*' >/dev/null 2>&1", shell=True)
+    sts = os.waitpid(p.pid, 0)[1]
+
+    print "* Waiting for pypo processes to start..."    
     p = Popen("invoke-rc.d airtime-playout start-no-monit  > /dev/null 2>&1", shell=True)
     sts = os.waitpid(p.pid, 0)[1]
     
