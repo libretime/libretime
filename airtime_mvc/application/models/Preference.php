@@ -772,6 +772,14 @@ class Application_Model_Preference
     public static function GetLiveDJSourceConnectionURL(){
         return self::GetValue("live_dj_source_connection_url");
     }
+    
+    public static function SetSystemEmail($value) {
+        self::SetValue("system_email", $value, false);
+    }
+    
+    public static function GetSystemEmail() {
+        return self::GetValue("system_email");
+    }
     /* User specific preferences end */
     
     public static function ShouldShowPopUp(){

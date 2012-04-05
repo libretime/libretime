@@ -56,7 +56,7 @@ class AuthController extends Zend_Controller_Action
         //check validity of token
         if (!$auth->checkToken($user_id, $token, 'password.restore')) {
         	echo "token not valid";
-            //$this->_helper->redirector('index', 'login');
+            $this->_helper->redirector('index', 'login');
         }
         
         if ($request->isPost() && $form->isValid($request->getPost())) {
@@ -82,7 +82,7 @@ class AuthController extends Zend_Controller_Action
             $authStorage = $zend_auth->getStorage();
             $authStorage->write($userInfo);
                 
-            $this->_helper->redirector('index', 'nowplaying');     
+            $this->_helper->redirector('index', 'showbuilder');     
         }
 
         $this->view->form = $form;

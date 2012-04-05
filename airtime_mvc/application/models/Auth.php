@@ -6,7 +6,7 @@ class Application_Model_Auth {
 	
 	private function generateToken($action, $user_id) 
 	{
-	   $salt = "pro";
+	   $salt = md5("pro");
 	   $token = self::generateRandomString();
 	   
 	   $info = new CcSubjsToken();
@@ -25,10 +25,7 @@ class Application_Model_Auth {
                
         $e_link_protocol = empty($_SERVER['HTTPS']) ? "http" : "https";
         $e_link_base = $_SERVER['SERVER_NAME'];
-        $e_link_path = $view->url(array('user_id' => $user->getDbId(), 
-                                    'token' => $token
-                                    ), 
-                                    'password-change');
+        $e_link_path = $view->url(array('user_id' => $user->getDbId(), 'token' => $token), 'password-change');
        
         $message = "Click this link: {$e_link_protocol}://{$e_link_base}{$e_link_path}";
        
@@ -45,7 +42,7 @@ class Application_Model_Auth {
 	
     public function checkToken($user_id, $token, $action)
     {
-    	$salt = "pro";
+    	$salt = md5("pro");
     	
         $token_info = CcSubjsTokenQuery::create()
            ->filterByDbAction($action)

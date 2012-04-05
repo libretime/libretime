@@ -64,6 +64,20 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $week_start_day->setValue(Application_Model_Preference::GetWeekStartDay());
         $week_start_day->setDecorators(array('ViewHelper'));
         $this->addElement($week_start_day);
+        
+        // Add end date element
+        $systemEmail = new Zend_Form_Element_Text('systemEmail');
+        $systemEmail->class = 'input_text';
+        $systemEmail->setRequired(false)
+            ->setValue(Application_Model_Preference::GetSystemEmail())
+            ->setLabel('Airtime System Email')
+            ->setFilters(array('StringTrim'))
+            ->setValidators(array(
+                        'NotEmpty',
+                        'EmailAddress'
+                    ))
+            ->setDecorators(array('ViewHelper'));
+        $this->addElement($systemEmail);
     }
 
     private function getTimezones(){
