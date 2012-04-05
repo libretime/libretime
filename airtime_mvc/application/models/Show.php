@@ -21,6 +21,30 @@ class Application_Model_Show {
         $show->setDbName($name);
         Application_Model_RabbitMq::PushSchedule();
     }
+    
+    public function setAirtimeAuthFlag($flag){
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbLiveStreamUsingAirtimeAuth($flag);
+        $show->save();
+    }
+    
+    public function setCustomAuthFlag($flag){
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbLiveStreamUsingCustomAuth($flag);
+        $show->save();
+    }
+    
+    public function setCustomUsername($username){
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbLiveStreamUser($username);
+        $show->save();
+    }
+    
+    public function setCustomPassword($password){
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbLiveStreamPass($password);
+        $show->save();
+    }
 
     public function getDescription()
     {

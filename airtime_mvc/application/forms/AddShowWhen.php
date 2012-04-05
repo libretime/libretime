@@ -119,8 +119,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         {
             if ($element->getType() != 'Zend_Form_Element_Hidden')
             {
-                $element->setAttrib('readonly',true);
-                $element->setAttribs(array('style' => 'color: #B1B1B1; '));
+                $element->setAttrib('disabled','disabled');
             }
         }
     }
@@ -129,8 +128,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $element = $this->getElement('add_show_repeats');
         if ($element->getType() != 'Zend_Form_Element_Hidden')
         {
-            $element->setAttrib('readonly',true);
-            $element->setAttribs(array('style' => 'color: #B1B1B1; '));
+            $element->setAttrib('disabled','disabled');
         }
     }
 }
