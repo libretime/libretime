@@ -27,10 +27,6 @@ class LibraryController extends Zend_Controller_Action
         $this->search_sess = new Zend_Session_Namespace("search");
     }
 
-    public function indexAction() {
-
-    }
-
     public function contextMenuAction()
     {
         $id = $this->_getParam('id');

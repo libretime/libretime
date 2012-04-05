@@ -2,25 +2,6 @@
 
 class Application_Form_EditAudioMD extends Zend_Form
 {
-    /*
-        "title": "track_title",\
-        "artist": "artist_name",\
-        "album": "album_title",\
-        "genre": "genre",\
-        "mood": "mood",\
-        "tracknumber": "track_number",\
-        "bpm": "bpm",\
-        "organization": "label",\
-        "composer": "composer",\
-        "encodedby": "encoded_by",\
-        "conductor": "conductor",\
-        "date": "year",\
-        "website": "info_url",\
-        "isrc": "isrc_number",\
-        "copyright": "copyright",\
-    */
-
-
     public function init()
     {
          // Set the method for the display form to POST
@@ -152,7 +133,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             'ignore'   => true,
             'class'    => 'ui-button ui-state-default ui-button-text-only md-cancel',
             'label'    => 'Cancel',
-            'onclick' => 'javascript:document.location="/Library"',
+            'onclick' => 'javascript:document.location = document.referrer',
             'decorators' => array(
                 'ViewHelper'
             )
