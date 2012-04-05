@@ -22,7 +22,6 @@ class TimeFilledFormatter {
         $perfect = true;
 
         $time = Application_Model_Playlist::secondsToPlaylistTime(abs($this->_seconds));
-        Logging::log("time is: ".$time);
         $info = explode(":", $time);
 
         $formatted .= $sign;
