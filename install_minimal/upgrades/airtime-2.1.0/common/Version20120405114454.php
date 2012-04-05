@@ -32,9 +32,8 @@ class Version20120405114454 extends AbstractMigration
         //start changes to cc_files
         //$cc_files = $schema->getTable('cc_files');
         
-        $con = Doctrine_Manager::getInstance()->connection();
-        $con->execute("ALTER TABLE cc_files ALTER COLUMN bit_rate TYPE integer");
-        $con->execute("ALTER TABLE cc_files ALTER COLUMN sample_rate TYPE integer");
+        $this->_addSql("ALTER TABLE cc_files ALTER COLUMN bit_rate TYPE integer");
+        $this->_addSql("ALTER TABLE cc_files ALTER COLUMN sample_rate TYPE integer");
         
         //end changes to cc_files
     }
