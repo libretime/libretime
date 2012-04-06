@@ -29,7 +29,7 @@ try:
         print 'Error loading config file: ', e
         sys.exit(1)
 
-    os.system("/etc/init.d/airtime-media-monitor stop")
+    os.system("invoke-rc.d airtime-media-monitor stop")
     os.system("rm -f /etc/init.d/airtime-media-monitor")
     os.system("update-rc.d -f airtime-media-monitor remove >/dev/null 2>&1")
 

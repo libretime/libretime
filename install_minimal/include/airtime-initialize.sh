@@ -46,7 +46,7 @@ fi
 # so we can ensure they can register with monit to monitor them when they start.
 # If monit is already running, this step is still useful as we need monit to
 # reload its config files.
-/etc/init.d/monit restart
+invoke-rc.d monit restart
 
 #give monit some time to boot-up before issuing commands
 sleep 1
