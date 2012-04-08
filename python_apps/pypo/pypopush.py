@@ -183,9 +183,14 @@ class PypoPush(Thread):
         problem_at_iteration = None
         for queue_item in liquidsoap_queue_approx:
             if queue_item['start'] in media_schedule.keys():
-                if queue_item['id'] == media_schedule[queue_item['start']]['id']:
-                    #Everything OK for this iteration.
-                    pass
+                media_item = media_schedule[queue_item['start']]
+                if queue_item['id'] == media_item['id']:
+                    if queue_item['end'] == media_item['end']:
+                        #Everything OK for this iteration.
+                        pass
+                    else:
+                        problem_at_iteration = iteration
+                        break 
                 else:
                     #A different item has been scheduled at the same time! Need to remove
                     #all tracks from the Liquidsoap queue starting at this point, and re-add
@@ -204,7 +209,7 @@ class PypoPush(Thread):
             #The first item in the Liquidsoap queue (the one that is currently playing)
             #has changed or been removed from the schedule. We need to clear the entire
             #queue, and push the new schedule
-            self.logger.debug("Problem at iteration %s", problem_at_iteration)
+            self.logger.debug("Change in link %s of current chain", problem_at_iteration)
             self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx)
             
         return problem_at_iteration
