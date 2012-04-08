@@ -28,6 +28,8 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('content-context-menu', 'json')
                     ->addActionContext('set-time-scale', 'json')
                     ->addActionContext('set-time-interval', 'json')
+                    ->addActionContext('edit-show-instance', 'json')
+                    ->addActionContext('dj-edit-show', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -462,6 +464,10 @@ class ScheduleController extends Zend_Controller_Action
         if(!($isAdminOrPM || $isDJ)) {
             return;
         }
+        
+        if($isDJ){
+            $this->view->action = "dj-edit-show";
+        }
 
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
@@ -623,6 +629,25 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         
+    }
+    
+    public function djEditShowAction(){
+        $js = $this->_getParam('data');
+        $data = array();
+
+        //need to convert from serialized jQuery array.
+        foreach($js as $j){
+            $data[$j["name"]] = $j["value"];
+        }
+        
+        //update cc_show
+        $show = new Application_Model_Show($data["add_show_id"]);
+        $show->setAirtimeAuthFlag($data["cb_airtime_auth"]);
+        $show->setCustomAuthFlag($data["cb_custom_auth"]);
+        $show->setCustomUsername($data["custom_username"]);
+        $show->setCustomPassword($data["custom_password"]);
+        
+        $this->view->edit = true;
     }
     
     //for 2.2
