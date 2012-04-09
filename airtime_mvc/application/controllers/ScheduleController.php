@@ -90,6 +90,9 @@ class ScheduleController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
+        if($user->isUserType(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)){
+            $this->view->preloadShowForm = true;
+        }
 
         $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
     }
@@ -615,8 +618,10 @@ class ScheduleController extends Zend_Controller_Action
     }
 
     public function getFormAction(){
-        Application_Model_Schedule::createNewFormSections($this->view);
-        $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+        if($user->isUserType(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)){
+            Application_Model_Schedule::createNewFormSections($this->view);
+            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+        }
     }
     
     public function editShowInstanceAction(){
