@@ -8,7 +8,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
     {
         $description1 = "This follows the same security pattern for the shows: if no users are explicitly set for the show, then anyone with a valid airtime login can connect to the stream, otherwise if there are users assigned to the show, then only those users can connect.";
         $cb_airtime_auth = new Zend_Form_Element_Checkbox("cb_airtime_auth");
-        $cb_airtime_auth->setLabel("Connect using Airtime username & password")
+        $cb_airtime_auth->setLabel("Use Airtime Authentication")
                           ->setDescription($description1)
                           ->setRequired(false)
                           ->setDecorators(array('ViewHelper'));
@@ -16,7 +16,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
         
         $description2 = "Specifiy custom athentification which will work for only the show.";
         $cb_custom_auth = new Zend_Form_Element_Checkbox("cb_custom_auth");
-        $cb_custom_auth  ->setLabel("Custom")
+        $cb_custom_auth  ->setLabel("Use Custom Authentication")
                             ->setDescription($description2)
                             ->setRequired(false)
                             ->setDecorators(array('ViewHelper'));
