@@ -20,7 +20,6 @@ function scheduleRefetchEvents(json) {
 }
 
 function openAddShowForm() {
-
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
@@ -99,61 +98,65 @@ function pad(number, length) {
     return str;
 }
 
-function dayClick(date, allDay, jsEvent, view) {
-    var now, today, selected, chosenDate, chosenTime;
-
-    now = adjustDateToServerDate(new Date(), serverTimezoneOffset);
+function dayClick(date, allDay, jsEvent, view){
+    // The show from will be preloaded if the user is admin or program manager.
+    // Hence, if the user if DJ then it won't open anything.
+    if($.trim($("#add-show-form").html()) != ""){
+        var now, today, selected, chosenDate, chosenTime;
         
-    if(view.name === "month") {
-        today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    }
-    else {
-        today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
-        selected = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
-    }
-
-    if(selected >= today) {
-        var addShow = $('.add-button');
-
-        //remove the +show button if it exists.
-        if(addShow.length == 1){
-             var span = $(addShow).parent();
-            $(span).prev().remove();
-            $(span).remove();
+        now = adjustDateToServerDate(new Date(), serverTimezoneOffset);
+            
+        if(view.name === "month") {
+            today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         }
-        
-        // get current duration value on the form
-        var duration_string = $.trim($("#add_show_duration").val());
-        var duration_info = duration_string.split(" ");
-        var duration_h = 0;
-        var duration_m = 0;
-        if(duration_info[0] != null){
-            duration_h = parseInt(duration_info[0], 10);
+        else {
+            today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+            selected = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
         }
-        if(duration_info[1] != null){
-            duration_m = parseInt(duration_info[1], 10);
+    
+        if(selected >= today) {
+            var addShow = $('.add-button');
+    
+            //remove the +show button if it exists.
+            if(addShow.length == 1){
+                 var span = $(addShow).parent();
+                $(span).prev().remove();
+                $(span).remove();
+            }
+            
+            // get current duration value on the form
+            var duration_string = $.trim($("#add_show_duration").val());
+            var duration_info = duration_string.split(" ");
+            var duration_h = 0;
+            var duration_m = 0;
+            if(duration_info[0] != null){
+                duration_h = parseInt(duration_info[0], 10);
+            }
+            if(duration_info[1] != null){
+                duration_m = parseInt(duration_info[1], 10);
+            }
+            // duration in milisec
+            var duration = (duration_h * 60 * 60 * 1000) + (duration_m * 60 * 1000);
+            
+            // get start time value on the form
+            var startTime_string = $("#add_show_start_time").val();
+            var startTime_info = startTime_string.split(':');
+            var startTime = (parseInt(startTime_info[0],10) * 60 * 60 * 1000) + (parseInt(startTime_info[1], 10) * 60 * 1000);
+            
+            // calculate endDateTime
+            var endDateTime = new Date(selected.getTime() + startTime + duration);
+            
+            chosenDate = selected.getFullYear() + '-' + pad(selected.getMonth()+1,2) + '-' + pad(selected.getDate(),2);
+            var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
+    
+            $("#add_show_start_date").val(chosenDate);
+            $("#add_show_end_date_no_repeat").val(endDateFormat);
+            $("#add_show_end_date").val(endDateFormat);
+            $("#schedule-show-when").show();
+    
+            openAddShowForm();
         }
-        // duration in milisec
-        var duration = (duration_h * 60 * 60 * 1000) + (duration_m * 60 * 1000);
-        
-        // get start time value on the form
-        var startTime_string = $("#add_show_start_time").val();
-        var startTime_info = startTime_string.split(':');
-        var startTime = (parseInt(startTime_info[0],10) * 60 * 60 * 1000) + (parseInt(startTime_info[1], 10) * 60 * 1000);
-        
-        // calculate endDateTime
-        var endDateTime = new Date(selected.getTime() + startTime + duration);
-        
-        chosenDate = selected.getFullYear() + '-' + pad(selected.getMonth()+1,2) + '-' + pad(selected.getDate(),2);
-        var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
-
-        $("#add_show_start_date").val(chosenDate);
-        $("#add_show_end_date_no_repeat").val(endDateFormat);
-        $("#add_show_end_date").val(endDateFormat);
-        $("#schedule-show-when").show();
-
-	    openAddShowForm();
     }
 }
 
