@@ -36,13 +36,6 @@ function openAddShowForm() {
         	$add_show_name.select();
         });
     }
-    
-     $.mask.masks = $.extend($.mask.masks,{
-         date:{ mask: '9999-19-39', selectCharsOnFocus: true, autoTab: false},
-         time:{ mask: '29:69', selectCharsOnFocus: true, autoTab: false}
-     });
-     
-    $('input:text').setMask();
 }
 
 function makeAddShowButton(){
