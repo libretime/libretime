@@ -235,7 +235,7 @@ class PreferenceController extends Zend_Controller_Action
             $live_stream_subform->updateConnectionURLs();
         }
         
-        $this->view->confirm_pypo_restart_text = "Updating settings will temporarily interrupt any currently playing shows. Click \'OK\' to continue.";
+        $this->view->confirm_pypo_restart_text = "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings).";
         
         $this->view->num_stream = $num_of_stream;
         $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
