@@ -260,16 +260,18 @@ class PreferenceController extends Zend_Controller_Action
         else
         {
             $path = $path.'/';
-            $handle =  opendir($path);
-            while (false !== ($file = readdir($handle))) {
-                if ($file != "." && $file != "..") {
-                    //only show directories that aren't private.
-                    if (is_dir($path.$file) && substr($file, 0, 1) != ".") {
-                        $element = array();
-                        $element["name"] = $file;
-                        $element["isFolder"] = true;
-                        $element["isError"] = false;
-                        $result[$file] = $element;
+            $handle = opendir($path);
+            if ($handle !== false){
+                while (false !== ($file = readdir($handle))) {
+                    if ($file != "." && $file != "..") {
+                        //only show directories that aren't private.
+                        if (is_dir($path.$file) && substr($file, 0, 1) != ".") {
+                            $element = array();
+                            $element["name"] = $file;
+                            $element["isFolder"] = true;
+                            $element["isError"] = false;
+                            $result[$file] = $element;
+                        }
                     }
                 }
             }
