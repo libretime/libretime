@@ -3,6 +3,7 @@ import grp
 import pwd
 import logging
 import stat
+import subprocess
 
 from subprocess import Popen, PIPE
 from airtimemetadata import AirtimeMetadata
@@ -289,3 +290,16 @@ class MediaMonitorCommon:
             self.logger.warn("File %s, has invalid metadata", pathname)
 
         return filepath
+        
+def test_file_playability(pathname):
+    """
+    Test if the file can be played by Liquidsoap. Return "True" if Liquidsoap
+    can play it, or if Liquidsoap is not found. 
+    """
+    liquidsoap_found = subprocess.call("which liquidsoap", shell=True)
+    if liquidsoap_found == 0:
+        return_code = subprocess.call("liquidsoap -c 'output.dummy(single(\"%s\"))'" % pathname, shell=True)
+    else:
+        return_code = 0
+
+    return (return_code == 0)
