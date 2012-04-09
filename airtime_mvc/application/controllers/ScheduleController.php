@@ -431,6 +431,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->percentFilled = $show->getPercentScheduled();
         $this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
+        $this->view->showTitle = $show->getName();
         unset($this->view->showContent);
     }
 
