@@ -87,7 +87,8 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement('text', 'bpm', array(
             'label'      => 'BPM:',
             'class'      => 'input_text',
-            'filters'    => array('StringTrim')
+            'filters'    => array('StringTrim'),
+            'validators' => array(array('StringLength', false, array(0, 8)))
         ));
 
         // Add copyright field
