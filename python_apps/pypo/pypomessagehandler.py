@@ -99,6 +99,14 @@ class PypoMessageHandler(Thread):
                 self.handle_message(message.payload)
                 # ACK the message to take it off the queue
                 message.ack()
+            except IOError, e:
+                import traceback
+                top = traceback.format_exc()
+                self.logger.error('Exception: %s', e)
+                self.logger.error("traceback: %s", top)
+                while not self.init_rabbit_mq():
+                    self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
+                    time.sleep(5)
             except Exception, e:
                 """
                 sleep 5 seconds so that we don't spin inside this
@@ -110,7 +118,10 @@ class PypoMessageHandler(Thread):
                 There is a problem with the RabbitMq messenger service. Let's
                 log the error and get the schedule via HTTP polling
                 """
-                self.logger.error("Exception, %s", e)
+                import traceback
+                top = traceback.format_exc()
+                self.logger.error('Exception: %s', e)
+                self.logger.error("traceback: %s", top)
 
             loops += 1
 
