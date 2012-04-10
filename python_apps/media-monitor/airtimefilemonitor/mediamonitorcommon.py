@@ -298,7 +298,7 @@ def test_file_playability(pathname):
     """
     liquidsoap_found = subprocess.call("which liquidsoap", shell=True)
     if liquidsoap_found == 0:
-        return_code = subprocess.call("liquidsoap -c 'output.dummy(single(\"%s\"))'" % pathname, shell=True)
+        return_code = subprocess.call("liquidsoap -r %s" % pathname.replace("'", "\\'"), shell=True)
     else:
         return_code = 0
 
