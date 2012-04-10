@@ -95,7 +95,7 @@ class Application_Model_Datatables {
 		}
 	
 		//display sql executed in airtime log for testing
-		//Logging::log($sql);
+		Logging::debug($sql);
 	
 		return array(
 			"sEcho" => intval($data["sEcho"]), 
