@@ -42,7 +42,6 @@ class CcPlaylistTableMap extends TableMap {
 		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, '');
 		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', false, 6, null);
 		$this->addColumn('UTIME', 'DbUtime', 'TIMESTAMP', false, 6, null);
-		$this->addColumn('LPTIME', 'DbLPtime', 'TIMESTAMP', false, 6, null);
 		$this->addForeignKey('CREATOR_ID', 'DbCreatorId', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', false, 512, null);
 		$this->addColumn('LENGTH', 'DbLength', 'VARCHAR', false, null, '00:00:00');

@@ -296,7 +296,6 @@ CREATE TABLE "cc_playlist"
 	"name" VARCHAR(255) default '' NOT NULL,
 	"mtime" TIMESTAMP(6),
 	"utime" TIMESTAMP(6),
-	"lptime" TIMESTAMP(6),
 	"creator_id" INTEGER,
 	"description" VARCHAR(512),
 	"length" interval default '00:00:00',

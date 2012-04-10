@@ -26,7 +26,7 @@ abstract class BaseCcPlaylistPeer {
 	const TM_CLASS = 'CcPlaylistTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 8;
+	const NUM_COLUMNS = 7;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -42,9 +42,6 @@ abstract class BaseCcPlaylistPeer {
 
 	/** the column name for the UTIME field */
 	const UTIME = 'cc_playlist.UTIME';
-
-	/** the column name for the LPTIME field */
-	const LPTIME = 'cc_playlist.LPTIME';
 
 	/** the column name for the CREATOR_ID field */
 	const CREATOR_ID = 'cc_playlist.CREATOR_ID';
@@ -71,12 +68,12 @@ abstract class BaseCcPlaylistPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbMtime', 'DbUtime', 'DbLPtime', 'DbCreatorId', 'DbDescription', 'DbLength', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbMtime', 'dbUtime', 'dbLPtime', 'dbCreatorId', 'dbDescription', 'dbLength', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::MTIME, self::UTIME, self::LPTIME, self::CREATOR_ID, self::DESCRIPTION, self::LENGTH, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'MTIME', 'UTIME', 'LPTIME', 'CREATOR_ID', 'DESCRIPTION', 'LENGTH', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'mtime', 'utime', 'lptime', 'creator_id', 'description', 'length', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbMtime', 'DbUtime', 'DbCreatorId', 'DbDescription', 'DbLength', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbMtime', 'dbUtime', 'dbCreatorId', 'dbDescription', 'dbLength', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::MTIME, self::UTIME, self::CREATOR_ID, self::DESCRIPTION, self::LENGTH, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'MTIME', 'UTIME', 'CREATOR_ID', 'DESCRIPTION', 'LENGTH', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'mtime', 'utime', 'creator_id', 'description', 'length', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
 	);
 
 	/**
@@ -86,12 +83,12 @@ abstract class BaseCcPlaylistPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbMtime' => 2, 'DbUtime' => 3, 'DbLPtime' => 4, 'DbCreatorId' => 5, 'DbDescription' => 6, 'DbLength' => 7, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbMtime' => 2, 'dbUtime' => 3, 'dbLPtime' => 4, 'dbCreatorId' => 5, 'dbDescription' => 6, 'dbLength' => 7, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::MTIME => 2, self::UTIME => 3, self::LPTIME => 4, self::CREATOR_ID => 5, self::DESCRIPTION => 6, self::LENGTH => 7, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'MTIME' => 2, 'UTIME' => 3, 'LPTIME' => 4, 'CREATOR_ID' => 5, 'DESCRIPTION' => 6, 'LENGTH' => 7, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'mtime' => 2, 'utime' => 3, 'lptime' => 4, 'creator_id' => 5, 'description' => 6, 'length' => 7, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbMtime' => 2, 'DbUtime' => 3, 'DbCreatorId' => 4, 'DbDescription' => 5, 'DbLength' => 6, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbMtime' => 2, 'dbUtime' => 3, 'dbCreatorId' => 4, 'dbDescription' => 5, 'dbLength' => 6, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::MTIME => 2, self::UTIME => 3, self::CREATOR_ID => 4, self::DESCRIPTION => 5, self::LENGTH => 6, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'MTIME' => 2, 'UTIME' => 3, 'CREATOR_ID' => 4, 'DESCRIPTION' => 5, 'LENGTH' => 6, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'mtime' => 2, 'utime' => 3, 'creator_id' => 4, 'description' => 5, 'length' => 6, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
 	);
 
 	/**
@@ -167,7 +164,6 @@ abstract class BaseCcPlaylistPeer {
 			$criteria->addSelectColumn(CcPlaylistPeer::NAME);
 			$criteria->addSelectColumn(CcPlaylistPeer::MTIME);
 			$criteria->addSelectColumn(CcPlaylistPeer::UTIME);
-			$criteria->addSelectColumn(CcPlaylistPeer::LPTIME);
 			$criteria->addSelectColumn(CcPlaylistPeer::CREATOR_ID);
 			$criteria->addSelectColumn(CcPlaylistPeer::DESCRIPTION);
 			$criteria->addSelectColumn(CcPlaylistPeer::LENGTH);
@@ -176,7 +172,6 @@ abstract class BaseCcPlaylistPeer {
 			$criteria->addSelectColumn($alias . '.NAME');
 			$criteria->addSelectColumn($alias . '.MTIME');
 			$criteria->addSelectColumn($alias . '.UTIME');
-			$criteria->addSelectColumn($alias . '.LPTIME');
 			$criteria->addSelectColumn($alias . '.CREATOR_ID');
 			$criteria->addSelectColumn($alias . '.DESCRIPTION');
 			$criteria->addSelectColumn($alias . '.LENGTH');

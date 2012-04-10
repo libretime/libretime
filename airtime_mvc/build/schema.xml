@@ -224,7 +224,6 @@
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
     <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false"/>
     <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="false"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
     <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00"/>

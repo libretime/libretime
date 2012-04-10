@@ -10,7 +10,6 @@
  * @method     CcPlaylistQuery orderByDbName($order = Criteria::ASC) Order by the name column
  * @method     CcPlaylistQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
  * @method     CcPlaylistQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
- * @method     CcPlaylistQuery orderByDbLPtime($order = Criteria::ASC) Order by the lptime column
  * @method     CcPlaylistQuery orderByDbCreatorId($order = Criteria::ASC) Order by the creator_id column
  * @method     CcPlaylistQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method     CcPlaylistQuery orderByDbLength($order = Criteria::ASC) Order by the length column
@@ -19,7 +18,6 @@
  * @method     CcPlaylistQuery groupByDbName() Group by the name column
  * @method     CcPlaylistQuery groupByDbMtime() Group by the mtime column
  * @method     CcPlaylistQuery groupByDbUtime() Group by the utime column
- * @method     CcPlaylistQuery groupByDbLPtime() Group by the lptime column
  * @method     CcPlaylistQuery groupByDbCreatorId() Group by the creator_id column
  * @method     CcPlaylistQuery groupByDbDescription() Group by the description column
  * @method     CcPlaylistQuery groupByDbLength() Group by the length column
@@ -43,7 +41,6 @@
  * @method     CcPlaylist findOneByDbName(string $name) Return the first CcPlaylist filtered by the name column
  * @method     CcPlaylist findOneByDbMtime(string $mtime) Return the first CcPlaylist filtered by the mtime column
  * @method     CcPlaylist findOneByDbUtime(string $utime) Return the first CcPlaylist filtered by the utime column
- * @method     CcPlaylist findOneByDbLPtime(string $lptime) Return the first CcPlaylist filtered by the lptime column
  * @method     CcPlaylist findOneByDbCreatorId(int $creator_id) Return the first CcPlaylist filtered by the creator_id column
  * @method     CcPlaylist findOneByDbDescription(string $description) Return the first CcPlaylist filtered by the description column
  * @method     CcPlaylist findOneByDbLength(string $length) Return the first CcPlaylist filtered by the length column
@@ -52,7 +49,6 @@
  * @method     array findByDbName(string $name) Return CcPlaylist objects filtered by the name column
  * @method     array findByDbMtime(string $mtime) Return CcPlaylist objects filtered by the mtime column
  * @method     array findByDbUtime(string $utime) Return CcPlaylist objects filtered by the utime column
- * @method     array findByDbLPtime(string $lptime) Return CcPlaylist objects filtered by the lptime column
  * @method     array findByDbCreatorId(int $creator_id) Return CcPlaylist objects filtered by the creator_id column
  * @method     array findByDbDescription(string $description) Return CcPlaylist objects filtered by the description column
  * @method     array findByDbLength(string $length) Return CcPlaylist objects filtered by the length column
@@ -264,37 +260,6 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistPeer::UTIME, $dbUtime, $comparison);
-	}
-
-	/**
-	 * Filter the query on the lptime column
-	 * 
-	 * @param     string|array $dbLPtime The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcPlaylistQuery The current query, for fluid interface
-	 */
-	public function filterByDbLPtime($dbLPtime = null, $comparison = null)
-	{
-		if (is_array($dbLPtime)) {
-			$useMinMax = false;
-			if (isset($dbLPtime['min'])) {
-				$this->addUsingAlias(CcPlaylistPeer::LPTIME, $dbLPtime['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbLPtime['max'])) {
-				$this->addUsingAlias(CcPlaylistPeer::LPTIME, $dbLPtime['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcPlaylistPeer::LPTIME, $dbLPtime, $comparison);
 	}
 
 	/**
