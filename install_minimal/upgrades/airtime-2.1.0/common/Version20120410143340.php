@@ -18,7 +18,6 @@ class Version20120410143340 extends AbstractMigration
         $this->_addSql("ALTER TABLE cc_playlist ADD CONSTRAINT cc_playlist_createdby_fkey FOREIGN KEY (creator_id) REFERENCES cc_subjs(id) NOT DEFERRABLE INITIALLY IMMEDIATE");
 
         $this->_addSql("ALTER TABLE cc_playlist ADD utime timestamp(6)");
-        $this->_addSql("ALTER TABLE cc_playlist ADD mtime timestamp(6)");
     }
 
     public function down(Schema $schema)
