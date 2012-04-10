@@ -7,6 +7,9 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
 
 class Version20120410104441 extends AbstractMigration
 {
+    /*
+     * contains modifications to cc_files for 2.1
+     */
     public function up(Schema $schema)
     {
         //add temp columns for changing bitrate and sample rate to integers.
@@ -21,6 +24,10 @@ class Version20120410104441 extends AbstractMigration
         
         $this->_addSql("ALTER TABLE cc_files RENAME COLUMN temp_sr TO sample_rate");
         $this->_addSql("ALTER TABLE cc_files RENAME COLUMN temp_br TO bit_rate");
+        
+        //add utime, lptime
+        $this->_addSql("ALTER TABLE cc_files ADD utime timestamp(6)");
+        $this->_addSql("ALTER TABLE cc_files ADD lptime timestamp(6)");
     }
     
     public function down(Schema $schema)

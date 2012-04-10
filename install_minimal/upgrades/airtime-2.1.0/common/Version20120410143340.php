@@ -7,10 +7,12 @@ use Doctrine\DBAL\Migrations\AbstractMigration,
 
 class Version20120410143340 extends AbstractMigration
 {
+    /*
+     * contains modifications to cc_playlist for 2.1
+     */
     public function up(Schema $schema)
     {
         //convert column creator to be creator_id on cc_playlist
-        
         $this->_addSql("ALTER TABLE cc_playlist ADD creator_id integer");
         $this->_addSql("UPDATE cc_playlist SET creator_id = (SELECT id FROM cc_subjs WHERE creator = login)");
         $this->_addSql("ALTER TABLE cc_playlist DROP COLUMN creator");
