@@ -320,8 +320,10 @@ function setAddShowEvents() {
                 message: null,
                 applyPlatformOpacityRules: false
             });
+
+            var action = "/Schedule/"+String(addShowButton.attr("data-action"));
             
-            $.post("/Schedule/add-show", {format: "json", data: data, hosts: hosts, days: days}, function(json){
+            $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 //addShowButton.removeClass("disabled");
                 $('#schedule-add-show').unblock();
                 if(json.form) {
@@ -334,6 +336,19 @@ function setAddShowEvents() {
                     $("#add_show_end_date").val(end_date);
                     $("#add_show_start_date").val(start_date);
                     showErrorSections();
+                }else if(json.edit){
+                    $("#schedule_calendar").removeAttr("style")
+                    .fullCalendar('render');
+
+                    $("#add-show-form").hide();
+                    $.get("/Schedule/get-form", {format:"json"}, function(json){
+                        $("#add-show-form")
+                            .empty()
+                            .append(json.form);
+        
+                        setAddShowEvents();
+                    });
+                    makeAddShowButton();
                 }
                 else {
                      $("#add-show-form")

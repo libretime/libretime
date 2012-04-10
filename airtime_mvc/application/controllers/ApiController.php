@@ -58,7 +58,8 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -333,7 +334,8 @@ class ApiController extends Zend_Controller_Action
 
         $api_key = $this->_getParam('api_key');
 
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if(!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource. ';
@@ -355,7 +357,8 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if(!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -378,7 +381,8 @@ class ApiController extends Zend_Controller_Action
         global $CC_CONFIG;
 
         $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -411,7 +415,8 @@ class ApiController extends Zend_Controller_Action
         global $CC_CONFIG;
 
         $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -435,7 +440,8 @@ class ApiController extends Zend_Controller_Action
         global $CC_CONFIG;
 
         $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -542,7 +548,8 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -564,7 +571,8 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -667,7 +675,8 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -683,7 +692,8 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -711,7 +721,8 @@ class ApiController extends Zend_Controller_Action
         $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
 
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -728,7 +739,8 @@ class ApiController extends Zend_Controller_Action
         $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
 
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -745,7 +757,8 @@ class ApiController extends Zend_Controller_Action
         $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
 
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -760,7 +773,8 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -777,14 +791,13 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         $getDiskInfo = $request->getParam('diskinfo') == "true";
-        /*
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
             exit;
         }
-        */
 
         $status = array(
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
@@ -846,7 +859,8 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -926,7 +940,8 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -945,7 +960,8 @@ class ApiController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
@@ -979,7 +995,8 @@ class ApiController extends Zend_Controller_Action
         $password = $request->getParam('password');
         $djtype = $request->getParam('djtype');
         
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]))
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';

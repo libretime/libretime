@@ -50,8 +50,8 @@ try:
     #copy monit files
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
     subprocess.call('sed -i "s/\$admin_pass/%s/g" /etc/monit/conf.d/monit-airtime-generic.cfg' % get_rand_string(), shell=True)
-    if os.environ["disable_auto_start_services"] == "f":
-        shutil.copy('%s/../monit-airtime-media-monitor.cfg'%current_script_dir, '/etc/monit/conf.d/')
+
+    shutil.copy('%s/../monit-airtime-media-monitor.cfg'%current_script_dir, '/etc/monit/conf.d/')
     
     #create log dir
     create_dir(config['log_dir'])

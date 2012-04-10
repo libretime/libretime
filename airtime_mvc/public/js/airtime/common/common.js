@@ -75,8 +75,9 @@ function open_show_preview(p_showID, p_showIndex) {
 }
 
 function openPreviewWindow(url) {
+    
     //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
-    _preview_window = window.open(url, 'Audio Player', 'width=450,height=800');
+    _preview_window = window.open(url, 'Audio Player', 'width=450,height=100,scrollbars=yes');
     //Set the play button to pause.
     //var elemID = "spl_"+elemIndexString;
     //$('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");

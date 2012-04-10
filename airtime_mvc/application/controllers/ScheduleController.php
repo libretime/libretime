@@ -28,6 +28,8 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('content-context-menu', 'json')
                     ->addActionContext('set-time-scale', 'json')
                     ->addActionContext('set-time-interval', 'json')
+                    ->addActionContext('edit-show-instance', 'json')
+                    ->addActionContext('dj-edit-show', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -52,7 +54,6 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
@@ -88,6 +89,9 @@ class ScheduleController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
+        if($user->isUserType(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)){
+            $this->view->preloadShowForm = true;
+        }
 
         $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
     }
@@ -429,6 +433,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->percentFilled = $show->getPercentScheduled();
         $this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
+        $this->view->showTitle = $show->getName();
         unset($this->view->showContent);
     }
 
@@ -444,6 +449,10 @@ class ScheduleController extends Zend_Controller_Action
         // repeating shows. It's value is either "instance","rebroadcast", or "all"
         $type = $this->_getParam('type');
         
+        if ($type == "instance"){
+            $this->view->action = "edit-show-instance";
+        }
+        
         try{
             $showInstance = new Application_Model_ShowInstance($showInstanceId);
         }catch(Exception $e){
@@ -456,6 +465,10 @@ class ScheduleController extends Zend_Controller_Action
         
         if(!($isAdminOrPM || $isDJ)) {
             return;
+        }
+        
+        if($isDJ){
+            $this->view->action = "dj-edit-show";
         }
 
         $formWhat = new Application_Form_AddShowWhat();
@@ -604,10 +617,50 @@ class ScheduleController extends Zend_Controller_Action
     }
 
     public function getFormAction(){
-        Application_Model_Schedule::createNewFormSections($this->view);
-        $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+        if($user->isUserType(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)){
+            Application_Model_Schedule::createNewFormSections($this->view);
+            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+        }
     }
+    
+    public function editShowInstanceAction(){
+        $js = $this->_getParam('data');
+        $data = array();
 
+        //need to convert from serialized jQuery array.
+        foreach($js as $j){
+            $data[$j["name"]] = $j["value"];
+        }
+
+        
+    }
+    
+    public function djEditShowAction(){
+        $js = $this->_getParam('data');
+        $data = array();
+
+        //need to convert from serialized jQuery array.
+        foreach($js as $j){
+            $data[$j["name"]] = $j["value"];
+        }
+        
+        //update cc_show
+        $show = new Application_Model_Show($data["add_show_id"]);
+        $show->setAirtimeAuthFlag($data["cb_airtime_auth"]);
+        $show->setCustomAuthFlag($data["cb_custom_auth"]);
+        $show->setCustomUsername($data["custom_username"]);
+        $show->setCustomPassword($data["custom_password"]);
+        
+        $this->view->edit = true;
+    }
+    
+    //for 2.2
+    /*
+    public function editShowAction(){
+    
+    }
+    */
+    
     public function addShowAction()
     {
         $js = $this->_getParam('data');
@@ -619,13 +672,6 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $show = new Application_Model_Show($data['add_show_id']);
-        
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        $isDJ = $user->isHost($show->getId());
-
         $startDateModified = true;
         if ($data['add_show_id'] != -1 && !array_key_exists('add_show_start_date', $data)){
             //show is being updated and changing the start date was disabled, since the
@@ -642,6 +688,11 @@ class ScheduleController extends Zend_Controller_Action
         if($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
+        
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isDJ = $user->isHost($show->getId());
 
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $record = false;
@@ -785,7 +836,7 @@ class ScheduleController extends Zend_Controller_Action
                     if (!$startDateModified){
                         $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
                     }
-
+                    
                     $this->view->form = $this->view->render('schedule/add-show-form.phtml');
 
                 }

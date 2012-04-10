@@ -20,7 +20,16 @@ $(document).ready(function(){
             height: "0px",
             cssClass: "jp-video-270p"
         },
-        wmode: "window"
+        playlistOptions: {
+            autoPlay: false,
+            loopOnPrevious: false,
+            shuffleOnLoop: true,
+            enableRemoveControls: false,
+            displayTime: 0,
+            addTime: 0,
+            removeTime: 0,
+            shuffleTime: 0
+        }
     });
     
     
@@ -32,6 +41,8 @@ $(document).ready(function(){
     var showID = $('.showID').text();
     var showIndex = $('.showIndex').text();
 
+    var numOfItems = 0;
+    
     if (playlistID != "" && playlistID !== ""){
         playAllPlaylist(playlistID, playlistIndex);
     }else if (audioFileID != "") {
@@ -87,6 +98,7 @@ function buildplaylist(p_url, p_playIndex) {
         var myPlaylist = new Array();
         var media;
         var index;
+        var total = 0;
         for(index in data){
             
             if (data[index]['element_mp3'] != undefined){
@@ -103,11 +115,17 @@ function buildplaylist(p_url, p_playIndex) {
             myPlaylist[index] = media;
             
             _idToPostionLookUp[data[index]['element_id']] = data[index]['element_position'];
+            total++;
         }
         
         _playlist_jplayer.setPlaylist(myPlaylist);
         _playlist_jplayer.option("autoPlay", true);
         play(p_playIndex);
+        
+        var height = Math.min(80 + (23 * total), 400);
+        window.innerWidth = 500;
+        window.innerHeight = height;
+        window.scrollbars = true;
     });
 }
 
@@ -146,4 +164,7 @@ function playOne(p_audioFileID) {
     //_playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready
     _playlist_jplayer._initPlaylist(playlist);
     _playlist_jplayer.play(0);
+    
+    window.innerWidth = 490;
+    window.innerHeight = 105;
 }

@@ -40,8 +40,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         {
             if ($element->getType() != 'Zend_Form_Element_Hidden')
             {
-                $element->setAttrib('readonly',true);
-                $element->setAttribs(array('style' => 'color: #B1B1B1; '));
+                $element->setAttrib('disabled','disabled');
             }
         }
     }

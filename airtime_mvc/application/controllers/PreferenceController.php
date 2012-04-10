@@ -142,7 +142,6 @@ class PreferenceController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/meioMask/jquery.meio.mask.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();
@@ -236,7 +235,7 @@ class PreferenceController extends Zend_Controller_Action
             $live_stream_subform->updateConnectionURLs();
         }
         
-        $this->view->confirm_pypo_restart_text = "Updating settings will temporarily interrupt any currently playing shows. Click \'OK\' to continue.";
+        $this->view->confirm_pypo_restart_text = "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings).";
         
         $this->view->num_stream = $num_of_stream;
         $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
@@ -261,16 +260,18 @@ class PreferenceController extends Zend_Controller_Action
         else
         {
             $path = $path.'/';
-            $handle =  opendir($path);
-            while (false !== ($file = readdir($handle))) {
-                if ($file != "." && $file != "..") {
-                    //only show directories that aren't private.
-                    if (is_dir($path.$file) && substr($file, 0, 1) != ".") {
-                        $element = array();
-                        $element["name"] = $file;
-                        $element["isFolder"] = true;
-                        $element["isError"] = false;
-                        $result[$file] = $element;
+            $handle = opendir($path);
+            if ($handle !== false){
+                while (false !== ($file = readdir($handle))) {
+                    if ($file != "." && $file != "..") {
+                        //only show directories that aren't private.
+                        if (is_dir($path.$file) && substr($file, 0, 1) != ".") {
+                            $element = array();
+                            $element["name"] = $file;
+                            $element["isFolder"] = true;
+                            $element["isError"] = false;
+                            $result[$file] = $element;
+                        }
                     }
                 }
             }
