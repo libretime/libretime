@@ -14,9 +14,6 @@ class Version20120410104441 extends AbstractMigration
         $cc_files->addColumn('temp_br', 'integer');
         $cc_files->addColumn('temp_sr', 'integer');
         
-        $this->_addSql("UPDATE cc_files SET temp_br = bit_rate::integer");
-        $this->_addSql("UPDATE cc_files SET temp_sr = sample_rate::integer");
-        
         //end changes to cc_files
     }
 
