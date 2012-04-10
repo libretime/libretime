@@ -30,6 +30,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('set-time-interval', 'json')
                     ->addActionContext('edit-show-instance', 'json')
                     ->addActionContext('dj-edit-show', 'json')
+                    ->addActionContext('edit-show-rebroadcast', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -451,6 +452,8 @@ class ScheduleController extends Zend_Controller_Action
         
         if ($type == "instance"){
             $this->view->action = "edit-show-instance";
+        }else if($type == "rebroadcast"){
+            $this->view->action = "edit-show-rebroadcast";
         }
         
         try{
@@ -632,6 +635,17 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
+        
+    }
+    
+    public function editShowRebroadcastAction(){
+        $js = $this->_getParam('data');
+        $data = array();
+
+        //need to convert from serialized jQuery array.
+        foreach($js as $j){
+            $data[$j["name"]] = $j["value"];
+        }
         
     }
     
