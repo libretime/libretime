@@ -25,7 +25,7 @@ class Version20120410143340 extends AbstractMigration
         //copy length property from our old view cc_playlisttimes
         $this->_addSql("UPDATE cc_playlist AS pl SET length = (SELECT pt.length FROM cc_playlisttimes AS pt WHERE pt.id = pl.id)");
         //drop the view as it is no longer needed.
-        $this->_addSql("DROP cc_playlisttimes");
+        $this->_addSql("DROP VIEW cc_playlisttimes");
         
         $this->_addSql("ALTER TABLE cc_playlist DROP COLUMN state");
         $this->_addSql("ALTER TABLE cc_playlist DROP COLUMN currentlyaccessing");
