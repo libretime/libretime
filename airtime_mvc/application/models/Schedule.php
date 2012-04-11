@@ -114,6 +114,7 @@ class Application_Model_Schedule {
         
         $timeNowAsMillis = strtotime($p_timeNow);
         for( $i = 0; $i < $numberOfRows; ++$i ){
+            // if the show is overbooked, then update the track end time to the end of the show time.
             if($rows[$i]['ends'] > $rows[$i]["show_ends"]){
                 $rows[$i]['ends'] = $rows[$i]["show_ends"];
             }
@@ -355,7 +356,6 @@ class Application_Model_Schedule {
             $secParts = explode(".", $t[2]);
             $millisecs = $secParts[1];
             $millisecs = str_pad(substr($millisecs, 0, 3),3, '0');
-            Logging::log("mili:".print_r($millisecs,true));
             $millisecs = intval($millisecs);
             $seconds = intval($secParts[0]);
         } else {
