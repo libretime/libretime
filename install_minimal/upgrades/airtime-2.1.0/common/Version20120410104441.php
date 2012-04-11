@@ -28,6 +28,10 @@ class Version20120410104441 extends AbstractMigration
         //add utime, lptime
         $this->_addSql("ALTER TABLE cc_files ADD utime timestamp(6)");
         $this->_addSql("ALTER TABLE cc_files ADD lptime timestamp(6)");
+        
+        //setting these to a default now for timeline refresh purposes.
+        $now = gmdate("Y-m-d H:i:s");
+        $this->_addSql("UPDATE cc_files SET utime = '$now'");
     }
     
     public function down(Schema $schema)
