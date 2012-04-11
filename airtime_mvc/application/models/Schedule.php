@@ -524,12 +524,13 @@ class Application_Model_Schedule {
 
         foreach ($items as $item){
 
-            $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
-            $uri = $storedFile->getFilePath();
-            
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
             $trackStartDateTime = new DateTime($item["start"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
+            
+            if ($trackStartDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
+                continue;
+            }
 
             /* Note: cue_out and end are always the same. */
             /* TODO: Not all tracks will have "show_end" */
@@ -537,7 +538,11 @@ class Application_Model_Schedule {
                 $di = $trackStartDateTime->diff($showEndDateTime);
                 
                 $item["cue_out"] = $di->format("%H:%i:%s").".000";
+                $item["end"] = $showEndDateTime->format("Y-m-d H:i:s");
             }
+            
+            $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
+            $uri = $storedFile->getFilePath();
             
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
             $data["media"][$start] = array(

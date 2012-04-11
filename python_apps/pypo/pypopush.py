@@ -173,6 +173,7 @@ class PypoPush(Thread):
         
         if problem_at_iteration is not None:
             self.logger.debug("Change in chain at link %s", problem_at_iteration)
+            self.modify_cue_point_of_first_link(current_chain)
             self.push_to_liquidsoap(current_chain[problem_at_iteration:])
         
             
@@ -249,11 +250,13 @@ class PypoPush(Thread):
         link_start = datetime.strptime(link['start'], "%Y-%m-%d-%H-%M-%S")
         
         diff_td = tnow - link_start
+        diff_sec = self.convert_timedelta_to_seconds(diff_td)
         
-        self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff_td)
-        original_cue_in_td = timedelta(seconds=float(link['cue_in']))
-        link['cue_in'] = self.convert_timedelta_to_seconds(original_cue_in_td + diff_td)
-        
+        if diff_sec > 0:
+            self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff_sec)
+            original_cue_in_td = timedelta(seconds=float(link['cue_in']))
+            link['cue_in'] = self.convert_timedelta_to_seconds(original_cue_in_td) + diff_sec
+            
         
     def convert_timedelta_to_seconds(self, td):
         return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
