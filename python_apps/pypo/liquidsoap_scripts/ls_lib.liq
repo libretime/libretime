@@ -15,6 +15,15 @@ def append_title(m) =
   end
 end
 
+def crossfade(s)
+  #duration is automatically overwritten by metadata fields passed in
+  #with audio
+  s = fade.in(type="log", duration=0., s)
+  s = fade.out(type="log", duration=0., s)
+  fader = fun (a,b) -> add(normalize=false,[b,a])
+  cross(fader,s)
+end
+
 def transition(a,b) =
   log("transition called...")
   add(normalize=false,
