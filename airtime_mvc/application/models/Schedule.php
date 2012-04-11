@@ -351,7 +351,8 @@ class Application_Model_Schedule {
         if (strpos($t[2], ".")) {
             $secParts = explode(".", $t[2]);
             $millisecs = $secParts[1];
-            $millisecs = substr($millisecs, 0, 3);
+            $millisecs = str_pad(substr($millisecs, 0, 3),3, '0');
+            Logging::log("mili:".print_r($millisecs,true));
             $millisecs = intval($millisecs);
             $seconds = intval($secParts[0]);
         } else {
