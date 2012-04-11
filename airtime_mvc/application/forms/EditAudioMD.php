@@ -84,12 +84,14 @@ class Application_Form_EditAudioMD extends Zend_Form
         ));
 
         // Add bmp field
-        $this->addElement('text', 'bpm', array(
-            'label'      => 'BPM:',
-            'class'      => 'input_text',
-            'filters'    => array('StringTrim'),
-            'validators' => array(array('StringLength', false, array(0, 8)))
-        ));
+        $bpm = new Zend_Form_Element_Text('bpm');
+        $bpm->class = 'input_text';
+        $bpm->setLabel('BPM:')
+            ->setFilters(array('StringTrim'))
+            ->setValidators(array(
+                        new Zend_Validate_StringLength(array('min'=>0,'max' => 8)),
+                        new Zend_Validate_Digits()));
+        $this->addElement($bpm);
 
         // Add copyright field
         $this->addElement('text', 'copyright', array(
