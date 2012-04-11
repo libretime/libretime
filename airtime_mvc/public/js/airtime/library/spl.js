@@ -764,7 +764,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		$pl.find(".ui-icon-alert").qtip({
 	        content: {
-	            text: "File does not exist on disk..."
+	            text: "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't \"watched\" anymore."
 	        },
 	        position:{
 	            adjust: {

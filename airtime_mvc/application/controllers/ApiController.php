@@ -875,10 +875,9 @@ class ApiController extends Zend_Controller_Action
         $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null,null);
 
             foreach( $added_list as $ad){
+                $ad .= '/';
                 foreach( $watched_dirs as $dir ){
                     $dirPath = $dir->getDirectory();
-
-                    $ad .= '/';
 
                     // if mount path itself was watched
                     if($dirPath == $ad){
@@ -901,9 +900,9 @@ class ApiController extends Zend_Controller_Action
                 }
             }
             foreach( $removed_list as $rd){
+                $rd .= '/';
                 foreach( $watched_dirs as $dir ){
                     $dirPath = $dir->getDirectory();
-                    $rd .= '/';
                     // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
                     if(substr($dirPath, 0, strlen($rd)) === $rd && $dir->getExistsFlag() == true){
                         Application_Model_MusicDir::removeWatchedDir($dirPath, false);

@@ -98,5 +98,23 @@ function setWatchedDirEvents() {
 $(document).ready(function() {
 
     setWatchedDirEvents();
-
+    $(".ui-icon-alert").qtip({
+        content: {
+            text: "This path is currently not accessible."
+        },
+        position:{
+            adjust: {
+            resize: true,
+            method: "flip flip"
+            },
+            at: "right center",
+            my: "left top",
+            viewport: $(window)
+        },
+        style: {
+            classes: "ui-tooltip-dark"
+        },
+        show: 'mouseover',
+        hide: 'mouseout'
+    });
 });
