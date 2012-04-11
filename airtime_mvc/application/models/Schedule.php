@@ -412,6 +412,7 @@ class Application_Model_Schedule {
         
         $baseQuery = "SELECT st.file_id AS file_id,"
             ." st.id as id,"
+            ." st.instance_id as instance_id,"
             ." st.starts AS start,"
             ." st.ends AS end,"
             ." st.cue_in AS cue_in,"
@@ -527,7 +528,12 @@ class Application_Model_Schedule {
         }
 
         foreach ($items as $item){
-
+			
+            $showInstance = CcShowInstancesQuery::create()->findPK($item["instance_id"]);
+            $showId = $showInstance->getDbShowId();
+            $show = CcShowQuery::create()->findPK($showId);
+            $showName = $show->getDbName();
+			
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
             $trackStartDateTime = new DateTime($item["start"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
@@ -559,7 +565,8 @@ class Application_Model_Schedule {
                 'cue_in' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
                 'cue_out' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
                 'start' => $start,
-                'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"])
+                'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]),
+                'show_name' => $showName
             );
         }
 

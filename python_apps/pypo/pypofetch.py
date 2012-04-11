@@ -421,8 +421,7 @@ class PypoFetch(Thread):
         try:
             mediaKeys = sorted(media.iterkeys())
             for mkey in mediaKeys:
-                media_item = media[mkey]
-                media_item['show_name'] = "TODO"                
+                media_item = media[mkey]           
         except Exception, e:
             self.logger.error("%s", e)
                 
