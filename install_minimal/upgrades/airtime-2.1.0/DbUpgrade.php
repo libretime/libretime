@@ -36,8 +36,8 @@ class AirtimeDatabaseUpgrade{
         //Propel classes.
         set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
         
-        require_once APPLICATION_PATH."/configs/conf.php";
-        require_once 'propel/runtime/lib/Propel.php';
+        include_once APPLICATION_PATH."/configs/conf.php";
+        include_once 'propel/runtime/lib/Propel.php';
         Propel::init(APPLICATION_PATH."/configs/airtime-conf-production.php");
         
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
