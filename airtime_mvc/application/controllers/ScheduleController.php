@@ -12,6 +12,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('make-context-menu', 'json')
 					->addActionContext('add-show-dialog', 'json')
 					->addActionContext('add-show', 'json')
+					->addActionContext('edit-show', 'json')
 					->addActionContext('move-show', 'json')
 					->addActionContext('resize-show', 'json')
 					->addActionContext('delete-show', 'json')
@@ -19,8 +20,7 @@ class ScheduleController extends Zend_Controller_Action
 					->addActionContext('clear-show', 'json')
                     ->addActionContext('get-current-playlist', 'json')
 					->addActionContext('remove-group', 'json')
-                    ->addActionContext('edit-show', 'json')
-                    ->addActionContext('add-show', 'json')
+                    ->addActionContext('populate-show-form', 'json')
                     ->addActionContext('cancel-show', 'json')
                     ->addActionContext('cancel-current-show', 'json')
                     ->addActionContext('get-form', 'json')
@@ -265,13 +265,13 @@ class ScheduleController extends Zend_Controller_Action
             } else {
                 if($instance->isRepeating()){
                     $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
-                    $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/edit-show");
-                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                    $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/populate-show-form");
+                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");
                 }else{
                     if($instance->isRebroadcast()){
-                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/edit-show");
+                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/populate-show-form");
                     }else{
-                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/edit-show");
+                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
                     }
                 }
                 if($isAdminOrPM){
@@ -286,13 +286,13 @@ class ScheduleController extends Zend_Controller_Action
 
                 if($instance->isRepeating()){
                     $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
-                    $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/edit-show");
-                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/edit-show");
+                    $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/populate-show-form");
+                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");
                 }else{
                     if($instance->isRebroadcast()){
-                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/edit-show");
+                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/populate-show-form");
                     }else{
-                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/edit-show");
+                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
                     }
                 }
 
@@ -438,7 +438,7 @@ class ScheduleController extends Zend_Controller_Action
         unset($this->view->showContent);
     }
 
-    public function editShowAction()
+    public function populateShowFormAction()
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -452,8 +452,10 @@ class ScheduleController extends Zend_Controller_Action
         
         if ($type == "instance"){
             $this->view->action = "edit-show-instance";
-        }else if($type == "rebroadcast"){
+        } else if($type == "rebroadcast") {
             $this->view->action = "edit-show-rebroadcast";
+        } else {
+            $this->view->action = "edit-show";
         }
         
         try{
@@ -625,19 +627,7 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
     }
-    
-    public function editShowInstanceAction(){
-        $js = $this->_getParam('data');
-        $data = array();
-
-        //need to convert from serialized jQuery array.
-        foreach($js as $j){
-            $data[$j["name"]] = $j["value"];
-        }
-
         
-    }
-    
     public function editShowRebroadcastAction(){
         $js = $this->_getParam('data');
         $data = array();
@@ -668,15 +658,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->edit = true;
     }
     
-    //for 2.2
-    /*
-    public function editShowAction(){
-    
-    }
-    */
-    
-    public function addShowAction()
-    {
+    public function editShowInstanceAction(){
         $js = $this->_getParam('data');
         $data = array();
 
@@ -685,15 +667,18 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
-        $show = new Application_Model_Show($data['add_show_id']);
-        $startDateModified = true;
-        if ($data['add_show_id'] != -1 && !array_key_exists('add_show_start_date', $data)){
-            //show is being updated and changing the start date was disabled, since the
-            //array key does not exist. We need to repopulate this entry from the db.
-            //The start date will be return in UTC time, so lets convert it to local time.
-            $dt = Application_Model_DateHelper::ConvertToLocalDateTime($show->getStartDate());
-            $data['add_show_start_date'] = $dt->format("Y-m-d");
-            $startDateModified = false;
+        
+    }
+    
+    public function editShowAction(){
+        
+        //1) Get add_show_start_date since it might not have been sent
+        $js = $this->_getParam('data');
+        $data = array();
+
+        //need to convert from serialized jQuery array.
+        foreach($js as $j){
+            $data[$j["name"]] = $j["value"];
         }
 
         $data['add_show_hosts'] =  $this->_getParam('hosts');
@@ -703,192 +688,59 @@ class ScheduleController extends Zend_Controller_Action
             $data['add_show_day_check'] = null;
         }
         
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        $isDJ = $user->isHost($show->getId());
-
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        $record = false;
-
-        $formWhat = new Application_Form_AddShowWhat();
-		$formWho = new Application_Form_AddShowWho();
-		$formWhen = new Application_Form_AddShowWhen();
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formStyle = new Application_Form_AddShowStyle();
-		$formLive = new Application_Form_AddShowLiveStream();
-
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWho->removeDecorator('DtDdWrapper');
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formStyle->removeDecorator('DtDdWrapper');
-		$formLive->removeDecorator('DtDdWrapper');
-
-		$what = $formWhat->isValid($data);
-		$when = $formWhen->isValid($data);
-		$live = $formLive->isValid($data);
-        if($when) {
-            $when = $formWhen->checkReliantFields($data, $startDateModified);
+        $show = new Application_Model_Show($data['add_show_id']);
+        $validateStartDate = true;
+        
+        if (!array_key_exists('add_show_start_date', $data)){
+            //Changing the start date was disabled, since the
+            //array key does not exist. We need to repopulate this entry from the db.
+            //The start date will be returned in UTC time, so lets convert it to local time.
+            $dt = Application_Model_DateHelper::ConvertToLocalDateTime($show->getStartDate());
+            $data['add_show_start_date'] = $dt->format("Y-m-d");
+            $validateStartDate = false;
         }
-
-
-        //The way the following code works is that is parses the hour and
-        //minute from a string with the format "1h 20m" or "2h" or "36m".
-        //So we are detecting whether an hour or minute value exists via strpos
-        //and then parse appropriately. A better way to do this in the future is
-        //actually pass the format from javascript in the format hh:mm so we don't
-        //have to do this extra String parsing.
-        $hPos = strpos($data["add_show_duration"], 'h');
-        $mPos = strpos($data["add_show_duration"], 'm');
-
-        $hValue = 0;
-        $mValue = 0;
-
-        if($hPos !== false){
-        	$hValue = trim(substr($data["add_show_duration"], 0, $hPos));
-        }
-        if($mPos !== false){
-            $hPos = $hPos === FALSE ? 0 : $hPos+1;
-        	$mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
-        }
-
-        $data["add_show_duration"] = $hValue.":".$mValue;
-
-        if(!$isSaas){
-            $formRecord = new Application_Form_AddShowRR();
-            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-            $formRecord->removeDecorator('DtDdWrapper');
-            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-            $formRebroadcast->removeDecorator('DtDdWrapper');
-
-            //If show is a new show (not updated), then get
-            //isRecorded from POST data. Otherwise get it from
-            //the database since the user is not allowed to
-            //update this option.
-            if ($data['add_show_id'] != -1){
-                $data['add_show_record'] = $show->isRecorded();
-                $record = $formRecord->isValid($data);
-                $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
-            } else {
-                $record = $formRecord->isValid($data);
-            }
-        }
-
-        if($data["add_show_repeats"]) {
-		    $repeats = $formRepeats->isValid($data);
-            if($repeats) {
-                $repeats = $formRepeats->checkReliantFields($data);
-            }
-            if(!$isSaas){
-                $formAbsoluteRebroadcast->reset();
-                //make it valid, results don't matter anyways.
-                $rebroadAb = 1;
-
-                if ($data["add_show_rebroadcast"]) {
-                    $rebroad = $formRebroadcast->isValid($data);
-                    if($rebroad) {
-                        $rebroad = $formRebroadcast->checkReliantFields($data);
-                    }
-                }
-                else {
-                    $rebroad = 1;
-                }
-            }
-        }
-        else {
-            $repeats = 1;
-            if(!$isSaas){
-                $formRebroadcast->reset();
-                 //make it valid, results don't matter anyways.
-                $rebroad = 1;
-
-                if ($data["add_show_rebroadcast"]) {
-                    $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
-                    if($rebroadAb) {
-                        $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
-                    }
-                }
-                else {
-                    $rebroadAb = 1;
-                }
-            }
-        }
-
-		$who = $formWho->isValid($data);
-		$style = $formStyle->isValid($data);
-        if ($what && $when && $repeats && $who && $style && $live) {
-            if(!$isSaas){
-                if($record && $rebroadAb && $rebroad){
-                    if ($isAdminOrPM || $isDJ) {
-                        Application_Model_Show::create($data);
-                    }
-
-                    //send back a new form for the user.
-                    Application_Model_Schedule::createNewFormSections($this->view);
-
-                    $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
-                }else{
-                    $this->view->what = $formWhat;
-                    $this->view->when = $formWhen;
-                    $this->view->repeats = $formRepeats;
-                    $this->view->who = $formWho;
-                    $this->view->style = $formStyle;
-                    $this->view->rr = $formRecord;
-                    $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                    $this->view->rebroadcast = $formRebroadcast;
-                    $this->view->live = $formLive;
-                    $this->view->addNewShow = true;
-
-                    //the form still needs to be "update" since
-                    //the validity test failed.
-                    if ($data['add_show_id'] != -1){
-                        $this->view->addNewShow = false;
-                    }
-                    if (!$startDateModified){
-                        $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
-                    }
-                    
-                    $this->view->form = $this->view->render('schedule/add-show-form.phtml');
-
-                }
-            }else{
-                if ($isAdminOrPM || $isDJ) {
-                    Application_Model_Show::create($data);
-                }
-
-                //send back a new form for the user.
-                Application_Model_Schedule::createNewFormSections($this->view);
-
-                $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
-            }
-		}
-        else {
-            $this->view->what = $formWhat;
-            $this->view->when = $formWhen;
-            $this->view->repeats = $formRepeats;
-            $this->view->who = $formWho;
-            $this->view->style = $formStyle;
-            $this->view->live = $formLive;
-            
-            if(!$isSaas){
-                $this->view->rr = $formRecord;
-                $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                $this->view->rebroadcast = $formRebroadcast;
-            }
+        
+        $data['add_show_record'] = $show->isRecorded();
+        
+        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate);
+        
+        if ($success){
             $this->view->addNewShow = true;
-
-            //the form still needs to be "update" since
-            //the validity test failed.
-            if ($data['add_show_id'] != -1){
-                $this->view->addNewShow = false;
+            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+        } else {
+            if (!$validateStartDate){
+                $this->view->when->getElement('add_show_start_date')->setOptions(array('disabled' => true));
             }
-            if (!$startDateModified){
-                $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
-            }
+            $this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
+            $this->view->addNewShow = false;
+            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+        }
+    }
+    
+    public function addShowAction(){
+        $js = $this->_getParam('data');
+        $data = array();
 
+        //need to convert from serialized jQuery array.
+        foreach($js as $j){
+            $data[$j["name"]] = $j["value"];
+        }
+
+        $data['add_show_hosts'] =  $this->_getParam('hosts');
+        $data['add_show_day_check'] =  $this->_getParam('days');
+
+        if($data['add_show_day_check'] == "") {
+            $data['add_show_day_check'] = null;
+        }
+        
+        $validateStartDate = true;
+        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate);
+        
+        if ($success){
+            $this->view->addNewShow = true;
+            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+        } else {
+            $this->view->addNewShow = true;
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
     }
