@@ -12,7 +12,7 @@ class AirtimeDatabaseUpgrade{
     }
 
     private static function task0(){
-        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20120411102907');
+        UpgradeCommon::MigrateTablesToVersion(__DIR__, '20120411174904');
        
         $sql = "INSERT INTO cc_pref(\"keystr\", \"valstr\") VALUES('scheduled_play_switch', 'on')";
         UpgradeCommon::nonSelectQueryDb($sql);
@@ -25,7 +25,7 @@ class AirtimeDatabaseUpgrade{
         
         // Define path to application directory
         defined('APPLICATION_PATH')
-        || define('APPLICATION_PATH', realpath(__DIR__."/../../application"));
+        || define('APPLICATION_PATH', realpath(__DIR__.'/../../../airtime_mvc/application'));
         
         // Ensure library is on include_path
         set_include_path(implode(PATH_SEPARATOR, array(
@@ -36,6 +36,7 @@ class AirtimeDatabaseUpgrade{
         //Propel classes.
         set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
         
+        require_once APPLICATION_PATH."/configs/conf.php";
         require_once 'propel/runtime/lib/Propel.php';
         Propel::init(APPLICATION_PATH."/configs/airtime-conf-production.php");
         
@@ -43,7 +44,7 @@ class AirtimeDatabaseUpgrade{
         
         $showInstances = CcShowInstancesQuery::create()
             ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-            ->filterByDbStarts(Criteria::GREATER_EQUAL)
+            ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_EQUAL)
             ->find($con);
         
         foreach ($showInstances as $instance) {
