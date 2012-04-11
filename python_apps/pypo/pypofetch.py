@@ -90,7 +90,7 @@ class PypoFetch(Thread):
                 self.switch_source(self.logger, self.telnet_lock, m['sourcename'], m['status'])
             elif command == 'disconnect_source':
                 self.logger.info("disconnect_on_source show command received...")
-                self.disconnect_source(self.logger, self.telnet.lock, m['sourcename'])
+                self.disconnect_source(self.logger, self.telnet_lock, m['sourcename'])
         except Exception, e:
             import traceback
             top = traceback.format_exc()
