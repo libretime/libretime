@@ -24,6 +24,8 @@ class Version20120411102907 extends AbstractMigration
         $this->_addSql("ALTER TABLE cc_schedule ALTER COLUMN cue_out TYPE interval");
         $this->_addSql("ALTER TABLE cc_schedule ALTER COLUMN clip_length TYPE interval");
         
+        $this->_addSql("ALTER TABLE cc_show_instances ALTER COLUMN time_filled TYPE interval");
+        
         //remove old columns from cc_schedule that deal with groups or playlists.
         $this->_addSql("ALTER TABLE cc_schedule DROP COLUMN group_id");
         $this->_addSql("ALTER TABLE cc_schedule DROP COLUMN schedule_group_played");

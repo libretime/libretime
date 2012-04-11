@@ -14,6 +14,11 @@ class Version20120411174904 extends AbstractMigration
     {
         $this->_addSql("ALTER TABLE cc_show_instances ADD created timestamp(6)");
         $this->_addSql("ALTER TABLE cc_show_instances ADD last_scheduled timestamp(6)");
+        
+        //setting these to a default now for timeline refresh purposes.
+        $now = gmdate("Y-m-d H:i:s");
+        $this->_addSql("UPDATE cc_show_instances SET created = '$now'");
+        $this->_addSql("UPDATE cc_show_instances SET last_scheduled = '$now'");
     }
 
     public function down(Schema $schema)
