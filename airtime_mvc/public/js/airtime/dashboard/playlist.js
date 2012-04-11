@@ -135,25 +135,28 @@ function updateProgressBarValue(){
 
 function updatePlaybar(){
     /* Column 0 update */
-    $('#previous').empty();
-    $('#prev-length').empty();
-    $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
-    $('#next').empty();
-    $('#next-length').empty();
     if (previousSong !== null){
         $('#previous').text(previousSong.name+",");
         $('#prev-length').text(convertToHHMMSSmm(previousSong.songLengthMs));
+    }else{
+        $('#previous').empty();
+        $('#prev-length').empty();
     }
     if (currentSong !== null){
         if (currentSong.record == "1")
             $('#current').html("<span style='color:red; font-weight:bold'>Recording: </span>"+currentSong.name+",");
         else
             $('#current').text(currentSong.name+",");
+    }else{
+        $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
     }
 
     if (nextSong !== null){
         $('#next').text(nextSong.name+",");
         $('#next-length').text(convertToHHMMSSmm(nextSong.songLengthMs));
+    }else{
+        $('#next').empty();
+        $('#next-length').empty();
     }
 
     $('#start').empty();

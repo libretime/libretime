@@ -114,6 +114,9 @@ class Application_Model_Schedule {
         
         $timeNowAsMillis = strtotime($p_timeNow);
         for( $i = 0; $i < $numberOfRows; ++$i ){
+            if($rows[$i]['ends'] > $rows[$i]["show_ends"]){
+                $rows[$i]['ends'] = $rows[$i]["show_ends"];
+            }
            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
                 if ( $i - 1 >= 0){
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
