@@ -635,7 +635,7 @@ class Application_Model_Schedule {
      * this method to manipulate the view (this should be done inside the controller function). With
      * 2.1 deadline looming, this is OK for now. -Martin */
     public static function updateShowInstance($data, $controller){
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
         
         $formWhat = new Application_Form_AddShowWhat();
 		$formWhen = new Application_Form_AddShowWhen();
@@ -718,7 +718,7 @@ class Application_Model_Schedule {
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
         $record = false;
 
         $formWhat = new Application_Form_AddShowWhat();
