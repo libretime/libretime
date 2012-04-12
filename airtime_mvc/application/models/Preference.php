@@ -543,7 +543,7 @@ class Application_Model_Preference
     }
 
     public static function GetAirtimeVersion(){
-        if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development"){
+        if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development" && function_exists('exec')){
             return self::GetValue("system_version")."+".exec("git rev-parse --short HEAD");
         } else {
             return self::GetValue("system_version");
