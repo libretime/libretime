@@ -318,7 +318,7 @@ class PypoPush(Thread):
         
                    
     def date_interval_to_seconds(self, interval):
-        return (interval.microseconds + (interval.seconds + interval.days * 24 * 3600) * 10**6) / 10**6
+        return (interval.microseconds + (interval.seconds + interval.days * 24 * 3600) * 10**6) / float(10**6)
                         
     def push_to_liquidsoap(self, event_chain):
         
