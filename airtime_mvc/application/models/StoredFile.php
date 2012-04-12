@@ -321,9 +321,6 @@ class Application_Model_StoredFile {
         // set file_exists falg to false
         $this->_file->setDbFileExists(false);
         $this->_file->save();
-        
-        // delete entries in cc_schedule which has file_id as this file
-        Application_Model_Schedule::deleteWithFileId(self::getId());
     }
 
     /**
