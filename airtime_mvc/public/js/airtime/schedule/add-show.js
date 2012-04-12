@@ -483,7 +483,6 @@ function showErrorSections() {
         $("#schedule-record-rebroadcast").show();
         $("#add_show_rebroadcast_relative").show();
     }
-    $('input:text').setMask()
 }
 
 $(document).ready(function() {

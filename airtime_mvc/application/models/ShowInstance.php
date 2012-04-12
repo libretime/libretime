@@ -609,7 +609,10 @@ class Application_Model_ShowInstance {
         $end = $this->getShowInstanceEnd(null);
 
         $interval = $start->diff($end);
-        return $interval->format("%h:%I:%S");
+        $days = $interval->format("%d");
+        
+        if ($days > 0) return "24:" . $interval->format("%I:%S");
+        else return $interval->format("%h:%I:%S");
     }
 
     public function getShowListContent()

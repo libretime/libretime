@@ -634,13 +634,96 @@ class Application_Model_Schedule {
         $p_view->addNewShow = true;
     }
     
+    /* This function is responsible for handling the case where an individual 
+     * show instance in a repeating show was edited (via the context menu in the Calendar).
+     * There is still lots of clean-up to do. For example we shouldn't be passing $controller into
+     * this method to manipulate the view (this should be done inside the controller function). With
+     * 2.1 deadline looming, this is OK for now. -Martin */
+    public static function updateShowInstance($data, $controller){
+        $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
+        
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWhen = new Application_Form_AddShowWhen();
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formWho = new Application_Form_AddShowWho();
+		$formStyle = new Application_Form_AddShowStyle();
+		$formLive = new Application_Form_AddShowLiveStream();
+
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formStyle->removeDecorator('DtDdWrapper');
+		$formLive->removeDecorator('DtDdWrapper');
+        
+        if(!$isSaas){
+            $formRecord = new Application_Form_AddShowRR();
+            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+
+            $formRecord->removeDecorator('DtDdWrapper');
+            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+            $formRebroadcast->removeDecorator('DtDdWrapper');
+        }
+        $when = $formWhen->isValid($data);
+        
+        if($when && $formWhen->checkReliantFields($data, true)) {        
+            $start_dt = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
+            $start_dt->setTimezone(new DateTimeZone('UTC'));
+            
+            $end_dt = new DateTime($data['add_show_end_date_no_repeat']." ".$data['add_show_end_time'], new DateTimeZone(date_default_timezone_get()));
+            $end_dt->setTimezone(new DateTimeZone('UTC'));
+                    
+            $ccShowInstance = CcShowInstancesQuery::create()->findPK($data["add_show_instance_id"]);
+            $ccShowInstance->setDbStarts($start_dt);
+            $ccShowInstance->setDbEnds($end_dt);
+            $ccShowInstance->save();    
+        
+            Application_Model_Schedule::createNewFormSections($controller->view);
+            
+            return true;
+        } else {
+            $formWhat->disable();
+            $formWhen->disableRepeatCheckbox();
+            $formRepeats->disable();
+            $formWho->disable();
+            $formStyle->disable();
+            //$formLive->disable();
+        
+            $controller->view->what = $formWhat;
+            $controller->view->when = $formWhen;
+            $controller->view->repeats = $formRepeats;
+            $controller->view->who = $formWho;
+            $controller->view->style = $formStyle;
+            $controller->view->live = $formLive; 
+            if(!$isSaas){
+                $controller->view->rr = $formRecord;
+                $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+                $controller->view->rebroadcast = $formRebroadcast;
+                
+                //$formRecord->disable();
+                //$formAbsoluteRebroadcast->disable();
+                //$formRebroadcast->disable();
+            }
+            return false;
+        }    
+    }
+    
+    /* This function is responsible for handling the case where the entire show (not a single show instance) 
+     * was edited (via the context menu in the Calendar).
+     * There is still lots of clean-up to do. For example we shouldn't be passing $controller into
+     * this method to manipulate the view (this should be done inside the controller function). With
+     * 2.1 deadline looming, this is OK for now.
+     * Another clean-up is to move all the form manipulation to the proper form class.....
+     * -Martin 
+     */
     public static function addUpdateShow($data, $controller, $validateStartDate){
     
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
         $record = false;
 
         $formWhat = new Application_Form_AddShowWhat();
