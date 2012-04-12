@@ -342,6 +342,9 @@ class Application_Model_MusicDir {
 
     public static function setStorDir($p_dir)
     {
+        // we want to be consistent when storing dir path.
+        // path should always ends with trailing '/'
+        $p_dir = realpath($p_dir)."/";
         if(!is_dir($p_dir)){
             return array("code"=>2, "error"=>"'$p_dir' is not a valid directory.");
         }else if(Application_Model_Preference::GetImportTimestamp()+10 > time()){
