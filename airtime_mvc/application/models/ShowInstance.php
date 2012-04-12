@@ -609,9 +609,16 @@ class Application_Model_ShowInstance {
 
         $interval = $start->diff($end);
         $days = $interval->format("%d");
+        $hours = sprintf("%02d" ,$interval->format("%h"));
         
-        if ($days > 0) return "24:" . $interval->format("%I:%S");
-        else return $interval->format("%h:%I:%S");
+        if ($days > 0) {
+            $totalHours = $days * 24 + $hours;
+            $returnStr = $totalHours . ":" . $interval->format("%I:%S") . ".00";
+        } else {
+            $returnStr = $hours . ":" . $interval->format("%I:%S") . ".00";
+        }
+        
+        return $returnStr;
     }
 
     public function getShowListContent()
