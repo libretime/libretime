@@ -14,6 +14,12 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'decorators' => array('ViewHelper')
         ));
         
+        // Hidden element to indicate the instance id of the show
+        // being edited.
+        $this->addElement('hidden', 'add_show_instance_id', array(
+            'decorators' => array('ViewHelper')
+        ));
+        
         // Add name element
         $this->addElement('text', 'add_show_name', array(
             'label'      => 'Name:',

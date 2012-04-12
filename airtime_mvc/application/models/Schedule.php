@@ -592,7 +592,8 @@ class Application_Model_Schedule {
         $p_view->style = $formStyle;
         $p_view->live = $formLive;
 
-        $formWhat->populate(array('add_show_id' => '-1'));
+        $formWhat->populate(array('add_show_id' => '-1', 
+                                      'add_show_instance_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
                                       'add_show_start_time' => '00:00',
                                       'add_show_end_date_no_repeate' => date("Y-m-d"),
