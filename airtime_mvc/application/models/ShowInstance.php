@@ -567,15 +567,14 @@ class Application_Model_ShowInstance {
     public function getTimeScheduled()
     {
         $time = $this->_showInstance->getDbTimeFilled();
-
-        if (is_null($time)) {
-            $time = "00:00:00";
+		
+        if ($time != "00:00:00") {
+            $milliseconds = substr(round(substr($time, 8), 2), 1);
+            $time = substr($time, 0, 8) . $milliseconds;
+        } else {
+            $time = "00:00:00.00";
         }
-        else {
-            $formatter = new LengthFormatter($time);
-            $time = $formatter->format();
-        }
-
+		
         return $time;
     }
 
@@ -610,9 +609,17 @@ class Application_Model_ShowInstance {
 
         $interval = $start->diff($end);
         $days = $interval->format("%d");
+        $hours = sprintf("%02d" ,$interval->format("%h"));
+
+        if ($days > 0) {
+            $totalHours = $days * 24 + $hours;
+            //$interval object does not have milliseconds so hard code to .00
+            $returnStr = $totalHours . ":" . $interval->format("%I:%S") . ".00";
+        } else {
+            $returnStr = $hours . ":" . $interval->format("%I:%S") . ".00";
+        }
         
-        if ($days > 0) return "24:" . $interval->format("%I:%S");
-        else return $interval->format("%h:%I:%S");
+        return $returnStr;
     }
 
     public function getShowListContent()
