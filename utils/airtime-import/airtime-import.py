@@ -18,7 +18,7 @@ logging.disable(50)
 # add ch to logger
 logger.addHandler(ch)
 
-if (commands.getoutput("whoami") != 'root'):
+if (os.geteuid() != 0):
     print 'Must be a root user.'
     sys.exit()
     

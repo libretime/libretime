@@ -11,7 +11,7 @@ require_once(__DIR__.'/airtime-constants.php');
 require_once(dirname(__FILE__).'/AirtimeIni.php');
 require_once(dirname(__FILE__).'/AirtimeInstall.php');
 
-if(exec("whoami") != "root"){
+if(posix_geteuid() != 0){
     echo "Must be root user.\n";
     exit(1);
 }
@@ -111,10 +111,13 @@ if (strcmp($version, "2.0.2") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.2/airtime-upgrade.php");
     pause();
 }
-if (strcmp($version, "2.1.0") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.0/airtime-upgrade.php");
+if (strcmp($version, "2.0.3") < 0){
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.3/airtime-upgrade.php");
     pause();
 }
+if (strcmp($version, "2.1.0") < 0){
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.0/airtime-upgrade.php");
+} 
 
 //set the new version in the database.
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";

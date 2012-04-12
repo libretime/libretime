@@ -224,10 +224,6 @@ class PypoPush(Thread):
                 problem_start_time = queue_item['start']
                 break
             iteration+=1
-        
-        
-
-            
         return (problem_at_iteration, problem_start_time)
         
         

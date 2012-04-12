@@ -27,6 +27,9 @@ def create_dir(path):
         os.makedirs(path)
     except Exception, e:
         pass
+    
+def get_rand_string(length=10):
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(length))
         
 def get_rand_string(length=10):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(length))

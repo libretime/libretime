@@ -11,13 +11,7 @@ def create_user(username):
   if (output[0:3] != "uid"):
     # Make the pypo user
     print " * Creating user "+username
-    os.system("adduser --system --quiet --group --shell /bin/bash "+username)
-
-    #set pypo password
-    p = os.popen('/usr/bin/passwd pypo 1>/dev/null 2>&1', 'w')
-    p.write('pypo\n')
-    p.write('pypo\n')
-    p.close()
+    os.system("adduser --system --quiet --group "+username)
   else:
     print "User already exists."
   #add pypo to audio group

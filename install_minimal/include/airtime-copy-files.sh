@@ -2,7 +2,7 @@
 #-e Causes bash script to exit if any of the installers
 #return with a non-zero return value.
 
-if [ `whoami` != 'root' ]; then
+if [[ $EUID -ne 0 ]]; then
     echo "Please run as root user."
     exit 1
 fi
