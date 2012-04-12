@@ -1,3 +1,3 @@
 [submodule "python_apps/pypo/liquidsoap_bin"]
 	path = python_apps/pypo/liquidsoap_bin
-	url = git@dev.sourcefabric.org:airtime-liquidsoap
+	url = git://github.com/sourcefabric/airtime-liquidsoap.git
