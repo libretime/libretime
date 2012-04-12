@@ -567,15 +567,14 @@ class Application_Model_ShowInstance {
     public function getTimeScheduled()
     {
         $time = $this->_showInstance->getDbTimeFilled();
-
-        if (is_null($time)) {
-            $time = "00:00:00";
+		
+        if ($time != "00:00:00") {
+            $milliseconds = substr(round(substr($time, 8), 2), 1);
+            $time = substr($time, 0, 8) . $milliseconds;
+        } else {
+            $time = "00:00:00.00";
         }
-        else {
-            $formatter = new LengthFormatter($time);
-            $time = $formatter->format();
-        }
-
+		
         return $time;
     }
 
