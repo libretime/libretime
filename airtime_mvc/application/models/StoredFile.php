@@ -286,14 +286,12 @@ class Application_Model_StoredFile {
     {
 
         $filepath = $this->getFilePath();
-
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             throw new DeleteScheduledFileException();
         }
 
         if (file_exists($filepath)) {
-
             $data = array("filepath" => $filepath, "delete" => 1);
             Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
         }
@@ -301,10 +299,31 @@ class Application_Model_StoredFile {
         if ($deleteFromPlaylist){
             Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
         }
-
         // set file_exists falg to false
         $this->_file->setDbFileExists(false);
         $this->_file->save();
+    }
+    
+    /**
+     * This function is for when media monitor detects deletion of file
+     * and trying to update airtime side
+     *
+     * @param boolean $p_deleteFile
+     *
+     */
+    public function deleteByMediaMonitor($deleteFromPlaylist=false)
+    {
+        $filepath = $this->getFilePath();
+
+        if ($deleteFromPlaylist){
+            Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
+        }
+        // set file_exists falg to false
+        $this->_file->setDbFileExists(false);
+        $this->_file->save();
+        
+        // delete entries in cc_schedule which has file_id as this file
+        Application_Model_Schedule::deleteWithFileId(self::getId());
     }
 
     /**
