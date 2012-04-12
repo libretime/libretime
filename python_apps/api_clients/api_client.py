@@ -442,7 +442,10 @@ class AirTimeApiClient(ApiClientInterface):
 
         except Exception, e:
             response = None
-            logger.error("Exception with file %s: %s", md, e)
+            import traceback
+            top = traceback.format_exc()
+            logger.error('Exception: %s', e)
+            logger.error("traceback: %s", top)
 
         return response
 

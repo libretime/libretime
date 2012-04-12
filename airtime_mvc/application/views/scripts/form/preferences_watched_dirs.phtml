@@ -38,7 +38,7 @@
         <?php if (count($watched_dirs) > 0): ?>
             <?php foreach($watched_dirs as $watched_dir): ?>
                 <dd class="block-display selected-item">
-                    <span><?php echo ($watched_dir->getExistsFlag())?"":"<img src='/css/images/warning-icon.png'>"?></span><span><?php echo $watched_dir->getDirectory();?></span></span><span class="ui-icon ui-icon-close"></span>
+                    <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span><?php echo $watched_dir->getDirectory();?></span></span><span class="ui-icon ui-icon-close"></span>
                 </dd>
             <?php endforeach; ?>
         <?php else: ?>

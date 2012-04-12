@@ -29,6 +29,8 @@ s3_namespace = ref ''
 
 queue = on_metadata(notify, queue)
 queue = map_metadata(append_title, queue)
+# the crossfade function controls fade in/out
+queue = crossfade(queue)
 ignore(output.dummy(queue, fallible=true))
 
 server.register(namespace="vars", "pypo_data", fun (s) -> begin pypo_data := s "Done" end)

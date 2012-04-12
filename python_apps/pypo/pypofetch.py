@@ -90,7 +90,7 @@ class PypoFetch(Thread):
                 self.switch_source(self.logger, self.telnet_lock, m['sourcename'], m['status'])
             elif command == 'disconnect_source':
                 self.logger.info("disconnect_on_source show command received...")
-                self.disconnect_source(self.logger, self.telnet.lock, m['sourcename'])
+                self.disconnect_source(self.logger, self.telnet_lock, m['sourcename'])
         except Exception, e:
             import traceback
             top = traceback.format_exc()
@@ -421,8 +421,7 @@ class PypoFetch(Thread):
         try:
             mediaKeys = sorted(media.iterkeys())
             for mkey in mediaKeys:
-                media_item = media[mkey]
-                media_item['show_name'] = "TODO"                
+                media_item = media[mkey]           
         except Exception, e:
             self.logger.error("%s", e)
                 

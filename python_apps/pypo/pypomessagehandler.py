@@ -99,7 +99,7 @@ class PypoMessageHandler(Thread):
                 self.handle_message(message.payload)
                 # ACK the message to take it off the queue
                 message.ack()
-            except IOError, e:
+            except (IOError, AttributeError), e:
                 import traceback
                 top = traceback.format_exc()
                 self.logger.error('Exception: %s', e)

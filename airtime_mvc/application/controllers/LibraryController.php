@@ -45,7 +45,7 @@ class LibraryController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::Recall($id);
 
             if (isset($this->pl_sess->id) && $screen == "playlist") {
-                $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "copy");
+                $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
             }
             
             
@@ -56,7 +56,7 @@ class LibraryController extends Zend_Controller_Action
             }
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
-            $menu["download"] = array("name" => "Download", "url" => $url);
+            $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
 
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
 
@@ -75,11 +75,11 @@ class LibraryController extends Zend_Controller_Action
                     $text = "Upload to SoundCloud";
                 }
 
-                $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "url" => "/library/upload-file-soundcloud/id/{$id}");
+                $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
 
                 if ($scid > 0){
                     $url = $file->getSoundCloudLinkToFile();
-                    $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "url" => $url);
+                    $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
                 }
             }
         }
@@ -93,7 +93,7 @@ class LibraryController extends Zend_Controller_Action
         }
 
         //Open a jPlayer window and play the audio clip.
-        $menu["play"] = array("name"=> "Play", "icon" => "big_play");
+        $menu["play"] = array("name"=> "Play", "icon" => "play");
             
         $this->view->items = $menu;
     }

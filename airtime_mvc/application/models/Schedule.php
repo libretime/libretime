@@ -114,6 +114,10 @@ class Application_Model_Schedule {
         
         $timeNowAsMillis = strtotime($p_timeNow);
         for( $i = 0; $i < $numberOfRows; ++$i ){
+            // if the show is overbooked, then update the track end time to the end of the show time.
+            if($rows[$i]['ends'] > $rows[$i]["show_ends"]){
+                $rows[$i]['ends'] = $rows[$i]["show_ends"];
+            }
            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
                 if ( $i - 1 >= 0){
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
@@ -351,7 +355,7 @@ class Application_Model_Schedule {
         if (strpos($t[2], ".")) {
             $secParts = explode(".", $t[2]);
             $millisecs = $secParts[1];
-            $millisecs = substr($millisecs, 0, 3);
+            $millisecs = str_pad(substr($millisecs, 0, 3),3, '0');
             $millisecs = intval($millisecs);
             $seconds = intval($secParts[0]);
         } else {
@@ -408,6 +412,7 @@ class Application_Model_Schedule {
         
         $baseQuery = "SELECT st.file_id AS file_id,"
             ." st.id as id,"
+            ." st.instance_id as instance_id,"
             ." st.starts AS start,"
             ." st.ends AS end,"
             ." st.cue_in AS cue_in,"
@@ -523,7 +528,12 @@ class Application_Model_Schedule {
         }
 
         foreach ($items as $item){
-
+			
+            $showInstance = CcShowInstancesQuery::create()->findPK($item["instance_id"]);
+            $showId = $showInstance->getDbShowId();
+            $show = CcShowQuery::create()->findPK($showId);
+            $showName = $show->getDbName();
+			
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
             $trackStartDateTime = new DateTime($item["start"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
@@ -555,7 +565,8 @@ class Application_Model_Schedule {
                 'cue_in' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
                 'cue_out' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
                 'start' => $start,
-                'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"])
+                'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]),
+                'show_name' => $showName
             );
         }
 
