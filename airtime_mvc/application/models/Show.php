@@ -1767,8 +1767,7 @@ class Application_Model_Show {
         ." AND si.ends < TIMESTAMP '$p_timeNow' + INTERVAL '2 days'"
         ." AND modified_instance != TRUE"
         ." ORDER BY si.starts";
-
-        //Logging::log($sql);
+        
         // Convert back to local timezone
         $rows = $CC_DBC->GetAll($sql);
         $numberOfRows = count($rows);
@@ -1785,6 +1784,7 @@ class Application_Model_Show {
                 if ( $i - 1 >= 0){
                     $results['previousShow'][0] = array(
                                 "id"=>$rows[$i-1]['id'],
+                                "instance_id"=>$rows[$i-1]['instance_id'],
                                 "name"=>$rows[$i-1]['name'],
                                 "start_timestamp"=>$rows[$i-1]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i-1]['end_timestamp'],
@@ -1797,6 +1797,7 @@ class Application_Model_Show {
                 if ( isset($rows[$i+1])){
                     $results['nextShow'][0] =  array(
                                 "id"=>$rows[$i+1]['id'],
+                                "instance_id"=>$rows[$i+1]['instance_id'],
                                 "name"=>$rows[$i+1]['name'],
                                 "start_timestamp"=>$rows[$i+1]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i+1]['end_timestamp'],
@@ -1814,6 +1815,7 @@ class Application_Model_Show {
             if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
                 $results['nextShow'][0] = array(
                                 "id"=>$rows[$i]['id'],
+                                "instance_id"=>$rows[$i]['instance_id'],
                                 "name"=>$rows[$i]['name'],
                                 "start_timestamp"=>$rows[$i]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i]['end_timestamp'],
@@ -1827,6 +1829,7 @@ class Application_Model_Show {
         if (count($results['previousShow']) == 0 && isset($previousShowIndex)) {
                 $results['previousShow'][0] = array(
                     "id"=>$rows[$previousShowIndex]['id'],
+                    "instance_id"=>$rows[$previousShowIndex]['instance_id'],
                     "name"=>$rows[$previousShowIndex]['name'],
                     "start_timestamp"=>$rows[$previousShowIndex]['start_timestamp'],
                     "end_timestamp"=>$rows[$previousShowIndex]['end_timestamp'],
