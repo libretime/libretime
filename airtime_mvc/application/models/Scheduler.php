@@ -16,8 +16,10 @@ class Application_Model_Scheduler {
     private $epochNow;
     private $nowDT;
     private $user;
+    
+    private $checkUserPermissions = true;
 
-    public function __construct($id = null) {
+    public function __construct() {
 
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         
@@ -26,6 +28,11 @@ class Application_Model_Scheduler {
          
         $this->user = Application_Model_User::GetCurrentUser();
     }
+    
+    public function setCheckUserPermissions($value) {
+        $this->checkUserPermissions = $value;
+    }
+    
     
     /*
      * make sure any incoming requests for scheduling are ligit.
@@ -83,7 +90,7 @@ class Application_Model_Scheduler {
             $id = $instance->getDbId();
             $show = $instance->getCcShow($this->con);
             
-            if ($this->user->canSchedule($show->getDbId()) === false) {
+            if ($this->checkUserPermissions && $this->user->canSchedule($show->getDbId()) === false) {
                 throw new Exception("You are not allowed to schedule show {$show->getDbName()}.");
             }
             
