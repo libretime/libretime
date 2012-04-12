@@ -464,6 +464,7 @@ class ScheduleController extends Zend_Controller_Action
         $showInstanceId = $this->_getParam('id');
                 
         $show_instance = CcShowInstancesQuery::create()->findPK($showInstanceId);
+        $show = new Application_Model_Show($show_instance->getDbShowId());
                 
         $starts_string = $show_instance->getDbStarts();
         $ends_string = $show_instance->getDbEnds();
@@ -474,15 +475,20 @@ class ScheduleController extends Zend_Controller_Action
         $starts_datetime->setTimezone(new DateTimeZone(date_default_timezone_get()));
         $ends_datetime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-        $instance_duration = $starts_datetime->diff($ends_datetime);        
+        $instance_duration = $starts_datetime->diff($ends_datetime);  
+
+        $formWhat->populate(array('add_show_id' => $show->getId(),
+                    'add_show_instance_id' => $showInstanceId,
+                    'add_show_name' => $show->getName(),
+                    'add_show_url' => $show->getUrl(),
+                    'add_show_genre' => $show->getGenre(),
+                    'add_show_description' => $show->getDescription()));        
         
-        $formValues = array('add_show_start_date' => $starts_datetime->format("Y-m-d"),
+        $formWhen->populate(array('add_show_start_date' => $starts_datetime->format("Y-m-d"),
                                   'add_show_start_time' => $starts_datetime->format("H:i"),
         						  'add_show_end_date_no_repeat' => $ends_datetime->format("Y-m-d"),
         						  'add_show_end_time'	=> $ends_datetime->format("H:i"),
-                                  'add_show_duration' => $instance_duration->format("%h"));
-                                          
-        $formWhen->populate($formValues);
+                                  'add_show_duration' => $instance_duration->format("%h")));
 
         $formWhat->disable();
         $formWho->disable();
@@ -719,19 +725,15 @@ class ScheduleController extends Zend_Controller_Action
         foreach($js as $j){
             $data[$j["name"]] = $j["value"];
         }
-
         
-        $start_dt = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
-        $start_dt->setTimezone(new DateTimeZone('UTC'));
-        
-        $end_dt = new DateTime($data['add_show_end_date_no_repeat']." ".$data['add_show_end_time'], new DateTimeZone(date_default_timezone_get()));
-        $end_dt->setTimezone(new DateTimeZone('UTC'));
-                
-        //add_show_instance_id not being populated by populateShowInstanceFormAction.
-        $ccShowInstance = CcShowInstancesQuery::create()->findPK($data["add_show_instance_id"]);
-        $ccShowInstance->setDbStarts($start_dt);
-        $ccShowInstance->setDbEnds($end_dt);
-        $ccShowInstance->save();
+        $success = Application_Model_Schedule::updateShowInstance($data, $this);
+        if ($success){
+            $this->view->addNewShow = true;
+            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+        } else {
+            $this->view->addNewShow = false;
+            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+        }
     }
     
     public function editShowAction(){
