@@ -137,8 +137,13 @@ class AirtimeProcessEvent(ProcessEvent):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
+                    oldPath = pathname
                     pathname = self.mmc.organize_new_file(pathname)
-                    name = os.path.basename(pathname)
+                    
+                    #delete files from organize if they can not be read properly.
+                    if pathname is None:
+                        os.remove(oldPath)
+                        return
 
                 self.mmc.set_needed_file_permissions(pathname, dir)
                 is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
@@ -237,6 +242,11 @@ class AirtimeProcessEvent(ProcessEvent):
                     del self.cookies_IN_MOVED_FROM[event.cookie]
                     if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
                         filepath = self.mmc.organize_new_file(event.pathname)
+                        
+                        #delete files from organize if they can not be read properly.
+                        if filepath is None:
+                            os.remove(event.pathname)
+
                     else:
                         filepath = event.pathname
 
@@ -244,7 +254,11 @@ class AirtimeProcessEvent(ProcessEvent):
                         self.file_events.append({'filepath': filepath, 'mode': self.config.MODE_MOVED})
                 else:
                     if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
-                        self.mmc.organize_new_file(event.pathname)
+                        filepath = self.mmc.organize_new_file(event.pathname)
+                        
+                        #delete files from organize if they can not be read properly.
+                        if filepath is None:
+                            os.remove(event.pathname)
                     else:
                         #show dragged from unwatched folder into a watched folder. Do not "organize".:q!
                         if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
@@ -285,8 +299,10 @@ class AirtimeProcessEvent(ProcessEvent):
         if not dir:
             if self.mmc.is_audio_file(pathname):
                 if pathname in self.ignore_event:
+                    self.logger.info("pathname in ignore event")
                     self.ignore_event.remove(pathname)
                 elif not self.mmc.is_parent_directory(pathname, self.config.organize_directory):
+                    self.logger.info("deleting a file not in organize")
                     #we don't care if a file was deleted from the organize directory.
                     self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_DELETE})
 

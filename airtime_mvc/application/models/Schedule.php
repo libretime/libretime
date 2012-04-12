@@ -603,7 +603,8 @@ class Application_Model_Schedule {
         $p_view->style = $formStyle;
         $p_view->live = $formLive;
 
-        $formWhat->populate(array('add_show_id' => '-1'));
+        $formWhat->populate(array('add_show_id' => '-1', 
+                                      'add_show_instance_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
                                       'add_show_start_time' => '00:00',
                                       'add_show_end_date_no_repeate' => date("Y-m-d"),
@@ -626,5 +627,167 @@ class Application_Model_Schedule {
             $p_view->rebroadcast = $formRebroadcast;
         }
         $p_view->addNewShow = true;
+    }
+    
+    public static function addUpdateShow($data, $controller, $validateStartDate){
+    
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        $record = false;
+
+        $formWhat = new Application_Form_AddShowWhat();
+		$formWho = new Application_Form_AddShowWho();
+		$formWhen = new Application_Form_AddShowWhen();
+		$formRepeats = new Application_Form_AddShowRepeats();
+		$formStyle = new Application_Form_AddShowStyle();
+		$formLive = new Application_Form_AddShowLiveStream();
+
+		$formWhat->removeDecorator('DtDdWrapper');
+		$formWho->removeDecorator('DtDdWrapper');
+		$formWhen->removeDecorator('DtDdWrapper');
+		$formRepeats->removeDecorator('DtDdWrapper');
+		$formStyle->removeDecorator('DtDdWrapper');
+		$formLive->removeDecorator('DtDdWrapper');
+
+		$what = $formWhat->isValid($data);
+		$when = $formWhen->isValid($data);
+		$live = $formLive->isValid($data);
+        if($when) {
+            $when = $formWhen->checkReliantFields($data, $validateStartDate);
+        }
+
+        //The way the following code works is that is parses the hour and
+        //minute from a string with the format "1h 20m" or "2h" or "36m".
+        //So we are detecting whether an hour or minute value exists via strpos
+        //and then parse appropriately. A better way to do this in the future is
+        //actually pass the format from javascript in the format hh:mm so we don't
+        //have to do this extra String parsing.
+        $hPos = strpos($data["add_show_duration"], 'h');
+        $mPos = strpos($data["add_show_duration"], 'm');
+
+        $hValue = 0;
+        $mValue = 0;
+
+        if($hPos !== false){
+        	$hValue = trim(substr($data["add_show_duration"], 0, $hPos));
+        }
+        if($mPos !== false){
+            $hPos = $hPos === FALSE ? 0 : $hPos+1;
+        	$mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
+        }
+
+        $data["add_show_duration"] = $hValue.":".$mValue;
+
+        if(!$isSaas){
+            $formRecord = new Application_Form_AddShowRR();
+            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+
+            $formRecord->removeDecorator('DtDdWrapper');
+            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+            $formRebroadcast->removeDecorator('DtDdWrapper');
+
+
+            $record = $formRecord->isValid($data);
+        }
+
+        if($data["add_show_repeats"]) {
+		    $repeats = $formRepeats->isValid($data);
+            if($repeats) {
+                $repeats = $formRepeats->checkReliantFields($data);
+            }
+            if(!$isSaas){
+                $formAbsoluteRebroadcast->reset();
+                //make it valid, results don't matter anyways.
+                $rebroadAb = 1;
+
+                if ($data["add_show_rebroadcast"]) {
+                    $rebroad = $formRebroadcast->isValid($data);
+                    if($rebroad) {
+                        $rebroad = $formRebroadcast->checkReliantFields($data);
+                    }
+                } else {
+                    $rebroad = 1;
+                }
+            }
+        } else {
+            $repeats = 1;
+            if(!$isSaas){
+                $formRebroadcast->reset();
+                 //make it valid, results don't matter anyways.
+                $rebroad = 1;
+
+                if ($data["add_show_rebroadcast"]) {
+                    $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
+                    if($rebroadAb) {
+                        $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
+                    }
+                } else {
+                    $rebroadAb = 1;
+                }
+            }
+        }
+
+		$who = $formWho->isValid($data);
+		$style = $formStyle->isValid($data);
+        if ($what && $when && $repeats && $who && $style && $live) {
+            if(!$isSaas){
+                if($record && $rebroadAb && $rebroad){
+                    if ($isAdminOrPM) {
+                        Application_Model_Show::create($data);
+                    }
+
+                    //send back a new form for the user.
+                    Application_Model_Schedule::createNewFormSections($controller->view);
+
+                    //$controller->view->newForm = $controller->view->render('schedule/add-show-form.phtml');
+                    return true;
+                } else {
+                    $controller->view->what = $formWhat;
+                    $controller->view->when = $formWhen;
+                    $controller->view->repeats = $formRepeats;
+                    $controller->view->who = $formWho;
+                    $controller->view->style = $formStyle;
+                    $controller->view->rr = $formRecord;
+                    $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+                    $controller->view->rebroadcast = $formRebroadcast;
+                    $controller->view->live = $formLive;
+                    //$controller->view->addNewShow = !$editShow;
+                    
+                    //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
+                    return false;
+
+                }
+            } else {
+                if ($isAdminOrPM) {
+                    Application_Model_Show::create($data);
+                }
+
+                //send back a new form for the user.
+                Application_Model_Schedule::createNewFormSections($controller->view);
+
+                //$controller->view->newForm = $controller->view->render('schedule/add-show-form.phtml');
+                return true;
+            }
+		} else {
+            $controller->view->what = $formWhat;
+            $controller->view->when = $formWhen;
+            $controller->view->repeats = $formRepeats;
+            $controller->view->who = $formWho;
+            $controller->view->style = $formStyle;
+            $controller->view->live = $formLive;
+            
+            if(!$isSaas){
+                $controller->view->rr = $formRecord;
+                $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+                $controller->view->rebroadcast = $formRebroadcast;
+            }
+            //$controller->view->addNewShow = !$editShow;
+            //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
+            return false;
+        }
     }
 }

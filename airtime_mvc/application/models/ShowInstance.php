@@ -352,7 +352,7 @@ class Application_Model_ShowInstance {
      * @param int $plId
      *         Playlist ID.
      */
-    public function addPlaylistToShow($pl_id)
+    public function addPlaylistToShow($pl_id, $checkUserPerm = true)
     {
         $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
         $id = $this->_showInstance->getDbId();
@@ -369,12 +369,13 @@ class Application_Model_ShowInstance {
      *
      * @param int $file_id
      */
-    public function addFileToShow($file_id)
+    public function addFileToShow($file_id, $checkUserPerm = true)
     {
         $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
         $id = $this->_showInstance->getDbId();
 
         $scheduler = new Application_Model_Scheduler();
+        $scheduler->setCheckUserPermissions($checkUserPerm);
         $scheduler->scheduleAfter(
             array(array("id" => 0, "instance" => $id, "timestamp" => $ts)),
             array(array("id" => $file_id, "type" => "audioclip"))
@@ -553,7 +554,7 @@ class Application_Model_ShowInstance {
 
             try {
                 $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
-                $rebroad->addFileToShow($file_id);
+                $rebroad->addFileToShow($file_id, false);
             }
             catch (Exception $e) {
                 Logging::log("{$e->getFile()}");
