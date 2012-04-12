@@ -578,6 +578,11 @@ class Application_Model_Schedule {
         global $CC_CONFIG, $CC_DBC;
         $CC_DBC->query("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
     }
+    
+    public static function deleteWithFileId($fileId){
+        global $CC_CONFIG, $CC_DBC;
+        $CC_DBC->query("DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=$fileId");
+    }
 
     public static function createNewFormSections($p_view){
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;

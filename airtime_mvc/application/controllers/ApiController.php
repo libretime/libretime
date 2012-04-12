@@ -648,13 +648,13 @@ class ApiController extends Zend_Controller_Action
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-
+            
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
                 return;
             }
             else {
-                $file->delete();
+                $file->deleteByMediaMonitor();
             }
         }
         else if ($mode == "delete_dir") {
@@ -663,7 +663,7 @@ class ApiController extends Zend_Controller_Action
             $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
 
             foreach($files as $file){
-                $file->delete();
+                $file->deleteByMediaMonitor();
             }
             return;
         }
