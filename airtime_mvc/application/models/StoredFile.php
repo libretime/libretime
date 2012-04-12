@@ -809,7 +809,10 @@ Logging::log("getting media! - 2");
         if (!isset($result)){//The file has no duplicate, so proceed to copy.
             $storDir = Application_Model_MusicDir::getStorDir();
             $stor = $storDir->getDirectory();
-
+            // check if "organize" dir exists and if not create one
+            if(!file_exists($stor."/organize")){
+                mkdir($stor."/organize", 0777);
+            }
             //check to see if there is enough space in $stor to continue.
             $enough_space = Application_Model_StoredFile::checkForEnoughDiskSpaceToCopy($stor, $audio_file);
             if ($enough_space){
