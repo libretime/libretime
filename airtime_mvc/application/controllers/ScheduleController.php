@@ -232,10 +232,10 @@ class ScheduleController extends Zend_Controller_Action
                 && !$instance->isRecorded()
                 && !$instance->isRebroadcast()) {
 
-                $menu["schedule"] = array("name"=> "Add / Remove Content",
+                $menu["schedule"] = array("name"=> "Add / Remove Content", "icon" => "add-remove-content",
                     "url" => "/showbuilder/builder-dialog/");
 
-                $menu["clear"] = array("name"=> "Remove All Content", "icon" => "delete",
+                $menu["clear"] = array("name"=> "Remove All Content", "icon" => "remove-all-content",
                     "url" => "/schedule/clear-show");
             }
 
@@ -243,7 +243,7 @@ class ScheduleController extends Zend_Controller_Action
 
         if (!$instance->isRecorded()) {
 
-            $menu["content"] = array("name"=> "Show Content", "url" => "/schedule/show-content-dialog");
+            $menu["content"] = array("name"=> "Show Content", "icon" => "overview", "url" => "/schedule/show-content-dialog");
         }
 
         if ($showEndLocalDT->getTimestamp() <= $epochNow
