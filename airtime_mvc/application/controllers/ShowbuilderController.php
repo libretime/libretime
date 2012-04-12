@@ -167,10 +167,10 @@ class ShowbuilderController extends Zend_Controller_Action
         $item = CcScheduleQuery::create()->findPK($id);
         $instance = $item->getCcShowInstances();
     
-        $menu["preview"] = array("name"=> "Preview");
+        $menu["preview"] = array("name"=> "Preview","icon" => "overview");
         //select the cursor
-        $menu["selCurs"] = array("name"=> "Select Cursor");
-        $menu["delCurs"] = array("name"=> "Remove Cursor");
+        $menu["selCurs"] = array("name"=> "Select Cursor","icon" => "select-cursor");
+        $menu["delCurs"] = array("name"=> "Remove Cursor","icon" => "select-cursor");
     
         if ($now < floatval($item->getDbEnds("U.u")) && $user->canSchedule($instance->getDbShowId())) {
     
