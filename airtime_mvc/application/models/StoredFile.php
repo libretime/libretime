@@ -465,10 +465,12 @@ Logging::log("getting media! - 2");
      * 		global unique id of file
      * @param string $p_md5sum
      *    MD5 sum of the file
+     * @param boolean $exist
+     *    When this is true, it check against only files with file_exist is 'true'
      * @return Application_Model_StoredFile|NULL
      *    Return NULL if the object doesnt exist in the DB.
      */
-    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null)
+    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null, $exist=false)
     {
         if (isset($p_id)) {
             $file = CcFilesQuery::create()->findPK(intval($p_id));
@@ -479,9 +481,16 @@ Logging::log("getting media! - 2");
                             ->findOne();
         }
         else if (isset($p_md5sum)) {
-            $file = CcFilesQuery::create()
+            if($exist){
+                $file = CcFilesQuery::create()
+                            ->filterByDbMd5($p_md5sum)
+                            ->filterByDbFileExists(true)
+                            ->findOne();
+            }else{
+                $file = CcFilesQuery::create()
                             ->filterByDbMd5($p_md5sum)
                             ->findOne();
+            }
         }
         else if (isset($p_filepath)) {
             $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
@@ -536,9 +545,9 @@ Logging::log("getting media! - 2");
      * @param string $p_md5sum
      * @return Application_Model_StoredFile|NULL
      */
-    public static function RecallByMd5($p_md5sum)
+    public static function RecallByMd5($p_md5sum, $exist=false)
     {
-        return Application_Model_StoredFile::Recall(null, null, $p_md5sum);
+        return Application_Model_StoredFile::Recall(null, null, $p_md5sum, null, $exist);
     }
 
     /**
@@ -809,7 +818,7 @@ Logging::log("getting media! - 2");
         $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $tempname;
         Logging::log('copyFileToStor: moving file '.$audio_file);
         $md5 = md5_file($audio_file);
-        $duplicate = Application_Model_StoredFile::RecallByMd5($md5);
+        $duplicate = Application_Model_StoredFile::RecallByMd5($md5, true);
         
         $result = null;
         if ($duplicate) {
