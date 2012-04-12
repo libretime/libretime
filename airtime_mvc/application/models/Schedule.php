@@ -39,9 +39,9 @@ class Application_Model_Schedule {
         $utcTimeNow = $date->getUtcTimestamp();
         
         $shows = Application_Model_Show::getPrevCurrentNext($utcTimeNow);
-        $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['id']:null;
-        $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['id']:null;
-        $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['id']:null;
+        $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
+        $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
+        $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
         $results = Application_Model_Schedule::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcTimeNow);
         
         $range = array("env"=>APPLICATION_ENV,
@@ -106,6 +106,7 @@ class Application_Model_Schedule {
         $sql .= ' AND st.playout_status > 0 ORDER BY st.starts';
         
         $rows = $CC_DBC->GetAll($sql);
+        
         $numberOfRows = count($rows);
 
         $results['previous'] = null;
