@@ -51,6 +51,12 @@ class PypoPush(Thread):
                 
         self.logger = logging.getLogger('push')
         
+    def is_media(self, item):
+        return item["type"] == "file"
+        
+    def is_event(self, item):
+        return item["type"] == "event"
+        
         
     def main(self):
         loops = 0
@@ -70,17 +76,17 @@ class PypoPush(Thread):
                 #We get to the following lines only if a schedule was received.
                 liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
 
-                
                 chains = self.get_all_chains(media_schedule) 
-                current_chain = self.get_current_chain(chains)                
-                if len(current_chain) > 0 and len(liquidsoap_queue_approx) == 0:
+                current_event_chain = self.get_current_chain(chains)                
+                if len(current_event_chain) > 0 and len(liquidsoap_queue_approx) == 0:
                     #Something is scheduled but Liquidsoap is not playing anything!
                     #Need to schedule it immediately..this might happen if Liquidsoap crashed.
-                    self.modify_cue_point_of_first_link(current_chain)
-                    next_media_item_chain = current_chain
+                    self.modify_cue_point_of_first_link(current_event_chain)
+                    next_media_item_chain = current_event_chain
                     time_until_next_play = 0
                 else:
-                    self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx, current_chain)
+                    media_chain = filter(self.is_media, current_event_chain)
+                    self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx, media_chain)
                     chains = self.get_all_chains(media_schedule) 
                     next_media_item_chain = self.get_next_schedule_chain(chains)
                     self.logger.debug("Next schedule chain: %s", next_media_item_chain)                
@@ -155,7 +161,7 @@ class PypoPush(Thread):
                 
         return liquidsoap_queue_approx
             
-    def handle_new_media_schedule(self, media_schedule, liquidsoap_queue_approx, current_chain):
+    def handle_new_media_schedule(self, media_schedule, liquidsoap_queue_approx, media_chain):
         """
         This function's purpose is to gracefully handle situations where
         Liquidsoap already has a track in its queue, but the schedule 
@@ -164,24 +170,35 @@ class PypoPush(Thread):
         queue.
         """
         
-        problem_at_iteration = self.find_removed_items(media_schedule, liquidsoap_queue_approx)
+        problem_at_iteration, problem_start_time = self.find_removed_items(media_schedule, liquidsoap_queue_approx)
         
-        if problem_at_iteration is None and len(current_chain) > len(liquidsoap_queue_approx):
+        if problem_at_iteration is not None:
+            #Items that are in Liquidsoap's queue aren't scheduled anymore. We need to connect
+            #and remove these items.
+            self.logger.debug("Change in link %s of current chain", problem_at_iteration)
+            self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx)
+        
+        if problem_at_iteration is None and len(media_chain) > len(liquidsoap_queue_approx):
             self.logger.debug("New schedule has longer current chain.")
             problem_at_iteration = len(liquidsoap_queue_approx)
-            
         
         if problem_at_iteration is not None:
             self.logger.debug("Change in chain at link %s", problem_at_iteration)
-            self.modify_cue_point_of_first_link(current_chain)
-            self.push_to_liquidsoap(current_chain[problem_at_iteration:])
+            #self.modify_cue_point_of_first_link(media_chain)
+            self.push_to_liquidsoap(media_chain[problem_at_iteration:])
         
-            
+    """
+    Compare whats in the liquidsoap_queue to the new schedule we just
+    received in media_schedule. This function only iterates over liquidsoap_queue_approx
+    and finds if every item in that list is still scheduled in "media_schedule". It doesn't 
+    take care of the case where media_schedule has more items than liquidsoap_queue_approx
+    """
     def find_removed_items(self, media_schedule, liquidsoap_queue_approx):
         #iterate through the items we got from the liquidsoap queue and 
         #see if they are the same as the newly received schedule
         iteration = 0
         problem_at_iteration = None
+        problem_start_time = None
         for queue_item in liquidsoap_queue_approx:
             if queue_item['start'] in media_schedule.keys():
                 media_item = media_schedule[queue_item['start']]
@@ -191,29 +208,27 @@ class PypoPush(Thread):
                         pass
                     else:
                         problem_at_iteration = iteration
+                        problem_start_time = queue_item['start']
                         break 
                 else:
                     #A different item has been scheduled at the same time! Need to remove
                     #all tracks from the Liquidsoap queue starting at this point, and re-add
                     #them. 
                     problem_at_iteration = iteration
+                    problem_start_time = queue_item['start']
                     break
             else:
                 #There are no more items scheduled for this time! The user has shortened
                 #the playlist, so we simply need to remove tracks from the queue. 
                 problem_at_iteration = iteration
+                problem_start_time = queue_item['start']
                 break
             iteration+=1
         
         
-        if problem_at_iteration is not None:
-            #The first item in the Liquidsoap queue (the one that is currently playing)
-            #has changed or been removed from the schedule. We need to clear the entire
-            #queue, and push the new schedule
-            self.logger.debug("Change in link %s of current chain", problem_at_iteration)
-            self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx)
+
             
-        return problem_at_iteration
+        return (problem_at_iteration, problem_start_time)
         
         
         
@@ -277,7 +292,7 @@ class PypoPush(Thread):
                     current_chain = chain[iteration:]
                     break
                 iteration += 1
-                
+                            
         return current_chain
                 
     """
@@ -305,10 +320,10 @@ class PypoPush(Thread):
     def date_interval_to_seconds(self, interval):
         return (interval.microseconds + (interval.seconds + interval.days * 24 * 3600) * 10**6) / 10**6
                         
-    def push_to_liquidsoap(self, media_item_chain):
+    def push_to_liquidsoap(self, event_chain):
         
         try:
-            for media_item in media_item_chain:
+            for media_item in event_chain:
                 if media_item['type'] == "file":
                     self.telnet_to_liquidsoap(media_item)
                 elif media_item['type'] == "event":
