@@ -150,9 +150,9 @@ function updatePlaybar(){
     }else{
         if (master_dj_on_air) {
             $('#current').html("Current: <span style='color:red; font-weight:bold'>Master DJ On Air</span>");
-        } else if (scheduled_play_on_air) {
-			$('#current').html("Current: <span style='color:red; font-weight:bold'>Show DJ On Air</span>");
         } else if (live_dj_on_air) {
+            $('#current').html("Current: <span style='color:red; font-weight:bold'>Live DJ On Air</span>");
+        } else {
             $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
         }
     }
