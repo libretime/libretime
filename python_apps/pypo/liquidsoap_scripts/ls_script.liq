@@ -24,6 +24,7 @@ s3_connected = ref ''
 s1_namespace = ref ''
 s2_namespace = ref ''
 s3_namespace = ref ''
+just_switched = ref false
 
 %include "ls_lib.liq"
 
@@ -47,9 +48,9 @@ default = amplify(id="silence_src", 0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
 ignore(output.dummy(default, fallible=true))
 
-master_dj_enabled = ref false;
-live_dj_enabled = ref false;
-scheduled_play_enabled = ref false;
+master_dj_enabled = ref false
+live_dj_enabled = ref false
+scheduled_play_enabled = ref false
 
 def make_master_dj_available()
         master_dj_enabled := true
@@ -69,6 +70,7 @@ end
 
 def make_scheduled_play_available()
         scheduled_play_enabled := true
+        just_switched := true
 end
 
 def make_scheduled_play_unavailable()
@@ -150,7 +152,7 @@ def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, 
     end
 end
 
-s = switch(id="default_switch", track_sensitive=false, transitions=[transition, transition], [({!scheduled_play_enabled},queue),({true},default)])
+s = switch(id="default_switch", track_sensitive=false, transitions=[transition_default, transition], [({!scheduled_play_enabled},queue),({true},default)])
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp, dj_live_stream_port, dj_live_stream_mp, s)
 
 # Attach a skip command to the source s:

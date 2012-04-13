@@ -32,6 +32,24 @@ def transition(a,b) =
         fade.final(duration=!default_dj_fade, a) ])
 end
 
+# we need this function for special transition case(from default to queue)
+# we don't want the trasition fade to have effect on the first song that would
+# be played siwtching out of the default(silent) source
+def transition_default(a,b) =
+  log("transition called...")
+  if !just_switched then
+      just_switched := false
+      add(normalize=false,
+         [ sequence([ blank(duration=0.01),
+                       fade.initial(duration=!default_dj_fade, b) ]),
+            fade.final(duration=!default_dj_fade, a) ])
+  else
+    just_switched := false
+    b
+  end
+end
+
+
 # Define a transition that fades out the
 # old source, adds a single, and then 
 # plays the new source
