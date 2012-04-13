@@ -399,7 +399,6 @@ class PypoFetch(Thread):
                     media_filtered[key] = media_item
              
             self.media_prepare_queue.put(copy.copy(media_filtered))
-            self.prepare_media(media_filtered)
         except Exception, e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
@@ -410,106 +409,6 @@ class PypoFetch(Thread):
         # cleanup
         try: self.cache_cleanup(media)
         except Exception, e: self.logger.error("%s", e)
-
-        
-
-    def prepare_media(self, media):
-        """
-        Iterate through the list of media items in "media" append some
-        attributes such as show_name
-        """
-        try:
-            mediaKeys = sorted(media.iterkeys())
-            for mkey in mediaKeys:
-                media_item = media[mkey]           
-        except Exception, e:
-            self.logger.error("%s", e)
-                
-        return media
-
-  
-    def handle_media_file(self, media_item, dst):
-        """
-        Download and cache the media item.
-        """
-        
-        self.logger.debug("Processing track %s", media_item['uri'])
-
-        try:
-            #blocking function to download the media item
-            #self.download_file(media_item, dst)
-            self.copy_file(media_item, dst)
-            
-            if os.access(dst, os.R_OK):
-                # check filesize (avoid zero-byte files)
-                try: 
-                    fsize = os.path.getsize(dst)
-                    if fsize > 0:
-                        return True
-                except Exception, e:
-                    self.logger.error("%s", e)
-                    fsize = 0
-            else:
-                self.logger.warning("Cannot read file %s.", dst)
-
-        except Exception, e: 
-            self.logger.info("%s", e)
-            
-        return False
-
-
-    def copy_file(self, media_item, dst):
-        """
-        Copy the file from local library directory. Note that we are not using os.path.exists
-        since this can lie to us! It seems the best way to get whether a file exists is to actually
-        do an operation on the file (such as query its size). Getting the file size of a non-existent
-        file will throw an exception, so we can look for this exception instead of os.path.exists.
-        """
-        
-        src = media_item['uri']
-        
-        try:
-            src_size = os.path.getsize(src)
-        except Exception, e:
-            self.logger.error("Could not get size of source file: %s", src)
-            return
-
-        
-        dst_exists = True
-        try:
-            dst_size = os.path.getsize(dst)
-        except Exception, e:
-            dst_exists = False
-            
-        do_copy = False
-        if dst_exists:
-            if src_size != dst_size:
-                do_copy = True
-        else:
-            do_copy = True
-            
-        
-        if do_copy:
-            self.logger.debug("copying from %s to local cache %s" % (src, dst))
-            try:
-                """
-                copy will overwrite dst if it already exists
-                """
-                shutil.copy(src, dst)
-            except:
-                self.logger.error("Could not copy from %s to %s" % (src, dst))
-
-
-    """
-    def download_file(self, media_item, dst):
-        #Download a file from a remote server and store it in the cache.
-        if os.path.isfile(dst):
-            pass
-            #self.logger.debug("file already in cache: %s", dst)
-        else:
-            self.logger.debug("try to download %s", media_item['uri'])
-            self.api_client.get_media(media_item['uri'], dst)
-    """
             
     def cache_cleanup(self, media):
         """

@@ -4,20 +4,25 @@ class Application_Model_Systemstatus
 {
 
     public static function GetMonitStatus($p_ip){
+        global $CC_CONFIG;
+        $monit_user = $CC_CONFIG['monit_user'];
+        $monit_password = $CC_CONFIG['monit_password'];
 
         $url = "http://$p_ip:2812/_status?format=xml";
         
         $ch = curl_init(); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
         curl_setopt($ch, CURLOPT_URL, $url);  
-        curl_setopt($ch, CURLOPT_USERPWD, "guest:airtime");
+        curl_setopt($ch, CURLOPT_USERPWD, "$monit_user:$monit_password");
         //wait a max of 3 seconds before aborting connection attempt
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
         $result = curl_exec($ch);
+        
+        $info = curl_getinfo($ch);
         curl_close($ch);
 
         $docRoot = null;
-        if ($result != FALSE){
+        if ($result !== FALSE && $info["http_code"] === 200){
             if ($result != ""){
                 $xmlDoc = new DOMDocument();
                 $xmlDoc->loadXML($result);

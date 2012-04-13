@@ -520,10 +520,14 @@ var AIRTIME = (function(AIRTIME) {
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
+        var table = $('#library_display').dataTable();
         if (data == true){
             div.show();
         }
         else{
+            if ($(div).is(':visible')) {
+				table.fnDraw();
+            }
             div.hide();
         }
     });
