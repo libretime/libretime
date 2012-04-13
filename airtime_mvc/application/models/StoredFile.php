@@ -836,7 +836,10 @@ Logging::log("getting media! - 2");
             $stor = $storDir->getDirectory();
             // check if "organize" dir exists and if not create one
             if(!file_exists($stor."/organize")){
-                mkdir($stor."/organize", 0777);
+                if(!mkdir($stor."/organize", 0777)){
+                    $result = array("code" => 109, "message" => "Failed to create 'organize' directory.");
+                    return $result;
+                }
             }
             //check to see if there is enough space in $stor to continue.
             $enough_space = Application_Model_StoredFile::checkForEnoughDiskSpaceToCopy($stor, $audio_file);
